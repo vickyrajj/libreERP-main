@@ -1,4 +1,4 @@
-var connection = new autobahn.Connection({url: 'ws://'+ '192.168.1.105' +':8080/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: 'ws://'+ '192.168.1.101'+':8000/ws', realm: 'default'});
 
 // "onopen" handler will fire when WAMP session has been established ..
 connection.onopen = function (session) {
@@ -9,7 +9,6 @@ connection.onopen = function (session) {
    //
   function chatResonse (args) {
     console.log(args);
-
     var status = args[0];
     var msg = args[1];
     var friend = args[2];
@@ -75,9 +74,6 @@ connection.onopen = function (session) {
       var scope = angular.element(document.getElementById('chatTab')).scope();
       console.log(scope);
       console.log(args);
-      // console.log(scope.);
-
-      console.log(args);
 
       function userExist() {
         for (var i = 0; i < scope.newUsers.length; i++) {
@@ -86,7 +82,15 @@ connection.onopen = function (session) {
               scope.newUsers[i].messages.push( {msg : args[2], sentByMe:false , created:  args[3] })
               return true
             }else if (args[1]=='MF') {
-              scope.newUsers[i].messages.push( {msg:"", img : args[2], sentByMe:false , created:  args[3] })
+              if (args[2].img) {
+                scope.newUsers[i].messages.push( {msg:"", img : args[2].img, sentByMe:false , created:  args[3] })
+              }else if (args[2].audioUrl) {
+                scope.newUsers[i].messages.push( {msg:"", audioUrl : args[2].audioUrl, sentByMe:false , created:  args[3] })
+              }else if (args[2].videoUrl) {
+                scope.newUsers[i].messages.push( {msg:"", videoUrl : args[2].videoUrl, sentByMe:false , created:  args[3] })
+              }else if (args[2].documentUrl) {
+                scope.newUsers[i].messages.push( {msg:"", documentUrl : args[2].documentUrl, sentByMe:false , created:  args[3] })
+              }
               return true
             }
           }
@@ -106,17 +110,24 @@ connection.onopen = function (session) {
       }
 
       if (userExist()) {
-        var s =  angular.element(document.getElementById('chatBox'+ args[0])).scope();
-        console.log(s);
-        // scope.$apply(function() {
-        //   console.log(scope);
-        //   scope.$$childHead.scroll()
-        // });
+        // var s =  angular.element(document.getElementById('chatBox'+ args[0])).scope();
+        // console.log(s);
       }else {
         if(args[1]=='M') {
           scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg : args[2], sentByMe:false , created:  args[3] }], isOnline:true }  )
         }else if (args[1]=='MF') {
           scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", img : args[2], sentByMe:false , created:  args[3] }], isOnline:true }  )
+        }else if (args[1]=='MF') {
+          if (args[2].img) {
+            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", img : args[2].img, sentByMe:false , created:  args[3] }], isOnline:true }  )
+          }else if (args[2].audioUrl) {
+            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", audioUrl : args[2].audioUrl, sentByMe:false , created:  args[3] }], isOnline:true }  )
+          }else if (args[2].videoUrl) {
+            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", videoUrl : args[2].videoUrl, sentByMe:false , created:  args[3] }], isOnline:true }  )
+          }else if (args[2].documentUrl) {
+            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", documentUrl : args[2].documentUrl, sentByMe:false , created:  args[3] }], isOnline:true }  )
+          }
+          return true
         }
       }
 

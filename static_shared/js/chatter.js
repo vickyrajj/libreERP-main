@@ -263,9 +263,12 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-var custID = 16;
+var custID = 18;
 var borderColor = '#ACA626';
 var custName = 'CIOC'
+var uid;
+var broswer;
+var chatOpen = false;
 
 
 
@@ -290,12 +293,49 @@ document.addEventListener("DOMContentLoaded", function(event) {
     return name
   }
 
-  var broswer = getBrowserName()
-  var uid = custID +'$'+custName+'$'+broswer.charAt(0)
-  console.log(uid);
+  broswer = getBrowserName()
+
+  function setCookie(cname, cvalue, exdays) {
+    console.log('set cookie');
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 
 
-  var connection = new autobahn.Connection({url: 'ws://192.168.1.105:8080/ws', realm: 'default'});
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function checkCookie() {
+    uid = getCookie("uid");
+    if (uid != "") {
+        // alert("Welcome again " + user);
+    } else {
+        uid = custID +'$'+custName+'$'+broswer.charAt(0)
+        if (uid != "" && uid != null) {
+            setCookie("uid", uid, 365);
+        }
+    }
+}
+
+checkCookie();
+
+
+  var connection = new autobahn.Connection({url: 'ws://192.168.1.101:8080/ws', realm: 'default'});
 
   connection.onopen = function (session) {
 
@@ -318,7 +358,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
 
-
     session.subscribe('service.support.chat.' + uid, supportChat).then(
       function (sub) {
         console.log("subscribed to topic 'service.support.agent'");
@@ -328,21 +367,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
     );
 
-
-
   };
 
   connection.open();
 
-
-
+  // <button type="button" style="height:100px; width:100px; background-color: #db4437; border-radius:50%;" >
+  //   <span style="font-size:70px; color:white;" > + </span>
+  // </button>
 
 
 
   var body = document.getElementsByTagName("BODY")[0];
   var div = document.createElement("div");
-  div.innerHTML = '<div class="chatWindow" style="height:36px;right:30px; border-top-color: '+ borderColor +'" id="chatWindowelizabeth">'+
-  '<div class="header" >'+
+  var buttonDiv = document.createElement("div");
+  buttonDiv.setAttribute('id','floatDiv');
+  buttonDiv.innerHTML = '<button id="floatButton" style="height:70px; width:70px; background-color: #db4437; border-radius:50%; border: 1px solid #db4437" >'+
+  '<span style="font-size:20px; color:white;" > Chat </span>'+
+  '</button>'
+  body.appendChild(buttonDiv);
+
+  div.innerHTML = '<div id="chatWindowDiv" class="chatWindow" style="border-top-style: solid; border-top-width:4px; border-top-color: '+ borderColor +'" >'+
+  '<div id="header" class="header" >'+
     '<div class="container-fluid" style="padding:7px;" >'+
       '<i class="fa fa-circle onlineStatus" style="color: #0b8640;font-size: 15px;" ></i>'+
       '<span class="username" style="padding-left:7px; font-size:15px;" >Online</span>'+
@@ -354,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   '<div id="footer"  class="footer">'+
     '<div class="container-fluid input-group" id="footerInputGrp" style="padding:10px;" >'+
       '<input id="inputText" class="form-control" style="width:100%" type="text" >'+
-      '<input id="filePicker" type="file" style="display:none;" accept="image/*" />'+
+      '<input id="filePicker" type="file" style="display:none;"  />'+
       '<span id="paperClip" class="input-group-addon btn btn-default " style="border:none; border-radius: 0px;"><i class="fa fa-paperclip" aria-hidden="true"></i></span>'+
       '<span id="fileName" class="input-group-addon btn btn-default" style="font-size:10px;" > filename </span>'+
       '<span id="removeFile" class="input-group-addon btn btn-default" style="cursor:pointer" > <i class="fa fa-times" aria-hidden="true"></i> </span>'+
@@ -367,35 +412,221 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+
   (function () {
-    var toggle = true;
-    document.getElementById("chatWindowelizabeth").style.height = "36px";
+    document.getElementById("chatWindowDiv").style.height = "36px";
     document.getElementById("footer").style.display = "none";
     document.getElementById("fileName").style.display = "none";
     document.getElementById("removeFile").style.display = "none";
     document.getElementById("sendFile").style.display = "none";
+
+    var footer = document.getElementById("footer");
+    footer.style.position = "absolute";
+    footer.style.bottom = "0px";
+    footer.style.width = "100%";
+    footer.style.borderTop = "1px solid #bfbfbf";
+
+    var header = document.getElementById("header");
+    header.style.borderBottom = "1px solid #bfbfbf";
+    header.style.height = "36px";
+
+    var messageView = document.getElementById("messages");
+    messageView.style.overflow = "auto"
+    messageView.style.position = "absolute"
+    messageView.style.boxSizing = "border-box"
+    messageView.style.display = "block"
+    messageView.style.height = "80%"
+    messageView.style.width = "100%"
+
+    var chatWindowDiv = document.getElementById("chatWindowDiv");
+    chatWindowDiv.style.position = "fixed";
+    chatWindowDiv.style.bottom = "0px";
+    chatWindowDiv.style.width = "300px";
+    chatWindowDiv.style.height = "36px";
+    chatWindowDiv.style.right = "30px";
+    chatWindowDiv.style.background = "#f9f9f9";
+    chatWindowDiv.style.zIndex = "10000";
+    chatWindowDiv.style.boxShadow = "0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)";
+
+    var floatDiv = document.getElementById("floatDiv");
+    floatDiv.style.position = "fixed";
+    floatDiv.style.bottom = "10px";
+    floatDiv.style.right = "10px";
+    floatDiv.style.zIndex = "10000";
+
   }());
 
-  document.getElementById("toggle").addEventListener("click", toggleWindow, false);
+
+  document.getElementById("floatButton").onmouseenter = function(event){
+      console.log('coming');
+      setTimeout(function() {
+      // event.target.style.boxShadow = "0 1px 4px 0 #fff, 0 2px 10px 0 #fff";
+      event.target.style.height ="72px";
+      event.target.style.width = "72px";
+    }, 50);
+  };
+
+  document.getElementById("floatButton").onmouseleave = function(event){
+    setTimeout(function() {
+      console.log('coming');
+      // event.target.style.boxShadow = "none";
+      event.target.style.height ="70px";
+      event.target.style.width = "70px";
+    }, 50);
+  };
+
+
+  function xsDevice(x) {
+    if (x.matches) { // If media query matches
+        console.log('extra small screen');
+        chatWindowDiv.style.width = "96%";
+        chatWindowDiv.style.right = "10px";
+        if (chatOpen) {
+          chatWindowDiv.style.height = "92vh";
+          floatDiv.style.display = "none";
+        }else {
+          chatWindowDiv.style.display = "none";
+          floatDiv.style.display = "";
+        }
+
+    }
+  }
+
+  function smDevice(x) {
+    if (x.matches) {
+        console.log('smaller screen');
+        chatWindowDiv.style.width = "300px";
+        chatWindowDiv.style.right = "30px";
+        floatDiv.style.display = "none";
+        chatWindowDiv.style.display = "";
+        if (chatOpen) {
+          chatWindowDiv.style.height = "500px";
+          footer.style.display = "";
+        }else {
+          chatWindowDiv.style.height = "36px";
+          footer.style.display = "none";
+
+        }
+    }
+  }
+
+  function mdDevice(x) {
+    if (x.matches) {
+        console.log('medium screen');
+        chatWindowDiv.style.width = "300px";
+        chatWindowDiv.style.right = "30px";
+        floatDiv.style.display = "none";
+        chatWindowDiv.style.display = "";
+        if (chatOpen) {
+          chatWindowDiv.style.height = "500px";
+          footer.style.display = "";
+        }else {
+          chatWindowDiv.style.height = "36px";
+          footer.style.display = "none";
+        }
+    }
+  }
+
+  function lgDevice(x) {
+    if (x.matches) {
+        console.log('large screen');
+        chatWindowDiv.style.width = "300px";
+        chatWindowDiv.style.right = "30px";
+        floatDiv.style.display = "none";
+        chatWindowDiv.style.display = "";
+        if (chatOpen) {
+          chatWindowDiv.style.height = "500px";
+          footer.style.display = "";
+        }else {
+          chatWindowDiv.style.height = "36px";
+          footer.style.display = "none";
+
+        }
+    }
+  }
+
+
+
+  var xs = window.matchMedia("(max-width: 767px)")
+  console.log('xssssssssss',xs);
+  xsDevice(xs) // Call listener function at run time
+  xs.addListener(xsDevice) // Attach listener function on state changes
+
+  var sm = window.matchMedia("(min-width: 768px) and (max-width: 991px)")
+  smDevice(sm)
+  sm.addListener(smDevice)
+
+  var md = window.matchMedia("(min-width: 992px) and (max-width: 1199px)")
+  mdDevice(md)
+  md.addListener(mdDevice)
+
+  var lg = window.matchMedia("(min-width: 1200px)")
+  lgDevice(lg)
+  lg.addListener(lgDevice)
+
+
+
+
+  document.getElementById("toggle").addEventListener("click", toggleWindow1, false);
   document.getElementById("paperClip").addEventListener("click", filePicker, false);
+  document.getElementById("floatButton").addEventListener("click", toggleWindow1, false);
 
   function filePicker() {
     document.getElementById('filePicker').click();
   }
 
-  function toggleWindow() {
-    toggle = !toggle;
-    if (toggle) {
-      document.getElementById("chatWindowelizabeth").style.height = "500px";
-      document.getElementById("footer").style.display = "block";
+  function toggleWindow1() {
+    chatOpen = !chatOpen;
+    if (chatOpen) {
+      var xs = window.matchMedia("(max-width: 767px)")
+      if (xs.matches) {
+        console.log('small screen');
+        chatWindowDiv.style.display = "";
+
+        // chatWin  = document.getElementById("chatWindowDiv");
+        // chatWinH = 0;
+        // chatWinW = 0;
+        // var id = setInterval(frame, 5);
+        // function frame() {
+        //   if (chatWinH == 92) {
+        //     clearInterval(id);
+        //   } else {
+        //     chatWinH++;
+        //     chatWin.style.height = chatWinH + 'vh';
+        //   }
+        //
+        //   if (chatWinW == 96) {
+        //     clearInterval(id);
+        //   } else {
+        //     chatWinW++;
+        //     chatWin.style.width = chatWinW + '%';
+        //   }
+        // }
+
+        document.getElementById("chatWindowDiv").style.height = "92vh";
+        document.getElementById("footer").style.display = "block";
+        floatDiv.style.display = "none"
+      }else {
+        document.getElementById("chatWindowDiv").style.height = "500px";
+        document.getElementById("footer").style.display = "block";
+      }
+
     }else {
-      document.getElementById("chatWindowelizabeth").style.height = "36px";
-      document.getElementById("footer").style.display = "none";
+      var xs = window.matchMedia("(max-width: 767px)")
+      if (xs.matches) {
+        chatWindowDiv.style.display = "none"
+        floatDiv.style.display = ""
+      }else {
+        console.log('chatOpen');
+        document.getElementById("chatWindowDiv").style.height = "36px";
+        document.getElementById("footer").style.display = "none";
+      }
+
     }
   }
 
 
-  var chat = {user : custName , messages : [] }
+  var chat = {user : custName , messages : [ ] }
 
   function messageDiv(message) {
     var col = message.sentByMe ? 'col-md-offset-2 col-md-10':'col-md-10'
@@ -403,8 +634,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var borderRad = message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'
     var bgCol = message.sentByMe ? '#dba4ae':'#72b3d4'
     var timeAgoSpan = message.sentByMe ? '<span class="text-muted pull-right" style="font-size:10px; padding-right:25px;">2 days ago</span>':'<span class="text-muted pull-left" style="font-size:10px; padding-left:25px;">5 mins ago</span>'
+    var attachedFile;
 
-    var msgDiv = message.msg=='' ? '<img  src="'+ message.img +'" style="width:200px;">' : '<p style="word-break: break-all !important;">'+ message.msg +'</p>'
+    if (message.msg=='') {
+      if (message.img) {
+        attachedFile = '<img  src="'+ message.img +'" style="width:200px;">'
+      }else if (message.audioUrl) {
+        attachedFile = '<audio style="width:200px;" src="'+ message.audioUrl +'" controls></audio>'
+      }else if (message.videoUrl) {
+        attachedFile = '<video width="200" height="180" src="'+ message.videoUrl +'" controls></video>'
+      }else if (message.documentUrl) {
+          attachedFile ='<p>  <a href="'+message.documentUrl+'"> '+message.documentUrl+' </a></p>'
+      }
+    }
+
+    var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important;">'+ message.msg +'</p>'
 
     msgHtml = '<div class="row">'+
       '<div class="'+ col +'"> '+
@@ -429,6 +673,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
     scroll();
   }
+
   pushMessges();
 
   function scroll() {
@@ -455,7 +700,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
   function sendFile() {
-    var message = {msg:'' ,  sentByMe:true , created: new Date() , img: '/static/images/career.jpg' }
+    var file = document.getElementById('filePicker');
+    var message;
+
+
+    var typ = file.files[0].type.split('/')[0]
+    if (typ=='image') {
+       message = {msg:'' ,  sentByMe:true , created: new Date() , img: '/static/images/career.jpg' }
+    }else if (typ=='audio') {
+       message = {msg:'' ,  sentByMe:true , created: new Date() , audioUrl:'/static/audio/notification.mp3' }
+    }else if (typ=='video') {
+       message = {msg:'' ,  sentByMe:true , created: new Date() , videoUrl:'/static/videos/24tutors.mp4' }
+    }else if (typ=='application') {
+       message = {msg:'' ,  sentByMe:true , created: new Date() , documentUrl:'static/document/invoice.pdf' }
+    }
+
+    console.log(message);
+
+
+
+
+    // var message = {msg:'' ,  sentByMe:true , created: new Date() , img: '/static/images/career.jpg' }
     var div = document.createElement("div");
     div.innerHTML = messageDiv(message)
     var msg = document.getElementById("messages");
@@ -474,19 +739,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     status = "MF";
-    connection.session.publish('service.support.agent', [uid , status , message.img , new Date() ], {}, {
+    connection.session.publish('service.support.agent', [uid , status , message , new Date() ], {}, {
       acknowledge: true
     }).
     then(function(publication) {
       console.log("Published");
     });
-
   }
-
 
   document.getElementById('filePicker').onchange = function(e) {
 
     var file = document.getElementById('filePicker');
+    console.log('files',file.files[0]);
 
     document.getElementById("inputText").style.display = "none";
     document.getElementById("paperClip").style.display = "none";
@@ -509,6 +773,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
           msg.appendChild(div);
           scroll();
           status = "M";
+          console.log('uid,,,,',uid);
+          inputText.value =''
           connection.session.publish('service.support.agent', [uid , status ,message.msg , new Date() ], {}, {
             acknowledge: true
           }).
@@ -516,7 +782,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             console.log("Published");
           });
         }
-        inputText.value =''
       }
   }, false);
 
@@ -525,8 +790,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     alert('Are you sure?');
     // body.removeChild(div);
   }, false);
-
-
 
 
 });
