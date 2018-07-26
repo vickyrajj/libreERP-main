@@ -85,7 +85,7 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
 
 });
 
-app.controller("businessManagement.customers.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.customers.explore", function($scope, $state, $users, $stateParams, $http, Flash , $uibModal) {
   $scope.compDetails = $scope.tab.data
   $scope.custDetails = {}
   $http({
@@ -95,6 +95,23 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   then(function(response) {
     $scope.custDetails = response.data[0]
   });
+  $scope.openChartPopoup = function(pk){
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        cPk: function() {
+          return pk;
+        }
+      },
+      controller: function($scope, $users , $uibModalInstance,cPk) {
+        console.log('sssssssssssss',cPk);
+        $scope.src = '<script src="' + "http://localhost:8000/static/js/chatter-" + cPk + ".js" + '"></script>'
+
+      },
+    })
+  }
 })
 
 app.controller("businessManagement.customers.form", function($scope, $state, $users, $stateParams, $http, Flash) {
