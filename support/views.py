@@ -30,3 +30,10 @@ class CustomerProfileViewSet(viewsets.ModelViewSet):
     queryset = CustomerProfile.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['service']
+
+class SupportChatFileViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny ,)
+    serializer_class = SupportChatFileSerializer
+    queryset = SupportChatFile.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['uid']

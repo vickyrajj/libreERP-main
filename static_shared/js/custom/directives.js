@@ -341,18 +341,23 @@ app.directive('chatBox', function() {
       $scope.send = function() {
         if ($scope.chatBox.fileToSend.size>0) {
           var typ = $scope.chatBox.fileToSend.type.split('/')[0]
+          var message;
           if (typ=='image') {
-            $scope.data.messages.push({msg : "",sentByMe:true, img:'/static/images/career.jpg' , created: new Date()})
+            message = {msg : "",sentByMe:true, img:'/static/images/career.jpg' , created: new Date()}
+            $scope.data.messages.push(message)
           }else if (typ=='audio') {
-            $scope.data.messages.push({msg:"" , sentByMe: true, audioUrl:'/static/audio/notification.mp3', created: new Date() })
+            message = {msg:"" , sentByMe: true, audio:'/static/audio/notification.mp3', created: new Date() }
+            $scope.data.messages.push(message)
           }else if (typ=='video') {
-            $scope.data.messages.push({msg : "",sentByMe:true, videoUrl:'/static/videos/24tutors.mp4' , created: new Date()})
+            message = {msg : "",sentByMe:true, video:'/static/videos/24tutors.mp4' , created: new Date()}
+            $scope.data.messages.push(message)
           }else if (typ=='application') {
-            $scope.data.messages.push({msg : "",sentByMe:true, documentUrl:'static/document/invoice.pdf' , created: new Date()})
+            message = {msg : "",sentByMe:true, doc:'static/document/invoice.pdf' , created: new Date()}
+            $scope.data.messages.push(message)
           }
           $scope.status = 'MF';
 
-          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , $scope.chatBox.fileToSend , new Date() ], {}, {
+          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , message , new Date() ], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -365,11 +370,22 @@ app.directive('chatBox', function() {
         }
 
         if ($scope.chatBox.messageToSend.length>0) {
-          $scope.data.messages.push({msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() })
-          console.log($scope.chatBox.messageToSend);
-          $scope.status = 'M';
 
-          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , $scope.chatBox.messageToSend , new Date() ], {}, {
+
+          var youtubeLink = $scope.chatBox.messageToSend.includes("www.youtube.com/");
+
+          if (youtubeLink) {
+            $scope.status = 'MF';
+            link = "https://www.youtube.com/embed/" + $scope.chatBox.messageToSend.split("v=")[1];
+            var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
+          }else {
+            $scope.status = 'M';
+            var message = {msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() }
+          }
+
+          $scope.data.messages.push(message)
+          console.log($scope.chatBox.messageToSend);
+          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , message , new Date() ], {}, {
             acknowledge: true
           }).
           then(function(publication) {

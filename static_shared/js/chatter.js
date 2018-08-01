@@ -1,4 +1,3 @@
-
 !function(la){if("object"==typeof exports)module.exports=la();else if("function"==typeof define&&define.amd)define(la);else{var h;"undefined"!=typeof window?h=window:"undefined"!=typeof global?h=global:"undefined"!=typeof self&&(h=self);h.autobahn=la()}}(function(){return function h(p,k,b){function a(d,e){if(!k[d]){if(!p[d]){var q="function"==typeof require&&require;if(!e&&q)return q(d,!0);if(c)return c(d,!0);throw Error("Cannot find module '"+d+"'");}q=k[d]={exports:{}};p[d][0].call(q.exports,function(c){var n=
 p[d][1][c];return a(n?n:c)},q,q.exports,h,p,k,b)}return k[d].exports}for(var c="function"==typeof require&&require,e=0;e<b.length;e++)a(b[e]);return a}({1:[function(h,p,k){function b(){}h=p.exports={};h.nextTick=function(){if("undefined"!==typeof window&&window.setImmediate)return function(a){return window.setImmediate(a)};if("undefined"!==typeof window&&window.postMessage&&window.addEventListener){var a=[];window.addEventListener("message",function(c){var b=c.source;b!==window&&null!==b||"process-tick"!==
 c.data||(c.stopPropagation(),0<a.length&&a.shift()())},!0);return function(c){a.push(c);window.postMessage("process-tick","*")}}return function(a){setTimeout(a,0)}}();h.title="browser";h.browser=!0;h.env={};h.argv=[];h.on=b;h.once=b;h.off=b;h.emit=b;h.binding=function(a){throw Error("process.binding is not supported");};h.cwd=function(){return"/"};h.chdir=function(a){throw Error("process.chdir is not supported");}},{}],2:[function(h,p,k){var b=h("crypto-js");k.sign=function(a,c){return b.HmacSHA256(c,
@@ -260,221 +259,499 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-
-
-
-var custID = 16;
+var custID = 18;
 var borderColor = '#ACA626';
 var custName = 'CIOC'
+var uid;
+var broswer;
+var isAgentOnline = false;
+
+function getBrowserName() {
+  var name;
+  if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
+    name = 'Opera'
+  }else if (navigator.userAgent.indexOf("Chrome") != -1 ) {
+    name = 'Chrome'
+  }else if (navigator.userAgent.indexOf("Safari") != -1) {
+    name = 'Safari'
+  }else if (navigator.userAgent.indexOf("Firefox") != -1) {
+    name = 'Firefox'
+  }else if ((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
+    name = 'IE'
+  }else {
+    name = 'unknown'
+  }
+  return name
+}
+
+broswer = getBrowserName()
+
+
+function setCookie(cname, cvalue, exdays) {
+  console.log('set cookie');
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+      }
+  }
+  return "";
+}
+
+function checkCookie() {
+  uid = getCookie("uid");
+  if (uid != "") {
+      // alert("Welcome again " + user);
+  } else {
+      uid = custID +'$'+custName+'$'+broswer.charAt(0)
+      if (uid != "" && uid != null) {
+          setCookie("uid", uid, 365);
+      }
+  }
+}
+
+checkCookie();
+
+
+
+
+
+
+
 
 
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
+  var connection = new autobahn.Connection({url: 'ws://192.168.0.12:8080/ws', realm: 'default'});
 
-  function getBrowserName() {
-    var name;
-    if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
-      name = 'Opera'
-    }else if (navigator.userAgent.indexOf("Chrome") != -1 ) {
-      name = 'Chrome'
-    }else if (navigator.userAgent.indexOf("Safari") != -1) {
-      name = 'Safari'
-    }else if (navigator.userAgent.indexOf("Firefox") != -1) {
-      name = 'Firefox'
-    }else if ((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
-      name = 'IE'
-    }else {
-      name = 'unknown'
-    }
-    return name
-  }
+    connection.onopen = function (session) {
+       console.log("session established!");
 
-  var broswer = getBrowserName()
-  var uid = custID +'$'+custName+'$'+broswer.charAt(0)
-  console.log(uid);
+      function supportChat(args) {
+        console.log(args);
+        var message;
 
+        if (args[0]=="M") {
+           message = {msg:args[1].msg , sentByMe:false , created: args[2].created }
+           console.log(message,'ddddddddddddddddddddddddd');
+        }else if (args[0]=="MF") {
+          if (args[1].img) {
+             message = {msg:'' ,  sentByMe:false , created: args[2].created , img: args[1].img }
+          }else if (args[1].audio) {
+             message = {msg:'' ,  sentByMe:false , created: args[2].created , audio:args[1].audio }
+          }else if (args[1].video) {
+             message = {msg:'' ,  sentByMe:false , created: args[2].created , video:args[1].video }
+          }else if (args[1].doc) {
+             message = {msg:'' ,  sentByMe:false , created: args[2].created , doc:args[1].doc }
+          }else if (args[1].link) {
+             message = {msg:'' ,  sentByMe:false , created: args[2].created , link:args[1].link }
+          }
+        }else if (args[0]=='O') {
+          console.log('yes online');
+          isAgentOnline = true;
+          onlineStatus.innerHTML = '<p style="font-size:10px;" >Online</p>'
+          // agentName.innerHTML = '<p>Syrow Agent</p>'
+        }else if (args[0]=='A') {
+          agentName.innerHTML = '<p>'+args[1]+'</p>'
+        }
 
-  var connection = new autobahn.Connection({url: 'ws://192.168.1.105:8080/ws', realm: 'default'});
+        var div = document.createElement("div");
+        div.innerHTML = messageDiv(message)
+        messageBox.appendChild(div);
+        scroll();
 
-  connection.onopen = function (session) {
-
-     console.log("session established!");
-
-    function supportChat(args) {
-      console.log(args);
-
-      if (args[0]=="M") {
-        var message = {msg:args[1] , sentByMe:false , created: args[2] }
-      }else if (args[0]=="MF") {
-        var message = {msg:"" , img:'/static/images/career.jpg' ,  sentByMe:false , created: args[2] }
       }
+
+      session.subscribe('service.support.chat.' + uid, supportChat).then(
+        function (sub) {
+          console.log("subscribed to topic 'service.support.agent'");
+        },
+        function (err) {
+          console.log("failed to subscribed: " + err);
+        }
+      );
+
+    };
+
+    connection.open();
+
+
+    var body = document.getElementsByTagName("BODY")[0];
+    var div = document.createElement("div");
+    div.innerHTML = '<div id="chatBox" style="width:347px; height:75vh; border-radius: 10px; background-color:#fff; position:fixed ; bottom:100px; right:10px; z-index:1500; margin-left:10px; box-shadow: 0px 5px 40px rgba(0,0,0,0.16) ">'+
+
+      '<div id="header1" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:#286EFA; color:#fff;">'+
+        '<div class="row" style="padding:10px; background-image:url(/static/images/bgChat.png); background-size:cover; " >'+
+          '<div id="backArrow" class="col-xs-1" style="cursor:pointer; padding:15px; border-radius:5px; " >'+
+            '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
+          '</div>'+
+          '<div class="col-xs-2">'+
+              '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:35px " alt="Samuel avatar">'+
+          '</div>'+
+          '<div class="col-xs-7">'+
+            '<div class="row">'+
+              '<span id="agentName" style="font-size:15px; cursor:pointer; "></span>'+
+            '</div>'+
+            '<div class="row">'+
+              '<span id="onlineStatus"></span>'+
+            '</div>'+
+          '</div>'+
+          '<div id="closeIcon" class="col-xs-1" style="cursor:pointer; padding:15px; border-radius:5px; "  >'+
+            '<span> <i class="fa fa-times" aria-hidden="true"></i> </span>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+
+      '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:#286EFA; color:#fff; padding:15px; background-image:url(static/images/bgChat.png); background-size:cover; " >'+
+        '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <i class="fa fa-times" aria-hidden="true"></i> </span>'+
+        '<div class="row" style="padding:15px; padding-left:40px; " >'+
+          '<p style="font-size:25px;" >Hi, We are Syrow 👋 </p>'+
+
+        '  <p style="font-size:15px;" >We deliver excellence and committed to Spread Happiness. </p>'+
+
+      '  </div>'+
+      '</div>'+
+
+      '<div id="startConversation" class="row text-center" style="padding:40px; height:40vh; position:absolute; background-color:#fff; border-radius:10px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16);  " >'+
+        '<p style="font-size:12px;" > Start a conversation </p>'+
+        '<p style="font-size:11px;" class="text-muted"> The team typically replies in a few minutes.</p>'+
+        '<div class="text-center">'+
+          '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Samira avatar">'+
+          '<img src="static/images/user1-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Samira avatar">'+
+          '<img src="static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Samira avatar">'+
+          '<img src="static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Samira avatar">'+
+        '</div>'+
+
+        '<div class="row" style="color:#fff; position:absolute; top:190px;" >'+
+          '<button id="startConvoBtn" type="button" class="btn btn-primary" style="padding:10px; border-radius:8px; background-color:#286EFA ; font-size:11px;" >'+
+            'Start Conversation'+
+          '</button>'+
+
+
+      '  </div>'+
+
+      '</div>'+
+
+    '  <div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
+      '  <div id="firstMessage" >'+
+          '<div class="row" style="padding-top:20px;" >'+
+            '<div class="col-xs-2" style="padding-right:0px;" >'+
+              '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:35px; height:35px; " alt="Samuel avatar">'+
+            '</div>'+
+            '<div class="col-xs-10" style="padding-left:5px;">'+
+              '<div style="float:left; background-color:#e0e0e0; padding:10px; border-radius:10px;">'+
+                '<p style="word-break: break-all !important; font-size:10px;">Hello, How can we help you?</p>'+
+            '  </div>'+
+          '  </div>'+
+          '</div>'+
+          '<div class="row">'+
+            '<span class="text-muted pull-left" style="font-size:8px; padding-left:70px;">just now</span>'+
+          '</div>'+
+      '</div>'+
+
+      '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
+        '<div class="container-fluid input-group" style="padding:0px;" >'+
+           '<input id="inputText" class="form-control" style="width:100% ; height:50px; border:none; box-shadow:none; " type="text" placeholder="Write a reply...">'+
+           '<input id="filePicker" type="file" style="display:none;"  />'+
+           '<span id="paperClip" class="input-group-addon btn btn-default " style="border:none; background-color:#fff; font-size:20px; "><i class="fa fa-paperclip " aria-hidden="true"></i></span>'+
+           '<span id="paperPlane" class="input-group-addon btn btn-default " style="border:none; background-color:#fff; font-size:20px; "><i class="fa fa-paper-plane-o " aria-hidden="true"></i></span>'+
+        '</div>'+
+      '</div>'+
+
+
+    '</div>'+
+
+
+    '<div id="chatCircle" style="height:55px; width:55px; background-color: #286EFA; border-radius:50%; border: 1px solid #286efa; position:fixed ; bottom:10px; right:10px; z-index:1000; cursor:pointer;">'+
+      '<svg id="chatIconSvg" style="width:30px; height:30px; position:absolute; top:14px; left:11px;" viewBox="0 0 28 32">'+
+        '<path style="fill:#fff" d="M28,32 C28,32 23.2863266,30.1450667 19.4727818,28.6592 L3.43749107,28.6592 C1.53921989,28.6592 0,27.0272 0,25.0144 L0,3.6448 C0,1.632 1.53921989,0 3.43749107,0 L24.5615088,0 C26.45978,0 27.9989999,1.632 27.9989999,3.6448 L27.9989999,22.0490667 L28,22.0490667 L28,32 Z M23.8614088,20.0181333 C23.5309223,19.6105242 22.9540812,19.5633836 22.5692242,19.9125333 C22.5392199,19.9392 19.5537934,22.5941333 13.9989999,22.5941333 C8.51321617,22.5941333 5.48178311,19.9584 5.4277754,19.9104 C5.04295119,19.5629428 4.46760991,19.6105095 4.13759108,20.0170667 C3.97913051,20.2124916 3.9004494,20.4673395 3.91904357,20.7249415 C3.93763774,20.9825435 4.05196575,21.2215447 4.23660523,21.3888 C4.37862552,21.5168 7.77411059,24.5386667 13.9989999,24.5386667 C20.2248893,24.5386667 23.6203743,21.5168 23.7623946,21.3888 C23.9467342,21.2215726 24.0608642,20.9827905 24.0794539,20.7254507 C24.0980436,20.4681109 24.0195551,20.2135019 23.8614088,20.0181333 Z">'+
+    '  </path>'+
+    '</svg>'+
+
+      '<svg id="closeChatSvg" style="position:absolute; top:18px; left:18px; height:42px;" viewBox="0 0 28 32">'+
+      '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+    '</svg>'+
+
+
+    '</div>'
+
+
+
+    body.appendChild(div);
+
+
+
+
+
+
+
+
+
+
+
+
+  var chatOpen = false;
+  var chatIconSvg = document.getElementById('chatIconSvg');
+  var chatCloseSvg = document.getElementById('closeChatSvg');
+  var chatBox = document.getElementById('chatBox');
+  var closeIcon = document.getElementById("closeIcon");
+  var chatCircle =  document.getElementById("chatCircle");
+  var header1 = document.getElementById("header1");
+  var messageBox = document.getElementById("messageBox");
+  var footer = document.getElementById("footer");
+  var paperClip = document.getElementById("paperClip");
+  var filePicker = document.getElementById('filePicker');
+  var inputText = document.getElementById("inputText");
+  var startConvoBtn = document.getElementById("startConvoBtn");
+  var startConversation = document.getElementById("startConversation");
+  var headerInit = document.getElementById('headerInit');
+  var backArrow = document.getElementById('backArrow');
+  var closeIconInit = document.getElementById('closeIconInit');
+  var onlineStatus = document.getElementById('onlineStatus');
+  var agentName = document.getElementById('agentName');
+  var paperPlane = document.getElementById('paperPlane')
+
+
+  agentName.innerHTML = '<p style="font-size:15px;" >Syrow Agent</p>'
+  onlineStatus.innerHTML = '<p style="font-size:10px;" >Away</p>';
+
+  header1.style.display = "none";
+  messageBox.style.display = "none";
+  footer.style.display = "none";
+
+
+  startConvoBtn.addEventListener("click", function() {
+    header1.style.display = "";
+    messageBox.style.display = "";
+    footer.style.display = "";
+    startConvoBtn.style.display = "none";
+    startConversation.style.display = "none";
+    headerInit.style.display = "none";
+  }, false);
+
+
+
+  backArrow.addEventListener("click", function() {
+    header1.style.display = "none";
+    messageBox.style.display = "none";
+    footer.style.display = "none";
+    startConvoBtn.style.display = "";
+    startConversation.style.display = "";
+    headerInit.style.display = "";
+  }, false);
+
+  paperPlane.addEventListener("click", function() {
+    sendMessage(inputText.value);
+  }, false);
+
+
+  setTimeout(function(){
+    chatCircle.style.backgroundColor = "#286EFA";
+    chatCircle.style.border = "1px solid #286efa";
+    chatIconSvg.style.display = "";
+    console.log('coming');
+  }, 3000);
+
+  chatCircle.style.backgroundColor = "transparent";
+  chatCircle.style.border = "none";
+  chatIconSvg.style.display = "none";
+
+
+  chatBox.style.display = "none";
+  closeIcon.style.display = "none";
+  chatCloseSvg.style.display = "none";
+
+  // document.getElementById("backArrow").onmouseenter = function(){
+  //   this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+  // };
+  //
+  // document.getElementById("backArrow").onmouseleave = function(){
+  //     this.style.backgroundColor = "";
+  // };
+
+
+
+    function messageDiv(message) {
+
+      if (message.msg=='') {
+        if (message.img) {
+          attachedFile = '<img  src="'+ message.img +'" style="width:200px;">'
+        }else if (message.audio) {
+          attachedFile = '<audio style="width:200px;" src="'+ message.audio +'" controls></audio>'
+        }else if (message.video) {
+          attachedFile = '<video width="200" height="180" src="'+ message.video +'" controls></video>'
+        }else if (message.doc) {
+            attachedFile ='<p>  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
+        }else if (message.link) {
+          console.log('yesssssssss' , message.link);
+        attachedFile = '<iframe width="100%" height="180" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+        }
+      }
+
+      var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:10px;">'+ message.msg+'</p>'
+
+      if (message.sentByMe) {
+        var msgHtml = '<div class="row" style="padding-top:20px;">'+
+             '<div class="col-xs-10" style="padding-right:5px;">'+
+               '<div style="float:right; background-color:#286EFA; color:#fff; padding:10px; border-radius:10px;;">'+
+                 msgDiv+
+               '</div>'+
+             '</div>'+
+             '<div class="col-xs-2" style="padding-left:0px;" >'+
+               '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:35px; height:35px; " alt="Samuel avatar">'+
+             '</div>'+
+           '</div>'+
+           '<div class="row">'+
+             '<span class="text-muted pull-right" style="font-size:8px; padding-right:70px;">just now</span>'+
+           '</div>'
+         return msgHtml;
+      }else {
+        var msgHtml = '<div class="row" style="padding-top:20px;" >'+
+          '<div class="col-xs-2">'+
+            '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:35px; height:35px; " alt="Samuel avatar">'+
+          '</div>'+
+          '<div class="col-xs-10">'+
+            '<div style="float:left; background-color:#e0e0e0; padding:10px; border-radius:10px;">'+
+              msgDiv+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="row">'+
+          '<span class="text-muted pull-left" style="font-size:8px; padding-left:70px;">just now</span>'+
+        '</div>'
+        return msgHtml
+      }
+
+
+
+    }
+
+    function scroll() {
+      setTimeout(function () {
+        var id = document.getElementById("messageBox");
+        id.scrollTop = id.scrollHeight;
+      }, 200);
+    }
+
+    function onlineAgent() {
+      setInterval(function () {
+        isAgentOnline = false;
+        onlineStatus.innerHTML = '<p style="font-size:10px;" >Away</p>';
+        // agentName.innerHTML = '<p>Syrow Agent</p>'
+        status = "O";
+        connection.session.publish('service.support.agent', [uid , status], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("check online status");
+        });
+      }, 10000);
+    }
+
+    onlineAgent();
+
+
+    function sendMessage(inptText) {
+
+
+      var youtubeLink = inptText.includes("yout");
+
+
+      console.log('linkkkkkkkkkkkkk',inptText);
+
+      if (youtubeLink) {
+        status = "MF";
+        link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+        var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
+      }else {
+        status = "M";
+        var message = {msg:inptText ,  sentByMe:true , created: new Date() }
+      }
+
+
+
 
       var div = document.createElement("div");
       div.innerHTML = messageDiv(message)
-      var msg = document.getElementById("messages");
-      msg.appendChild(div);
+      messageBox.appendChild(div);
       scroll();
+      inputText.value =''
 
+
+      connection.session.publish('service.support.agent', [uid , status , message ], {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published");
+      });
+
+      console.log('dddddddddddddd',isAgentOnline);
     }
 
 
-    session.subscribe('service.support.chat.' + uid, supportChat).then(
-      function (sub) {
-        console.log("subscribed to topic 'service.support.agent'");
-      },
-      function (err) {
-        console.log("failed to subscribed: " + err);
-      }
-    );
+    inputText.addEventListener("keydown", function (e) {
+        if (e.keyCode === 13) {
+          if (inputText.value.length>0) {
+            sendMessage(inputText.value)
+          }
+        }
+    }, false);
 
 
+  paperClip.addEventListener("click", function() {
+    filePicker.click();
+  }, false);
 
-  };
-
-  connection.open();
-
-
-
-
-
-
-  var body = document.getElementsByTagName("BODY")[0];
-  var div = document.createElement("div");
-  div.innerHTML = '<div class="chatWindow" style="height:36px;right:30px; border-top-color: '+ borderColor +'" id="chatWindowelizabeth">'+
-  '<div class="header" >'+
-    '<div class="container-fluid" style="padding:7px;" >'+
-      '<i class="fa fa-circle onlineStatus" style="color: #0b8640;font-size: 15px;" ></i>'+
-      '<span class="username" style="padding-left:7px; font-size:15px;" >Online</span>'+
-      '<span class="pull-right" style="cursor:pointer; font-size:15px;"><i class="fa fa-chevron-down" id="toggle" ></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-close" id="closeChatWindow" ></i></span>'+
-    '</div>'+
-  '</div>'+
-  '<div id="messages" class="messageView container-fluid">'+
-  '</div>'+
-  '<div id="footer"  class="footer">'+
-    '<div class="container-fluid input-group" id="footerInputGrp" style="padding:10px;" >'+
-      '<input id="inputText" class="form-control" style="width:100%" type="text" >'+
-      '<input id="filePicker" type="file" style="display:none;" accept="image/*" />'+
-      '<span id="paperClip" class="input-group-addon btn btn-default " style="border:none; border-radius: 0px;"><i class="fa fa-paperclip" aria-hidden="true"></i></span>'+
-      '<span id="fileName" class="input-group-addon btn btn-default" style="font-size:10px;" > filename </span>'+
-      '<span id="removeFile" class="input-group-addon btn btn-default" style="cursor:pointer" > <i class="fa fa-times" aria-hidden="true"></i> </span>'+
-      '<span id="sendFile" class="input-group-addon btn btn-default " style="cursor:pointer"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>'+
-    '</div>'+
-  '</div>'+
-  '</div>'
-
-  body.appendChild(div);
-
-
-
-  (function () {
-    var toggle = true;
-    document.getElementById("chatWindowelizabeth").style.height = "36px";
-    document.getElementById("footer").style.display = "none";
-    document.getElementById("fileName").style.display = "none";
-    document.getElementById("removeFile").style.display = "none";
-    document.getElementById("sendFile").style.display = "none";
-  }());
-
-  document.getElementById("toggle").addEventListener("click", toggleWindow, false);
-  document.getElementById("paperClip").addEventListener("click", filePicker, false);
-
-  function filePicker() {
-    document.getElementById('filePicker').click();
-  }
-
-  function toggleWindow() {
-    toggle = !toggle;
-    if (toggle) {
-      document.getElementById("chatWindowelizabeth").style.height = "500px";
-      document.getElementById("footer").style.display = "block";
-    }else {
-      document.getElementById("chatWindowelizabeth").style.height = "36px";
-      document.getElementById("footer").style.display = "none";
-    }
-  }
-
-
-  var chat = {user : custName , messages : [] }
-
-  function messageDiv(message) {
-    var col = message.sentByMe ? 'col-md-offset-2 col-md-10':'col-md-10'
-    var floatSide = message.sentByMe ?  'right':'left'
-    var borderRad = message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'
-    var bgCol = message.sentByMe ? '#dba4ae':'#72b3d4'
-    var timeAgoSpan = message.sentByMe ? '<span class="text-muted pull-right" style="font-size:10px; padding-right:25px;">2 days ago</span>':'<span class="text-muted pull-left" style="font-size:10px; padding-left:25px;">5 mins ago</span>'
-
-    var msgDiv = message.msg=='' ? '<img  src="'+ message.img +'" style="width:200px;">' : '<p style="word-break: break-all !important;">'+ message.msg +'</p>'
-
-    msgHtml = '<div class="row">'+
-      '<div class="'+ col +'"> '+
-        '<div style="float:'+ floatSide +'; background-color:'+ bgCol +'; padding:10px;margin:8px; border-radius:'+ borderRad +'" >'+
-          msgDiv +
-        '</div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="row">'+
-      timeAgoSpan +
-    '</div>'
-    return msgHtml;
-  }
-
-
-  function pushMessges() {
-    for (var i = 0; i < chat.messages.length; i++) {
-      var div = document.createElement("div");
-      div.innerHTML = messageDiv(chat.messages[i])
-      var msg = document.getElementById("messages");
-      msg.appendChild(div);
-    }
-    scroll();
-  }
-  pushMessges();
-
-  function scroll() {
-    setTimeout(function () {
-      var id = document.getElementById("messages");
-      id.scrollTop = id.scrollHeight;
-    }, 200);
-  }
-
-
-  document.getElementById("removeFile").addEventListener("click", removeFile, false);
-  document.getElementById("sendFile").addEventListener("click", sendFile, false);
-
-
-  function removeFile() {
-    document.getElementById('filePicker').value = "";
-
-    document.getElementById("fileName").style.display = "none";
-    document.getElementById("removeFile").style.display = "none";
-    document.getElementById("sendFile").style.display = "none";
-
-    document.getElementById("inputText").style.display = "";
-    document.getElementById("paperClip").style.display = "";
-  }
 
   function sendFile() {
-    var message = {msg:'' ,  sentByMe:true , created: new Date() , img: '/static/images/career.jpg' }
+    var file = filePicker;
+    console.log('hereee',file.files[0] );
+
+
+    var xhr = new XMLHttpRequest();
+       var fd = new FormData();
+       fd.append('uid', uid);
+       fd.append('attachment', file.files[0]);
+       // var csrftk = $("meta[name='csrf-token']").attr("content");
+       xhr.open('POST', '/api/support/supportChat/', true);
+       // xhr.setRequestHeader("X-CSRF-Token", csrftk);
+       xhr.send(fd);
+
+    var typ = file.files[0].type.split('/')[0]
+        if (typ=='image') {
+           message = {msg:'' ,  sentByMe:true , created: new Date() , img: '/static/images/career.jpg' }
+        }else if (typ=='audio') {
+           message = {msg:'' ,  sentByMe:true , created: new Date() , audio:'/static/audio/notification.mp3' }
+        }else if (typ=='video') {
+           message = {msg:'' ,  sentByMe:true , created: new Date() , video:'/static/videos/24tutors.mp4' }
+        }else if (typ=='application') {
+           message = {msg:'' ,  sentByMe:true , created: new Date() , doc:'static/document/invoice.pdf' }
+        }
+        console.log(message);
+
     var div = document.createElement("div");
     div.innerHTML = messageDiv(message)
-    var msg = document.getElementById("messages");
-    msg.appendChild(div);
+    messageBox.appendChild(div);
     scroll();
-
-
-
-    document.getElementById('filePicker').value = "";
-    document.getElementById("fileName").style.display = "none";
-    document.getElementById("removeFile").style.display = "none";
-    document.getElementById("sendFile").style.display = "none";
-
-    document.getElementById("inputText").style.display = "";
-    document.getElementById("paperClip").style.display = "";
-
+    filePicker.value = ""
 
     status = "MF";
-    connection.session.publish('service.support.agent', [uid , status , message.img , new Date() ], {}, {
+    connection.session.publish('service.support.agent', [uid , status , message], {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -483,48 +760,169 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   }
 
-
-  document.getElementById('filePicker').onchange = function(e) {
-
-    var file = document.getElementById('filePicker');
-
-    document.getElementById("inputText").style.display = "none";
-    document.getElementById("paperClip").style.display = "none";
-
-    document.getElementById("fileName").style.display = "";
-    document.getElementById("removeFile").style.display = "";
-    document.getElementById("sendFile").style.display = "";
-    document.getElementById("fileName").innerHTML = file.files[0].name;
-
+  filePicker.onchange = function(e) {
+    var file = filePicker;
+    console.log('hereee',file.files[0] );
+    sendFile();
   }
 
-  var inputText = document.getElementById("inputText");
-  inputText.addEventListener("keydown", function (e) {
-      if (e.keyCode === 13) {
-        if (inputText.value.length>0) {
-          var message = {msg:inputText.value ,  sentByMe:true , created: new Date() }
-          var div = document.createElement("div");
-          div.innerHTML = messageDiv(message)
-          var msg = document.getElementById("messages");
-          msg.appendChild(div);
-          scroll();
-          status = "M";
-          connection.session.publish('service.support.agent', [uid , status ,message.msg , new Date() ], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
-        }
-        inputText.value =''
+
+  chatCircle.addEventListener("click", function() {
+    console.log('click');
+    chatOpen = !chatOpen
+    if (chatOpen) {
+      console.log('open chat');
+      chatIconSvg.style.display = "none"
+      closeChatSvg.style.display = ""
+      chatBox.style.display = "";
+    }else {
+
+
+        // chatBox  = document.getElementById("chatBox");
+        // chatWinH = 0;
+        // chatWinW = 0;
+        // var id1 = setInterval(frameH, 3);
+        // function frameH() {
+        //   if (chatWinH == 75) {
+        //     clearInterval(id1);
+        //   } else {
+        //     chatWinH++;
+        //     chatBox.style.height = chatWinH + 'vh';
+        //   }
+        // }
+
+      console.log('close chat');
+      chatIconSvg.style.display = ""
+      closeChatSvg.style.display = "none"
+      chatBox.style.display = "none";
+    }
+
+  }, false);
+
+
+  closeIcon.addEventListener("click", function() {
+    if (chatOpen) {
+      chatOpen = !chatOpen
+      chatIconSvg.style.display = ""
+      closeChatSvg.style.display = "none"
+      chatBox.style.display = "none";
+      chatCircle.style.display = ""
+    }
+  } , false);
+
+  closeIconInit.addEventListener("click", function() {
+    if (chatOpen) {
+      chatOpen = !chatOpen
+      chatIconSvg.style.display = ""
+      closeChatSvg.style.display = "none"
+      chatBox.style.display = "none";
+      chatCircle.style.display = ""
+    }
+  } , false);
+
+
+
+  function xsDevice(x) {
+      if (x.matches) { // If media query matches
+        console.log('xs');
+        chatBox.style.width ="100%";
+        chatBox.style.height ="100vh";
+        messageBox.style.height = "70vh";
+        header1.style.height = "15vh";
+        footer.style.height = "15vh";
+        closeIcon.style.display = "";
+        chatBox.style.right = "0px";
+        chatBox.style.bottom = "0px";
+        closeIconInit.style.display = "";
+          if (chatOpen) {
+            chatCircle.style.display = "none";
+          }else {
+            chatCircle.style.display = ""
+          }
       }
-  }, false);
+    }
+
+    function smDevice(x) {
+      if (x.matches) {
+        console.log('sm');
+        chatBox.style.width ="100%";
+        chatBox.style.height ="100vh";
+        messageBox.style.height = "70vh";
+        header1.style.height = "15vh";
+        footer.style.height = "15vh";
+        closeIcon.style.display = "";
+        chatBox.style.right = "0px";
+        chatBox.style.bottom = "0px";
+        closeIconInit.style.display = "";
+          if (chatOpen) {
+            chatCircle.style.display = "none";
+          }else {
+            chatCircle.style.display = ""
+          }
+
+      }
+    }
+
+    function mdDevice(x) {
+      if (x.matches) {
+          console.log('md');
+          chatBox.style.width ="347px";
+          chatBox.style.height ="70vh";
+          messageBox.style.height = "50vh";
+          header1.style.height = "10vh";
+          footer.style.height = "10vh";
+          closeIcon.style.display = "none"
+          chatBox.style.right = "10px";
+          chatBox.style.bottom = "100px";
+          closeIconInit.style.display = "none";
+          if (chatOpen) {
+            chatCircle.style.display = ""
+          }else {
+            chatCircle.style.display = ""
+          }
+      }
+    }
+
+    function lgDevice(x) {
+      if (x.matches) {
+          console.log('lg');
+          chatBox.style.width ="347px";
+          chatBox.style.height ="70vh";
+          messageBox.style.height = "50vh";
+          header1.style.height = "10vh";
+          footer.style.height = "10vh";
+          closeIcon.style.display = "none"
+          chatBox.style.right = "10px";
+          chatBox.style.bottom = "100px";
+          closeIconInit.style.display = "none";
+          if (chatOpen) {
+            chatCircle.style.display = ""
+          }else {
+            chatCircle.style.display = ""
+          }
+      }
+    }
 
 
-  document.getElementById("closeChatWindow").addEventListener("click", function(e) {
-    alert('Are you sure?');
-    // body.removeChild(div);
-  }, false);
+
+    var xs = window.matchMedia("(max-width: 767px)")
+    console.log('xssssssssss',xs);
+    xsDevice(xs) // Call listener function at run time
+    xs.addListener(xsDevice) // Attach listener function on state changes
+
+    var sm = window.matchMedia("(min-width: 768px) and (max-width: 991px)")
+    smDevice(sm)
+    sm.addListener(smDevice)
+
+    var md = window.matchMedia("(min-width: 992px) and (max-width: 1199px)")
+    mdDevice(md)
+    md.addListener(mdDevice)
+
+    var lg = window.matchMedia("(min-width: 1200px)")
+    lgDevice(lg)
+    lg.addListener(lgDevice)
+
+
 
 
 
