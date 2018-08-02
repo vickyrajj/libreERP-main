@@ -679,10 +679,12 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     fd.append('serialId', f.serialId);
     fd.append('reorderTrashold', f.reorderTrashold);
     fd.append('discount', f.discount);
-    fd.append('unit', f.unit);
     if (f.productMeta != null && typeof f.productMeta == 'object') {
       console.log('cameeee');
       fd.append('productMeta', f.productMeta.pk);
+    }
+    if (f.unit != null && f.unit.length > 0) {
+      fd.append('unit', f.unit);      
     }
     if ($scope.categoriesList.length > 0) {
       fd.append('haveComposition', true);

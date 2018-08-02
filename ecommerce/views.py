@@ -91,7 +91,23 @@ from ERP.models import service, appSettingsField
 # Create your views here.
 
 def ecommerceHome(request):
-    return render(request , 'ngEcommerce.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN})
+    print 'cameeeeeeeeeeeeeeeeeeeeeee'
+    data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':'Ecommerce','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}}
+    if '/' in request.get_full_path():
+        urlData = request.get_full_path().split('/')
+        print urlData
+        if 'details'in urlData and len(urlData) > 2 :
+            pk = urlData[-2]
+            print pk
+            lpObj = listing.objects.get(pk=pk)
+            dpList = lpObj.files.all()
+            print lpObj,'**************'
+            print lpObj.product.name,lpObj.files.all()[0].attachment.url
+            data['seoDetails']['title'] = lpObj.product.name
+            data['seoDetails']['description'] = lpObj.product.name
+            if len(dpList)>0:
+                data['seoDetails']['image'] = dpList[0].attachment.url
+    return render(request , 'ngEcommerce.html' , {'data':data})
 
 class SearchProductAPI(APIView):
     renderer_classes = (JSONRenderer,)

@@ -1,7 +1,7 @@
 
 
 
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule','ngMeta']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider) {
 
@@ -107,7 +107,7 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('details', {
-      url: "/details/:id",
+      url: "/details/:id/:name",
       templateUrl: '/static/ngTemplates/app.ecommerce.details.html',
       controller: 'controller.ecommerce.details'
     })
@@ -173,10 +173,18 @@ app.config(function($stateProvider) {
 
 });
 
-app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
+app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window , ngMeta) {
 
   $scope.me = $users.get('mySelf');
-  console.log('cominggggggggggggggggggggg', $scope.me);
+  console.log('cominggggggggggggggggggggg', $scope.me,$state.params);
+  console.log("$rootScope.ngMeta "+JSON.stringify($rootScope.ngMeta));
+  // var metaList = document.getElementsByTagName("meta")
+  // console.log(metaList);
+  // console.log(document.querySelector('meta[name="description"]'));
+  // // document.querySelector('meta[name="description"]').setAttribute("content", 'some description');
+  // metaList[2].setAttribute("content","Some New Description");
+  // document.title = $state.params.name
+  // ngMeta.setTitle('new Title');
 
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime'
   console.log($scope.data);

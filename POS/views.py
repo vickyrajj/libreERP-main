@@ -13,7 +13,7 @@ from .models import *
 # Create your views here.
 from reportlab import *
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A4,A6,A1,landscape
 from reportlab.lib.units import cm, mm
 from reportlab.lib import colors , utils
 from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
@@ -387,7 +387,10 @@ def genInvoice(response , invoice, request):
         pBodyProd = Paragraph('Service' if i['data']['productMeta'] and i['data']['productMeta']['typ'] == 'SAC' else 'Product' , tableBodyStyle)
         pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
         pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
-        pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
+        if invoice.customer is not None:
+            pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
+        else:
+            pBodyPrice = Paragraph(str(i['data']['price'] + (i['data']['price'] * i['data']['productMeta']['taxRate']/float(100) if i['data']['productMeta'] and  i['data']['productMeta']['taxRate'] else 0)) , tableBodyStyle)
         pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
         # pBodyTotal = Paragraph(str(i['quantity']*i['data']['price']) , tableBodyStyle)
         pBodysubTotalTax = Paragraph(str(round(i['subTotalTax'],2)) , tableBodyStyle)
@@ -408,7 +411,7 @@ def genInvoice(response , invoice, request):
         data += [['', '','','', '',Paragraph(str(round(totalTax,2)) , tableBodyStyle)  , Paragraph(str(round(grandTotal,2)) , tableBodyStyle) ],
                 ['', '', '', '',  Paragraph('Total (INR)' , tableGrandStyle), '', Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
     else:
-        data += [['', '', Paragraph('Total (INR)' , tableGrandStyle), Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
+        data += [['',Paragraph('Total (INR)' , tableGrandStyle), '', Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
 
     t=Table(data)
 
@@ -446,16 +449,16 @@ def genInvoice(response , invoice, request):
                     ('BACKGROUND',(0,0),(-1,0) , themeColor),
                     ('LINEABOVE',(0,0),(-1,0),0.25,themeColor),
                     ('LINEABOVE',(0,1),(-1,1),0.25,themeColor),
-                    ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
+                    # ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
                     ('BACKGROUND',(-3,-1),(-1,-1) , themeColor),
-                    ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
+                    # ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
                     ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.gray),
                     # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
                 ])
         t.setStyle(ts)
         t._argW[0] = 8*cm
-        t._argW[1] = 4*cm
-        t._argW[2] = 3*cm
+        t._argW[1] = 3*cm
+        t._argW[2] = 4*cm
         t._argW[3] = 5*cm
 
 

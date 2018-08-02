@@ -4,9 +4,37 @@
 <html ng-app="app" ng-controller="ecommerce.main" id="main">
   <head>
     <meta charset="utf-8">
-    <title>Ecommerce</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{data.seoDetails.title}}</title>
+
     <base href="/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{data.seoDetails.description}}"/>
+    <link rel="canonical" href="https://monomerce.com/" />
+    <link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{data.seoDetails.title}}" />
+    <meta property="og:description" content="{{data.seoDetails.description}}" />
+    <meta property="og:url" content="https://monomerce.com" />
+    <meta property="og:site_name" content="STERLING SELECT" />
+    <meta property="og:updated_time" content="2018-08-02T07:17:53+00:00" />
+    <meta property="og:image" content="https://{{ request.get_host }}{{data.seoDetails.image}}" />
+    <meta property="og:image:secure_url" content="https://{{ request.get_host }}{{data.seoDetails.image}}" />
+    <meta property="og:image:width" content="{{data.seoDetails.width}}" />
+    <meta property="og:image:height" content="{{data.seoDetails.height}}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:description" content="{{data.seoDetails.description}}" />
+    <meta name="twitter:title" content="{{data.seoDetails.title}}" />
+    <meta name="twitter:site" content="@monomerce" />
+    <meta name="twitter:image" content="https://{{ request.get_host }}{{data.seoDetails.image}}" />
+    <meta name="twitter:creator" content="@monomerce" />
+    <meta property="article:author" content="monomerce.com" />
+
+
+
+
+
     <!-- stock css libraries -->
     {% if useCDN %}
       <link rel="stylesheet" href="https://bootswatch.com/paper/bootstrap.min.css" charset="utf-8">
@@ -82,5 +110,7 @@
     <script src="{% static 'js/custom/directive.table.js' %}"></script>
     <script src="{% static 'js/custom/directives.native.js' %}"></script>
     <script src="{% static 'js/custom/filters.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-meta/1.0.3/ngMeta.min.js"></script>
+
   </body>
 </html>
