@@ -369,6 +369,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
           $scope.offset+=4
           $scope.getRatings($scope.offset)
         }
+          Flash.create('success', 'Your review is added')
         $scope.form.rating=0
         $scope.form.reviewText=''
         $scope.form.reviewHeading=''
@@ -836,7 +837,7 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
   $scope.config = {
     views: views,
     url: '/api/ecommerce/order/',
-    searchField: 'Name',
+    searchField: 'state',
     getParams: [{
       key: 'user',
       value: $scope.me.pk

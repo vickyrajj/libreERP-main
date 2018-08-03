@@ -166,17 +166,17 @@
                     <h5 ng-if="l.product.name.length>28" style="margin:0px;  height:50px;">{{l.product.name.slice(0,28)}}...</h5>
                     <h5 ng-if="l.product.name.length<=28" style="margin:0px;  height:50px;">{{l.product.name}}</h5>
                     <span style="font-size:15px;"> Price : </span>
-                    <span class="pull-right" style="font-size:15px; padding-left:10px; ">
+                    <span  style="font-size:15px; padding-left:10px; ">
                       <span ng-if="l.product.discount>0" class="text-muted" >
-                        <strike>{{l.product.price}}</strike>
+                        <strike><i class="fa fa-inr"></i>{{l.product.price}}</strike>
                       </span>
                     <span ng-if="l.product.discount==0">
-                        {{l.product.price}} <i class="fa fa-inr"></i>
+                        <i class="fa fa-inr"></i>{{l.product.price}}
                       </span>
                     </span>
 
-                    <span ng-if="l.product.discount>0" class="pull-right" style="font-size:15px;">
-                    {{l.product.discountedPrice.toFixed(2)}} <i class="fa fa-inr"></i>
+                    <span ng-if="l.product.discount>0" style="font-size:15px;">
+                    <i class="fa fa-inr"></i>{{l.product.discountedPrice.toFixed(2)}}
                     </span>
                   </div>
                 </div>
@@ -197,17 +197,17 @@
                     <h5 ng-if="l.product.name.length>28" style="margin:0px;  height:50px;">{{l.product.name.slice(0,28)}}...</h5>
                     <h5 ng-if="l.product.name.length<=28" style="margin:0px;  height:50px;">{{l.product.name}}</h5>
                     <span style="font-size:15px;"> Price : </span>
-                    <span class="pull-right" style="font-size:15px; padding-left:10px; ">
+                    <span  style="font-size:15px; padding-left:10px; ">
                       <span ng-if="l.product.discount>0" class="text-muted" >
-                        <strike>{{l.product.price}}</strike>
+                        <strike><i class="fa fa-inr"></i>{{l.product.price}}</strike>
                       </span>
                     <span ng-if="l.product.discount==0">
-                        {{l.product.price}} <i class="fa fa-inr"></i>
+                        <i class="fa fa-inr"></i>{{l.product.price}}
                       </span>
                     </span>
 
-                    <span ng-if="l.product.discount>0" class="pull-right" style="font-size:15px;">
-                    {{l.product.discountedPrice.toFixed(2)}} <i class="fa fa-inr"></i>
+                    <span ng-if="l.product.discount>0"  style="font-size:15px;">
+                    <i class="fa fa-inr"></i>{{l.product.discountedPrice.toFixed(2)}}
                     </span>
                   </div>
                 </div>

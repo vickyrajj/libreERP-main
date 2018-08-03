@@ -46,8 +46,8 @@
             </span> -->
             <div class="row">
               <span style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>
-                <span ng-if="details.product.discount>0"> {{details.product.discountedPrice.toFixed(2)}} </span>
-                <span ng-if="details.product.discount>0" class="text-muted" > <strike> {{details.product.price}} </strike> </span>
+                <span ng-if="details.product.discount>0">{{details.product.discountedPrice.toFixed(2)}} </span>
+                <span ng-if="details.product.discount>0" class="text-muted" ><strike>{{details.product.price}}</strike> </span>
                 <span ng-if="details.product.discount==0">{{details.product.price}} </span>
               </span>
             </div>
@@ -126,39 +126,85 @@
           <h5 style="color:white;">Ratings and Review</h5>
         </div>
         <div class="row">
-          <div class="col-md-4 col-sm-4 col-xs-12" style="padding-top:20px;">
-            <div class="col-md-5 col-sm-4 col-xs-12 text-center">
-              <span>{{ratings.averageRating == null ? 0 : ratings.averageRating}}/5</span> <br>
+          <div class="col-md-4 hidden-sm hidden-xs" style="padding-top:20px;">
+            <div class="col-md-5 hidden-sm hidden-xs text-center">
+              <span  ng-if="details.rating.rating__avg==none">0/5</span> <br>
+              <span  ng-if="details.rating.rating__avg!=none">{{details.rating.rating__avg| number : 1}}/5</span> <br>
               <i class="fa fa-star" style="color:#e3bc18;font-size:80px;"></i>
             </div>
-            <div class="col-md-7 col-sm-8 col-xs-12">
+            <div class="col-md-7 hidden-sm hidden-xs">
               <div class="container-fluid" ng-repeat="m in ratings.meta">
-                <span style="margin-right:10px;">{{ratings.counts[$index]}}</span>
+                <!-- <span style="margin-right:10px;">{{ratings.counts[$index]}}</span> -->
                 <uib-rating ng-model="m" max="m" readonly="true" style="font-size:15px;color:#e2a900;"></uib-rating> <br>
               </div>
             </div>
           </div>
-          <div class="col-md-8 col-sm-8 col-xs-12">
+          <div class="col-md-8 hidden-sm hidden-xs">
             <h5>Have you used this product before ?  <small style="margin-left:20px;">Give us your review</small> </h5>
-            <uib-rating ng-model="form.rating" max="5" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" ></uib-rating> <br>
+            <uib-rating ng-model="form.rating" max="5" min="1" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" ></uib-rating> <br>
             <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
               <i class="fa fa-pencil-square-o"></i>  Write a review
             </button>
             <div ng-if="form.reviewEditor">
-              <div class="col-md-10">
-                <input type="text" placeholder="Heading.." ng-model="form.reviewHeading">
-                <textarea class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
+              <div class="col-md-10 hidden-sm hidden-xs">
+                <input type="text" placeholder="Tittle.." ng-model="form.reviewHeading" style="background:white">
+                <textarea style="margin-top:20px"class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
               </div>
-              <div class="col-md-2 btn-group-vertical">
+              <div class="col-md-2 hidden-sm hidden-xs btn-group-vertical" style="padding-top:47px">
+                <div class="btn-group">
                 <button type="button" class="btn btn-success" ng-click="sendReview()">
-                  Send
+                <i class="fa fa-plus"></i> Add
                 </button>
                 <button type="button" class="btn btn-default" ng-click="form.reviewEditor = false">
-                  Cancel
+                  <i class="fa fa-close"></i> Close
                 </button>
               </div>
             </div>
+            </div>
           </div>
+
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-xs-12  hidden-md hidden-lg">
+            <div class="col-sm-6 col-xs-6  hidden-md hidden-lg text-center">
+              <span  ng-if="details.rating.rating__avg==none">0/5</span> <br>
+              <span  ng-if="details.rating.rating__avg!=none">{{details.rating.rating__avg| number : 1}}/5</span> <br>
+              <i class="fa fa-star" style="color:#e3bc18;font-size:80px;"></i>
+            </div>
+            <div class="col-sm-6 col-xs-6 hidden-md hidden-lg" style="padding-top:20px">
+              <div ng-repeat="m in ratings.meta">
+                <!-- <span style="margin-right:10px;">{{ratings.counts[$index]}}</span> -->
+                <uib-rating ng-model="m" max="m" readonly="true" style="font-size:15px;color:#e2a900;"></uib-rating> <br>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-xs-12 hidden-md hidden-lg">
+            <h5>Have you used this product before ?  <small >Give us your review</small> </h5>
+            <uib-rating ng-model="form.rating" max="5" min="1" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" ></uib-rating> <br>
+            <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
+              <i class="fa fa-pencil-square-o"></i>  Write a review
+            </button>
+            <div ng-if="form.reviewEditor">
+              <div class="row">
+              <div class="col-sm-12 hidden-md hidden-lg" >
+                <input type="text" placeholder="Tittle.." ng-model="form.reviewHeading" style="background:white">
+                <textarea style="margin-top:20px"class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
+              </div>
+            </div>
+              <div class="row">
+              <div class="col-sm-12  hidden-md hidden-lg btn-group" style="padding-top:10px">
+                <button type="button" class="btn btn-success" ng-click="sendReview()">
+                <i class="fa fa-plus"></i> Add
+                </button>
+                <button type="button" class="btn btn-default" ng-click="form.reviewEditor = false">
+                  <i class="fa fa-close"></i> Close
+                </button>
+
+              </div>
+            </div>
+            </div>
+          </div>
+
         </div>
         <hr>
         <div class="row text-center" ng-if="reviews.length==0">
@@ -173,9 +219,9 @@
           <div class="container-fluid">
             <div class="col-md-12 col-xs-12 col-sm-6" ng-repeat="r in reviews">
               <div class="row container-fluid">
-                <div class="col-md-3" style="padding-left:50px;">
+                <div class="col-md-3" style="padding-left:35px;">
                   <div class="row">
-                    <uib-rating ng-model="r.rating" max="5" readonly="false" style="font-size:17px;color:#e2a900;"></uib-rating>
+                    <uib-rating ng-model="r.rating" max="5" readonly="true" style="font-size:17px;color:#e2a900;padding-left:0px"></uib-rating>
                     <span class="label success" style="background-color:green">Verified User</span>
                   </div>
                   <!-- <div class="row" ng-if="me != null">
@@ -209,7 +255,7 @@
     </div>
   </div>
 
-  <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:15px; position:sticky; top:10px; ">
+  <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:15px; position:sticky; top:10px; " ng-if="me != null">
     <h4>Recently Viewed</h4>
     <div style="padding:10px;" class="row card bg-white">
         <div class="col-md-12 anim-in-out anim-zoom-out">
@@ -222,17 +268,17 @@
               <h5 ng-if="recentlyViewed.product.product.name.length>30" style="margin:0px;  height:60px;">{{recentlyViewed.product.product.name.slice(0,30)}}...</h5>
               <h5 ng-if="recentlyViewed.product.product.name.length<=30" style="margin:0px;  height:60px;">{{recentlyViewed.product.product.name}}</h5>
               <span style="font-size:15px;"> Price : </span>
-              <span class="pull-right" style="font-size:15px; ">
+              <span style="font-size:15px; ">
                 <span ng-if="recentlyViewed.product.product.discount>0" class="text-muted" >
-                  <strike>{{recentlyViewed.product.product.price}}</strike>
+                  <strike><i class="fa fa-inr"></i>{{recentlyViewed.product.product.price}}</strike>
                 </span>
                 <span ng-if="recentlyViewed.product.product.discount==0" >
-                  {{recentlyViewed.product.product.price}} <i class="fa fa-inr"></i>
+                  <i class="fa fa-inr"></i>{{recentlyViewed.product.product.price}}
                 </span>
               </span>
 
-              <span ng-if="recentlyViewed.product.product.discount>0" class="pull-right" style="font-size:15px;">
-              {{recentlyViewed.product.product.discountedPrice.toFixed(2)}} <i class="fa fa-inr"></i>
+              <span ng-if="recentlyViewed.product.product.discount>0"  style="font-size:15px;">
+              <i class="fa fa-inr"></i>{{recentlyViewed.product.product.discountedPrice.toFixed(2)}}
               </span>
             </div>
           </div>
