@@ -128,7 +128,7 @@
                     <p> X </p>
                   </div>
                   <div class="col-md-1">
-                    <input type="number" ng-change="changeQty()" ng-model="item.qty" name="" value="" style="width: 60px;">
+                    <input type="number" ng-change="changeQty()" ng-model="item.qty" name="" value="" style="width: 60px;" min="1">
                   </div>
                   <div class="col-md-1">
                     <p> <i class="fa fa-inr"></i> {{(item.product.discountedPrice * item.qty).toFixed(2) }} </p>
@@ -160,7 +160,7 @@
                     <p> X </p>
                   </div>
                   <div class="col-md-1">
-                    <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 60px;">
+                    <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 60px;" min="1">
                   </div>
                   <div class="col-md-1">
                     <p > <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
@@ -195,7 +195,7 @@
                     <span>Qty :</span>
                   </div>
                   <div class="col-xs-3">
-                    <input type="number" ng-change="changeQty()" ng-model="item.qty" name="" value="" style="width: 40px;">
+                    <input type="number" ng-change="changeQty()" ng-model="item.qty" name="" value="" style="width: 40px;" min="1">
                   </div>
                   <div class="col-xs-3">
                     <span>Total :</span>
@@ -232,7 +232,7 @@
                       <span>Qty :</span>
                     </div>
                     <div class="col-xs-3">
-                      <input type="number"  ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 40px;">
+                      <input type="number"  ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 40px;" min="1">
                     </div>
                     <div class="col-xs-3">
                       <span>Total :</span>
