@@ -59,7 +59,8 @@ app.controller('controller.ecommerce.account.cart.item', function($scope, $http,
     $scope.$parent.$parent.$parent.$parent.$parent.$parent.$parent.$parent.data.pickUpTime = new Date($scope.data.start);
     $scope.$parent.$parent.$parent.$parent.$parent.$parent.$parent.$parent.data.dropInTime = new Date($scope.data.end);
     $state.go('details', {
-      id: $scope.data.pk
+      id: $scope.data.pk,
+      name: $scope.data.product.name.split(' ').join('-')
     });
   }
 })

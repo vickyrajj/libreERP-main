@@ -299,7 +299,7 @@ app.controller('businessManagement.ecommerce.listings' , function($scope ,$rootS
     views : views,
     url : '/api/ecommerce/listingLite/',
     fields : ['pk','approved' ,  'parentType'],
-    searchField: 'title',
+    searchField: 'product__name',
     options : options,
     deletable : true,
     itemsNumPerView : [6,12,24],

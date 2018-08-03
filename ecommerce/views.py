@@ -88,6 +88,8 @@ from reportlab.graphics.shapes import *
 import calendar as pythonCal
 from POS.models import *
 from ERP.models import service, appSettingsField
+from PIL import Image
+from django.core.files.images import get_image_dimensions
 # Create your views here.
 
 def ecommerceHome(request):
@@ -101,12 +103,36 @@ def ecommerceHome(request):
             print pk
             lpObj = listing.objects.get(pk=pk)
             dpList = lpObj.files.all()
-            print lpObj,'**************'
-            print lpObj.product.name,lpObj.files.all()[0].attachment.url
+            print lpObj,'**************',dpList
             data['seoDetails']['title'] = lpObj.product.name
-            data['seoDetails']['description'] = lpObj.product.name
+            data['seoDetails']['description'] = lpObj.product.description
             if len(dpList)>0:
                 data['seoDetails']['image'] = dpList[0].attachment.url
+                w, h = get_image_dimensions(dpList[0].attachment.file)
+                print w,h
+                data['seoDetails']['width'] = w
+                data['seoDetails']['height'] = h
+                # image=Image.open(dpList[0].attachment.file)
+                # print image,image.size,image.format
+        if 'categories' in urlData and len(urlData) > 2 :
+            data['seoDetails'] = {'title':'Ecommerce','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+            data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | Sterling Select'
+        if 'checkout' in urlData and len(urlData) > 2 :
+            data['seoDetails'] = {'title':'Sterling Select | Review Order > Select Shipping Address > Place Order','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+        if 'account' in urlData and len(urlData) > 2 and urlData[-1]!= '':
+            print 'somethinggggggggggg'
+            if urlData[-1] == 'cart':
+                data['seoDetails'] = {'title':'Sterling Select | Shopping Cart','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+            elif urlData[-1] == 'orders':
+                data['seoDetails'] = {'title':'Sterling Select | My Orders','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+            elif urlData[-1] == 'settings':
+                data['seoDetails'] = {'title':'Sterling Select | My Settings','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+            elif urlData[-1] == 'support':
+                data['seoDetails'] = {'title':'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+            elif urlData[-1] == 'saved':
+                data['seoDetails'] = {'title':'Sterling Select | Saved Products','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+            else:
+                data['seoDetails'] = {'title':'Ecommerce','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
     return render(request , 'ngEcommerce.html' , {'data':data})
 
 class SearchProductAPI(APIView):
@@ -371,14 +397,17 @@ class listingViewSet(viewsets.ModelViewSet):
             return listing.objects.all()
 
 class listingLiteViewSet(viewsets.ModelViewSet):
-    permission_classes = (readOnly, )
+    permission_classes = (isAdminOrReadOnly, )
     serializer_class = listingLiteSerializer
     # queryset = listing.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['product']
     def get_queryset(self):
         print "fffffffffffffffffffff",self.request.user.is_authenticated
-        if self.request.user.is_authenticated:
-            u = self.request.user
-            has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
+        # if self.request.user.is_authenticated:
+        #     print "gggggggggggggggggggggg", self.request.user
+        #     u = self.request.user
+        #     has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
         if 'mode' in  self.request.GET:
             if self.request.GET['mode'] == 'vendor':
                 s = service.objects.get(user = u)
@@ -409,7 +438,7 @@ class CartViewSet(viewsets.ModelViewSet):
     serializer_class = CartSerializer
     queryset = Cart.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['user','typ']
+    filter_fields = ['user','typ','product']
 
 class ActivitiesViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -451,6 +480,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     # queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['status']
     def get_queryset(self):
         # return Order.objects.filter( ~Q(status = 'failed')).order_by('-created')
         return Order.objects.all().order_by('-created')
@@ -706,7 +737,7 @@ class expanseReportHead(Flowable):
 
 
         pSrc = '''
-        <font size=10>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<u>%s</u></font><br/><br/><br/>
+        <font size=10>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<u>%s</u></font><br/><br/><br/>
         <font size=8>
         <strong>Dated:</strong> %s<br/><br/>
         <strong>Invoice ID:</strong> %s<br/><br/>
@@ -967,7 +998,6 @@ def genInvoice(response, contract, request):
 class DownloadInvoiceAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
-        print request.GET['value'],'aaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbb'
         response = HttpResponse(content_type='application/pdf')
         o = Order.objects.get(pk=request.GET['value'])
         print o
@@ -987,6 +1017,13 @@ class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['productDetail',]
+
+class SupportFeedViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = SupportFeed.objects.all()
+    serializer_class = SupportFeedSerializer
+    filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['productDetail',]
 
 from datetime import timedelta
 from django.db.models import Sum
@@ -1014,21 +1051,18 @@ class OnlineSalesGraphAPIView(APIView):
                 price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
                 orderD = Order.objects.filter(orderQtyMap=i.pk)
                 for j in orderD:
-                    if str(j.paymentMode) == 'COD':
-                            if j.promoCode!=None:
-                                promo = Promocode.objects.filter(name__iexact=j.promoCode)
-                                for p in promo:
-                                    promocode = p.discount
-                                    priceVal = price-(promocode * price)/100
-                                    totalCollections += priceVal
+                        if j.promoCode!=None:
+                            promo = Promocode.objects.filter(name__iexact=j.promoCode)
+                            for p in promo:
+                                promocode = p.discount
+                                priceVal = price-(promocode * price)/100
+                                totalCollections += priceVal
                             else:
                                 totalCollections += price
             elif str(i.status) != 'delivered':
-                print 'aaaaaaaaaaaaaa'
                 orderD = Order.objects.filter(orderQtyMap=i.pk)
                 for j in orderD:
                     if str(j.paymentMode) == 'card':
-                        print 'aaaaaaaaaaaaaavvvvvvvvvv'
                         price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
                         if j.promoCode!=None:
                             promo = Promocode.objects.filter(name__iexact=j.promoCode)

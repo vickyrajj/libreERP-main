@@ -1,3 +1,50 @@
+<div class="container-fluid bg-white" style="position:relative; width:100%; bottom:0px; padding:20px;padding-top:0px">
+  <div class="row" style="border-top:3px solid #eeeeee;border-bottom:3px solid #eeeeee">
+    <div class="col-md-12">
+      <div class="col-md-4" style="border-right:3px solid #eeeeee;">
+        <div class="row">
+          <div class="col-xs-6" style="padding:25px 0px;padding-bottom:30px;font-size:35px">
+            <i class="fa fa-map-marker fa-lg pull-right"></i>
+          </div>
+          <!-- <div class="col-xs-6" style="padding:15px 0px;padding-bottom:30px">
+            <h2> <i class="fa fa-map-marker fa-lg pull-right"></i></h2>
+          </div> -->
+          <div class="col-xs-6" style="font-size:15px;padding-top:20px">
+            <span class="text-center">TRACK YOUR <br>ORDER</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" style="border-right:3px solid #eeeeee;">
+        <div class="row">
+          <div class="col-xs-6" style="padding:25px 0px;padding-bottom:30px;font-size:35px">
+            <i class="fa fa-refresh fa-lg pull-right"></i>
+          </div>
+          <!-- <div class="col-xs-6" style="padding:15px 0px;padding-bottom:30px">
+            <h2> <i class="fa fa-refresh fa-lg pull-right"></i></h2>
+          </div> -->
+          <div class="col-xs-6" style="font-size:15px;padding-top:20px">
+            <span class="text-center">FREE & EASY <br>RETURNS</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-xs-6" style="padding:25px 0px;padding-bottom:30px;font-size:35px">
+            <i class="fa fa-times-circle-o fa-lg pull-right"></i>
+          </div>
+          <div class="col-xs-6" style="font-size:15px;padding-top:20px">
+            <span class="text-center">ONLINE <br>CANCELLATION</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="padding-top:15px">
+    <strong style="font-size:15px;padding-left:20px">Payment Methods</strong>
+    <!-- <h4><span style="padding-left:30px"></span>Payment Methods</h4> -->
+    <img src="/static/images/payment-methods.svg" alt="Payment Methods" width="97%">
+  </div>
+</div>
 <div class="container-fluid bg-blue" style="position:relative; width:100%; bottom:0px; padding:20px;">
   <div class="row hidden-xs hidden-sm">
     <div class="col-md-2 col-md-offset-1" ng-if="settings.playstoreLink.indexOf('http')!=-1 || settings.appstoreLink.indexOf('http')!=-1">
@@ -8,7 +55,7 @@
     <div class="col-md-3 {{settings.playstoreLink.indexOf('http')==-1 && settings.appstoreLink.indexOf('http')==-1 ? 'col-md-offset-2 col-md-offset-1' :''}}">
       <strong style="font-size:15px;">HELP</strong><br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'payment'})"> Payment </span><br>
-      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'cancellationAndRefund'})">Cancellationa and Returns</span> <br>
+      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'cancellationAndRefund'})">Cancellations and Returns</span> <br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'faq'})">FAQ</span>
     </div>
     <div class="col-md-3 text-center">

@@ -346,7 +346,7 @@ app.controller('businessManagement.ecommerce.orders', function($scope, $http, $a
   $scope.config = {
     views: views,
     url: '/api/ecommerce/order/',
-    searchField: 'name',
+    searchField: 'status',
     deletable: true,
     itemsNumPerView: [16, 32, 48],
   }

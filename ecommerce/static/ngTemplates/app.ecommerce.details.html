@@ -28,11 +28,13 @@
           <div class="col-md-6 col-xs-6 ">
             <div class="row container-fluid">
               <!-- <uib-rating ng-model="ratings.averageRating.rating__avg" max="5" readonly="true" aria-labelledby="default-rating" style="font-size:20px;color:#e2a900;" class="text-muted"></uib-rating> -->
-              <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;"> {{ratings.averageRating}} <i class="fa fa-star" aria-hidden="true"></i></span> 400 Ratings & 23 Reviews
+              <!-- <span style="background-color:red; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg==none"> 0.0 <i class="fa fa-star" aria-hidden="true"></i></span> -->
+              <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg!=none"> {{details.rating.rating__avg| number : 1}} <i class="fa fa-star" aria-hidden="true"></i></span> {{details.rating_count}} Ratings & Reviews
             </div>
             <div class="row container-fluid" style="padding-top:14px;">
-              <i class="fa fa-money fa-1x text-muted"></i> Cash on {{data.priceModel=='time' ? 'pickup' : 'delivery'}} : {{data.providerOptions[offeringInView].cod ? 'Yes' : 'No'}} <br>
-              <i class="fa fa-retweet fa-1x text-muted"></i> Free returns : {{data.providerOptions[offeringInView].freeReturns ? 'Yes' : 'No'}} <br>
+              <i class="fa fa-money fa-1x text-muted"></i> Cash on delivery : Yes
+               <!-- {{data.priceModel=='time' ? 'pickup' : 'delivery'}} : {{data.providerOptions[offeringInView].cod ? 'Yes' : 'No'}} <br> -->
+              <!-- <i class="fa fa-retweet fa-1x text-muted"></i> Free returns : {{data.providerOptions[offeringInView].freeReturns ? 'Yes' : 'No'}} <br> -->
             </div>
           </div>
           <div class="col-md-6 col-xs-6">
@@ -160,9 +162,10 @@
         </div>
         <hr>
         <div class="row text-center" ng-if="reviews.length==0">
-          <h4>No reviews yet. Be the first to review</h4>
+          <!-- <h4>No reviews yet. Be the first to review</h4> -->
+            <h4>Write a review</h4>
         </div>
-        <div class="row" ng-if="reviewsCount>0">
+        <div class="row" ng-if="reviewsCount!=0">
 
           <!-- <div class="container-fluid">
             <h5>Recent reviews <small>{{reviews.length < 4 ? reviews.length : 4}} out of {{reviews.length}}</small> </h5>
@@ -197,7 +200,7 @@
             <nav>
               <ul class="pager">
                 <li><a href="" ng-if="offset>0" ng-click="prevReviews()">Previous</a></li>
-                <li><a href="" ng-click="nextReviews()">Next</a></li>
+                <li><a href="" ng-if="next!=none"  ng-click="nextReviews()">Next</a></li>
               </ul>
             </nav>
           </div>
@@ -210,7 +213,7 @@
     <h4>Recently Viewed</h4>
     <div style="padding:10px;" class="row card bg-white">
         <div class="col-md-12 anim-in-out anim-zoom-out">
-          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : recentlyViewed.product.pk})">
+          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : recentlyViewed.product.pk,name:recentlyViewed.product.product.name.split(' ').join('-')})">
             <div class="row">
               <img style="width: 100%; height:100px;" class="img" ng-src="{{recentlyViewed.product.files[0].attachment}}" ng-if="recentlyViewed.product.files.length>0">
               <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="recentlyViewed.product.files==null">

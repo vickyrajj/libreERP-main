@@ -143,7 +143,7 @@
 <div class="container-fluid" style="padding:60px;background-color:#eeecec;">
   <div ng-repeat="l in listings" >
     <div class="col-md-3 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
-      <div class="container-fluid zoomOnHover" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
+      <div class="container-fluid zoomOnHover" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk,name:l.product.name.split(' ').join('-')})">
         <div class="row" >
           <img style="width: 100%;" class="img" ng-src="{{l.files[0].attachment}}" >
         </div>
