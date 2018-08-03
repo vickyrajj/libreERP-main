@@ -844,6 +844,7 @@ def genInvoice(response, contract, request):
     totalprice = 0
     promoAmount = 0
     discount = 0
+    promoCode = ''
     tableBodyStyle = styles['Normal'].clone('tableBodyStyle')
     tableBodyStyle.fontSize = 7
     tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
@@ -853,6 +854,7 @@ def genInvoice(response, contract, request):
         for p in promoObj:
             if str(p.name)==str(contract.promoCode):
                 promoAmount = p.discount
+                print  p.name,'aaaaaaaaaaaaaaaa'
                 promoCode = p.name
     else:
         promoCode="None"
