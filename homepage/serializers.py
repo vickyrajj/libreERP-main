@@ -79,7 +79,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             'heading' : 'Welcome to Ecommerce',
             'recieverName' : 'Customer',
             'message': msgBody,
-            'linkUrl': 'monomerce.com',
+            'linkUrl': 'sterlingselect.com',
             'linkText' : 'View Online',
             'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
             'sendersPhone' : '841101',

@@ -90,11 +90,12 @@ from POS.models import *
 from ERP.models import service, appSettingsField
 from PIL import Image
 from django.core.files.images import get_image_dimensions
+
 # Create your views here.
 
 def ecommerceHome(request):
     print 'cameeeeeeeeeeeeeeeeeeeeeee'
-    data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':'Ecommerce','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}}
+    data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
         print urlData
@@ -114,25 +115,23 @@ def ecommerceHome(request):
                 data['seoDetails']['height'] = h
                 # image=Image.open(dpList[0].attachment.file)
                 # print image,image.size,image.format
+
         if 'categories' in urlData and len(urlData) > 2 :
-            data['seoDetails'] = {'title':'Ecommerce','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
             data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | Sterling Select'
         if 'checkout' in urlData and len(urlData) > 2 :
-            data['seoDetails'] = {'title':'Sterling Select | Review Order > Select Shipping Address > Place Order','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+            data['seoDetails']['title'] = 'Sterling Select | Review Order > Select Shipping Address > Place Order'
         if 'account' in urlData and len(urlData) > 2 and urlData[-1]!= '':
             print 'somethinggggggggggg'
             if urlData[-1] == 'cart':
-                data['seoDetails'] = {'title':'Sterling Select | Shopping Cart','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | Shopping Cart'
             elif urlData[-1] == 'orders':
-                data['seoDetails'] = {'title':'Sterling Select | My Orders','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | My Orders'
             elif urlData[-1] == 'settings':
-                data['seoDetails'] = {'title':'Sterling Select | My Settings','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | My Settings'
             elif urlData[-1] == 'support':
-                data['seoDetails'] = {'title':'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
             elif urlData[-1] == 'saved':
-                data['seoDetails'] = {'title':'Sterling Select | Saved Products','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
-            else:
-                data['seoDetails'] = {'title':'Ecommerce','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | Saved Products'
     return render(request , 'ngEcommerce.html' , {'data':data})
 
 class SearchProductAPI(APIView):

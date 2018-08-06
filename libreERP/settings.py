@@ -76,6 +76,23 @@ SERVICE_NAME = 'Inventory, Sales and Ecommerce'
 BRAND_LOGO = '/static/images/company_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
 
+
+SEO_TITLE = 'Sterling Select'
+SEO_DESCRIPTION = 'Sterling Select Online Shopping'
+SEO_IMG = '/static/images/company_icon.png'
+SEO_IMG_WIDTH = 1024
+SEO_IMG_HEIGHT = 719
+
+
+SEO_AUTHOR = 'sterlingselect.com'
+SEO_TWITTER_CREATOR = '@sterlingselect'
+SEO_TWITTER_SITE = '@sterlingselect'
+SEO_SITE_NAME = 'STERLING SELECT'
+SEO_URL = 'https://sterlingselect.com/'
+SEO_PUBLISHER = 'https://plus.google.com/b/105723801328437605094/'
+
+
+
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
 INSTALLED_APPS = (

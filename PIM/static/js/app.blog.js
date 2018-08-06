@@ -170,7 +170,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
 
 
   $scope.edit = function(){
-    $state.go('home.blog' , { id : $scope.articleInView.pk , action : 'edit'});
+    $state.go('admin.blog' , { id : $scope.articleInView.pk , action : 'edit'});
   }
 
   $scope.comment = {text :''};
@@ -193,7 +193,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
 
   $scope.goBack = function(){
     $scope.mode = 'list';
-    $state.go('home.blog' , { id : '', action : 'list'});
+    $state.go('admin.blog' , { id : '', action : 'list'});
   }
 
   $scope.viewArticle = function(index){ // if we have the data in the scope and just want to read the artile
@@ -283,8 +283,9 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
           fd.append('section' , $scope.editor.section);
           fd.append('author' , $scope.editor.author);
           fd.append('description' , $scope.editor.description);
-
+          console.log($scope.mode);
           if ($scope.mode == 'edit') {
+            console.log('edittttttttttt');
             method = 'PATCH';
             url = '/api/PIM/blog/' + $stateParams.id +'/';
           } else if ($scope.mode == 'new') {
@@ -355,9 +356,9 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
         icon: false,
         onclick: function() {
           if ($scope.mode == 'edit') {
-            $state.go('home.blog' , { action:'list'} )
+            $state.go('admin.blog' , { action:'list'} )
           } else {
-            $state.go('home.blog' , {id : '' , action:'list'} )
+            $state.go('admin.blog' , {id : '' , action:'list'} )
           }
 
         }
