@@ -484,7 +484,12 @@ class OrderViewSet(viewsets.ModelViewSet):
     filter_fields = ['status']
     def get_queryset(self):
         # return Order.objects.filter( ~Q(status = 'failed')).order_by('-created')
-        return Order.objects.all().order_by('-created')
+        if 'user' in self.request.GET:
+            print 'userrrrrrrrrrrr wise Orders'
+            return Order.objects.filter(user=self.request.user).order_by('-created')
+        else:
+            print 'adminnnnnnnnnnn wise Orders'
+            return Order.objects.all().order_by('-created')
 
 class PromocodeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -1046,8 +1051,12 @@ class OnlineSalesGraphAPIView(APIView):
             order = Order.objects.filter(created__range=(datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
             orderQty = OrderQtyMap.objects.filter(updated__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
             custs = User.objects.filter(date_joined__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
+        print '***********'
+        print order,order.count()
 
-        totalSales = order.aggregate(Sum('totalAmount'))
+        totalSales = order.aggregate(Sum('totalAmount')) if order.count() > 0 else {'totalAmount__sum':0}
+        if 'totalAmount__sum' in totalSales and type(totalSales['totalAmount__sum']) == float:
+            totalSales['totalAmount__sum'] = round(totalSales['totalAmount__sum'],2)
         for i in orderQty:
             if str(i.status) == 'delivered':
                 price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100

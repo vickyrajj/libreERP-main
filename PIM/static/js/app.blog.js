@@ -259,7 +259,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
           fd.append('sourceFormat' ,'html');
           fd.append('state' ,'published');
           fd.append('tags' , tags);
-          
+
           if ($scope.editor.ogimage ==emptyFile && ($scope.editor.ogimageUrl == '' || $scope.editor.ogimageUrl == undefined)) {
             Flash.create('danger' , 'Either the OG image file OR og image url is required')
             return;

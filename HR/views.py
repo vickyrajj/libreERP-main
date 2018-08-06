@@ -219,7 +219,7 @@ def home(request):
         apps = getApps(u)
         modules = getModules(u)
 
-    defaultRoute = 'businessManagement/productsInventory'
+    defaultRoute = 'admin'
 
 
     if globalSettings.SHOW_COMMON_APPS:

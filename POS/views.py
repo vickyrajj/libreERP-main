@@ -516,9 +516,14 @@ class SalesGraphAPIView(APIView):
             invcs = Invoice.objects.filter(invoicedate__range=(frm, to))
             custs = Customer.objects.filter(created__range = (frm , to))
 
-        totalSales = invcs.aggregate(Sum('grandTotal'))
-        print type(totalSales),'kkkk'
-        totalCollections = invcs.aggregate(Sum('amountRecieved'))
+        totalSales = invcs.aggregate(Sum('grandTotal'))  if invcs.count() > 0 else {'grandTotal__sum':0}
+        totalCollections = invcs.aggregate(Sum('amountRecieved'))  if invcs.count() > 0 else {'amountRecieved__sum':0}
+        print type(totalSales),type(totalCollections),'kkkk'
+        if 'grandTotal__sum' in totalSales and type(totalSales['grandTotal__sum']) == float:
+            totalSales['grandTotal__sum'] = round(totalSales['grandTotal__sum'],2)
+        if 'amountRecieved__sum' in totalCollections and type(totalCollections['amountRecieved__sum']) == float:
+            totalCollections['amountRecieved__sum'] = round(totalCollections['amountRecieved__sum'],2)
+
         sales =  invcs.count()
         custCount = custs.count()
 

@@ -1545,9 +1545,10 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   $scope.search = function() {
     if (typeof $scope.searchProduct.product == 'object') {
       if ($scope.searchProduct.product.typ == 'list') {
+        console.log($scope.searchProduct);
         $state.go('details', {
           id: $scope.searchProduct.product.pk,
-          name: $scope.searchProduct.product.product.name.split(' ').join('-')
+          name: $scope.searchProduct.product.name.split(' ').join('-')
         })
       } else {
         $state.go('categories', {
@@ -1561,9 +1562,10 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   $scope.$watch('searchProduct.product', function(newValue, oldValue) {
     if (newValue != null && typeof newValue == 'object') {
       if (newValue.typ == 'list') {
+        console.log(newValue);
         $state.go('details', {
           id: newValue.pk,
-          name: newValue.product.name.split(' ').join('-')
+          name: newValue.name.split(' ').join('-')
         })
       } else {
         $state.go('categories', {
