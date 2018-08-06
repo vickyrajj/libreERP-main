@@ -37,7 +37,8 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpg'
+LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpeg'
+LOGIN_PAGE_LOGO = '/static/images/company_icon.svg'
 
 SHOW_COMMON_APPS = False
 
@@ -72,7 +73,7 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 BRAND_NAME = 'monomerce.com'
 SERVICE_NAME = 'Inventory, Sales and Ecommerce'
-BRAND_LOGO = '/static/images/mono_icon.svg'
+BRAND_LOGO = '/static/images/company_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
@@ -100,22 +101,22 @@ INSTALLED_APPS = (
     'PIM', # personal information manager
     'social', # social networking client
     'homepage', # landing page
-    'mail', # mail application
     'businessManagement', # BM application
     'ecommerce', # ecommerce
     'blogs', # publically accesible blogging site
-	'finance',# billing , invoicing , finance etc
-	'events',# to manage events like test, hackathon or something like that
 	'clientRelationships',# CRM like sales force
 	'POS',# POS terminal like tally
     'support',# canvas
-	'employees',# employees details
-	'payroll',# payroll
-	'performance',# performance
-	'recruitment',# recruitment
-	'organization',# organization
-	'logistic',# logistics
 	'productsInventory',# inventory for POS products
+    # 'mail', # mail application
+    # 'employees',# employees details
+    # 'events',# to manage events like test, hackathon or something like that
+    # 'finance',# billing , invoicing , finance etc
+    # 'organization',# organization
+    # 'payroll',# payroll
+    # 'logistic',# logistics
+    # 'performance',# performance
+    # 'recruitment',# recruitment
     # 'assets',# assets
     # 'workforceManagement',# canvas
 )

@@ -32,11 +32,11 @@ app.config(function($stateProvider){
     templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.html',
     controller: 'businessManagement.ecommerce.orders'
   })
-  .state('businessManagement.ecommerce.earnings', {
-    url: "/earnings",
-    templateUrl: '/static/ngTemplates/app.ecommerce.vendor.earnings.html',
-    controller: 'businessManagement.ecommerce.earnings'
-  })
+  // .state('businessManagement.ecommerce.earnings', {
+  //   url: "/earnings",
+  //   templateUrl: '/static/ngTemplates/app.ecommerce.vendor.earnings.html',
+  //   controller: 'businessManagement.ecommerce.earnings'
+  // })
   .state('businessManagement.ecommerce.support', {
     url: "/support",
     templateUrl: '/static/ngTemplates/app.ecommerce.vendor.support.html',
@@ -47,11 +47,11 @@ app.config(function($stateProvider){
     templateUrl: '/static/ngTemplates/app.ecommerce.vendor.offerings.html',
     controller: 'businessManagement.ecommerce.offerings'
   })
-  .state('businessManagement.ecommerce.partners', {
-    url: "/partners",
-    templateUrl: '/static/ngTemplates/app.ecommerce.vendor.partners.html',
-    controller: 'businessManagement.ecommerce.partners'
-  })
+  // .state('businessManagement.ecommerce.partners', {
+  //   url: "/partners",
+  //   templateUrl: '/static/ngTemplates/app.ecommerce.vendor.partners.html',
+  //   controller: 'businessManagement.ecommerce.partners'
+  // })
 
 });
 app.controller("businessManagement.ecommerce.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside) {
