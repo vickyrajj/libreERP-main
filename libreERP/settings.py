@@ -26,7 +26,7 @@ DEFAULT_APPS_ON_REGISTER = []
 
 ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user will be redirected to this url
 
-SITE_ADDRESS = 'http://skinstore.monomerce.com' # the url prefix of the site
+SITE_ADDRESS = 'http://sterlingselect.com' # the url prefix of the site
 
 ROOT_APP = 'ERP' # the default app
 ECOMMERCE_APP = {
@@ -60,7 +60,11 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['192.168.1.106', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.116' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.121','192.168.1.123','192.168.1.119']
+=======
+ALLOWED_HOSTS = ['192.168.1.106', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'sterlingselect.com', '192.168.1.116' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.121']
+>>>>>>> 17d24e2660505be9e4c91bfbb5ad1a6e756e35d8
 
 
 LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
@@ -71,7 +75,7 @@ LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = 'monomerce.com'
+BRAND_NAME = 'sterlingselect.com'
 SERVICE_NAME = 'Inventory, Sales and Ecommerce'
 BRAND_LOGO = '/static/images/company_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
