@@ -91,7 +91,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         email_body = get_template('app.homepage.emailOTP.html').render(ctx)
         print email_body
-        email_subject = '[24Tutors.com] Email OTP'
+        email_subject = 'SterlingSelect Email OTP'
         sentEmail=[]
         sentEmail.append(str(reg.email))
         # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )

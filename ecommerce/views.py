@@ -485,7 +485,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # return Order.objects.filter( ~Q(status = 'failed')).order_by('-created')
         if 'user' in self.request.GET:
-            print 'userrrrrrrrrrrr wise Orders'
+            print 'userrrrrrrrrrrr wise Orders',self.request.user
             return Order.objects.filter(user=self.request.user).order_by('-created')
         else:
             print 'adminnnnnnnnnnn wise Orders'
