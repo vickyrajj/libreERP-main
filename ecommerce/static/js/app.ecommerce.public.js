@@ -113,6 +113,13 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
+    .state('pages', {
+      url: "/:title",
+      templateUrl: '/static/ngTemplates/app.ecommerce.PagesDetails.html',
+      controller: 'controller.ecommerce.PagesDetails'
+    })
+
+  $stateProvider
     .state('categories', {
       url: "/categories/:name",
       templateUrl: '/static/ngTemplates/app.ecommerce.categories.html',
@@ -170,24 +177,35 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.ecommerce.account.saved.html',
       controller: 'controller.ecommerce.account.saved'
     })
-    .state('sterlingSelect.in', {
-      url: "/sterlingSelect.in/:title",
-      templateUrl: '/static/ngTemplates/app.ecommerce.PagesDetails.html',
-      controller: 'controller.ecommerce.PagesDetails'
-    })
+
 
 });
 
 app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
 
   // $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
-  // $window.scrollTo(0, 0)
-  // $scope.minValue;
-  // $scope.maxValue
-  console.log('paramsssssssssssss',$state.params.name);
+  $window.scrollTo(0, 0)
+  console.log('paramsssssssssssss',$state.params.title,$state.params.title.toLowerCase());
 
-  document.title = $state.params.name + ' | Buy ' + $state.params.name + ' At Best Price In India | Sterling Select'
+  document.title = 'Sterling Select |  ' + $state.params.title
   document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+
+  $scope.title = $state.params.title.toLowerCase()
+
+  if ($scope.title == undefined || $scope.title == '') {
+    $state.go('ecommerce' , {})
+  }else if ($scope.title == 'faq' || $scope.title == 'contact-us') {
+    $state.go('account.support' , {})
+  }else {
+    $http({
+        method: 'GET',
+        url: '/api/ecommerce/pages/?pageurl__icontains=' + $scope.title
+      }).
+      then(function(response) {
+        $scope.pageData = response.data[0]
+      })
+  }
+
 
 
   // $scope.slider = {
