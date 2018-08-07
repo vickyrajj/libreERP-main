@@ -513,9 +513,7 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
       return;
     }
 
-    console.log(f.amountRecieved);
-    console.log(f.modeOfPayment);
-    console.log(f.receivedDate);
+
     var toSend = {
       amountRecieved: f.amountRecieved,
       modeOfPayment: f.modeOfPayment,
@@ -604,7 +602,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     $scope.product = {
       'name': '',
       'productMeta': '',
-      'price': '',
+      'price': 0,
       'displayPicture': emptyFile,
       'serialNo': '',
       'description': '',
@@ -614,7 +612,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       'serialId': '',
       'reorderTrashold': 0,
       'pk': null,
-      'unit':''
+      'unit':'',
+      'discount':0
     }
   }
 
@@ -913,7 +912,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     views: views,
     url: '/api/POS/product/',
     filterSearch : true,
-    searchField : 'Name or SKU or Description',
+    searchField : 'Name or SKU',
     itemsNumPerView: [6, 12, 24],
     multiselectOptions: productmultiselectOptions,
   }
@@ -1480,7 +1479,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
         $scope.configProductMeta = {
           views: views,
           url: '/api/clientRelationships/productMeta/',
-          searchField: 'name',
+          searchField: 'description',
           itemsNumPerView: [8, 16, 24],
         }
 

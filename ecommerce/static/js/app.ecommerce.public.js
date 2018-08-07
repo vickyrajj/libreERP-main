@@ -1423,6 +1423,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   }
 
   $scope.order = function() {
+    console.log("aaaaaaaaaaaaaaaaaaaa");
     $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
     $scope.dataToSend.modeOfShopping = 'online'
     if ($scope.dataToSend.modeOfPayment == 'COD') {
@@ -1443,6 +1444,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.order = response.data
       $scope.data.stage = 'confirmation';
       $rootScope.inCart = [];
+      $scope.item =[];
       console.log('in cart', $rootScope.inCart);
     })
 

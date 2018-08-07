@@ -250,7 +250,7 @@
 
           <hr>
 
-          <div class="row" style="margin-top:30px;padding:10px;">
+          <div class="row" style="margin-top:30px;padding:10px;" ng-if="item || cartItems.length>0 ">
             <div class="col-md-4">
               <div class="input-group">
                 <input type="text" class="form-control" ng-model="data.promoCode" placeholder="Apply Promo Code..." />
@@ -276,7 +276,8 @@
               </div>
             </div>
             <div class="col-md-6 col-xs-6">
-              <button type="button" class="btn btn-success pull-right" ng-click="next()">
+              <!-- {{item}} {{cartItems.length}} -->
+              <button ng-if="item || cartItems.length>0 " type="button" class="btn btn-success pull-right" ng-click="next()">
                 Next
               </button>
             </div>
@@ -355,6 +356,14 @@
                 <label for="mob">Mobile no. : </label>
                 <input type="text" class="form-control" id="mob" ng-model="data.address.mobile" placeholder="Enter mobile.." >
               </div>
+              <div class="row" style="margin-top:55px">
+                <button type="button" class="btn btn-default pull-left" ng-click="prev()">
+                  Go back
+                </button>
+                <button type="button" class="btn btn-success pull-right" ng-click="next()">
+                  Next
+                </button>
+              </div>
             </div>
 
             <div class="col-md-5 col-xs-12" style="padding-left:55px" ng-if="savedAddress.length>0">
@@ -403,14 +412,14 @@
             </div>
 
           </div>
-          <div class="row" style="margin-top:55px">
+          <!-- <div class="row" style="margin-top:55px">
             <button type="button" class="btn btn-default pull-left" ng-click="prev()">
               Go back
             </button>
             <button type="button" class="btn btn-success pull-right" ng-click="next()">
               Next
             </button>
-          </div>
+          </div> -->
         </div>
         <!-- shippingDetails pane end here -->
         <div ng-if="data.stage == 'payment'">
@@ -517,7 +526,7 @@
         <h1>Thank you</h1>
         <h2>Your order details are as follows</h2>
         <strong> Order No. : </strong> #{{order.odnumber}}<br>
-        <strong> Order date and time : </strong> {{order.dt| date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
+        <strong> Order date and time : </strong> {{order.dt | date : 'dd-MMM-yyyy: hh:mm:ss a'}}<br>
         <!-- <strong> Item ID : </strong> {{data.order.offer}}<br> -->
         <strong> Payment mode. : </strong> {{order.paymentMode}}<br>
         <hr>

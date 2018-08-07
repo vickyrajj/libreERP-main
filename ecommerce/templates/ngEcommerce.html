@@ -10,14 +10,14 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="{{data.seoDetails.description}}"/>
-    <link rel="canonical" href="https://monomerce.com/" />
-    <link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
+    <link rel="canonical" href="{{data.seoDetails.url}}" />
+    <link rel="publisher" href="{{data.seoDetails.publisher}}"/>
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{data.seoDetails.title}}" />
     <meta property="og:description" content="{{data.seoDetails.description}}" />
-    <meta property="og:url" content="https://monomerce.com" />
-    <meta property="og:site_name" content="STERLING SELECT" />
+    <meta property="og:url" content="{{data.seoDetails.url}}" />
+    <meta property="og:site_name" content="{{data.seoDetails.site_name}}" />
     <meta property="og:updated_time" content="2018-08-02T07:17:53+00:00" />
     <meta property="og:image" content="https://{{ request.get_host }}{{data.seoDetails.image}}" />
     <meta property="og:image:secure_url" content="https://{{ request.get_host }}{{data.seoDetails.image}}" />
@@ -26,10 +26,10 @@
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:description" content="{{data.seoDetails.description}}" />
     <meta name="twitter:title" content="{{data.seoDetails.title}}" />
-    <meta name="twitter:site" content="@monomerce" />
+    <meta name="twitter:site" content="{{data.seoDetails.site_name}}" />
     <meta name="twitter:image" content="https://{{ request.get_host }}{{data.seoDetails.image}}" />
-    <meta name="twitter:creator" content="@monomerce" />
-    <meta property="article:author" content="monomerce.com" />
+    <meta name="twitter:creator" content="{{data.seoDetails.twitter_creator}}" />
+    <meta property="article:author" content="{{data.seoDetails.author}}" />
 
 
 
@@ -58,7 +58,7 @@
     <link rel="stylesheet" href="{% static 'css/custom/base.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/app.ecommerce.css' %}" charset="utf-8">
   </head>
-  <body style="background-image: url(/static/images/ecommerce_home_back.png);">
+  <body style="background-image: url(/static/images/sterlingSelect_banner.png);">
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>

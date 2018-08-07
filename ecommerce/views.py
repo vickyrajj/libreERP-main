@@ -90,11 +90,25 @@ from POS.models import *
 from ERP.models import service, appSettingsField
 from PIL import Image
 from django.core.files.images import get_image_dimensions
+
 # Create your views here.
+
+defaultSettingsData = appSettingsField.objects.filter(app_id=25)
+fbLink = ''
+lkLink = ''
+twtLink = ''
+if defaultSettingsData.count()>0:
+    for i in defaultSettingsData:
+        if i.name == 'facebookLink':
+            fbLink = i.value
+        elif i.name == 'twitterLink':
+            lkLink = i.value
+        elif i.name == 'linkedInLink':
+            twtLink = i.value
 
 def ecommerceHome(request):
     print 'cameeeeeeeeeeeeeeeeeeeeeee'
-    data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':'Ecommerce','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}}
+    data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
         print urlData
@@ -114,25 +128,23 @@ def ecommerceHome(request):
                 data['seoDetails']['height'] = h
                 # image=Image.open(dpList[0].attachment.file)
                 # print image,image.size,image.format
+
         if 'categories' in urlData and len(urlData) > 2 :
-            data['seoDetails'] = {'title':'Ecommerce','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
             data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | Sterling Select'
         if 'checkout' in urlData and len(urlData) > 2 :
-            data['seoDetails'] = {'title':'Sterling Select | Review Order > Select Shipping Address > Place Order','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+            data['seoDetails']['title'] = 'Sterling Select | Review Order > Select Shipping Address > Place Order'
         if 'account' in urlData and len(urlData) > 2 and urlData[-1]!= '':
             print 'somethinggggggggggg'
             if urlData[-1] == 'cart':
-                data['seoDetails'] = {'title':'Sterling Select | Shopping Cart','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | Shopping Cart'
             elif urlData[-1] == 'orders':
-                data['seoDetails'] = {'title':'Sterling Select | My Orders','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | My Orders'
             elif urlData[-1] == 'settings':
-                data['seoDetails'] = {'title':'Sterling Select | My Settings','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | My Settings'
             elif urlData[-1] == 'support':
-                data['seoDetails'] = {'title':'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
             elif urlData[-1] == 'saved':
-                data['seoDetails'] = {'title':'Sterling Select | Saved Products','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
-            else:
-                data['seoDetails'] = {'title':'Ecommerce','description':'Sterling Select Online Shopping','image':'/static/images/seo_mono_common.png','width':1024,'height':719}
+                data['seoDetails']['title'] = 'Sterling Select | Saved Products'
     return render(request , 'ngEcommerce.html' , {'data':data})
 
 class SearchProductAPI(APIView):
@@ -253,8 +265,8 @@ class CreateOrderAPI(APIView):
             ctx = {
                 'heading' : "Invoice Details",
                 'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
-                'linkUrl': 'cioc.co.in',
-                'sendersAddress' : 'CIOC',
+                'linkUrl': globalSettings.BRAND_NAME,
+                'sendersAddress' : globalSettings.SEO_TITLE,
                 # 'sendersPhone' : '122004',
                 'grandTotal':grandTotal,
                 'total': total,
@@ -262,9 +274,9 @@ class CreateOrderAPI(APIView):
                 'docID':docID,
                 'data':orderObj,
                 'promoAmount':promoAmount,
-                'linkedinUrl' : 'https://www.linkedin.com/',
-                'fbUrl' : 'https://facebook.com',
-                'twitterUrl' : 'https://twitter.com',
+                'linkedinUrl' : lkLink,
+                'fbUrl' : fbLink,
+                'twitterUrl' : twtLink,
             }
             print ctx
             email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
@@ -670,8 +682,8 @@ class SendDeliveredStatus(APIView):
         ctx = {
             'heading' : "Invoice Details",
             # 'recieverName' : name,
-            'linkUrl': 'cioc.co.in',
-            'sendersAddress' : 'CIOC',
+            'linkUrl': globalSettings.BRAND_NAME,
+            'sendersAddress' : globalSettings.SEO_TITLE,
             # 'sendersPhone' : '122004',
             # 'grandTotal':grandTotal,
             'promoAmount':promoAmount,
@@ -681,9 +693,9 @@ class SendDeliveredStatus(APIView):
             'order': o,
             'price':price,
             'orderQTY':oq,
-            'linkedinUrl' : 'https://www.linkedin.com/',
-            'fbUrl' : 'https://facebook.com',
-            'twitterUrl' : 'https://twitter.com',
+            'linkedinUrl' : lkLink,
+            'fbUrl' : fbLink,
+            'twitterUrl' : twtLink,
         }
         print ctx
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
