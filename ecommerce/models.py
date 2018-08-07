@@ -93,6 +93,12 @@ class Category(models.Model):
 def getEcommerceBannerUploadPath(instance , filename ):
     return 'ecommerce/bannerUploads/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
+class Pages(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=100 ,null = False)
+    pageurl = models.CharField(max_length=100 ,null = False)
+    body = models.CharField(max_length=10000 ,null = False)
 
 class offerBanner(models.Model):
     user = models.ForeignKey(User, null = False)
@@ -102,8 +108,9 @@ class offerBanner(models.Model):
     imagePortrait =  models.ImageField(null = True , upload_to = getEcommerceBannerUploadPath)
     title = models.CharField(max_length = 20 , null = True)
     subtitle = models.CharField(max_length = 20 , null = True)
-    state = models.CharField(max_length = 20 , null = True)
-    params = models.CharField(max_length = 200 , null = True) # string repr of json obj to be passed as params
+    page = models.ForeignKey(Pages,null = True ,related_name='offerBannerPage')
+    # state = models.CharField(max_length = 20 , null = True)
+    # params = models.CharField(max_length = 200 , null = True) # string repr of json obj to be passed as params
     active = models.BooleanField(default = False)
 
 CART_TYPE_CHOICES = (

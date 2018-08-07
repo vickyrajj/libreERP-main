@@ -52,6 +52,11 @@ app.config(function($stateProvider){
   //   templateUrl: '/static/ngTemplates/app.ecommerce.vendor.partners.html',
   //   controller: 'businessManagement.ecommerce.partners'
   // })
+  .state('businessManagement.ecommerce.pages', {
+    url: "/pages",
+    templateUrl: '/static/ngTemplates/app.ecommerce.vendor.pages.html',
+    controller: 'businessManagement.ecommerce.pages'
+  })
 
 });
 app.controller("businessManagement.ecommerce.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside) {

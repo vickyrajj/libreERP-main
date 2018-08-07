@@ -583,7 +583,7 @@ class GetNextAvailableInvoiceIDAPIView(APIView):
 
 
 from BeautifulSoup import BeautifulSoup as bs
-import pandas as pd
+# import pandas as pd
 import re
 
 class ExternalEmailOrders(APIView):

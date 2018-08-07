@@ -193,18 +193,35 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ( 'pk', 'created' , 'title' ,'dp' , 'parent')
 
+class PagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pages
+        fields = ( 'pk', 'created' , 'updated' ,'title' , 'pageurl' , 'body')
 
 class offerBannerSerializer(serializers.ModelSerializer):
+    # page = PagesSerializer(many = False , read_only = True)
     class Meta:
         model = offerBanner
-        fields = ('pk' , 'user' , 'created'  , 'level' , 'image' ,'imagePortrait' , 'title' , 'subtitle' , 'state' , 'params' , 'active')
+        fields = ('pk' , 'user' , 'created'  , 'level' , 'image' ,'imagePortrait' , 'title' , 'subtitle' , 'active' , 'page')
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
         b = offerBanner(**validated_data)
         b.user = u
+        if 'page' in self.context['request'].data:
+            b.page = Pages.objects.get(pk = self.context['request'].data['page'])
         b.save()
         return b
+    def update(self ,instance, validated_data):
+        for key in ['level' , 'image' ,'imagePortrait' , 'title' , 'subtitle' , 'active']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'page' in self.context['request'].data:
+            instance.page = Pages.objects.get(pk = self.context['request'].data['page'])
+        instance.save()
+        return instance
 
 class CartSerializer(serializers.ModelSerializer):
     product = listingSerializer(many = False , read_only = True)
