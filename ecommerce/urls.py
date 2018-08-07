@@ -20,6 +20,7 @@ router.register(r'promocode' , PromocodeViewSet , base_name='promocode')
 router.register(r'rating' , RatingViewSet , base_name='rating')
 router.register(r'supportFeed' , SupportFeedViewSet , base_name='supportFeed')
 router.register(r'frequentlyQuestions' , FrequentlyQuestionsViewSet , base_name='frequentlyQuestions')
+router.register(r'pages' , PagesViewSet , base_name='pages')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

@@ -435,6 +435,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+class PagesViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny ,)
+    queryset = Pages.objects.all()
+    serializer_class = PagesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
 
 class offerBannerViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly, )

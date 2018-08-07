@@ -5,14 +5,22 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
     imagePortrait: emptyFile
   };
 
+  $scope.pageSearch = function(query) {
+    console.log(query);
+    return $http.get('/api/ecommerce/pages/?title__icontains=' + query).
+    then(function(response) {
+      console.log('**********************', response);
+      return response.data;
+    })
+  }
+
   if (angular.isUndefined($scope.data.pk)) {
     $scope.mode = 'new';
     $scope.data = {
       title: '',
       subtitle: '',
       level: 1,
-      state: '',
-      params: ''
+      page: ''
     };
     $scope.url = '/api/ecommerce/offerBanner/';
     $scope.method = 'POST';
@@ -23,13 +31,18 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
   }
 
   $scope.submit = function() {
+
     var fd = new FormData();
     fd.append('title', $scope.data.title);
     fd.append('subtitle', $scope.data.subtitle);
     fd.append('level', $scope.data.level);
-    fd.append('state', $scope.data.state);
-    fd.append('params', $scope.data.params);
     if ($scope.mode == 'new') {
+      if ($scope.data.page == null || $scope.data.page == '' || typeof $scope.data.page != 'object') {
+        Flash.create('danger', 'Please Selcet Some Page');
+        return;
+      }else {
+        fd.append('page', $scope.data.page.pk);
+      }
       if ($scope.form.image == emptyFile) {
         Flash.create('danger', 'No image selected');
         return;
@@ -45,6 +58,14 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
 
       if ($scope.form.imagePortrait != emptyFile) {
         fd.append('imagePortrait', $scope.form.imagePortrait);
+      }
+      if ($scope.data.page == '') {
+        Flash.create('danger', 'Please Selcet Some Page');
+        return;
+      }else {
+        if (typeof $scope.data.page == 'object') {          
+          fd.append('page', $scope.data.page.pk);
+        }
       }
     }
     $http({
@@ -64,8 +85,7 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
           image: emptyFile,
           imagePortraitL: emptyFile,
           level: 1,
-          state: '',
-          params: ''
+          page: ''
         };
       }
       Flash.create('success', response.status + ' : ' + response.statusText);

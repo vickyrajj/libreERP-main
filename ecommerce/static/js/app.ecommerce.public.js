@@ -170,6 +170,150 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.ecommerce.account.saved.html',
       controller: 'controller.ecommerce.account.saved'
     })
+    .state('sterlingSelect.in', {
+      url: "/sterlingSelect.in/:title",
+      templateUrl: '/static/ngTemplates/app.ecommerce.PagesDetails.html',
+      controller: 'controller.ecommerce.PagesDetails'
+    })
+
+});
+
+app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
+
+  // $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
+  // $window.scrollTo(0, 0)
+  // $scope.minValue;
+  // $scope.maxValue
+  console.log('paramsssssssssssss',$state.params.name);
+
+  document.title = $state.params.name + ' | Buy ' + $state.params.name + ' At Best Price In India | Sterling Select'
+  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+
+
+  // $scope.slider = {
+  //   minValue: 200,
+  //   maxValue: 600,
+  //   options: {
+  //     floor: 0,
+  //     ceil: 1000,
+  //     step: 10,
+  //     noSwitching: true,
+  //     translate: function(value) {
+  //       return '₹' + value;
+  //     }
+  //   }
+  // };
+  //
+  // // $scope.cities = [{name:'Bangalore',selected: false},{name:'mysore',selected: false},{name:'Delhi NCR',selected: false},{name:'Mumbai',selected: false},{name:'Chennai',selected: false}];
+  // // $scope.brands = [{name:'Dell',selected: false},{name:'hp',selected: false},{name:'Apple',selected: false}];
+  //
+  // $scope.breadcrumbList = [];
+  // $scope.category = {}
+  // $scope.fields;
+  // $http({
+  //   method: 'GET',
+  //   url: '/api/ecommerce/genericProduct/?name__iexact=' + $state.params.name
+  // }).
+  // then(function(response) {
+  //   $scope.category = response.data[0];
+  //   $scope.fields = $scope.category.fields;
+  //   $scope.category.fields = [];
+  //   var parent = response.data[0].parent
+  //   while (parent) {
+  //     $scope.breadcrumbList.push(parent.name)
+  //     parent = parent.parent
+  //   }
+  //
+  // });
+  //
+  // $scope.choices = {};
+  //
+  // $timeout(function() {
+  //   $scope.category.fields = $scope.fields;
+  //   for (var i = 0; i < $scope.category.fields.length; i++) {
+  //     if ($scope.category.fields[i].data) {
+  //       $scope.category.fields[i].data = JSON.parse($scope.category.fields[i].data)
+  //     }
+  //     if ($scope.category.fields[i].fieldType == 'choice') {
+  //       for (var j = 0; j < $scope.category.fields[i].data.length; j++) {
+  //         // console.log($scope.category.fields[i].data[j]);
+  //         $scope.category.fields[i].data[j] = {
+  //           name: $scope.category.fields[i].data[j],
+  //           selected: false
+  //         }
+  //         // $scope.category.fields[i].choices.push()
+  //       }
+  //     }
+  //     $scope.category.fields[i].val = '';
+  //   }
+  //
+  //
+  //   $http({
+  //     method: 'GET',
+  //     url: '/api/ecommerce/listing/?parent=' + $scope.category.pk + '&recursive=1'
+  //   }).
+  //   then(function(response) {
+  //     $scope.listingSearch = response.data;
+  //   })
+  //   $scope.breadcrumbList = $scope.breadcrumbList.slice().reverse();
+  // }, 1500);
+  //
+  //
+  //
+  //
+  //
+  // $scope.filter = function() {
+  //
+  //   params = {
+  //     minPrice: $scope.slider.minValue,
+  //     maxPrice: $scope.slider.maxValue,
+  //     fields: {}
+  //   }
+  //
+  //   for (var i = 0; i < $scope.category.fields.length; i++) {
+  //     if ($scope.category.fields[i].fieldType == 'choice') {
+  //       var arr = []
+  //       for (var j = 0; j < $scope.category.fields[i].data.length; j++) {
+  //         if ($scope.category.fields[i].data[j].selected) {
+  //           arr.push($scope.category.fields[i].data[j].name)
+  //         }
+  //       }
+  //       if (arr.length > 0) {
+  //         var a = $scope.category.fields[i].name
+  //         // params.fields.push({a : arr})
+  //         params.fields[a] = arr
+  //       }
+  //     } else {
+  //       if ($scope.category.fields[i].val) {
+  //         var a = $scope.category.fields[i].name
+  //         // params.fields.push({a : $scope.category.fields[i].val})
+  //         params.fields[a] = $scope.category.fields[i].val
+  //       }
+  //     }
+  //   }
+  //
+  //
+  //   // var cities = []
+  //   // for (var i = 0; i < $scope.cities.length; i++) {
+  //   //   if ($scope.cities[i].selected==true) {
+  //   //     cities.push($scope.cities[i].name)
+  //   //   }
+  //   // }
+  //   //
+  //   // if (cities.length>0) {
+  //   //   params.city = cities
+  //   // }
+  //   //
+  //   $http({
+  //     method: 'GET',
+  //     url: '/api/ecommerce/listing/?parent=' + $scope.category.pk + '&recursive=1',
+  //     params: params
+  //   }).
+  //   then(function(response) {
+  //     $scope.listingSearch = response.data;
+  //   })
+  // }
+
 
 });
 
