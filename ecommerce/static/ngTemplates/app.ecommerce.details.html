@@ -139,7 +139,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-8 hidden-sm hidden-xs">
+          <div class="col-md-8 hidden-sm hidden-xs"  ng-if="me != null">
             <h5>Have you used this product before ?  <small style="margin-left:20px;">Give us your review</small> </h5>
             <uib-rating ng-model="form.rating" max="5" min="1" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" ></uib-rating> <br>
             <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
@@ -167,7 +167,7 @@
         <div class="row">
           <div class="col-sm-12 col-xs-12  hidden-md hidden-lg">
             <div class="col-sm-6 col-xs-6  hidden-md hidden-lg text-center">
-              <span  ng-if="details.rating.rating__avg==none">0/5</span> <br>
+              <span  ng-if="details.rating.rating__avg==none">None</span> <br>
               <span  ng-if="details.rating.rating__avg!=none">{{details.rating.rating__avg| number : 1}}/5</span> <br>
               <i class="fa fa-star" style="color:#e3bc18;font-size:80px;"></i>
             </div>
@@ -178,7 +178,7 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-12 col-xs-12 hidden-md hidden-lg">
+          <div class="col-sm-12 col-xs-12 hidden-md hidden-lg"  ng-if="me != null">
             <h5>Have you used this product before ?  <small >Give us your review</small> </h5>
             <uib-rating ng-model="form.rating" max="5" min="1" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" ></uib-rating> <br>
             <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
@@ -206,11 +206,11 @@
           </div>
 
         </div>
-        <hr>
-        <div class="row text-center" ng-if="reviews.length==0">
+        <hr >
+        <!-- <div class="row text-center" ng-if="reviews.length==0||me != null"> -->
           <!-- <h4>No reviews yet. Be the first to review</h4> -->
-            <h4>Write a review</h4>
-        </div>
+            <!-- <h4>Write a review</h4>
+        </div> -->
         <div class="row" ng-if="reviewsCount!=0">
 
           <!-- <div class="container-fluid">
