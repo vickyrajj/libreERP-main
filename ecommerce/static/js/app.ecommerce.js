@@ -90,12 +90,11 @@ app.controller("businessManagement.ecommerce.default", function($scope, $state, 
     $http({method : 'POST' , url : '/api/ecommerce/onlineSalesGraphAPI/' , data : toSend}).
     then(function(response) {
       $scope.stats = response.data;
-      console.log($scope.stats,'aaaaaaaaaaa');
+
 
       $scope.data2 = [$scope.stats.totalCollections, $scope.stats.totalSales.totalAmount__sum];
       $scope.labels2 = ["Sales", "Collections"];
 
-      console.log($scope.data2,'kkkkkkkkkkkkkkkkkkk')
 
       $scope.labels = [];
       // $scope.series = ['Series A'];

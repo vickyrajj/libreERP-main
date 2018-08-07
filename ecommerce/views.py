@@ -93,6 +93,19 @@ from django.core.files.images import get_image_dimensions
 
 # Create your views here.
 
+defaultSettingsData = appSettingsField.objects.filter(app_id=25)
+fbLink = ''
+lkLink = ''
+twtLink = ''
+if defaultSettingsData.count()>0:
+    for i in defaultSettingsData:
+        if i.name == 'facebookLink':
+            fbLink = i.value
+        elif i.name == 'twitterLink':
+            lkLink = i.value
+        elif i.name == 'linkedInLink':
+            twtLink = i.value
+
 def ecommerceHome(request):
     print 'cameeeeeeeeeeeeeeeeeeeeeee'
     data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
@@ -252,8 +265,8 @@ class CreateOrderAPI(APIView):
             ctx = {
                 'heading' : "Invoice Details",
                 'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
-                'linkUrl': 'cioc.co.in',
-                'sendersAddress' : 'CIOC',
+                'linkUrl': globalSettings.BRAND_NAME,
+                'sendersAddress' : globalSettings.SEO_TITLE,
                 # 'sendersPhone' : '122004',
                 'grandTotal':grandTotal,
                 'total': total,
@@ -261,9 +274,9 @@ class CreateOrderAPI(APIView):
                 'docID':docID,
                 'data':orderObj,
                 'promoAmount':promoAmount,
-                'linkedinUrl' : 'https://www.linkedin.com/',
-                'fbUrl' : 'https://facebook.com',
-                'twitterUrl' : 'https://twitter.com',
+                'linkedinUrl' : lkLink,
+                'fbUrl' : fbLink,
+                'twitterUrl' : twtLink,
             }
             print ctx
             email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
@@ -669,8 +682,8 @@ class SendDeliveredStatus(APIView):
         ctx = {
             'heading' : "Invoice Details",
             # 'recieverName' : name,
-            'linkUrl': 'cioc.co.in',
-            'sendersAddress' : 'CIOC',
+            'linkUrl': globalSettings.BRAND_NAME,
+            'sendersAddress' : globalSettings.SEO_TITLE,
             # 'sendersPhone' : '122004',
             # 'grandTotal':grandTotal,
             'promoAmount':promoAmount,
@@ -680,9 +693,9 @@ class SendDeliveredStatus(APIView):
             'order': o,
             'price':price,
             'orderQTY':oq,
-            'linkedinUrl' : 'https://www.linkedin.com/',
-            'fbUrl' : 'https://facebook.com',
-            'twitterUrl' : 'https://twitter.com',
+            'linkedinUrl' : lkLink,
+            'fbUrl' : fbLink,
+            'twitterUrl' : twtLink,
         }
         print ctx
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
@@ -1041,6 +1054,7 @@ class OnlineSalesGraphAPIView(APIView):
         if "date" in request.data:
             # one day sale
             d = datetime.datetime.strptime(request.data["date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            print d,'dateeeeeeeeeeeeeeee'
             order = Order.objects.filter(created__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
             custs = User.objects.filter(date_joined__range= (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
             orderQty = OrderQtyMap.objects.filter(updated__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))

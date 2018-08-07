@@ -165,6 +165,12 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
     //   // $scope.instockUpdate(url,inStockData)
     //
     // }
+    console.log("aaaaaaaaaaaaaaf");
+    if (f.amountRecieved==undefined) {
+      Flash.create('warning', 'Enter valid Received Amount');
+      return;
+    }
+
     var toSend = {
       // invoicedate: date,
       duedate: date,
@@ -498,6 +504,10 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
 
     var f = $scope.form;
     console.log(f);
+    if (f.amountRecieved==undefined) {
+      Flash.create('warning', 'Enter valid Received Amount');
+      return;
+    }
     if (f.amountRecieved.length == 0) {
       Flash.create('warning', 'Amount can not be left blank');
       return;
@@ -638,11 +648,13 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   }
 
   $scope.save = function() {
-    console.log('entered', $scope.product.discount);
+    console.log('entered', $scope.product.discount,'aaaa');
     // console.log($scope.product.productMeta);
     // console.log($scope.product.productMeta.pk);
 
+
     var f = $scope.product;
+    console.log(f.price,'s');
     var url = '/api/POS/product/';
     if ($scope.mode == 'new') {
       var method = 'POST';
@@ -660,12 +672,23 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       Flash.create('warning', 'Name can not be blank');
       return;
     }
-    if (f.price.length == 0) {
+    if (f.price==undefined) {
+      Flash.create('warning', 'Enter valid MRP');
+      return;
+    }
+    if (f.inStock==undefined) {
+      Flash.create('warning', 'Add a valid number of items In Stock');
+      return;
+    }
+    if (f.price.length == 0||f.price<0) {
       Flash.create('warning', 'MRP Is Required');
       return;
     }
-    console.log('fffffffff',f.discount);
-    if (f.discount < 0 || f.discount > 100) {
+    if (f.inStock.length == 0||f.inStock<0) {
+      Flash.create('warning', 'Add a valid number of items In Stock');
+      return;
+    }
+    if (f.discount < 0 || f.discount > 100||f.price.length < 0) {
       Flash.create('warning', 'discount should in range 0-100');
       return;
     }
@@ -684,7 +707,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       fd.append('productMeta', f.productMeta.pk);
     }
     if (f.unit != null && f.unit.length > 0) {
-      fd.append('unit', f.unit);      
+      fd.append('unit', f.unit);
     }
     if ($scope.categoriesList.length > 0) {
       fd.append('haveComposition', true);
@@ -792,7 +815,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   })
 
   $scope.today = new Date();
-  $scope.firstDay = new Date($scope.today.getFullYear(), $scope.today.getMonth(), 1);
+  $scope.firstDay = new Date($scope.today.getFullYear(), $scope.today.getMonth(), 2);
   $scope.monday = getMonday(new Date());
 
 
