@@ -54,16 +54,16 @@
     </div>
     <div class="col-md-3 {{settings.playstoreLink.indexOf('http')==-1 && settings.appstoreLink.indexOf('http')==-1 ? 'col-md-offset-2 col-md-offset-1' :''}}">
       <img src="/static/images/sterlin_select.png" style="height:7vh;" alt="Logo"><br><br>
-      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'payment'.split(' ').join('-')})">Payment</span><br>
-      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Cancellations and Returns'.split(' ').join('-')})">Cancellations and Returns</span>
+      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'payment'.split(' ').join('-').toLowerCase()})">Payment</span><br>
+      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Cancellations and Returns'.split(' ').join('-').toLowerCase()})">Cancellations and Returns</span>
     </div>
     <div class="col-md-3 text-center">
       <strong style="font-size:15px;">STERLING SELECT</strong><br>
-      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Contact Us'.split(' ').join('-')})">Contact Us</span><br>
-      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'About us'.split(' ').join('-')})">About us</span> <br>
-      <!-- <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'careers'.split(' ').join('-')})">Careers</span> <br> -->
-      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Press'.split(' ').join('-')})">Press</span><br>
-      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'FAQ'.split(' ').join('-')})">FAQ</span>
+      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Contact Us'.split(' ').join('-').toLowerCase()})">Contact Us</span><br>
+      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'About us'.split(' ').join('-').toLowerCase()})">About us</span> <br>
+      <!-- <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'careers'.split(' ').join('-').toLowerCase()})">Careers</span> <br> -->
+      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Press'.split(' ').join('-').toLowerCase()})">Press</span><br>
+      <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'FAQ'.split(' ').join('-').toLowerCase()})">FAQ</span>
 
     </div>
     <div class="col-md-4 text-right">
@@ -85,8 +85,8 @@
         <span>Copyright &copy; {{settings.copyrightHolder}} {{settings.copyrightYear}}</span>
       </div>
       <div class="row">
-        <a href="#" style="color:white;">Privacy Policy</a>
-        <a href="#" style="color:white;">Terms of Use</a>
+        <span  style="color:white;font-size:12px;cursor:pointer" ng-click="$state.go('pages' , {title : 'Privacy Policy'.split(' ').join('-').toLowerCase()})">Privacy Policy</span> &nbsp;
+        <span  style="color:white;font-size:12px;cursor:pointer" ng-click="$state.go('pages' , {title : 'Terms of Use'.split(' ').join('-').toLowerCase()})">Terms of Use</span>
       </div>
     </div>
   </div>
@@ -108,17 +108,17 @@
 
     <div class="col-xs-6 text-center">
       <img src="/static/images/sterlin_select.png" style="height:7vh;" alt="Logo"><br><br>
-      <span style="cursor:pointer;font-size:12px" ng-click="$state.go('pages' , {title : 'payment'.split(' ').join('-')})">Payment</span><br>
-      <span style="cursor:pointer; font-size:12px" ng-click="$state.go('pages' , {title : 'Cancellations and Returns'.split(' ').join('-')})">Cancellationa and Returns</span>
+      <span style="cursor:pointer;font-size:12px" ng-click="$state.go('pages' , {title : 'payment'.split(' ').join('-').toLowerCase()})">Payment</span><br>
+      <span style="cursor:pointer; font-size:12px" ng-click="$state.go('pages' , {title : 'Cancellations and Returns'.split(' ').join('-').toLowerCase()})">Cancellationa and Returns</span>
     </div>
 
     <div class="col-xs-6 text-center">
       <strong style="font-size:12px;">STERLING SELECT</strong><br>
-      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'Contact Us'.split(' ').join('-')})">Contact Us</span><br>
-      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'About us'.split(' ').join('-')})">About us</span> <br>
-      <!-- <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'careers'.split(' ').join('-')})">Careers</span> <br> -->
-      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'Press'.split(' ').join('-')})">Press</span><br>
-      <span style="cursor:pointer; font-size:12px" ng-click="$state.go('pages' , {title : 'FAQ'.split(' ').join('-')})">FAQ</span>
+      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'Contact Us'.split(' ').join('-').toLowerCase()})">Contact Us</span><br>
+      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'About us'.split(' ').join('-').toLowerCase()})">About us</span> <br>
+      <!-- <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'careers'.split(' ').join('-').toLowerCase()})">Careers</span> <br> -->
+      <span style="cursor:pointer; font-size:12px;" ng-click="$state.go('pages' , {title : 'Press'.split(' ').join('-').toLowerCase()})">Press</span><br>
+      <span style="cursor:pointer; font-size:12px" ng-click="$state.go('pages' , {title : 'FAQ'.split(' ').join('-').toLowerCase()})">FAQ</span>
     </div>
 
     <div class="col-xs-12 text-center">
@@ -137,8 +137,8 @@
         <span style="font-size:12px;">Copyright &copy; {{settings.copyrightHolder}} {{settings.copyrightYear}}</span>
       </div>
       <div class="row">
-        <a href="#" style="color:white;font-size:10px;">Privacy Policy</a>
-        <a href="#" style="color:white;font-size:10px;">Terms of Use</a>
+        <span  style="color:white;font-size:12px;cursor:pointer" ng-click="$state.go('pages' , {title : 'Privacy Policy'.split(' ').join('-').toLowerCase()})">Privacy Policy</span> &nbsp;
+        <span  style="color:white;font-size:12px;cursor:pointer" ng-click="$state.go('pages' , {title : 'Terms of Use'.split(' ').join('-').toLowerCase()})">Terms of Use</span>
       </div>
     </div>
 

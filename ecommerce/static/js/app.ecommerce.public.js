@@ -135,7 +135,7 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('account', {
-      url: "/account",
+      url: "/user/account",
       views: {
         "": {
           templateUrl: '/static/ngTemplates/app.ecommerce.account.html',
@@ -185,12 +185,12 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
 
   // $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
   $window.scrollTo(0, 0)
-  console.log('paramsssssssssssss',$state.params.title,$state.params.title.toLowerCase());
+  console.log('paramsssssssssssss',$state.params.title);
 
-  document.title = 'Sterling Select |  ' + $state.params.title
+  document.title = 'Sterling Select |  ' + $state.params.title.split('-').join(' ')
   document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
 
-  $scope.title = $state.params.title.toLowerCase()
+  $scope.title = $state.params.title
 
   if ($scope.title == undefined || $scope.title == '') {
     $state.go('ecommerce' , {})
@@ -1585,6 +1585,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   }
 
   $scope.order = function() {
+    console.log("aaaaaaaaaaaaaaaaaaaa");
     $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
     $scope.dataToSend.modeOfShopping = 'online'
     if ($scope.dataToSend.modeOfPayment == 'COD') {
@@ -1605,6 +1606,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.order = response.data
       $scope.data.stage = 'confirmation';
       $rootScope.inCart = [];
+      $scope.item =[];
       console.log('in cart', $rootScope.inCart);
     })
 

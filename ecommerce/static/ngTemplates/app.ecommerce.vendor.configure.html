@@ -21,11 +21,18 @@
       </uib-tab-heading>
       <generic-Table data="data.tableproductData" config-Obj="{{genericProductConfig}}" callback-Fn="tableProductAction"></generic-Table>
     </uib-tab>
+    <!-- <uib-tab>
+      <uib-tab-heading>
+        Offer Banners
+      </uib-tab-heading>
+      <generic-Table data="data.tableOfferBannersData" config-Obj="{{offerBannersConfig}}" callback-Fn="tableActionOfferBanners"></generic-Table>
+    </uib-tab> -->
     <uib-tab>
       <uib-tab-heading>
         Offer Banners
       </uib-tab-heading>
-      <generic-Table data="tableData.offerBanners" config-Obj="{{offerBannersConfig}}" callback-Fn="tableAction"></generic-Table>
+      <div ng-include="'/static/ngTemplates/app.ecommerce.vendor.configure.offerBanners.html'"></div>
+      <!-- <generic-Table data="tableData.tablePromocodeData" config-Obj="{{promocodesConfig}}" callback-Fn="tablePromocodeAction"></generic-Table> -->
     </uib-tab>
     <uib-tab>
       <uib-tab-heading>
@@ -57,6 +64,12 @@
       </div>
       <div ng-if="tab.app == 'productExplore'">
           <div ng-include="'/static/ngTemplates/app.ecommerce.vendor.explore.html'"></div>
+      </div>
+      <!-- <div ng-if="tab.app == 'editOfferBanner'">
+          <div ng-include="'/static/ngTemplates/app.ecommerce.vendor.form.offerBanner.html'"></div>
+      </div> -->
+      <div ng-if="tab.app == 'offerBannerExplore'">
+          <div ng-include="'/static/ngTemplates/app.ecommerce.vendor.offerBanner.explore.html'"></div>
       </div>
     </uib-tab>
   </uib-tabset>
