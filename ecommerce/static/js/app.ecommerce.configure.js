@@ -475,7 +475,8 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
       default: '',
       fields: [],
       minCost: 0,
-      visual: emptyFile
+      visual: emptyFile,
+      bannerImage:emptyFile
     }
     $scope.editing = false
   }
@@ -552,6 +553,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
       Flash.create('warning', 'Name Should Not Be Blank')
       return;
     }
+
     if ($scope.form.mode == 'field') {
       dataToSend = {
         fieldType: d.fieldType,
@@ -578,6 +580,11 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
         Flash.create('warning', 'No fields selected')
         return;
       }
+      console.log(d.bannerImage,'aaaaaaaaaaaaaa');
+      if (d.bannerImage== null || typeof d.bannerImage == 'string'||d.bannerImage.name=='') {
+        Flash.create('warning', 'Please add the Banner Image')
+        return;
+      }
       for (var i = 0; i < d.fields.length; i++) {
         fs.push(d.fields[i].pk);
       }
@@ -592,7 +599,9 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
       if (d.visual != null && typeof d.visual != 'string') {
         fd.append('visual', d.visual);
       }
-
+      if (d.bannerImage != null && typeof d.bannerImage != 'string') {
+        fd.append('bannerImage', d.bannerImage);
+      }
       url = '/api/ecommerce/genericProduct/';
       console.log(fd);
     }
@@ -622,7 +631,8 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
             default: '',
             fields: [],
             minCost: 0,
-            visual: emptyFile
+            visual: emptyFile,
+            bannerImage:emptyFile
           };
         }
         Flash.create('success', response.status + ' : ' + response.statusText);
@@ -655,7 +665,8 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
             default: '',
             fields: [],
             minCost: 0,
-            visual: emptyFile
+            visual: emptyFile,
+            bannerImage:emptyFile
           }
         }
         Flash.create('success', response.status + ' : ' + response.statusText);

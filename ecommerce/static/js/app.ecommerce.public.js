@@ -378,7 +378,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       parent = parent.parent
     }
     $scope.getRatings($scope.offset)
-    // $scope.getReview()
+    $scope.getSuggestion()
 
   });
 
@@ -567,27 +567,17 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }
   // $scope.rating=[]
   // $scope.count=0
-  //   $scope.getReview = function(){
-  //     console.log($scope.details.pk,'aaaaaaaaaaaaaa');
-  //     $http({
-  //       method: 'GET',
-  //       url: '/api/ecommerce/rating/?productDetail=' +  $scope.details.pk
-  //     }).
-  //     then(function(response) {
-  //       $scope.rating = response.data
-  //       console.log(  $scope.rating,'aaaaaaaaaaaaaaaaaaaaa');
-  //       if($scope.rating.length>0)
-  //       {
-  //         for (var i = 0; i < $scope.rating.length; i++) {
-  //           console.log($scope.rating[i].rating,'r');
-  //           $scope.count+=$scope.rating[i].rating
-  //         }
-  //         $scope.countVal = $scope.count/$scope.rating.length
-  //         $scope.count = $scope.countVal.toFixed(2);
-  //         console.log( $scope.count ,'hhhhhhhh');
-  //       }
-  //     });
-  //   }
+// $scope.suggest=[]
+//     $scope.getSuggestion= function(){
+//       $http({
+//         method: 'GET',
+//         url: '/api/ecommerce/listingLite/?limit=4'
+//       }).
+//       then(function(response) {
+//         $scope.suggest = response.data.results
+//         console.log($scope.suggest,'aaaaaaaaaaaaaaaa');
+//       });
+//     }
 
 
   // $scope.fetchReviews = function() {
@@ -2024,6 +2014,16 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
       $scope.recentlyViewed = response.data.results
     })
   }
+
+  $http({
+    method: 'GET',
+    url: '/api/ecommerce/suggestedItem/'
+  }).
+  then(function(response) {
+    console.log('%%%%%%%%', response.data.results);
+    $scope.suggestedProducts = response.data.results
+  })
+
 
 
 });

@@ -42,8 +42,8 @@
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk,name:l.product.name.split(' ').join('-')})">
           <div class="row">
             <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-            <img style=" height:200px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
-            <img style=" height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files==null">
+            <img style="width:50%;height:200px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+            <img style="width:50%;height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files==null">
           </div>
         </div>
           <div class="row">
@@ -110,8 +110,8 @@
           <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : g.name})">
             <div class="row">
                 <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-              <img style="height:280px" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
-              <img style="height:280px" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none">
+              <img style="width:50%;height:280px" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
+              <img style="width:50%;height:280px" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none">
             </div>
           </div>
             <div class="row" style="padding-top:5px; padding-bottom:20px;">
@@ -172,8 +172,8 @@
           <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.product.pk,name:r.product.product.name.split(' ').join('-')})">
             <div class="row">
                 <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-              <img style="height:200px;" class="img" ng-src="{{r.product.files[0].attachment}}" ng-if="r.product.files.length>0">
-              <img style=" height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.product.files==null">
+              <img style="width:50%;height:200px;" class="img" ng-src="{{r.product.files[0].attachment}}" ng-if="r.product.files.length>0">
+              <img style="width:50%;height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.product.files==null">
             </div>
             </div>
             <div class="row container-fluid" style="padding-top:5px; padding-bottom:20px;">
@@ -193,7 +193,6 @@
               <span ng-if="r.product.product.discount>0" class="pull-right" style="font-size:15px;">
               <i class="fa fa-inr"></i>{{r.product.product.discountedPrice.toFixed(2)}}
               </span>
-
             </div>
           </div>
         </div>

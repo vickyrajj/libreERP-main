@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'downloadInvoice/$' , DownloadInvoiceAPI.as_view()),
     url(r'sendDeliveredStatus/$' , SendDeliveredStatus.as_view()),
     url(r'onlineSalesGraphAPI/$' , OnlineSalesGraphAPIView.as_view() ),
+    # url(r'suggestedItem/$' , suggestedItemAPI.as_view() ),
 ]

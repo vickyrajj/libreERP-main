@@ -256,6 +256,84 @@
         </div>
       </div>
     </div>
+    <!-- <div class="row" style="margin:0px;" ng-if="me != null">
+      <div class="col-md-offset-1 col-md-10 hidden-xs hidden-sm" style="padding:40px; padding-top:0px;">
+        <div style="padding:10px;width:100%" class="row card bg-white">
+          <h4>Suggested Products</h4>
+          <div ng-repeat="r in suggest" style="padding:0px;">
+            <div class="col-md-3 anim-in-out anim-zoom-out">
+              <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.product.pk,name:r.product.product.name.split(' ').join('-')})">
+                <div class="row">
+                    <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
+                  <img style="width: 80%; height:200px;" class="img" ng-src="{{r.files[0].ttachment}}" ng-if="r.files.length>0">
+                  <img style="width: 80%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null">
+                </div>
+              </div>
+                <div class="row container-fluid" style="padding-top:5px;">
+                  <h5 ng-if="r.product.name.length>35" style="margin:0px;  height:60px;">{{r.product.name.slice(0,35)}}...</h5>
+                  <h5 ng-if="r.product.name.length<=35" style="margin:0px;  height:60px;">{{r.product.name}}</h5>
+                  <span style="font-size:15px;"> Price : </span>
+
+                  <span  style="font-size:15px; padding-left:10px; ">{{r.product.price}}
+                    <span ng-if="r.product.product.discount>0" class="text-muted" >
+                      <strike><i class="fa fa-inr"></i>{{r.product.price}}</strike>
+                    </span>
+                    <span ng-if="r.product.product.discount==0" >
+                    <i class="fa fa-inr"></i>{{r.product..price}}
+                    </span>
+                  </span>
+
+                  <span ng-if="r.product.product.discount>0"  style="font-size:15px;">
+                  <i class="fa fa-inr"></i>{{r.product.discountedPrice.toFixed(2)}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-xs-12 hidden-md hidden-lg" style="padding:40px; padding-top:0px;">
+        <div style="padding:10px;" class="row card bg-white">
+          <h4>Suggested Products</h4>{{suggest}}
+          <div ng-repeat="r in suggest" style="padding:0px;">
+            <div class="col-xs-12 col-sm-6 anim-in-out anim-zoom-out">
+              <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.product.pk,name:r.product.product.name.split(' ').join('-')})">
+                <div class="row">
+                    <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
+                  <img style="width:50%;height:200px;" class="img" ng-src="{{r.product.files[0].attachment}}" ng-if="r.product.files.length>0">
+                  <img style="width:50%;height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.product.files==null">
+                </div>
+                </div>
+                <div class="row container-fluid" style="padding-top:5px; padding-bottom:20px;">
+                  <h5 ng-if="r.product.product.name.length>35" style="margin:0px;  height:40px;">{{r.product.product.name.slice(0,35)}}...</h5>
+                  <h5 ng-if="r.product.product.name.length<=35" style="margin:0px;  height:40px;">{{r.product.product.name}}</h5>
+                  <span style="font-size:15px;"> Price : </span>
+
+                  <span class="pull-right" style="font-size:15px; padding-left:10px; ">
+                    <span ng-if="r.product.product.discount>0" class="text-muted" >
+                      <strike><i class="fa fa-inr"></i>{{r.product.product.price}}</strike>
+                    </span>
+                    <span ng-if="r.product.product.discount==0" >
+                    <i class="fa fa-inr"></i>{{r.product.product.price}}
+                    </span>
+                  </span>
+
+                  <span ng-if="r.product.product.discount>0" class="pull-right" style="font-size:15px;">
+                  <i class="fa fa-inr"></i>{{r.product.product.discountedPrice.toFixed(2)}}
+                  </span>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div> -->
   </div>
 
   <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:15px; position:sticky; top:10px; " ng-if="me != null">

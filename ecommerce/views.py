@@ -1050,6 +1050,22 @@ class SupportFeedViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     # filter_fields = ['productDetail',]
 
+# class suggestedItemAPI(APIView):
+#     renderer_classes = (JSONRenderer,)
+#     def get(self, request, format=None):
+#         count=0
+#         listObj = listing.objects.all()
+#         for i in listObj:
+#             average=0
+#             ratingObj = Rating.objects.filter(productDetail=i.pk)
+#             if ratingObj.count()!=0:
+#                 rating = 0.0
+#                 for j in ratingObj:
+#                     rating+= j.rating
+#                 average=round(rating/ratingObj.count(),2)
+#                 print average,'avvvvvvvvvvvv'
+#         # return(status.HTTP_200_OK)
+
 from datetime import timedelta
 from django.db.models import Sum
 class OnlineSalesGraphAPIView(APIView):

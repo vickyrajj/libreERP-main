@@ -42,6 +42,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
   }
 
   $scope.verify = function() {
+    console.log($scope.form,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 
     $http({method : 'PATCH' , url : '/api/homepage/registration/' + $scope.form.reg + '/', data : $scope.form }).
     then(function(response) {

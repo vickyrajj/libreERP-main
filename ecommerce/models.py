@@ -14,6 +14,8 @@ def getEcommerceProductVisualUploadPath(instance , filename ):
     return 'ecommerce/pictureUploads/%s_%s' % (str(time()).replace('.', '_'), filename)
 def getEcommerceCategoryDpPath(instance , filename ):
     return 'ecommerce/CategoryDp/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getEcommerceGenericProductBannerUploadPath(instance , filename ):
+    return 'ecommerce/GenericProductBanner/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 FIELD_TYPE_CHOCIE = (
     ('char' , 'char'),
@@ -39,6 +41,7 @@ class genericProduct(models.Model): # such as MI5, Nokia N8 etc
     created = models.DateTimeField(auto_now_add = True)
     minCost = models.PositiveIntegerField(default=0)
     visual = models.ImageField(upload_to=getEcommerceProductVisualUploadPath , null = True)
+    bannerImage = models.ImageField(upload_to=getEcommerceGenericProductBannerUploadPath , null = True)
     parent = models.ForeignKey('self' , related_name='children' , null= True)
     def __repr__(self):
         return  "Generic Product : " + self.name
