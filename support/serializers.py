@@ -14,14 +14,14 @@ from django.conf import settings as globalSettings
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
-        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' )
+        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket' )
     def create(self ,  validated_data):
         c = CustomerProfile(**validated_data)
         c.service = service.objects.get(pk=self.context['request'].data['service'])
         c.save()
         return c
 
-class SupportChatFileSerializer(serializers.ModelSerializer):
+class SupportChatSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SupportChatFile
-        fields = ( 'pk' , 'created' , 'uid', 'attachment' , 'message' , 'link','sentByAgent')
+        model = SupportChat
+        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType')

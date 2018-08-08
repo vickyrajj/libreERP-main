@@ -94,6 +94,7 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   }).
   then(function(response) {
     $scope.custDetails = response.data[0]
+    console.log($scope.custDetails,'dddddddddddd');
   });
   $scope.openChartPopoup = function(pk){
     $uibModal.open({
@@ -123,7 +124,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       return response.data;
     })
   };
-  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:''}
+  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'' , callBack:false , ticket: false}
   $scope.fetCustomerProfile = function(pk){
     $scope.cpForm.service = pk
     $http({

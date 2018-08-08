@@ -163,6 +163,16 @@ app.config(function($stateProvider ){
     }
   })
 
+  .state('home.reviews', {
+    url: "/reviews",
+    views: {
+      "": {
+        templateUrl: '/static/ngTemplates/app.reviews.html',
+        controller: 'businessManagement.reviews',
+      }
+    }
+  })
+
 
   .state('home.employees', {
     url: "/employees",

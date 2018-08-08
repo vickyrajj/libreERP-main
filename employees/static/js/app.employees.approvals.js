@@ -57,8 +57,9 @@ app.controller("businessManagement.employees.timeSheet.info", function($scope, $
         total += $scope.data.items[i].duration;
       }
     }
-    return total.toFixed(2);
     console.log('aaaaaa', total);
+    
+    return total.toFixed(2);
   }
 
   $scope.save = function() {

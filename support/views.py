@@ -25,15 +25,20 @@ import urllib
 # Create your views here.
 
 class CustomerProfileViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = CustomerProfileSerializer
     queryset = CustomerProfile.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['service']
 
-class SupportChatFileViewSet(viewsets.ModelViewSet):
+class SupportChatViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny ,)
-    serializer_class = SupportChatFileSerializer
-    queryset = SupportChatFile.objects.all()
+    serializer_class = SupportChatSerializer
+    queryset = SupportChat.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['uid']
+
+def getChatterScript(request):
+    print 'coming here'
+    print request
+    return render(request, 'chatter.js', content_type="application/x-javascript")

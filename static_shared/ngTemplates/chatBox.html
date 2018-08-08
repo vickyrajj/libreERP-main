@@ -4,7 +4,7 @@
       <div class="row" style="padding:10px;">
         <div class="col-md-5">
             <h4 > {{data.uid.split("$")[1]}} </h4>
-            <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i> <span>{{data.name}}</span>
+            <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i> <span>{{data.uid}}</span>
         </div>
         <div class="col-md-5">
            <button class="btn btn-primary" type="button" name="button" ng-click="knowledgeBase()"> Knowledge base </button>
@@ -14,20 +14,20 @@
         </div>
       </div>
   </div>
-    <div class="container-fluid" id="scrollArea{{index}}" style="margin-left:10px;margin-right:10px; height:65vh; overflow-y:auto; overflow-x:hidden;">
+    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px;margin-right:10px; height:65vh; overflow-y:auto; overflow-x:hidden;">
 
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
         {{message.length}}
         <div class="row container-fluid">
           <div style="float:{{message.sentByMe ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+
           <p ng-if="message.msg.length>0" style="word-break: break-all !important;" >{{message.msg}}</p>
            <img ng-if="message.img" ng-src="{{message.img}}" style="width:250px;">
            <video ng-if="message.video" width="280" height="240" ng-src="{{message.video}}" controls></video>
            <audio ng-if="message.audio" ng-src="{{message.audio}}" controls></audio>
-           <p class="text-center" ng-if="message.doc" style="word-wrap: break-word;"> <a ng-href="{{message.doc}}" target = "_blank" ><i class="fa {{message.doc.split('document/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{message.doc.split('document/')[1]}}  </p>
+           <p class="text-center" ng-if="message.doc" style="word-wrap: break-word;"><a ng-href="{{message.doc}}" target = "_blank" ><i class="fa {{message.doc.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{message.doc.split('chat/')[1]}}  </p>
            <div ng-if="message.link" >
-
-             <iframe width="100%" height="215" ng-src="{{message.link}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+             <iframe width="100%" height="215" ng-src="{{message.link | trusted}}" frameborder="0" allowfullscreen></iframe>
            </div>
 
           </div>

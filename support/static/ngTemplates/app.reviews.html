@@ -1,0 +1,52 @@
+<div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
+  <breadcrumb></breadcrumb>
+
+  <div class="row">
+    <div class="col-md-offset-2 col-md-3">
+      <div class="form-group">
+        <label> Select Date </label>
+        <div class="input-group">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="logger.when" is-open="status.opened" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-offset-1 col-md-3">
+      <div class="form-group">
+        <label> Agent Name </label>
+        <input type="text" class="form-control"  placeholder="Search and select">
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container-fluid">
+    <uib-tabset>
+      <uib-tab active="searchTabActive">
+        <uib-tab-heading>
+          Browse
+          <i class="fa fa-list-ul"></i>
+        </uib-tab-heading>
+        <div class="container-fluid">
+          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+        </div>
+      </uib-tab>
+
+      <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+        <uib-tab-heading>
+          {{tab.title}}
+          <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+        </uib-tab-heading>
+        <div ng-if="tab.app == 'companyEdit'">
+          <div ng-include="'/static/ngTemplates/app.customers.form.html'"></div>
+        </div>
+        <div ng-if="tab.app == 'companyInfo'">
+          <div ng-include="'/static/ngTemplates/app.customers.explore.html'"></div>
+        </div>
+      </uib-tab>
+
+    </uib-tabset>
+  </div>
+</div>

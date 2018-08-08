@@ -1,4 +1,4 @@
-var connection = new autobahn.Connection({url: 'ws://'+ '192.168.0.12' +':8080/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: 'ws://'+ 'wamp.cioc.in' +':8080/ws', realm: 'default'});
 
 // "onopen" handler will fire when WAMP session has been established ..
 connection.onopen = function (session) {
@@ -84,24 +84,45 @@ connection.onopen = function (session) {
               scope.newUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created: args[2].created })
               return true
             }else if (args[1]=='MF') {
-              if (args[2].img) {
-                console.log('img');
-                scope.newUsers[i].messages.push( {msg:"", img : args[2].img, sentByMe:false , created:  args[3] })
-              }else if (args[2].audio) {
-                console.log('audiio');
-                scope.newUsers[i].messages.push( {msg:"", audio : args[2].audio, sentByMe:false , created:  args[3] })
-              }else if (args[2].video) {
-                console.log('video');
-                scope.newUsers[i].messages.push( {msg:"", video : args[2].video, sentByMe:false , created:  args[3] })
-              }else if (args[2].doc) {
-                console.log('doc');
-                scope.newUsers[i].messages.push( {msg:"", doc : args[2].doc, sentByMe:false , created:  args[3] })
-              }else if (args[2].link) {
-                console.log('doc');
-                scope.newUsers[i].messages.push( {msg:"", link : args[2].link, sentByMe:false , created:  args[3] })
-              }
+
+
+              var attachment;
+              var xhttp = new XMLHttpRequest();
+
+              xhttp.onreadystatechange = function() {
+                console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+                  if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    var data = JSON.parse(this.responseText)
+                    attachment = data.attachment
+
+                    if (args[2].type=='image') {
+                      console.log('img');
+                      scope.newUsers[i].messages.push( {msg:"", img : attachment, sentByMe:false , created:  args[3] })
+                    }else if (args[2].type=='audio') {
+                      console.log('audiio');
+                      scope.newUsers[i].messages.push( {msg:"", audio : attachment, sentByMe:false , created:  args[3] })
+                    }else if (args[2].type=='video') {
+                      console.log('video');
+                      scope.newUsers[i].messages.push( {msg:"", video : attachment, sentByMe:false , created:  args[3] })
+                    }else if (args[2].type=='doc') {
+                      console.log('doc');
+                      scope.newUsers[i].messages.push( {msg:"", doc : attachment, sentByMe:false , created:  args[3] })
+                    }
+
+                  }
+              };
+
+              xhttp.open('GET', '/api/support/supportChat/' + args[2].filePk + '/'  , true);
+              xhttp.send();
+
+
+            }else if (args[1]=='ML') {
+              scope.newUsers[i].messages.push( {msg:"", link : args[2].link, sentByMe:false , created:  args[3] })
             }
+
             return true
+
           }
         }
         for (var i = 0; i < scope.myUsers.length; i++) {
@@ -110,22 +131,44 @@ connection.onopen = function (session) {
             if(args[1]=='M') {
               scope.myUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created:  args[2].created })
             }else if (args[1]=='MF') {
-              if (args[2].img) {
-                console.log('img');
-                scope.myUsers[i].messages.push( {msg:"", img : args[2].img, sentByMe:false , created:  args[3] })
-              }else if (args[2].audio) {
-                console.log('audiio');
-                scope.myUsers[i].messages.push( {msg:"", audio : args[2].audio, sentByMe:false , created:  args[3] })
-              }else if (args[2].video) {
-                console.log('video');
-                scope.myUsers[i].messages.push( {msg:"", video : args[2].video, sentByMe:false , created:  args[3] })
-              }else if (args[2].doc) {
-                console.log('doc');
-                scope.myUsers[i].messages.push( {msg:"", doc : args[2].doc, sentByMe:false , created:  args[3] })
-              }else if (args[2].link) {
-                console.log('doc');
-                scope.myUsers[i].messages.push( {msg:"", link : args[2].link, sentByMe:false , created:  args[3] })
-              }
+
+              var attachment;
+              var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                  // console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+                  if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    var data = JSON.parse(this.responseText)
+                    attachment = data.attachment
+                    console.log('attachment' , attachment);
+
+
+                    if (args[2].type=='image') {
+                      console.log('image' , attachment);
+                      scope.myUsers[i].messages.push( {msg:"", img : attachment, sentByMe:false , created:  args[3] })
+                    }else if (args[2].type=='audio') {
+                      console.log('audiio');
+                      scope.myUsers[i].messages.push( {msg:"", audio : attachment, sentByMe:false , created:  args[3] })
+                    }else if (args[2].type=='video') {
+                      console.log('video');
+                      scope.myUsers[i].messages.push( {msg:"", video : attachment, sentByMe:false , created:  args[3] })
+                    }else if (args[2].type=='doc') {
+                      console.log('doc');
+                      scope.myUsers[i].messages.push( {msg:"", doc : attachment, sentByMe:false , created:  args[3] })
+                    }
+
+
+
+                  }
+              };
+              xhttp.open('GET', '/api/support/supportChat/' + args[2].filePk + '/'  , true);
+              xhttp.send();
+
+
+
+
+            }else if (args[1]=='ML') {
+              scope.myUsers[i].messages.push( {msg:"", link : args[2].link, sentByMe:false , created:  args[2].created })
             }
             return true
           }
@@ -133,9 +176,7 @@ connection.onopen = function (session) {
       }
 
       if (userExist()) {
-        console.log('yes');
-        // var s =  angular.element(document.getElementById('chatBox'+ args[0])).scope();
-        // console.log(s);
+        console.log('yesssssssssssss');
       }else {
         console.log('no');
         console.log(args);
@@ -143,18 +184,38 @@ connection.onopen = function (session) {
           console.log(args,'argssssssssss');
           scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg : args[2].msg, sentByMe:false , created:  args[2].created }], isOnline:true }  )
         }else if (args[1]=='MF') {
-          if (args[2].img) {
-            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", img : args[2].img, sentByMe:false , created:  args[3] }], isOnline:true }  )
-          }else if (args[2].audio) {
-            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", audio : args[2].audio, sentByMe:false , created:  args[3] }], isOnline:true }  )
-          }else if (args[2].video) {
-            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", video : args[2].video, sentByMe:false , created:  args[3] }], isOnline:true }  )
-          }else if (args[2].doc) {
-            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", doc : args[2].doc, sentByMe:false , created:  args[3] }], isOnline:true }  )
-          }else if (args[2].link) {
-            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", link : args[2].link, sentByMe:false , created:  args[3] }], isOnline:true }  )
-          }
+
+          var attachment;
+          var xhttp = new XMLHttpRequest();
+
+          xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                var data = JSON.parse(this.responseText)
+                attachment = data.attachment
+
+
+                if (args[2].type=='image') {
+                  scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", img : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+                }else if (args[2].type=='audio') {
+                  scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", audio : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+                }else if (args[2].type=='video') {
+                  scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", video : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+                }else if (args[2].type=='doc') {
+                  scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", doc : attachment , sentByMe:false , created:  args[3] }], isOnline:true }  )
+                }
+
+
+              }
+          };
+
+          xhttp.open('GET', '/api/support/supportChat/' + args[2].filePk + '/'  , true);
+          xhttp.send();
+
+
           return true
+        }else if (args[1]=='ML') {
+            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", link : args[2].link, sentByMe:false , created:  args[3] }], isOnline:true }  )
         }
       }
 

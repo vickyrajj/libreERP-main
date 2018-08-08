@@ -325,8 +325,47 @@ app.directive('chatBox', function() {
       index:'=',
       closeChat: '=',
     },
-    controller: function($scope, $users , $uibModal) {
+    controller: function($scope, $users , $uibModal , $http) {
       $scope.me = $users.get('mySelf');
+      console.log($scope.data,'will fetch here');
+
+      $http({
+        method: 'GET',
+        url: '/api/support/supportChat/?uid='+$scope.data.uid,
+      }).then(function(response) {
+        console.log(response.data , 'ressss');
+        $scope.data.messages = [];
+        for (var i = 0; i < response.data.length; i++) {
+
+
+          if (response.data[i].user) {
+            var sentByMe = true;
+          }else {
+            var sentByMe = false;
+          }
+
+
+
+          if (response.data[i].message) {
+              $scope.data.messages.push( { msg: response.data[i].message , sentByMe: sentByMe , created: response.data[i].created } )
+          }else if (response.data[i].attachment) {
+            if (response.data[i].attachmentType == 'image') {
+                $scope.data.messages.push( { msg: '' , img : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
+            }else if (data[i].attachmentType == 'audio') {
+                $scope.data.messages.push( { msg: '' , audio : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
+            }else if (data[i].attachmentType == 'video') {
+                $scope.data.messages.push( { msg: '' , video : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
+            }else if (data[i].attachmentType == 'application') {
+                $scope.data.messages.push( { msg: '' , doc : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
+            }
+          }
+
+        }
+        $scope.scroll()
+      });
+
+
+      console.log('userrrrrrr' , $scope.me.pk);
 
       $scope.chatBox = {
         messageToSend: '',
@@ -340,32 +379,72 @@ app.directive('chatBox', function() {
 
       $scope.send = function() {
         if ($scope.chatBox.fileToSend.size>0) {
+
+
+          $scope.attachment;
           var typ = $scope.chatBox.fileToSend.type.split('/')[0]
-          var message;
-          if (typ=='image') {
-            message = {msg : "",sentByMe:true, img:'/static/images/career.jpg' , created: new Date()}
-            $scope.data.messages.push(message)
-          }else if (typ=='audio') {
-            message = {msg:"" , sentByMe: true, audio:'/static/audio/notification.mp3', created: new Date() }
-            $scope.data.messages.push(message)
-          }else if (typ=='video') {
-            message = {msg : "",sentByMe:true, video:'/static/videos/24tutors.mp4' , created: new Date()}
-            $scope.data.messages.push(message)
-          }else if (typ=='application') {
-            message = {msg : "",sentByMe:true, doc:'static/document/invoice.pdf' , created: new Date()}
-            $scope.data.messages.push(message)
-          }
-          $scope.status = 'MF';
 
-          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , message , new Date() ], {}, {
-            acknowledge: true
+          var fd = new FormData();
+          fd.append('attachment', $scope.chatBox.fileToSend);
+          fd.append('user' , $scope.me.pk);
+          fd.append('uid' , $scope.data.uid)
+          fd.append('attachmentType' , $scope.chatBox.fileToSend.type.split('/')[0] )
+          $http({
+            method: 'POST',
+            data: fd,
+            url: '/api/support/supportChat/',
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
           }).
-          then(function(publication) {
-            console.log("Published");
-          });
+          then(function(response) {
+            $scope.attachment = response.data.attachment
+            console.log($scope.attachment);
 
-          $scope.chatBox.fileToSend = emptyFile;
-          $scope.scroll()
+            $scope.fileData = {
+              filePk : response.data.pk
+            }
+
+
+            var message;
+            if (typ=='image') {
+              console.log('img');
+              $scope.fileData.typ = 'image'
+              console.log($scope.fileData);
+              console.log($scope.attachment);
+              message = {msg : "",sentByMe:true, img:$scope.attachment , created: new Date()}
+              $scope.data.messages.push(message)
+            }else if (typ=='audio') {
+              $scope.fileData.typ = 'audio'
+              message = {msg:"" , sentByMe: true, audio:$scope.attachment, created: new Date() }
+              $scope.data.messages.push(message)
+            }else if (typ=='video') {
+              $scope.fileData.typ = 'video'
+              message = {msg : "",sentByMe:true, video:$scope.attachment , created: new Date()}
+              $scope.data.messages.push(message)
+            }else if (typ=='application') {
+              $scope.fileData.typ = 'doc'
+              message = {msg : "",sentByMe:true, doc:$scope.attachment , created: new Date()}
+              $scope.data.messages.push(message)
+            }
+
+
+            console.log($scope.fileData,'filedataaaaa');
+            $scope.status = 'MF';
+            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , $scope.fileData , $scope.me.username , new Date() ], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+
+            $scope.chatBox.fileToSend = emptyFile;
+            $scope.scroll()
+
+          })
+
+
 
         }
 
@@ -375,17 +454,36 @@ app.directive('chatBox', function() {
           var youtubeLink = $scope.chatBox.messageToSend.includes("www.youtube.com/");
 
           if (youtubeLink) {
-            $scope.status = 'MF';
+            $scope.status = 'ML';
             link = "https://www.youtube.com/embed/" + $scope.chatBox.messageToSend.split("v=")[1];
             var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
+            var dataToSend = {
+              uid : $scope.data.uid ,
+              message : message.link ,
+              user : $scope.me.pk
+            }
           }else {
             $scope.status = 'M';
             var message = {msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() }
+            var dataToSend = {
+              uid : $scope.data.uid ,
+              message : message.msg ,
+              user : $scope.me.pk
+            }
           }
+
+          $http({
+            method: 'POST',
+            data: dataToSend,
+            url: '/api/support/supportChat/'
+          }).
+          then(function(response) {
+
+          });
 
           $scope.data.messages.push(message)
           console.log($scope.chatBox.messageToSend);
-          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , message , new Date() ], {}, {
+          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , message , $scope.me.username , new Date() ], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -408,7 +506,7 @@ app.directive('chatBox', function() {
 
       $scope.scroll = function () {
         setTimeout(function () {
-          var id = document.getElementById("scrollArea"+ $scope.index);
+          var id = document.getElementById("scrollArea"+ $scope.data.uid );
           id.scrollTop = id.scrollHeight;
         }, 200);
       }
