@@ -13,14 +13,14 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>MRP</label>
-            <input type="text" class="form-control" ng-model="product.price">
+            <input type="number" min="0" class="form-control" ng-model="product.price">
           </div>
         </div>
 
         <div class="col-md-6">
           <div class="form-group">
             <label>Cost</label>
-            <input type="number" class="form-control" ng-model="product.cost">
+            <input type="number" min="0" class="form-control" ng-model="product.cost">
           </div>
         </div>
       </div>
@@ -39,7 +39,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>In Stock.</label>
-            <input type="tel" class="form-control" ng-model="product.inStock">
+            <input type="number" min="0" class="form-control" ng-model="product.inStock">
           </div>
 
         </div>
@@ -47,7 +47,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>logistics</label>
-            <input type="number" class="form-control" ng-model="product.logistics">
+            <input type="number" min="0" class="form-control" ng-model="product.logistics">
           </div>
         </div>
       </div>

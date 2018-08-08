@@ -507,14 +507,15 @@ class SalesGraphAPIView(APIView):
         if "date" in request.data:
             # one day sale
             d = datetime.datetime.strptime(request.data["date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            print d,'dateeeeeeeeeeeeeeee'
             invcs = Invoice.objects.filter(invoicedate = d)
             custs = Customer.objects.filter(created__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
 
         else:
             frm = datetime.datetime.strptime(request.data["from"], '%Y-%m-%dT%H:%M:%S.%fZ')
             to = datetime.datetime.strptime(request.data["to"], '%Y-%m-%dT%H:%M:%S.%fZ')
-            invcs = Invoice.objects.filter(invoicedate__range=(frm, to))
-            custs = Customer.objects.filter(created__range = (frm , to))
+            invcs = Invoice.objects.filter(invoicedate__range=(datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
+            custs = Customer.objects.filter(created__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
 
         totalSales = invcs.aggregate(Sum('grandTotal'))  if invcs.count() > 0 else {'grandTotal__sum':0}
         totalCollections = invcs.aggregate(Sum('amountRecieved'))  if invcs.count() > 0 else {'amountRecieved__sum':0}
