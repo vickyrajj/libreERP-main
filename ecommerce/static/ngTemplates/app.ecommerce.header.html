@@ -1,6 +1,6 @@
-<div class="row bg-blue ecomNav" style="height:7vh;width:100%;">
+<div class="row bg-blue ecomNav" style="height:10vh;width:100%;padding-top: 15px;">
 
-  <div class="col-xs-3 text-right">
+  <div class="col-xs-3 text-center">
     <img ng-click="$state.go('ecommerce')" src="/static/images/sterlin_select.png" style="height:7vh;cursor:pointer;" alt="">
   </div>
 
@@ -72,8 +72,8 @@
 
 
 
-<div ng-if="$state.is('ecommerce')" style="position:relative;height:300px;margin-bottom:20px;width:64%;left:18%;display:border-box;overflow:hidden;" class="card hidden-xs hidden-sm">
-  <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slide.banners[slide.active].state , slide.banners[slide.active].params)" style="width:100%;" ng-if="$index == slide.active" ng-repeat="b in slide.banners" ng-src="{{b.image}}"/>
+<div ng-if="$state.is('ecommerce')" style="position:relative;height:400px;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-xs hidden-sm">
+  <img class="anim-in-out anim-fade" data-anim-speed="100" style="width:100%;cursor:pointer" ng-if="$index == slide.active" ng-repeat="b in slide.banners" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:40px;margin:0px;">
     <ul style="padding:0px;">
       <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:20%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
@@ -85,11 +85,16 @@
   </div>
 </div>
 
-<div ng-if="$state.is('ecommerce')" style="position:relative;height:88vh ;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
-  <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slideMobile.banners[slideMobile.active].state , slideMobile.banners[slideMobile.active].params)" style="width:100%;" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}"/>
+
+<div ng-if="$state.is('ecommerce')" style="position:relative;height:72vh ;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+  <img class="anim-in-out anim-fade" data-anim-speed="100" style="width:100%;cursor:pointer" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
+
+<!-- <div ng-if="$state.is('ecommerce')" style="position:relative;height:88vh ;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+  <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slideMobile.banners[slideMobile.active].state , slideMobile.banners[slideMobile.active].params)" style="width:100%;" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}"/> -->
+
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:40px;margin:0px;">
     <ul style="padding:0px;">
-      <li ng-click="changeSlideMobile($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:33%;height:60px;cursor:pointer;" ng-repeat="s in slideMobile.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
+      <li ng-click="changeSlideMobile($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:33%;height:80px;cursor:pointer;" ng-repeat="s in slideMobile.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
         <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;">
           {{s.title | uppercase}}
         </span>

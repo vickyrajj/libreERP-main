@@ -440,7 +440,7 @@ class PagesViewSet(viewsets.ModelViewSet):
     queryset = Pages.objects.all()
     serializer_class = PagesSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title']
+    filter_fields = ['title','pageurl']
 
 class offerBannerViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly, )

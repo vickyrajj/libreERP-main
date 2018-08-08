@@ -147,7 +147,11 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
     if (f.body == null || f.body.length==0) {
       Flash.create('warning','Please Create Some Body Content')
       return
+    }else if (f.body.length > 9990) {
+      Flash.create('warning','Body Content Is Too Big')
+      return
     }
+
     var url = '/api/ecommerce/pages/';
     if ($scope.mode == 'new') {
       var method = 'POST';

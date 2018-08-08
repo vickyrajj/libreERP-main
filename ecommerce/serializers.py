@@ -199,7 +199,7 @@ class PagesSerializer(serializers.ModelSerializer):
         fields = ( 'pk', 'created' , 'updated' ,'title' , 'pageurl' , 'body')
 
 class offerBannerSerializer(serializers.ModelSerializer):
-    # page = PagesSerializer(many = False , read_only = True)
+    page = PagesSerializer(many = False , read_only = True)
     class Meta:
         model = offerBanner
         fields = ('pk' , 'user' , 'created'  , 'level' , 'image' ,'imagePortrait' , 'title' , 'subtitle' , 'active' , 'page')

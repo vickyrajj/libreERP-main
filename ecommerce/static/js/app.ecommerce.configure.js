@@ -1,9 +1,36 @@
-app.controller('businessManagement.ecommerce.configure.offerBanner', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+app.controller('businessManagement.ecommerce.configure.offerBanner.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions,$rootScope) {
+  $scope.data = $scope.tab.data.offerBanner;
+})
 
-  $scope.form = {
-    image: emptyFile,
-    imagePortrait: emptyFile
-  };
+
+app.controller('businessManagement.ecommerce.configure.offerBanner', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions,$rootScope) {
+
+  $scope.resetForm = function(){
+    $scope.form = {
+      image: emptyFile,
+      imagePortrait: emptyFile,
+      title: '',
+      subtitle: '',
+      level: 1,
+      page: ''
+    };
+    $scope.url = '/api/ecommerce/offerBanner/';
+    $scope.method = 'POST';
+    $scope.mode = 'new'
+    $scope.msg = 'Create'
+  }
+  $scope.resetForm()
+
+  $scope.$on('offerBannerUpdate', function(event, input) {
+    console.log("recieved");
+    console.log(input.data);
+    $scope.msg = 'Update'
+    $scope.form = input.data
+    $scope.mode = 'edit'
+    $scope.url = '/api/ecommerce/offerBanner/' + input.data.pk + '/?mode=configure';
+    $scope.method = 'PATCH';
+
+  });
 
   $scope.pageSearch = function(query) {
     console.log(query);
@@ -14,57 +41,54 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
     })
   }
 
-  if (angular.isUndefined($scope.data.pk)) {
-    $scope.mode = 'new';
-    $scope.data = {
-      title: '',
-      subtitle: '',
-      level: 1,
-      page: ''
-    };
-    $scope.url = '/api/ecommerce/offerBanner/';
-    $scope.method = 'POST';
-  } else {
-    $scope.mdoe = 'edit';
-    $scope.url = '/api/ecommerce/offerBanner/' + $scope.data.pk + '/?mode=configure';
-    $scope.method = 'PATCH';
-  }
 
   $scope.submit = function() {
 
+    if ($scope.form.title.length == 0) {
+      Flash.create('danger', 'Please Mention Some Title');
+      return;
+    }
     var fd = new FormData();
-    fd.append('title', $scope.data.title);
-    fd.append('subtitle', $scope.data.subtitle);
-    fd.append('level', $scope.data.level);
+    fd.append('title', $scope.form.title);
+    fd.append('level', $scope.form.level);
+    if ($scope.form.subtitle != null && $scope.form.subtitle.length > 0) {
+      fd.append('subtitle', $scope.form.subtitle);
+    }
     if ($scope.mode == 'new') {
-      if ($scope.data.page == null || $scope.data.page == '' || typeof $scope.data.page != 'object') {
-        Flash.create('danger', 'Please Selcet Some Page');
-        return;
-      }else {
-        fd.append('page', $scope.data.page.pk);
-      }
+
       if ($scope.form.image == emptyFile) {
         Flash.create('danger', 'No image selected');
         return;
       } else {
         fd.append('image', $scope.form.image);
+      }
+      if ($scope.form.imagePortrait == emptyFile) {
+        Flash.create('danger', 'No Potrait image selected');
+        return;
+      } else {
         fd.append('imagePortrait', $scope.form.imagePortrait);
       }
-    } else {
-      fd.append('active', $scope.data.active);
-      if ($scope.form.image != emptyFile) {
-        fd.append('image', $scope.form.image);
-      }
-
-      if ($scope.form.imagePortrait != emptyFile) {
-        fd.append('imagePortrait', $scope.form.imagePortrait);
-      }
-      if ($scope.data.page == '') {
+      if ($scope.form.page == null || $scope.form.page == '' || typeof $scope.form.page != 'object') {
         Flash.create('danger', 'Please Selcet Some Page');
         return;
       }else {
-        if (typeof $scope.data.page == 'object') {          
-          fd.append('page', $scope.data.page.pk);
+        fd.append('page', $scope.form.page.pk);
+      }
+    } else {
+      fd.append('active', $scope.form.active);
+      if (typeof $scope.form.image != 'string' && $scope.form.image != emptyFile) {
+        fd.append('image', $scope.form.image);
+      }
+
+      if (typeof $scope.form.imagePortrait != 'string' && $scope.form.imagePortrait != emptyFile) {
+        fd.append('imagePortrait', $scope.form.imagePortrait);
+      }
+      if ($scope.form.page == '') {
+        Flash.create('danger', 'Please Selcet Some Page');
+        return;
+      }else {
+        if (typeof $scope.form.page == 'object') {
+          fd.append('page', $scope.form.page.pk);
         }
       }
     }
@@ -78,17 +102,9 @@ app.controller('businessManagement.ecommerce.configure.offerBanner', function($s
       }
     }).
     then(function(response) {
-      if ($scope.mode == 'new') {
-        $scope.data = {
-          title: '',
-          subtitle: '',
-          image: emptyFile,
-          imagePortraitL: emptyFile,
-          level: 1,
-          page: ''
-        };
-      }
       Flash.create('success', response.status + ' : ' + response.statusText);
+      $rootScope.$broadcast('forceRefetch', {});
+      $scope.resetForm()
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });
@@ -158,6 +174,7 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     tableFieldData: [],
     tableproductData: [],
     tablePromocodeData: [],
+    tableOfferBannersData: [],
   };
 
   var fieldViews = [{
@@ -210,15 +227,15 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
 
   $scope.offerBannersConfig = {
     views: [{
-      name: 'table',
-      icon: 'fa-bars',
-      template: '/static/ngTemplates/genericTable/tableDefault.html'
+      name: 'list',
+      icon: 'fa-th-large',
+      template: '/static/ngTemplates/genericTable/genericSearchList.html',
+      itemTemplate: '/static/ngTemplates/app.ecommerce.vendor.form.offerBanner.item.html',
     }, ],
     url: '/api/ecommerce/offerBanner/',
+    searchField: 'title',
     deletable: true,
-    searchField: 'name',
-    canCreate: true,
-    editorTemplate: '/static/ngTemplates/app.ecommerce.vendor.form.offerBanner.html',
+    itemsNumPerView: [12, 24, 48],
   }
 
   $scope.fAQConfig = {
@@ -294,6 +311,44 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
           },
           active: true
         })
+      }
+    }
+
+  }
+
+  $scope.tableActionOfferBanners = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableOfferBannersData);
+
+    for (var i = 0; i < $scope.data.tableOfferBannersData.length; i++) {
+      if ($scope.data.tableOfferBannersData[i].pk == parseInt(target)) {
+        if (action == 'edit') {
+          console.log('editing');
+          // var title = 'Edit OfferBanner : '
+          // var appType = 'editOfferBanner'
+          $rootScope.$broadcast('offerBannerUpdate', {data:$scope.data.tableOfferBannersData[i]});
+        }else if (action == 'delete') {
+          $http({method : 'DELETE' , url : '/api/ecommerce/offerBanner/' + target + '/'}).
+          then(function(response) {
+            Flash.create('success' , 'Deleted');
+            $scope.$broadcast('forceRefetch', {});
+          })
+        } else {
+          var title = 'OfferBanner Explore : '
+          var appType = 'offerBannerExplore'
+          $scope.addTab({
+            title: title + $scope.data.tableOfferBannersData[i].pk,
+            cancel: true,
+            app: appType,
+            data: {
+              pk: target,
+              offerBanner: $scope.data.tableOfferBannersData[i]
+            },
+            active: true
+          })
+        }
+        // i clicked this $scope.data.tableOfferBannersData[i]
+
       }
     }
 
