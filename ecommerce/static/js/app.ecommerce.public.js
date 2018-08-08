@@ -1726,6 +1726,10 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     banners: [],
     active: 0
   };
+  $scope.slideMobile = {
+    banners: [],
+    active: 0
+  };
 
   $http({
     method: 'GET',
@@ -1739,6 +1743,9 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     //   response.data[i].params = {id : parseInt(s)}
     // }
     $scope.slide.banners = response.data;
+    console.log(response.data,'fffff');
+    $scope.slideMobile.banners = response.data.slice(0,3);
+    console.log($scope.slideMobile.banners);
   })
   $scope.changeSlide = function(index) {
     $scope.slide.active = index;
@@ -1750,6 +1757,18 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       $scope.slide.active = 0;
     }
   }, 5000);
+
+
+  $scope.changeSlideMobile = function(index) {
+    $scope.slideMobile.active = index;
+  }
+
+  $interval(function() {
+    $scope.slideMobile.active += 1;
+    if ($scope.slideMobile.active == 3) {
+      $scope.slideMobile.active = 0;
+    }
+  }, 3000);
 
   $scope.feedback = {
     email: '',

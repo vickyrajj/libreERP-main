@@ -128,7 +128,7 @@
         <div class="row">
           <div class="col-md-4 hidden-sm hidden-xs" style="padding-top:20px;">
             <div class="col-md-5 hidden-sm hidden-xs text-center">
-              <span  ng-if="details.rating.rating__avg==none">0/5</span> <br>
+              <span  ng-if="details.rating.rating__avg==none">None</span> <br>
               <span  ng-if="details.rating.rating__avg!=none">{{details.rating.rating__avg| number : 1}}/5</span> <br>
               <i class="fa fa-star" style="color:#e3bc18;font-size:80px;"></i>
             </div>
@@ -207,10 +207,10 @@
 
         </div>
         <hr >
-        <!-- <div class="row text-center" ng-if="reviews.length==0||me != null"> -->
+        <div class="row text-center" ng-if="me != null&&reviews.length==0">
           <!-- <h4>No reviews yet. Be the first to review</h4> -->
-            <!-- <h4>Write a review</h4>
-        </div> -->
+            <h4>Write a review</h4>
+        </div>
         <div class="row" ng-if="reviewsCount!=0">
 
           <!-- <div class="container-fluid">
@@ -222,7 +222,9 @@
                 <div class="col-md-3" style="padding-left:35px;">
                   <div class="row">
                     <uib-rating ng-model="r.rating" max="5" readonly="true" style="font-size:17px;color:#e2a900;padding-left:0px"></uib-rating>
-                    <span class="label success" style="background-color:green">Verified User</span>
+                      <span class="label success" style="background-color:green">Verified User</span></br>
+                    <span class="text-muted"> By {{r.user.first_name}} {{r.user.last_name}} On {{r.created | date : 'dd-MMM-yyyy'}}</span>
+
                   </div>
                   <!-- <div class="row" ng-if="me != null">
                     {{r.user | getName}} <br> {{r.created | date : 'dd-MMM-yyyy'}} <br>
@@ -234,6 +236,7 @@
                 </div>
                 <div class="col-md-9">
                   <div class="row container-fluid">
+
                     <h5>{{r.headingVal}} </h5>
                     <p>
                       {{r.textVal}}
