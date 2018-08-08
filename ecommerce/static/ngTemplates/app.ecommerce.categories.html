@@ -157,8 +157,10 @@
           <div class="col-md-3  hidden-xs hidden-sm  anim-in-out anim-zoom-out" style="margin-bottom:15px;">
             <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk,name:l.product.name.split(' ').join('-')})">
               <div class="row">
-                <img style="width: 100%; height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
-                <img style="width: 100%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
+                <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
+                <img style="width: 80%; height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+                <img style="width: 80%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
+              </div>
               </div>
               <div class="row">
                 <div class=" card bg-white" style="padding-bottom:0px;">
@@ -188,8 +190,10 @@
           <div class="col-xs-12 col-sm-6 hidden-lg hidden-md anim-in-out anim-zoom-out" style="margin-bottom:15px;">
             <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk,name:l.product.name.split(' ').join('-')})">
               <div class="row">
-                <img style="width: 100%; height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
-                <img style="width: 100%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
+                <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
+                <img style="height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+                <img style=" height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
+              </div>
               </div>
               <div class="row">
                 <div class=" card bg-white" style="padding-bottom:0px;">

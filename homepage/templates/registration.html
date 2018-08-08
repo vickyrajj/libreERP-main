@@ -79,7 +79,7 @@
           </div>
         </div>
 
-        <div class="container-fluid" style="margin-top:15px" ng-if="mode== 'main'">
+        <!-- <div class="container-fluid" style="margin-top:15px" ng-if="mode== 'main'">
 
           <div class="row text-center" style="margin-top: 30px;">
               <div class="row">
@@ -96,7 +96,7 @@
               OR
             </span>
           </div>
-        </div>
+        </div> -->
 
 
 
@@ -115,10 +115,10 @@
                     <div class="row" style="margin-bottom:15px;">
                       <div class="col-md-6">
                         <div class="row">
-                          <div class="col-md-1 col-sm-1 col-xs-1">
+                          <div class="col-md-2 col-sm-2 col-xs-2">
                             <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                           </div>
-                          <div class="col-md-11 col-sm-11 col-xs-11">
+                          <div class="col-md-10 col-sm-10 col-xs-10">
                             <div class="form-group has-{{ validity.firstName != null && validity.firstName ? 'success':'danger'}}">
                               <input ng-model="form.firstName" type="text" class="form-control floatInput" required/>
                               <span class="floating-label">First Name *</span>
@@ -129,10 +129,10 @@
                         </div>
                       <div class="col-md-6">
                         <div class="row">
-                          <div class="col-md-1 col-sm-1 col-xs-1">
+                          <div class="col-md-2 col-sm-2 col-xs-2">
                             <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                           </div>
-                          <div class="col-md-11 col-sm-11 col-xs-11">
+                          <div class="col-md-10 col-sm-10 col-xs-10">
                             <div class="form-group has-{{ validity.lastName != null && validity.lastName ? 'success':'danger'}}">
                               <input ng-model="form.lastName" type="text" class="form-control floatInput" required/>
                               <span class="floating-label">Last Name *</span>
@@ -145,10 +145,10 @@
                     <div class="row" style="margin-bottom:15px;">
                       <div class="col-md-6">
                         <div class="row">
-                          <div class="col-md-1 col-sm-1 col-xs-1">
+                          <div class="col-md-2 col-sm-2 col-xs-2">
                             <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
                           </div>
-                          <div class="col-md-11 col-sm-11 col-xs-11">
+                          <div class="col-md-10 col-sm-10 col-xs-10">
                             <div class="form-group">
                               <input ng-model="form.email" type="text" class="form-control floatInput" required/>
                               <span class="floating-label">Email *</span>
@@ -159,10 +159,10 @@
                       </div>
                       <div class="col-md-6">
                         <div class="row">
-                          <div class="col-md-1 col-sm-1 col-xs-1">
+                          <div class="col-md-2 col-sm-2 col-xs-2">
                             <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                           </div>
-                          <div class="col-md-11 col-sm-11 col-xs-11">
+                          <div class="col-md-10 col-sm-10 col-xs-10">
                             <div class="form-group">
                               <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)'  ng-model="form.mobile" type="text" class="form-control floatInput" required/>
                               <span class="floating-label">Phone *</span>
@@ -175,10 +175,10 @@
                     <div class="row" style="margin-bottom:15px;">
                       <div class="col-md-6">
                         <div class="row">
-                          <div class="col-md-1 col-sm-1 col-xs-1">
+                          <div class="col-md-2 col-sm-2 col-xs-2">
                             <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
                           </div>
-                          <div class="col-md-11 col-sm-11 col-xs-11">
+                          <div class="col-md-10 col-sm-10 col-xs-10">
                             <div class="form-group">
                               <input ng-model="form.password" type="password" class="form-control floatInput" required/>
                               <span class="floating-label">Password *</span>
@@ -189,10 +189,10 @@
                       </div>
                       <div class="col-md-6">
                         <div class="row">
-                          <div class="col-md-1 col-sm-1 col-xs-1">
+                          <div class="col-md-2 col-sm-2 col-xs-2">
                             <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
                           </div>
-                          <div class="col-md-11 col-sm-11 col-xs-11">
+                          <div class="col-md-10 col-sm-10 col-xs-10">
                             <div class="form-group">
                               <input ng-model="form.rePassword" type="password" class="form-control floatInput" required/>
                               <span class="floating-label">Confirm Password *</span>
@@ -208,11 +208,11 @@
 
 
                     <div class="row" style="margin-top:50px;">
-                      <div class="col-md-1 col-sm-1 col-xs-1">
+                      <div class="col-md-2 col-sm-2 col-xs-2">
                         <input type="checkbox" class="form-control pull-right" ng-model="form.agree">
                       </div>
-                      <div class="col-md-11 col-sm-11 col-xs-11">
-                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by CIOC FMCG Pvt Ltd.</span>
+                      <div class="col-md-10 col-sm-10 col-xs-10">
+                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  Sterling Select.</span>
                       </div>
                     </div>
                     <div ng-if="validityChecked && !form.agree" class="row">
@@ -225,10 +225,10 @@
                   <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
                     <div class="col-md-6">
                       <div class="row">
-                        <div class="col-md-1 col-sm-1 col-xs-1">
+                        <div class="col-md-2 col-sm-2 col-xs-2">
                           <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                         </div>
-                        <div class="col-md-11 col-sm-11 col-xs-11">
+                        <div class="col-md-10 col-sm-10 col-xs-10">
                           <div class="form-group">
                             <input ng-model="form.mobileOTP" type="password" class="form-control floatInput" required/>
                             <span class="floating-label">Mobile OTP *</span>
@@ -238,10 +238,10 @@
                     </div>
                     <div class="col-md-6">
                       <div class="row">
-                        <div class="col-md-1 col-sm-1 col-xs-1">
+                        <div class="col-md-2 col-sm-2 col-xs-2">
                           <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
                         </div>
-                        <div class="col-md-11 col-sm-11 col-xs-11">
+                        <div class="col-md-10 col-sm-10 col-xs-10">
                           <div class="form-group">
                             <input ng-model="form.emailOTP" type="password" class="form-control floatInput" required/>
                             <span class="floating-label">Email OTP *</span>
