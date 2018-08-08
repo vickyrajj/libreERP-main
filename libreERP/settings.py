@@ -75,7 +75,7 @@ BRAND_NAME = 'sterlingselect.com'
 SERVICE_NAME = 'Inventory, Sales and Ecommerce'
 BRAND_LOGO = '/static/images/company_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
-
+SMART_REGISTRATION = True
 
 SEO_TITLE = 'Sterling Select'
 SEO_DESCRIPTION = 'Sterling Select Online Shopping'
