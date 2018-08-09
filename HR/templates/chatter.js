@@ -267,6 +267,7 @@ var custName = '{{custName}}'
 var uid;
 var broswer;
 var isAgentOnline = false;
+var agentPk = null;
 
 
 
@@ -465,6 +466,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
           }
 
            message = {msg:'' ,  sentByMe:false , created: args[1].created , link:args[1].link }
+        }else if (args[0]=='AP') {
+          agentPk = args[1];
         }
 
 
@@ -1132,15 +1135,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+      // if (youtubeLink) {
+      //   status = "ML";
+      //   link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+      //   var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
+      //   var dataToSend = JSON.stringify({uid: uid , message: message.link });
+      // }else {
+      //   status = "M";
+      //   var message = {msg:inptText ,  sentByMe:true , created: new Date() }
+      //   var dataToSend = JSON.stringify({uid: uid , message: message.msg });
+      // }
+
       if (youtubeLink) {
         status = "ML";
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
         var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
-        var dataToSend = JSON.stringify({uid: uid , message: message.link });
+
+        var dataToSend = {uid: uid , message: message.link};
+        if (agentPk) {
+          dataToSend.user = agentPk
+        }
+        dataToSend = JSON.stringify(dataToSend)
       }else {
         status = "M";
         var message = {msg:inptText ,  sentByMe:true , created: new Date() }
-        var dataToSend = JSON.stringify({uid: uid , message: message.msg });
+        var dataToSend = {uid: uid , message: message.msg };
+        if (agentPk) {
+          dataToSend.user = agentPk
+        }
+        dataToSend = JSON.stringify(dataToSend)
       }
 
 
@@ -1235,6 +1258,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     fd.append('uid', uid);
     fd.append('attachment', file.files[0]);
     fd.append('attachmentType' , file.files[0].type.split('/')[0] )
+
+    if (agentPk) {
+      fd.append('user' , agentPk)
+    }
 
      var xhttp = new XMLHttpRequest();
 
