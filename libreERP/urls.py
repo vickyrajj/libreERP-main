@@ -5,7 +5,6 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
 from support.views import getChatterScript
-
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration,index,crmHome,customerLoginView , customerHomeView
 
 from ERP.views import serviceRegistration
@@ -40,7 +39,7 @@ urlpatterns = [
     url(r'^contacts', contacts , name ='contacts'),
     url(r'^customer/login', customerLoginView , name ='customerLogin'),
     url(r'^customerhome', customerHomeView , name ='customerhome'),
-    url(r'^script/chatter', getChatterScript , name ='getChatter'),
+    url(r'^script/(?P<fileName>[\w|\W]+)', getChatterScript , name ='getChatterScript'),
 ]
 
 if settings.DEBUG:

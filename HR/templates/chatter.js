@@ -259,9 +259,11 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-var custID = 1;
-var borderColor = '#ACA626';
-var custName = 'CIOC'
+var custID = {{pk}};
+// var borderColor = '#ACA626';
+// var custName = 'CIOC'
+var borderColor = '{{windowColor}}'
+var custName = '{{custName}}'
 var uid;
 var broswer;
 var isAgentOnline = false;
@@ -330,7 +332,7 @@ function fetchMessages(uid) {
         console.log(data);
         for (var i = 0; i < data.length; i++) {
 
-          if (data[i].user) {
+          if (data[i].sentByAgent) {
             var sentByMe = false;
           }else {
             var sentByMe = true;
@@ -530,9 +532,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
       '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:#286EFA; color:#fff; padding:15px; background-size:cover; " >'+
         '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <i class="fa fa-times" aria-hidden="true"></i> </span>'+
         '<div style="padding:15px; padding-left:25px; " >'+
-          '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are Syrow 👋 </p>'+
+          '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are '+ custName +' 👋 </p>'+
 
-        ' <p style="font-size:15px; margin:0px 0px 10px; line-height: 1.75;" >We deliver excellence and committed to Spread Happiness. </p>'+
+        // ' <p style="font-size:15px; margin:0px 0px 10px; line-height: 1.75;" >We deliver excellence and committed to Spread Happiness. </p>'+
       '  </div>'+
       '</div>'+
 
@@ -733,6 +735,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
         console.log(data);
+        data = data[0];
         console.log('yaaaaa');
 
         for (var i = 0; i < supportOptions.length; i++) {
@@ -794,7 +797,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
   };
 
-  xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/' + custID + '/' , true);
+  xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/?service=' + custID , true);
   xhttp.send();
 
 
@@ -949,7 +952,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
-  agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >Syrow Agent</p>'
+  agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >Agent</p>'
   onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
 
   closeSupport.style.display = "none";
@@ -1155,7 +1158,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.log(isAgentOnline, ' is agent online..........');
 
         if (!isAgentOnline) {
-          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">Syrow Agent</p>'
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">Agent</p>'
           var div = document.createElement("div");
           div.id="offlineMessage"
 

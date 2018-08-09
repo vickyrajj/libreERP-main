@@ -96,6 +96,7 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     $scope.custDetails = response.data[0]
     console.log($scope.custDetails,'dddddddddddd');
   });
+
   $scope.openChartPopoup = function(pk){
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',
@@ -106,13 +107,34 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
           return pk;
         }
       },
-      controller: function($scope, $users , $uibModalInstance,cPk) {
+      controller: function($scope, $users , $timeout , $uibModalInstance,cPk) {
         console.log('sssssssssssss',cPk);
-        $scope.src = '<script src="' + "http://localhost:8000/static/js/chatter-" + cPk + ".js" + '"></script>'
+        $scope.cpk ;
+        $http({
+          method: 'GET',
+          url: '/api/support/script/chatter/?pk='+pk,
+        }).
+        then(function(response) {
+          // console.log(response.data);
+          $scope.cpk= response.data.data
+          console.log($scope.cpk);
+        });
+
+        $timeout(function () {
+          $scope.src = '<script src="' + "http://localhost:8080/script/chatter-" + $scope.cpk + ".js" + '"></script>'
+        }, 600);
 
       },
     })
+
+
+
+
+
+
+
   }
+
 })
 
 app.controller("businessManagement.customers.form", function($scope, $state, $users, $stateParams, $http, Flash) {
@@ -124,7 +146,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       return response.data;
     })
   };
-  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'' , callBack:false , ticket: false}
+  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'' , callBack:false , ticket: false , dp: emptyFile , name:''}
   $scope.fetCustomerProfile = function(pk){
     $scope.cpForm.service = pk
     $http({

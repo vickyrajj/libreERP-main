@@ -21,6 +21,15 @@ import requests
 import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
+from Crypto.Cipher import DES
+import base64
+import hashlib
+from Crypto.Cipher import AES
+from Crypto import Random
+
+BLOCK_SIZE = 16
+pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
+unpad = lambda s: s[:-ord(s[len(s) - 1:])]
 
 # Create your views here.
 
@@ -34,11 +43,47 @@ class CustomerProfileViewSet(viewsets.ModelViewSet):
 class SupportChatViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny ,)
     serializer_class = SupportChatSerializer
-    queryset = SupportChat.objects.all()
+    # queryset = SupportChat.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['uid']
+    filter_fields = ['uid' , 'user']
+    def get_queryset(self):
+        if 'user__isnull' in self.request.GET:
+            return SupportChat.objects.filter(user__isnull = True)
+        else:
+            return SupportChat.objects.all()
 
-def getChatterScript(request):
-    print 'coming here'
-    print request
-    return render(request, 'chatter.js', content_type="application/x-javascript")
+def encrypt(raw, password):
+    private_key = hashlib.sha256(password.encode("utf-8")).digest()
+    raw = pad(raw)
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(private_key, AES.MODE_CBC, iv)
+    return base64.b64encode(iv + cipher.encrypt(raw))
+
+
+def decrypt(enc, password):
+    private_key = hashlib.sha256(password.encode("utf-8")).digest()
+    enc = base64.b64decode(enc)
+    iv = enc[:16]
+    cipher = AES.new(private_key, AES.MODE_CBC, iv)
+    return unpad(cipher.decrypt(enc[16:]))
+
+class getChatterScriptAPI(APIView):
+    def get(self , request , format = None):
+        pk = request.GET['pk']
+        encrypted = encrypt(pk, "cioc")
+        print 'ee',encrypted
+
+        while '/' in encrypted:
+            encrypted = encrypt(pk, "cioc")
+
+        return Response({'data':encrypted  }, status = status.HTTP_200_OK)
+
+def getChatterScript(request , fileName):
+    print fileName
+    fileName = fileName.replace('.js' , '').replace("chatter-" , '')
+    pk = decrypt(fileName , "cioc")
+    print pk
+
+    obj = CustomerProfile.objects.get(pk = pk)
+    print obj,'objjjjjj'
+    return render(request, 'chatter.js', {"pk" : pk , "windowColor" : obj.windowColor , "custName" : obj.service.name } ,content_type="application/x-javascript")

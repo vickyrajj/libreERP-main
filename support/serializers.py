@@ -24,4 +24,4 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
 class SupportChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupportChat
-        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType')
+        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent' ,'dp' ,'name')

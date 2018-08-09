@@ -28,6 +28,45 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
      //
      // ];
 
+     $http({
+       method: 'GET',
+       url: '/api/support/supportChat/?user='+$scope.me.pk,
+     }).then(function(response) {
+       // $scope.data.messages = [];
+       for (var i = 0; i < response.data.length; i++) {
+
+        if ($scope.myUsers.length>0) {
+          $scope.alreadyExist;
+          for (var j = 0; j < $scope.myUsers.length; j++) {
+            if ($scope.myUsers[j].uid== response.data[i].uid ) {
+              console.log('yesss' , );
+              $scope.alreadyExist = true;
+            }else {
+              // $scope.myUsers.push( { uid: response.data[i].uid , messages:[]  } )
+                // $scope.myUsers.push( {name : 'Ashish', uid: response.data[i].uid,  messages : [], isOnline:true }  )
+                $scope.alreadyExist = false;
+            }
+          }
+
+          if (!$scope.alreadyExist) {
+            $scope.myUsers.push( {name : 'Ashish', uid: response.data[i].uid,  messages : [], isOnline:true }  )
+          }
+
+
+        }else {
+          // $scope.myUsers.push( { uid: response.data[i].uid , messages:[]  } )
+          $scope.myUsers.push( {name : 'Ashish', uid: response.data[i].uid,  messages : [], isOnline:true }  )
+
+          // newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", img : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+        }
+
+
+       }
+     });
+
+
+
+
    $scope.chatsInView = [];
    $scope.data = { activeTab:0,}
 
@@ -90,6 +129,38 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
    $scope.assignUser = function (indx , uid) {
      $scope.myUsers.push($scope.newUsers[indx]);
      $scope.newUsers.splice(indx, 1);
+
+
+     $http({
+       method: 'GET',
+       url:  '/api/support/supportChat/?user__isnull=True&uid='+ uid
+     }).
+     then(function(response) {
+       console.log(response.data);
+       for (var i = 0; i < response.data.length; i++) {
+
+         $http({
+           method: 'PATCH',
+           url: '/api/support/supportChat/'+ response.data[i].pk +'/',
+           data: {user : $scope.me.pk}
+         }).
+         then(function(response) {
+           console.log(response.data);
+         });
+
+       }
+     });
+
+     $scope.status ='AP';
+
+     connection.session.publish('service.support.chat.' + uid, [$scope.status , $scope.me.pk ], {}, {
+       acknowledge: true
+     }).
+     then(function(publication) {
+       console.log("Published");
+     });
+
+
 
    }
 

@@ -174,51 +174,51 @@ app.config(function($stateProvider ){
   })
 
 
-  .state('home.employees', {
-    url: "/employees",
-    views: {
-       "": {
-          templateUrl: '/static/ngTemplates/genericAppBase.html',
-       },
-       "menu@home.employees": {
-          templateUrl: '/static/ngTemplates/genericMenu.html',
-          controller : 'controller.generic.menu',
-        },
-        "@home.employees": {
-          templateUrl: '/static/ngTemplates/app.employees.dash.html',
-          // controller : 'projectManagement.LMS.default',
-        }
-    }
-  })
-  .state('home.employees.orgChart', {
-    url: "/orgChart",
-    templateUrl: '/static/ngTemplates/app.employees.orgChart.html',
-    controller: 'businessManagement.employees.orgChart'
-  })
-  .state('home.employees.list', {
-    url: "/list",
-    templateUrl: '/static/ngTemplates/app.employees.list.html',
-    controller: 'businessManagement.employees.list'
-  })
-  .state('home.employees.myCircle', {
-    url: "/myCircle",
-    templateUrl: '/static/ngTemplates/app.employees.myCircle.html',
-    controller: 'businessManagement.employees.myCircle'
-  })
-  .state('home.employees.exitManagement', {
-    url: "/exitManagement",
-    views: {
-      "": {
-        templateUrl: '/static/ngTemplates/app.employees.exitManagement.html',
-        controller: 'businessManagement.exitManagement',
-      }
-    }
-  })
-  .state('home.employees.approvals', {
-    url: "/approvals",
-    templateUrl: '/static/ngTemplates/app.employees.approvals.html',
-    controller: 'businessManagement.employees.approvals'
-  })
+  // .state('home.employees', {
+  //   url: "/employees",
+  //   views: {
+  //      "": {
+  //         templateUrl: '/static/ngTemplates/genericAppBase.html',
+  //      },
+  //      "menu@home.employees": {
+  //         templateUrl: '/static/ngTemplates/genericMenu.html',
+  //         controller : 'controller.generic.menu',
+  //       },
+  //       "@home.employees": {
+  //         templateUrl: '/static/ngTemplates/app.employees.dash.html',
+  //         // controller : 'projectManagement.LMS.default',
+  //       }
+  //   }
+  // })
+  // .state('home.employees.orgChart', {
+  //   url: "/orgChart",
+  //   templateUrl: '/static/ngTemplates/app.employees.orgChart.html',
+  //   controller: 'businessManagement.employees.orgChart'
+  // })
+  // .state('home.employees.list', {
+  //   url: "/list",
+  //   templateUrl: '/static/ngTemplates/app.employees.list.html',
+  //   controller: 'businessManagement.employees.list'
+  // })
+  // .state('home.employees.myCircle', {
+  //   url: "/myCircle",
+  //   templateUrl: '/static/ngTemplates/app.employees.myCircle.html',
+  //   controller: 'businessManagement.employees.myCircle'
+  // })
+  // .state('home.employees.exitManagement', {
+  //   url: "/exitManagement",
+  //   views: {
+  //     "": {
+  //       templateUrl: '/static/ngTemplates/app.employees.exitManagement.html',
+  //       controller: 'businessManagement.exitManagement',
+  //     }
+  //   }
+  // })
+  // .state('home.employees.approvals', {
+  //   url: "/approvals",
+  //   templateUrl: '/static/ngTemplates/app.employees.approvals.html',
+  //   controller: 'businessManagement.employees.approvals'
+  // })
 
 
 
