@@ -121,7 +121,8 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
         });
 
         $timeout(function () {
-          $scope.src = '<script src="' + "http://localhost:8080/script/chatter-" + $scope.cpk + ".js" + '"></script>'
+          console.log(window.location.host,'hosttttttt');
+          $scope.src = '<script src="' + "http://"+window.location.host+"/script/chatter-" + $scope.cpk + ".js" + '"></script>'
         }, 600);
 
       },
