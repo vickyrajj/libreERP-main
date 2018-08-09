@@ -21,6 +21,7 @@ import requests
 import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
+import datetime
 from Crypto.Cipher import DES
 import base64
 import hashlib
@@ -45,12 +46,42 @@ class SupportChatViewSet(viewsets.ModelViewSet):
     serializer_class = SupportChatSerializer
     # queryset = SupportChat.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['uid' , 'user']
+    filter_fields = ['uid','user']
+    exclude_fields = ['id']
     def get_queryset(self):
         if 'user__isnull' in self.request.GET:
-            return SupportChat.objects.filter(user__isnull = True)
+            return SupportChat.objects.filter(user__isnull=True)
         else:
             return SupportChat.objects.all()
+
+class ReviewFilterCalAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+
+    def get(self, request, format=None):
+        print '****** entered', request.GET
+
+        toSend = []
+        sobj = SupportChat.objects.filter(user__isnull=False)
+        if 'date' in self.request.GET:
+            date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
+            sobj = sobj.filter(created__startswith = date)
+        if 'user' in self.request.GET:
+            sobj = sobj.filter(user = int(self.request.GET['user']))
+        # toSend = list(sobj.values())
+        agentsList = list(sobj.values_list('user',flat=True).distinct())
+        print agentsList
+        for i in agentsList:
+            agSobj = sobj.filter(user = i)
+            agUid = list(agSobj.values_list('uid',flat=True).distinct())
+            print agUid
+            for j in agUid:
+                print '@@@@@@@@@@@@@@@@@@@2',j
+                agUidObj = list(agSobj.filter(uid=j).values())
+                toSend.append(agUidObj)
+        print toSend
+
+        return Response(toSend, status=status.HTTP_200_OK)
+
 
 def encrypt(raw, password):
     private_key = hashlib.sha256(password.encode("utf-8")).digest()

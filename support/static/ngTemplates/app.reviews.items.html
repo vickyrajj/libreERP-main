@@ -1,24 +1,16 @@
 <div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
   <div class="container-fluid card" style="padding-bottom:10px;">
-    <div class="row" style="border-bottom: 1px solid #dedede;height:70px">
-      <div class="col-md-12" style="position:relative;display:block;">
-        <div class="row" style="padding-left:10px;">
-          <h4>Agent Name : </h4>
-        </div>
+    <div class="row container-fluid" style="border-bottom: 1px solid #dedede;height:70px">
+      <div class="col-md-12">
+        <h4>Agent Name : {{data.user | getName}}</h4>
+        <h4>UID : {{data.uid}}</h4>
       </div>
     </div>
-    <div class="row container-fluid" style="padding-top:20px;height:50px;">
-      <div class="col-md-10">
-        <strong>Date:</strong> {{data.telephone}} <br>
-      </div>
-      <div class="col-md-2">
-        <div style="padding-right:20px;">
-          <div class="row">
-            <span class="pull-right" style="cursor:pointer;">
-              <i class="fa fa-info-circle fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('info')"></i>
-            </span>
-          </div>
-        </div>
+    <div class="row container-fluid" style="padding-top:10px;height:50px;">
+      <div class="col-md-12">
+        <h4>Date: {{data.created | date : 'dd-MMM-yyyy'}}
+          <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg" ng-click="rowActionClicked('info')"></i></span>
+        </h4>
       </div>
     </div>
   </div>
