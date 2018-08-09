@@ -11,4 +11,5 @@ router.register(r'supportChat' , SupportChatViewSet , base_name = 'supportChat')
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'reviewHomeCal/$' , ReviewFilterCalAPIView.as_view() ),
+    url(r'script/chatter/$' , getChatterScriptAPI.as_view()),
 ]

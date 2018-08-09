@@ -8,6 +8,13 @@ from ERP.models import service
 
 # Create your models here.
 
+def getdpPath(instance , filename):
+    return 'support/customerProfile/DP/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+
+def getSupportChatAttachment(instance , filename ):
+    return 'support/chat/%s_%s' % (str(time()).replace('.', '_'), filename)
+
+
 class CustomerProfile(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
@@ -20,10 +27,9 @@ class CustomerProfile(models.Model):
     videoAndAudio = models.BooleanField(default = False)
     vr = models.BooleanField(default = False)
     windowColor = models.CharField(max_length = 20 , null = True )
+    dp = models.ImageField(upload_to = getdpPath , null = True)
+    name = models.CharField(max_length = 50 , null = True )
 
-
-def getSupportChatAttachment(instance , filename ):
-    return 'support/chat/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 class SupportChat(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -32,3 +38,4 @@ class SupportChat(models.Model):
     user = models.ForeignKey(User , related_name = 'supportFile' , null = True)
     message = models.CharField(max_length = 200 , null = True)
     attachmentType =  models.CharField(max_length = 50, null = True)
+    sentByAgent = models.BooleanField(default = False)

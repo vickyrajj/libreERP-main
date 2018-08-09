@@ -1,7 +1,19 @@
 <div ng-controller="businessManagement.reviews.explore" style="padding-top:20px;">
   <div class="col-md-12">
     <div class="row" ng-repeat="msg in msgData">
-      <h3>{{msg.message}}</h3>
+      <!-- <h3>{{msg.message}}</h3> -->
+      <div style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+
+      <p ng-if="msg.message.length>0" style="word-break: break-all !important;" ><h4>{{msg.message}}</h4></p>
+       <!-- <img ng-if="msg.img" ng-src="{{msg.img}}" style="width:250px;">
+       <video ng-if="msg.video" width="280" height="240" ng-src="{{msg.video}}" controls></video>
+       <audio ng-if="msg.audio" ng-src="{{msg.audio}}" controls></audio>
+       <p class="text-center" ng-if="msg.doc" style="word-wrap: break-word;"><a ng-href="{{msg.doc}}" target = "_blank" ><i class="fa {{msg.doc.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.doc.split('chat/')[1]}}  </p>
+       <div ng-if="msg.link" >
+         <iframe width="100%" height="215" ng-src="{{msg.link | trusted}}" frameborder="0" allowfullscreen></iframe>
+       </div> -->
+
+      </div>
     </div>
   </div>
 </div>

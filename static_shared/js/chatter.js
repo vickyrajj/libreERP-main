@@ -265,6 +265,7 @@ var custName = 'CIOC'
 var uid;
 var broswer;
 var isAgentOnline = false;
+var agentPk = null;
 
 
 
@@ -330,7 +331,7 @@ function fetchMessages(uid) {
         console.log(data);
         for (var i = 0; i < data.length; i++) {
 
-          if (data[i].user) {
+          if (data[i].sentByAgent) {
             var sentByMe = false;
           }else {
             var sentByMe = true;
@@ -463,6 +464,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
           }
 
            message = {msg:'' ,  sentByMe:false , created: args[1].created , link:args[1].link }
+        }else if (args[0]=='AP') {
+          agentPk = args[1];
         }
 
 
@@ -724,7 +727,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //   }
   // };
 
-
+  // function getKeyByValue(object, value) {
+  //   var aa = Object.keys(object).find(key => object[key] === value);
+  //   console.log(aa);
+  // }
 
   var mainStr = "";
   var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:false} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
@@ -733,6 +739,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
         console.log(data);
+        var a = getKeyByValue(data , true)
+        console.log(a ,'aaaaaaaaaaaaaaaaa');
+
         console.log('yaaaaa');
 
         for (var i = 0; i < supportOptions.length; i++) {
@@ -1133,11 +1142,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
         status = "ML";
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
         var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
-        var dataToSend = JSON.stringify({uid: uid , message: message.link });
+
+        var dataToSend = {uid: uid , message: message.link};
+        if (agentPk) {
+          dataToSend.user = agentPk
+        }
+        dataToSend = JSON.stringify(dataToSend)
       }else {
         status = "M";
         var message = {msg:inptText ,  sentByMe:true , created: new Date() }
-        var dataToSend = JSON.stringify({uid: uid , message: message.msg });
+        var dataToSend = {uid: uid , message: message.msg };
+        if (agentPk) {
+          dataToSend.user = agentPk
+        }
+        dataToSend = JSON.stringify(dataToSend)
       }
 
 
@@ -1232,6 +1250,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     fd.append('uid', uid);
     fd.append('attachment', file.files[0]);
     fd.append('attachmentType' , file.files[0].type.split('/')[0] )
+
+    if (agentPk) {
+      fd.append('user' , agentPk)
+    }
 
      var xhttp = new XMLHttpRequest();
 

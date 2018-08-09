@@ -327,18 +327,17 @@ app.directive('chatBox', function() {
     },
     controller: function($scope, $users , $uibModal , $http) {
       $scope.me = $users.get('mySelf');
-      console.log($scope.data,'will fetch here');
+      // console.log($scope.data,'will fetch here');
 
       $http({
         method: 'GET',
         url: '/api/support/supportChat/?uid='+$scope.data.uid,
       }).then(function(response) {
-        console.log(response.data , 'ressss');
+        // console.log(response.data , 'ressss');
         $scope.data.messages = [];
         for (var i = 0; i < response.data.length; i++) {
 
-
-          if (response.data[i].user) {
+          if (response.data[i].sentByAgent) {
             var sentByMe = true;
           }else {
             var sentByMe = false;
@@ -388,6 +387,7 @@ app.directive('chatBox', function() {
           fd.append('attachment', $scope.chatBox.fileToSend);
           fd.append('user' , $scope.me.pk);
           fd.append('uid' , $scope.data.uid)
+          fd.append('sentByAgent' , true)
           fd.append('attachmentType' , $scope.chatBox.fileToSend.type.split('/')[0] )
           $http({
             method: 'POST',
@@ -468,7 +468,8 @@ app.directive('chatBox', function() {
             var dataToSend = {
               uid : $scope.data.uid ,
               message : message.msg ,
-              user : $scope.me.pk
+              user : $scope.me.pk,
+              sentByAgent: true
             }
           }
 
