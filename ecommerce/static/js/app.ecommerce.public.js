@@ -1772,8 +1772,29 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     //   response.data[i].params = {id : parseInt(s)}
     // }
     $scope.slide.banners = response.data;
+    if ($scope.slide.banners.length > 5) {
+      $scope.slide.banners = $scope.slide.banners.slice(0,5)
+    }
+    $scope.slide.active =0
+    if ($scope.slide.banners.length > 1) {
+      $scope.slide.lastbanner = $scope.slide.banners.length - 1
+    }else {
+      $scope.slide.lastbanner = 0
+    }
+
     console.log(response.data,'fffff');
-    $scope.slideMobile.banners = response.data.slice(0,3);
+
+    $scope.slideMobile.banners = response.data;
+    if ($scope.slideMobile.banners.length > 3) {
+      $scope.slideMobile.banners = response.data.slice(0,3);
+    }
+    $scope.slideMobile.active =0
+    if ($scope.slideMobile.banners.length > 1) {
+      $scope.slideMobile.lastbanner = $scope.slideMobile.banners.length - 1
+    }else {
+      $scope.slideMobile.lastbanner = 0
+    }
+    console.log($scope.slide.banners);    
     console.log($scope.slideMobile.banners);
   })
   $scope.changeSlide = function(index) {
@@ -1781,9 +1802,13 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   }
 
   $interval(function() {
-    $scope.slide.active += 1;
-    if ($scope.slide.active == 5) {
+    if ($scope.slide.active == undefined) {
+      $scope.slide.active =0
+    }
+    if ($scope.slide.active == $scope.slide.lastbanner) {
       $scope.slide.active = 0;
+    }else {
+      $scope.slide.active += 1;
     }
   }, 5000);
 
@@ -1793,11 +1818,22 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   }
 
   $interval(function() {
-    $scope.slideMobile.active += 1;
-    if ($scope.slideMobile.active == 3) {
+    if ($scope.slideMobile.active == undefined) {
+      $scope.slideMobile.active =0
+    }
+    if ($scope.slideMobile.active == $scope.slideMobile.lastbanner) {
       $scope.slideMobile.active = 0;
+    }else {
+      $scope.slideMobile.active += 1;
     }
   }, 3000);
+
+  // $interval(function() {
+  //   $scope.slideMobile.active += 1;
+  //   if ($scope.slideMobile.active == 3) {
+  //     $scope.slideMobile.active = 0;
+  //   }
+  // }, 3000);
 
   $scope.feedback = {
     email: '',

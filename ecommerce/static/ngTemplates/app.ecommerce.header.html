@@ -73,10 +73,10 @@
 
 
 <div ng-if="$state.is('ecommerce')" style="position:relative;height:400px;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
-  <img class="anim-in-out anim-fade" data-anim-speed="100" style="width:100%;cursor:pointer" ng-if="$index == slide.active" ng-repeat="b in slide.banners" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
+  <img class="anim-in-out anim-fade" data-anim-speed="100" style="width:100%;cursor:pointer" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:40px;margin:0px;">
     <ul style="padding:0px;">
-      <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:20%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
+      <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:{{100/slide.banners.length}}%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
         <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;">
           {{s.title | uppercase}}
         </span>
@@ -94,8 +94,8 @@
 
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:40px;margin:0px;">
     <ul style="padding:0px;">
-      <li ng-click="changeSlideMobile($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:33%;height:80px;cursor:pointer;" ng-repeat="s in slideMobile.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
-        <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;">
+      <li ng-click="changeSlideMobile($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:{{100/slideMobile.banners.length}}%;height:80px;cursor:pointer;" ng-repeat="s in slideMobile.banners track by $index" class="text-center {{($index == slideMobile.active || onHover) ? 'activeSlideTab' : ''}}">
+        <span style="color:{{($index == slideMobile.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;">
           {{s.title | uppercase}}
         </span>
       </li>
