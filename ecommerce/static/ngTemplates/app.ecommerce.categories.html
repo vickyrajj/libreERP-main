@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="col-md-2 hidden-sm hidden-xs  card bg-white ">
+  <div class="col-md-2 hidden-sm hidden-xs  card bg-white " style="margin-left:20px;margin-right:20px;" >
     <div class="row" style="padding-top:40px; ">
       <div class="container-fluid ">
         <form>
@@ -44,7 +44,7 @@
   </div>
 
 
-  <div class="row hidden-lg hidden-md card bg-white" style="margin:15px; padding:15px;">
+  <div class="row hidden-lg hidden-md card bg-white" style="margin:20px; padding:20px;">
 
     <div class="col-xs-12">
       <span><b>Select Price Range</b></span>
@@ -90,7 +90,7 @@
 
   </div>
 
-  <div class="col-md-8 card bg-white" style="margin-left:15px; margin-right:15px; padding-top:0px;">
+  <div class="col-md-7 card bg-white" style="padding-top:0px;margin-left:20px;margin-right:20px;">
 
     <!-- <div class="row hidden-lg hidden-md">
 
@@ -237,6 +237,51 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<div class="col-md-2 hidden-xs hidden-sm" style="margin-left:20px;margin-right:20px;" >
+  <div  class="row card bg-white ">
+    <h4 >Other Categories</h4>
+    <div ng-repeat="r in categories" style="padding:0px;">
+      <div class="col-md-12 anim-in-out anim-zoom-out">
+        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">
+          <div class="row">
+              <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
+            <img style="width: 80%; height:200px;" class="img" ng-src="{{r.visual}}" >
+            <!-- <img style="width: 80%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null"> -->
+          </div>
+        </div>
+          <div class="row container-fluid" style="padding-top:5px;">
+            <h5 ng-if="r.name.length>35" style="margin:0px;  height:60px;">{{r.name.slice(0,35)}}...</h5>
+            <h5 ng-if="r.name.length<=35" style="margin:0px;  height:60px;">{{r.name}}</h5>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-sm-12 col-xs-12 hidden-lg hidden-md" style="margin-top:20px">
+  <div  class="row card bg-white"style="width:100%">
+    <h4 class=" text-center">Other Categories</h4>
+    <div ng-repeat="r in categories" style="padding:0px;">
+      <div class="col-sm-12 col-xs-12 hidden-lg hidden-md anim-in-out anim-zoom-out">
+        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">
+          <div class="row">
+              <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
+            <img style="width: 80%; height:200px;" class="img" ng-src="{{r.visual}}" >
+            <!-- <img style="width: 80%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null"> -->
+          </div>
+        </div>
+          <div class="row container-fluid" style="padding-top:5px;">
+            <h5 ng-if="r.name.length>35" style="margin:0px;  height:60px;">{{r.name.slice(0,35)}}...</h5>
+            <h5 ng-if="r.name.length<=35" style="margin:0px;  height:60px;">{{r.name}}</h5>
+
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

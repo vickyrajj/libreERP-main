@@ -250,7 +250,7 @@ class ActivitiesSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ('pk' ,'user' , 'title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country','landMark')
+        fields = ('pk' ,'user' , 'title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country','landMark','mobileNo','primary')
     def create(self , validated_data):
         print '******************'
         a = Address(**validated_data)
@@ -263,7 +263,7 @@ class AddressSerializer(serializers.ModelSerializer):
         profObj.save()
         return a
     def update(self ,instance, validated_data):
-        for key in ['title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country','landMark']:
+        for key in ['title' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country','landMark','mobileNo','primary']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

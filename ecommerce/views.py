@@ -302,10 +302,16 @@ class fieldViewSet(viewsets.ModelViewSet):
 
 class genericProductViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly , )
-    queryset = genericProduct.objects.all()
+    # queryset = genericProduct.objects.all()
     serializer_class = genericProductSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name','parent']
+    def get_queryset(self):
+        if 'genericValue' in  self.request.GET:
+            return  genericProduct.objects.exclude(pk = self.request.GET['genericValue'] ).filter()[0:4]
+        else:
+            return genericProduct.objects.all()
+
 
 class mediaViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly , )
@@ -413,13 +419,16 @@ class listingLiteViewSet(viewsets.ModelViewSet):
     serializer_class = listingLiteSerializer
     # queryset = listing.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['product']
+    filter_fields = ['product','parentType']
     def get_queryset(self):
-        print "fffffffffffffffffffff",self.request.user.is_authenticated
         # if self.request.user.is_authenticated:
         #     print "gggggggggggggggggggggg", self.request.user
         #     u = self.request.user
         #     has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
+        if 'parentValue' in  self.request.GET:
+            return listing.objects.filter(parentType=self.request.GET['parentValue']).exclude(pk = self.request.GET['detailValue'] )[0:4]
+        else:
+            return listing.objects.all()
         if 'mode' in  self.request.GET:
             if self.request.GET['mode'] == 'vendor':
                 s = service.objects.get(user = u)
@@ -429,6 +438,15 @@ class listingLiteViewSet(viewsets.ModelViewSet):
                 return listing.objects.all()[:5]
         else:
             return listing.objects.all()
+        #     if self.request.GET['parentValue'] == 'vendor':
+        #         s = service.objects.get(user = u)
+        #         items = offering.objects.filter( service = s).values_list('item' , flat = True)
+        #         return listing.objects.exclude(pk__in = items)
+        #     elif self.request.GET['mode'] == 'suggest':
+        #         return listing.objects.all()[:5]
+        # else:
+        #     return listing.objects.all()
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly , )

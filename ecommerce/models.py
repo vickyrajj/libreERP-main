@@ -158,7 +158,8 @@ class Address(models.Model):
     lat = models.CharField(max_length=15 ,null = True , blank = True)
     lon = models.CharField(max_length=15 ,null = True , blank = True)
     country = models.CharField(max_length = 50 , null = True , blank = True)
-
+    mobileNo = models.CharField(max_length=15 ,null = True , blank = True)
+    primary = models.BooleanField(default = False)
     def __unicode__(self):
         return '< street :%s>,<city :%s>,<state :%s>' %(self.street ,self.city, self.state)
 

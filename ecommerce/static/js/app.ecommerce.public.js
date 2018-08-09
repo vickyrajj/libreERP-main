@@ -338,8 +338,19 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
 app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window , ngMeta) {
 
   $scope.me = $users.get('mySelf');
+  $scope.showRatings = false
   console.log('cominggggggggggggggggggggg', $scope.me,$state.params);
   document.title = $state.params.name + ' Online At Best Price Only On Sterling Select'
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=rating').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg',response.data);
+    if(response.data[0]!=null){
+      if (response.data[0].flag) {
+        $scope.showRatings = true
+      }
+    }
+    console.log($scope.showRatings);
+  })
   // ngMeta.init()
   // ngMeta.setTitle('new Title');
   // ngMeta.setTag('description', 'Some New Description');
@@ -378,8 +389,14 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       parent = parent.parent
     }
     $scope.getRatings($scope.offset)
-    $scope.getSuggestion()
 
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/listingLite/?parentValue=' + $scope.details.parentType.pk + '&detailValue='+$scope.details.pk
+    }).
+    then(function(response) {
+      $scope.suggest = response.data
+    });
   });
 
   $timeout(function() {
@@ -567,17 +584,10 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }
   // $scope.rating=[]
   // $scope.count=0
-// $scope.suggest=[]
-//     $scope.getSuggestion= function(){
-//       $http({
-//         method: 'GET',
-//         url: '/api/ecommerce/listingLite/?limit=4'
-//       }).
-//       then(function(response) {
-//         $scope.suggest = response.data.results
-//         console.log($scope.suggest,'aaaaaaaaaaaaaaaa');
-//       });
-//     }
+
+    $scope.getSuggestion= function(){
+
+    }
 
 
   // $scope.fetchReviews = function() {
@@ -682,6 +692,14 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
       $scope.breadcrumbList.push(parent.name)
       parent = parent.parent
     }
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/genericProduct/?genericValue=' + response.data[0].pk ,
+    }).
+    then(function(response) {
+      console.log(response.data);
+      $scope.categories = response.data;
+    })
 
   });
 
@@ -716,6 +734,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     })
     $scope.breadcrumbList = $scope.breadcrumbList.slice().reverse();
   }, 1500);
+
 
 
 
@@ -763,6 +782,8 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     //   params.city = cities
     // }
     //
+    console.log("gggggggggggggggggggggggggggg");
+    console.log($scope.category.pk,'aaaaaaaaaaaaaaaaaaaaaaa');
     $http({
       method: 'GET',
       url: '/api/ecommerce/listing/?parent=' + $scope.category.pk + '&recursive=1',
