@@ -71,8 +71,16 @@
           <div class="col-md-5">
             <h4><i class="fa fa-desktop"></i> &nbsp; Name </h4>
           </div>
-          <div class="col-md-3" style="margin-top:10px">
-            <h3> {{custDetails.name}}  </h3>
+          <div class="col-md-2">
+            <h4> {{custDetails.name}}  </h4>
+          </div>
+        </div><br>
+        <div class="row" ng-if="custDetails.dp" style="padding-left:10px">
+          <div class="col-md-5">
+            <h4><i class="fa fa-desktop"></i> &nbsp; Picture </h4>
+          </div>
+          <div class="col-md-2">
+            <h4> <img src="custDetails.dp" alt="">  </h4>
           </div>
         </div><br>
       </div>

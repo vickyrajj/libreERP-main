@@ -14,7 +14,7 @@ from django.conf import settings as globalSettings
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
-        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket' )
+        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' )
     def create(self ,  validated_data):
         c = CustomerProfile(**validated_data)
         c.service = service.objects.get(pk=self.context['request'].data['service'])
@@ -24,4 +24,4 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
 class SupportChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupportChat
-        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent' ,'dp' ,'name')
+        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent' )

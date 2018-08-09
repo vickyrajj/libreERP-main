@@ -9,7 +9,7 @@ from ERP.models import service
 # Create your models here.
 
 def getdpPath(instance , filename):
-    return 'support/customerProfile/DP/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+    return 'support/customerProfile/DP/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 def getSupportChatAttachment(instance , filename ):
     return 'support/chat/%s_%s' % (str(time()).replace('.', '_'), filename)

@@ -157,6 +157,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       console.log(response.data);
       if (response.data[0].pk!=null) {
         $scope.cpForm = response.data[0]
+        console.log($scope.cpForm,'fetching');
       }
     });
   }
@@ -237,6 +238,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
     console.log($scope.toSend);
     $scope.companysave = function() {
+      console.log('save companyyyyyyyyyyyy');
       if ($scope.mode == 'new') {
         var method = 'POST'
         var url = '/api/ERP/service/'
@@ -251,38 +253,55 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       }).
       then(function(response) {
         $scope.form = response.data;
+        if ($scope.form.address == null) {
+          $scope.form.address = {
+            street: null,
+            city: null,
+            state: null,
+            pincode: null,
+            country: null
+          }
+        }
         $scope.cpForm.service = $scope.form.pk
         Flash.create('success', 'Saved');
         if ($scope.mode == 'new') {
           $scope.mode = 'edit'
         }
+      }, function(err) {
+        console.log(err,'err');
+        Flash.create('danger', err.status + ' : ' + err.statusText + ': ' + err.data.name );
       });
     }
 
-    if (f.address.street != null && f.address.street.length > 0 || f.address.city != null && f.address.city.length > 0 || f.address.state != null && f.address.state.length > 0 || f.address.country != null && f.address.country.length > 0) {
-      var addData = f.address
-      var method = 'POST'
-      var url = '/api/ERP/address/'
-      if (f.address.pk != undefined) {
-        method = 'PATCH'
-        url += f.address.pk + '/'
-      }
-      if (addData.pincode == null) {
-        delete addData.pincode
-      }
-      $http({
-        method: method,
-        url: url,
-        data: addData
-      }).
-      then(function(response) {
-        $scope.form.address = response.data;
-        $scope.toSend.address = response.data.pk;
+    // if (f.address!=null) {
+      console.log('addressssssssssss' , f.address);
+
+      if (f.address.street != null && f.address.street.length > 0 || f.address.city != null && f.address.city.length > 0 || f.address.state != null && f.address.state.length > 0 || f.address.country != null && f.address.country.length > 0) {
+        var addData = f.address
+        var method = 'POST'
+        var url = '/api/ERP/address/'
+        if (f.address.pk != undefined) {
+          method = 'PATCH'
+          url += f.address.pk + '/'
+        }
+        if (addData.pincode == null) {
+          delete addData.pincode
+        }
+        $http({
+          method: method,
+          url: url,
+          data: addData
+        }).
+        then(function(response) {
+          $scope.form.address = response.data;
+          $scope.toSend.address = response.data.pk;
+          $scope.companysave()
+        })
+      }else {
+        console.log('no addressssssssssss');
         $scope.companysave()
-      })
-    } else {
-      $scope.companysave()
-    }
+      }
+    // }
   }
 
 
@@ -300,15 +319,56 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       method = 'PATCH'
       url += $scope.cpForm.pk + '/'
     }
+    //
+    // $http({
+    //   method: method,
+    //   url: url,
+    //   data: cpF
+    // }).
+    // then(function(response) {
+    //   $scope.cpForm = response.data;
+    // });
+
+    var fd = new FormData();
+    fd.append('call', cpF.call );
+    fd.append('callBack', cpF.callBack);
+    fd.append('chat', cpF.chat);
+    fd.append('name', cpF.name);
+    fd.append('videoAndAudio', cpF.videoAndAudio);
+    fd.append('ticket', cpF.ticket);
+    fd.append('vr', cpF.vr);
+    fd.append('service', cpF.service);
+
+
+    if (cpF.windowColor != '') {
+      fd.append('windowColor', cpF.windowColor);
+    }
+
+    console.log(cpF.dp , 'dddddddddddddddddddddddddddddddddddddd');
+
+
+    if (cpF.dp && typeof cpF.dp!='string' ) {
+
+      fd.append('dp',cpF.dp);
+      console.log('append');
+    }
 
     $http({
       method: method,
       url: url,
-      data: cpF
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
     }).
     then(function(response) {
       $scope.cpForm = response.data;
-    });
+    })
+
+
+
+  // }
 
 
   }
