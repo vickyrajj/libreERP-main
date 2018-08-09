@@ -58,7 +58,7 @@
         </div>
           <ul class="nav nav-sidebar-inverse" style="width:100%;">
             <!-- <li ng-repeat="x in newUsers" ng-click="data.xInView = $index" class="ripple "> -->
-            <li ng-repeat="x in newUsers" mwl-confirm title="Confirm" message="Are you sure you want to assign this user to yourself?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="assignUser($index)" confirm-button-type="btn btn-success" cancel-button-type="btn btn-danger" class="ripple">
+            <li ng-repeat="x in newUsers" mwl-confirm title="Confirm" message="Are you sure you want to assign this user to yourself?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="assignUser($index , x.uid)" confirm-button-type="btn btn-success" cancel-button-type="btn btn-danger" class="ripple">
               <a>
                 <div class="row" style="cursor:pointer" >
                   <div class="container-fluid">

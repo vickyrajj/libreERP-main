@@ -20,3 +20,8 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
         c.service = service.objects.get(pk=self.context['request'].data['service'])
         c.save()
         return c
+
+class SupportChatFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SupportChatFile
+        fields = ( 'pk' , 'created' , 'uid', 'attachment' , 'message' , 'link','sentByAgent')

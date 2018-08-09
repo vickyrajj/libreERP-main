@@ -28,6 +28,15 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
      //
      // ];
 
+     $http({
+        method : "GET",
+        url : "welcome.htm"
+    }).then(function mySuccess(response) {
+        $scope.myWelcome = response.data;
+    }, function myError(response) {
+        $scope.myWelcome = response.statusText;
+    });
+
    $scope.chatsInView = [];
    $scope.data = { activeTab:0,}
 
@@ -87,9 +96,25 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
    //
    // $scope.comments = [{msg:"hii,how are you,i am fine",date:"2nd march",time:"2.00 pm"},{msg:"hello,how are you",date:"3nd march",time:"6.00 pm"},{msg:"In computer programming, a comment is a programmer-readable explanation or annotation in the source code of a computer program. They are added with the purpose of making the source code easier for humans to understand, and are generally ignored by compilers and interpreters.",date:"5th march",time:"4.00 pm"},{msg:"yups,how are you",date:"1st march",time:"8.00 pm"}]
 
-   $scope.assignUser = function (indx) {
+   $scope.assignUser = function (indx , uid) {
      $scope.myUsers.push($scope.newUsers[indx]);
      $scope.newUsers.splice(indx, 1);
+
+
+     console.log('me', $scope.me);
+
+
+     console.log(uid,'jjjjjjjjjjjj');
+
+     connection.session.publish('service.support.chat.' + uid, ['A' , $scope.me.username , new Date() ], {}, {
+       acknowledge: true
+     }).
+     then(function(publication) {
+       console.log("Published");
+     });
+
+
+
    }
 
 });

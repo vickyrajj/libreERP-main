@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% load staticfiles %} {% block specific_head %}
+
 <title>CIOC</title>
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
@@ -8,18 +9,17 @@
 
 <style media="screen">
   @media only screen and (max-width: 800px) {
-    .intro-text{
-      padding-top:70vh !important;position:absolute;right:10px !important;
+    .intro-text {
+      padding-top: 70vh !important;
+      position: absolute;
+      right: 10px !important;
     }
 
-    #particles-js{
+    #particles-js {
       background-image: url('/static/images/back_xs.svg');
     }
 
   }
-
-
-
 </style>
 
 
@@ -29,11 +29,11 @@
   <div id="particles-js" style="min-height:100vh;">
 
     <div class="container">
-        <div class="intro-text text-right" style="text-align:right;padding-top:200px;position:absolute;right:50px;">
-            <div style="color:white;font-size:25px;margin-bottom:20px;" >We are your technology partner</div>
-            <!-- <div class="intro-heading" >Think Free</div> -->
-            <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
-        </div>
+      <div class="intro-text text-right" style="text-align:right;padding-top:200px;position:absolute;right:50px;">
+        <div style="color:white;font-size:25px;margin-bottom:20px;">We are your technology partner</div>
+        <!-- <div class="intro-heading" >Think Free</div> -->
+        <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
+      </div>
     </div>
 
   </div>
@@ -300,7 +300,7 @@
           <span class="glyphicon glyphicon-chevron-left"></span>
           <span class="sr-only">Previous</span>
         </a>
-        <a class="right carousel-control"  style="background-image:none;" href="#myCarousel" data-slide="next">
+        <a class="right carousel-control" style="background-image:none;" href="#myCarousel" data-slide="next">
           <span class="glyphicon glyphicon-chevron-right"></span>
           <span class="sr-only">Next</span>
         </a>
@@ -312,6 +312,8 @@
       {% endblock %} {% block footer %} {% include "footer.html" %}
 
     </div>
+
+
   </div>
 </div>
 
@@ -321,8 +323,9 @@
 {% endblock %} {% block specific_js %}
 <script src="{% static 'js/jquery.easing.min.js' %}"></script>
 <script src="{% static 'js/classie.js' %}"></script>
-<script src="{% static 'js/chatter.js' %}"></script>
 
+
+<script src="http://localhost:8080/script/chatter-whUl+COcwVmllwGmV0JRJFWNWDfB1JROQ3Nm5KRWG6o=.js"></script>
 
 
 <script src="{% static 'js/agency.js' %}"></script>
