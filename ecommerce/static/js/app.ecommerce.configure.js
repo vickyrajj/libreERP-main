@@ -296,6 +296,13 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
           console.log('editing');
           var title = 'Edit Product : '
           var appType = 'editproduct'
+        }else if (action == 'delete') {
+          $http({method : 'DELETE' , url : '/api/ecommerce/genericProduct/' + target + '/'}).
+          then(function(response) {
+            Flash.create('success' , 'Deleted');
+            $scope.$broadcast('forceRefetch', {});
+          })
+          return
         } else {
           var title = 'Product Explore : '
           var appType = 'productExplore'
