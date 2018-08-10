@@ -54,6 +54,22 @@ class SupportChatViewSet(viewsets.ModelViewSet):
         else:
             return SupportChat.objects.all()
 
+
+class GetMyUser(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self, request, format=None):
+        print '****** entered', request.GET
+        if 'getMyUser' in request.GET:
+            print self.request.GET
+            uPk = self.request.GET['user']
+            print 'my userrrrr',uPk
+            sChatObj = SupportChat.objects.filter(user = uPk)
+            uidsList = list(sChatObj.values_list('uid',flat=True).distinct())
+            print uidsList , 'distinct'
+            # return uidsList
+            return Response(uidsList, status=status.HTTP_200_OK)
+
+
 class ReviewFilterCalAPIView(APIView):
     renderer_classes = (JSONRenderer,)
 
@@ -115,6 +131,6 @@ def getChatterScript(request , fileName):
     pk = decrypt(fileName , "cioc")
     print pk
     obj = CustomerProfile.objects.get(pk = pk)
-    print obj,'objjjjjj'
-    dataToSend = {"pk" : pk , "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "name" : obj.name , "dp" : obj.dp }
+    print 'dpppppppppppp',obj.dp,obj.dp.url
+    dataToSend = {"pk" : pk , "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "name" : obj.name , "dp" : obj.dp.url }
     return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")

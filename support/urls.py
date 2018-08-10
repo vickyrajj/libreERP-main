@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'reviewHomeCal/$' , ReviewFilterCalAPIView.as_view() ),
     url(r'script/chatter/$' , getChatterScriptAPI.as_view()),
+    url(r'getMyUser/$' , GetMyUser.as_view()),
 ]
