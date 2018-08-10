@@ -13,7 +13,7 @@ from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
-from django.db.models import Q
+from django.db.models import Q,F,Value,CharField
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
@@ -27,6 +27,7 @@ import base64
 import hashlib
 from Crypto.Cipher import AES
 from Crypto import Random
+from django.db.models.functions import Concat
 
 BLOCK_SIZE = 16
 pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
@@ -76,7 +77,7 @@ class ReviewFilterCalAPIView(APIView):
             print agUid
             for j in agUid:
                 # print '@@@@@@@@@@@@@@@@@@@2',j
-                agUidObj = list(agSobj.filter(uid=j).values())
+                agUidObj = list(agSobj.filter(uid=j).values().annotate(file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
         print toSend
 
@@ -114,7 +115,7 @@ def getChatterScript(request , fileName):
     fileName = fileName.replace('.js' , '').replace("chatter-" , '')
     pk = decrypt(fileName , "cioc")
     print pk
-
     obj = CustomerProfile.objects.get(pk = pk)
     print obj,'objjjjjj'
-    return render(request, 'chatter.js', {"pk" : pk , "windowColor" : obj.windowColor , "custName" : obj.service.name } ,content_type="application/x-javascript")
+    dataToSend = {"pk" : pk , "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "name" : obj.name , "dp" : obj.dp }
+    return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")

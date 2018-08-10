@@ -73,8 +73,8 @@ connection.onopen = function (session) {
 
   supportChatResponse = function(args) {
       var scope = angular.element(document.getElementById('chatTab')).scope();
-      console.log(scope);
-      console.log(args);
+      console.log(scope,args);
+      // console.log(args);
 
       function userExist() {
         for (var i = 0; i < scope.newUsers.length; i++) {

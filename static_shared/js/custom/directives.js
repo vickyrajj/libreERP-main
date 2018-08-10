@@ -346,8 +346,14 @@ app.directive('chatBox', function() {
 
 
           if (response.data[i].message) {
+
+            if (response.data[i].attachmentType) {
+              $scope.data.messages.push( { msg: "" , link:response.data[i].message ,  sentByMe: sentByMe , created: response.data[i].created } )
+            }else {
               $scope.data.messages.push( { msg: response.data[i].message , sentByMe: sentByMe , created: response.data[i].created } )
+            }
           }else if (response.data[i].attachment) {
+            console.log(response.data[i].attachment);
             if (response.data[i].attachmentType == 'image') {
                 $scope.data.messages.push( { msg: '' , img : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
             }else if (data[i].attachmentType == 'audio') {

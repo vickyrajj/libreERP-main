@@ -262,8 +262,52 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 var custID = {{pk}};
 // var borderColor = '#ACA626';
 // var custName = 'CIOC'
-var borderColor = '{{windowColor}}'
+var windowColor = '{{windowColor}}'
 var custName = '{{custName}}'
+var chatSupport = '{{chat}}'
+var callBackSupport = '{{callBack}}'
+var videoAndAudioSupport = '{{videoAndAudio}}'
+var ticketSupport = '{{ticket}}'
+var nameSupport = '{{name}}'
+var dpSupport = '{{dp}}'
+
+
+if (nameSupport=='None') {
+  nameSupport = 'Agent'
+}
+
+
+if (dpSupport=='') {
+  dpSupport = 'http://localhost:8080/static/images/img_avatar_card.png'
+}
+
+
+
+if (chatSupport=='True') {
+  chatSupport = true
+}else {
+  chatSupport = false
+}
+
+if (callBackSupport=='True') {
+  callBackSupport = true
+}else {
+  callBackSupport = false
+}
+
+if (videoAndAudioSupport=='True') {
+  videoAndAudioSupport = true
+}else {
+  videoAndAudioSupport = false
+}
+
+if (ticketSupport=='True') {
+  ticketSupport = true
+}else {
+  ticketSupport = false
+}
+
+
 var uid;
 var broswer;
 var isAgentOnline = false;
@@ -340,9 +384,17 @@ function fetchMessages(uid) {
           }
 
           if (data[i].message) {
-            chat.messages.push( { msg: data[i].message , sentByMe: sentByMe , created: data[i].created } )
-          }else if (data[i].attachment) {
 
+            if (data[i].attachmentType) {
+              // link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+              // var message = {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() }
+              chat.messages.push( {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() } )
+            }else {
+              chat.messages.push( { msg: data[i].message , sentByMe: sentByMe , created: data[i].created } )
+            }
+
+
+          }else if (data[i].attachment) {
               if (data[i].attachmentType == 'image') {
                 chat.messages.push( { msg: '' , img : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
               }else if (data[i].attachmentType == 'audio') {
@@ -509,13 +561,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     mainDiv.innerHTML = '<div id="chatBox" style="width:347px; height:75vh; border-radius: 10px; background-color:#fff; position:fixed ; bottom:100px; right:10px; z-index:1500; margin-left:10px; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); overflow:auto; overflow-x:hidden; ">'+
 
-      '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:#286EFA; color:#fff;">'+
+      '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:'+ windowColor +'; color:#fff;">'+
         '<div style="padding:10px; background-size:cover; " >'+
           '<div id="backArrow" style="float:left; cursor:pointer; padding:15px; border-radius:5px; " >'+
             '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
           '</div>'+
           '<div style="float:left;">'+
-              '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:35px " alt="Samuel">'+
+              '<img src="'+dpSupport+'" style="border-radius:50%; width:35px " alt="Samuel">'+
           '</div>'+
           '<div style="float:left;padding-left: 15px;" >'+
             '<div>'+
@@ -532,7 +584,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       '</div>'+
 
 
-      '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:#286EFA; color:#fff; padding:15px; background-size:cover; " >'+
+      '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:'+ windowColor +'; color:#fff; padding:15px; background-size:cover; " >'+
         '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <i class="fa fa-times" aria-hidden="true"></i> </span>'+
         '<div style="padding:15px; padding-left:25px; " >'+
           '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are '+ custName +' 👋 </p>'+
@@ -541,7 +593,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       '  </div>'+
       '</div>'+
 
-      '<div id="startConversation" style="margin-right:-15px; margin-left:-15px; padding:30px; padding-top:10px; height:200px; position:absolute; background-color:#fff; border-radius:5px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid #286EFA" >'+
+      '<div id="startConversation" style="margin-right:-15px; margin-left:-15px; padding:30px; padding-top:10px; height:200px; position:absolute; background-color:#fff; border-radius:5px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'" >'+
         '<p style="font-size:12px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px;" > Start a conversation </p>'+
         '<p style="font-size:11px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px; color:#777; "> The team typically replies in few minutes.</p>'+
         '<div style="padding-top:5px; text-align:center;" >'+
@@ -552,31 +604,31 @@ document.addEventListener("DOMContentLoaded", function(event) {
         '</div>'+
 
         '<div style="margin-right:-15px; margin-left:-15px; color:#fff; position:absolute; top:144px; text-align:center; padding-top:5px; " >'+
-          '<button id="startConvoBtn" type="button" style="padding:13px; border-radius:20px; background-color:#fff ; color:#286EFA; border:2px solid #286EFA; text-transform:none;  font-size:11px; cursor:pointer;" >'+
+          '<button id="startConvoBtn" type="button" style="padding:13px; border-radius:20px; background-color:#fff ; color:'+ windowColor +'; border:2px solid '+ windowColor +'; text-transform:none;  font-size:11px; cursor:pointer;" >'+
             'Start Conversation'+
           '</button>'+
       '  </div>'+
       '</div>'+
 
-      '<div id="demo" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:150px; position:absolute; background-color:#fff; border-radius:5px; top:355px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid #286EFA">'+
-        '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " >  Get a demo  </p>'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Get a look inside Syrow to discover what we can do for you. </p>'+
-        '<div style="color:#fff; position:absolute; top:95px; padding-left:15px;" >'+
-          '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-            'Request a Demo'+
-          '</button>'+
-        '</div>'+
-      '</div>'+
+      // '<div id="demo" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:150px; position:absolute; background-color:#fff; border-radius:5px; top:355px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'">'+
+      //   '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " >  Get a demo  </p>'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Get a look inside Syrow to discover what we can do for you. </p>'+
+      //   '<div style="color:#fff; position:absolute; top:95px; padding-left:15px;" >'+
+      //     '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:'+ windowColor +' ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+      //       'Request a Demo'+
+      //     '</button>'+
+      //   '</div>'+
+      // '</div>'+
 
-      '<div id="exploreSyrow" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:160px; position:absolute; background-color:#fff; border-radius:5px; top:522px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid #286EFA">'+
-        '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " > Explore Syrow </p>'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Syrow is a call center company located in Bangalore providing varied call center services to its clients.</p>'+
-        '<div style="color:#fff; position:absolute; top:110px; padding-left:15px;" >'+
-          '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-            'Explore Syrow'+
-          '</button>'+
-        '</div>'+
-      '</div>'+
+      // '<div id="exploreSyrow" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:160px; position:absolute; background-color:#fff; border-radius:5px; top:522px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'">'+
+      //   '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " > Explore Syrow </p>'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Syrow is a call center company located in Bangalore providing varied call center services to its clients.</p>'+
+      //   '<div style="color:#fff; position:absolute; top:110px; padding-left:15px;" >'+
+      //     '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:'+ windowColor +' ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+      //       'Explore Syrow'+
+      //     '</button>'+
+      //   '</div>'+
+      // '</div>'+
 
     ' <div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
       '</div>'+
@@ -680,8 +732,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var inputText = document.getElementById("inputText");
   var startConvoBtn = document.getElementById("startConvoBtn");
   var startConversation = document.getElementById("startConversation");
-  var demo = document.getElementById("demo");
-  var exploreSyrow = document.getElementById('exploreSyrow');
+  // var demo = document.getElementById("demo");
+  // var exploreSyrow = document.getElementById('exploreSyrow');
   var headerInit = document.getElementById('headerInit');
   var backArrow = document.getElementById('backArrow');
   var closeIconInit = document.getElementById('closeIconInit');
@@ -697,6 +749,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var ticketCircle = document.getElementById('ticketCircle');
   var closeSupport = document.getElementById('closeSupport');
   var supportCircle = document.getElementById('supportCircle');
+
+
 
   document.getElementById('sy-main-icon').style.display = "none";
 
@@ -731,77 +785,80 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+
+
+
   var mainStr = "";
   var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:false} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        var data = JSON.parse(this.responseText)
-        console.log(data);
-        data = data[0];
-        console.log('yaaaaa');
-
-        for (var i = 0; i < supportOptions.length; i++) {
-          if (supportOptions[i].name=='callCircle') {
-            supportOptions[i].value = data.callBack;
-          }
-          if (supportOptions[i].name=='chatCircle') {
-            supportOptions[i].value = data.chat;
-          }
-          if (supportOptions[i].name=='audioCircle') {
-            supportOptions[i].value = data.videoAndAudio;
-          }
-          if (supportOptions[i].name=='videoCircle') {
-            supportOptions[i].value = data.videoAndAudio;
-          }
-          if (supportOptions[i].name=='ticketCircle') {
-            supportOptions[i].value = data.ticket;
-          }
-        }
-
-        console.log(supportOptions,'so');
-          for (var i = 0 , rD = 0 , mB = 0 , mR=0; i < supportOptions.length; i++) {
-            if (supportOptions[i].value) {
-              rD+=2;
-              mB+=60;
-              mR+=1;
-              var itemName = 'item-'+(i+1);
-
-              supportString = "\
-                @-moz-keyframes "+ itemName +" { 100% { \
-                margin-bottom: "+mB+"px; \
-                margin-right: -"+mR+"px; \
-                opacity: 1; \
-                -webkit-transform: rotate("+rD+"deg); \
-              } }\
-              @-webkit-keyframes "+ itemName +" { 100% { \
-                margin-bottom: "+mB+"px; \
-                margin-right: -"+mR+"px; \
-                opacity: 1; \
-                -webkit-transform: rotate("+rD+"deg); \
-              } }\
-              @-ms-keyframes item-1 { 100% { \
-                margin-bottom: "+mB+"px; \
-                margin-right: -"+mR+"px; \
-                opacity: 1; \
-                -ms-transform: rotate("+rD+"deg); \
-              } }\
-              "
-              mainStr = mainStr.concat(supportString);
-            }else {
-                document.getElementById(supportOptions[i].name).style.display = "none";
-            }
-          }
 
 
+  for (var i = 0; i < supportOptions.length; i++) {
+    if (supportOptions[i].name=='callCircle') {
+      supportOptions[i].value = chatSupport;
+    }
+    if (supportOptions[i].name=='chatCircle') {
+      supportOptions[i].value = chatSupport;
+    }
+    if (supportOptions[i].name=='audioCircle') {
+      supportOptions[i].value = videoAndAudioSupport;
+    }
+    if (supportOptions[i].name=='videoCircle') {
+      supportOptions[i].value = videoAndAudioSupport;
+    }
+    if (supportOptions[i].name=='ticketCircle') {
+      supportOptions[i].value = ticketSupport;
+    }
+  }
 
+  console.log(supportOptions,'so');
+    for (var i = 0 , rD = 0 , mB = 0 , mR=0; i < supportOptions.length; i++) {
+      if (supportOptions[i].value) {
+        rD+=2;
+        mB+=60;
+        mR+=1;
+        var itemName = 'item-'+(i+1);
 
-        // console.log(data.chat);
+        supportString = "\
+          @-moz-keyframes "+ itemName +" { 100% { \
+          margin-bottom: "+mB+"px; \
+          margin-right: -"+mR+"px; \
+          opacity: 1; \
+          -webkit-transform: rotate("+rD+"deg); \
+        } }\
+        @-webkit-keyframes "+ itemName +" { 100% { \
+          margin-bottom: "+mB+"px; \
+          margin-right: -"+mR+"px; \
+          opacity: 1; \
+          -webkit-transform: rotate("+rD+"deg); \
+        } }\
+        @-ms-keyframes item-1 { 100% { \
+          margin-bottom: "+mB+"px; \
+          margin-right: -"+mR+"px; \
+          opacity: 1; \
+          -ms-transform: rotate("+rD+"deg); \
+        } }\
+        "
+        mainStr = mainStr.concat(supportString);
+      }else {
+          document.getElementById(supportOptions[i].name).style.display = "none";
       }
-  };
+    }
 
-  xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/?service=' + custID , true);
-  xhttp.send();
+
+  // var xhttp = new XMLHttpRequest();
+  // xhttp.onreadystatechange = function() {
+  //     if (this.readyState == 4 && this.status == 200) {
+  //       var data = JSON.parse(this.responseText)
+  //       console.log(data);
+  //       data = data[0];
+  //       console.log('yaaaaa');
+  //
+  //       // console.log(data.chat);
+  //     }
+  // };
+  //
+  // xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/?service=' + custID , true);
+  // xhttp.send();
 
 
 
@@ -955,7 +1012,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
-  agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >Agent</p>'
+  agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >'+nameSupport+'</p>'
   onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
 
   closeSupport.style.display = "none";
@@ -972,8 +1029,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     footer.style.display = "";
     startConvoBtn.style.display = "none";
     startConversation.style.display = "none";
-    demo.style.display ="none";
-    exploreSyrow.style.display = "none";
+    // demo.style.display ="none";
+    // exploreSyrow.style.display = "none";
     headerInit.style.display = "none";
   }, false);
 
@@ -985,8 +1042,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     footer.style.display = "none";
     startConvoBtn.style.display = "";
     startConversation.style.display = "";
-    demo.style.display = "";
-    exploreSyrow.style.display ="";
+    // demo.style.display = "";
+    // exploreSyrow.style.display ="";
     headerInit.style.display = "";
   }, false);
 
@@ -1060,14 +1117,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       if (message.sentByMe) {
         var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:#286EFA; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
                       '</div>'
         return msgHtml
 
       }else {
-    var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+        var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                   '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
@@ -1181,7 +1238,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.log(isAgentOnline, ' is agent online..........');
 
         if (!isAgentOnline) {
-          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">Agent</p>'
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+nameSupport+'</p>'
           var div = document.createElement("div");
           div.id="offlineMessage"
 

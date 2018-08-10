@@ -37,7 +37,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }).
     then(function(response) {
       // $scope.custDetails = response.data[0]
-      console.log(response.data,'dddddddddddd');
+      console.log(response.data,'dddddddddddd',typeof response.data);
       $scope.reviewData =response.data
     });
   }

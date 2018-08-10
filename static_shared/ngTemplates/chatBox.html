@@ -20,7 +20,6 @@
         {{message.length}}
         <div class="row container-fluid">
           <div style="float:{{message.sentByMe ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{message.sentByMe ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-
           <p ng-if="message.msg.length>0" style="word-break: break-all !important;" >{{message.msg}}</p>
            <img ng-if="message.img" ng-src="{{message.img}}" style="width:250px;">
            <video ng-if="message.video" width="280" height="240" ng-src="{{message.video}}" controls></video>

@@ -5,15 +5,39 @@
       <!-- <h3>{{msg.message}}</h3> -->
       <div style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
       <p ng-if="msg.message.length>0" style="word-break: break-all !important;" ><h4>{{msg.message}}</h4></p>
-       <img ng-if="msg.attachmentType == 'image'" ng-src="/media/{{msg.attachment}}" style="width:250px;">
-       <video ng-if="msg.video" width="280" height="240" ng-src="{{msg.video}}" controls></video>
-       <audio ng-if="msg.audio" ng-src="{{msg.audio}}" controls></audio>
-       <p class="text-center" ng-if="msg.doc" style="word-wrap: break-word;"><a ng-href="{{msg.doc}}" target = "_blank" ><i class="fa {{msg.doc.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.doc.split('chat/')[1]}}  </p>
-       <div ng-if="msg.link" >
-         <iframe width="100%" height="215" ng-src="{{msg.link | trusted}}" frameborder="0" allowfullscreen></iframe>
+       <img ng-if="msg.attachmentType == 'image'" ng-src="{{msg.file}}" style="width:250px;">
+       <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.file}}" controls></video>
+       <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.file}}" controls></audio>
+       <p class="text-center" ng-if="msg.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{msg.file}}" target = "_blank" ><i class="fa {{msg.file.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.file.split('chat/')[1]}}  </p>
+       <div ng-if="msg.attachmentType == 'youtubeLink'" >
+         <iframe width="100%" height="215" ng-src="{{msg.message | trusted}}" frameborder="0" allowfullscreen></iframe>
        </div>
 
       </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+      <div class="row" ng-repeat="x in [1,2,3]" style="padding-bottom:15px;" >
+        <div class="col-md-1" >
+          <img src="static/images/avatar.png" style="border-radius:50%; width:30px;" alt="">
+        </div>
+        <div class="col-md-11">
+          <div style="float:left; background-color:#286EFA; color:#fff; border-radius:30px 5px 5px 30px; padding:10px 10px 10px 15px;">
+            <p> @Sai Why did you reply late? </p>
+          </div>
+        </div>
+
+      </div>
+    <div class="row" style="padding-top:20px;" >
+      <div class="col-md-10">
+        <div class="form-group">
+         <textarea class="form-control" rows="3" id="comment" placeholder="Comments.." ></textarea>
+        </div>
+      </div>
+      <div class="col-md-2" style="padding-top:15px;" >
+        <button type="button" class="btn btn-primary" name="button"> Send  </button>
+      </div>
+
     </div>
   </div>
 </div>
