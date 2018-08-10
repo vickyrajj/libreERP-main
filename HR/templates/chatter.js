@@ -269,7 +269,7 @@ var callBackSupport = '{{callBack}}'
 var videoAndAudioSupport = '{{videoAndAudio}}'
 var ticketSupport = '{{ticket}}'
 var nameSupport = '{{name}}'
-var dpSupport = '{{dp}}'
+var dpSupport = 'http://localhost:8080'+'{{dp}}'
 
 
 if (nameSupport=='None') {
@@ -315,25 +315,25 @@ var agentPk = null;
 
 
 
-function getBrowserName() {
-  var name;
-  if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
-    name = 'Opera'
-  }else if (navigator.userAgent.indexOf("Chrome") != -1 ) {
-    name = 'Chrome'
-  }else if (navigator.userAgent.indexOf("Safari") != -1) {
-    name = 'Safari'
-  }else if (navigator.userAgent.indexOf("Firefox") != -1) {
-    name = 'Firefox'
-  }else if ((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
-    name = 'IE'
-  }else {
-    name = 'unknown'
-  }
-  return name
-}
-
-broswer = getBrowserName()
+// function getBrowserName() {
+//   var name;
+//   if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
+//     name = 'Opera'
+//   }else if (navigator.userAgent.indexOf("Chrome") != -1 ) {
+//     name = 'Chrome'
+//   }else if (navigator.userAgent.indexOf("Safari") != -1) {
+//     name = 'Safari'
+//   }else if (navigator.userAgent.indexOf("Firefox") != -1) {
+//     name = 'Firefox'
+//   }else if ((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
+//     name = 'IE'
+//   }else {
+//     name = 'unknown'
+//   }
+//   return name
+// }
+//
+// broswer = getBrowserName()
 
 
 function setCookie(cname, cvalue, exdays) {
@@ -421,10 +421,12 @@ function checkCookie() {
   uid = getCookie("uid");
   if (uid != "") {
       // alert("Welcome again " + user);
+      console.log();
       fetchMessages(uid);
   } else {
       // uid = custID +'$'+custName+'$'+broswer.charAt(0)
       uid = new Date().getTime()
+      console.log(uid);
       if (uid != "" && uid != null) {
           setCookie("uid", uid, 365);
       }
@@ -519,6 +521,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
            message = {msg:'' ,  sentByMe:false , created: args[1].created , link:args[1].link }
         }else if (args[0]=='AP') {
+          console.log('agent pk recievedddddddddd');
           agentPk = args[1];
         }
 
