@@ -1151,7 +1151,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
         var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
 
-        var dataToSend = {uid: uid , message: message.link};
+        var dataToSend = {uid: uid , message: message.link,attachmentType:'youtubeLink'};
         if (agentPk) {
           dataToSend.user = agentPk
         }
@@ -1249,7 +1249,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   function sendFile() {
     var file = filePicker;
-    console.log(file.files[0] );
+    console.log(file.files[0],'typpppppppppppppppppppppp' );
 
 
     console.log(chat.messages.length);

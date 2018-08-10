@@ -36,6 +36,6 @@ class SupportChat(models.Model):
     uid = models.CharField(max_length = 50, null = True)
     attachment = models.FileField(upload_to = getSupportChatAttachment , null = True)
     user = models.ForeignKey(User , related_name = 'supportFile' , null = True)
-    message = models.CharField(max_length = 200 , null = True)
+    message = models.CharField(max_length = 500 , null = True)
     attachmentType =  models.CharField(max_length = 50, null = True)
     sentByAgent = models.BooleanField(default = False)

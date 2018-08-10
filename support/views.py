@@ -75,7 +75,7 @@ class ReviewFilterCalAPIView(APIView):
             agUid = list(agSobj.values_list('uid',flat=True).distinct())
             print agUid
             for j in agUid:
-                print '@@@@@@@@@@@@@@@@@@@2',j
+                # print '@@@@@@@@@@@@@@@@@@@2',j
                 agUidObj = list(agSobj.filter(uid=j).values())
                 toSend.append(agUidObj)
         print toSend

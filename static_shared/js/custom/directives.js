@@ -460,7 +460,8 @@ app.directive('chatBox', function() {
             var dataToSend = {
               uid : $scope.data.uid ,
               message : message.link ,
-              user : $scope.me.pk
+              user : $scope.me.pk,
+              attachmentType:'youtubeLink'
             }
           }else {
             $scope.status = 'M';
