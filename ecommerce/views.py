@@ -90,6 +90,7 @@ from POS.models import *
 from ERP.models import service, appSettingsField
 from PIL import Image
 from django.core.files.images import get_image_dimensions
+import ast
 
 # Create your views here.
 
@@ -194,12 +195,21 @@ class CreateOrderAPI(APIView):
         contactData=[]
         userCart = Cart.objects.filter(user=request.user)
         print userCart.count(),userCart
-        for i in request.data['products']:
+        print request.data,type(request.data),'fffffffffffffffff'
+        prod = request.data['products']
+        if type(request.data['products']) == unicode:
+            prod = ast.literal_eval(request.data['products'])
+        print 'ssssssssssssssss',prod,type(prod)
+        for i in prod:
+            # if type(i['pk']) == 'string':
+            #     int(i['pk'])
+            print i,'77777777777777',request.data['promoCodeDiscount'],type(request.data['promoCodeDiscount'])
             pObj = listing.objects.get(pk = i['pk'])
             pp = pObj.product.price
             if pp > 0:
                 a = pp - (pObj.product.discount*pp)/100
-                b = a - (request.data['promoCodeDiscount']*a)/100
+                print a ,type(a)
+                b = a - (int(request.data['promoCodeDiscount'])*a)/100
             else:
                 b=0
             totalAmount += b * i['qty']

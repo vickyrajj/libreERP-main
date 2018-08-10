@@ -349,7 +349,17 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
         $scope.showRatings = true
       }
     }
-    console.log($scope.showRatings);
+  })
+  $scope.showDescription = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=description').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg',response.data);
+    if(response.data[0]!=null){
+      if (response.data[0].flag) {
+        $scope.showDescription = true
+      }
+    }
+    console.log($scope.showDescription);
   })
   // ngMeta.init()
   // ngMeta.setTitle('new Title');
@@ -1237,7 +1247,16 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
     } else {
       $scope.form.primary = false
     }
-    $scope.savedAddress.splice(idx, 1)
+    // $scope.savedAddress.splice(idx, 1)
+  }
+
+  $scope.delete = function(idx) {
+    console.log($scope.savedAddress[idx]);
+    $http({method : 'DELETE' , url : '/api/ecommerce/address/' + $scope.savedAddress[idx].pk + '/'}).
+    then(function(response) {
+      $scope.savedAddress.splice(idx, 1)
+      Flash.create('success',"Address Deleted" );
+    })
   }
 
   $scope.fetchaddress = function() {
@@ -1794,7 +1813,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     }else {
       $scope.slideMobile.lastbanner = 0
     }
-    console.log($scope.slide.banners);    
+    console.log($scope.slide.banners);
     console.log($scope.slideMobile.banners);
   })
   $scope.changeSlide = function(index) {

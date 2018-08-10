@@ -159,23 +159,23 @@
     </div>
 
 
-    <div class="row">
+    <div class="row" style="padding-right:15px;padding-left:15px;">
       <div ng-if="listingSearch.length>0">
         <div ng-repeat="l in listingSearch">
           <div class="col-md-3  hidden-xs hidden-sm  anim-in-out anim-zoom-out" style="margin-bottom:15px;">
             <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk,name:l.product.name.split(' ').join('-')})">
               <div class="row">
                 <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-                <img style="width: 80%; height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
-                <img style="width: 80%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
+                <img style="width: 90%; height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+                <img style="width: 90%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
               </div>
               </div>
               <div class="row">
                 <div class=" card bg-white" style="padding-bottom:0px;">
                   <div class="row container-fluid" style="padding:10px 20px; ">
-                    <h5 ng-if="l.product.name.length>28" style="margin:0px;  height:50px;">{{l.product.name.slice(0,28)}}...</h5>
-                    <h5 ng-if="l.product.name.length<=28" style="margin:0px;  height:50px;">{{l.product.name}}</h5>
-                    <span style="font-size:15px;"> Price : </span>
+                    <h5 ng-if="l.product.name.length>28" style="margin:0px;  height:50px;padding-left:10px">{{l.product.name.slice(0,28)}}...</h5>
+                    <h5 ng-if="l.product.name.length<=28" style="margin:0px;  height:50px;padding-left:10px">{{l.product.name}}</h5>
+                    <span style="font-size:15px;padding-left:10px"> Price : </span>
                     <span  style="font-size:15px; padding-left:10px; ">
                       <span ng-if="l.product.discount>0" class="text-muted" >
                         <strike><i class="fa fa-inr"></i>{{l.product.price}}</strike>
@@ -199,16 +199,16 @@
             <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk,name:l.product.name.split(' ').join('-')})">
               <div class="row">
                 <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-                <img style="width:50%;height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
-                <img style="width:50%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
+                <img style="width:70%;height:120px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+                <img style="width:70%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files.length==0">
               </div>
               </div>
               <div class="row">
                 <div class=" card bg-white" style="padding-bottom:0px;">
                   <div class="row container-fluid" style="padding:10px 20px; ">
-                    <h5 ng-if="l.product.name.length>28" style="margin:0px;  height:50px;">{{l.product.name.slice(0,28)}}...</h5>
-                    <h5 ng-if="l.product.name.length<=28" style="margin:0px;  height:50px;">{{l.product.name}}</h5>
-                    <span style="font-size:15px;"> Price : </span>
+                    <h5 ng-if="l.product.name.length>28" style="margin:0px;  height:50px;padding-left:5px">{{l.product.name.slice(0,28)}}...</h5>
+                    <h5 ng-if="l.product.name.length<=28" style="margin:0px;  height:50px;padding-left:5px">{{l.product.name}}</h5>
+                    <span style="font-size:15px;padding-left:5px"> Price : </span>
                     <span  style="font-size:15px; padding-left:10px; ">
                       <span ng-if="l.product.discount>0" class="text-muted" >
                         <strike><i class="fa fa-inr"></i>{{l.product.price}}</strike>
@@ -231,8 +231,13 @@
 
         </div>
       </div>
+      <!-- <div ng-if="listingSearch.length>0">
+        <img style="width: 90%; height:120px;" class="img" src="/static/images/loading.gif"> -->
+        <!-- <h2 class="text-center text-muted">No Products</h2> -->
+      <!-- </div> -->
 
-      <div ng-if="listingSearch.length==0">
+      <div class="text-center" ng-if="listingSearch.length==0">
+          <img style="width: 50%; height:70vh;" class="img" src="/static/images/loading.gif">
         <h2 class="text-center text-muted">No Products</h2>
       </div>
     </div>
@@ -248,14 +253,15 @@
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">
           <div class="row">
               <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-            <img style="width: 80%; height:200px;" class="img" ng-src="{{r.visual}}" >
-            <!-- <img style="width: 80%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null"> -->
+            <img style="width: 100%; height:200px;" class="img" ng-src="{{r.visual}}" >
+            <img style="width: 100%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.visual==null">
           </div>
         </div>
-          <div class="row container-fluid" style="padding-top:5px;">
+          <div class="row container-fluid" style="padding:0px;margin-bottom:10px">
+            <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;padding-top:25px">
             <h5 ng-if="r.name.length>35" style="margin:0px;  height:60px;">{{r.name.slice(0,35)}}...</h5>
             <h5 ng-if="r.name.length<=35" style="margin:0px;  height:60px;">{{r.name}}</h5>
-
+          </div>
           </div>
         </div>
       </div>
@@ -270,14 +276,15 @@
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">
           <div class="row">
               <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-            <img style="width: 80%; height:200px;" class="img" ng-src="{{r.visual}}" >
-            <!-- <img style="width: 80%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null"> -->
+            <img style="width: 100%; height:200px;" class="img" ng-src="{{r.visual}}" >
+            <img style="width: 100%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.visual==null">
           </div>
         </div>
-          <div class="row container-fluid" style="padding-top:5px;">
+          <div class="row container-fluid" style="padding:0px;margin-bottom:10px">
+            <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
             <h5 ng-if="r.name.length>35" style="margin:0px;  height:60px;">{{r.name.slice(0,35)}}...</h5>
             <h5 ng-if="r.name.length<=35" style="margin:0px;  height:60px;">{{r.name}}</h5>
-
+          </div>
           </div>
         </div>
       </div>

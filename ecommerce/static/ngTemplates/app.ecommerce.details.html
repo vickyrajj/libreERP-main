@@ -82,7 +82,7 @@
     <!-- {{details}} -->
     <div class="row">
       <div class="container-fluid" style="padding:10px;">
-        <div class="row">
+        <div class="row" ng-if="showDescription">
           <div class="col-md-6">
             <strong style="font-size:16px;">Specifications : </strong>
             <table class="table table-striped" style="margin-top:20px;">
@@ -120,8 +120,8 @@
             </div>
           </div>
 
+          <hr>
         </div>
-        <hr>
         <div class="row bg-blue text-center" style="margin:0px;margin-top:20px;" ng-if="showRatings">
           <h5 style="color:white;">Ratings and Review</h5>
         </div>
@@ -147,7 +147,7 @@
             </button>
             <div ng-if="form.reviewEditor">
               <div class="col-md-10 hidden-sm hidden-xs">
-                <input type="text" placeholder="Tittle.." ng-model="form.reviewHeading" style="background:white">
+                <input type="text" placeholder="Tittle.." ng-model="form.reviewHeading" style="background:white;width:100%">
                 <textarea style="margin-top:20px"class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
               </div>
               <div class="col-md-2 hidden-sm hidden-xs btn-group-vertical" style="padding-top:47px">
@@ -178,8 +178,8 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-12 col-xs-12 hidden-md hidden-lg"  ng-if="me != null">
-            <h5>Have you used this product before ?  <small >Give us your review</small> </h5>
+          <div class="col-sm-12 col-xs-12 hidden-md hidden-lg text-center"  ng-if="me != null">
+            <h5>Have you used this product before ?  <small ><br/>Give us your review</small> </h5>
             <uib-rating ng-model="form.rating" max="5" min="1" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" ></uib-rating> <br>
             <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
               <i class="fa fa-pencil-square-o"></i>  Write a review
@@ -187,7 +187,7 @@
             <div ng-if="form.reviewEditor">
               <div class="row">
               <div class="col-sm-12 hidden-md hidden-lg" >
-                <input type="text" placeholder="Tittle.." ng-model="form.reviewHeading" style="background:white">
+                <input type="text" placeholder="Tittle.." ng-model="form.reviewHeading" style="background:white;width:100%">
                 <textarea style="margin-top:20px"class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
               </div>
             </div>
@@ -203,9 +203,10 @@
               </div>
             </div>
             </div>
+              <hr>
           </div>
 
-          <hr >
+          <hr>
         </div>
         <div class="row text-center" ng-if="me != null&&reviews.length==0&&showRatings">
           <!-- <h4>No reviews yet. Be the first to review</h4> -->
@@ -216,7 +217,7 @@
           <!-- <div class="container-fluid">
             <h5>Recent reviews <small>{{reviews.length < 4 ? reviews.length : 4}} out of {{reviews.length}}</small> </h5>
           </div> -->
-          <div class="container-fluid">
+          <div class="container-fluid" ng-if="showRatings">
             <div class="col-md-12 col-xs-12 col-sm-6" ng-repeat="r in reviews">
               <div class="row container-fluid">
                 <div class="col-md-3" style="padding-left:35px;">
@@ -264,8 +265,8 @@
               <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.pk,name:r.product.name.split(' ').join('-')})">
                 <div class="row">
                     <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-                  <img style="width: 80%; height:200px;" class="img" ng-src="{{r.files[0].attachment}}" ng-if="r.files.length>0">
-                  <img style="width: 80%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null">
+                  <img style="width: 90%; height:200px;" class="img" ng-src="{{r.files[0].attachment}}" ng-if="r.files.length>0">
+                  <img style="width: 90%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null">
                 </div>
               </div>
                 <div class="row container-fluid" style="padding-top:5px;">
@@ -293,23 +294,24 @@
 
 
       <div class="col-xs-12 hidden-md hidden-lg" style="padding:40px; padding-top:0px;">
-        <div style="padding:10px;" class="row card bg-white">
-          <h4>Suggested Products</h4>
+        <!-- <div style="padding:10px;" class="row card bg-white"> -->
+          <h4 class="text-center">Suggested Products</h4>
           <div ng-repeat="r in suggest" style="padding:0px;">
-            <div class="col-xs-12 col-sm-6 anim-in-out anim-zoom-out">
+            <div class="col-xs-12 col-sm-6 anim-in-out anim-zoom-out" style="margin-bottom:15px">
               <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.pk,name:r.product.name.split(' ').join('-')})">
                 <div class="row">
                     <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-                  <img style="width:50%;height:200px;" class="img" ng-src="{{r.files[0].attachment}}" ng-if="r.files.length>0">
-                  <img style="width:50%;height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null">
+                  <img style="width:70%;height:200px;" class="img" ng-src="{{r.files[0].attachment}}" ng-if="r.files.length>0">
+                  <img style="width:70%;height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null">
                 </div>
                 </div>
-                <div class="row container-fluid" style="padding-top:5px; padding-bottom:20px;">
-                  <h5 ng-if="r.product.name.length>35" style="margin:0px;  height:40px;">{{r.product.name.slice(0,35)}}...</h5>
-                  <h5 ng-if="r.product.name.length<=35" style="margin:0px;  height:40px;">{{r.product.name}}</h5>
-                  <span style="font-size:15px;"> Price : </span>
+                <div class="row container-fluid" style="padding:0px;">
+                  <div class=" card bg-white" style="width: 100%;">
+                  <h5 ng-if="r.product.name.length>16" style="margin:0px;height:40px;padding-left:5px">{{r.product.name.slice(0,16)}}...</h5>
+                  <h5 ng-if="r.product.name.length<=16" style="margin:0px;height:40px;padding-left:5px">{{r.product.name}}</h5>
+                  <span style="font-size:15px;padding-left:5px"> Price : </span>
 
-                  <span class="pull-right" style="font-size:15px; padding-left:10px; ">
+                  <span  style="font-size:15px; padding-left:10px; ">
                     <span ng-if="r.product.discount>0" class="text-muted" >
                       <strike><i class="fa fa-inr"></i>{{r.product.price}}</strike>
                     </span>
@@ -318,7 +320,7 @@
                     </span>
                   </span>
 
-                  <span ng-if="r.product.discount>0" class="pull-right" style="font-size:15px;">
+                  <span ng-if="r.product.discount>0"  style="font-size:15px;">
                   <i class="fa fa-inr"></i>{{r.product.product.discountedPrice.toFixed(2)}}
                   </span>
                 </div>
