@@ -114,7 +114,7 @@ def getChatterScript(request , fileName):
     fileName = fileName.replace('.js' , '').replace("chatter-" , '')
     pk = decrypt(fileName , "cioc")
     print pk
-
     obj = CustomerProfile.objects.get(pk = pk)
     print obj,'objjjjjj'
-    return render(request, 'chatter.js', {"pk" : pk , "windowColor" : obj.windowColor , "custName" : obj.service.name } ,content_type="application/x-javascript")
+    dataToSend = {"pk" : pk , "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "name" : obj.name , "dp" : obj.dp }
+    return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
