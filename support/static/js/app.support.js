@@ -33,7 +33,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
        url: '/api/support/getMyUser/?getMyUser=1&user='+$scope.me.pk,
      }).then(function(response) {
-       console.log(response.data , 'distinct resssssssssss');
+       // console.log(response.data , 'distinct resssssssssss');
        for (var i = 0; i < response.data.length; i++) {
          $scope.myUsers.push( {name : 'Ashish', uid: response.data[i],  messages : [], isOnline:true }  )
        }
