@@ -333,12 +333,12 @@ app.directive('chatBox', function() {
         method: 'GET',
         url: '/api/support/supportChat/?user='+$scope.me.pk+'&uid='+$scope.data.uid,
       }).then(function(response) {
-
+        $scope.data.messages = [];
         console.log(response.data);
         for (var i = 0; i < response.data.length; i++) {
           $scope.data.messages.push(response.data[i]);
         }
-        // $scope.data.messages = [];
+
         //
         // for (var i = 0; i < response.data.length; i++) {
         //
@@ -413,7 +413,7 @@ app.directive('chatBox', function() {
           then(function(response) {
             // console.log($scope.response.data , 'data');
             $scope.data.messages.push(response.data)
-            $scope.attachment = response.data.attachment
+            // $scope.attachment = response.data.attachment
             // console.log($scope.attachment);
 
             $scope.fileData = {
@@ -421,7 +421,7 @@ app.directive('chatBox', function() {
             }
 
             $scope.status = 'MF';
-            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , response.data , $scope.me.username , new Date() ], {}, {
+            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , $scope.fileData , $scope.me.username , new Date() ], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -471,18 +471,24 @@ app.directive('chatBox', function() {
           then(function(response) {
             console.log(response.data , 'dataaa');
             $scope.data.messages.push(response.data)
+
+            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , response.data , $scope.me.username , new Date() ], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+
+            $scope.chatBox.messageToSend = ''
+            $scope.scroll()
+
+
           });
 
-          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , response.data , $scope.me.username , new Date() ], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
 
 
-          $scope.chatBox.messageToSend = ''
-          $scope.scroll()
+
+
         }
       };
 

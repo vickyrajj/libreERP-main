@@ -81,12 +81,11 @@ connection.onopen = function (session) {
           if (scope.newUsers[i].uid == args[0] ) {
             console.log('yes');
             if (args[1]=='M') {
-              scope.newUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created: args[2].created })
+              scope.newUsers[i].messages.push(args[2])
               return true
             }else if (args[1]=='MF') {
 
-
-              var attachment;
+              // var attachment;
               var xhttp = new XMLHttpRequest();
 
               xhttp.onreadystatechange = function() {
@@ -94,21 +93,23 @@ connection.onopen = function (session) {
                   if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
                     var data = JSON.parse(this.responseText)
-                    attachment = data.attachment
+                    // attachment = data.attachment
 
-                    if (args[2].type=='image') {
-                      console.log('img');
-                      scope.newUsers[i].messages.push( {msg:"", img : attachment, sentByMe:false , created:  args[3] })
-                    }else if (args[2].type=='audio') {
-                      console.log('audiio');
-                      scope.newUsers[i].messages.push( {msg:"", audio : attachment, sentByMe:false , created:  args[3] })
-                    }else if (args[2].type=='video') {
-                      console.log('video');
-                      scope.newUsers[i].messages.push( {msg:"", video : attachment, sentByMe:false , created:  args[3] })
-                    }else if (args[2].type=='doc') {
-                      console.log('doc');
-                      scope.newUsers[i].messages.push( {msg:"", doc : attachment, sentByMe:false , created:  args[3] })
-                    }
+                    scope.newUsers[i].messages.push(data)
+
+                    // if (data.type=='image') {
+                    //   console.log('img');
+                    //   scope.newUsers[i].messages.push(data)
+                    // }else if (args[2].type=='audio') {
+                    //   console.log('audiio');
+                    //   scope.newUsers[i].messages.push(data)
+                    // }else if (args[2].type=='video') {
+                    //   console.log('video');
+                    //   scope.newUsers[i].messages.push(data)
+                    // }else if (args[2].type=='application') {
+                    //   console.log('doc');
+                    //   scope.newUsers[i].messages.push(data)
+                    // }
 
                   }
               };
@@ -118,7 +119,7 @@ connection.onopen = function (session) {
 
 
             }else if (args[1]=='ML') {
-              scope.newUsers[i].messages.push( {msg:"", link : args[2].link, sentByMe:false , created:  args[3] })
+              scope.newUsers[i].messages.push( args[2])
             }
 
             return true
@@ -129,7 +130,8 @@ connection.onopen = function (session) {
           if (scope.myUsers[i].uid == args[0] ) {
             console.log('yes');
             if(args[1]=='M') {
-              scope.myUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created:  args[2].created })
+              scope.myUsers[i].messages.push(args[2])
+              // scope.myUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created:  args[2].created })
             }else if (args[1]=='MF') {
 
               var attachment;
@@ -139,23 +141,23 @@ connection.onopen = function (session) {
                   if (this.readyState == 4 && this.status == 200) {
                     console.log(this.responseText);
                     var data = JSON.parse(this.responseText)
-                    attachment = data.attachment
-                    console.log('attachment' , attachment);
+                    // attachment = data.attachment
+                    // console.log('attachment' , attachment);
+                     scope.myUsers[i].messages.push(data)
 
-
-                    if (args[2].type=='image') {
-                      console.log('image' , attachment);
-                      scope.myUsers[i].messages.push( {msg:"", img : attachment, sentByMe:false , created:  args[3] })
-                    }else if (args[2].type=='audio') {
-                      console.log('audiio');
-                      scope.myUsers[i].messages.push( {msg:"", audio : attachment, sentByMe:false , created:  args[3] })
-                    }else if (args[2].type=='video') {
-                      console.log('video');
-                      scope.myUsers[i].messages.push( {msg:"", video : attachment, sentByMe:false , created:  args[3] })
-                    }else if (args[2].type=='doc') {
-                      console.log('doc');
-                      scope.myUsers[i].messages.push( {msg:"", doc : attachment, sentByMe:false , created:  args[3] })
-                    }
+                    // if (args[2].type=='image') {
+                    //   console.log('image' , attachment);
+                    //   scope.myUsers[i].messages.push( {msg:"", img : attachment, sentByMe:false , created:  args[3] })
+                    // }else if (args[2].type=='audio') {
+                    //   console.log('audiio');
+                    //   scope.myUsers[i].messages.push( {msg:"", audio : attachment, sentByMe:false , created:  args[3] })
+                    // }else if (args[2].type=='video') {
+                    //   console.log('video');
+                    //   scope.myUsers[i].messages.push( {msg:"", video : attachment, sentByMe:false , created:  args[3] })
+                    // }else if (args[2].type=='doc') {
+                    //   console.log('doc');
+                    //   scope.myUsers[i].messages.push( {msg:"", doc : attachment, sentByMe:false , created:  args[3] })
+                    // }
 
 
 
@@ -168,7 +170,7 @@ connection.onopen = function (session) {
 
 
             }else if (args[1]=='ML') {
-              scope.myUsers[i].messages.push( {msg:"", link : args[2].link, sentByMe:false , created:  args[2].created })
+              scope.myUsers[i].messages.push(args[2])
             }
             return true
           }
@@ -182,7 +184,7 @@ connection.onopen = function (session) {
         console.log(args);
         if(args[1]=='M') {
           console.log(args,'argssssssssss');
-          scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg : args[2].msg, sentByMe:false , created:  args[2].created }], isOnline:true }  )
+          scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [args[2]], isOnline:true }  )
         }else if (args[1]=='MF') {
 
           var attachment;
@@ -192,18 +194,18 @@ connection.onopen = function (session) {
               if (this.readyState == 4 && this.status == 200) {
                 console.log(this.responseText);
                 var data = JSON.parse(this.responseText)
-                attachment = data.attachment
+                // attachment = data.attachment
+                 scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [args[2]], isOnline:true }  )
 
-
-                if (args[2].type=='image') {
-                  scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", img : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
-                }else if (args[2].type=='audio') {
-                  scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", audio : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
-                }else if (args[2].type=='video') {
-                  scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", video : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
-                }else if (args[2].type=='doc') {
-                  scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", doc : attachment , sentByMe:false , created:  args[3] }], isOnline:true }  )
-                }
+                // if (args[2].type=='image') {
+                //   scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", img : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+                // }else if (args[2].type=='audio') {
+                //   scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", audio : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+                // }else if (args[2].type=='video') {
+                //   scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", video : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+                // }else if (args[2].type=='doc') {
+                //   scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", doc : attachment , sentByMe:false , created:  args[3] }], isOnline:true }  )
+                // }
 
 
               }
@@ -215,7 +217,7 @@ connection.onopen = function (session) {
 
           return true
         }else if (args[1]=='ML') {
-            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", link : args[2].link, sentByMe:false , created:  args[3] }], isOnline:true }  )
+            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [args[2]], isOnline:true }  )
         }
       }
 
