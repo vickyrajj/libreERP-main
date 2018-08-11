@@ -61,14 +61,17 @@ class GetMyUser(APIView):
     def get(self, request, format=None):
         print '****** entered', request.GET
         if 'getMyUser' in request.GET:
-            print self.request.GET
-            uPk = self.request.GET['user']
-            print 'my userrrrr',uPk
-            sChatObj = SupportChat.objects.filter(user = uPk)
-            uidsList = list(sChatObj.values_list('uid',flat=True).distinct())
+            uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
             print uidsList , 'distinct'
-            # return uidsList
-            return Response(uidsList, status=status.HTTP_200_OK)
+            toSend = []
+            for i in uidsList:
+                try:
+                    data = Visitor.objects.get(uid=i)
+                    toSend.append({'uid':data.uid,'name':data.name})
+                except:
+                    toSend.append({'uid':i,'name':''})
+
+            return Response(toSend, status=status.HTTP_200_OK)
 
 
 class ReviewFilterCalAPIView(APIView):
@@ -141,7 +144,7 @@ class VisitorViewSet(viewsets.ModelViewSet):
     serializer_class = VisitorSerializer
     queryset = Visitor.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['uid','email']
+    filter_fields = ['uid','email' ,'name']
 
 class ReviewCommentViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
