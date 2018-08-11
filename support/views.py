@@ -133,5 +133,26 @@ def getChatterScript(request , fileName):
     print pk
     obj = CustomerProfile.objects.get(pk = pk)
     print 'dpppppppppppp',obj.dp,obj.dp.url
-    dataToSend = {"pk" : pk , "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "name" : obj.name , "dp" : obj.dp.url }
+    dataToSend = {"pk" : pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "name" : obj.name , "dp" : obj.dp.url }
     return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+
+class VisitorViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = VisitorSerializer
+    queryset = Visitor.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['uid','email']
+
+class ReviewCommentViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = ReviewCommentSerializer
+    queryset = ReviewComment.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['uid','user','chatedDate']
+
+class ChatThreadViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = ChatThreadSerializer
+    queryset = ChatThread.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['uid','status']

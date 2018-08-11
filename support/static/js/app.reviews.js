@@ -13,13 +13,41 @@ app.config(function($stateProvider) {
 app.controller("businessManagement.reviews.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
   $scope.msgData = $scope.tab.data
   console.log($scope.tab.data);
+  $scope.reviewCommentData = []
+  $http({
+    method: 'GET',
+    url: '/api/support/reviewComment/?user='+$scope.msgData[0].user_id+'&uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+  }).
+  then(function(response) {
+    console.log(response.data,'dddddddddddd',typeof response.data);
+    $scope.reviewCommentData =response.data
+  });
+  $scope.reviewForm = {message:''}
+  $scope.postComment = function(){
+    console.log($scope.msgData[0].created);
+    if ($scope.reviewForm.message.length == 0) {
+      Flash.create('warning','Please Write Some Comment')
+      return
+    }
+    var toSend = {message:$scope.reviewForm.message,uid:$scope.msgData[0].uid,chatedDate:$scope.msgData[0].created.split('T')[0]}
+    $http({
+      method: 'POST',
+      url: '/api/support/reviewComment/',
+      data : toSend
+    }).
+    then(function(response) {
+      console.log(response.data,'dddddddddddd',typeof response.data);
+      $scope.reviewCommentData.push(response.data)
+      $scope.reviewForm = {message:''}
+    });
+  }
 })
 app.controller("businessManagement.reviews", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
 
   $scope.data = {
     tableData: []
   };
-
+  
   $scope.form = {date:new Date(),user:''}
   $scope.reviewData = []
   $scope.getData = function(date,user){

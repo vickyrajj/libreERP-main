@@ -29,6 +29,7 @@ class CustomerProfile(models.Model):
     windowColor = models.CharField(max_length = 20 , null = True )
     dp = models.ImageField(upload_to = getdpPath , null = True)
     name = models.CharField(max_length = 50 , null = True )
+    supportBubbleColor = models.CharField(max_length = 20 , null = True ,default='#286EFA')
 
 
 class SupportChat(models.Model):
@@ -39,3 +40,32 @@ class SupportChat(models.Model):
     message = models.CharField(max_length = 500 , null = True)
     attachmentType =  models.CharField(max_length = 50, null = True)
     sentByAgent = models.BooleanField(default = False)
+
+class Visitor(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    uid = models.CharField(max_length = 50 , null = True )
+    email = models.EmailField(null = True)
+    name = models.CharField(max_length = 50, null = True)
+    phoneNumber = models.CharField(max_length = 20, null = True)
+    notes = models.CharField(max_length = 1000, null = True)
+
+class ReviewComment(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    uid = models.CharField(max_length = 50 , null = True )
+    user = models.ForeignKey(User , related_name = 'reviewedUser' , null = True)
+    message = models.CharField(max_length = 1000 , null = True)
+    chatedDate = models.DateField(null=True)
+
+CHATTHREAD_STATUS_CHOICES = (
+    ('started' , 'started'),
+    ('reviewed' , 'reviewed'),
+    ('resolved' , 'resolved'),
+    ('archived' , 'archived'),
+    ('escalatedL1' , 'escalatedL1'),
+    ('escalatedL2' , 'escalatedL2'),
+)
+
+class ChatThread(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    uid = models.CharField(max_length = 50 , null = True )
+    status = models.CharField(choices = CHATTHREAD_STATUS_CHOICES , max_length = 15 , default = 'started')

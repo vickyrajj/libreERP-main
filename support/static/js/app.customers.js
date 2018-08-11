@@ -147,7 +147,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       return response.data;
     })
   };
-  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'' , callBack:false , ticket: false , dp: emptyFile , name:''}
+  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'' , callBack:false , ticket: false , dp: emptyFile , name:'',supportBubbleColor:'#286EFA'}
   $scope.fetCustomerProfile = function(pk){
     $scope.cpForm.service = pk
     $http({
@@ -314,6 +314,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     if (cpF.windowColor == '') {
       delete cpF.windowColor
     }
+    if (cpF.supportBubbleColor == '') {
+      delete cpF.supportBubbleColor
+    }
     var method = 'POST'
     var url = '/api/support/customerProfile/'
     if ($scope.cpForm.pk!=undefined) {
@@ -343,6 +346,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
     if (cpF.windowColor != '') {
       fd.append('windowColor', cpF.windowColor);
+    }
+    if (cpF.supportBubbleColor != '') {
+      fd.append('supportBubbleColor', cpF.supportBubbleColor);
     }
 
     console.log(cpF.dp , 'dddddddddddddddddddddddddddddddddddddd');

@@ -270,6 +270,7 @@ var videoAndAudioSupport = '{{videoAndAudio}}'
 var ticketSupport = '{{ticket}}'
 var nameSupport = '{{name}}'
 var dpSupport = 'http://localhost:8080'+'{{dp}}'
+var supportBubbleColor = '{{supportBubbleColor}}'
 
 
 if (nameSupport=='None') {
@@ -658,7 +659,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //
     // '</div>'+
 
-    '<div id="closeSupport" style="height:60px; width:60px; background-color: #286EFA; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
+    '<div id="closeSupport" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
       '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
        '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
      '</svg>'+
@@ -912,7 +913,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }\
         /* The below code can be optimised 10X better */\
         .sy-circle, .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link, .sy-text {\
-        background: #286efa !important; /* background color should be dynamic */\
+        background: "+supportBubbleColor+" !important; /* background color should be dynamic */\
         color: #fff; 					/* color should be dynamic */\
       }\
         .sy-circle {\
