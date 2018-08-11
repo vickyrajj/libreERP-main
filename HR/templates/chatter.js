@@ -365,7 +365,7 @@ function getCookie(cname) {
 }
 
 
-var chat = {user : custName , messages : [ { msg:"Thanks for visiting us. If you need help simply reply to this message...", sentByMe:false , created:  new Date() } ] }
+var chat = {user : custName , messages : [ { message:"Thanks for visiting us. If you need help simply reply to this message...", sentByAgent:true , created:  new Date() } ] }
 
 
 function fetchMessages(uid) {
@@ -375,42 +375,52 @@ function fetchMessages(uid) {
       console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
-        console.log(data);
+        // console.log(data);
+        console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' , data);
+        // if (data.length>0) {
+        //
+        // }
+
+
         for (var i = 0; i < data.length; i++) {
-
-          if (data[i].sentByAgent) {
-            var sentByMe = false;
-          }else {
-            var sentByMe = true;
-          }
-
-          if (data[i].message) {
-
-            if (data[i].attachmentType) {
-              // link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-              // var message = {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() }
-              chat.messages.push( {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() } )
-            }else {
-              chat.messages.push( { msg: data[i].message , sentByMe: sentByMe , created: data[i].created } )
-            }
-
-
-          }else if (data[i].attachment) {
-              if (data[i].attachmentType == 'image') {
-                chat.messages.push( { msg: '' , img : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-              }else if (data[i].attachmentType == 'audio') {
-                  chat.messages.push( { msg: '' , audio : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-              }else if (data[i].attachmentType == 'video') {
-                  chat.messages.push( { msg: '' , video : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-              }else if (data[i].attachmentType == 'application') {
-                  chat.messages.push( { msg: '' , doc : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-              }
-          }
-          // chat.messages.push({ msg: , sentByMe: , created:  })
-
-
+          agentPk = data[i].user
+          chat.messages.push(data[i])
         }
-        scroll();
+        // for (var i = 0; i < data.length; i++) {
+        //
+        //   if (data[i].sentByAgent) {
+        //     var sentByMe = false;
+        //   }else {
+        //     var sentByMe = true;
+        //   }
+        //
+        //   if (data[i].message) {
+        //
+        //     if (data[i].attachmentType) {
+        //       // link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+        //       // var message = {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() }
+        //       chat.messages.push( {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() } )
+        //     }else {
+        //       chat.messages.push( { msg: data[i].message , sentByMe: sentByMe , created: data[i].created } )
+        //     }
+        //
+        //
+        //   }else if (data[i].attachment) {
+        //       if (data[i].attachmentType == 'image') {
+        //         chat.messages.push( { msg: '' , img : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }else if (data[i].attachmentType == 'audio') {
+        //           chat.messages.push( { msg: '' , audio : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }else if (data[i].attachmentType == 'video') {
+        //           chat.messages.push( { msg: '' , video : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }else if (data[i].attachmentType == 'application') {
+        //           chat.messages.push( { msg: '' , doc : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }
+        //   }
+        //   // chat.messages.push({ msg: , sentByMe: , created:  })
+        //
+        //
+        // }
+        // scroll();
       }
   };
 
@@ -454,8 +464,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var message;
 
         if (args[0]=="M") {
-           message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
-           chat.messages.push(message);
+            message = args[1]
+           // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
+           // chat.messages.push(args[1]);
            if (!chatOpen) {
              unreadMsgCount+=1;
              // unreadMsg.style.display = "";
@@ -481,20 +492,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
               if (this.readyState == 4 && this.status == 200) {
                 console.log(this.responseText);
                 var data = JSON.parse(this.responseText)
-                attachment = data.attachment
-                console.log('attachmenttttttttttt' , attachment);
+                // attachment = data.attachment
+                // console.log('attachmenttttttttttt' , attachment);
+                message = data
 
 
-
-                if (args[1].typ=='image') {
-                   message = {msg:'' ,  sentByMe:false , created: args[1].created , img: attachment }
-                }else if (args[1].typ=='audio') {
-                   message = {msg:'' ,  sentByMe:false , created: args[1].created , audio:attachment }
-                }else if (args[1].typ=='video') {
-                   message = {msg:'' ,  sentByMe:false , created: args[1].created , video:attachment }
-                }else if (args[1].typ=='doc') {
-                   message = {msg:'' ,  sentByMe:false , created: args[1].created , doc:attachment }
-                }
+                // if (args[1].typ=='image') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , img: attachment }
+                // }else if (args[1].typ=='audio') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , audio:attachment }
+                // }else if (args[1].typ=='video') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , video:attachment }
+                // }else if (args[1].typ=='doc') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , doc:attachment }
+                // }
 
               }
           };
@@ -502,6 +513,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
           xhttp.open('GET', 'http://localhost:8080/api/support/supportChat/' + args[1].filePk + '/'  , true);
           xhttp.send();
 
+        }else if (args[0]=='ML') {
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
+
+          if (!chatOpen) {
+            unreadMsgCount+=1;
+            // unreadMsg.style.display = "";
+            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
+          }
+           message = args[1]
+        }else if (args[0]=='AP') {
+          console.log('agent pk recievedddddddddd');
+          agentPk = args[1];
+          return
         }else if (args[0]=='O') {
           console.log('yes online');
           isAgentOnline = true;
@@ -511,19 +535,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }else if (args[0]=='A') {
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[1]+'</p>'
           return
-        }else if (args[0]=='ML') {
-          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
-
-          if (!chatOpen) {
-            unreadMsgCount+=1;
-            // unreadMsg.style.display = "";
-            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
-          }
-
-           message = {msg:'' ,  sentByMe:false , created: args[1].created , link:args[1].link }
-        }else if (args[0]=='AP') {
-          console.log('agent pk recievedddddddddd');
-          agentPk = args[1];
         }
 
 
@@ -1102,24 +1113,43 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     function messageDiv(message) {
 
-      if (message.msg=='') {
-        if (message.img) {
-          attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
-        }else if (message.audio) {
-          attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
-        }else if (message.video) {
-          attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
-        }else if (message.doc) {
-            attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
-        }else if (message.link) {
-          console.log('yesssssssss' , message.link);
-        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+      console.log(chat.messages.length);
+
+      console.log('messsaaageeeeeeeeeeeeeeeeeeeee',message);
+
+      if (message.attachment) {
+        if (message.attachmentType=='image') {
+            console.log('image');
+          attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
+        }else if (message.attachmentType=='audio') {
+            console.log('audio');
+          attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.attachment +'" controls></audio>'
+        }else if (message.attachmentType=='video') {
+            console.log('video');
+          attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.attachment +'" controls></video>'
+        }else if (message.attachmentType=='application') {
+            console.log('application');
+            attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
         }
+        // else if (message.link) {
+        //   console.log('yesssssssss' , message.link);
+        // attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+        // }
       }
 
-      var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
+      if (message.message!=null && message.attachmentType!=null) {
+        console.log('youtube link');
+        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'" frameborder="0" allowfullscreen></iframe>'
+        var msgDiv =attachedFile
+      }else {
+        var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.message +'</p>'
+      }
 
-      if (message.sentByMe) {
+
+
+      console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
+
+      if (!message.sentByAgent) {
         var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
                         '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
@@ -1135,6 +1165,41 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 '</div> '
         return msgHtml
       }
+
+
+      // if (message.msg=='') {
+      //   if (message.img) {
+      //     attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
+      //   }else if (message.audio) {
+      //     attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
+      //   }else if (message.video) {
+      //     attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
+      //   }else if (message.doc) {
+      //       attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
+      //   }else if (message.link) {
+      //     console.log('yesssssssss' , message.link);
+      //   attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+      //   }
+      // }
+      //
+      // var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
+      //
+      // if (message.sentByMe) {
+      //   var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
+      //                   '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
+      //                     msgDiv+
+      //                   '</div>'+
+      //                 '</div>'
+      //   return msgHtml
+      //
+      // }else {
+      //   var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+      //             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+      //                msgDiv+
+      //             '</div> '+
+      //           '</div> '
+      //   return msgHtml
+      // }
 
 
 
@@ -1210,17 +1275,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (youtubeLink) {
         status = "ML";
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-        var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
 
-        var dataToSend = {uid: uid , message: message.link,attachmentType:'youtubeLink'};
+
+        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false  };
+        var message = dataToSend
         if (agentPk) {
           dataToSend.user = agentPk
         }
         dataToSend = JSON.stringify(dataToSend)
       }else {
         status = "M";
-        var message = {msg:inptText ,  sentByMe:true , created: new Date() }
-        var dataToSend = {uid: uid , message: message.msg };
+        // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
+        var dataToSend = {uid: uid , message: inptText , sentByAgent:false };
+        var message = dataToSend
         if (agentPk) {
           dataToSend.user = agentPk
         }
@@ -1337,34 +1404,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
           console.log(typ);
 
           var fileData = {
-            filePk : data.pk
+            filePk : data.pk,
+            typ : data.attachmentType
           }
 
-          if (typ=='image') {
-              fileData.type = 'image';
-             message = {msg:'' ,  sentByMe:true , created: new Date() , img: data.attachment }
-          }else if (typ=='audio') {
-            console.log('audoooooooooo');
-              fileData.type = 'audio';
-             message = {msg:'' ,  sentByMe:true , created: new Date() , audio: data.attachment }
-          }else if (typ=='video') {
-              fileData.type = 'video';
-             message = {msg:'' ,  sentByMe:true , created: new Date() , video: data.attachment }
-          }else if (typ=='application') {
-              fileData.type = 'doc';
-             message = {msg:'' ,  sentByMe:true , created: new Date() , doc: data.attachment }
-          }
+          // if (typ=='image') {
+          //     fileData.type = 'image';
+          //    message = {msg:'' ,  sentByMe:true , created: new Date() , img: data.attachment }
+          // }else if (typ=='audio') {
+          //   console.log('audoooooooooo');
+          //     fileData.type = 'audio';
+          //    message = {msg:'' ,  sentByMe:true , created: new Date() , audio: data.attachment }
+          // }else if (typ=='video') {
+          //     fileData.type = 'video';
+          //    message = {msg:'' ,  sentByMe:true , created: new Date() , video: data.attachment }
+          // }else if (typ=='application') {
+          //     fileData.type = 'doc';
+          //    message = {msg:'' ,  sentByMe:true , created: new Date() , doc: data.attachment }
+          // }
 
 
-          console.log(message);
+          // console.log(message);
 
           var div = document.createElement("div");
-          div.innerHTML = messageDiv(message)
+          div.innerHTML = messageDiv(data)
           messageBox.appendChild(div);
           scroll();
 
-          chat.messages.push(message);
 
+          chat.messages.push(data);
 
           filePicker.value = ""
 
@@ -1583,9 +1651,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var lg = window.matchMedia("(min-width: 1200px)")
     lgDevice(lg)
     lg.addListener(lgDevice)
-
-
-
 
 
 
