@@ -428,12 +428,54 @@ function fetchMessages(uid) {
   xhttp.send();
 }
 
+function fetchThread(uid) {
+  console.log('fetch thread');
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+      console.log(this.readyState , this.status,'onready' , this.responseText);
+      console.log(this);
+      if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText)
+        if (data.length>0) {
+          // fetchThread(uid);
+          threadExist = true
+
+        }
+        console.log(data);
+        fetchMessages(uid);
+      } else if (this.responseText == '{"PARAMS":"createCookie"}') {
+        console.log('genertate new uid');
+        // document.cookie = "uid" + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
+        uid = new Date().getTime()
+        console.log('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn',uid ,document.cookie);
+        setCookie("uid", uid, 365);
+        fetchMessages(uid);
+
+      }
+
+
+  };
+
+  xhttp.open('GET', 'http://localhost:8080/api/support/chatThread/?uid=' + uid + '&checkThread', true);
+  xhttp.send();
+
+}
+
+var threadExist
+var threadResponse
+
+
 function checkCookie() {
   uid = getCookie("uid");
   if (uid != "") {
       // alert("Welcome again " + user);
-      console.log();
-      fetchMessages(uid);
+      console.log('cookie exu=ist');
+      fetchThread(uid);
+      // if (threadExist!=undefined && threadExist) {
+      //   fetchMessages(uid);
+      // }
   } else {
       // uid = custID +'$'+custName+'$'+broswer.charAt(0)
       uid = new Date().getTime()
@@ -454,7 +496,7 @@ checkCookie();
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8080/ws', realm: 'default'});
+  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8001/ws', realm: 'default'});
 
     connection.onopen = function (session) {
        console.log("session established!");
@@ -1113,9 +1155,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     function messageDiv(message) {
 
-      console.log(chat.messages.length);
+      // console.log(chat.messages.length);
 
-      console.log('messsaaageeeeeeeeeeeeeeeeeeeee',message);
+      // console.log('messsaaageeeeeeeeeeeeeeeeeeeee',message);
 
       if (message.attachment) {
         if (message.attachmentType=='image') {
@@ -1252,8 +1294,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     function sendMessage(inptText) {
+      console.log(uid);
+      console.log(getCookie("uid"));
+      if (uid!=getCookie("uid")) {
+        uid = getCookie("uid");
+      }
 
 
+      console.log(uid);
       console.log(chat.messages.length);
 
 
@@ -1341,6 +1389,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
        xhttp.open('POST', 'http://localhost:8080/api/support/supportChat/', true);
        xhttp.setRequestHeader("Content-type", "application/json");
        xhttp.send(dataToSend);
+
+
+       if (threadExist==undefined) {
+        var dataToSend = JSON.stringify({uid: uid});
+         var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 201) {
+              console.log('posted successfully');
+              threadExist=true
+            }
+          };
+          xhttp.open('POST', 'http://localhost:8080/api/support/chatThread/', true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(dataToSend);
+       }
 
 
 
@@ -1450,6 +1513,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
       };
       xhttp.open('POST', 'http://localhost:8080/api/support/supportChat/', true);
       xhttp.send(fd);
+
+
+
+      if (threadExist==undefined) {
+       var dataToSend = JSON.stringify({uid: uid});
+        var xhttp = new XMLHttpRequest();
+         xhttp.onreadystatechange = function() {
+           if (this.readyState == 4 && this.status == 201) {
+             console.log('posted successfully');
+             threadExist=true
+           }
+         };
+         xhttp.open('POST', 'http://localhost:8080/api/support/chatThread/', true);
+         xhttp.setRequestHeader("Content-type", "application/json");
+         xhttp.send(dataToSend);
+      }
 
 
 

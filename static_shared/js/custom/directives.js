@@ -640,6 +640,21 @@ app.directive('chatBox', function() {
         });
       }
 
+
+      $scope.arremoji = ['👋' , '💁' ,'🙃' , '🙏', '😬', '👇' ,'👈', '👉', '👋', '👏' ,'👐' ,'👆' ,'☝', '👊' ,'✋', '✌', '✊' ,'👌' ,'👍' ,'👎' ];
+
+      $scope.emojiOpen = false
+
+      $scope.insertEmoji = function (indx) {
+        $scope.chatBox.messageToSend += $scope.arremoji[indx]
+      }
+
+
+      $scope.openEmoji = function () {
+        $scope.emojiOpen = !$scope.emojiOpen
+
+      }
+
     }
   };
 });

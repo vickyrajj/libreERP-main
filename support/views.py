@@ -159,3 +159,14 @@ class ChatThreadViewSet(viewsets.ModelViewSet):
     queryset = ChatThread.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['uid','status']
+    def get_queryset(self):
+        if 'uid' in self.request.GET and 'checkThread' in self.request.GET:
+            threadObj = ChatThread.objects.filter(uid = self.request.GET['uid'])
+            if threadObj.count()>0:
+                print 'sssssssssssssssssssss',threadObj[0].status
+                if threadObj[0].status != 'started':
+                    print 'nottttttttttttttt',threadObj[0].status
+                    raise ValidationError(detail={'PARAMS' : 'createCookie'})
+            print 'tttttttttttttttt',threadObj
+            return threadObj
+        return ChatThread.objects.all()
