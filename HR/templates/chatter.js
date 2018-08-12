@@ -688,6 +688,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       // '</div>'+
 
     ' <div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
+      '<p id="emoji">&#x1f604;</p>'+
       '</div>'+
       '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
         '<div style="padding:0px;" >'+
@@ -772,7 +773,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.getElementById('mainDiv').style.color = "#333";
 
 
-
+  document.getElementById("emoji").innerHTML = String.fromCodePoint(0x1F604)
 
 
   var device;

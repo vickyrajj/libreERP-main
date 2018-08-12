@@ -118,9 +118,9 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     tableData: []
   };
 
-  $scope.form = {date:new Date(),user:''}
+  $scope.form = {date:new Date(),user:'',email:''}
   $scope.reviewData = []
-  $scope.getData = function(date,user){
+  $scope.getData = function(date,user,email){
     console.log('@@@@@@@@@@@@@@@@@@',date,user);
     var url = '/api/support/reviewHomeCal/?'
     if (typeof date == 'object') {
@@ -128,6 +128,9 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }
     if (typeof user == 'object') {
       url += '&user=' + user.pk
+    }
+    if (email.length > 0 && email.indexOf('@') > 0) {
+      url += '&email=' + email
     }
     $http({
       method: 'GET',
@@ -139,7 +142,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       $scope.reviewData =response.data
     });
   }
-  $scope.getData($scope.form.date,$scope.form.user)
+  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email)
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
     then(function(response){
@@ -159,7 +162,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }else {
       var user = ''
     }
-    $scope.getData($scope.form.date,user)
+    if ($scope.form.email==undefined) {
+      Flash.create('warning','Please Select Valid Email')
+      return
+    }
+    console.log($scope.form);
+    $scope.getData($scope.form.date,user,$scope.form.email)
   }
   // views = [{
   //   name: 'list',

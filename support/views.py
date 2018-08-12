@@ -92,11 +92,17 @@ class ReviewFilterCalAPIView(APIView):
         print agentsList
         for i in agentsList:
             agSobj = sobj.filter(user = i)
-            agUid = list(agSobj.values_list('uid',flat=True).distinct())
+            if 'email' in self.request.GET:
+                agUid = list(Visitor.objects.filter(email=self.request.GET['email']).values_list('uid',flat=True).distinct())
+            else:
+                agUid = list(agSobj.values_list('uid',flat=True).distinct())
             print agUid
             for j in agUid:
-                # print '@@@@@@@@@@@@@@@@@@@2',j
-                agUidObj = list(agSobj.filter(uid=j).values().annotate(file=Concat(Value('/media/'),'attachment')))
+                try:
+                    email = Visitor.objects.get(uid=j).email
+                except:
+                    email = ''
+                agUidObj = list(agSobj.filter(uid=j).values().annotate(email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
         print toSend
 
