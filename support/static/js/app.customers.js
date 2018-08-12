@@ -104,18 +104,17 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
       backdrop: true,
       resolve: {
         cPk: function() {
-          return pk;
+          return $scope.custDetails.pk;
         }
       },
-      controller: function($scope, $users , $timeout , $uibModalInstance,cPk) {
-        console.log('sssssssssssss',cPk);
+      controller: function($scope, $users , $timeout , $uibModalInstance , cPk) {
         $scope.cpk ;
         $http({
           method: 'GET',
-          url: '/api/support/script/chatter/?pk='+pk,
+          url: '/api/support/script/chatter/?pk='+cPk,
         }).
         then(function(response) {
-          // console.log(response.data);
+          console.log('reeeeeeeeeeeeeeeeeeesssssssssss',response.data);
           $scope.cpk= response.data.data
           console.log($scope.cpk);
         });

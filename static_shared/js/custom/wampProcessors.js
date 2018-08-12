@@ -188,7 +188,6 @@ connection.onopen = function (session) {
               console.log(id);
             }, 200 );
 
-
             return true
           }
         }
