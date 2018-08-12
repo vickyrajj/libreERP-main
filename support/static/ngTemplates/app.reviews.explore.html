@@ -1,6 +1,10 @@
 <div ng-controller="businessManagement.reviews.explore" style="padding-top:20px;">
-  <div class="col-md-6" style="border-right:1px solid #eeeeee">
-    <h3><strong>Date : </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</h3><hr>
+  <div class="row" >
+
+
+  <div class="col-md-6" style="border-right:1px solid #eeeeee;">
+    <h3><strong>Date : </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</h3>
+    <span ng-if="chatThreadData.uid!=none"><h3><strong>Status : </strong>{{chatThreadData.status}} <span class="pull-right"><div class="btn btn-primary" ng-click="showChart()">Change Status</div></span></h3></span><hr>
     <div class="row" ng-repeat="msg in msgData">
       <!-- <h3>{{msg.message}}</h3> -->
       <div class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
@@ -18,7 +22,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-6" style="padding:20px">
+  <div class="col-md-6" style="padding:20px;">
       <div class="row" ng-repeat="comment in reviewCommentData" style="padding-bottom:15px;" >
         <div class="col-md-10">
           <div style="float:right; background-color:#286EFA; color:#fff; border-radius:15px 50px 50px 15px; padding:10px 10px 10px 15px;word-break: break-all !important;">
@@ -33,7 +37,7 @@
     <div class="row" style="padding-top:20px;" >
       <div class="col-md-10">
         <div class="form-group">
-         <textarea class="form-control" rows="3" id="comment" placeholder="Comments... " ng-model="reviewForm.message"></textarea>
+         <textarea class="form-control" rows="3" id="comment" placeholder="Comments... " ng-model="reviewForm.message" style="resize:none;"></textarea>
         </div>
       </div>
       <div class="col-md-2" style="padding-top:20px;" >
@@ -42,4 +46,5 @@
 
     </div>
   </div>
+    </div>
 </div>

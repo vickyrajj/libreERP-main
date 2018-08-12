@@ -328,6 +328,23 @@ app.directive('chatBox', function() {
     controller: function($scope, $users , $uibModal , $http) {
       $scope.me = $users.get('mySelf');
       // console.log($scope.data,'will fetch here');
+      $scope.visitorForm = ''
+
+      $http({
+          method: 'GET',
+          url: '/api/support/visitor/?uid='+$scope.data.uid,
+        }).
+        then(function(response) {
+          console.log(response.data,typeof response.data,response.data.length);
+          if (response.data.length>0) {
+            $scope.visitorForm = response.data[0]
+          }
+          // if (response.data.length ==1 && response.data[0].email == $scope.form.email) {
+          //   $scope.form = response.data[0]
+          //
+          // }
+
+        });
 
       $http({
         method: 'GET',
@@ -450,7 +467,8 @@ app.directive('chatBox', function() {
               uid : $scope.data.uid ,
               message : link ,
               user : $scope.me.pk,
-              attachmentType:'youtubeLink'
+              attachmentType:'youtubeLink',
+              sentByAgent: true
             }
           }else {
             $scope.status = 'M';
@@ -520,6 +538,106 @@ app.directive('chatBox', function() {
 
           },
         })
+      }
+
+
+      $scope.editUserDetails = function(uid) {
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.editUserDetails.modal.html',
+          size: 'md',
+          backdrop: true,
+          resolve: {
+            visitorData: function() {
+              return $scope.visitorForm;
+            }
+          },
+          controller: function($scope, visitorData , $users , $uibModalInstance, Flash) {
+            $scope.uid = uid
+            console.log(uid);
+
+            if (typeof visitorData =='string') {
+              $scope.form = {
+                email:'',
+                name:'',
+                phoneNumber:'',
+                notes:''
+              }
+            }else {
+              $scope.form = visitorData
+            }
+
+
+
+
+            // $scope.$watch('form.email', function(newValue, oldValue) {
+            //   console.log('inside weathcccc');
+            //   // console.log($scope.form);
+            //   // console.log(newValue);
+            //   if (newValue.length>0) {
+            //     $http({
+            //       method: 'GET',
+            //       url: '/api/support/visitor/?email='+newValue,
+            //     }).
+            //     then(function(response) {
+            //
+            //       console.log(response.data);
+            //     });
+            //   }
+            //
+            // });
+            checkEmail = function(){
+              console.log($scope.form.email);
+              $http({
+                  method: 'GET',
+                  url: '/api/support/visitor/?email='+$scope.form.email,
+                }).
+                then(function(response) {
+                  console.log(response.data,typeof response.data,response.data.length);
+                  if (response.data.length ==1 && response.data[0].email == $scope.form.email) {
+                    $scope.form = response.data[0]
+                  }
+                });
+            }
+
+            $scope.submit = function () {
+
+
+              if ($scope.form.email=='') {
+                Flash.create('danger', 'Email is required')
+                return
+              }
+
+
+              $scope.toSend = $scope.form
+              $scope.toSend.uid = $scope.uid;
+
+              var method = 'POST'
+              var url = '/api/support/visitor/'
+              if ($scope.form.pk != undefined) {
+                method = 'PATCH'
+                url += $scope.form.pk + '/'
+              }
+
+              $http({
+                method: method,
+                url: url,
+                data: $scope.toSend
+              }).
+              then(function(response) {
+                // dataName = response.data.name
+                Flash.create('success', 'User details saved')
+                $uibModalInstance.dismiss(response.data.name)
+              });
+            }
+
+          },
+        }).result.then(function () {
+
+        }, function (name) {
+          if (name != 'backdrop click') {
+            $scope.data.name = name
+          }
+        });
       }
 
     }
