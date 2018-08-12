@@ -316,6 +316,8 @@ var agentPk = null;
 
 
 
+
+
 // function getBrowserName() {
 //   var name;
 //   if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
@@ -505,6 +507,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.log(args);
         var message;
 
+
+        if (args[0]=='T') {
+          console.log('typingggggggggggggggggggggg');
+          isTyping.style.display = "";
+          setTimeout(function(){
+            isTyping.style.display = "none";
+          }, 1500);
+          return
+        }
+
         if (args[0]=="M") {
             message = args[1]
            // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
@@ -687,8 +699,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
       //   '</div>'+
       // '</div>'+
 
-    ' <div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
-      '<p id="emoji">&#x1f604;</p>'+
+      '<div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
+      '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
       '</div>'+
       '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
         '<div style="padding:0px;" >'+
@@ -773,7 +785,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.getElementById('mainDiv').style.color = "#333";
 
 
-  document.getElementById("emoji").innerHTML = String.fromCodePoint(0x1F604)
+  // document.getElementById("emoji").innerHTML = String.fromCodePoint(0x1F604)
 
 
   var device;
@@ -807,7 +819,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var ticketCircle = document.getElementById('ticketCircle');
   var closeSupport = document.getElementById('closeSupport');
   var supportCircle = document.getElementById('supportCircle');
+  var isTyping = document.getElementById('isTyping');
 
+
+  isTyping.style.display = "none";
 
 
   document.getElementById('sy-main-icon').style.display = "none";
@@ -1185,7 +1200,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'" frameborder="0" allowfullscreen></iframe>'
         var msgDiv =attachedFile
       }else {
-        var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.message +'</p>'
+        var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
       }
 
 
@@ -1193,7 +1208,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
 
       if (!message.sentByAgent) {
-        var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
+        var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
                         '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
@@ -1292,6 +1307,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     onlineAgent();
+
+
+    // inputText.addEventListener("input", function(e) {
+    //   console.log(this.value);
+    //   var status = 'T'
+    //   connection.session.publish('service.support.agent', [uid , status], {}, {
+    //     acknowledge: true
+    //   }).
+    //   then(function(publication) {
+    //     console.log("Published");
+    //   });
+    //
+    // });
 
 
     function sendMessage(inptText) {
@@ -1622,6 +1650,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (x.matches) {
         device = 'xs';
         console.log('xs');
+        isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
         chatBox.style.height ="100vh";
@@ -1646,6 +1675,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (x.matches) {
         device = 'sm';
         console.log('sm');
+        isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
         chatBox.style.height ="100vh";

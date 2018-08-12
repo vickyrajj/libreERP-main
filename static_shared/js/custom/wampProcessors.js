@@ -246,6 +246,10 @@ connection.onopen = function (session) {
         then(function(publication) {
           console.log("Published");
         });
+      }else if (args[1]=='T') {
+        console.log('typingggggggggg cccccc');
+        // console.log(scope.$$childHead.isTyping);
+        // scope.$$childHead.isTyping = true;
       }
 
   };

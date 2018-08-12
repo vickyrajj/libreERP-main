@@ -329,6 +329,7 @@ app.directive('chatBox', function() {
       $scope.me = $users.get('mySelf');
       // console.log($scope.data,'will fetch here');
       $scope.visitorForm = ''
+      $scope.isTyping = false;
 
       $http({
           method: 'GET',
@@ -511,6 +512,18 @@ app.directive('chatBox', function() {
 
         }
       };
+
+      $scope.$watch('chatBox.messageToSend', function(newValue, oldValue) {
+        $scope.status = "T";
+        if (newValue != "") {
+          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
+        }
+      });
 
       $scope.closeChatBox = function(indx) {
         $scope.closeChat(indx)
