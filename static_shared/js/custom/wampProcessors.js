@@ -73,6 +73,7 @@ connection.onopen = function (session) {
 
   supportChatResponse = function(args) {
       var scope = angular.element(document.getElementById('chatTab')).scope();
+
       console.log(scope,args);
       // console.log(args);
 
@@ -122,6 +123,7 @@ connection.onopen = function (session) {
               scope.newUsers[i].messages.push( args[2])
             }
 
+
             return true
 
           }
@@ -131,9 +133,13 @@ connection.onopen = function (session) {
             console.log('yes');
             if(args[1]=='M') {
               scope.myUsers[i].messages.push(args[2])
+              // if (!scope.myUsers[i].boxOpen) {
+              //   scope.myUsers[i].boxOpen = false
+              // }
+              scope.myUsers[i].unreadMsg+=1
               // scope.myUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created:  args[2].created })
             }else if (args[1]=='MF') {
-
+              scope.myUsers[i].unreadMsg+=1
               var attachment;
               var xhttp = new XMLHttpRequest();
               xhttp.onreadystatechange = function() {
@@ -171,7 +177,18 @@ connection.onopen = function (session) {
 
             }else if (args[1]=='ML') {
               scope.myUsers[i].messages.push(args[2])
+              scope.myUsers[i].unreadMsg+=1
             }
+            console.log('scroll');
+
+            setTimeout( function(){
+              var id = document.getElementById("scrollArea"+ args[0] );
+              console.log(id.scrollHeight);
+              id.scrollTop = id.scrollHeight;
+              console.log(id);
+            }, 200 );
+
+
             return true
           }
         }
@@ -184,7 +201,7 @@ connection.onopen = function (session) {
         console.log(args);
         if(args[1]=='M') {
           console.log(args,'argssssssssss');
-          scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [args[2]], isOnline:true }  )
+          scope.newUsers.push( {name : '', uid: args[0],  messages : [args[2]], isOnline:true }  )
         }else if (args[1]=='MF') {
 
           var attachment;
@@ -195,16 +212,16 @@ connection.onopen = function (session) {
                 console.log(this.responseText);
                 var data = JSON.parse(this.responseText)
                 // attachment = data.attachment
-                 scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [args[2]], isOnline:true }  )
+                 scope.newUsers.push( {name : '', uid: args[0],  messages : [args[2]], isOnline:true }  )
 
                 // if (args[2].type=='image') {
-                //   scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", img : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+                //   scope.newUsers.push( {name : '', uid: args[0],  messages : [{msg:"", img : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
                 // }else if (args[2].type=='audio') {
-                //   scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", audio : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+                //   scope.newUsers.push( {name : '', uid: args[0],  messages : [{msg:"", audio : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
                 // }else if (args[2].type=='video') {
-                //   scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", video : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
+                //   scope.newUsers.push( {name : '', uid: args[0],  messages : [{msg:"", video : attachment, sentByMe:false , created:  args[3] }], isOnline:true }  )
                 // }else if (args[2].type=='doc') {
-                //   scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [{msg:"", doc : attachment , sentByMe:false , created:  args[3] }], isOnline:true }  )
+                //   scope.newUsers.push( {name : '', uid: args[0],  messages : [{msg:"", doc : attachment , sentByMe:false , created:  args[3] }], isOnline:true }  )
                 // }
 
 
@@ -217,7 +234,7 @@ connection.onopen = function (session) {
 
           return true
         }else if (args[1]=='ML') {
-            scope.newUsers.push( {name : 'Ashish', uid: args[0],  messages : [args[2]], isOnline:true }  )
+            scope.newUsers.push( {name : '', uid: args[0],  messages : [args[2]], isOnline:true }  )
         }
       }
 

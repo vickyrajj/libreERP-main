@@ -1439,6 +1439,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
   function sendFile() {
+
+    if (uid!=getCookie("uid")) {
+      uid = getCookie("uid");
+    }
+
     var file = filePicker;
     console.log(file.files[0],'typpppppppppppppppppppppp' );
 

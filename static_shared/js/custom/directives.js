@@ -355,6 +355,8 @@ app.directive('chatBox', function() {
         for (var i = 0; i < response.data.length; i++) {
           $scope.data.messages.push(response.data[i]);
         }
+        $scope.data.unreadMsg = 0
+        $scope.data.boxOpen = true
 
         //
         // for (var i = 0; i < response.data.length; i++) {
@@ -512,6 +514,7 @@ app.directive('chatBox', function() {
 
       $scope.closeChatBox = function(indx) {
         $scope.closeChat(indx)
+        $scope.data.boxOpen = false
       }
 
       $scope.attachFile = function() {
@@ -519,6 +522,7 @@ app.directive('chatBox', function() {
       }
 
       $scope.scroll = function () {
+        console.log('calling');
         setTimeout(function () {
           var id = document.getElementById("scrollArea"+ $scope.data.uid );
           id.scrollTop = id.scrollHeight;
@@ -594,7 +598,10 @@ app.directive('chatBox', function() {
                 then(function(response) {
                   console.log(response.data,typeof response.data,response.data.length);
                   if (response.data.length ==1 && response.data[0].email == $scope.form.email) {
-                    $scope.form = response.data[0]
+                    $scope.form.name = response.data[0].name
+                    $scope.form.email = response.data[0].email
+                    $scope.form.phoneNumber = response.data[0].phoneNumber
+                    $scope.form.notes = response.data[0].notes
                   }
                 });
             }
@@ -625,17 +632,19 @@ app.directive('chatBox', function() {
               }).
               then(function(response) {
                 // dataName = response.data.name
+                // $scope.form = response.data;
                 Flash.create('success', 'User details saved')
-                $uibModalInstance.dismiss(response.data.name)
+                $uibModalInstance.dismiss(response.data)
               });
             }
 
           },
         }).result.then(function () {
 
-        }, function (name) {
-          if (name != 'backdrop click') {
-            $scope.data.name = name
+        }, function (data) {
+          if (data != 'backdrop click') {
+            $scope.data.name = data.name
+            $scope.visitorForm = data
           }
         });
       }

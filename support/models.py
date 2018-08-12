@@ -45,9 +45,9 @@ class Visitor(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     uid = models.CharField(max_length = 50 , null = True )
     email = models.EmailField(null = True)
-    name = models.CharField(max_length = 50, null = True)
-    phoneNumber = models.CharField(max_length = 20, null = True)
-    notes = models.CharField(max_length = 1000, null = True)
+    name = models.CharField(max_length = 50, null = True , blank = True)
+    phoneNumber = models.CharField(max_length = 20, null = True , blank = True)
+    notes = models.CharField(max_length = 1000, null = True , blank = True)
 
 class ReviewComment(models.Model):
     created = models.DateTimeField(auto_now_add = True)
