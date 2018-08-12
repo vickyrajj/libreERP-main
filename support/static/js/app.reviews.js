@@ -22,6 +22,14 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     console.log(response.data,'dddddddddddd',typeof response.data);
     $scope.reviewCommentData =response.data
   });
+  $http({
+    method: 'GET',
+    url: '/api/support/chatThread/?uid='+$scope.msgData[0].uid
+  }).
+  then(function(response) {
+    console.log(response.data,'dddddddddddd',typeof response.data);
+    $scope.chatThreadData =response.data[0]
+  });
   $scope.reviewForm = {message:''}
   $scope.postComment = function(){
     console.log($scope.msgData[0].created);
@@ -41,13 +49,75 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
       $scope.reviewForm = {message:''}
     });
   }
+  $scope.showChart = function(){
+    console.log('modalllllllllllllllll');
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.support.review.fullChat.modal.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        chatThreadData: function() {
+          return $scope.chatThreadData;
+        }
+      },
+      controller: function($scope, chatThreadData , $users , $uibModalInstance, Flash) {
+
+        $scope.chatThreadData = chatThreadData
+        $http({
+            method: 'GET',
+            url: '/api/support/supportChat/?uid='+chatThreadData.uid,
+          }).
+          then(function(response) {
+            console.log(response.data,typeof response.data,response.data.length);
+            $scope.fullChatData = response.data
+          });
+
+
+        checkEmail = function(){
+          console.log($scope.form.email);
+          $http({
+              method: 'GET',
+              url: '/api/support/visitor/?email='+$scope.form.email+'&uid='+uid,
+            }).
+            then(function(response) {
+              console.log(response.data,typeof response.data,response.data.length);
+              if (response.data.length ==1 && response.data[0].email == $scope.form.email) {
+                $scope.form = response.data[0]
+              }
+            });
+        }
+        $scope.changeStatus = function(status){
+          $http({
+            method: 'PATCH',
+            url: '/api/support/chatThread/' + $scope.chatThreadData.pk + '/',
+            data: {status:status}
+          }).
+          then(function(response) {
+            // dataName = response.data.name
+            Flash.create('success', 'Updated')
+            $uibModalInstance.dismiss(response.data.status)
+          });
+        }
+
+      },
+    }).result.then(function () {
+
+    }, function (status) {
+      console.log(status);
+      console.log($scope.chatThreadData);
+      if (status != 'backdrop click') {
+        $scope.chatThreadData.status = status
+      }
+    });
+
+  }
 })
 app.controller("businessManagement.reviews", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
 
   $scope.data = {
     tableData: []
   };
-  
+
   $scope.form = {date:new Date(),user:''}
   $scope.reviewData = []
   $scope.getData = function(date,user){

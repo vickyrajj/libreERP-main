@@ -589,7 +589,7 @@ app.directive('chatBox', function() {
               console.log($scope.form.email);
               $http({
                   method: 'GET',
-                  url: '/api/support/visitor/?email='+$scope.form.email+'&uid='+uid,
+                  url: '/api/support/visitor/?email='+$scope.form.email,
                 }).
                 then(function(response) {
                   console.log(response.data,typeof response.data,response.data.length);
