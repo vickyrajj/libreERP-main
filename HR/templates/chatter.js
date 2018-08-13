@@ -593,6 +593,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }else if (args[0]=='A') {
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[1]+'</p>'
           return
+        }else if (args[0]=='F') {
+          openFeedback(args[1])
+          return
         }
 
 
@@ -1077,11 +1080,119 @@ document.addEventListener("DOMContentLoaded", function(event) {
         -ms-animation: item-5 0.5s forwards; \
         -moz-animation: item-5 0.5s forwards; \
       }\
+          div.stars {\
+          width: 270px;\
+          display: inline-block;\
+        }\
+        input.star { display: none; }\
+        label.star {\
+          float: right;\
+          padding: 10px;\
+          font-size: 36px;\
+          color: #444;\
+          transition: all .2s;\
+        }\
+        input.star:checked ~ label.star:before {\
+          content: '\\2605';\
+          color: #FD4;\
+          transition: all .25s;\
+        }\
+        input.star-5:checked ~ label.star:before {\
+          color: #FE7;\
+          text-shadow: 0 0 20px #952;\
+        }\
+        input.star-1:checked ~ label.star:before { color: #F62; }\
+        label.star:hover { transform: rotate(-15deg) scale(1.3); }\
+        label.star:before {\
+          content: '\\2605';\
+        }\
       "));
 
       document.head.appendChild(newStyle);
 
   }, 2000);
+
+
+
+  function openFeedback(id) {
+    var id = id;
+    div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Please provide your feedback below:</p>'+
+                      '<form>'+
+                        '<div class="stars">'+
+                          '<form id="stars">'+
+                            '<input class="star star-5" id="star-5" type="radio" name="star"/>'+
+                            '<label class="star star-5" for="star-5"></label>'+
+                            '<input class="star star-4" id="star-4" type="radio" name="star"/>'+
+                            '<label class="star star-4" for="star-4"></label>'+
+                            '<input class="star star-3" id="star-3" type="radio" name="star"/>'+
+                            '<label class="star star-3" for="star-3"></label>'+
+                            '<input class="star star-2" id="star-2" type="radio" name="star"/>'+
+                            '<label class="star star-2" for="star-2"></label>'+
+                            '<input class="star star-1" id="star-1" type="radio" name="star"/>'+
+                            '<label class="star star-1" for="star-1"></label>'+
+                          '</form>'+
+                        '</div>'+
+                         '<textarea id="feedbackText" style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
+                         '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                           'Submit'+
+                         '</button>'+
+                        '</form>'+
+                      '</div> '+
+                    '</div>'
+    messageBox.appendChild(div);
+    var stars = document.getElementById('stars');
+    var submitStars = document.getElementById('submitStars');
+    submitStarForm(id);
+  }
+
+
+  function submitStarForm(id) {
+    submitStars.addEventListener("click", function() {
+      console.log('somthing hereeeeee' , this);
+      // id="star-5"
+      // console.log(document.getElementById('feedbackText').value);
+      var feedbackText = document.getElementById('feedbackText')
+
+      var ratingForm = {
+        customerRating:0,
+        customerFeedback:feedbackText.value
+      }
+
+      // var rating;
+      if (document.getElementById('star-1').checked) {
+        ratingForm.customerRating = 1
+      }
+      if (document.getElementById('star-2').checked) {
+        ratingForm.customerRating = 2
+      }
+      if (document.getElementById('star-3').checked) {
+        ratingForm.customerRating = 3
+      }
+      if (document.getElementById('star-4').checked) {
+        ratingForm.customerRating = 4
+      }
+      if (document.getElementById('star-5').checked) {
+        ratingForm.customerRating = 5
+      }
+
+
+
+
+      var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 201) {
+           console.log('posted successfully');
+           console.log(ratingForm);
+           feedbackText.value = ''
+         }
+       };
+       xhttp.open('PATCH', 'http://localhost:8080/api/support/chatThread/' + id + '/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(ratingForm);
+    }, false);
+  }
 
 
 
@@ -1394,22 +1505,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
           var div = document.createElement("div");
           div.id="offlineMessage"
 
-          // div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-          //                   '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-          //                   '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
-          //                   '<form>'+
-          //                     '<input style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
-          //                      '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
-          //                      '<button type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-          //                        'Submit'+
-          //                      '</button>'+
-          //                     '</form>'+
-          //                   '</div> '+
-          //                 '</div>'
           div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                            '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Please provide your feedback below:</p>'+
+                            '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
                             '<form>'+
+                              '<input style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
                                '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
                                '<button type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                                  'Submit'+
@@ -1417,7 +1517,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
                               '</form>'+
                             '</div> '+
                           '</div>'
-          messageBox.appendChild(div);
           scroll();
           }
       }, 4000)
@@ -1460,9 +1559,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
 
       console.log('dddddddddddddd',isAgentOnline);
-
-
-
 
 
     }
@@ -1584,10 +1680,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   }
 
-
-  function sendFeedback(rating , feedbackText) {
-
-  }
 
   filePicker.onchange = function(e) {
     var file = filePicker;
