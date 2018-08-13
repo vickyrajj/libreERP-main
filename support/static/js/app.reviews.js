@@ -63,6 +63,22 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
       controller: function($scope, chatThreadData , $users , $uibModalInstance, Flash) {
 
         $scope.chatThreadData = chatThreadData
+        $scope.calculateTime = function (user , agent) {
+          if (user!=undefined) {
+            var usertime = new Date(user);
+            var agenttime = new Date(agent);
+            var diff = Math.floor((agenttime - usertime)/60000)
+            if (diff<60) {
+              return diff+' Mins';
+            }else if (diff>=60 && diff<60*24) {
+              return Math.floor(diff/60)+' Hrs';
+            }else if (diff>=60*24) {
+              return Math.floor(diff/(60*24))+' Days';
+            }
+          }else {
+            return
+          }
+        }
         $http({
             method: 'GET',
             url: '/api/support/supportChat/?uid='+chatThreadData.uid,
@@ -123,7 +139,6 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
   $scope.calculateTime = function (user , agent) {
 
     if (user!=undefined) {
-      console.log(user,agent);
       var usertime = new Date(user);
       var agenttime = new Date(agent);
       var diff = Math.floor((agenttime - usertime)/60000)
@@ -154,7 +169,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.getData = function(date,user,email){
     console.log('@@@@@@@@@@@@@@@@@@',date,user);
     var url = '/api/support/reviewHomeCal/?'
-    if (typeof date == 'object') {
+    if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
     if (typeof user == 'object') {
@@ -257,7 +272,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
+    // console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
