@@ -142,8 +142,13 @@ def getChatterScript(request , fileName):
     pk = decrypt(fileName , "cioc")
     print pk
     obj = CustomerProfile.objects.get(pk = pk)
-    print 'dpppppppppppp',obj.dp,obj.dp.url
-    dataToSend = {"pk" : pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "name" : obj.name , "dp" : obj.dp.url }
+    # print 'dpppppppppppp',obj.dp,obj.dp.url
+    dataToSend = {"pk" : pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket}
+    if obj.dp:
+        dataToSend["dp"] =  obj.dp.url
+    if obj.name:
+        dataToSend["name"] =  obj.name
+        
     return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
 
 class VisitorViewSet(viewsets.ModelViewSet):

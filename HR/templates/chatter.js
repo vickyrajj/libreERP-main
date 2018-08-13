@@ -269,7 +269,7 @@ var callBackSupport = '{{callBack}}'
 var videoAndAudioSupport = '{{videoAndAudio}}'
 var ticketSupport = '{{ticket}}'
 var nameSupport = '{{name}}'
-var dpSupport = 'http://localhost:8080'+'{{dp}}'
+var dpSupport = '{{dp}}'
 var supportBubbleColor = '{{supportBubbleColor}}'
 
 
@@ -280,6 +280,8 @@ if (nameSupport=='None') {
 
 if (dpSupport=='') {
   dpSupport = 'http://localhost:8080/static/images/img_avatar_card.png'
+}else {
+  dpSupport = 'http://localhost:8080'+'{{dp}}'
 }
 
 
