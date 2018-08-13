@@ -1,21 +1,23 @@
 <div class="animated fadeIn" id="chatBox">
   <div style="min-height:75vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white; " class="container-fluid">
-    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:80px;">
+    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:90px;">
       <div class="row" style="padding:10px;">
         <div class="col-md-6" style="padding-right:0px;" >
-
           <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i> <span style="font-size:18px;" >{{data.uid}}</span>
           <h4>{{data.name}}</h4>
         </div>
         <div class="col-md-4" style="padding:0px" >
-           <button class="btn btn-primary btn-sm" type="button" name="button" ng-click="knowledgeBase()"> Knowledge base </button>
+          <div class="btn-group-vertical">
+            <button class="btn btn-primary" type="button" name="button" ng-click="knowledgeBase()"> Knowledge base </button>
+            <button class="btn btn-danger" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="closeChat(data.uid)" confirm-button-type="default" cancel-button-type="default"> Close Chat </button>
+          </div>
         </div>
         <div class="col-md-2 " >
           <div class="row">
-            <i class="fa fa-times pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding-right:15px;" ng-click="closeChatBox(index)" ></i>
+            <i class="fa fa-times pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding-right:10px;" ng-click="closeChatBox(index)" ></i>
           </div>
           <div class="row" style="padding-top:15px;">
-            <i class="fa fa-pencil fa-lg  pull-right" style="cursor:pointer; padding-right:15px;" aria-hidden="true" ng-click="editUserDetails(data.uid)"></i>
+            <i class="fa fa-pencil fa-lg  pull-right" style="cursor:pointer; padding-right:10px;" aria-hidden="true" ng-click="editUserDetails(data.uid)"></i>
           </div>
         </div>
       </div>
