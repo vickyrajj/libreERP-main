@@ -526,6 +526,17 @@ app.directive('chatBox', function() {
         }
       });
 
+
+      $scope.chatClose = function(uid) {
+        $scope.status = "F";
+        connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status , uid ], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published");
+        });
+      }
+
       $scope.closeChatBox = function(indx) {
         $scope.closeChat(indx)
         $scope.data.boxOpen = false

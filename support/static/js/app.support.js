@@ -162,6 +162,15 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
      });
 
 
+     $scope.status ='R';
+     connection.session.publish('service.support.chat', [$scope.status , uid ], {}, {
+       acknowledge: true
+     }).
+     then(function(publication) {
+       console.log("Published");
+     });
+
+
 
    }
 

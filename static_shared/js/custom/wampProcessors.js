@@ -77,7 +77,7 @@ connection.onopen = function(session) {
   supportChatResponse = function(args) {
     var scope = angular.element(document.getElementById('chatTab')).scope();
 
-    console.log(scope, args);
+    // console.log(args);
     // console.log(args);
 
     function userExist() {
@@ -202,6 +202,36 @@ connection.onopen = function(session) {
       }
     }
 
+
+
+      if (args[1] == 'O') {
+        var uid = args[0];
+        var status = 'O';
+        connection.session.publish('service.support.chat.' + uid, [status], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published");
+        });
+        return
+      } else if (args[1] == 'T') {
+        console.log('typingggggggggg cccccc');
+        // console.log(scope.$$childHead.isTyping);
+        // scope.$$childHead.isTyping = true;
+        return
+      }else if (args[1] == 'R') {
+        console.log('remove this from ur new user list' , args[0]);
+
+        for (var i = 0; i < scope.newUsers.length; i++) {
+          if (scope.newUsers[i].uid == args[0]) {
+              console.log(scope.newUsers[i].uid , 'yessssssssssssss');
+              scope.newUsers.splice(i, 1);
+          }
+        }
+
+        return
+      }
+
     if (userExist()) {
       console.log('yesssssssssssss');
     } else {
@@ -263,20 +293,6 @@ connection.onopen = function(session) {
       }
     }
 
-    if (args[1] == 'O') {
-      var uid = args[0];
-      var status = 'O';
-      connection.session.publish('service.support.chat.' + uid, [status], {}, {
-        acknowledge: true
-      }).
-      then(function(publication) {
-        console.log("Published");
-      });
-    } else if (args[1] == 'T') {
-      console.log('typingggggggggg cccccc');
-      // console.log(scope.$$childHead.isTyping);
-      // scope.$$childHead.isTyping = true;
-    }
 
   };
 

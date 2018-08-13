@@ -444,7 +444,8 @@ function fetchThread(uid) {
         if (data.length>0) {
           // fetchThread(uid);
           threadExist = true
-
+          console.log(data,'fffffffffffffffff');
+          chatThreadPk = data[0].pk
         }
         console.log(data);
         fetchMessages(uid);
@@ -453,7 +454,7 @@ function fetchThread(uid) {
         // document.cookie = "uid" + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
         uid = new Date().getTime()
-        console.log('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn',uid ,document.cookie);
+        // console.log('nn',uid ,document.cookie);
         setCookie("uid", uid, 365);
         fetchMessages(uid);
 
@@ -469,6 +470,7 @@ function fetchThread(uid) {
 
 var threadExist
 var threadResponse
+var chatThreadPk
 
 
 function checkCookie() {
@@ -594,6 +596,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[1]+'</p>'
           return
         }else if (args[0]=='F') {
+          console.log('open feedback');
           openFeedback(args[1])
           return
         }
@@ -1115,7 +1118,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
   function openFeedback(id) {
+    console.log('coming in open feedback');
     var id = id;
+    var div = document.createElement("div");
+    div.id="offlineMessage"
     div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                       '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                       '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Please provide your feedback below:</p>'+
@@ -1142,6 +1148,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                       '</div> '+
                     '</div>'
     messageBox.appendChild(div);
+    scroll();
     var stars = document.getElementById('stars');
     var submitStars = document.getElementById('submitStars');
     submitStarForm(id);
@@ -1177,8 +1184,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
         ratingForm.customerRating = 5
       }
 
-
-
+    console.log(ratingForm);
+    ratingForm = JSON.stringify(ratingForm)
+    feedbackText.value = ''
+    document.getElementById('star-1').checked = false
+    document.getElementById('star-2').checked = false
+    document.getElementById('star-3').checked = false
+    document.getElementById('star-4').checked = false
+    document.getElementById('star-5').checked = false
 
       var xhttp = new XMLHttpRequest();
        xhttp.onreadystatechange = function() {
@@ -1188,7 +1201,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
            feedbackText.value = ''
          }
        };
-       xhttp.open('PATCH', 'http://localhost:8080/api/support/chatThread/' + id + '/', true);
+       xhttp.open('PATCH', 'http://localhost:8080/api/support/chatThread/'+ chatThreadPk + '/', true);
        xhttp.setRequestHeader("Content-type", "application/json");
        xhttp.send(ratingForm);
     }, false);
@@ -1540,7 +1553,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
           xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 201) {
               console.log('posted successfully');
+              var data = JSON.parse(this.responseText)
               threadExist=true
+              console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+              chatThreadPk = data.pk
             }
           };
           xhttp.open('POST', 'http://localhost:8080/api/support/chatThread/', true);
@@ -1668,6 +1684,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
            if (this.readyState == 4 && this.status == 201) {
              console.log('posted successfully');
              threadExist=true
+             console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+             chatThreadPk = data.pk
            }
          };
          xhttp.open('POST', 'http://localhost:8080/api/support/chatThread/', true);
