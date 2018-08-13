@@ -44,4 +44,4 @@ class ReviewCommentSerializer(serializers.ModelSerializer):
 class ChatThreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatThread
-        fields = ( 'pk' , 'created' , 'uid', 'status')
+        fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback')
