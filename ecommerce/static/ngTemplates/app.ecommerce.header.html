@@ -77,7 +77,7 @@
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:5vh;margin:0px;">
     <ul style="padding:0px;">
       <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:{{100/slide.banners.length}}%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
-        <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;v-align:center">
+        <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;margin-right: 105px;">
           {{s.title | uppercase}}
         </span>
       </li>

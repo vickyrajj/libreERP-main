@@ -260,9 +260,17 @@ class Rating(models.Model):
     productDetail =  models.ForeignKey(listing , null = True , related_name = "ratings")
     user = models.ForeignKey(User , related_name = 'ecommerceUser' , null = False)
 
+FEEDBACK_STATUS_CHOICES = (
+    ('created' , 'created'),
+    ('ongoing' , 'ongoing'),
+    ('resolved' , 'resolved'),
+    ('junk' , 'junk'),
+)
+
 class SupportFeed(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     user = models.ForeignKey(User , related_name = 'supportUser' , null = True)
     email = models.CharField(max_length = 35, blank = True)
     mobile = models.CharField(null = False , max_length = 14)
     message = models.CharField( null = False , max_length = 1000)
+    status = models.CharField(choices = FEEDBACK_STATUS_CHOICES , max_length = 10 , default='created' )

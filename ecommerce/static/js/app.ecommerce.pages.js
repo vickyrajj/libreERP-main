@@ -189,5 +189,6 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
 app.controller("businessManagement.ecommerce.pages.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
 
   $scope.data = $scope.tab.data;
+  console.log(  $scope.data ,'AAAAAAAAAAA');
 
 });

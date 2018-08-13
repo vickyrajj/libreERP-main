@@ -380,7 +380,7 @@ class SupportFeedSerializer(serializers.ModelSerializer):
     user = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = SupportFeed
-        fields = ( 'pk', 'created' , 'email', 'mobile' ,'message' , 'user')
+        fields = ( 'pk', 'created' , 'email', 'mobile' ,'message' , 'user','status')
         read_only_fields = ('user',)
     def create(self , validated_data):
         print 'hhhhhhhhhhhhhhhhhhhhj',self.context['request'].user
@@ -388,4 +388,5 @@ class SupportFeedSerializer(serializers.ModelSerializer):
         if self.context['request'].user.is_authenticated :
             a.user=User.objects.get(pk = self.context['request'].user.pk)
         a.save()
+        print a,'ddddddddddddddd'
         return a

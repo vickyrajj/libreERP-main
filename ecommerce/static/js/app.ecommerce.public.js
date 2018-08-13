@@ -659,7 +659,16 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 });
 
 app.controller('controller.ecommerce.categories', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
-
+  $scope.showFilter = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=filter').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg',response.data);
+    if(response.data[0]!=null){
+      if (response.data[0].flag) {
+        $scope.showFilter = true
+      }
+    }
+  })
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
   $window.scrollTo(0, 0)
   $scope.minValue;
@@ -755,7 +764,8 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     params = {
       minPrice: $scope.slider.minValue,
       maxPrice: $scope.slider.maxValue,
-      fields: {}
+      fields: {},
+      sort:$scope.data.sort
     }
 
     for (var i = 0; i < $scope.category.fields.length; i++) {
@@ -792,6 +802,12 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     //   params.city = cities
     // }
     //
+
+
+    // console.log();
+
+
+
     console.log("gggggggggggggggggggggggggggg");
     console.log($scope.category.pk,'aaaaaaaaaaaaaaaaaaaaaaa');
     $http({
@@ -1781,7 +1797,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
   $http({
     method: 'GET',
-    url: '/api/ecommerce/offerBanner/'
+    url: '/api/ecommerce/offerBanner/?level=1'
   }).
   then(function(response) {
     // for (var i = 0; i < response.data.length; i++) {
@@ -2054,11 +2070,13 @@ document.title = 'Buy Products Online At Best Price In India | Sterling Select'
 document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
   $http({
     method: 'GET',
-    url: '/api/ecommerce/listingLite/?limit=16'
+    url: '/api/ecommerce/listingLite/'
   }).
   then(function(response) {
-    $scope.listingProducts = response.data.results;
+    $scope.listingProducts = response.data.splice(1, 8);
     console.log('sssssssssss', $scope.listingProducts);
+    $scope.listingRemainingProducts = response.data.splice(5,8);
+      console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
   })
 // }
 // $scope.load($scope.offset)
@@ -2099,6 +2117,89 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
     console.log('%%%%%%%%', response.data.results);
     $scope.suggestedProducts = response.data.results
   })
+
+
+  $scope.subSlide = {
+    banners: [],
+    active: 0
+  };
+  $scope.subSlideMobile = {
+    banners: [],
+    active: 0
+  };
+
+  $http({
+    method: 'GET',
+    url: '/api/ecommerce/offerBanner/?level=2'
+  }).
+  then(function(response) {
+    // for (var i = 0; i < response.data.length; i++) {
+    //   s = response.data[i].params;
+    //   s = s.split(':')[1];
+    //   s = s.split('}')[0];
+    //   response.data[i].params = {id : parseInt(s)}
+    // }
+    $scope.subSlide.banners = response.data;
+    if ($scope.subSlide.banners.length > 5) {
+      $scope.subSlide.banners = $scope.slide.banners.slice(0,5)
+    }
+    if ($scope.subSlide.banners.length > 1) {
+      $scope.subSlide.lastbanner = $scope.subSlide.banners.length - 1
+      $scope.subSlide.img = $scope.subSlide.banners[0].image
+      $scope.subSlide.title = $scope.subSlide.banners[0].title
+    }else {
+      $scope.subSlide.lastbanner = 0
+    }
+
+
+    console.log(response.data,'fffff');
+
+    $scope.subSlideMobile.banners = response.data;
+    if ($scope.subSlideMobile.banners.length > 3) {
+      $scope.subSlideMobile.banners = response.data.slice(0,3);
+    }
+    if ($scope.subSlideMobile.banners.length > 1) {
+      $scope.subSlideMobile.lastbanner = $scope.subSlideMobile.banners.length - 1
+
+    }else {
+      $scope.subSlideMobile.lastbanner = 0
+    }
+    console.log($scope.subSlide.banners,'LLLLLLLLLLLLLLLLLLLLLLL');
+    console.log($scope.subSlideMobile.banners,'KKKKKKKKKKKKKKKKKKKKKKKKKKKKK');
+  })
+  // $scope.changesubSlide = function(index) {
+  //   $scope.subSlide.active = index;
+  // }
+
+
+    $interval(function() {
+      if ($scope.subSlide.active == undefined) {
+        $scope.subSlide.active =0
+      }
+      if ($scope.subSlide.active == $scope.subSlide.lastbanner) {
+        $scope.subSlide.active = 0;
+      }else {
+        $scope.subSlide.active += 1;
+      }
+      $scope.subSlide.img = $scope.subSlide.banners[$scope.subSlide.active].image
+      $scope.subSlide.title = $scope.subSlide.banners[$scope.subSlide.active].title
+
+    }, 3000);
+
+  // $scope.changeSlideMobile = function(index) {
+  //   $scope.subSlideMobile.active = index;
+  // }
+
+  $interval(function() {
+    if ($scope.subSlideMobile.active == undefined) {
+      $scope.subSlideMobile.active =0
+    }
+    if ($scope.subSlideMobile.active == $scope.subSlideMobile.lastbanner) {
+      $scope.subSlideMobile.active = 0;
+    }else {
+      $scope.subSlideMobile.active += 1;
+    }
+  }, 3000);
 
 
 

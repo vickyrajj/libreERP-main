@@ -342,7 +342,7 @@ class listingViewSet(viewsets.ModelViewSet):
     filter_fields = ['parentType']
 
     def get_queryset(self):
-
+        print self.request.GET,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         data = self.request.GET
         if 'recursive' in data:
             if data['recursive'] == '1':
@@ -389,6 +389,13 @@ class listingViewSet(viewsets.ModelViewSet):
                         toReturn = toReturn.filter(qry)
                         print 'filtered',toReturn
                         print len(toReturn)
+
+                # if 'sort' in data:
+                #     if data['sort']=='lth':
+                #         print toReturn.values() , 'ffffffffffffff'
+                #         # toReturn = toReturn
+                #     else:
+                #         print toReturn
 
 
                 # for idx,c in enumerate(self.request.GET[]):
@@ -474,7 +481,7 @@ class offerBannerViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly, )
     serializer_class = offerBannerSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title']
+    filter_fields = ['title','level']
     def get_queryset(self):
         return offerBanner.objects.all()
         # return offerBanner.objects.filter(active = True)
@@ -743,6 +750,41 @@ class SendDeliveredStatus(APIView):
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
+
+class SendFeedBackAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        emailAddr=[]
+        response=''
+        supportObj=SupportFeed.objects.get(pk = request.data['datapk'])
+        print '**************************',supportObj.email, request.data['response']
+        print response,'ggggggggggggg'
+        response = str( request.data['response'])
+        a , b = response.split("<p>")
+        response = b.split("</p>")
+        print type(response[0])
+        emailAddr.append(supportObj.email)
+        ctx = {
+            'heading' : " On response to your Feed Back",
+            'linkUrl': globalSettings.BRAND_NAME,
+            'sendersAddress' : globalSettings.SEO_TITLE,
+            'question' : supportObj.message,
+            'response':response[0],
+            'linkedinUrl' : lkLink,
+            'fbUrl' : fbLink,
+            'twitterUrl' : twtLink,
+        }
+        print ctx
+        email_body = get_template('app.ecommerce.support.email.html').render(ctx)
+        # email_subject = "Order Details:"
+        # msgBody = " Your Order has been placed and details are been attached"
+        # contactData.append(str(orderObj.user.email))
+        print 'aaaaaaaaaaaaaaa'
+        msg = EmailMessage("Response" , email_body, to= emailAddr)
+        msg.content_subtype = 'html'
+        # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
+        msg.send()
+        return Response({}, status = status.HTTP_200_OK)
 
 
 themeColor = colors.HexColor('#227daa')
@@ -1076,7 +1118,7 @@ class SupportFeedViewSet(viewsets.ModelViewSet):
     queryset = SupportFeed.objects.all()
     serializer_class = SupportFeedSerializer
     filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['productDetail',]
+    filter_fields = ['status',]
 
 # class suggestedItemAPI(APIView):
 #     renderer_classes = (JSONRenderer,)

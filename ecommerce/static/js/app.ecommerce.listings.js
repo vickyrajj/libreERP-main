@@ -331,14 +331,30 @@ app.controller('businessManagement.ecommerce.listings' , function($scope ,$rootS
   $scope.tableAction = function(target , action , mode){
     console.log(target , action , mode);
     console.log($scope.data.tableData);
-    if (action=='edit') {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)){
-          $scope.addTab({title : 'Edit Listing : ' + $scope.data.tableData[i].pk , cancel : true , app : 'editListing' , data : {pk : target} , active : true})
-        }
+          if (action=='edit') {
+            var title = 'Edit Listing : ';
+            var appType = 'editListing';
+          }
+          if (action=='delete') {
+            $http({
+              method: 'DELETE',
+              url: '/api/ecommerce/listingLite/' + $scope.data.tableData[i].pk + '/'
+            }).
+            then(function(response) {
+              Flash.create('success', 'Item Deleted');
+            })
+            $scope.data.tableData.splice(i, 1)
+            return;
+          }
+          $scope.addTab({title : title +  $scope.data.tableData[i].pk , cancel : true , app :appType  , data : {pk : target} , active : true})
       }
     }
   }
+
+
+
 
   $scope.genericProductSearch = function(query) {
     return $http.get('/api/ecommerce/genericProduct/?name__contains=' + query).

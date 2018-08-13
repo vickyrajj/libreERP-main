@@ -1,5 +1,4 @@
-app.controller('businessManagement.ecommerce.support' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
-
+app.controller("businessManagement.ecommerce.support", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
   // var views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
   // ];
   //
@@ -30,5 +29,194 @@ app.controller('businessManagement.ecommerce.support' , function($scope , $http 
   //   }
   // }
 
+  $scope.data = {
+    tableCreatedData: []
+  }
 
+  var views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.ecommerce.vendor.support.request.item.html',
+  }, ];
+
+
+  $scope.requestconfig = {
+    views: views,
+    url: '/api/ecommerce/supportFeed/',
+    searchField: 'status',
+    deletable: true,
+    itemsNumPerView: [16, 32, 48],
+    getParams : [{key : 'status__in' , value : 'created,ongoing'}],
+  }
+
+  $scope.tableCreatedAction = function(target, action, mode) {
+    for (var i = 0; i < $scope.data.tableCreatedData.length; i++) {
+      if ($scope.data.tableCreatedData[i].pk == parseInt(target)) {
+        if (action == 'info') {
+          var title = 'Support Details : ';
+          var appType = 'requestInfo';
+        }
+        $scope.addTab({
+          title: title + $scope.data.tableCreatedData[i].pk,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i,
+            request: $scope.data.tableCreatedData[i]
+          },
+          active: true
+        })
+      }
+    }
+
+  }
+
+
+
+  $scope.tabs = [];
+  $scope.searchTabActive = true;
+
+  $scope.closeTab = function(index) {
+    $scope.tabs.splice(index, 1)
+  }
+
+  $scope.addTab = function(input) {
+    console.log(JSON.stringify(input));
+    $scope.searchTabActive = false;
+    alreadyOpen = false;
+    for (var i = 0; i < $scope.tabs.length; i++) {
+      if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+        $scope.tabs[i].active = true;
+        alreadyOpen = true;
+      } else {
+        $scope.tabs[i].active = false;
+      }
+    }
+    if (!alreadyOpen) {
+      $scope.tabs.push(input)
+    }
+  }
+
+  $scope.data = {
+    tableResolvedData: []
+  }
+
+  var views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.ecommerce.vendor.support.resolved.item.html',
+  }, ];
+
+
+  $scope.resolvedConfig = {
+    views: views,
+    url: '/api/ecommerce/supportFeed/',
+    searchField: 'status',
+    deletable: true,
+    itemsNumPerView: [16, 32, 48],
+    getParams : [{key : 'status__in' , value : 'junk,resolved'}],
+  }
+
+  $scope.tableResolvedAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableResolvedData,'jjjjjjjjjjjjjjjjjjjjjjjjjjj');
+
+    for (var i = 0; i < $scope.data.tableResolvedData.length; i++) {
+      if ($scope.data.tableResolvedData[i].pk == parseInt(target)) {
+        if (action == 'resolvedInfo') {
+          var title = 'Support Details : ';
+          var appType = 'resolvedInfo';
+        }
+
+        $scope.addTab({
+          title: title + $scope.data.tableResolvedData[i].pk,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i,
+            order: $scope.data.tableResolvedData[i]
+          },
+          active: true
+        })
+      }
+    }
+
+  }
+
+
+  $scope.tabs = [];
+  $scope.searchTabActive = true;
+
+  $scope.closeTab = function(index) {
+    $scope.tabs.splice(index, 1)
+  }
+
+  $scope.addTab = function(input) {
+    console.log(JSON.stringify(input));
+    $scope.searchTabActive = false;
+    alreadyOpen = false;
+    for (var i = 0; i < $scope.tabs.length; i++) {
+      if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+        $scope.tabs[i].active = true;
+        alreadyOpen = true;
+      } else {
+        $scope.tabs[i].active = false;
+      }
+    }
+    if (!alreadyOpen) {
+      $scope.tabs.push(input)
+    }
+  }
+
+
+
+
+
+
+});
+
+app.controller("businessManagement.ecommerce.support.request.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
+
+  $scope.data = $scope.tab.data;
+
+$scope.sendResponse=function(){
+  console.log($scope.data.request);
+  var sendData = {
+    response:$scope.data.request.response,
+    user : $scope.data.request.user.pk,
+    datapk : $scope.data.request.pk
+  }
+  console.log(sendData,'aaaaaaaaaaa');
+  $http({
+    method: 'POST',
+    url: '/api/ecommerce/sendFeedBack/',
+    data: sendData
+  }).
+  then(function(response) {
+    console.log(response.data);
+    Flash.create('success', 'Email Sent Successfully! ');
+  })
+
+}
+
+$scope.$watch('data.request.status', function(newValue, oldValue) {
+$scope.status= newValue
+// var sendData = {
+//   status: $scope.status,
+// }
+
+$http({
+  method: 'PATCH',
+  url: '/api/ecommerce/supportFeed/' + $scope.data.request.pk + '/',
+  data: {status: $scope.status}
+}).
+then(function(response) {
+  console.log(response.data);
+})
+
+});
 });
