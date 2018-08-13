@@ -611,7 +611,7 @@ app.directive('chatBox', function() {
                 }).
                 then(function(response) {
                   console.log(response.data,typeof response.data,response.data.length);
-                  if (response.data.length ==1 && response.data[0].email == $scope.form.email) {
+                  if (response.data.length >0 && response.data[0].email == $scope.form.email) {
                     $scope.form.name = response.data[0].name
                     $scope.form.email = response.data[0].email
                     $scope.form.phoneNumber = response.data[0].phoneNumber
