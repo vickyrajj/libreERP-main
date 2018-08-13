@@ -325,11 +325,12 @@ app.directive('chatBox', function() {
       index:'=',
       closeChat: '=',
     },
-    controller: function($scope, $users , $uibModal , $http) {
+    controller: function($scope, $users , $uibModal , $http , ngAudio) {
       $scope.me = $users.get('mySelf');
       // console.log($scope.data,'will fetch here');
       $scope.visitorForm = ''
       $scope.isTyping = false;
+      $scope.sound = ngAudio.load("static/audio/notification.mp3");
 
       $http({
           method: 'GET',

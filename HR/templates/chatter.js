@@ -313,6 +313,8 @@ var uid;
 var broswer;
 var isAgentOnline = false;
 var agentPk = null;
+var notification = new Audio('static/audio/notification.mp3');
+
 
 
 
@@ -435,8 +437,8 @@ function fetchThread(uid) {
 
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
-      console.log(this.readyState , this.status,'onready' , this.responseText);
-      console.log(this);
+      // console.log(this.readyState , this.status,'onready' , this.responseText);
+      // console.log(this);
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
         if (data.length>0) {
@@ -493,9 +495,6 @@ checkCookie();
 
 
 
-
-
-
 document.addEventListener("DOMContentLoaded", function(event) {
 
   var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8001/ws', realm: 'default'});
@@ -510,14 +509,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         if (args[0]=='T') {
           console.log('typingggggggggggggggggggggg');
-          isTyping.style.display = "";
+          onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Typing..</p>';
+          // isTyping.style.display = "";
           setTimeout(function(){
-            isTyping.style.display = "none";
+            // isTyping.style.display = "none";
+          onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
           }, 1500);
           return
         }
 
         if (args[0]=="M") {
+            notification.play();
             message = args[1]
            // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
            // chat.messages.push(args[1]);
@@ -530,6 +532,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
         }else if (args[0]=="MF") {
+          notification.play();
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
           if (!chatOpen) {
@@ -568,6 +571,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
           xhttp.send();
 
         }else if (args[0]=='ML') {
+          notification.play();
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
           if (!chatOpen) {
@@ -700,7 +704,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       // '</div>'+
 
       '<div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
-      '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
+      // '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
       '</div>'+
       '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
         '<div style="padding:0px;" >'+
@@ -774,7 +778,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
   body.appendChild(mainDiv);
 
-  console.log(document.getElementById('ticketCircle'));
+  // console.log(document.getElementById('ticketCircle'));
 
 
   var allTags = document.getElementById('mainDiv').getElementsByTagName("*");
@@ -819,10 +823,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var ticketCircle = document.getElementById('ticketCircle');
   var closeSupport = document.getElementById('closeSupport');
   var supportCircle = document.getElementById('supportCircle');
-  var isTyping = document.getElementById('isTyping');
+  // var isTyping = document.getElementById('isTyping');
 
 
-  isTyping.style.display = "none";
+  // isTyping.style.display = "none";
 
 
   document.getElementById('sy-main-icon').style.display = "none";
@@ -831,7 +835,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById('sy-main-icon').style.display = "";
   }, 2000);
 
-  console.log(supportCircle,'scir');
+  // console.log(supportCircle,'scir');
   // console.log(document.getElementsByClassName('font-SyrowCallBack'));
   // var docTitle = document.title;
   // console.log(docTitle);
@@ -883,7 +887,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
-  console.log(supportOptions,'so');
+  // console.log(supportOptions,'so');
     for (var i = 0 , rD = 0 , mB = 0 , mR=0; i < supportOptions.length; i++) {
       if (supportOptions[i].value) {
         rD+=2;
@@ -1205,7 +1209,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
-      console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
+      // console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
 
       if (!message.sentByAgent) {
         var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
@@ -1390,11 +1394,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
           var div = document.createElement("div");
           div.id="offlineMessage"
 
+          // div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+          //                   '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+          //                   '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
+          //                   '<form>'+
+          //                     '<input style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
+          //                      '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
+          //                      '<button type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+          //                        'Submit'+
+          //                      '</button>'+
+          //                     '</form>'+
+          //                   '</div> '+
+          //                 '</div>'
           div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                            '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
+                            '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Please provide your feedback below:</p>'+
                             '<form>'+
-                              '<input style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
                                '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
                                '<button type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                                  'Submit'+
@@ -1569,6 +1584,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   }
 
+
+  function sendFeedback(rating , feedbackText) {
+
+  }
+
   filePicker.onchange = function(e) {
     var file = filePicker;
     sendFile();
@@ -1650,7 +1670,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (x.matches) {
         device = 'xs';
         console.log('xs');
-        isTyping.style.display = "none";
+        // isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
         chatBox.style.height ="100vh";
@@ -1675,7 +1695,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (x.matches) {
         device = 'sm';
         console.log('sm');
-        isTyping.style.display = "none";
+        // isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
         chatBox.style.height ="100vh";
@@ -1751,7 +1771,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     var xs = window.matchMedia("(max-width: 767px)")
-    console.log('xssssssssss',xs);
+    // console.log('xssssssssss',xs);
     xsDevice(xs) // Call listener function at run time
     xs.addListener(xsDevice) // Attach listener function on state changes
 

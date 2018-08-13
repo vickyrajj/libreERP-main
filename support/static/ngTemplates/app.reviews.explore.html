@@ -17,8 +17,10 @@
          <iframe width="100%" height="215" ng-src="{{msg.message | trusted}}" frameborder="0" allowfullscreen></iframe>
        </div>
       </div>
-      <div class="row container-fluid" style="{{msg.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};" >
-        <span style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" >{{msg.created | timeAgo}}</span>
+      <div class="row container-fluid" style="{{msg.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};"  >
+        <span ng-if="msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" ng-init="cal = calculateTime(msgData[$index-1].created , msg.created)" >{{msg.created | date : 'hh:mm:a' }} , {{cal}}</span>
+        <span ng-if="!msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" >{{msg.created | date : 'hh:mm:a' }}</span>
+
       </div>
     </div>
   </div>

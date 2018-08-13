@@ -10,7 +10,7 @@ app.config(function($stateProvider) {
     }
   })
 });
-app.controller("businessManagement.reviews.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
+app.controller("businessManagement.reviews.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval) {
   $scope.msgData = $scope.tab.data
   console.log($scope.tab.data);
   $scope.reviewCommentData = []
@@ -111,6 +111,37 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     });
 
   }
+
+  // $interval(function() {
+  //
+  //   $scope.sound = ngAudio.load("static/audio/notification.mp3");
+  //   $scope.sound.play();
+  //   console.log('sdfsdf', $scope.sound);
+  // }, 3000)
+
+
+  $scope.calculateTime = function (user , agent) {
+
+    if (user!=undefined) {
+      console.log(user,agent);
+      var usertime = new Date(user);
+      var agenttime = new Date(agent);
+      var diff = Math.floor((agenttime - usertime)/60000)
+      if (diff<60) {
+        return diff+' Mins';
+      }else if (diff>=60 && diff<60*24) {
+        return Math.floor(diff/60)+' Hrs';
+      }else if (diff>=60*24) {
+        return Math.floor(diff/(60*24))+' Days';
+      }
+    }else {
+      return
+    }
+
+  }
+
+
+
 })
 app.controller("businessManagement.reviews", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
 
