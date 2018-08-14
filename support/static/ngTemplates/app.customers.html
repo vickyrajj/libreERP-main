@@ -30,6 +30,9 @@
         <div ng-if="tab.app == 'companyInfo'">
           <div ng-include="'/static/ngTemplates/app.customers.explore.html'"></div>
         </div>
+        <div ng-if="tab.app == 'document'">
+          <div ng-include="'/static/ngTemplates/app.customers.document.html'"></div>
+        </div>
       </uib-tab>
     </uib-tabset>
   </div>

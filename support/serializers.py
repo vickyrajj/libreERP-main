@@ -50,3 +50,8 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         c.company = CustomerProfile.objects.get(pk=int(self.context['request'].data['company']))
         c.save()
         return c
+
+class DocumentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Documentation
+        fields = ( 'pk' , 'created' , 'title', 'customer' , 'text' , 'docs')

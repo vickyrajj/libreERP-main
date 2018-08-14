@@ -1,32 +1,50 @@
 <!-- <div class="modal-body">
   <div class="container-fluid">
     <section>
-      <div class="row text-center">
-        <input type="text" class="form-control" name="" value="" placeholder="Search by title..">
+      <div class="row text-center" style="margin:10px 50px">
+        <input type="text" class="form-control" ng-model="form.title" placeholder="Search by title.." ng-change="filterData(form.title)">
       </div>
       <hr>
       <div class="row">
-        <div class="panel-group" id="accordion">
-          <div class="panel panel-default" ng-repeat="d in data">
-            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{$index}}" >
-              <h4 class="panel-title"  >
-                <a>{{d.title}}</a>
-              </h4>
+        <div class="col-md-8">
+          <span ng-repeat="d in docData">
+            <div class="panel-group" id="accordion" ng-show="d.text!=none">
+              <div class="panel panel-default" >
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{$index}}" >
+                  <h4 class="panel-title"  >
+                    <span>{{d.title}}</span>
+                  </h4>
+                </div>
+                <div id="{{$index}}" class="panel-collapse collapse">
+                  <!-- <div class="panel-body">{{d.text}}</div> -->
+                  <span ng-bind-html="d.text"></span>
+                </div>
+              </div>
             </div>
-            <div id="{{$index}}" class="panel-collapse collapse">
-              <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+          </span>
+        </div>
+        <div class="col-md-4">
+          <span ng-repeat="d in docData">
+            <div class="panel-group" id="accordion" ng-if="d.docs!=none">
+              <div class="panel panel-default" >
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#{{$index}}" style="text-decoration:none">{{d.title}}</a>
+                  </h4>
+                </div>
+                <div id="{{$index}}" class="panel-collapse collapse">
+                  <div class="panel-body">{{d.docs}}</div>
+                </div>
+              </div>
             </div>
-          </div>
+          </span>
         </div>
       </div>
     </section>
   </div>
-
   <div class="container-fluid text-center">
     <button type="button" class="btn btn-success text-center" ng-click="closeModal()">
-      close
+      Close
     </button>
   </div>
 </div> -->

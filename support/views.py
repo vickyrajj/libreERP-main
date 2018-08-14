@@ -141,7 +141,7 @@ class getChatterScriptAPI(APIView):
         return Response({'data':encrypted  }, status = status.HTTP_200_OK)
 
 def getChatterScript(request , fileName):
-    print fileName
+    print fileName,'*****************'
     fileName = fileName.replace('.js' , '').replace("chatter-" , '')
     pk = decrypt(fileName , "cioc")
     print pk
@@ -186,3 +186,10 @@ class ChatThreadViewSet(viewsets.ModelViewSet):
             print 'tttttttttttttttt',threadObj
             return threadObj
         return ChatThread.objects.all()
+
+class DocumentationViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = DocumentationSerializer
+    queryset = Documentation.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title','customer']

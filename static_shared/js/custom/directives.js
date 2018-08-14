@@ -322,10 +322,10 @@ app.directive('chatBox', function() {
     replace: true,
     scope: {
       data: '=',
-      index:'=',
+      index: '=',
       closeChat: '=',
     },
-    controller: function($scope, $users , $uibModal , $http , ngAudio) {
+    controller: function($scope, $users, $uibModal, $http, ngAudio) {
       $scope.me = $users.get('mySelf');
       // console.log($scope.data,'will fetch here');
       $scope.visitorForm = ''
@@ -333,19 +333,19 @@ app.directive('chatBox', function() {
       $scope.sound = ngAudio.load("static/audio/notification.mp3");
 
       $http({
-          method: 'GET',
-          url: '/api/support/visitor/?uid='+$scope.data.uid,
-        }).
-        then(function(response) {
-          console.log(response.data,typeof response.data,response.data.length);
-          if (response.data.length>0) {
-            $scope.visitorForm = response.data[0]
-          }
-        });
+        method: 'GET',
+        url: '/api/support/visitor/?uid=' + $scope.data.uid,
+      }).
+      then(function(response) {
+        console.log(response.data, typeof response.data, response.data.length);
+        if (response.data.length > 0) {
+          $scope.visitorForm = response.data[0]
+        }
+      });
 
       $http({
         method: 'GET',
-        url: '/api/support/supportChat/?user='+$scope.me.pk+'&uid='+$scope.data.uid,
+        url: '/api/support/supportChat/?user=' + $scope.me.pk + '&uid=' + $scope.data.uid,
       }).then(function(response) {
         $scope.data.messages = [];
         console.log(response.data);
@@ -358,7 +358,7 @@ app.directive('chatBox', function() {
       });
 
 
-      console.log('userrrrrrr' , $scope.me.pk);
+      console.log('userrrrrrr', $scope.me.pk);
 
       $scope.chatBox = {
         messageToSend: '',
@@ -371,17 +371,17 @@ app.directive('chatBox', function() {
 
 
       $scope.send = function() {
-        if ($scope.chatBox.fileToSend.size>0) {
+        if ($scope.chatBox.fileToSend.size > 0) {
 
           $scope.attachment;
           var typ = $scope.chatBox.fileToSend.type.split('/')[0]
 
           var fd = new FormData();
           fd.append('attachment', $scope.chatBox.fileToSend);
-          fd.append('user' , $scope.me.pk);
-          fd.append('uid' , $scope.data.uid)
-          fd.append('sentByAgent' , true)
-          fd.append('attachmentType' , $scope.chatBox.fileToSend.type.split('/')[0] )
+          fd.append('user', $scope.me.pk);
+          fd.append('uid', $scope.data.uid)
+          fd.append('sentByAgent', true)
+          fd.append('attachmentType', $scope.chatBox.fileToSend.type.split('/')[0])
           $http({
             method: 'POST',
             data: fd,
@@ -398,11 +398,11 @@ app.directive('chatBox', function() {
             // console.log($scope.attachment);
 
             $scope.fileData = {
-              filePk : response.data.pk
+              filePk: response.data.pk
             }
 
             $scope.status = 'MF';
-            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , $scope.fileData , $scope.me.username , new Date() ], {}, {
+            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me.username, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -418,7 +418,7 @@ app.directive('chatBox', function() {
 
         }
 
-        if ($scope.chatBox.messageToSend.length>0) {
+        if ($scope.chatBox.messageToSend.length > 0) {
 
 
           var youtubeLink = $scope.chatBox.messageToSend.includes("www.youtube.com/");
@@ -428,19 +428,19 @@ app.directive('chatBox', function() {
             link = "https://www.youtube.com/embed/" + $scope.chatBox.messageToSend.split("v=")[1];
             // var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
             var dataToSend = {
-              uid : $scope.data.uid ,
-              message : link ,
-              user : $scope.me.pk,
-              attachmentType:'youtubeLink',
+              uid: $scope.data.uid,
+              message: link,
+              user: $scope.me.pk,
+              attachmentType: 'youtubeLink',
               sentByAgent: true
             }
-          }else {
+          } else {
             $scope.status = 'M';
             // var message = {msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() }
             var dataToSend = {
-              uid : $scope.data.uid ,
-              message : $scope.chatBox.messageToSend ,
-              user : $scope.me.pk,
+              uid: $scope.data.uid,
+              message: $scope.chatBox.messageToSend,
+              user: $scope.me.pk,
               sentByAgent: true
             }
           }
@@ -451,10 +451,10 @@ app.directive('chatBox', function() {
             url: '/api/support/supportChat/'
           }).
           then(function(response) {
-            console.log(response.data , 'dataaa');
+            console.log(response.data, 'dataaa');
             $scope.data.messages.push(response.data)
 
-            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , response.data , $scope.me.username , new Date() ], {}, {
+            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me.username, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -489,7 +489,7 @@ app.directive('chatBox', function() {
 
       $scope.chatClose = function(uid) {
         $scope.status = "F";
-        connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status , uid ], {}, {
+        connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
         }).
         then(function(publication) {
@@ -506,10 +506,10 @@ app.directive('chatBox', function() {
         $('#filePickerChat' + $scope.index).click();
       }
 
-      $scope.scroll = function () {
+      $scope.scroll = function() {
         console.log('calling');
-        setTimeout(function () {
-          var id = document.getElementById("scrollArea"+ $scope.data.uid );
+        setTimeout(function() {
+          var id = document.getElementById("scrollArea" + $scope.data.uid);
           id.scrollTop = id.scrollHeight;
         }, 200);
       }
@@ -517,15 +517,32 @@ app.directive('chatBox', function() {
       $scope.knowledgeBase = function(companyPk) {
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.knowledgeBase.modal.html',
-          size: 'lg',
+          size: 'xl',
           backdrop: true,
-          controller: function($scope, $users , $uibModalInstance ) {
-
+          controller: function($scope, $users, $uibModalInstance) {
+            $scope.form = {title:''}
             console.log(companyPk);
+            $http({
+              method: 'GET',
+              url: '/api/support/documentation/?customer=' + companyPk,
+            }).
+            then(function(response) {
+              console.log(response.data);
+              $scope.docData = response.data
 
-            $scope.data = [ {title:"Return Policy"} , {title:"Cancel Item"} , {title:"Third Title"} , {title:"Fourth Title"} ];
+            });
+            $scope.filterData = function(title){
+              $http({
+                method: 'GET',
+                url: '/api/support/documentation/?customer=' + companyPk+'&title__icontains='+title,
+              }).
+              then(function(response) {
+                console.log(response.data);
+                $scope.docData = response.data
+              });
+            }
 
-            $scope.closeModal = function () {
+            $scope.closeModal = function() {
               $uibModalInstance.close()
             }
 
@@ -547,18 +564,18 @@ app.directive('chatBox', function() {
               return $scope.visitorForm;
             }
           },
-          controller: function($scope, visitorData , $users , $uibModalInstance, Flash) {
+          controller: function($scope, visitorData, $users, $uibModalInstance, Flash) {
             $scope.uid = uid
             console.log(uid);
 
-            if (typeof visitorData =='string') {
+            if (typeof visitorData == 'string') {
               $scope.form = {
-                email:'',
-                name:'',
-                phoneNumber:'',
-                notes:''
+                email: '',
+                name: '',
+                phoneNumber: '',
+                notes: ''
               }
-            }else {
+            } else {
               $scope.form = visitorData
             }
 
@@ -581,27 +598,27 @@ app.directive('chatBox', function() {
             //   }
             //
             // });
-            checkEmail = function(){
+            checkEmail = function() {
               console.log($scope.form.email);
               $http({
-                  method: 'GET',
-                  url: '/api/support/visitor/?email='+$scope.form.email,
-                }).
-                then(function(response) {
-                  console.log(response.data,typeof response.data,response.data.length);
-                  if (response.data.length >0 && response.data[0].email == $scope.form.email) {
-                    $scope.form.name = response.data[0].name
-                    $scope.form.email = response.data[0].email
-                    $scope.form.phoneNumber = response.data[0].phoneNumber
-                    $scope.form.notes = response.data[0].notes
-                  }
-                });
+                method: 'GET',
+                url: '/api/support/visitor/?email=' + $scope.form.email,
+              }).
+              then(function(response) {
+                console.log(response.data, typeof response.data, response.data.length);
+                if (response.data.length > 0 && response.data[0].email == $scope.form.email) {
+                  $scope.form.name = response.data[0].name
+                  $scope.form.email = response.data[0].email
+                  $scope.form.phoneNumber = response.data[0].phoneNumber
+                  $scope.form.notes = response.data[0].notes
+                }
+              });
             }
 
-            $scope.submit = function () {
+            $scope.submit = function() {
 
 
-              if ($scope.form.email=='') {
+              if ($scope.form.email == '') {
                 Flash.create('danger', 'Email is required')
                 return
               }
@@ -631,9 +648,9 @@ app.directive('chatBox', function() {
             }
 
           },
-        }).result.then(function () {
+        }).result.then(function() {
 
-        }, function (data) {
+        }, function(data) {
           if (data != 'backdrop click') {
             $scope.data.name = data.name
             $scope.visitorForm = data
@@ -642,16 +659,16 @@ app.directive('chatBox', function() {
       }
 
 
-      $scope.arremoji = ['👋' , '💁' ,'🙃' , '🙏', '😬', '👇' ,'👈', '👉', '👋', '👏' ,'👐' ,'👆' ,'☝', '👊' ,'✋', '✌', '✊' ,'👌' ,'👍' ,'👎' ];
+      $scope.arremoji = ['👋', '💁', '🙃', '🙏', '😬', '👇', '👈', '👉', '👋', '👏', '👐', '👆', '☝', '👊', '✋', '✌', '✊', '👌', '👍', '👎'];
 
       $scope.emojiOpen = false
 
-      $scope.insertEmoji = function (indx) {
+      $scope.insertEmoji = function(indx) {
         $scope.chatBox.messageToSend += $scope.arremoji[indx]
       }
 
 
-      $scope.openEmoji = function () {
+      $scope.openEmoji = function() {
         $scope.emojiOpen = !$scope.emojiOpen
 
       }
@@ -931,10 +948,10 @@ app.directive('chatWindow', function($users) {
             console.log('resssssss', response.data);
             // $scope.ims.push(response.data)
             var fileTypeArr = response.data.attachment.split('.')
-            var fileType =  fileTypeArr[fileTypeArr.length-1]
-            if (fileType == 'jpg'|| fileType == 'jpeg'|| fileType == 'png'|| fileType == 'svg'|| fileType == 'gif') {
+            var fileType = fileTypeArr[fileTypeArr.length - 1]
+            if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'svg' || fileType == 'gif') {
               response.data.fileType = 'image'
-            }else {
+            } else {
               response.data.fileType = 'document'
             }
             $scope.ims.push(response.data)
@@ -965,7 +982,7 @@ app.directive('chatWindow', function($users) {
         $scope.chatForm.fileToSend = emptyFile;
       }
 
-      $scope.expandImage = function (imgUrl) {
+      $scope.expandImage = function(imgUrl) {
         console.log('expaaannddddd');
         console.log(imgUrl);
       }
@@ -984,10 +1001,10 @@ app.directive('chatWindow', function($users) {
           console.log('resssssssss');
           if (response.data.attachment) {
             var fileTypeArr = response.data.attachment.split('.')
-            var fileType =  fileTypeArr[fileTypeArr.length-1]
-            if (fileType == 'jpg'|| fileType == 'jpeg'|| fileType == 'png'|| fileType == 'svg'|| fileType == 'gif') {
+            var fileType = fileTypeArr[fileTypeArr.length - 1]
+            if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'svg' || fileType == 'gif') {
               response.data.fileType = 'image'
-            }else {
+            } else {
               response.data.fileType = 'document'
             }
           }
@@ -1018,10 +1035,10 @@ app.directive('chatWindow', function($users) {
             }
             if (im.attachment) {
               var fileTypeArr = im.attachment.split('.')
-              var fileType =  fileTypeArr[fileTypeArr.length-1]
-              if (fileType == 'jpg'|| fileType == 'jpeg'|| fileType == 'png'|| fileType == 'svg'|| fileType == 'gif') {
+              var fileType = fileTypeArr[fileTypeArr.length - 1]
+              if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'svg' || fileType == 'gif') {
                 im.fileType = 'image'
-              }else {
+              } else {
                 im.fileType = 'document'
               }
             }
