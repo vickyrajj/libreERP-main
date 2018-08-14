@@ -1,4 +1,4 @@
-<!-- <div class="modal-body">
+<div class="modal-body">
   <div class="container-fluid">
     <section>
       <div class="row text-center" style="margin:10px 50px">
@@ -7,15 +7,15 @@
       <hr>
       <div class="row">
         <div class="col-md-8">
-          <span ng-repeat="d in docData">
+          <span ng-repeat="d in docData track by $index">
             <div class="panel-group" id="accordion" ng-show="d.text!=none">
               <div class="panel panel-default" >
-                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{$index}}" >
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{d.pk}}" >
                   <h4 class="panel-title"  >
                     <span>{{d.title}}</span>
                   </h4>
                 </div>
-                <div id="{{$index}}" class="panel-collapse collapse">
+                <div id="{{d.pk}}" class="panel-collapse collapse">
                   <!-- <div class="panel-body">{{d.text}}</div> -->
                   <span ng-bind-html="d.text"></span>
                 </div>
@@ -24,17 +24,33 @@
           </span>
         </div>
         <div class="col-md-4">
-          <span ng-repeat="d in docData">
-            <div class="panel-group" id="accordion" ng-if="d.docs!=none">
-              <div class="panel panel-default" >
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#{{$index}}" style="text-decoration:none">{{d.title}}</a>
-                  </h4>
+          <span ng-repeat="d in docData track by $index">
+            <div class="col-md-8">
+              <div class="panel-group" id="accordion" ng-if="d.docs!=none" >
+                <a href="{{d.docs}}" target = "_blank"  style="text-decoration: none;" >
+                <div class="panel panel-default"   href="{{d.docs}}" >
+                  <div class="panel-heading"  >
+                    <h4 class="panel-title">
+                      <span  style="text-decoration:none">{{d.title}}</span>
+                    </h4>
+                  </div>
+                  <div class="panel-collapse">
+                    <div class="panel-body">
+                      <div class="row">
+                        <div class="col-md-8" style="padding-top:15px;">
+                          <span>{{d.docs.split('documentations/')[1]}}</span>
+                        </div>
+                        <div class="col-md-4">
+                          <i class="fa fa-4x {{d.docs.split('documentations/')[1] | fileTypeIcon}}"></i>
+                        </div>
+                      </div>
+                      <!-- {{d.docs}} -->
+
+                      <!-- <i class="fa fa-2x {{}} | fileTypeIcon }}"></i> -->
+                    </div>
+                  </div>
                 </div>
-                <div id="{{$index}}" class="panel-collapse collapse">
-                  <div class="panel-body">{{d.docs}}</div>
-                </div>
+                </a>
               </div>
             </div>
           </span>
@@ -47,4 +63,4 @@
       Close
     </button>
   </div>
-</div> -->
+</div>
