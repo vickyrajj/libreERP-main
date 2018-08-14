@@ -315,7 +315,7 @@ var uid;
 var broswer;
 var isAgentOnline = false;
 var agentPk = null;
-var notification = new Audio('static/audio/notification.mp3');
+var notification = new Audio('http://localhost:8080/static/audio/notification.ogg');
 
 
 

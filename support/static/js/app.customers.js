@@ -334,6 +334,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
     var fd = new FormData();
     fd.append('call', cpF.call );
+    fd.append('email', cpF.email );
     fd.append('callBack', cpF.callBack);
     fd.append('chat', cpF.chat);
     fd.append('name', cpF.name);
