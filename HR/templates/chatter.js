@@ -1485,19 +1485,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
         var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false  };
-        var message = dataToSend
         if (agentPk) {
           dataToSend.user = agentPk
         }
+        var message = dataToSend
         dataToSend = JSON.stringify(dataToSend)
       }else {
         status = "M";
         // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
         var dataToSend = {uid: uid , message: inptText , sentByAgent:false };
-        var message = dataToSend
         if (agentPk) {
           dataToSend.user = agentPk
         }
+        var message = dataToSend
         dataToSend = JSON.stringify(dataToSend)
       }
 
@@ -1632,6 +1632,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
           var fileData = {
             filePk : data.pk,
             typ : data.attachmentType
+          }
+
+          if (agentPk) {
+            fileData.user = agentPk;
           }
 
           // if (typ=='image') {
