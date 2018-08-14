@@ -65,7 +65,7 @@
         <div class="row text-center">
           <div class="col-md-12" style="font-size:19px">
             <strong>{{adr.title}}</strong>
-              <i class="pull-right fa fa-trash fa-lg" style="cursor:pointer" ng-click="delete($index)"></i>
+              <i class="pull-right fa fa-trash fa-lg" style="cursor:pointer"  mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="delete($index)" confirm-button-type="default" cancel-button-type="default"></i>
           </div>
         </div>
         <div class="row">

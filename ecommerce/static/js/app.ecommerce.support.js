@@ -57,6 +57,17 @@ app.controller("businessManagement.ecommerce.support", function($scope, $state, 
           var title = 'Support Details : ';
           var appType = 'requestInfo';
         }
+        else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/ecommerce/supportFeed/' + $scope.data.tableCreatedData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Deleted Successfully!');
+          })
+          $scope.data.tableCreatedData.splice(i, 1)
+          return;
+        }
         $scope.addTab({
           title: title + $scope.data.tableCreatedData[i].pk,
           cancel: true,
@@ -75,29 +86,6 @@ app.controller("businessManagement.ecommerce.support", function($scope, $state, 
 
 
 
-  $scope.tabs = [];
-  $scope.searchTabActive = true;
-
-  $scope.closeTab = function(index) {
-    $scope.tabs.splice(index, 1)
-  }
-
-  $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
-    $scope.searchTabActive = false;
-    alreadyOpen = false;
-    for (var i = 0; i < $scope.tabs.length; i++) {
-      if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
-        $scope.tabs[i].active = true;
-        alreadyOpen = true;
-      } else {
-        $scope.tabs[i].active = false;
-      }
-    }
-    if (!alreadyOpen) {
-      $scope.tabs.push(input)
-    }
-  }
 
   $scope.data = {
     tableResolvedData: []
@@ -120,17 +108,25 @@ app.controller("businessManagement.ecommerce.support", function($scope, $state, 
     getParams : [{key : 'status__in' , value : 'junk,resolved'}],
   }
 
-  $scope.tableResolvedAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableResolvedData,'jjjjjjjjjjjjjjjjjjjjjjjjjjj');
 
+  $scope.tableResolvedAction = function(target, action, mode) {
     for (var i = 0; i < $scope.data.tableResolvedData.length; i++) {
       if ($scope.data.tableResolvedData[i].pk == parseInt(target)) {
-        if (action == 'resolvedInfo') {
+        if (action == 'info') {
           var title = 'Support Details : ';
           var appType = 'resolvedInfo';
         }
-
+        else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/ecommerce/supportFeed/' + $scope.data.tableResolvedData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Deleted Successfully!');
+          })
+          $scope.data.tableResolvedData.splice(i, 1)
+          return;
+        }
         $scope.addTab({
           title: title + $scope.data.tableResolvedData[i].pk,
           cancel: true,
@@ -138,7 +134,7 @@ app.controller("businessManagement.ecommerce.support", function($scope, $state, 
           data: {
             pk: target,
             index: i,
-            order: $scope.data.tableResolvedData[i]
+            request: $scope.data.tableResolvedData[i]
           },
           active: true
         })
@@ -148,30 +144,30 @@ app.controller("businessManagement.ecommerce.support", function($scope, $state, 
   }
 
 
-  $scope.tabs = [];
-  $scope.searchTabActive = true;
 
-  $scope.closeTab = function(index) {
-    $scope.tabs.splice(index, 1)
-  }
+    $scope.tabs = [];
+    $scope.searchTabActive = true;
 
-  $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
-    $scope.searchTabActive = false;
-    alreadyOpen = false;
-    for (var i = 0; i < $scope.tabs.length; i++) {
-      if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
-        $scope.tabs[i].active = true;
-        alreadyOpen = true;
-      } else {
-        $scope.tabs[i].active = false;
+    $scope.closeTab = function(index) {
+      $scope.tabs.splice(index, 1)
+    }
+
+    $scope.addTab = function(input) {
+      console.log(JSON.stringify(input));
+      $scope.searchTabActive = false;
+      alreadyOpen = false;
+      for (var i = 0; i < $scope.tabs.length; i++) {
+        if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+          $scope.tabs[i].active = true;
+          alreadyOpen = true;
+        } else {
+          $scope.tabs[i].active = false;
+        }
+      }
+      if (!alreadyOpen) {
+        $scope.tabs.push(input)
       }
     }
-    if (!alreadyOpen) {
-      $scope.tabs.push(input)
-    }
-  }
-
 
 
 
@@ -219,4 +215,12 @@ then(function(response) {
 })
 
 });
+});
+
+app.controller("businessManagement.ecommerce.support.resolved.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
+
+  $scope.data = $scope.tab.data;
+  console.log(  $scope.data,'aaaaaaaaaaaaaaaaaa');
+
+
 });

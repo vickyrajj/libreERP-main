@@ -1884,26 +1884,40 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
 
   $scope.sendFeedback = function() {
-    if ($scope.me==null){
+    // if ($scope.me==null){
+    //   console.log("aaaaaaaa");
+    //   if ($scope.feedback.email == '') {
+    //     Flash.create('danger', 'Please provide details')
+    //   }
+    //   else{
+    //     var toSend = {
+    //       email: $scope.feedback.email,
+    //       mobile: $scope.feedback.mobile,
+    //       message: $scope.feedback.message,
+    //     }
+    //   }
+    // }
+    // else{
+    //   var toSend = {
+    //     email: $scope.feedback.email,
+    //     mobile: $scope.feedback.mobile,
+    //     message: $scope.feedback.message,
+    //   }
+    // }
+
+
       console.log("aaaaaaaa");
-      if ($scope.feedback.email == '' ) {
+      if ($scope.feedback.email == '') {
         Flash.create('danger', 'Please provide details')
       }
       else{
+        console.log($scope.feedback.email,'aaaaa');
         var toSend = {
           email: $scope.feedback.email,
           mobile: $scope.feedback.mobile,
           message: $scope.feedback.message,
         }
       }
-    }
-    else{
-      var toSend = {
-        email: $scope.feedback.email,
-        mobile: $scope.feedback.mobile,
-        message: $scope.feedback.message,
-      }
-    }
 
 
     $http({
@@ -2160,12 +2174,13 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
     }
     if ($scope.subSlideMobile.banners.length > 1) {
       $scope.subSlideMobile.lastbanner = $scope.subSlideMobile.banners.length - 1
+      $scope.subSlideMobile.img = $scope.subSlideMobile.banners[0].imagePortrait
+      $scope.subSlideMobile.title = $scope.subSlideMobile.banners[0].title
 
     }else {
       $scope.subSlideMobile.lastbanner = 0
     }
-    console.log($scope.subSlide.banners,'LLLLLLLLLLLLLLLLLLLLLLL');
-    console.log($scope.subSlideMobile.banners,'KKKKKKKKKKKKKKKKKKKKKKKKKKKKK');
+
   })
   // $scope.changesubSlide = function(index) {
   //   $scope.subSlide.active = index;
@@ -2181,9 +2196,10 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
       }else {
         $scope.subSlide.active += 1;
       }
+      if($scope.subSlideMobile.banners[$scope.subSlideMobile.active]!=undefined){
       $scope.subSlide.img = $scope.subSlide.banners[$scope.subSlide.active].image
       $scope.subSlide.title = $scope.subSlide.banners[$scope.subSlide.active].title
-
+    }
     }, 3000);
 
   // $scope.changeSlideMobile = function(index) {
@@ -2191,6 +2207,7 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
   // }
 
   $interval(function() {
+    console.log("aaaaaaaaaaaaaaaaaaaaa");
     if ($scope.subSlideMobile.active == undefined) {
       $scope.subSlideMobile.active =0
     }
@@ -2198,6 +2215,11 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
       $scope.subSlideMobile.active = 0;
     }else {
       $scope.subSlideMobile.active += 1;
+    }
+    if($scope.subSlideMobile.banners[$scope.subSlideMobile.active]!=undefined){
+      $scope.subSlideMobile.img = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].imagePortrait
+      console.log($scope.subSlideMobile.img,'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+      $scope.subSlideMobile.title = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].title
     }
   }, 3000);
 

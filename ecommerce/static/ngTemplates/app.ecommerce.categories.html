@@ -7,16 +7,16 @@
           <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;">
             <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
           </div>
-          <!-- <span><b>Sort</b></span>
+          <span><b>Sort</b></span>
           <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;">
             <div class="form-group">
               <input type="radio" name="sort" ng-model="data.sort" value="lth"> Low to High <br>
             </div>
             <div class="form-group">
               <input type="radio" name="sort" ng-model="data.sort" value="htl"> High to Low
-            </div> -->
+            </div>
             <!-- <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider> -->
-          <!-- </div> -->
+          </div>
           <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;" ng-repeat="f in category.fields">
             <span ng-if="f.fieldType=='boolean'">
                <input type="checkbox" ng-model="f.val" > {{f.name}}
@@ -84,6 +84,16 @@
       <span><b>Select Price Range</b></span>
       <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;">
         <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider>
+      </div>
+      <span><b>Sort</b></span>
+      <div class="form-group" style="padding-bottom:10px; border-bottom:1px solid #d0d0d0;">
+        <div class="form-group">
+          <input type="radio" name="sort" ng-model="data.sort" value="lth"> Low to High <br>
+        </div>
+        <div class="form-group">
+          <input type="radio" name="sort" ng-model="data.sort" value="htl"> High to Low
+        </div>
+        <!-- <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options"></rzslider> -->
       </div>
     </div>
 

@@ -33,6 +33,17 @@ app.controller("businessManagement.ecommerce.pages", function($scope, $state, $u
           var title = 'Details : ';
           var appType = 'PagesInfo';
         }
+        else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/ecommerce/pages/' + $scope.data.tableData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Deleted Successfully!');
+          })
+          $scope.data.tableData.splice(i, 1)
+          return;
+        }
 
         $scope.addTab({
           title: title + $scope.data.tableData[i].title,

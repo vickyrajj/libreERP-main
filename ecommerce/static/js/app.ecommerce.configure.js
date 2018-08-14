@@ -266,9 +266,20 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
           console.log('editing');
           var title = 'Edit Field : '
           var appType = 'editField'
-        } else {
+        } else if (action == 'info')  {
           var title = 'Field Explore : '
           var appType = 'fieldExplore'
+        }
+        else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/ecommerce/field/' + $scope.data.tableFieldData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Deleted Successfully!');
+          })
+          $scope.data.tableFieldData.splice(i, 1)
+          return;
         }
         // i clicked this $scope.data.tableFieldData[i]
         $scope.addTab({

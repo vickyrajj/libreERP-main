@@ -390,14 +390,11 @@ class listingViewSet(viewsets.ModelViewSet):
                         print 'filtered',toReturn
                         print len(toReturn)
 
-                # if 'sort' in data:
-                #     if data['sort']=='lth':
-                #         print toReturn.values() , 'ffffffffffffff'
-                #         # toReturn = toReturn
-                #     else:
-                #         print toReturn
-
-
+                if 'sort' in data:
+                    if data['sort']=='lth':
+                        toReturn = toReturn.order_by('product__price')
+                    elif data['sort']=='htl':
+                        toReturn = toReturn.order_by('-product__price')
                 # for idx,c in enumerate(self.request.GET[]):
                 #         if idx == 0:
                 #             qry = Q(specifications__icontains = '"name":"place","value":"'+ cities[idx])
