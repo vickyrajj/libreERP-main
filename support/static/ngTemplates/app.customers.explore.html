@@ -51,14 +51,25 @@
     </div>
     <div class="col-md-4">
       <span class="text-center"><h3>Supports</h3></span>
+      <div class="row" ng-if="custDetails.supportBubbleColor.length>0" style="padding-left:10px">
+        <div class="col-md-6">
+          <h4><i class="fa fa-gg-circle"></i> &nbsp; SupportBubble Colour</h4>
+        </div>
+        <div class="col-md-3" style="background-color:{{custDetails.supportBubbleColor}};margin-top:10px">
+          <h3> </h3>
+        </div>
+        <br>
+      </div>
       <div class="row" ng-if="custDetails.windowColor.length>0" style="padding-left:10px">
-        <div class="col-md-5">
+        <div class="col-md-6">
           <h4><i class="fa fa-desktop"></i> &nbsp; Window Colour</h4>
         </div>
         <div class="col-md-3" style="background-color:{{custDetails.windowColor}};margin-top:10px">
           <h3> </h3>
         </div>
-      </div><br>
+        <br>
+      </div>
+
       <div class="row" style="padding-left:25px">
         <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-primary" ng-if="custDetails.chat" ng-click="openChartPopoup(compDetails)">Generate Script</span></h4><br>
         <h4><i class="fa fa-phone"></i> &nbsp; Call &nbsp;<i class="fa {{custDetails.call?'fa-check':'fa-times'}}" style="color:{{custDetails.call?'green':'red'}}"></i></i></h4><br>
@@ -68,18 +79,18 @@
         <h4><i class="fa fa-phone"></i> &nbsp; Call Back &nbsp;<i class="fa {{custDetails.callBack?'fa-check':'fa-times'}}" style="color:{{custDetails.callBack?'green':'red'}}"></i></i></h4><br>
         <h4><i class="fa fa-ticket"></i> &nbsp; Ticket &nbsp;<i class="fa {{custDetails.ticket?'fa-check':'fa-times'}}" style="color:{{custDetails.ticket?'green':'red'}}"></i></i></h4><br>
         <div class="row" ng-if="custDetails.name.length>0" style="padding-left:10px">
-          <div class="col-md-5">
+          <div class="col-md-4">
             <h4><i class="fa fa-desktop"></i> &nbsp; Name </h4>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-8">
             <h4> {{custDetails.name}}  </h4>
           </div>
         </div><br>
         <div class="row" ng-if="custDetails.dp" style="padding-left:10px">
-          <div class="col-md-5">
+          <div class="col-md-4">
             <h4><i class="fa  fa-picture-o"></i> &nbsp; Picture </h4>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-8">
             <h4> <img src="{{custDetails.dp}}" width="100px" alt="">  </h4>
           </div>
         </div><br>
