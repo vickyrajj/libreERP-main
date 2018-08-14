@@ -64,12 +64,16 @@ class GetMyUser(APIView):
             uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
             print uidsList , 'distinct'
             toSend = []
+            chatThreadObjs = ChatThread.objects.filter(uid__in=uidsList)
             for i in uidsList:
                 try:
                     data = Visitor.objects.get(uid=i)
-                    toSend.append({'uid':data.uid,'name':data.name})
+                    dic = {'uid':data.uid,'name':data.name}
                 except:
-                    toSend.append({'uid':i,'name':''})
+                    dic = {'uid':i,'name':''}
+                print ChatThread.objects.get(uid=i).company.pk
+                dic['companyPk'] = ChatThread.objects.get(uid=i).company.pk
+                toSend.append(dic)
 
             return Response(toSend, status=status.HTTP_200_OK)
 
@@ -143,7 +147,7 @@ def getChatterScript(request , fileName):
     print pk
     obj = CustomerProfile.objects.get(pk = pk)
     # print 'dpppppppppppp',obj.dp,obj.dp.url
-    dataToSend = {"pk" : pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket}
+    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url
     if obj.name:

@@ -214,7 +214,8 @@ connection.onopen = function(session) {
           name: '',
           uid: args[0],
           messages: [args[2]],
-          isOnline: true
+          isOnline: true,
+          companyPk: args[3]
         })
       } else if (args[1] == 'MF') {
         scope.sound.play();
@@ -230,7 +231,8 @@ connection.onopen = function(session) {
               name: '',
               uid: args[0],
               messages: [args[2]],
-              isOnline: true
+              isOnline: true,
+              companyPk: args[3]
             })
 
           }
@@ -240,14 +242,15 @@ connection.onopen = function(session) {
         xhttp.send();
 
 
-        return true
+        // return true
       } else if (args[1] == 'ML') {
         scope.sound.play();
         scope.newUsers.push({
           name: '',
           uid: args[0],
           messages: [args[2]],
-          isOnline: true
+          isOnline: true,
+          companyPk: args[3]
         })
       }
     }

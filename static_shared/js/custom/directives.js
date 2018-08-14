@@ -341,11 +341,6 @@ app.directive('chatBox', function() {
           if (response.data.length>0) {
             $scope.visitorForm = response.data[0]
           }
-          // if (response.data.length ==1 && response.data[0].email == $scope.form.email) {
-          //   $scope.form = response.data[0]
-          //
-          // }
-
         });
 
       $http({
@@ -359,41 +354,6 @@ app.directive('chatBox', function() {
         }
         $scope.data.unreadMsg = 0
         $scope.data.boxOpen = true
-
-        //
-        // for (var i = 0; i < response.data.length; i++) {
-        //
-        //   if (response.data[i].sentByAgent) {
-        //     var sentByMe = true;
-        //   }else {
-        //     var sentByMe = false;
-        //   }
-        //
-        //
-        //
-        //   if (response.data[i].message) {
-        //
-        //     if (response.data[i].attachmentType) {
-        //       $scope.data.messages.push( { msg: "" , link:response.data[i].message ,  sentByMe: sentByMe , created: response.data[i].created } )
-        //     }else {
-        //       $scope.data.messages.push( { msg: response.data[i].message , sentByMe: sentByMe , created: response.data[i].created } )
-        //     }
-        //   }else if (response.data[i].attachment) {
-        //     console.log(response.data[i].attachment);
-        //     if (response.data[i].attachmentType == 'image') {
-        //         $scope.data.messages.push( { msg: '' , img : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
-        //     }else if (data[i].attachmentType == 'audio') {
-        //         $scope.data.messages.push( { msg: '' , audio : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
-        //     }else if (data[i].attachmentType == 'video') {
-        //         $scope.data.messages.push( { msg: '' , video : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
-        //     }else if (data[i].attachmentType == 'application') {
-        //         $scope.data.messages.push( { msg: '' , doc : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
-        //     }
-        //   }
-        //
-        // }
-        //
-        //
         $scope.scroll()
       });
 
@@ -554,16 +514,23 @@ app.directive('chatBox', function() {
         }, 200);
       }
 
-      $scope.knowledgeBase = function(data) {
+      $scope.knowledgeBase = function(companyPk) {
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.knowledgeBase.modal.html',
-          size: 'md',
+          size: 'lg',
           backdrop: true,
-          controller: function($scope, $users , $uibModalInstance) {
+          controller: function($scope, $users , $uibModalInstance ) {
+
+            console.log(companyPk);
+
+            $scope.data = [ {title:"Return Policy"} , {title:"Cancel Item"} , {title:"Third Title"} , {title:"Fourth Title"} ];
 
             $scope.closeModal = function () {
               $uibModalInstance.close()
             }
+
+
+
 
           },
         })

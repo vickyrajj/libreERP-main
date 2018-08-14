@@ -260,6 +260,7 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 var custID = {{pk}};
+console.log('customer id....', custID);
 // var borderColor = '#ACA626';
 // var custName = 'CIOC'
 var windowColor = '{{windowColor}}'
@@ -1557,8 +1558,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
        xhttp.send(dataToSend);
 
 
+       var dataToPublish = [uid , status , message ];
+
+
        if (threadExist==undefined) {
-        var dataToSend = JSON.stringify({uid: uid});
+        var dataToPublish = [uid , status , message , custID ];
+        var dataToSend = JSON.stringify({uid: uid , company: custID});
          var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 201) {
@@ -1577,7 +1582,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
-      connection.session.publish('service.support.agent', [uid , status , message ], {}, {
+      connection.session.publish('service.support.agent', dataToPublish , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -1692,7 +1697,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
       if (threadExist==undefined) {
-       var dataToSend = JSON.stringify({uid: uid});
+       var dataToSend = JSON.stringify({uid: uid , company: custID});
         var xhttp = new XMLHttpRequest();
          xhttp.onreadystatechange = function() {
            if (this.readyState == 4 && this.status == 201) {
