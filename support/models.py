@@ -26,7 +26,7 @@ class CustomerProfile(models.Model):
     email = models.BooleanField(default = False)
     videoAndAudio = models.BooleanField(default = False)
     vr = models.BooleanField(default = False)
-    windowColor = models.CharField(max_length = 20 , null = True )
+    windowColor = models.CharField(max_length = 20 , null = True, default='#000000' )
     dp = models.ImageField(upload_to = getdpPath , null = True)
     name = models.CharField(max_length = 50 , null = True )
     supportBubbleColor = models.CharField(max_length = 20 , null = True ,default='#286EFA')

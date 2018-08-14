@@ -43,7 +43,7 @@ class CustomerProfileViewSet(viewsets.ModelViewSet):
     filter_fields = ['service']
 
 class SupportChatViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny ,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = SupportChatSerializer
     # queryset = SupportChat.objects.all()
     filter_backends = [DjangoFilterBackend]
