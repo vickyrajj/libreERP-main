@@ -43,7 +43,7 @@ class CustomerProfileViewSet(viewsets.ModelViewSet):
     filter_fields = ['service']
 
 class SupportChatViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny ,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = SupportChatSerializer
     # queryset = SupportChat.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -148,7 +148,7 @@ def getChatterScript(request , fileName):
         dataToSend["dp"] =  obj.dp.url
     if obj.name:
         dataToSend["name"] =  obj.name
-        
+
     return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
 
 class VisitorViewSet(viewsets.ModelViewSet):

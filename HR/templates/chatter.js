@@ -523,7 +523,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
 
         if (args[0]=="M") {
-            notification.play();
+            // notification.play();
             message = args[1]
            // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
            // chat.messages.push(args[1]);
@@ -536,7 +536,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
         }else if (args[0]=="MF") {
-          notification.play();
+          // notification.play();
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
           if (!chatOpen) {
@@ -575,7 +575,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
           xhttp.send();
 
         }else if (args[0]=='ML') {
-          notification.play();
+          // notification.play();
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
           if (!chatOpen) {
@@ -613,6 +613,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
           scroll();
 
           chat.messages.push(message);
+          notification.play();
+
 
         }, 1500);
 
@@ -1524,15 +1526,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
                             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                             '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
                             '<form>'+
-                              '<input style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
+                              '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
                                '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
-                               '<button type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                               '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                                  'Submit'+
                                '</button>'+
                               '</form>'+
                             '</div> '+
                           '</div>'
           scroll();
+
+          // var sendEmail = document.getElementById('sendEmail');
+          // sendEmail();
+
+
+
           }
       }, 4000)
 
