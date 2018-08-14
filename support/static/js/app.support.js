@@ -36,7 +36,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
        // console.log(response.data , 'distinct resssssssssss');
        for (var i = 0; i < response.data.length; i++) {
          console.log(response.data);
-         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid,  messages : [], isOnline:true , unreadMsg:0 , boxOpen:false }  )
+         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid,  messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
        }
        // $scope.data.messages = [];
        // for (var i = 0; i < response.data.length; i++) {

@@ -74,6 +74,7 @@ class ChatThread(models.Model):
     status = models.CharField(choices = CHATTHREAD_STATUS_CHOICES , max_length = 15 , default = 'started')
     customerRating = models.PositiveSmallIntegerField(null = True,blank=True)
     customerFeedback = models.CharField(max_length = 3000 , null = True )
+    company = models.ForeignKey(CustomerProfile , related_name = 'chatThread' , null = False)
 
 class Documentation(models.Model):
     created = models.DateTimeField(auto_now_add = True)

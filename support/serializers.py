@@ -44,7 +44,12 @@ class ReviewCommentSerializer(serializers.ModelSerializer):
 class ChatThreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatThread
-        fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback')
+        fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback' , 'company')
+    def create(self ,  validated_data):
+        c = ChatThread(**validated_data)
+        c.company = CustomerProfile.objects.get(pk=int(self.context['request'].data['company']))
+        c.save()
+        return c
 
 class DocumentationSerializer(serializers.ModelSerializer):
     class Meta:
