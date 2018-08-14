@@ -182,3 +182,10 @@ class ChatThreadViewSet(viewsets.ModelViewSet):
             print 'tttttttttttttttt',threadObj
             return threadObj
         return ChatThread.objects.all()
+
+class DocumentationViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = DocumentationSerializer
+    queryset = Documentation.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title','customer']

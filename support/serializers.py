@@ -45,3 +45,8 @@ class ChatThreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatThread
         fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback')
+
+class DocumentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Documentation
+        fields = ( 'pk' , 'created' , 'title', 'customer' , 'text' , 'docs')

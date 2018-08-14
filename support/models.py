@@ -14,6 +14,9 @@ def getdpPath(instance , filename):
 def getSupportChatAttachment(instance , filename ):
     return 'support/chat/%s_%s' % (str(time()).replace('.', '_'), filename)
 
+def getCustomerAttachments(instance , filename ):
+    return 'support/documentations/%s_%s' % (str(time()).replace('.', '_'), filename)
+
 
 class CustomerProfile(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -71,3 +74,10 @@ class ChatThread(models.Model):
     status = models.CharField(choices = CHATTHREAD_STATUS_CHOICES , max_length = 15 , default = 'started')
     customerRating = models.PositiveSmallIntegerField(null = True,blank=True)
     customerFeedback = models.CharField(max_length = 3000 , null = True )
+
+class Documentation(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    title = models.CharField(max_length = 200 , null = False )
+    customer = models.ForeignKey(CustomerProfile , related_name = 'customerDocumentatios' , null = False)
+    text = models.CharField(max_length = 20000 , null = True ,blank=True)
+    docs = models.FileField(upload_to = getCustomerAttachments , null = True,blank=True)
