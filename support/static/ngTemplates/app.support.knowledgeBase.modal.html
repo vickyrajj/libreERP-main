@@ -8,7 +8,7 @@
       <div class="row">
         <div class="col-md-8">
           <span ng-repeat="d in docData track by $index">
-            <div class="panel-group" id="accordion" ng-show="d.text!=none">
+            <div class="panel-group" id="accordion" ng-show="d.text!=none" style="cursor:pointer;">
               <div class="panel panel-default" >
                 <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{d.pk}}" >
                   <h4 class="panel-title"  >
