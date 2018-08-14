@@ -137,7 +137,7 @@ class getChatterScriptAPI(APIView):
         return Response({'data':encrypted  }, status = status.HTTP_200_OK)
 
 def getChatterScript(request , fileName):
-    print fileName
+    print fileName,'*****************'
     fileName = fileName.replace('.js' , '').replace("chatter-" , '')
     pk = decrypt(fileName , "cioc")
     print pk
@@ -148,7 +148,7 @@ def getChatterScript(request , fileName):
         dataToSend["dp"] =  obj.dp.url
     if obj.name:
         dataToSend["name"] =  obj.name
-        
+
     return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
 
 class VisitorViewSet(viewsets.ModelViewSet):
