@@ -149,12 +149,21 @@ app.controller("businessManagement.customers.document", function($scope, $state,
   console.log($scope.compDetails);
   $http({
     method: 'GET',
-    url: '/api/support/documentation/?customer='+$scope.compDetails.pk,
+    url: '/api/support/customerProfile/?service='+$scope.compDetails.pk,
   }).
   then(function(response) {
-    $scope.custDocs = response.data
-    console.log($scope.custDocs,'dddddddddddd');
+    $scope.custDetails = response.data[0]
+    console.log($scope.custDetails,'dddddddddddd');
+    $http({
+      method: 'GET',
+      url: '/api/support/documentation/?customer='+$scope.custDetails.pk,
+    }).
+    then(function(response) {
+      $scope.custDocs = response.data
+      console.log($scope.custDocs,'dddddddddddd');
+    });
   });
+
 
   $scope.addDoc = function(idx){
     if (idx==-1) {
@@ -178,7 +187,7 @@ app.controller("businessManagement.customers.document", function($scope, $state,
 
     var fd = new FormData();
     fd.append('title', $scope.docForm.title);
-    fd.append('customer', $scope.compDetails.pk);
+    fd.append('customer', $scope.custDetails.pk);
     if ($scope.docForm.text!=null && $scope.docForm.text.length>0) {
       fd.append('text', $scope.docForm.text);
     }
