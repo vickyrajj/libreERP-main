@@ -8,11 +8,11 @@
       <div class="row">
         <div class="col-md-8">
           <span ng-repeat="d in docData">
-            <div class="panel-group" id="accordion" ng-if="d.text!=none">
+            <div class="panel-group" id="accordion" ng-show="d.text!=none">
               <div class="panel panel-default" >
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion"  style="text-decoration:none">{{d.title}}</a>
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{$index}}" >
+                  <h4 class="panel-title"  >
+                    <span>{{d.title}}</span>
                   </h4>
                 </div>
                 <div id="{{$index}}" class="panel-collapse collapse">
