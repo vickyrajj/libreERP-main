@@ -163,7 +163,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
 
      $scope.status ='R';
-     connection.session.publish('service.support.chat', [$scope.status , uid ], {}, {
+     connection.session.publish('service.support.agent', [uid , $scope.status ], {}, {
        acknowledge: true
      }).
      then(function(publication) {

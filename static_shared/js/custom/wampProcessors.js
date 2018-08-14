@@ -1,5 +1,5 @@
 var connection = new autobahn.Connection({
-  url: 'ws://' + 'wamp.cioc.in' + ':8001/ws',
+  url: 'ws://' + 'wamp.cioc.in' + ':8090/ws',
   realm: 'default'
 });
 
@@ -78,7 +78,7 @@ connection.onopen = function(session) {
     var scope = angular.element(document.getElementById('chatTab')).scope();
 
     // console.log(args);
-    // console.log(args);
+    console.log(args);
 
     function userExist() {
       for (var i = 0; i < scope.newUsers.length; i++) {
@@ -228,7 +228,6 @@ connection.onopen = function(session) {
               scope.newUsers.splice(i, 1);
           }
         }
-
         return
       }
 

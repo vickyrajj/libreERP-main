@@ -269,7 +269,7 @@ var callBackSupport = '{{callBack}}'
 var videoAndAudioSupport = '{{videoAndAudio}}'
 var ticketSupport = '{{ticket}}'
 var nameSupport = '{{name}}'
-var dpSupport = 'http://localhost:8080'+'{{dp}}'
+var dpSupport = '{{dp}}'
 var supportBubbleColor = '{{supportBubbleColor}}'
 
 
@@ -280,6 +280,8 @@ if (nameSupport=='None') {
 
 if (dpSupport=='') {
   dpSupport = 'http://localhost:8080/static/images/img_avatar_card.png'
+}else {
+  dpSupport = 'http://localhost:8080'+'{{dp}}'
 }
 
 
@@ -313,7 +315,7 @@ var uid;
 var broswer;
 var isAgentOnline = false;
 var agentPk = null;
-var notification = new Audio('static/audio/notification.mp3');
+var notification = new Audio('http://localhost:8080/static/audio/notification.ogg');
 
 
 
@@ -499,7 +501,7 @@ checkCookie();
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8001/ws', realm: 'default'});
+  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
 
     connection.onopen = function (session) {
        console.log("session established!");
