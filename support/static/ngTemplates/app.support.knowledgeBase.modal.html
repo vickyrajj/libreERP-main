@@ -10,12 +10,12 @@
           <span ng-repeat="d in docData">
             <div class="panel-group" id="accordion" ng-show="d.text!=none">
               <div class="panel panel-default" >
-                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{$index}}" >
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{d.pk}}" >
                   <h4 class="panel-title"  >
                     <span>{{d.title}}</span>
                   </h4>
                 </div>
-                <div id="{{$index}}" class="panel-collapse collapse">
+                <div id="{{d.pk}}" class="panel-collapse collapse">
                   <!-- <div class="panel-body">{{d.text}}</div> -->
                   <span ng-bind-html="d.text"></span>
                 </div>
