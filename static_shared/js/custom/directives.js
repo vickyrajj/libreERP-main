@@ -545,6 +545,11 @@ app.directive('chatBox', function() {
             $scope.closeModal = function() {
               $uibModalInstance.close()
             }
+            $scope.sowDetails = 0
+            $scope.textShow = function(pk){
+              console.log(pk);
+              $scope.sowDetails = pk
+            }
 
 
 
