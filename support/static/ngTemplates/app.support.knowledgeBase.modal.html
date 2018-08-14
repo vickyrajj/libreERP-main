@@ -8,9 +8,9 @@
       <div class="row">
         <div class="panel-group" id="accordion">
           <div class="panel panel-default" ng-repeat="d in data">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#{{$index}}">{{d.title}}</a>
+            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{$index}}" >
+              <h4 class="panel-title"  >
+                <a>{{d.title}}</a>
               </h4>
             </div>
             <div id="{{$index}}" class="panel-collapse collapse">
@@ -21,7 +21,6 @@
           </div>
         </div>
       </div>
-
     </section>
   </div>
 
