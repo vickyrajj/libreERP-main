@@ -46,6 +46,9 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
         } else if (action == 'info') {
           var title = 'Details : ';
           var appType = 'companyInfo';
+        }else if (action == 'document') {
+          var title = 'Document : ';
+          var appType = 'document';
         }
 
         $scope.addTab({
@@ -104,36 +107,150 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
       backdrop: true,
       resolve: {
         cPk: function() {
-          return pk;
+          return $scope.custDetails.pk;
         }
       },
-      controller: function($scope, $users , $timeout , $uibModalInstance,cPk) {
-        console.log('sssssssssssss',cPk);
+      controller: function($scope, $users , $timeout , $uibModalInstance , cPk) {
         $scope.cpk ;
         $http({
           method: 'GET',
-          url: '/api/support/script/chatter/?pk='+pk,
+          url: '/api/support/script/chatter/?pk='+cPk,
         }).
         then(function(response) {
-          // console.log(response.data);
+          console.log('reeeeeeeeeeeeeeeeeeesssssssssss',response.data);
           $scope.cpk= response.data.data
           console.log($scope.cpk);
         });
 
         $timeout(function () {
-          $scope.src = '<script src="' + "http://localhost:8080/script/chatter-" + $scope.cpk + ".js" + '"></script>'
+          console.log(window.location.host,'hosttttttt');
+          $scope.src = '<script src="' + "http://"+window.location.host+"/script/chatter-" + $scope.cpk + ".js" + '"></script>'
         }, 600);
 
       },
     })
 
-
-
-
-
-
-
   }
+
+})
+
+app.controller("businessManagement.customers.document", function($scope, $state, $users, $stateParams, $http, Flash , $uibModal) {
+  $scope.tinymceOptions = {
+    selector: 'textarea',
+    content_css : '/static/css/bootstrap.min.css',
+    inline: false,
+    plugins : 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
+    skin: 'lightgray',
+    theme : 'modern',
+    height : 400,
+    toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+  };
+  $scope.compDetails = $scope.tab.data
+  console.log($scope.compDetails);
+  $http({
+    method: 'GET',
+    url: '/api/support/customerProfile/?service='+$scope.compDetails.pk,
+  }).
+  then(function(response) {
+    $scope.custDetails = response.data[0]
+    console.log($scope.custDetails,'dddddddddddd');
+    $http({
+      method: 'GET',
+      url: '/api/support/documentation/?customer='+$scope.custDetails.pk,
+    }).
+    then(function(response) {
+      $scope.custDocs = response.data
+      console.log($scope.custDocs,'dddddddddddd');
+    });
+  });
+
+
+  $scope.addDoc = function(idx){
+    if (idx==-1) {
+      $scope.docForm = {title:'',text:'',docs:emptyFile}
+    }else {
+      $scope.docForm = $scope.custDocs[idx]
+    }
+    console.log($scope.docForm);
+  }
+  $scope.saveDoc = function(){
+    console.log($scope.docForm);
+    if ($scope.docForm.title==null||$scope.docForm.title.length==0) {
+      Flash.create('warning', 'Title Is Required')
+      return
+    }
+    console.log($scope.docForm.text==null);
+    if (($scope.docForm.text==null || $scope.docForm.text.length==0) && ($scope.docForm.docs==null || $scope.docForm.docs==emptyFile)) {
+      Flash.create('warning', 'Either Content Or Document File Is Required')
+      return
+    }
+
+    var fd = new FormData();
+    fd.append('title', $scope.docForm.title);
+    fd.append('customer', $scope.custDetails.pk);
+    if ($scope.docForm.text!=null && $scope.docForm.text.length>0) {
+      fd.append('text', $scope.docForm.text);
+    }
+    if ($scope.docForm.docs!=null && typeof $scope.docForm.docs!='string' && $scope.docForm.docs!=emptyFile) {
+      fd.append('docs', $scope.docForm.docs);
+    }
+    var method = 'POST'
+    var url = '/api/support/documentation/'
+    if ($scope.docForm.pk!=undefined) {
+      method = 'PATCH'
+      url += $scope.docForm.pk +'/'
+    }
+    console.log(fd);
+
+    $http({
+      method: method,
+      url: url,
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      if ($scope.docForm.pk==undefined) {
+        $scope.custDocs.push(response.data)
+      }
+      $scope.docForm = response.data
+    })
+  }
+
+  // $scope.openChartPopoup = function(pk){
+  //   $uibModal.open({
+  //     templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',
+  //     size: 'md',
+  //     backdrop: true,
+  //     resolve: {
+  //       cPk: function() {
+  //         return $scope.custDetails.pk;
+  //       }
+  //     },
+  //     controller: function($scope, $users , $timeout , $uibModalInstance , cPk) {
+  //       $scope.cpk ;
+  //       $http({
+  //         method: 'GET',
+  //         url: '/api/support/script/chatter/?pk='+cPk,
+  //       }).
+  //       then(function(response) {
+  //         console.log('reeeeeeeeeeeeeeeeeeesssssssssss',response.data);
+  //         $scope.cpk= response.data.data
+  //         console.log($scope.cpk);
+  //       });
+  //
+  //       $timeout(function () {
+  //         console.log(window.location.host,'hosttttttt');
+  //         $scope.src = '<script src="' + "http://"+window.location.host+"/script/chatter-" + $scope.cpk + ".js" + '"></script>'
+  //       }, 600);
+  //
+  //     },
+  //   })
+  //
+  // }
 
 })
 
@@ -146,7 +263,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       return response.data;
     })
   };
-  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'' , callBack:false , ticket: false , dp: emptyFile , name:''}
+  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'' , callBack:false , ticket: false , dp: emptyFile , name:'',supportBubbleColor:'#286EFA'}
   $scope.fetCustomerProfile = function(pk){
     $scope.cpForm.service = pk
     $http({
@@ -313,6 +430,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     if (cpF.windowColor == '') {
       delete cpF.windowColor
     }
+    if (cpF.supportBubbleColor == '') {
+      delete cpF.supportBubbleColor
+    }
     var method = 'POST'
     var url = '/api/support/customerProfile/'
     if ($scope.cpForm.pk!=undefined) {
@@ -331,6 +451,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
     var fd = new FormData();
     fd.append('call', cpF.call );
+    fd.append('email', cpF.email );
     fd.append('callBack', cpF.callBack);
     fd.append('chat', cpF.chat);
     fd.append('name', cpF.name);
@@ -342,6 +463,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
     if (cpF.windowColor != '') {
       fd.append('windowColor', cpF.windowColor);
+    }
+    if (cpF.supportBubbleColor != '') {
+      fd.append('supportBubbleColor', cpF.supportBubbleColor);
     }
 
     console.log(cpF.dp , 'dddddddddddddddddddddddddddddddddddddd');

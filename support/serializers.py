@@ -14,7 +14,7 @@ from django.conf import settings as globalSettings
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
-        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' )
+        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor')
     def create(self ,  validated_data):
         c = CustomerProfile(**validated_data)
         c.service = service.objects.get(pk=self.context['request'].data['service'])
@@ -25,3 +25,33 @@ class SupportChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupportChat
         fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent' )
+
+class VisitorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Visitor
+        fields = ( 'pk' , 'created' , 'uid', 'email','name','phoneNumber','notes')
+
+class ReviewCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReviewComment
+        fields = ( 'pk' , 'created' , 'uid', 'user' ,'chatedDate', 'message' )
+    def create(self ,  validated_data):
+        r = ReviewComment(**validated_data)
+        r.user = self.context['request'].user
+        r.save()
+        return r
+
+class ChatThreadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatThread
+        fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback' , 'company')
+    def create(self ,  validated_data):
+        c = ChatThread(**validated_data)
+        c.company = CustomerProfile.objects.get(pk=int(self.context['request'].data['company']))
+        c.save()
+        return c
+
+class DocumentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Documentation
+        fields = ( 'pk' , 'created' , 'title', 'customer' , 'text' , 'docs')

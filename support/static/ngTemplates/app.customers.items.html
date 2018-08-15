@@ -7,11 +7,11 @@
         </div>
       </div>
     </div>
-    <div class="row container-fluid" style="padding-top:20px;height:70px;">
-      <div class="col-md-10">
+    <div class="row container-fluid" style="padding-top:20px;height:100px;">
+      <div class="col-md-10" style="font-size:17px">
         <strong>Telephone:</strong> {{data.telephone}} <br>
         <strong>Contact Person:</strong> {{data.contactPerson.first_name}} {{data.contactPerson.last_name}}<br>
-        <strong>Mobile:</strong> {{data.mobile}} <br>
+        <strong>Mobile:</strong> {{data.mobile}}
       </div>
       <div class="col-md-2">
         <div style="padding-right:20px;">
@@ -21,6 +21,9 @@
             </span> <br><br>
             <span class="pull-right" style="cursor:pointer;">
               <i class="fa fa-info-circle fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('info')"></i>
+            </span><br><br>
+            <span class="pull-right" style="cursor:pointer;">
+              <i class="fa fa-file-text fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('document')"></i>
             </span>
           </div>
         </div>

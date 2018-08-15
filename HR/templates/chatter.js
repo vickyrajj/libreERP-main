@@ -260,35 +260,88 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 var custID = {{pk}};
+console.log('customer id....', custID);
 // var borderColor = '#ACA626';
 // var custName = 'CIOC'
-var borderColor = '{{windowColor}}'
+var windowColor = '{{windowColor}}'
 var custName = '{{custName}}'
+var chatSupport = '{{chat}}'
+var callBackSupport = '{{callBack}}'
+var videoAndAudioSupport = '{{videoAndAudio}}'
+var ticketSupport = '{{ticket}}'
+var nameSupport = '{{name}}'
+var dpSupport = '{{dp}}'
+var supportBubbleColor = '{{supportBubbleColor}}'
+
+
+if (nameSupport=='None') {
+  nameSupport = 'Agent'
+}
+
+
+if (dpSupport=='') {
+  dpSupport = 'http://localhost:8080/static/images/img_avatar_card.png'
+}else {
+  dpSupport = 'http://localhost:8080'+'{{dp}}'
+}
+
+
+
+if (chatSupport=='True') {
+  chatSupport = true
+}else {
+  chatSupport = false
+}
+
+if (callBackSupport=='True') {
+  callBackSupport = true
+}else {
+  callBackSupport = false
+}
+
+if (videoAndAudioSupport=='True') {
+  videoAndAudioSupport = true
+}else {
+  videoAndAudioSupport = false
+}
+
+if (ticketSupport=='True') {
+  ticketSupport = true
+}else {
+  ticketSupport = false
+}
+
+
 var uid;
 var broswer;
 var isAgentOnline = false;
+var agentPk = null;
+var notification = new Audio('http://localhost:8080/static/audio/notification.ogg');
 
 
 
-function getBrowserName() {
-  var name;
-  if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
-    name = 'Opera'
-  }else if (navigator.userAgent.indexOf("Chrome") != -1 ) {
-    name = 'Chrome'
-  }else if (navigator.userAgent.indexOf("Safari") != -1) {
-    name = 'Safari'
-  }else if (navigator.userAgent.indexOf("Firefox") != -1) {
-    name = 'Firefox'
-  }else if ((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
-    name = 'IE'
-  }else {
-    name = 'unknown'
-  }
-  return name
-}
 
-broswer = getBrowserName()
+
+
+// function getBrowserName() {
+//   var name;
+//   if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
+//     name = 'Opera'
+//   }else if (navigator.userAgent.indexOf("Chrome") != -1 ) {
+//     name = 'Chrome'
+//   }else if (navigator.userAgent.indexOf("Safari") != -1) {
+//     name = 'Safari'
+//   }else if (navigator.userAgent.indexOf("Firefox") != -1) {
+//     name = 'Firefox'
+//   }else if ((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
+//     name = 'IE'
+//   }else {
+//     name = 'unknown'
+//   }
+//   return name
+// }
+//
+// broswer = getBrowserName()
 
 
 function setCookie(cname, cvalue, exdays) {
@@ -319,7 +372,7 @@ function getCookie(cname) {
 }
 
 
-var chat = {user : custName , messages : [ { msg:"Thanks for visiting us. If you need help simply reply to this message...", sentByMe:false , created:  new Date() } ] }
+var chat = {user : custName , messages : [ { message:"Thanks for visiting us. If you need help simply reply to this message...", sentByAgent:true , created:  new Date() } ] }
 
 
 function fetchMessages(uid) {
@@ -329,34 +382,52 @@ function fetchMessages(uid) {
       console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
-        console.log(data);
+        // console.log(data);
+        console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' , data);
+        // if (data.length>0) {
+        //
+        // }
+
+
         for (var i = 0; i < data.length; i++) {
-
-          if (data[i].sentByAgent) {
-            var sentByMe = false;
-          }else {
-            var sentByMe = true;
-          }
-
-          if (data[i].message) {
-            chat.messages.push( { msg: data[i].message , sentByMe: sentByMe , created: data[i].created } )
-          }else if (data[i].attachment) {
-
-              if (data[i].attachmentType == 'image') {
-                chat.messages.push( { msg: '' , img : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-              }else if (data[i].attachmentType == 'audio') {
-                  chat.messages.push( { msg: '' , audio : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-              }else if (data[i].attachmentType == 'video') {
-                  chat.messages.push( { msg: '' , video : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-              }else if (data[i].attachmentType == 'application') {
-                  chat.messages.push( { msg: '' , doc : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-              }
-          }
-          // chat.messages.push({ msg: , sentByMe: , created:  })
-
-
+          agentPk = data[i].user
+          chat.messages.push(data[i])
         }
-        scroll();
+        // for (var i = 0; i < data.length; i++) {
+        //
+        //   if (data[i].sentByAgent) {
+        //     var sentByMe = false;
+        //   }else {
+        //     var sentByMe = true;
+        //   }
+        //
+        //   if (data[i].message) {
+        //
+        //     if (data[i].attachmentType) {
+        //       // link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+        //       // var message = {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() }
+        //       chat.messages.push( {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() } )
+        //     }else {
+        //       chat.messages.push( { msg: data[i].message , sentByMe: sentByMe , created: data[i].created } )
+        //     }
+        //
+        //
+        //   }else if (data[i].attachment) {
+        //       if (data[i].attachmentType == 'image') {
+        //         chat.messages.push( { msg: '' , img : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }else if (data[i].attachmentType == 'audio') {
+        //           chat.messages.push( { msg: '' , audio : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }else if (data[i].attachmentType == 'video') {
+        //           chat.messages.push( { msg: '' , video : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }else if (data[i].attachmentType == 'application') {
+        //           chat.messages.push( { msg: '' , doc : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }
+        //   }
+        //   // chat.messages.push({ msg: , sentByMe: , created:  })
+        //
+        //
+        // }
+        // scroll();
       }
   };
 
@@ -364,14 +435,60 @@ function fetchMessages(uid) {
   xhttp.send();
 }
 
+function fetchThread(uid) {
+  console.log('fetch thread');
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+      // console.log(this.readyState , this.status,'onready' , this.responseText);
+      // console.log(this);
+      if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText)
+        if (data.length>0) {
+          // fetchThread(uid);
+          threadExist = true
+          console.log(data,'fffffffffffffffff');
+          chatThreadPk = data[0].pk
+        }
+        console.log(data);
+        fetchMessages(uid);
+      } else if (this.responseText == '{"PARAMS":"createCookie"}') {
+        console.log('genertate new uid');
+        // document.cookie = "uid" + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
+        uid = new Date().getTime()
+        // console.log('nn',uid ,document.cookie);
+        setCookie("uid", uid, 365);
+        fetchMessages(uid);
+
+      }
+
+
+  };
+
+  xhttp.open('GET', 'http://localhost:8080/api/support/chatThread/?uid=' + uid + '&checkThread', true);
+  xhttp.send();
+
+}
+
+var threadExist
+var threadResponse
+var chatThreadPk
+
+
 function checkCookie() {
   uid = getCookie("uid");
   if (uid != "") {
       // alert("Welcome again " + user);
-      fetchMessages(uid);
+      console.log('cookie exu=ist');
+      fetchThread(uid);
+      // if (threadExist!=undefined && threadExist) {
+      //   fetchMessages(uid);
+      // }
   } else {
       // uid = custID +'$'+custName+'$'+broswer.charAt(0)
       uid = new Date().getTime()
+      console.log(uid);
       if (uid != "" && uid != null) {
           setCookie("uid", uid, 365);
       }
@@ -383,12 +500,9 @@ checkCookie();
 
 
 
-
-
-
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8080/ws', realm: 'default'});
+  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
 
     connection.onopen = function (session) {
        console.log("session established!");
@@ -397,9 +511,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.log(args);
         var message;
 
+
+        if (args[0]=='T') {
+          console.log('typingggggggggggggggggggggg');
+          onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Typing..</p>';
+          // isTyping.style.display = "";
+          setTimeout(function(){
+            // isTyping.style.display = "none";
+          onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
+          }, 1500);
+          return
+        }
+
         if (args[0]=="M") {
-           message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
-           chat.messages.push(message);
+            // notification.play();
+            message = args[1]
+           // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
+           // chat.messages.push(args[1]);
            if (!chatOpen) {
              unreadMsgCount+=1;
              // unreadMsg.style.display = "";
@@ -409,6 +537,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
         }else if (args[0]=="MF") {
+          // notification.play();
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
           if (!chatOpen) {
@@ -425,20 +554,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
               if (this.readyState == 4 && this.status == 200) {
                 console.log(this.responseText);
                 var data = JSON.parse(this.responseText)
-                attachment = data.attachment
-                console.log('attachmenttttttttttt' , attachment);
+                // attachment = data.attachment
+                // console.log('attachmenttttttttttt' , attachment);
+                message = data
 
 
-
-                if (args[1].typ=='image') {
-                   message = {msg:'' ,  sentByMe:false , created: args[1].created , img: attachment }
-                }else if (args[1].typ=='audio') {
-                   message = {msg:'' ,  sentByMe:false , created: args[1].created , audio:attachment }
-                }else if (args[1].typ=='video') {
-                   message = {msg:'' ,  sentByMe:false , created: args[1].created , video:attachment }
-                }else if (args[1].typ=='doc') {
-                   message = {msg:'' ,  sentByMe:false , created: args[1].created , doc:attachment }
-                }
+                // if (args[1].typ=='image') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , img: attachment }
+                // }else if (args[1].typ=='audio') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , audio:attachment }
+                // }else if (args[1].typ=='video') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , video:attachment }
+                // }else if (args[1].typ=='doc') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , doc:attachment }
+                // }
 
               }
           };
@@ -446,6 +575,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
           xhttp.open('GET', 'http://localhost:8080/api/support/supportChat/' + args[1].filePk + '/'  , true);
           xhttp.send();
 
+        }else if (args[0]=='ML') {
+          // notification.play();
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
+
+          if (!chatOpen) {
+            unreadMsgCount+=1;
+            // unreadMsg.style.display = "";
+            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
+          }
+           message = args[1]
+        }else if (args[0]=='AP') {
+          console.log('agent pk recievedddddddddd');
+          agentPk = args[1];
+          return
         }else if (args[0]=='O') {
           console.log('yes online');
           isAgentOnline = true;
@@ -455,16 +598,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }else if (args[0]=='A') {
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[1]+'</p>'
           return
-        }else if (args[0]=='ML') {
-          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
-
-          if (!chatOpen) {
-            unreadMsgCount+=1;
-            // unreadMsg.style.display = "";
-            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
-          }
-
-           message = {msg:'' ,  sentByMe:false , created: args[1].created , link:args[1].link }
+        }else if (args[0]=='F') {
+          console.log('open feedback');
+          openFeedback(args[1])
+          return
         }
 
 
@@ -477,6 +614,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
           scroll();
 
           chat.messages.push(message);
+          notification.play();
+
 
         }, 1500);
 
@@ -506,13 +645,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     mainDiv.innerHTML = '<div id="chatBox" style="width:347px; height:75vh; border-radius: 10px; background-color:#fff; position:fixed ; bottom:100px; right:10px; z-index:1500; margin-left:10px; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); overflow:auto; overflow-x:hidden; ">'+
 
-      '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:#286EFA; color:#fff;">'+
+      '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:'+ windowColor +'; color:#fff;">'+
         '<div style="padding:10px; background-size:cover; " >'+
           '<div id="backArrow" style="float:left; cursor:pointer; padding:15px; border-radius:5px; " >'+
             '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
           '</div>'+
           '<div style="float:left;">'+
-              '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:35px " alt="Samuel">'+
+              '<img src="'+dpSupport+'" style="border-radius:50%; width:35px " alt="Samuel">'+
           '</div>'+
           '<div style="float:left;padding-left: 15px;" >'+
             '<div>'+
@@ -529,7 +668,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       '</div>'+
 
 
-      '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:#286EFA; color:#fff; padding:15px; background-size:cover; " >'+
+      '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:'+ windowColor +'; color:#fff; padding:15px; background-size:cover; " >'+
         '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <i class="fa fa-times" aria-hidden="true"></i> </span>'+
         '<div style="padding:15px; padding-left:25px; " >'+
           '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are '+ custName +' 👋 </p>'+
@@ -538,7 +677,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       '  </div>'+
       '</div>'+
 
-      '<div id="startConversation" style="margin-right:-15px; margin-left:-15px; padding:30px; padding-top:10px; height:200px; position:absolute; background-color:#fff; border-radius:5px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid #286EFA" >'+
+      '<div id="startConversation" style="margin-right:-15px; margin-left:-15px; padding:30px; padding-top:10px; height:200px; position:absolute; background-color:#fff; border-radius:5px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'" >'+
         '<p style="font-size:12px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px;" > Start a conversation </p>'+
         '<p style="font-size:11px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px; color:#777; "> The team typically replies in few minutes.</p>'+
         '<div style="padding-top:5px; text-align:center;" >'+
@@ -549,33 +688,34 @@ document.addEventListener("DOMContentLoaded", function(event) {
         '</div>'+
 
         '<div style="margin-right:-15px; margin-left:-15px; color:#fff; position:absolute; top:144px; text-align:center; padding-top:5px; " >'+
-          '<button id="startConvoBtn" type="button" style="padding:13px; border-radius:20px; background-color:#fff ; color:#286EFA; border:2px solid #286EFA; text-transform:none;  font-size:11px; cursor:pointer;" >'+
+          '<button id="startConvoBtn" type="button" style="padding:13px; border-radius:20px; background-color:#fff ; color:'+ windowColor +'; border:2px solid '+ windowColor +'; text-transform:none;  font-size:11px; cursor:pointer;" >'+
             'Start Conversation'+
           '</button>'+
       '  </div>'+
       '</div>'+
 
-      '<div id="demo" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:150px; position:absolute; background-color:#fff; border-radius:5px; top:355px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid #286EFA">'+
-        '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " >  Get a demo  </p>'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Get a look inside Syrow to discover what we can do for you. </p>'+
-        '<div style="color:#fff; position:absolute; top:95px; padding-left:15px;" >'+
-          '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-            'Request a Demo'+
-          '</button>'+
-        '</div>'+
-      '</div>'+
+      // '<div id="demo" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:150px; position:absolute; background-color:#fff; border-radius:5px; top:355px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'">'+
+      //   '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " >  Get a demo  </p>'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Get a look inside Syrow to discover what we can do for you. </p>'+
+      //   '<div style="color:#fff; position:absolute; top:95px; padding-left:15px;" >'+
+      //     '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:'+ windowColor +' ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+      //       'Request a Demo'+
+      //     '</button>'+
+      //   '</div>'+
+      // '</div>'+
 
-      '<div id="exploreSyrow" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:160px; position:absolute; background-color:#fff; border-radius:5px; top:522px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid #286EFA">'+
-        '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " > Explore Syrow </p>'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Syrow is a call center company located in Bangalore providing varied call center services to its clients.</p>'+
-        '<div style="color:#fff; position:absolute; top:110px; padding-left:15px;" >'+
-          '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-            'Explore Syrow'+
-          '</button>'+
-        '</div>'+
-      '</div>'+
+      // '<div id="exploreSyrow" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:160px; position:absolute; background-color:#fff; border-radius:5px; top:522px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'">'+
+      //   '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " > Explore Syrow </p>'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Syrow is a call center company located in Bangalore providing varied call center services to its clients.</p>'+
+      //   '<div style="color:#fff; position:absolute; top:110px; padding-left:15px;" >'+
+      //     '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:'+ windowColor +' ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+      //       'Explore Syrow'+
+      //     '</button>'+
+      //   '</div>'+
+      // '</div>'+
 
-    ' <div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
+      '<div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
+      // '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
       '</div>'+
       '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
         '<div style="padding:0px;" >'+
@@ -600,7 +740,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //
     // '</div>'+
 
-    '<div id="closeSupport" style="height:60px; width:60px; background-color: #286EFA; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
+    '<div id="closeSupport" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
       '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
        '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
      '</svg>'+
@@ -649,7 +789,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
   body.appendChild(mainDiv);
 
-  console.log(document.getElementById('ticketCircle'));
+  // console.log(document.getElementById('ticketCircle'));
 
 
   var allTags = document.getElementById('mainDiv').getElementsByTagName("*");
@@ -660,7 +800,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.getElementById('mainDiv').style.color = "#333";
 
 
-
+  // document.getElementById("emoji").innerHTML = String.fromCodePoint(0x1F604)
 
 
   var device;
@@ -677,8 +817,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var inputText = document.getElementById("inputText");
   var startConvoBtn = document.getElementById("startConvoBtn");
   var startConversation = document.getElementById("startConversation");
-  var demo = document.getElementById("demo");
-  var exploreSyrow = document.getElementById('exploreSyrow');
+  // var demo = document.getElementById("demo");
+  // var exploreSyrow = document.getElementById('exploreSyrow');
   var headerInit = document.getElementById('headerInit');
   var backArrow = document.getElementById('backArrow');
   var closeIconInit = document.getElementById('closeIconInit');
@@ -694,6 +834,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var ticketCircle = document.getElementById('ticketCircle');
   var closeSupport = document.getElementById('closeSupport');
   var supportCircle = document.getElementById('supportCircle');
+  // var isTyping = document.getElementById('isTyping');
+
+
+  // isTyping.style.display = "none";
+
 
   document.getElementById('sy-main-icon').style.display = "none";
 
@@ -701,7 +846,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById('sy-main-icon').style.display = "";
   }, 2000);
 
-  console.log(supportCircle,'scir');
+  // console.log(supportCircle,'scir');
   // console.log(document.getElementsByClassName('font-SyrowCallBack'));
   // var docTitle = document.title;
   // console.log(docTitle);
@@ -728,77 +873,80 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+
+
+
   var mainStr = "";
   var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:false} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        var data = JSON.parse(this.responseText)
-        console.log(data);
-        data = data[0];
-        console.log('yaaaaa');
-
-        for (var i = 0; i < supportOptions.length; i++) {
-          if (supportOptions[i].name=='callCircle') {
-            supportOptions[i].value = data.callBack;
-          }
-          if (supportOptions[i].name=='chatCircle') {
-            supportOptions[i].value = data.chat;
-          }
-          if (supportOptions[i].name=='audioCircle') {
-            supportOptions[i].value = data.videoAndAudio;
-          }
-          if (supportOptions[i].name=='videoCircle') {
-            supportOptions[i].value = data.videoAndAudio;
-          }
-          if (supportOptions[i].name=='ticketCircle') {
-            supportOptions[i].value = data.ticket;
-          }
-        }
-
-        console.log(supportOptions,'so');
-          for (var i = 0 , rD = 0 , mB = 0 , mR=0; i < supportOptions.length; i++) {
-            if (supportOptions[i].value) {
-              rD+=2;
-              mB+=60;
-              mR+=1;
-              var itemName = 'item-'+(i+1);
-
-              supportString = "\
-                @-moz-keyframes "+ itemName +" { 100% { \
-                margin-bottom: "+mB+"px; \
-                margin-right: -"+mR+"px; \
-                opacity: 1; \
-                -webkit-transform: rotate("+rD+"deg); \
-              } }\
-              @-webkit-keyframes "+ itemName +" { 100% { \
-                margin-bottom: "+mB+"px; \
-                margin-right: -"+mR+"px; \
-                opacity: 1; \
-                -webkit-transform: rotate("+rD+"deg); \
-              } }\
-              @-ms-keyframes item-1 { 100% { \
-                margin-bottom: "+mB+"px; \
-                margin-right: -"+mR+"px; \
-                opacity: 1; \
-                -ms-transform: rotate("+rD+"deg); \
-              } }\
-              "
-              mainStr = mainStr.concat(supportString);
-            }else {
-                document.getElementById(supportOptions[i].name).style.display = "none";
-            }
-          }
 
 
+  for (var i = 0; i < supportOptions.length; i++) {
+    if (supportOptions[i].name=='callCircle') {
+      supportOptions[i].value = chatSupport;
+    }
+    if (supportOptions[i].name=='chatCircle') {
+      supportOptions[i].value = chatSupport;
+    }
+    if (supportOptions[i].name=='audioCircle') {
+      supportOptions[i].value = videoAndAudioSupport;
+    }
+    if (supportOptions[i].name=='videoCircle') {
+      supportOptions[i].value = videoAndAudioSupport;
+    }
+    if (supportOptions[i].name=='ticketCircle') {
+      supportOptions[i].value = ticketSupport;
+    }
+  }
 
+  // console.log(supportOptions,'so');
+    for (var i = 0 , rD = 0 , mB = 0 , mR=0; i < supportOptions.length; i++) {
+      if (supportOptions[i].value) {
+        rD+=2;
+        mB+=60;
+        mR+=1;
+        var itemName = 'item-'+(i+1);
 
-        // console.log(data.chat);
+        supportString = "\
+          @-moz-keyframes "+ itemName +" { 100% { \
+          margin-bottom: "+mB+"px; \
+          margin-right: -"+mR+"px; \
+          opacity: 1; \
+          -webkit-transform: rotate("+rD+"deg); \
+        } }\
+        @-webkit-keyframes "+ itemName +" { 100% { \
+          margin-bottom: "+mB+"px; \
+          margin-right: -"+mR+"px; \
+          opacity: 1; \
+          -webkit-transform: rotate("+rD+"deg); \
+        } }\
+        @-ms-keyframes item-1 { 100% { \
+          margin-bottom: "+mB+"px; \
+          margin-right: -"+mR+"px; \
+          opacity: 1; \
+          -ms-transform: rotate("+rD+"deg); \
+        } }\
+        "
+        mainStr = mainStr.concat(supportString);
+      }else {
+          document.getElementById(supportOptions[i].name).style.display = "none";
       }
-  };
+    }
 
-  xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/?service=' + custID , true);
-  xhttp.send();
+
+  // var xhttp = new XMLHttpRequest();
+  // xhttp.onreadystatechange = function() {
+  //     if (this.readyState == 4 && this.status == 200) {
+  //       var data = JSON.parse(this.responseText)
+  //       console.log(data);
+  //       data = data[0];
+  //       console.log('yaaaaa');
+  //
+  //       // console.log(data.chat);
+  //     }
+  // };
+  //
+  // xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/?service=' + custID , true);
+  // xhttp.send();
 
 
 
@@ -849,7 +997,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }\
         /* The below code can be optimised 10X better */\
         .sy-circle, .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link, .sy-text {\
-        background: #286efa !important; /* background color should be dynamic */\
+        background: "+supportBubbleColor+" !important; /* background color should be dynamic */\
         color: #fff; 					/* color should be dynamic */\
       }\
         .sy-circle {\
@@ -940,6 +1088,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
         -ms-animation: item-5 0.5s forwards; \
         -moz-animation: item-5 0.5s forwards; \
       }\
+          div.stars {\
+          width: 270px;\
+          display: inline-block;\
+        }\
+        input.star { display: none; }\
+        label.star {\
+          float: right;\
+          padding: 10px;\
+          font-size: 36px;\
+          color: #444;\
+          transition: all .2s;\
+        }\
+        input.star:checked ~ label.star:before {\
+          content: '\\2605';\
+          color: #FD4;\
+          transition: all .25s;\
+        }\
+        input.star-5:checked ~ label.star:before {\
+          color: #FE7;\
+          text-shadow: 0 0 20px #952;\
+        }\
+        input.star-1:checked ~ label.star:before { color: #F62; }\
+        label.star:hover { transform: rotate(-15deg) scale(1.3); }\
+        label.star:before {\
+          content: '\\2605';\
+        }\
       "));
 
       document.head.appendChild(newStyle);
@@ -948,11 +1122,103 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+  function openFeedback(id) {
+    console.log('coming in open feedback');
+    var id = id;
+    var div = document.createElement("div");
+    div.id="offlineMessage"
+    div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Please provide your feedback below:</p>'+
+                      '<form>'+
+                        '<div class="stars">'+
+                          '<form id="stars">'+
+                            '<input class="star star-5" id="star-5" type="radio" name="star"/>'+
+                            '<label class="star star-5" for="star-5"></label>'+
+                            '<input class="star star-4" id="star-4" type="radio" name="star"/>'+
+                            '<label class="star star-4" for="star-4"></label>'+
+                            '<input class="star star-3" id="star-3" type="radio" name="star"/>'+
+                            '<label class="star star-3" for="star-3"></label>'+
+                            '<input class="star star-2" id="star-2" type="radio" name="star"/>'+
+                            '<label class="star star-2" for="star-2"></label>'+
+                            '<input class="star star-1" id="star-1" type="radio" name="star"/>'+
+                            '<label class="star star-1" for="star-1"></label>'+
+                          '</form>'+
+                        '</div>'+
+                         '<textarea id="feedbackText" style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
+                         '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                           'Submit'+
+                         '</button>'+
+                        '</form>'+
+                      '</div> '+
+                    '</div>'
+    messageBox.appendChild(div);
+    scroll();
+    var stars = document.getElementById('stars');
+    var submitStars = document.getElementById('submitStars');
+    submitStarForm(id);
+  }
+
+
+  function submitStarForm(id) {
+    submitStars.addEventListener("click", function() {
+      console.log('somthing hereeeeee' , this);
+      // id="star-5"
+      // console.log(document.getElementById('feedbackText').value);
+      var feedbackText = document.getElementById('feedbackText')
+
+      var ratingForm = {
+        customerRating:0,
+        customerFeedback:feedbackText.value
+      }
+
+      // var rating;
+      if (document.getElementById('star-1').checked) {
+        ratingForm.customerRating = 1
+      }
+      if (document.getElementById('star-2').checked) {
+        ratingForm.customerRating = 2
+      }
+      if (document.getElementById('star-3').checked) {
+        ratingForm.customerRating = 3
+      }
+      if (document.getElementById('star-4').checked) {
+        ratingForm.customerRating = 4
+      }
+      if (document.getElementById('star-5').checked) {
+        ratingForm.customerRating = 5
+      }
+
+    console.log(ratingForm);
+    ratingForm = JSON.stringify(ratingForm)
+    feedbackText.value = ''
+    document.getElementById('star-1').checked = false
+    document.getElementById('star-2').checked = false
+    document.getElementById('star-3').checked = false
+    document.getElementById('star-4').checked = false
+    document.getElementById('star-5').checked = false
+
+      var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 201) {
+           console.log('posted successfully');
+           console.log(ratingForm);
+           feedbackText.value = ''
+         }
+       };
+       xhttp.open('PATCH', 'http://localhost:8080/api/support/chatThread/'+ chatThreadPk + '/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(ratingForm);
+    }, false);
+  }
 
 
 
 
-  agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >Agent</p>'
+
+
+
+  agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >'+nameSupport+'</p>'
   onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
 
   closeSupport.style.display = "none";
@@ -969,8 +1235,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     footer.style.display = "";
     startConvoBtn.style.display = "none";
     startConversation.style.display = "none";
-    demo.style.display ="none";
-    exploreSyrow.style.display = "none";
+    // demo.style.display ="none";
+    // exploreSyrow.style.display = "none";
     headerInit.style.display = "none";
   }, false);
 
@@ -982,8 +1248,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     footer.style.display = "none";
     startConvoBtn.style.display = "";
     startConversation.style.display = "";
-    demo.style.display = "";
-    exploreSyrow.style.display ="";
+    // demo.style.display = "";
+    // exploreSyrow.style.display ="";
     headerInit.style.display = "";
   }, false);
 
@@ -1038,39 +1304,93 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     function messageDiv(message) {
 
-      if (message.msg=='') {
-        if (message.img) {
-          attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
-        }else if (message.audio) {
-          attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
-        }else if (message.video) {
-          attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
-        }else if (message.doc) {
-            attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
-        }else if (message.link) {
-          console.log('yesssssssss' , message.link);
-        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+      // console.log(chat.messages.length);
+
+      // console.log('messsaaageeeeeeeeeeeeeeeeeeeee',message);
+
+      if (message.attachment) {
+        if (message.attachmentType=='image') {
+            console.log('image');
+          attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
+        }else if (message.attachmentType=='audio') {
+            console.log('audio');
+          attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.attachment +'" controls></audio>'
+        }else if (message.attachmentType=='video') {
+            console.log('video');
+          attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.attachment +'" controls></video>'
+        }else if (message.attachmentType=='application') {
+            console.log('application');
+            attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
         }
+        // else if (message.link) {
+        //   console.log('yesssssssss' , message.link);
+        // attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+        // }
       }
 
-      var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
+      if (message.message!=null && message.attachmentType!=null) {
+        console.log('youtube link');
+        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'" frameborder="0" allowfullscreen></iframe>'
+        var msgDiv =attachedFile
+      }else {
+        var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
+      }
 
-      if (message.sentByMe) {
-        var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:#286EFA; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
+
+
+      // console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
+
+      if (!message.sentByAgent) {
+        var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
                       '</div>'
         return msgHtml
 
       }else {
-    var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+        var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                   '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
                 '</div> '
         return msgHtml
       }
+
+
+      // if (message.msg=='') {
+      //   if (message.img) {
+      //     attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
+      //   }else if (message.audio) {
+      //     attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
+      //   }else if (message.video) {
+      //     attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
+      //   }else if (message.doc) {
+      //       attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
+      //   }else if (message.link) {
+      //     console.log('yesssssssss' , message.link);
+      //   attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+      //   }
+      // }
+      //
+      // var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
+      //
+      // if (message.sentByMe) {
+      //   var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
+      //                   '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
+      //                     msgDiv+
+      //                   '</div>'+
+      //                 '</div>'
+      //   return msgHtml
+      //
+      // }else {
+      //   var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+      //             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+      //                msgDiv+
+      //             '</div> '+
+      //           '</div> '
+      //   return msgHtml
+      // }
 
 
 
@@ -1122,9 +1442,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
     onlineAgent();
 
 
+    // inputText.addEventListener("input", function(e) {
+    //   console.log(this.value);
+    //   var status = 'T'
+    //   connection.session.publish('service.support.agent', [uid , status], {}, {
+    //     acknowledge: true
+    //   }).
+    //   then(function(publication) {
+    //     console.log("Published");
+    //   });
+    //
+    // });
+
+
     function sendMessage(inptText) {
+      console.log(uid);
+      console.log(getCookie("uid"));
+      if (uid!=getCookie("uid")) {
+        uid = getCookie("uid");
+      }
 
 
+      console.log(uid);
       console.log(chat.messages.length);
 
 
@@ -1132,15 +1471,37 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+      // if (youtubeLink) {
+      //   status = "ML";
+      //   link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+      //   var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
+      //   var dataToSend = JSON.stringify({uid: uid , message: message.link });
+      // }else {
+      //   status = "M";
+      //   var message = {msg:inptText ,  sentByMe:true , created: new Date() }
+      //   var dataToSend = JSON.stringify({uid: uid , message: message.msg });
+      // }
+
       if (youtubeLink) {
         status = "ML";
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-        var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
-        var dataToSend = JSON.stringify({uid: uid , message: message.link });
+
+
+        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false  };
+        if (agentPk) {
+          dataToSend.user = agentPk
+        }
+        var message = dataToSend
+        dataToSend = JSON.stringify(dataToSend)
       }else {
         status = "M";
-        var message = {msg:inptText ,  sentByMe:true , created: new Date() }
-        var dataToSend = JSON.stringify({uid: uid , message: message.msg });
+        // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
+        var dataToSend = {uid: uid , message: inptText , sentByAgent:false };
+        if (agentPk) {
+          dataToSend.user = agentPk
+        }
+        var message = dataToSend
+        dataToSend = JSON.stringify(dataToSend)
       }
 
 
@@ -1158,7 +1519,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.log(isAgentOnline, ' is agent online..........');
 
         if (!isAgentOnline) {
-          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">Agent</p>'
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+nameSupport+'</p>'
           var div = document.createElement("div");
           div.id="offlineMessage"
 
@@ -1166,16 +1527,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
                             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                             '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
                             '<form>'+
-                              '<input style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
+                              '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
                                '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
-                               '<button type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                               '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                                  'Submit'+
                                '</button>'+
                               '</form>'+
                             '</div> '+
                           '</div>'
-          messageBox.appendChild(div);
           scroll();
+
+          // var sendEmail = document.getElementById('sendEmail');
+          // sendEmail();
+
+
+
           }
       }, 4000)
 
@@ -1192,9 +1558,31 @@ document.addEventListener("DOMContentLoaded", function(event) {
        xhttp.send(dataToSend);
 
 
+       var dataToPublish = [uid , status , message ];
 
 
-      connection.session.publish('service.support.agent', [uid , status , message ], {}, {
+       if (threadExist==undefined) {
+        var dataToPublish = [uid , status , message , custID ];
+        var dataToSend = JSON.stringify({uid: uid , company: custID});
+         var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 201) {
+              console.log('posted successfully');
+              var data = JSON.parse(this.responseText)
+              threadExist=true
+              console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+              chatThreadPk = data.pk
+            }
+          };
+          xhttp.open('POST', 'http://localhost:8080/api/support/chatThread/', true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(dataToSend);
+       }
+
+
+
+
+      connection.session.publish('service.support.agent', dataToPublish , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -1202,9 +1590,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
 
       console.log('dddddddddddddd',isAgentOnline);
-
-
-
 
 
     }
@@ -1225,8 +1610,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
   function sendFile() {
+
+    if (uid!=getCookie("uid")) {
+      uid = getCookie("uid");
+    }
+
     var file = filePicker;
-    console.log(file.files[0] );
+    console.log(file.files[0],'typpppppppppppppppppppppp' );
 
 
     console.log(chat.messages.length);
@@ -1235,6 +1625,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     fd.append('uid', uid);
     fd.append('attachment', file.files[0]);
     fd.append('attachmentType' , file.files[0].type.split('/')[0] )
+
+    if (agentPk) {
+      fd.append('user' , agentPk)
+    }
 
      var xhttp = new XMLHttpRequest();
 
@@ -1249,34 +1643,39 @@ document.addEventListener("DOMContentLoaded", function(event) {
           console.log(typ);
 
           var fileData = {
-            filePk : data.pk
+            filePk : data.pk,
+            typ : data.attachmentType
           }
 
-          if (typ=='image') {
-              fileData.type = 'image';
-             message = {msg:'' ,  sentByMe:true , created: new Date() , img: data.attachment }
-          }else if (typ=='audio') {
-            console.log('audoooooooooo');
-              fileData.type = 'audio';
-             message = {msg:'' ,  sentByMe:true , created: new Date() , audio: data.attachment }
-          }else if (typ=='video') {
-              fileData.type = 'video';
-             message = {msg:'' ,  sentByMe:true , created: new Date() , video: data.attachment }
-          }else if (typ=='application') {
-              fileData.type = 'doc';
-             message = {msg:'' ,  sentByMe:true , created: new Date() , doc: data.attachment }
+          if (agentPk) {
+            fileData.user = agentPk;
           }
 
+          // if (typ=='image') {
+          //     fileData.type = 'image';
+          //    message = {msg:'' ,  sentByMe:true , created: new Date() , img: data.attachment }
+          // }else if (typ=='audio') {
+          //   console.log('audoooooooooo');
+          //     fileData.type = 'audio';
+          //    message = {msg:'' ,  sentByMe:true , created: new Date() , audio: data.attachment }
+          // }else if (typ=='video') {
+          //     fileData.type = 'video';
+          //    message = {msg:'' ,  sentByMe:true , created: new Date() , video: data.attachment }
+          // }else if (typ=='application') {
+          //     fileData.type = 'doc';
+          //    message = {msg:'' ,  sentByMe:true , created: new Date() , doc: data.attachment }
+          // }
 
-          console.log(message);
+
+          // console.log(message);
 
           var div = document.createElement("div");
-          div.innerHTML = messageDiv(message)
+          div.innerHTML = messageDiv(data)
           messageBox.appendChild(div);
           scroll();
 
-          chat.messages.push(message);
 
+          chat.messages.push(data);
 
           filePicker.value = ""
 
@@ -1297,8 +1696,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+      if (threadExist==undefined) {
+       var dataToSend = JSON.stringify({uid: uid , company: custID});
+        var xhttp = new XMLHttpRequest();
+         xhttp.onreadystatechange = function() {
+           if (this.readyState == 4 && this.status == 201) {
+             console.log('posted successfully');
+             threadExist=true
+             console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+             chatThreadPk = data.pk
+           }
+         };
+         xhttp.open('POST', 'http://localhost:8080/api/support/chatThread/', true);
+         xhttp.setRequestHeader("Content-type", "application/json");
+         xhttp.send(dataToSend);
+      }
+
+
+
 
   }
+
 
   filePicker.onchange = function(e) {
     var file = filePicker;
@@ -1381,6 +1799,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (x.matches) {
         device = 'xs';
         console.log('xs');
+        // isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
         chatBox.style.height ="100vh";
@@ -1405,6 +1824,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (x.matches) {
         device = 'sm';
         console.log('sm');
+        // isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
         chatBox.style.height ="100vh";
@@ -1480,7 +1900,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     var xs = window.matchMedia("(max-width: 767px)")
-    console.log('xssssssssss',xs);
+    // console.log('xssssssssss',xs);
     xsDevice(xs) // Call listener function at run time
     xs.addListener(xsDevice) // Attach listener function on state changes
 
@@ -1495,9 +1915,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var lg = window.matchMedia("(min-width: 1200px)")
     lgDevice(lg)
     lg.addListener(lgDevice)
-
-
-
 
 
 

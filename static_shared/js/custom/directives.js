@@ -322,49 +322,43 @@ app.directive('chatBox', function() {
     replace: true,
     scope: {
       data: '=',
-      index:'=',
+      index: '=',
       closeChat: '=',
     },
-    controller: function($scope, $users , $uibModal , $http) {
+    controller: function($scope, $users, $uibModal, $http, ngAudio) {
       $scope.me = $users.get('mySelf');
       // console.log($scope.data,'will fetch here');
+      $scope.visitorForm = ''
+      $scope.isTyping = false;
+      $scope.sound = ngAudio.load("static/audio/notification.mp3");
 
       $http({
         method: 'GET',
-        url: '/api/support/supportChat/?uid='+$scope.data.uid,
-      }).then(function(response) {
-        // console.log(response.data , 'ressss');
-        $scope.data.messages = [];
-        for (var i = 0; i < response.data.length; i++) {
-
-          if (response.data[i].sentByAgent) {
-            var sentByMe = true;
-          }else {
-            var sentByMe = false;
-          }
-
-
-
-          if (response.data[i].message) {
-              $scope.data.messages.push( { msg: response.data[i].message , sentByMe: sentByMe , created: response.data[i].created } )
-          }else if (response.data[i].attachment) {
-            if (response.data[i].attachmentType == 'image') {
-                $scope.data.messages.push( { msg: '' , img : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
-            }else if (data[i].attachmentType == 'audio') {
-                $scope.data.messages.push( { msg: '' , audio : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
-            }else if (data[i].attachmentType == 'video') {
-                $scope.data.messages.push( { msg: '' , video : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
-            }else if (data[i].attachmentType == 'application') {
-                $scope.data.messages.push( { msg: '' , doc : response.data[i].attachment  , sentByMe: sentByMe , created: response.data[i].created } )
-            }
-          }
-
+        url: '/api/support/visitor/?uid=' + $scope.data.uid,
+      }).
+      then(function(response) {
+        console.log(response.data, typeof response.data, response.data.length);
+        if (response.data.length > 0) {
+          $scope.visitorForm = response.data[0]
         }
+      });
+
+      $http({
+        method: 'GET',
+        url: '/api/support/supportChat/?user=' + $scope.me.pk + '&uid=' + $scope.data.uid,
+      }).then(function(response) {
+        $scope.data.messages = [];
+        console.log(response.data);
+        for (var i = 0; i < response.data.length; i++) {
+          $scope.data.messages.push(response.data[i]);
+        }
+        $scope.data.unreadMsg = 0
+        $scope.data.boxOpen = true
         $scope.scroll()
       });
 
 
-      console.log('userrrrrrr' , $scope.me.pk);
+      console.log('userrrrrrr', $scope.me.pk);
 
       $scope.chatBox = {
         messageToSend: '',
@@ -377,18 +371,17 @@ app.directive('chatBox', function() {
 
 
       $scope.send = function() {
-        if ($scope.chatBox.fileToSend.size>0) {
-
+        if ($scope.chatBox.fileToSend.size > 0) {
 
           $scope.attachment;
           var typ = $scope.chatBox.fileToSend.type.split('/')[0]
 
           var fd = new FormData();
           fd.append('attachment', $scope.chatBox.fileToSend);
-          fd.append('user' , $scope.me.pk);
-          fd.append('uid' , $scope.data.uid)
-          fd.append('sentByAgent' , true)
-          fd.append('attachmentType' , $scope.chatBox.fileToSend.type.split('/')[0] )
+          fd.append('user', $scope.me.pk);
+          fd.append('uid', $scope.data.uid)
+          fd.append('sentByAgent', true)
+          fd.append('attachmentType', $scope.chatBox.fileToSend.type.split('/')[0])
           $http({
             method: 'POST',
             data: fd,
@@ -399,40 +392,17 @@ app.directive('chatBox', function() {
             }
           }).
           then(function(response) {
-            $scope.attachment = response.data.attachment
-            console.log($scope.attachment);
+            // console.log($scope.response.data , 'data');
+            $scope.data.messages.push(response.data)
+            // $scope.attachment = response.data.attachment
+            // console.log($scope.attachment);
 
             $scope.fileData = {
-              filePk : response.data.pk
+              filePk: response.data.pk
             }
 
-
-            var message;
-            if (typ=='image') {
-              console.log('img');
-              $scope.fileData.typ = 'image'
-              console.log($scope.fileData);
-              console.log($scope.attachment);
-              message = {msg : "",sentByMe:true, img:$scope.attachment , created: new Date()}
-              $scope.data.messages.push(message)
-            }else if (typ=='audio') {
-              $scope.fileData.typ = 'audio'
-              message = {msg:"" , sentByMe: true, audio:$scope.attachment, created: new Date() }
-              $scope.data.messages.push(message)
-            }else if (typ=='video') {
-              $scope.fileData.typ = 'video'
-              message = {msg : "",sentByMe:true, video:$scope.attachment , created: new Date()}
-              $scope.data.messages.push(message)
-            }else if (typ=='application') {
-              $scope.fileData.typ = 'doc'
-              message = {msg : "",sentByMe:true, doc:$scope.attachment , created: new Date()}
-              $scope.data.messages.push(message)
-            }
-
-
-            console.log($scope.fileData,'filedataaaaa');
             $scope.status = 'MF';
-            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , $scope.fileData , $scope.me.username , new Date() ], {}, {
+            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me.username, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -448,7 +418,7 @@ app.directive('chatBox', function() {
 
         }
 
-        if ($scope.chatBox.messageToSend.length>0) {
+        if ($scope.chatBox.messageToSend.length > 0) {
 
 
           var youtubeLink = $scope.chatBox.messageToSend.includes("www.youtube.com/");
@@ -456,19 +426,21 @@ app.directive('chatBox', function() {
           if (youtubeLink) {
             $scope.status = 'ML';
             link = "https://www.youtube.com/embed/" + $scope.chatBox.messageToSend.split("v=")[1];
-            var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
+            // var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
             var dataToSend = {
-              uid : $scope.data.uid ,
-              message : message.link ,
-              user : $scope.me.pk
+              uid: $scope.data.uid,
+              message: link,
+              user: $scope.me.pk,
+              attachmentType: 'youtubeLink',
+              sentByAgent: true
             }
-          }else {
+          } else {
             $scope.status = 'M';
-            var message = {msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() }
+            // var message = {msg:$scope.chatBox.messageToSend , sentByMe: true, created: new Date() }
             var dataToSend = {
-              uid : $scope.data.uid ,
-              message : message.msg ,
-              user : $scope.me.pk,
+              uid: $scope.data.uid,
+              message: $scope.chatBox.messageToSend,
+              user: $scope.me.pk,
               sentByAgent: true
             }
           }
@@ -479,52 +451,231 @@ app.directive('chatBox', function() {
             url: '/api/support/supportChat/'
           }).
           then(function(response) {
+            console.log(response.data, 'dataaa');
+            $scope.data.messages.push(response.data)
+
+            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me.username, new Date()], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+
+            $scope.chatBox.messageToSend = ''
+            $scope.scroll()
+
 
           });
 
-          $scope.data.messages.push(message)
-          console.log($scope.chatBox.messageToSend);
-          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status  , message , $scope.me.username , new Date() ], {}, {
+
+
+
+
+        }
+      };
+
+      $scope.$watch('chatBox.messageToSend', function(newValue, oldValue) {
+        $scope.status = "T";
+        if (newValue != "") {
+          connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
             acknowledge: true
           }).
           then(function(publication) {
             console.log("Published");
           });
-
-
-          $scope.chatBox.messageToSend = ''
-          $scope.scroll()
         }
-      };
+      });
+
+
+      $scope.chatClose = function(uid) {
+        $scope.status = "F";
+        connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published");
+        });
+      }
 
       $scope.closeChatBox = function(indx) {
         $scope.closeChat(indx)
+        $scope.data.boxOpen = false
       }
 
       $scope.attachFile = function() {
         $('#filePickerChat' + $scope.index).click();
       }
 
-      $scope.scroll = function () {
-        setTimeout(function () {
-          var id = document.getElementById("scrollArea"+ $scope.data.uid );
+      $scope.scroll = function() {
+        console.log('calling');
+        setTimeout(function() {
+          var id = document.getElementById("scrollArea" + $scope.data.uid);
           id.scrollTop = id.scrollHeight;
         }, 200);
       }
 
-      $scope.knowledgeBase = function(data) {
+      $scope.knowledgeBase = function(companyPk) {
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.knowledgeBase.modal.html',
-          size: 'md',
+          size: 'xl',
           backdrop: true,
-          controller: function($scope, $users , $uibModalInstance) {
+          controller: function($scope, $users, $uibModalInstance) {
+            $scope.form = {title:''}
+            console.log(companyPk);
+            $http({
+              method: 'GET',
+              url: '/api/support/documentation/?customer=' + companyPk,
+            }).
+            then(function(response) {
+              console.log(response.data);
+              $scope.docData = response.data
 
-            $scope.closeModal = function () {
+            });
+            $scope.filterData = function(title){
+              $http({
+                method: 'GET',
+                url: '/api/support/documentation/?customer=' + companyPk+'&title__icontains='+title,
+              }).
+              then(function(response) {
+                console.log(response.data);
+                $scope.docData = response.data
+              });
+            }
+
+            $scope.closeModal = function() {
               $uibModalInstance.close()
             }
+            $scope.sowDetails = 0
+            $scope.textShow = function(pk){
+              console.log(pk);
+              $scope.sowDetails = pk
+            }
+
+
+
 
           },
         })
+      }
+
+
+      $scope.editUserDetails = function(uid) {
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.editUserDetails.modal.html',
+          size: 'md',
+          backdrop: true,
+          resolve: {
+            visitorData: function() {
+              return $scope.visitorForm;
+            }
+          },
+          controller: function($scope, visitorData, $users, $uibModalInstance, Flash) {
+            $scope.uid = uid
+            console.log(uid);
+
+            if (typeof visitorData == 'string') {
+              $scope.form = {
+                email: '',
+                name: '',
+                phoneNumber: '',
+                notes: ''
+              }
+            } else {
+              $scope.form = visitorData
+            }
+
+
+
+
+            // $scope.$watch('form.email', function(newValue, oldValue) {
+            //   console.log('inside weathcccc');
+            //   // console.log($scope.form);
+            //   // console.log(newValue);
+            //   if (newValue.length>0) {
+            //     $http({
+            //       method: 'GET',
+            //       url: '/api/support/visitor/?email='+newValue,
+            //     }).
+            //     then(function(response) {
+            //
+            //       console.log(response.data);
+            //     });
+            //   }
+            //
+            // });
+            checkEmail = function() {
+              console.log($scope.form.email);
+              $http({
+                method: 'GET',
+                url: '/api/support/visitor/?email=' + $scope.form.email,
+              }).
+              then(function(response) {
+                console.log(response.data, typeof response.data, response.data.length);
+                if (response.data.length > 0 && response.data[0].email == $scope.form.email) {
+                  $scope.form.name = response.data[0].name
+                  $scope.form.email = response.data[0].email
+                  $scope.form.phoneNumber = response.data[0].phoneNumber
+                  $scope.form.notes = response.data[0].notes
+                }
+              });
+            }
+
+            $scope.submit = function() {
+
+
+              if ($scope.form.email == '') {
+                Flash.create('danger', 'Email is required')
+                return
+              }
+
+
+              $scope.toSend = $scope.form
+              $scope.toSend.uid = $scope.uid;
+
+              var method = 'POST'
+              var url = '/api/support/visitor/'
+              if ($scope.form.pk != undefined) {
+                method = 'PATCH'
+                url += $scope.form.pk + '/'
+              }
+
+              $http({
+                method: method,
+                url: url,
+                data: $scope.toSend
+              }).
+              then(function(response) {
+                // dataName = response.data.name
+                // $scope.form = response.data;
+                Flash.create('success', 'User details saved')
+                $uibModalInstance.dismiss(response.data)
+              });
+            }
+
+          },
+        }).result.then(function() {
+
+        }, function(data) {
+          if (data != 'backdrop click') {
+            $scope.data.name = data.name
+            $scope.visitorForm = data
+          }
+        });
+      }
+
+
+      $scope.arremoji = ['👋', '💁', '🙃', '🙏', '😬', '👇', '👈', '👉', '👋', '👏', '👐', '👆', '☝', '👊', '✋', '✌', '✊', '👌', '👍', '👎'];
+
+      $scope.emojiOpen = false
+
+      $scope.insertEmoji = function(indx) {
+        $scope.chatBox.messageToSend += $scope.arremoji[indx]
+      }
+
+
+      $scope.openEmoji = function() {
+        $scope.emojiOpen = !$scope.emojiOpen
+
       }
 
     }
@@ -802,10 +953,10 @@ app.directive('chatWindow', function($users) {
             console.log('resssssss', response.data);
             // $scope.ims.push(response.data)
             var fileTypeArr = response.data.attachment.split('.')
-            var fileType =  fileTypeArr[fileTypeArr.length-1]
-            if (fileType == 'jpg'|| fileType == 'jpeg'|| fileType == 'png'|| fileType == 'svg'|| fileType == 'gif') {
+            var fileType = fileTypeArr[fileTypeArr.length - 1]
+            if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'svg' || fileType == 'gif') {
               response.data.fileType = 'image'
-            }else {
+            } else {
               response.data.fileType = 'document'
             }
             $scope.ims.push(response.data)
@@ -836,7 +987,7 @@ app.directive('chatWindow', function($users) {
         $scope.chatForm.fileToSend = emptyFile;
       }
 
-      $scope.expandImage = function (imgUrl) {
+      $scope.expandImage = function(imgUrl) {
         console.log('expaaannddddd');
         console.log(imgUrl);
       }
@@ -855,10 +1006,10 @@ app.directive('chatWindow', function($users) {
           console.log('resssssssss');
           if (response.data.attachment) {
             var fileTypeArr = response.data.attachment.split('.')
-            var fileType =  fileTypeArr[fileTypeArr.length-1]
-            if (fileType == 'jpg'|| fileType == 'jpeg'|| fileType == 'png'|| fileType == 'svg'|| fileType == 'gif') {
+            var fileType = fileTypeArr[fileTypeArr.length - 1]
+            if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'svg' || fileType == 'gif') {
               response.data.fileType = 'image'
-            }else {
+            } else {
               response.data.fileType = 'document'
             }
           }
@@ -889,10 +1040,10 @@ app.directive('chatWindow', function($users) {
             }
             if (im.attachment) {
               var fileTypeArr = im.attachment.split('.')
-              var fileType =  fileTypeArr[fileTypeArr.length-1]
-              if (fileType == 'jpg'|| fileType == 'jpeg'|| fileType == 'png'|| fileType == 'svg'|| fileType == 'gif') {
+              var fileType = fileTypeArr[fileTypeArr.length - 1]
+              if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'svg' || fileType == 'gif') {
                 im.fileType = 'image'
-              }else {
+              } else {
                 im.fileType = 'document'
               }
             }

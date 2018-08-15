@@ -149,7 +149,9 @@ class addressViewSet(viewsets.ModelViewSet):
     serializer_class = addressSerializer
     def get_queryset(self):
         u = self.request.user
-        has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.orders'])
+        print u
+        if u.is_authenticated:
+            has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.orders'])
         return address.objects.all()
 
 class serviceViewSet(viewsets.ModelViewSet):
