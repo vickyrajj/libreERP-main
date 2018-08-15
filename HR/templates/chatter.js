@@ -947,7 +947,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //
   // xhttp.open('GET', '{{serverAddress}}/api/support/customerProfile/?service=' + custID , true);
   // xhttp.send();
-
+// https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf
 
 
   setTimeout(function(){
@@ -956,11 +956,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
       newStyle.appendChild(document.createTextNode("\
       @font-face {\
         font-family: 'Syrow';\
-        src:  url('{{serverAddress}}/static/fonts/syrow/Syrow.eot?a8jyi4');\
-        src:  url('{{serverAddress}}/static/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
-        url('{{serverAddress}}/static/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
-        url('{{serverAddress}}/static/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
-        url('{{serverAddress}}/static/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
+        src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4');\
+        src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
+        url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
+        url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
+        url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
         font-weight: normal;\
         font-style: normal;\
       }\
