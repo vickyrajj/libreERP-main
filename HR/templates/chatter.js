@@ -956,11 +956,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
       newStyle.appendChild(document.createTextNode("\
       @font-face {\
         font-family: 'Syrow';\
-        src:  url('static/fonts/syrow/Syrow.eot?a8jyi4');\
-        src:  url('static/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
-        url('static/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
-        url('static/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
-        url('static/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
+        src:  url('{{serverAddress}}/static/fonts/syrow/Syrow.eot?a8jyi4');\
+        src:  url('{{serverAddress}}/static/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
+        url('{{serverAddress}}/static/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
+        url('{{serverAddress}}/static/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
+        url('{{serverAddress}}/static/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
         font-weight: normal;\
         font-style: normal;\
       }\
