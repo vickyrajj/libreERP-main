@@ -3,9 +3,10 @@
     <div class="col-md-9">
     <h5><strong>email : </strong><span>{{data.request.email}}</h5></span>
     <h5><strong>Mobile : </strong><span>{{data.request.mobile}}</h5></span>
-    <h5><strong>message : </strong><span>{{data.request.message}}</h5></span>
+    <h5><strong>Message : </strong><span>{{data.request.message}}</h5></span>
+    <h5 ng-if="data.request.status=='resolved'||data.request.status=='junk'"><strong>Status : </strong><span>{{data.request.status}}</h5></span>
   </div>
-    <div class="col-md-3">
+    <div class="col-md-3" ng-if="data.request.status=='ongoing'||data.request.status=='created'">
       <div class="form-group">
         <label>Status</label>
         <select class="form-control" ng-model="data.request.status">
@@ -18,7 +19,7 @@
       </div>
     <hr>
   </div>
-  <div class="row" style="margin-top:30px">
+  <div class="row" style="margin-top:30px" ng-if="data.request.status=='ongoing'||data.request.status=='created'">
       <div class="col-md-12">
     <div class="form-group">
       <label>Response</label>
