@@ -125,6 +125,11 @@
   <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm" style="padding-left:42px;padding-right:65px;">
     <div class="row" ng-if="subSlide.banners.length > 0">
       <div style="height:45vh;margin-bottom:20px;margin-left:10px;padding-left:0px;padding-right:0px;" class="card col-md-12 text-center  hidden-xs hidden-sm">
+        <!-- <picture>
+          <source media="(min-width: 100%)" srcset="{{subSlide.img}}" ng-click="$state.go('pages' , {title : subSlide.title.split(' ').join('-').toLowerCase()}">
+            <source media="(min-width: 100%)" srcset="{{subSlide.img}}" ng-click="$state.go('pages' , {title : subSlide.title.split(' ').join('-').toLowerCase()}">
+              <img src="{{subSlide.img}}" alt="Flowers" style="width:100%;" ng-click="$state.go('pages' , {title : subSlide.title.split(' ').join('-').toLowerCase()}">
+            </picture> -->
         <img class="anim-in-out anim-fade" data-anim-speed="100" style="width:100%;cursor:pointer;height:45vh" ng-src="{{subSlide.img}}" ng-click="$state.go('pages' , {title : subSlide.title.split(' ').join('-').toLowerCase()})"
         />
       </div>

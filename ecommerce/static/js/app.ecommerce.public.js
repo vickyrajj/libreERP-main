@@ -1876,11 +1876,13 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     message: ''
   };
 
-
-
-
-
-
+$scope.feddbackPannel=false
+$scope.feedbackstatus=function(){
+  $scope.feddbackPannel=true
+}
+$scope.close=function(){
+  $scope.feddbackPannel=false
+}
 
 
   $scope.sendFeedback = function() {

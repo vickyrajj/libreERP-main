@@ -180,7 +180,6 @@ app.controller("businessManagement.ecommerce.support.request.explore", function(
   $scope.data = $scope.tab.data;
 
 $scope.sendResponse=function(){
-  console.log($scope.data.request);
   var sendData = {
     response:$scope.data.request.response,
     user : $scope.data.request.user.pk,
