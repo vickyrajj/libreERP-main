@@ -35,6 +35,7 @@ import json
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
 from django.template import defaultfilters
+from datetime import timedelta
 # Create your views here.
 
 
@@ -151,10 +152,10 @@ class PageNumCanvas(canvas.Canvas):
 def invoice(response,inv):
     print '999999999999999999999999999999999999999'
     now = datetime.datetime.now()
-    print now
-    print 'indiaaaaaaaaaaa'
-    print datetime.datetime.now(timezone('Asia/Kolkata'))
-    print inv.activePatient.dateOfDischarge,inv.activePatient.inTime
+    # print now
+    # print 'indiaaaaaaaaaaa'
+    # print datetime.datetime.now(timezone('Asia/Kolkata'))
+    # print inv.activePatient.dateOfDischarge,inv.activePatient.inTime
 
     # ad1 = str(inv.activePatient.inTime).split(' ')
     # ad = ad1[0].split('-')
@@ -174,8 +175,8 @@ def invoice(response,inv):
         count = 289 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=inv.pk).count() - 25
         # n = count if count>=1000 else '0'+str(count)
         billNo = 'CB'+str(count).zfill(4)+'/18'
-        a = defaultfilters.date(inv.activePatient.inTime, "d-m-Y , h:i A")
-        d = defaultfilters.date(inv.activePatient.dateOfDischarge, "d-m-Y , h:i A")
+        a = defaultfilters.date(inv.activePatient.inTime + timedelta(hours=5,minutes=30), "d-m-Y , h:i A")
+        d = defaultfilters.date(inv.activePatient.dateOfDischarge + timedelta(hours=5,minutes=30), "d-m-Y , h:i A")
         try:
             refId = inv.activePatient.dischargeSummary.get().ipNo
         except DischargeSummary.DoesNotExist:
@@ -188,13 +189,13 @@ def invoice(response,inv):
         #     d = dd[2]+'-'+dd[1]+'-'+dd[0]+' '+ dd1[1].split('.')[0]
         # except:
         #     d = ''
-    print billNo
+    # print billNo
     (refid,name,admitDate,dischargeDate,total) = (inv.activePatient.patient.uniqueId,inv.activePatient.patient.firstName+' '+inv.activePatient.patient.lastName,a,d,inv.grandTotal)
     data = json.loads(inv.products)
     details = []
     for i in data:
         details.append({'name':i['data']['name'],'qty':i['quantity'],'rate':i['data']['rate']})
-    print '************',details
+    # print '************',details
 
     totalRows = len(details)
 
@@ -289,8 +290,8 @@ def invoice(response,inv):
 
 def dischargeSummary(response,dis):
     print '77777777777777777'
-    print dis
-    now = datetime.datetime.now()
+    # print dis
+    now = datetime.datetime.now() + timedelta(hours=5,minutes=30)
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=5*cm,leftMargin=0.1*cm,rightMargin=0.1*cm,bottomMargin=1*cm)
     elements = []
@@ -322,20 +323,20 @@ def dischargeSummary(response,dis):
     elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=black><b> DISCHARGE SUMMARY </b></para>",styles['Normal']))
 
     elements.append(Spacer(1, 20))
-    print dis.patient.patient,dis.patient.inTime,dis.patient.dateOfDischarge
+    # print dis.patient.patient,dis.patient.inTime,dis.patient.dateOfDischarge
     if '.' in str(dis.patient.inTime):
         ad = str(dis.patient.inTime).split('.')[0]
     else:
         ad = str(dis.patient.inTime).split('+')[0]
 
-    ad = defaultfilters.date(dis.patient.inTime, "d-m-Y , h:i A")
+    ad = defaultfilters.date(dis.patient.inTime + timedelta(hours=5,minutes=30), "d-m-Y , h:i A")
 
     dd = str(dis.patient.dateOfDischarge).split('.')[0]
 
-    dd = defaultfilters.date(dis.patient.dateOfDischarge, "d-m-Y , h:i A")
+    dd = defaultfilters.date(dis.patient.dateOfDischarge + timedelta(hours=5,minutes=30), "d-m-Y , h:i A")
 
     d = defaultfilters.date(now, "d-m-Y , h:i A")
-    print d, ad , dd
+    # print d, ad , dd
     # page= int(d.split('-')[0])-int(str(dis.patient.patient.dateOfBirth).split('-')[0])
     # print 'ageeeeeeeeeeee',page
     if dis.patient.docName:
@@ -354,7 +355,7 @@ def dischargeSummary(response,dis):
         dMB = ''
         dPB = ''
 
-    print 'disssssssssssssssss',dis.treatingConsultant.all()
+    # print 'disssssssssssssssss',dis.treatingConsultant.all()
     dList = dis.treatingConsultant.all().reverse()
     for i in dList:
         dN += ' , ' + i.name
@@ -394,8 +395,8 @@ def dischargeSummary(response,dis):
         #     docMobile = ''
 
     # print dep
-    print 'advv',dis.advice
-    print 'revvvvvvvvvv',dis.reviewOn
+    # print 'advv',dis.advice
+    # print 'revvvvvvvvvv',dis.reviewOn
 
     bottomDName = dNB
     bottomDMob = dMB
@@ -530,7 +531,7 @@ def dischargeSummary(response,dis):
     elements.append(t2)
 
     elements.append(Spacer(1,6))
-    print docname,dt,mob,pname
+    # print docname,dt,mob,pname
     data3 = [['Treating Consultant /\nAuthorized Team Doctor','Name',docname.upper(),''],['','Signature','',''],['Date&Time : '+dt,'Reg. No.: ',regno,'Contact No. : '+str(docMob)],['Patient / Attendant','Name',pname.upper(),''],['','Signature','',''],]
     rheights=5*[0.3*inch]
     cwidths=[2.2*inch , 0.7*inch , 2.8*inch , 2*inch]
