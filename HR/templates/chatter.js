@@ -279,10 +279,12 @@ if (nameSupport=='None') {
 }
 
 
+
+
 if (dpSupport=='') {
-  dpSupport = 'http://localhost:8080/static/images/img_avatar_card.png'
+  dpSupport = '{{serverAddress}}/static/images/img_avatar_card.png'
 }else {
-  dpSupport = 'http://localhost:8080'+'{{dp}}'
+  dpSupport = '{{serverAddress}}'+'{{dp}}'
 }
 
 
@@ -316,7 +318,7 @@ var uid;
 var broswer;
 var isAgentOnline = false;
 var agentPk = null;
-var notification = new Audio('http://localhost:8080/static/audio/notification.ogg');
+var notification = new Audio('{{serverAddress}}/static/audio/notification.ogg');
 
 
 
@@ -431,7 +433,7 @@ function fetchMessages(uid) {
       }
   };
 
-  xhttp.open('GET', 'http://localhost:8080/api/support/supportChat/?uid=' + uid , true);
+  xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?uid=' + uid , true);
   xhttp.send();
 }
 
@@ -466,7 +468,7 @@ function fetchThread(uid) {
 
   };
 
-  xhttp.open('GET', 'http://localhost:8080/api/support/chatThread/?uid=' + uid + '&checkThread', true);
+  xhttp.open('GET', '{{serverAddress}}/api/support/chatThread/?uid=' + uid + '&checkThread', true);
   xhttp.send();
 
 }
@@ -572,7 +574,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
               }
           };
 
-          xhttp.open('GET', 'http://localhost:8080/api/support/supportChat/' + args[1].filePk + '/'  , true);
+          xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/' + args[1].filePk + '/'  , true);
           xhttp.send();
 
         }else if (args[0]=='ML') {
@@ -945,9 +947,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //     }
   // };
   //
-  // xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/?service=' + custID , true);
+  // xhttp.open('GET', '{{serverAddress}}/api/support/customerProfile/?service=' + custID , true);
   // xhttp.send();
-
+// https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf
 
 
   setTimeout(function(){
@@ -956,11 +958,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
       newStyle.appendChild(document.createTextNode("\
       @font-face {\
         font-family: 'Syrow';\
-        src:  url('static/fonts/syrow/Syrow.eot?a8jyi4');\
-        src:  url('static/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
-        url('static/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
-        url('static/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
-        url('static/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
+        src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4');\
+        src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
+        url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
+        url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
+        url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
         font-weight: normal;\
         font-style: normal;\
       }\
@@ -1206,7 +1208,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
            feedbackText.value = ''
          }
        };
-       xhttp.open('PATCH', 'http://localhost:8080/api/support/chatThread/'+ chatThreadPk + '/', true);
+       xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
        xhttp.setRequestHeader("Content-type", "application/json");
        xhttp.send(ratingForm);
     }, false);
@@ -1553,7 +1555,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
            console.log('posted successfully');
          }
        };
-       xhttp.open('POST', 'http://localhost:8080/api/support/supportChat/', true);
+       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
        xhttp.setRequestHeader("Content-type", "application/json");
        xhttp.send(dataToSend);
 
@@ -1574,7 +1576,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
               chatThreadPk = data.pk
             }
           };
-          xhttp.open('POST', 'http://localhost:8080/api/support/chatThread/', true);
+          xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
           xhttp.setRequestHeader("Content-type", "application/json");
           xhttp.send(dataToSend);
        }
@@ -1691,7 +1693,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         }
       };
-      xhttp.open('POST', 'http://localhost:8080/api/support/supportChat/', true);
+      xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
       xhttp.send(fd);
 
 
@@ -1707,7 +1709,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
              chatThreadPk = data.pk
            }
          };
-         xhttp.open('POST', 'http://localhost:8080/api/support/chatThread/', true);
+         xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
          xhttp.setRequestHeader("Content-type", "application/json");
          xhttp.send(dataToSend);
       }

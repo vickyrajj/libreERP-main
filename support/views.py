@@ -18,7 +18,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 import requests
-import libreERP.Checksum as Checksum
+# import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
 import datetime
@@ -147,7 +147,9 @@ def getChatterScript(request , fileName):
     print pk
     obj = CustomerProfile.objects.get(pk = pk)
     # print 'dpppppppppppp',obj.dp,obj.dp.url
-    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket}
+    print globalSettings.SITE_ADDRESS
+    print request.get_host()
+    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url
     if obj.name:

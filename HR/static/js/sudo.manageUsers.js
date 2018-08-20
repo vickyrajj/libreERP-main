@@ -774,6 +774,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
           url: '/api/HR/usersAdminMode/' + target + '/'
         }).
         then(function(response) {
+          console.log(response.data,'res');
           $http({
             method: 'GET',
             url: '/api/mail/account/?user=' + target
