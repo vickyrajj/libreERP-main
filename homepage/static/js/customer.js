@@ -1,42 +1,19 @@
-var app = angular.module("customerApp", []);
+var app = angular.module("customerApp", ['ui.bootstrap']);
 app.controller("cutomerController", function($scope , $http ) {
 
 
   console.log('cominggggggggggg');
   $scope.displayReview = false;
+  $scope.reviewData = []
 
 
 
-  $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
-    $scope.searchTabActive = false;
-    alreadyOpen = false;
-    for (var i = 0; i < $scope.tabs.length; i++) {
-      if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
-        $scope.tabs[i].active = true;
-        alreadyOpen = true;
-      } else {
-        $scope.tabs[i].active = false;
-      }
-    }
-    if (!alreadyOpen) {
-      $scope.tabs.push(input)
-    }
-  }
+
+
 
   $scope.review = function () {
     console.log('in review function');
     $scope.displayReview = true;
-
-    $scope.addTab({
-      title: 'some',
-      cancel: true,
-      app: appType,
-      data: $scope.data.tableData[i],
-      active: true
-    })
-
-
 
 
     $http({
@@ -51,14 +28,46 @@ app.controller("cutomerController", function($scope , $http ) {
       console.log($scope.reviewData);
     });
 
+    $scope.tabs = [];
+    $scope.searchTabActive = true;
 
+    $scope.addTab = function(input) {
+      console.log(JSON.stringify(input));
+      $scope.searchTabActive = false;
+      alreadyOpen = false;
+      for (var i = 0; i < $scope.tabs.length; i++) {
+        if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+          $scope.tabs[i].active = true;
+          alreadyOpen = true;
+        } else {
+          $scope.tabs[i].active = false;
+        }
+      }
+      if (!alreadyOpen) {
+        $scope.tabs.push(input)
+      }
+    }
 
+    $scope.closeTab = function(index) {
+      $scope.tabs.splice(index, 1)
+    }
 
+    $scope.explore = function(indx) {
+      console.log(indx);
+      $scope.addTab({
+        title: 'some',
+        cancel: true,
+        app: 'explore',
+        data: $scope.reviewData[indx],
+        active: true
+      })
+    }
   }
   //
   //
   // console.log('hello');
+});
 
-
-
+app.controller("app.customer.reviews.explore", function($scope , $http ) {
+  $scope.data = $scope.tab.data
 });
