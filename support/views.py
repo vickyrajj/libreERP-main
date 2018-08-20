@@ -147,6 +147,8 @@ def getChatterScript(request , fileName):
     print pk
     obj = CustomerProfile.objects.get(pk = pk)
     # print 'dpppppppppppp',obj.dp,obj.dp.url
+    print globalSettings.SITE_ADDRESS
+    print request.get_host()
     dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url

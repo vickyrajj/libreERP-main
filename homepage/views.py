@@ -35,7 +35,7 @@ def customerLoginView(request):
     def loginRender(authStatus):
         return render(request, 'customerLogin.html', {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT} )
     def go_next():
-        nxt = request.GET.get('next','/customerhome')
+        nxt = request.GET.get('next','/customer/home')
         return redirect(nxt)
 
     if request.user.is_authenticated:
@@ -44,6 +44,7 @@ def customerLoginView(request):
     if 'GET' == request.method:
         return loginRender(authStatus)
     elif 'POST' == request.method:
+        print 'posttttttttttttt##########'
         print request.POST
         userObj = User.objects.filter(username = request.POST['username'])
         if len(userObj)>0:
@@ -65,6 +66,7 @@ def customerLoginView(request):
 
 @login_required(login_url = '/customer/login')
 def customerHomeView(request):
+    print "cominhhhhhhhhhhhh$$$$$$$$$$$$$$$"
     return render(request, 'customerHome.html' ,{'user':request.user})
 
 

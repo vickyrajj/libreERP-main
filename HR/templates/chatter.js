@@ -279,6 +279,8 @@ if (nameSupport=='None') {
 }
 
 
+
+
 if (dpSupport=='') {
   dpSupport = '{{serverAddress}}/static/images/img_avatar_card.png'
 }else {
