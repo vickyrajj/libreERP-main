@@ -51,7 +51,7 @@
   <!-- ============================================================== -->
   <!-- Main wrapper - style you can find in pages.scss -->
   <!-- ============================================================== -->
-  <div id="main-wrapper">
+  <div ng-app="customerApp" ng-controller="cutomerController" id="main-wrapper">
     <!-- ============================================================== -->
     <!-- Topbar header - style you can find in pages.scss -->
     <!-- ============================================================== -->
@@ -299,12 +299,12 @@
             <!-- Profile -->
             <!-- ============================================================== -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{user.profile.displayPicture.url}}" alt="{{user.username}}"  class="profile-pic" /></a>
+              <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{displayPicture}}" alt="{{user.username}}"  class="profile-pic" /></a>
               <div class="dropdown-menu dropdown-menu-right scale-up">
                 <ul class="dropdown-user">
                   <li>
                     <div class="dw-user-box">
-                      <div class="u-img"><img src="{{user.profile.displayPicture.url}}" alt="{{user.username}}" ></div>
+                      <div class="u-img"><img src="{{displayPicture}}" alt="{{user.username}}" ></div>
                       <div class="u-text">
                         <h4>{{user.first_name}} {{user.last_name}}</h4>
                         <p class="text-muted">{{user.email}}</p>
@@ -346,7 +346,7 @@
         <!-- User profile -->
         <div class="user-profile" style="background: url({% static 'customer/images/user-info.jpg' %}) no-repeat;">
           <!-- User profile image -->
-          <div class="profile-img"> <img src="{{user.profile.displayPicture.url}}" alt="{{user.username}}" /> </div>
+          <div class="profile-img"> <img src="{{displayPicture}}" alt="{{user.username}}" /> </div>
           <!-- User profile text-->
           <div class="profile-text"> <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">{{user.first_name}} {{user.last_name}}</a>
             <div class="dropdown-menu animated flipInY"> <a href="#" class="dropdown-item"><i class="ti-user"></i> My Profile</a> <a href="#" class="dropdown-item"><i class="ti-wallet"></i> My Balance</a> <a href="#" class="dropdown-item"><i class="ti-email"></i> Inbox</a>
@@ -424,6 +424,11 @@
                 <li><a href="ui-dragable-portlet.html">Dragable Portlet</a></li>
               </ul>
             </li>
+            <li class="nav-devider"></li>
+            <li class="nav-small-cap">Support</li>
+            <li ng-click="review()" > <a class="waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Review</span></a></li>
+            <li> <a class="waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Settings</span></a></li>
+            <li> <a class="waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Knowledge Base</span></a></li>
             <li class="nav-devider"></li>
             <li class="nav-small-cap">FORMS, TABLE &amp; WIDGETS</li>
             <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-file"></i><span class="hide-menu">Forms</span></a>
@@ -615,12 +620,14 @@
   {% if useCDN %}
   <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
   {% else %}
   <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
   <script src="{% static 'js/jquery.cookie-1.4.1.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/angular.min.js' %}"></script>
   {% endif %}
-
+  <script src="/static/js/customer.js"> </script>
   <script src="{% static 'customer/js/plugins/jquery.min.js' %}"></script>
   <!-- Bootstrap tether Core JavaScript -->
   <script src="{% static 'customer/js/plugins/popper.min.js' %}"></script>
@@ -654,7 +661,6 @@
 
 
   {% block specific_js %}{% endblock %}
-
 
 </body>
 

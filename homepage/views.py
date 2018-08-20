@@ -68,13 +68,10 @@ def customerLoginView(request):
 @login_required(login_url = '/customer/login')
 def customerHomeView(request):
     print "cominhhhhhhhhhhhh$$$$$$$$$$$$$$$"
-    # print request.user.profile.displayPicture,len(request.user.profile.displayPicture),type(request.user.profile.displayPicture)
-    if request.user.profile.displayPicture==None or request.user.profile.displayPicture == '':
-        print 'emptyyyyyyyy'
-        dp = os.path.join(globalSettings.BASE_DIR, 'static_shared', 'images', 'userIcon.png')
+    if request.user.profile.displayPicture==None:
+        dp = '/static/images/userIcon.png'
     else:
-        dp = request.user.profile.displayPicture
-    print dp
+        dp = request.user.profile.displayPicture.url
     return render(request, 'customerHome.html' ,{'user':request.user,'displayPicture':dp})
 
 

@@ -83,7 +83,7 @@ class profile(models.Model):
         ('O' , 'Other'),
     )
     empID = models.PositiveIntegerField(unique = True , null = True)
-    displayPicture = models.ImageField(upload_to = getDisplayPicturePath)
+    displayPicture = models.ImageField(upload_to = getDisplayPicturePath, null=True)
     dateOfBirth = models.DateField( null= True )
     anivarsary = models.DateField( null= True )
     married = models.BooleanField(default = False)
