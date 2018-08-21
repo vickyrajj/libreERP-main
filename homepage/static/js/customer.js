@@ -1,14 +1,10 @@
 var app = angular.module("customerApp", ['ui.bootstrap']);
-app.controller("cutomerController", function($scope , $http ) {
+app.controller("cutomerController", function($scope , $http) {
 
 
   console.log('cominggggggggggg');
   $scope.displayReview = false;
   $scope.reviewData = []
-
-
-
-
 
 
   $scope.review = function () {
@@ -62,10 +58,31 @@ app.controller("cutomerController", function($scope , $http ) {
         active: true
       })
     }
+
   }
-  //
-  //
-  // console.log('hello');
+
+
+  $scope.settings = function () {
+    $http({
+      method: 'GET',
+      url:  '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+    }).
+    then(function(response) {
+      console.log(response.data);
+    });
+  }
+
+
+  $scope.knowledgeBase = function () {
+    $http({
+      method: 'GET',
+      url:  '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+    }).
+    then(function(response) {
+      console.log(response.data);
+    });
+  }
+
 });
 
 app.controller("app.customer.reviews.explore", function($scope , $http ) {
