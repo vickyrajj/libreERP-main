@@ -1,4 +1,5 @@
 var app = angular.module("customerApp", ['ui.bootstrap' ]);
+
 app.controller("cutomerController", function($scope , $http) {
 
   var emptyFile = new File([""], "");
@@ -128,15 +129,17 @@ app.controller("cutomerController", function($scope , $http) {
 
   $scope.knowledgeBase = function () {
     $scope.state = 'Knowledge Base';
+    $scope.custDetailsPk;
     $http({
       method: 'GET',
       url:  '/api/support/reviewHomeCal/?customer&customerProfilePkList',
     }).
     then(function(response) {
       console.log(response.data);
+      $scope.custDetailsPk = response.data[0];
       $http({
         method: 'GET',
-        url: '/api/support/documentation/?customer='+response.data[0],
+        url: '/api/support/documentation/?customer='+$scope.custDetailsPk,
       }).
       then(function(response) {
         $scope.custDocs = response.data
@@ -155,7 +158,52 @@ app.controller("cutomerController", function($scope , $http) {
     }
 
 
+    $scope.saveDoc = function(){
+      console.log($scope.docForm);
+      if ($scope.docForm.title==null||$scope.docForm.title.length==0) {
+        Flash.create('warning', 'Title Is Required')
+        return
+      }
+      console.log($scope.docForm.text==null);
+      if (($scope.docForm.text==null || $scope.docForm.text.length==0) && ($scope.docForm.docs==null || $scope.docForm.docs==emptyFile)) {
+        Flash.create('warning', 'Either Content Or Document File Is Required')
+        return
+      }
 
+      var fd = new FormData();
+      fd.append('title', $scope.docForm.title);
+      fd.append('customer', $scope.custDetailsPk);
+      if ($scope.docForm.text!=null && $scope.docForm.text.length>0) {
+        fd.append('text', $scope.docForm.text);
+      }
+      if ($scope.docForm.docs!=null && typeof $scope.docForm.docs!='string' && $scope.docForm.docs!=emptyFile) {
+        fd.append('docs', $scope.docForm.docs);
+      }
+      var method = 'POST'
+      var url = '/api/support/documentation/'
+      if ($scope.docForm.pk!=undefined) {
+        method = 'PATCH'
+        url += $scope.docForm.pk +'/'
+      }
+      console.log(fd);
+
+      $http({
+        method: method,
+        url: url,
+        data: fd,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      }).
+      then(function(response) {
+        Flash.create('success', 'Saved');
+        if ($scope.docForm.pk==undefined) {
+          $scope.custDocs.push(response.data)
+        }
+        $scope.docForm = response.data
+      })
+    }
 
   }
 
