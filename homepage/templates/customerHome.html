@@ -134,12 +134,13 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="row container-fluid" style="padding: 0 30px 10px 30px;" >
-                        <h4>UID : {{r.uid}}</h4>
-                        <h4>{{r.email}}</h4>
+                        <h4>Company : {{r[0].company}}</h4>
+                        <h4>UID : {{r[0].uid}}</h4>
+                        <h4>{{r[0].email}}</h4>
                       </div>
                       <div class="row" style="border-top:1px solid #eee; padding:10px;">
                         <div class="col-md-8">
-                          <h4>Date: {{r.created}}</h4>
+                          <!-- <h4>Date: {{r.created}}</h4> -->
                         </div>
                         <div class="col-md-4">
                           <span ng-click="explore($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>

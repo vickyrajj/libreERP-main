@@ -299,12 +299,12 @@
             <!-- Profile -->
             <!-- ============================================================== -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{user.profile.displayPicture.url}}" alt="user" class="profile-pic" /></a>
+              <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{displayPicture}}" alt="{{user.username}}"  class="profile-pic" /></a>
               <div class="dropdown-menu dropdown-menu-right scale-up">
                 <ul class="dropdown-user">
                   <li>
                     <div class="dw-user-box">
-                      <div class="u-img"><img src="{{user.profile.displayPicture.url}}" alt="user"></div>
+                      <div class="u-img"><img src="{{displayPicture}}" alt="{{user.username}}" ></div>
                       <div class="u-text">
                         <h4>{{user.first_name}} {{user.last_name}}</h4>
                         <p class="text-muted">{{user.email}}</p>
@@ -346,7 +346,7 @@
         <!-- User profile -->
         <div class="user-profile" style="background: url({% static 'customer/images/user-info.jpg' %}) no-repeat;">
           <!-- User profile image -->
-          <div class="profile-img"> <img src="{{user.profile.displayPicture.url}}" alt="user" /> </div>
+          <div class="profile-img"> <img src="{{displayPicture}}" alt="{{user.username}}" /> </div>
           <!-- User profile text-->
           <div class="profile-text"> <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">{{user.first_name}} {{user.last_name}}</a>
             <div class="dropdown-menu animated flipInY"> <a href="#" class="dropdown-item"><i class="ti-user"></i> My Profile</a> <a href="#" class="dropdown-item"><i class="ti-wallet"></i> My Balance</a> <a href="#" class="dropdown-item"><i class="ti-email"></i> Inbox</a>

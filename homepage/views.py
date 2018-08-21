@@ -21,6 +21,7 @@ import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
 from PIM.models import blogPost
+import os
 
 def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
@@ -67,7 +68,11 @@ def customerLoginView(request):
 @login_required(login_url = '/customer/login')
 def customerHomeView(request):
     print "cominhhhhhhhhhhhh$$$$$$$$$$$$$$$"
-    return render(request, 'customerHome.html' ,{'user':request.user})
+    if request.user.profile.displayPicture==None:
+        dp = '/static/images/userIcon.png'
+    else:
+        dp = request.user.profile.displayPicture.url
+    return render(request, 'customerHome.html' ,{'user':request.user,'displayPicture':dp})
 
 
 def blogDetails(request, blogname):

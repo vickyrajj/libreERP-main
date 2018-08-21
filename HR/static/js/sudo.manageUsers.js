@@ -559,6 +559,9 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
         fd.append(fileFields[i], $scope.files[fileFields[i]])
       }
     }
+    if (fd.displayPicture==null||fd.displayPicture==emptyFile||typeof fd.displayPicture == 'string') {
+      delete fd.displayPicture
+    }
 
     $http({
       method: 'PATCH',

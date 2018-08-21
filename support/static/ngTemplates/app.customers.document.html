@@ -1,12 +1,20 @@
 <div ng-controller="businessManagement.customers.document" style="padding-top:20px;">
   <div class="col-md-12">
-    <div class="row">
+    <div class="row" ng-if="custDetails.pk!=none">
       <div class="col-md-3">
         <div class="btn btn-block {{docForm!=none&&docForm.title.length==0?'btn-warning':'btn-default'}}" ng-click="addDoc(-1)" style="font-size:18px">
           Add Document &nbsp;<i class="fa fa-plus fa-lg"></i>
         </div>
       </div>
-    </div><hr>
+    </div>
+    <div class="row" ng-if="custDetails.pk==none">
+      <div class="col-md-12">
+        <div class="text-center" style="font-size:20px">
+          Please Create Customer Profile First (Like Support Details)
+        </div>
+      </div>
+    </div>
+    <hr>
     <div class="row" style="padding-top:15px">
       <div class="col-md-3">
         <div class="row" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;" ng-if="custDocs.length>0||docForm!=none">
