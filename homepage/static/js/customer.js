@@ -1,6 +1,17 @@
-var app = angular.module("customerApp", ['ui.bootstrap' , 'ui.tinymce' ]);
+var app = angular.module("customerApp", ['ui.bootstrap' , 'ui.tinymce' , 'ui.router']);
 
 
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
+
+  // $urlRouterProvider.otherwise('/home');
+  $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+  $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+  $httpProvider.defaults.withCredentials = true;
+
+
+
+
+});
 
 
 
