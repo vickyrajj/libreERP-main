@@ -91,6 +91,7 @@ class ReviewFilterCalAPIView(APIView):
             userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
             userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
             if 'customerProfilePkList' in self.request.GET:
+                print 'a###############',userCustProfile
                 return Response(userCustProfile, status=status.HTTP_200_OK)
             userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
             print userCompany
