@@ -425,6 +425,7 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     $http({method : 'POST' , url : '/api/ecommerce/addPincode/', data : dataToSend }).
     then(function(response) {
       $scope.pincodelist.push(response.data)
+      console.log($scope.pincodelist);
       Flash.create('success', 'Pincode added to list..');
       $scope.form={pincodes:''}
 

@@ -759,15 +759,9 @@ class SendFeedBackAPI(APIView):
         emailAddr=[]
         response=''
         supportObj=SupportFeed.objects.get(pk = request.data['datapk'])
-        print '**************************',supportObj.email, request.data['response']
-        print response,'ggggggggggggg'
         response = str(request.data['response'])
-        # a , b = response.split("<p>")
-        # response = b.split("</p>")
-        # print type(response[0])
-        emailAddr.append(supportObj.email)
         responseData = BeautifulSoup(response, 'html.parser')
-        print responseData.get_text(),'AAAAAAAAAAAAA'
+        emailAddr.append(supportObj.email)
         ctx = {
             'heading' : " On response to your Feed Back",
             'linkUrl': globalSettings.BRAND_NAME,

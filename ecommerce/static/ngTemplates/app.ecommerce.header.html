@@ -27,8 +27,13 @@
   </div>
 
   <div class="col-md-2 text-center hidden-xs hidden-sm" ng-if="me.pk" >
-    <span ng-click="$state.go('account.cart')" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46)" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
+    <span ng-click="$state.go('account.cart')" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46)" >  Cart <i class="fa fa-shopping-cart fa-lg"></i>
+    <span style="background-color:green;position:relative;text-align:center;  justify-content: center;  top:-10px;  border-radius: 50%;  right: 11px;padding:3px;color:white">{{inCart.length}}</span>
+</span>
   </div>
+
+
+
 
   <div class="col-md-2 text-center hidden-xs hidden-sm" ng-if="!me.pk">
     <span style="cursor:pointer;font-size:17px;padding-right:10px;color:rgb(24, 89, 46)" ng-click="loginPage()"> Login <i class="fa fa-user fa-lg"></i></span>
@@ -43,7 +48,8 @@
   </div>
 
   <div class="col-xs-offset-3 col-xs-3 text-center hidden-lg hidden-md" ng-if="me.pk" style="padding-top: 10px;color:rgb(24, 89, 46)">
-    <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
+    <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i>
+      <span style="background-color:green;position:relative;text-align:center;  justify-content: center;  top:-10px;  border-radius: 50%;  right: 11px;padding:3px;color:white">{{inCart.length}}</span></span>
   </div>
 
   <div class="col-xs-1 text-center dropdown hidden-lg hidden-md " style="padding-top: 10px;">
