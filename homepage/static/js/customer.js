@@ -18,12 +18,12 @@ app.controller("cutomerController", function($scope , $http ) {
 
     $http({
       method: 'GET',
-      url:  '/api/support/reviewHomeCal/',
+      url:  '/api/support/reviewHomeCal/?customer',
     }).
     then(function(response) {
       // $scope.custDetails = response.data[0]
       console.log(response.data);
-      $scope.reviewData = response.data[0]
+      $scope.reviewData = response.data
       // $scope.reviewData = $scope.reviewData[0]
       console.log($scope.reviewData);
     });

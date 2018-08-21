@@ -28,6 +28,7 @@ import hashlib
 from Crypto.Cipher import AES
 from Crypto import Random
 from django.db.models.functions import Concat
+from ERP.models import service
 
 BLOCK_SIZE = 16
 pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
@@ -86,6 +87,17 @@ class ReviewFilterCalAPIView(APIView):
 
         toSend = []
         sobj = SupportChat.objects.filter(user__isnull=False)
+        if 'customer' in self.request.GET:
+            userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
+            userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
+            if 'customerProfilePkList' in self.request.GET:
+                return Response(userCustProfile, status=status.HTTP_200_OK)
+            userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
+            print userCompany
+            print userCustProfile
+            print userCompanyUidList
+            sobj = SupportChat.objects.filter(uid__in=userCompanyUidList)
+
         if 'date' in self.request.GET:
             date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
             sobj = sobj.filter(created__startswith = date)
@@ -107,9 +119,14 @@ class ReviewFilterCalAPIView(APIView):
                     email = Visitor.objects.get(uid=j).email
                 except:
                     email = ''
-                agUidObj = list(agSobj.filter(uid=j).values().annotate(email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
+                try:
+                    company = ChatThread.objects.get(uid=j).company.service.name
+                except:
+                    company = ''
+                print company
+                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
-        # print toSend
+        print toSend
 
         return Response(toSend, status=status.HTTP_200_OK)
 
