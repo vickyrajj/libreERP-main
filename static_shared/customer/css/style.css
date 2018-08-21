@@ -164,7 +164,7 @@ html body .mdi:before, html body .mdi-set {
 /*******************
 Headings
 *******************/
-h1,
+/* h1,
 h2,
 h3,
 h4,
@@ -172,9 +172,9 @@ h5,
 h6 {
   color: #455a64;
   font-family: "Poppins", sans-serif;
-  font-weight: 400; }
+  font-weight: 400; } */
 
-h1 {
+/* h1 {
   line-height: 40px;
   font-size: 36px; }
 
@@ -198,7 +198,7 @@ h5 {
 h6 {
   line-height: 16px;
   font-size: 14px;
-  font-weight: 400; }
+  font-weight: 400; } */
 
 .display-5 {
   font-size: 3rem; }

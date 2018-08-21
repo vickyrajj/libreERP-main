@@ -27,7 +27,7 @@
           <div class="d-flex m-r-20 m-l-10 hidden-md-down">
             <div class="chart-text m-r-10">
               <h6 class="m-b-0"><small>THIS MONTH</small></h6>
-              <h4 class="m-t-0 text-info">$58,356</h4></div>
+              <h5 class="m-t-0 text-info">$58,356</h5></div>
             <div class="spark-chart">
               <div id="monthchart"></div>
             </div>
@@ -35,7 +35,7 @@
           <div class="d-flex m-r-20 m-l-10 hidden-md-down">
             <div class="chart-text m-r-10">
               <h6 class="m-b-0"><small>LAST MONTH</small></h6>
-              <h4 class="m-t-0 text-primary">$48,356</h4></div>
+              <h5 class="m-t-0 text-primary">$48,356</h5></div>
             <div class="spark-chart">
               <div id="lastmonthchart"></div>
             </div>
@@ -128,19 +128,19 @@
           <div class="card">
             <div class="card-body">
               <div class="row" >
-                <div class="col-md-3" ng-repeat="r in reviewData">
+                <div class="col-md-4" ng-repeat="r in reviewData">
                   <div class="card">
                     <div class="card-body">
-                      <div class="row container-fluid" style="padding: 0 30px 10px 30px;" >
-                        <h4>Company : {{r[0].company}}</h4>
-                        <h4>UID : {{r[0].uid}}</h4>
-                        <h4>{{r[0].email}}</h4>
+                      <div class="row" style="padding:0px 10px; height:100px;">
+                        <h5>Company : {{r[0].company}}</h5>
+                        <h5>UID : {{r[0].uid}}</h5>
+                        <h5>{{r[0].email}}</h5>
                       </div>
                       <div class="row" style="border-top:1px solid #eee; padding:10px;">
                         <div class="col-md-8">
                         </div>
                         <div class="col-md-4">
-                          <span ng-click="explore($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
+                          <span ng-click="tableAction($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
                         </div>
                       </div>
                     </div>
@@ -156,7 +156,7 @@
             {{tab.title}}
             <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
           </uib-tab-heading>
-          <div ng-if="tab.app == 'explore'">
+          <div ng-if="tab.app == 'ChatInfo'">
             <div ng-include="'/static/ngTemplates/app.customer.reviews.explore.html'"></div>
           </div>
         </uib-tab>
@@ -246,7 +246,7 @@
           <div class="col-md-12">
             <div class="row">
               <div class="col-md-3">
-                <div class="btn btn-block {{docForm!=none&&docForm.title.length==0?'btn-warning':'btn-default'}}" ng-click="addDoc(-1)" style="font-size:18px">
+                <div class="btn btn-block {{docForm!=none&&docForm.title.length==0?'btn-warning':'btn-light'}}" ng-click="addDoc(-1)" style="font-size:18px">
                   Add Document &nbsp;<i class="fa fa-plus fa-lg"></i>
                 </div>
               </div>
@@ -280,7 +280,7 @@
                 </div>
                 <div class="row" style="padding:20px">
                   <div class="col-md-2 col-md-offset-5">
-                    <div class="btn btn-block btn-success" style="font-size:18px" ng-click="saveDoc()">
+                    <div class="btn btn-success" style="font-size:18px" ng-click="saveDoc()">
                       Save Document
                     </div>
                   </div>

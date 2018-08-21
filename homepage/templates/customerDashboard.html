@@ -621,15 +621,17 @@
   <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.3.4/tinymce.min.js"></script>
   {% else %}
   <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
   <script src="{% static 'js/jquery.cookie-1.4.1.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <!-- <script src="{% static 'js/bootstrap.min.js' %}"></script> -->
   <script src="{% static 'js/angular.min.js' %}"></script>
   <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
-  <script src="{% static 'js/agency.js' %}"></script>
+  <script src="{% static 'js/tinymce.min.js' %}"></script>
+  <!-- <script src="{% static 'js/agency.js' %}"></script> -->
   {% endif %}
-  <script src="/static/js/customer.js"> </script>
+  <script src="{% static 'js/ng-tinymce.js' %}"></script>
   <script src="{% static 'customer/js/plugins/jquery.min.js' %}"></script>
   <!-- Bootstrap tether Core JavaScript -->
   <script src="{% static 'customer/js/plugins/popper.min.js' %}"></script>
@@ -660,6 +662,8 @@
   <!-- Style switcher -->
   <!-- ============================================================== -->
   <script src="{% static 'customer/js/plugins/jQuery.style.switcher.js' %}"></script>
+  <script src="/static/js/customer.js"> </script>
+
 
 
   {% block specific_js %}{% endblock %}

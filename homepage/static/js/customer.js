@@ -1,10 +1,100 @@
-var app = angular.module("customerApp", ['ui.bootstrap' ]);
+var app = angular.module("customerApp", ['ui.bootstrap' , 'ui.tinymce' ]);
+
+
+
+
+
+
+// app.config(function($stateProvider) {
+//
+//   $stateProvider
+//     .state('customer', {
+//       url: "/customer/home/:name",
+//       templateUrl: '/static/ngTemplates/app.ecommerce.list.html',
+//       controller: 'controller.ecommerce.list'
+//     })
+//
+//   // $stateProvider
+//   //   .state('details', {
+//   //     url: "/details/:id",
+//   //     templateUrl: '/static/ngTemplates/app.ecommerce.details.html',
+//   //     controller: 'controller.ecommerce.details'
+//   //   })
+//   //
+//   // $stateProvider
+//   //   .state('categories', {
+//   //     url: "/categories/:name",
+//   //     templateUrl: '/static/ngTemplates/app.ecommerce.categories.html',
+//   //     controller: 'controller.ecommerce.categories'
+//   //   })
+//   //
+//   // $stateProvider
+//   //   .state('checkout', {
+//   //     url: "/checkout/:pk",
+//   //     templateUrl: '/static/ngTemplates/app.ecommerce.checkout.html',
+//   //     controller: 'controller.ecommerce.checkout'
+//   //   })
+//   //
+//   // $stateProvider
+//   //   .state('account', {
+//   //     url: "/account",
+//   //     views: {
+//   //       "": {
+//   //         templateUrl: '/static/ngTemplates/app.ecommerce.account.html',
+//   //       },
+//   //       "menu@account": {
+//   //         templateUrl: '/static/ngTemplates/app.ecommerce.account.menu.html',
+//   //       },
+//   //       "topMenu@account": { //this is for top menu for mobile view
+//   //         templateUrl: '/static/ngTemplates/app.ecommerce.account.topMenu.html',
+//   //       },
+//   //       "@account": {
+//   //         templateUrl: '/static/ngTemplates/app.ecommerce.account.default.html',
+//   //       }
+//   //     }
+//   //   })
+//   //
+//   //   .state('account.cart', {
+//   //     url: "/cart",
+//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.cart.html',
+//   //     controller: 'controller.ecommerce.account.cart'
+//   //   })
+//   //   .state('account.orders', {
+//   //     url: "/orders",
+//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.orders.html',
+//   //     controller: 'controller.ecommerce.account.orders'
+//   //   })
+//   //   .state('account.settings', {
+//   //     url: "/settings",
+//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.settings.html',
+//   //     controller: 'controller.ecommerce.account.settings'
+//   //   })
+//   //   .state('account.support', {
+//   //     url: "/support",
+//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.support.html',
+//   //     controller: 'controller.ecommerce.account.support'
+//   //   })
+//   //   .state('account.saved', {
+//   //     url: "/saved",
+//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.saved.html',
+//   //     controller: 'controller.ecommerce.account.saved'
+//   //   })
+//
+// });
+
 
 app.controller("cutomerController", function($scope , $http) {
 
   var emptyFile = new File([""], "");
   console.log('cominggggggggggg');
   $scope.displayReview = false;
+  $scope.reviewData = []
+
+  $scope.data = {
+    tableData: []
+  };
+
+
   $scope.state = 'Dashboard';
 
 
@@ -24,15 +114,35 @@ app.controller("cutomerController", function($scope , $http) {
       console.log($scope.reviewData);
     });
 
+
+    $scope.tableAction = function(target) {
+      // console.log(target, action, mode);
+      console.log($scope.reviewData[target]);
+      var appType = 'Info';
+      $scope.addTab({
+        title: 'Chat : ' + $scope.reviewData[target][0].uid,
+        cancel: true,
+        app: 'ChatInfo',
+        data: $scope.reviewData[target],
+        active: true
+      })
+
+    }
+
     $scope.tabs = [];
     $scope.searchTabActive = true;
 
+    $scope.closeTab = function(index) {
+      $scope.tabs.splice(index, 1)
+    }
+
     $scope.addTab = function(input) {
-      console.log(JSON.stringify(input));
+      // console.log(JSON.stringify(input));
       $scope.searchTabActive = false;
       alreadyOpen = false;
       for (var i = 0; i < $scope.tabs.length; i++) {
-        if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+        console.log($scope.tabs[i].data[0].id,input.data[0].id, $scope.tabs[i].app ,input.app);
+        if ($scope.tabs[i].data[0].id == input.data[0].id && $scope.tabs[i].app == input.app) {
           $scope.tabs[i].active = true;
           alreadyOpen = true;
         } else {
@@ -44,20 +154,54 @@ app.controller("cutomerController", function($scope , $http) {
       }
     }
 
-    $scope.closeTab = function(index) {
-      $scope.tabs.splice(index, 1)
-    }
 
-    $scope.explore = function(indx) {
-      console.log(indx);
-      $scope.addTab({
-        title: 'some',
-        cancel: true,
-        app: 'explore',
-        data: $scope.reviewData[indx],
-        active: true
-      })
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+    // $scope.tabs = [];
+    // $scope.searchTabActive = true;
+    //
+    // $scope.addTab = function(input) {
+    //   console.log(JSON.stringify(input));
+    //   $scope.searchTabActive = false;
+    //   alreadyOpen = false;
+    //   for (var i = 0; i < $scope.tabs.length; i++) {
+    //     if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+    //       $scope.tabs[i].active = true;
+    //       alreadyOpen = true;
+    //     } else {
+    //       $scope.tabs[i].active = false;
+    //     }
+    //   }
+    //   if (!alreadyOpen) {
+    //     $scope.tabs.push(input)
+    //   }
+    // }
+    //
+    // $scope.closeTab = function(index) {
+    //   $scope.tabs.splice(index, 1)
+    // }
+    //
+    //
+    // $scope.explore = function(indx) {
+    //   console.log(indx);
+    //   $scope.addTab({
+    //     title: 'some',
+    //     cancel: true,
+    //     app: 'explore',
+    //     data: $scope.reviewData[indx],
+    //     active: true
+    //   })
+    // }
 
   }
 
@@ -128,6 +272,16 @@ app.controller("cutomerController", function($scope , $http) {
 
 
   $scope.knowledgeBase = function () {
+    $scope.tinymceOptions = {
+      selector: 'textarea',
+      content_css : '/static/css/bootstrap.min.css',
+      inline: false,
+      plugins : 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
+      skin: 'lightgray',
+      theme : 'modern',
+      height : 400,
+      toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+    };
     $scope.state = 'Knowledge Base';
     $scope.custDetailsPk;
     $http({
@@ -210,5 +364,6 @@ app.controller("cutomerController", function($scope , $http) {
 });
 
 app.controller("app.customer.reviews.explore", function($scope , $http ) {
+  console.log($scope.tab.data);
   $scope.data = $scope.tab.data
 });
