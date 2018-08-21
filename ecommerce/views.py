@@ -21,7 +21,7 @@ import pytz
 import math
 import json
 from email.mime.image import MIMEImage
-
+from bs4 import BeautifulSoup
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from StringIO import StringIO
@@ -555,6 +555,11 @@ class FrequentlyQuestionsViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['ques']
 
+class PincodeViewSet(viewsets.ModelViewSet):
+    permission_classes = (isAdminOrReadOnly , )
+    queryset = Pincode.objects.all()
+    serializer_class = pincodeSerializer
+
 
 
 def manifest(response,item):
@@ -761,12 +766,14 @@ class SendFeedBackAPI(APIView):
         # response = b.split("</p>")
         # print type(response[0])
         emailAddr.append(supportObj.email)
+        responseData = BeautifulSoup(response, 'html.parser')
+        print responseData.get_text(),'AAAAAAAAAAAAA'
         ctx = {
             'heading' : " On response to your Feed Back",
             'linkUrl': globalSettings.BRAND_NAME,
             'sendersAddress' : globalSettings.SEO_TITLE,
             'question' : supportObj.message,
-            'response':response,
+            'response':responseData.get_text(),
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,

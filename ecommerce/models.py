@@ -274,3 +274,7 @@ class SupportFeed(models.Model):
     mobile = models.CharField(null = False , max_length = 14)
     message = models.CharField( null = False , max_length = 1000)
     status = models.CharField(choices = FEEDBACK_STATUS_CHOICES , max_length = 10 , default='created' )
+
+class Pincode(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    pincodes = models.PositiveIntegerField( null=False)

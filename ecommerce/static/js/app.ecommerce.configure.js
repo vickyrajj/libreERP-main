@@ -410,8 +410,31 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
       $scope.tabs.push(input)
     }
   }
+  $scope.pincodelist=[]
+  $scope.form={pincodes:''}
+  $scope.addPincode = function(){
+    console.log('7777777777777777777',typeof $scope.form.pincodes);
+    if (typeof $scope.form.pincodes=='undefined'){
+        Flash.create('danger', 'Not a valid number!');
+    }
+    // var method = 'POST'
+    // var url = '/api/ecommerce/addPincode/'
+    dataToSend = {
+      pincodes : $scope.form.pincodes,
+    }
+    $http({method : 'POST' , url : '/api/ecommerce/addPincode/', data : dataToSend }).
+    then(function(response) {
+      $scope.pincodelist.push(response.data)
+      Flash.create('success', 'Pincode added to list..');
+      $scope.form={pincodes:''}
 
+    })
 
+  }
+  $http({method : 'GET' , url : '/api/ecommerce/addPincode/'}).
+  then(function(response) {
+    $scope.pincodelist=response.data
+  })
 
 
 

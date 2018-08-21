@@ -390,3 +390,9 @@ class SupportFeedSerializer(serializers.ModelSerializer):
         a.save()
         print a,'ddddddddddddddd'
         return a
+
+
+class pincodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pincode
+        fields = ('pk' ,  'created' ,  'pincodes')

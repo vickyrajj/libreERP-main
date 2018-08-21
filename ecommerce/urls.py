@@ -21,6 +21,7 @@ router.register(r'rating' , RatingViewSet , base_name='rating')
 router.register(r'supportFeed' , SupportFeedViewSet , base_name='supportFeed')
 router.register(r'frequentlyQuestions' , FrequentlyQuestionsViewSet , base_name='frequentlyQuestions')
 router.register(r'pages' , PagesViewSet , base_name='pages')
+router.register(r'addPincode' , PincodeViewSet , base_name='addPincode')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
