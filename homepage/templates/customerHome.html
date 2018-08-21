@@ -19,7 +19,7 @@
         <h3 class="text-themecolor">Dashboard</h3>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
+          <li class="breadcrumb-item active">{{state}}</li>
         </ol>
       </div>
       <div class="col-md-7 col-4 align-self-center">
@@ -118,7 +118,7 @@
       </div>
     </div> -->
 
-    <div ng-if="displayReview">
+    <div ng-if="state=='Review'">
       <uib-tabset>
         <uib-tab active="searchTabActive">
           <uib-tab-heading>
@@ -128,9 +128,7 @@
           <div class="card">
             <div class="card-body">
               <div class="row" >
-                <!-- {{reviewData}} -->
                 <div class="col-md-3" ng-repeat="r in reviewData">
-                  <!-- {{r}} -->
                   <div class="card">
                     <div class="card-body">
                       <div class="row container-fluid" style="padding: 0 30px 10px 30px;" >
@@ -140,10 +138,9 @@
                       </div>
                       <div class="row" style="border-top:1px solid #eee; padding:10px;">
                         <div class="col-md-8">
-                          <!-- <h4>Date: {{r.created}}</h4> -->
                         </div>
                         <div class="col-md-4">
-                          <span ng-click="explore($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
+                          <span ng-click="tableAction($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
                         </div>
                       </div>
                     </div>
@@ -159,16 +156,144 @@
             {{tab.title}}
             <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
           </uib-tab-heading>
-          <div ng-if="tab.app == 'explore'">
+          <div ng-if="tab.app == 'ChatInfo'">
             <div ng-include="'/static/ngTemplates/app.customer.reviews.explore.html'"></div>
           </div>
         </uib-tab>
-
       </uib-tabset>
     </div>
 
 
-    <div ng-if="!displayReview">
+
+    <div ng-if="state=='Settings'">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <i class="fa fa-comment-o"></i> &nbsp; <label>Chat</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.chat">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <i class="fa fa-phone"></i> &nbsp; <label>Call</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.call">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <i class="fa fa-envelope"></i> &nbsp; <label>Email</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.email">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <i class="fa fa-video-camera"></i> &nbsp; <label>Video&Audio</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.videoAndAudio">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <i class="fa fa-phone"></i> &nbsp; <label>Call Back</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.callBack">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.ticket">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <i class="fa fa-gg-circle"></i> &nbsp; <label>SupportBubble Colour</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.supportBubbleColor">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-5">
+                    <i class="fa fa-user"></i> &nbsp; <label>Name</label>
+                  </div>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" ng-model="cpForm.name">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-5">
+                    <i class="fa  fa-picture-o"></i> &nbsp; <label>Picture</label>
+                  </div>
+                  <div class="col-md-7">
+                    <input type="file" file-model="cpForm.dp">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><br>
+          <button type="button" class="btn btn-primary " ng-click="saveCustomerProfile()">Save</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div ng-if="state=='Knowledge Base'">
+      <div class="card">
+        <div class="card-body">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="btn btn-block {{docForm!=none&&docForm.title.length==0?'btn-warning':'btn-default'}}" ng-click="addDoc(-1)" style="font-size:18px">
+                  Add Document &nbsp;<i class="fa fa-plus fa-lg"></i>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row" style="padding-top:15px">
+              <div class="col-md-3">
+                <div class="row" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;" ng-if="custDocs.length>0||docForm!=none">
+                  <div class="row text-center container-fluid card {{docForm.pk==doc.pk?'bg-yellow':'bg-shaded'}}" ng-repeat="doc in custDocs" ng-click="addDoc($index)" style="cursor:pointer;font-size:18px;padding:10px;margin:20px 10px">
+                    {{doc.title}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-9" style="padding-left:35px" ng-if="docForm!=none">
+                <div class="row text-center">
+                  <h4>{{docForm.pk!=none?'Edit':'Create'}} Document <span ng-if="docForm.pk!=none">- {{docForm.title}}</span></h4>
+                </div>
+                <div class="row">
+                  <div class="form-group">
+                    <label>Title</label>
+                    <input type="text " class="form-control" ng-model="docForm.title">
+                  </div>
+                  <div class="form-group" ng-if="docForm.text!=null">
+                    <label>Content</label>
+                    <textarea ui-tinymce="tinymceOptions" ng-model="docForm.text"></textarea>
+                  </div>
+                  <div class="form-group" ng-if="docForm.docs!=null">
+                    <label>Document</label>
+                    <input type="file" file-model="docForm.docs">
+                  </div>
+                </div>
+                <div class="row" style="padding:20px">
+                  <div class="col-md-2 col-md-offset-5">
+                    <div class="btn btn-block btn-success" style="font-size:18px" ng-click="saveDoc()">
+                      Save Document
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div ng-if="state=='Dashboard'">
       <div class="row">
         <!-- Column -->
         <div class="col-lg-8 col-md-7">
