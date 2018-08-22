@@ -873,7 +873,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
           })
           $scope.data.tableData.splice(i, 1)
           $rootScope.inCart.splice(i, 1)
-          $scope.calcTotal();
+          // $scope.calcTotal();
         } else if (action == 'addQty') {
           $scope.data.tableData[i].qty = $scope.data.tableData[i].qty + 1;
           $http({
@@ -884,7 +884,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
             }
           }).
           then(function(response) {})
-          $scope.calcTotal();
+          // $scope.calcTotal();
         } else if (action == 'substractQty') {
           $scope.data.tableData[i].qty = $scope.data.tableData[i].qty - 1;
           $http({
@@ -895,7 +895,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
             }
           }).
           then(function(response) {})
-          $scope.calcTotal();
+          // $scope.calcTotal();
         } else if (action == 'favourite') {
           $http({
             method: 'PATCH',
@@ -928,11 +928,12 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       $scope.total = $scope.total + ($scope.data.tableData[i].product.product.discountedPrice * $scope.data.tableData[i].qty)
     }
+    return $scope.total
   }
 
-  $timeout(function() {
-    $scope.calcTotal();
-  }, 1000);
+  // $timeout(function() {
+  //   $scope.calcTotal();
+  // }, 1000);
 
   $scope.checkout = function() {
     $state.go('checkout', {

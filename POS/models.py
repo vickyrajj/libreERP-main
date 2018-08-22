@@ -55,6 +55,21 @@ UNIT_CHOICES = (
     ('Quantity' , 'Quantity'),
 )
 
+class Store(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    user = models.ForeignKey(User , related_name = 'posStsore' , null = False)
+    name = models.CharField(max_length = 100 , null = False)
+    address = models.CharField(max_length = 500 , null = False)
+    pincode = models.CharField(null= True , max_length = 7)
+    mobile = models.CharField(max_length = 12 , null = True)
+    email = models.EmailField(null = True)
+
+class StoreQty(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    store = models.ForeignKey(Store , related_name="POSStoreDetail")
+    quantity = models.PositiveIntegerField(default = 0)
+
+
 class Product(models.Model):
     user = models.ForeignKey(User , related_name = 'posProducts' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
@@ -75,6 +90,7 @@ class Product(models.Model):
     compositions = models.ManyToManyField("self" , related_name="parent" , blank = True)
     compositionQtyMap = models.CharField(max_length = 1000 , null = True, blank = True)
     discount = models.PositiveIntegerField(default = 0)
+    storeQty = models.ManyToManyField(StoreQty , related_name="productStore" , blank = True)
     def __str__(self):
         return self.name
 

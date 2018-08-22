@@ -46,6 +46,28 @@ class CustomerViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name' ]
 
+class StoreViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = StoreSerializer
+    queryset = Store.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name' ]
+
+class StoreViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = StoreSerializer
+    queryset = Store.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['name' ]
+
+class StoreQtyViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = StoreQtySerializer
+    queryset = StoreQty.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['name' ]
+
+
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny, )
     serializer_class = ProductSerializer

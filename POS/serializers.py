@@ -29,6 +29,31 @@ class CustomerSerializer(serializers.ModelSerializer):
         c.save()
         return c
 
+class StoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = ('pk' ,'created', 'user' , 'name' , 'address' , 'pincode' , 'mobile' , 'email')
+        read_only_fields = ( 'user' , )
+    def create(self , validated_data):
+        s = Store(**validated_data)
+        s.user = self.context['request'].user
+        s.save()
+        return s
+
+class StoreQtySerializer(serializers.ModelSerializer):
+    class Meta:
+        store=StoreSerializer(many=False,read_only=True)
+        model = StoreQty
+        fields = ('pk' ,'created', 'store' , 'quantity' )
+        read_only_fields = ( 'user' , )
+    def create(self , validated_data):
+        s = StoreQty(**validated_data)
+        if 'store' in self.context['request'].data:
+            s.store = Store.objects.get(pk=int(self.context['request'].data['store']))
+        print s.store
+        s.save()
+        return s
+
 class ProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -37,11 +62,11 @@ class ProductLiteSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
     compositions=ProductLiteSerializer(many=True,read_only=True)
+    storeQty=StoreQtySerializer(many=True,read_only=True)
     skuUnitpack = serializers.SerializerMethodField()
-    
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','storeQty')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
@@ -57,6 +82,10 @@ class ProductSerializer(serializers.ModelSerializer):
         if 'productMeta' in self.context['request'].data:
             print self.context['request'].data['productMeta']
             p.productMeta = ProductMeta.objects.get(pk=int(self.context['request'].data['productMeta']))
+        if 'storeQty' in self.context['request'].data:
+            p.storeQty.clear()
+            for c in self.context['request'].data['storeQty']:
+                p.storeQty.add(StoreQty.objects.get(pk = c))
         p.save()
         return p
 

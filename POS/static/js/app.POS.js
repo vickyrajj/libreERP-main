@@ -543,7 +543,18 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
 })
 
 app.controller("controller.POS.productForm.modal", function($scope, product, $http, Flash) {
-  console.log(product);
+  console.log(product,'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+
+  $scope.multiStores = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg',response.data);
+    if(response.data[0]!=null){
+      if (response.data[0].flag) {
+        $scope.multiStores = true
+      }
+    }
+  })
   $scope.$watch('product.productMeta', function(newValue, oldValue) {
     if (typeof newValue == 'object') {
       $scope.showTaxCodeDetails = true;
@@ -565,6 +576,15 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       return response.data.results;
     })
   }
+
+  $scope.storeStore = function(storesearch) {
+    return $http.get('/api/POS/store/?search=' + storesearch +'&limit=10').
+    then(function(response) {
+      console.log(response.data);
+      return response.data.results;
+    })
+  }
+
 
   $scope.categoriesList = []
   $scope.compositionQtyMap = []
@@ -615,6 +635,30 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       'unit':'',
       'discount':0
     }
+  }
+$scope.storeData=[]
+  $scope.storeDetail = {
+    'store':'',
+    'quantity':''
+}
+
+  $scope.savestore = function(){
+    console.log($scope.storeDetail);
+    var sendData = {
+      store : $scope.storeDetail.store.pk,
+      quantity : $scope.storeDetail.quantity
+    }
+    $http({
+      method: 'POST',
+      url: '/api/POS/storeQty/',
+      data: sendData,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved')
+      console.log(response.data);
+      $scope.storeData.push(response.data)
+    })
+
   }
 
   $scope.addCategories = function(){
@@ -1426,12 +1470,13 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   }
 
+
   $scope.openProductForm = function(idx) {
 
 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.product.form.html',
-      size: 'xl',
+      size: 'xxl',
       backdrop: true,
       resolve: {
         product: function() {

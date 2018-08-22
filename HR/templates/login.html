@@ -25,7 +25,7 @@
   <div class="col-md-8 hidden-sm hidden-xs" style="background-image: url('{{backgroundImage}}');background-size: cover;height:100%;position:absolute;left:0px;">
   </div>
   <div class="col-md-4  hidden-sm hidden-xs" style="height:100%;position:absolute;right:0px;">
-    <img class="text-center" src="{{logoImage}}" alt="" width="200" height="200" Style="display: block;margin-left: auto;margin-right: auto;">
+    <a  href="/" style="outline: none;border:none"><img class="text-center"  src="{{logoImage}}" alt="" width="200" height="200" Style="display:block;margin-left: auto;margin-right: auto;"></a>
     <form method="post" class="form-signin" action="" style="padding:0px">{% csrf_token %}
       <h2 class="form-signin-heading" style="color:black;margin-top:200px;">Login</h2> {% if authStatus.status != 'default' %}
       <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
@@ -42,7 +42,8 @@
       <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
       <button style="margin-bottom:20px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
-      <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a>
+      <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a><br/>
+      <a style="color:black;" href="registerPage()">New User?</a>
 
       <!-- <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
         <span style="color:white;">
@@ -66,7 +67,7 @@
   <div class="col-xs-12 ol-sm-12  hidden-lg hidden-md" style="position:absolute;right:0px;height:60vh">
     <!-- <div style="background-image: url('{{logoImage}}');background-size: cover;height:50%;position:absolute;left:0px;margin-top:250px">
     </div> -->
-  <img class="text-center" src="{{logoImage}}" alt="" width="100" height="100" Style="display: block;margin-left: auto;margin-right: auto;margin-bottom:-20px">
+    <a  href="/" style="outline:none;border:none"><img class="text-center" src="{{logoImage}}" alt="" width="100" height="100" style="display:block;margin-left:auto;margin-right:auto;margin-bottom:-20px;"></a>
     <form method="post" class="form-signin" action="">{% csrf_token %}
       <h2 class="form-signin-heading" style="color:black;margin-top:0px;">Login</h2> {% if authStatus.status != 'default' %}
       <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
@@ -83,7 +84,8 @@
       <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
       <button style="margin-bottom:20px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
-      <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a>
+      <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a><br/>
+      <a style="color:black;" href="registerPage()">New User?</a>
 
       <!-- <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
         <span style="color:white;">
