@@ -154,7 +154,7 @@ connection.onopen = function(session) {
 
           setTimeout(function() {
             var id = document.getElementById("scrollArea" + args[0]);
-            if (id!=null) {
+            if (id != null) {
               console.log(id.scrollHeight);
               id.scrollTop = id.scrollHeight;
               console.log(id);
@@ -168,40 +168,39 @@ connection.onopen = function(session) {
 
 
 
-      if (args[1] == 'O') {
-        var uid = args[0];
-        var status = 'O';
-        connection.session.publish('service.support.chat.' + uid, [status], {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("Published");
-        });
-        return
-      } else if (args[1] == 'T') {
-        console.log('typingggggggggg cccccc');
-        // console.log(scope.$$childHead.isTyping);
-        // scope.$$childHead.isTyping = true;
-        return
-      }else if (args[1] == 'R') {
-        console.log('remove this from ur new user list' , args[0]);
+    if (args[1] == 'O') {
+      var uid = args[0];
+      var status = 'O';
+      connection.session.publish('service.support.chat.' + uid, [status], {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published");
+      });
+      return
+    } else if (args[1] == 'T') {
+      console.log('typingggggggggg cccccc');
+      // console.log(scope.$$childHead.isTyping);
+      // scope.$$childHead.isTyping = true;
+      return
+    } else if (args[1] == 'R') {
+      console.log('remove this from ur new user list', args[0]);
 
-        for (var i = 0; i < scope.newUsers.length; i++) {
-          if (scope.newUsers[i].uid == args[0]) {
-              console.log(scope.newUsers[i].uid , 'yessssssssssssss');
-              scope.newUsers.splice(i, 1);
-          }
+      for (var i = 0; i < scope.newUsers.length; i++) {
+        if (scope.newUsers[i].uid == args[0]) {
+          console.log(scope.newUsers[i].uid, 'yessssssssssssss');
+          scope.newUsers.splice(i, 1);
         }
-        return
       }
+      return
+    }
 
     if (userExist()) {
       console.log('yesssssssssssss');
 
     } else {
-
-      if ((args[1]=='M' || args[1]=='MF' || args[1]=='ML') && args[2].user) {
-        console.log('check argssssssss' , args[2]);
+      if ((args[1] == 'M' || args[1] == 'MF' || args[1] == 'ML') && args[2].user) {
+        console.log('check argssssssss', args[2]);
         return
       }
 
@@ -257,6 +256,39 @@ connection.onopen = function(session) {
 
 
   };
+
+
+  function checkOnline() {
+    var scope = angular.element(document.getElementById('chatTab')).scope();
+    for (var i = 0; i < scope.myUsers.length; i++) {
+      session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
+      then((function(i) {
+        return function (res) {
+          scope.myUsers[i].isOnline = true;
+           }
+      })(i) , (function(i) {
+        return function (err) {
+          console.log(err,'err');
+          scope.myUsers[i].isOnline = false;
+           }
+      })(i))
+    }
+  }
+
+
+
+
+  setTimeout(function() {
+    checkOnline();
+  }, 1500);
+
+  setInterval(function() {
+    console.log('comin in interval');
+    checkOnline();
+  }, 30000)
+
+
+
 
   session.subscribe('service.support.agent', supportChatResponse).then(
     function(sub) {

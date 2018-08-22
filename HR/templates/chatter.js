@@ -625,6 +625,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       }
 
+      function heartbeat() {
+        console.log('caming in heartttttttttttttttttttttttttttttttttttttt here');
+        var isOnline = true
+        return uid
+      }
+
+
+
+      session.register('service.support.heartbeat.'+uid, heartbeat);
+
       session.subscribe('service.support.chat.' + uid, supportChat).then(
         function (sub) {
           console.log("subscribed to topic 'service.support.agent'");

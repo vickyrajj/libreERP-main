@@ -18,52 +18,22 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
      $scope.newUsers = [];
      $scope.myUsers =[];
 
-     // $scope.templates=[
-     //   {
-     //     "msg":"Call you later"
-     //   },
-     //   {
-     //     "msg":"Get Back to you"
-     //   }
-     //
-     // ];
+
 
      $http({
        method: 'GET',
-
        url: '/api/support/getMyUser/?getMyUser=1&user='+$scope.me.pk,
      }).then(function(response) {
        // console.log(response.data , 'distinct resssssssssss');
        for (var i = 0; i < response.data.length; i++) {
          console.log(response.data);
-         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid,  messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
+         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid,  messages : [], isOnline:false , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
+
        }
-       // $scope.data.messages = [];
-       // for (var i = 0; i < response.data.length; i++) {
-       //   console.log($scope.myUsers.length);
-       //  if ($scope.myUsers.length>0) {
-       //    $scope.alreadyExist;
-       //    for (var j = 0; j < $scope.myUsers.length; j++) {
-       //      if ($scope.myUsers[j].uid == response.data[i].uid ) {
-       //        $scope.alreadyExist = true;
-       //      }else {
-       //          $scope.alreadyExist = false;
-       //      }
-       //    }
-       //
-       //    if (!$scope.alreadyExist) {
-       //      $scope.myUsers.push( {name : '', uid: response.data[i].uid,  messages : [], isOnline:true }  )
-       //    }
-       //  }else {
-       //    console.log('one');
-       //    $scope.myUsers.push( {name : '', uid: response.data[i].uid,  messages : [], isOnline:true }  )
-       //  }
-       //
-       //
-       // }
-
-
      });
+
+
+
 
 
 
