@@ -426,9 +426,9 @@
             </li>
             <li class="nav-devider"></li>
             <li class="nav-small-cap">Support</li>
-            <li ng-click="$state.go('reviews')" > <a class="waves-effect waves-dark" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Review</span></a></li>
-            <li ng-click="$state.go('settings')" > <a class="waves-effect waves-dark" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Settings</span></a></li>
-            <li ng-click="$state.go('knowledgeBase')" > <a class="waves-effect waves-dark" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Knowledge Base</span></a></li>
+            <li ng-click="$state.go('reviews')" > {{state}} <a class="waves-effect waves-dark" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Review</span></a></li>
+            <li ng-click="$state.go('settings')" > <a class="waves-effect waves-dark" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Settings</span></a></li>
+            <li ng-click="$state.go('knowledgeBase')" > <a class="waves-effect waves-dark" aria-expanded="false"><i class="mdi mdi-file"></i><span class="hide-menu">Knowledge Base</span></a></li>
             <li class="nav-devider"></li>
             <li class="nav-small-cap">FORMS, TABLE &amp; WIDGETS</li>
             <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-file"></i><span class="hide-menu">Forms</span></a>
@@ -665,6 +665,10 @@
   <!-- ============================================================== -->
   <script src="{% static 'customer/js/plugins/jQuery.style.switcher.js' %}"></script>
   <script src="/static/js/customer.js"> </script>
+  <script src="{% static 'js/custom/directives.js' %}"></script>
+  <script src="{% static 'js/custom/directive.calendar.js' %}"></script>
+  <script src="{% static 'js/custom/directive.table.js' %}"></script>
+  <script src="{% static 'js/custom/directives.native.js' %}"></script>
   <script src="{% static 'js/custom/filters.js' %}"></script>
 
 

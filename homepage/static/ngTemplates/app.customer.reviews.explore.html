@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-body">
       <div class="col-md-12" >
-        <h3><strong>Date : </strong>{{data[0].created | date : 'dd-MMM-yyyy'}}</h3>
+        <h4><strong>Date : </strong>{{data[0].created | date : 'dd-MMM-yyyy'}} </h4>
         <span ng-if="chatThreadData.uid!=none"><h3><strong>Status : </strong>{{chatThreadData.status}} <span class="pull-right"><div class="btn btn-primary" ng-click="showChart()">Change Status</div></span></h3></span><hr>
 
         <div ng-repeat="msg in data">
