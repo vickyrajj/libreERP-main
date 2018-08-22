@@ -22,7 +22,7 @@
         </div>
       </div>
   </div>
-    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px;margin-right:10px; height:65vh; overflow-y:auto; overflow-x:hidden;">
+    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px;margin-right:10px; height:74vh; overflow-y:auto; overflow-x:hidden;">
 
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
         <div class="row container-fluid">
@@ -57,7 +57,7 @@
   </div> -->
 
   <div class="container-fluid" style="padding:;border-top:30px;background-color:#eeeeee">
-    <div class="row" style="margin:0px;margin-top:40px;margin-bottom:60px;">
+    <div class="row" style="margin:0px;margin-top:10px;margin-bottom:5px;">
       <form>
         <div class="input-group">
           <input ng-if="chatBox.fileToSend.size==0" type="text" class="form-control" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend">
