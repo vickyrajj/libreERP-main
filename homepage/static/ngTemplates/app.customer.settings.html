@@ -1,69 +1,65 @@
 <div class="card-body">
-  <div class="row">
-    <div class="col-md-3">
-      <div class="form-group">
-        <i class="fa fa-comment-o"></i> &nbsp; <label>Chat</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.chat">
-      </div>
+  <div class="row" style="padding-bottom:10px;">
+    <div class="col-md-4" style="font-size:20px;padding-left:35px">
+      <span ><i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;</span>
     </div>
-    <div class="col-md-3">
-      <div class="form-group">
-        <i class="fa fa-phone"></i> &nbsp; <label>Call</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.call">
-      </div>
+    <div class="col-md-8">
+        <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
     </div>
-    <div class="col-md-3">
-      <div class="form-group">
-        <i class="fa fa-envelope"></i> &nbsp; <label>Email</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.email">
-      </div>
+  </div>
+  <div class="row" style="padding-bottom:10px;">
+    <div class="col-md-4" style="font-size:20px;padding-left:35px">
+      <span ><i class="fa fa-gg-circle"></i> &nbsp; <label>SupportBubble Colour</label> &nbsp;</span>
     </div>
-    <div class="col-md-3">
-      <div class="form-group">
-        <i class="fa fa-video-camera"></i> &nbsp; <label>Video&Audio</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.videoAndAudio">
-      </div>
+    <div class="col-md-8">
+        <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.supportBubbleColor">
     </div>
-    <div class="col-md-3">
-      <div class="form-group">
-        <i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
-      </div>
+  </div>
+  <div class="row" style="padding-bottom:10px;">
+    <div class="col-md-4" style="font-size:20px;padding-left:35px">
+      <span ><i class="fa  fa-picture-o"></i> &nbsp; <label>Picture</label></span>
     </div>
-    <div class="col-md-3">
-      <div class="form-group">
-        <i class="fa fa-phone"></i> &nbsp; <label>Call Back</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.callBack">
-      </div>
+    <div class="col-md-8">
+        <input type="file" file-model="cpForm.dp">
     </div>
-    <div class="col-md-3">
-      <div class="form-group">
-        <i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.ticket">
-      </div>
+  </div>
+  <div class="row" style="padding-bottom:10px;">
+    <div class="col-md-4" style="font-size:20px;padding-left:35px">
+      <span ><i class="fa fa-user"></i> &nbsp; <label>Name</label></span>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-8">
+      <input class="form-control" type="text" ng-model="cpForm.name">
+    </div>
+  </div>
+  <!-- <div class="row">
+      <div class="form-group">
+          <i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
+      </div>
       <div class="form-group">
         <i class="fa fa-gg-circle"></i> &nbsp; <label>SupportBubble Colour</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.supportBubbleColor">
       </div>
-    </div>
-    <div class="col-md-3">
       <div class="form-group">
         <div class="row">
-          <div class="col-md-5">
+          <div class="col-md-2">
             <i class="fa fa-user"></i> &nbsp; <label>Name</label>
           </div>
-          <div class="col-md-7">
+          <div class="col-md-10">
             <input class="form-control" type="text" ng-model="cpForm.name">
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-3">
       <div class="form-group">
         <div class="row">
-          <div class="col-md-5">
+          <div class="col-md-2">
             <i class="fa  fa-picture-o"></i> &nbsp; <label>Picture</label>
           </div>
-          <div class="col-md-7">
+          <div class="col-md-10">
             <input type="file" file-model="cpForm.dp">
           </div>
         </div>
       </div>
-    </div>
-  </div><br>
-  <button type="button" class="btn btn-primary " ng-click="saveCustomerProfile()">Save</button>
+  </div><br> -->
+  <div class="row justify-content-center" style="padding:15px;">
+    <button type="button" class="btn btn-primary " ng-click="saveCustomerProfile()">Save</button>
+  </div>
 </div>

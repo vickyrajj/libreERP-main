@@ -4,30 +4,47 @@
       Browse
       <i class="fa fa-list-ul"></i>
     </uib-tab-heading>
-    <div class="card">
+    <!-- <div class="card" style="min-height:65vh;" > -->
       <div class="card-body">
         <div class="row" >
           <div class="col-md-4" ng-repeat="r in reviewData">
-            <div class="card">
-              <div class="card-body">
-                <div class="row" style="padding:0px 10px; height:100px;">
-                  <h5>Company : {{r[0].company}}</h5>
-                  <h5>UID : {{r[0].uid}}</h5>
-                  <h5>{{r[0].email}}</h5>
-                </div>
-                <div class="row" style="border-top:1px solid #eee; padding:10px;">
-                  <div class="col-md-8">
+            <div class="row" style="margin-bottom:30px;">
+              <div class="col-md-12">
+                <div class="card" style="margin-bottom:-2px; border-radius:4px 4px 0px 0px;">
+                  <div class="card-body">
+                    <div class="row" style="padding:0px 10px; min-height:70px;">
+                      <div class="col-md-12">
+                        <h5>UID : {{r[0].uid}}</h5>
+                      </div>
+                      <div class="col-md-12">
+                        <h5>{{r[0].email}}</h5>
+                      </div>
+                    </div>
+                    <!-- <div class="row btn btn-block btn-primary" style="border-top:1px solid #eee; padding:10px;">
+                    View
+                    <div class="col-md-8">
                   </div>
                   <div class="col-md-4">
-                    <span ng-click="tableAction($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
-                  </div>
+                  <span ng-click="tableAction($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
                 </div>
+              </div> -->
+            </div>
+          </div>
+          <div class="btn btn-block btn-primary" style="border-top:1px solid #eee; padding:10px; border-radius:0px 0px 4px 4px;" ng-click="tableAction($index)">
+            View Chat
+            <!-- <div class="col-md-8">
+          </div>
+          <div class="col-md-4">
+          <span ng-click="tableAction($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
+        </div> -->
+      </div>
+
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    <!-- </div> -->
   </uib-tab>
 
   <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
