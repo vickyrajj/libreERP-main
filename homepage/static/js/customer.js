@@ -377,4 +377,26 @@ app.controller("cutomerController", function($scope , $http) {
 app.controller("app.customer.reviews.explore", function($scope , $http ) {
   console.log($scope.tab.data);
   $scope.data = $scope.tab.data
+
+  $scope.calculateTime = function (user , agent) {
+    console.log('inside cal cccccccccccc');
+
+    if (user!=undefined) {
+      var usertime = new Date(user);
+      var agenttime = new Date(agent);
+      var diff = Math.floor((agenttime - usertime)/60000)
+      if (diff<60) {
+        return diff+' Mins';
+      }else if (diff>=60 && diff<60*24) {
+        return Math.floor(diff/60)+' Hrs';
+      }else if (diff>=60*24) {
+        return Math.floor(diff/(60*24))+' Days';
+      }
+    }else {
+      return
+    }
+
+  }
+
+
 });

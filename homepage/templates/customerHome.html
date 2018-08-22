@@ -118,31 +118,48 @@
       </div>
     </div> -->
 
-    <div ng-if="state=='Review'">
+    <div ng-if="state=='Review'" >
       <uib-tabset>
         <uib-tab active="searchTabActive">
           <uib-tab-heading>
             Browse
             <i class="fa fa-list-ul"></i>
           </uib-tab-heading>
-          <div class="card">
+          <div class="card" style="min-height:65vh;" >
             <div class="card-body">
               <div class="row" >
-                <div class="col-md-4" ng-repeat="r in reviewData">
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="row" style="padding:0px 10px; height:100px;">
-                        <h5>Company : {{r[0].company}}</h5>
-                        <h5>UID : {{r[0].uid}}</h5>
-                        <h5>{{r[0].email}}</h5>
-                      </div>
-                      <div class="row" style="border-top:1px solid #eee; padding:10px;">
-                        <div class="col-md-8">
+                <div class="col-md-3" ng-repeat="r in reviewData">
+                  <div class="row" style="margin-bottom:30px;">
+                    <div class="col-md-12">
+                      <div class="card" style="margin-bottom:-2px; border-radius:4px 4px 0px 0px;">
+                        <div class="card-body">
+                          <div class="row" style="padding:0px 10px; min-height:70px;">
+                            <div class="col-md-12">
+                              <h5>UID : {{r[0].uid}}</h5>
+                            </div>
+                            <div class="col-md-12">
+                              <h5>{{r[0].email}}</h5>
+                            </div>
+                          </div>
+                          <!-- <div class="row btn btn-block btn-primary" style="border-top:1px solid #eee; padding:10px;">
+                          View
+                          <div class="col-md-8">
                         </div>
                         <div class="col-md-4">
-                          <span ng-click="tableAction($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
-                        </div>
+                        <span ng-click="tableAction($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
                       </div>
+                    </div> -->
+                  </div>
+                </div>
+                <div class="btn btn-block btn-primary" style="border-top:1px solid #eee; padding:10px; border-radius:0px 0px 4px 4px;" ng-click="tableAction($index)">
+                  View Chat
+                  <!-- <div class="col-md-8">
+                </div>
+                <div class="col-md-4">
+                <span ng-click="tableAction($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
+              </div> -->
+            </div>
+
                     </div>
                   </div>
                 </div>
@@ -168,73 +185,69 @@
     <div ng-if="state=='Settings'">
       <div class="card">
         <div class="card-body">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="form-group">
-                <i class="fa fa-comment-o"></i> &nbsp; <label>Chat</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.chat">
-              </div>
+          <div class="row" style="padding-bottom:10px;">
+            <div class="col-md-3" style="font-size:20px;">
+              <span ><i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;</span>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <i class="fa fa-phone"></i> &nbsp; <label>Call</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.call">
-              </div>
+            <div class="col-md-9">
+                <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <i class="fa fa-envelope"></i> &nbsp; <label>Email</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.email">
-              </div>
+          </div>
+          <div class="row" style="padding-bottom:10px;">
+            <div class="col-md-3" style="font-size:20px;">
+              <span ><i class="fa fa-gg-circle"></i> &nbsp; <label>SupportBubble Colour</label> &nbsp;</span>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <i class="fa fa-video-camera"></i> &nbsp; <label>Video&Audio</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.videoAndAudio">
-              </div>
+            <div class="col-md-9">
+                <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.supportBubbleColor">
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
-              </div>
+          </div>
+          <div class="row" style="padding-bottom:10px;">
+            <div class="col-md-3" style="font-size:20px;">
+              <span ><i class="fa  fa-picture-o"></i> &nbsp; <label>Picture</label></span>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <i class="fa fa-phone"></i> &nbsp; <label>Call Back</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.callBack">
-              </div>
+            <div class="col-md-9">
+                <input type="file" file-model="cpForm.dp">
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="checkbox" ng-model="cpForm.ticket">
-              </div>
+          </div>
+          <div class="row" style="padding-bottom:10px;">
+            <div class="col-md-3" style="font-size:20px;">
+              <span ><i class="fa fa-user"></i> &nbsp; <label>Name</label></span>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-9">
+              <input class="form-control" type="text" ng-model="cpForm.name">
+            </div>
+          </div>
+          <!-- <div class="row">
+              <div class="form-group">
+                  <i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
+              </div>
               <div class="form-group">
                 <i class="fa fa-gg-circle"></i> &nbsp; <label>SupportBubble Colour</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.supportBubbleColor">
               </div>
-            </div>
-            <div class="col-md-3">
               <div class="form-group">
                 <div class="row">
-                  <div class="col-md-5">
+                  <div class="col-md-2">
                     <i class="fa fa-user"></i> &nbsp; <label>Name</label>
                   </div>
-                  <div class="col-md-7">
+                  <div class="col-md-10">
                     <input class="form-control" type="text" ng-model="cpForm.name">
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-3">
               <div class="form-group">
                 <div class="row">
-                  <div class="col-md-5">
+                  <div class="col-md-2">
                     <i class="fa  fa-picture-o"></i> &nbsp; <label>Picture</label>
                   </div>
-                  <div class="col-md-7">
+                  <div class="col-md-10">
                     <input type="file" file-model="cpForm.dp">
                   </div>
                 </div>
               </div>
-            </div>
-          </div><br>
-          <button type="button" class="btn btn-primary " ng-click="saveCustomerProfile()">Save</button>
+          </div><br> -->
+          <div class="row justify-content-center" style="padding:15px;">
+            <button type="button" class="btn btn-primary " ng-click="saveCustomerProfile()">Save</button>
+          </div>
         </div>
       </div>
     </div>
@@ -254,17 +267,20 @@
             <hr>
             <div class="row" style="padding-top:15px">
               <div class="col-md-3">
-                <div class="row" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;" ng-if="custDocs.length>0||docForm!=none">
+                <div class="row" style="border-right:solid 2px #eeeeee;min-height:54vh;position:relative;" ng-if="custDocs.length>0||docForm!=none">
                   <div class="row text-center container-fluid card" ng-repeat="doc in custDocs" ng-click="addDoc($index)" style="cursor:pointer;font-size:18px;padding:10px;margin:20px 10px; {{docForm.pk==doc.pk?'background-color:#ffb22b':'background-color: #e9e9e9 !important;'}}">
                     {{doc.title}}
                   </div>
+                  <!-- <div ng-repeat="doc in custDocs">
+                    <p>{{doc.title}}</p>
+                  </div> -->
                 </div>
               </div>
               <div class="col-md-9" style="padding-left:35px" ng-if="docForm!=none">
                 <div class="row text-center">
                   <h4>{{docForm.pk!=none?'Edit':'Create'}} Document <span ng-if="docForm.pk!=none">- {{docForm.title}}</span></h4>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                   <div class="form-group">
                     <label>Title</label>
                     <input type="text " class="form-control" ng-model="docForm.title">
@@ -276,6 +292,30 @@
                   <div class="form-group" ng-if="docForm.docs!=null">
                     <label>Document</label>
                     <input type="file" file-model="docForm.docs">
+                  </div>
+                </div> -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Title</label>
+                      <input type="text " class="form-control" ng-model="docForm.title">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group" ng-if="docForm.text!=null">
+                      <label>Content</label>
+                      <textarea ui-tinymce="tinymceOptions" ng-model="docForm.text"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group" ng-if="docForm.docs!=null">
+                      <label>Document</label>
+                      <input type="file" file-model="docForm.docs">
+                    </div>
                   </div>
                 </div>
                 <div class="row" style="padding:20px">
