@@ -1,10 +1,8 @@
 var app = angular.module("customerApp", ['ui.bootstrap' , 'ui.tinymce' , 'ui.router']);
 
-
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
-
   // $urlRouterProvider.otherwise('/home');
-  $urlRouterProvider.otherwise('/reviews');
+  $urlRouterProvider.otherwise('/');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
@@ -16,11 +14,7 @@ app.run(['$rootScope', '$state', '$stateParams',  function($rootScope, $state, $
   $rootScope.$on("$stateChangeError", console.log.bind(console));
 }]);
 
-
-
-
 app.config(function($stateProvider) {
-  console.log('cccccccccccccccccc');
   $stateProvider
     .state('reviews', {
       url: "/reviews",
@@ -52,19 +46,16 @@ app.config(function($stateProvider) {
   //       }
   //     }
   //   })
-  //
   //   .state('customer.reviews', {
   //     url: "/reviews",
   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.cart.html',
   //     controller: 'controller.ecommerce.account.cart'
   //   })
 
-
 });
 
 
 app.controller("app.customer.reviews", function($scope ,$state, $http,$rootScope ) {
-  console.log('ppppppppppppppppppp',$state.params);
   $rootScope.state = 'Reviews';
   $scope.reviewData = []
 
@@ -75,13 +66,9 @@ app.controller("app.customer.reviews", function($scope ,$state, $http,$rootScope
     url:  '/api/support/reviewHomeCal/?customer',
   }).
   then(function(response) {
-    // $scope.custDetails = response.data[0]
-    console.log(response.data);
     $scope.reviewData = response.data
-    // $scope.reviewData = $scope.reviewData[0]
     console.log($scope.reviewData);
   });
-
 
   $scope.tableAction = function(target) {
     // console.log(target, action, mode);
@@ -124,7 +111,6 @@ app.controller("app.customer.reviews", function($scope ,$state, $http,$rootScope
 
 })
 app.controller("app.customer.settings", function($scope ,$state, $http ,$rootScope) {
-  console.log('ppppppppppppppppppp',$state.params);
   $rootScope.state = 'Settings';
   $scope.cpForm = {};
   $http({
@@ -132,7 +118,6 @@ app.controller("app.customer.settings", function($scope ,$state, $http ,$rootSco
     url:  '/api/support/reviewHomeCal/?customer&customerProfilePkList',
   }).
   then(function(response) {
-
     console.log(response.data);
     $http({
       method: 'GET',
@@ -142,9 +127,7 @@ app.controller("app.customer.settings", function($scope ,$state, $http ,$rootSco
       console.log(response.data);
       $scope.cpForm = response.data
     });
-
   });
-
 
   $scope.saveCustomerProfile = function () {
     var fd = new FormData();
@@ -158,7 +141,6 @@ app.controller("app.customer.settings", function($scope ,$state, $http ,$rootSco
     fd.append('vr', $scope.cpForm .vr);
     fd.append('service', $scope.cpForm .service);
 
-
     if ($scope.cpForm .windowColor != '') {
       fd.append('windowColor', $scope.cpForm .windowColor);
     }
@@ -168,7 +150,6 @@ app.controller("app.customer.settings", function($scope ,$state, $http ,$rootSco
     if ($scope.cpForm .dp && typeof $scope.cpForm .dp!='string' ) {
       fd.append('dp',$scope.cpForm .dp);
     }
-
 
     $http({
       method: 'PATCH',
@@ -185,7 +166,6 @@ app.controller("app.customer.settings", function($scope ,$state, $http ,$rootSco
   }
 })
 app.controller("app.customer.knowledgeBase", function($scope ,$state, $http,$rootScope ) {
-  console.log('ppppppppppppppppppp',$state.params);
   $rootScope.state = 'KnowledgeBase';
   var emptyFile = new File([""], "");
   $scope.tinymceOptions = {
@@ -217,7 +197,6 @@ app.controller("app.customer.knowledgeBase", function($scope ,$state, $http,$roo
     });
   });
 
-
   $scope.addDoc = function(idx){
     if (idx==-1) {
       $scope.docForm = {title:'',text:'',docs:emptyFile}
@@ -226,7 +205,6 @@ app.controller("app.customer.knowledgeBase", function($scope ,$state, $http,$roo
     }
     console.log($scope.docForm);
   }
-
 
   $scope.saveDoc = function(){
     console.log($scope.docForm);
@@ -278,10 +256,8 @@ app.controller("app.customer.knowledgeBase", function($scope ,$state, $http,$roo
 
 
 app.controller("cutomerController", function($scope , $http,$rootScope) {
-
   console.log('cominggggggggggg');
   $rootScope.state = 'Dashboard';
-
 });
 
 app.controller("app.customer.reviews.explore", function($scope , $http ) {

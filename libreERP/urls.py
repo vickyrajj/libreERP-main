@@ -38,7 +38,7 @@ urlpatterns = [
     url(r'^refund', refund , name ='refund'),
     url(r'^contacts', contacts , name ='contacts'),
     url(r'^customer/login', customerLoginView , name ='customerLogin'),
-    url(r'^customer/home', customerHomeView , name ='customerhome'),
+    url(r'^customer/home/', customerHomeView , name ='customerhome'),
     url(r'^script/(?P<fileName>[\w|\W]+)', getChatterScript , name ='getChatterScript'),
 ]
 

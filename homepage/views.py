@@ -36,7 +36,7 @@ def customerLoginView(request):
     def loginRender(authStatus):
         return render(request, 'customerLogin.html', {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT} )
     def go_next():
-        nxt = request.GET.get('next','/customer/home')
+        nxt = request.GET.get('next','/customer/home/')
         return redirect(nxt)
 
     if request.user.is_authenticated:
