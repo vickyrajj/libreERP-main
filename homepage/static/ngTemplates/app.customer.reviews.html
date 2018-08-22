@@ -1,0 +1,42 @@
+<uib-tabset>
+  <uib-tab active="searchTabActive">
+    <uib-tab-heading>
+      Browse
+      <i class="fa fa-list-ul"></i>
+    </uib-tab-heading>
+    <div class="card">
+      <div class="card-body">
+        <div class="row" >
+          <div class="col-md-4" ng-repeat="r in reviewData">
+            <div class="card">
+              <div class="card-body">
+                <div class="row" style="padding:0px 10px; height:100px;">
+                  <h5>Company : {{r[0].company}}</h5>
+                  <h5>UID : {{r[0].uid}}</h5>
+                  <h5>{{r[0].email}}</h5>
+                </div>
+                <div class="row" style="border-top:1px solid #eee; padding:10px;">
+                  <div class="col-md-8">
+                  </div>
+                  <div class="col-md-4">
+                    <span ng-click="tableAction($index)" class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </uib-tab>
+
+  <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+    <uib-tab-heading>
+      {{tab.title}}
+      <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+    </uib-tab-heading>
+    <div ng-if="tab.app == 'ChatInfo'">
+      <div ng-include="'/static/ngTemplates/app.customer.reviews.explore.html'"></div>
+    </div>
+  </uib-tab>
+</uib-tabset>

@@ -4,97 +4,86 @@ var app = angular.module("customerApp", ['ui.bootstrap' , 'ui.tinymce' , 'ui.rou
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
 
   // $urlRouterProvider.otherwise('/home');
+  $urlRouterProvider.otherwise('/reviews');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
+});
+
+app.run(['$rootScope', '$state', '$stateParams',  function($rootScope, $state, $stateParams) {
+  $rootScope.$state = $state;
+  $rootScope.$stateParams = $stateParams;
+  $rootScope.$on("$stateChangeError", console.log.bind(console));
+}]);
 
 
+
+
+app.config(function($stateProvider) {
+  console.log('cccccccccccccccccc');
+  $stateProvider
+    .state('reviews', {
+      url: "/reviews",
+      templateUrl: '/static/ngTemplates/app.customer.reviews.html',
+      controller: 'app.customer.reviews'
+    })
+  $stateProvider
+    .state('settings', {
+      url: "/settings",
+      templateUrl: '/static/ngTemplates/app.customer.settings.html',
+      controller: 'app.customer.settings'
+    })
+    $stateProvider
+      .state('knowledgeBase', {
+        url: "/knowledgeBase",
+        templateUrl: '/static/ngTemplates/app.customer.knowledgeBase.html',
+        controller: 'app.customer.knowledgeBase'
+      })
+
+  // $stateProvider
+  //   .state('customer', {
+  //     url: "/",
+  //     views: {
+  //       "": {
+  //         templateUrl: '/static/ngTemplates/app.ecommerce.account.html',
+  //       },
+  //       "@customer": {
+  //         templateUrl: '/static/ngTemplates/app.ecommerce.account.default.html',
+  //       }
+  //     }
+  //   })
+  //
+  //   .state('customer.reviews', {
+  //     url: "/reviews",
+  //     templateUrl: '/static/ngTemplates/app.ecommerce.account.cart.html',
+  //     controller: 'controller.ecommerce.account.cart'
+  //   })
 
 
 });
 
 
+app.controller("app.customer.reviews", function($scope ,$state, $http,$rootScope ) {
+  console.log('ppppppppppppppppppp',$state.params);
+  $rootScope.state = 'Reviews';
+  // console.log($scope.tab.data);
+  // $scope.data = $scope.tab.data
+})
+app.controller("app.customer.settings", function($scope ,$state, $http ,$rootScope) {
+  console.log('ppppppppppppppppppp',$state.params);
+  $rootScope.state = 'Settings';
+  // console.log($scope.tab.data);
+  // $scope.data = $scope.tab.data
+})
+app.controller("app.customer.knowledgeBase", function($scope ,$state, $http,$rootScope ) {
+  console.log('ppppppppppppppppppp',$state.params);
+  $rootScope.state = 'KnowledgeBase';
+  // console.log($scope.tab.data);
+  // $scope.data = $scope.tab.data
+})
 
 
-// app.config(function($stateProvider) {
-//
-//   $stateProvider
-//     .state('customer', {
-//       url: "/customer/home/:name",
-//       templateUrl: '/static/ngTemplates/app.ecommerce.list.html',
-//       controller: 'controller.ecommerce.list'
-//     })
-//
-//   // $stateProvider
-//   //   .state('details', {
-//   //     url: "/details/:id",
-//   //     templateUrl: '/static/ngTemplates/app.ecommerce.details.html',
-//   //     controller: 'controller.ecommerce.details'
-//   //   })
-//   //
-//   // $stateProvider
-//   //   .state('categories', {
-//   //     url: "/categories/:name",
-//   //     templateUrl: '/static/ngTemplates/app.ecommerce.categories.html',
-//   //     controller: 'controller.ecommerce.categories'
-//   //   })
-//   //
-//   // $stateProvider
-//   //   .state('checkout', {
-//   //     url: "/checkout/:pk",
-//   //     templateUrl: '/static/ngTemplates/app.ecommerce.checkout.html',
-//   //     controller: 'controller.ecommerce.checkout'
-//   //   })
-//   //
-//   // $stateProvider
-//   //   .state('account', {
-//   //     url: "/account",
-//   //     views: {
-//   //       "": {
-//   //         templateUrl: '/static/ngTemplates/app.ecommerce.account.html',
-//   //       },
-//   //       "menu@account": {
-//   //         templateUrl: '/static/ngTemplates/app.ecommerce.account.menu.html',
-//   //       },
-//   //       "topMenu@account": { //this is for top menu for mobile view
-//   //         templateUrl: '/static/ngTemplates/app.ecommerce.account.topMenu.html',
-//   //       },
-//   //       "@account": {
-//   //         templateUrl: '/static/ngTemplates/app.ecommerce.account.default.html',
-//   //       }
-//   //     }
-//   //   })
-//   //
-//   //   .state('account.cart', {
-//   //     url: "/cart",
-//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.cart.html',
-//   //     controller: 'controller.ecommerce.account.cart'
-//   //   })
-//   //   .state('account.orders', {
-//   //     url: "/orders",
-//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.orders.html',
-//   //     controller: 'controller.ecommerce.account.orders'
-//   //   })
-//   //   .state('account.settings', {
-//   //     url: "/settings",
-//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.settings.html',
-//   //     controller: 'controller.ecommerce.account.settings'
-//   //   })
-//   //   .state('account.support', {
-//   //     url: "/support",
-//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.support.html',
-//   //     controller: 'controller.ecommerce.account.support'
-//   //   })
-//   //   .state('account.saved', {
-//   //     url: "/saved",
-//   //     templateUrl: '/static/ngTemplates/app.ecommerce.account.saved.html',
-//   //     controller: 'controller.ecommerce.account.saved'
-//   //   })
-//
-// });
-
-
-app.controller("cutomerController", function($scope , $http) {
+app.controller("cutomerController", function($scope , $http,$rootScope) {
 
   var emptyFile = new File([""], "");
   console.log('cominggggggggggg');
@@ -106,7 +95,7 @@ app.controller("cutomerController", function($scope , $http) {
   };
 
 
-  $scope.state = 'Dashboard';
+  $rootScope.state = 'Dashboard';
 
 
   $scope.review = function () {
