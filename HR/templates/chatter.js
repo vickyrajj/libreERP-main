@@ -392,7 +392,7 @@ function fetchMessages(uid) {
 
 
         for (var i = 0; i < data.length; i++) {
-          agentPk = data[i].user
+          // agentPk = data[i].user
           chat.messages.push(data[i])
         }
         // for (var i = 0; i < data.length; i++) {
@@ -451,6 +451,7 @@ function fetchThread(uid) {
           threadExist = true
           console.log(data,'fffffffffffffffff');
           chatThreadPk = data[0].pk
+          agentPk = data[0].user
         }
         console.log(data);
         fetchMessages(uid);
@@ -637,7 +638,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       session.subscribe('service.support.chat.' + uid, supportChat).then(
         function (sub) {
-          console.log("subscribed to topic 'service.support.agent'");
+          console.log("subscribed to topic 'service.support.chat'");
         },
         function (err) {
           console.log("failed to subscribed: " + err);
@@ -1437,21 +1438,58 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }, 200);
     }
 
+    // function onlineAgent() {
+    //   if (agentPk) {
+    //     setInterval(function () {
+    //       isAgentOnline = false;
+    //       onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
+    //       status = "O";
+    //       connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
+    //         acknowledge: true
+    //       }).
+    //       then(function(publication) {
+    //         console.log("check online status");
+    //       });
+    //     }, 10000);
+    //   }
+    // }
+
     function onlineAgent() {
-      setInterval(function () {
-        isAgentOnline = false;
-        onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
-        status = "O";
-        connection.session.publish('service.support.agent', [uid , status], {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("check online status");
-        });
-      }, 10000);
+      console.log('in onlineAgent######333333333' , agentPk);
+      if (agentPk) {
+        // setInterval(function () {
+          // status = "O";
+          connection.session.call('service.support.heartbeat.' + agentPk, []).then(
+            function (res) {
+             console.log("Result:", res);
+             isAgentOnline = true;
+             onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
+           },
+           function (err) {
+            console.log("Error:", err);
+            isAgentOnline = false;
+            onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
+          }
+         );
+          // connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
+          //   acknowledge: true
+          // }).
+          // then(function(publication) {
+          //   console.log("check online status");
+          // });
+        // }, 30000);
+      }
     }
 
-    onlineAgent();
+
+
+    setTimeout(function(){
+      onlineAgent();
+    },1000 )
+
+    setInterval(function(){
+      onlineAgent();
+    },30000 )
 
 
     // inputText.addEventListener("input", function(e) {
@@ -1501,7 +1539,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false  };
         if (agentPk) {
+          console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
+          if (!isAgentOnline) {
+            console.log('agetn online');
+            dataToSend.user = null
+          }
         }
         var message = dataToSend
         dataToSend = JSON.stringify(dataToSend)
@@ -1510,7 +1553,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
         var dataToSend = {uid: uid , message: inptText , sentByAgent:false };
         if (agentPk) {
+          console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
+          if (!isAgentOnline) {
+            console.log('agetn oflineee');
+            dataToSend.user = null
+          }
         }
         var message = dataToSend
         dataToSend = JSON.stringify(dataToSend)

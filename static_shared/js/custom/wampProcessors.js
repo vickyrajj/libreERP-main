@@ -168,24 +168,13 @@ connection.onopen = function(session) {
 
 
 
-    if (args[1] == 'O') {
-      var uid = args[0];
-      var status = 'O';
-      connection.session.publish('service.support.chat.' + uid, [status], {}, {
-        acknowledge: true
-      }).
-      then(function(publication) {
-        console.log("Published");
-      });
-      return
-    } else if (args[1] == 'T') {
+    if (args[1] == 'T') {
       console.log('typingggggggggg cccccc');
       // console.log(scope.$$childHead.isTyping);
       // scope.$$childHead.isTyping = true;
       return
     } else if (args[1] == 'R') {
-      console.log('remove this from ur new user list', args[0]);
-
+      console.log('remove this from new user list because someone else have assigned', args[0]);
       for (var i = 0; i < scope.newUsers.length; i++) {
         if (scope.newUsers[i].uid == args[0]) {
           console.log(scope.newUsers[i].uid, 'yessssssssssssss');
@@ -275,17 +264,34 @@ connection.onopen = function(session) {
     }
   }
 
+  function sendBackHeartBeat() {
+    function heartbeat() {
+      return true
+    }
+    var scope = angular.element(document.getElementById('chatTab')).scope();
+    session.register('service.support.heartbeat.'+scope.me.pk, heartbeat);
+    console.log(scope.me.pk);
+  }
+
 
 
 
   setTimeout(function() {
     checkOnline();
+    sendBackHeartBeat();
   }, 1500);
 
   setInterval(function() {
     console.log('comin in interval');
     checkOnline();
   }, 30000)
+
+  function heartbeat() {
+    console.log('coming in heartttt');
+    return scope.me.pk
+  }
+
+
 
 
 

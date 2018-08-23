@@ -15,6 +15,7 @@ app.config(function($stateProvider) {
 
 app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash , $timeout, $interval , $uibModal) {
 
+
      $scope.newUsers = [];
      $scope.myUsers =[];
 
@@ -27,8 +28,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
        // console.log(response.data , 'distinct resssssssssss');
        for (var i = 0; i < response.data.length; i++) {
          console.log(response.data);
-         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid,  messages : [], isOnline:false , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
-
+         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid,  messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
        }
      });
 
@@ -120,6 +120,22 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
          });
 
        }
+
+       $http({
+         method: 'GET',
+         url:  '/api/support/chatThread/?uid='+ uid
+       }).
+       then(function(response) {
+         $http({
+           method: 'PATCH',
+           url: '/api/support/chatThread/'+ response.data[0].pk +'/',
+           data: {user : $scope.me.pk}
+         }).
+         then(function(response) {
+           console.log(response.data);
+         });
+       })
+
      });
 
      $scope.status ='AP';
