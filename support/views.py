@@ -62,18 +62,20 @@ class GetMyUser(APIView):
     def get(self, request, format=None):
         print '****** entered', request.GET
         if 'getMyUser' in request.GET:
-            uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
+            # uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
+            uidsList = list(ChatThread.objects.filter(user = self.request.GET['user'],status='started').values_list('uid',flat=True).distinct())
             print uidsList , 'distinct'
             toSend = []
-            chatThreadObjs = ChatThread.objects.filter(uid__in=uidsList)
+            # chatThreadObjs = ChatThread.objects.filter(uid__in=uidsList)
             for i in uidsList:
                 try:
                     data = Visitor.objects.get(uid=i)
                     dic = {'uid':data.uid,'name':data.name}
                 except:
                     dic = {'uid':i,'name':''}
-                print ChatThread.objects.get(uid=i).company.pk
+                # print ChatThread.objects.get(uid=i).company.pk
                 dic['companyPk'] = ChatThread.objects.get(uid=i).company.pk
+                dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
                 toSend.append(dic)
 
             return Response(toSend, status=status.HTTP_200_OK)

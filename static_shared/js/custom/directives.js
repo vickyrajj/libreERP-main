@@ -487,13 +487,25 @@ app.directive('chatBox', function() {
       });
 
 
-      $scope.chatClose = function(uid) {
+      $scope.chatClose = function(uid,chatThreadPk) {
         $scope.status = "F";
         connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
         }).
         then(function(publication) {
           console.log("Published");
+        });
+
+        $http({
+          method: 'PATCH',
+          url: '/api/support/chatThread/' + chatThreadPk + '/',
+          data: {
+            status: 'closed'
+          }
+        }).
+        then(function(response) {
+          Flash.create('sucess', 'Chat Has Closed')
+          return
         });
       }
 
