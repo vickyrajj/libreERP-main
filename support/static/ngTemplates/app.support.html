@@ -39,7 +39,7 @@
                       </div>
                     </div>
                     <div class="col-md-2">
-                      <i ng-if="!x.isOnline" class="fa fa-times fa-lg" ng-click="myUsers.splice($index,1)"></i>
+                      <i ng-if="!x.isOnline" class="fa fa-times fa-lg" ng-click="chatClose($index,x.chatThreadPk)"></i>
                     </div>
                   </div>
                 </div>

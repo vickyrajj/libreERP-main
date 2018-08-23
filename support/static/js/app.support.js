@@ -27,7 +27,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
        // console.log(response.data , 'distinct resssssssssss');
        for (var i = 0; i < response.data.length; i++) {
          console.log(response.data);
-         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid,  messages : [], isOnline:false , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
+         console.log(response.data[i].chatThreadPk);
+         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid, chatThreadPk:response.data[i].chatThreadPk, messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
 
        }
      });
@@ -74,6 +75,21 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
        $scope.chatsInView.splice(0,1)
        console.log('elseeee');
      }
+   }
+
+   $scope.chatClose = function(idx,chatThreadPk) {
+     $scope.myUsers.splice(idx,1)
+     $http({
+       method: 'PATCH',
+       url: '/api/support/chatThread/' + chatThreadPk + '/',
+       data: {
+         status: 'closed'
+       }
+     }).
+     then(function(response) {
+       Flash.create('sucess', 'Chat Has Closed')
+       return
+     });
    }
 
 

@@ -61,6 +61,7 @@ class ReviewComment(models.Model):
 
 CHATTHREAD_STATUS_CHOICES = (
     ('started' , 'started'),
+    ('closed' , 'closed'),
     ('reviewed' , 'reviewed'),
     ('resolved' , 'resolved'),
     ('archived' , 'archived'),
