@@ -632,7 +632,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return uid
       }
 
+      function createCookieDetail(args) {
+        console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
+        console.log(args[0]);
+          detail = getCookie("uidDetails");
+          if (detail != "") {
+            console.log('already there');
+            document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
+          }
 
+          setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
+      }
+
+      session.register('service.support.createDetailCookie.'+uid, createCookieDetail);
 
       session.register('service.support.heartbeat.'+uid, heartbeat);
 
@@ -1489,7 +1501,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     setInterval(function(){
       onlineAgent();
-    },30000 )
+    },15000 )
 
 
     // inputText.addEventListener("input", function(e) {
@@ -1542,8 +1554,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
           console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
           if (!isAgentOnline) {
-            console.log('agetn online');
+            console.log('agetn oflineee');
             dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
           }
         }
         var message = dataToSend
@@ -1552,12 +1566,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
         status = "M";
         // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
         var dataToSend = {uid: uid , message: inptText , sentByAgent:false };
+        console.log(agentPk);
         if (agentPk) {
           console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
           if (!isAgentOnline) {
             console.log('agetn oflineee');
             dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
           }
         }
         var message = dataToSend
@@ -1619,10 +1636,29 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
        var dataToPublish = [uid , status , message ];
+       // setCookie("uidDetails", {}, 365);
 
+       // details = getCookie("uidDetails");
+       // console.log('********************8',details);
+       // if (details != "") {
+       //    dataToPublish.push(details)
+       // } else {
+       //   dataToPublish.push(false)
+       // }
 
        if (threadExist==undefined) {
+
+
         var dataToPublish = [uid , status , message , custID ];
+        details = getCookie("uidDetails");
+        if (details != "") {
+          console.log(details);
+
+           dataToPublish.push(JSON.parse(details))
+        } else {
+          dataToPublish.push(false)
+        }
+
         var dataToSend = JSON.stringify({uid: uid , company: custID});
          var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function() {
@@ -1632,22 +1668,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
               threadExist=true
               console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
               chatThreadPk = data.pk
+              dataToPublish.push(chatThreadPk)
+              connection.session.publish('service.support.agent', dataToPublish , {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("Published");
+              });
             }
           };
           xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
           xhttp.setRequestHeader("Content-type", "application/json");
           xhttp.send(dataToSend);
+       }else {
+         console.log('else chat thread exist');
+         connection.session.publish('service.support.agent', dataToPublish , {}, {
+           acknowledge: true
+         }).
+         then(function(publication) {
+           console.log("Published");
+         });
        }
 
 
 
 
-      connection.session.publish('service.support.agent', dataToPublish , {}, {
-        acknowledge: true
-      }).
-      then(function(publication) {
-        console.log("Published");
-      });
+
 
       console.log('dddddddddddddd',isAgentOnline);
 
@@ -1707,8 +1753,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
             typ : data.attachmentType
           }
 
+          // if (agentPk) {
+          //   fileData.user = agentPk;
+          // }
+
           if (agentPk) {
+            console.log('agent pk is pnline',isAgentOnline);
             fileData.user = agentPk;
+            if (!isAgentOnline) {
+              console.log('agetn oflineee');
+              fileData.user = null
+            }else {
+              fileData.user = agentPk;
+            }
           }
 
           // if (typ=='image') {

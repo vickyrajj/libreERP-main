@@ -193,18 +193,55 @@ connection.onopen = function(session) {
         return
       }
 
+      var detail = {
+        name: '',
+        uid: args[0],
+        messages: [args[2]],
+        isOnline: true,
+        companyPk: args[3],
+        email:'',
+        unreadMsg:0,
+        boxOpen:false,
+        chatThreadPk: args[5]
+      }
+
+      function createVisitor(email, phoneNumber , name) {
+        console.log(email , phoneNumber , name,'sometinhhhhhhhhh###');
+        var toPost = {email:email , phoneNumber:phoneNumber , name:name}
+        console.log(toPost);
+        console.log(typeof toPost);
+        var xhttp = new XMLHttpRequest();
+         xhttp.onreadystatechange = function() {
+           if (this.readyState == 4 && this.status == 201) {
+             var data = JSON.parse(this.responseText)
+             detail.name = data.name
+             detail.email = data.email
+           }
+         };
+         xhttp.open('POST', '/api/support/visitor/', true);
+         xhttp.setRequestHeader("Content-type", "application/json");
+         xhttp.setRequestHeader('Accept', 'application/json');
+         xhttp.send(toPost);
+      }
+
+      console.log(args[4]);
+
+      if (args[4]) {
+        console.log(args[4]);
+        createVisitor(args[4].email , args[4].phoneNumber , args[4].name)
+      }
+
+      // if (detailsCookie) {
+      //   createVisitor()
+      // }
+
+
       console.log('no');
       console.log(args);
       if (args[1] == 'M') {
         scope.sound.play();
         console.log(args, 'argssssssssss');
-        scope.newUsers.push({
-          name: '',
-          uid: args[0],
-          messages: [args[2]],
-          isOnline: true,
-          companyPk: args[3]
-        })
+        scope.newUsers.push(detail)
       } else if (args[1] == 'MF') {
         scope.sound.play();
         var attachment;
@@ -215,13 +252,7 @@ connection.onopen = function(session) {
             console.log(this.responseText);
             var data = JSON.parse(this.responseText)
             // attachment = data.attachment
-            scope.newUsers.push({
-              name: '',
-              uid: args[0],
-              messages: [args[2]],
-              isOnline: true,
-              companyPk: args[3]
-            })
+            scope.newUsers.push(detail)
 
           }
         };
@@ -233,13 +264,7 @@ connection.onopen = function(session) {
         // return true
       } else if (args[1] == 'ML') {
         scope.sound.play();
-        scope.newUsers.push({
-          name: '',
-          uid: args[0],
-          messages: [args[2]],
-          isOnline: true,
-          companyPk: args[3]
-        })
+        scope.newUsers.push(detail)
       }
     }
 
@@ -249,6 +274,7 @@ connection.onopen = function(session) {
 
   function checkOnline() {
     var scope = angular.element(document.getElementById('chatTab')).scope();
+    console.log(scope.myUsers);
     for (var i = 0; i < scope.myUsers.length; i++) {
       session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
       then((function(i) {
@@ -284,7 +310,7 @@ connection.onopen = function(session) {
   setInterval(function() {
     console.log('comin in interval');
     checkOnline();
-  }, 30000)
+  }, 15000)
 
   function heartbeat() {
     console.log('coming in heartttt');
