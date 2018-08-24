@@ -1,19 +1,53 @@
 <div class="animated fadeIn" id="chatBox">
-  <div style="min-height:75vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white; " class="container-fluid">
-    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:90px;">
-      <div class="row" style="padding:10px;">
-        <div class="col-md-6" style="padding-right:0px;" >
-          <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i> <span style="font-size:18px;" >{{data.uid}}</span>
-          <h4>{{data.name}}</h4>
-        </div>
-        <div class="col-md-4" style="padding:0px" >
-          <div class="btn-group-vertical">
-            <button class="btn btn-primary" type="button" name="button" ng-click="knowledgeBase(data.companyPk)"> Knowledge base </button>
-            <button class="btn btn-danger" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(data.uid,data.chatThreadPk);closed=true" confirm-button-type="default" cancel-button-type="default" ng-hide="closed"> Close Chat </button>
+  <div style="min-height:75vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white;border-bottom:2px solid #eeeeee " class="container-fluid">
+    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:110px;">
+      <div class="row" style="padding:0px;margin-top:5px">
+        <div class="col-md-12">
+          <div class="col-md-4" style="padding:0px">
+            <div class="btn btn-primary btn-sm btn-block" type="button" name="button" ng-click="knowledgeBase(data.companyPk)"> Knowledge base
+            </div>
+          </div>
+          <div class="col-md-4" style="padding:0px">
+            <div class="btn btn-warning btn-sm btn-block" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatTransfer(data.uid,data.chatThreadPk)" confirm-button-type="default" cancel-button-type="default"> Chat Transfer
+            </div>
+          </div>
+          <div class="col-md-4" style="padding:0px">
+            <div class="btn btn-danger btn-sm btn-block" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(data.uid,data.chatThreadPk);closed=true" confirm-button-type="default" cancel-button-type="default" ng-hide="closed"> Close Chat
+            </div>
             <span ng-if="closed" style="font-size:22px;color:red">Chat Closed</span>
           </div>
         </div>
-        <div class="col-md-2 " >
+      </div>
+      <div class="row" style="padding:10px;padding-bottom:0px">
+        <div class="col-md-8" style="padding-right:0px;" >
+          <i class="fa fa-circle" aria-hidden="true" style="color:{{data.isOnline ? '#37a508':'#ff0022'}}"></i> <span style="font-size:18px;" >{{data.uid}}</span>
+          <h4 style="margin:5px 10px">{{data.name}}</h4>
+        </div>
+        <div class="col-md-2">
+          <div class="row" style="padding-top:10px;">
+            <i ng-if="chatHistBtn" class="fa fa-eye pull-right " aria-hidden="true" style="cursor:pointer; font-size:30px; padding-right:10px;" ng-click="getChatHistory(data.email)" title="Chat History"></i>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="row">
+            <i class="fa fa-times pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding-right:10px;" ng-click="closeChatBox(index)"></i>
+          </div>
+          <div class="row" style="padding-top:10px;">
+            <i class="fa fa-pencil fa-lg  pull-right" style="cursor:pointer; padding-right:10px;" aria-hidden="true" ng-click="editUserDetails(data.uid)" title="Edit Details"></i>
+          </div>
+          <!-- <div class="row" style="padding-top:10px;">
+            <i ng-if="chatHistBtn" class="fa fa-eye pull-right " aria-hidden="true" style="cursor:pointer; font-size:25px; padding-right:10px;" ng-click="getChatHistory(data.email)" title="Chat History"></i>
+          </div> -->
+        </div>
+        <!-- <div class="col-md-4" style="padding:0px" >
+          <div class="btn-group-vertical">
+            <button class="btn btn-primary btn-sm" type="button" name="button" ng-click="knowledgeBase(data.companyPk)"> Knowledge base </button>
+            <button class="btn btn-warning btn-sm" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(data.uid,data.chatThreadPk);closed=true" confirm-button-type="default" cancel-button-type="default" ng-hide="closed"> Chat Transfer </button>
+            <button class="btn btn-danger btn-sm" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(data.uid,data.chatThreadPk);closed=true" confirm-button-type="default" cancel-button-type="default" ng-hide="closed"> Close Chat </button>
+            <span ng-if="closed" style="font-size:22px;color:red">Chat Closed</span>
+          </div>
+        </div> -->
+        <!-- <div class="col-md-2 " >
           <div class="row">
             <i class="fa fa-times pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding-right:10px;" ng-click="closeChatBox(index)"></i>
           </div>
@@ -23,10 +57,15 @@
           <div class="row" style="padding-top:10px;">
             <i ng-if="chatHistBtn" class="fa fa-eye pull-right " aria-hidden="true" style="cursor:pointer; font-size:25px; padding-right:10px;" ng-click="getChatHistory(data.email)" title="Chat History"></i>
           </div>
-        </div>
+          <div class="row" style="padding-top:10px;">
+            <i class="fa fa-share fa-lg  pull-right" style="cursor:pointer; padding-right:10px;" aria-hidden="true" ng-click="chatTransfer(data.uid)" title="Chat Transfer"></i>
+          </div>
+        </div> -->
       </div>
+
+
   </div>
-    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px;margin-right:10px; height:74vh; overflow-y:auto; overflow-x:hidden;">
+    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; height:71vh; overflow-y:auto; overflow-x:hidden;">
 
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
         <div class="row container-fluid">
@@ -61,7 +100,7 @@
     </div>
   </div> -->
 
-  <div class="container-fluid" style="padding:;border-top:30px;background-color:#eeeeee">
+  <div class="" style="padding:;border-top:30px;margin-right:15px">
     <div class="row" style="margin:0px;margin-top:10px;margin-bottom:5px;">
       <form>
         <div class="input-group">

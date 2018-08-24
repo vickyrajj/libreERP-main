@@ -660,6 +660,107 @@ app.directive('chatBox', function() {
         });
       }
 
+      $scope.chatTransfer = function (uid, chatThreadPk) {
+        console.log($scope.data,'entireeeeeeeeeeeeee');
+        $scope.onlineAgents = []
+        $scope.offlineAgents = []
+        $http({
+          method: 'GET',
+          url: '/api/support/getMyUser/?allAgents',
+        }).
+        then(function(response) {
+          console.log(response.data.allAgents,'@@@@@@@@@@@@@@@@@@@@@');
+          $scope.allAgents = response.data.allAgents
+          for (var i = 0; i < $scope.allAgents.length; i++) {
+            connection.session.call('service.support.heartbeat.' + $scope.allAgents[i] , []).
+            then((function(i) {
+              return function (res) {
+                $scope.onlineAgents.push($scope.allAgents[i])
+              }
+            })(i) , (function(i) {
+              return function (err) {
+                console.log(err,'offline agents');
+                $scope.offlineAgents.push($scope.allAgents[i])
+              }
+            })(i))
+          }
+        });
+        $scope.opnpoup = function(){
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.support.chatTransfer.modal.html',
+            size: 'xl',
+            backdrop: true,
+            resolve: {
+              onlineAgents: function() {
+                return $scope.onlineAgents;
+              },
+              offlineAgents: function() {
+                return $scope.offlineAgents;
+              },
+              userData: function() {
+                return $scope.data;
+              }
+            },
+            controller: function($scope,onlineAgents,offlineAgents,userData, $users, $uibModalInstance, Flash) {
+              console.log(onlineAgents,offlineAgents);
+              $scope.me = $users.get("mySelf")
+              $scope.onlineAgents = onlineAgents
+              $scope.offlineAgents = offlineAgents
+              $scope.agentPk = 0;
+              $scope.agentForm = {
+                name:'',
+                pk:0
+              }
+              $scope.selectedAgent = function (pk) {
+                $scope.agentPk = pk
+                $scope.agentForm.name = $users.get(pk).username
+                $scope.agentForm.pk =pk
+
+              }
+
+              $scope.transferChat = function () {
+
+                connection.session.call('service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username , userData ]).then(
+                  function (res) {
+                    console.log(userData.chatThreadPk,$scope.agentForm.pk);
+                    // $http({
+                    //   method: 'PATCH',
+                    //   url: '/api/support/chatThread/' + userData.chatThreadPk + '/',
+                    //   data: {
+                    //     user: $scope.agentForm.pk
+                    //   }
+                    // }).
+                    // then(function(response) {
+                    // });
+                    Flash.create('success',"Chat Has Been Transfered Sucessfully")
+                    $uibModalInstance.dismiss('close')
+
+                 },
+                 function (err) {
+                  console.log("Error:", err);
+                  Flash.create('danger',"Chat Couldn't Transfer - Some Server Issues")
+                }
+               );
+              }
+
+
+            },
+          }).result.then(function() {
+
+          }, function(data) {
+            if (data == 'close') {
+              console.log(data);
+              console.log($scope.index);
+              $scope.closeChatBox($scope.index)
+            }
+          });
+        }
+        setTimeout(function () {
+          $scope.opnpoup()
+        }, 2000);
+
+      }
+
 
 
       $scope.editUserDetails = function(uid) {

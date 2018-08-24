@@ -63,6 +63,11 @@ class GetMyUser(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
         print '****** entered', request.GET
+        if 'allAgents' in request.GET:
+            print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
+            allAgents = list(User.objects.exclude(pk=self.request.user.pk).values_list('pk',flat=True))
+            print allAgents,type(allAgents)
+            return Response({'allAgents':allAgents}, status=status.HTTP_200_OK)
         if 'getMyUser' in request.GET:
             # uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
             uidsList = list(ChatThread.objects.filter(user = self.request.GET['user'],status='started').values_list('uid',flat=True).distinct())
@@ -79,6 +84,7 @@ class GetMyUser(APIView):
                 dic['companyPk'] = ChatThread.objects.get(uid=i).company.pk
                 dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
                 toSend.append(dic)
+
 
             return Response(toSend, status=status.HTTP_200_OK)
 
@@ -191,6 +197,7 @@ def getChatterScript(request , fileName):
     serviceWebsite = obj.service.web
     browserHeader =  dict((regex.sub('', header), value) for (header, value) in request.META.items() if header.startswith('HTTP_'))
     print browserHeader
+    print request.META.get('HTTP_X_FORWARDED_FOR') , request.META.get('REMOTE_ADDR')
     print '**************8',browserHeader['REFERER'],serviceWebsite
 
     print globalSettings.SITE_ADDRESS
@@ -202,7 +209,7 @@ def getChatterScript(request , fileName):
         dataToSend["name"] =  obj.name
 
     # return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
-    if serviceWebsite == browserHeader['REFERER']:
+    if serviceWebsite in browserHeader['REFERER']:
         return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
     else:
         return HttpResponse(request,'')

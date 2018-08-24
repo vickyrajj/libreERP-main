@@ -274,29 +274,40 @@ connection.onopen = function(session) {
 
   function checkOnline() {
     var scope = angular.element(document.getElementById('chatTab')).scope();
-    console.log(scope.myUsers);
-    for (var i = 0; i < scope.myUsers.length; i++) {
-      session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
-      then((function(i) {
-        return function (res) {
-          scope.myUsers[i].isOnline = true;
-           }
-      })(i) , (function(i) {
-        return function (err) {
-          console.log(err,'err');
-          scope.myUsers[i].isOnline = false;
-           }
-      })(i))
+    if (scope) {
+      console.log(scope.myUsers);
+      for (var i = 0; i < scope.myUsers.length; i++) {
+        session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
+        then((function(i) {
+          return function (res) {
+            scope.myUsers[i].isOnline = true;
+          }
+        })(i) , (function(i) {
+          return function (err) {
+            console.log(err,'err');
+            scope.myUsers[i].isOnline = false;
+          }
+        })(i))
+      }
     }
   }
 
   function sendBackHeartBeat() {
-    function heartbeat() {
-      return true
-    }
     var scope = angular.element(document.getElementById('chatTab')).scope();
-    session.register('service.support.heartbeat.'+scope.me.pk, heartbeat);
-    console.log(scope.me.pk);
+    if (scope) {
+      function heartbeat(args) {
+        if (args[0]=='popup') {
+          console.log(args[2]);
+          alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
+          return
+        }else {
+          console.log('onlieeeeeeeeeeeeeeeeeeeeeeeee');
+          return true
+        }
+      }
+      session.register('service.support.heartbeat.'+scope.me.pk, heartbeat);
+      console.log(scope.me.pk);
+    }
   }
 
 
