@@ -1,0 +1,61 @@
+<div ng-repeat="l in list">
+  <div class="col-md-3 col-sm-6 col-xs-12   anim-in-out anim-zoom-out" style="margin-bottom:15px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
+    <div class="container-fluid" style="cursor:pointer;" ng-click="openDetails(l.pk,l.product.name.split(' ').join('-'))" >
+      <div class="row" class="text-center">
+        <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
+          <img style="width: 90%; height:200px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
+          <img style="width: 90%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files==null">
+        </div>
+      </div>
+      <div class="row">
+        <div class=" card bg-white" style="padding-bottom:0px;">
+          <div class="row container-fluid" style="padding:10px 20px; " >
+            <!-- <div >
+            <h5 ng-if="l.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name.slice(0,35)}}...</h5>
+            <h5 ng-if="l.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name}}</h5>
+          </div> -->
+            <div  ng-if="!hover">
+            <h5 ng-if="l.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name.slice(0,35)}}...</h5>
+            <h5 ng-if="l.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name}}</h5>
+          </div>
+          <div  ng-if="hover" >
+            <div style="background-color:rgb(24, 89, 46); color:white; padding:10px 10px 10px 10px;margin:0px;height:60px">
+              <div class="col-md-6 col-xs-6 col-sm-6 text-center" style="border-right:1px solid #FFFFFF;">
+              <span ng-click="addToCart(l.pk)" style="cursor:pointer;" >
+              <i class="fa fa-heart  fa-2x"></i>
+              </span>
+            </div>
+            <div class="col-md-6 col-xs-6 col-sm-6 text-center">
+              <span ng-click="addToCart(l.pk)" style="cursor:pointer;">
+              <i class="fa fa-shopping-cart fa-2x"></i>
+              </span>
+            </div>
+            </div>
+          </div>
+            <span style="font-size:15px;padding-left:10px"> Price : </span>
+            <span style="font-size:15px;">
+              <span ng-if="l.product.discount>0" class="text-muted" >
+                <strike>   <i class="fa fa-inr"></i>{{l.product.price}}</strike>
+              </span>
+            <span ng-if="l.product.discount==0">
+                 <i class="fa fa-inr"></i>{{l.product.price}}
+              </span>
+            </span>
+            <span ng-if="l.product.discount>0" style="font-size:15px;">
+              <i class="fa fa-inr"></i>{{l.product.discountedPrice.toFixed(2)}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="container-fluid" style="cursor:pointer;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
+      <div class="row card bg-white text-center" >
+    <div style="background-color:rgb(24, 89, 46); color:white; padding:5px 0px;margin:0px" ng-if="hover">
+      <span ng-click="addToCart(l.pk)" style="cursor:pointer;">
+          <span style="font-size:15px;"><b> Add To Cart </b></span>
+      <i class="fa fa-shopping-cart fa-2x"></i>
+      </span>
+    </div>
+  </div>
+</div> -->
+</div>

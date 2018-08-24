@@ -593,6 +593,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     category : '',
     qty : 1
   }
+  $scope.storeData=[]
+  $scope.storeData.pk=[]
 
   if (product.pk != undefined) {
     $scope.mode = 'edit';
@@ -633,10 +635,10 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       'reorderTrashold': 0,
       'pk': null,
       'unit':'',
-      'discount':0
+      'discount':0,
+      'storeQty':[]
     }
   }
-$scope.storeData=[]
   $scope.storeDetail = {
     'store':'',
     'quantity':''
@@ -656,7 +658,8 @@ $scope.storeData=[]
     then(function(response) {
       Flash.create('success', 'Saved')
       console.log(response.data);
-      $scope.storeData.push(response.data)
+      $scope.product.storeQty.push(response.data)
+      $scope.storeData.push(response.data.pk)
     })
 
   }
@@ -691,6 +694,7 @@ $scope.storeData=[]
   }
 
   $scope.save = function() {
+    console.log(  $scope.storeData.length,'lllllllllllllllllllllllll');
     console.log('entered', $scope.product.discount,'aaaa');
     // console.log($scope.product.productMeta);
     // console.log($scope.product.productMeta.pk);
@@ -763,6 +767,12 @@ $scope.storeData=[]
       fd.append('haveComposition', false);
     }
 
+    if($scope.storeData.length>0){
+
+      fd.append('storeQty' , $scope.storeData)
+
+    }
+
 
     console.log(f.displayPicture);
     console.log(fd);
@@ -778,6 +788,7 @@ $scope.storeData=[]
     }).
     then(function(response) {
       Flash.create('success', 'Saved')
+      console.log(response.data,'aaaaaaaaa');
       $scope.product.pk = response.data.pk;
       if ($scope.mode == 'new') {
         $scope.product.pk = response.data.pk;
@@ -794,6 +805,20 @@ $scope.storeData=[]
     then((function(ind) {
       return function(response) {
         $scope.productData.splice(ind, 1);
+        Flash.create('success', 'Deleted');
+      }
+    })(ind))
+
+  }
+
+  $scope.deleteStore = function(pk, ind) {
+    $http({
+      method: 'DELETE',
+      url: '/api/POS/storeQty/' + pk + '/'
+    }).
+    then((function(ind) {
+      return function(response) {
+        $scope.product.storeQty.splice(ind, 1);
         Flash.create('success', 'Deleted');
       }
     })(ind))

@@ -57,7 +57,6 @@ UNIT_CHOICES = (
 
 class Store(models.Model):
     created = models.DateTimeField(auto_now_add = True)
-    user = models.ForeignKey(User , related_name = 'posStsore' , null = False)
     name = models.CharField(max_length = 100 , null = False)
     address = models.CharField(max_length = 500 , null = False)
     pincode = models.CharField(null= True , max_length = 7)

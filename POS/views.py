@@ -47,18 +47,16 @@ class CustomerViewSet(viewsets.ModelViewSet):
     filter_fields = ['name' ]
 
 class StoreViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.AllowAny, )
     serializer_class = StoreSerializer
-    queryset = Store.objects.all()
+    # queryset = Store.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name' ]
-
-class StoreViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = StoreSerializer
-    queryset = Store.objects.all()
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['name' ]
+    def get_queryset(self):
+        toReturn = Store.objects.all()
+        if 'pincode' in self.request.GET:
+            toReturn = toReturn.filter(pincode__icontains=int(self.request.GET['pincode']))
+        return toReturn
 
 class StoreQtyViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )

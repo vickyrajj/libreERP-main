@@ -206,7 +206,8 @@
 
     <div class="row" style="padding-right:15px;padding-left:15px;">
       <div ng-if="listingSearch.length>0">
-        <div ng-repeat="l in listingSearch">
+        <product-card list="listingSearch"></product-card>
+        <!-- <div ng-repeat="l in listingSearch">
           <div class="col-md-3  hidden-xs hidden-sm  anim-in-out anim-zoom-out" style="margin-bottom:15px;">
             <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk,name:l.product.name.split(' ').join('-')})">
               <div class="row">
@@ -274,7 +275,7 @@
 
 
 
-        </div>
+        </div> -->
       </div>
       <!-- <div ng-if="listingSearch.length>0">
         <img style="width: 90%; height:120px;" class="img" src="/static/images/loading.gif"> -->
@@ -282,7 +283,7 @@
       <!-- </div> -->
 
       <div class="text-center" ng-if="listingSearch.length==0">
-          <img style="width: 50%; height:70vh;" class="img" src="/static/images/loading.gif">
+        <img style="width: 50%; height:70vh;" class="img" src="/static/images/loading.gif">
         <h2 class="text-center text-muted">No Products</h2>
       </div>
     </div>
@@ -347,8 +348,9 @@
 
   <div class="row" style="padding-right:15px;padding-left:15px;">
     <div ng-if="listingSearch.length>0">
-      <div ng-repeat="l in listingSearch">
-        <div class="col-md-3  hidden-xs hidden-sm  anim-in-out anim-zoom-out" style="margin-bottom:15px;">
+      <product-card list="listingSearch"></product-card>
+      <!-- <div ng-repeat="l in listingSearch"> -->
+        <!-- <div class="col-md-3  hidden-xs hidden-sm  anim-in-out anim-zoom-out" style="margin-bottom:15px;">
           <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk,name:l.product.name.split(' ').join('-')})">
             <div class="row">
               <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
@@ -411,7 +413,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
 
 
@@ -429,7 +431,7 @@
   </div>
 
 </div>
-</div>
+
 
 <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:20px;margin-right:20px;" ng-if="showFilter==true">
   <div  class="row card bg-white ">
@@ -477,7 +479,7 @@
     </div>
   </div>
 </div>
-
+</div>
 <div class="row anim-in-out anim-zoom-out" style="position:fixed; bottom:20px; left:0px;z-index:100;" ng-if="showGoToTop">
   <div class="card text-center" style="width:300px;height:70px;padding:10px;background-color:#0e7560;border-radius:0px 10px 10px 0px;">
     <h4 style="color:white;cursor:pointer;" ng-click="rentOut()">Have one to rent out ?</h4>

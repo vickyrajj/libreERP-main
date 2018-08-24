@@ -1,0 +1,31 @@
+<div class="modal-header text-center" style="font-size:19px">
+  <div class="row">
+  <div class="col-md-11">
+  Check for Availability of Store nearby you!
+</div>
+<div class="col-md-1">
+    <i ng-click="close()" class="fa fa-close fa-lg"></i>
+</div>
+</div>
+</div>
+<div class="row modal-body">
+  <div class="col-md-12">
+    <form>
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+      <div class="col-md-6 text-center">
+        <div class="form-group">
+          <!-- <label > Name</label> -->
+          <input type="number" class="form-control" ng-model="form.pincode" placeholder="Enter your Pincode" >
+        </div>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col-md-12" >
+        <button type="submit" class="btn btn-primary" ng-click="checkPincode()">Check</button>
+      </div>
+    </div>
+  </form>
+  </div>
+</div>

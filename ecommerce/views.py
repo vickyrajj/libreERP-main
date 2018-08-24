@@ -91,6 +91,7 @@ from ERP.models import service, appSettingsField
 from PIL import Image
 from django.core.files.images import get_image_dimensions
 import ast
+from flask import Markup
 
 # Create your views here.
 
@@ -759,28 +760,25 @@ class SendFeedBackAPI(APIView):
         emailAddr=[]
         response=''
         supportObj=SupportFeed.objects.get(pk = request.data['datapk'])
-        response = str(request.data['response'])
-        responseData = BeautifulSoup(response, 'html.parser')
+        response = request.data['response']
+        # responseData = BeautifulSoup(response, 'html.parser')
+        responseData = Markup(response)
         emailAddr.append(supportObj.email)
+
         ctx = {
             'heading' : " On response to your Feed Back",
             'linkUrl': globalSettings.BRAND_NAME,
             'sendersAddress' : globalSettings.SEO_TITLE,
             'question' : supportObj.message,
-            'response':responseData.get_text(),
+            'response':responseData,
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
         }
         print ctx
         email_body = get_template('app.ecommerce.support.email.html').render(ctx)
-        # email_subject = "Order Details:"
-        # msgBody = " Your Order has been placed and details are been attached"
-        # contactData.append(str(orderObj.user.email))
-        print 'aaaaaaaaaaaaaaa'
         msg = EmailMessage("Response" , email_body, to= emailAddr)
         msg.content_subtype = 'html'
-        # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
 

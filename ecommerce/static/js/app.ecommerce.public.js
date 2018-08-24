@@ -1,7 +1,4 @@
-
-
-
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule','ngMeta']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule', 'ngMeta']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider) {
 
@@ -185,7 +182,7 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
 
   // $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
   $window.scrollTo(0, 0)
-  console.log('paramsssssssssssss',$state.params.title);
+  console.log('paramsssssssssssss', $state.params.title);
 
   document.title = 'Sterling Select |  ' + $state.params.title.split('-').join(' ')
   document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
@@ -193,17 +190,17 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
   $scope.title = $state.params.title
 
   if ($scope.title == undefined || $scope.title == '') {
-    $state.go('ecommerce' , {})
-  }else if ($scope.title == 'faq' || $scope.title == 'contact-us') {
-    $state.go('account.support' , {})
-  }else {
+    $state.go('ecommerce', {})
+  } else if ($scope.title == 'faq' || $scope.title == 'contact-us') {
+    $state.go('account.support', {})
+  } else {
     $http({
-        method: 'GET',
-        url: '/api/ecommerce/pages/?pageurl__icontains=' + $scope.title
-      }).
-      then(function(response) {
-        $scope.pageData = response.data[0]
-      })
+      method: 'GET',
+      url: '/api/ecommerce/pages/?pageurl__icontains=' + $scope.title
+    }).
+    then(function(response) {
+      $scope.pageData = response.data[0]
+    })
   }
 
 
@@ -335,16 +332,16 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
 
 });
 
-app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window , ngMeta) {
+app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window, ngMeta) {
 
   $scope.me = $users.get('mySelf');
   $scope.showRatings = false
-  console.log('cominggggggggggggggggggggg', $scope.me,$state.params);
+  console.log('cominggggggggggggggggggggg', $scope.me, $state.params);
   document.title = $state.params.name + ' Online At Best Price Only On Sterling Select'
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=rating').
   then(function(response) {
-    console.log('ratingggggggggggggggggggg',response.data);
-    if(response.data[0]!=null){
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
       if (response.data[0].flag) {
         $scope.showRatings = true
       }
@@ -353,8 +350,8 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.showDescription = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=description').
   then(function(response) {
-    console.log('ratingggggggggggggggggggg',response.data);
-    if(response.data[0]!=null){
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
       if (response.data[0].flag) {
         $scope.showDescription = true
       }
@@ -372,11 +369,11 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.details = {};
   $window.scrollTo(0, 0)
   $scope.offset = 0
-  $scope.reviews =[]
-  $scope.getRatings = function(offset){
+  $scope.reviews = []
+  $scope.getRatings = function(offset) {
     $http({
       method: 'GET',
-      url: '/api/ecommerce/rating/?productDetail=' +  $scope.details.pk +'&limit=4&offset='+offset
+      url: '/api/ecommerce/rating/?productDetail=' + $scope.details.pk + '&limit=4&offset=' + offset
     }).
     then(function(response) {
       $scope.reviews = response.data.results
@@ -402,7 +399,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
     $http({
       method: 'GET',
-      url: '/api/ecommerce/listingLite/?parentValue=' + $scope.details.parentType.pk + '&detailValue='+$scope.details.pk
+      url: '/api/ecommerce/listingLite/?parentValue=' + $scope.details.parentType.pk + '&detailValue=' + $scope.details.pk
     }).
     then(function(response) {
       $scope.suggest = response.data
@@ -533,44 +530,44 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.sendReview = function() {
 
     // if (mode == 'rating') {
-      if ($scope.form.rating == '' ) {
-        Flash.create('danger', 'Please provide rating')
-      }
+    if ($scope.form.rating == '') {
+      Flash.create('danger', 'Please provide rating')
+    }
     // } else {
-      if ($scope.form.reviewText == '' ) {
-        Flash.create('danger', 'No review heading to post')
-        return;
-      }
-      if ($scope.form.reviewHeading == '' ) {
-        Flash.create('danger', 'No review to post')
-        return;
-      }
-      //post request
+    if ($scope.form.reviewText == '') {
+      Flash.create('danger', 'No review heading to post')
+      return;
+    }
+    if ($scope.form.reviewHeading == '') {
+      Flash.create('danger', 'No review to post')
+      return;
+    }
+    //post request
     var toSend = {
-        rating: $scope.form.rating,
-        textVal:$scope.form.reviewText,
-        headingVal: $scope.form.reviewHeading,
-        // user:$scope.me.pk,
-        productDetail : $scope.details.pk
+      rating: $scope.form.rating,
+      textVal: $scope.form.reviewText,
+      headingVal: $scope.form.reviewHeading,
+      // user:$scope.me.pk,
+      productDetail: $scope.details.pk
+    }
+    $http({
+      method: 'POST',
+      url: '/api/ecommerce/rating/',
+      data: toSend
+    }).
+    then(function(response) {
+      if ($scope.reviews.length < 4) {
+        $scope.reviews.push(response.data)
+      } else {
+        $scope.offset += 4
+        $scope.getRatings($scope.offset)
       }
-      $http({
-        method: 'POST',
-        url: '/api/ecommerce/rating/',
-        data: toSend
-      }).
-      then(function(response) {
-        if($scope.reviews.length<4){
-          $scope.reviews.push(response.data)
-        }else{
-          $scope.offset+=4
-          $scope.getRatings($scope.offset)
-        }
-          Flash.create('success', 'Your review is added')
-        $scope.form.rating=0
-        $scope.form.reviewText=''
-        $scope.form.reviewHeading=''
+      Flash.create('success', 'Your review is added')
+      $scope.form.rating = 0
+      $scope.form.reviewText = ''
+      $scope.form.reviewHeading = ''
 
-      })
+    })
 
 
     // }
@@ -595,9 +592,9 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   // $scope.rating=[]
   // $scope.count=0
 
-    $scope.getSuggestion= function(){
+  $scope.getSuggestion = function() {
 
-    }
+  }
 
 
   // $scope.fetchReviews = function() {
@@ -641,6 +638,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   // then(function(response) {
   //
   // });
+  $scope.recentlyViewed=[]
   if ($scope.me != null) {
     $http({
       method: 'GET',
@@ -651,7 +649,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       if ($scope.recentlyViewed.product.pk == $scope.details.pk) {
         $scope.recentlyViewed = response.data.results[1]
       }
-
+      // for(var i=0;i<response.data.results.length;i++){
+      //   if(response.data.results[i].product.pk!=$scope.details.pk){
+      //      $scope.recentlyViewed.push(response.data.results[1].product)
+      //   }
+      //
+      // }
     })
   }
 
@@ -662,8 +665,8 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
   $scope.showFilter = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=filter').
   then(function(response) {
-    console.log('ratingggggggggggggggggggg',response.data);
-    if(response.data[0]!=null){
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
       if (response.data[0].flag) {
         $scope.showFilter = true
       }
@@ -713,7 +716,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     }
     $http({
       method: 'GET',
-      url: '/api/ecommerce/genericProduct/?genericValue=' + response.data[0].pk ,
+      url: '/api/ecommerce/genericProduct/?genericValue=' + response.data[0].pk,
     }).
     then(function(response) {
       console.log(response.data);
@@ -765,7 +768,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
       minPrice: $scope.slider.minValue,
       maxPrice: $scope.slider.maxValue,
       fields: {},
-      sort:$scope.data.sort
+      sort: $scope.data.sort
     }
 
     for (var i = 0; i < $scope.category.fields.length; i++) {
@@ -809,7 +812,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
 
 
     console.log("gggggggggggggggggggggggggggg");
-    console.log($scope.category.pk,'aaaaaaaaaaaaaaaaaaaaaaa');
+    console.log($scope.category.pk, 'aaaaaaaaaaaaaaaaaaaaaaa');
     $http({
       method: 'GET',
       url: '/api/ecommerce/listing/?parent=' + $scope.category.pk + '&recursive=1',
@@ -1003,8 +1006,7 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
 
 });
 
-app.controller('controller.ecommerce.account.saved.item', function($scope, $rootScope, $http, $state) {
-})
+app.controller('controller.ecommerce.account.saved.item', function($scope, $rootScope, $http, $state) {})
 
 app.controller('controller.ecommerce.account.cart.item', function($scope, $rootScope, $http, $state) {
 
@@ -1269,10 +1271,13 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
 
   $scope.delete = function(idx) {
     console.log($scope.savedAddress[idx]);
-    $http({method : 'DELETE' , url : '/api/ecommerce/address/' + $scope.savedAddress[idx].pk + '/'}).
+    $http({
+      method: 'DELETE',
+      url: '/api/ecommerce/address/' + $scope.savedAddress[idx].pk + '/'
+    }).
     then(function(response) {
       $scope.savedAddress.splice(idx, 1)
-      Flash.create('success',"Address Deleted" );
+      Flash.create('success', "Address Deleted");
     })
   }
 
@@ -1653,7 +1658,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.order = response.data
       $scope.data.stage = 'confirmation';
       $rootScope.inCart = [];
-      $scope.item =[];
+      $scope.item = [];
       console.log('in cart', $rootScope.inCart);
     })
 
@@ -1733,13 +1738,13 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     location: null
   } // to be used to store different parameter by the users on which the search result will be filtered out
 
-  $scope.loginPage = function(){
+  $scope.loginPage = function() {
     window.location = '/login';
   }
-  $scope.logoutPage = function(){
+  $scope.logoutPage = function() {
     window.location = '/logout';
   }
-  $scope.registerPage = function(){
+  $scope.registerPage = function() {
     window.location = '/register';
   }
   $scope.genericProductSearch = function(query) {
@@ -1753,6 +1758,45 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     product: ''
   };
 
+  $scope.showmultipleStore = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.multipleStore = true
+        if($scope.multipleStore == true){
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.ecommerce.pincodeEnquiry.form.html',
+            size: 'md',
+            backdrop: false,
+            // resolve: {
+            //   product: function() {
+            //
+            //   }
+            // },
+            controller: 'controller.ecommerce.pincodeEnquiry.modal',
+          }).result.then(function() {
+
+          }, function() {
+
+          });
+        }
+      }
+    }
+    console.log($scope.multipleStore);
+  })
+
+
+  $scope.bannerText = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerText').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.bannerText = true
+      }
+    }
+  })
   $scope.search = function() {
     if (typeof $scope.searchProduct.product == 'object') {
       if ($scope.searchProduct.product.typ == 'list') {
@@ -1809,25 +1853,25 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     // }
     $scope.slide.banners = response.data;
     if ($scope.slide.banners.length > 5) {
-      $scope.slide.banners = $scope.slide.banners.slice(0,5)
+      $scope.slide.banners = $scope.slide.banners.slice(0, 5)
     }
-    $scope.slide.active =0
+    $scope.slide.active = 0
     if ($scope.slide.banners.length > 1) {
       $scope.slide.lastbanner = $scope.slide.banners.length - 1
-    }else {
+    } else {
       $scope.slide.lastbanner = 0
     }
 
-    console.log(response.data,'fffff');
+    console.log(response.data, 'fffff');
 
     $scope.slideMobile.banners = response.data;
     if ($scope.slideMobile.banners.length > 3) {
-      $scope.slideMobile.banners = response.data.slice(0,3);
+      $scope.slideMobile.banners = response.data.slice(0, 3);
     }
-    $scope.slideMobile.active =0
+    $scope.slideMobile.active = 0
     if ($scope.slideMobile.banners.length > 1) {
       $scope.slideMobile.lastbanner = $scope.slideMobile.banners.length - 1
-    }else {
+    } else {
       $scope.slideMobile.lastbanner = 0
     }
     console.log($scope.slide.banners);
@@ -1839,11 +1883,11 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
   $interval(function() {
     if ($scope.slide.active == undefined) {
-      $scope.slide.active =0
+      $scope.slide.active = 0
     }
     if ($scope.slide.active == $scope.slide.lastbanner) {
       $scope.slide.active = 0;
-    }else {
+    } else {
       $scope.slide.active += 1;
     }
   }, 5000);
@@ -1855,11 +1899,11 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
   $interval(function() {
     if ($scope.slideMobile.active == undefined) {
-      $scope.slideMobile.active =0
+      $scope.slideMobile.active = 0
     }
     if ($scope.slideMobile.active == $scope.slideMobile.lastbanner) {
       $scope.slideMobile.active = 0;
-    }else {
+    } else {
       $scope.slideMobile.active += 1;
     }
   }, 3000);
@@ -1877,13 +1921,13 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     message: ''
   };
 
-$scope.feddbackPannel=false
-$scope.feedbackstatus=function(){
-  $scope.feddbackPannel=true
-}
-$scope.close=function(){
-  $scope.feddbackPannel=false
-}
+  $scope.feddbackPannel = false
+  $scope.feedbackstatus = function() {
+    $scope.feddbackPannel = true
+  }
+  $scope.close = function() {
+    $scope.feddbackPannel = false
+  }
 
 
   $scope.sendFeedback = function() {
@@ -1909,18 +1953,17 @@ $scope.close=function(){
     // }
 
 
-      console.log("aaaaaaaa");
-      if ($scope.feedback.email == '') {
-        Flash.create('danger', 'Please provide details')
+    console.log("aaaaaaaa");
+    if ($scope.feedback.email == '') {
+      Flash.create('danger', 'Please provide details')
+    } else {
+      console.log($scope.feedback.email, 'aaaaa');
+      var toSend = {
+        email: $scope.feedback.email,
+        mobile: $scope.feedback.mobile,
+        message: $scope.feedback.message,
       }
-      else{
-        console.log($scope.feedback.email,'aaaaa');
-        var toSend = {
-          email: $scope.feedback.email,
-          mobile: $scope.feedback.mobile,
-          message: $scope.feedback.message,
-        }
-      }
+    }
 
 
     $http({
@@ -2005,8 +2048,22 @@ $scope.close=function(){
   }
 
 });
+app.controller('controller.ecommerce.pincodeEnquiry.modal', function($scope, $rootScope, $state, $http, $users, $interval,$uibModal,$uibModalInstance, Flash) {
+  $scope.close=function(){
+    $uibModalInstance.close();
+  }
 
-app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, $users,$interval) {
+$scope.checkPincode=function(){
+  if ($scope.form.pincode.toString().length<6){
+      Flash.create('danger',"Please enter a correct Pincode");
+  }
+ $http.get('/api/POS/store/?pincode=' + $scope.form.pincode ).
+  then(function(response) {
+    console.log(response.data);
+  })
+}
+});
+app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, $users, $interval) {
 
   // $scope.fetchListings = function(){
   //   url = '/api/ecommerce/listingLite/?'
@@ -2076,15 +2133,15 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
 
   // $scope.fetchListings()
 
-// $scope.offset = 0
-//
-// $scope.load=function(offset){
-// $scope.productDetails = function(pk,name){
-//   console.log(name,name.split(' ').join('-'));
-//   $state.go('details' , {id : pk,name:name.replace(' ','-')})
-// }
-document.title = 'Buy Products Online At Best Price In India | Sterling Select'
-document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  // $scope.offset = 0
+  //
+  // $scope.load=function(offset){
+  // $scope.productDetails = function(pk,name){
+  //   console.log(name,name.split(' ').join('-'));
+  //   $state.go('details' , {id : pk,name:name.replace(' ','-')})
+  // }
+  document.title = 'Buy Products Online At Best Price In India | Sterling Select'
+  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
   $http({
     method: 'GET',
     url: '/api/ecommerce/listingLite/'
@@ -2092,15 +2149,15 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
   then(function(response) {
     $scope.listingProducts = response.data.splice(1, 8);
     console.log('sssssssssss', $scope.listingProducts);
-    $scope.listingRemainingProducts = response.data.splice(5,8);
-      console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
+    $scope.listingRemainingProducts = response.data.splice(5, 8);
+    console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
   })
-// }
-// $scope.load($scope.offset)
-// $interval(function(){
-// $scope.offset += 10;
-// $scope.load($scope.offset)
-// },10);
+  // }
+  // $scope.load($scope.offset)
+  // $interval(function(){
+  // $scope.offset += 10;
+  // $scope.load($scope.offset)
+  // },10);
 
 
 
@@ -2112,7 +2169,7 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
     $scope.genericProducts = response.data;
   })
 
-  // $scope.recentlyViewed = [];
+  $scope.recentlyViewed = [];
   // $scope.recentViewsArr = [];
   //
   if ($scope.me != null) {
@@ -2121,8 +2178,9 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
       url: '/api/ecommerce/activities/?user=' + $scope.me.pk + '&typ=productView&limit=4'
     }).
     then(function(response) {
-      console.log('%%%%%%%%', response.data.results);
-      $scope.recentlyViewed = response.data.results
+    for (var i=0;i<response.data.results.length;i++){
+      $scope.recentlyViewed .push(response.data.results[i].product)
+    }
     })
   }
 
@@ -2158,29 +2216,29 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
     // }
     $scope.subSlide.banners = response.data;
     if ($scope.subSlide.banners.length > 5) {
-      $scope.subSlide.banners = $scope.slide.banners.slice(0,5)
+      $scope.subSlide.banners = $scope.slide.banners.slice(0, 5)
     }
     if ($scope.subSlide.banners.length > 1) {
       $scope.subSlide.lastbanner = $scope.subSlide.banners.length - 1
       $scope.subSlide.img = $scope.subSlide.banners[0].image
       $scope.subSlide.title = $scope.subSlide.banners[0].title
-    }else {
+    } else {
       $scope.subSlide.lastbanner = 0
     }
 
 
-    console.log(response.data,'fffff');
+    console.log(response.data, 'fffff');
 
     $scope.subSlideMobile.banners = response.data;
     if ($scope.subSlideMobile.banners.length > 3) {
-      $scope.subSlideMobile.banners = response.data.slice(0,3);
+      $scope.subSlideMobile.banners = response.data.slice(0, 3);
     }
     if ($scope.subSlideMobile.banners.length > 1) {
       $scope.subSlideMobile.lastbanner = $scope.subSlideMobile.banners.length - 1
       $scope.subSlideMobile.img = $scope.subSlideMobile.banners[0].imagePortrait
       $scope.subSlideMobile.title = $scope.subSlideMobile.banners[0].title
 
-    }else {
+    } else {
       $scope.subSlideMobile.lastbanner = 0
     }
 
@@ -2190,20 +2248,20 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
   // }
 
 
-    $interval(function() {
-      if ($scope.subSlide.active == undefined) {
-        $scope.subSlide.active =0
-      }
-      if ($scope.subSlide.active == $scope.subSlide.lastbanner) {
-        $scope.subSlide.active = 0;
-      }else {
-        $scope.subSlide.active += 1;
-      }
-      if($scope.subSlideMobile.banners[$scope.subSlideMobile.active]!=undefined){
+  $interval(function() {
+    if ($scope.subSlide.active == undefined) {
+      $scope.subSlide.active = 0
+    }
+    if ($scope.subSlide.active == $scope.subSlide.lastbanner) {
+      $scope.subSlide.active = 0;
+    } else {
+      $scope.subSlide.active += 1;
+    }
+    if ($scope.subSlideMobile.banners[$scope.subSlideMobile.active] != undefined) {
       $scope.subSlide.img = $scope.subSlide.banners[$scope.subSlide.active].image
       $scope.subSlide.title = $scope.subSlide.banners[$scope.subSlide.active].title
     }
-    }, 3000);
+  }, 3000);
 
   // $scope.changeSlideMobile = function(index) {
   //   $scope.subSlideMobile.active = index;
@@ -2212,16 +2270,16 @@ document.querySelector('meta[name="description"]').setAttribute("content", 'Ster
   $interval(function() {
     console.log("aaaaaaaaaaaaaaaaaaaaa");
     if ($scope.subSlideMobile.active == undefined) {
-      $scope.subSlideMobile.active =0
+      $scope.subSlideMobile.active = 0
     }
     if ($scope.subSlideMobile.active == $scope.subSlideMobile.lastbanner) {
       $scope.subSlideMobile.active = 0;
-    }else {
+    } else {
       $scope.subSlideMobile.active += 1;
     }
-    if($scope.subSlideMobile.banners[$scope.subSlideMobile.active]!=undefined){
+    if ($scope.subSlideMobile.banners[$scope.subSlideMobile.active] != undefined) {
       $scope.subSlideMobile.img = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].imagePortrait
-      console.log($scope.subSlideMobile.img,'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+      console.log($scope.subSlideMobile.img, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
       $scope.subSlideMobile.title = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].title
     }
   }, 3000);

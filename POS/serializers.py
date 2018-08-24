@@ -32,25 +32,18 @@ class CustomerSerializer(serializers.ModelSerializer):
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
-        fields = ('pk' ,'created', 'user' , 'name' , 'address' , 'pincode' , 'mobile' , 'email')
-        read_only_fields = ( 'user' , )
-    def create(self , validated_data):
-        s = Store(**validated_data)
-        s.user = self.context['request'].user
-        s.save()
-        return s
+        fields = ('pk' ,'created' , 'name' , 'address' , 'pincode' , 'mobile' , 'email')
 
 class StoreQtySerializer(serializers.ModelSerializer):
+    store = StoreSerializer(many = False , read_only = True)
     class Meta:
-        store=StoreSerializer(many=False,read_only=True)
         model = StoreQty
         fields = ('pk' ,'created', 'store' , 'quantity' )
-        read_only_fields = ( 'user' , )
     def create(self , validated_data):
         s = StoreQty(**validated_data)
         if 'store' in self.context['request'].data:
-            s.store = Store.objects.get(pk=int(self.context['request'].data['store']))
-        print s.store
+            s.store = Store.objects.get(pk=self.context['request'].data['store'])
+        print s.store,'aaaaaaaaaaaaaaaaaaa'
         s.save()
         return s
 
@@ -71,6 +64,7 @@ class ProductSerializer(serializers.ModelSerializer):
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
         print self.context['request'].data
+        print self.context['request'].data['storeQty'],'llllllllllllllllllllllllllllllllll'
         print 'entered','***************'
         print validated_data
         p = Product(**validated_data)
@@ -104,6 +98,7 @@ class ProductSerializer(serializers.ModelSerializer):
     def update(self ,instance, validated_data):
         print 'entered in updating ************************************'
         print self.context['request'].data
+
         print 'entered','***************'
         print validated_data
 
@@ -111,7 +106,7 @@ class ProductSerializer(serializers.ModelSerializer):
             il = InventoryLog(before = instance.inStock , after = validated_data['inStock'],product = instance,typ = 'user' , user = self.context['request'].user)
             il.save()
 
-        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap','unit']:
+        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap','unit','storeQty']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -125,7 +120,10 @@ class ProductSerializer(serializers.ModelSerializer):
             print self.context['request'].data['compositions'],type(self.context['request'].data['compositions'])
             for c in self.context['request'].data['compositions'].split(','):
                 instance.compositions.add(Product.objects.get(pk = int(c)))
-
+        if 'storeQty' in self.context['request'].data:
+            for c in self.context['request'].data['storeQty'].split(','):
+                print type(c), c
+                instance.storeQty.add(StoreQty.objects.get(pk = c))
 
 
         instance.save()

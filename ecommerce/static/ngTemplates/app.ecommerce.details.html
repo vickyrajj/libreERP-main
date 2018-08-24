@@ -278,7 +278,8 @@
     <div class="row" style="margin:0px;" ng-if="me != null">
       <div class=" col-md-10 hidden-xs hidden-sm" style="padding:40px; padding-top:0px;width:100%">
           <h4>Suggested Products</h4>
-          <div ng-repeat="r in suggest" style="padding:0px;">
+            <product-card list="suggest"></product-card>
+          <!-- <div ng-repeat="r in suggest" style="padding:0px;">
             <div class="col-md-3 anim-in-out anim-zoom-out">
               <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.pk,name:r.product.name.split(' ').join('-')})">
                 <div class="row">
@@ -307,14 +308,15 @@
                 </div>
               </div>
             </div>
-        </div>
+        </div> -->
       </div>
 
 
       <div class="col-xs-12 hidden-md hidden-lg" style="padding:40px; padding-top:0px;">
         <!-- <div style="padding:10px;" class="row card bg-white"> -->
           <h4 class="text-center">Suggested Products</h4>
-          <div ng-repeat="r in suggest" style="padding:0px;">
+            <product-card list="suggest"></product-card>
+          <!-- <div ng-repeat="r in suggest" style="padding:0px;">
             <div class="col-xs-12 col-sm-6 anim-in-out anim-zoom-out" style="margin-bottom:15px">
               <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.pk,name:r.product.name.split(' ').join('-')})">
                 <div class="row">
@@ -345,13 +347,14 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
 
   <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:15px; position:sticky; top:10px; " ng-if="me != null">
     <h4>Recently Viewed</h4>
+      <!-- <product-card list="recentlyViewed"></product-card> -->
     <div style="padding:10px;" class="row card bg-white">
         <div class="col-md-12 anim-in-out anim-zoom-out">
           <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : recentlyViewed.product.pk,name:recentlyViewed.product.product.name.split(' ').join('-')})">

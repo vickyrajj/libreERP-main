@@ -562,3 +562,31 @@ app.directive('chatWindow', function ($users) {
     } // link
   };
 });
+
+app.directive('productCard', function () {
+  return {
+    templateUrl: '/static/ngTemplates/productCart.html',
+    restrict: 'E',
+    scope:{
+      list: '=',
+      title: '@',
+    },
+    controller : function($scope , $state , $http , Flash, $rootScope){
+
+      // console.log($scope.list,'aaaaa');
+
+      $scope.openDetails = function (id , name) {
+        console.log('calling open details ' , id , name);
+
+        $state.go('details', {
+          id: id,
+          name: name
+        })
+
+      }
+      $scope.addToCart=function(id){
+        console.log("aaaaaaa",id);
+      }
+    },
+  };
+});
