@@ -29,7 +29,14 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
        for (var i = 0; i < response.data.length; i++) {
          console.log(response.data);
          console.log(response.data[i].chatThreadPk);
-         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid, chatThreadPk:response.data[i].chatThreadPk, messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
+         $scope.myUsers.push( {name : response.data[i].name , email:response.data[i].email , uid: response.data[i].uid, chatThreadPk:response.data[i].chatThreadPk, messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
+
+         connection.session.publish('service.support.agent', [response.data[i].uid , 'R' ], {}, {
+           acknowledge: true
+         }).
+         then(function(publication) {
+           console.log("Published");
+         });
 
        }
      });
@@ -78,7 +85,25 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
      }
    }
 
+   // $scope.removeChat = function(indx) {
+   //   for (var i = 0; i < $scope.chatsInView.length; i++) {
+   //     if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
+   //       $scope.chatsInView.splice(i,1)
+   //       console.log('removing from chat');
+   //       return
+   //     }
+   //   }
+   // }
+
    $scope.chatClose = function(idx,chatThreadPk) {
+     console.log('coming in chatclose');
+     var myUser = $scope.myUsers[idx];
+     for (var i = 0; i < $scope.chatsInView.length; i++) {
+       if (myUser.uid == $scope.chatsInView[i].uid) {
+         $scope.chatsInView.splice(i,1)
+         console.log('removing from chat');
+       }
+     }
      $scope.myUsers.splice(idx,1)
      $http({
        method: 'PATCH',
@@ -88,7 +113,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
        }
      }).
      then(function(response) {
-       Flash.create('sucess', 'Chat Has Closed')
+       Flash.create('success', 'Chat Has Closed')
        return
      });
    }

@@ -70,9 +70,9 @@ class GetMyUser(APIView):
             for i in uidsList:
                 try:
                     data = Visitor.objects.get(uid=i)
-                    dic = {'uid':data.uid,'name':data.name}
+                    dic = {'uid':data.uid,'name':data.name ,'email':data.email}
                 except:
-                    dic = {'uid':i,'name':''}
+                    dic = {'uid':i,'name':'' ,'email':''}
                 # print ChatThread.objects.get(uid=i).company.pk
                 dic['companyPk'] = ChatThread.objects.get(uid=i).company.pk
                 dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
@@ -149,7 +149,7 @@ def decrypt(enc, password):
     cipher = AES.new(private_key, AES.MODE_CBC, iv)
     return unpad(cipher.decrypt(enc[16:]))
 
-class getChatterScriptAPI(APIView):
+class GetChatterScriptAPI(APIView):
     def get(self , request , format = None):
         pk = request.GET['pk']
         encrypted = encrypt(pk, "cioc")
@@ -159,6 +159,25 @@ class getChatterScriptAPI(APIView):
             encrypted = encrypt(pk, "cioc")
 
         return Response({'data':encrypted  }, status = status.HTTP_200_OK)
+
+class GetChatHistory(APIView):
+    def get(self , request , format = None):
+        if 'email' in request.GET:
+            toSend = []
+            email = request.GET['email']
+            print email,'77777777777777777777'
+            uidList = list(Visitor.objects.filter(email=email).values_list('uid',flat=True).distinct())
+            print uidList
+            for uid in uidList:
+                chatList = list(SupportChat.objects.filter(uid=uid).values().annotate(file=Concat(Value('/media/'),'attachment')))
+                agentList = list(SupportChat.objects.filter(uid=uid).values_list('user',flat=True).distinct())
+
+                # print agentList,chatList
+                toSend.append({'agentList':agentList,'chatList':chatList})
+            return Response({'data':toSend}, status = status.HTTP_200_OK)
+        else:
+            return Response({}, status = status.HTTP_200_OK)
+
 
 def getChatterScript(request , fileName):
     print fileName,'*****************'

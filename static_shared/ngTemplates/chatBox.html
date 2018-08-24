@@ -15,10 +15,13 @@
         </div>
         <div class="col-md-2 " >
           <div class="row">
-            <i class="fa fa-times pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding-right:10px;" ng-click="closeChatBox(index)" ></i>
+            <i class="fa fa-times pull-right " aria-hidden="true" style="cursor:pointer; font-size:20px; padding-right:10px;" ng-click="closeChatBox(index)"></i>
           </div>
-          <div class="row" style="padding-top:15px;">
-            <i class="fa fa-pencil fa-lg  pull-right" style="cursor:pointer; padding-right:10px;" aria-hidden="true" ng-click="editUserDetails(data.uid)"></i>
+          <div class="row" style="padding-top:10px;">
+            <i class="fa fa-pencil fa-lg  pull-right" style="cursor:pointer; padding-right:10px;" aria-hidden="true" ng-click="editUserDetails(data.uid)" title="Edit Details"></i>
+          </div>
+          <div class="row" style="padding-top:10px;">
+            <i ng-if="chatHistBtn" class="fa fa-eye pull-right " aria-hidden="true" style="cursor:pointer; font-size:25px; padding-right:10px;" ng-click="getChatHistory(data.email)" title="Chat History"></i>
           </div>
         </div>
       </div>
@@ -41,7 +44,8 @@
         </div>
 
         <div class="row container-fluid" style="{{message.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
-          <span style="float:{{message.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" >{{message.created | timeAgo}}</span>
+          <span ng-if="!message.sentByAgent" style="float:left;  font-size:11px; " class="text-muted" >{{message.created | timeAgo}}</span>
+          <span ng-if="message.sentByAgent" style="float:right;  font-size:11px; " class="text-muted" >{{message.user | getName}}, {{message.created | timeAgo}}</span>
         </div>
 
       </div>

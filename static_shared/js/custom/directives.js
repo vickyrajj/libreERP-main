@@ -330,6 +330,21 @@ app.directive('chatBox', function() {
       // console.log($scope.data,'will fetch here');
       $scope.visitorForm = ''
       $scope.isTyping = false;
+      $scope.chatHistBtn = false;
+      $scope.chatHistory = []
+      console.log('adsd',$scope.data);
+      if ($scope.data.email.length>0) {
+        $http({
+          method: 'GET',
+          url: '/api/support/visitor/?email=' + $scope.data.email,
+        }).
+        then(function(response) {
+          if (response.data.length>1) {
+            $scope.chatHistBtn = true
+          }
+        })
+      }
+
       $scope.sound = ngAudio.load("static/audio/notification.mp3");
 
       $http({
@@ -345,7 +360,7 @@ app.directive('chatBox', function() {
 
       $http({
         method: 'GET',
-        url: '/api/support/supportChat/?user=' + $scope.me.pk + '&uid=' + $scope.data.uid,
+        url: '/api/support/supportChat/?&uid=' + $scope.data.uid,
       }).then(function(response) {
         $scope.data.messages = [];
         console.log(response.data);
@@ -570,6 +585,42 @@ app.directive('chatBox', function() {
         })
       }
 
+      $scope.getChatHistory = function(email) {
+        $http({
+          method: 'GET',
+          url: '/api/support/getChatHistory/?email=' + email,
+        }).
+        then(function(response) {
+          console.log(response.data.data);
+          $scope.chatHistory = response.data.data
+          $scope.chatHistModal(email)
+        })
+      }
+
+
+      $scope.chatHistModal = function(email) {
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.chatHistory.modal.html',
+          size: 'xl',
+          backdrop: true,
+          resolve: {
+            chatData: function() {
+              return $scope.chatHistory;
+            }
+          },
+          controller: function($scope,chatData , $users, $uibModalInstance, Flash) {
+            $scope.chatData = chatData;
+            $scope.email = email
+
+          },
+        }).result.then(function() {
+
+        }, function(data) {
+
+        });
+      }
+
+
 
       $scope.editUserDetails = function(uid) {
         $uibModal.open({
@@ -661,6 +712,16 @@ app.directive('chatBox', function() {
                 // $scope.form = response.data;
                 Flash.create('success', 'User details saved')
                 $uibModalInstance.dismiss(response.data)
+
+
+                connection.session.call('service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
+                  function (res) {
+                 },
+                 function (err) {
+
+                }
+               );
+
               });
             }
 
@@ -671,6 +732,19 @@ app.directive('chatBox', function() {
           if (data != 'backdrop click') {
             $scope.data.name = data.name
             $scope.visitorForm = data
+            console.log('something#################');
+
+
+            $http({
+              method: 'GET',
+              url: '/api/support/visitor/?email=' + data.email,
+            }).
+            then(function(response) {
+              if (response.data.length>1) {
+                $scope.chatHistBtn = true
+              }
+            })
+
           }
         });
       }

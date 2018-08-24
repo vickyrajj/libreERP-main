@@ -34,12 +34,12 @@
                         <span> {{x.uid.split("$")[1]}}</span>
                       </div>
                       <div class="row">
-                        <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i>  <span ng-if="x.name.length>0" >{{x.name}}</span> <span ng-if="x.name.length==0" >{{x.uid}}</span>
+                        <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline>0 ? '#37a508':'#ff0022'}}"></i>  <span ng-if="x.name.length>0" >{{x.name}}</span> <span ng-if="x.name.length==0" >{{x.uid}}</span>
                         <span ng-if="!x.boxOpen && x.unreadMsg>0" >( {{x.unreadMsg}} )</span>
                       </div>
                     </div>
                     <div class="col-md-2">
-                      <i ng-if="!x.isOnline" class="fa fa-times fa-lg" ng-click="chatClose($index,x.chatThreadPk)"></i>
+                      <i ng-if="!x.isOnline" class="fa fa-times fa-lg" ng-click="chatClose($index,x.chatThreadPk);"></i>
                     </div>
                   </div>
                 </div>
