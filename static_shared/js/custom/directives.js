@@ -332,14 +332,14 @@ app.directive('chatBox', function() {
       $scope.isTyping = false;
       $scope.chatHistBtn = false;
       $scope.chatHistory = []
-      console.log('adsd',$scope.data);
-      if ($scope.data.email.length>0) {
+      console.log('adsd', $scope.data);
+      if ($scope.data.email.length > 0) {
         $http({
           method: 'GET',
           url: '/api/support/visitor/?email=' + $scope.data.email,
         }).
         then(function(response) {
-          if (response.data.length>1) {
+          if (response.data.length > 1) {
             $scope.chatHistBtn = true
           }
         })
@@ -502,7 +502,7 @@ app.directive('chatBox', function() {
       });
 
 
-      $scope.chatClose = function(uid,chatThreadPk) {
+      $scope.chatClose = function(uid, chatThreadPk) {
         $scope.status = "F";
         connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
@@ -547,7 +547,9 @@ app.directive('chatBox', function() {
           size: 'xl',
           backdrop: true,
           controller: function($scope, $users, $uibModalInstance) {
-            $scope.form = {title:''}
+            $scope.form = {
+              title: ''
+            }
             console.log(companyPk);
             $http({
               method: 'GET',
@@ -558,10 +560,10 @@ app.directive('chatBox', function() {
               $scope.docData = response.data
 
             });
-            $scope.filterData = function(title){
+            $scope.filterData = function(title) {
               $http({
                 method: 'GET',
-                url: '/api/support/documentation/?customer=' + companyPk+'&title__icontains='+title,
+                url: '/api/support/documentation/?customer=' + companyPk + '&title__icontains=' + title,
               }).
               then(function(response) {
                 console.log(response.data);
@@ -573,7 +575,7 @@ app.directive('chatBox', function() {
               $uibModalInstance.close()
             }
             $scope.sowDetails = 0
-            $scope.textShow = function(pk){
+            $scope.textShow = function(pk) {
               console.log(pk);
               $scope.sowDetails = pk
             }
@@ -608,9 +610,47 @@ app.directive('chatBox', function() {
               return $scope.chatHistory;
             }
           },
-          controller: function($scope,chatData , $users, $uibModalInstance, Flash) {
+          controller: function($scope, chatData, $users, $uibModalInstance, Flash) {
             $scope.chatData = chatData;
             $scope.email = email
+            $scope.searchForm = {
+              value: ''
+            }
+
+
+            $scope.searchText = function() {
+              console.log($scope.searchForm.value, 'ffffffffffffffffff');
+            //   if (window.find) {        // Firefox, Google Chrome, Safari
+            //     var found = window.find($scope.searchForm.value);
+            //     if (!found) {
+            //         alert ("The following text was not found:\n" + $scope.searchForm.value);
+            //     }else {
+            //       console.log(found , 'gggggggggg');
+            //     }
+            // }
+            // else {
+            //     alert ("Your browser does not support this example!");
+            // }
+
+
+            var name = $scope.searchForm.value
+            var pattern = name.toLowerCase();
+            var targetId = "";
+            var divs = document.getElementsByClassName("search");
+            console.log(divs);
+            for (var i = 0; i < divs.length; i++) {
+               var para = divs[i].getElementsByClassName("p");
+               console.log(para);
+               console.log(para[0]);
+               var index = para[0].innerText.toLowerCase().indexOf(pattern);
+               if (index != -1) {
+                  targetId = divs[i].parentNode.id;
+                  document.getElementById(targetId).scrollIntoView();
+                  break;
+               }
+            }
+
+            }
 
           },
         }).result.then(function() {
@@ -715,12 +755,11 @@ app.directive('chatBox', function() {
 
 
                 connection.session.call('service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
-                  function (res) {
-                 },
-                 function (err) {
+                  function(res) {},
+                  function(err) {
 
-                }
-               );
+                  }
+                );
 
               });
             }
@@ -740,7 +779,7 @@ app.directive('chatBox', function() {
               url: '/api/support/visitor/?email=' + data.email,
             }).
             then(function(response) {
-              if (response.data.length>1) {
+              if (response.data.length > 1) {
                 $scope.chatHistBtn = true
               }
             })

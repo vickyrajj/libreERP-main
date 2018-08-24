@@ -1,15 +1,29 @@
 <div class="modal-body">
   <div class="container-fluid">
-    <div class="text-center" style="font-size:22px">{{email}}</div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search by text.." ng-model="searchForm.value"  />
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="searchText()"><i class="fa fa-search"></i></button>
+        </span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <span class="pull-right" style="font-size:22px">{{email}}</span>
+      </div>
+    </div>
     <hr>
     <div class="row" style="padding:15px 20px">
       <div class="row" ng-repeat="chat in chatData">
-        <div class="row container-fluid">
+        <div class="row container-fluid search">
+          <!-- <p>abcd</p>
+          <p cl>aaa</p> -->
           <div class="col-md-8" style="border-right:2px solid #eeeeee">
             <span style="font-size:22px">{{chat.chatList[0].uid}}</span>
             <div class="row" ng-repeat="msg in chat.chatList">
               <div class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-              <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" ><h4>{{msg.message}}</h4></p>
+              <p class="p" ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" ><h4>{{msg.message}}</h4></p>
                <img ng-if="msg.attachmentType == 'image'" ng-src="{{msg.file}}" style="width:250px;">
                <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.file}}" controls></video>
                <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.file}}" controls></audio>

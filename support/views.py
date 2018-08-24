@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.models import User , Group
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,HttpResponse
 from django.contrib.auth import authenticate , login , logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -29,6 +29,8 @@ from Crypto.Cipher import AES
 from Crypto import Random
 from django.db.models.functions import Concat
 from ERP.models import service
+import re
+regex = re.compile('^HTTP_')
 
 BLOCK_SIZE = 16
 pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
@@ -151,6 +153,7 @@ def decrypt(enc, password):
 
 class GetChatterScriptAPI(APIView):
     def get(self , request , format = None):
+        print '*******************************************'
         pk = request.GET['pk']
         encrypted = encrypt(pk, "cioc")
         print 'ee',encrypted
@@ -185,7 +188,11 @@ def getChatterScript(request , fileName):
     pk = decrypt(fileName , "cioc")
     print pk
     obj = CustomerProfile.objects.get(pk = pk)
-    # print 'dpppppppppppp',obj.dp,obj.dp.url
+    serviceWebsite = obj.service.web
+    browserHeader =  dict((regex.sub('', header), value) for (header, value) in request.META.items() if header.startswith('HTTP_'))
+    print browserHeader
+    print '**************8',browserHeader['REFERER'],serviceWebsite
+
     print globalSettings.SITE_ADDRESS
     print request.get_host()
     dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS}
@@ -194,7 +201,12 @@ def getChatterScript(request , fileName):
     if obj.name:
         dataToSend["name"] =  obj.name
 
-    return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+    # return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+    if serviceWebsite == browserHeader['REFERER']:
+        return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+    else:
+        return HttpResponse(request,'')
+
 
 class VisitorViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
