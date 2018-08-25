@@ -681,10 +681,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         '<p style="font-size:12px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px;" > Start a conversation </p>'+
         '<p style="font-size:11px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px; color:#777; "> The team typically replies in few minutes.</p>'+
         '<div style="padding-top:5px; text-align:center;" >'+
-          '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Agent1">'+
-          '<img src="static/images/user2-160x160.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Agent2">'+
-          '<img src="static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Agent3">'+
-          '<img src="static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Agent4">'+
+          '<img src="http://syrow.cioc.in/static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Agent1">'+
+          '<img src="http://syrow.cioc.in/static/images/user2-160x160.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Agent2">'+
+          '<img src="http://syrow.cioc.in/static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Agent3">'+
+          '<img src="http://syrow.cioc.in/static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Agent4">'+
         '</div>'+
 
         '<div style="margin-right:-15px; margin-left:-15px; color:#fff; position:absolute; top:144px; text-align:center; padding-top:5px; " >'+
