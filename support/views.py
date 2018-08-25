@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.models import User , Group
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,HttpResponse
 from django.contrib.auth import authenticate , login , logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -28,6 +28,9 @@ import hashlib
 from Crypto.Cipher import AES
 from Crypto import Random
 from django.db.models.functions import Concat
+from ERP.models import service
+import re
+regex = re.compile('^HTTP_')
 
 BLOCK_SIZE = 16
 pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
@@ -60,20 +63,28 @@ class GetMyUser(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
         print '****** entered', request.GET
+        if 'allAgents' in request.GET:
+            print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
+            allAgents = list(User.objects.exclude(pk=self.request.user.pk).values_list('pk',flat=True))
+            print allAgents,type(allAgents)
+            return Response({'allAgents':allAgents}, status=status.HTTP_200_OK)
         if 'getMyUser' in request.GET:
-            uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
+            # uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
+            uidsList = list(ChatThread.objects.filter(user = self.request.GET['user'],status='started').values_list('uid',flat=True).distinct())
             print uidsList , 'distinct'
             toSend = []
-            chatThreadObjs = ChatThread.objects.filter(uid__in=uidsList)
+            # chatThreadObjs = ChatThread.objects.filter(uid__in=uidsList)
             for i in uidsList:
                 try:
                     data = Visitor.objects.get(uid=i)
-                    dic = {'uid':data.uid,'name':data.name}
+                    dic = {'uid':data.uid,'name':data.name ,'email':data.email}
                 except:
-                    dic = {'uid':i,'name':''}
-                print ChatThread.objects.get(uid=i).company.pk
+                    dic = {'uid':i,'name':'' ,'email':''}
+                # print ChatThread.objects.get(uid=i).company.pk
                 dic['companyPk'] = ChatThread.objects.get(uid=i).company.pk
+                dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
                 toSend.append(dic)
+
 
             return Response(toSend, status=status.HTTP_200_OK)
 
@@ -86,6 +97,18 @@ class ReviewFilterCalAPIView(APIView):
 
         toSend = []
         sobj = SupportChat.objects.filter(user__isnull=False)
+        if 'customer' in self.request.GET:
+            userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
+            userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
+            if 'customerProfilePkList' in self.request.GET:
+                print 'a###############',userCustProfile
+                return Response(userCustProfile, status=status.HTTP_200_OK)
+            userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
+            print userCompany
+            print userCustProfile
+            print userCompanyUidList
+            sobj = SupportChat.objects.filter(uid__in=userCompanyUidList)
+
         if 'date' in self.request.GET:
             date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
             sobj = sobj.filter(created__startswith = date)
@@ -107,9 +130,14 @@ class ReviewFilterCalAPIView(APIView):
                     email = Visitor.objects.get(uid=j).email
                 except:
                     email = ''
-                agUidObj = list(agSobj.filter(uid=j).values().annotate(email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
+                try:
+                    company = ChatThread.objects.get(uid=j).company.service.name
+                except:
+                    company = ''
+                print company
+                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
-        # print toSend
+        print toSend
 
         return Response(toSend, status=status.HTTP_200_OK)
 
@@ -129,8 +157,9 @@ def decrypt(enc, password):
     cipher = AES.new(private_key, AES.MODE_CBC, iv)
     return unpad(cipher.decrypt(enc[16:]))
 
-class getChatterScriptAPI(APIView):
+class GetChatterScriptAPI(APIView):
     def get(self , request , format = None):
+        print '*******************************************'
         pk = request.GET['pk']
         encrypted = encrypt(pk, "cioc")
         print 'ee',encrypted
@@ -140,20 +169,51 @@ class getChatterScriptAPI(APIView):
 
         return Response({'data':encrypted  }, status = status.HTTP_200_OK)
 
+class GetChatHistory(APIView):
+    def get(self , request , format = None):
+        if 'email' in request.GET:
+            toSend = []
+            email = request.GET['email']
+            print email,'77777777777777777777'
+            uidList = list(Visitor.objects.filter(email=email).values_list('uid',flat=True).distinct())
+            print uidList
+            for uid in uidList:
+                chatList = list(SupportChat.objects.filter(uid=uid).values().annotate(file=Concat(Value('/media/'),'attachment')))
+                agentList = list(SupportChat.objects.filter(uid=uid).values_list('user',flat=True).distinct())
+
+                # print agentList,chatList
+                toSend.append({'agentList':agentList,'chatList':chatList})
+            return Response({'data':toSend}, status = status.HTTP_200_OK)
+        else:
+            return Response({}, status = status.HTTP_200_OK)
+
+
 def getChatterScript(request , fileName):
     print fileName,'*****************'
     fileName = fileName.replace('.js' , '').replace("chatter-" , '')
     pk = decrypt(fileName , "cioc")
     print pk
     obj = CustomerProfile.objects.get(pk = pk)
-    # print 'dpppppppppppp',obj.dp,obj.dp.url
+    serviceWebsite = obj.service.web
+    browserHeader =  dict((regex.sub('', header), value) for (header, value) in request.META.items() if header.startswith('HTTP_'))
+    print browserHeader
+    print request.META.get('HTTP_X_FORWARDED_FOR') , request.META.get('REMOTE_ADDR')
+    print '**************8',browserHeader['REFERER'],serviceWebsite
+
+    print globalSettings.SITE_ADDRESS
+    print request.get_host()
     dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url
     if obj.name:
         dataToSend["name"] =  obj.name
 
-    return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+    # return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+    if serviceWebsite in browserHeader['REFERER']:
+        return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+    else:
+        return HttpResponse(request,'')
+
 
 class VisitorViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)

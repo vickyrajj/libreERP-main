@@ -279,6 +279,8 @@ if (nameSupport=='None') {
 }
 
 
+
+
 if (dpSupport=='') {
   dpSupport = '{{serverAddress}}/static/images/img_avatar_card.png'
 }else {
@@ -390,7 +392,7 @@ function fetchMessages(uid) {
 
 
         for (var i = 0; i < data.length; i++) {
-          agentPk = data[i].user
+          // agentPk = data[i].user
           chat.messages.push(data[i])
         }
         // for (var i = 0; i < data.length; i++) {
@@ -449,6 +451,7 @@ function fetchThread(uid) {
           threadExist = true
           console.log(data,'fffffffffffffffff');
           chatThreadPk = data[0].pk
+          agentPk = data[0].user
         }
         console.log(data);
         fetchMessages(uid);
@@ -623,9 +626,31 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       }
 
+      function heartbeat() {
+        console.log('caming in heartttttttttttttttttttttttttttttttttttttt here');
+        var isOnline = true
+        return uid
+      }
+
+      function createCookieDetail(args) {
+        console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
+        console.log(args[0]);
+          detail = getCookie("uidDetails");
+          if (detail != "") {
+            console.log('already there');
+            document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
+          }
+
+          setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
+      }
+
+      session.register('service.support.createDetailCookie.'+uid, createCookieDetail);
+
+      session.register('service.support.heartbeat.'+uid, heartbeat);
+
       session.subscribe('service.support.chat.' + uid, supportChat).then(
         function (sub) {
-          console.log("subscribed to topic 'service.support.agent'");
+          console.log("subscribed to topic 'service.support.chat'");
         },
         function (err) {
           console.log("failed to subscribed: " + err);
@@ -1425,21 +1450,58 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }, 200);
     }
 
+    // function onlineAgent() {
+    //   if (agentPk) {
+    //     setInterval(function () {
+    //       isAgentOnline = false;
+    //       onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
+    //       status = "O";
+    //       connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
+    //         acknowledge: true
+    //       }).
+    //       then(function(publication) {
+    //         console.log("check online status");
+    //       });
+    //     }, 10000);
+    //   }
+    // }
+
     function onlineAgent() {
-      setInterval(function () {
-        isAgentOnline = false;
-        onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
-        status = "O";
-        connection.session.publish('service.support.agent', [uid , status], {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("check online status");
-        });
-      }, 10000);
+      console.log('in onlineAgent######333333333' , agentPk);
+      if (agentPk) {
+        // setInterval(function () {
+          // status = "O";
+          connection.session.call('service.support.heartbeat.' + agentPk, []).then(
+            function (res) {
+             console.log("Result:", res);
+             isAgentOnline = true;
+             onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
+           },
+           function (err) {
+            console.log("Error:", err);
+            isAgentOnline = false;
+            onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
+          }
+         );
+          // connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
+          //   acknowledge: true
+          // }).
+          // then(function(publication) {
+          //   console.log("check online status");
+          // });
+        // }, 30000);
+      }
     }
 
-    onlineAgent();
+
+
+    setTimeout(function(){
+      onlineAgent();
+    },1000 )
+
+    setInterval(function(){
+      onlineAgent();
+    },15000 )
 
 
     // inputText.addEventListener("input", function(e) {
@@ -1489,7 +1551,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false  };
         if (agentPk) {
+          console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
+          if (!isAgentOnline) {
+            console.log('agetn oflineee');
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
+          }
         }
         var message = dataToSend
         dataToSend = JSON.stringify(dataToSend)
@@ -1497,8 +1566,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
         status = "M";
         // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
         var dataToSend = {uid: uid , message: inptText , sentByAgent:false };
+        console.log(agentPk);
         if (agentPk) {
+          console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
+          if (!isAgentOnline) {
+            console.log('agetn oflineee');
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
+          }
         }
         var message = dataToSend
         dataToSend = JSON.stringify(dataToSend)
@@ -1559,10 +1636,29 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
        var dataToPublish = [uid , status , message ];
+       // setCookie("uidDetails", {}, 365);
 
+       // details = getCookie("uidDetails");
+       // console.log('********************8',details);
+       // if (details != "") {
+       //    dataToPublish.push(details)
+       // } else {
+       //   dataToPublish.push(false)
+       // }
 
        if (threadExist==undefined) {
+
+
         var dataToPublish = [uid , status , message , custID ];
+        details = getCookie("uidDetails");
+        if (details != "") {
+          console.log(details);
+
+           dataToPublish.push(JSON.parse(details))
+        } else {
+          dataToPublish.push(false)
+        }
+
         var dataToSend = JSON.stringify({uid: uid , company: custID});
          var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function() {
@@ -1572,22 +1668,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
               threadExist=true
               console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
               chatThreadPk = data.pk
+              dataToPublish.push(chatThreadPk)
+              connection.session.publish('service.support.agent', dataToPublish , {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("Published");
+              });
             }
           };
           xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
           xhttp.setRequestHeader("Content-type", "application/json");
           xhttp.send(dataToSend);
+       }else {
+         console.log('else chat thread exist');
+         connection.session.publish('service.support.agent', dataToPublish , {}, {
+           acknowledge: true
+         }).
+         then(function(publication) {
+           console.log("Published");
+         });
        }
 
 
 
 
-      connection.session.publish('service.support.agent', dataToPublish , {}, {
-        acknowledge: true
-      }).
-      then(function(publication) {
-        console.log("Published");
-      });
+
 
       console.log('dddddddddddddd',isAgentOnline);
 
@@ -1647,8 +1753,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
             typ : data.attachmentType
           }
 
+          // if (agentPk) {
+          //   fileData.user = agentPk;
+          // }
+
           if (agentPk) {
+            console.log('agent pk is pnline',isAgentOnline);
             fileData.user = agentPk;
+            if (!isAgentOnline) {
+              console.log('agetn oflineee');
+              fileData.user = null
+            }else {
+              fileData.user = agentPk;
+            }
           }
 
           // if (typ=='image') {

@@ -330,6 +330,21 @@ app.directive('chatBox', function() {
       // console.log($scope.data,'will fetch here');
       $scope.visitorForm = ''
       $scope.isTyping = false;
+      $scope.chatHistBtn = false;
+      $scope.chatHistory = []
+      console.log('adsd', $scope.data);
+      if ($scope.data.email.length > 0) {
+        $http({
+          method: 'GET',
+          url: '/api/support/visitor/?email=' + $scope.data.email,
+        }).
+        then(function(response) {
+          if (response.data.length > 1) {
+            $scope.chatHistBtn = true
+          }
+        })
+      }
+
       $scope.sound = ngAudio.load("static/audio/notification.mp3");
 
       $http({
@@ -345,7 +360,7 @@ app.directive('chatBox', function() {
 
       $http({
         method: 'GET',
-        url: '/api/support/supportChat/?user=' + $scope.me.pk + '&uid=' + $scope.data.uid,
+        url: '/api/support/supportChat/?&uid=' + $scope.data.uid,
       }).then(function(response) {
         $scope.data.messages = [];
         console.log(response.data);
@@ -487,13 +502,25 @@ app.directive('chatBox', function() {
       });
 
 
-      $scope.chatClose = function(uid) {
+      $scope.chatClose = function(uid, chatThreadPk) {
         $scope.status = "F";
         connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
         }).
         then(function(publication) {
           console.log("Published");
+        });
+
+        $http({
+          method: 'PATCH',
+          url: '/api/support/chatThread/' + chatThreadPk + '/',
+          data: {
+            status: 'closed'
+          }
+        }).
+        then(function(response) {
+          Flash.create('sucess', 'Chat Has Closed')
+          return
         });
       }
 
@@ -520,7 +547,9 @@ app.directive('chatBox', function() {
           size: 'xl',
           backdrop: true,
           controller: function($scope, $users, $uibModalInstance) {
-            $scope.form = {title:''}
+            $scope.form = {
+              title: ''
+            }
             console.log(companyPk);
             $http({
               method: 'GET',
@@ -531,10 +560,10 @@ app.directive('chatBox', function() {
               $scope.docData = response.data
 
             });
-            $scope.filterData = function(title){
+            $scope.filterData = function(title) {
               $http({
                 method: 'GET',
-                url: '/api/support/documentation/?customer=' + companyPk+'&title__icontains='+title,
+                url: '/api/support/documentation/?customer=' + companyPk + '&title__icontains=' + title,
               }).
               then(function(response) {
                 console.log(response.data);
@@ -546,7 +575,7 @@ app.directive('chatBox', function() {
               $uibModalInstance.close()
             }
             $scope.sowDetails = 0
-            $scope.textShow = function(pk){
+            $scope.textShow = function(pk) {
               console.log(pk);
               $scope.sowDetails = pk
             }
@@ -557,6 +586,181 @@ app.directive('chatBox', function() {
           },
         })
       }
+
+      $scope.getChatHistory = function(email) {
+        $http({
+          method: 'GET',
+          url: '/api/support/getChatHistory/?email=' + email,
+        }).
+        then(function(response) {
+          console.log(response.data.data);
+          $scope.chatHistory = response.data.data
+          $scope.chatHistModal(email)
+        })
+      }
+
+
+      $scope.chatHistModal = function(email) {
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.chatHistory.modal.html',
+          size: 'xl',
+          backdrop: true,
+          resolve: {
+            chatData: function() {
+              return $scope.chatHistory;
+            }
+          },
+          controller: function($scope, chatData, $users, $uibModalInstance, Flash) {
+            $scope.chatData = chatData;
+            $scope.email = email
+            $scope.searchForm = {
+              value: ''
+            }
+
+
+            $scope.searchText = function() {
+              console.log($scope.searchForm.value, 'ffffffffffffffffff');
+            //   if (window.find) {        // Firefox, Google Chrome, Safari
+            //     var found = window.find($scope.searchForm.value);
+            //     if (!found) {
+            //         alert ("The following text was not found:\n" + $scope.searchForm.value);
+            //     }else {
+            //       console.log(found , 'gggggggggg');
+            //     }
+            // }
+            // else {
+            //     alert ("Your browser does not support this example!");
+            // }
+
+
+            var name = $scope.searchForm.value
+            var pattern = name.toLowerCase();
+            var targetId = "";
+            var divs = document.getElementsByClassName("search");
+            console.log(divs);
+            for (var i = 0; i < divs.length; i++) {
+               var para = divs[i].getElementsByClassName("p");
+               console.log(para);
+               console.log(para[0]);
+               var index = para[0].innerText.toLowerCase().indexOf(pattern);
+               if (index != -1) {
+                  targetId = divs[i].parentNode.id;
+                  document.getElementById(targetId).scrollIntoView();
+                  break;
+               }
+            }
+
+            }
+
+          },
+        }).result.then(function() {
+
+        }, function(data) {
+
+        });
+      }
+
+      $scope.chatTransfer = function (uid, chatThreadPk) {
+        console.log($scope.data,'entireeeeeeeeeeeeee');
+        $scope.onlineAgents = []
+        $scope.offlineAgents = []
+        $http({
+          method: 'GET',
+          url: '/api/support/getMyUser/?allAgents',
+        }).
+        then(function(response) {
+          console.log(response.data.allAgents,'@@@@@@@@@@@@@@@@@@@@@');
+          $scope.allAgents = response.data.allAgents
+          for (var i = 0; i < $scope.allAgents.length; i++) {
+            connection.session.call('service.support.heartbeat.' + $scope.allAgents[i] , []).
+            then((function(i) {
+              return function (res) {
+                $scope.onlineAgents.push($scope.allAgents[i])
+              }
+            })(i) , (function(i) {
+              return function (err) {
+                console.log(err,'offline agents');
+                $scope.offlineAgents.push($scope.allAgents[i])
+              }
+            })(i))
+          }
+        });
+        $scope.opnpoup = function(){
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.support.chatTransfer.modal.html',
+            size: 'xl',
+            backdrop: true,
+            resolve: {
+              onlineAgents: function() {
+                return $scope.onlineAgents;
+              },
+              offlineAgents: function() {
+                return $scope.offlineAgents;
+              },
+              userData: function() {
+                return $scope.data;
+              }
+            },
+            controller: function($scope,onlineAgents,offlineAgents,userData, $users, $uibModalInstance, Flash) {
+              console.log(onlineAgents,offlineAgents);
+              $scope.me = $users.get("mySelf")
+              $scope.onlineAgents = onlineAgents
+              $scope.offlineAgents = offlineAgents
+              $scope.agentPk = 0;
+              $scope.agentForm = {
+                name:'',
+                pk:0
+              }
+              $scope.selectedAgent = function (pk) {
+                $scope.agentPk = pk
+                $scope.agentForm.name = $users.get(pk).username
+                $scope.agentForm.pk =pk
+
+              }
+
+              $scope.transferChat = function () {
+
+                connection.session.call('service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username , userData ]).then(
+                  function (res) {
+                    console.log(userData.chatThreadPk,$scope.agentForm.pk);
+                    // $http({
+                    //   method: 'PATCH',
+                    //   url: '/api/support/chatThread/' + userData.chatThreadPk + '/',
+                    //   data: {
+                    //     user: $scope.agentForm.pk
+                    //   }
+                    // }).
+                    // then(function(response) {
+                    // });
+                    Flash.create('success',"Chat Has Been Transfered Sucessfully")
+                    $uibModalInstance.dismiss('close')
+
+                 },
+                 function (err) {
+                  console.log("Error:", err);
+                  Flash.create('danger',"Chat Couldn't Transfer - Some Server Issues")
+                }
+               );
+              }
+
+
+            },
+          }).result.then(function() {
+
+          }, function(data) {
+            if (data == 'close') {
+              console.log(data);
+              console.log($scope.index);
+              $scope.closeChatBox($scope.index)
+            }
+          });
+        }
+        setTimeout(function () {
+          $scope.opnpoup()
+        }, 2000);
+
+      }
+
 
 
       $scope.editUserDetails = function(uid) {
@@ -649,6 +853,15 @@ app.directive('chatBox', function() {
                 // $scope.form = response.data;
                 Flash.create('success', 'User details saved')
                 $uibModalInstance.dismiss(response.data)
+
+
+                connection.session.call('service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
+                  function(res) {},
+                  function(err) {
+
+                  }
+                );
+
               });
             }
 
@@ -659,24 +872,37 @@ app.directive('chatBox', function() {
           if (data != 'backdrop click') {
             $scope.data.name = data.name
             $scope.visitorForm = data
+            console.log('something#################');
+
+
+            $http({
+              method: 'GET',
+              url: '/api/support/visitor/?email=' + data.email,
+            }).
+            then(function(response) {
+              if (response.data.length > 1) {
+                $scope.chatHistBtn = true
+              }
+            })
+
           }
         });
       }
 
 
-      $scope.arremoji = ['👋', '💁', '🙃', '🙏', '😬', '👇', '👈', '👉', '👋', '👏', '👐', '👆', '☝', '👊', '✋', '✌', '✊', '👌', '👍', '👎'];
-
-      $scope.emojiOpen = false
-
-      $scope.insertEmoji = function(indx) {
-        $scope.chatBox.messageToSend += $scope.arremoji[indx]
-      }
-
-
-      $scope.openEmoji = function() {
-        $scope.emojiOpen = !$scope.emojiOpen
-
-      }
+      // $scope.arremoji = ['👋', '💁', '🙃', '🙏', '😬', '👇', '👈', '👉', '👋', '👏', '👐', '👆', '☝', '👊', '✋', '✌', '✊', '👌', '👍', '👎'];
+      //
+      // $scope.emojiOpen = false
+      //
+      // $scope.insertEmoji = function(indx) {
+      //   $scope.chatBox.messageToSend += $scope.arremoji[indx]
+      // }
+      //
+      //
+      // $scope.openEmoji = function() {
+      //   $scope.emojiOpen = !$scope.emojiOpen
+      //
+      // }
 
     }
   };

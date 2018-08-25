@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from fabric.api import *
 import os
 from django.conf import settings as globalSettings
+import re
+regex = re.compile('^HTTP_')
 
 
 class CustomerProfileSerializer(serializers.ModelSerializer):
@@ -44,12 +46,28 @@ class ReviewCommentSerializer(serializers.ModelSerializer):
 class ChatThreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatThread
-        fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback' , 'company')
+        fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback' , 'company','user','userDevice','userDeviceIp')
     def create(self ,  validated_data):
         c = ChatThread(**validated_data)
         c.company = CustomerProfile.objects.get(pk=int(self.context['request'].data['company']))
+        browserHeader =  dict((regex.sub('', header), value) for (header, value) in self.context['request'].META.items() if header.startswith('HTTP_'))
+        print browserHeader.get('USER_AGENT') , self.context['request'].META.get('REMOTE_ADDR'),'@@@@@@@@@@@2'
+        if browserHeader.get('USER_AGENT'):
+            c.userDevice = browserHeader.get('USER_AGENT')
+        if self.context['request'].META.get('REMOTE_ADDR'):
+            c.userDeviceIp = self.context['request'].META.get('REMOTE_ADDR')
         c.save()
         return c
+    def update(self ,instance, validated_data):
+        for key in ['uid', 'status' , 'customerRating' , 'customerFeedback' , 'company','user']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'user' in self.context['request'].data:
+            instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
+        instance.save()
+        return instance
 
 class DocumentationSerializer(serializers.ModelSerializer):
     class Meta:

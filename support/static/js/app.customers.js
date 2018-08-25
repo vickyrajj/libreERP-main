@@ -263,7 +263,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       return response.data;
     })
   };
-  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'' , callBack:false , ticket: false , dp: emptyFile , name:'',supportBubbleColor:'#286EFA'}
+  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'#000000' , callBack:false , ticket: false , dp: emptyFile , name:'',supportBubbleColor:'#286EFA'}
   $scope.fetCustomerProfile = function(pk){
     $scope.cpForm.service = pk
     $http({
@@ -460,6 +460,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     fd.append('vr', cpF.vr);
     fd.append('service', cpF.service);
 
+    console.log(cpF.name);
+    console.log($scope.cpForm);
 
     if (cpF.windowColor != '') {
       fd.append('windowColor', cpF.windowColor);
@@ -488,6 +490,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     }).
     then(function(response) {
       $scope.cpForm = response.data;
+      console.log(response.data);
     })
 
 

@@ -15,55 +15,34 @@ app.config(function($stateProvider) {
 
 app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash , $timeout, $interval , $uibModal) {
 
+
      $scope.newUsers = [];
      $scope.myUsers =[];
 
-     // $scope.templates=[
-     //   {
-     //     "msg":"Call you later"
-     //   },
-     //   {
-     //     "msg":"Get Back to you"
-     //   }
-     //
-     // ];
+
 
      $http({
        method: 'GET',
-
        url: '/api/support/getMyUser/?getMyUser=1&user='+$scope.me.pk,
      }).then(function(response) {
        // console.log(response.data , 'distinct resssssssssss');
        for (var i = 0; i < response.data.length; i++) {
          console.log(response.data);
-         $scope.myUsers.push( {name : response.data[i].name , uid: response.data[i].uid,  messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
+         console.log(response.data[i].chatThreadPk);
+         $scope.myUsers.push( {name : response.data[i].name , email:response.data[i].email , uid: response.data[i].uid, chatThreadPk:response.data[i].chatThreadPk, messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
+
+         connection.session.publish('service.support.agent', [response.data[i].uid , 'R' ], {}, {
+           acknowledge: true
+         }).
+         then(function(publication) {
+           console.log("Published");
+         });
+
        }
-       // $scope.data.messages = [];
-       // for (var i = 0; i < response.data.length; i++) {
-       //   console.log($scope.myUsers.length);
-       //  if ($scope.myUsers.length>0) {
-       //    $scope.alreadyExist;
-       //    for (var j = 0; j < $scope.myUsers.length; j++) {
-       //      if ($scope.myUsers[j].uid == response.data[i].uid ) {
-       //        $scope.alreadyExist = true;
-       //      }else {
-       //          $scope.alreadyExist = false;
-       //      }
-       //    }
-       //
-       //    if (!$scope.alreadyExist) {
-       //      $scope.myUsers.push( {name : '', uid: response.data[i].uid,  messages : [], isOnline:true }  )
-       //    }
-       //  }else {
-       //    console.log('one');
-       //    $scope.myUsers.push( {name : '', uid: response.data[i].uid,  messages : [], isOnline:true }  )
-       //  }
-       //
-       //
-       // }
-
-
      });
+
+
+
 
 
 
@@ -104,6 +83,39 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
        $scope.chatsInView.splice(0,1)
        console.log('elseeee');
      }
+   }
+
+   // $scope.removeChat = function(indx) {
+   //   for (var i = 0; i < $scope.chatsInView.length; i++) {
+   //     if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
+   //       $scope.chatsInView.splice(i,1)
+   //       console.log('removing from chat');
+   //       return
+   //     }
+   //   }
+   // }
+
+   $scope.chatClose = function(idx,chatThreadPk) {
+     console.log('coming in chatclose');
+     var myUser = $scope.myUsers[idx];
+     for (var i = 0; i < $scope.chatsInView.length; i++) {
+       if (myUser.uid == $scope.chatsInView[i].uid) {
+         $scope.chatsInView.splice(i,1)
+         console.log('removing from chat');
+       }
+     }
+     $scope.myUsers.splice(idx,1)
+     $http({
+       method: 'PATCH',
+       url: '/api/support/chatThread/' + chatThreadPk + '/',
+       data: {
+         status: 'closed'
+       }
+     }).
+     then(function(response) {
+       Flash.create('success', 'Chat Has Closed')
+       return
+     });
    }
 
 
@@ -150,6 +162,22 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
          });
 
        }
+
+       $http({
+         method: 'GET',
+         url:  '/api/support/chatThread/?uid='+ uid
+       }).
+       then(function(response) {
+         $http({
+           method: 'PATCH',
+           url: '/api/support/chatThread/'+ response.data[0].pk +'/',
+           data: {user : $scope.me.pk}
+         }).
+         then(function(response) {
+           console.log(response.data);
+         });
+       })
+
      });
 
      $scope.status ='AP';

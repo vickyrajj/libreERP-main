@@ -154,7 +154,7 @@ connection.onopen = function(session) {
 
           setTimeout(function() {
             var id = document.getElementById("scrollArea" + args[0]);
-            if (id!=null) {
+            if (id != null) {
               console.log(id.scrollHeight);
               id.scrollTop = id.scrollHeight;
               console.log(id);
@@ -168,55 +168,80 @@ connection.onopen = function(session) {
 
 
 
-      if (args[1] == 'O') {
-        var uid = args[0];
-        var status = 'O';
-        connection.session.publish('service.support.chat.' + uid, [status], {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("Published");
-        });
-        return
-      } else if (args[1] == 'T') {
-        console.log('typingggggggggg cccccc');
-        // console.log(scope.$$childHead.isTyping);
-        // scope.$$childHead.isTyping = true;
-        return
-      }else if (args[1] == 'R') {
-        console.log('remove this from ur new user list' , args[0]);
-
-        for (var i = 0; i < scope.newUsers.length; i++) {
-          if (scope.newUsers[i].uid == args[0]) {
-              console.log(scope.newUsers[i].uid , 'yessssssssssssss');
-              scope.newUsers.splice(i, 1);
-          }
+    if (args[1] == 'T') {
+      console.log('typingggggggggg cccccc');
+      // console.log(scope.$$childHead.isTyping);
+      // scope.$$childHead.isTyping = true;
+      return
+    } else if (args[1] == 'R') {
+      console.log('remove this from new user list because someone else have assigned', args[0]);
+      for (var i = 0; i < scope.newUsers.length; i++) {
+        if (scope.newUsers[i].uid == args[0]) {
+          console.log(scope.newUsers[i].uid, 'yessssssssssssss');
+          scope.newUsers.splice(i, 1);
         }
-        return
       }
+      return
+    }
 
     if (userExist()) {
       console.log('yesssssssssssss');
 
     } else {
-
-      if ((args[1]=='M' || args[1]=='MF' || args[1]=='ML') && args[2].user) {
-        console.log('check argssssssss' , args[2]);
+      if ((args[1] == 'M' || args[1] == 'MF' || args[1] == 'ML') && args[2].user) {
+        console.log('check argssssssss', args[2]);
         return
       }
+
+      var detail = {
+        name: '',
+        uid: args[0],
+        messages: [args[2]],
+        isOnline: true,
+        companyPk: args[3],
+        email:'',
+        unreadMsg:0,
+        boxOpen:false,
+        chatThreadPk: args[5]
+      }
+
+      function createVisitor(email, phoneNumber , name) {
+        console.log(email , phoneNumber , name,'sometinhhhhhhhhh###');
+        var toPost = JSON.stringify({"email":email , "phoneNumber":phoneNumber , "name":name ,"uid":args[0]})
+        console.log(toPost);
+        // console.log(typeof toPost);
+        var xhttp = new XMLHttpRequest();
+         xhttp.onreadystatechange = function() {
+           if (this.readyState == 4 && this.status == 201) {
+             var data = JSON.parse(this.responseText)
+             detail.name = data.name
+             detail.email = data.email
+           }
+         };
+         xhttp.open('POST', '/api/support/visitor/', true);
+         xhttp.setRequestHeader("Content-type", "application/json");
+         xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+         xhttp.send(toPost);
+      }
+
+      console.log(args[4]);
+
+      if (args[4]) {
+        console.log(args[4]);
+        createVisitor(args[4].email , args[4].phoneNumber , args[4].name)
+      }
+
+      // if (detailsCookie) {
+      //   createVisitor()
+      // }
+
 
       console.log('no');
       console.log(args);
       if (args[1] == 'M') {
         scope.sound.play();
         console.log(args, 'argssssssssss');
-        scope.newUsers.push({
-          name: '',
-          uid: args[0],
-          messages: [args[2]],
-          isOnline: true,
-          companyPk: args[3]
-        })
+        scope.newUsers.push(detail)
       } else if (args[1] == 'MF') {
         scope.sound.play();
         var attachment;
@@ -227,13 +252,7 @@ connection.onopen = function(session) {
             console.log(this.responseText);
             var data = JSON.parse(this.responseText)
             // attachment = data.attachment
-            scope.newUsers.push({
-              name: '',
-              uid: args[0],
-              messages: [args[2]],
-              isOnline: true,
-              companyPk: args[3]
-            })
+            scope.newUsers.push(detail)
 
           }
         };
@@ -245,18 +264,74 @@ connection.onopen = function(session) {
         // return true
       } else if (args[1] == 'ML') {
         scope.sound.play();
-        scope.newUsers.push({
-          name: '',
-          uid: args[0],
-          messages: [args[2]],
-          isOnline: true,
-          companyPk: args[3]
-        })
+        scope.newUsers.push(detail)
       }
     }
 
 
   };
+
+
+  function checkOnline() {
+    var scope = angular.element(document.getElementById('chatTab')).scope();
+    if (scope) {
+      console.log(scope.myUsers);
+      for (var i = 0; i < scope.myUsers.length; i++) {
+        session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
+        then((function(i) {
+          return function (res) {
+            scope.myUsers[i].isOnline = true;
+          }
+        })(i) , (function(i) {
+          return function (err) {
+            console.log(err,'err');
+            scope.myUsers[i].isOnline = false;
+          }
+        })(i))
+      }
+    }
+  }
+
+  function sendBackHeartBeat() {
+    var scope = angular.element(document.getElementById('chatTab')).scope();
+    if (scope) {
+      function heartbeat(args) {
+        if (args[0]=='popup') {
+          console.log(args[2]);
+          alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
+          return
+        }else {
+          console.log('onlieeeeeeeeeeeeeeeeeeeeeeeee');
+          return true
+        }
+      }
+      session.register('service.support.heartbeat.'+scope.me.pk, heartbeat);
+      console.log(scope.me.pk);
+    }
+  }
+
+
+
+
+  setTimeout(function() {
+    checkOnline();
+    sendBackHeartBeat();
+  }, 1500);
+
+  setInterval(function() {
+    console.log('comin in interval');
+    checkOnline();
+  }, 15000)
+
+  function heartbeat() {
+    console.log('coming in heartttt');
+    return scope.me.pk
+  }
+
+
+
+
+
 
   session.subscribe('service.support.agent', supportChatResponse).then(
     function(sub) {
@@ -311,3 +386,23 @@ connection.onclose = function(reason, details) {
   console.log("Connection lost: " + reason);
 }
 connection.open();
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  console.log(decodedCookie);
+  var ca = decodedCookie.split(';');
+  console.log(ca);
+  for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+      }
+  }
+  return "";
+}
+// console.log(getCookie("csrftoken"));
+// console.log(getCSRFCookie());

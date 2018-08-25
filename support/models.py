@@ -33,6 +33,7 @@ class CustomerProfile(models.Model):
     dp = models.ImageField(upload_to = getdpPath , null = True)
     name = models.CharField(max_length = 50 , null = True )
     supportBubbleColor = models.CharField(max_length = 20 , null = True ,default='#286EFA')
+    userApiKey = models.CharField(max_length = 100 , null = True )
 
 
 class SupportChat(models.Model):
@@ -61,6 +62,7 @@ class ReviewComment(models.Model):
 
 CHATTHREAD_STATUS_CHOICES = (
     ('started' , 'started'),
+    ('closed' , 'closed'),
     ('reviewed' , 'reviewed'),
     ('resolved' , 'resolved'),
     ('archived' , 'archived'),
@@ -75,6 +77,9 @@ class ChatThread(models.Model):
     customerRating = models.PositiveSmallIntegerField(null = True,blank=True)
     customerFeedback = models.CharField(max_length = 3000 , null = True )
     company = models.ForeignKey(CustomerProfile , related_name = 'chatThread' , null = False)
+    user = models.ForeignKey(User , related_name = 'chatAgentUser' , null = True, blank=True)
+    userDevice = models.CharField(max_length = 100 , null = True , blank=True)
+    userDeviceIp = models.CharField(max_length = 20 , null = True , blank=True)
 
 class Documentation(models.Model):
     created = models.DateTimeField(auto_now_add = True)

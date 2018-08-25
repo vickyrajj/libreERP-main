@@ -107,10 +107,64 @@ a.link {
 html body .mdi:before, html body .mdi-set {
   line-height: initial; }
 
+  .nav {
+   padding-left:0;
+   margin-bottom:0;
+   list-style:none
+  }
+  .nav>li {
+   position:relative;
+   display:block
+  }
+  .nav>li>a {
+   position:relative;
+   display:block;
+   padding:10px 15px
+  }
+
+  .nav-tabs {
+ border-bottom:1px solid #ddd
+}
+.nav-tabs>li {
+ float:left;
+ margin-bottom:-1px
+}
+.nav-tabs>li>a {
+ margin-right:2px;
+ line-height:1.42857143;
+ border:1px solid transparent;
+ border-radius:4px 4px 0 0
+}
+.nav-tabs>li>a:hover {
+ border-color:#eee #eee #ddd
+}
+.nav-tabs>li.active>a,.nav-tabs>li.active>a:focus,.nav-tabs>li.active>a:hover {
+ color:#555;
+ cursor:default;
+ background-color:#fff;
+ border:1px solid #ddd;
+ border-bottom-color:transparent
+}
+.nav-tabs.nav-justified {
+ width:100%;
+ border-bottom:0
+}
+.nav-tabs.nav-justified>li {
+ float:none
+}
+.nav-tabs.nav-justified>li>a {
+ margin-bottom:5px;
+ text-align:center
+}
+.nav-tabs.nav-justified>.dropdown .dropdown-menu {
+ top:auto;
+ left:auto
+}
+
 /*******************
 Headings
 *******************/
-h1,
+/* h1,
 h2,
 h3,
 h4,
@@ -118,9 +172,9 @@ h5,
 h6 {
   color: #455a64;
   font-family: "Poppins", sans-serif;
-  font-weight: 400; }
+  font-weight: 400; } */
 
-h1 {
+/* h1 {
   line-height: 40px;
   font-size: 36px; }
 
@@ -144,7 +198,7 @@ h5 {
 h6 {
   line-height: 16px;
   font-size: 14px;
-  font-weight: 400; }
+  font-weight: 400; } */
 
 .display-5 {
   font-size: 3rem; }
@@ -1688,7 +1742,7 @@ File: scss
   padding-bottom: 60px; }
 
 .container-fluid {
-  padding: 0 30px 25px 30px; }
+  padding: 0 20px 25px 20px; }
 
 /*******************
  Topbar
@@ -6530,6 +6584,12 @@ File: scss
   display: none !important; }
 
 @media (max-width: 575px) {
+  .responsiveMedia {
+    width: 100% !important;
+  }
+  responseHeight{
+    height: 150px !important;
+  }
   .hidden-xs-down {
     display: none !important; } }
 
@@ -6538,6 +6598,12 @@ File: scss
     display: none !important; } }
 
 @media (max-width: 767px) {
+  .responsiveMedia {
+    width: 100% !important;
+  }
+  responseHeight{
+    height: 200px !important;
+  }
   .hidden-sm-down {
     display: none !important; } }
 
