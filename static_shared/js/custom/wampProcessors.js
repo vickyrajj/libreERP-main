@@ -207,9 +207,9 @@ connection.onopen = function(session) {
 
       function createVisitor(email, phoneNumber , name) {
         console.log(email , phoneNumber , name,'sometinhhhhhhhhh###');
-        var toPost = {email:email , phoneNumber:phoneNumber , name:name}
+        var toPost = JSON.stringify({"email":email , "phoneNumber":phoneNumber , "name":name ,"uid":args[0]})
         console.log(toPost);
-        console.log(typeof toPost);
+        // console.log(typeof toPost);
         var xhttp = new XMLHttpRequest();
          xhttp.onreadystatechange = function() {
            if (this.readyState == 4 && this.status == 201) {
@@ -220,7 +220,7 @@ connection.onopen = function(session) {
          };
          xhttp.open('POST', '/api/support/visitor/', true);
          xhttp.setRequestHeader("Content-type", "application/json");
-         xhttp.setRequestHeader('Accept', 'application/json');
+         xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
          xhttp.send(toPost);
       }
 
@@ -274,29 +274,41 @@ connection.onopen = function(session) {
 
   function checkOnline() {
     var scope = angular.element(document.getElementById('chatTab')).scope();
-    console.log(scope.myUsers);
-    for (var i = 0; i < scope.myUsers.length; i++) {
-      session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
-      then((function(i) {
-        return function (res) {
-          scope.myUsers[i].isOnline = true;
-           }
-      })(i) , (function(i) {
-        return function (err) {
-          console.log(err,'err');
-          scope.myUsers[i].isOnline = false;
-           }
-      })(i))
+    if (scope) {
+      console.log(scope.myUsers);
+      for (var i = 0; i < scope.myUsers.length; i++) {
+        session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
+        then((function(i) {
+          return function (res) {
+            scope.myUsers[i].isOnline = true;
+          }
+        })(i) , (function(i) {
+          return function (err) {
+            console.log(err,'err');
+            scope.myUsers[i].isOnline = false;
+          }
+        })(i))
+      }
     }
   }
 
   function sendBackHeartBeat() {
-    function heartbeat() {
-      return true
-    }
     var scope = angular.element(document.getElementById('chatTab')).scope();
-    session.register('service.support.heartbeat.'+scope.me.pk, heartbeat);
-    console.log(scope.me.pk);
+    if (scope) {
+      function heartbeat(args) {
+        if (args[0]=='popup') {
+          console.log(args[2]);
+          alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
+          scope.myUsers.push(args[2]);
+          return
+        }else {
+          console.log('onlieeeeeeeeeeeeeeeeeeeeeeeee');
+          return true
+        }
+      }
+      session.register('service.support.heartbeat.'+scope.me.pk, heartbeat);
+      console.log(scope.me.pk);
+    }
   }
 
 
@@ -375,3 +387,23 @@ connection.onclose = function(reason, details) {
   console.log("Connection lost: " + reason);
 }
 connection.open();
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  console.log(decodedCookie);
+  var ca = decodedCookie.split(';');
+  console.log(ca);
+  for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+      }
+  }
+  return "";
+}
+// console.log(getCookie("csrftoken"));
+// console.log(getCSRFCookie());

@@ -58,9 +58,12 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
      $scope.xInView = indx;
    }
 
-   $scope.closeChatBox = function(index) {
+   $scope.closeChatBox = function(index , myUserIndex) {
      console.log('dfddcominh in closesssssss');
      $scope.chatsInView.splice(index,1)
+     if (myUserIndex!=undefined) {
+       $scope.myUsers.splice(myUserIndex,1)
+     }
    }
 
    $scope.display = function(data) {
@@ -76,9 +79,11 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
        }
      }
      if ($scope.chatsInView.length<4) {
+       $scope.myUsers[indx].myUserIndex = indx
        $scope.chatsInView.push($scope.myUsers[indx])
        console.log('yess');
      }else {
+       $scope.myUsers[indx].myUserIndex = indx
        $scope.chatsInView.push($scope.myUsers[indx])
        $scope.chatsInView.splice(0,1)
        console.log('elseeee');
