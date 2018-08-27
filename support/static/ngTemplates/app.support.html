@@ -25,7 +25,7 @@
         </div>
           <ul class="nav nav-sidebar-inverse" style="width:100%;">
             <!-- <li ng-repeat="x in newUsers" ng-click="data.xInView = $index" class="ripple "> -->
-            <li ng-repeat="x in myUsers"  ng-click="addToChat($index); x.unreadMsg=0" class="ripple animated fadeIn">
+            <li ng-repeat="x in myUsers track by $index"  ng-click="addToChat($index); x.unreadMsg=0" class="ripple animated fadeIn">
               <a>
                 <div class="row" style="cursor:pointer" >
                   <div class="container-fluid">

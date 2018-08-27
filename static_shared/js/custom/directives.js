@@ -524,8 +524,8 @@ app.directive('chatBox', function() {
         });
       }
 
-      $scope.closeChatBox = function(indx) {
-        $scope.closeChat(indx)
+      $scope.closeChatBox = function(indx , myUserIndex) {
+        $scope.closeChat(indx , myUserIndex)
         $scope.data.boxOpen = false
       }
 
@@ -620,35 +620,6 @@ app.directive('chatBox', function() {
 
             $scope.searchText = function() {
               console.log($scope.searchForm.value, 'ffffffffffffffffff');
-            //   if (window.find) {        // Firefox, Google Chrome, Safari
-            //     var found = window.find($scope.searchForm.value);
-            //     if (!found) {
-            //         alert ("The following text was not found:\n" + $scope.searchForm.value);
-            //     }else {
-            //       console.log(found , 'gggggggggg');
-            //     }
-            // }
-            // else {
-            //     alert ("Your browser does not support this example!");
-            // }
-
-
-            var name = $scope.searchForm.value
-            var pattern = name.toLowerCase();
-            var targetId = "";
-            var divs = document.getElementsByClassName("search");
-            console.log(divs);
-            for (var i = 0; i < divs.length; i++) {
-               var para = divs[i].getElementsByClassName("p");
-               console.log(para);
-               console.log(para[0]);
-               var index = para[0].innerText.toLowerCase().indexOf(pattern);
-               if (index != -1) {
-                  targetId = divs[i].parentNode.id;
-                  document.getElementById(targetId).scrollIntoView();
-                  break;
-               }
-            }
 
             }
 
@@ -723,15 +694,15 @@ app.directive('chatBox', function() {
                 connection.session.call('service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username , userData ]).then(
                   function (res) {
                     console.log(userData.chatThreadPk,$scope.agentForm.pk);
-                    // $http({
-                    //   method: 'PATCH',
-                    //   url: '/api/support/chatThread/' + userData.chatThreadPk + '/',
-                    //   data: {
-                    //     user: $scope.agentForm.pk
-                    //   }
-                    // }).
-                    // then(function(response) {
-                    // });
+                    $http({
+                      method: 'PATCH',
+                      url: '/api/support/chatThread/' + userData.chatThreadPk + '/',
+                      data: {
+                        user: $scope.agentForm.pk
+                      }
+                    }).
+                    then(function(response) {
+                    });
                     Flash.create('success',"Chat Has Been Transfered Sucessfully")
                     $uibModalInstance.dismiss('close')
 
@@ -751,7 +722,9 @@ app.directive('chatBox', function() {
             if (data == 'close') {
               console.log(data);
               console.log($scope.index);
-              $scope.closeChatBox($scope.index)
+              $scope.closeChatBox($scope.index ,$scope.data.myUserIndex )
+              // console.log($scope.data);
+              // console.log($scope.data.myUserIndex , 'ffffffffffffff');
             }
           });
         }

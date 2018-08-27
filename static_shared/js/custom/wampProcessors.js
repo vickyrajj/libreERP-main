@@ -299,6 +299,7 @@ connection.onopen = function(session) {
         if (args[0]=='popup') {
           console.log(args[2]);
           alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
+          scope.myUsers.push(args[2]);
           return
         }else {
           console.log('onlieeeeeeeeeeeeeeeeeeeeeeeee');
