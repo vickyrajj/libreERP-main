@@ -158,16 +158,16 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
 
 
 })
-app.controller("businessManagement.reviews", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
+app.controller("businessManagement.reviews", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
 
   $scope.data = {
     tableData: []
   };
 
-  $scope.form = {date:new Date(),user:'',email:''}
+  $scope.form = {date:new Date(),user:'',email:'',client:''}
   $scope.reviewData = []
-  $scope.getData = function(date,user,email){
-    console.log('@@@@@@@@@@@@@@@@@@',date,user);
+  $scope.getData = function(date,user,email,client,download){
+    console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
     var url = '/api/support/reviewHomeCal/?'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
@@ -175,28 +175,50 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     if (typeof user == 'object') {
       url += '&user=' + user.pk
     }
+    if (typeof client == 'object') {
+      url += '&client=' + client.pk
+    }
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
     }
-    $http({
-      method: 'GET',
-      url: url,
-    }).
-    then(function(response) {
-      // $scope.custDetails = response.data[0]
-      console.log(response.data,'dddddddddddd',typeof response.data);
-      $scope.reviewData =response.data
-    });
+    if (download) {
+      $window.open(url+'&download','_blank');
+    }else {
+      $http({
+        method: 'GET',
+        url: url,
+      }).
+      then(function(response) {
+        // $scope.custDetails = response.data[0]
+        console.log(response.data,'dddddddddddd',typeof response.data);
+        $scope.reviewData =response.data
+      });
+    }
   }
-  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email)
+  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
     then(function(response){
       return response.data;
     })
   };
-  $scope.filterData = function(){
-    if (typeof $scope.form.date =='string') {
+  $scope.serviceSearch = function(query) {
+    return $http.get('/api/ERP/service/?name__contains=' + query+'&limit=15').
+    then(function(response){
+      return response.data.results;
+    })
+  };
+  $scope.changeDateType = false
+  $scope.$watch('form.date', function(newValue, oldValue) {
+    // console.log(oldValue,newValue);
+    if (oldValue == undefined || oldValue == null) {
+      $scope.changeDateType = true
+    }
+  })
+  $scope.filterData = function(download){
+
+    // console.log($scope.form.date,typeof($scope.form.date),$scope.oldDateValue);
+    if (typeof $scope.form.date =='undefined') {
       Flash.create('warning','Please Select Proper Date')
       return
     }
@@ -208,12 +230,29 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }else {
       var user = ''
     }
+    if (typeof $scope.form.client == 'string' && $scope.form.client.length > 0) {
+      Flash.create('warning','Please Select Suggested Client')
+      return
+    }else if (typeof $scope.form.client == 'object') {
+      var client = $scope.form.client
+    }else {
+      var client = ''
+    }
     if ($scope.form.email==undefined) {
       Flash.create('warning','Please Select Valid Email')
       return
     }
     console.log($scope.form);
-    $scope.getData($scope.form.date,user,$scope.form.email)
+    if ($scope.changeDateType&&$scope.form.date!=null) {
+      console.log('update');
+      $scope.form.date.setDate($scope.form.date.getDate() + 1);
+    }else {
+      console.log('no changeeeeeee');
+    }
+    $scope.getData($scope.form.date,user,$scope.form.email,client,download)
+  }
+  $scope.download = function(){
+    $scope.filterData(true)
   }
   // views = [{
   //   name: 'list',

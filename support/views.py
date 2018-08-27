@@ -19,6 +19,7 @@ from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 import requests
 from django.contrib.auth.hashers import make_password,check_password
+from excel_response import ExcelResponse
 # import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
@@ -97,6 +98,7 @@ class ReviewFilterCalAPIView(APIView):
         print '****** entered', request.GET
 
         toSend = []
+        res = []
         sobj = SupportChat.objects.filter(user__isnull=False)
         if 'customer' in self.request.GET:
             userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
@@ -115,6 +117,11 @@ class ReviewFilterCalAPIView(APIView):
             sobj = sobj.filter(created__startswith = date)
         if 'user' in self.request.GET:
             sobj = sobj.filter(user = int(self.request.GET['user']))
+        if 'client' in self.request.GET:
+            userCustProfile = list(CustomerProfile.objects.filter(service=self.request.GET['client']).values_list('pk',flat=True).distinct())
+            userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
+            print userCustProfile,userCompanyUidList
+            sobj = sobj.filter(uid__in=userCompanyUidList)
         # toSend = list(sobj.values())
         agentsList = list(sobj.values_list('user',flat=True).distinct())
         print agentsList
@@ -138,7 +145,14 @@ class ReviewFilterCalAPIView(APIView):
                 print company
                 agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
+                res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType').annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField())))
         print toSend
+        if 'download' in self.request.GET:
+            print 'downloadddddddddddddddddddddddd'
+            # res = []
+            # for i in toSend:
+            #     res = res + i
+            return ExcelResponse(res)
 
         return Response(toSend, status=status.HTTP_200_OK)
 
