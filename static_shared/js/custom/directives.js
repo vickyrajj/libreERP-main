@@ -567,9 +567,11 @@ app.directive('productCard', function () {
   return {
     templateUrl: '/static/ngTemplates/productCart.html',
     restrict: 'E',
+    transclude: true,
+    replace:true,
     scope:{
       list: '=',
-      title: '@',
+      addCart :'='
     },
     controller : function($scope , $state , $http , Flash, $rootScope){
 
@@ -585,6 +587,11 @@ app.directive('productCard', function () {
 
       }
       $scope.addToCart=function(id){
+        console.log($scope.list,'hhhhhhhhhhhhhhhhhh,');
+        $scope.addCart(id)
+      }
+      
+      $scope.wishlist=function(id){
         console.log("aaaaaaa",id);
       }
     },

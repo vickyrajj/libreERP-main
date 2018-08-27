@@ -475,6 +475,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
 
   $scope.addToCart = function(inputPk) {
+    console.log('coming in addddddddddddddd');
     dataToSend = {
       product: inputPk,
       user: getPK($scope.me.url),
@@ -822,6 +823,54 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
       $scope.listingSearch = response.data;
     })
   }
+
+  $scope.addToCart = function(inputPk) {
+    console.log('coming in addddddddddddddd');
+    dataToSend = {
+      product: inputPk,
+      user: getPK($scope.me.url),
+      qty: 1,
+      typ: 'cart',
+    }
+    console.log(dataToSend);
+    console.log('in cart', $rootScope.inCart);
+
+
+    for (var i = 0; i < $rootScope.inCart.length; i++) {
+      if ($rootScope.inCart[i].product.pk == dataToSend.product) {
+        if ($rootScope.inCart[i].typ == 'cart') {
+          Flash.create('warning', 'This Product is already in cart');
+          return
+        } else {
+          $http({
+            method: 'PATCH',
+            url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+            data: {
+              typ: 'cart'
+            }
+          }).
+          then(function(response) {
+            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaaa');
+            Flash.create('success', 'Product added to cart');
+          })
+          $rootScope.inCart[i].typ = 'cart'
+          return
+        }
+
+      }
+    }
+    $http({
+      method: 'POST',
+      url: '/api/ecommerce/cart/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      console.log(response.data,'bbbbbbbbbbbbbbbbbbbbbbbbb');
+      Flash.create('success', 'Product added in cart');
+      $rootScope.inCart.push(response.data);
+    })
+  }
+
 
 
 });
@@ -2063,7 +2112,10 @@ $scope.checkPincode=function(){
   })
 }
 });
-app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, $users, $interval) {
+
+
+
+app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval) {
 
   // $scope.fetchListings = function(){
   //   url = '/api/ecommerce/listingLite/?'
@@ -2283,6 +2335,54 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
       $scope.subSlideMobile.title = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].title
     }
   }, 3000);
+
+
+  $scope.addToCart = function(inputPk) {
+    console.log('coming in addddddddddddddd');
+    dataToSend = {
+      product: inputPk,
+      user: getPK($scope.me.url),
+      qty: 1,
+      typ: 'cart',
+    }
+    console.log(dataToSend);
+    console.log('in cart', $rootScope.inCart);
+
+
+    for (var i = 0; i < $rootScope.inCart.length; i++) {
+      if ($rootScope.inCart[i].product.pk == dataToSend.product) {
+        if ($rootScope.inCart[i].typ == 'cart') {
+          Flash.create('warning', 'This Product is already in cart');
+          return
+        } else {
+          $http({
+            method: 'PATCH',
+            url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+            data: {
+              typ: 'cart'
+            }
+          }).
+          then(function(response) {
+            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaaa');
+            Flash.create('success', 'Product added to cart');
+          })
+          $rootScope.inCart[i].typ = 'cart'
+          return
+        }
+
+      }
+    }
+    $http({
+      method: 'POST',
+      url: '/api/ecommerce/cart/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      console.log(response.data,'bbbbbbbbbbbbbbbbbbbbbbbbb');
+      Flash.create('success', 'Product added in cart');
+      $rootScope.inCart.push(response.data);
+    })
+  }
 
 
 

@@ -110,11 +110,12 @@ class POSProductSerializer(serializers.ModelSerializer):
 class listingSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
     product = POSProductSerializer(many = False , read_only = True)
+    added_cart = serializers.SerializerMethodField()
     # parentType = genericProductSerializer(many = False , read_only = True)
 
     class Meta:
         model = listing
-        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs' )
+        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart' )
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
@@ -168,6 +169,11 @@ class listingSerializer(serializers.ModelSerializer):
                 instance.files.add(media.objects.get(pk = m))
         instance.save()
         return instance
+    def get_added_cart(self , obj):
+        return Cart.objects.filter(product=obj.pk,user=obj.user).count()
+
+
+
 from django.db.models import Avg
 
 class listingLiteSerializer(serializers.ModelSerializer):
@@ -176,18 +182,20 @@ class listingLiteSerializer(serializers.ModelSerializer):
     parentType = genericProductSerializer(many = False , read_only = True)
     rating = serializers.SerializerMethodField()
     rating_count = serializers.SerializerMethodField()
+    added_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart')
     def get_rating(self , obj):
         return obj.ratings.all().aggregate(Avg('rating'))
 
     def get_rating_count(self , obj):
         return obj.ratings.all().count()
 
-
-
+    def get_added_cart(self , obj):
+        return Cart.objects.filter(product=obj.pk,user=obj.user).count()
+        
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
