@@ -9,6 +9,9 @@ from rest_framework.response import Response
 from fabric.api import *
 import os
 from django.conf import settings as globalSettings
+import datetime
+from django.contrib.auth.hashers import make_password,check_password
+
 import re
 regex = re.compile('^HTTP_')
 
@@ -16,12 +19,21 @@ regex = re.compile('^HTTP_')
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
-        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor')
+        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey')
     def create(self ,  validated_data):
         c = CustomerProfile(**validated_data)
         c.service = service.objects.get(pk=self.context['request'].data['service'])
-        c.save()
-        return c
+        val = '{:%Y-%m-%d %H-%M-%S-%f}'.format(datetime.datetime.now())
+        enc = make_password(val)
+        print enc
+        while '/' in enc:
+            print enc,'////////////////'
+            enc = make_password(val)
+        else:
+            print enc
+            c.userApiKey=enc
+            c.save()
+            return c
 
 class SupportChatSerializer(serializers.ModelSerializer):
     class Meta:

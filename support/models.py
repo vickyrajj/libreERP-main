@@ -33,7 +33,7 @@ class CustomerProfile(models.Model):
     dp = models.ImageField(upload_to = getdpPath , null = True)
     name = models.CharField(max_length = 50 , null = True )
     supportBubbleColor = models.CharField(max_length = 20 , null = True ,default='#286EFA')
-    userApiKey = models.CharField(max_length = 100 , null = True )
+    userApiKey = models.CharField(max_length = 500 , null = True )
 
 
 class SupportChat(models.Model):

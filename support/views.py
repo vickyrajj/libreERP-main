@@ -18,6 +18,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 import requests
+from django.contrib.auth.hashers import make_password,check_password
 # import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
@@ -39,14 +40,14 @@ unpad = lambda s: s[:-ord(s[len(s) - 1:])]
 # Create your views here.
 
 class CustomerProfileViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CustomerProfileSerializer
     queryset = CustomerProfile.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['service']
 
 class SupportChatViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = SupportChatSerializer
     # queryset = SupportChat.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -202,6 +203,7 @@ def getChatterScript(request , fileName):
 
     print globalSettings.SITE_ADDRESS
     print request.get_host()
+    print request.META.get('REMOTE_ADDR')
     dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url
@@ -218,21 +220,21 @@ def getChatterScript(request , fileName):
 
 
 class VisitorViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = VisitorSerializer
     queryset = Visitor.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['uid','email' ,'name']
 
 class ReviewCommentViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ReviewCommentSerializer
     queryset = ReviewComment.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['uid','user','chatedDate']
 
 class ChatThreadViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ChatThreadSerializer
     queryset = ChatThread.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -250,8 +252,65 @@ class ChatThreadViewSet(viewsets.ModelViewSet):
         return ChatThread.objects.all()
 
 class DocumentationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = DocumentationSerializer
     queryset = Documentation.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['title','customer']
+
+class GetChatTranscriptsViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = ChatThreadSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['uid','status']
+    def get_queryset(self):
+        if 'apiKey' in self.request.GET:
+            try:
+                print '*****************',self.request.GET['apiKey']
+                userExit = CustomerProfile.objects.get(userApiKey=self.request.GET['apiKey'])
+                return ChatThread.objects.all()
+            except:
+                print 'errorrrrrrrrr'
+                raise PermissionDenied()
+        else:
+            print 'not enter apikey'
+            raise PermissionDenied()
+
+class GetVisitorDetailsViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = VisitorSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['uid','email' ,'name']
+    def get_queryset(self):
+        if 'apiKey' in self.request.GET:
+            try:
+                print '*****************',self.request.GET['apiKey']
+                userExit = CustomerProfile.objects.get(userApiKey=self.request.GET['apiKey'])
+                return Visitor.objects.all()
+            except:
+                print 'errorrrrrrrrr'
+                raise PermissionDenied()
+        else:
+            print 'not enter apikey'
+            raise PermissionDenied()
+
+class GetOfflineMessagesViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = SupportChatSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['uid','user']
+    exclude_fields = ['id']
+    def get_queryset(self):
+        # userObj = User.objects.get(pk=1)
+        # print 'userrrrrrrrrrrrrr',userObj
+        if 'apiKey' in self.request.GET:
+            try:
+                print '*****************',self.request.GET['apiKey']
+                userExit = CustomerProfile.objects.get(userApiKey=self.request.GET['apiKey'])
+                return SupportChat.objects.filter(user__isnull=True)
+            except:
+                print 'errorrrrrrrrr'
+                raise PermissionDenied()
+        else:
+            print 'not enter apikey'
+            raise PermissionDenied()
