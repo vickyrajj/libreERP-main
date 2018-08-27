@@ -71,7 +71,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
    }
 
    $scope.addToChat = function(indx) {
-     console.log('comingggg');
+     console.log('comingggg in add to chat');
      for (var i = 0; i < $scope.chatsInView.length; i++) {
        if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
          console.log('already in chat');

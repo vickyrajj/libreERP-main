@@ -721,52 +721,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
       '  </div>'+
       '</div>'+
 
-      // '<div id="demo" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:150px; position:absolute; background-color:#fff; border-radius:5px; top:355px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'">'+
-      //   '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " >  Get a demo  </p>'+
-      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Get a look inside Syrow to discover what we can do for you. </p>'+
-      //   '<div style="color:#fff; position:absolute; top:95px; padding-left:15px;" >'+
-      //     '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:'+ windowColor +' ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-      //       'Request a Demo'+
-      //     '</button>'+
-      //   '</div>'+
-      // '</div>'+
-
-      // '<div id="exploreSyrow" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:160px; position:absolute; background-color:#fff; border-radius:5px; top:522px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'">'+
-      //   '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " > Explore Syrow </p>'+
-      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Syrow is a call center company located in Bangalore providing varied call center services to its clients.</p>'+
-      //   '<div style="color:#fff; position:absolute; top:110px; padding-left:15px;" >'+
-      //     '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:'+ windowColor +' ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-      //       'Explore Syrow'+
-      //     '</button>'+
-      //   '</div>'+
-      // '</div>'+
 
       '<div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
       // '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
       '</div>'+
       '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
         '<div style="padding:0px;" >'+
-           '<input id="inputText" style="width:70% ; height:50px; border:none; box-shadow:none; background-color:#fff; padding-left:10px; " type="text" placeholder="Write a reply...">'+
+           '<input id="inputText" style="width:70% ; height:50px; border:none; outline:none; box-shadow:none; background-color:#fff; padding-left:10px; " type="text" placeholder="Write a reply...">'+
            '<input id="filePicker" type="file" style="display:none;"  />'+
            '<span id="paperClip" style="width:10% ; border:none; background-color:#fff; font-size:20px; padding:0% 5%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="height:20px; width:20px;" ></span>'+
            '<span id="paperPlane" style="width:10% ; border:none; background-color:#fff; font-size:20px; cursor:pointer;"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:40px; widtth:30px; padding-top:10px;"></span>'+
         '</div>'+
       '</div>'+
     '</div>'+
-
-
-    // '<div id="chatCircle" style="height:55px; width:55px; background-color: #286EFA; border-radius:50%; border: 1px solid #286efa; position:fixed ; bottom:10px; right:10px; z-index:1000; cursor:pointer;">'+
-    //   '<svg id="chatIconSvg" style="width:30px; height:30px; position:absolute; top:14px; left:11px;" viewBox="0 0 28 32">'+
-    //     '<path style="fill:#fff" d="M28,32 C28,32 23.2863266,30.1450667 19.4727818,28.6592 L3.43749107,28.6592 C1.53921989,28.6592 0,27.0272 0,25.0144 L0,3.6448 C0,1.632 1.53921989,0 3.43749107,0 L24.5615088,0 C26.45978,0 27.9989999,1.632 27.9989999,3.6448 L27.9989999,22.0490667 L28,22.0490667 L28,32 Z M23.8614088,20.0181333 C23.5309223,19.6105242 22.9540812,19.5633836 22.5692242,19.9125333 C22.5392199,19.9392 19.5537934,22.5941333 13.9989999,22.5941333 C8.51321617,22.5941333 5.48178311,19.9584 5.4277754,19.9104 C5.04295119,19.5629428 4.46760991,19.6105095 4.13759108,20.0170667 C3.97913051,20.2124916 3.9004494,20.4673395 3.91904357,20.7249415 C3.93763774,20.9825435 4.05196575,21.2215447 4.23660523,21.3888 C4.37862552,21.5168 7.77411059,24.5386667 13.9989999,24.5386667 C20.2248893,24.5386667 23.6203743,21.5168 23.7623946,21.3888 C23.9467342,21.2215726 24.0608642,20.9827905 24.0794539,20.7254507 C24.0980436,20.4681109 24.0195551,20.2135019 23.8614088,20.0181333 Z">'+
-    // '  </path>'+
-    // '</svg>'+
-    //
-    //   '<svg id="closeChatSvg" style="position:absolute; top:18px; left:18px; height:42px;" viewBox="0 0 28 32">'+
-    //   '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
-    // '</svg>'+
-    //
-    // '</div>'+
-
     '<div id="closeSupport" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
       '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
        '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
@@ -1187,6 +1154,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
 
+  function thankYouMessage() {
+    var div = document.createElement("div");
+    div.id="thankYou"
+    div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                    '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                    '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Thank You !</p>'+
+                    '</div> '+
+                    '</div>'
+  messageBox.appendChild(div);
+  scroll();
+  }
+
+
   function submitStarForm(id) {
     submitStars.addEventListener("click", function() {
       console.log('somthing hereeeeee' , this);
@@ -1199,38 +1179,46 @@ document.addEventListener("DOMContentLoaded", function(event) {
         customerFeedback:feedbackText.value
       }
 
+      var star1 = document.getElementById('star-1')
+      var star2 = document.getElementById('star-2')
+      var star3 = document.getElementById('star-3')
+      var star4 = document.getElementById('star-4')
+      var star5 = document.getElementById('star-5')
+
+
       // var rating;
-      if (document.getElementById('star-1').checked) {
+      if (star1.checked) {
         ratingForm.customerRating = 1
       }
-      if (document.getElementById('star-2').checked) {
+      if (star2.checked) {
         ratingForm.customerRating = 2
       }
-      if (document.getElementById('star-3').checked) {
+      if (star3.checked) {
         ratingForm.customerRating = 3
       }
-      if (document.getElementById('star-4').checked) {
+      if (star4.checked) {
         ratingForm.customerRating = 4
       }
-      if (document.getElementById('star-5').checked) {
+      if (star5.checked) {
         ratingForm.customerRating = 5
       }
 
     console.log(ratingForm);
     ratingForm = JSON.stringify(ratingForm)
-    feedbackText.value = ''
-    document.getElementById('star-1').checked = false
-    document.getElementById('star-2').checked = false
-    document.getElementById('star-3').checked = false
-    document.getElementById('star-4').checked = false
-    document.getElementById('star-5').checked = false
-
+    // feedbackText.value = ''
       var xhttp = new XMLHttpRequest();
        xhttp.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 201) {
            console.log('posted successfully');
            console.log(ratingForm);
            feedbackText.value = ''
+           star1.checked = false
+           star2.checked = false
+           star3.checked = false
+           star4.checked = false
+           star5.checked = false
+           submitStars.style.display = "none";
+           // thankYouMessage()
          }
        };
        xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
@@ -1921,10 +1909,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
-        chatBox.style.height ="100vh";
-        messageBox.style.height = "70vh";
-        headerChat.style.height = "15vh";
-        footer.style.height = "15vh";
+        chatBox.style.height ="100%";
+        messageBox.style.height = "72%";
+        headerChat.style.height = "15%";
+        // headerChat.style.minHeight = "60px";
+        footer.style.height = "12%";
+        // footer.style.minHeight = "60px";
         closeIcon.style.display = "";
         chatBox.style.right = "0px";
         chatBox.style.bottom = "0px";
@@ -1946,10 +1936,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
-        chatBox.style.height ="100vh";
-        messageBox.style.height = "70vh";
-        headerChat.style.height = "15vh";
-        footer.style.height = "15vh";
+        chatBox.style.height ="100%";
+        messageBox.style.height = "72%";
+        headerChat.style.height = "15%";
+        footer.style.height = "12%";
         closeIcon.style.display = "";
         chatBox.style.right = "0px";
         chatBox.style.bottom = "0px";
@@ -2018,8 +2008,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+
     var xs = window.matchMedia("(max-width: 767px)")
-    // console.log('xssssssssss',xs);
     xsDevice(xs) // Call listener function at run time
     xs.addListener(xsDevice) // Attach listener function on state changes
 
