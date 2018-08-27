@@ -10,6 +10,9 @@ router.register(r'visitor' , VisitorViewSet , base_name = 'visitor')
 router.register(r'reviewComment' , ReviewCommentViewSet , base_name = 'reviewComment')
 router.register(r'chatThread' , ChatThreadViewSet , base_name = 'chatThread')
 router.register(r'documentation' , DocumentationViewSet , base_name = 'documentation')
+# router.register(r'getChatTranscripts' , GetChatTranscriptsViewSet , base_name = 'getChatTranscripts')
+# router.register(r'getVisitorDetails' , GetVisitorDetailsViewSet , base_name = 'getVisitorDetails')
+# router.register(r'getOfflineMessages' , GetOfflineMessagesViewSet , base_name = 'getOfflineMessages')
 
 
 urlpatterns = [

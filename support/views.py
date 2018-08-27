@@ -188,6 +188,7 @@ def getChatterScript(request , fileName):
     # print 'dpppppppppppp',obj.dp,obj.dp.url
     print globalSettings.SITE_ADDRESS
     print request.get_host()
+    print request.META.get('REMOTE_ADDR')
     dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url
@@ -234,3 +235,40 @@ class DocumentationViewSet(viewsets.ModelViewSet):
     queryset = Documentation.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['title','customer']
+
+# class GetChatTranscriptsViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = ChatThreadSerializer
+#     # queryset = SupportChat.objects.all()
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['uid','status']
+#     def get_queryset(self):
+#         if 'user__isnull' in self.request.GET:
+#             return ChatThread.objects.filter(user__isnull=True)
+#         else:
+#             return ChatThread.objects.all()
+#
+# class GetVisitorDetailsViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = VisitorSerializer
+#     # queryset = SupportChat.objects.all()
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['uid','email' ,'name']
+#     def get_queryset(self):
+#         if 'user__isnull' in self.request.GET:
+#             return Visitor.objects.filter(user__isnull=True)
+#         else:
+#             return Visitor.objects.all()
+#
+# class GetOfflineMessagesViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = SupportChatSerializer
+#     # queryset = SupportChat.objects.all()
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['uid','user']
+#     exclude_fields = ['id']
+#     def get_queryset(self):
+#         if 'user__isnull' in self.request.GET:
+#             return SupportChat.objects.filter(user__isnull=True)
+#         else:
+#             return SupportChat.objects.all()
