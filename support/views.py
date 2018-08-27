@@ -212,7 +212,9 @@ def getChatterScript(request , fileName):
     if serviceWebsite in browserHeader['REFERER']:
         return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
     else:
-        return HttpResponse(request,'')
+        # return HttpResponse(request,'')
+        return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+
 
 
 class VisitorViewSet(viewsets.ModelViewSet):

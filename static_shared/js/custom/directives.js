@@ -679,7 +679,7 @@ app.directive('chatBox', function() {
             })(i))
           }
         });
-        $scope.opnpoup = function(){
+        // $scope.opnpoup = function(){
           $uibModal.open({
             templateUrl: '/static/ngTemplates/app.support.chatTransfer.modal.html',
             size: 'xl',
@@ -713,7 +713,6 @@ app.directive('chatBox', function() {
               }
 
               $scope.transferChat = function () {
-
                 connection.session.call('service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username , userData ]).then(
                   function (res) {
                     console.log(userData.chatThreadPk,$scope.agentForm.pk);
@@ -738,6 +737,9 @@ app.directive('chatBox', function() {
               }
 
 
+
+
+
             },
           }).result.then(function() {
 
@@ -750,10 +752,12 @@ app.directive('chatBox', function() {
               // console.log($scope.data.myUserIndex , 'ffffffffffffff');
             }
           });
-        }
-        setTimeout(function () {
-          $scope.opnpoup()
-        }, 2000);
+        // }
+
+
+        // setTimeout(function () {
+        //   $scope.opnpoup()
+        // }, 1000);
 
       }
 
