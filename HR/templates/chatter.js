@@ -673,7 +673,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
       '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:'+ windowColor +'; color:#fff;">'+
         '<div style="padding:10px; background-size:cover; " >'+
           '<div id="backArrow" style="float:left; cursor:pointer; padding:15px; border-radius:5px; " >'+
-            '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
+            // '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
+            '<img src="{{serverAddress}}/static/images/backArrow.png" alt="Back Arrow" width="15" height="15">'+
+            // '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
           '</div>'+
           '<div style="float:left;">'+
               '<img src="'+dpSupport+'" style="border-radius:50%; width:35px " alt="Samuel">'+
@@ -687,14 +689,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
             '</div>'+
           '</div>'+
           '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
-            '<span> <i class="fa fa-times" aria-hidden="true"></i> </span>'+
+            '<span> <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
           '</div>'+
         '</div>'+
       '</div>'+
 
 
       '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:'+ windowColor +'; color:#fff; padding:15px; background-size:cover; " >'+
-        '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <i class="fa fa-times" aria-hidden="true"></i> </span>'+
+        '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
         '<div style="padding:15px; padding-left:25px; " >'+
           '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are '+ custName +' 👋 </p>'+
 
@@ -746,8 +748,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         '<div style="padding:0px;" >'+
            '<input id="inputText" style="width:70% ; height:50px; border:none; box-shadow:none; background-color:#fff; padding-left:10px; " type="text" placeholder="Write a reply...">'+
            '<input id="filePicker" type="file" style="display:none;"  />'+
-           '<span id="paperClip" style="width:10% ; border:none; background-color:#fff; font-size:20px; padding:0% 5%; cursor:pointer; "><i class="fa fa-paperclip " aria-hidden="true"></i></span>'+
-           '<span id="paperPlane" style="width:10% ; border:none; background-color:#fff; font-size:20px; cursor:pointer;"><i class="fa fa-paper-plane-o " aria-hidden="true"></i></span>'+
+           '<span id="paperClip" style="width:10% ; border:none; background-color:#fff; font-size:20px; padding:0% 5%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="height:20px; width:20px;" ></span>'+
+           '<span id="paperPlane" style="width:10% ; border:none; background-color:#fff; font-size:20px; cursor:pointer;"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:40px; widtth:30px; padding-top:10px;"></span>'+
         '</div>'+
       '</div>'+
     '</div>'+
@@ -907,7 +909,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   for (var i = 0; i < supportOptions.length; i++) {
     if (supportOptions[i].name=='callCircle') {
-      supportOptions[i].value = chatSupport;
+      supportOptions[i].value = callBackSupport;
     }
     if (supportOptions[i].name=='chatCircle') {
       supportOptions[i].value = chatSupport;

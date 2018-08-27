@@ -619,7 +619,30 @@ app.directive('chatBox', function() {
 
 
             $scope.searchText = function() {
-              console.log($scope.searchForm.value, 'ffffffffffffffffff');
+              for (var i = 0; i < $scope.chatData.length; i++) {
+                console.log($scope.chatData[i].chatList);
+                for (var j = 0; j < $scope.chatData[i].chatList.length; j++) {
+                  var page = $('#p'+j);
+                  // var page = $('#all_text');
+                  var pageText = page.text().replace("<span>","").replace("</span>");
+                  console.log(pageText);
+                  var searchedText = $scope.searchForm.value
+                  var theRegEx = new RegExp("("+searchedText+")", "igm");
+                  var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
+                  console.log(newHtml);
+                  page.html(newHtml);
+                }
+              }
+              // for (var i = 0; i < $scope.texts.length; i++) {
+              //     var page = $('#all_text'+i);
+              //     // var page = $('#all_text');
+              //     var pageText = page.text().replace("<span>","").replace("</span>");
+              //     console.log(pageText);
+              //     var searchedText = $scope.searchForm.value
+              //     var theRegEx = new RegExp("("+searchedText+")", "igm");
+              //     var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
+              //     page.html(newHtml);
+              // }
 
             }
 

@@ -23,7 +23,7 @@
             <span style="font-size:22px">{{chat.chatList[0].uid}}</span>
             <div class="row" ng-repeat="msg in chat.chatList">
               <div class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-              <p class="p" ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" ><h4>{{msg.message}}</h4></p>
+              <p id="p{{$index}}" ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" >{{msg.message}}</p>
                <img ng-if="msg.attachmentType == 'image'" ng-src="{{msg.file}}" style="width:250px;">
                <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.file}}" controls></video>
                <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.file}}" controls></audio>
