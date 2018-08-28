@@ -224,6 +224,13 @@ def getChatterScript(request , fileName):
     if obj.name:
         dataToSend["name"] =  obj.name
 
+    if obj.firstMessage:
+
+        dataToSend["firstMessage"] =  obj.firstMessage
+        print obj.firstMessage
+
+
+
     # return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
     if serviceWebsite in browserHeader['REFERER']:
         return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")

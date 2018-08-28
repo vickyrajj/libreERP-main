@@ -256,6 +256,17 @@ app.controller("businessManagement.customers.document", function($scope, $state,
 
 app.controller("businessManagement.customers.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
+  $scope.tinymceOptions = {
+    selector: 'textarea',
+    content_css : '/static/css/bootstrap.min.css',
+    inline: false,
+    plugins : 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
+    skin: 'lightgray',
+    theme : 'modern',
+    height : 180,
+    toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+  };
+
   $scope.me = $users.get('mySelf')
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
@@ -263,7 +274,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       return response.data;
     })
   };
-  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'#000000' , callBack:false , ticket: false , dp: emptyFile , name:'',supportBubbleColor:'#286EFA'}
+  $scope.cpForm = {chat:false,call:false,email:false,videoAndAudio:false,vr:false,windowColor:'#000000' , callBack:false , ticket: false , dp: emptyFile , name:'',supportBubbleColor:'#286EFA' , firstMessage:''}
   $scope.fetCustomerProfile = function(pk){
     $scope.cpForm.service = pk
     $http({
@@ -433,6 +444,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     if (cpF.supportBubbleColor == '') {
       delete cpF.supportBubbleColor
     }
+    if (cpF.firstMessage == '') {
+      delete cpF.supportBubbleColor
+    }
     var method = 'POST'
     var url = '/api/support/customerProfile/'
     if ($scope.cpForm.pk!=undefined) {
@@ -468,6 +482,10 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     }
     if (cpF.supportBubbleColor != '') {
       fd.append('supportBubbleColor', cpF.supportBubbleColor);
+    }
+
+    if (cpF.firstMessage != '') {
+      fd.append('firstMessage', cpF.firstMessage);
     }
 
     console.log(cpF.dp , 'dddddddddddddddddddddddddddddddddddddd');

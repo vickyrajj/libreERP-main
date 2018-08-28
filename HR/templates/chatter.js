@@ -1,3 +1,8 @@
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
 !function(la){if("object"==typeof exports)module.exports=la();else if("function"==typeof define&&define.amd)define(la);else{var h;"undefined"!=typeof window?h=window:"undefined"!=typeof global?h=global:"undefined"!=typeof self&&(h=self);h.autobahn=la()}}(function(){return function h(p,k,b){function a(d,e){if(!k[d]){if(!p[d]){var q="function"==typeof require&&require;if(!e&&q)return q(d,!0);if(c)return c(d,!0);throw Error("Cannot find module '"+d+"'");}q=k[d]={exports:{}};p[d][0].call(q.exports,function(c){var n=
 p[d][1][c];return a(n?n:c)},q,q.exports,h,p,k,b)}return k[d].exports}for(var c="function"==typeof require&&require,e=0;e<b.length;e++)a(b[e]);return a}({1:[function(h,p,k){function b(){}h=p.exports={};h.nextTick=function(){if("undefined"!==typeof window&&window.setImmediate)return function(a){return window.setImmediate(a)};if("undefined"!==typeof window&&window.postMessage&&window.addEventListener){var a=[];window.addEventListener("message",function(c){var b=c.source;b!==window&&null!==b||"process-tick"!==
 c.data||(c.stopPropagation(),0<a.length&&a.shift()())},!0);return function(c){a.push(c);window.postMessage("process-tick","*")}}return function(a){setTimeout(a,0)}}();h.title="browser";h.browser=!0;h.env={};h.argv=[];h.on=b;h.once=b;h.off=b;h.emit=b;h.binding=function(a){throw Error("process.binding is not supported");};h.cwd=function(){return"/"};h.chdir=function(a){throw Error("process.chdir is not supported");}},{}],2:[function(h,p,k){var b=h("crypto-js");k.sign=function(a,c){return b.HmacSHA256(c,
@@ -272,6 +277,7 @@ var ticketSupport = '{{ticket}}'
 var nameSupport = '{{name}}'
 var dpSupport = '{{dp}}'
 var supportBubbleColor = '{{supportBubbleColor}}'
+var firstMessage = `{{firstMessage}}`;
 
 
 if (nameSupport=='None') {
@@ -374,7 +380,7 @@ function getCookie(cname) {
 }
 
 
-var chat = {user : custName , messages : [ { message:"Thanks for visiting us. If you need help simply reply to this message...", sentByAgent:true , created:  new Date() } ] }
+var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
 
 
 function fetchMessages(uid) {
@@ -502,6 +508,90 @@ checkCookie();
 
 
 
+// function getLoginDetails(username , phoneNumber , email) {
+//    setcookies - details
+// }
+
+function setVisitorDetails(name , phoneNumber , email) {
+  console.log('coming in chatter', name , phoneNumber , email);
+
+  detail = getCookie("uidDetails");
+  if (detail != "") {
+    console.log('already there');
+    document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
+  }
+
+  console.log(getCookie("uid") , uid , 'getttttttttttttt`');
+
+  if (uid!="") {
+    console.log(uid);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+          var data = JSON.parse(this.responseText)
+          console.log(data,'');
+          if (data.length==0) {
+            console.log('vistor not there');
+            var xhttp = new XMLHttpRequest();
+             xhttp.onreadystatechange = function() {
+               if (this.readyState == 4 && this.status == 201) {
+                 console.log('posted successfully');
+               }
+             };
+             xhttp.open('POST', '{{serverAddress}}/api/support/visitor/', true);
+             xhttp.setRequestHeader("Content-type", "application/json");
+             xhttp.send(JSON.stringify({uid:uid,name:name,email:email,phoneNumber:phoneNumber}));
+          }
+        }
+    };
+
+    xhttp.open('GET', '{{serverAddress}}/api/support/visitor/?uid='+uid  , true);
+    xhttp.send();
+  }
+  setCookie("uidDetails", JSON.stringify({email:email , name:name , phoneNumber:phoneNumber}), 365);
+}
+
+
+function unsetVisitorDetails() {
+  detail = getCookie("uidDetails");
+  if (detail != "") {
+    document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
+  }
+}
+
+function getVisitorDetails() {
+  detail = getCookie("uidDetails");
+  if (detail != "") {
+    return detail
+  }
+}
+
+
+
+function setColors(bubbleColor , windowColor) {
+  setTimeout(function () {
+    headerChat.style.backgroundColor = windowColor
+    startConvoBtn.style.color =  windowColor
+    startConvoBtn.style.borderColor =  windowColor
+    headerInit.style.backgroundColor = windowColor
+    startConversation.style.borderColor = windowColor
+    chatCircle.style.background = bubbleColor
+    callCircle.style.background = bubbleColor
+    audioCircle.style.background = bubbleColor
+    videoCircle.style.background = bubbleColor
+    ticketCircle.style.background = bubbleColor
+    closeSupport.style.background = bubbleColor
+    document.getElementById('chatCircleText').style.background = bubbleColor
+    document.getElementById('callCircleText').style.background = bubbleColor
+    document.getElementById('audioCircleText').style.background = bubbleColor
+    document.getElementById('videoCircleText').style.background = bubbleColor
+    document.getElementById('ticketCircleText').style.background = bubbleColor
+    document.getElementById('sy-main-icon').style.background = bubbleColor
+    document.getElementById('Syrow24hSupportText').style.background = bubbleColor
+  }, 1000);
+}
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
@@ -591,6 +681,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }else if (args[0]=='AP') {
           console.log('agent pk recievedddddddddd');
           agentPk = args[1];
+          isAgentOnline = true;
           return
         }else if (args[0]=='O') {
           console.log('yes online');
@@ -599,6 +690,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
           // agentName.innerHTML = '<p style="line-height: 1.75;">Syrow Agent</p>'
           return
         }else if (args[0]=='A') {
+          console.log('asigned');
+          isAgentOnline = true;
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[1]+'</p>'
           return
         }else if (args[0]=='F') {
@@ -644,9 +737,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
           setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
       }
 
-      session.register('service.support.createDetailCookie.'+uid, createCookieDetail);
+      session.register('service.support.createDetailCookie.'+uid, createCookieDetail).then(
+        function (res) {
+          console.log("registered to service.support.heartbeat'");
+        },
+        function (err) {
+          console.log("failed to registered: ");
+        }
+      );
 
-      session.register('service.support.heartbeat.'+uid, heartbeat);
+      session.register('service.support.heartbeat.'+uid, heartbeat).then(
+        function (res) {
+          console.log("registered to service.support.heartbeat'");
+        },
+        function (err) {
+          console.log("failed to registered: " + err);
+        }
+      );
 
       session.subscribe('service.support.chat.' + uid, supportChat).then(
         function (sub) {
@@ -662,126 +769,131 @@ document.addEventListener("DOMContentLoaded", function(event) {
     connection.open();
 
 
+    function createDiv() {
+      var body = document.getElementsByTagName("BODY")[0];
+      var mainDiv = document.createElement("mainDiv");
+      mainDiv.id="mainDiv"
 
+      mainDiv.innerHTML = '<div id="chatBox" style="width:347px; height:75vh; border-radius: 10px; background-color:#fff; position:fixed ; bottom:100px; right:10px; z-index:1500; margin-left:10px; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); overflow:auto; overflow-x:hidden; ">'+
 
-    var body = document.getElementsByTagName("BODY")[0];
-    var mainDiv = document.createElement("mainDiv");
-    mainDiv.id="mainDiv"
-
-    mainDiv.innerHTML = '<div id="chatBox" style="width:347px; height:75vh; border-radius: 10px; background-color:#fff; position:fixed ; bottom:100px; right:10px; z-index:1500; margin-left:10px; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); overflow:auto; overflow-x:hidden; ">'+
-
-      '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:'+ windowColor +'; color:#fff;">'+
-        '<div style="padding:10px; background-size:cover; " >'+
-          '<div id="backArrow" style="float:left; cursor:pointer; padding:15px; border-radius:5px; " >'+
-            // '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
-            '<img src="{{serverAddress}}/static/images/backArrow.png" alt="Back Arrow" width="15" height="15">'+
-            // '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
-          '</div>'+
-          '<div style="float:left;">'+
-              '<img src="'+dpSupport+'" style="border-radius:50%; width:35px " alt="Samuel">'+
-          '</div>'+
-          '<div style="float:left;padding-left: 15px;" >'+
-            '<div>'+
-              '<span id="agentName" style="font-size:15px; cursor:pointer; "></span>'+
+        '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:'+ windowColor +'; color:#fff;">'+
+          '<div style="padding:10px; background-size:cover; " >'+
+            '<div id="backArrow" style="float:left; cursor:pointer; padding:15px; border-radius:5px; " >'+
+              // '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
+              '<img src="{{serverAddress}}/static/images/backArrow.png" alt="Back Arrow" width="15" height="15">'+
+              // '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
             '</div>'+
-            '<div>'+
-              '<span id="onlineStatus"></span>'+
+            '<div style="float:left;">'+
+                '<img src="'+dpSupport+'" style="border-radius:50%; width:35px " alt="Samuel">'+
+            '</div>'+
+            '<div style="float:left;padding-left: 15px;" >'+
+              '<div>'+
+                '<span id="agentName" style="font-size:15px; cursor:pointer; "></span>'+
+              '</div>'+
+              '<div>'+
+                '<span id="onlineStatus"></span>'+
+              '</div>'+
+            '</div>'+
+            '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
+              '<span> <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
             '</div>'+
           '</div>'+
-          '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
-            '<span> <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
+        '</div>'+
+
+
+        '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:'+ windowColor +'; color:#fff; padding:15px; background-size:cover; " >'+
+          '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
+          '<div style="padding:15px; padding-left:25px; " >'+
+            '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are '+ custName +' 👋 </p>'+
+
+          // ' <p style="font-size:15px; margin:0px 0px 10px; line-height: 1.75;" >We deliver excellence and committed to Spread Happiness. </p>'+
+        '  </div>'+
+        '</div>'+
+
+        '<div id="startConversation" style="margin-right:-15px; margin-left:-15px; padding:30px; padding-top:10px; height:200px; position:absolute; background-color:#fff; border-radius:5px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'" >'+
+          '<p style="font-size:12px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px;" > Start a conversation </p>'+
+          '<p style="font-size:11px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px; color:#777; "> The team typically replies in few minutes.</p>'+
+          '<div style="padding-top:5px; text-align:center;" >'+
+            '<img src="http://syrow.cioc.in/static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Agent1">'+
+            '<img src="http://syrow.cioc.in/static/images/user2-160x160.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Agent2">'+
+            '<img src="http://syrow.cioc.in/static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Agent3">'+
+            '<img src="http://syrow.cioc.in/static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Agent4">'+
+          '</div>'+
+
+          '<div style="margin-right:-15px; margin-left:-15px; color:#fff; position:absolute; top:144px; text-align:center; padding-top:5px; " >'+
+            '<button id="startConvoBtn" type="button" style="padding:13px; border-radius:20px; background-color:#fff ; color:'+ windowColor +'; border:2px solid '+ windowColor +'; text-transform:none;  font-size:11px; cursor:pointer;" >'+
+              'Start Conversation'+
+            '</button>'+
+        '  </div>'+
+        '</div>'+
+
+
+        '<div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
+        // '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
+        '</div>'+
+        '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
+          '<div style="padding:0px;" >'+
+             '<input id="inputText" style="width:70% ; height:50px; border:none; outline:none; box-shadow:none; background-color:#fff; padding-left:10px; " type="text" placeholder="Write a reply...">'+
+             '<input id="filePicker" type="file" style="display:none;"  />'+
+             '<span id="paperClip" style="width:10% ; border:none; background-color:#fff; font-size:20px; padding:0% 5%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="height:20px; width:20px;" ></span>'+
+             '<span id="paperPlane" style="width:10% ; border:none; background-color:#fff; font-size:20px; cursor:pointer;"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:40px; widtth:30px; padding-top:10px;"></span>'+
           '</div>'+
         '</div>'+
       '</div>'+
-
-
-      '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:'+ windowColor +'; color:#fff; padding:15px; background-size:cover; " >'+
-        '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
-        '<div style="padding:15px; padding-left:25px; " >'+
-          '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are '+ custName +' 👋 </p>'+
-
-        // ' <p style="font-size:15px; margin:0px 0px 10px; line-height: 1.75;" >We deliver excellence and committed to Spread Happiness. </p>'+
-      '  </div>'+
+      '<div id="closeSupport" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
+        '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
+         '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+       '</svg>'+
       '</div>'+
 
-      '<div id="startConversation" style="margin-right:-15px; margin-left:-15px; padding:30px; padding-top:10px; height:200px; position:absolute; background-color:#fff; border-radius:5px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'" >'+
-        '<p style="font-size:12px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px;" > Start a conversation </p>'+
-        '<p style="font-size:11px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px; color:#777; "> The team typically replies in few minutes.</p>'+
-        '<div style="padding-top:5px; text-align:center;" >'+
-          '<img src="http://syrow.cioc.in/static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Agent1">'+
-          '<img src="http://syrow.cioc.in/static/images/user2-160x160.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Agent2">'+
-          '<img src="http://syrow.cioc.in/static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Agent3">'+
-          '<img src="http://syrow.cioc.in/static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Agent4">'+
-        '</div>'+
+      '<div id="supportCircle" >'+
+  			'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
+  				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">24 Hours Support</span>'+
+  				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
+  				'<div  id="sy-sub-icons">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="callCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Callback</span>'+
+  						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
+  					'</div>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="chatCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Chat</span>'+
+  						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
+  					'</div>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="audioCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Audio Call</span>'+
+  						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
+  					'</div>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="videoCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Video Call</span>'+
+  						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
+  					'</div>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="ticketCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Ticket</span>'+
+  						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
+  					'</div>'+
+  				'</div>'+
+  			'</div>'+
+  		'</div>'
 
-        '<div style="margin-right:-15px; margin-left:-15px; color:#fff; position:absolute; top:144px; text-align:center; padding-top:5px; " >'+
-          '<button id="startConvoBtn" type="button" style="padding:13px; border-radius:20px; background-color:#fff ; color:'+ windowColor +'; border:2px solid '+ windowColor +'; text-transform:none;  font-size:11px; cursor:pointer;" >'+
-            'Start Conversation'+
-          '</button>'+
-      '  </div>'+
+
+
+      '<div id="welcomeMessage"  style="width:270px; height:76px; padding:5px 10px 5px 10px; background-color:#fff; color:#000; position:fixed; bottom:42px;  right:30px; border-radius:5px; cursor:pointer; box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.3)">'+
+        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:12px;" >Syrow</p>'+
+        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:10px; word-wrap: break-word;" >Thanks for visiting us. If you need help simply reply to this message.... </p>'+
       '</div>'+
+      '<div id="unreadMsg" style="background-color:#fff; color:#fff; width:3px; height:3px; position:fixed; bottom:42px; right:38px; z-index:9999; " >'+
+
+      '</div>'
 
 
-      '<div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
-      // '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
-      '</div>'+
-      '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
-        '<div style="padding:0px;" >'+
-           '<input id="inputText" style="width:70% ; height:50px; border:none; outline:none; box-shadow:none; background-color:#fff; padding-left:10px; " type="text" placeholder="Write a reply...">'+
-           '<input id="filePicker" type="file" style="display:none;"  />'+
-           '<span id="paperClip" style="width:10% ; border:none; background-color:#fff; font-size:20px; padding:0% 5%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="height:20px; width:20px;" ></span>'+
-           '<span id="paperPlane" style="width:10% ; border:none; background-color:#fff; font-size:20px; cursor:pointer;"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:40px; widtth:30px; padding-top:10px;"></span>'+
-        '</div>'+
-      '</div>'+
-    '</div>'+
-    '<div id="closeSupport" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
-      '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
-       '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
-     '</svg>'+
-    '</div>'+
+    mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
+    body.appendChild(mainDiv);
 
-    '<div id="supportCircle" >'+
-			'<div class="sy-circle" onclick="" id="sy-main-icon">'+
-				'<span class="sy-text">24 Hours Support</span>'+
-				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
-				'<div  id="sy-sub-icons">'+
-					'<div id="callCircle" class="sy-circle" style="cursor:pointer;">'+
-						'<span class="sy-text">Callback</span>'+
-						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
-					'</div>'+
-					'<div id="chatCircle" class="sy-circle" style="cursor:pointer;">'+
-						'<span class="sy-text">Chat</span>'+
-						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
-					'</div>'+
-					'<div id="audioCircle" class="sy-circle" style="cursor:pointer;">'+
-						'<span class="sy-text">Audio Call</span>'+
-						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
-					'</div>'+
-					'<div id="videoCircle" class="sy-circle" style="cursor:pointer;">'+
-						'<span class="sy-text">Video Call</span>'+
-						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
-					'</div>'+
-					'<div id="ticketCircle" class="sy-circle" style="cursor:pointer;">'+
-						'<span class="sy-text">Ticket</span>'+
-						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
-					'</div>'+
-				'</div>'+
-			'</div>'+
-		'</div>'
+    }
 
 
 
-    '<div id="welcomeMessage"  style="width:270px; height:76px; padding:5px 10px 5px 10px; background-color:#fff; color:#000; position:fixed; bottom:42px;  right:30px; border-radius:5px; cursor:pointer; box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.3)">'+
-      '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:12px;" >Syrow</p>'+
-      '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:10px; word-wrap: break-word;" >Thanks for visiting us. If you need help simply reply to this message.... </p>'+
-    '</div>'+
-    '<div id="unreadMsg" style="background-color:#fff; color:#fff; width:3px; height:3px; position:fixed; bottom:42px; right:38px; z-index:9999; " >'+
-
-    '</div>'
-
-
-  mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
-  body.appendChild(mainDiv);
+  createDiv()
 
   // console.log(document.getElementById('ticketCircle'));
 
@@ -867,7 +979,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
-
+  // function setColors(colors) {
+  //   console.log('coming in set colorsssssssssssssssssssssssssssssss');
+  //   headerChat.style.backgroundColor = colors.main
+  //   startConvoBtn.style.color =  colors.main
+  //   console.log(startConvoBtn.style.color);
+  //   console.log(headerChat.style.backgroundColor);
+  //   console.log(colors);
+  //   // startConversation.style =  colors.main
+  //   // border-top: 2px solid '+ windowColor +'"
+  // }
 
 
   var mainStr = "";
@@ -944,175 +1065,173 @@ document.addEventListener("DOMContentLoaded", function(event) {
 // https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf
 
 
-  setTimeout(function(){
+function setStyle() {
 
-      var newStyle = document.createElement('style');
-      newStyle.appendChild(document.createTextNode("\
-      @font-face {\
-        font-family: 'Syrow';\
-        src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4');\
-        src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
-        url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
-        url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
-        url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
-        font-weight: normal;\
-        font-style: normal;\
-      }\
-        .SyrowFont {\
-        /* use !important to prevent issues with browser extensions that change fonts */\
-        font-family: 'Syrow' !important;\
-        speak: none;\
-        font-style: normal;\
-        font-weight: normal;\
-        font-variant: normal;\
-        text-transform: none;\
-        line-height: 1;\
-        /* Better Font Rendering =========== */\
-        -webkit-font-smoothing: antialiased;\
-        -moz-osx-font-smoothing: grayscale;\
-      }\
-        .font-Syrow24hSupport:before {\
-        content: '\\61';\
-      }\
-        .font-SyrowChat:before {\
-        content: '\\62';\
-      }\
-        .font-SyrowAudioCall:before {\
-        content: '\\63';\
-      }\
-        .font-SyrowVideoCall:before {\
-        content: '\\64';\
-      }\
-        .font-SyrowCallBack:before {\
-        content: '\\65';\
-      }\
-        .font-SyrowTicket:before {\
-        content: '\\66';\
-      }\
-        /* The below code can be optimised 10X better */\
-        .sy-circle, .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link, .sy-text {\
-        background: "+supportBubbleColor+" !important; /* background color should be dynamic */\
-        color: #fff; 					/* color should be dynamic */\
-      }\
-        .sy-circle {\
-        z-index: 987654321!important;\
-        position: fixed!important;\
-        bottom: 20px;\
-        right: 40px;\
-        width: 60px!important;\
-        height: 60px!important;\
-        border-radius: 50%!important;\
-      }\
-        .sy-md-1 {\
-        font-size: 40px;\
-      }\
-        .sy-md-2 {\
-        font-size: 34px;\
-      }\
-        .sy-ops {\
-        position: absolute;\
-        top: 0;\
-        bottom: 0;\
-        width: 100%;\
-        display: -webkit-box;\
-        display: -ms-flexbox;\
-        display: flex;\
-        -webkit-box-align: center;\
-        -ms-flex-align: center;\
-        align-items: center;\
-        -webkit-box-pack: center;\
-        -ms-flex-pack: center;\
-        justify-content: center;\
-        -webkit-transition: opacity .08s linear,-webkit-transform .16s linear;\
-        transition: opacity .08s linear,-webkit-transform .16s linear;\
-        transition: transform .16s linear,opacity .08s linear;\
-        transition: transform .16s linear,opacity .08s linear,-webkit-transform .16s linear;\
-      }\
-        .sy-text {\
-        position: fixed;\
-        right: 70px;\
-        margin-top: 15px;\
-        border-radius: 15px;\
-        padding: 4px 8px;\
-        font-family: Verdana, Arial, sans-serif;\
-        font-size: 14px;\
-        display: inline-block;\
-        white-space: nowrap;\
-        max-width: 250px;\
-        overflow: hidden;\
-      }\
-        .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
-        text-decoration: none;\
-      }\
-        #sy-sub-icons .sy-circle, #sy-main-icon > .sy-text {\
-        display: none;\
-      }\
-        #sy-main-icon:hover > .sy-text {\
-        display: inline-block;\
-        right: 110px;\
-      }\
-      "+ mainStr+"\
-        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1) { \
-        display: block;\
-        -webkit-animation: item-1 0.5s forwards; \
-        -ms-animation: item-1 0.5s forwards; \
-        -moz-animation: item-1 0.5s forwards;\
-      }\
-        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2) { \
-        display: block;\
-        -webkit-animation: item-2 0.5s forwards; \
-        -ms-animation: item-2 0.5s forwards;\
-        -moz-animation: item-2 0.5s forwards; \
-      }\
-        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3) {\
-        display: block;\
-        -webkit-animation: item-3 0.5s forwards; \
-        -ms-animation: item-3 0.5s forwards; \
-        -moz-animation: item-3 0.5s forwards; \
-      }\
-        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4) { \
-        display: block;\
-        -webkit-animation: item-4 0.5s forwards; \
-        -ms-animation: item-4 0.5s forwards; \
-        -moz-animation: item-4 0.5s forwards; \
-      }\
-        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5) { \
-        display: block;\
-        -webkit-animation: item-5 0.5s forwards; \
-        -ms-animation: item-5 0.5s forwards; \
-        -moz-animation: item-5 0.5s forwards; \
-      }\
-          div.stars {\
-          width: 270px;\
+        var newStyle = document.createElement('style');
+        newStyle.appendChild(document.createTextNode("\
+        @font-face {\
+          font-family: 'Syrow';\
+          src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4');\
+          src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
+          url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
+          url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
+          url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
+          font-weight: normal;\
+          font-style: normal;\
+        }\
+          .SyrowFont {\
+          /* use !important to prevent issues with browser extensions that change fonts */\
+          font-family: 'Syrow' !important;\
+          speak: none;\
+          font-style: normal;\
+          font-weight: normal;\
+          font-variant: normal;\
+          text-transform: none;\
+          line-height: 1;\
+          /* Better Font Rendering =========== */\
+          -webkit-font-smoothing: antialiased;\
+          -moz-osx-font-smoothing: grayscale;\
+        }\
+          .font-Syrow24hSupport:before {\
+          content: '\\61';\
+        }\
+          .font-SyrowChat:before {\
+          content: '\\62';\
+        }\
+          .font-SyrowAudioCall:before {\
+          content: '\\63';\
+        }\
+          .font-SyrowVideoCall:before {\
+          content: '\\64';\
+        }\
+          .font-SyrowCallBack:before {\
+          content: '\\65';\
+        }\
+          .font-SyrowTicket:before {\
+          content: '\\66';\
+        }\
+          .sy-circle {\
+          z-index: 987654321!important;\
+          position: fixed!important;\
+          bottom: 20px;\
+          right: 40px;\
+          width: 60px!important;\
+          height: 60px!important;\
+          border-radius: 50%!important;\
+        }\
+          .sy-md-1 {\
+          font-size: 40px;\
+        }\
+          .sy-md-2 {\
+          font-size: 34px;\
+        }\
+          .sy-ops {\
+          position: absolute;\
+          top: 0;\
+          bottom: 0;\
+          width: 100%;\
+          display: -webkit-box;\
+          display: -ms-flexbox;\
+          display: flex;\
+          -webkit-box-align: center;\
+          -ms-flex-align: center;\
+          align-items: center;\
+          -webkit-box-pack: center;\
+          -ms-flex-pack: center;\
+          justify-content: center;\
+          -webkit-transition: opacity .08s linear,-webkit-transform .16s linear;\
+          transition: opacity .08s linear,-webkit-transform .16s linear;\
+          transition: transform .16s linear,opacity .08s linear;\
+          transition: transform .16s linear,opacity .08s linear,-webkit-transform .16s linear;\
+        }\
+          .sy-text {\
+          position: fixed;\
+          right: 70px;\
+          margin-top: 15px;\
+          border-radius: 15px;\
+          padding: 4px 8px;\
+          font-family: Verdana, Arial, sans-serif;\
+          font-size: 14px;\
           display: inline-block;\
+          white-space: nowrap;\
+          max-width: 250px;\
+          overflow: hidden;\
         }\
-        input.star { display: none; }\
-        label.star {\
-          float: right;\
-          padding: 10px;\
-          font-size: 36px;\
-          color: #444;\
-          transition: all .2s;\
+          .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
+          text-decoration: none;\
         }\
-        input.star:checked ~ label.star:before {\
-          content: '\\2605';\
-          color: #FD4;\
-          transition: all .25s;\
+          #sy-sub-icons .sy-circle, #sy-main-icon > .sy-text {\
+          display: none;\
         }\
-        input.star-5:checked ~ label.star:before {\
-          color: #FE7;\
-          text-shadow: 0 0 20px #952;\
+          #sy-main-icon:hover > .sy-text {\
+          display: inline-block;\
+          right: 110px;\
         }\
-        input.star-1:checked ~ label.star:before { color: #F62; }\
-        label.star:hover { transform: rotate(-15deg) scale(1.3); }\
-        label.star:before {\
-          content: '\\2605';\
+        "+ mainStr+"\
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1) { \
+          display: block;\
+          -webkit-animation: item-1 0.5s forwards; \
+          -ms-animation: item-1 0.5s forwards; \
+          -moz-animation: item-1 0.5s forwards;\
         }\
-      "));
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2) { \
+          display: block;\
+          -webkit-animation: item-2 0.5s forwards; \
+          -ms-animation: item-2 0.5s forwards;\
+          -moz-animation: item-2 0.5s forwards; \
+        }\
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3) {\
+          display: block;\
+          -webkit-animation: item-3 0.5s forwards; \
+          -ms-animation: item-3 0.5s forwards; \
+          -moz-animation: item-3 0.5s forwards; \
+        }\
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4) { \
+          display: block;\
+          -webkit-animation: item-4 0.5s forwards; \
+          -ms-animation: item-4 0.5s forwards; \
+          -moz-animation: item-4 0.5s forwards; \
+        }\
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5) { \
+          display: block;\
+          -webkit-animation: item-5 0.5s forwards; \
+          -ms-animation: item-5 0.5s forwards; \
+          -moz-animation: item-5 0.5s forwards; \
+        }\
+            div.stars {\
+            width: 270px;\
+            display: inline-block;\
+          }\
+          input.star { display: none; }\
+          label.star {\
+            float: right;\
+            padding: 10px;\
+            font-size: 36px;\
+            color: #444;\
+            transition: all .2s;\
+          }\
+          input.star:checked ~ label.star:before {\
+            content: '\\2605';\
+            color: #FD4;\
+            transition: all .25s;\
+          }\
+          input.star-5:checked ~ label.star:before {\
+            color: #FE7;\
+            text-shadow: 0 0 20px #952;\
+          }\
+          input.star-1:checked ~ label.star:before { color: #F62; }\
+          label.star:hover { transform: rotate(-15deg) scale(1.3); }\
+          label.star:before {\
+            content: '\\2605';\
+          }\
+        "));
 
-      document.head.appendChild(newStyle);
+        document.head.appendChild(newStyle);
+}
 
-  }, 2000);
+setTimeout(function () {
+  setStyle()
+}, 2000);
 
 
 
@@ -1155,6 +1274,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
   function thankYouMessage() {
+    console.log('coming in thankyou');
     var div = document.createElement("div");
     div.id="thankYou"
     div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
@@ -1208,7 +1328,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // feedbackText.value = ''
       var xhttp = new XMLHttpRequest();
        xhttp.onreadystatechange = function() {
-         if (this.readyState == 4 && this.status == 201) {
+         if (this.readyState == 4 && this.status == 200) {
            console.log('posted successfully');
            console.log(ratingForm);
            feedbackText.value = ''
@@ -1218,7 +1338,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
            star4.checked = false
            star5.checked = false
            submitStars.style.display = "none";
-           // thankYouMessage()
+           thankYouMessage()
          }
        };
        xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
@@ -1318,7 +1438,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     function messageDiv(message) {
-
+      console.log(message);
       // console.log(chat.messages.length);
 
       // console.log('messsaaageeeeeeeeeeeeeeeeeeeee',message);
@@ -1419,7 +1539,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
     function pushMessges() {
       for (var i = 0; i < chat.messages.length; i++) {
         var div = document.createElement("div");
-        div.innerHTML = messageDiv(chat.messages[i])
+        console.log(chat.messages[i].message);
+        if (chat.messages[i].message=="first") {
+          // div.innerHTML = '<p>hello</p>'
+          // console.log(div,'divvvvvvvvvvv');
+          console.log(firstMessage);
+          firstMessage = firstMessage.replaceAll("&lt;",'<')
+          firstMessage = firstMessage.replaceAll("&gt;",">")
+            div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                    '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                       firstMessage+
+                    '</div> '+
+                  '</div> '
+
+          console.log(firstMessage);
+          console.log('firstttttttt' , typeof firstMessage);
+        }else {
+          div.innerHTML = messageDiv(chat.messages[i])
+        }
         messageBox.appendChild(div);
       }
       scroll();
@@ -1637,13 +1774,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
        // }
 
        if (threadExist==undefined) {
-
-
         var dataToPublish = [uid , status , message , custID ];
         details = getCookie("uidDetails");
         if (details != "") {
           console.log(details);
-
            dataToPublish.push(JSON.parse(details))
         } else {
           dataToPublish.push(false)
@@ -1671,21 +1805,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
           xhttp.setRequestHeader("Content-type", "application/json");
           xhttp.send(dataToSend);
        }else {
-         console.log('else chat thread exist');
-         connection.session.publish('service.support.agent', dataToPublish , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published");
-         });
+         console.log('chat threAD EXIST');
+         if (isAgentOnline) {
+           console.log('ONLINE' , agentPk);
+           connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+             acknowledge: true
+           }).
+           then(function(publication) {
+             console.log("Published");
+           });
+         }else {
+           console.log('offline send to all');
+           connection.session.publish('service.support.agent', dataToPublish , {}, {
+             acknowledge: true
+           }).
+           then(function(publication) {
+             console.log("Published");
+           });
+         }
+         console.log('chat thread exist');
+
        }
-
-
-
-
-
-
-      console.log('dddddddddddddd',isAgentOnline);
 
 
     }
@@ -1706,6 +1846,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
   function sendFile() {
+
+    status = "MF";
+
 
     if (uid!=getCookie("uid")) {
       uid = getCookie("uid");
@@ -1743,9 +1886,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             typ : data.attachmentType
           }
 
-          // if (agentPk) {
-          //   fileData.user = agentPk;
-          // }
 
           if (agentPk) {
             console.log('agent pk is pnline',isAgentOnline);
@@ -1758,42 +1898,75 @@ document.addEventListener("DOMContentLoaded", function(event) {
             }
           }
 
-          // if (typ=='image') {
-          //     fileData.type = 'image';
-          //    message = {msg:'' ,  sentByMe:true , created: new Date() , img: data.attachment }
-          // }else if (typ=='audio') {
-          //   console.log('audoooooooooo');
-          //     fileData.type = 'audio';
-          //    message = {msg:'' ,  sentByMe:true , created: new Date() , audio: data.attachment }
-          // }else if (typ=='video') {
-          //     fileData.type = 'video';
-          //    message = {msg:'' ,  sentByMe:true , created: new Date() , video: data.attachment }
-          // }else if (typ=='application') {
-          //     fileData.type = 'doc';
-          //    message = {msg:'' ,  sentByMe:true , created: new Date() , doc: data.attachment }
-          // }
-
-
-          // console.log(message);
-
           var div = document.createElement("div");
           div.innerHTML = messageDiv(data)
           messageBox.appendChild(div);
           scroll();
-
-
           chat.messages.push(data);
-
           filePicker.value = ""
 
+          var dataToPublish = [uid , status , fileData];
 
-          status = "MF";
-          connection.session.publish('service.support.agent', [uid , status , fileData ], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
+
+          if (threadExist==undefined) {
+
+          var dataToPublish = [uid , status , fileData , custID ];
+          details = getCookie("uidDetails");
+          if (details != "") {
+            console.log(details);
+             dataToPublish.push(JSON.parse(details))
+          } else {
+            dataToPublish.push(false)
+          }
+
+           var dataToSend = JSON.stringify({uid: uid , company: custID});
+            var xhttp = new XMLHttpRequest();
+             xhttp.onreadystatechange = function() {
+               if (this.readyState == 4 && this.status == 201) {
+                 console.log('posted successfully');
+                 threadExist=true
+                 console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+                 chatThreadPk = data.pk
+                 dataToPublish.push(chatThreadPk)
+
+                 connection.session.publish('service.support.agent', dataToPublish, {}, {
+                   acknowledge: true
+                 }).
+                 then(function(publication) {
+                   console.log("Published");
+                 });
+
+
+               }
+             };
+             xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+             xhttp.setRequestHeader("Content-type", "application/json");
+             xhttp.send(dataToSend);
+          }else {
+            console.log('chat threAD EXIST');
+            if (isAgentOnline) {
+              console.log('ONLINE' , agentPk);
+              connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("Published");
+              });
+            }else {
+              console.log('offline send to all');
+              connection.session.publish('service.support.agent', dataToPublish , {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("Published");
+              });
+            }
+            console.log('chat thread exist');
+          }
+
+
+
+
 
 
         }
@@ -1802,22 +1975,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
       xhttp.send(fd);
 
 
-
-      if (threadExist==undefined) {
-       var dataToSend = JSON.stringify({uid: uid , company: custID});
-        var xhttp = new XMLHttpRequest();
-         xhttp.onreadystatechange = function() {
-           if (this.readyState == 4 && this.status == 201) {
-             console.log('posted successfully');
-             threadExist=true
-             console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-             chatThreadPk = data.pk
-           }
-         };
-         xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-         xhttp.setRequestHeader("Content-type", "application/json");
-         xhttp.send(dataToSend);
-      }
+      //
+      // if (threadExist==undefined) {
+      //  var dataToSend = JSON.stringify({uid: uid , company: custID});
+      //   var xhttp = new XMLHttpRequest();
+      //    xhttp.onreadystatechange = function() {
+      //      if (this.readyState == 4 && this.status == 201) {
+      //        console.log('posted successfully');
+      //        threadExist=true
+      //        console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+      //        chatThreadPk = data.pk
+      //      }
+      //    };
+      //    xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+      //    xhttp.setRequestHeader("Content-type", "application/json");
+      //    xhttp.send(dataToSend);
+      // }
 
 
 

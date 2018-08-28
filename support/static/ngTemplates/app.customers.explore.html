@@ -93,7 +93,15 @@
           <div class="col-md-8">
             <h4> <img src="{{custDetails.dp}}" width="100px" alt="">  </h4>
           </div>
-        </div><br>
+        </div>
+        <div class="row" ng-if="custDetails.firstMessage.length>0">
+          <div class="col-md-4">
+            <h4> <i class="fa fa-commenting-o"></i> &nbsp;First Message</h4>
+          </div>
+          <div class="col-md-8">
+            <span ng-bind-html="custDetails.firstMessage"></span>
+          </div>
+        </div> <br>
       </div>
     </div>
   </div>
