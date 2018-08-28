@@ -7,20 +7,21 @@ app.directive("mathjaxBind", function() {
           $element.html(texExpression);
           MathJax.Hub.Queue(["Typeset", MathJax.Hub, $element[0]]);
         });
-      }]
+      }
+    ]
   };
 });
 
-app.directive('tabsStrip', function () {
+app.directive('tabsStrip', function() {
   return {
     templateUrl: '/static/ngTemplates/tabsStrip.html',
     restrict: 'E',
     replace: true,
     scope: {
-      tabs :'=',
-      active : '='
+      tabs: '=',
+      active: '='
     },
-    controller : function($scope , $state , $stateParams){
+    controller: function($scope, $state, $stateParams) {
       $scope.changeTab = function(index) {
         for (var i = 0; i < $scope.tabs.length; i++) {
           $scope.tabs[i].active = false;
@@ -29,26 +30,26 @@ app.directive('tabsStrip', function () {
         $scope.active = index;
       }
 
-      $scope.$watch('active' , function(newValue , oldValue) {
+      $scope.$watch('active', function(newValue, oldValue) {
         $scope.changeTab(newValue);
       })
     },
   };
 });
 
-app.directive('commentInput', function () {
+app.directive('commentInput', function() {
   return {
     templateUrl: '/static/ngTemplates/inputWithFile.html',
     restrict: 'E',
     replace: true,
     scope: {
-      text :'=',
-      doc : '=',
-      saveNote : '='
+      text: '=',
+      doc: '=',
+      saveNote: '='
     },
-    controller : function($scope , $state , $stateParams){
+    controller: function($scope, $state, $stateParams) {
 
-      $scope.randomKey = ''+ new Date().getTime();
+      $scope.randomKey = '' + new Date().getTime();
 
       if ($scope.doc == null || $scope.doc == undefined) {
         $scope.doc = emptyFile;
@@ -61,7 +62,7 @@ app.directive('commentInput', function () {
           $scope.doc = emptyFile;
           return;
         }
-        $('#noteEditorFile' + $scope.randomKey ).click();
+        $('#noteEditorFile' + $scope.randomKey).click();
       }
 
       $scope.$watch('doc', function(newValue, oldValue) {
@@ -71,18 +72,18 @@ app.directive('commentInput', function () {
   };
 });
 
-app.directive('wizard', function () {
+app.directive('wizard', function() {
   return {
     templateUrl: '/static/ngTemplates/wizard.html',
     restrict: 'E',
     replace: true,
     scope: {
-      active :'=',
-      editable : '=',
-      steps : '=',
-      error : '='
+      active: '=',
+      editable: '=',
+      steps: '=',
+      error: '='
     },
-    controller : function($scope , $state , $stateParams){
+    controller: function($scope, $state, $stateParams) {
 
       $scope.activeBackup = -2;
       $scope.wizardClicked = function(indx) {
@@ -110,16 +111,16 @@ app.directive('wizard', function () {
   };
 });
 
-app.directive('breadcrumb', function () {
+app.directive('breadcrumb', function() {
   return {
     templateUrl: '/static/ngTemplates/breadcrumb.html',
     restrict: 'E',
     replace: true,
     scope: false,
-    controller : function($scope , $state , $stateParams){
+    controller: function($scope, $state, $stateParams) {
       var stateName = $state.current.name;
       $scope.stateParts = stateName.split('.');
-      for(key in $stateParams){
+      for (key in $stateParams) {
         if (typeof $stateParams[key] != 'undefined' && $stateParams[key] != '' && typeof parseInt($stateParams[key]) != 'number') {
           $scope.stateParts.push($stateParams[key]);
         };
@@ -128,171 +129,184 @@ app.directive('breadcrumb', function () {
   };
 });
 
-app.directive('userField', function () {
+app.directive('userField', function() {
   return {
     templateUrl: '/static/ngTemplates/userInputField.html',
     restrict: 'E',
     replace: true,
     scope: {
-      user :'=',
-      url : '@',
-      label : '@',
+      user: '=',
+      url: '@',
+      label: '@',
     },
-    controller : function($scope , $state , $http , Flash){
-        $scope.userSearch = function(query) {
-          return $http.get( $scope.url +'?username__contains=' + query).
-          then(function(response){
-            return response.data;
-          })
-        };
-        $scope.getName = function(u) {
-          if (typeof u == 'undefined' || u== null) {
-            return '';
-          }
-          return u.first_name + '  ' +u.last_name;
+    controller: function($scope, $state, $http, Flash) {
+      $scope.userSearch = function(query) {
+        return $http.get($scope.url + '?username__contains=' + query).
+        then(function(response) {
+          return response.data;
+        })
+      };
+      $scope.getName = function(u) {
+        if (typeof u == 'undefined' || u == null) {
+          return '';
         }
+        return u.first_name + '  ' + u.last_name;
+      }
     },
   };
 });
 
-app.directive('usersField', function () {
+app.directive('usersField', function() {
   return {
     templateUrl: '/static/ngTemplates/usersInputField.html',
     restrict: 'E',
     replace: true,
     scope: {
-      data :'=',
-      url : '@',
-      col : '@',
-      label : '@',
-      viewOnly : '@'
+      data: '=',
+      url: '@',
+      col: '@',
+      label: '@',
+      viewOnly: '@'
     },
-    controller : function($scope , $state , $http , Flash){
-        $scope.d = {user : undefined};
-        if (typeof $scope.col != 'undefined') {
-            $scope.showResults = true;
-        }else{
-            $scope.showResults = false;
-        }
+    controller: function($scope, $state, $http, Flash) {
+      $scope.d = {
+        user: undefined
+      };
+      if (typeof $scope.col != 'undefined') {
+        $scope.showResults = true;
+      } else {
+        $scope.showResults = false;
+      }
 
-        if (typeof $scope.viewOnly != 'undefined') {
-            $scope.viewOnly = false;
-        }
-        // $scope.user = undefined;
-        $scope.userSearch = function(query) {
-          return $http.get( $scope.url +'?username__contains=' + query).
-          then(function(response){
-              for (var i = 0; i < response.data.length; i++) {
-                  if ($scope.data.indexOf(response.data[i]) != -1){
-                      response.data.splice(i,1);
-                  }
-              }
-            return response.data;
-          })
-        };
-        $scope.getName = function(u) {
-          if (typeof u == 'undefined') {
-            return '';
-          }
-          return u.first_name + '  ' +u.last_name;
-        }
-
-        $scope.removeUser = function(index) {
-          $scope.data.splice(index,1);
-        }
-
-        $scope.addUser = function() {
-          for (var i = 0; i < $scope.data.length; i++) {
-            if ($scope.data[i] == $scope.d.user.pk){
-              Flash.create('danger' , 'User already a member of this group')
-              return;
+      if (typeof $scope.viewOnly != 'undefined') {
+        $scope.viewOnly = false;
+      }
+      // $scope.user = undefined;
+      $scope.userSearch = function(query) {
+        return $http.get($scope.url + '?username__contains=' + query).
+        then(function(response) {
+          for (var i = 0; i < response.data.length; i++) {
+            if ($scope.data.indexOf(response.data[i]) != -1) {
+              response.data.splice(i, 1);
             }
           }
-          $scope.data.push($scope.d.user.pk);
-          $scope.d.user = undefined;
+          return response.data;
+        })
+      };
+      $scope.getName = function(u) {
+        if (typeof u == 'undefined') {
+          return '';
         }
+        return u.first_name + '  ' + u.last_name;
+      }
+
+      $scope.removeUser = function(index) {
+        $scope.data.splice(index, 1);
+      }
+
+      $scope.addUser = function() {
+        for (var i = 0; i < $scope.data.length; i++) {
+          if ($scope.data[i] == $scope.d.user.pk) {
+            Flash.create('danger', 'User already a member of this group')
+            return;
+          }
+        }
+        $scope.data.push($scope.d.user.pk);
+        $scope.d.user = undefined;
+      }
     },
   };
 });
 
-app.directive('mediaField', function () {
+app.directive('mediaField', function() {
   return {
     templateUrl: '/static/ngTemplates/mediaInputField.html',
     restrict: 'E',
     replace: true,
     scope: {
-      data :'=',
-      url : '@',
+      data: '=',
+      url: '@',
     },
-    controller : function($scope , $state , $http , Flash){
-        $scope.form = {mediaType : '' , url : ''}
-        $scope.switchMediaMode = function(mode) {
-            $scope.form.mediaType = mode;
-        }
+    controller: function($scope, $state, $http, Flash) {
+      $scope.form = {
+        mediaType: '',
+        url: ''
+      }
+      $scope.switchMediaMode = function(mode) {
+        $scope.form.mediaType = mode;
+      }
 
-        $scope.getFileName = function(f) {
-            var parts = f.split('/');
-            return parts[parts.length-1];
-        }
+      $scope.getFileName = function(f) {
+        var parts = f.split('/');
+        return parts[parts.length - 1];
+      }
 
-        $scope.removeMedia = function(index) {
-            $http({
-                method : 'DELETE',
-                url : $scope.url  + $scope.data[index].pk + '/'
-            }).
-            then(function(response) {
-                $scope.data.splice(index,1);
-            })
+      $scope.removeMedia = function(index) {
+        $http({
+          method: 'DELETE',
+          url: $scope.url + $scope.data[index].pk + '/'
+        }).
+        then(function(response) {
+          $scope.data.splice(index, 1);
+        })
+      }
+      $scope.postMedia = function() {
+        var fd = new FormData();
+        fd.append('mediaType', $scope.form.mediaType);
+        fd.append('link', $scope.form.url);
+        if (['doc', 'image', 'video'].indexOf($scope.form.mediaType) != -1 && $scope.form.file != emptyFile) {
+          fd.append('attachment', $scope.form.file);
+        } else if ($scope.form.url == '') {
+          Flash.create('danger', 'No file to attach');
+          return;
         }
-        $scope.postMedia = function(){
-            var fd = new FormData();
-            fd.append( 'mediaType' , $scope.form.mediaType);
-            fd.append( 'link' , $scope.form.url);
-            if (['doc' , 'image' , 'video'].indexOf($scope.form.mediaType) != -1 && $scope.form.file != emptyFile) {
-                fd.append( 'attachment' ,$scope.form.file);
-            }else if ($scope.form.url == '') {
-                Flash.create('danger' , 'No file to attach');
-                return;
-            }
-            url = $scope.url;
-            $http({method : 'POST' , url : url , data : fd , transformRequest: angular.identity, headers: {'Content-Type': undefined}}).
-            then(function(response){
-                $scope.data.push(response.data);
-                $scope.form.file = emptyFile;
-                Flash.create('success', response.status + ' : ' + response.statusText);
-            }, function(response){
-                Flash.create('danger', response.status + ' : ' + response.statusText);
-            });
-        }
+        url = $scope.url;
+        $http({
+          method: 'POST',
+          url: url,
+          data: fd,
+          transformRequest: angular.identity,
+          headers: {
+            'Content-Type': undefined
+          }
+        }).
+        then(function(response) {
+          $scope.data.push(response.data);
+          $scope.form.file = emptyFile;
+          Flash.create('success', response.status + ' : ' + response.statusText);
+        }, function(response) {
+          Flash.create('danger', response.status + ' : ' + response.statusText);
+        });
+      }
     },
   };
 });
 
-app.directive('genericForm', function () {
+app.directive('genericForm', function() {
   return {
     templateUrl: '/static/ngTemplates/genericForm.html',
     restrict: 'E',
     replace: true,
     scope: {
-      template : '=',
-      submitFn : '&',
-      data :'=',
-      formTitle : '=',
-      wizard : '=',
-      maxPage : '=',
+      template: '=',
+      submitFn: '&',
+      data: '=',
+      formTitle: '=',
+      wizard: '=',
+      maxPage: '=',
     },
-    controller : function($scope , $state){
+    controller: function($scope, $state) {
       $scope.page = 1;
 
-      $scope.next = function(){
-        $scope.page +=1;
-        if ($scope.page>$scope.maxPage) {
+      $scope.next = function() {
+        $scope.page += 1;
+        if ($scope.page > $scope.maxPage) {
           $scope.page = $scope.maxPage;
         }
       }
-      $scope.prev = function(){
-        $scope.page -=1;
-        if ($scope.page<1) {
+      $scope.prev = function() {
+        $scope.page -= 1;
+        if ($scope.page < 1) {
           $scope.page = 1;
         }
       }
@@ -301,21 +315,21 @@ app.directive('genericForm', function () {
 });
 
 
-app.directive('messageStrip', function () {
+app.directive('messageStrip', function() {
   return {
     templateUrl: '/static/ngTemplates/messageStrip.html',
     restrict: 'E',
     transclude: true,
-    replace:true,
-    scope:{
-      data : '=',
-      openChat :'=',
+    replace: true,
+    scope: {
+      data: '=',
+      openChat: '=',
     },
-    controller : function($scope , $users){
+    controller: function($scope, $users) {
       $scope.me = $users.get('mySelf');
-      if ($scope.me.pk==$scope.data.originator) {
+      if ($scope.me.pk == $scope.data.originator) {
         $scope.friend = $scope.data.user;
-      }else{
+      } else {
         $scope.friend = $scope.data.originator;
       }
       $scope.clicked = function() {
@@ -326,19 +340,19 @@ app.directive('messageStrip', function () {
   };
 });
 
-app.directive('notificationStrip', function () {
+app.directive('notificationStrip', function() {
   return {
     templateUrl: '/static/ngTemplates/notificationStrip.html',
     restrict: 'E',
     transclude: true,
-    replace:true,
-    scope:{
-      data : '=',
+    replace: true,
+    scope: {
+      data: '=',
     },
-    controller : function($scope , $http , $users , $aside ){
+    controller: function($scope, $http, $users, $aside) {
       var parts = $scope.data.shortInfo.split(':');
       // console.log(parts);
-      if(typeof parts[1] == 'undefined'){
+      if (typeof parts[1] == 'undefined') {
         $scope.notificationType = 'default';
       } else {
         $scope.notificationType = parts[0];
@@ -346,42 +360,57 @@ app.directive('notificationStrip', function () {
       // console.log($scope.data);
       // console.log($scope.notificationType);
       var nodeUrl = '/api/social/' + $scope.notificationType + '/'
-      if(typeof parts[1] != 'undefined' && $scope.data.originator == 'social'){
+      if (typeof parts[1] != 'undefined' && $scope.data.originator == 'social') {
         // console.log(nodeUrl + parts[1]);
-        $http({method : 'GET' , url : nodeUrl + parts[1] + '/'}).
-        then(function(response){
+        $http({
+          method: 'GET',
+          url: nodeUrl + parts[1] + '/'
+        }).
+        then(function(response) {
           $scope.friend = response.data.user;
           if ($scope.notificationType == 'postComment') {
             var url = '/api/social/post/' + response.data.parent + '/';
-          }else if ($scope.notificationType == 'pictureComment') {
+          } else if ($scope.notificationType == 'pictureComment') {
             var url = '/api/social/picture/' + response.data.parent + '/';
           }
-          $http({method: 'GET' , url : url}).then(function(response){
+          $http({
+            method: 'GET',
+            url: url
+          }).then(function(response) {
             $scope.notificationData = response.data;
             if ($scope.notificationType == 'pictureComment') {
-              $http({method : 'GET' , url : '/api/social/album/' +  $scope.data.shortInfo.split(':')[3] + '/?user=' + $users.get($scope.notificationData.user).username}).
-              then(function(response){
+              $http({
+                method: 'GET',
+                url: '/api/social/album/' + $scope.data.shortInfo.split(':')[3] + '/?user=' + $users.get($scope.notificationData.user).username
+              }).
+              then(function(response) {
                 $scope.objParent = response.data;
               });
             };
           });
         });
-      }else if (typeof parts[1] != 'undefined' && $scope.data.originator == 'git') {
+      } else if (typeof parts[1] != 'undefined' && $scope.data.originator == 'git') {
         if (parts[0] == 'codeComment') {
           var url = '/api/git/commitNotification/?sha=' + parts[2];
-          $http({method : 'GET' , url : url}).
+          $http({
+            method: 'GET',
+            url: url
+          }).
           then(function(response) {
             $scope.commit = response.data[0];
           });
           var url = '/api/git/codeComment/' + parts[1] + '/';
-          $http({method : 'GET' , url : url}).
+          $http({
+            method: 'GET',
+            url: url
+          }).
           then(function(response) {
             $scope.codeComment = response.data;
           });
         }
       };
 
-      $scope.openAlbum = function(position, backdrop , input) {
+      $scope.openAlbum = function(position, backdrop, input) {
         $scope.asideState = {
           open: true,
           position: position
@@ -398,14 +427,14 @@ app.directive('notificationStrip', function () {
           backdrop: backdrop,
           controller: 'controller.social.aside.picture',
           resolve: {
-           input: function () {
-             return input;
+            input: function() {
+              return input;
             }
           }
         }).result.then(postClose, postClose);
       }
 
-      $scope.openPost = function(position, backdrop , input) {
+      $scope.openPost = function(position, backdrop, input) {
         $scope.asideState = {
           open: true,
           position: position
@@ -420,10 +449,10 @@ app.directive('notificationStrip', function () {
           placement: position,
           size: 'md',
           backdrop: backdrop,
-          controller:'controller.social.aside.post',
+          controller: 'controller.social.aside.post',
           resolve: {
-           input: function () {
-             return input;
+            input: function() {
+              return input;
             }
           }
         }).result.then(postClose, postClose);
@@ -431,30 +460,45 @@ app.directive('notificationStrip', function () {
 
       $scope.openCommit = function() {
         $aside.open({
-          templateUrl : '/static/ngTemplates/app.GIT.aside.exploreNotification.html',
-          position:'left',
-          size : 'xxl',
-          backdrop : true,
-          resolve : {
-            input : function() {
+          templateUrl: '/static/ngTemplates/app.GIT.aside.exploreNotification.html',
+          position: 'left',
+          size: 'xxl',
+          backdrop: true,
+          resolve: {
+            input: function() {
               return $scope.commit;
             }
           },
-          controller : 'projectManagement.GIT.exploreNotification',
+          controller: 'projectManagement.GIT.exploreNotification',
         })
       }
 
-      $scope.openNotification = function(){
-        $http({method: 'PATCH' , url : '/api/PIM/notification/'+$scope.data.pk +'/' , data : {read : true}}).
-        then(function(response){
+      $scope.openNotification = function() {
+        $http({
+          method: 'PATCH',
+          url: '/api/PIM/notification/' + $scope.data.pk + '/',
+          data: {
+            read: true
+          }
+        }).
+        then(function(response) {
           $scope.$parent.notificationClicked($scope.data.pk);
           $scope.data.read = true;
         });
         if ($scope.notificationType == 'postLike' || $scope.notificationType == 'postComment') {
-          $scope.openPost('right', true , {data: $scope.notificationData , onDelete: function(){return;}})
+          $scope.openPost('right', true, {
+            data: $scope.notificationData,
+            onDelete: function() {
+              return;
+            }
+          })
         } else if ($scope.notificationType == 'pictureLike' || $scope.notificationType == 'pictureComment') {
-          $scope.openAlbum('right', true , {data: $scope.notificationData , parent : $scope.objParent , onDelete: ""})
-        }else if ($scope.notificationType == 'codeComment') {
+          $scope.openAlbum('right', true, {
+            data: $scope.notificationData,
+            parent: $scope.objParent,
+            onDelete: ""
+          })
+        } else if ($scope.notificationType == 'codeComment') {
           $scope.openCommit()
         }
       }
@@ -463,18 +507,18 @@ app.directive('notificationStrip', function () {
 });
 
 
-app.directive('chatWindow', function ($users) {
+app.directive('chatWindow', function($users) {
   return {
     templateUrl: '/static/ngTemplates/chatWindow.html',
     restrict: 'E',
     transclude: true,
-    replace:true,
-    scope:{
-      friendUrl : '=',
-      pos : '=',
-      cancel :'&',
+    replace: true,
+    scope: {
+      friendUrl: '=',
+      pos: '=',
+      cancel: '&',
     },
-    controller : function($scope ,$location,  $anchorScroll, $http, $templateCache, $timeout, ngAudio){
+    controller: function($scope, $location, $anchorScroll, $http, $templateCache, $timeout, ngAudio) {
       // console.log($scope.pos);
       $scope.me = $users.get("mySelf");
       $scope.friend = $users.get($scope.friendUrl);
@@ -485,25 +529,41 @@ app.directive('chatWindow', function ($users) {
       $scope.toggle = true;
       $scope.messageToSend = "";
       $scope.status = "N"; // neutral / No action being performed
-      $scope.send = function(){
+      $scope.send = function() {
         var msg = angular.copy($scope.messageToSend)
-        if (msg!="") {
+        if (msg != "") {
           $scope.status = "M"; // contains message
-          var dataToSend = {message:msg , user: $scope.friend.pk , read:false};
-          $http({method: 'POST', data:dataToSend, url: '/api/PIM/chatMessage/'}).
-          then(function(response){
+          var dataToSend = {
+            message: msg,
+            user: $scope.friend.pk,
+            read: false
+          };
+          $http({
+            method: 'POST',
+            data: dataToSend,
+            url: '/api/PIM/chatMessage/'
+          }).
+          then(function(response) {
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
-            connection.session.publish('service.chat.'+$scope.friend.username, [$scope.status , response.data.message , $scope.me.username , response.data.pk], {}, {acknowledge: true}).
-            then(function (publication) {});
+            connection.session.publish('service.chat.' + $scope.friend.username, [$scope.status, response.data.message, $scope.me.username, response.data.pk], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {});
             $scope.messageToSend = "";
           })
         }
       }; // send function
 
-      $scope.addMessage = function(msg , url){
+      $scope.addMessage = function(msg, url) {
         $scope.sound.play();
-        $http({method : 'PATCH' , url : '/api/PIM/chatMessage/' +url + '/?mode=' , data : {read : true}}).
+        $http({
+          method: 'PATCH',
+          url: '/api/PIM/chatMessage/' + url + '/?mode=',
+          data: {
+            read: true
+          }
+        }).
         then(function(response) {
           $scope.ims.push(response.data);
           $scope.senderIsMe.push(false);
@@ -512,11 +572,14 @@ app.directive('chatWindow', function ($users) {
 
       $scope.fetchMessages = function() {
         $scope.method = 'GET';
-        $scope.url = '/api/PIM/chatMessageBetween/?other='+$scope.friend.username;
+        $scope.url = '/api/PIM/chatMessageBetween/?other=' + $scope.friend.username;
         $scope.ims = [];
         $scope.imsCount = 0;
         $scope.senderIsMe = [];
-        $http({method: $scope.method, url: $scope.url}).
+        $http({
+          method: $scope.method,
+          url: $scope.url
+        }).
         then(function(response) {
           $scope.imsCount = response.data.length;
           for (var i = 0; i < response.data.length; i++) {
@@ -524,7 +587,7 @@ app.directive('chatWindow', function ($users) {
             var sender = $users.get(im.originator)
             if (sender.username == $scope.me.username) {
               $scope.senderIsMe.push(true);
-            }else {
+            } else {
               $scope.senderIsMe.push(false);
             }
             $scope.ims.push(im);
@@ -533,29 +596,29 @@ app.directive('chatWindow', function ($users) {
         });
       };
       $scope.fetchMessages();
-      $scope.scroll = function(){
-        var $id= $("#scrollArea"+$scope.pos);
+      $scope.scroll = function() {
+        var $id = $("#scrollArea" + $scope.pos);
         $id.scrollTop($id[0].scrollHeight);
       }
     },
     // attrs is the attrs passed from the main scope
     link: function postLink(scope, element, attrs) {
-      scope.$watch('messageToSend', function(newValue , oldValue ){
+      scope.$watch('messageToSend', function(newValue, oldValue) {
         // console.log("changing");
         scope.status = "T"; // the sender is typing a message
-        if (newValue!="") {
-          connection.session.publish('service.chat.'+ scope.friend.username, [scope.status , scope.messageToSend , scope.me.username]);
+        if (newValue != "") {
+          connection.session.publish('service.chat.' + scope.friend.username, [scope.status, scope.messageToSend, scope.me.username]);
         }
         scope.status = "N";
       }); // watch for the messageTosend
-      scope.$watch('ims.length', function( ){
-        setTimeout( function(){
+      scope.$watch('ims.length', function() {
+        setTimeout(function() {
           scope.scroll();
-        }, 500 );
+        }, 500);
       });
-      scope.$watch('pos', function( newValue , oldValue){
+      scope.$watch('pos', function(newValue, oldValue) {
         // console.log(newValue);
-        scope.location = 30+newValue*320;
+        scope.location = 30 + newValue * 320;
         // console.log("setting the new position value");
         // console.log();
       });
@@ -563,22 +626,22 @@ app.directive('chatWindow', function ($users) {
   };
 });
 
-app.directive('productCard', function () {
+app.directive('productCard', function() {
   return {
     templateUrl: '/static/ngTemplates/productCart.html',
     restrict: 'E',
     transclude: true,
-    replace:true,
-    scope:{
+    replace: true,
+    scope: {
       list: '=',
-      addCart :'='
+      addCart: '='
     },
-    controller : function($scope , $state , $http , Flash, $rootScope){
+    controller: function($scope, $state, $http, Flash, $rootScope, $users) {
 
       // console.log($scope.list,'aaaaa');
-
-      $scope.openDetails = function (id , name) {
-        console.log('calling open details ' , id , name);
+      $scope.me = $users.get('mySelf');
+      $scope.openDetails = function(id, name) {
+        console.log('calling open details ', id, name);
 
         $state.go('details', {
           id: id,
@@ -586,13 +649,164 @@ app.directive('productCard', function () {
         })
 
       }
-      $scope.addToCart=function(id){
-        console.log($scope.list,'hhhhhhhhhhhhhhhhhh,');
-        $scope.addCart(id)
+      $scope.mainPage = function(){
+      window.location = '/login';
       }
-      
-      $scope.wishlist=function(id){
-        console.log("aaaaaaa",id);
+      $scope.addToCart = function() {
+        $scope.list.added_cart++
+          // $scope.addCart(id)
+          $http({
+            method: 'GET',
+            url: '/api/ecommerce/cart/?user=' + $scope.me.pk
+          }).
+          then(function(response) {
+            for (var i = 0; i < response.data.length; i++) {
+              if (response.data[i].product.pk == $scope.list.pk) {
+                if (response.data[i].typ == 'cart') {
+                  Flash.create('warning', 'This Product is already in cart');
+                  return
+                } else if (response.data[i].typ == 'favourite') {
+                  $http({
+                    method: 'PATCH',
+                    url: '/api/ecommerce/cart/' + response.data[i].pk + '/',
+                    data: {
+                      typ: 'cart'
+                    }
+                  }).
+                  then(function(response) {
+                    Flash.create('success', 'Product added to cart');
+                    $rootScope.inCart.push(response.data);
+                  })
+                  response.data[i].typ = 'cart'
+                  return
+                }
+              }
+            }
+
+              dataToSend = {
+                product: $scope.list.pk,
+                user: getPK($scope.me.url),
+                qty: 1,
+                typ: 'cart',
+              }
+              $http({
+                method: 'POST',
+                url: '/api/ecommerce/cart/',
+                data: dataToSend
+              }).
+              then(function(response) {
+                Flash.create('success', 'Product added in cart');
+                $rootScope.inCart.push(response.data);
+              })
+
+          })
+          // for (var i = 0; i < $rootScope.inCart.length; i++) {
+          //   console.log("cameeeeeeeeeeeeeeeeeeeeeeee",$rootScope.inCart[i].product.pk, $scope.list.pk);
+          //
+          // }
+
+      }
+      $scope.wishlist = function() {
+        $scope.list.added_saved++
+          dataToSend = {
+            product: $scope.list.pk,
+            user: getPK($scope.me.url),
+            qty: 1,
+            typ: 'favourite',
+          }
+        // console.log(dataToSend);
+        // console.log('in cart', $rootScope.inCart);
+        //
+        //
+        // for (var i = 0; i < $rootScope.inCart.length; i++) {
+        //   if ($rootScope.inCart[i].product.pk == $scope.list.pk) {
+        //     if ($rootScope.inCart[i].typ == 'favourite') {
+        //       Flash.create('warning', 'This Product is already in cart');
+        //       return
+        //     } else {
+        //       $http({
+        //         method: 'PATCH',
+        //         url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+        //         data: {
+        //           typ: 'favourite'
+        //         }
+        //       }).
+        //       then(function(response) {
+        //         Flash.create('success', 'Product added to Wishlist');
+        //         $rootScope.inCart.push(response.data);
+        //         console.log($rootScope.inCart,'lllllllllllllllll');
+        //       })
+        //     }
+        //
+        //   }
+        // }
+
+
+        $http({
+          method: 'POST',
+          url: '/api/ecommerce/cart/',
+          data: dataToSend
+        }).
+        then(function(response) {
+          Flash.create('success', 'Product added in Wishlist');
+        })
+      }
+
+      $scope.increment = function() {
+        $scope.list.added_cart++
+        for (var i = 0; i < $rootScope.inCart.length; i++) {
+          if ($rootScope.inCart[i].product.pk == $scope.list.pk) {
+            if ($rootScope.inCart[i].typ == 'cart') {
+              $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
+              $http({
+                method: 'PATCH',
+                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+                data: {
+                  qty: $rootScope.inCart[i].qty
+                }
+              }).
+              then(function(response) {
+                Flash.create('success', 'Product added in cart');
+              })
+            }
+          }
+        }
+      }
+      $scope.decrement = function() {
+        $scope.list.added_cart--
+          for (var i = 0; i < $rootScope.inCart.length; i++) {
+            if ($rootScope.inCart[i].product.pk == $scope.list.pk) {
+              if ($rootScope.inCart[i].typ == 'cart') {
+                if ($scope.list.added_cart == 0) {
+                  $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
+                  $http({
+                    method: 'DELETE',
+                    url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+                  }).
+                  then(function(response) {
+                    Flash.create('success', 'Removed From Cart');
+
+                  })
+                  $rootScope.inCart.splice(i, 1)
+                  $scope.list.added_saved = 0
+                } else if ($scope.list.added_cart != 0) {
+                  $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
+                  $http({
+                    method: 'PATCH',
+                    url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+                    data: {
+                      qty: $rootScope.inCart[i].qty
+                    }
+                  }).
+                  then(function(response) {
+                    Flash.create('success', 'Product added in cart');
+                  })
+
+                }
+              }
+            }
+          }
+
       }
     },
   };

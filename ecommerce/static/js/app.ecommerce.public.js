@@ -824,52 +824,52 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     })
   }
 
-  $scope.addToCart = function(inputPk) {
-    console.log('coming in addddddddddddddd');
-    dataToSend = {
-      product: inputPk,
-      user: getPK($scope.me.url),
-      qty: 1,
-      typ: 'cart',
-    }
-    console.log(dataToSend);
-    console.log('in cart', $rootScope.inCart);
-
-
-    for (var i = 0; i < $rootScope.inCart.length; i++) {
-      if ($rootScope.inCart[i].product.pk == dataToSend.product) {
-        if ($rootScope.inCart[i].typ == 'cart') {
-          Flash.create('warning', 'This Product is already in cart');
-          return
-        } else {
-          $http({
-            method: 'PATCH',
-            url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-            data: {
-              typ: 'cart'
-            }
-          }).
-          then(function(response) {
-            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaaa');
-            Flash.create('success', 'Product added to cart');
-          })
-          $rootScope.inCart[i].typ = 'cart'
-          return
-        }
-
-      }
-    }
-    $http({
-      method: 'POST',
-      url: '/api/ecommerce/cart/',
-      data: dataToSend
-    }).
-    then(function(response) {
-      console.log(response.data,'bbbbbbbbbbbbbbbbbbbbbbbbb');
-      Flash.create('success', 'Product added in cart');
-      $rootScope.inCart.push(response.data);
-    })
-  }
+  // $scope.addToCart = function(inputPk) {
+  //   console.log('coming in addddddddddddddd');
+  //   dataToSend = {
+  //     product: inputPk,
+  //     user: getPK($scope.me.url),
+  //     qty: 1,
+  //     typ: 'cart',
+  //   }
+  //   console.log(dataToSend);
+  //   console.log('in cart', $rootScope.inCart);
+  //
+  //
+  //   for (var i = 0; i < $rootScope.inCart.length; i++) {
+  //     if ($rootScope.inCart[i].product.pk == dataToSend.product) {
+  //       if ($rootScope.inCart[i].typ == 'cart') {
+  //         Flash.create('warning', 'This Product is already in cart');
+  //         return
+  //       } else {
+  //         $http({
+  //           method: 'PATCH',
+  //           url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+  //           data: {
+  //             typ: 'cart'
+  //           }
+  //         }).
+  //         then(function(response) {
+  //           console.log(response.data,'aaaaaaaaaaaaaaaaaaaaaa');
+  //           Flash.create('success', 'Product added to cart');
+  //         })
+  //         $rootScope.inCart[i].typ = 'cart'
+  //         return
+  //       }
+  //
+  //     }
+  //   }
+  //   $http({
+  //     method: 'POST',
+  //     url: '/api/ecommerce/cart/',
+  //     data: dataToSend
+  //   }).
+  //   then(function(response) {
+  //     console.log(response.data,'bbbbbbbbbbbbbbbbbbbbbbbbb');
+  //     Flash.create('success', 'Product added in cart');
+  //     $rootScope.inCart.push(response.data);
+  //   })
+  // }
 
 
 
@@ -916,6 +916,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'deleteItem') {
+          console.log("kkkkkkkkkkkkkkkkkk",$scope.data.tableData[i].pk);
           $http({
             method: 'DELETE',
             url: '/api/ecommerce/cart/' + $scope.data.tableData[i].pk + '/'
@@ -949,6 +950,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
           then(function(response) {})
           // $scope.calcTotal();
         } else if (action == 'favourite') {
+              console.log("aaaaaaaaaaaaaaaaaa");
           $http({
             method: 'PATCH',
             url: '/api/ecommerce/cart/' + $scope.data.tableData[i].pk + '/',
@@ -961,6 +963,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
           $scope.data.tableData.splice(i, 1)
           $rootScope.inCart[i].typ = 'favourite'
         } else if (action == 'unfavourite') {
+              console.log("aaaaaaaaaaaaaaaaaa");
           $http({
             method: 'PATCH',
             url: '/api/ecommerce/cart/' + $scope.data.tableData[i].pk + '/',
@@ -1034,6 +1037,7 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'unfavourite') {
+          console.log("aaaaaaaaaaaaaaaaaa");
           $http({
             method: 'PATCH',
             url: '/api/ecommerce/cart/' + $scope.data.tableData[i].pk + '/',
@@ -1045,6 +1049,19 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
           // $rootScope.inCart.push($scope.data.tableData[i])
           $scope.data.tableData.splice(i, 1)
           $rootScope.inCart[i].typ = 'cart'
+        }
+        else if(action == 'deleteItem') {
+          console.log("jjjjjjjjjjjjjjjjjjjj");
+          $http({
+            method: 'DELETE',
+            url: '/api/ecommerce/cart/' + $scope.data.tableData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Item removed from cart');
+          })
+          $scope.data.tableData.splice(i, 1)
+          $rootScope.inCart.splice(i, 1)
+          // $scope.calcTotal();
         }
       }
     }

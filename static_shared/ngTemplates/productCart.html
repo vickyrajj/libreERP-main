@@ -30,27 +30,42 @@
               <i class="fa fa-inr"></i>{{list.product.discountedPrice.toFixed(2)}}
             </span>
             <div>
-              <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0">
+              <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&me.pk">
                 <div class="col-md-6 col-xs-6 col-sm-6 text-center" style="border-right:1px solid #808080;">
-                  <span ng-click="wishlist(list.pk);$event.stopPropagation();" style="cursor:pointer;">
+                  <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:#808080;" ng-if="list.added_saved==0&&me.pk">
+                    <i class="fa fa-heart  fa-3x"></i>
+                  </span>
+                  <span ng-click="$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);" ng-if="list.added_saved>0&&me.pk">
                     <i class="fa fa-heart  fa-3x"></i>
                   </span>
                 </div>
                 <div class="col-md-6 col-xs-6 col-sm-6 text-center">
-                  <span ng-click="addToCart(list.pk);$event.stopPropagation();" style="cursor:pointer;">
+                  <span ng-click="addToCart();$event.stopPropagation();" style="cursor:pointer;color:#808080;">
+                    <i class="fa fa-shopping-cart fa-3x" ></i>
+                  </span>
+                </div>
+              </div>
+              <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="!me.pk">
+                <div class="col-md-6 col-xs-6 col-sm-6 text-center" style="border-right:1px solid #808080;">
+                  <span ng-click="mainPage();$event.stopPropagation();" style="cursor:pointer;color:#808080;">
+                    <i class="fa fa-heart  fa-3x" ></i>
+                  </span>
+                </div>
+                <div class="col-md-6 col-xs-6 col-sm-6 text-center">
+                  <span ng-click="mainPage();$event.stopPropagation();" style="cursor:pointer;color:#808080;">
                     <i class="fa fa-shopping-cart fa-3x" ></i>
                   </span>
                 </div>
               </div>
               <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0">
                 <div class="col-md-4 col-sm-4 col-xs-4">
-                  <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="data.qty>1"  ng-click="$event.stopPropagation()"></i>
+                  <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="list.added_cart>0"  ng-click="decrement();$event.stopPropagation()"></i>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-4">
                   <span style="font-size:20px; padding:0px 20px;"> {{list.added_cart}} </span>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-4">
-                  <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="$event.stopPropagation()"></i>
+                  <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="increment();$event.stopPropagation()"></i>
                 </div>
                 <!-- <div class="col-md-6 col-xs-6 col-sm-6 text-center" style="border-right:1px solid #808080;">
                   <span ng-click="wishlist(list.pk);$event.stopPropagation();" style="cursor:pointer;">

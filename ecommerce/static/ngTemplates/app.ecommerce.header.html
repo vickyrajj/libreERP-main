@@ -28,7 +28,7 @@
 
   <div class="col-md-2 text-center hidden-xs hidden-sm" ng-if="me.pk" >
     <span ng-click="$state.go('account.cart')" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46)" >  Cart <i class="fa fa-shopping-cart fa-lg"></i>
-    <span style="background-color:green;position:relative;text-align:center;  justify-content: center;  top:-10px;  border-radius: 50%;  right: 11px;padding:3px;color:white">{{inCart.length}}</span>
+    <span style="background-color:green;position:relative;text-align:center;  justify-content: center;  top:-10px;  border-radius: 50%;  right: 11px;padding:3px;color:white" ng-if="inCart.length>0">{{inCart.length}}</span>
 </span>
   </div>
 
@@ -41,6 +41,7 @@
 
 
   </div>
+
   <!-- <span ng-click="loginPage()"> <i class="fa fa-sign-in"></i> Login</span> -->
   <div class="col-xs-9 text-right hidden-md hidden-lg" ng-if="!me.pk">
     <span style="cursor:pointer;font-size:17px;padding-right:10px;color:rgb(24, 89, 46)" ng-click="loginPage()"> Login <i class="fa fa-user fa-lg"></i></span>
@@ -49,7 +50,7 @@
 
   <div class="col-xs-offset-3 col-xs-3 text-center hidden-lg hidden-md" ng-if="me.pk" style="padding-top: 10px;color:rgb(24, 89, 46)">
     <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i>
-      <span style="background-color:green;position:relative;text-align:center;  justify-content: center;  top:-10px;  border-radius: 50%;  right: 11px;padding:3px;color:white">{{inCart.length}}</span></span>
+      <span style="background-color:green;position:relative;text-align:center;  justify-content: center;  top:-10px;  border-radius: 50%;  right: 11px;padding:3px;color:white" ng-if="inCart.length>0">{{inCart.length}}</span></span>
   </div>
 
   <div class="col-xs-1 text-center dropdown hidden-lg hidden-md " style="padding-top: 10px;">
@@ -64,7 +65,7 @@
   </div>
 
 </div>
-<div class="row bg-blue ecomNav hidden-lg hidden-md " style="width:100%" >
+<div class="row bg-white ecomNav hidden-lg hidden-md " style="width:100%" >
   <div class="col-xs-12" style="padding-right:0px; padding-left:0px;">
     <!-- <input type="text" class="" style="width:100%;color: #000;text-indent: 10px;outline: none;" placeholder="Search for products, brands and more.."> -->
     <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;color:rgb(24, 89, 46)" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="Search 200 Products in Grains, Rice & Dry Fruits..">
@@ -78,7 +79,7 @@
 
 
 
-
+  <hr style="margin:0px;border: solid 1px #DCDCDC;">
 <div ng-if="$state.is('ecommerce')&&bannerText" style="position:relative;height:60vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
   <img style="width:100%;cursor:pointer;height:56vh;background-attachment: fixed;background-position: center;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:4vh;margin:0px;">
