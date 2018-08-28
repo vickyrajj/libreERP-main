@@ -227,7 +227,46 @@ app.config(function($stateProvider ){
 
 });
 
-app.controller("controller.home.main", function($scope , $state) {
+app.controller("controller.home.main", function($scope , $state,$http) {
+  $scope.sai='kiran'
+
+  $scope.barlabels = ['Aug 23', 'Aug 24', 'Aug 25', 'Aug 26', 'Aug 27', 'Aug 28', 'Aug 29'];
+  $scope.series = ['Series A', 'Series B'];
+
+  $scope.barData = [];
+  // $scope.colours = ['#72C02C', '#3498DB'];
+  $scope.sharesOptions = {
+    scales: {
+      xAxes: [{
+        stacked: true,
+      }],
+      yAxes: [{
+        stacked: true
+      }]
+    }
+  };
+
+  $scope.barColours = [{
+    backgroundColor: "#71A0F2",
+    borderColor: "#71A0F2"
+  }, {
+    backgroundColor: "#0080FF",
+    borderColor: "#0080FF"
+  }];
+
+
+  $http({
+    method: 'GET',
+    url: '/api/support/gethomeCal/',
+  }).
+  then(function(response) {
+    console.log(response.data,'dddddddddddd',typeof response.data);
+    $scope.totalChats = response.data.totalChats
+    $scope.missedChats = response.data.missedChats
+    $scope.agentChatCount = response.data.agentChatCount
+    $scope.barData = response.data.graphData
+  });
+
   $scope.modules = $scope.$parent.$parent.modules;
   $scope.dashboardAccess = false;
   $scope.homeMenuAccess = false;

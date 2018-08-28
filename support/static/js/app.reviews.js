@@ -245,12 +245,16 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     console.log($scope.form);
     if ($scope.changeDateType&&$scope.form.date!=null) {
       console.log('update');
-      $scope.form.date.setDate($scope.form.date.getDate() + 1);
+      res = new Date($scope.form.date)
+      var date = new Date(res.setDate(res.getDate() + 1))
     }else {
       console.log('no changeeeeeee');
+      var date = $scope.form.date
     }
-    $scope.getData($scope.form.date,user,$scope.form.email,client,download)
+    console.log(date);
+    $scope.getData(date,user,$scope.form.email,client,download)
   }
+  
   $scope.download = function(){
     $scope.filterData(true)
   }

@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'script/chatter/$' , GetChatterScriptAPI.as_view()),
     url(r'getMyUser/$' , GetMyUser.as_view()),
     url(r'getChatHistory/$' , GetChatHistory.as_view()),
+    url(r'gethomeCal/$' , GethomeCal.as_view()),
 
 ]
