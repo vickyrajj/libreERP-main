@@ -41,14 +41,14 @@ unpad = lambda s: s[:-ord(s[len(s) - 1:])]
 # Create your views here.
 
 class CustomerProfileViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = CustomerProfileSerializer
     queryset = CustomerProfile.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['service']
 
 class SupportChatViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = SupportChatSerializer
     # queryset = SupportChat.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -234,7 +234,7 @@ def getChatterScript(request , fileName):
 
 
 class VisitorViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = VisitorSerializer
     queryset = Visitor.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -248,7 +248,7 @@ class ReviewCommentViewSet(viewsets.ModelViewSet):
     filter_fields = ['uid','user','chatedDate']
 
 class ChatThreadViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = ChatThreadSerializer
     queryset = ChatThread.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -266,7 +266,7 @@ class ChatThreadViewSet(viewsets.ModelViewSet):
         return ChatThread.objects.all()
 
 class DocumentationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = DocumentationSerializer
     queryset = Documentation.objects.all()
     filter_backends = [DjangoFilterBackend]
