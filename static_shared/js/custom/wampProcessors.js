@@ -205,35 +205,34 @@ connection.onopen = function(session) {
         chatThreadPk: args[5]
       }
 
-      function createVisitor(email, phoneNumber , name) {
-        console.log(email , phoneNumber , name,'sometinhhhhhhhhh###');
-        var toPost = JSON.stringify({"email":email , "phoneNumber":phoneNumber , "name":name ,"uid":args[0]})
-        console.log(toPost);
-        // console.log(typeof toPost);
-        var xhttp = new XMLHttpRequest();
-         xhttp.onreadystatechange = function() {
-           if (this.readyState == 4 && this.status == 201) {
-             var data = JSON.parse(this.responseText)
-             detail.name = data.name
-             detail.email = data.email
-           }
-         };
-         xhttp.open('POST', '/api/support/visitor/', true);
-         xhttp.setRequestHeader("Content-type", "application/json");
-         xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-         xhttp.send(toPost);
-      }
+      // function createVisitor(email, phoneNumber , name) {
+      //   console.log(email , phoneNumber , name,'sometinhhhhhhhhh###');
+      //   var toPost = JSON.stringify({"email":email , "phoneNumber":phoneNumber , "name":name ,"uid":args[0]})
+      //   console.log(toPost);
+      //   // console.log(typeof toPost);
+      //   var xhttp = new XMLHttpRequest();
+      //    xhttp.onreadystatechange = function() {
+      //      if (this.readyState == 4 && this.status == 201) {
+      //        var data = JSON.parse(this.responseText)
+      //        detail.name = data.name
+      //        detail.email = data.email
+      //      }
+      //    };
+      //    xhttp.open('POST', '/api/support/visitor/', true);
+      //    xhttp.setRequestHeader("Content-type", "application/json");
+      //    xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+      //    xhttp.send(toPost);
+      // }
 
       console.log(args[4]);
 
       if (args[4]) {
         console.log(args[4]);
-        createVisitor(args[4].email , args[4].phoneNumber , args[4].name)
+        detail.name = args[4].name
+        detail.email = args[4].email
+        // createVisitor(args[4].email , args[4].phoneNumber , args[4].name)
       }
 
-      // if (detailsCookie) {
-      //   createVisitor()
-      // }
 
 
       console.log('no');
@@ -306,7 +305,14 @@ connection.onopen = function(session) {
           return true
         }
       }
-      session.register('service.support.heartbeat.'+scope.me.pk, heartbeat);
+      session.register('service.support.heartbeat.'+scope.me.pk, heartbeat).then(
+        function (res) {
+          console.log("registered'");
+        },
+        function (err) {
+          console.log("failed to registered: ");
+        }
+      );;
       console.log(scope.me.pk);
     }
   }
@@ -342,6 +348,20 @@ connection.onopen = function(session) {
       console.log("failed to subscribed: " + err);
     }
   );
+
+setTimeout(function () {
+  var scope = angular.element(document.getElementById('chatTab')).scope();
+  session.subscribe('service.support.agent.'+scope.me.pk, supportChatResponse).then(
+    function(sub) {
+      console.log("subscribed to topic 'supportChatResponse'");
+    },
+    function(err) {
+      console.log("failed to subscribed: " + err);
+    }
+  );
+}, 1500);
+
+
 
 
   session.subscribe('service.chat.' + wampBindName, chatResonse).then(

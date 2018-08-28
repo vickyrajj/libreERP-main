@@ -34,6 +34,7 @@ class CustomerProfile(models.Model):
     name = models.CharField(max_length = 50 , null = True )
     supportBubbleColor = models.CharField(max_length = 20 , null = True ,default='#286EFA')
     userApiKey = models.CharField(max_length = 500 , null = True )
+    firstMessage = models.CharField(max_length = 20000 , null = True ,blank=True)
 
 
 class SupportChat(models.Model):
