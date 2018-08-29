@@ -111,6 +111,19 @@ app.controller("app.customer.reviews", function($scope ,$state, $http,$rootScope
 
 })
 app.controller("app.customer.settings", function($scope ,$state, $http ,$rootScope) {
+
+  $scope.tinymceOptions = {
+    selector: 'textarea',
+    content_css : '/static/css/bootstrap.min.css',
+    inline: false,
+    plugins : 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
+    skin: 'lightgray',
+    theme : 'modern',
+    height : 100,
+    toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+  };
+
+
   $rootScope.state = 'Settings';
   $scope.cpForm = {};
   $http({
@@ -141,13 +154,16 @@ app.controller("app.customer.settings", function($scope ,$state, $http ,$rootSco
     fd.append('vr', $scope.cpForm .vr);
     fd.append('service', $scope.cpForm .service);
 
-    if ($scope.cpForm .windowColor != '') {
-      fd.append('windowColor', $scope.cpForm .windowColor);
+    if ($scope.cpForm.windowColor != '') {
+      fd.append('windowColor', $scope.cpForm.windowColor);
     }
-    if ($scope.cpForm .supportBubbleColor != '') {
-      fd.append('supportBubbleColor', $scope.cpForm .supportBubbleColor);
+    if ($scope.cpForm.supportBubbleColor != '') {
+      fd.append('supportBubbleColor', $scope.cpForm.supportBubbleColor);
     }
-    if ($scope.cpForm .dp && typeof $scope.cpForm .dp!='string' ) {
+    if ($scope.cpForm.firstMessage != '') {
+      fd.append('firstMessage', $scope.cpForm.firstMessage);
+    }
+    if ($scope.cpForm.dp && typeof $scope.cpForm.dp!='string' ) {
       fd.append('dp',$scope.cpForm .dp);
     }
 
@@ -178,7 +194,7 @@ app.controller("app.customer.knowledgeBase", function($scope ,$state, $http,$roo
     height : 400,
     toolbar : 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
   };
-  $scope.state = 'Knowledge Base';
+  // $scope.state = 'Knowledge Base';
   $scope.custDetailsPk;
   $http({
     method: 'GET',
