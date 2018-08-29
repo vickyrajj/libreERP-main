@@ -81,6 +81,7 @@ class ChatThread(models.Model):
     user = models.ForeignKey(User , related_name = 'chatAgentUser' , null = True, blank=True)
     userDevice = models.CharField(max_length = 100 , null = True , blank=True)
     userDeviceIp = models.CharField(max_length = 20 , null = True , blank=True)
+    # chatDuration = models.Char
 
 class Documentation(models.Model):
     created = models.DateTimeField(auto_now_add = True)

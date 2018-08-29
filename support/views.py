@@ -172,10 +172,12 @@ class ReviewFilterCalAPIView(APIView):
             print userCustProfile,userCompanyUidList
             sobj = sobj.filter(uid__in=userCompanyUidList)
         # toSend = list(sobj.values())
-        agentsList = list(sobj.values_list('user',flat=True).distinct())
+        uidL = list(sobj.values_list('uid',flat=True).distinct())
+        agentsList = list(ChatThread.objects.filter(~Q(status='archived'),uid__in=uidL).values_list('user',flat=True).distinct())
         print agentsList
         for i in agentsList:
-            agSobj = sobj.filter(user = i)
+            agentuidList = list(ChatThread.objects.filter(~Q(status='archived'),user=i).values_list('uid',flat=True).distinct())
+            agSobj = sobj.filter(uid__in = agentuidList)
             if 'email' in self.request.GET:
                 uidl = list(Visitor.objects.filter(email=self.request.GET['email']).values_list('uid',flat=True).distinct())
                 agUid = list(agSobj.filter(uid__in=uidl).values_list('uid',flat=True).distinct())
@@ -411,27 +413,28 @@ class GethomeCal(APIView):
         print today,tomorrow,lastWeek
         chatThreadObj = ChatThread.objects.filter(created__range=(lastWeek,tomorrow))
         if 'perticularUser' in self.request.GET:
-            chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['perticularUser']))
+            if int(self.request.GET['perticularUser'])>0:
+                chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['perticularUser']))
         totalChats = chatThreadObj.count()
         print 'cccccccccccccc',totalChats,chatThreadObj
         agentChatCount = list(chatThreadObj.values('user').annotate(count_val=Count('user')))
         missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
         if 'perticularUser' in self.request.GET:
-            missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
+            if int(self.request.GET['perticularUser'])>0:
+                missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
         graphData = [[],[]]
         graphLabels = []
         for i in range(7):
-            # print i,lastWeek + relativedelta(days=i)
-            # date = lastWeek + relativedelta(days=i)
             dt = lastWeek + relativedelta(days=i)
             dateChat = ChatThread.objects.filter(created__startswith=dt)
             if 'perticularUser' in self.request.GET:
-                dateChat = dateChat.filter(company=int(self.request.GET['perticularUser']))
+                if int(self.request.GET['perticularUser'])>0:
+                    dateChat = dateChat.filter(company=int(self.request.GET['perticularUser']))
             missed = dateChat.filter(user__isnull=True).count() * -1
             received = dateChat.filter(user__isnull=False).count()
             graphData[0].append(received)
             graphData[1].append(missed)
-            print dt,received,missed,datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d')
+            print dt,received,missed,datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'),datetime.datetime.combine(dt, datetime.datetime.min.time())-datetime.datetime.now()
             graphLabels.append(datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'))
         # for idx,i in enumerate(agentChatCount):
         #     if not i['user']:

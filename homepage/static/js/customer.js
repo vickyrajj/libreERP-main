@@ -311,6 +311,11 @@ app.controller("cutomerController", function($scope , $http,$rootScope) {
   }).
   then(function(response) {
     console.log(response.data);
+    if (response.data.length>0) {
+      id = response.data[0]
+    }else {
+      id = 0
+    }
     // $http({
     //   method: 'GET',
     //   url:  '/api/support/customerProfile/'+response.data[0]+'/',
@@ -321,7 +326,7 @@ app.controller("cutomerController", function($scope , $http,$rootScope) {
     // });
     $http({
       method: 'GET',
-      url: '/api/support/gethomeCal/?perticularUser='+response.data[0],
+      url: '/api/support/gethomeCal/?perticularUser='+id,
     }).
     then(function(response) {
       console.log(response.data,'dddddddddddd',typeof response.data);
