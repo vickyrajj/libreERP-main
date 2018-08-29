@@ -52,7 +52,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="agent in agentChatCount" ng-if="agent.user != 'noUser'">
+                  <tr ng-repeat="agent in agentChatCount" ng-if="agent.user != none">
                     <td style="border: 0;">{{agent.user | getName}}</td>
                     <td style="border: 0;">{{agent.count_val}}</td>
                   </tr>

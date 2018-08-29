@@ -415,6 +415,7 @@ class GethomeCal(APIView):
         agentChatCount = list(chatThreadObj.values('user').annotate(count_val=Count('user')))
         missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
         graphData = [[],[]]
+        graphLabels = []
         for i in range(7):
             # print i,lastWeek + relativedelta(days=i)
             # date = lastWeek + relativedelta(days=i)
@@ -423,7 +424,7 @@ class GethomeCal(APIView):
             received = dateChat.filter(user__isnull=False).count()
             graphData[0].append(received)
             graphData[1].append(missed)
-            print lastWeek + relativedelta(days=i),received,missed
+            print lastWeek + relativedelta(days=i),received,missed,datetime.strptime(lastWeek + relativedelta(days=i), '%Y%m%d')
         # for idx,i in enumerate(agentChatCount):
         #     if not i['user']:
         #         missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
