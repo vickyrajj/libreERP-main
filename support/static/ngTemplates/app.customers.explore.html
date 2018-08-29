@@ -11,6 +11,7 @@
         <span ng-if="compDetails.cin.length>0"><strong>CIN : </strong>{{compDetails.cin}}<br></span>
         <span ng-if="compDetails.tin.length>0"><strong>TIN : </strong>{{compDetails.tin}}<br></span>
       </div>
+      <span ng-if="custDetails.userApiKey.length>0" style="font-size:18px"><strong>apiKey : </strong>{{custDetails.userApiKey}}<br></span>
       <div class="row" style="margin-top:20px;font-size:18px;padding:5px 15px" ng-if="compDetails.about.length>0">
         <span><strong>About : </strong><br></span> {{compDetails.about}}
       </div>

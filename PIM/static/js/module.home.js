@@ -230,7 +230,7 @@ app.config(function($stateProvider ){
 app.controller("controller.home.main", function($scope , $state,$http) {
   $scope.sai='kiran'
 
-  $scope.barlabels = ['Aug 23', 'Aug 24', 'Aug 25', 'Aug 26', 'Aug 27', 'Aug 28', 'Aug 29'];
+  $scope.barlabels = [];
   $scope.series = ['Series A', 'Series B'];
 
   $scope.barData = [];
@@ -265,6 +265,7 @@ app.controller("controller.home.main", function($scope , $state,$http) {
     $scope.missedChats = response.data.missedChats
     $scope.agentChatCount = response.data.agentChatCount
     $scope.barData = response.data.graphData
+    $scope.barlabels = response.data.graphLabels
   });
 
   $scope.modules = $scope.$parent.$parent.modules;

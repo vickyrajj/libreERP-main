@@ -1,4 +1,4 @@
-var app = angular.module("customerApp", ['ui.bootstrap' , 'ui.tinymce' , 'ui.router']);
+var app = angular.module("customerApp", ['ui.bootstrap' , 'ui.tinymce' , 'ui.router','chart.js',]);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
   // $urlRouterProvider.otherwise('/home');
@@ -258,6 +258,64 @@ app.controller("app.customer.knowledgeBase", function($scope ,$state, $http,$roo
 app.controller("cutomerController", function($scope , $http,$rootScope) {
   console.log('cominggggggggggg');
   $rootScope.state = 'Dashboard';
+  $scope.sai = 'kiran'
+  // setTimeout(function () {
+  //   var elid = document.getElementById('dashboardBar')
+  //   elid.height = 10
+  //   elid.width = 100
+  // }, 1000);
+
+  $scope.barlabels = [];
+  $scope.series = ['Series A', 'Series B'];
+
+  $scope.barData = [];
+  // $scope.colours = ['#72C02C', '#3498DB'];
+  $scope.sharesOptions = {
+    scales: {
+      xAxes: [{
+        stacked: true,
+      }],
+      yAxes: [{
+        stacked: true
+      }]
+    }
+  };
+
+  $scope.barColours = [{
+    backgroundColor: "#71A0F2",
+    borderColor: "#71A0F2"
+  }, {
+    backgroundColor: "#0080FF",
+    borderColor: "#0080FF"
+  }];
+
+  $http({
+    method: 'GET',
+    url:  '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+  }).
+  then(function(response) {
+    console.log(response.data);
+    // $http({
+    //   method: 'GET',
+    //   url:  '/api/support/customerProfile/'+response.data[0]+'/',
+    // }).
+    // then(function(response) {
+    //   console.log(response.data);
+    //   $scope.cpForm = response.data
+    // });
+    $http({
+      method: 'GET',
+      url: '/api/support/gethomeCal/?perticularUser='+response.data[0],
+    }).
+    then(function(response) {
+      console.log(response.data,'dddddddddddd',typeof response.data);
+      $scope.totalChats = response.data.totalChats
+      $scope.missedChats = response.data.missedChats
+      $scope.agentChatCount = response.data.agentChatCount
+      $scope.barData = response.data.graphData
+      $scope.barlabels = response.data.graphLabels
+    });
+  });
 });
 
 app.controller("app.customer.reviews.explore", function($scope , $http ) {

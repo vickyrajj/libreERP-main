@@ -410,21 +410,29 @@ class GethomeCal(APIView):
         lastWeek = today - relativedelta(days=6)
         print today,tomorrow,lastWeek
         chatThreadObj = ChatThread.objects.filter(created__range=(lastWeek,tomorrow))
+        if 'perticularUser' in self.request.GET:
+            chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['perticularUser']))
         totalChats = chatThreadObj.count()
         print 'cccccccccccccc',totalChats,chatThreadObj
         agentChatCount = list(chatThreadObj.values('user').annotate(count_val=Count('user')))
         missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
+        if 'perticularUser' in self.request.GET:
+            missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
         graphData = [[],[]]
         graphLabels = []
         for i in range(7):
             # print i,lastWeek + relativedelta(days=i)
             # date = lastWeek + relativedelta(days=i)
-            dateChat = ChatThread.objects.filter(created__startswith=lastWeek + relativedelta(days=i))
+            dt = lastWeek + relativedelta(days=i)
+            dateChat = ChatThread.objects.filter(created__startswith=dt)
+            if 'perticularUser' in self.request.GET:
+                dateChat = dateChat.filter(company=int(self.request.GET['perticularUser']))
             missed = dateChat.filter(user__isnull=True).count() * -1
             received = dateChat.filter(user__isnull=False).count()
             graphData[0].append(received)
             graphData[1].append(missed)
-            print lastWeek + relativedelta(days=i),received,missed,datetime.strptime(lastWeek + relativedelta(days=i), '%Y%m%d')
+            print dt,received,missed,datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d')
+            graphLabels.append(datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'))
         # for idx,i in enumerate(agentChatCount):
         #     if not i['user']:
         #         missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
@@ -433,4 +441,4 @@ class GethomeCal(APIView):
         #         break
         print agentChatCount,graphData
 
-        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData}, status = status.HTTP_200_OK)
+        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels}, status = status.HTTP_200_OK)
