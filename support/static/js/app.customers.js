@@ -437,6 +437,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
   $scope.saveCustomerProfile=function(){
     $scope.saveCompanyDetails()
     console.log($scope.cpForm);
+    var fd = new FormData();
+
     var cpF = $scope.cpForm
     if (cpF.windowColor == '') {
       delete cpF.windowColor
@@ -444,8 +446,17 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     if (cpF.supportBubbleColor == '') {
       delete cpF.supportBubbleColor
     }
-    if (cpF.firstMessage == '') {
-      delete cpF.supportBubbleColor
+    if (cpF.firstMessage == null || cpF.firstMessage == '') {
+      delete cpF.firstMessage
+      console.log('thereee',cpF.firstMessage);
+    }else {
+      fd.append('firstMessage', cpF.firstMessage);
+      console.log('not thereee',cpF.firstMessage);
+    }
+    if (cpF.name==null || cpF.name == '') {
+      delete cpF.name
+    }else {
+      fd.append('name', cpF.name);
     }
     var method = 'POST'
     var url = '/api/support/customerProfile/'
@@ -463,12 +474,10 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     //   $scope.cpForm = response.data;
     // });
 
-    var fd = new FormData();
     fd.append('call', cpF.call );
     fd.append('email', cpF.email );
     fd.append('callBack', cpF.callBack);
     fd.append('chat', cpF.chat);
-    fd.append('name', cpF.name);
     fd.append('videoAndAudio', cpF.videoAndAudio);
     fd.append('ticket', cpF.ticket);
     fd.append('vr', cpF.vr);
@@ -484,9 +493,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       fd.append('supportBubbleColor', cpF.supportBubbleColor);
     }
 
-    if (cpF.firstMessage != '') {
-      fd.append('firstMessage', cpF.firstMessage);
-    }
+    // if (cpF.firstMessage != '') {
+    //   fd.append('firstMessage', cpF.firstMessage);
+    // }
 
     console.log(cpF.dp , 'dddddddddddddddddddddddddddddddddddddd');
 
