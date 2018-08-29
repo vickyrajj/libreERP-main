@@ -312,7 +312,7 @@ connection.onopen = function(session) {
         function (err) {
           console.log("failed to registered: ");
         }
-      );;
+      );
       console.log(scope.me.pk);
     }
   }

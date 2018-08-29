@@ -502,7 +502,7 @@ app.directive('chatBox', function() {
       });
 
 
-      $scope.chatClose = function(uid, chatThreadPk) {
+      $scope.chatClose = function(indx,uid, chatThreadPk) {
         $scope.status = "F";
         connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
@@ -522,6 +522,7 @@ app.directive('chatBox', function() {
           Flash.create('sucess', 'Chat Has Closed')
           return
         });
+        $scope.closeChatBox(indx,$scope.data.myUserIndex)
       }
 
       $scope.closeChatBox = function(indx , myUserIndex) {
@@ -588,6 +589,7 @@ app.directive('chatBox', function() {
       }
 
       $scope.getChatHistory = function(email) {
+        console.log('email ',email);
         $http({
           method: 'GET',
           url: '/api/support/getChatHistory/?email=' + email,
@@ -595,12 +597,14 @@ app.directive('chatBox', function() {
         then(function(response) {
           console.log(response.data.data);
           $scope.chatHistory = response.data.data
+          console.log(response.data.data,'ressssssssssssin chat hist');
           $scope.chatHistModal(email)
         })
       }
 
 
       $scope.chatHistModal = function(email) {
+        console.log('chatHistModal',email);
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.chatHistory.modal.html',
           size: 'xl',
@@ -871,6 +875,7 @@ app.directive('chatBox', function() {
         }, function(data) {
           if (data != 'backdrop click') {
             $scope.data.name = data.name
+            $scope.data.email = data.email
             $scope.visitorForm = data
             console.log('something#################');
 

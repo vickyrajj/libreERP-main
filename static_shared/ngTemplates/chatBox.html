@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="col-md-4" style="padding:0px">
-            <div class="btn btn-danger btn-sm btn-block" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(data.uid,data.chatThreadPk);closed=true" confirm-button-type="default" cancel-button-type="default" ng-hide="closed"> Close Chat
+            <div class="btn btn-danger btn-sm btn-block" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(index,data.uid,data.chatThreadPk);closed=true" confirm-button-type="default" cancel-button-type="default" ng-hide="closed"> Close Chat
             </div>
             <span ng-if="closed" style="font-size:18px;color:red">Chat Closed</span>
           </div>
