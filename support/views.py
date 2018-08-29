@@ -38,6 +38,12 @@ BLOCK_SIZE = 16
 pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
 unpad = lambda s: s[:-ord(s[len(s) - 1:])]
 
+from openpyxl import Workbook
+from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
+from dateutil.relativedelta import relativedelta
+from django.db.models import Sum, Count
+
 # Create your views here.
 
 class CustomerProfileViewSet(viewsets.ModelViewSet):
@@ -89,7 +95,50 @@ class GetMyUser(APIView):
 
 
             return Response(toSend, status=status.HTTP_200_OK)
+def createExcel(data):
+    wb = Workbook()
 
+    # dest_filename = 'empty_book.xlsx'
+    ws1 = wb.active
+    ws1.title = "UID Wise"
+    heading = ['UID','Email','Company','User Message','Agent Message',]
+    heading_font = Font(bold=True, size=14)
+    ws1.append(heading)
+    print ws1.column_dimensions,'widthhhhhhhhhhhhhhhhhhhh'
+    for idx,cell in enumerate(ws1["1:1"]):
+        cell.font = heading_font
+        ws1.column_dimensions[get_column_letter(idx+1)].width = 25 if idx<3 else 50
+    uidList = []
+
+    for row in data:
+        dt = 'MEDIA ('+row['attachmentType'] +' )' if row['attachmentType'] else row['message']
+        if row['uid'] in uidList:
+            if row['sentByAgent']:
+                ws1.append(['','','','',dt])
+            else:
+                ws1.append(['','','',dt,''])
+        else:
+            if len(uidList)>0:
+                ws1.append(['','','','','',''])
+                ws1.append(['','','','','',''])
+                ws1.append(['','','','','',''])
+            uidList.append(row['uid'])
+            if row['sentByAgent']:
+                ws1.append([row['uid'],row['email'],row['company'],'',dt])
+            else:
+                ws1.append([row['uid'],row['email'],row['company'],dt,''])
+
+    # ws2 = wb.create_sheet(title="Pi")
+    #
+    # ws2['F5'] = 3.14
+    #
+    # ws3 = wb.create_sheet(title="Data")
+    # for row in range(10, 20):
+    #     for col in range(27, 54):
+    #         _ = ws3.cell(column=col, row=row, value="{0}".format(get_column_letter(col)))
+    # print(ws3['AA10'].value)
+    # wb.save(filename = dest_filename)
+    return wb
 
 class ReviewFilterCalAPIView(APIView):
     renderer_classes = (JSONRenderer,)
@@ -145,14 +194,17 @@ class ReviewFilterCalAPIView(APIView):
                 print company
                 agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
-                res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType').annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField())))
+                res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType','sentByAgent').annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField())))
         print toSend
         if 'download' in self.request.GET:
             print 'downloadddddddddddddddddddddddd'
-            # res = []
-            # for i in toSend:
-            #     res = res + i
-            return ExcelResponse(res)
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=excelReport.xlsx'
+            excelData = createExcel(res)
+            print excelData,'dddddddddddddddd'
+            excelData.save(response)
+            return response
+            # return ExcelResponse(res)
 
         return Response(toSend, status=status.HTTP_200_OK)
 
@@ -235,6 +287,7 @@ def getChatterScript(request , fileName):
     if serviceWebsite in browserHeader['REFERER']:
         return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
     else:
+        # pass
         return HttpResponse(request,'')
         # return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
 
@@ -248,7 +301,7 @@ class VisitorViewSet(viewsets.ModelViewSet):
     filter_fields = ['uid','email' ,'name']
 
 class ReviewCommentViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = ReviewCommentSerializer
     queryset = ReviewComment.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -287,14 +340,19 @@ class GetChatTranscriptsViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if 'apiKey' in self.request.GET:
             try:
-                print '*****************',self.request.GET['apiKey']
                 userExit = CustomerProfile.objects.get(userApiKey=self.request.GET['apiKey'])
-                return ChatThread.objects.all()
             except:
-                print 'errorrrrrrrrr'
                 raise PermissionDenied()
+            if 'date' in self.request.GET:
+                try:
+                    date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
+                except:
+                    raise ValidationError(detail={'PARAMS' : 'Date Argument Should Be yyyy-mm-dd Formate'} )
+                print date,'dateeeeeeeeeeee'
+                return ChatThread.objects.filter(created__startswith = date)
+            else:
+                raise ValidationError(detail={'PARAMS' : 'Date Argument Is Required'} )
         else:
-            print 'not enter apikey'
             raise PermissionDenied()
 
 class GetVisitorDetailsViewSet(viewsets.ModelViewSet):
@@ -305,14 +363,19 @@ class GetVisitorDetailsViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if 'apiKey' in self.request.GET:
             try:
-                print '*****************',self.request.GET['apiKey']
                 userExit = CustomerProfile.objects.get(userApiKey=self.request.GET['apiKey'])
-                return Visitor.objects.all()
             except:
-                print 'errorrrrrrrrr'
                 raise PermissionDenied()
+            if 'date' in self.request.GET:
+                try:
+                    date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
+                except:
+                    raise ValidationError(detail={'PARAMS' : 'Date Argument Should Be yyyy-mm-dd Formate'} )
+                print date,'dateeeeeeeeeeee'
+                return Visitor.objects.filter(created__startswith = date)
+            else:
+                raise ValidationError(detail={'PARAMS' : 'Date Argument Is Required'} )
         else:
-            print 'not enter apikey'
             raise PermissionDenied()
 
 class GetOfflineMessagesViewSet(viewsets.ModelViewSet):
@@ -322,16 +385,51 @@ class GetOfflineMessagesViewSet(viewsets.ModelViewSet):
     filter_fields = ['uid','user']
     exclude_fields = ['id']
     def get_queryset(self):
-        # userObj = User.objects.get(pk=1)
-        # print 'userrrrrrrrrrrrrr',userObj
         if 'apiKey' in self.request.GET:
             try:
-                print '*****************',self.request.GET['apiKey']
                 userExit = CustomerProfile.objects.get(userApiKey=self.request.GET['apiKey'])
-                return SupportChat.objects.filter(user__isnull=True)
             except:
-                print 'errorrrrrrrrr'
                 raise PermissionDenied()
+            if 'date' in self.request.GET:
+                try:
+                    date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
+                except:
+                    raise ValidationError(detail={'PARAMS' : 'Date Argument Should Be yyyy-mm-dd Formate'} )
+                print date,'dateeeeeeeeeeee'
+                return SupportChat.objects.filter(user__isnull=True,created__startswith = date)
+            else:
+                raise ValidationError(detail={'PARAMS' : 'Date Argument Is Required'} )
         else:
-            print 'not enter apikey'
             raise PermissionDenied()
+
+class GethomeCal(APIView):
+    def get(self , request , format = None):
+        print '******************************************* holmcal'
+        today = datetime.datetime.now().date()
+        tomorrow = today + relativedelta(days=1)
+        lastWeek = today - relativedelta(days=6)
+        print today,tomorrow,lastWeek
+        chatThreadObj = ChatThread.objects.filter(created__range=(lastWeek,tomorrow))
+        totalChats = chatThreadObj.count()
+        print 'cccccccccccccc',totalChats,chatThreadObj
+        agentChatCount = list(chatThreadObj.values('user').annotate(count_val=Count('user')))
+        missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
+        graphData = [[],[]]
+        for i in range(7):
+            # print i,lastWeek + relativedelta(days=i)
+            # date = lastWeek + relativedelta(days=i)
+            dateChat = ChatThread.objects.filter(created__startswith=lastWeek + relativedelta(days=i))
+            missed = dateChat.filter(user__isnull=True).count() * -1
+            received = dateChat.filter(user__isnull=False).count()
+            graphData[0].append(received)
+            graphData[1].append(missed)
+            print lastWeek + relativedelta(days=i),received,missed
+        # for idx,i in enumerate(agentChatCount):
+        #     if not i['user']:
+        #         missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
+        #         agentChatCount[idx]['count_val'] = missedChats
+        #         agentChatCount[idx]['user'] = 'noUser'
+        #         break
+        print agentChatCount,graphData
+
+        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData}, status = status.HTTP_200_OK)
