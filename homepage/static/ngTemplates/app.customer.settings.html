@@ -31,6 +31,14 @@
       <input class="form-control" type="text" ng-model="cpForm.name">
     </div>
   </div>
+  <div class="row" style="padding-bottom:10px;">
+    <div class="col-md-4" style="font-size:20px;">
+      <span ><i class="fa fa-commenting-o"></i> &nbsp;<span>First Message</span></span>
+    </div>
+    <div class="col-md-8">
+      <textarea ui-tinymce="tinymceOptions" ng-model="cpForm.firstMessage"></textarea>
+    </div>
+  </div>
   <!-- <div class="row">
       <div class="form-group">
           <i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
