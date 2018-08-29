@@ -35,7 +35,7 @@
                   <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:#808080;" ng-if="list.added_saved==0&&me.pk">
                     <i class="fa fa-heart  fa-3x"></i>
                   </span>
-                  <span ng-click="$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);" ng-if="list.added_saved>0&&me.pk">
+                  <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);" ng-if="list.added_saved>0&&me.pk">
                     <i class="fa fa-heart  fa-3x"></i>
                   </span>
                 </div>
@@ -58,10 +58,10 @@
                 </div>
               </div>
               <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0">
-                <div class="col-md-4 col-sm-4 col-xs-4">
+                <div class="col-md-4 col-sm-4 col-xs-4 text-right">
                   <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="list.added_cart>0"  ng-click="decrement();$event.stopPropagation()"></i>
                 </div>
-                <div class="col-md-4 col-sm-4 col-xs-4">
+                <div class="col-md-4 col-sm-4 col-xs-4 text-center">
                   <span style="font-size:20px; padding:0px 20px;"> {{list.added_cart}} </span>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-4">

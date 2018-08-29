@@ -13,7 +13,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
     $scope.validityChecked = true;
     console.log($scope.form);
 
-    if (!$scope.form.agree || $scope.form.firstName == undefined || $scope.form.firstName == null || $scope.form.firstName.length ==0 || $scope.form.lastName == undefined || $scope.form.lastName == null || $scope.form.lastName.length ==0 || $scope.form.email == undefined || $scope.form.email == null || $scope.form.email.length ==0 || $scope.form.mobile == undefined || $scope.form.mobile == null || $scope.form.mobile.length ==0 || $scope.form.password == undefined || $scope.form.password == null || $scope.form.password.length <6 || $scope.form.email.indexOf('@') == -1 ) {
+    if (!$scope.form.agree || $scope.form.firstName == undefined || $scope.form.firstName == null || $scope.form.firstName.length ==0 || $scope.form.lastName == undefined || $scope.form.lastName == null || $scope.form.lastName.length ==0 || $scope.form.email == undefined || $scope.form.email == null || $scope.form.email.length ==0 || $scope.form.mobile == undefined || $scope.form.mobile == null || $scope.form.mobile.length ==0 || $scope.form.password == undefined || $scope.form.password == null || $scope.form.password.length <3 || $scope.form.email.indexOf('@') == -1 ) {
       console.log("form not valid , returning");
 
       return;
@@ -28,7 +28,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
     then(function(response) {
 
 
-      if (($scope.form.password != null && $scope.form.password.length <6) || $scope.form.password == null ) {
+      if (($scope.form.password != null && $scope.form.password.length <3) || $scope.form.password == null ) {
         return;
       }
 

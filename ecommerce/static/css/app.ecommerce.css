@@ -132,10 +132,10 @@
 	content: '';
   display: block;
   position: absolute;
-  top: 8.3vh;
+  top: 15vh;
   left:12vw;
-  width: 5vw;
-  height: 5vh;
+  width: 30px;
+  height: 30px;
   background: white;
   -moz-transform:rotate(45deg);
   -webkit-transform:rotate(45deg);
@@ -145,10 +145,10 @@
 	content: '';
   display: block;
   position: absolute;
-  top: 9.5vh;
+  top: 14vh;
   left:5.2vw;
-  width: 5vw;
-  height: 5vh;
+  width: 30px;
+  height: 30px;
   background: white;
   -moz-transform:rotate(45deg);
   -webkit-transform:rotate(45deg);

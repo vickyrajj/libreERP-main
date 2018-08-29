@@ -1724,6 +1724,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.order = response.data
       $scope.data.stage = 'confirmation';
       $rootScope.inCart = [];
+      $rootScope.inFavourite = [];
       $scope.item = [];
       console.log('in cart', $rootScope.inCart);
     })
@@ -1797,6 +1798,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash) {
   $scope.me = $users.get('mySelf')
   $rootScope.inCart = [];
+  $rootScope.inFavourite = [];
   $scope.data = {
     location: null
   }
@@ -1987,67 +1989,31 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     message: ''
   };
 
-  $scope.feddbackPannel = false
+  // $scope.feddbackPannel = false
   $scope.feedbackstatus = function() {
-    $scope.feddbackPannel = true
-  }
-  $scope.close = function() {
-    $scope.feddbackPannel = false
-  }
+console.log("kkkkkhhhhhhhhhhhhhhhhhhh");
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.feedBack.html',
+      size: 'md',
+      backdrop: false,
+      // resolve: {
+      //   product: function() {
+      //
+      //   }
+      // },
+      controller: 'controller.ecommerce.feedBack.modal',
+    }).result.then(function() {
 
+    }, function() {
 
-  $scope.sendFeedback = function() {
-    // if ($scope.me==null){
-    //   console.log("aaaaaaaa");
-    //   if ($scope.feedback.email == '') {
-    //     Flash.create('danger', 'Please provide details')
-    //   }
-    //   else{
-    //     var toSend = {
-    //       email: $scope.feedback.email,
-    //       mobile: $scope.feedback.mobile,
-    //       message: $scope.feedback.message,
-    //     }
-    //   }
-    // }
-    // else{
-    //   var toSend = {
-    //     email: $scope.feedback.email,
-    //     mobile: $scope.feedback.mobile,
-    //     message: $scope.feedback.message,
-    //   }
-    // }
-
-
-    console.log("aaaaaaaa");
-    if ($scope.feedback.email == '') {
-      Flash.create('danger', 'Please provide details')
-    } else {
-      console.log($scope.feedback.email, 'aaaaa');
-      var toSend = {
-        email: $scope.feedback.email,
-        mobile: $scope.feedback.mobile,
-        message: $scope.feedback.message,
-      }
-    }
-
-
-    $http({
-      method: 'POST',
-      url: '/api/ecommerce/supportFeed/',
-      data: toSend
-    }).
-    then(function(response) {
-      Flash.create('success', 'Thank you!');
-      $scope.feedback = {
-        email: '',
-        mobile: null,
-        message: ''
-      };
-    }, function(response) {
-      Flash.create('danger', response.status + ' : ' + response.statusText);
     });
+    // $scope.feddbackPannel = true
   }
+  // $scope.close = function() {
+  //   $scope.feddbackPannel = false
+  // }
+
+
 
   $scope.settings = {};
   $http({
@@ -2066,12 +2032,15 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   if ($scope.me != null) {
     $http({
       method: 'GET',
-      url: '/api/ecommerce/cart/?user=' + $scope.me.pk + '&typ=cart'
+      url: '/api/ecommerce/cart/?user=' + $scope.me.pk
     }).
     then(function(response) {
       for (var i = 0; i < response.data.length; i++) {
         if (response.data[i].typ == 'cart') {
           $rootScope.inCart.push(response.data[i])
+        }
+        if (response.data[i].typ == 'favourite') {
+          $rootScope.inFavourite.push(response.data[i])
         }
       }
     })
@@ -2130,6 +2099,64 @@ $scope.checkPincode=function(){
 }
 });
 
+app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval,$uibModal,$uibModalInstance, Flash) {
+  $scope.close=function(){
+    $uibModalInstance.close();
+  }
+
+    $scope.sendFeedback = function() {
+      // if ($scope.me==null){
+      //   console.log("aaaaaaaa");
+      //   if ($scope.feedback.email == '') {
+      //     Flash.create('danger', 'Please provide details')
+      //   }
+      //   else{
+      //     var toSend = {
+      //       email: $scope.feedback.email,
+      //       mobile: $scope.feedback.mobile,
+      //       message: $scope.feedback.message,
+      //     }
+      //   }
+      // }
+      // else{
+      //   var toSend = {
+      //     email: $scope.feedback.email,
+      //     mobile: $scope.feedback.mobile,
+      //     message: $scope.feedback.message,
+      //   }
+      // }
+
+
+      console.log("aaaaaaaa");
+      if ($scope.feedback.email == '') {
+        Flash.create('danger', 'Please provide details')
+      } else {
+        console.log($scope.feedback.email, 'aaaaa');
+        var toSend = {
+          email: $scope.feedback.email,
+          mobile: $scope.feedback.mobile,
+          message: $scope.feedback.message,
+        }
+      }
+
+
+      $http({
+        method: 'POST',
+        url: '/api/ecommerce/supportFeed/',
+        data: toSend
+      }).
+      then(function(response) {
+        Flash.create('success', 'Thank you!');
+        $scope.feedback = {
+          email: '',
+          mobile: null,
+          message: ''
+        };
+      }, function(response) {
+        Flash.create('danger', response.status + ' : ' + response.statusText);
+      });
+    }
+});
 
 
 app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval) {

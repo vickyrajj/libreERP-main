@@ -34,14 +34,14 @@ app.controller("businessManagement.productsInventory.store", function($scope, $h
   }
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);
-    console.log($scope.data.tableData);
 
     for (var i = 0; i < $scope.data.tableData.length; i++) {
+      console.log($scope.data.tableData[i],'ffffffffffffffffffff');
       if ($scope.data.tableData[i].pk == parseInt(target)) {
-        if (action == 'edit') {
+        if (action == 'storeEditor') {
           var title = 'Edit : ';
           var appType = 'storeEditor';
-        } else if (action == 'info') {
+        } else if (action == 'storeInfo') {
           var title = 'Details : ';
           var appType = 'storeInfo';
         }
@@ -84,7 +84,81 @@ app.controller("businessManagement.productsInventory.store", function($scope, $h
 
 })
 
+
+app.controller("businessManagement.productsInventory.store.form", function($scope, $http, Flash , $uibModal , $rootScope,$state) {
+  $scope.resetForm = function(){
+      $scope.form = {name:'',mobile:'',email:'',address:'',pincode:''}
+
+  }
+
+  if ($scope.tab != undefined) {
+    $scope.mode = 'edit';
+    console.log('aaaaaaaaaaaa', $scope.tab.data);
+    $scope.form = $scope.tab.data;
+  } else {
+    $scope.mode = 'new';
+    $scope.resetForm()
+  }
+
+
+    $scope.save = function() {
+      console.log('entered');
+      var f = $scope.form;
+
+      if (f.name == null || f.name.length==0) {
+        Flash.create('warning','Please Add Store Name')
+        return
+      }
+      if (f.mobile == null || f.mobile.length==0) {
+        Flash.create('warning','Please Add Mobile Number')
+        return
+      }
+      if (f.email == null || f.email.length==0) {
+        Flash.create('warning','Please Add Email')
+        return
+      }
+      if (f.address == null || f.address.length==0) {
+        Flash.create('warning','Please Add Address')
+        return
+      }
+      if (f.pincode == null || f.pincode.length==0) {
+        Flash.create('warning','Please Add Pincode')
+        return
+      }
+      var url = '/api/POS/store/';
+      if ($scope.mode == 'new') {
+        var method = 'POST';
+      } else {
+        var method = 'PATCH';
+        url += f.pk + '/'
+      }
+
+      var toSend = {
+        name:f.name,
+        mobile:f.mobile,
+        email:f.email,
+        address:f.address,
+        pincode:f.pincode
+      }
+      console.log('dataaaaaaaaaaaaaaaaaaa',toSend);
+
+      $http({
+        method: method,
+        url: url,
+        data: toSend,
+      }).
+      then(function(response) {
+        Flash.create('success', 'Saved')
+        if ($scope.mode == 'new') {
+          $scope.resetForm()
+        }
+      }, function(err) {
+        Flash.create('danger' , 'Some Internal Error')
+      })
+    }
+
+})
+
 app.controller("businessManagement.productsInventory.store.explore", function($scope, $http, Flash , $uibModal , $rootScope,$state) {
-    $scope.data = $scope.data.tableData;
-    console.log($scope.data,'aaaaaaaaaaaaaaa');
+    $scope.data = $scope.tab.data;
 })
