@@ -71,7 +71,10 @@ def customerHomeView(request):
     if request.user.profile.displayPicture==None:
         dp = '/static/images/userIcon.png'
     else:
-        dp = request.user.profile.displayPicture.url
+        try:
+            dp = request.user.profile.displayPicture.url
+        except:
+            dp = '/static/images/userIcon.png'
     return render(request, 'customerHome.html' ,{'user':request.user,'displayPicture':dp})
 
 

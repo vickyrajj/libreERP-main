@@ -227,6 +227,9 @@ app.config(function($stateProvider ){
 
 });
 
+app.controller("controller.home", function($scope , $state,$http) {
+})
+
 app.controller("controller.home.main", function($scope , $state,$http) {
   $scope.sai='kiran'
 
@@ -247,11 +250,11 @@ app.controller("controller.home.main", function($scope , $state,$http) {
   };
 
   $scope.barColours = [{
-    backgroundColor: "#71A0F2",
-    borderColor: "#71A0F2"
+    backgroundColor: "red",
+    borderColor: "red"
   }, {
-    backgroundColor: "#0080FF",
-    borderColor: "#0080FF"
+    backgroundColor: "white",
+    borderColor: "white"
   }];
 
 
@@ -266,6 +269,10 @@ app.controller("controller.home.main", function($scope , $state,$http) {
     $scope.agentChatCount = response.data.agentChatCount
     $scope.barData = response.data.graphData
     $scope.barlabels = response.data.graphLabels
+    $scope.avgChatDuration = response.data.avgChatDuration
+    $scope.agentLeaderBoard = response.data.agentLeaderBoard
+    $scope.avgRatingAll = response.data.avgRatingAll
+    $scope.avgRespTimeAll = response.data.avgRespTimeAll
   });
 
   $scope.modules = $scope.$parent.$parent.modules;

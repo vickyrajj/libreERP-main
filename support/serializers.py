@@ -38,7 +38,27 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
 class SupportChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupportChat
-        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent' )
+        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent','responseTime' )
+    def create(self ,  validated_data):
+        s = SupportChat(**validated_data)
+        lstMsg= SupportChat.objects.latest('created')
+        s.save()
+        responseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
+        if lstMsg.sentByAgent==False and s.sentByAgent==True:
+            s.responseTime = responseTime
+        s.save()
+        chatThObj = ChatThread.objects.filter(uid=s.uid)
+        if len(chatThObj)>0 and s.sentByAgent==True:
+            print chatThObj[0].firstResponseTime ,'frt'
+            if chatThObj[0].firstResponseTime:
+                print 'frt is already there'
+            else:
+                print 'create frt'
+                print lstMsg , s.message
+                print round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
+                chatThObj[0].firstResponseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
+                chatThObj[0].save()
+        return s
 
 class VisitorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -71,7 +91,12 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         c.save()
         return c
     def update(self ,instance, validated_data):
-        for key in ['uid', 'status' , 'customerRating' , 'customerFeedback' , 'company','user']:
+        print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        if 'status' in self.context['request'].data and instance.status=='started':
+            print 'changinggggggggggggggggggg',self.context['request'].data['status']
+            uidMsg = SupportChat.objects.filter(uid=instance.uid)
+            instance.chatDuration = round((uidMsg[uidMsg.count()-1].created - uidMsg[0].created).total_seconds()/60.0 , 2)
+        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

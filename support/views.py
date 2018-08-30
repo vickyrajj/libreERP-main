@@ -42,7 +42,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 from dateutil.relativedelta import relativedelta
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Avg
 
 # Create your views here.
 
@@ -148,7 +148,7 @@ class ReviewFilterCalAPIView(APIView):
 
         toSend = []
         res = []
-        sobj = SupportChat.objects.filter(user__isnull=False)
+        sobj = SupportChat.objects.all()
         if 'customer' in self.request.GET:
             userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
             userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
@@ -172,10 +172,12 @@ class ReviewFilterCalAPIView(APIView):
             print userCustProfile,userCompanyUidList
             sobj = sobj.filter(uid__in=userCompanyUidList)
         # toSend = list(sobj.values())
-        agentsList = list(sobj.values_list('user',flat=True).distinct())
+        uidL = list(sobj.values_list('uid',flat=True).distinct())
+        agentsList = list(ChatThread.objects.filter(~Q(status='archived'),uid__in=uidL).values_list('user',flat=True).distinct())
         print agentsList
         for i in agentsList:
-            agSobj = sobj.filter(user = i)
+            agentuidList = list(ChatThread.objects.filter(~Q(status='archived'),user=i).values_list('uid',flat=True).distinct())
+            agSobj = sobj.filter(uid__in = agentuidList)
             if 'email' in self.request.GET:
                 uidl = list(Visitor.objects.filter(email=self.request.GET['email']).values_list('uid',flat=True).distinct())
                 agUid = list(agSobj.filter(uid__in=uidl).values_list('uid',flat=True).distinct())
@@ -405,33 +407,58 @@ class GetOfflineMessagesViewSet(viewsets.ModelViewSet):
 class GethomeCal(APIView):
     def get(self , request , format = None):
         print '******************************************* holmcal'
+
         today = datetime.datetime.now().date()
         tomorrow = today + relativedelta(days=1)
         lastWeek = today - relativedelta(days=6)
         print today,tomorrow,lastWeek
         chatThreadObj = ChatThread.objects.filter(created__range=(lastWeek,tomorrow))
         if 'perticularUser' in self.request.GET:
-            chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['perticularUser']))
+            if int(self.request.GET['perticularUser'])>0:
+                chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['perticularUser']))
         totalChats = chatThreadObj.count()
         print 'cccccccccccccc',totalChats,chatThreadObj
         agentChatCount = list(chatThreadObj.values('user').annotate(count_val=Count('user')))
         missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
         if 'perticularUser' in self.request.GET:
-            missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
+            if int(self.request.GET['perticularUser'])>0:
+                missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
+        try:
+            a = chatThreadObj.filter(~Q(chatDuration=0)).aggregate(Avg('chatDuration'))
+            avgChatDuration = a['chatDuration__avg']
+        except:
+            avgChatDuration = 0
+        print avgChatDuration,'avgggggggggggggg'
+        agentLeaderBoard = []
+        agL = list(chatThreadObj.filter(user__isnull=False).values_list('user',flat=True).distinct())
+        print agL
+        for i in agL:
+            oneAgentDetails = chatThreadObj.filter(user=i)
+            r = oneAgentDetails.filter(customerRating__isnull=False).aggregate(Avg('customerRating'))
+            rating = r['customerRating__avg'] if r['customerRating__avg'] else 0
+            respTimeAvg = SupportChat.objects.filter(user=i, responseTime__isnull=False).aggregate(Avg('responseTime'))
+            respTimeAvg = respTimeAvg['responseTime__avg'] if respTimeAvg['responseTime__avg'] else 0
+            agentLeaderBoard.append({'agentName':oneAgentDetails[0].user.username,'rating':rating ,'respTimeAvg':respTimeAvg})
+        avgRatingAll=0
+        avgRespTimeAll=0
+        for i in agentLeaderBoard:
+            avgRatingAll+= i['rating']
+            avgRespTimeAll+=i['respTimeAvg']
+        avgRespTimeAll = avgRespTimeAll/len(agentLeaderBoard)
+        avgRatingAll = avgRatingAll/len(agentLeaderBoard)
         graphData = [[],[]]
         graphLabels = []
         for i in range(7):
-            # print i,lastWeek + relativedelta(days=i)
-            # date = lastWeek + relativedelta(days=i)
             dt = lastWeek + relativedelta(days=i)
             dateChat = ChatThread.objects.filter(created__startswith=dt)
             if 'perticularUser' in self.request.GET:
-                dateChat = dateChat.filter(company=int(self.request.GET['perticularUser']))
+                if int(self.request.GET['perticularUser'])>0:
+                    dateChat = dateChat.filter(company=int(self.request.GET['perticularUser']))
             missed = dateChat.filter(user__isnull=True).count() * -1
             received = dateChat.filter(user__isnull=False).count()
             graphData[0].append(received)
             graphData[1].append(missed)
-            print dt,received,missed,datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d')
+            print dt,received,missed,datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'),datetime.datetime.combine(dt, datetime.datetime.min.time())-datetime.datetime.now()
             graphLabels.append(datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'))
         # for idx,i in enumerate(agentChatCount):
         #     if not i['user']:
@@ -441,4 +468,4 @@ class GethomeCal(APIView):
         #         break
         print agentChatCount,graphData
 
-        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels}, status = status.HTTP_200_OK)
+        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels,'avgChatDuration':avgChatDuration,'agentLeaderBoard':agentLeaderBoard,'avgRatingAll':avgRatingAll,'avgRespTimeAll':avgRespTimeAll}, status = status.HTTP_200_OK)
