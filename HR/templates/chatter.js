@@ -278,6 +278,7 @@ var nameSupport = '{{name}}'
 var dpSupport = '{{dp}}'
 var supportBubbleColor = '{{supportBubbleColor}}'
 var firstMessage = `{{firstMessage}}`;
+var iconColor = '#000'
 
 
 if (nameSupport=='None') {
@@ -570,26 +571,44 @@ function getVisitorDetails() {
 
 
 
-function setColors(bubbleColor , windowColor) {
+function setColors(bubbleColor , windowColor , iconColor) {
+  windowColor = windowColor
+  supportBubbleColor = bubbleColor
+  iconColor = iconColor
   setTimeout(function () {
     headerChat.style.backgroundColor = windowColor
     startConvoBtn.style.color =  windowColor
     startConvoBtn.style.borderColor =  windowColor
     headerInit.style.backgroundColor = windowColor
     startConversation.style.borderColor = windowColor
+
+
     chatCircle.style.background = bubbleColor
     callCircle.style.background = bubbleColor
     audioCircle.style.background = bubbleColor
     videoCircle.style.background = bubbleColor
     ticketCircle.style.background = bubbleColor
     closeSupport.style.background = bubbleColor
-    document.getElementById('chatCircleText').style.background = bubbleColor
-    document.getElementById('callCircleText').style.background = bubbleColor
-    document.getElementById('audioCircleText').style.background = bubbleColor
-    document.getElementById('videoCircleText').style.background = bubbleColor
-    document.getElementById('ticketCircleText').style.background = bubbleColor
-    document.getElementById('sy-main-icon').style.background = bubbleColor
-    document.getElementById('Syrow24hSupportText').style.background = bubbleColor
+    var syMainIcon = document.getElementById('sy-main-icon')
+    syMainIcon.style.background = bubbleColor
+
+    document.getElementById('closeChatSvg').style.fill = iconColor
+    // document.getElementById('sy-main-icon').style.background = bubbleColor
+
+     chatCircleText.style.cssText  = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     callCircleText.style.cssText =  'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     audioCircleText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     videoCircleText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     ticketCircleText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     Syrow24hSupportText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+
+    syMainIcon.style.color = iconColor
+    chatCircle.style.color = iconColor
+    callCircle.style.color = iconColor
+    audioCircle.style.color = iconColor
+    videoCircle.style.color = iconColor
+    ticketCircle.style.color = iconColor
+    closeSupport.style.color = iconColor
   }, 1000);
 }
 
@@ -842,33 +861,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
       '</div>'+
       '<div id="closeSupport" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
         '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
-         '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+         '<path id="closeChatSvg" style="fill:'+iconColor+'" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
        '</svg>'+
       '</div>'+
 
       '<div id="supportCircle" >'+
-  			'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
-  				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">24 Hours Support</span>'+
+  			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
+  				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
   				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
   				'<div  id="sy-sub-icons">'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="callCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Callback</span>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Callback</span>'+
   						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="chatCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Chat</span>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Chat</span>'+
   						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="audioCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Audio Call</span>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Audio Call</span>'+
   						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="videoCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Video Call</span>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Video Call</span>'+
   						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:#fff;cursor:pointer" id="ticketCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:#fff" class="sy-text">Ticket</span>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle" style="cursor:pointer;">'+
+  						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Ticket</span>'+
   						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
   					'</div>'+
   				'</div>'+
@@ -941,6 +960,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var closeSupport = document.getElementById('closeSupport');
   var supportCircle = document.getElementById('supportCircle');
   // var isTyping = document.getElementById('isTyping');
+
+
+  var chatCircleText =   document.getElementById('chatCircleText')
+  var callCircleText =   document.getElementById('callCircleText')
+  var audioCircleText =  document.getElementById('audioCircleText')
+  var videoCircleText = document.getElementById('videoCircleText')
+  var ticketCircleText = document.getElementById('ticketCircleText')
+  var Syrow24hSupportText = document.getElementById('Syrow24hSupportText')
 
 
   // isTyping.style.display = "none";
@@ -1331,12 +1358,12 @@ setTimeout(function () {
          if (this.readyState == 4 && this.status == 200) {
            console.log('posted successfully');
            console.log(ratingForm);
-           feedbackText.value = ''
-           star1.checked = false
-           star2.checked = false
-           star3.checked = false
-           star4.checked = false
-           star5.checked = false
+           // feedbackText.value = ''
+           // star1.checked = false
+           // star2.checked = false
+           // star3.checked = false
+           // star4.checked = false
+           // star5.checked = false
            submitStars.style.display = "none";
            thankYouMessage()
          }

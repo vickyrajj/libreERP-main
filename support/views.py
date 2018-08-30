@@ -42,7 +42,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 from dateutil.relativedelta import relativedelta
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Avg
 
 # Create your views here.
 
@@ -148,7 +148,7 @@ class ReviewFilterCalAPIView(APIView):
 
         toSend = []
         res = []
-        sobj = SupportChat.objects.filter(user__isnull=False)
+        sobj = SupportChat.objects.all()
         if 'customer' in self.request.GET:
             userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
             userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
@@ -407,6 +407,7 @@ class GetOfflineMessagesViewSet(viewsets.ModelViewSet):
 class GethomeCal(APIView):
     def get(self , request , format = None):
         print '******************************************* holmcal'
+
         today = datetime.datetime.now().date()
         tomorrow = today + relativedelta(days=1)
         lastWeek = today - relativedelta(days=6)
@@ -422,6 +423,29 @@ class GethomeCal(APIView):
         if 'perticularUser' in self.request.GET:
             if int(self.request.GET['perticularUser'])>0:
                 missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
+        try:
+            a = chatThreadObj.filter(~Q(chatDuration=0)).aggregate(Avg('chatDuration'))
+            avgChatDuration = a['chatDuration__avg']
+        except:
+            avgChatDuration = 0
+        print avgChatDuration,'avgggggggggggggg'
+        agentLeaderBoard = []
+        agL = list(chatThreadObj.filter(user__isnull=False).values_list('user',flat=True).distinct())
+        print agL
+        for i in agL:
+            oneAgentDetails = chatThreadObj.filter(user=i)
+            r = oneAgentDetails.filter(customerRating__isnull=False).aggregate(Avg('customerRating'))
+            rating = r['customerRating__avg'] if r['customerRating__avg'] else 0
+            respTimeAvg = SupportChat.objects.filter(user=i, responseTime__isnull=False).aggregate(Avg('responseTime'))
+            respTimeAvg = respTimeAvg['responseTime__avg'] if respTimeAvg['responseTime__avg'] else 0
+            agentLeaderBoard.append({'agentName':oneAgentDetails[0].user.username,'rating':rating ,'respTimeAvg':respTimeAvg})
+        avgRatingAll=0
+        avgRespTimeAll=0
+        for i in agentLeaderBoard:
+            avgRatingAll+= i['rating']
+            avgRespTimeAll+=i['respTimeAvg']
+        avgRespTimeAll = avgRespTimeAll/len(agentLeaderBoard)
+        avgRatingAll = avgRatingAll/len(agentLeaderBoard)
         graphData = [[],[]]
         graphLabels = []
         for i in range(7):
@@ -444,4 +468,4 @@ class GethomeCal(APIView):
         #         break
         print agentChatCount,graphData
 
-        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels}, status = status.HTTP_200_OK)
+        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels,'avgChatDuration':avgChatDuration,'agentLeaderBoard':agentLeaderBoard,'avgRatingAll':avgRatingAll,'avgRespTimeAll':avgRespTimeAll}, status = status.HTTP_200_OK)

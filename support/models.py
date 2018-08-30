@@ -45,6 +45,7 @@ class SupportChat(models.Model):
     message = models.CharField(max_length = 500 , null = True)
     attachmentType =  models.CharField(max_length = 50, null = True)
     sentByAgent = models.BooleanField(default = False)
+    responseTime = models.FloatField(null=True, blank=True)
 
 class Visitor(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -81,7 +82,8 @@ class ChatThread(models.Model):
     user = models.ForeignKey(User , related_name = 'chatAgentUser' , null = True, blank=True)
     userDevice = models.CharField(max_length = 100 , null = True , blank=True)
     userDeviceIp = models.CharField(max_length = 20 , null = True , blank=True)
-    # chatDuration = models.Char
+    chatDuration = models.FloatField(null=True, blank=True , default=0)
+    firstResponseTime = models.FloatField(null=True, blank=True)
 
 class Documentation(models.Model):
     created = models.DateTimeField(auto_now_add = True)

@@ -43,7 +43,7 @@
                 <h4>Agent Leaderboard &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
               </div>
             </div>
-            <div class="row col-md-12" >
+            <div class="row col-md-12">
               <table class="table" style="font-size:18px">
                 <thead>
                   <tr style="color:#43c8b0">
@@ -97,7 +97,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <h3>12:24</h3>
+                <h3>{{avgChatDuration.toFixed(2)}} Min</h3>
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <h3>4.9</h3>
+                <h3>{{avgRatingAll.toFixed(2)}}</h3>
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <h3>00:50</h3>
+                <h3>{{avgRespTimeAll.toFixed(2)}} Min</h3>
               </div>
             </div>
           </div>
@@ -172,17 +172,33 @@
                 <h4>Agent Leaderboard &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
               </div>
             </div>
-            <div class="row col-md-12" >
+            <div class="row col-md-12">
               <table class="table" style="font-size:18px">
+
+
+                <!-- <tbody>
+                  <tr ng-repeat="agent in agentChatCount" ng-if="agent.user != none">
+                    <td style="border: 0;">{{agent.user | getName}}</td>
+                    <td style="border: 0;">{{agent.count_val}}</td>
+                  </tr>
+                </tbody> -->
                 <thead>
                   <tr style="color:#43c8b0">
                     <th style="border: 0;">Name</th>
-                    <th style="border: 0;">ART</th>
-                    <th style="border: 0;">AFRT</th>
+                    <th style="border: 0;">ART (mins)</th>
+                    <th style="border: 0;">AFRT (mins)</th>
                     <th style="border: 0;">Rating</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <tr ng-repeat="alb in agentLeaderBoard">
+                    <td style="border: 0;">{{alb.agentName}}</td>
+                    <td style="border: 0;">{{alb.respTimeAvg.toFixed(2)}}</td>
+                    <td style="border: 0;">Defaultson</td>
+                    <td style="border: 0;">{{alb.rating.toFixed(2)}}</td>
+                  </tr>
+                </tbody>
+                <!-- <tbody>
                   <tr>
                     <td style="border: 0;">Default</td>
                     <td style="border: 0;">Defaultson</td>
@@ -219,7 +235,7 @@
                     <td style="border: 0;">Defaultson</td>
                     <td style="border: 0;">Defaultson</td>
                   </tr>
-                </tbody>
+                </tbody> -->
               </table>
             </div>
           </div>
@@ -371,7 +387,7 @@
 
 
 
-          </div>
+  </div>
 
 
-        </div>
+</div>

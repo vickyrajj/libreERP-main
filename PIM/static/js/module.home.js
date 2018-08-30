@@ -269,6 +269,10 @@ app.controller("controller.home.main", function($scope , $state,$http) {
     $scope.agentChatCount = response.data.agentChatCount
     $scope.barData = response.data.graphData
     $scope.barlabels = response.data.graphLabels
+    $scope.avgChatDuration = response.data.avgChatDuration
+    $scope.agentLeaderBoard = response.data.agentLeaderBoard
+    $scope.avgRatingAll = response.data.avgRatingAll
+    $scope.avgRespTimeAll = response.data.avgRespTimeAll
   });
 
   $scope.modules = $scope.$parent.$parent.modules;
