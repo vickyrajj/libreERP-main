@@ -434,7 +434,7 @@ class GethomeCal(APIView):
             received = dateChat.filter(user__isnull=False).count()
             graphData[0].append(received)
             graphData[1].append(missed)
-            print dt,received,missed,datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'),datetime.datetime.combine(dt, datetime.datetime.min.time())-datetime.datetime.now()
+            print dt,received,missed,datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'),round((datetime.datetime.now()-datetime.datetime.combine(dt, datetime.datetime.min.time())).total_seconds() / 60.0 ,2)
             graphLabels.append(datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'))
         # for idx,i in enumerate(agentChatCount):
         #     if not i['user']:
