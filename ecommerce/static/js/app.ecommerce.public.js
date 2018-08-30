@@ -476,46 +476,79 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
   $scope.addToCart = function(inputPk) {
     console.log('coming in addddddddddddddd');
-    dataToSend = {
-      product: inputPk,
-      user: getPK($scope.me.url),
-      qty: 1,
-      typ: 'cart',
-    }
+
     console.log(dataToSend);
     console.log('in cart', $rootScope.inCart);
 
 
-    for (var i = 0; i < $rootScope.inCart.length; i++) {
-      if ($rootScope.inCart[i].product.pk == dataToSend.product) {
-        if ($rootScope.inCart[i].typ == 'cart') {
-          Flash.create('warning', 'This Product is already in cart');
-          return
-        } else {
-          $http({
-            method: 'PATCH',
-            url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-            data: {
-              typ: 'cart'
-            }
-          }).
-          then(function(response) {
-            Flash.create('success', 'Product added to cart');
-          })
-          $rootScope.inCart[i].typ = 'cart'
-          return
-        }
+    // for (var i = 0; i < $rootScope.inCart.length; i++) {
+    //   if ($rootScope.inCart[i].product.pk == dataToSend.product) {
+    //     if ($rootScope.inCart[i].typ == 'cart') {
+    //       Flash.create('warning', 'This Product is already in cart');
+    //       return
+    //     } else {
+    //       $http({
+    //         method: 'PATCH',
+    //         url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+    //         data: {
+    //           typ: 'cart'
+    //         }
+    //       }).
+    //       then(function(response) {
+    //         Flash.create('success', 'Product added to cart');
+    //       })
+    //       $rootScope.inCart[i].typ = 'cart'
+    //       return
+    //     }
+    //
+    //   }
+    // }
 
-      }
-    }
     $http({
-      method: 'POST',
-      url: '/api/ecommerce/cart/',
-      data: dataToSend
+      method: 'GET',
+      url: '/api/ecommerce/cart/?user=' + $scope.me.pk
     }).
     then(function(response) {
-      Flash.create('success', 'Product added in cart');
-      $rootScope.inCart.push(response.data);
+      for (var i = 0; i < response.data.length; i++) {
+        if (response.data[i].product.pk ==dataToSend.product) {
+          if (response.data[i].typ == 'cart') {
+            Flash.create('warning', 'This Product is already in cart');
+            return
+          } else if (response.data[i].typ == 'favourite') {
+            console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+            $http({
+              method: 'PATCH',
+              url: '/api/ecommerce/cart/' + response.data[i].pk + '/',
+              data: {
+                qty: 1,
+                typ: 'cart'
+              }
+            }).
+            then(function(response) {
+              Flash.create('success', 'Product added to cart');
+              $rootScope.inCart.push(response.data);
+            })
+            response.data[i].typ = 'cart'
+            return
+          }
+        }
+      }
+      dataToSend = {
+        product: inputPk,
+        user: getPK($scope.me.url),
+        qty: 1,
+        typ: 'cart',
+      }
+      $http({
+        method: 'POST',
+        url: '/api/ecommerce/cart/',
+        data: dataToSend
+      }).
+      then(function(response) {
+        Flash.create('success', 'Product added in cart');
+        $rootScope.inCart.push(response.data);
+        return
+      })
     })
   }
 
@@ -2087,6 +2120,7 @@ app.controller('controller.ecommerce.pincodeEnquiry.modal', function($scope, $ro
   $scope.close=function(){
     $uibModalInstance.close();
   }
+  $scope.form={pincode:''}
 
 $scope.checkPincode=function(){
   if ($scope.form.pincode.toString().length<6){
@@ -2095,8 +2129,10 @@ $scope.checkPincode=function(){
  $http.get('/api/POS/store/?pincode=' + $scope.form.pincode ).
   then(function(response) {
     console.log(response.data);
+    $scope.stores=response.data
   })
 }
+console.log($scope.stores,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakkkkkkkkkkkkkkkkkkk');
 });
 
 app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval,$uibModal,$uibModalInstance, Flash) {

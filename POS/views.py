@@ -54,8 +54,13 @@ class StoreViewSet(viewsets.ModelViewSet):
     filter_fields = ['name' ]
     def get_queryset(self):
         toReturn = Store.objects.all()
+        # if 'pincode' in self.request.GET:
+        #     toReturn = toReturn.filter(pincode__icontains=int(self.request.GET['pincode']))
+        # return toReturn
         if 'pincode' in self.request.GET:
-            toReturn = toReturn.filter(pincode__icontains=int(self.request.GET['pincode']))
+            # minno = int(self.request.GET['pincode'])-50
+            # maxno = int(self.request.GET['pincode'])+50
+            toReturn = toReturn.filter(pincode__range=(int(self.request.GET['pincode'])-50,int(self.request.GET['pincode'])+50))
         return toReturn
 
 class StoreQtyViewSet(viewsets.ModelViewSet):

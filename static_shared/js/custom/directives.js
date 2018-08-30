@@ -779,7 +779,7 @@ app.directive('productCard', function() {
         }
       }
       $scope.decrement = function() {
-        $scope.list.added_cart = 0
+        $scope.list.added_cart --
           for (var i = 0; i < $rootScope.inCart.length; i++) {
             if ($rootScope.inCart[i].product.pk == $scope.list.pk) {
               if ($rootScope.inCart[i].typ == 'cart') {

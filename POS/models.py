@@ -59,7 +59,7 @@ class Store(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     name = models.CharField(max_length = 100 , null = False)
     address = models.CharField(max_length = 500 , null = False)
-    pincode = models.CharField(null= True , max_length = 7)
+    pincode = models.PositiveIntegerField(null= True )
     mobile = models.CharField(max_length = 12 , null = True)
     email = models.EmailField(null = True)
 
