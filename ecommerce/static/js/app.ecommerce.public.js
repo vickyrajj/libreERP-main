@@ -1533,12 +1533,14 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   }
   $scope.fetchaddress()
   $scope.ChangeAdd = function(idx) {
+    $scope.addressview =  true
     mob = $scope.data.address.mobile
     $scope.data.address = $scope.savedAddress[idx]
     $scope.data.address.mobile = mob
     // $scope.data.address.landMark = ''
   }
   $scope.resetAdd = function() {
+    $scope.addressview =  true
     $scope.data.address = {
       street: '',
       city: '',
@@ -1549,6 +1551,11 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       landMark: ''
     }
   }
+  $scope.show = function(idx) {
+  $scope.addressview =  false
+  $scope.idx=idx
+  }
+
   $scope.saveAdd = function() {
     if ($scope.data.address.street.length == 0) {
       Flash.create('danger', 'Please Fill Address Details');
@@ -1709,6 +1716,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       }
       console.log('aaaaaaaaaaaaaaaaaaaaaaaaaa', $scope.dataToSend.products);
     } else if ($scope.data.stage == 'shippingDetails') {
+
       console.log($scope.data.address);
       if ($scope.data.address.street == '' || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == '' || $scope.data.address.mobile == '' || $scope.data.address.landMark == '') {
         Flash.create('warning', 'Please fill all details')
@@ -1979,8 +1987,39 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     console.log($scope.slideMobile.banners);
   })
   $scope.changeSlide = function(index) {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaa',index);
     $scope.slide.active = index;
   }
+
+  $scope.change = function(value) {
+    if(value=="next"){
+      if ($scope.slide.active == undefined) {
+        $scope.slide.active = 0
+      }
+      if ($scope.slide.active == $scope.slide.lastbanner) {
+        $scope.slide.active = 0;
+      } else {
+        $scope.slide.active += 1;
+      }
+    }
+    else if(value=="previous"){
+      console.log($scope.slide.active );
+    console.log($scope.slide.active , $scope.slide.lastbanner);
+      if ($scope.slide.active == undefined) {
+        $scope.slide.active = 0;
+      } else {
+        $scope.slide.active -= 1;
+      }
+
+      if ($scope.slide.active < 0) {
+        console.log("kkkkkkkkkkkkkkkkk");
+        $scope.slide.active = $scope.slide.lastbanner
+      }
+    }
+  }
+
+
+
 
   $interval(function() {
     if ($scope.slide.active == undefined) {
@@ -1991,7 +2030,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     } else {
       $scope.slide.active += 1;
     }
-  }, 5000);
+  }, 3000);
 
 
   $scope.changeSlideMobile = function(index) {
@@ -2015,6 +2054,16 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   //     $scope.slideMobile.active = 0;
   //   }
   // }, 3000);
+
+
+  // $scope.increaseSlide = function(index) {
+  //   console.log(index,'aaaaaaaaa');
+  //   $scope.banners= index+1;
+  // }
+  //
+  // $scope.decreaseSlide = function(index) {
+  //   $scope.slide.active = index-1;
+  // }
 
   $scope.feedback = {
     email: '',

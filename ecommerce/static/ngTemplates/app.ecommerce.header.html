@@ -17,7 +17,7 @@
   </div>
 
   <div class="col-md-1 text-center dropdown hidden-xs hidden-sm">
-    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46)" ng-if="me.pk" > {{me.first_name}} <i class="fa fa-user"></i></span>
+    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46)" ng-if="me.pk" > {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 20px;" alt=""></span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
       <li><a ui-sref="account.orders" style="color:rgb(24, 89, 46)">Orders</a></li>
@@ -30,7 +30,7 @@
     <spn>
     <span ng-click="$state.go('account.cart')" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46);margin-right: -4px;" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
     <!-- <span style="background-color:green;position:relative;text-align:center;  justify-content: center;  top:-10px;  border-radius: 50%;  right: 11px;padding:3px;color:white" ng-if="inCart.length>0">{{inCart.length}}</span> -->
-      <span style="background-color:green;height: 20px;width: 25px;  border-radius: 50%;color:white;display: table-cell;text-align: center;vertical-align: middle;" ng-if="inCart.length>0" class="text-center">{{inCart.length}}</span>
+      <span style="background-color:green;height: 10%;width: 25px;  border-radius: 50%;color:white;display: table-cell;text-align: center;vertical-align: middle;" ng-if="inCart.length>0" class="text-center">{{inCart.length}}</span>
 </span>
   </div>
 
@@ -54,13 +54,10 @@
     <span ng-click="$state.go('account.cart')" style="cursor:pointer" >  Cart <i class="fa fa-shopping-cart fa-lg"></i>
       <!-- <span style="background-color:green;position:relative;text-align:center;  justify-content: center;  top:-11px;  border-radius: 50%;  right: 11px;padding:3px;color:white" ng-if="inCart.length>0">{{inCart.length}}</span> -->
           <span style="background-color:green;height: 20px;width: 20px;  border-radius: 50%;display: table-cell;text-align: center;vertical-align: middle;color:white;position:relative;right: 5px" ng-if="inCart.length>0" class="text-center">{{inCart.length}}</span>
-
-
-
     </span>
   </div>
-  <div class="col-xs-4 text-center dropdown hidden-lg hidden-md " style="padding-top: 18px;">
-    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;color:rgb(24, 89, 46)" ng-if="me.pk" > {{me.first_name}} <i class="fa fa-user fa-lg"></i></span>
+  <div class="col-xs-4 text-center dropdown hidden-lg hidden-md " style="padding-top: 4%;">
+    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;color:rgb(24, 89, 46)" ng-if="me.pk" > {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 15px;" alt=""></span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px; left:-80px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
       <li><a ui-sref="account.orders" style="color:rgb(24, 89, 46)" >Orders</a></li>
@@ -98,8 +95,34 @@
     </ul>
   </div>
 </div>
-<div ng-if="$state.is('ecommerce')&&!bannerText" style="position:relative;height:60vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
-  <img style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
+<!-- <div ng-if="$state.is('ecommerce')&&!bannerText" style="position:relative;height:60vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
+  <img style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;position:absolute;z-index:none;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
+  <a href="#" class="previous round text-right" style="background-color: #4CAF50;color: white;text-decoration: none;display: inline-block; padding: 8px 16px;" ng-click="changeSlide($index)">&#8249; </a>
+  <a href="#" class="previous round" style="background-color: #4CAF50;color: white;text-decoration: none;display: inline-block; padding: 8px 16px;">&#8250;</a> -->
+
+  <!-- <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:4vh;margin:0px;">
+    <ul style="padding:0px;">
+      <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:{{100/slide.banners.length}}%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
+        <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;margin-right: 105px;">
+          {{s.title | uppercase}}
+        </span>
+      </li>
+    </ul>
+  </div> -->
+<!-- </div> -->
+
+<div ng-if="$state.is('ecommerce')&&!bannerText" style="position:relative;height:60vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm ">
+
+    <img style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;position:absolute;z-index:none;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/><br/>
+    <div class="col-md-12" style="padding-left:0px">
+      <div class="col-md-6 text-left" style="margin-left:0px;left:0px;padding-top:8%;padding-left:0px">
+    <button  class="previous round text-right" style="background-color:white;color: black;position:absolute;font-size:50px;padding-right:10px;border:0px white; box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px" ng-click="change('previous')">&#8249; </button>
+  </div>
+    <div class="col-md-6 text-right" style="margin-left:0px;left:0px;padding-top:8%;">
+    <button  class="next round text-left" style="background-color: white;color: black;position:absolute;float: left;font-size:50px;padding-right:10px;margin-right:10px;border:0px white;box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px"  ng-click="change('next')">&#8250;</button>
+  </div>
+  </div>
+
   <!-- <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:4vh;margin:0px;">
     <ul style="padding:0px;">
       <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:{{100/slide.banners.length}}%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
@@ -131,7 +154,7 @@
 
 
 <div ng-if="$state.is('ecommerce')&&!bannerText" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
-  <img class="anim-in-out" data-anim-speed="100" style="width:100%;cursor:pointer;height:50vh" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
+  <!-- <img class="anim-in-out" data-anim-speed="100" style="width:100%;cursor:pointer;height:50vh" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/> -->
 
 <!-- <div ng-if="$state.is('ecommerce')" style="position:relative;height:88vh ;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
   <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slideMobile.banners[slideMobile.active].state , slideMobile.banners[slideMobile.active].params)" style="width:100%;" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}"/> -->
@@ -145,6 +168,15 @@
       </li>
     </ul>
   </div> -->
+  <img style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;position:absolute;z-index:none;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/><br/>
+  <div class="col-xs-12" style="padding-left:0px">
+    <div class="col-xs-6 text-left" style="margin-left:0px;left:0px;padding-top:8%;padding-left:0px">
+  <button href="#" class="previous round text-right" style="background-color:white;color: black;position:absolute;font-size:25px;padding-right:10px;border:0px white;height:75px" ng-click="change('previous')">&#8249; </button>
+</div>
+  <div class="col-xs-6 text-right" style="margin-left:0px;padding-top:8%;">
+  <button href="#" class="next round text-left" style="background-color: white;color: black;position:absolute;float: left;font-size:25px;padding-right:23px;padding-left:10pxborder:0px white;height:75px"  ng-click="change('next')">&#8250;</button>
+</div>
+</div>
 </div>
 
 <!-- <div ng-init="showFeedback=false;" class="bg-white card" style="position:fixed; top:35vh;right:{{!showFeedback ? '0' : '0'}}px;transition:right 0.1s linear;
