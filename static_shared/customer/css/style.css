@@ -82,13 +82,7 @@ body {
   overflow-x: hidden;
   color: #67757c;
   font-weight: 300; }
-  .toc ol{counter-reset: item}
-  .toc li{
-    display: block
-  }
-  .toc li:before{
-  content: counters(item, ".") " "; counter-increment: item
-  }
+
 
 html {
   position: relative;
@@ -166,6 +160,21 @@ html body .mdi:before, html body .mdi-set {
 .nav-tabs.nav-justified>.dropdown .dropdown-menu {
  top:auto;
  left:auto
+}
+
+.toc ol{counter-reset: item}
+.toc li{
+  display: block
+}
+.toc li:before{
+content: counters(item, ".") " "; counter-increment: item
+}
+
+.versions .active{
+  background-color:   #3e72d9;
+}
+.versions button:hover{
+  background-color:   #3e72d9;
 }
 
 /*******************

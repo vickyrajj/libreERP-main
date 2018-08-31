@@ -220,6 +220,54 @@ app.controller("businessManagement.customers.document", function($scope, $state,
     })
   }
 
+
+
+  $scope.$watch('docForm.text' , function(newValue , oldValue) {
+    var span = document.createElement('span');
+    span.innerHTML = newValue;
+    // console.log(span.innerHTML);
+    $scope.h1_array=[{}];
+    $scope.h2_array=[{}];
+
+          var nodes=span.getElementsByTagName('h1');
+          for(var i=0;i<nodes.length;i++){
+            var current=nodes[i].outerHTML;
+            var index = newValue.indexOf(current);
+            var tempString = newValue.substring(0, index);
+            var lineNumber = tempString.split('\n').length;
+            if(span.getElementsByTagName('h1')[i].innerHTML!=="&nbsp;")
+            $scope.h1_array.push({title:nodes[i].innerHTML,index_val:lineNumber,childeren:[{}]});
+              // console.log($scope.h1_array);
+          }
+          var nodes_h2=span.getElementsByTagName('h2');
+          for(var j=0;j<nodes_h2.length;j++){
+            var current=nodes_h2[j].outerHTML;
+            var index = newValue.indexOf(current);
+            var tempString = newValue.substring(0, index);
+            var lineNumber = tempString.split('\n').length;
+            if(span.getElementsByTagName('h2')[j].innerHTML!=="&nbsp;")
+            $scope.h2_array.push({title:nodes_h2[j].innerHTML,index_val:lineNumber});
+            // console.log($scope.h2_array);
+          }
+
+          if($scope.h1_array.length>1){
+            var ind=1;
+          for(var k=1;k<$scope.h2_array.length;k++){
+            while(ind < $scope.h1_array.length && $scope.h2_array[k].index_val > $scope.h1_array[ind].index_val){
+              ind=ind+1;
+            }
+            $scope.h1_array[--ind].childeren.push($scope.h2_array[k]);
+            }
+          }
+  }, true)
+
+          $scope.versions = ['V1', 'V2', 'V3', 'V4'];
+          $scope.activeVersion = $scope.versions[0];
+          $scope.setActive = function(version) {
+              $scope.activeVersion = version
+           }
+
+
   // $scope.openChartPopoup = function(pk){
   //   $uibModal.open({
   //     templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',

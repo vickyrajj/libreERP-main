@@ -308,10 +308,16 @@ app.controller("app.customer.knowledgeBase", function($scope ,$state, $http,$roo
           }
   }, true)
 
-$scope.h1tag=function(){
-  var index = docForm.text.indexOf('console');
-  console.log(index);
-}
+// $scope.h1tag=function(){
+//   var index = docForm.text.indexOf('console');
+//   console.log(index);
+// }
+
+            $scope.versions = ['V1', 'V2', 'V3', 'V4'];
+            $scope.activeVersion = $scope.versions[0];
+            $scope.setActive = function(version) {
+                $scope.activeVersion = version
+             }
 
 })
 

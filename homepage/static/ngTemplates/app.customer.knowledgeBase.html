@@ -104,30 +104,14 @@
                   <uib-tab-heading>
                       Versions
                   </uib-tab-heading>
-                    vikas
+                  <div class="versions" style="margin:30px 0px">
+                    <div ng-repeat='version in versions' >
+                            <button  style="width:100%;padding:5px"ng-class="{active : activeVersion === version}" ng-click="setActive(version)"> {{ version }}</button>
+                    </div>
+
+                  </div>
               </uib-tab>
             </uib-tabset>
-            <!-- <div class="container">
-              <ul class="nav nav-pills">
-                <li class="active"><a data-toggle="pill" ng-click="type='article'">Article</a></li>
-                <li><a data-toggle="pill" ng-click="type='toc'">TOC</a></li>
-                <li><a data-toggle="pill" ng-click="type='versions'">Versions</a></li>
-              </ul>
-              <div class="tab-content">
-                <div ng-if="type=='article'" class="tab-pane fade in active">
-                  <h3>HOME</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-                <div  ng-if="type=='toc'" class="tab-pane fade">
-                  <h3>Menu 1</h3>
-                  <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                </div>
-                <div  ng-if="type=='versions'" class="tab-pane fade">
-                  <h3>Menu 2</h3>
-                  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-                </div>
-              </div>
-            </div> -->
           </div>
         </div>
         <div class="row">
