@@ -375,6 +375,14 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
   }
 
 
+
+             $scope.processSearch = function(val){
+              return $http({method : 'GET' , url : '/api/social/productTag/?txt__contains=' + val}).
+              then(function(response) {
+                return response.data;
+              })
+            }
+
 })
 
 app.controller("cutomerController", function($scope, $http, $rootScope) {
