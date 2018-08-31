@@ -171,10 +171,10 @@ content: counters(item, ".") " "; counter-increment: item
 }
 
 .versions .active{
-  background-color:   #3e72d9;
+  background-color:   #ffb22b;
 }
 .versions button:hover{
-  background-color:   #3e72d9;
+  background-color:   #ffb22b;
 }
 
 /*******************

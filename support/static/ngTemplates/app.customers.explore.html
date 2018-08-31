@@ -46,7 +46,24 @@
             </div>
           </div>
         </div>
+      </div><br><br>
+      <div class="col-md-8">
+        <div class="input-group">
+        <input type="text" class="form-control" placeholder="Process" ng-model="process_text">
+        <span class="input-group-addon" ng-click="add_process1()">Add</span>
+        </div>
+        <div class="row">
+        <div class="col-md-6" ng-repeat="pl in process_list">
+        <div class="container-fluid card">
+          <i class="fa fa-times fa-lg pull-right" style="padding-top:10px;cursor:pointer" ng-click="close_process($index)"></i>
+          <div class="row container-fluid" style="padding-top:10px;">
+            <h4>{{pl}}</h4>
+          </div>
+        </div>
       </div>
+    </div>
+      </div>
+
       <!-- <div class="row" style="margin-top:10px;" ng-if="compDetails.contactPerson.pk!=none">
       </div> -->
     </div>

@@ -132,6 +132,29 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
 
   }
 
+
+  $scope.process_list=[];
+  $scope.add_process1=function(){
+      if ($scope.process_text.length > 0) {
+        // Flash.create('warning' , 'Mention Some process')
+        // return
+        for (var i = 0; i < $scope.process_list.length; i++) {
+          if ($scope.process_list[i] == $scope.process_text) {
+            Flash.create('warning' , 'This process Is Already Added')
+            return
+          }
+        }
+        $scope.process_list.push($scope.process_text)
+        $scope.process_text= ''
+      }
+      // if (typeof $scope.producrForm.selling == 'object') {
+
+    }
+    $scope.close_process = function(indx){
+    // console.log('closingl',indx,$scope.process_list);
+    $scope.process_list.splice(indx,1)
+  }
+
 })
 
 app.controller("businessManagement.customers.document", function($scope, $state, $users, $stateParams, $http, Flash , $uibModal) {
@@ -574,5 +597,6 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
 
   }
+
 
 })

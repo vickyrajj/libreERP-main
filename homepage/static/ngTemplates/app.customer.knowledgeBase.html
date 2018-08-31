@@ -76,11 +76,11 @@
                       <option>erp</option>
                       <option>random</option>
                     </select>
-                    <p style="color:red;margin:20px 0px">Display permission</p>
-                        <ul class="list-group">
-                          <li class="active"><a href="#">Agents</a></li>
-                          <li><a href="#">Reg</a></li>
-                          <li><a href="#">All</a></li>
+                    <p style="color:red;margin:20px 0px;">Display permission</p>
+                        <ul class="list-inline versions"  style="font-size:15px">
+                          <li  style="padding:0px"><button  ng-class="{active : agents}" ng-click="agents=true">Agents</button></li>
+                          <li style="padding:0px"><button ng-class="{active : regd}" ng-click="regd=true">Reg. users</button></li>
+                          <li style="padding:0px"><button ng-class="{active : all}" ng-click="all=true">All users</button></li>
                         </ul>
 
                   </div>
@@ -106,7 +106,7 @@
                   </uib-tab-heading>
                   <div class="versions" style="margin:30px 0px">
                     <div ng-repeat='version in versions' >
-                            <button  style="width:100%;padding:5px"ng-class="{active : activeVersion === version}" ng-click="setActive(version)"> {{ version }}</button>
+                            <button  style="width:100%;padding:7px;"ng-class="{active : activeVersion === version}" ng-click="setActive(version)"> {{ version }}</button>
                     </div>
 
                   </div>
