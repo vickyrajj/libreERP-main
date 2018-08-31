@@ -1532,8 +1532,15 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     })
   }
   $scope.fetchaddress()
-  $scope.ChangeAdd = function(idx) {
-    $scope.addressview =  true
+  $scope.ChangeAdd = function(idx,value) {
+    console.log(value);
+    if(value=="use"){
+      $scope.addressview =  false
+        Flash.create('success', 'Address Added');
+    }
+    else if(value=="edit"){
+      $scope.addressview =  true
+    }
     mob = $scope.data.address.mobile
     $scope.data.address = $scope.savedAddress[idx]
     $scope.data.address.mobile = mob
@@ -1541,6 +1548,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   }
   $scope.resetAdd = function() {
     $scope.addressview =  true
+    $scope.idx = null
     $scope.data.address = {
       street: '',
       city: '',
