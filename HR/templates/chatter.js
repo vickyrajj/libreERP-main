@@ -1381,7 +1381,7 @@ setTimeout(function () {
 
 
   agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >'+nameSupport+'</p>'
-  onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
+  onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
 
   closeSupport.style.display = "none";
 
@@ -1492,10 +1492,17 @@ setTimeout(function () {
 
       if (message.message!=null && message.attachmentType!=null) {
         console.log('youtube link');
-        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'" frameborder="0" allowfullscreen></iframe>'
+        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'"frameborder="0" allowfullscreen></iframe>'
         var msgDiv =attachedFile
       }else {
-        var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
+        if (message.attachment==null) {
+          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
+          msgDiv = pTag
+        }else {
+          msgDiv = attachedFile
+        }
+        //
+        // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
       }
 
 
@@ -1648,10 +1655,9 @@ setTimeout(function () {
     }
 
 
-
     setTimeout(function(){
       onlineAgent();
-    },1000 )
+    },2000 )
 
     setInterval(function(){
       onlineAgent();
@@ -1770,9 +1776,6 @@ setTimeout(function () {
 
           // var sendEmail = document.getElementById('sendEmail');
           // sendEmail();
-
-
-
           }
       }, 4000)
 

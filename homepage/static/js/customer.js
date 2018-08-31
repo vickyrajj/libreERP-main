@@ -324,6 +324,7 @@ app.controller("cutomerController", function($scope , $http,$rootScope) {
     //   console.log(response.data);
     //   $scope.cpForm = response.data
     // });
+    console.log(id ,'ffffffffffffffffffffffffffffffffffffffffff');
     $http({
       method: 'GET',
       url: '/api/support/gethomeCal/?perticularUser='+id,
@@ -334,7 +335,13 @@ app.controller("cutomerController", function($scope , $http,$rootScope) {
       $scope.missedChats = response.data.missedChats
       $scope.agentChatCount = response.data.agentChatCount
       $scope.barData = response.data.graphData
+      console.log($scope.barData);
       $scope.barlabels = response.data.graphLabels
+      $scope.avgChatDuration = response.data.avgChatDuration
+      $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
+      $scope.avgRatingAll = response.data.avgRatingAll
+      $scope.avgRespTimeAll = response.data.avgRespTimeAll
+      $scope.changeInChat = response.data.changeInChat
     });
   });
 });

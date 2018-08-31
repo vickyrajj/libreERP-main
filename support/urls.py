@@ -13,6 +13,7 @@ router.register(r'documentation' , DocumentationViewSet , base_name = 'documenta
 router.register(r'getChatTranscripts' , GetChatTranscriptsViewSet , base_name = 'getChatTranscripts')
 router.register(r'getVisitorDetails' , GetVisitorDetailsViewSet , base_name = 'getVisitorDetails')
 router.register(r'getOfflineMessages' , GetOfflineMessagesViewSet , base_name = 'getOfflineMessages')
+router.register(r'documentVersion' , DocumentVersionViewSet , base_name = 'documentVersion')
 
 
 urlpatterns = [

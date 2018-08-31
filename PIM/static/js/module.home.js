@@ -263,16 +263,20 @@ app.controller("controller.home.main", function($scope , $state,$http) {
     url: '/api/support/gethomeCal/',
   }).
   then(function(response) {
-    console.log(response.data,'dddddddddddd',typeof response.data);
     $scope.totalChats = response.data.totalChats
     $scope.missedChats = response.data.missedChats
     $scope.agentChatCount = response.data.agentChatCount
     $scope.barData = response.data.graphData
+    console.log($scope.barData);
     $scope.barlabels = response.data.graphLabels
+    console.log($scope.barlabels);
     $scope.avgChatDuration = response.data.avgChatDuration
     $scope.agentLeaderBoard = response.data.agentLeaderBoard
     $scope.avgRatingAll = response.data.avgRatingAll
     $scope.avgRespTimeAll = response.data.avgRespTimeAll
+    $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
+    $scope.changeInChat = response.data.changeInChat
+    console.log($scope.agentLeaderBoard);
   });
 
   $scope.modules = $scope.$parent.$parent.modules;

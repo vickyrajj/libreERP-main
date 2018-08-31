@@ -54,8 +54,6 @@ class SupportChatSerializer(serializers.ModelSerializer):
                 print 'frt is already there'
             else:
                 print 'create frt'
-                print lstMsg , s.message
-                print round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
                 chatThObj[0].firstResponseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
                 chatThObj[0].save()
         return s
@@ -110,3 +108,13 @@ class DocumentationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Documentation
         fields = ( 'pk' , 'created' , 'title', 'customer' , 'text' , 'docs')
+
+class DocumentVersionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentVersion
+        fields = ( 'pk' , 'created' , 'text', 'parent')
+
+class CompanyProcessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyProcess
+        fields = ( 'pk' , 'created' , 'text', 'service')

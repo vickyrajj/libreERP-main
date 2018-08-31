@@ -170,6 +170,9 @@ app.controller("businessManagement.customers.document", function($scope, $state,
       $scope.docForm = {title:'',text:'',docs:emptyFile}
     }else {
       $scope.docForm = $scope.custDocs[idx]
+      $scope.versions = [];
+      console.log('coming hereeeee');
+      $scope.fetchVersions($scope.docForm.pk)
     }
     console.log($scope.docForm);
   }
@@ -217,6 +220,21 @@ app.controller("businessManagement.customers.document", function($scope, $state,
         $scope.custDocs.push(response.data)
       }
       $scope.docForm = response.data
+
+
+
+      $http({
+        method: 'POST',
+        url: '/api/support/documentVersion/',
+        data:{text:response.data.text,parent:response.data.pk}
+      }).
+      then(function(response) {
+        // $scope.version = response.data
+        console.log('ddddddddddddddd',response.data);
+        $scope.versions.push(response.data)
+      });
+
+
     })
   }
 
@@ -251,6 +269,23 @@ app.controller("businessManagement.customers.document", function($scope, $state,
   //   })
   //
   // }
+
+  $scope.fetchVersions = function (pk) {
+    $http({
+      method: 'GET',
+      url: '/api/support/documentVersion/?parent='+pk,
+    }).
+    then(function(response) {
+      $scope.versions = response.data
+      console.log($scope.versions);
+      console.log('got versionsssssssssss');
+    });
+  }
+
+
+  $scope.selectVersion = function(indx) {
+    $scope.docForm.text = $scope.versions[indx].text
+  }
 
 })
 

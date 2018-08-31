@@ -581,11 +581,22 @@ app.directive('chatBox', function() {
               $scope.sowDetails = pk
             }
 
+            $scope.sendDocument = function(doc) {
+              console.log(doc);
+              $uibModalInstance.dismiss(doc)
+            }
+
 
 
 
           },
-        })
+        }).result.then(function() {
+
+        }, function(data) {
+          console.log(data);
+          $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
+          $scope.send()
+        });
       }
 
       $scope.getChatHistory = function(email) {
@@ -657,6 +668,9 @@ app.directive('chatBox', function() {
 
         });
       }
+
+
+
 
       $scope.chatTransfer = function (uid, chatThreadPk) {
         console.log($scope.data,'entireeeeeeeeeeeeee');

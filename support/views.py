@@ -411,26 +411,29 @@ class GethomeCal(APIView):
         today = datetime.datetime.now().date()
         tomorrow = today + relativedelta(days=1)
         lastWeek = today - relativedelta(days=6)
-        print today,tomorrow,lastWeek
+        lastToLastWeek =  today - relativedelta(days=13)
         chatThreadObj = ChatThread.objects.filter(created__range=(lastWeek,tomorrow))
-        if 'perticularUser' in self.request.GET:
-            if int(self.request.GET['perticularUser'])>0:
-                chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['perticularUser']))
+        lastToLastWeekChatCount = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek)).count()
+        # if 'perticularUser' in self.request.GET:
+        #     if int(self.request.GET['perticularUser'])>0:
+        #         chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['perticularUser']))
         totalChats = chatThreadObj.count()
+
         print 'cccccccccccccc',totalChats,chatThreadObj
         agentChatCount = list(chatThreadObj.values('user').annotate(count_val=Count('user')))
         missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
-        if 'perticularUser' in self.request.GET:
-            if int(self.request.GET['perticularUser'])>0:
-                missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
+
         try:
             a = chatThreadObj.filter(~Q(chatDuration=0)).aggregate(Avg('chatDuration'))
             avgChatDuration = a['chatDuration__avg']
         except:
             avgChatDuration = 0
-        print avgChatDuration,'avgggggggggggggg'
+
+
         agentLeaderBoard = []
         agL = list(chatThreadObj.filter(user__isnull=False).values_list('user',flat=True).distinct())
+        if 'perticularUser' in self.request.GET:
+            agL = list(chatThreadObj.filter(user__isnull=False , company= int(self.request.GET['perticularUser']) ).values_list('user',flat=True).distinct())
         print agL
         for i in agL:
             oneAgentDetails = chatThreadObj.filter(user=i)
@@ -438,14 +441,46 @@ class GethomeCal(APIView):
             rating = r['customerRating__avg'] if r['customerRating__avg'] else 0
             respTimeAvg = SupportChat.objects.filter(user=i, responseTime__isnull=False).aggregate(Avg('responseTime'))
             respTimeAvg = respTimeAvg['responseTime__avg'] if respTimeAvg['responseTime__avg'] else 0
-            agentLeaderBoard.append({'agentName':oneAgentDetails[0].user.username,'rating':rating ,'respTimeAvg':respTimeAvg})
+            firstResTimeAvg = oneAgentDetails.aggregate(Avg('firstResponseTime'))
+            firstResTimeAvg = firstResTimeAvg['firstResponseTime__avg'] if firstResTimeAvg['firstResponseTime__avg'] else 0
+            agentLeaderBoard.append({'agentName':oneAgentDetails[0].user.username,'rating':rating ,'respTimeAvg':respTimeAvg ,'firstResTimeAvg':firstResTimeAvg})
         avgRatingAll=0
         avgRespTimeAll=0
+        firstResTimeAvgAll =0
+        print agentLeaderBoard
         for i in agentLeaderBoard:
             avgRatingAll+= i['rating']
             avgRespTimeAll+=i['respTimeAvg']
+            firstResTimeAvgAll+=i['firstResTimeAvg']
         avgRespTimeAll = avgRespTimeAll/len(agentLeaderBoard)
         avgRatingAll = avgRatingAll/len(agentLeaderBoard)
+        firstResTimeAvgAll = firstResTimeAvgAll/len(agentLeaderBoard)
+        if 'perticularUser' in self.request.GET:
+            if int(self.request.GET['perticularUser'])>0:
+                avgChatDuration = 0
+                avgRatingAll=0
+                firstResTimeAvgAll =0
+                missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
+                a = chatThreadObj.filter(~Q(chatDuration=0) ,company = int(self.request.GET['perticularUser'])).aggregate(Avg('chatDuration'))
+                avgChatDuration = a['chatDuration__avg']
+                frt = chatThreadObj.filter(firstResponseTime__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('firstResponseTime'))
+                firstResTimeAvgAll = frt['firstResponseTime__avg']
+                arAll = chatThreadObj.filter(customerRating__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('customerRating'))
+                avgRatingAll = arAll['customerRating__avg']
+                print avgRatingAll ,'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH'
+                totalChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),company=int(self.request.GET['perticularUser'])).count()
+                lastToLastWeekChatCount = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek),company=int(self.request.GET['perticularUser'])).count()
+                usr = chatThreadObj.filter(company = int(self.request.GET['perticularUser']))[0].user
+                avgRespTimeAll = SupportChat.objects.filter(user=usr , responseTime__isnull=False).aggregate(Avg('responseTime'))
+                avgRespTimeAll = avgRespTimeAll['responseTime__avg'] if avgRespTimeAll['responseTime__avg'] else 0
+                print avgRespTimeAll
+        changeInChat = {}
+        if lastToLastWeekChatCount<totalChats:
+            changeInChat['percentage'] = (float(totalChats - lastToLastWeekChatCount)/totalChats)*100
+            changeInChat['increase'] = True
+        else:
+            changeInChat['percentage'] = (float(lastToLastWeekChatCount - totalChats)/lastToLastWeekChatCount)*100
+            changeInChat['increase'] = False
         graphData = [[],[]]
         graphLabels = []
         for i in range(7):
@@ -468,4 +503,12 @@ class GethomeCal(APIView):
         #         break
         print agentChatCount,graphData
 
-        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels,'avgChatDuration':avgChatDuration,'agentLeaderBoard':agentLeaderBoard,'avgRatingAll':avgRatingAll,'avgRespTimeAll':avgRespTimeAll}, status = status.HTTP_200_OK)
+        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels,'avgChatDuration':avgChatDuration,'agentLeaderBoard':agentLeaderBoard,'avgRatingAll':avgRatingAll,'avgRespTimeAll':avgRespTimeAll,'firstResTimeAvgAll':firstResTimeAvgAll,'changeInChat':changeInChat}, status = status.HTTP_200_OK)
+
+
+class DocumentVersionViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = DocumentVersionSerializer
+    queryset = DocumentVersion.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['parent']
