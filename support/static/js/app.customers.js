@@ -290,6 +290,14 @@ app.controller("businessManagement.customers.document", function($scope, $state,
               $scope.activeVersion = version
            }
 
+           $scope.processSearch = function(val){
+            return $http({method : 'GET' , url : '/api/social/productTag/?txt__contains=' + val}).
+            then(function(response) {
+              return response.data;
+            })
+          }
+
+
 
   // $scope.openChartPopoup = function(pk){
   //   $uibModal.open({
