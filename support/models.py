@@ -86,12 +86,20 @@ class ChatThread(models.Model):
     firstResponseTime = models.FloatField(null=True, blank=True)
 
 
+class CompanyProcess(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    text =  models.CharField(max_length = 200 , null = True ,blank=True)
+    service = models.ForeignKey(service , related_name = 'process' , null = False)
+
 class Documentation(models.Model):
     created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length = 200 , null = False )
     customer = models.ForeignKey(CustomerProfile , related_name = 'customerDocumentatios' , null = False)
     text = models.CharField(max_length = 20000 , null = True ,blank=True)
     docs = models.FileField(upload_to = getCustomerAttachments , null = True,blank=True)
+    articleOwner = models.ForeignKey(User , related_name = 'documentOwner', null = True)
+    process = models.ForeignKey(CompanyProcess , related_name = 'process', null = True)
     # versions = models.ManyToManyField(Documentation , related_name = 'documentation' , blank = True)
 
 
@@ -100,9 +108,3 @@ class DocumentVersion(models.Model):
     title = models.CharField(max_length = 200 , null = True , blank=True )
     text =  models.CharField(max_length = 20000 , null = True ,blank=True)
     parent = models.ForeignKey(Documentation , related_name = 'documentation' , null = False)
-
-
-class CompanyProcess(models.Model):
-    created = models.DateTimeField(auto_now_add = True)
-    text =  models.CharField(max_length = 200 , null = True ,blank=True)
-    service = models.ForeignKey(service , related_name = 'process' , null = False)

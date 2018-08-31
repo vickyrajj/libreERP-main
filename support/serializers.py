@@ -105,9 +105,13 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         return instance
 
 class DocumentationSerializer(serializers.ModelSerializer):
+    version_count = serializers.SerializerMethodField()
     class Meta:
         model = Documentation
-        fields = ( 'pk' , 'created' , 'title', 'customer' , 'text' , 'docs')
+        fields = ( 'pk' , 'created','updated' , 'title', 'customer' , 'text' , 'docs' ,'articleOwner' ,'version_count' ,'process')
+        read_only_fields = ('process',)
+    def get_version_count(self , obj):
+        return DocumentVersion.objects.filter(parent=obj.pk).count()
 
 class DocumentVersionSerializer(serializers.ModelSerializer):
     class Meta:

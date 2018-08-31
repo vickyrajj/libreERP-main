@@ -1,4 +1,4 @@
-var app = angular.module("customerApp", ['ui.bootstrap', 'ui.tinymce', 'ui.router', 'chart.js', ]);
+var app = angular.module("customerApp", ['ui.bootstrap', 'ui.tinymce', 'ui.router', 'chart.js' ]);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
   // $urlRouterProvider.otherwise('/home');
@@ -181,7 +181,7 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     });
   }
 })
-app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $rootScope) {
+app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $rootScope , $uibModal) {
   $rootScope.state = 'KnowledgeBase';
   var emptyFile = new File([""], "");
   $scope.tinymceOptions = {
@@ -275,24 +275,6 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
       }
       $scope.docForm = response.data
 
-      if ($scope.editVersion) {
-        $http({
-          method: 'PATCH',
-          url: '/api/support/documentVersion/' + $scope.editVersion.pk + '/',
-          data: {
-            text: response.data.text,
-            title: response.data.title
-          }
-        }).
-        then(function(response) {
-          for (var i = 0; i < $scope.versions.length; i++) {
-            if ($scope.versions[i].pk == response.data.pk) {
-              $scope.versions[i] = response.data
-            }
-          }
-          $scope.activeVersion = response.data
-        });
-      } else {
         $http({
           method: 'POST',
           url: '/api/support/documentVersion/',
@@ -306,7 +288,7 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
           console.log('ddddddddddddddd', response.data);
           $scope.versions.push(response.data)
         });
-      }
+
 
 
     })
@@ -376,9 +358,20 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
 
   $scope.setActiveVersion = function(version) {
     $scope.activeVersion = version
-    $scope.editVersion = version
-    $scope.docForm.text = version.text
-    $scope.docForm.title = version.title
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.customer.version.modal.html',
+      size: 'md',
+      backdrop: true,
+      controller: function($scope, $timeout, $uibModalInstance) {
+        $scope.version = version
+        console.log(version);
+      },
+    })
+
+    // $scope.editVersion = version
+    // $scope.docForm.text = version.text
+    // $scope.docForm.title = version.title
   }
 
 

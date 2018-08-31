@@ -132,29 +132,64 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
 
   }
 
-  $scope.fetchProcess = function () {
+
+
+  $scope.fetchProcess = function() {
+    $scope.process_list =[]
     $http({
-      method:'GET',
-      url:'api/support/companyProcess/'
+      method: 'GET',
+      url: 'api/support/companyProcess/?service='+$scope.compDetails.pk
     }).
-    then(function(response){
-      console.log(response.data,'response');
+    then(function(response) {
+      console.log(response.data, 'response');
+      $scope.process_list = response.data
     });
   }
 
+  $scope.fetchProcess()
 
-  $scope.addProcess = function () {
-    if ($scope.process.text.length>0) {
+
+
+  $scope.add_process1 = function() {
+    if ($scope.process_text) {
+      for (var i = 0; i < $scope.process_list.length; i++) {
+        if ($scope.process_list[i] == $scope.process_text) {
+          Flash.create('warning', 'This process Is Already Added')
+          return
+        }
+      }
       $http({
-        method:'POST',
-        url:'api/support/companyProcess/',
-        data:{text:$scope.process.text , service:$scope.compDetails.pk}
+        method: 'POST',
+        url: 'api/support/companyProcess/',
+        data: {
+          text: $scope.process_text,
+          service: $scope.compDetails.pk
+        }
       }).
-      then(function(response){
-        console.log(response.data,'response');
+      then(function(response) {
+        console.log(response.data, 'response');
+          $scope.process_list.push(response.data)
+          $scope.process_text = ''
       });
+
+      // $scope.process_list.push($scope.process_text)
+    } else {
+      Flash.create('warning', 'Mention Some process')
     }
   }
+
+  $scope.close_process = function(indx) {
+    // console.log('closingl',indx,$scope.process_list);
+    $scope.process_list.splice(indx, 1)
+
+    // $http({method : 'DELETE' , url : '/api/PIM/calendar/' + $scope.itemInView.data.pk + '/'}).
+    // then(function(response){
+    //   $scope.data.items.splice($scope.data.items.indexOf($scope.itemInView) , 1);
+    // })
+
+
+  }
+
 })
 
 app.controller("businessManagement.customers.document", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
@@ -249,24 +284,6 @@ app.controller("businessManagement.customers.document", function($scope, $state,
       }
       $scope.docForm = response.data
 
-
-      if ($scope.editVersion) {
-        $http({
-          method: 'PATCH',
-          url: '/api/support/documentVersion/' + $scope.editVersion.pk + '/',
-          data: {
-            text: response.data.text,
-            title: response.data.title
-          }
-        }).
-        then(function(response) {
-          for (var i = 0; i < $scope.versions.length; i++) {
-            if ($scope.versions[i].pk == response.data.pk) {
-              $scope.versions[i] = response.data
-            }
-          }
-        });
-      } else {
         $http({
           method: 'POST',
           url: '/api/support/documentVersion/',
@@ -280,7 +297,6 @@ app.controller("businessManagement.customers.document", function($scope, $state,
           console.log('ddddddddddddddd', response.data);
           $scope.versions.push(response.data)
         });
-      }
 
     })
   }
@@ -381,9 +397,20 @@ app.controller("businessManagement.customers.document", function($scope, $state,
 
   $scope.setActiveVersion = function(version) {
     $scope.activeVersion = version
-    $scope.editVersion = version
-    $scope.docForm.text = version.text
-    $scope.docForm.title = version.title
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.customer.version.modal.html',
+      size: 'md',
+      backdrop: true,
+      controller: function($scope, $users, $timeout, $uibModalInstance) {
+        $scope.version = version
+        console.log(version);
+      },
+    })
+
+    // $scope.editVersion = version
+    // $scope.docForm.text = version.text
+    // $scope.docForm.title = version.title
   }
 
 })
@@ -673,5 +700,6 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
 
   }
+
 
 })
