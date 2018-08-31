@@ -112,7 +112,7 @@ class DocumentationSerializer(serializers.ModelSerializer):
 class DocumentVersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentVersion
-        fields = ( 'pk' , 'created' , 'text', 'parent')
+        fields = ( 'pk' , 'created' , 'text', 'parent','title')
 
 class CompanyProcessSerializer(serializers.ModelSerializer):
     class Meta:

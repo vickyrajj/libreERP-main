@@ -14,6 +14,8 @@ router.register(r'getChatTranscripts' , GetChatTranscriptsViewSet , base_name = 
 router.register(r'getVisitorDetails' , GetVisitorDetailsViewSet , base_name = 'getVisitorDetails')
 router.register(r'getOfflineMessages' , GetOfflineMessagesViewSet , base_name = 'getOfflineMessages')
 router.register(r'documentVersion' , DocumentVersionViewSet , base_name = 'documentVersion')
+router.register(r'companyProcess' , CompanyProcessViewSet , base_name = 'companyProcess')
+
 
 
 urlpatterns = [

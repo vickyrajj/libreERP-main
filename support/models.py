@@ -97,6 +97,7 @@ class Documentation(models.Model):
 
 class DocumentVersion(models.Model):
     created = models.DateTimeField(auto_now_add = True)
+    title = models.CharField(max_length = 200 , null = True , blank=True )
     text =  models.CharField(max_length = 20000 , null = True ,blank=True)
     parent = models.ForeignKey(Documentation , related_name = 'documentation' , null = False)
 
