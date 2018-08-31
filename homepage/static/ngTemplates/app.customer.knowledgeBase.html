@@ -46,11 +46,88 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-9">
             <div class="form-group" ng-if="docForm.text!=null">
               <label>Content</label>
               <textarea ui-tinymce="tinymceOptions" ng-model="docForm.text"></textarea>
             </div>
+          </div>
+          <div class="col-md-3">
+            <uib-tabset>
+              <uib-tab>
+                <uib-tab-heading>
+                  Article
+                </uib-tab-heading>
+                  <div >
+                    <p style="color:red;margin:15px 0px">Category</p>
+                    <select class="form-control" id="category" style="margin:5px 0px">
+                      <option>Syrow</option>
+                      <option>erp</option>
+                      <option>random</option>
+                    </select>
+                    <select class="form-control" id="" style="margin:5px 0px">
+                      <option>Syrow</option>
+                      <option>erp</option>
+                      <option>random</option>
+                    </select>
+                    <p style="color:red;margin:15px 0px">Article owner</p>
+                    <select class="form-control" id="" style="margin:5px 0px">
+                      <option>Syrow</option>
+                      <option>erp</option>
+                      <option>random</option>
+                    </select>
+                    <p style="color:red;margin:20px 0px">Display permission</p>
+                        <ul class="list-group">
+                          <li class="active"><a href="#">Agents</a></li>
+                          <li><a href="#">Reg</a></li>
+                          <li><a href="#">All</a></li>
+                        </ul>
+
+                  </div>
+              </uib-tab>
+              <uib-tab>
+                  <uib-tab-heading>
+                      TOC
+                  </uib-tab-heading>
+                  <div class="toc">
+                    <ol style="margin:20px 0px;">
+                      <li style="color:  #5257d2;font-size:20px;" ng-repeat="x in h1_array" ng-if="$index!=0">{{x.title}}
+                        <ol>
+                          <li style="margin:10px 0px;color:black;font-size:15px"ng-repeat="y in x.childeren" ng-if="$index!=0">{{y.title}}</li>
+                        </ol>
+                      </li>
+                    </ol>
+                  </div>
+
+              </uib-tab>
+              <uib-tab>
+                  <uib-tab-heading>
+                      Versions
+                  </uib-tab-heading>
+                    vikas
+              </uib-tab>
+            </uib-tabset>
+            <!-- <div class="container">
+              <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" ng-click="type='article'">Article</a></li>
+                <li><a data-toggle="pill" ng-click="type='toc'">TOC</a></li>
+                <li><a data-toggle="pill" ng-click="type='versions'">Versions</a></li>
+              </ul>
+              <div class="tab-content">
+                <div ng-if="type=='article'" class="tab-pane fade in active">
+                  <h3>HOME</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                <div  ng-if="type=='toc'" class="tab-pane fade">
+                  <h3>Menu 1</h3>
+                  <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                <div  ng-if="type=='versions'" class="tab-pane fade">
+                  <h3>Menu 2</h3>
+                  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                </div>
+              </div>
+            </div> -->
           </div>
         </div>
         <div class="row">

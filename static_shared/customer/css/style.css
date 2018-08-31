@@ -82,6 +82,13 @@ body {
   overflow-x: hidden;
   color: #67757c;
   font-weight: 300; }
+  .toc ol{counter-reset: item}
+  .toc li{
+    display: block
+  }
+  .toc li:before{
+  content: counters(item, ".") " "; counter-increment: item
+  }
 
 html {
   position: relative;
