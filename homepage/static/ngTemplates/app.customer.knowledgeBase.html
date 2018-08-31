@@ -13,10 +13,10 @@
         <div class="row" style="border-right:solid 2px #eeeeee;min-height:54vh;position:relative;" ng-if="custDocs.length>0||docForm!=none">
           <div class="row container-fluid card" ng-repeat="doc in custDocs" ng-click="addDoc($index)" style="cursor:pointer;margin:10px; {{docForm.pk==doc.pk?'background-color:#ffb22b':'background-color: #e9e9e9 !important;'}}">
             <div class="text-center" style="font-size:20px;padding:10px"><b>{{doc.title}}</b></div>
-            <ul style="list-style:none;position:absolute;bottom:-15px;left:0px;font-size:14px" class="list-inline">
-              <li>Last modified:<b> 7:27</b></li>
+            <ul style="list-style:none;position:absolute;bottom:-15px;left:0px;font-size:12px" class="list-inline">
+              <li>Last modified:<b> {{doc.updated  | date:'dd-MMM-yyyy'}}</b></li>
               <li>Process:<b> abc</b></li>
-              <li>Versions:<b> 4</b></li>
+              <li>Versions:<b> {{doc.version_count}}</b></li>
             </ul>
           </div>
           <!-- <div class="">
@@ -66,14 +66,21 @@
                 <uib-tab-heading>
                   Article
                 </uib-tab-heading>
-                  <div >
-                    <input type="text" class="form-control"  ng-model="selected_process" uib-typeahead="process as process.text for process in processSearch($viewValue)"/
-                    <p style="color:red;margin:15px 0px">Article owner</p>
-                    <select class="form-control" id="" style="margin:5px 0px">
+                  <div style="padding-top:20px;">
+                    <div class="row">
+                      <label>Process:</label>
+                      <input type="text" class="form-control"  ng-model="docForm.process" uib-typeahead="process as process.text for process in processSearch($viewValue)"/>
+                    </div>
+                    <div class="row">
+                      <label>Article Owner</label>
+                      <input type="text" class="form-control"  ng-model="docForm.articleOwner" uib-typeahead="user as user.username for user in userSearch($viewValue)"/>
+                    </div>
+                    <!-- <p style="color:red;margin:15px 0px">Article owner</p>userSearch -->
+                    <!-- <select class="form-control" id="" style="margin:5px 0px">
                       <option>Syrow</option>
                       <option>erp</option>
                       <option>random</option>
-                    </select>
+                    </select> -->
                     <!-- <p style="color:red;margin:20px 0px;">Display permission</p>
                         <ul class="list-inline versions"  style="font-size:15px" ng-init="type='agents'">
                           <li  style="padding:0px"><button style="padding:8px;border-radius:10px" class="{{type=='agents' ? 'active' : ''}}" ng-click="type='agents'">Agents</button></li>

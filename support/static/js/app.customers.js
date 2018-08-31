@@ -413,6 +413,26 @@ app.controller("businessManagement.customers.document", function($scope, $state,
     // $scope.docForm.title = version.title
   }
 
+
+  $scope.userSearch = function(query) {
+    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+
+
+
+    $scope.processSearch = function(val) {
+      return $http({
+        method: 'GET',
+        url: '/api/support/companyProcess/?text__contains=' + val
+      }).
+      then(function(response) {
+        return response.data;
+      })
+    }
+
 })
 
 app.controller("businessManagement.customers.form", function($scope, $state, $users, $stateParams, $http, Flash) {

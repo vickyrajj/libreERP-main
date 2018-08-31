@@ -1,4 +1,4 @@
-var app = angular.module("customerApp", ['ui.bootstrap', 'ui.tinymce', 'ui.router', 'chart.js' ]);
+var app = angular.module("customerApp", ['ui.bootstrap', 'ui.tinymce', 'ui.router', 'chart.js']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
   // $urlRouterProvider.otherwise('/home');
@@ -181,7 +181,7 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     });
   }
 })
-app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $rootScope , $uibModal) {
+app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $rootScope, $uibModal) {
   $rootScope.state = 'KnowledgeBase';
   var emptyFile = new File([""], "");
   $scope.tinymceOptions = {
@@ -223,6 +223,7 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
       $scope.versions = [];
     } else {
       $scope.docForm = $scope.custDocs[idx]
+      console.log($scope.docForm,'%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
       $scope.versions = [];
       console.log('coming hereeeee');
       $scope.fetchVersions($scope.docForm.pk)
@@ -245,6 +246,18 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
     var fd = new FormData();
     fd.append('title', $scope.docForm.title);
     fd.append('customer', $scope.custDetailsPk);
+
+    if ($scope.docForm.process!=null && typeof $scope.docForm.process != 'string') {
+      console.log($scope.docForm.process.pk,'dddddddddddddddddd');
+      console.log($scope.docForm.process);
+      fd.append('process' , $scope.docForm.process.pk)
+    }
+
+    if ($scope.docForm.articleOwner!=null && typeof $scope.docForm.articleOwner != 'string') {
+      console.log('article owner' , $scope.docForm.articleOwner , $scope.docForm.articleOwner.pk);
+      fd.append('articleOwner' , $scope.docForm.articleOwner.pk)
+    }
+
     if ($scope.docForm.text != null && $scope.docForm.text.length > 0) {
       fd.append('text', $scope.docForm.text);
     }
@@ -274,24 +287,28 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
         $scope.custDocs.push(response.data)
       }
       $scope.docForm = response.data
+      console.log('docFormmmmmmmmmmmmmmmmmm',$scope.docForm);
 
-        $http({
-          method: 'POST',
-          url: '/api/support/documentVersion/',
-          data: {
-            text: response.data.text,
-            parent: response.data.pk,
-            title: response.data.title
-          }
-        }).
-        then(function(response) {
-          console.log('ddddddddddddddd', response.data);
-          $scope.versions.push(response.data)
-        });
+      $http({
+        method: 'POST',
+        url: '/api/support/documentVersion/',
+        data: {
+          text: response.data.text,
+          parent: response.data.pk,
+          title: response.data.title
+        }
+      }).
+      then(function(response) {
+        console.log('ddddddddddddddd', response.data);
+        $scope.versions.push(response.data)
+      });
 
 
 
     })
+
+
+    console.log($scope.selected_process,'ffffffffffffff');
   }
 
   $scope.$watch('docForm.text', function(newValue, oldValue) {
@@ -374,14 +391,24 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
     // $scope.docForm.title = version.title
   }
 
+  $scope.userSearch = function(query) {
+    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
 
 
-             $scope.processSearch = function(val){
-              return $http({method : 'GET' , url : '/api/social/productTag/?txt__contains=' + val}).
-              then(function(response) {
-                return response.data;
-              })
-            }
+
+  $scope.processSearch = function(val) {
+    return $http({
+      method: 'GET',
+      url: '/api/support/companyProcess/?text__contains=' + val
+    }).
+    then(function(response) {
+      return response.data;
+    })
+  }
 
 })
 

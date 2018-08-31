@@ -519,4 +519,4 @@ class CompanyProcessViewSet(viewsets.ModelViewSet):
     serializer_class = CompanyProcessSerializer
     queryset = CompanyProcess.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['service']
+    filter_fields = ['service','text']

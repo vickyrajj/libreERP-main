@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User , Group
+from HR.serializers import userSearchSerializer
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import *
@@ -104,12 +105,19 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class CompanyProcessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyProcess
+        fields = ( 'pk' , 'created' , 'text', 'service')
+
+
 class DocumentationSerializer(serializers.ModelSerializer):
     version_count = serializers.SerializerMethodField()
+    process = CompanyProcessSerializer(many=False , read_only=True)
+    articleOwner = userSearchSerializer(many=False , read_only=True)
     class Meta:
         model = Documentation
         fields = ( 'pk' , 'created','updated' , 'title', 'customer' , 'text' , 'docs' ,'articleOwner' ,'version_count' ,'process')
-        read_only_fields = ('process',)
     def get_version_count(self , obj):
         return DocumentVersion.objects.filter(parent=obj.pk).count()
 
@@ -117,8 +125,3 @@ class DocumentVersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentVersion
         fields = ( 'pk' , 'created' , 'text', 'parent','title')
-
-class CompanyProcessSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CompanyProcess
-        fields = ( 'pk' , 'created' , 'text', 'service')
