@@ -296,90 +296,179 @@
         <!-- review page ends here  -->
         <div ng-if="data.stage == 'shippingDetails'">
           <div class="row">
-            <div class="col-md-8 col-md-offset-2 hidden-sm hidden-xs" style="padding-left:55px" ng-if="savedAddress.length>0">
+            <div class="col-md-8 col-md-offset-2 col-sm-offset-1  col-xs-offset-1  col-sm-10 col-xs-10" style="padding-left:55px" ng-if="savedAddress.length>0">
               <div class="row">
                 <div class="row card" style="margin-bottom:15px">
-                  <div class="col-md-6 text-center">
+                  <div class="col-md-6 col-xs-12 col-sm-6  text-center">
                     <h5>{{me.first_name}} {{me.last_name}}</h5>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-6 col-xs-12 col-sm-6">
                     <div class="form-group">
                       <input type="text" class="form-control" id="mob" ng-model="data.address.mobile" placeholder="Enter mobile..">
                     </div>
                   </div>
                 </div>
-                <div class="row card" style="margin-bottom:15px">
+                <div class="row card" style="margin-bottom:15px" ng-if="!saved">
                   <div class="row card bg-blue" style="margin-left:0px;margin-right:0px">
                     <h5 style="padding-left:10px;color:white"> DELIVERY ADDRESS </h5>
                   </div>
-                  <div class="col-md-12" ng-repeat = "adr in savedAddress">
+                  <div class="col-md-12" ng-repeat="adr in savedAddress">
                     <div class="row" style="margin-top:15px">
-                      <div class="col-md-1">
-                      <input ng-model="adr.pk" type="radio" name="radio" value="adr.pk" ng-click="show($index)">
-                    </div>
-                    <div class="col-md-10">
-                  <strong>{{me.first_name}} {{me.last_name}}</strong><br/>
-                  {{adr.title}} {{adr.landMark}}  {{adr.street}},
-                  {{adr.city}}, {{adr.state}},  {{adr.country}} - {{adr.pincode}}
-
-                  <div class="row"  ng-if="$index==idx" >
-                    <div class="col-md-4">
-                    <div class=" btn btn-block btn-primary" ng-click="ChangeAdd($index,'use')">
-                      Use This Address
-                    </div>
-                    </div>
-                  </div>
-                  <div class="row" ng-if="addressview&&$index==idxVal">
-                  <h4>Address</h4>
-                  <div class="form-group">
-
-                    <textarea ng-model="data.address.street" class="form-control" id="street" placeholder="Enter street.." ></textarea>
-                  </div>
-                  <div class="form-group">
-
-                    <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark" placeholder="Enter Landmark.." >
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 col-xs-6">
-                      <div class="form-group">
-
-                        <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." >
+                      <div class="col-md-1 col-xs-1 col-sm-1">
+                        <input ng-model="adr.pk" type="radio" name="radio" value="adr.pk" ng-click="show($index)">
                       </div>
-                    </div>
-                    <div class="col-md-6 col-xs-6">
-                      <div class="form-group">
-                        <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State..">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 col-xs-6">
-                      <div class="form-group">
-                        <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-xs-6">
-                      <div class="form-group">
-                        <input ng-model="data.address.country" type="text" class="form-control" id="country" placeholder="Enter Country..">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row" style="margin-bottom:35px">
+                      <div class="col-md-10 col-xs-7 col-sm-10">
+                        <div class="row">
+                          <strong>{{me.first_name}} {{me.last_name}}</strong><br/> {{adr.title}} {{adr.landMark}} {{adr.street}}, {{adr.city}}, {{adr.state}}, {{adr.country}} - {{adr.pincode}}
+                        </div>
 
-                    <div class="col-xs-6">
-                      <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none" >
+                        <div class="row" ng-if="$index==idx">
+                        </br>
+                          <div class="col-md-4 hidden-xs col-sm-6" style="margin-left:0px;padding-left:0px">
+                            <div class=" btn btn-block btn-primary" ng-click="ChangeAdd($index,'use')">
+                              Use This Address
+                            </div>
+                          </div>
+                          <div class="col-xs-12 hidden-sm hidden-lg hidden-md" >
+                            <div class=" btn btn-block btn-primary" ng-click="ChangeAdd($index,'use')" >
+                              Use This
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row" ng-if="addressview&&$index==idxVal">
+                          <h4>Address</h4>
+                          <div class="form-group">
+
+                            <textarea ng-model="data.address.street" class="form-control" id="street" placeholder="Enter street.."></textarea>
+                          </div>
+                          <div class="form-group">
+
+                            <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark" placeholder="Enter Landmark..">
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 col-xs-12 col-sm-6">
+                              <div class="form-group">
+                                <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
+                              </div>
+                            </div>
+                            <div class="col-md-6 col-xs-12 col-sm-6">
+                              <div class="form-group">
+                                <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State.." disabled>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 col-xs-12 col-sm-6">
+                              <div class="form-group">
+                                <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." disabled>
+                              </div>
+                            </div>
+                            <div class="col-md-6 col-xs-12 col-sm-6">
+                              <div class="form-group">
+                                <input ng-model="data.address.country" type="text" class="form-control" id="country" placeholder="Enter Country..">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" style="margin-bottom:35px">
+
+                            <div class="col-sm-6 col-xs-12 col-md-6">
+                              <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none">
                         <i class="fa fa-star fa-lg"></i> &nbsp;Save for later use
                       </button>
 
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-1 col-sm-1 col-sm-1" ng-if="$index==idx" ng-click="ChangeAdd($index,'edit')" style="cursor:pointer">
+                        <strong>Edit</strong>
+                      </div>
+
                     </div>
                   </div>
+                </div>
+                <div class="row card" style="margin-bottom:15px;padding-bottom:0px" ng-if="!saved">
+                  <div class=" btn btn-block btn-default" ng-click="resetAdd()">
+                    Add a New Address
                   </div>
-                </div>
-                  <div class="col-md-1"  ng-if="$index==idx" ng-click="ChangeAdd($index,'edit')">
-                    <strong>Edit</strong>
-                </div>
+
+                  <div class="row" ng-if="newAdr" style="padding-left:25px;padding-right:25px">
+                    <div class="form-group">
+
+                      <textarea ng-model="data.address.street" class="form-control" id="street" placeholder="Enter street.."></textarea>
+                    </div>
+                    <div class="form-group">
+
+                      <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark" placeholder="Enter Landmark..">
+                    </div>
+                    <div class="row">
+                      <div class="col-md-5 col-xs-12 col-sm-6">
+                        <div class="form-group">
+                          <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
+                        </div>
+                      </div>
+
+                      <div class="col-md-5 col-xs-12 col-sm-6">
+                        <div class="form-group">
+                          <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State.." disabled>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-5 col-xs-12 col-sm-6">
+                        <div class="form-group">
+                          <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-5 col-xs-12 col-sm-6">
+                        <div class="form-group">
+                          <input ng-model="data.address.country" type="text" class="form-control" id="country" placeholder="Enter Country..">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" style="margin-bottom:35px">
+
+                      <div class="hidden-xs col-md-12 col-sm-6">
+                        <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none">
+                        <i class="fa fa-star fa-lg"></i> &nbsp;Save for later use
+                      </button>
+                        <button type="button" class="btn btn-primary" ng-click="cancel()" ng-if="data.address.pk == none" >
+                      Cancel
+                      </button>
+
+                      </div>
+                      <div class="hidden-lg hidden-md hidden-sm col-xs-12 ">
+                        <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none" style="width:100%">
+                        <i class="fa fa-star fa-lg"></i> &nbsp;Save for later use
+                      </button><br/><br/>
+                        <button type="button" class="btn btn-primary" ng-click="cancel()" ng-if="data.address.pk == none" style="width:100%">
+                      <i class="fa fa-close fa-lg"></i> &nbsp;Cancel
+                      </button>
+
+                      </div>
+
+
+
                     </div>
                   </div>
+                </div>
+                <div class="row card" style="margin-bottom:15px;padding-bottom:0px" ng-if="saved">
+
+
+                    <div class="row card bg-blue" style="margin-left:0px;margin-right:0px">
+                      <h5 style="padding-left:10px;color:white"> DELIVERY ADDRESS </h5>
+                    </div>
+                    <div class="row" style="padding-left:15px;padding-top:15px;padding-bottom:15px">
+                      <div class="col-md-10 col-sm-10 col-xs-12">
+                        <strong>{{me.first_name}} {{me.last_name}}</strong><br/>{{data.address.landMark}} {{data.address.street}}, {{data.address.city}}, {{data.address.state}}, {{data.address.country}} - {{data.address.pincode}}
+                      </div>
+                      <div class="col-md-1 col-sm-1 col-xs-12">
+                        <strong ng-click="change()" style="cursor:pointer">
+                          Change
+                        </strong>
+                      </div>
+                    </div>
+
                 </div>
               </div>
               <!-- <span class="text-center"> <h4>Saved Addresses</h4><br> </span>
@@ -446,7 +535,7 @@
 
 
             </div>
-            <div class="hidden-md hidden-lg col-xs-12" ng-if="savedAddress.length>0">
+            <!-- <div class="hidden-md hidden-lg col-xs-12" ng-if="savedAddress.length>0">
               <span class="text-center"> <h4>Saved Addresses</h4><br> </span>
               <div class="row" ng-repeat="adr in savedAddress">
                 <div class="hidden-md hidden-lg col-xs-1">
@@ -510,7 +599,7 @@
               </div>
 
 
-            </div>
+            </div> -->
             <!-- <div class="col-md-7 col-xs-12">
               <div class="row" ng-if="addressview">
               <h4>Address</h4>

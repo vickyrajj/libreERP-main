@@ -433,3 +433,8 @@ class pincodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pincode
         fields = ('pk' ,  'created' ,  'pincodes')
+
+class genericPincodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GenericPincode
+        fields = ('pk' ,  'state' ,  'city' , 'pincode' , 'pin_status')

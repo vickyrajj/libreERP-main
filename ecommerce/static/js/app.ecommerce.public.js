@@ -1380,6 +1380,30 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
     })
   }
 
+
+$scope.$watch('form.pincode' , function(newValue , oldValue) {
+  if(newValue!=null){
+    if(newValue.length==6){
+      $http({
+        method: 'GET',
+        url: '/api/ecommerce/genericPincode/?pincode=' +newValue
+      }).
+      then(function(response) {
+    if(response.data.length>0){
+      $scope.form.city = response.data[0].city
+      $scope.form.state = response.data[0].state
+    }
+      })
+    }
+  }
+})
+
+
+
+
+
+
+
   $scope.fetchaddress = function() {
     $http({
       method: 'GET',
@@ -1532,12 +1556,17 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     })
   }
   $scope.fetchaddress()
+  $scope.saved = false
+
+
   $scope.ChangeAdd = function(idx,value) {
     console.log(value);
     if(value=="use"){
       $scope.addressview =  false
       $scope.idx=null
+      $scope.saved = true
       Flash.create('success', 'Address Added');
+
     }
     else if(value=="edit"){
       $scope.idx=null
@@ -1549,9 +1578,26 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     $scope.data.address.mobile = mob
     // $scope.data.address.landMark = ''
   }
+    $scope.change = function() {
+        $scope.saved = false
+        $scope.data.address = {
+          street: '',
+          city: '',
+          state: '',
+          pincode: '',
+          country: 'India',
+          mobile: '',
+          landMark: ''
+        }
+    }
+  $scope.cancel = function() {
+      $scope.newAdr =  false
+  }
+
   $scope.resetAdd = function() {
-    $scope.addressview =  true
+    $scope.newAdr =  true
     $scope.idx = null
+    $scope.addressview =  false
     $scope.data.address = {
       street: '',
       city: '',
@@ -1565,7 +1611,27 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $scope.show = function(idx) {
   $scope.addressview =  false
   $scope.idx=idx
+  $scope.newAdr =  false
   }
+
+  $scope.$watch('data.address.pincode' , function(newValue , oldValue) {
+      if(newValue!=null){
+    if(newValue.length==6){
+      $http({
+        method: 'GET',
+        url: '/api/ecommerce/genericPincode/?pincode=' +newValue
+      }).
+      then(function(response) {
+        if(response.data.length>0){
+          $scope.data.address.city = response.data[0].city
+          $scope.data.address.state = response.data[0].state
+        }
+      })
+    }
+  }
+  })
+
+
 
   $scope.saveAdd = function() {
     if ($scope.data.address.street.length == 0) {

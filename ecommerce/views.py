@@ -1199,3 +1199,16 @@ class OnlineSalesGraphAPIView(APIView):
 
         # return Response({"totalSales" : totalSales , "totalCollections" : totalCollections ,  "sales" : sales , "custCount" : custCount , "trend" : data},status=status.HTTP_200_OK)
         return Response({"totalSales" : totalSales , "totalCollections" : totalCollections ,  "sales" : sales , "custCount" : custCount , "trend" : data},status=status.HTTP_200_OK)
+
+class GenericPincodeViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny ,)
+    # queryset = GenericPincode.objects.all()
+    serializer_class = genericPincodeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['pincode','state','city']
+    def get_queryset(self):
+        toReturn = GenericPincode.objects.all()
+        if 'pincode' in self.request.GET:
+            print 'lllllllllllllllllllllllllllllllllllllllllllllllllllll'
+            toReturn = toReturn.filter(pincode__iexact=self.request.GET['pincode'])
+        return toReturn
