@@ -73,7 +73,6 @@
 
   </div>
     <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; height:71vh; overflow-y:auto; overflow-x:hidden;">
-
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
         <div class="row container-fluid">
           <div style="float:{{message.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{message.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
@@ -108,7 +107,7 @@
   </div> -->
 
   <div class="" style="padding:;border-top:30px;margin-right:15px">
-    <div class="row" style="margin:0px;margin-top:10px;margin-bottom:5px;">
+    <div class="row" style="margin:0px;margin-top:10px;margin-bottom:5px;padding-top:10px;padding-bottom:10px;">
       <form>
         <div class="input-group">
           <input ng-if="chatBox.fileToSend.size==0" type="text" class="col-md-9" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" style="border:none;outline:none;background-color:white;">

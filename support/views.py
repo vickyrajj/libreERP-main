@@ -89,10 +89,12 @@ class GetMyUser(APIView):
                 except:
                     dic = {'uid':i,'name':'' ,'email':''}
                 # print ChatThread.objects.get(uid=i).company.pk
-                dic['companyPk'] = ChatThread.objects.get(uid=i).company.pk
-                dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
+                # dic['companyPk'] = ChatThread.objects.get(uid=i).company.pk
+                # dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
+                dic['companyPk'] = ChatThread.objects.filter(uid=i)[0].company.pk
+                dic['chatThreadPk'] = ChatThread.objects.filter(uid=i)[0].pk
+                print dic ,'diccccccccccccccccccccccccccccccccccc'
                 toSend.append(dic)
-
 
             return Response(toSend, status=status.HTTP_200_OK)
 def createExcel(data):
