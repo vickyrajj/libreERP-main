@@ -93,7 +93,7 @@ class GetMyUser(APIView):
                 # dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
                 dic['companyPk'] = ChatThread.objects.filter(uid=i)[0].company.pk
                 dic['chatThreadPk'] = ChatThread.objects.filter(uid=i)[0].pk
-                print dic ,'diccccccccccccccccccccccccccccccccccc'
+                print dic
                 toSend.append(dic)
 
             return Response(toSend, status=status.HTTP_200_OK)
