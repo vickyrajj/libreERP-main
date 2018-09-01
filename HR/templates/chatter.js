@@ -278,7 +278,7 @@ var nameSupport = '{{name}}'
 var dpSupport = '{{dp}}'
 var supportBubbleColor = '{{supportBubbleColor}}'
 var firstMessage = `{{firstMessage}}`;
-var iconColor = '#000'
+var iconColor = '{{iconColor}}'
 
 
 if (nameSupport=='None') {
@@ -571,10 +571,12 @@ function getVisitorDetails() {
 
 
 
-function setColors(bubbleColor , windowColor , iconColor) {
+function setColors(bubbleColor , windowColor , icnClr) {
   windowColor = windowColor
   supportBubbleColor = bubbleColor
-  iconColor = iconColor
+  if (icnClr) {
+    iconColor = icnClr
+  }
   setTimeout(function () {
     headerChat.style.backgroundColor = windowColor
     startConvoBtn.style.color =  windowColor
@@ -813,6 +815,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 '<span id="onlineStatus"></span>'+
               '</div>'+
             '</div>'+
+            '<div style="float:left;padding-left: 55px;" >'+
+              '<div>'+
+                '<span id="endThisChat" style="font-size:15px; cursor:pointer; ">End Chat</span>'+
+              '</div>'+
+            '</div>'+
             '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
               '<span> <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
             '</div>'+
@@ -961,6 +968,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var supportCircle = document.getElementById('supportCircle');
   // var isTyping = document.getElementById('isTyping');
 
+  var endThisChat = document.getElementById('endThisChat');
+
 
   var chatCircleText =   document.getElementById('chatCircleText')
   var callCircleText =   document.getElementById('callCircleText')
@@ -968,6 +977,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var videoCircleText = document.getElementById('videoCircleText')
   var ticketCircleText = document.getElementById('ticketCircleText')
   var Syrow24hSupportText = document.getElementById('Syrow24hSupportText')
+
+
+  endThisChat.style.display ="none"
 
 
   // isTyping.style.display = "none";
@@ -1261,6 +1273,22 @@ setTimeout(function () {
 }, 2000);
 
 
+function endChat() {
+  chatClosed = true
+  var xhttp = new XMLHttpRequest();
+   xhttp.onreadystatechange = function() {
+     if (this.readyState == 4 && this.status == 200) {
+       console.log('posted successfully');
+     }
+   };
+   xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
+   xhttp.setRequestHeader("Content-type", "application/json");
+   xhttp.send(JSON.stringify({status:"closed"}));
+
+  openFeedback()
+}
+
+
 
   function openFeedback(id) {
     console.log('coming in open feedback');
@@ -1402,18 +1430,33 @@ setTimeout(function () {
     headerInit.style.display = "none";
   }, false);
 
-
+  var chatClosed = false
 
   backArrow.addEventListener("click", function() {
-    headerChat.style.display = "none";
-    messageBox.style.display = "none";
-    footer.style.display = "none";
-    startConvoBtn.style.display = "";
-    startConversation.style.display = "";
-    // demo.style.display = "";
-    // exploreSyrow.style.display ="";
-    headerInit.style.display = "";
+    console.log(chat.messages,'coming in loggggggggg');
+    if (chat.messages.length>1 && chatClosed!=true) {
+      endChat()
+      console.log('end chat');
+    }else {
+      headerChat.style.display = "none";
+      messageBox.style.display = "none";
+      footer.style.display = "none";
+      startConvoBtn.style.display = "";
+      startConversation.style.display = "";
+      // demo.style.display = "";
+      // exploreSyrow.style.display ="";
+      headerInit.style.display = "";
+    }
+
+
   }, false);
+
+
+  endThisChat.addEventListener("click", function() {
+
+    endChat()
+  }, false);
+
 
   paperPlane.addEventListener("click", function() {
     sendMessage(inputText.value);
@@ -1678,6 +1721,13 @@ setTimeout(function () {
 
 
     function sendMessage(inptText) {
+
+
+      // chat.message.push(inptText)
+      // console.log(chat);
+
+      console.log(inptText,'input');
+
       console.log(uid);
       console.log(getCookie("uid"));
       if (uid!=getCookie("uid")) {

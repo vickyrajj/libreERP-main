@@ -1,4 +1,4 @@
-var app = angular.module("customerApp", ['ui.bootstrap', 'ui.tinymce', 'ui.router', 'chart.js']);
+var app = angular.module("customerApp", ['ui.bootstrap', 'ui.tinymce', 'ui.router', 'chart.js','ngSanitize']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
   // $urlRouterProvider.otherwise('/home');
@@ -184,7 +184,7 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     });
   }
 })
-app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $rootScope, $uibModal) {
+app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $rootScope, $uibModal ,$sce) {
   $rootScope.state = 'KnowledgeBase';
   var emptyFile = new File([""], "");
   $scope.tinymceOptions = {
@@ -385,8 +385,11 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
       templateUrl: '/static/ngTemplates/app.customer.version.modal.html',
       size: 'md',
       backdrop: true,
-      controller: function($scope, $timeout, $uibModalInstance) {
-        $scope.version = version
+      controller: function($scope, $timeout, $uibModalInstance ,$sce) {
+        console.log(version);
+        // $scope.version = $sce.trustAsHtml(version.text);
+        $scope.text = $sce.trustAsHtml(version.text);
+        // $scope.version = version
         console.log(version);
       },
     })

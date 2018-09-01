@@ -780,6 +780,25 @@ app.directive('chatBox', function() {
       }
 
 
+      $scope.searchCannedRes = function(val) {
+        var hash = "#"
+        if (val.includes('#')) {
+        var afterHash = val.slice(val.indexOf(hash) + hash.length);
+        if (afterHash.length>0) {
+          return $http({
+            method: 'GET',
+            url: '/api/support/cannedResponses/?text__contains=' + afterHash
+          }).
+          then(function(response) {
+            console.log(response.data);
+            // $scope.chatBox.messageToSend+=response.data.text
+            return response.data;
+          })
+          }
+        }
+      }
+
+
 
       $scope.editUserDetails = function(uid) {
         $uibModal.open({
