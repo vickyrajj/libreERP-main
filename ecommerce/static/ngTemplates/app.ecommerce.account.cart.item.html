@@ -9,19 +9,19 @@
           <h5 ng-if="data.product.product.name.length>30" style="margin:0px;  height:50px;">{{data.product.product.name.slice(0,30)}}...</h5>
           <h5 ng-if="data.product.product.name.length<=30" style="margin:0px;  height:50px;">{{data.product.product.name}}</h5>
           <span style="font-size:15px;" > Price : </span>
-          <span class="pull-right" style="font-size:15px;">
-          {{data.product.product.discountedPrice.toFixed(2)}} <i class="fa fa-inr"></i>
+          <span  style="font-size:15px;padding-left:10px">
+            <i class="fa fa-inr"></i>{{data.product.product.discountedPrice.toFixed(2)}}
           </span>
         </div>
         <hr style="margin:0px;" >
         <div class="row container-fluid text-center" style="padding:10px;" >
-          <div class="col-md-4 col-sm-4 col-xs-4">
+          <div class="col-md-4 col-sm-4 col-xs-4 text-right">
             <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="data.qty>1"  ng-click="rowActionClicked('substractQty')"></i>
           </div>
-          <div class="col-md-4 col-sm-4 col-xs-4">
-            <span style="font-size:20px; padding:0px 20px;"> {{data.qty}} </span>
+          <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 6px">
+            <span style="font-size:20px; "> {{data.qty}} </span>
           </div>
-          <div class="col-md-4 col-sm-4 col-xs-4">
+          <div class="col-md-4 col-sm-4 col-xs-4 text-left">
             <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="rowActionClicked('addQty')"></i>
           </div>
         </div>

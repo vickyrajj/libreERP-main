@@ -5,7 +5,7 @@
   </div>
 
   <div style="padding-top:1.5vh;" class="hidden-xs hidden-sm">
-    <div class="col-xs-6" style="padding:0px;">
+    <div class="col-xs-5" style="padding:0px;">
       <!-- <input type="text" class="" style="width:100%;color: #000;text-indent: 10px;outline: none;" placeholder="Search for products, brands and more.."> -->
       <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;border-radius: 7px;color:rgb(24, 89, 46)" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}">
     </div>
@@ -16,7 +16,7 @@
     </div> -->
   </div>
 
-  <div class="col-md-1 text-center dropdown hidden-xs hidden-sm">
+  <div class="col-md-2 text-center dropdown hidden-xs hidden-sm">
     <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46)" ng-if="me.pk" > {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 20px;" alt=""></span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
@@ -57,7 +57,7 @@
     </span>
   </div>
   <div class="col-xs-4 text-center dropdown hidden-lg hidden-md " style="padding-top: 12px;">
-    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;color:rgb(24, 89, 46)" ng-if="me.pk" > {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 15px;" alt=""></span>
+    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;color:rgb(24, 89, 46);" ng-if="me.pk" > {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 15px;" alt=""></span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px; left:-80px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
       <li><a ui-sref="account.orders" style="color:rgb(24, 89, 46)" >Orders</a></li>
@@ -111,15 +111,15 @@
   </div> -->
 <!-- </div> -->
 
-<div ng-if="$state.is('ecommerce')&&!bannerText" style="position:relative;height:60vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm ">
+<div ng-if="$state.is('ecommerce')&& !bannerText" style="position:relative;height:60vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm ">
 
     <img style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;position:absolute;z-index:none;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/><br/>
     <div class="col-md-12" style="padding-left:0px">
       <div class="col-md-6 text-left" style="margin-left:0px;left:0px;padding-top:8%;padding-left:0px">
-    <button  class="previous round text-right" style="background-color:white;color: black;position:absolute;font-size:50px;padding-right:10px;border:0px white; box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px" ng-click="change('previous')">&#8249; </button>
+    <button  class="previous round text-right" style="background-color:white;color:#808080;position:absolute;font-size:50px;padding-right:10px;border:0px white; box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px" ng-click="change('previous')">&#8249; </button>
   </div>
     <div class="col-md-6 text-right" style="margin-left:0px;left:0px;padding-top:8%;">
-    <button  class="next round text-left" style="background-color: white;color: black;position:absolute;float: left;font-size:50px;padding-right:10px;margin-right:10px;border:0px white;box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px"  ng-click="change('next')">&#8250;</button>
+    <button  class="next round text-left" style="background-color: white ;color: #808080;position:absolute;float: left;font-size:50px;padding-right:10px;margin-right:10px;border:0px white;box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px"  ng-click="change('next')">&#8250;</button>
   </div>
   </div>
 
@@ -153,7 +153,7 @@
 </div>
 
 
-<div ng-if="$state.is('ecommerce')&&!bannerText" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+<div ng-if="$state.is('ecommerce')&& !bannerText" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
   <!-- <img class="anim-in-out" data-anim-speed="100" style="width:100%;cursor:pointer;height:50vh" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/> -->
 
 <!-- <div ng-if="$state.is('ecommerce')" style="position:relative;height:88vh ;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">

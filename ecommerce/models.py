@@ -278,3 +278,9 @@ class SupportFeed(models.Model):
 class Pincode(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     pincodes = models.PositiveIntegerField( null=False)
+
+class GenericPincode(models.Model):
+    state = models.CharField(max_length = 35, null = True)
+    city =  models.CharField(max_length = 35, null = True)
+    pincode = models.CharField( max_length = 7, null = True)
+    pin_status = models.CharField( max_length = 2, default = "1")

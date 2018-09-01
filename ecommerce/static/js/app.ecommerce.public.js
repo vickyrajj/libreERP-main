@@ -1536,9 +1536,12 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     console.log(value);
     if(value=="use"){
       $scope.addressview =  false
-        Flash.create('success', 'Address Added');
+      $scope.idx=null
+      Flash.create('success', 'Address Added');
     }
     else if(value=="edit"){
+      $scope.idx=null
+      $scope.idxVal=idx
       $scope.addressview =  true
     }
     mob = $scope.data.address.mobile

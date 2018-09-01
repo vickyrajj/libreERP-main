@@ -43,24 +43,24 @@
       </div>
     </div>
 
-    <div class="row bg-purple hidden-md hidden-lg" style="margin-left:0px; padding-bottom:25px; " >
-      <div class="col-xs-12" >
-          <h4 style="color:white;">
+    <div class="row bg-purple hidden-md hidden-lg" style="margin-left:0px; padding-bottom:25px; ">
+      <div class="col-xs-12">
+        <h4 style="color:white;">
         <i class="fa fa-shopping-cart fa-2x"></i> Checkout
       </h4>
       </div>
     </div>
 
-    <div class="row bg-purple hidden-md hidden-lg" style="margin-left:0px; height:15vh;  padding-bottom:25px; " ng-if="data.stage=='!confirmation'" >
-      <div class="col-xs-4 text-center  " ng-class="{activeTopTab: data.stage == 'review'}" >
-        <div class="row " style="padding:0px;" >
+    <div class="row bg-purple hidden-md hidden-lg" style="margin-left:0px; height:15vh;  padding-bottom:25px; " ng-if="data.stage=='!confirmation'">
+      <div class="col-xs-4 text-center  " ng-class="{activeTopTab: data.stage == 'review'}">
+        <div class="row " style="padding:0px;">
           <i class="fa fa-check"></i>
         </div>
         <span style="color:white">
           Review
         </span>
       </div>
-      <div class="col-xs-4 text-center" ng-class="{activeTopTab: data.stage == 'shippingDetails'}"  >
+      <div class="col-xs-4 text-center" ng-class="{activeTopTab: data.stage == 'shippingDetails'}">
         <div class="row " style="padding:0px;">
           <i class="fa fa-truck"></i>
         </div>
@@ -68,7 +68,7 @@
           Shipment
         </span>
       </div>
-      <div class="col-xs-4 text-center" ng-class="{activeTopTab: data.stage == 'payment'}" >
+      <div class="col-xs-4 text-center" ng-class="{activeTopTab: data.stage == 'payment'}">
         <div class="row " style="padding:0px;">
           <i class="fa fa-credit-card"></i>
         </div>
@@ -90,16 +90,16 @@
             <div class="container-fluid hidden-xs hidden-sm">
 
               <div class="row">
-                <div class="col-md-3 ">
+                <div class="col-md-3 " style="padding-left:50px">
                   <span> <strong>Product</strong> </span>
                 </div>
                 <div class="col-md-offset-3 col-md-3 text-center">
                   <strong style="padding-left:50px">Price</strong>
                 </div>
-                <div class="col-md-offset-1 col-md-1">
+                <div class=" col-md-1">
                   <strong>Qty</strong>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2" style="padding-left:50px">
                   <strong>Total</strong>
                 </div>
               </div>
@@ -117,10 +117,10 @@
                   <div class="col-md-3">
                     <div class="row container-fluid">
                       <div class="col-md-6">
-                          <span class="pull-right"  ng-if="item.product.discount>0" > <strike> <i class="fa fa-inr"></i> {{item.product.price.toFixed(2)}} </strike> </span>
+                        <span class="pull-right" ng-if="item.product.discount>0"> <strike> <i class="fa fa-inr"></i> {{item.product.price.toFixed(2)}} </strike> </span>
                       </div>
                       <div class="col-md-6">
-                          <span><i class="fa fa-inr"></i>{{item.product.discountedPrice.toFixed(2)}}</span>
+                        <span><i class="fa fa-inr"></i>{{item.product.discountedPrice.toFixed(2)}}</span>
                       </div>
                     </div>
                   </div>
@@ -139,31 +139,29 @@
               <div ng-if="cartItems" ng-repeat="c in cartItems">
                 <div class="row" style="padding-top:30px;">
                   <div class="col-md-3">
-                    <img style="width: 100%; height:100px;" class="img" ng-src="{{c.product.files[0].attachment}}" ng-if="c.product.files.length>0">
-                    <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="c.product.files==null">
+                    <img style="width: 70%; height:100px;" class="img" ng-src="{{c.product.files[0].attachment}}" ng-if="c.product.files.length>0">
+                    <img style="width: 70%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="c.product.files==null">
                   </div>
-                  <div class="col-md-3" style="height:100px;">
+                  <div class="col-md-3" style="height:100px;padding-top: 50px;">
                     <h5 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h5>
                     <h5 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h5>
                   </div>
                   <div class="col-md-3">
                     <div class="row container-fluid">
-                      <div class="col-md-6">
-                          <span class="pull-right"  ng-if="c.product.product.discount>0" > <strike> <i class="fa fa-inr"></i> {{c.product.product.price.toFixed(2)}} </strike> </span>
+                      <div class="col-md-6" style="padding-top: 50px;>
+                          <span class=" pull-right "  ng-if="c.product.product.discount>0" > <strike> <i class="fa fa-inr"></i> {{c.product.product.price.toFixed(2)}} </strike> </span>
                       </div>
-                      <div class="col-md-6">
-                          <span><i class="fa fa-inr"></i> {{c.product.product.discountedPrice.toFixed(2)}}</span>
+                      <div class="col-md-6" style="padding-top: 50px;">
+                        <span><i class="fa fa-inr"></i> {{c.product.product.discountedPrice.toFixed(2)}}</span>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-1">
-                    <p> X </p>
-                  </div>
-                  <div class="col-md-1">
+
+                  <div class="col-md-1" style="padding-top: 50px;">
                     <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 60px;" min="1">
                   </div>
-                  <div class="col-md-1">
-                    <p > <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
+                  <div class="col-md-2" style="padding-top: 50px;padding-left:50px;">
+                    <p> <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
                   </div>
                 </div>
               </div>
@@ -180,17 +178,17 @@
                     <img style="width: 100%; height:65px;" class="img" src="/static/images/ecommerce.jpg" ng-if="item.files==null">
                   </div>
                   <div class="col-xs-6">
-                    <div class="row" style="padding:0px" >
+                    <div class="row" style="padding:0px">
                       <h6 ng-if="item.product.name.length>30" style="margin:0px;  height:50px;">{{item.product.name.slice(0,30)}}...</h6>
                       <h6 ng-if="item.product.name.length<=30" style="margin:0px;  height:50px;">{{item.product.name}}</h6>
                     </div>
-                    <div class="row" style="padding:0px" >
-                      <span  ng-if="item.product.discount>0" style="padding-right:5px;" > <strike> <i class="fa fa-inr"></i> {{item.product.price.toFixed(2)}} </strike> </span>
+                    <div class="row" style="padding:0px">
+                      <span ng-if="item.product.discount>0" style="padding-right:5px;"> <strike> <i class="fa fa-inr"></i> {{item.product.price.toFixed(2)}} </strike> </span>
                       <span><i class="fa fa-inr"></i>{{item.product.discountedPrice.toFixed(2)}}</span>
                     </div>
                   </div>
                 </div>
-                <div class="row" style="padding-top:20px;" >
+                <div class="row" style="padding-top:20px;">
                   <div class="col-xs-2">
                     <span>Qty :</span>
                   </div>
@@ -201,7 +199,7 @@
                     <span>Total :</span>
                   </div>
                   <div class="col-xs-4">
-                    <p > <i class="fa fa-inr"></i>  {{(item.product.discountedPrice * item.qty).toFixed(2) }} </p>
+                    <p> <i class="fa fa-inr"></i> {{(item.product.discountedPrice * item.qty).toFixed(2) }} </p>
                   </div>
                 </div>
               </div>
@@ -216,29 +214,29 @@
                       <img style="width: 100%; height:65px;" class="img" src="/static/images/ecommerce.jpg" ng-if="c.product.files==null">
                     </div>
                     <div class="col-xs-6">
-                      <div class="row" style="padding:0px" >
+                      <div class="row" style="padding:0px">
                         <h6 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h6>
                         <h6 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h6>
                       </div>
-                      <div class="row" style="padding:0px" >
-                        <span  ng-if="c.product.product.discount>0" style="padding-right:5px;" > <strike> <i class="fa fa-inr"></i> {{c.product.product.price.toFixed(2)}} </strike> </span>
+                      <div class="row" style="padding:0px">
+                        <span ng-if="c.product.product.discount>0" style="padding-right:5px;"> <strike> <i class="fa fa-inr"></i> {{c.product.product.price.toFixed(2)}} </strike> </span>
                         <span><i class="fa fa-inr"></i>{{c.product.product.discountedPrice.toFixed(2)}}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div class="row" style="padding-top:20px;" >
+                  <div class="row" style="padding-top:20px;">
                     <div class="col-xs-2">
                       <span>Qty :</span>
                     </div>
                     <div class="col-xs-3">
-                      <input type="number"  ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 40px;" min="1">
+                      <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 40px;" min="1">
                     </div>
                     <div class="col-xs-3">
                       <span>Total :</span>
                     </div>
                     <div class="col-xs-4">
-                      <p > <i class="fa fa-inr"></i>  {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
+                      <p> <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
                     </div>
                   </div>
 
@@ -260,7 +258,7 @@
               </div>
             </div>
             <div class="col-md-8">
-              <span style="color: {{msg=='Success'?'green':'red'}};" > {{msg}}</span>
+              <span style="color: {{msg=='Success'?'green':'red'}};"> {{msg}}</span>
               <!-- <span  ng-if="promo=='notApplied'" style="color: red;" > This Promocode is invalid! </span> -->
             </div>
 
@@ -283,23 +281,108 @@
             </div>
           </div>
 
-          <div class="row" ng-if="msg=='Success'" style="padding:15px;" >
+          <div class="row" ng-if="msg=='Success'" style="padding:15px;">
             <span style="font-size:20px;">  Total Payable <br>
             <i class="fa fa-inr"></i> {{totalAfterPromo.toFixed(2)}}</span>
-            <span style="font-size:18px; padding-left:10px; " class="text-muted" >(after {{promoDiscount}} % discount )</span>
+            <span style="font-size:18px; padding-left:10px; " class="text-muted">(after {{promoDiscount}} % discount )</span>
           </div>
 
           <div class="row" style="padding:15px;">
-            <p ng-if="total!=totalAfterDiscount && msg!='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterDiscount).toFixed(2)}} on this order</p>
-            <p ng-if="msg=='Success'" >You are saving <i class="fa fa-inr"></i>  {{(total - totalAfterPromo).toFixed(2)}} on this order</p>
+            <p ng-if="total!=totalAfterDiscount && msg!='Success'">You are saving <i class="fa fa-inr"></i> {{(total - totalAfterDiscount).toFixed(2)}} on this order</p>
+            <p ng-if="msg=='Success'">You are saving <i class="fa fa-inr"></i> {{(total - totalAfterPromo).toFixed(2)}} on this order</p>
           </div>
 
         </div>
         <!-- review page ends here  -->
         <div ng-if="data.stage == 'shippingDetails'">
           <div class="row">
-            <div class="col-md-5 hidden-sm hidden-xs" style="padding-left:55px" ng-if="savedAddress.length>0">
-              <span class="text-center"> <h4>Saved Addresses</h4><br> </span>
+            <div class="col-md-8 col-md-offset-2 hidden-sm hidden-xs" style="padding-left:55px" ng-if="savedAddress.length>0">
+              <div class="row">
+                <div class="row card" style="margin-bottom:15px">
+                  <div class="col-md-6 text-center">
+                    <h5>{{me.first_name}} {{me.last_name}}</h5>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <input type="text" class="form-control" id="mob" ng-model="data.address.mobile" placeholder="Enter mobile..">
+                    </div>
+                  </div>
+                </div>
+                <div class="row card" style="margin-bottom:15px">
+                  <div class="row card bg-blue" style="margin-left:0px;margin-right:0px">
+                    <h5 style="padding-left:10px;color:white"> DELIVERY ADDRESS </h5>
+                  </div>
+                  <div class="col-md-12" ng-repeat = "adr in savedAddress">
+                    <div class="row" style="margin-top:15px">
+                      <div class="col-md-1">
+                      <input ng-model="adr.pk" type="radio" name="radio" value="adr.pk" ng-click="show($index)">
+                    </div>
+                    <div class="col-md-10">
+                  <strong>{{me.first_name}} {{me.last_name}}</strong><br/>
+                  {{adr.title}} {{adr.landMark}}  {{adr.street}},
+                  {{adr.city}}, {{adr.state}},  {{adr.country}} - {{adr.pincode}}
+
+                  <div class="row"  ng-if="$index==idx" >
+                    <div class="col-md-4">
+                    <div class=" btn btn-block btn-primary" ng-click="ChangeAdd($index,'use')">
+                      Use This Address
+                    </div>
+                    </div>
+                  </div>
+                  <div class="row" ng-if="addressview&&$index==idxVal">
+                  <h4>Address</h4>
+                  <div class="form-group">
+
+                    <textarea ng-model="data.address.street" class="form-control" id="street" placeholder="Enter street.." ></textarea>
+                  </div>
+                  <div class="form-group">
+
+                    <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark" placeholder="Enter Landmark.." >
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-xs-6">
+                      <div class="form-group">
+
+                        <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." >
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                      <div class="form-group">
+                        <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State..">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-xs-6">
+                      <div class="form-group">
+                        <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                      <div class="form-group">
+                        <input ng-model="data.address.country" type="text" class="form-control" id="country" placeholder="Enter Country..">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-bottom:35px">
+
+                    <div class="col-xs-6">
+                      <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none" >
+                        <i class="fa fa-star fa-lg"></i> &nbsp;Save for later use
+                      </button>
+
+                    </div>
+                  </div>
+                  </div>
+                </div>
+                  <div class="col-md-1"  ng-if="$index==idx" ng-click="ChangeAdd($index,'edit')">
+                    <strong>Edit</strong>
+                </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <span class="text-center"> <h4>Saved Addresses</h4><br> </span>
               <div class="row" ng-repeat="adr in savedAddress">
                 <div class="col-md-1 hidden-sm hidden-xs">
                   <input ng-model="adr.pk" type="radio" name="radio" value="adr.pk" ng-click="show($index)">
@@ -359,96 +442,95 @@
                   Add a New Address
                 </div>
               </div>
-              </div>
+              </div> -->
 
 
             </div>
-            <div class="hidden-md hidden-lg col-xs-12"  ng-if="savedAddress.length>0">
+            <div class="hidden-md hidden-lg col-xs-12" ng-if="savedAddress.length>0">
               <span class="text-center"> <h4>Saved Addresses</h4><br> </span>
               <div class="row" ng-repeat="adr in savedAddress">
                 <div class="hidden-md hidden-lg col-xs-1">
                   <input ng-model="adr.pk" type="radio" name="radio" value="adr.pk" ng-click="show($index)">
                 </div>
                 <div class="hidden-md hidden-lg  col-xs-10">
-              <div class="row"  style="padding:5px 30px;margin-bottom:15px">
-                <div class="row card">
-                  <div class="row text-center">
-                    <div class="hidden-md hidden-lg  col-xs-9" style="font-size:19px" >
-                      <strong>{{adr.title}}</strong>
+                  <div class="row" style="padding:5px 30px;margin-bottom:15px">
+                    <div class="row card">
+                      <div class="row text-center">
+                        <div class="hidden-md hidden-lg  col-xs-9" style="font-size:19px">
+                          <strong>{{adr.title}}</strong>
+                        </div>
+                        <div class="hidden-md hidden-lg  col-xs-2" style="cursor:pointer;padding-top:10px" ng-if="$index==idx" ng-click="ChangeAdd($index,'edit')">
+                          <strong><i class="fa fa-pencil"></i></strong>
+                        </div>
+                      </div>
+                      <div class="row" style="padding-left:15px;font-size:16px">
+                        <div class="hidden-md hidden-lg  col-xs-12">
+                          <strong>Landmark :</strong> {{adr.landMark}}
+                        </div>
+                      </div>
+                      <div class="row" style="padding-left:15px;font-size:16px">
+                        <div class="hidden-md hidden-lg col-xs-12">
+                          <strong>Street :</strong> {{adr.street}}
+                        </div>
+                      </div>
+                      <div class="row" style="padding-left:15px;font-size:16px">
+                        <div class="hidden-md hidden-lg col-xs-6">
+                          <strong>City :</strong> {{adr.city}}
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                          <strong>State :</strong> {{adr.state}}
+                        </div>
+                      </div>
+                      <div class="row" style="padding-left:15px;font-size:16px">
+                        <div class="hidden-md hidden-lg col-xs-6">
+                          <strong>PinCode :</strong> {{adr.pincode}}
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                          <strong>Country :</strong> {{adr.country}}
+                        </div>
+                      </div>
                     </div>
-                    <div class="hidden-md hidden-lg  col-xs-2" style="cursor:pointer;padding-top:10px"  ng-if="$index==idx"  ng-click="ChangeAdd($index,'edit')">
-                    <strong><i class="fa fa-pencil"></i></strong>
+                    <div class="row" ng-if="$index==idx">
+                      <div class=" btn btn-block btn-primary" ng-click="ChangeAdd($index,'use')">
+                        Use This Address
+                      </div>
                     </div>
-                  </div>
-                  <div class="row" style="padding-left:15px;font-size:16px">
-                    <div class="hidden-md hidden-lg  col-xs-12">
-                      <strong>Landmark :</strong> {{adr.landMark}}
-                    </div>
-                  </div>
-                  <div class="row" style="padding-left:15px;font-size:16px">
-                    <div class="hidden-md hidden-lg col-xs-12">
-                      <strong>Street :</strong> {{adr.street}}
-                    </div>
-                  </div>
-                  <div class="row" style="padding-left:15px;font-size:16px">
-                    <div class="hidden-md hidden-lg col-xs-6">
-                      <strong>City :</strong> {{adr.city}}
-                    </div>
-                    <div class="col-md-6 col-xs-6">
-                      <strong>State :</strong> {{adr.state}}
-                    </div>
-                  </div>
-                  <div class="row" style="padding-left:15px;font-size:16px">
-                    <div class="hidden-md hidden-lg col-xs-6">
-                      <strong>PinCode :</strong> {{adr.pincode}}
-                    </div>
-                    <div class="col-md-6 col-xs-6">
-                      <strong>Country :</strong> {{adr.country}}
-                    </div>
-                  </div>
-                </div>
-                <div class="row" ng-if="$index==idx">
-                  <div class=" btn btn-block btn-primary" ng-click="ChangeAdd($index,'use')">
-                    Use This Address
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
               <div class="row">
                 <div class="col-xs-1 hidden-md hidden-lg">
 
                 </div>
-                  <div class="col-xs-10 hidden-md hidden-lg">
-                <div class=" btn btn-block btn-default" ng-click="resetAdd()" >
-                  Add a New Address
+                <div class="col-xs-10 hidden-md hidden-lg">
+                  <div class=" btn btn-block btn-default" ng-click="resetAdd()">
+                    Add a New Address
+                  </div>
                 </div>
-              </div>
               </div>
 
 
             </div>
-            <div class="col-md-7 col-xs-12">
+            <!-- <div class="col-md-7 col-xs-12">
               <div class="row" ng-if="addressview">
               <h4>Address</h4>
               <div class="form-group">
-                <!-- <label for="street">Street : </label> -->
+
                 <textarea ng-model="data.address.street" class="form-control" id="street" placeholder="Enter street.." ></textarea>
               </div>
               <div class="form-group">
-                <!-- <label for="ldm">Land Mark : </label> -->
+
                 <input type="text" class="form-control" id="ldm" ng-model="data.address.landMark" placeholder="Enter Landmark.." >
               </div>
               <div class="row">
                 <div class="col-md-6 col-xs-6">
                   <div class="form-group">
-                    <!-- <label for="city">City : </label> -->
+
                     <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." >
                   </div>
                 </div>
                 <div class="col-md-6 col-xs-6">
                   <div class="form-group">
-                    <!-- <label for="state">State : </label> -->
                     <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State..">
                   </div>
                 </div>
@@ -456,42 +538,34 @@
               <div class="row">
                 <div class="col-md-6 col-xs-6">
                   <div class="form-group">
-                    <!-- <label for="pincode">Pincode : </label> -->
                     <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
                   </div>
                 </div>
                 <div class="col-md-6 col-xs-6">
                   <div class="form-group">
-                    <!-- <label for="country">Country : </label> -->
                     <input ng-model="data.address.country" type="text" class="form-control" id="country" placeholder="Enter Country..">
                   </div>
                 </div>
               </div>
               <div class="row" style="margin-bottom:35px">
-                <!-- <div class="col-xs-6">
-                  <button type="button" class="btn btn-default" ng-click="resetAdd()" >
-                    <i class="fa fa-refresh fa-lg"></i> &nbsp;Reset This Address
-                  </button> -->
 
-                  <!-- <i class="btn btn-default" ng-click="resetAdd()"><i class="fa fa-refresh fa-lg"></i> Reset This Address</i> -->
-                <!-- </div> -->
                 <div class="col-xs-6">
                   <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none" >
                     <i class="fa fa-star fa-lg"></i> &nbsp;Save for later use
                   </button>
-                  <!-- <i class="pull-right btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none"><i class="fa fa-star fa-lg"></i> Save for later use</i> -->
+
                 </div>
               </div>
             </div>
               <h4>Contact Details</h4>
               <div class="form-group">
-                <!-- <label for="mob">Mobile no. : </label> -->
+
                 <input type="text" class="form-control" id="mob" ng-model="data.address.mobile" placeholder="Enter mobile.." >
               </div>
 
             </div>
 
-
+ -->
 
 
           </div>
@@ -539,7 +613,7 @@
             <p>
               <strong>Total amount payable :</strong>
               <span ng-if="msg=='Success'" >{{totalAfterPromo.toFixed(2)}}</span>
-              <span ng-if="msg!='Success'" >{{totalAfterDiscount.toFixed(2)}}</span>
+            <span ng-if="msg!='Success'">{{totalAfterDiscount.toFixed(2)}}</span>
             </p>
           </div>
 
@@ -553,82 +627,82 @@
           </div>
         </div>
         <div ng-if="data.stage == 'onlinePayment'">
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <h3 class="text-center">Payment Details</h3>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <form role="form">
-                                <div class="row container-fluid">
-                                  <div class="form-group">
-                                    <label>Card Number</label>
-                                    <input type="tel" class="form-control" placeholder="Valid Card Number" />
-                                  </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-7 col-md-7">
-                                        <div class="form-group">
-                                          <label><span >Valid</span> Till</label>
-                                          <input type="tel" class="form-control" placeholder="MM / YY" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-5 col-md-5 pull-right">
-                                        <div class="form-group">
-                                          <label>CV Code</label>
-                                          <input type="tel" class="form-control" placeholder="CV Code" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row container-fluid">
-                                    <div class="form-group">
-                                      <label>CARD HOLDER</label>
-                                      <input type="text" class="form-control" placeholder="Card Holder's Name" />
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="panel-footer">
-                            <div class="row text-center">
-                              <button class="btn btn-success">Process payment</button>
-                            </div>
-                        </div>
-                    </div>
+          <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <div class="row">
+                    <h3 class="text-center">Payment Details</h3>
+                  </div>
                 </div>
+                <div class="panel-body">
+                  <form role="form">
+                    <div class="row container-fluid">
+                      <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="tel" class="form-control" placeholder="Valid Card Number" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-7 col-md-7">
+                        <div class="form-group">
+                          <label><span >Valid</span> Till</label>
+                          <input type="tel" class="form-control" placeholder="MM / YY" />
+                        </div>
+                      </div>
+                      <div class="col-xs-5 col-md-5 pull-right">
+                        <div class="form-group">
+                          <label>CV Code</label>
+                          <input type="tel" class="form-control" placeholder="CV Code" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row container-fluid">
+                      <div class="form-group">
+                        <label>CARD HOLDER</label>
+                        <input type="text" class="form-control" placeholder="Card Holder's Name" />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="panel-footer">
+                  <div class="row text-center">
+                    <button class="btn btn-success">Process payment</button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="row">
-              <button type="button" class="btn btn-default pull-left" ng-click="prev()">
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn-default pull-left" ng-click="prev()">
                 Go back
               </button>
-            </div>
+          </div>
         </div>
         <div ng-if="data.stage == 'processing'">
           <div class="col-md-4 col-md-offset-4">
             <div class="text-center">
               <i class="fa fa-spinner fa-spin fa-5x"></i> <br>
               <span>Please wait</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div ng-if="data.stage == 'confirmation'">
-        <h1>Thank you</h1>
-        <h2>Your order details are as follows</h2>
-        <strong> Order No. : </strong> #{{order.odnumber}}<br>
-        <strong> Order date and time : </strong> {{order.dt | date : 'dd-MMM-yyyy: hh:mm:ss a'}}<br>
-        <!-- <strong> Item ID : </strong> {{data.order.offer}}<br> -->
-        <strong> Payment mode. : </strong> {{order.paymentMode}}<br>
-        <hr>
-        <!-- <strong> Booking starts from : </strong> {{data.order.start | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
+        <div ng-if="data.stage == 'confirmation'">
+          <h1>Thank you</h1>
+          <h2>Your order details are as follows</h2>
+          <strong> Order No. : </strong> #{{order.odnumber}}<br>
+          <strong> Order date and time : </strong> {{order.dt | date : 'dd-MMM-yyyy: hh:mm:ss a'}}<br>
+          <!-- <strong> Item ID : </strong> {{data.order.offer}}<br> -->
+          <strong> Payment mode. : </strong> {{order.paymentMode}}<br>
+          <hr>
+          <!-- <strong> Booking starts from : </strong> {{data.order.start | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br>
         <strong> Booking ends at : </strong> {{data.order.end | date : 'dd-mm-yyyy: hh:mm:ss a'}}<br> -->
+        </div>
       </div>
+
+
     </div>
 
 
   </div>
-
-
-</div>
 </div>
