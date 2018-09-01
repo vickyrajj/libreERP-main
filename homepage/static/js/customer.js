@@ -160,6 +160,9 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     if ($scope.cpForm.supportBubbleColor != '') {
       fd.append('supportBubbleColor', $scope.cpForm.supportBubbleColor);
     }
+    if ($scope.cpForm.iconColor != '') {
+      fd.append('iconColor', $scope.cpForm.iconColor);
+    }
     if ($scope.cpForm.firstMessage != '') {
       fd.append('firstMessage', $scope.cpForm.firstMessage);
     }
@@ -247,6 +250,8 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
     fd.append('title', $scope.docForm.title);
     fd.append('customer', $scope.custDetailsPk);
 
+    console.log($scope.docForm.process,'this is process');
+
     if ($scope.docForm.process!=null && typeof $scope.docForm.process != 'string') {
       console.log($scope.docForm.process.pk,'dddddddddddddddddd');
       console.log($scope.docForm.process);
@@ -299,7 +304,7 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
         }
       }).
       then(function(response) {
-        console.log('ddddddddddddddd', response.data);
+        // console.log('ddddddddddddddd', response.data);
         $scope.versions.push(response.data)
       });
 

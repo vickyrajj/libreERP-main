@@ -15,6 +15,8 @@ router.register(r'getVisitorDetails' , GetVisitorDetailsViewSet , base_name = 'g
 router.register(r'getOfflineMessages' , GetOfflineMessagesViewSet , base_name = 'getOfflineMessages')
 router.register(r'documentVersion' , DocumentVersionViewSet , base_name = 'documentVersion')
 router.register(r'companyProcess' , CompanyProcessViewSet , base_name = 'companyProcess')
+router.register(r'cannedResponses' , CannedResponsesViewSet , base_name = 'cannedResponses')
+
 
 
 

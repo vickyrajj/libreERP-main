@@ -15,7 +15,7 @@
             <div class="text-center" style="font-size:20px;padding:10px"><b>{{doc.title}}</b></div>
             <ul style="list-style:none;position:absolute;bottom:-15px;left:0px;font-size:12px" class="list-inline">
               <li>Last modified:<b> {{doc.updated  | date:'dd-MMM-yyyy'}}</b></li>
-              <li>Process:<b> abc</b></li>
+              <li ng-if="doc.process.text">Process:<b> {{doc.process.text}}c</b></li>
               <li>Versions:<b> {{doc.version_count}}</b></li>
             </ul>
           </div>

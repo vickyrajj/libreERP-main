@@ -260,6 +260,19 @@ app.controller("businessManagement.customers.document", function($scope, $state,
     if ($scope.docForm.docs != null && typeof $scope.docForm.docs != 'string' && $scope.docForm.docs != emptyFile) {
       fd.append('docs', $scope.docForm.docs);
     }
+
+    if ($scope.docForm.process!=null && typeof $scope.docForm.process != 'string') {
+      console.log($scope.docForm.process.pk,'dddddddddddddddddd');
+      console.log($scope.docForm.process);
+      fd.append('process' , $scope.docForm.process.pk)
+    }
+
+    if ($scope.docForm.articleOwner!=null && typeof $scope.docForm.articleOwner != 'string') {
+      console.log('article owner' , $scope.docForm.articleOwner , $scope.docForm.articleOwner.pk);
+      fd.append('articleOwner' , $scope.docForm.articleOwner.pk)
+    }
+
+
     var method = 'POST'
     var url = '/api/support/documentation/'
     if ($scope.docForm.pk != undefined) {
@@ -348,16 +361,6 @@ app.controller("businessManagement.customers.document", function($scope, $state,
       }
     }
   }, true)
-
-
-
-           $scope.processSearch = function(val){
-            return $http({method : 'GET' , url : '/api/social/productTag/?txt__contains=' + val}).
-            then(function(response) {
-              return response.data;
-            })
-          }
-
 
 
   // $scope.openChartPopoup = function(pk){
@@ -475,6 +478,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     dp: emptyFile,
     name: '',
     supportBubbleColor: '#286EFA',
+    iconColor: '#FFFFFF',
     firstMessage: ''
   }
   $scope.fetCustomerProfile = function(pk) {
@@ -648,6 +652,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     if (cpF.supportBubbleColor == '') {
       delete cpF.supportBubbleColor
     }
+    if (cpF.iconColor == '') {
+      delete cpF.iconColor
+    }
     if (cpF.firstMessage == null || cpF.firstMessage == '') {
       delete cpF.firstMessage
       console.log('thereee', cpF.firstMessage);
@@ -693,6 +700,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     }
     if (cpF.supportBubbleColor != '') {
       fd.append('supportBubbleColor', cpF.supportBubbleColor);
+    }
+    if (cpF.iconColor != '') {
+      fd.append('iconColor', cpF.iconColor);
     }
 
     // if (cpF.firstMessage != '') {

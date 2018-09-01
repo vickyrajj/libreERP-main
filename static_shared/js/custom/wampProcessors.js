@@ -188,7 +188,9 @@ connection.onopen = function(session) {
       console.log('yesssssssssssss');
 
     } else {
+      console.log(args,'hereeeeeeeeeeeeeeeeee');
       if ((args[1] == 'M' || args[1] == 'MF' || args[1] == 'ML') && args[2].user) {
+        console.log(args[2].user ,'ffffffffffffffffffff');
         console.log('check argssssssss', args[2]);
         return
       }

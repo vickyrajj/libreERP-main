@@ -73,7 +73,7 @@
         <div class="col-md-6">
           <h4><i class="fa fa-gg-circle"></i> &nbsp; SupportBubble Colour</h4>
         </div>
-        <div class="col-md-3" style="background-color:{{custDetails.supportBubbleColor}};margin-top:10px">
+        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.supportBubbleColor}};margin-top:10px">
           <h3> </h3>
         </div>
         <br>
@@ -82,7 +82,17 @@
         <div class="col-md-6">
           <h4><i class="fa fa-desktop"></i> &nbsp; Window Colour</h4>
         </div>
-        <div class="col-md-3" style="background-color:{{custDetails.windowColor}};margin-top:10px">
+        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.windowColor}};margin-top:10px">
+          <h3> </h3>
+        </div>
+        <br>
+      </div>
+
+      <div class="row" ng-if="custDetails.iconColor.length>0" style="padding-left:10px">
+        <div class="col-md-6">
+          <h4><i class="fa fa-desktop"></i> &nbsp; Icon Colour</h4>
+        </div>
+        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.iconColor}};margin-top:10px">
           <h3> </h3>
         </div>
         <br>

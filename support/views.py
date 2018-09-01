@@ -520,3 +520,10 @@ class CompanyProcessViewSet(viewsets.ModelViewSet):
     queryset = CompanyProcess.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['service','text']
+
+class CannedResponsesViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = CannedResponsesSerializer
+    queryset = CannedResponses.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['text']
