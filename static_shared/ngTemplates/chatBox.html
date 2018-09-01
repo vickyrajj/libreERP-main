@@ -4,15 +4,22 @@
       <div class="row" style="padding:0px;margin-top:5px">
         <div class="col-md-12">
           <div class="col-md-4" style="padding:0px">
-            <div class="btn btn-primary btn-sm btn-block" type="button" name="button" ng-click="knowledgeBase(data.companyPk)"> Knowledge base
+            <div class="btn btn-primary btn-sm btn-block" type="button" name="button" ng-click="knowledgeBase(data.companyPk)"><i class="fa fa-book" style="font-size:35px" aria-hidden="true"></i>
             </div>
           </div>
           <div class="col-md-4" style="padding:0px">
-            <div class="btn btn-warning btn-sm btn-block" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatTransfer(data.uid,data.chatThreadPk)" confirm-button-type="default" cancel-button-type="default"> Chat Transfer
+            <div class="btn btn-warning btn-sm btn-block" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatTransfer(data.uid,data.chatThreadPk)" confirm-button-type="default" cancel-button-type="default"><i style="font-size:35px" class="fa fa-user-o" aria-hidden="true"></i>
+              <i style="font-size:35px" class="fa fa-exchange" aria-hidden="true"></i>
+              <i style="font-size:35px" class="fa fa-user" aria-hidden="true"></i>
+
+              <!-- <img style="width:37px;border-radius:10px" src="/static/images/chat_transfer.jpg"> -->
             </div>
           </div>
           <div class="col-md-4" style="padding:0px">
-            <div class="btn btn-danger btn-sm btn-block" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(index,data.uid,data.chatThreadPk);closed=true" confirm-button-type="default" cancel-button-type="default" ng-hide="closed"> Close Chat
+            <div class="btn btn-danger btn-sm btn-block" type="button" name="button"  mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatClose(index,data.uid,data.chatThreadPk);closed=true" confirm-button-type="default" cancel-button-type="default" ng-hide="closed">
+               <!-- <span style="font-size:15px">Chat &nbsp<i style="font-size:18px" class="fa fa-times" aria-hidden="true"></i></span> -->
+               <img style="width:34px;border-radius:10px" src="/static/images/close_chat.png">
+
             </div>
             <span ng-if="closed" style="font-size:18px;color:red">Chat Closed</span>
           </div>
@@ -104,15 +111,16 @@
     <div class="row" style="margin:0px;margin-top:10px;margin-bottom:5px;">
       <form>
         <div class="input-group">
-          <input ng-if="chatBox.fileToSend.size==0" type="text" class="form-control" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)">
+          <input ng-if="chatBox.fileToSend.size==0" type="text" class="col-md-9" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" style="border:none;outline:none;background-color:white;">
           <!-- <span ng-if="chatBox.fileToSend.size==0" class="input-group-addon" ng-click="openEmoji()" style="cursor:pointer"><i class="fa fa-smile-o" aria-hidden="true"></i></span> -->
           <input type="file" id="filePickerChat{{index}}" style="display:none;" file-model="chatBox.fileToSend">
-          <span ng-if="chatBox.fileToSend.size==0" class="input-group-addon"style="cursor:pointer" ng-click="attachFile()" ><i class="fa fa-paperclip"  aria-hidden="true"></i></span>
-          <span ng-if="chatBox.fileToSend.size!=0" class="input-group-addon btn btn-default" > <i class="fa {{chatBox.fileToSend.name | fileTypeIcon }}"></i> </span>
-          <span ng-if="chatBox.fileToSend.size!=0" class="input-group-addon btn btn-default" style="font-size:10px;" > {{chatBox.fileToSend.name.slice(0,25)}} </span>
-          <span ng-if="chatBox.fileToSend.size!=0" class="input-group-addon btn btn-default" style="cursor:pointer" ng-click="removeFile()" > <i class="fa fa-times" aria-hidden="true"></i> </span>
-          <span class="input-group-addon" ng-click="send()" style="cursor:pointer"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
-        </div>
+
+          <span ng-if="chatBox.fileToSend.size==0" class="col-md-1" style="cursor:pointer;font-size:20px" ng-click="attachFile()" ><i class="fa fa-paperclip"  aria-hidden="true"></i></span>
+          <span ng-if="chatBox.fileToSend.size!=0" class="col-md-3" style="cursor:pointer;font-size:20px;padding:0px;text-align:center" > <i class="fa {{chatBox.fileToSend.name | fileTypeIcon }}"></i> </span>
+          <span ng-if="chatBox.fileToSend.size!=0" class="col-md-3" style="cursor:pointer;font-size:20px;padding:0px" > {{chatBox.fileToSend.name.slice(0,25)}} </span>
+          <span ng-if="chatBox.fileToSend.size!=0" class="col-md-3" style="cursor:pointer;font-size:20px;padding:0px;text-align:center" ng-click="removeFile()" > <i class="fa fa-times" aria-hidden="true"></i> </span>
+          <span class=" col-md-1" ng-click="send()" style="cursor:pointer;font-size:20px"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
+        <!-- </div> -->
       </form>
     </div>
   </div>

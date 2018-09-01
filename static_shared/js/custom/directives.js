@@ -593,9 +593,13 @@ app.directive('chatBox', function() {
         }).result.then(function() {
 
         }, function(data) {
-          console.log(data);
-          $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
-          $scope.send()
+
+          if (data!= 'backdrop click') {
+            console.log(data);
+            $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
+            $scope.send()
+          }
+
         });
       }
 
