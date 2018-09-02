@@ -1,10 +1,10 @@
-<div class="col-md-3 col-sm-6 col-xs-12" style="padding-bottom:30px;"  ng-controller="controller.ecommerce.account.cart.item">
-  <div class="container-fluid">
-    <div class="row" >
-      <img style="width: 100%; height:100px;" class="img" ng-src="{{data.product.files[0].attachment}}" >
+<div class="col-md-3 col-sm-6 col-xs-12 " style="padding-bottom:30px;"  ng-controller="controller.ecommerce.account.cart.item">
+  <div class="container-fluid card  bg-white" style="padding-bottom:0px;">
+    <div class="row" style="overflow:hidden;">
+      <img style="width: 100%;" class="img" ng-src="{{data.product.files[0].attachment}}" >
     </div>
     <div class="row" >
-      <div class=" card bg-white" style="padding-bottom:0px;">
+      <div class="" style="padding-bottom:0px;">
         <div class="row container-fluid" style="padding:10px 20px; height:100px;">
           <h5 ng-if="data.product.product.name.length>30" style="margin:0px;  height:50px;">{{data.product.product.name.slice(0,30)}}...</h5>
           <h5 ng-if="data.product.product.name.length<=30" style="margin:0px;  height:50px;">{{data.product.product.name}}</h5>

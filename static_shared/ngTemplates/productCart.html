@@ -1,9 +1,9 @@
 <div  style="cursor:pointer;">
   <div  ng-click="openDetails(list.pk,list.product.name.split(' ').join('-'))" style="margin-bottom:15px;margin-left:15px;margin-right:15px">
     <div class="row" class="text-center">
-      <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-        <img style="width: 90%; height:200px;" class="img" ng-src="{{list.files[0].attachment}}" ng-if="list.files.length>0">
-        <img style="width: 90%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="list.files==null">
+      <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;overflow:hidden;">
+        <img style="width: 100%;" class="img" ng-src="{{list.files[0].attachment}}" ng-if="list.files.length>0">
+        <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" ng-if="list.files==null">
       </div>
     </div>
     <div class="row">

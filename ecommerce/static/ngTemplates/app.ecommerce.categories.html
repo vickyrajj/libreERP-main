@@ -7,15 +7,14 @@
     </ol>
   </nav> -->
   <div class="row">
-  <div class="col-md-12  hidden-xs hidden-sm  anim-in-out anim-zoom-out" style="padding-right:0px;padding-left:0px;margin-bottom:20px">
-    <img style="width: 100%; height:60vh;" class="img" ng-src="{{category.bannerImage}}">
-</div>
+  <div class="col-md-12  hidden-xs hidden-sm  anim-in-out anim-zoom-out" style="padding-right:0px;padding-left:0px;margin-bottom:20px;border-bottom: solid 4px #eeeeee;overflow:hidden;height:40vh;background: url('{{category.bannerImage}}') no-repeat center center;background-size: cover;">
+  </div>
 <div class="col-xs-12 col-sm-12 hidden-md hidden-lg  anim-in-out anim-zoom-out" style="padding-left:0px;padding-right:0px;margin-bottom:20px">
   <img style="width: 100%; height:250px;" class="img" ng-src="{{category.visual}}">
 </div>
   </div>
 
-  <div class="col-md-2 hidden-sm hidden-xs  card bg-white " style="margin-left:15px;margin-right:15px;" ng-if="showFilter==true">
+  <div class="col-md-2 hidden-sm hidden-xs bg-white " style="margin-left:15px;margin-right:15px;" ng-if="showFilter==true">
     <div class="row" style="padding-top:40px; ">
       <div class="container-fluid ">
         <form>
@@ -70,7 +69,7 @@
   </div>
 
   <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:20px;margin-right:20px" ng-if="showFilter==false">
-    <div  class="row card bg-white ">
+    <div  class="row bg-white ">
       <h4 class="text-center">Other Categories</h4>
       <div ng-repeat="r in categories" style="padding:0px;">
         <div class="col-md-12 anim-in-out anim-zoom-out">
@@ -151,7 +150,7 @@
   </div>
 
 
-  <div class="col-md-7 card bg-white" style="padding-top:15px;margin-left:15px;margin-right:15px;" ng-if="showFilter==true">
+  <div class="col-md-7 bg-white" style="padding-top:15px;margin-left:15px;margin-right:15px;" ng-if="showFilter==true">
 
     <!-- <div class="row hidden-lg hidden-md">
 
@@ -299,7 +298,7 @@
 
   <!-- </div> -->
 </div>
-<div class="col-md-9 card bg-white" style="padding-top:15px;margin-left:20px;margin-right:20px;" ng-if="showFilter==false">
+<div class="col-md-9 bg-white" style="padding-top:15px;margin-left:20px;margin-right:20px;" ng-if="showFilter==false">
 
   <!-- <div class="row hidden-lg hidden-md">
 
@@ -451,7 +450,7 @@
 
 
 <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:20px;margin-right:20px;" ng-if="showFilter==true">
-  <div  class="row card bg-white ">
+  <div  class="row bg-white ">
     <h4 class="text-center">Other Categories</h4>
     <div ng-repeat="r in categories" style="padding:0px;">
       <div class="col-md-12 anim-in-out anim-zoom-out">
@@ -474,7 +473,7 @@
   </div>
 </div>
 <div class="col-sm-12 col-xs-12 hidden-lg hidden-md" style="margin-top:20px">
-  <div  class="row card bg-white"style="width:100%;margin-left: 1px;">
+  <div  class="row bg-white"style="width:100%;margin-left: 1px;">
     <h4 class=" text-center" >Other Categories</h4>
     <div ng-repeat="r in categories" style="padding:0px;">
       <div class="col-sm-12 col-xs-12 hidden-lg hidden-md anim-in-out anim-zoom-out">

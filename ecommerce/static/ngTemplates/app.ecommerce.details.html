@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="col-md-8 col-md-offset-1 card bg-white">
+  <div class="col-md-8 col-md-offset-{{me != null ? '1' : '2' }} card bg-white">
     <div class="row" style="margin:0px 0px 30px 0px">
 
       <nav aria-label="breadcrumb">
@@ -14,8 +14,8 @@
       <div class="col-md-1 col-xs-3" style="padding:0px; cursor:pointer;">
         <img ng-repeat="f in details.files" ng-click="changePicture($index)" style="{{details.files[pictureInView].attachment==f.attachment?'width: 100%; border:1px solid #b4acb0':'width: 100%'}}" class="img" ng-src="{{f.attachment}}">
       </div>
-      <div class="col-md-5 col-xs-9" style="padding:0px;">
-        <img style="width: 100%; height:300px;" class="img" ng-src="{{details.files[pictureInView].attachment}}">
+      <div class="col-md-5 col-xs-9" style="padding:0px;overflow:hidden;">
+        <img style="width: 100%;" class="img" ng-src="{{details.files[pictureInView].attachment}}">
       </div>
       <div class="col-md-6 col-xs-12" style="height:100%;right:0px;">
         <div class="row container-fluid">
@@ -376,8 +376,8 @@
         <div class="col-md-12 anim-in-out anim-zoom-out">
           <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : recentlyViewed.product.pk,name:recentlyViewed.product.product.name.split(' ').join('-')})">
             <div class="row">
-              <img style="width: 100%; height:100px;" class="img" ng-src="{{recentlyViewed.product.files[0].attachment}}" ng-if="recentlyViewed.product.files.length>0">
-              <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="recentlyViewed.product.files==null">
+              <img style="width: 100%; height:150px;" class="img" ng-src="{{recentlyViewed.product.files[0].attachment}}" ng-if="recentlyViewed.product.files.length>0">
+              <img style="width: 100%; height:150px;" class="img" src="/static/images/ecommerce.jpg" ng-if="recentlyViewed.product.files==null">
             </div>
             <div class="row container-fluid" style="padding-top:5px; ">
               <h5 ng-if="recentlyViewed.product.product.name.length>30" style="margin:0px;  height:60px;">{{recentlyViewed.product.product.name.slice(0,30)}}...</h5>
@@ -402,16 +402,10 @@
   </div>
 </div>
 
+<!--
 
-
-<div class="row anim-in-out anim-zoom-out" style="position:fixed; bottom:20px; left:0px;z-index:100;" ng-if="showGoToTop">
-  <div class="card text-center" style="width:300px;height:70px;padding:10px;background-color:#0e7560;border-radius:0px 10px 10px 0px;">
-    <h4 style="color:white;cursor:pointer;" ng-click="rentOut()">Have one to rent out ?</h4>
-  </div>
-</div>
-
-<div class="row" style="position:fixed; bottom:40px; right:50px;z-index:100;" ng-if="showGoToTop">
+<div class="row" style="position:fixed; bottom:40px; right:50px;z-index:100;">
   <button ng-click="goToTop()" type="button" class="btn btn-lg btn-default col-md-offset-9" style="border-radius:20px;">
     <i class="fa fa-level-up"></i> TOP
   </button>
-</div>
+</div> -->

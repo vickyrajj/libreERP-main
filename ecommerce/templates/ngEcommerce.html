@@ -60,12 +60,68 @@
   </head>
   <body style="background-color:white;">
   <!-- <body style="background-image: url(/static/images/sterlingSelect_banner.jpg);"> -->
+    {%  verbatim %}
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>
-    <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
+    <div class="row" style="margin:0px;" ng-controller="ecommerce.body" >
+      <div class="col-md-{{ cart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;">
+        <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
+      </div>
+
+
+
+      <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;"  ng-click="checkout()" ng-if="cart.length>0 && !$state.is('checkout') && !$state.includes('account')">
+        <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.total}} )</h5>
+      </div>
+
+
+      <div ng-if="cart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
+
+        <img src="/static/images/grain.jpg" style="width:100%;" alt="">
+
+        <div class="row" style="margin:0px;">
+          <div class="container-fluid">
+            <h2>Cart</h2>
+          </div>
+        </div>
+
+        <div ng-repeat="p in cart" style="border-bottom:solid 2px #eeeeee; ">
+          <h5 style="margin:10px;">{{p.product.product.name}}</h5>
+
+          <div class="row" style="margin:0px;">
+            <div class="col-sm-4 text-right">
+              <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >0" ng-click="changeQty(p , 'increase');"></i>
+            </div>
+            <div class="col-sm-4 text-center">
+              {{p.qty}}
+            </div>
+            <div class="col-sm-4 text-left" >
+              <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="changeQty(p , 'decrease');"></i>
+            </div>
+          </div>
+
+          <div class="row" style="margin:0px;padding-left:20px;" >
+            <i class="fa fa-inr"></i>  {{p.product.product.discountedPrice * p.qty }}
+          </div>
+
+
+
+        </div>
+
+        <div class="text-center bg-blue" style="padding:20px;cursor:pointer;" ng-click="checkout()">
+          Checkout ( <i class="fa fa-inr" ></i> {{data.total}} )
+        </div>
+
+
+
+
+
+      </div>
+    </div>
     <div ng-include="footerUrl"></div>
 
+    {%  endverbatim %}
     <!-- contains very common ng templates used in the directives -->
     <!-- Stock JS libraries -->
 
