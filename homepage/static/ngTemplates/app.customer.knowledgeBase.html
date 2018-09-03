@@ -14,9 +14,9 @@
           <div class="row container-fluid card" ng-repeat="doc in custDocs" ng-click="addDoc($index)" style="cursor:pointer;margin:10px; {{docForm.pk==doc.pk?'background-color:#ffb22b':'background-color: #e9e9e9 !important;'}}">
             <div class="text-left" style="font-size:20px;padding:10px;margin-top:-10px;margin-left:-20px;"><b>{{doc.title}}</b></div>
             <ul style="list-style:none;position:absolute;bottom:-15px;left:0px;font-size:14px" class="list-inline">
-              <li>Last modified:<b> 7:27</b></li>
-              <li>Process:<b> abc</b></li>
-              <li>Versions:<b> 4</b></li>
+              <li>Last modified:<b> {{doc.updated  | date:'dd-MMM-yyyy'}}</b></li>
+              <li ng-if="doc.process.text">Process:<b> {{doc.process.text}}c</b></li>
+              <li>Versions:<b> {{doc.version_count}}</b></li>
             </ul>
           </div>
           <!-- <div class="">
@@ -60,20 +60,27 @@
               <textarea ui-tinymce="tinymceOptions" ng-model="docForm.text"></textarea>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3" ng-if="docForm.text!=null">
             <uib-tabset>
               <uib-tab>
                 <uib-tab-heading>
                   Article
                 </uib-tab-heading>
-                  <div >
-                    <input type="text" class="form-control"  ng-model="selected_process" uib-typeahead="process as process.text for process in processSearch($viewValue)"/
-                    <p style="color:red;margin:15px 0px">Article owner</p>
-                    <select class="form-control" id="" style="margin:5px 0px">
+                  <div style="padding-top:20px;">
+                    <div class="row">
+                      <label>Process:</label>
+                      <input type="text" class="form-control"  ng-model="docForm.process" uib-typeahead="process as process.text for process in processSearch($viewValue)"/>
+                    </div>
+                    <div class="row">
+                      <label>Article Owner</label>
+                      <input type="text" class="form-control"  ng-model="docForm.articleOwner" uib-typeahead="user as user.username for user in userSearch($viewValue)"/>
+                    </div>
+                    <!-- <p style="color:red;margin:15px 0px">Article owner</p>userSearch -->
+                    <!-- <select class="form-control" id="" style="margin:5px 0px">
                       <option>Syrow</option>
                       <option>erp</option>
                       <option>random</option>
-                    </select>
+                    </select> -->
                     <!-- <p style="color:red;margin:20px 0px;">Display permission</p>
                         <ul class="list-inline versions"  style="font-size:15px" ng-init="type='agents'">
                           <li  style="padding:0px"><button style="padding:8px;border-radius:10px" class="{{type=='agents' ? 'active' : ''}}" ng-click="type='agents'">Agents</button></li>
@@ -102,11 +109,10 @@
                   <uib-tab-heading>
                       Versions
                   </uib-tab-heading>
-                  <div class="versions" style="margin:30px 0px">
-                    <div ng-repeat='version in versions' >
-                            <button  style="width:100%;padding:7px;border-radius:10px;backgroundColor: #efeff0;margin:2px" ng-class="{active : activeVersion === version}" ng-click="setActive(version)"> {{ version }}</button>
+                  <div class="versions" style="margin:30px 0px;">
+                    <div ng-repeat='version in versions'>
+                        <button style="width:100%;padding:7px;border-radius:10px;backgroundColor: #efeff0;margin:2px" ng-class="{active : activeVersion === version}" ng-click="setActiveVersion(version)"> {{ version.title }}</button>
                     </div>
-
                   </div>
               </uib-tab>
             </uib-tabset>

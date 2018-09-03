@@ -1,16 +1,15 @@
 <!-- <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;"> -->
-  <breadcrumb></breadcrumb>
-  <div class="container-fluid" id="chatTab" style="margin-top: -20px;">
+  <div class="container-fluid" id="chatTab">
     <div class="row" style="background-color: white;">
 
       <!-- middle part -->
-       <div class="col-md-10" style="padding:0px; min-height:88vh;">
-        <div class="col-md-3 anim-in-out anim-fade" style="padding:0px;" ng-repeat="cust in chatsInView">
+       <div class="col-md-10" style="padding:0px; min-height:92vh;">
+        <div class="col-md-3 anim-in-out anim-fade" style="padding:0px;height:92vh;border-right:2px #eeeeee solid;" ng-repeat="cust in chatsInView">
           <chat-box data = "cust" index="$index" id="chatBox{{cust.uid}}" close-chat="closeChatBox" ></chat-box>
         </div>
       </div>
       <!-- right side part -->
-       <div class="col-md-2" style="padding:0px; background-color:var(--themeMain);color:white; min-height:88vh;">
+       <div class="col-md-2" style="padding:0px; background-color:var(--themeMain);color:white; min-height:92vh;">
 
         <div class="container-fluid" style="padding:0px;">
           <div class="container-fluid"style="border:1px solid #474444">

@@ -1,11 +1,23 @@
 <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
-    <p style="text-align:center;padding-top:200px;">
-      <i class="fa fa-search-plus fa-5x"></i>
-      <i class="fa fa-cogs fa-5x "></i>
-      <br>
-      <h3 class="text-muted" style="text-align:center;"> Settings default page</h3>
-    </p>
+    <uib-tabset>
+      <uib-tab active="searchTabActive">
+        <uib-tab-heading>
+          Prescripts
+          <!-- <i class="fa fa-plus"></i> -->
+        </uib-tab-heading>
+        <div style="margin-top:20px;" ng-include="'/static/ngTemplates/module.home.settings.prescripts.html'">
+        </div>
+      </uib-tab>
+      <uib-tab>
+        <uib-tab-heading>
+          Roles
+          <!-- <i class="fa fa-plus"></i> -->
+        </uib-tab-heading>
+        <div style="margin-top:20px;" ng-include="'/static/ngTemplates/module.home.settings.roles.html'">
+        </div>
+      </uib-tab>
+    </uib-tabset>
 </div>
 </div>

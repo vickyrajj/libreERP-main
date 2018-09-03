@@ -23,7 +23,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootS
 
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
-app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio) {
+app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio ,$sce) {
   $scope.me = $users.get('mySelf');
   $scope.headerUrl = '/static/ngTemplates/header.html',
     $scope.sideMenu = '/static/ngTemplates/sideMenu.html',

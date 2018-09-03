@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User , Group
+from HR.serializers import userSearchSerializer
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import *
@@ -19,7 +20,7 @@ regex = re.compile('^HTTP_')
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
-        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage')
+        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage','iconColor')
     def create(self ,  validated_data):
         c = CustomerProfile(**validated_data)
         c.service = service.objects.get(pk=self.context['request'].data['service'])
@@ -54,8 +55,6 @@ class SupportChatSerializer(serializers.ModelSerializer):
                 print 'frt is already there'
             else:
                 print 'create frt'
-                print lstMsg , s.message
-                print round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
                 chatThObj[0].firstResponseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
                 chatThObj[0].save()
         return s
@@ -106,7 +105,49 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class CompanyProcessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyProcess
+        fields = ( 'pk' , 'created' , 'text', 'service')
+
+
 class DocumentationSerializer(serializers.ModelSerializer):
+    version_count = serializers.SerializerMethodField()
+    process = CompanyProcessSerializer(many=False , read_only=True)
+    articleOwner = userSearchSerializer(many=False , read_only=True)
     class Meta:
         model = Documentation
-        fields = ( 'pk' , 'created' , 'title', 'customer' , 'text' , 'docs')
+        fields = ( 'pk' , 'created','updated' , 'title', 'customer' , 'text' , 'docs' ,'articleOwner' ,'version_count' ,'process')
+    def get_version_count(self , obj):
+        return DocumentVersion.objects.filter(parent=obj.pk).count()
+    def create(self ,  validated_data):
+        d = Documentation(**validated_data)
+        if 'articleOwner' in self.context['request'].data:
+            d.articleOwner = User.objects.get(pk=self.context['request'].data['articleOwner'])
+        if 'process' in self.context['request'].data:
+            d.process = CompanyProcess.objects.get(pk=self.context['request'].data['process'])
+        d.save()
+        return d
+    def update(self ,instance, validated_data):
+        for key in ['title' , 'customer' , 'text' , 'docs']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'articleOwner' in self.context['request'].data:
+            instance.articleOwner = User.objects.get(pk=self.context['request'].data['articleOwner'])
+        if 'process' in self.context['request'].data:
+            instance.process = CompanyProcess.objects.get(pk=self.context['request'].data['process'])
+        instance.save()
+        return instance
+
+
+class DocumentVersionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentVersion
+        fields = ( 'pk' , 'created' , 'text', 'parent','title')
+
+class CannedResponsesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CannedResponses
+        fields = ( 'pk' , 'created' , 'text')

@@ -17,7 +17,7 @@
                 <h4># Of Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
               </div>
               <div class="col-md-6 text-right">
-                <h4><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;78.26%</h4>
+                <h4><i class="fa fa-sort-{{changeInChat.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInChat.percentage.toFixed(2)}}%</h4>
               </div>
             </div>
             <div class="row">
@@ -158,7 +158,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <h3>01:16</h3>
+                <h3>{{firstResTimeAvgAll.toFixed(2)}} Min</h3>
               </div>
             </div>
           </div>
@@ -194,7 +194,7 @@
                   <tr ng-repeat="alb in agentLeaderBoard">
                     <td style="border: 0;">{{alb.agentName}}</td>
                     <td style="border: 0;">{{alb.respTimeAvg.toFixed(2)}}</td>
-                    <td style="border: 0;">Defaultson</td>
+                    <td style="border: 0;">{{alb.firstResTimeAvg.toFixed(2)}}</td>
                     <td style="border: 0;">{{alb.rating.toFixed(2)}}</td>
                   </tr>
                 </tbody>

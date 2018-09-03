@@ -14,7 +14,7 @@
               <h4># Of Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
             </div>
             <div class="col-sm-3 text-right">
-              <h4><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;78.26%</h4>
+              <h4><i class="fa fa-sort-{{changeInChat.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInChat.percentage.toFixed(2)}}%</h4>
             </div>
           <!-- </div> -->
           <!-- <div class="row"> -->
@@ -62,7 +62,7 @@
           <!-- </div> -->
           <!-- <div class="row"> -->
             <div class="col-sm-12" style="padding-top:25px">
-              <h3>12:24</h3>
+              <h3>{{avgChatDuration.toFixed(2)}} Min</h3>
             </div>
           <!-- </div> -->
         </div>
@@ -90,7 +90,7 @@
           <!-- </div> -->
           <!-- <div class="row"> -->
             <div class="col-sm-12" style="padding-top:25px">
-              <h3>4.9</h3>
+              <h3>{{avgRatingAll.toFixed(2)}}</h3>
             </div>
           <!-- </div> -->
         </div>
@@ -110,7 +110,7 @@
           <!-- </div> -->
           <!-- <div class="row"> -->
             <div class="col-sm-12" style="padding-top:25px">
-              <h3>00:50</h3>
+              <h3>{{avgRespTimeAll.toFixed(2)}} Min</h3>
             </div>
           <!-- </div> -->
         </div>
@@ -132,7 +132,7 @@
           <!-- </div> -->
           <!-- <div class="row"> -->
             <div class="col-sm-12" style="padding-top:25px">
-              <h3>01:16</h3>
+              <h3>{{firstResTimeAvgAll.toFixed(2)}} Min</h3>
             </div>
           <!-- </div> -->
         </div>

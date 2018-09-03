@@ -27,13 +27,14 @@
           <span ng-repeat="d in docData track by $index">
             <div class="col-md-8">
               <div class="panel-group" id="accordion" ng-if="d.docs!=none" >
-                <a href="{{d.docs}}" target = "_blank"  style="text-decoration: none;" >
                 <div class="panel panel-default"   href="{{d.docs}}" >
                   <div class="panel-heading"  >
                     <h4 class="panel-title">
                       <span  style="text-decoration:none">{{d.title}}</span>
+                      <!-- <span class="pull-right"><button type="button" class="btn btn-sm btn-primary">Send</button></span> -->
                     </h4>
                   </div>
+                  <a href="{{d.docs}}" target = "_blank"  style="text-decoration: none;" >
                   <div class="panel-collapse">
                     <div class="panel-body">
                       <div class="row">
@@ -49,8 +50,13 @@
                       <!-- <i class="fa fa-2x {{}} | fileTypeIcon }}"></i> -->
                     </div>
                   </div>
-                </div>
                 </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2" style="padding-left:0px">
+              <div ng-if="d.docs!=none" style="padding-top:40px;">
+                <button type="button" class="btn btn-primary" ng-click="sendDocument(d.docs)">Send</button>
               </div>
             </div>
           </span>

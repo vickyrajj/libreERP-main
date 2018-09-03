@@ -581,11 +581,26 @@ app.directive('chatBox', function() {
               $scope.sowDetails = pk
             }
 
+            $scope.sendDocument = function(doc) {
+              console.log(doc);
+              $uibModalInstance.dismiss(doc)
+            }
+
 
 
 
           },
-        })
+        }).result.then(function() {
+
+        }, function(data) {
+
+          if (data!= 'backdrop click') {
+            console.log(data);
+            $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
+            $scope.send()
+          }
+
+        });
       }
 
       $scope.getChatHistory = function(email) {
@@ -657,6 +672,9 @@ app.directive('chatBox', function() {
 
         });
       }
+
+
+
 
       $scope.chatTransfer = function (uid, chatThreadPk) {
         console.log($scope.data,'entireeeeeeeeeeeeee');
@@ -763,6 +781,25 @@ app.directive('chatBox', function() {
         //   $scope.opnpoup()
         // }, 1000);
 
+      }
+
+
+      $scope.searchCannedRes = function(val) {
+        var hash = "#"
+        if (val.includes('#')) {
+        var afterHash = val.slice(val.indexOf(hash) + hash.length);
+        if (afterHash.length>0) {
+          return $http({
+            method: 'GET',
+            url: '/api/support/cannedResponses/?text__contains=' + afterHash
+          }).
+          then(function(response) {
+            console.log(response.data);
+            // $scope.chatBox.messageToSend+=response.data.text
+            return response.data;
+          })
+          }
+        }
       }
 
 

@@ -33,6 +33,7 @@ class CustomerProfile(models.Model):
     dp = models.ImageField(upload_to = getdpPath , null = True)
     name = models.CharField(max_length = 50 , null = True )
     supportBubbleColor = models.CharField(max_length = 20 , null = True ,default='#286EFA')
+    iconColor = models.CharField(max_length = 20 , null = True ,default='#FFFFFF')
     userApiKey = models.CharField(max_length = 500 , null = True )
     firstMessage = models.CharField(max_length = 20000 , null = True ,blank=True)
 
@@ -85,9 +86,31 @@ class ChatThread(models.Model):
     chatDuration = models.FloatField(null=True, blank=True , default=0)
     firstResponseTime = models.FloatField(null=True, blank=True)
 
+
+class CompanyProcess(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    text =  models.CharField(max_length = 200 , null = True ,blank=True)
+    service = models.ForeignKey(service , related_name = 'process' , null = False)
+
 class Documentation(models.Model):
     created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length = 200 , null = False )
     customer = models.ForeignKey(CustomerProfile , related_name = 'customerDocumentatios' , null = False)
     text = models.CharField(max_length = 20000 , null = True ,blank=True)
     docs = models.FileField(upload_to = getCustomerAttachments , null = True,blank=True)
+    articleOwner = models.ForeignKey(User , related_name = 'documentOwner', null = True)
+    process = models.ForeignKey(CompanyProcess , related_name = 'process', null = True)
+    # versions = models.ManyToManyField(Documentation , related_name = 'documentation' , blank = True)
+
+
+class DocumentVersion(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    title = models.CharField(max_length = 200 , null = True , blank=True )
+    text =  models.CharField(max_length = 20000 , null = True ,blank=True)
+    parent = models.ForeignKey(Documentation , related_name = 'documentation' , null = False)
+
+
+class CannedResponses(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    text = models.CharField(max_length = 200 , null = True , blank=True )

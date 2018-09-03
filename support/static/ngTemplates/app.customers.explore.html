@@ -48,16 +48,17 @@
         </div>
       </div><br><br>
       <div class="col-md-8">
+        <label>Processes</label> <br>
         <div class="input-group">
         <input type="text" class="form-control" placeholder="Process" ng-model="process_text">
         <span class="input-group-addon" ng-click="add_process1()">Add</span>
         </div>
         <div class="row">
-        <div class="col-md-6" ng-repeat="pl in process_list">
+        <div class="col-md-6" ng-repeat="pl in process_list" style="margin-top:10px;">
         <div class="container-fluid card">
           <i class="fa fa-times fa-lg pull-right" style="padding-top:10px;cursor:pointer" ng-click="close_process($index)"></i>
           <div class="row container-fluid" style="padding-top:10px;">
-            <h4>{{pl}}</h4>
+            <h4>{{pl.text}}</h4>
           </div>
         </div>
       </div>
@@ -73,7 +74,7 @@
         <div class="col-md-6">
           <h4><i class="fa fa-gg-circle"></i> &nbsp; SupportBubble Colour</h4>
         </div>
-        <div class="col-md-3" style="background-color:{{custDetails.supportBubbleColor}};margin-top:10px">
+        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.supportBubbleColor}};margin-top:10px">
           <h3> </h3>
         </div>
         <br>
@@ -82,7 +83,17 @@
         <div class="col-md-6">
           <h4><i class="fa fa-desktop"></i> &nbsp; Window Colour</h4>
         </div>
-        <div class="col-md-3" style="background-color:{{custDetails.windowColor}};margin-top:10px">
+        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.windowColor}};margin-top:10px">
+          <h3> </h3>
+        </div>
+        <br>
+      </div>
+
+      <div class="row" ng-if="custDetails.iconColor.length>0" style="padding-left:10px">
+        <div class="col-md-6">
+          <h4><i class="fa fa-desktop"></i> &nbsp; Icon Colour</h4>
+        </div>
+        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.iconColor}};margin-top:10px">
           <h3> </h3>
         </div>
         <br>

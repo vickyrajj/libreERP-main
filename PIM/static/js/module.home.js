@@ -115,7 +115,7 @@ app.config(function($stateProvider ){
   .state('home.settings', {
     url: "/settings",
     templateUrl: '/static/ngTemplates/app.home.settings.html',
-    // controller: 'module.home.settings'
+    controller: 'module.home.settings'
   })
 
   // .state('home.settings', {
@@ -227,7 +227,42 @@ app.config(function($stateProvider ){
 
 });
 
+app.controller("module.home.settings", function($scope , $state,$http) {
+  $scope.tabs = [];
+  $scope.searchTabActive = true;
+
+  $scope.closeTab = function(index) {
+    $scope.tabs.splice(index, 1)
+  }
+
+  $scope.addTab = function(input) {
+    console.log(JSON.stringify(input));
+    $scope.searchTabActive = false;
+    alreadyOpen = false;
+    for (var i = 0; i < $scope.tabs.length; i++) {
+      if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+        $scope.tabs[i].active = true;
+        alreadyOpen = true;
+      } else {
+        $scope.tabs[i].active = false;
+      }
+    }
+    if (!alreadyOpen) {
+      $scope.tabs.push(input)
+    }
+  }
+})
+
+app.controller("module.home.settings.prescripts", function($scope , $state,$http) {
+
+})
+
+app.controller("module.home.settings.roles", function($scope , $state,$http) {
+
+})
+
 app.controller("controller.home", function($scope , $state,$http) {
+
 })
 
 app.controller("controller.home.main", function($scope , $state,$http) {
@@ -263,16 +298,20 @@ app.controller("controller.home.main", function($scope , $state,$http) {
     url: '/api/support/gethomeCal/',
   }).
   then(function(response) {
-    console.log(response.data,'dddddddddddd',typeof response.data);
     $scope.totalChats = response.data.totalChats
     $scope.missedChats = response.data.missedChats
     $scope.agentChatCount = response.data.agentChatCount
     $scope.barData = response.data.graphData
+    console.log($scope.barData);
     $scope.barlabels = response.data.graphLabels
+    console.log($scope.barlabels);
     $scope.avgChatDuration = response.data.avgChatDuration
     $scope.agentLeaderBoard = response.data.agentLeaderBoard
     $scope.avgRatingAll = response.data.avgRatingAll
     $scope.avgRespTimeAll = response.data.avgRespTimeAll
+    $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
+    $scope.changeInChat = response.data.changeInChat
+    console.log($scope.agentLeaderBoard);
   });
 
   $scope.modules = $scope.$parent.$parent.modules;
