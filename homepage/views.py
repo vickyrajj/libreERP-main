@@ -28,39 +28,6 @@ def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
 
 
-# def customerLoginView(request):
-#     print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeee'
-#     authStatus = {'status' : 'default' , 'message' : '' }
-#     def loginRender(authStatus):
-#         return render(request, 'customerLogin.html', {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT} )
-#
-#     if 'GET' == request.method:
-#         return loginRender(authStatus)
-#     elif 'POST' == request.method:
-#         print request.POST
-#         userObj = User.objects.filter(username = request.POST['username'])
-#         if len(userObj)>0:
-#             print userObj
-#             sObj = userObj[0].servicesContactPerson.all()
-#             print len(sObj)
-#             if len(sObj)>0:
-#                 user = authenticate(username = request.POST['username'] , password = request.POST['password'])
-#                 if user is not None:
-#                     login(request , user)
-#                     return redirect('libreERP:customerhome')
-#                 else:
-#                     authStatus = {'status' : 'danger' , 'message' : "Incorrect username or password."}
-#                     return loginRender(authStatus)
-#             else:
-#                 authStatus = {'status' : 'danger' , 'message' : "Not A Right Person"}
-#                 return loginRender(authStatus)
-#         else:
-#             authStatus = {'status' : 'danger' , 'message' : "You Don't Have An Account"}
-#             return loginRender(authStatus)
-#
-# def customerHomeView(request):
-#     return render(request, 'customerHome.html' )
-
 
 def blogDetails(request, blogname):
     blogobj = blogPost.objects.get(shortUrl=blogname)
@@ -135,7 +102,13 @@ def desclaimer(request):
 
 
 def registration(request):
-    return render(request,"registration.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
+
+    if not globalSettings.LITE_REGISTRATION:
+        return render(request,"registration.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
+
+    else:
+        return render(request,"registration.lite.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
+
 
 class RegistrationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
