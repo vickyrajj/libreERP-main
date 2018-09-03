@@ -308,6 +308,7 @@ app.controller("businessManagement.customers.document", function($scope, $state,
         }).
         then(function(response) {
           console.log('ddddddddddddddd', response.data);
+          response.data.active = false
           $scope.versions.push(response.data)
         });
 
@@ -402,20 +403,29 @@ app.controller("businessManagement.customers.document", function($scope, $state,
     }).
     then(function(response) {
       $scope.versions = response.data
-      console.log($scope.versions);
+
+      for (var i = 0; i < $scope.versions.length; i++) {
+        $scope.versions[i].active = false
+      }
     });
   }
 
-  $scope.setActiveVersion = function(version) {
-    $scope.activeVersion = version
-
+  $scope.openVersion = function(indx) {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.customer.version.modal.html',
-      size: 'md',
+      size: 'lg',
       backdrop: true,
-      controller: function($scope, $users, $timeout, $uibModalInstance) {
+      resolve: {
+        version: function() {
+          return $scope.versions[indx];
+        }
+      },
+      controller: function($scope, $users, version, $timeout, $uibModalInstance) {
         $scope.version = version
-        console.log(version);
+
+        $scope.close = function () {
+            $uibModalInstance.dismiss();
+        }
       },
     })
 

@@ -305,6 +305,7 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
       }).
       then(function(response) {
         // console.log('ddddddddddddddd', response.data);
+        response.data.active = false
         $scope.versions.push(response.data)
       });
 
@@ -374,29 +375,17 @@ app.controller("app.customer.knowledgeBase", function($scope, $state, $http, $ro
     }).
     then(function(response) {
       $scope.versions = response.data
-      console.log($scope.versions);
+      for (var i = 0; i < $scope.versions.length; i++) {
+        $scope.versions[i].active = false
+      }
+
     });
   }
 
-  $scope.setActiveVersion = function(version) {
-    $scope.activeVersion = version
+  $scope.openVersion = function(indx) {
+    $scope.version = $scope.versions[indx];
 
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.customer.version.modal.html',
-      size: 'md',
-      backdrop: true,
-      controller: function($scope, $timeout, $uibModalInstance ,$sce) {
-        console.log(version);
-        // $scope.version = $sce.trustAsHtml(version.text);
-        $scope.text = $sce.trustAsHtml(version.text);
-        // $scope.version = version
-        console.log(version);
-      },
-    })
-
-    // $scope.editVersion = version
-    // $scope.docForm.text = version.text
-    // $scope.docForm.title = version.title
+    //opening modal window from html
   }
 
   $scope.userSearch = function(query) {

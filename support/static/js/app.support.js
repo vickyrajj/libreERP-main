@@ -29,7 +29,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
        for (var i = 0; i < response.data.length; i++) {
          console.log(response.data);
          console.log(response.data[i].chatThreadPk);
-         $scope.myUsers.push( {name : response.data[i].name , email:response.data[i].email , uid: response.data[i].uid, chatThreadPk:response.data[i].chatThreadPk, messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk}  )
+         $scope.myUsers.push( {name : response.data[i].name , email:response.data[i].email , uid: response.data[i].uid, chatThreadPk:response.data[i].chatThreadPk, messages : [], isOnline:true , unreadMsg:0 , boxOpen:false , companyPk:response.data[i].companyPk , servicePk:response.data[i].servicePk}  )
 
          connection.session.publish('service.support.agent', [response.data[i].uid , 'R' ], {}, {
            acknowledge: true

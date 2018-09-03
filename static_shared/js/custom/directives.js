@@ -787,11 +787,12 @@ app.directive('chatBox', function() {
       $scope.searchCannedRes = function(val) {
         var hash = "#"
         if (val.includes('#')) {
-        var afterHash = val.slice(val.indexOf(hash) + hash.length);
-        if (afterHash.length>0) {
+        // beforeHash = val.slice(0,val.indexOf(hash))
+        var textAfterHash = val.slice(val.indexOf(hash) + hash.length);
+        if (textAfterHash.length>0) {
           return $http({
             method: 'GET',
-            url: '/api/support/cannedResponses/?text__contains=' + afterHash
+            url: '/api/support/cannedResponses/?text__icontains=' + textAfterHash +'&service='+$scope.data.servicePk
           }).
           then(function(response) {
             console.log(response.data);

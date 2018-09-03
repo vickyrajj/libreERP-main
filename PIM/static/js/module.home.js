@@ -55,123 +55,123 @@
 
 
 
-app.config(function($stateProvider ){
+app.config(function($stateProvider) {
 
   $stateProvider
-  .state('home', {
-    url: "/home",
-    views: {
-      "": {
-        templateUrl: '/static/ngTemplates/home.html',
-        controller:'controller.home.main'
-      },
-      "@home": {
-        templateUrl: '/static/ngTemplates/app.home.dashboard.html',
-        controller : 'controller.home'
+    .state('home', {
+      url: "/home",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/home.html',
+          controller: 'controller.home.main'
+        },
+        "@home": {
+          templateUrl: '/static/ngTemplates/app.home.dashboard.html',
+          controller: 'controller.home'
+        }
       }
-    }
-  })
-  // .state('home.mail', {
-  //   url: "/mail",
-  //   templateUrl: '/static/ngTemplates/app.mail.html',
-  //   controller: 'controller.mail'
-  // })
-  // .state('home.social', {
-  //   url: "/social/:id",
-  //   templateUrl: '/static/ngTemplates/app.social.html',
-  //   controller: 'controller.social'
-  // })
-  // .state('home.blog', {
-  //   url: "/blog/:id?action",
-  //   templateUrl: '/static/ngTemplates/app.home.blog.html',
-  //   controller: 'controller.home.blog'
-  // })
-  // .state('home.calendar', {
-  //   url: "/calendar",
-  //   templateUrl: '/static/ngTemplates/app.home.calendar.html',
-  //   controller: 'controller.home.calendar'
-  // })
-  // .state('home.notes', {
-  //   url: "/notes",
-  //   templateUrl: '/static/ngTemplates/app.home.notes.html',
-  //   controller: 'controller.home.notes'
-  // })
-  // .state('home.profile', {
-  //   url: "/profile",
-  //   templateUrl: '/static/ngTemplates/app.home.profile.html',
-  //   controller: 'controller.home.profile'
-  // })
-  // .state('home.myWork', {
-  //   url: "/myWork",
-  //   templateUrl: '/static/ngTemplates/app.home.myWork.html',
-  //   controller: 'controller.home.myWork'
-  // })
+    })
+    // .state('home.mail', {
+    //   url: "/mail",
+    //   templateUrl: '/static/ngTemplates/app.mail.html',
+    //   controller: 'controller.mail'
+    // })
+    // .state('home.social', {
+    //   url: "/social/:id",
+    //   templateUrl: '/static/ngTemplates/app.social.html',
+    //   controller: 'controller.social'
+    // })
+    // .state('home.blog', {
+    //   url: "/blog/:id?action",
+    //   templateUrl: '/static/ngTemplates/app.home.blog.html',
+    //   controller: 'controller.home.blog'
+    // })
+    // .state('home.calendar', {
+    //   url: "/calendar",
+    //   templateUrl: '/static/ngTemplates/app.home.calendar.html',
+    //   controller: 'controller.home.calendar'
+    // })
+    // .state('home.notes', {
+    //   url: "/notes",
+    //   templateUrl: '/static/ngTemplates/app.home.notes.html',
+    //   controller: 'controller.home.notes'
+    // })
+    // .state('home.profile', {
+    //   url: "/profile",
+    //   templateUrl: '/static/ngTemplates/app.home.profile.html',
+    //   controller: 'controller.home.profile'
+    // })
+    // .state('home.myWork', {
+    //   url: "/myWork",
+    //   templateUrl: '/static/ngTemplates/app.home.myWork.html',
+    //   controller: 'controller.home.myWork'
+    // })
 
-  .state('home.manageUsers', {
-    url: "/manageUsers",
-    templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
-    controller: 'admin.manageUsers'
-  })
-  .state('home.settings', {
-    url: "/settings",
-    templateUrl: '/static/ngTemplates/app.home.settings.html',
-    controller: 'module.home.settings'
-  })
+    .state('home.manageUsers', {
+      url: "/manageUsers",
+      templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
+      controller: 'admin.manageUsers'
+    })
+    .state('home.settings', {
+      url: "/settings",
+      templateUrl: '/static/ngTemplates/app.home.settings.html',
+      controller: 'module.home.settings'
+    })
 
-  // .state('home.settings', {
-  //   url: "/settings",
-  //   views: {
-  //      "": {
-  //         templateUrl: '/static/ngTemplates/app.ERP.settings.html',
-  //      },
-  //      "menu@home.settings": {
-  //         templateUrl: '/static/ngTemplates/app.ERP.settings.menu.html',
-  //         controller : 'admin.settings.menu'
-  //       },
-  //       "@home.settings": {
-  //         templateUrl: '/static/ngTemplates/app.ERP.settings.default.html',
-  //       }
-  //   }
-  // })
-  // .state('home.settings.modulesAndApplications', {
-  //   url: "/modulesAndApplications",
-  //   templateUrl: '/static/ngTemplates/app.ERP.settings.modulesAndApps.html',
-  //   controller: 'admin.settings.modulesAndApps'
-  // })
-  // .state('home.settings.configure', {
-  //   url: "/configure?app&canConfigure",
-  //   templateUrl: '/static/ngTemplates/app.ERP.settings.configure.html',
-  //   controller: 'admin.settings.configure'
-  // })
+    // .state('home.settings', {
+    //   url: "/settings",
+    //   views: {
+    //      "": {
+    //         templateUrl: '/static/ngTemplates/app.ERP.settings.html',
+    //      },
+    //      "menu@home.settings": {
+    //         templateUrl: '/static/ngTemplates/app.ERP.settings.menu.html',
+    //         controller : 'admin.settings.menu'
+    //       },
+    //       "@home.settings": {
+    //         templateUrl: '/static/ngTemplates/app.ERP.settings.default.html',
+    //       }
+    //   }
+    // })
+    // .state('home.settings.modulesAndApplications', {
+    //   url: "/modulesAndApplications",
+    //   templateUrl: '/static/ngTemplates/app.ERP.settings.modulesAndApps.html',
+    //   controller: 'admin.settings.modulesAndApps'
+    // })
+    // .state('home.settings.configure', {
+    //   url: "/configure?app&canConfigure",
+    //   templateUrl: '/static/ngTemplates/app.ERP.settings.configure.html',
+    //   controller: 'admin.settings.configure'
+    // })
 
-  .state('home.support', {
-    url: "/support",
-    views: {
-      "": {
-        templateUrl: '/static/ngTemplates/app.support.html',
-        controller: 'businessManagement.support',
+    .state('home.support', {
+      url: "/support",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.support.html',
+          controller: 'businessManagement.support',
+        }
       }
-    }
-  })
-  .state('home.customers', {
-    url: "/customers",
-    views: {
-      "": {
-        templateUrl: '/static/ngTemplates/app.customers.html',
-        controller: 'businessManagement.customers',
+    })
+    .state('home.customers', {
+      url: "/customers",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.customers.html',
+          controller: 'businessManagement.customers',
+        }
       }
-    }
-  })
+    })
 
-  .state('home.reviews', {
-    url: "/reviews",
-    views: {
-      "": {
-        templateUrl: '/static/ngTemplates/app.reviews.html',
-        controller: 'businessManagement.reviews',
+    .state('home.reviews', {
+      url: "/reviews",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.reviews.html',
+          controller: 'businessManagement.reviews',
+        }
       }
-    }
-  })
+    })
 
 
   // .state('home.employees', {
@@ -227,7 +227,49 @@ app.config(function($stateProvider ){
 
 });
 
-app.controller("module.home.settings", function($scope , $state,$http) {
+app.controller("module.home.settings", function($scope, $state, $http) {
+
+  $scope.data = {
+    tableData: []
+  };
+
+  views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.settings.prescriptItems.html',
+  }, ];
+
+
+  $scope.config = {
+    views: views,
+    url: '/api/ERP/service/',
+    searchField: 'name',
+    itemsNumPerView: [16, 32, 48],
+  }
+
+  $scope.tableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.tableData);
+
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      if ($scope.data.tableData[i].pk == parseInt(target)) {
+        if (action == 'info') {
+          var title = 'Prescipts : ';
+          var appType = 'prescriptInfo';
+        }
+        $scope.addTab({
+          title: title + $scope.data.tableData[i].pk,
+          cancel: true,
+          app: appType,
+          data: $scope.data.tableData[i],
+          active: true
+        })
+      }
+    }
+  }
+
+
   $scope.tabs = [];
   $scope.searchTabActive = true;
 
@@ -251,22 +293,106 @@ app.controller("module.home.settings", function($scope , $state,$http) {
       $scope.tabs.push(input)
     }
   }
-})
 
-app.controller("module.home.settings.prescripts", function($scope , $state,$http) {
 
 })
 
-app.controller("module.home.settings.roles", function($scope , $state,$http) {
+
+
+app.controller("app.settings.prescript.explore", function($scope, $state, $http ,Flash) {
+  $scope.compDetails = $scope.tab.data
+
+  $scope.prescripts = []
+
+
+  $http({
+    method: 'GET',
+    url: '/api/support/cannedResponses/?service=' + $scope.compDetails.pk,
+  }).
+  then(function(response) {
+    console.log(response.data);
+    for (var i = 0; i < response.data.length; i++) {
+      response.data[i].display = false
+      $scope.prescripts.push(response.data[i])
+    }
+  });
+
+  $scope.prescriptForm = {
+    text: '',
+    service: $scope.compDetails.pk
+  }
+
+
+  $scope.editPrescript = function (p) {
+    $scope.prescriptForm = p
+    console.log($scope.prescriptForm);
+  }
+
+
+  $scope.createPrescipts = function() {
+    if ($scope.prescriptForm.text != '') {
+
+      if ($scope.prescriptForm.pk) {
+        $http({
+          method: 'PATCH',
+          url: '/api/support/cannedResponses/'+$scope.prescriptForm.pk +'/',
+          data: {text:$scope.prescriptForm.text}
+        }).
+        then(function(response) {
+          console.log(response.data);
+          response.data.display = false
+          for (var i = 0; i < $scope.prescripts.length; i++) {
+            if ($scope.prescripts[i].pk == response.data.pk) {
+                $scope.prescripts[i] = response.data
+            }
+          }
+          $scope.prescriptForm = {
+            text: '',
+            service: $scope.compDetails.pk
+          }
+          Flash.create('success', 'Edited Successfully')
+        });
+      }else {
+        $http({
+          method: 'POST',
+          url: '/api/support/cannedResponses/',
+          data: $scope.prescriptForm
+        }).
+        then(function(response) {
+          console.log(response.data);
+          response.data.display = false
+          $scope.prescripts.push(response.data)
+          $scope.prescriptForm = {
+            text: '',
+            service: $scope.compDetails.pk
+          }
+          Flash.create('success', 'Created Successfully')
+        });
+      }
+    }else {
+      Flash.create('warning', 'Prescipt can not be empty')
+    }
+  }
+
+
+  $scope.deletePrescript = function (pk , indx) {
+      $http({method : 'DELETE' , url : '/api/support/cannedResponses/' + pk +'/'}).
+      then(function(response) {
+        $scope.prescripts.splice(indx , 1);
+        Flash.create('success', 'Deleted Successfully')
+      })
+  }
+
+
 
 })
 
-app.controller("controller.home", function($scope , $state,$http) {
+app.controller("controller.home", function($scope, $state, $http) {
 
 })
 
-app.controller("controller.home.main", function($scope , $state,$http) {
-  $scope.sai='kiran'
+app.controller("controller.home.main", function($scope, $state, $http) {
+  $scope.sai = 'kiran'
 
   $scope.barlabels = [];
   $scope.series = ['Series A', 'Series B'];
@@ -302,23 +428,20 @@ app.controller("controller.home.main", function($scope , $state,$http) {
     $scope.missedChats = response.data.missedChats
     $scope.agentChatCount = response.data.agentChatCount
     $scope.barData = response.data.graphData
-    console.log($scope.barData);
     $scope.barlabels = response.data.graphLabels
-    console.log($scope.barlabels);
     $scope.avgChatDuration = response.data.avgChatDuration
     $scope.agentLeaderBoard = response.data.agentLeaderBoard
     $scope.avgRatingAll = response.data.avgRatingAll
     $scope.avgRespTimeAll = response.data.avgRespTimeAll
     $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
     $scope.changeInChat = response.data.changeInChat
-    console.log($scope.agentLeaderBoard);
   });
 
   $scope.modules = $scope.$parent.$parent.modules;
   $scope.dashboardAccess = false;
   $scope.homeMenuAccess = false;
   for (var i = 0; i < $scope.modules.length; i++) {
-    if ($scope.modules[i].name == 'home'){
+    if ($scope.modules[i].name == 'home') {
       $scope.dashboardAccess = true;
     }
     if ($scope.modules[i].name.indexOf('home') != -1) {
@@ -328,10 +451,10 @@ app.controller("controller.home.main", function($scope , $state,$http) {
 })
 
 
-app.controller('controller.home.menu' , function($scope ,$state, $http, $permissions){
+app.controller('controller.home.menu', function($scope, $state, $http, $permissions) {
   $scope.apps = [];
 
-  $scope.buildMenu = function(apps){
+  $scope.buildMenu = function(apps) {
     for (var i = 0; i < apps.length; i++) {
       a = apps[i];
       if (a.module != 1) {
@@ -339,12 +462,12 @@ app.controller('controller.home.menu' , function($scope ,$state, $http, $permiss
       }
 
       parts = a.name.split('.');
-      a.dispName = parts[parts.length-1];
+      a.dispName = parts[parts.length - 1];
 
       if (a.name == 'app.dashboard') {
         a.state = 'home';
-      }else {
-        a.state = a.name.replace('app' , 'home');
+      } else {
+        a.state = a.name.replace('app', 'home');
       }
       $scope.apps.push(a);
     }
@@ -353,10 +476,10 @@ app.controller('controller.home.menu' , function($scope ,$state, $http, $permiss
 
 
   as = $permissions.apps();
-  if(typeof as.success == 'undefined'){
+  if (typeof as.success == 'undefined') {
     $scope.buildMenu(as);
   } else {
-    as.success(function(response){
+    as.success(function(response) {
       $scope.buildMenu(response);
     });
   };

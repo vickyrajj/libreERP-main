@@ -145,9 +145,15 @@ class DocumentationSerializer(serializers.ModelSerializer):
 class DocumentVersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentVersion
-        fields = ( 'pk' , 'created' , 'text', 'parent','title')
+        fields = ( 'pk' , 'created' , 'text', 'parent','title','user')
+    def create(self ,  validated_data):
+        d = DocumentVersion(**validated_data)
+        d.user = self.context['request'].user
+        print self.context['request'].user , '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+        d.save()
+        return d
 
 class CannedResponsesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CannedResponses
-        fields = ( 'pk' , 'created' , 'text')
+        fields = ( 'pk' , 'created' , 'text' ,'service')

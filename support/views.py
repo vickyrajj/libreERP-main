@@ -93,6 +93,7 @@ class GetMyUser(APIView):
                 # dic['chatThreadPk'] = ChatThread.objects.get(uid=i).pk
                 dic['companyPk'] = ChatThread.objects.filter(uid=i)[0].company.pk
                 dic['chatThreadPk'] = ChatThread.objects.filter(uid=i)[0].pk
+                dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
                 print dic
                 toSend.append(dic)
 
@@ -528,4 +529,4 @@ class CannedResponsesViewSet(viewsets.ModelViewSet):
     serializer_class = CannedResponsesSerializer
     queryset = CannedResponses.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['text']
+    filter_fields = ['text','service']

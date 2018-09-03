@@ -109,8 +109,10 @@ class DocumentVersion(models.Model):
     title = models.CharField(max_length = 200 , null = True , blank=True )
     text =  models.CharField(max_length = 20000 , null = True ,blank=True)
     parent = models.ForeignKey(Documentation , related_name = 'documentation' , null = False)
+    user = models.ForeignKey(User , related_name = 'docUser' , null = True, blank=True)
 
 
 class CannedResponses(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     text = models.CharField(max_length = 200 , null = True , blank=True )
+    service = models.ForeignKey(service , related_name = 'cannedResponses' , null = True)
