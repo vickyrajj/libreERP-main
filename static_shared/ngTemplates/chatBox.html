@@ -1,6 +1,6 @@
 <div class="animated fadeIn" id="chatBox">
   <div style="min-height:84vh;margin-top:0px;padding:0px;border-left: 1px solid #eeeeee; border-right: 1px solid #eeeeee; background-color: white;border-bottom:2px solid #eeeeee " class="container-fluid">
-    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:110px;">
+    <div class="container-fluid" style="padding:0px;border-bottom:1px solid #eeeeee;height:115px;">
       <div class="row" style="padding:0px;">
         <div class="col-md-12">
           <div class="col-md-4" style="padding:0px">
@@ -8,9 +8,9 @@
             </div>
           </div>
           <div class="col-md-4" style="padding:0px">
-            <div class="btn btn-warning btn-sm btn-block" type="button" style="border-radius:0px !important;" name="button" mwl-confirm title="Close Chat" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatTransfer(data.uid,data.chatThreadPk)"
-              confirm-button-type="default" cancel-button-type="default"><i style="font-size:33px" class="fa fa-user-o" aria-hidden="true"></i>
-              <i style="font-size:35px" class="fa fa-exchange" aria-hidden="true"></i>
+            <div class="btn btn-warning btn-sm btn-block" type="button" style="border-radius:0px !important;" name="button" mwl-confirm title="Close Chat" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="chatTransfer(data.uid,data.chatThreadPk)"
+              confirm-button-type="default" cancel-button-type="default"><i style="font-size:30px" class="fa fa-user-o" aria-hidden="true"></i>
+              <i style="font-size:16px" class="fa fa-exchange" aria-hidden="true"></i>
               <i style="font-size:35px" class="fa fa-user" aria-hidden="true"></i>
             </div>
           </div>
@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; height:73vh; overflow-y:auto; overflow-x:hidden;">
+    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; height:71vh; overflow-y:auto; overflow-x:hidden;">
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
         <div class="row container-fluid">
           <div style="float:{{message.sentByAgent ? 'right; background-color:#E4E5E9; ':'left; background-color:#DDF7C8;'}} padding:10px;margin:8px;border-radius:{{message.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
@@ -70,8 +70,22 @@
   </div>
 
   <div class="" style="padding:;border-top:30px;margin-right:15px">
+
+    <!-- <div class="row" style="margin:0px;margin-top:10px;margin-bottom:5px;">
+      <form>
+
+          <input ng-if="chatBox.fileToSend.size==0" type="text" class="col-md-9" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend" style="border:none;outline:none;font-size:23px;height: 70px;background-color: #fff;">
+          <input type="file" id="filePickerChat{{index}}" style="display:none;" file-model="chatBox.fileToSend">
+
+          <span ng-if="chatBox.fileToSend.size==0" class="col-md-1" style="cursor:pointer;font-size:30px;padding:14px" ng-click="attachFile()" ><i class="fa fa-paperclip"  aria-hidden="true"></i></span>
+          <span ng-if="chatBox.fileToSend.size!=0" class="col-md-3" style="cursor:pointer;font-size:30px;padding:14px 0px;text-align:center" > <i class="fa {{chatBox.fileToSend.name | fileTypeIcon }}"></i> </span>
+          <span ng-if="chatBox.fileToSend.size!=0" class="col-md-3" style="cursor:pointer;font-size:30px;padding:14px 0px" > {{chatBox.fileToSend.name.slice(0,25)}} </span>
+          <span ng-if="chatBox.fileToSend.size!=0" class="col-md-3" style="cursor:pointer;font-size:30px;padding:14px 0px;text-align:center" ng-click="removeFile()" > <i class="fa fa-times" aria-hidden="true"></i> </span>
+          <span class=" col-md-1" ng-click="send()" style="cursor:pointer;font-size:30px;padding:14px"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
+      </form> -->
+
     <div class="row" style="margin:0px;margin-top:10px;margin-bottom:5px;padding-top:10px;padding-bottom:10px;">
-      <span class="abcd">
+      <span class="uibTypeaheadDropup">
         <input ng-if="chatBox.fileToSend.size==0" type="text" class="col-md-9" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" data-placement="top" style="border:none;outline:none;background-color:white;">
       </span>
 
@@ -86,6 +100,5 @@
           </span>
       <span class=" col-md-1 text-right" ng-click="send()" style="cursor:pointer;font-size:20px"><i class="fa fa-paper-plane-o" aria-hidden="true"></i>
           </span>
-      <!-- </div> -->
     </div>
   </div>

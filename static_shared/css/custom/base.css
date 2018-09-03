@@ -20,19 +20,17 @@
         transform: scaleY(-1);
 } */
 
-.abcd ul li{
+.uibTypeaheadDropup ul li{
 		transform: rotate(180deg);
 		/* transform: scaleY(-1); */
 }
 
-.abcd ul{
+.uibTypeaheadDropup ul{
 	margin-bottom: 100px;
 	transform: rotate(180deg);
   transform-origin: top left;
 	/* transform: scaleY(-1); */
 }
-
-
 
 .basicAppLink :hover , .basicAppLink.active{
   background: var(--themeMain);

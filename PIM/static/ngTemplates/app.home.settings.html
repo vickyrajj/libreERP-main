@@ -16,7 +16,9 @@
           Roles
           <!-- <i class="fa fa-plus"></i> -->
         </uib-tab-heading>
-        <div style="margin-top:20px;" ng-include="'/static/ngTemplates/module.home.settings.roles.html'"></div>
+        <div class="container-fluid">
+          <generic-Table data="rolesData.tableData" config-Obj="{{rolesConfig}}" callback-Fn="tableActionRoles"></generic-Table>
+        </div>
       </uib-tab>
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
         <uib-tab-heading>
@@ -24,6 +26,9 @@
           <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
         </uib-tab-heading>
         <div ng-if="tab.app == 'prescriptInfo'">
+          <div ng-include="'/static/ngTemplates/app.settings.prescript.explore.html'"></div>
+        </div>
+        <div ng-if="tab.app == 'rolesInfo'">
           <div ng-include="'/static/ngTemplates/app.settings.prescript.explore.html'"></div>
         </div>
       </uib-tab>

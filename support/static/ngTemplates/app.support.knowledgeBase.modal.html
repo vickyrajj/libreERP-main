@@ -8,7 +8,7 @@
       <div class="row">
         <div class="col-md-8">
           <span ng-repeat="d in docData track by $index">
-            <div class="panel-group" id="accordion" ng-show="d.text!=none" style="cursor:pointer;">
+            <div class="panel-group" id="accordion" ng-if="d.text!=none" style="cursor:pointer;">
               <div class="panel panel-default" >
                 <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{d.pk}}" >
                   <h4 class="panel-title"  >
@@ -31,7 +31,7 @@
                   <div class="panel-heading"  >
                     <h4 class="panel-title">
                       <span  style="text-decoration:none">{{d.title}}</span>
-                      <!-- <span class="pull-right"><button type="button" class="btn btn-sm btn-primary">Send</button></span> -->
+                      <span class="pull-right" style="margin-top:-7px"><button type="button" class="btn btn-sm btn-primary" ng-click="sendDocument(d.docs)" >Send</button></span>
                     </h4>
                   </div>
                   <a href="{{d.docs}}" target = "_blank"  style="text-decoration: none;" >
@@ -54,11 +54,11 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-2" style="padding-left:0px">
+            <!-- <div class="col-md-2" style="padding-left:0px">
               <div ng-if="d.docs!=none" style="padding-top:40px;">
                 <button type="button" class="btn btn-primary" ng-click="sendDocument(d.docs)">Send</button>
               </div>
-            </div>
+            </div> -->
           </span>
         </div>
       </div>

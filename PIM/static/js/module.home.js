@@ -270,6 +270,56 @@ app.controller("module.home.settings", function($scope, $state, $http) {
   }
 
 
+  $scope.rolesData = {
+    tableData: []
+  };
+
+  views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.settings.prescriptItems.html',
+  }, ];
+
+
+  $scope.rolesConfig = {
+    views: views,
+    url: '/api/HR/users/',
+    searchField: 'name',
+    itemsNumPerView: [16, 32, 48],
+  }
+
+
+  $scope.tableActionRoles = function(target, action, mode) {
+
+    console.log('ddddddddddddddddd');
+
+    console.log(target, action, mode);
+    console.log($scope.rolesData.tableData);
+
+    for (var i = 0; i < $scope.rolesData.tableData.length; i++) {
+      if ($scope.rolesData.tableData[i].pk == parseInt(target)) {
+        if (action == 'rolesInfo') {
+          var title = 'Roles : ';
+          var appType = 'rolesInfo';
+        }
+        $scope.addTab({
+          title: title + $scope.rolesData.tableData[i].pk,
+          cancel: true,
+          app: appType,
+          data: $scope.rolesData.tableData[i],
+          active: true
+        })
+      }
+    }
+  }
+
+
+
+
+
+
+
   $scope.tabs = [];
   $scope.searchTabActive = true;
 

@@ -1,0 +1,21 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+  <div class="container-fluid card" style="padding-bottom:10px; height:90px">
+    <div class="row" style="height:60px;">
+      <div class="col-md-10" style="position:relative;display:block;">
+        <div class="row" style="padding-left:10px;">
+          <h3 style="margin-bottom:0px">{{data}}</h3>
+        </div>
+      </div>
+      <div class="col-md-2" style="position:relative;display:block;">
+        <div class="row" style="margin-top:20px;">
+          <span style="cursor:pointer;">
+            <i class="fa fa-info-circle fa-lg" ng-click="rowActionClicked('info')"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row" ng-if="data.contactPerson" style="padding-left:15px;">
+      <strong>Contact Person:</strong> {{data.contactPerson.first_name}} {{data.contactPerson.last_name}}
+    </div>
+  </div>
+</div>

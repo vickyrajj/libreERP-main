@@ -34,55 +34,52 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
 
-  function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-function checkCookie() {
-    var sideMenuVisibility=getCookie("sideMenuVisibility");
-    if (sideMenuVisibility != "") {
-        alert("Welcome again " + user);
-    } else {
-       user = prompt("Please enter your name:","");
-       if (user != "" && user != null) {
-           setCookie("username", user, 30);
-       }
-    }
-}
+  function setCookie(cname,cvalue,exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires=" + d.toGMTString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+          }
+      }
+      return "";
+  }
 
 
-  // $scope.sideMenuVisibility = true;
+
+  $scope.sideMenuVisibility = true;
   // retrive it back
-  $scope.sideMenuVisibility=getCookie('sideMenuVisibility')
+  var sideMenuVisibility=getCookie("sideMenuVisibility");
+  console.log(getCookie("sideMenuVisibility"))
+  if (sideMenuVisibility == "false") {
+      $scope.sideMenuVisibility=false;
+     } else {
+     $scope.sideMenuVisibility=true;
+  }
 
   $scope.toggleSideMenu = function() {
     $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
-
+    console.log($scope.sideMenuVisibility);
+    if ($scope.sideMenuVisibility === false) {
+        sideMenuVisibility='false';
+       } else {
+       sideMenuVisibility='true';
+    }
     // save it in cookies
-    setCookie('sideMenuVisibility',$scope.sideMenuVisibility,30);
-    console.log(getCookie('sideMenuVisibility'));
-
-
-
-
-
+    setCookie('sideMenuVisibility',sideMenuVisibility,30);
+    console.log(getCookie('sideMenuVisibility'))
   }
 
   $permissions.module().
