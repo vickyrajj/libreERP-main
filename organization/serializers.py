@@ -5,6 +5,7 @@ from rest_framework.exceptions import *
 from .models import *
 from django.conf import settings as globalSettings
 from rest_framework.response import Response
+from ERP.serializers import applicationSerializer
 import re
 
 
@@ -148,28 +149,37 @@ class DepartmentsSerializer(serializers.ModelSerializer):
 
 
 class RoleSerializer(serializers.ModelSerializer):
-    department = DepartmentsLiteSerializer(many = False , read_only = True)
+    applications = applicationSerializer(many=True , read_only=True)
+    # department = DepartmentsLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Role
-        fields = ('pk','name','department')
+        fields = ('pk','name','department','applications')
     def create(self , validated_data):
-        d = Role(**validated_data)
-        d.department=Departments.objects.get(pk=self.context['request'].data['department'])
-        d.save()
-        return d
+        r = Role(**validated_data)
+        r.save()
+        for p in self.context['request'].data['applications']:
+            r.applications.add(application.objects.get(pk=p))
+        return r
+
     def update(self ,instance, validated_data):
         for key in ['name']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
-        instance.department=Departments.objects.get(pk=self.context['request'].data['department'])
-        instance.division=Division.objects.get(pk=self.context['request'].data['division'])
-        instance.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
-        if 'contacts' in self.context['request'].data:
-            a=self.context['request'].data['contacts'].split(',')
-            for i in a:
-                instance.contacts.add(User.objects.get(pk = i))
+        instance.save()
+        # print self.context['request'].data['applications']
+        if 'applications' in self.context['request'].data:
+            instance.applications.clear()
+            for p in self.context['request'].data['applications']:
+                instance.applications.add(application.objects.get(pk=p))
+        # instance.department=Departments.objects.get(pk=self.context['request'].data['department'])
+        # instance.division=Division.objects.get(pk=self.context['request'].data['division'])
+        # instance.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
+        # if 'contacts' in self.context['request'].data:
+        #     a=self.context['request'].data['contacts'].split(',')
+        #     for i in a:
+        #         instance.contacts.add(User.objects.get(pk = i))
         instance.save()
         return instance
 

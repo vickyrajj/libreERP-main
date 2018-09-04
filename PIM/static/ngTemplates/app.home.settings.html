@@ -17,7 +17,7 @@
           <!-- <i class="fa fa-plus"></i> -->
         </uib-tab-heading>
         <div class="container-fluid">
-          <generic-Table data="rolesData.tableData" config-Obj="{{rolesConfig}}" callback-Fn="tableActionRoles"></generic-Table>
+          <div ng-include="'/static/ngTemplates/app.settings.roles.html'"></div>
         </div>
       </uib-tab>
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">

@@ -182,7 +182,6 @@ class designation(models.Model):
 
 User.designation = property(lambda u : designation.objects.get_or_create(user = u)[0])
 
-
 class payroll(models.Model):
     user = models.ForeignKey(User , related_name = "payrollAuthored" , null=False)
     # user = models.OneToOneField(User)
@@ -255,7 +254,3 @@ class Leave(models.Model):
     comment = models.CharField(max_length = 10000 , null = True)
     approvedStage = models.PositiveIntegerField(null = True,default=0)
     approvedMatrix = models.PositiveIntegerField(null = True,default=1)
-
-class Role(models.Model):
-    created = models.DateField(auto_now=True)
-    text = models.ManyToManyField(application , related_name='roles' , blank = True)

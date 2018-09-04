@@ -173,6 +173,77 @@ app.config(function($stateProvider) {
       }
     })
 
+    // .state('home.organization', {
+    //   url: "/organization",
+    //   views: {
+    //      "": {
+    //         templateUrl: '/static/ngTemplates/genericAppBase.html',
+    //      },
+    //      "menu@home.organization": {
+    //         templateUrl: '/static/ngTemplates/genericMenu.html',
+    //         controller : 'controller.generic.menu',
+    //       },
+    //       "@home.organization": {
+    //         templateUrl: '/static/ngTemplates/app.organization.dash.html',
+    //         controller : 'businessManagement.organization.dash',
+    //       }
+    //   }
+    // })
+    //
+    // .state('home.organization.departments', {
+    //   url: "/departments",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.organization.departments.html',
+    //       controller: 'businessManagement.organization.departments',
+    //     }
+    //   }
+    // })
+    //
+    //
+    // .state('home.organization.divisions', {
+    //   url: "/divisions",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.organization.division.html',
+    //       controller: 'businessManagement.organization.division',
+    //     }
+    //   }
+    // })
+    //
+    //
+    // .state('home.organization.responsibilities', {
+    //   url: "/responsibilities",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.organization.responsibilities.html',
+    //       controller: 'businessManagement.organization.responsibilities',
+    //     }
+    //   }
+    // })
+    //
+    //
+    // .state('home.organization.roles', {
+    //   url: "/roles",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.organization.roles.html',
+    //       controller: 'businessManagement.organization.roles',
+    //     }
+    //   }
+    // })
+    //
+    //
+    // .state('home.organization.units', {
+    //   url: "/units",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.organization.units.html',
+    //       controller: 'businessManagement.organization.units',
+    //     }
+    //   }
+    // })
+
 
   // .state('home.employees', {
   //   url: "/employees",
@@ -270,55 +341,6 @@ app.controller("module.home.settings", function($scope, $state, $http) {
   }
 
 
-  $scope.rolesData = {
-    tableData: []
-  };
-
-  views = [{
-    name: 'list',
-    icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.settings.prescriptItems.html',
-  }, ];
-
-
-  $scope.rolesConfig = {
-    views: views,
-    url: '/api/HR/users/',
-    searchField: 'name',
-    itemsNumPerView: [16, 32, 48],
-  }
-
-
-  $scope.tableActionRoles = function(target, action, mode) {
-
-    console.log('ddddddddddddddddd');
-
-    console.log(target, action, mode);
-    console.log($scope.rolesData.tableData);
-
-    for (var i = 0; i < $scope.rolesData.tableData.length; i++) {
-      if ($scope.rolesData.tableData[i].pk == parseInt(target)) {
-        if (action == 'rolesInfo') {
-          var title = 'Roles : ';
-          var appType = 'rolesInfo';
-        }
-        $scope.addTab({
-          title: title + $scope.rolesData.tableData[i].pk,
-          cancel: true,
-          app: appType,
-          data: $scope.rolesData.tableData[i],
-          active: true
-        })
-      }
-    }
-  }
-
-
-
-
-
-
 
   $scope.tabs = [];
   $scope.searchTabActive = true;
@@ -342,6 +364,106 @@ app.controller("module.home.settings", function($scope, $state, $http) {
     if (!alreadyOpen) {
       $scope.tabs.push(input)
     }
+  }
+
+
+})
+
+
+app.controller("app.settings.roles", function($scope, $state, $http ,Flash) {
+
+  $scope.roles = []
+
+  $scope.roleForm = {
+    name: '',
+    applications: []
+  }
+
+    $http({
+      method: 'GET',
+      url: '/api/organization/role/',
+    }).
+    then(function(response) {
+      for (var i = 0; i < response.data.length; i++) {
+        response.data[i].display = false
+        $scope.roles.push(response.data[i])
+      }
+    });
+
+
+  $scope.editRole = function (r) {
+    console.log(r,'r');
+    $scope.roleForm = r
+  }
+
+
+  $scope.saveRole = function() {
+    console.log($scope.roleForm);
+    var apps = [];
+    for (var i = 0; i < $scope.roleForm.applications.length; i++) {
+      apps.push($scope.roleForm.applications[i].pk)
+    }
+
+    console.log(apps);
+
+    if ($scope.roleForm.name != '' && $scope.roleForm.applications.length>0) {
+      if ($scope.roleForm.pk) {
+        $http({
+          method: 'PATCH',
+          url: '/api/organization/role/'+$scope.roleForm.pk +'/',
+          data: {name: $scope.roleForm.name , applications:apps}
+        }).
+        then(function(response) {
+          response.data.display = false
+          for (var i = 0; i < $scope.roles.length; i++) {
+            if ($scope.roles[i].pk == response.data.pk) {
+                $scope.roles[i] = response.data
+            }
+          }
+          $scope.roleForm = {
+            name: '',
+            applications: []
+          }
+          Flash.create('success', 'Edited Successfully')
+        });
+      }else {
+        $http({
+          method: 'POST',
+          url: '/api/organization/role/',
+          data: {name: $scope.roleForm.name , applications:apps}
+        }).
+        then(function(response) {
+          console.log(response.data);
+          response.data.display = false
+          $scope.roles.push(response.data)
+          $scope.roleForm = {
+            name: '',
+            applications: []
+          }
+          Flash.create('success', 'Created Successfully')
+        });
+      }
+    }else {
+      Flash.create('warning', 'Fields can not be empty')
+    }
+  }
+
+
+  $scope.deleteRole = function (pk , indx) {
+      $http({method : 'DELETE' , url : '/api/organization/role/' + pk +'/'}).
+      then(function(response) {
+        $scope.roles.splice(indx , 1);
+        $scope.roleForm = {
+          name: '',
+          applications: []
+        }
+
+        Flash.create('success', 'Deleted Successfully')
+      })
+  }
+
+  $scope.getPermissionSuggestions = function(query) {
+    return $http.get('/api/ERP/application/?name__contains=' + query)
   }
 
 
@@ -379,7 +501,13 @@ app.controller("app.settings.prescript.explore", function($scope, $state, $http 
   }
 
 
-  $scope.createPrescipts = function() {
+  $scope.savePrescript = function() {
+
+    if ($scope.prescriptForm.text.length>200) {
+      Flash.create('warning','prescript length is too long')
+      return
+    }
+
     if ($scope.prescriptForm.text != '') {
 
       if ($scope.prescriptForm.pk) {
@@ -429,6 +557,10 @@ app.controller("app.settings.prescript.explore", function($scope, $state, $http 
       $http({method : 'DELETE' , url : '/api/support/cannedResponses/' + pk +'/'}).
       then(function(response) {
         $scope.prescripts.splice(indx , 1);
+        $scope.prescriptForm = {
+          text: '',
+          service: $scope.compDetails.pk
+        }
         Flash.create('success', 'Deleted Successfully')
       })
   }

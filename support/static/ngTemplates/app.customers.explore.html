@@ -51,9 +51,9 @@
         <label>Processes</label> <br>
         <div class="input-group">
         <input type="text" class="form-control" placeholder="Process" ng-model="process_text">
-        <span class="input-group-addon" ng-click="add_process1()">Add</span>
+        <span class="input-group-addon" ng-click="add_process1()" style="cursor:pointer">Add</span>
         </div>
-        <div class="row">
+        <div class="row" style="padding-top:15px;">
         <div class="col-md-6" ng-repeat="pl in process_list" style="margin-top:10px;">
         <div class="container-fluid card">
           <i class="fa fa-times fa-lg pull-right" style="padding-top:10px;cursor:pointer" ng-click="close_process($index)"></i>

@@ -6,6 +6,7 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 from time import time
+from ERP.models import application
 
 
 
@@ -66,6 +67,7 @@ class Departments(models.Model):
 class Role(models.Model):
     name = models.CharField(max_length = 200 , null = False)
     department = models.ForeignKey(Departments , null = True , related_name = "department")
+    applications = models.ManyToManyField(application , related_name='roleApplications' , blank = True)
 
 class Responsibility(models.Model):
     created = models.DateTimeField(auto_now_add = True)

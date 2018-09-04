@@ -81,8 +81,8 @@ class ChatThread(models.Model):
     customerFeedback = models.CharField(max_length = 3000 , null = True )
     company = models.ForeignKey(CustomerProfile , related_name = 'chatThread' , null = False)
     user = models.ForeignKey(User , related_name = 'chatAgentUser' , null = True, blank=True)
-    userDevice = models.CharField(max_length = 100 , null = True , blank=True)
-    userDeviceIp = models.CharField(max_length = 20 , null = True , blank=True)
+    userDevice = models.CharField(max_length = 200 , null = True , blank=True)
+    userDeviceIp = models.CharField(max_length = 100 , null = True , blank=True)
     chatDuration = models.FloatField(null=True, blank=True , default=0)
     firstResponseTime = models.FloatField(null=True, blank=True)
 

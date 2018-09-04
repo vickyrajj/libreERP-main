@@ -1,15 +1,15 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('businessManagement.organization.roles', {
-      url: "/roles",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/app.organization.roles.html',
-          controller: 'businessManagement.organization.roles',
-        }
-      }
-    })
+    // .state('businessManagement.organization.roles', {
+    //   url: "/roles",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.organization.roles.html',
+    //       controller: 'businessManagement.organization.roles',
+    //     }
+    //   }
+    // })
 });
 app.controller("businessManagement.organization.roles", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 

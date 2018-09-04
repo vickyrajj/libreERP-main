@@ -180,12 +180,12 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
 
   $scope.close_process = function(indx) {
     // console.log('closingl',indx,$scope.process_list);
-    $scope.process_list.splice(indx, 1)
 
-    // $http({method : 'DELETE' , url : '/api/PIM/calendar/' + $scope.itemInView.data.pk + '/'}).
-    // then(function(response){
-    //   $scope.data.items.splice($scope.data.items.indexOf($scope.itemInView) , 1);
-    // })
+    $http({method : 'DELETE' , url : '/api/support/companyProcess/' + $scope.process_list[indx].pk + '/'}).
+    then(function(response){
+      Flash.create('success' , 'Deleted Successfully')
+      $scope.process_list.splice(indx, 1)
+    })
 
 
   }

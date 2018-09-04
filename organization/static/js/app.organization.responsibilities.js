@@ -1,15 +1,15 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('businessManagement.organization.responsibilities', {
-      url: "/responsibilities",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/app.organization.responsibilities.html',
-          controller: 'businessManagement.organization.responsibilities',
-        }
-      }
-    })
+    // .state('businessManagement.organization.responsibilities', {
+    //   url: "/responsibilities",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.organization.responsibilities.html',
+    //       controller: 'businessManagement.organization.responsibilities',
+    //     }
+    //   }
+    // })
 });
 
 

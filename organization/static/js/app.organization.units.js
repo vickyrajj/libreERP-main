@@ -1,15 +1,15 @@
 app.config(function($stateProvider) {
 
   $stateProvider
-    .state('businessManagement.organization.units', {
-      url: "/units",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/app.organization.units.html',
-          controller: 'businessManagement.organization.units',
-        }
-      }
-    })
+    // .state('businessManagement.organization.units', {
+    //   url: "/units",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.organization.units.html',
+    //       controller: 'businessManagement.organization.units',
+    //     }
+    //   }
+    // })
 });
 app.controller("businessManagement.organization.units", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
