@@ -47,6 +47,7 @@
     <a href="/login" style="cursor:pointer;font-size:17px;color:white;text-decoration:none;color:rgb(24, 89, 46)"> Already User? <i class="fa fa-user fa-lg"></i></a>
 
   </div>
+
 </div>
 
 {% endblock %}
@@ -56,6 +57,7 @@
 <div ng-app="app" ng-controller="registrationLite">
 
   <div class="body">
+      <hr style="margin:0px;border: solid 2px #DCDCDC;">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
       <section style="background-color:white">
         <div class="row">
@@ -71,7 +73,6 @@
           {% verbatim %}
           <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
-
                   <div >
                     <div class="row " style="margin-bottom:15px;" ng-if="mode == 'main'||'verify'">
                       <div class="col-md-6 col-md-offset-3">

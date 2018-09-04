@@ -269,8 +269,12 @@ class CartSerializer(serializers.ModelSerializer):
 	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 	try:
 		c=Cart.objects.get(product = self.context['request'].data['product'] ,user=self.context['request'].user)
-		c.qty = self.context['request'].data['qty']
-		c.save()
+		if self.context['request'].data['qty'] > 0:
+			c.typ = self.context['request'].data['typ']
+			c.qty = self.context['request'].data['qty']
+			c.save()
+		else:
+			c.remove()
 
 	except:
        	 	c = Cart(**validated_data)

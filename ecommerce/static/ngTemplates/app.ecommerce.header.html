@@ -31,8 +31,6 @@
   <div class="col-md-2 text-center hidden-xs hidden-sm" ng-if="!me.pk">
     <span style="cursor:pointer;font-size:17px;padding-right:10px;color:rgb(24, 89, 46)" ng-click="loginPage()"> Login <i class="fa fa-user fa-lg"></i></span>
     <span style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46)" ng-click="registerPage()"> Register <i class="fa fa-registered fa-lg"></i></span>
-
-
   </div>
 
   <div class="col-xs-9 text-right hidden-md hidden-lg" ng-if="!me.pk">
@@ -64,7 +62,7 @@
 
 
 
-  <hr style="margin:0px;border: solid 1px #DCDCDC;">
+  <hr style="margin:0px;border: solid 2px #DCDCDC;">
 <div ng-if="$state.is('ecommerce') && bannerText" style="position:relative;height:60vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
   <img style="width:100%;cursor:pointer;height:56vh;background-attachment: fixed;background-position: center;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
 

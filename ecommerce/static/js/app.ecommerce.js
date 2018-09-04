@@ -11,7 +11,7 @@ app.config(function($stateProvider){
           templateUrl: '/static/ngTemplates/genericMenu.html',
           controller : 'controller.generic.menu',
         },
-        "@businessManagement.ecommerce": {
+        "@businessManagement.ecommerce": {`
           templateUrl: '/static/ngTemplates/app.ecommerce.vendor.default.html',
           controller: 'businessManagement.ecommerce.default',
         }

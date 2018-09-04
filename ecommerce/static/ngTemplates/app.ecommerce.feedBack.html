@@ -72,30 +72,30 @@
   <div class="col-md-12">
     <form>
       <div class="row">
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 col-md-offset-3 col-xs-12 col-sm-12 text-center">
 
           <div class="form-group">
-            <input type="email" ng-model="feedback.email" class="form-control" placeholder="Enter your email address">
+            <input type="email" ng-model="feedback.email" class="form-control" placeholder="Email address">
           </div>
         </div>
-        <div class="col-md-6 text-center">
+        </div>
+        <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-xs-12 col-sm-12 text-center">
           <div class="form-group">
-            <input type="number" ng-model="feedback.mobile" class="form-control" placeholder="Enter your mobile number">
+            <input type="number" ng-model="feedback.mobile" class="form-control" placeholder="Mobile number">
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-3 text-center">
-        </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 col-md-offset-3 col-xs-12 col-sm-12 text-center">
           <div class="form-group">
-            <textarea rows="2" ng-model="feedback.message" class="form-control" placeholder="Enter your message/feedback"> </textarea>
+            <textarea rows="2" ng-model="feedback.message" class="form-control" placeholder="Message/feedback"> </textarea>
           </div>
         </div>
       </div>
   </div>
   <div class="row text-center">
-    <div class="col-md-12">
+    <div class="col-md-12 col-xs-12 col-sm-12">
       <button type="submit" class="btn btn-primary" ng-click="sendFeedback()">Send</button>
     </div>
   </div>
