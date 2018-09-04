@@ -1777,23 +1777,29 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
   // $scope.feddbackPannel = false
   $scope.feedbackstatus = function() {
-console.log("kkkkkhhhhhhhhhhhhhhhhhhh");
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.ecommerce.feedBack.html',
       size: 'md',
       backdrop: false,
-      // resolve: {
-      //   product: function() {
-      //
-      //   }
-      // },
       controller: 'controller.ecommerce.feedBack.modal',
     }).result.then(function() {
 
     }, function() {
 
     });
-    // $scope.feddbackPannel = true
+  }
+
+    $scope.contactUs = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.contact.html',
+      size: 'md',
+      backdrop: false,
+      controller: 'controller.ecommerce.contact.modal',
+    }).result.then(function() {
+
+    }, function() {
+
+    });
   }
   // $scope.close = function() {
   //   $scope.feddbackPannel = false
@@ -1894,29 +1900,6 @@ app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScop
   }
 
     $scope.sendFeedback = function() {
-      // if ($scope.me==null){
-      //   console.log("aaaaaaaa");
-      //   if ($scope.feedback.email == '') {
-      //     Flash.create('danger', 'Please provide details')
-      //   }
-      //   else{
-      //     var toSend = {
-      //       email: $scope.feedback.email,
-      //       mobile: $scope.feedback.mobile,
-      //       message: $scope.feedback.message,
-      //     }
-      //   }
-      // }
-      // else{
-      //   var toSend = {
-      //     email: $scope.feedback.email,
-      //     mobile: $scope.feedback.mobile,
-      //     message: $scope.feedback.message,
-      //   }
-      // }
-
-
-      console.log("aaaaaaaa");
       if ($scope.feedback.email == '') {
         Flash.create('danger', 'Please provide details')
       } else {
@@ -1947,6 +1930,41 @@ app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScop
     }
 });
 
+app.controller('controller.ecommerce.contact.modal', function($scope, $rootScope, $state, $http, $users, $interval,$uibModal,$uibModalInstance, Flash) {
+  //   $http({
+  //   method: 'GET',
+  //   url: '/api/ecommerce/frequentlyQuestions/'
+  // }).
+  // then(function(response) {
+  //   $scope.fAQ = response.data
+  // })
+
+  // $scope.message = {
+  //   subject: '',
+  //   body: ''
+  // };
+  // $scope.sendMessage = function() {
+  //   $http({
+  //     method: 'POST',
+  //     url: '/api/ecommerce/support/',
+  //     data: $scope.message
+  //   }).
+  //   then(function(response) {
+  //     $scope.message = {
+  //       subject: '',
+  //       body: ''
+  //     };
+  //     Flash.create('success', response.status + ' : ' + response.statusText);
+  //   }, function(response) {
+  //     Flash.create('danger', response.status + ' : ' + response.statusText);
+  //   })
+  // }
+
+  $scope.close=function(){
+    $uibModalInstance.close();
+  }
+
+});
 
 app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval) {
 
