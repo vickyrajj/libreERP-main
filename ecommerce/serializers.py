@@ -266,9 +266,16 @@ class CartSerializer(serializers.ModelSerializer):
         model = Cart
         fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ')
     def create(self , validated_data):
-        c = Cart(**validated_data)
-        c.product = listing.objects.get(pk = self.context['request'].data['product'])
-        c.save()
+	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+	try:
+		c=Cart.objects.get(product = self.context['request'].data['product'] ,user=self.context['request'].user)
+		c.qty = self.context['request'].data['qty']
+		c.save()
+
+	except:
+       	 	c = Cart(**validated_data)
+       	 	c.product = listing.objects.get(pk = self.context['request'].data['product'])
+        	c.save()
         return c
 
 

@@ -491,6 +491,7 @@ class CartViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','typ','product']
 
+
 class ActivitiesViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = ActivitiesSerializer
@@ -1212,3 +1213,12 @@ class GenericPincodeViewSet(viewsets.ModelViewSet):
             print 'lllllllllllllllllllllllllllllllllllllllllllllllllllll'
             toReturn = toReturn.filter(pincode__iexact=self.request.GET['pincode'])
         return toReturn
+
+class CartLiteAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self, request, format=None):
+        print request.GET,'aaaaaaaaaaaaaa'
+        data = Cart.objects.filter(product=request.GET['product'],user=request.user)
+        print data
+        return data
+

@@ -296,19 +296,20 @@
         <!-- review page ends here  -->
         <div ng-if="data.stage == 'shippingDetails'">
           <div class="row">
-            <div class="col-md-8 col-md-offset-2 col-sm-offset-1  col-xs-offset-1  col-sm-10 col-xs-10" style="padding-left:10px;" ng-if="savedAddress.length>0">
-              <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-sm-offset-1  col-xs-offset-1  col-sm-10 col-xs-10" style="padding-left:10px;" >
+              <div class="row" >
                 <div class="row card" style="margin-bottom:15px;padding-top:20px;">
                   <div class="col-md-6 col-xs-12 col-sm-6  text-center">
                     <h5>{{me.first_name}} {{me.last_name}}</h5>
                   </div>
                   <div class="col-md-6 col-xs-12 col-sm-6">
                     <div class="form-group">
-                      <input type="text" class="form-control" id="mob" ng-model="data.address.mobile" placeholder="Enter mobile..">
+                      <h5>{{me.profile.number}}</h5>
+                      <!-- <input type="text" class="form-control" id="mob" ng-model="data.address.mobile" placeholder="Enter mobile.."> -->
                     </div>
                   </div>
                 </div>
-                <div class="row card" style="margin-bottom:15px" ng-if="!saved">
+                <div class="row card" style="margin-bottom:15px" ng-if="!saved&&savedAddress.length>0">
                   <div class="row card bg-blue" style="margin-left:0px;margin-right:0px">
                     <h5 style="padding-left:10px;color:white"> DELIVERY ADDRESS </h5>
                   </div>

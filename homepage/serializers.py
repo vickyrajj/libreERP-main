@@ -32,72 +32,97 @@ class RegistrationSerializer(serializers.ModelSerializer):
         print "updateeeeaaaaaaaaaaa", self.context['request'].data;
         print instance
         print validated_data
-        d = self.context['request'].data;
-        if( d['token'] == instance.token and d['mobileOTP'] == instance.mobileOTP and d['emailOTP']== instance.emailOTP ):
-            print "will create a new user"
-
-
-
-
-            u = User(username = d['email'].split('@')[0])
-            u.first_name = d['firstName']
-            u.email = d['email']
-            u.last_name = d['lastName']
-            u.first_name = d['firstName']
-            u.set_password(d['password'])
-            u.is_active = True
-            u.save()
-            print 'ddddddddddddddddd'
-            for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
-                print a ,'gggggggggggggggggggggg'
-                app = application.objects.get(name = a)
-                p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
-            login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
-            instance.delete()
-            return instance
+        if 'emailOTP' in self.context['request'].data:
+            d = self.context['request'].data;
+            if( d['token'] == instance.token and d['mobileOTP'] == instance.mobileOTP and d['emailOTP']== instance.emailOTP ):
+                print "will create a new user"
+                u = User(username = d['email'].split('@')[0])
+                u.first_name = d['firstName']
+                u.email = d['email']
+                u.last_name = d['lastName']
+                u.set_password(d['password'])
+                u.is_active = True
+                u.save()
+                print 'ddddddddddddddddd'
+                for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
+                    print a ,'gggggggggggggggggggggg'
+                    app = application.objects.get(name = a)
+                    p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
+                login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
+                instance.delete()
+                return instance
+            else:
+                raise SuspiciousOperation('Expired')
         else:
-            raise SuspiciousOperation('Expired')
+            d = self.context['request'].data;
+            if( d['token'] == instance.token and d['mobileOTP'] == instance.mobileOTP ):
+                print "will create a new user"
+                u = User(username = d['mobile'])
+                u.first_name = d['mobile']
+                u.mobile = d['mobile']
+                u.email = ''
+                u.last_name = ''
+                u.set_password('titan@1')
+                u.is_active = True
+                u.save()
+                u.profile.mobile = u
+                u.profile.save()
+                for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
+                    app = application.objects.get(name = a)
+                    p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
+                login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
+                instance.delete()
+                return instance
+            else:
+                raise SuspiciousOperation('Expired')
+
         return instance
     def create(self , validated_data):
         print "createaaaaaaaaaa"
 
         reg = Registration(**validated_data)
 
+
         salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
-        key = hashlib.sha1(salt+validated_data.pop('email')).hexdigest()
+        if reg.email!=None:
+            key = hashlib.sha1(salt+validated_data.pop('email')).hexdigest()
+            reg.token = key
+        else:
+            key = hashlib.sha1(salt+validated_data.pop('mobile')).hexdigest()
+            reg.token = key
 
-        reg.token = key
         reg.mobileOTP = generateOTPCode()
-        print reg.mobileOTP
-        reg.emailOTP = generateOTPCode()
-        print reg.emailOTP
+
+        if reg.email!=None:
+            reg.emailOTP = generateOTPCode()
+            print reg.emailOTP
 
 
-        msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP) ]
+            msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP) ]
 
-        ctx = {
-            'heading' : 'Welcome to Ecommerce',
-            'recieverName' : 'Customer',
-            'message': msgBody,
-            'linkUrl': 'sterlingselect.com',
-            'linkText' : 'View Online',
-            'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
-            'sendersPhone' : '841101',
-            'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
-            'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
-            'twitterUrl' : 'twitter.com',
-            'brandName' : globalSettings.BRAND_NAME,
-        }
+            ctx = {
+                'heading' : 'Welcome to Ecommerce',
+                'recieverName' : 'Customer',
+                'message': msgBody,
+                'linkUrl': 'sterlingselect.com',
+                'linkText' : 'View Online',
+                'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+                'sendersPhone' : '841101',
+                'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
+                'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
+                'twitterUrl' : 'twitter.com',
+                'brandName' : globalSettings.BRAND_NAME,
+            }
 
-        email_body = get_template('app.homepage.emailOTP.html').render(ctx)
-        print email_body
-        email_subject = 'SterlingSelect Email OTP'
-        sentEmail=[]
-        sentEmail.append(str(reg.email))
-        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-        msg = EmailMessage(email_subject, email_body, to= sentEmail)
-        msg.content_subtype = 'html'
-        msg.send()
+            email_body = get_template('app.homepage.emailOTP.html').render(ctx)
+            print email_body
+            email_subject = 'SterlingSelect Email OTP'
+            sentEmail=[]
+            sentEmail.append(str(reg.email))
+            # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+            msg = EmailMessage(email_subject, email_body, to= sentEmail)
+            msg.content_subtype = 'html'
+            msg.send()
 
         url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
         requests.get(url)

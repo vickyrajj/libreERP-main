@@ -53,7 +53,7 @@
 <!-- Header -->
 {% block content %}
 
-<div ng-app="app" ng-controller="registration">
+<div ng-app="app" ng-controller="registrationLite">
 
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
@@ -72,8 +72,8 @@
           <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
 
-                  <div ng-if="mode == 'main'">
-                    <div class="row " style="margin-bottom:15px;">
+                  <div >
+                    <div class="row " style="margin-bottom:15px;" ng-if="mode == 'main'||'verify'">
                       <div class="col-md-6 col-md-offset-3">
                         <div class="row">
                           <div class="col-md-2 col-sm-2 col-xs-2">
@@ -91,7 +91,7 @@
                     </div>
 
 
-                    <div class="row" style="margin-top:50px;">
+                    <div class="row" style="margin-top:50px;"  ng-if="mode == 'main'">
                       <div class="col-md-2 col-sm-2 col-xs-2">
                         <input type="checkbox" class="form-control pull-right" ng-model="form.agree">
                       </div>
@@ -107,10 +107,10 @@
 
 
                   <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-md-offset-3">
                       <div class="row">
                         <div class="col-md-2 col-sm-2 col-xs-2">
-                          <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+                          <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                         </div>
                         <div class="col-md-10 col-sm-10 col-xs-10">
                           <div class="form-group">
@@ -120,7 +120,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                       <div class="row">
                         <div class="col-md-2 col-sm-2 col-xs-2">
                           <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
@@ -132,7 +132,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
 
                   <div class="row text-center text-danger" ng-if="validityChecked2">

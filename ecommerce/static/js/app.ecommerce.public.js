@@ -199,30 +199,46 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
     },1000)
   }
 
-  $scope.changeQty = function() {
-    $scope.list.added_cart++
-    for (var i = 0; i < $rootScope.inCart.length; i++) {
-      if ($rootScope.inCart[i].product.pk == $scope.list.pk) {
-        if ($rootScope.inCart[i].typ == 'cart') {
-          $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
-          $http({
-            method: 'PATCH',
-            url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-            data: {
-              qty: $rootScope.inCart[i].qty
+
+
+  $scope.changeQty = function(value,data) {
+      for (var i = 0; i < $rootScope.inCart.length; i++) {
+        if ($rootScope.inCart[i].product.pk == value) {
+          if ($rootScope.inCart[i].typ == 'cart') {
+            if(data =='increase'){
+              $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
             }
-          }).
-          then(function(response) {
-          })
+            if(data =='decrease'){
+              $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
+            }
+            if($rootScope.inCart[i].qty > 0){
+              $http({
+                method: 'PATCH',
+                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+                data: {
+                  qty: $rootScope.inCart[i].qty
+                }
+              }).
+              then(function(response) {
+              })
+            }
+            else if($rootScope.inCart[i].qty== 0){
+              $http({
+                method: 'DELETE',
+                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+              }).
+              then(function(response) {
+                Flash.create('success', 'Removed From Cart');
+
+              })
+              $rootScope.inCart.splice(i, 1)
+              return
+            }
+
+          }
         }
       }
-    }
   }
-
-  $scope.decrement = function() {
-
-  }
-
 
 });
 
@@ -1463,10 +1479,11 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     } else if ($scope.data.stage == 'shippingDetails') {
 
       console.log($scope.data.address);
-      if ($scope.data.address.street == '' || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == '' || $scope.data.address.mobile == '' || $scope.data.address.landMark == '') {
+      if ($scope.data.address.street == '' || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == ''  || $scope.data.address.landMark == '') {
         Flash.create('warning', 'Please fill all details')
         return
       } else {
+        $scope.dataToSend.mobile = $scope.me.profile.mobile
         $scope.dataToSend.address = $scope.data.address
       }
       $scope.data.stage = 'payment';
