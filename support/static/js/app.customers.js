@@ -12,7 +12,25 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller("businessManagement.customers", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
+app.controller("businessManagement.customers", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope ,$permissions) {
+
+
+  // as = $permissions.apps();
+  // if(typeof as.success == 'undefined'){
+  //   console.log('dnnnnnnnnnnnnnnnnnnn');
+  //   // $scope.buildMenu(as);
+  // } else {
+  //   as.success(function(response){
+  //     // $scope.buildMenu(response);
+  //
+  //     console.log('ffffffffffffffffffffffffffffffffffff');
+  //
+  //
+  //   });
+  // };
+
+
+  // console.log($permissions.apps() , 'what is thisssssssss');
 
   $scope.data = {
     tableData: []

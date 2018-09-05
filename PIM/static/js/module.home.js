@@ -463,7 +463,7 @@ app.controller("app.settings.roles", function($scope, $state, $http ,Flash) {
   }
 
   $scope.getPermissionSuggestions = function(query) {
-    return $http.get('/api/ERP/application/?name__contains=' + query)
+    return $http.get('/api/ERP/applicationAdminMode/?name__contains=' + query)
   }
 
 

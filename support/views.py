@@ -414,30 +414,21 @@ class GethomeCal(APIView):
         today = datetime.datetime.now().date()
         tomorrow = today + relativedelta(days=1)
         lastWeek = today - relativedelta(days=6)
-        lastToLastWeek =  today - relativedelta(days=13)
+        lastToLastWeek =  lastWeek - relativedelta(days=7)
         chatThreadObj = ChatThread.objects.filter(created__range=(lastWeek,tomorrow))
-        lastToLastWeekChatCount = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek)).count()
+        lastToLastWeekChatCount = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1))).count()
         # if 'perticularUser' in self.request.GET:
         #     if int(self.request.GET['perticularUser'])>0:
         #         chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['perticularUser']))
         totalChats = chatThreadObj.count()
 
-        print 'cccccccccccccc',totalChats,chatThreadObj
         agentChatCount = list(chatThreadObj.values('user').annotate(count_val=Count('user')))
         missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
 
-        try:
-            a = chatThreadObj.filter(~Q(chatDuration=0)).aggregate(Avg('chatDuration'))
-            avgChatDuration = a['chatDuration__avg']
-        except:
-            avgChatDuration = 0
-
-
         agentLeaderBoard = []
         agL = list(chatThreadObj.filter(user__isnull=False).values_list('user',flat=True).distinct())
-        if 'perticularUser' in self.request.GET:
-            agL = list(chatThreadObj.filter(user__isnull=False , company= int(self.request.GET['perticularUser']) ).values_list('user',flat=True).distinct())
-        print agL
+        # if 'perticularUser' in self.request.GET:
+        #     agL = list(chatThreadObj.filter(user__isnull=False , company= int(self.request.GET['perticularUser']) ).values_list('user',flat=True).distinct())
         for i in agL:
             oneAgentDetails = chatThreadObj.filter(user=i)
             r = oneAgentDetails.filter(customerRating__isnull=False).aggregate(Avg('customerRating'))
@@ -450,14 +441,6 @@ class GethomeCal(APIView):
         avgRatingAll=0
         avgRespTimeAll=0
         firstResTimeAvgAll =0
-        print agentLeaderBoard
-        for i in agentLeaderBoard:
-            avgRatingAll+= i['rating']
-            avgRespTimeAll+=i['respTimeAvg']
-            firstResTimeAvgAll+=i['firstResTimeAvg']
-        avgRespTimeAll = avgRespTimeAll/len(agentLeaderBoard)
-        avgRatingAll = avgRatingAll/len(agentLeaderBoard)
-        firstResTimeAvgAll = firstResTimeAvgAll/len(agentLeaderBoard)
         if 'perticularUser' in self.request.GET:
             if int(self.request.GET['perticularUser'])>0:
                 avgChatDuration = 0
@@ -477,7 +460,23 @@ class GethomeCal(APIView):
                 avgRespTimeAll = SupportChat.objects.filter(user=usr , responseTime__isnull=False).aggregate(Avg('responseTime'))
                 avgRespTimeAll = avgRespTimeAll['responseTime__avg'] if avgRespTimeAll['responseTime__avg'] else 0
                 print avgRespTimeAll
+        else:
+            try:
+                a = chatThreadObj.filter(~Q(chatDuration=0)).aggregate(Avg('chatDuration'))
+                avgChatDuration = a['chatDuration__avg']
+            except:
+                avgChatDuration = 0
+            print agentLeaderBoard
+            for i in agentLeaderBoard:
+                avgRatingAll+= i['rating']
+                avgRespTimeAll+=i['respTimeAvg']
+                firstResTimeAvgAll+=i['firstResTimeAvg']
+            avgRespTimeAll = avgRespTimeAll/len(agentLeaderBoard)
+            avgRatingAll = avgRatingAll/len(agentLeaderBoard)
+            firstResTimeAvgAll = firstResTimeAvgAll/len(agentLeaderBoard)
+
         changeInChat = {}
+        print lastToLastWeekChatCount , totalChats , 'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
         if lastToLastWeekChatCount<totalChats:
             changeInChat['percentage'] = (float(totalChats - lastToLastWeekChatCount)/totalChats)*100
             changeInChat['increase'] = True

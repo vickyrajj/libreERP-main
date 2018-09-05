@@ -804,6 +804,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
             permissionsFormData = {
               appsToAdd: data,
               url: target,
+              role:''
             }
             $scope.addTab({
               title: 'Edit permissions for ' + u.first_name + ' ' + u.last_name,
@@ -923,6 +924,27 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     })
 
   }
+
+  $scope.role = {
+    selected:'',
+    tabIndex:'',
+  }
+
+  $scope.$watch('tabs[role.tabIndex].data.role' , function(newValue , oldValue) {
+    if (typeof newValue == 'object') {
+      console.log($scope.role);
+      console.log($scope.tabs[$scope.role.tabIndex].data.role);
+      $scope.tabs[$scope.role.tabIndex].data.appsToAdd = $scope.tabs[$scope.role.tabIndex].data.role.applications
+      $scope.tabs[$scope.role.tabIndex].data.role = ''
+    }
+  })
+
+  $scope.roleSearch = function(query) {
+    return $http.get('/api/organization/role/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
 
   $scope.getPermissionSuggestions = function(query) {
     return $http.get('/api/ERP/application/?name__contains=' + query)

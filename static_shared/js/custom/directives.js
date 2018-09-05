@@ -638,18 +638,34 @@ app.directive('chatBox', function() {
 
 
             $scope.searchText = function() {
+
+              var all_text = document.getElementById('all_text')
+              for (var i = 0; i < all_text.childNodes.length; i++) {
+                for (var j = 0; j < all_text.childNodes[i].length; j++) {
+                  console.log(all_text.childNodes[i].childNodes[j]);
+                }
+              }
+              console.log(all_text);
+               // var page = $('#all_text');
+               // var pageText = page.text().replace("<span>","").replace("</span>");
+               // var searchedText = $scope.searchForm.value
+               // var theRegEx = new RegExp("("+searchedText+")", "igm");
+               // var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
+               // page.html(newHtml);
+
               for (var i = 0; i < $scope.chatData.length; i++) {
-                console.log($scope.chatData[i].chatList);
                 for (var j = 0; j < $scope.chatData[i].chatList.length; j++) {
-                  var page = $('#p'+j);
-                  // var page = $('#all_text');
-                  var pageText = page.text().replace("<span>","").replace("</span>");
-                  console.log(pageText);
-                  var searchedText = $scope.searchForm.value
-                  var theRegEx = new RegExp("("+searchedText+")", "igm");
-                  var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
-                  console.log(newHtml);
-                  page.html(newHtml);
+                  if ($scope.chatData[i].chatList[j].message) {
+                    var page = $('#p'+j);
+                    // console.log(page.text(),'page');
+                    // var page = $('#all_text');
+                    var pageText = page.text().replace("<span>","").replace("</span>");
+                    // console.log(pageText);
+                    var searchedText = $scope.searchForm.value
+                    var theRegEx = new RegExp("("+searchedText+")", "igm");
+                    var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
+                    page.html(newHtml);
+                  }
                 }
               }
               // for (var i = 0; i < $scope.texts.length; i++) {
