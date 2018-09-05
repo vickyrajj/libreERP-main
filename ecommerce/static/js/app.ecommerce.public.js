@@ -21,9 +21,9 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
   $rootScope.$on("$stateChangeSuccess", function(params, to, toParams, from, fromParams) {
     $rootScope.previousState = from.name;
     $rootScope.currentState = to.name;
-    $timeout(function() {
-      window.scrollTo(0,0);
-    },1000)
+  // $timeout(function() {
+  //   window.scrollTo(0,0);
+  // }, 1000);
     var me = $users.get('mySelf');
 
     var now = new Date();
@@ -1181,17 +1181,31 @@ app.controller('controller.ecommerce.account.support', function($scope, $rootSco
   })
 
   $scope.message = {
+    invoiceNo:'',
     subject: '',
     body: ''
   };
   $scope.sendMessage = function() {
+    if($scope.me==undefined|| $scope.me==''||$scope.message.invoiceNo==''||$scope.message.body==''){
+      Flash.create("warning","Please add all details")
+    }
+    else{
+      dataToSend ={
+        email : $scope.me.email,
+        mobile : $scope.me.profile.mobile,
+        invoiceNo : $scope.message.invoiceNo,
+        subject : $scope.message.subject , 
+        message : $scope.message.body
+      }
+    }
     $http({
       method: 'POST',
-      url: '/api/ecommerce/support/',
-      data: $scope.message
+      url: '/api/ecommerce/supportFeed/',
+      data:dataToSend
     }).
     then(function(response) {
       $scope.message = {
+        invoiceNo:'',
         subject: '',
         body: ''
       };
@@ -1777,6 +1791,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
   // $scope.feddbackPannel = false
   $scope.feedbackstatus = function() {
+ 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.ecommerce.feedBack.html',
       size: 'md',
@@ -1790,6 +1805,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   }
 
     $scope.contactUs = function() {
+     $scope.me = $users.get('mySelf')
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.ecommerce.contact.html',
       size: 'md',
@@ -1895,23 +1911,46 @@ console.log($scope.stores,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakkkkkkkkkkkkkkkkkkk')
 });
 
 app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval,$uibModal,$uibModalInstance, Flash) {
+  $scope.me = $users.get('mySelf')
   $scope.close=function(){
     $uibModalInstance.close();
   }
 
+  $scope.feedback = {
+    email: '',
+    subject:'',
+    mobile: null,
+    message: ''
+  };
     $scope.sendFeedback = function() {
-      if ($scope.feedback.email == '') {
-        Flash.create('danger', 'Please provide details')
-      } else {
-        console.log($scope.feedback.email, 'aaaaa');
-        var toSend = {
-          email: $scope.feedback.email,
-          mobile: $scope.feedback.mobile,
-          message: $scope.feedback.message,
+      console.log($scope.me,'aaaaaaaaa')
+      if ($scope.me==null||$scope.me==undefined){
+         console.log('kkkkkkkkkkkkkkk')
+        if($scope.feedback.email==''|| $scope.feedback.mobile==5||$scope.feedback.message==''){
+          Flash.create("warning","Please Add Email and Mobile")
+        }
+        else{
+            var toSend = {
+                email: $scope.feedback.email,
+                mobile: $scope.feedback.mobile,
+                subject: $scope.feedback.subject,
+                message: $scope.feedback.message,
+            }
         }
       }
+      else{
+            if($scope.feedback.message==''){
+          Flash.create("warning","Please Add Email and Mobile")
+        }else{
+                  var toSend = {
+            email: $scope.me.email,
+            mobile: $scope.me.profile.mobile,
+            subject: $scope.feedback.subject,
+            message: $scope.feedback.message,
+        }
+        }
 
-
+     }
       $http({
         method: 'POST',
         url: '/api/ecommerce/supportFeed/',
@@ -1921,6 +1960,7 @@ app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScop
         Flash.create('success', 'Thank you!');
         $scope.feedback = {
           email: '',
+          subject:'',
           mobile: null,
           message: ''
         };

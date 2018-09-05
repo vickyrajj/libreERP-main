@@ -266,17 +266,20 @@ class CartSerializer(serializers.ModelSerializer):
         model = Cart
         fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ')
     def create(self , validated_data):
-	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-	try:
-		c=Cart.objects.get(product = self.context['request'].data['product'] ,user=self.context['request'].user)
-		if self.context['request'].data['qty'] > 0:
-			c.typ = self.context['request'].data['typ']
-			c.qty = self.context['request'].data['qty']
-			c.save()
-		else:
-			c.remove()
+    	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    	try:
+    		c=Cart.objects.get(product = self.context['request'].data['product'] ,user=self.context['request'].user)
+    		if self.context['request'].data['qty'] > 0:
+    			c.typ = self.context['request'].data['typ']
+    			c.qty = self.context['request'].data['qty']
+    			c.save()
+                # return c
+    		else:
+                    print 'deleteeeeeeeeeeeeeeeeeeee'
+                    del c
+                    return 
 
-	except:
+    	except:
        	 	c = Cart(**validated_data)
        	 	c.product = listing.objects.get(pk = self.context['request'].data['product'])
         	c.save()
@@ -428,7 +431,7 @@ class SupportFeedSerializer(serializers.ModelSerializer):
     user = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = SupportFeed
-        fields = ( 'pk', 'created' , 'email', 'mobile' ,'message' , 'user','status')
+        fields = ( 'pk', 'created' , 'email', 'mobile' ,'message' , 'user','status' ,'invoiceNo' , 'subject')
         read_only_fields = ('user',)
     def create(self , validated_data):
         print 'hhhhhhhhhhhhhhhhhhhhj',self.context['request'].user
