@@ -1,32 +1,34 @@
 <div class="modal-header text-center" style="font-size:19px">
   <div class="row">
-    <div class="col-md-1">
+    <!-- <div class="col-md-1">
         <i ng-click="close()" class="fa fa-close fa-lg"></i>
-    </div>
-  <div class="col-md-11"  ng-if="!stores">
+    </div> -->
+  <div class="col-md-12"  ng-if="!stores">
   Check for Availability of Store nearby you!
 </div>
-<div class="col-md-11" ng-if="stores.length>0">
-Available Stores near you!!!
+<div class="col-md-12" ng-if="stores.length>0">
+Checking For Available Stores near you!!!
 </div>
-<div class="col-md-11" ng-if="stores.length==0">
+<div class="col-md-12" ng-if="stores.length==0">
 Sorry!! We Are not Functioning in your Area..<br/>
 </div>
 
 </div>
 </div>
 <div class="row modal-body">
-  <div class="col-md-12" ng-if="!stores">
+  <div class="col-md-12" ng-if="showSpinner">
+    <img src="/static/images/multistoreSpinner.gif" alt="Spinner" width="100%" height="500px">
+  </div>
+  <div class="col-md-12" ng-if="!stores || stores.length==0">
     <form>
     <div class="row">
-        <div class="col-md-3">
-        </div>
-      <div class="col-md-6 text-center">
+      <div class="col-md-6 col-md-offset-3">
         <div class="form-group">
-          <!-- <label > Name</label> -->
           <input type="number" class="form-control" ng-model="form.pincode" placeholder="Enter your Pincode" >
+          <p class="warning" ng-if="stores.length==0">Try With Different Pincode...</p>
         </div>
       </div>
+
     </div>
     <div class="row text-center">
       <div class="col-md-12" >
@@ -36,10 +38,9 @@ Sorry!! We Are not Functioning in your Area..<br/>
   </form>
     </div>
 
-    <div class="col-md-12" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-repeat="s in stores" ng-if="stores.length>0">
+    <!-- <div class="col-md-12" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-repeat="s in stores" ng-if="stores.length>0">
       <div class="container-fluid card" style="padding-bottom:10px;">
         <div class="row" style="border-bottom: 1px solid #dedede;">
-          <!-- <span class="pull-right" style="padding-right:15px"><h4>#{{data.pk}}</h4></span> -->
           <span class="text-center"><h3>{{s.name}}</h3></span>
         </div>
         <div class="row container-fluid" style="padding-top:20px;">
@@ -51,5 +52,5 @@ Sorry!! We Are not Functioning in your Area..<br/>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 </div>

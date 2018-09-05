@@ -90,6 +90,7 @@ class Product(models.Model):
     compositionQtyMap = models.CharField(max_length = 1000 , null = True, blank = True)
     discount = models.PositiveIntegerField(default = 0)
     storeQty = models.ManyToManyField(StoreQty , related_name="productStore" , blank = True)
+    alias = models.CharField(max_length = 500 , null = True)
     def __str__(self):
         return self.name
 

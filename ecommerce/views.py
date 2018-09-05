@@ -158,8 +158,24 @@ class SearchProductAPI(APIView):
             search = str(self.request.GET['search'])
             l = int(self.request.GET['limit'])
             print l , type(l)
-            genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
-            listProd = list(listing.objects.filter(product__name__icontains=search).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
+
+            if 'multipleStore' in self.request.GET:
+                print 'miltiiiiiiiiiiiiiiiiiiiiii',self.request.GET['pin']
+                try:
+                    store = Store.objects.get(pincode=int(self.request.GET['pin']))
+                except:
+                    return listing.objects.all()
+                storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+                productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                listingobjs = listing.objects.filter(product__in=productsList)
+                listingList = list(listingobjs.values_list('parentType',flat=True))
+                genericList = genericProduct.objects.filter(pk__in=listingList)
+                genericProd = list(genericList.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
+            else:
+                genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
+
             tosend = genericProd + listProd
             print tosend[0:l]
             return Response(tosend[0:l], status = status.HTTP_200_OK)
@@ -318,6 +334,19 @@ class genericProductViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name','parent']
     def get_queryset(self):
+        if 'multipleStore' in self.request.GET:
+            print 'miltiiiiiiiiiiiiiiiiiiiiii',self.request.GET['pin']
+            try:
+                store = Store.objects.get(pincode=int(self.request.GET['pin']))
+            except:
+                return listing.objects.all()
+            storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+            productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            listingList = list(listing.objects.filter(product__in=productsList).values_list('parentType',flat=True))
+            genericList = genericProduct.objects.filter(pk__in=listingList)
+            if 'genericValue' in  self.request.GET:
+                return  genericList.exclude(pk = self.request.GET['genericValue'])[0:4]
+            return genericList
         if 'genericValue' in  self.request.GET:
             return  genericProduct.objects.exclude(pk = self.request.GET['genericValue'] ).filter()[0:4]
         else:
@@ -330,10 +359,11 @@ class mediaViewSet(viewsets.ModelViewSet):
     serializer_class = mediaSerializer
 
 
-def getProducts(lst , node):
-    lst = lst | listing.objects.filter(parentType = node)
+def getProducts(lst , node , multiproductLst):
+    a = multiproductLst
+    lst = lst | listing.objects.filter(parentType = node,product__in=a)
     for child in node.children.all():
-        lst = getProducts(lst , child)
+        lst = getProducts(lst , child , a)
     return lst
 
 class listingViewSet(viewsets.ModelViewSet):
@@ -347,11 +377,28 @@ class listingViewSet(viewsets.ModelViewSet):
         data = self.request.GET
         if 'recursive' in data:
             if data['recursive'] == '1':
+                print 'enterrrrrrrrr'
                 print data['parent'] , type(data['parent'])
                 prnt = genericProduct.objects.get(id = data['parent'])
+                print prnt
                 toReturn = listing.objects.filter(parentType = prnt)
+
+                multiproductLst = []
+                if 'multipleStore' in self.request.GET:
+                    print 'miltiiiiiiiiiiiiiiiiiiiiii',self.request.GET['pin']
+                    try:
+                        store = Store.objects.get(pincode=int(self.request.GET['pin']))
+                    except:
+                        return listing.objects.all()
+                    storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+                    productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                    toReturn = toReturn.filter(product__in=productsList)
+                    multiproductLst = productsList
+
+                print toReturn.count()
+
                 for child in prnt.children.all():
-                    toReturn = getProducts(toReturn , child)
+                    toReturn = getProducts(toReturn , child , multiproductLst)
 
                 if 'minPrice' in data:
                     minPrice = data['minPrice']
@@ -440,10 +487,23 @@ class listingLiteViewSet(viewsets.ModelViewSet):
         #     print "gggggggggggggggggggggg", self.request.user
         #     u = self.request.user
         #     has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
+        if 'multipleStore' in self.request.GET:
+            print 'miltiiiiiiiiiiiiiiiiiiiiii',self.request.GET['pin']
+            try:
+                store = Store.objects.get(pincode=int(self.request.GET['pin']))
+            except:
+                return listing.objects.all()
+            storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+            productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            listingList = listing.objects.filter(product__in=productsList)
+            if 'parentValue' in  self.request.GET:
+                return listingList.filter(parentType=self.request.GET['parentValue']).exclude(pk = self.request.GET['detailValue'] )[0:4]
+            return listingList
+
         if 'parentValue' in  self.request.GET:
             return listing.objects.filter(parentType=self.request.GET['parentValue']).exclude(pk = self.request.GET['detailValue'] )[0:4]
-        else:
-            return listing.objects.all()
+        # else:
+        #     return listing.objects.all()
         if 'mode' in  self.request.GET:
             if self.request.GET['mode'] == 'vendor':
                 s = service.objects.get(user = u)
@@ -451,8 +511,8 @@ class listingLiteViewSet(viewsets.ModelViewSet):
                 return listing.objects.exclude(pk__in = items)
             elif self.request.GET['mode'] == 'suggest':
                 return listing.objects.all()[:5]
-        else:
-            return listing.objects.all()
+        # else:
+        return listing.objects.all()
         #     if self.request.GET['parentValue'] == 'vendor':
         #         s = service.objects.get(user = u)
         #         items = offering.objects.filter( service = s).values_list('item' , flat = True)
@@ -499,16 +559,27 @@ class ActivitiesViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user','typ','product']
     def get_queryset(self):
-        a = Activities.objects.filter(user=self.request.user).order_by('-created')
+        a = Activities.objects.filter(user=self.request.user,product__isnull=False).order_by('-created')
+        if 'multipleStore' in self.request.GET:
+            print 'miltiiiiiiiiiiiiiiiiiiiiii',self.request.GET['pin']
+            try:
+                store = Store.objects.get(pincode=int(self.request.GET['pin']))
+            except:
+                return listing.objects.all()
+            storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+            productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            listingList = list(listing.objects.filter(product__in=productsList).values_list('pk',flat=True))
+            a = a.filter(product__in = listingList)
         pPk = []
         aPk = []
         for i in a :
-            if i.product:
-                if i.product.pk not in pPk:
-                    pPk.append(i.product.pk)
-                    aPk.append(i.pk)
-                else:
-                    a = a.exclude(product=i.product)
+            if len(aPk) == 4:
+                break
+            if i.product.pk not in pPk:
+                pPk.append(i.product.pk)
+                aPk.append(i.pk)
+            else:
+                a = a.exclude(product=i.product)
         return Activities.objects.filter(pk__in=aPk).order_by('-created')
 
 class AddressViewSet(viewsets.ModelViewSet):
@@ -1221,4 +1292,3 @@ class CartLiteAPI(APIView):
         data = Cart.objects.filter(product=request.GET['product'],user=request.user)
         print data
         return data
-

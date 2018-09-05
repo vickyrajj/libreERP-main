@@ -628,6 +628,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       'displayPicture': emptyFile,
       'serialNo': '',
       'description': '',
+      'alias': '',
       'inStock': 0,
       'cost': 0,
       'logistics': 0,
@@ -755,6 +756,9 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     }
     if (f.unit != null && f.unit.length > 0) {
       fd.append('unit', f.unit);
+    }
+    if (f.alias != null && f.alias.length > 0) {
+      fd.append('alias', f.alias);
     }
     if ($scope.categoriesList.length > 0) {
       fd.append('haveComposition', true);

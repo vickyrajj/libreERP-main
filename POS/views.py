@@ -58,9 +58,33 @@ class StoreViewSet(viewsets.ModelViewSet):
         #     toReturn = toReturn.filter(pincode__icontains=int(self.request.GET['pincode']))
         # return toReturn
         if 'pincode' in self.request.GET:
-            # minno = int(self.request.GET['pincode'])-50
-            # maxno = int(self.request.GET['pincode'])+50
-            toReturn = toReturn.filter(pincode__range=(int(self.request.GET['pincode'])-50,int(self.request.GET['pincode'])+50))
+            # toReturn = toReturn.filter(pincode__range=(int(self.request.GET['pincode'])-150,int(self.request.GET['pincode'])+150))
+            val = int(self.request.GET['pincode'])
+            lt = toReturn.filter(pincode__range=(val-150,val)).order_by('-pincode')
+            gt = toReturn.filter(pincode__range=(val,val+150)).order_by('pincode')
+            if lt.count()>0 and gt.count()==0:
+                toReturn = lt.first()
+            elif gt.count()>0 and lt.count()==0:
+                toReturn = gt.first()
+            elif gt.count()==0 and lt.count()==0:
+                toReturn = gt
+            else:
+                if gt[0].pincode - val < val-lt[0].pincode:
+                    print 'greaterrrrrrrrrrrrr'
+                    toReturn = gt.first()
+                elif val-lt[0].pincode < gt[0].pincode - val:
+                    print 'lessssssssssss'
+                    toReturn = lt.first()
+                else:
+                    print 'equallllllllll'
+                    toReturn = lt.first()
+            try:
+                print toReturn.pk
+                toReturn = Store.objects.filter(pk=toReturn.pk)
+            except:
+                print 'in excepttttttttttttttttt'
+                toReturn = toReturn
+            print toReturn
         return toReturn
 
 class StoreQtyViewSet(viewsets.ModelViewSet):
