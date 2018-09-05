@@ -86,15 +86,20 @@ def tokenAuthentication(request):
 
 
 def generateOTP(request):
-    print request.POST
+    print request.POST['id'],'kkkkkkkkllllllllllllkkkkkkkkkkk'
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
+    print otp,'hhhhhhhhhhhhhhhh'
     user = get_object_or_404(User, username = request.POST['id'])
+    print user,'aaaaaaaaaaaaaaaaaaahhhhhhhhh'
     ak = accountsKey(user= user, activation_key= otp,
         key_expires=key_expires , keyType = 'otp')
+    print ak,'aaaaaaaaaaa'
     ak.save()
     print ak.activation_key
     # send a SMS with the OTP
+    url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(request.POST['id'] , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(otp))
+    # requests.get(url)
     return JsonResponse({} ,status =200 )
 
 @csrf_exempt
@@ -102,6 +107,8 @@ def loginView(request):
 
     # print request.META['HTTP_USER_AGENT']
     print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
+
 
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
@@ -113,7 +120,7 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
-
+        print request.POST,'lllllllllllllddddddddddddd'
     	usernameOrEmail = request.POST['username']
         otpMode = False
         if 'otp' in request.POST:
@@ -173,7 +180,13 @@ def loginView(request):
     if 'mode' in request.GET and request.GET['mode'] == 'api':
         return JsonResponse(authStatus , status = statusCode)
 
-    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+    # return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+    if not globalSettings.LOGIN_TEMPLATE:
+        return render(request,"login.html" , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+
+    else:
+        return render(request,"login.lite.html" , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+
 
 def registerView(request):
     if globalSettings.REGISTER_URL != 'register':
