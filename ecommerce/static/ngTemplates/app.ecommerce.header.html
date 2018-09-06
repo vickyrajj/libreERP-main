@@ -31,12 +31,21 @@
     <span ng-click="openPinPopup()" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46);margin-right: -4px;" ng-if="pin!=0&&pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>
   </div>
 
-  <div class="col-md-4 text-right hidden-xs hidden-sm" ng-if="!me.pk">
+  <div class="col-md-3 text-right hidden-xs hidden-sm" ng-if="!me.pk">
     <span ng-click="openPinPopup()" style="cursor:pointer;font-size:17px;padding-right:30px;color:rgb(24, 89, 46)" ng-if="pin!=0&&pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>
     <span style="cursor:pointer;font-size:17px;padding-right:30px;color:rgb(24, 89, 46)" ng-click="loginPage()"> Login <i class="fa fa-user fa-lg"></i></span>
     <span style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46)" ng-click="registerPage()"> Register <i class="fa fa-registered fa-lg"></i></span>
 
   </div>
+
+
+  <div class="col-md-1 text-right hidden-xs hidden-sm" ng-if="!me.pk">
+    <span>
+      <span ng-click="mainPage()" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46);margin-right: -4px;" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
+      <span style="background-color:green;height: 10%;width: 25px;  border-radius: 50%;color:white;display: table-cell;text-align: center;vertical-align: middle;"  class="text-center">{{addToCart.length}}</span>
+    </span>
+  </div>
+
 
   <div class="col-xs-9 text-right hidden-md hidden-lg" ng-if="!me.pk">
     <span ng-click="openPinPopup()" style="cursor:pointer;font-size:13px;padding-right:10px;color:rgb(24, 89, 46)" ng-if="pin!=0&&pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>
@@ -54,6 +63,11 @@
           <span style="background-color:green;height: 20px;width: 20px;  border-radius: 50%;display: table-cell;text-align: center;vertical-align: middle;color:white;position:relative;right: 5px" ng-if="inCart.length>0" class="text-center">{{inCart.length}}</span>
     </span>
   </div>
+<!--     <div class="col-xs-2 text-right hidden-lg hidden-md" ng-if="!me.pk" style="padding-top: 10px;color:rgb(24, 89, 46)">
+    <span ng-click="$state.go('account.cart')" style="cursor:pointer" > <i class="fa fa-shopping-cart fa-lg"></i>
+          <span style="background-color:green;height: 20px;width: 20px;  border-radius: 50%;display: table-cell;text-align: center;vertical-align: middle;color:white;position:relative;right: 5px" ng-if="inCart.length>0" class="text-center">{{addToCart.length}}</span>
+    </span>
+  </div> -->
 
   <div class="col-xs-3 text-center dropdown hidden-lg hidden-md " style="padding-top: 12px;">
     <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;color:rgb(24, 89, 46);" ng-if="me.pk" > {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 15px;" alt=""></span>
