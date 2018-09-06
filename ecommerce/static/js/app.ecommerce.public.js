@@ -27,6 +27,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
     setTimeout(function () {
       window.scrollTo(0, 0);
     }, 1000);
+
     var me = $users.get('mySelf');
 
     var now = new Date();
@@ -208,42 +209,47 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
 
 
 
-  $scope.changeQty = function(value, data) {
-    for (var i = 0; i < $rootScope.inCart.length; i++) {
-      if ($rootScope.inCart[i].product.pk == value) {
-        if ($rootScope.inCart[i].typ == 'cart') {
-          if (data == 'increase') {
-            $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
-          }
-          if (data == 'decrease') {
-            $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
-          }
-          if ($rootScope.inCart[i].qty > 0) {
-            $http({
-              method: 'PATCH',
-              url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-              data: {
-                qty: $rootScope.inCart[i].qty
-              }
-            }).
-            then(function(response) {})
-          } else if ($rootScope.inCart[i].qty == 0) {
-            $http({
-              method: 'DELETE',
-              url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-            }).
-            then(function(response) {
-              Flash.create('success', 'Removed From Cart');
 
-            })
-            $rootScope.inCart.splice(i, 1)
-            return
+  $scope.changeQty = function(value,data) {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+      for (var i = 0; i < $rootScope.inCart.length; i++) {
+        if ($rootScope.inCart[i].product.pk == value) {
+          if ($rootScope.inCart[i].typ == 'cart') {
+            if(data =='increase'){
+              $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
+            }
+            if(data =='decrease'){
+              $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
+            }
+            if($rootScope.inCart[i].qty > 0){
+              $http({
+                method: 'PATCH',
+                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+                data: {
+                  qty: $rootScope.inCart[i].qty
+                }
+              }).
+              then(function(response) {
+              })
+            }
+            else if($rootScope.inCart[i].qty== 0){
+              $http({
+                method: 'DELETE',
+                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+              }).
+              then(function(response) {
+                Flash.create('success', 'Removed From Cart');
+
+              })
+              $rootScope.inCart.splice(i, 1)
+              return
+            }
+
+            }
           }
 
         }
       }
-    }
-  }
 
 });
 
@@ -1210,17 +1216,31 @@ app.controller('controller.ecommerce.account.support', function($scope, $rootSco
   })
 
   $scope.message = {
+    invoiceNo:'',
     subject: '',
     body: ''
   };
   $scope.sendMessage = function() {
+    if($scope.me==undefined|| $scope.me==''||$scope.message.invoiceNo==''||$scope.message.body==''){
+      Flash.create("warning","Please add all details")
+    }
+    else{
+      dataToSend ={
+        email : $scope.me.email,
+        mobile : $scope.me.profile.mobile,
+        invoiceNo : $scope.message.invoiceNo,
+        subject : $scope.message.subject ,
+        message : $scope.message.body
+      }
+    }
     $http({
       method: 'POST',
-      url: '/api/ecommerce/support/',
-      data: $scope.message
+      url: '/api/ecommerce/supportFeed/',
+      data:dataToSend
     }).
     then(function(response) {
       $scope.message = {
+        invoiceNo:'',
         subject: '',
         body: ''
       };
@@ -1851,23 +1871,31 @@ then(function(response) {
 
   // $scope.feddbackPannel = false
   $scope.feedbackstatus = function() {
-    console.log("kkkkkhhhhhhhhhhhhhhhhhhh");
+
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.ecommerce.feedBack.html',
       size: 'md',
       backdrop: false,
-      // resolve: {
-      //   product: function() {
-      //
-      //   }
-      // },
       controller: 'controller.ecommerce.feedBack.modal',
     }).result.then(function() {
 
     }, function() {
 
     });
-    // $scope.feddbackPannel = true
+  }
+
+    $scope.contactUs = function() {
+     $scope.me = $users.get('mySelf')
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.contact.html',
+      size: 'md',
+      backdrop: false,
+      controller: 'controller.ecommerce.contact.modal',
+    }).result.then(function() {
+
+    }, function() {
+
+    });
   }
   // $scope.close = function() {
   //   $scope.feddbackPannel = false
@@ -2024,10 +2052,105 @@ app.controller('controller.ecommerce.pincodeEnquiry.modal', function($scope, $ro
   console.log($scope.stores, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakkkkkkkkkkkkkkkkkkk');
 });
 
-app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
-  $scope.close = function() {
+// app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
+//   $scope.close = function() {
+//     $uibModalInstance.close();
+//   }
+
+app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval,$uibModal,$uibModalInstance, Flash) {
+  $scope.me = $users.get('mySelf')
+  $scope.close=function(){
     $uibModalInstance.close();
   }
+
+  $scope.feedback = {
+    email: '',
+    subject:'',
+    mobile: null,
+    message: ''
+  };
+    $scope.sendFeedback = function() {
+      console.log($scope.me,'aaaaaaaaa')
+      if ($scope.me==null||$scope.me==undefined){
+         console.log('kkkkkkkkkkkkkkk')
+        if($scope.feedback.email==''|| $scope.feedback.mobile==5||$scope.feedback.message==''){
+          Flash.create("warning","Please Add Email and Mobile")
+        }
+        else{
+            var toSend = {
+                email: $scope.feedback.email,
+                mobile: $scope.feedback.mobile,
+                subject: $scope.feedback.subject,
+                message: $scope.feedback.message,
+            }
+        }
+      }
+      else{
+            if($scope.feedback.message==''){
+          Flash.create("warning","Please Add Email and Mobile")
+        }else{
+                  var toSend = {
+            email: $scope.me.email,
+            mobile: $scope.me.profile.mobile,
+            subject: $scope.feedback.subject,
+            message: $scope.feedback.message,
+        }
+        }
+
+     }
+      $http({
+        method: 'POST',
+        url: '/api/ecommerce/supportFeed/',
+        data: toSend
+      }).
+      then(function(response) {
+        Flash.create('success', 'Thank you!');
+        $scope.feedback = {
+          email: '',
+          subject:'',
+          mobile: null,
+          message: ''
+        };
+      }, function(response) {
+        Flash.create('danger', response.status + ' : ' + response.statusText);
+      });
+    }
+});
+
+app.controller('controller.ecommerce.contact.modal', function($scope, $rootScope, $state, $http, $users, $interval,$uibModal,$uibModalInstance, Flash) {
+  //   $http({
+  //   method: 'GET',
+  //   url: '/api/ecommerce/frequentlyQuestions/'
+  // }).
+  // then(function(response) {
+  //   $scope.fAQ = response.data
+  // })
+
+  // $scope.message = {
+  //   subject: '',
+  //   body: ''
+  // };
+  // $scope.sendMessage = function() {
+  //   $http({
+  //     method: 'POST',
+  //     url: '/api/ecommerce/support/',
+  //     data: $scope.message
+  //   }).
+  //   then(function(response) {
+  //     $scope.message = {
+  //       subject: '',
+  //       body: ''
+  //     };
+  //     Flash.create('success', response.status + ' : ' + response.statusText);
+  //   }, function(response) {
+  //     Flash.create('danger', response.status + ' : ' + response.statusText);
+  //   })
+  // }
+
+  $scope.close=function(){
+    $uibModalInstance.close();
+  }
+
 
   $scope.sendFeedback = function() {
     // if ($scope.me==null){

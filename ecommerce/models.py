@@ -272,7 +272,9 @@ class SupportFeed(models.Model):
     user = models.ForeignKey(User , related_name = 'supportUser' , null = True)
     email = models.CharField(max_length = 35, blank = True)
     mobile = models.CharField(null = False , max_length = 14)
+    subject =  models.CharField( null = True , max_length = 500)
     message = models.CharField( null = False , max_length = 1000)
+    invoiceNo = models.CharField( null = True , max_length = 1000)
     status = models.CharField(choices = FEEDBACK_STATUS_CHOICES , max_length = 10 , default='created' )
 
 class Pincode(models.Model):

@@ -13,6 +13,7 @@ from django.shortcuts import redirect , get_object_or_404
 from django.conf import settings as globalSettings
 from ERP.models import application, permission , module
 import requests
+from HR.models import profile
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 
@@ -59,19 +60,23 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 print "will create a new user"
                 u = User(username = d['mobile'])
                 u.first_name = d['mobile']
-                u.mobile = d['mobile']
                 u.email = ''
                 u.last_name = ''
                 u.set_password('titan@1')
                 u.is_active = True
                 u.save()
-                u.profile.mobile = u
-                u.profile.save()
+                # pobj=profile()
+                # pobj.mobile = d['mobile']
+                # pobj.save()
                 for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
                     app = application.objects.get(name = a)
                     p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
                 login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
                 instance.delete()
+                print u, u.profile, u.profile.pk, u.profile.mobile ,'ddddddddd'
+                pobj = profile.objects.get(user=u)
+                pobj.mobile = d['mobile']
+                pobj.save()
                 return instance
             else:
                 raise SuspiciousOperation('Expired')

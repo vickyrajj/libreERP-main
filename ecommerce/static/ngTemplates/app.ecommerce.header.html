@@ -31,7 +31,6 @@
     <span ng-click="openPinPopup()" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46);margin-right: -4px;" ng-if="pin!=0&&pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>
   </div>
 
-
   <div class="col-md-4 text-right hidden-xs hidden-sm" ng-if="!me.pk">
     <span ng-click="openPinPopup()" style="cursor:pointer;font-size:17px;padding-right:30px;color:rgb(24, 89, 46)" ng-if="pin!=0&&pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>
     <span style="cursor:pointer;font-size:17px;padding-right:30px;color:rgb(24, 89, 46)" ng-click="loginPage()"> Login <i class="fa fa-user fa-lg"></i></span>
@@ -75,7 +74,7 @@
 
 
 
-  <hr style="margin:0px;border: solid 1px #DCDCDC;">
+  <hr style="margin:0px;border: solid 2px #DCDCDC;">
 <div ng-if="$state.is('ecommerce') && bannerText" style="position:relative;height:60vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
   <img style="width:100%;cursor:pointer;height:56vh;background-attachment: fixed;background-position: center;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
 
@@ -140,7 +139,7 @@
 </div>
 
 
-<div ng-if="$state.is('ecommerce')&& !bannerText" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+<div ng-if="$state.is('ecommerce')&& !bannerText" style="position:relative;height:40vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
   <!-- <img class="anim-in-out" data-anim-speed="100" style="width:100%;cursor:pointer;height:50vh" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/> -->
 
 <!-- <div ng-if="$state.is('ecommerce')" style="position:relative;height:88vh ;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">

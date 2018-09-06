@@ -182,7 +182,7 @@ app.controller("businessManagement.ecommerce.support.request.explore", function(
 $scope.sendResponse=function(){
   var sendData = {
     response:$scope.data.request.response,
-    user : $scope.data.request.user.pk,
+    // user : $scope.data.request.user.pk,
     datapk : $scope.data.request.pk
   }
   console.log(sendData,'aaaaaaaaaaa');
