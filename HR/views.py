@@ -19,6 +19,7 @@ from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
 import random, string
+import requests
 from django.utils import timezone
 from rest_framework.views import APIView
 
@@ -99,7 +100,7 @@ def generateOTP(request):
     print ak.activation_key
     # send a SMS with the OTP
     url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(request.POST['id'] , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(otp))
-    # requests.get(url)
+    requests.get(url)
     return JsonResponse({} ,status =200 )
 
 @csrf_exempt
