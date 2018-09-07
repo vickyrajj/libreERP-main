@@ -180,7 +180,8 @@ app.config(function($stateProvider) {
 
 app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
 
-  console.log();
+
+console.log($rootScope.addToCart,'aaaaaaaaaaaaaaaaaaaagggggggggggggggggggggggg');
 
   $scope.var1 = "hello";
 
@@ -250,6 +251,60 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
 
         }
       }
+
+     function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      console.log(decodedCookie,'hhhhhhhhhhhhhhhhhhhhhh');
+      var ca = decodedCookie.split(';');
+      console.log(ca);
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+       }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+      function setCookie(cname, cvalue, exdays) {
+          console.log('set cookie');
+          var d = new Date();
+          d.setTime(d.getTime() + (exdays*24*60*60*1000));
+          var expires = "expires="+ d.toUTCString();
+          document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+
+
+      $scope.updateCookieDetail=function(indx, value) {
+        console.log(indx, value)
+        if(value=="increase"){
+          $rootScope.addToCart[indx].qty++
+        }
+         if(value=="decrease"){
+          $rootScope.addToCart[indx].qty--
+        }
+        setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+      }
+
+
+  $scope.$watch('addToCart', function(newValue, oldValue) {
+    $scope.data.totalVal = 0;
+    if($rootScope.addToCart!=undefined){
+      for (var i = 0; i < $rootScope.addToCart.length; i++) {
+        $scope.data.totalVal += $rootScope.addToCart[i].product.product.discountedPrice * $rootScope.addToCart[i].qty
+     }
+    }
+  }, true)
+
+
+  $scope.mainPage = function(){
+     window.location = '/login';
+  }
+
 
 });
 
@@ -536,6 +591,58 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
     })
   }
+
+      function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      console.log(decodedCookie,'hhhhhhhhhhhhhhhhhhhhhh');
+      var ca = decodedCookie.split(';');
+      console.log(ca);
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+       }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+
+      function setCookie(cname, cvalue, exdays) {
+          console.log('set cookie');
+          var d = new Date();
+          d.setTime(d.getTime() + (exdays*24*60*60*1000));
+          var expires = "expires="+ d.toUTCString();
+          document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+
+       $scope.createCookieDetail=function(product) {
+        console.log(product,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        if($rootScope.addToCart!=undefined){
+           for(var i=0;i<$rootScope.addToCart.length;i++){
+              if($rootScope.addToCart[i].product.pk==product.pk){
+              Flash.create("warning","Product Already in Cart")
+              return
+            }
+          }
+        }
+
+          product.added_cart++
+          $scope.item = {'product':product,'qty':1}
+          detail = getCookie("addToCart");
+         $rootScope.addToCart=[]
+          if (detail != "") {
+          console.log('already there');
+          $rootScope.addToCart = JSON.parse(detail)
+          document.cookie = encodeURIComponent("addToCart") + "=deleted; expires=" + new Date(0).toUTCString()
+          }
+          $rootScope.addToCart.push($scope.item)
+        setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+      }
+
 
 
 });
@@ -1606,6 +1713,20 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 
 app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash) {
+
+
+
+  $scope.addTCart = getCookie('addToCart')
+  if($scope.addTCart!=''){
+      $rootScope.addToCart =JSON.parse($scope.addTCart)
+  }
+
+
+
+  $scope.mainPage = function(){
+     window.location = '/login';
+  }
+
 
 
   function getCookie(cname) {

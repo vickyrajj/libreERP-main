@@ -649,9 +649,59 @@ app.directive('productCard', function() {
         })
 
       }
-      $scope.mainPage = function(){
-      window.location = '/login';
+      // $scope.mainPage = function(){
+      // window.location = '/login';
+      // }
+
+    function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      console.log(decodedCookie,'hhhhhhhhhhhhhhhhhhhhhh');
+      var ca = decodedCookie.split(';');
+      console.log(ca);
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+       }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
       }
+      return "";
+    }
+
+      function setCookie(cname, cvalue, exdays) {
+          console.log('set cookie');
+          var d = new Date();
+          d.setTime(d.getTime() + (exdays*24*60*60*1000));
+          var expires = "expires="+ d.toUTCString();
+          document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+
+       $scope.createCookieDetail=function() {
+        console.log($rootScope.addToCart,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        if($rootScope.addToCart!=undefined){
+           for(var i=0;i<$rootScope.addToCart.length;i++){
+              if($rootScope.addToCart[i].product.pk==$scope.list.pk){
+              Flash.create("warning","Product Already in Cart")
+              return
+            }
+          }
+        }
+          $scope.list.added_cart++
+          $scope.item = {'product':$scope.list,'qty':$scope.list.added_cart}
+          detail = getCookie("addToCart");
+         $rootScope.addToCart=[]
+          if (detail != "") {
+          console.log('already there');
+          $rootScope.addToCart = JSON.parse(detail)
+          document.cookie = encodeURIComponent("addToCart") + "=deleted; expires=" + new Date(0).toUTCString()
+          }
+          $rootScope.addToCart.push($scope.item)
+        setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+      }
+
       $scope.addToCart = function() {
           $scope.list.added_cart++
           // $scope.addCart(id)
@@ -701,7 +751,6 @@ app.directive('productCard', function() {
                 Flash.create('success', 'Product added in cart');
                 $rootScope.inCart.push(response.data);
               })
-
           })
           // for (var i = 0; i < $rootScope.inCart.length; i++) {
           //   console.log("cameeeeeeeeeeeeeeeeeeeeeeee",$rootScope.inCart[i].product.pk, $scope.list.pk);
