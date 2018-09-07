@@ -1,20 +1,32 @@
 
 <div class="row" ng-if="!posShowAll" style="font-size:35px">
-  <div class="col-md-8">
+  <div class="col-md-5">
     <label>Invoice Serial Number</label> - {{form.serialNumber}}
   </div>
-  <div class="col-md-4">
-    <div class="input-group pull-right" ng-if="!connected">
-      <input type="text" class="form-control" placeholder="Please enter device ID" ng-model="connectData.deviceID">
-      <span class="input-group-btn">
-        <button type="button" class="btn btn-success" ng-click="connectDevice()">Connect</button>
+  <div class="col-md-7">
+    <div class="col-md-7">
+      <span ng-if="multiStore" style="font-size:21px">
+        <div class="col-md-3 text-right">
+          <label>Store :</label>
+        </div>
+        <div class="col-md-9">
+          <input uib-typeahead="store as store.name for store in storeSearch($viewValue)" ng-model="storeForm.name" type="text" class="form-control" placeholder="Search By Store Name">
+        </div>
       </span>
     </div>
-    <div class="input-group pull-right" ng-if="connected">
-      <input type="text" class="form-control" value="{{connectData.deviceID}}" disabled>
-      <span class="input-group-btn">
-        <button type="button" class="btn btn-danger" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="disconnectDevice()" confirm-button-type="default" cancel-button-type="default">Disconnect</button>
-      </span>
+    <div class="col-md-5">
+      <div class="input-group pull-right" ng-if="!connected">
+        <input type="text" class="form-control" placeholder="Please enter device ID" ng-model="connectData.deviceID">
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-success" ng-click="connectDevice()">Connect</button>
+        </span>
+      </div>
+      <div class="input-group pull-right" ng-if="connected">
+        <input type="text" class="form-control" value="{{connectData.deviceID}}" disabled>
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-danger" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="disconnectDevice()" confirm-button-type="default" cancel-button-type="default">Disconnect</button>
+        </span>
+      </div>
     </div>
 
   </div>

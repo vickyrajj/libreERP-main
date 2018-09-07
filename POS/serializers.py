@@ -47,6 +47,17 @@ class StoreQtySerializer(serializers.ModelSerializer):
         s.save()
         return s
 
+    def update(self ,instance, validated_data):
+        for key in ['quantity']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'store' in self.context['request'].data:
+            instance.store = Store.objects.get(pk=self.context['request'].data['store'])
+        instance.save()
+        return instance
+
 class ProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -121,9 +132,12 @@ class ProductSerializer(serializers.ModelSerializer):
             for c in self.context['request'].data['compositions'].split(','):
                 instance.compositions.add(Product.objects.get(pk = int(c)))
         if 'storeQty' in self.context['request'].data:
-            for c in self.context['request'].data['storeQty'].split(','):
-                print type(c), c
-                instance.storeQty.add(StoreQty.objects.get(pk = c))
+            print self.context['request'].data['storeQty'],'ssssssssssssssssssss',len(self.context['request'].data['storeQty'])
+            if len(self.context['request'].data['storeQty']) > 0:
+                instance.storeQty.clear()
+                for c in self.context['request'].data['storeQty'].split(','):
+                    print type(c), c
+                    instance.storeQty.add(StoreQty.objects.get(pk = int(c)))
 
 
         instance.save()
@@ -146,6 +160,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         print validated_data,'**************'
         print '****************************'
+        print self.context['request'].data
         inv = Invoice(**validated_data)
         if 'customer' in self.context['request'].data:
             inv.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
@@ -155,7 +170,15 @@ class InvoiceSerializer(serializers.ModelSerializer):
             for i in productList:
                 print i['data']['pk'],i['quantity']
                 pObj = Product.objects.get(pk=i['data']['pk'])
-                pObj.inStock = pObj.inStock - i['quantity']
+                if 'storepk' in self.context['request'].data:
+                    print 'multistoreeeeeeeeeeeeeeeeee'
+                    storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
+                    storeQtyObj = pObj.storeQty.get(store__id=storeObj.pk)
+                    storeQtyObj.quantity = storeQtyObj.quantity - i['quantity']
+                    storeQtyObj.save()
+                else:
+                    print 'singlestoreeeeeeeeeeeeeeeeeee'
+                    pObj.inStock = pObj.inStock - i['quantity']
                 pObj.save()
                 data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':inv}
                 InventoryLog.objects.create(**data)
@@ -176,13 +199,29 @@ class InvoiceSerializer(serializers.ModelSerializer):
                 if i['data']['pk']==j['data']['pk']:
                     if i['quantity'] > j['quantity']:
                         print 'increasedddddddddddddddd and inventory created'
-                        pObj.inStock = pObj.inStock + (i['quantity'] - j['quantity'])
+                        if 'storepk' in self.context['request'].data:
+                            print 'multistoreeeeeeeeeeeeeeeeee'
+                            storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
+                            storeQtyObj = pObj.storeQty.get(store__id=storeObj.pk)
+                            storeQtyObj.quantity = storeQtyObj.quantity + (i['quantity'] - j['quantity'])
+                            storeQtyObj.save()
+                        else:
+                            print 'singlestoreeeeeeeeeeeeeeeeeee'
+                            pObj.inStock = pObj.inStock + (i['quantity'] - j['quantity'])
                         pObj.save()
                         data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'after':j['quantity'],'internalInvoice':instance}
                         InventoryLog.objects.create(**data)
                     elif j['quantity'] > i['quantity']:
                         print 'decreasedddddddddddddddd and inventory created'
-                        pObj.inStock = pObj.inStock - (j['quantity'] - i['quantity'])
+                        if 'storepk' in self.context['request'].data:
+                            print 'multistoreeeeeeeeeeeeeeeeee'
+                            storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
+                            storeQtyObj = pObj.storeQty.get(store__id=storeObj.pk)
+                            storeQtyObj.quantity = storeQtyObj.quantity - (j['quantity'] - i['quantity'])
+                            storeQtyObj.save()
+                        else:
+                            print 'singlestoreeeeeeeeeeeeeeeeeee'
+                            pObj.inStock = pObj.inStock - (j['quantity'] - i['quantity'])
                         pObj.save()
                         data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'after':j['quantity'],'internalInvoice':instance}
                         InventoryLog.objects.create(**data)

@@ -8,7 +8,7 @@ from HR.serializers import userSearchSerializer
 from rest_framework.response import Response
 from API.permissions import has_application_permission
 from ERP.serializers import serviceLiteSerializer, addressSerializer
-from POS.models import Product
+from POS.models import Product,Store,StoreQty
 from POS.serializers import ProductSerializer
 import json
 from HR.models import *
@@ -91,12 +91,23 @@ class mediaSerializer(serializers.ModelSerializer):
         m.user = u
         m.save()
         return m
+class StoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = ('pk' ,'created' , 'name' , 'address' , 'pincode' , 'mobile' , 'email')
+
+class StoreQtySerializer(serializers.ModelSerializer):
+    store = StoreSerializer(many = False , read_only = True)
+    class Meta:
+        model = StoreQty
+        fields = ('pk' ,'created', 'store' , 'quantity' )
 
 class POSProductSerializer(serializers.ModelSerializer):
     discountedPrice = serializers.SerializerMethodField()
+    storeQty=StoreQtySerializer(many=True,read_only=True)
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name' , 'price' , 'discount','discountedPrice' ,'description')
+        fields = ('pk' , 'user' ,'name' , 'price' , 'discount','discountedPrice' ,'description','inStock','storeQty')
     def get_discountedPrice(self, obj):
         if obj.discount>0:
             # discountedPrice = obj.price - ((obj.discount / obj.price )* 100)
@@ -277,7 +288,7 @@ class CartSerializer(serializers.ModelSerializer):
     		else:
                     print 'deleteeeeeeeeeeeeeeeeeeee'
                     del c
-                    return 
+                    return
 
     	except:
        	 	c = Cart(**validated_data)

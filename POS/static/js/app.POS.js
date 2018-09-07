@@ -12,7 +12,7 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller("controller.POS.invoice.form", function($scope, invoice, $http, Flash) {
+app.controller("controller.POS.invoice.form", function($scope, invoice, $http, Flash,$rootScope) {
 
   if (invoice.pk != undefined) {
     $scope.mode = 'edit';
@@ -179,6 +179,9 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
       paymentRefNum : f.paymentRefNum,
       receivedDate : f.receivedDate.toJSON().split('T')[0],
       modeOfPayment : f.modeOfPayment,
+    }
+    if ($rootScope.multiStore) {
+      toSend.storepk = $rootScope.storepk
     }
 
     $http({
@@ -594,11 +597,16 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     qty : 1
   }
   $scope.storeData=[]
+  $scope.checkStore=[]
   $scope.storeData.pk=[]
 
   if (product.pk != undefined) {
     $scope.mode = 'edit';
     $scope.product = product;
+    for (var i = 0; i < $scope.product.storeQty.length; i++) {
+      $scope.storeData.push($scope.product.storeQty[i].pk)
+      $scope.checkStore.push($scope.product.storeQty[i].store.pk)
+    }
     if ($scope.product.compositionQtyMap == null) {
       $scope.compositionQtyMap = []
     }else {
@@ -646,14 +654,24 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
 }
 
   $scope.savestore = function(){
-    console.log($scope.storeDetail);
+    console.log($scope.storeDetail,$scope.storeData,$scope.checkStore);
+    if ($scope.checkStore.indexOf($scope.storeDetail.store.pk) >= 0) {
+      Flash.create('warning','This Store Has Already Added')
+      return
+    }
+    var method = 'POST'
+    var url = '/api/POS/storeQty/'
+    if ($scope.storeDetail.editpk != undefined && $scope.storeDetail.editpk > 0) {
+      method = 'PATCH'
+      url = url + $scope.storeDetail.editpk + '/'
+    }
     var sendData = {
       store : $scope.storeDetail.store.pk,
       quantity : $scope.storeDetail.quantity
     }
     $http({
-      method: 'POST',
-      url: '/api/POS/storeQty/',
+      method: method,
+      url: url,
       data: sendData,
     }).
     then(function(response) {
@@ -661,6 +679,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       console.log(response.data);
       $scope.product.storeQty.push(response.data)
       $scope.storeData.push(response.data.pk)
+      $scope.checkStore.push(response.data.store.pk)
+      $scope.storeDetail = {'store':'','quantity':''}
     })
 
   }
@@ -770,12 +790,12 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     }else {
       fd.append('haveComposition', false);
     }
-
-    if($scope.storeData.length>0){
-
-      fd.append('storeQty' , $scope.storeData)
-
-    }
+    fd.append('storeQty' , $scope.storeData)
+    // if($scope.storeData.length>0){
+    //
+    //   fd.append('storeQty' , $scope.storeData)
+    //
+    // }
 
 
     console.log(f.displayPicture);
@@ -823,9 +843,23 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     then((function(ind) {
       return function(response) {
         $scope.product.storeQty.splice(ind, 1);
+        $scope.storeData.splice(ind, 1);
+        $scope.checkStore.splice(ind, 1);
         Flash.create('success', 'Deleted');
       }
     })(ind))
+
+  }
+  $scope.editStore = function(ind) {
+    console.log($scope.product.storeQty[ind]);
+    $scope.storeDetail = {
+      'store':$scope.product.storeQty[ind].store,
+      'quantity':$scope.product.storeQty[ind].quantity,
+      'editpk':$scope.product.storeQty[ind].pk
+  }
+    $scope.product.storeQty.splice(ind, 1);
+    $scope.storeData.splice(ind, 1);
+    $scope.checkStore.splice(ind, 1);
 
   }
 
@@ -1196,15 +1230,98 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
 
   $scope.sai='kiran'
+  $rootScope.multiStore = false
+  $rootScope.storepk = 0
+
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    console.log(decodedCookie);
+    var ca = decodedCookie.split(';');
+    console.log(ca);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  function setCookie(cname, cvalue, exdays) {
+  console.log('set cookie');
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+  function createCookieDevice(deviceNo) {
+    console.log('create cookieeeeeeeee',deviceNo);
+    detail = getCookie("connectedDevice");
+    if (detail != "") {
+      console.log('already there');
+      document.cookie = encodeURIComponent("connectedDevice") + "=deleted; expires=" + new Date(0).toUTCString()
+    }
+    setCookie("connectedDevice", deviceNo , 365);
+  }
+
+  function createCookieStore(store) {
+    console.log('create cookieeeeeeeee',store);
+    detail = getCookie("selectedStore");
+    if (detail != "") {
+      console.log('already there');
+      document.cookie = encodeURIComponent("selectedStore") + "=deleted; expires=" + new Date(0).toUTCString()
+    }
+    setCookie("selectedStore", store , 365);
+  }
+
+  $scope.storeForm = {'name':''}
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $rootScope.multiStore = true
+        selectedStore = getCookie("selectedStore");
+        console.log('strrrrrrrrrrrrrrr',selectedStore);
+        if (selectedStore!="") {
+          $scope.storeForm.name = JSON.parse(selectedStore)
+          $rootScope.storepk = $scope.storeForm.name.pk
+          // $scope.connectDevice()
+        }
+      }
+    }
+  })
+
+  $scope.$watch('storeForm.name', function(newValue, oldValue) {
+    if (typeof newValue == 'object') {
+      $rootScope.storepk = newValue.pk
+      createCookieStore(JSON.stringify(newValue))
+    }
+  })
+
+  $scope.storeSearch = function(query) {
+    return $http.get('/api/POS/store/?name__icontains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
 
   $scope.connectData = {deviceID:'123'}
   $scope.connected = false
   $scope.connectDevice = function() {
+    console.log('connect Deviceeeeeeeeeeeeee');
     if ($scope.connectData.deviceID.length == 0) {
       Flash.create('danger','Please Enter Device Id')
       return
     }
     console.log($scope.connectData.deviceID);
+    createCookieDevice($scope.connectData.deviceID)
 
     wampSession.subscribe('service.POS.device.'+ $scope.connectData.deviceID, $scope.processScannerNotification).then(
       function (sub) {
@@ -1219,6 +1336,15 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     );
 
   }
+
+  connectedDevice = getCookie("connectedDevice");
+  console.log('devvvvvvvvvvvvvvvvvvvvv',connectedDevice);
+  if (connectedDevice!="") {
+    $scope.connectData.deviceID = connectedDevice
+    // $scope.connectDevice()
+  }
+
+
   $scope.disconnectDevice = function(){
     console.log($scope.subId);
     wampSession.unsubscribe($scope.subId).then(
@@ -1275,6 +1401,12 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     })
   }
   $scope.payPopup = function(){
+    if ($rootScope.multiStore) {
+      if (typeof $scope.storeForm.name == 'string') {
+        Flash.create('danger' , 'Please Select The Store')
+        return;
+      }
+    }
     if ($scope.form.products.length==0 || $scope.form.products.length == 1 &&  $scope.form.products[0].data == "" ) {
       Flash.create('danger' , 'There is no product to generate invoice for')
       return;
@@ -1862,6 +1994,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     // toSend.returndate=returndateParts[2]+'-'+returndateParts[0]+'-'+returndateParts[1];
     // console.log(typeof toSend.returnquater,toSend.returnquater);
     console.log(toSend);
+    if ($rootScope.multiStore) {
+      toSend.storepk = $rootScope.storepk
+    }
     var url = '/api/POS/invoice/';
     if ($scope.form.pk == undefined) {
       var method = 'POST';
