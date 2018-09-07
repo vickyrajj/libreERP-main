@@ -293,6 +293,7 @@ class CartSerializer(serializers.ModelSerializer):
     	except:
        	 	c = Cart(**validated_data)
        	 	c.product = listing.objects.get(pk = self.context['request'].data['product'])
+
         	c.save()
         return c
 

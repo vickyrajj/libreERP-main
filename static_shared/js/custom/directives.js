@@ -862,6 +862,38 @@ app.directive('productCard', function() {
           }
 
       }
+
+      $scope.incrementCookie = function() {
+        $scope.list.added_cart++
+        for (var i = 0; i < $rootScope.addToCart.length; i++) {
+          if ($rootScope.addToCart[i].product.pk == $scope.list.pk) {
+              $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty+1
+              setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+          }
+        }
+      }
+
+      $scope.decrementCookie = function() {
+        $scope.list.added_cart--
+        for (var i = 0; i < $rootScope.addToCart.length; i++) {
+          if ($rootScope.addToCart[i].product.pk == $scope.list.pk) {
+              $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
+              setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+          }
+        }
+      }
+
+
+      // $scope.updateCookieDetail=function(indx, value) {
+      //   console.log(productId, value)
+      //   if(value=="increase"){
+      //     $rootScope.addToCart[indx].qty++
+      //   }
+      //    if(value=="decrease"){
+      //     $rootScope.addToCart[indx].qty--
+      //   }
+      //   setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+      // }
     },
   };
 });
