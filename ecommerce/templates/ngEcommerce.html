@@ -65,7 +65,7 @@
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>
     <div class="row" style="margin:0px;" ng-controller="ecommerce.body" >
-      <div class="col-md-{{ cart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'10'}}" style="padding:0px;">
+      <div class="col-md-{{ cart.length > 0 && !$state.is('checkout') && !$state.includes('account')||!me.pk ?  '10':'12'}}" style="padding:0px;">
         <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
       </div>
 
@@ -73,6 +73,10 @@
 
       <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;"  ng-click="checkout()" ng-if="cart.length>0 && !$state.is('checkout') && !$state.includes('account')">
         <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.total}} )</h5>
+      </div>
+
+      <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;"  ng-click="mainPage()" ng-if="addToCart.length>0&&!me.pk">
+        <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.totalVal.toFixed(2)}})</h5>
       </div>
 
 

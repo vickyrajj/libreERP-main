@@ -1368,6 +1368,41 @@ app.controller('controller.ecommerce.account', function($scope, $rootScope, $sta
 
 
 app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash) {
+  $rootScope.totalLimit = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=orderLimit').
+  then(function(response) {
+    if (response.data[0] != null) {
+      console.log(response.data[0].value,'aaaaaaaaaaaaaaaaaa');
+      $rootScope.limitValue = parseInt(response.data[0].value)
+      console.log(response.data[0].value,'aaaaaaaaaaaaaaaaaa');
+      if (response.data[0].value>0) {
+        if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
+          $rootScope.totalLimit = true
+        }
+        else{
+          $rootScope.totalLimit = false
+        }
+      }
+    }
+  })
+
+  // if ($scope.dataToSend.modeOfPayment == 'COD') {
+  //   if ($scope.totalLimit = true) {
+  //     if ($scope.totalAfterPromo > 5000 || $scope.totalAfterDiscount > 5000) {
+  //       $scope.warningMessage = true
+  //     }
+  //     else {
+  //       $scope.warningMessage = false
+  //       $scope.dataToSend.paidAmount = 0
+  //     }
+  //   } else {
+  //     $scope.warningMessage = false
+  //     $scope.dataToSend.paidAmount = 0
+  //   }
+  // } else {
+  //     $scope.warningMessage = false
+  //   $scope.dataToSend.paidAmount = 0
+  // }
   $scope.me = $users.get('mySelf');
   $scope.data = {
     quantity: 1,
@@ -1611,6 +1646,15 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $scope.dataToSend = {}
 
   $scope.next = function() {
+    console.log($scope.totalAfterPromo,$scope.totalAfterDiscount,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    if($rootScope.limitValue){
+      if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
+        $rootScope.totalLimit = true
+      }
+      else{
+        $rootScope.totalLimit = false
+      }
+    }
     window.scrollTo(0, 0);
     if ($scope.data.stage == 'review') {
       $scope.data.stage = 'shippingDetails';
