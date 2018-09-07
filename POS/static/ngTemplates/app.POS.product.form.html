@@ -130,7 +130,7 @@
           <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 15px;" ng-repeat="data in productData">
             <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
               <div class="col-md-12">
-                <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br/><br/>
+                <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br/>
                 <span><strong>Units / Pack:</strong>{{data.unitPerpack}}</span>
                 <!-- <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a> -->
                 <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
@@ -162,17 +162,17 @@
           </div>
           <div class="row" style="margin-top: 30px;padding:5px 20px">
             <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top:15px;" ng-repeat="c in product.storeQty">
-              <div class="row" style="padding:15px">
-                <div class="col-md-11">
-                  <span><strong>Name : </strong> {{c.store.name}}</span><br/><br/>
+              <div class="row" style="padding:15px;font-size:17px">
+                <div class="col-md-10">
+                  <span><strong>Name : </strong> {{c.store.name}}</span><br/>
                   <span><strong>Quantity : </strong> {{c.quantity}}</span>
                 </div>
-                <!-- <div class="col-md-1">
-                  <i class="fa fa-pencil fa-lg" ng-click="editCategories($index)" style="cursor:pointer"></i>
-                  <i class="fa fa-trash fa-lg" ng-click="removeCategories($index)" style="cursor:pointer;margin-top:30px"></i>
-                </div> -->
-                <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteStore(c.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
-                style="padding-bottom: 9px;margin-top:16px;margin-right:12px"> <i class="fa fa-trash fa-lg"></i> </button>
+                <div class="col-md-2 text-right">
+                  <i class="fa fa-pencil fa-lg" ng-click="editStore($index)" style="cursor:pointer"></i><br>
+                  <i class="fa fa-trash fa-lg" style="cursor:pointer;margin-top:10px" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteStore(c.pk , $index)" confirm-button-type="danger" cancel-button-type="default"></i>
+                </div>
+                <!-- <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteStore(c.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
+                style="padding-bottom: 9px;margin-top:16px;margin-right:12px"> <i class="fa fa-trash fa-lg"></i> </button> -->
               </div>
             </div>
           </div>

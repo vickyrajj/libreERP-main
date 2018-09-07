@@ -372,6 +372,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $window.scrollTo(0, 0)
   $scope.offset = 0
   $scope.reviews = []
+  $scope.showOptions = true
   $scope.getRatings = function(offset) {
     $http({
       method: 'GET',
@@ -388,6 +389,19 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }).
   then(function(response) {
     $scope.details = response.data
+    if ($rootScope.multiStore) {
+      for (var i = 0; i < $scope.details.product.storeQty.length; i++) {
+        if ($scope.details.product.storeQty[i].store.pincode == $rootScope.pin) {
+          if ($scope.details.product.storeQty[i].quantity<=0) {
+            $scope.showOptions = false
+          }
+        }
+      }
+    }else {
+      if ($scope.details.product.inStock <= 0) {
+        $scope.showOptions = false
+      }
+    }
     console.log(response.data);
     console.log(response.data.product.description);
     document.querySelector('meta[name="description"]').setAttribute("content", response.data.product.description)
@@ -1714,9 +1728,13 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     } else {
       $scope.dataToSend.paidAmount = 0
     }
-    console.log($scope.dataToSend);
 
     $scope.data.stage = 'processing';
+    if ($rootScope.multiStore) {
+      console.log('multiiiiiiiiiiiiii');
+      $scope.dataToSend.storepk = $rootScope.storepk
+    }
+    console.log($scope.dataToSend);
 
     $http({
       method: 'POST',
@@ -1778,6 +1796,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 console.log('firstttttttttttttttttttttttttttttttttttttttttttttt');
 $rootScope.multiStore = false
 $rootScope.pin = 0
+$rootScope.storepk = 0
 $scope.openPinPopup = function(){
   $uibModal.open({
     templateUrl: '/static/ngTemplates/app.ecommerce.pincodeEnquiry.form.html',
@@ -1812,6 +1831,7 @@ then(function(response) {
           console.log(response.data);
           if (response.data.length>0) {
             $rootScope.pin = response.data[0].pincode
+            $rootScope.storepk = response.data[0].pk
             $rootScope.$broadcast('filterForStore', {
               pin: response.data[0].pincode
             });
