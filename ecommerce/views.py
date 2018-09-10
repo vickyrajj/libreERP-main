@@ -1284,3 +1284,10 @@ class GenericPincodeViewSet(viewsets.ModelViewSet):
             print 'lllllllllllllllllllllllllllllllllllllllllllllllllllll'
             toReturn = toReturn.filter(pincode__iexact=self.request.GET['pincode'])
         return toReturn
+
+class GenericImageViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny ,)
+    queryset = GenericImage.objects.all()
+    serializer_class = genericImageSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['pincode','state','city']

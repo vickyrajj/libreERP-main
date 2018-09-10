@@ -23,6 +23,7 @@ router.register(r'frequentlyQuestions' , FrequentlyQuestionsViewSet , base_name=
 router.register(r'pages' , PagesViewSet , base_name='pages')
 router.register(r'addPincode' , PincodeViewSet , base_name='addPincode')
 router.register(r'genericPincode' , GenericPincodeViewSet , base_name='genericPincode')
+router.register(r'genericImage' , GenericImageViewSet , base_name='genericImage')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

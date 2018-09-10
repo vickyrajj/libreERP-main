@@ -80,7 +80,7 @@
               </div>
               <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&!me.pk">
                 <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-                  <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="list.added_cart>0&&!me.pk"  ng-click="decrementCookie();$event.stopPropagation()"></i>
+                  <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="list.added_cart>1&&!me.pk"  ng-click="decrementCookie();$event.stopPropagation()"></i>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
                   <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{list.added_cart}} </span>

@@ -969,6 +969,18 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   })
 
+  // $scope.posProductDel = false
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=posProduct').
+  // then(function(response) {
+  //   if(response.data[0]!=null){
+  //     if (response.data[0].flag) {
+  //       $scope.posProductDel = true
+  //     }
+  //   }
+  //   console.log($scope.posProductDel,'aaaaaaaaaaaaa');
+  // })
+
+
   $scope.productSearch = function(query) {
     console.log("called");
     return $http.get('/api/POS/product/?search=' + query + '&limit=10').
@@ -984,7 +996,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     // productMetatableData: []
   };
 
-
+$scope.data.tableData.posProductDel= $scope.posProductDel
 
   var views = [{
     name: 'list',
@@ -1070,6 +1082,12 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       $scope.openProductBulkForm();
     } else if (action == 'taxCodes') {
       $scope.openProductConfigureForm();
+    } else if (action == 'delete') {
+      $http({method : 'DELETE' , url : '/api/POS/product/' + target + '/'}).
+      then(function(response) {
+        Flash.create('success' , 'Deleted');
+        $scope.$broadcast('forceRefetch',)
+      })
     } else {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)) {
@@ -2019,6 +2037,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       }
     })
   }
+
 
 
 });

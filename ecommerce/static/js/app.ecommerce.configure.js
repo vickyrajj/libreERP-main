@@ -438,6 +438,60 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
   })
 
 
+  $scope.addImage = function(){
+    var fd = new FormData();
+    if ($scope.form.backgroundImage != null && typeof $scope.form.backgroundImage != 'string') {
+      fd.append('backgroundImage', $scope.form.backgroundImage);
+    }
+    if ($scope.form.cartImage != null && typeof $scope.form.cartImage != 'string') {
+      fd.append('cartImage', $scope.form.cartImage);
+    }
+    if ($scope.form.paymentImage != null && typeof $scope.form.paymentImage != 'string') {
+      fd.append('paymentImage',$scope.form.paymentImage);
+    }
+    if ($scope.form.paymentPortrait != null && typeof $scope.form.paymentPortrait != 'string') {
+      fd.append('paymentPortrait',$scope.form.paymentPortrait);
+    }
+    $http({method : 'GET' , url : '/api/ecommerce/genericImage/'}).
+    then(function(response) {
+      if(response.data.length==0){
+        $http({
+          method: 'POST',
+          url: '/api/ecommerce/genericImage/',
+          data: fd,
+          transformRequest: angular.identity,
+          headers: {
+            'Content-Type': undefined
+          }
+        }).
+        then(function(response) {
+            Flash.create('success', 'Added Successfully!!!!');
+            return
+        });
+      }
+      else{
+        $http({
+          method: 'PATCH',
+          url: '/api/ecommerce/genericImage/'+response.data[0].pk+'/',
+          data: fd,
+          transformRequest: angular.identity,
+          headers: {
+            'Content-Type': undefined
+          }
+        }).
+        then(function(response) {
+          Flash.create('success', 'Updated Successfully!!!!');
+          return
+        });
+      }
+  })
+
+}
+
+// $http({method : 'GET' , url : '/api/ecommerce/genericImage/'}).
+// then(function(response) {
+//   $scope.imageData = response.data[0]
+// })
 
 });
 

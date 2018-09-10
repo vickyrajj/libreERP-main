@@ -87,15 +87,11 @@ def tokenAuthentication(request):
 
 
 def generateOTP(request):
-    print request.POST['id'],'kkkkkkkkllllllllllllkkkkkkkkkkk'
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
-    print otp,'hhhhhhhhhhhhhhhh'
     user = get_object_or_404(User, username = request.POST['id'])
-    print user,'aaaaaaaaaaaaaaaaaaahhhhhhhhh'
     ak = accountsKey(user= user, activation_key= otp,
         key_expires=key_expires , keyType = 'otp')
-    print ak,'aaaaaaaaaaa'
     ak.save()
     print ak.activation_key
     # send a SMS with the OTP

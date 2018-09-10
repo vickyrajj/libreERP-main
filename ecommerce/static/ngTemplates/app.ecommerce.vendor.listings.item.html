@@ -32,7 +32,7 @@
         <i class="fa fa-bar-chart-o fa-5x" style="color:#fafafa;margin-top:15px;"></i>
       </div> -->
       <div class = "col-md-12" style="padding-right:0px;">
-        <span class="pull-left" style="cursor:pointer;" ng-click = "rowActionClicked('delete')">
+        <span class="pull-left" style="cursor:pointer;"  mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('delete')" confirm-button-type="default" cancel-button-type="default" >
           <i class="fa fa-trash fa-lg" style="margin-top:20px;"></i> &nbsp;Delete
         </span>
         <span class="pull-right" style="cursor:pointer;" ng-click = "rowActionClicked('edit')">

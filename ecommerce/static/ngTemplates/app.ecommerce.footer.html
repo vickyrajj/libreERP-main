@@ -228,7 +228,8 @@
       <!-- <h4><span style="padding-left:30px"></span>Payment Methods</h4> -->
       <div class="row">
         <div class="col-md-12 hidden-sm hidden-xs">
-          <img src="/static/images/payment-methods.svg" alt="Payment Methods" width="100%;" >
+          <img ng-if="!genericImage" src="/static/images/payment-methods.svg" alt="Payment Methods" width="100%;" >
+          <img ng-if="genericImage" src="{{genericImage.paymentImage}}" alt="Payment Methods" width="100%;" >
         </div>
       </div>
     </div>
@@ -241,7 +242,8 @@
       <!-- <h4><span style="padding-left:30px"></span>Payment Methods</h4> -->
       <div class="row">
         <div class=" col-xs-12 col-sm-12 hidden-md hidden-lg">
-          <img src="/static/images/paymentlogo123.png" alt="Payment Methods" width="100%;" >
+          <img ng-if="!genericImage" src="/static/images/paymentlogo123.png" alt="Payment Methods" width="100%;" >
+            <img ng-if="genericImage" src="{{genericImage.paymentPortrait}}" alt="Payment Methods" width="100%;" >
         </div>
       </div>
           <!-- <div class="row">

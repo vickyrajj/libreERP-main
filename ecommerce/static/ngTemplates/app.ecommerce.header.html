@@ -39,7 +39,7 @@
   </div>
 
 
-  <div class="col-md-1 text-right hidden-xs hidden-sm" ng-if="!me.pk">
+  <div class="col-md-1 text-left hidden-xs hidden-sm" ng-if="!me.pk">
     <span>
       <span ng-click="mainPage()" style="cursor:pointer;font-size:17px;color:rgb(24, 89, 46);margin-right: -4px;" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
       <span style="background-color:green;height: 10%;width: 25px;  border-radius: 50%;color:white;display: table-cell;text-align: center;vertical-align: middle;" ng-if="addToCart.length>0"  class="text-center">{{addToCart.length}}</span>
@@ -72,8 +72,8 @@
     </span>
   </div> -->
 
-  <div class="col-xs-3 text-center dropdown hidden-lg hidden-md " style="padding-top: 12px;padding-left:0px">
-    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;color:rgb(24, 89, 46);" ng-if="me.pk" > {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 15px;" alt=""></span>
+  <div class="col-xs-4 text-center dropdown hidden-lg hidden-md " style="padding-top: 12px;padding-left:0px;padding-right: 0px;" ng-if="me.pk">
+    <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;color:rgb(24, 89, 46);"> {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 15px;" alt=""></span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px; left:-80px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
       <li><a ui-sref="account.orders" style="color:rgb(24, 89, 46)" >Orders</a></li>

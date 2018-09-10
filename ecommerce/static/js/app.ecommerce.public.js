@@ -305,7 +305,13 @@ console.log($rootScope.addToCart,'aaaaaaaaaaaaaaaaaaaagggggggggggggggggggggggg')
      window.location = '/login';
   }
 
-
+  $http({
+    method: 'GET',
+    url: '/api/ecommerce/genericImage/'
+  }).
+  then(function(response) {
+    $rootScope.genericImage=response.data[0]
+  })
 });
 
 
@@ -620,7 +626,6 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       }
 
        $scope.createCookieDetail=function(product) {
-        console.log(product,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         if($rootScope.addToCart!=undefined){
            for(var i=0;i<$rootScope.addToCart.length;i++){
               if($rootScope.addToCart[i].product.pk==product.pk){
@@ -2142,8 +2147,8 @@ then(function(response) {
 
 
   if($scope.me){
-    if($rootScope.addToCart!=undefined||$rootScope.addToCart.length>0){
-    if($rootScope.inCart.length>0||$rootScope.inCart!=undefined){
+    if($rootScope.addToCart.length>0){
+    if($rootScope.inCart.length>0){
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
         for (var j = 0; j <$rootScope.inCart.length; j++) {
           if( $rootScope.addToCart[i].product.pk == $rootScope.inCart[j].product.pk ){
@@ -2219,26 +2224,27 @@ then(function(response) {
           })
         }
       }
-    }
-
-
-        function setCookie(cname, cvalue, exdays) {
+      function setCookie(cname, cvalue, exdays) {
         console.log('set cookie');
         var d = new Date();
         d.setTime(d.getTime() + (exdays*24*60*60*1000));
         var expires = "expires="+ d.toUTCString();
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
+      }
 
 
-        detail = getCookie("addToCart");
-        if (detail != "") {
+      detail = getCookie("addToCart");
+      if (detail != "") {
         console.log('already there');
         setCookie("addToCart", "" , -1);
         // document.cookie = encodeURIComponent("addToCart") + "=deleted; expires=" + new Date(0).toUTCString()
-        }
-        $scope.cart = $rootScope.inCart;
-        $rootScope.addToCart=[]
+      }
+      window.location = '/checkout/cart';
+      $scope.cart = $rootScope.inCart;
+      $rootScope.addToCart=[]
+    }
+
+
 
     }
 
@@ -2298,7 +2304,8 @@ app.controller('controller.ecommerce.pincodeEnquiry.modal', function($scope, $ro
       while (c.charAt(0) == ' ') {
         c = c.substring(1);
       }
-      if (c.indexOf(name) == 0) {
+      if (c.indexOf(name) == 0) {0
+
         return c.substring(name.length, c.length);
       }
     }
