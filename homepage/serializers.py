@@ -98,6 +98,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         reg.mobileOTP = generateOTPCode()
 
+        print reg.mobileOTP,'aaaaaaaaaaaaaaaaaaaaaaaaa'
+
         if reg.email!=None:
             reg.emailOTP = generateOTPCode()
             print reg.emailOTP
