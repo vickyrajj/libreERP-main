@@ -12,7 +12,7 @@ import os
 from django.conf import settings as globalSettings
 from clientRelationships.models import ProductMeta
 from clientRelationships.serializers import ProductMetaSerializer
-from ERP.models import service
+from ERP.models import service, appSettingsField
 import json
 
 
@@ -68,9 +68,10 @@ class ProductSerializer(serializers.ModelSerializer):
     compositions=ProductLiteSerializer(many=True,read_only=True)
     storeQty=StoreQtySerializer(many=True,read_only=True)
     skuUnitpack = serializers.SerializerMethodField()
+    productOption = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','storeQty','alias')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','storeQty','alias' ,'productOption')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
@@ -149,6 +150,10 @@ class ProductSerializer(serializers.ModelSerializer):
             if len(pvObj)>0:
                 return list(pvObj)[0]['unitPerpack']
         return None
+    def get_productOption(self, obj):
+        settingObj = appSettingsField.objects.filter(app=int(25), name = 'posProduct')
+        return settingObj[0].flag
+
 
 class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)

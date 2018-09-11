@@ -24,7 +24,7 @@
 <body style="height:100%">
   <div class="col-md-8 hidden-sm hidden-xs" style="background-image: url('{{backgroundImage}}');background-size: cover;height:100%;position:absolute;left:0px;">
   </div>
-  <div class="col-md-4  hidden-sm hidden-xs" style="height:100%;position:absolute;right:0px;">
+  <div class="col-md-4 col-sm-12 col-xs-12" style="height:100%;position:absolute;right:0px;">
     <a  href="/" style="outline: none;border:none"><img class="text-center"  src="{{logoImage}}" alt="" width="200" height="200" Style="display:block;margin-left: auto;margin-right: auto;"></a>
     <form method="post" class="form-signin" action="" style="padding:0px">{% csrf_token %}
       <h2 class="form-signin-heading" style="color:black;margin-top:150px;">Login</h2> {% if authStatus.status != 'default' %}
@@ -36,23 +36,24 @@
       </div>
 
 
-      <label for="username" class="sr-only">Username/Email</label>
-      <input id="id" name="username" type="text" class="form-control" placeholder="Email" required autofocus>
+      <label for="username" class="sr-only">Mobile Number</label>
+      <input id="username" name="username" type="text" class="form-control" placeholder="Mobile Number" required autofocus>
+    <!--   <input id="otp" name="otp" type="text" class="form-control" placeholder="OTP" required autofocus> -->
       <label for="password" class="sr-only">Password</label>
       <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
-      <button style="margin-bottom:20px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <button id="signIn" style="margin-bottom:20px; margin-top:10px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
-      <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a><br/>
+   <!--    <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a><br/> -->
       <a style="color:black;" href="registerPage">New User?</a>
 
-      <!-- <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
+      <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
         <span style="color:white;">
             <i class="fa fa-mobile fa-3x" ></i> <br>
             <span id="otptxt">Send OTP</span>
           </span>
       </div>
 
-      <a href="/register" class="btn btn-success btn-block" style="margin-top:150px;">Register</a>
+<!--       <a href="/register" class="btn btn-success btn-block" style="margin-top:150px;">Register</a>
           <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
             <i class="fa fa-google-plus pull-left"></i>Login with Google
           </a>
@@ -63,11 +64,13 @@
 
 
   </div>
-
-  <div class="col-xs-12 ol-sm-12  hidden-lg hidden-md" style="position:absolute;right:0px;height:60vh">
+ <!--  <div class="col-xs-12 col-sm-12 hidden-lg hidden-md" style="background-image: url('{{backgroundImage}}');background-size: cover;height:40vh;position:absolute;left:0px;margin-top:350px">
+  </div>
+ -->
+<!--   <div class="col-xs-12 ol-sm-12  hidden-lg hidden-md" style="position:absolute;right:0px;height:60vh"> -->
     <!-- <div style="background-image: url('{{logoImage}}');background-size: cover;height:50%;position:absolute;left:0px;margin-top:250px">
     </div> -->
-    <a  href="/" style="outline:none;border:none"><img class="text-center" src="{{logoImage}}" alt="" width="100" height="100" style="display:block;margin-left:auto;margin-right:auto;margin-bottom:-20px;"></a>
+<!--     <a  href="/" style="outline:none;border:none"><img class="text-center" src="{{logoImage}}" alt="" width="100" height="100" style="display:block;margin-left:auto;margin-right:auto;margin-bottom:-20px;"></a>
     <form method="post" class="form-signin" action="">{% csrf_token %}
       <h2 class="form-signin-heading" style="color:black;margin-top:0px;">Login</h2> {% if authStatus.status != 'default' %}
       <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
@@ -78,35 +81,36 @@
       </div>
 
 
-      <label for="username" class="sr-only">Username/Email</label>
-      <input id="id" name="username" type="text" class="form-control" placeholder="Email" required autofocus>
+      <label for="username" class="sr-only">Mobile Number</label>
+      <input id="username" name="username" type="text" class="form-control" placeholder="Mobile Number" required autofocus>
+      <input id="otp" name="otp" type="text" class="form-control" placeholder="OTP" required autofocus>
       <label for="password" class="sr-only">Password</label>
       <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
-      <button style="margin-bottom:20px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <button id="signIn" style="margin-bottom:20px; margin-top:10px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button> -->
 
-      <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a><br/>
-      <a style="color:black;" href="registerPage">New User?</a>
+      <!-- <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a><br/> -->
+<!--       <a style="color:black;" href="registerPage">New User?</a>
 
-      <!-- <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
+      <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
         <span style="color:white;">
             <i class="fa fa-mobile fa-3x" ></i> <br>
             <span id="otptxt">Send OTP</span>
           </span>
-      </div>
+      </div> -->
 
-      <a href="/register" class="btn btn-success btn-block" style="margin-top:150px;">Register</a>
+      <!-- <a href="/register" class="btn btn-success btn-block" style="margin-top:150px;">Register</a>
           <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
             <i class="fa fa-google-plus pull-left"></i>Login with Google
           </a>
           <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block">
             <i class="fa fa-facebook pull-left"></i> Login with Facebook
           </a> -->
-    </form>
+<!--     </form>
 
 
-  </div>
-  <div class="col-xs-12 col-sm-12 hidden-lg hidden-md" style="background-image: url('{{backgroundImage}}');background-size: cover;height:40vh;position:absolute;left:0px;margin-top:350px">
-  </div>
+  </div> -->
+ <!--  <div class="col-xs-12 col-sm-12 hidden-lg hidden-md" style="background-image: url('{{backgroundImage}}');background-size: cover;height:40vh;position:absolute;left:0px;margin-top:350px">
+  </div> -->
   <!-- /container -->
   {% if useCDN %}
   <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
@@ -119,16 +123,19 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+      $('#password').hide();
+      $('#signIn').hide();
+
       $('#requestOTP').click(function(e) {
 
         $('#alerts').empty();
 
 
-        var id = $('#id').val()
+        var id = $('#username').val()
         if (id.length == 0) {
           $('#alerts').append('<div class="alert alert-warning">Please enter your Mobile number or Email or Username</div>')
         } else {
-
+          console.log(id,'kkkkkkkkkkkkkkkkkkkkkkkkk')
           var csrf = $.cookie("csrftoken")
           $.ajax({
             url: '/generateOTP',
@@ -156,8 +163,6 @@
 
               $('#otptxt').empty();
               $('#otptxt').append("Resend OTP");
-
-
             },
             error: function(e) {
               $('#alerts').append('<div class="alert alert-danger">Error while sending OTP</div>')
@@ -165,7 +170,8 @@
           });
 
         }
-
+        $('#password').show();
+        $('#signIn').show();
       });
     });
   </script>

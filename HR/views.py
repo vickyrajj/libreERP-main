@@ -177,12 +177,12 @@ def loginView(request):
     if 'mode' in request.GET and request.GET['mode'] == 'api':
         return JsonResponse(authStatus , status = statusCode)
 
-    # return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
-    if not globalSettings.LOGIN_TEMPLATE:
-        return render(request,"login.html" , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
-
-    else:
-        return render(request,"login.lite.html" , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+    # if not globalSettings.LOGIN_TEMPLATE:
+    #     return render(request,"login.html" , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+    #
+    # else:
+    #     return render(request,"login.lite.html" , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
 
 
 def registerView(request):
