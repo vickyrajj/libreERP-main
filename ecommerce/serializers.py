@@ -293,6 +293,7 @@ class CartSerializer(serializers.ModelSerializer):
     	except:
        	 	c = Cart(**validated_data)
        	 	c.product = listing.objects.get(pk = self.context['request'].data['product'])
+
         	c.save()
         return c
 
@@ -463,3 +464,8 @@ class genericPincodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenericPincode
         fields = ('pk' ,  'state' ,  'city' , 'pincode' , 'pin_status')
+
+class genericImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GenericImage
+        fields = ( 'pk', 'backgroundImage' , 'paymentImage' ,'paymentPortrait' , 'cartImage')

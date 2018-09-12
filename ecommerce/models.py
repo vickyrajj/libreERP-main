@@ -16,6 +16,8 @@ def getEcommerceCategoryDpPath(instance , filename ):
     return 'ecommerce/CategoryDp/%s_%s' % (str(time()).replace('.', '_'), filename)
 def getEcommerceGenericProductBannerUploadPath(instance , filename ):
     return 'ecommerce/GenericProductBanner/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getEcommerceCenericImageUploadPath(instance , filename ):
+    return 'ecommerce/GenericProductBanner/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 FIELD_TYPE_CHOCIE = (
     ('char' , 'char'),
@@ -286,3 +288,9 @@ class GenericPincode(models.Model):
     city =  models.CharField(max_length = 35, null = True)
     pincode = models.CharField( max_length = 7, null = True)
     pin_status = models.CharField( max_length = 2, default = "1")
+
+class GenericImage(models.Model):
+    backgroundImage = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)
+    cartImage = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)
+    paymentImage = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)
+    paymentPortrait = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)

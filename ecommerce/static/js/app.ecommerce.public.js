@@ -306,11 +306,11 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
   }
 
   $http({
-      method: 'GET',
-      url: '/api/ecommerce/genericImage/'
-    }).
-    then(function(response) {
-      $rootScope.genericImage=response.data[0]
+    method: 'GET',
+    url: '/api/ecommerce/genericImage/'
+  }).
+  then(function(response) {
+    $rootScope.genericImage = response.data[0]
   })
 });
 
@@ -590,9 +590,13 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       url: rurl
     }).
     then(function(response) {
-      $scope.recentlyViewed = response.data.results[0]
-      if ($scope.recentlyViewed.product.pk == $scope.details.pk) {
-        $scope.recentlyViewed = response.data.results[1]
+      if (response.data.results.length > 0) {
+        $scope.recentlyViewed = response.data.results[0]
+        if ($scope.recentlyViewed.product.pk == $scope.details.pk) {
+          if (response.data.results.length > 1) {
+            $scope.recentlyViewed = response.data.results[1]
+          }
+        }
       }
 
     })
@@ -637,7 +641,10 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     }
 
     product.added_cart++
-      $scope.item = {'product': product,'qty': 1}
+      $scope.item = {
+        'product': product,
+        'qty': 1
+      }
     detail = getCookie("addToCart");
     $rootScope.addToCart = []
     if (detail != "") {
@@ -718,6 +725,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     then(function(response) {
       console.log(response.data);
       $scope.categories = response.data;
+
     })
 
   });
@@ -755,12 +763,12 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     }).
     then(function(response) {
       $scope.listingSearch = response.data;
-      if ($rootScope.addToCart.length>0) {
+      if ($rootScope.addToCart.length > 0) {
         console.log("gggggggggggggggggggggggggggggggggggggg");
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
           for (var j = 0; j < $scope.listingSearch.length; j++) {
-            if ($scope.listingSearch[j].pk==$rootScope.addToCart[i].product.pk) {
-              $scope.listingSearch[j].added_cart=$rootScope.addToCart[i].qty
+            if ($scope.listingSearch[j].pk == $rootScope.addToCart[i].product.pk) {
+              $scope.listingSearch[j].added_cart = $rootScope.addToCart[i].qty
             }
           }
         }
@@ -819,12 +827,12 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     }).
     then(function(response) {
       $scope.listingSearch = response.data;
-      if ($rootScope.addToCart.length>0) {
+      if ($rootScope.addToCart.length > 0) {
         console.log("gggggggggggggggggggggggggggggggggggggg");
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
           for (var j = 0; j < $scope.listingSearch.length; j++) {
-            if ($scope.listingSearch[j].pk==$rootScope.addToCart[i].product.pk) {
-              $scope.listingSearch[j].added_cart=$rootScope.addToCart[i].qty
+            if ($scope.listingSearch[j].pk == $rootScope.addToCart[i].product.pk) {
+              $scope.listingSearch[j].added_cart = $rootScope.addToCart[i].qty
             }
           }
         }
@@ -994,7 +1002,8 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
             method: 'PATCH',
             url: '/api/ecommerce/cart/' + $scope.data.tableData[i].pk + '/',
             data: {
-              typ: 'cart'
+              typ: 'cart',
+              qty: 1
             }
           }).
           then(function(response) {})
@@ -1370,8 +1379,7 @@ app.controller('controller.ecommerce.account.support', function($scope, $rootSco
   $scope.sendMessage = function() {
     if ($scope.me == undefined || $scope.me == '' || $scope.message.invoiceNo == '' || $scope.message.body == '') {
       Flash.create("warning", "Please add all details")
-    }
-    else {
+    } else {
       dataToSend = {
         email: $scope.me.email,
         mobile: $scope.me.profile.mobile,
@@ -1412,14 +1420,13 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=orderLimit').
   then(function(response) {
     if (response.data[0] != null) {
-      console.log(response.data[0].value,'aaaaaaaaaaaaaaaaaa');
+      console.log(response.data[0].value, 'aaaaaaaaaaaaaaaaaa');
       $rootScope.limitValue = parseInt(response.data[0].value)
-      console.log(response.data[0].value,'aaaaaaaaaaaaaaaaaa');
-      if (response.data[0].value>0) {
+      console.log(response.data[0].value, 'aaaaaaaaaaaaaaaaaa');
+      if (response.data[0].value > 0) {
         if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
           $rootScope.totalLimit = true
-        }
-        else{
+        } else {
           $rootScope.totalLimit = false
         }
       }
@@ -1442,772 +1449,782 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   // } else {
   //     $scope.warningMessage = false
   //   $scope.dataToSend.paidAmount = 0
-// }
-      $scope.me = $users.get('mySelf');
-      $scope.data = {
-        quantity: 1,
-        shipping: 'express',
-        stage: 'review',
-        promoCode: '',
-        modeOfPayment: 'Card',
-        address: {
-          street: '',
-          city: '',
-          state: '',
-          pincode: '',
-          country: 'India',
-          mobile: $scope.me.profile.mobile,
-          landMark: ''
-        }
-      };
+  // }
+  $scope.me = $users.get('mySelf');
+  $scope.data = {
+    quantity: 1,
+    shipping: 'express',
+    stage: 'review',
+    promoCode: '',
+    modeOfPayment: 'Card',
+    address: {
+      street: '',
+      city: '',
+      state: '',
+      pincode: '',
+      country: 'India',
+      mobileNo: $scope.me.profile.mobile,
+      landMark: ''
+    }
+  };
 
-      $scope.cartProducts = [];
-      $scope.itemProduct = [];
+  $scope.cartProducts = [];
+  $scope.itemProduct = [];
 
-      document.title = 'Sterling Select | Review Order > Select Shipping Address > Place Order'
-      document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
-      $scope.fetchaddress = function() {
-        $http({
-          method: 'GET',
-          url: '/api/ecommerce/address/?user=' + $scope.me.pk
-        }).
-        then(function(response) {
-          $scope.savedAddress = response.data
-          console.log($scope.savedAddress);
-          $scope.pa = 0
+  document.title = 'Sterling Select | Review Order > Select Shipping Address > Place Order'
+  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  $scope.fetchaddress = function() {
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/address/?user=' + $scope.me.pk
+    }).
+    then(function(response) {
+      $scope.savedAddress = response.data
+      console.log($scope.savedAddress);
+      $scope.pa = 0
+      console.log($scope.data.address);
+      for (var i = 0; i < $scope.savedAddress.length; i++) {
+        if ($scope.me.profile.primaryAddress == $scope.savedAddress[i].pk) {
+          $scope.pa = $scope.savedAddress[i].pk
+          $scope.data.address = $scope.savedAddress[i]
           console.log($scope.data.address);
-          for (var i = 0; i < $scope.savedAddress.length; i++) {
-            if ($scope.me.profile.primaryAddress == $scope.savedAddress[i].pk) {
-              $scope.pa = $scope.savedAddress[i].pk
-              // $scope.data.address = $scope.savedAddress[i]
-              console.log($scope.data.address.landMark);
-              $scope.data.address.mobile = ''
-              // $scope.data.address.landMark = ''
-            }
+          if ($scope.data.address.mobileNo == null || $scope.data.address.mobileNo.length == 0) {
+            $scope.data.address.mobileNo = $scope.me.profile.mobile
           }
-        })
-      }
-      $scope.fetchaddress()
-      $scope.saved = false
-
-
-      $scope.ChangeAdd = function(idx, value) {
-        console.log(value);
-        if (value == "use") {
-          $scope.addressview = false
-          $scope.idx = null
-          $scope.saved = true
-          Flash.create('success', 'Address Added');
-
-        } else if (value == "edit") {
-          $scope.idx = null
-          $scope.idxVal = idx
-          $scope.addressview = true
-        }
-        mob = $scope.data.address.mobile
-        $scope.data.address = $scope.savedAddress[idx]
-        $scope.data.address.mobile = mob
-        // $scope.data.address.landMark = ''
-      }
-      $scope.change = function() {
-        $scope.saved = false
-        $scope.data.address = {
-          street: '',
-          city: '',
-          state: '',
-          pincode: '',
-          country: 'India',
-          mobile: '',
-          landMark: ''
+          // $scope.data.address.landMark = ''
         }
       }
-      $scope.cancel = function() {
-        $scope.newAdr = false
-      }
-
-      $scope.resetAdd = function() {
-        $scope.newAdr = true
-        $scope.idx = null
-        $scope.addressview = false
-        $scope.data.address = {
-          street: '',
-          city: '',
-          state: '',
-          pincode: '',
-          country: 'India',
-          mobile: '',
-          landMark: ''
-        }
-      }
-      $scope.show = function(idx) {
-        $scope.addressview = false
-        $scope.idx = idx
-        $scope.newAdr = false
-      }
-
-      $scope.$watch('data.address.pincode', function(newValue, oldValue) {
-        if (newValue != null) {
-          if (newValue.length == 6) {
-            $http({
-              method: 'GET',
-              url: '/api/ecommerce/genericPincode/?pincode=' + newValue
-            }).
-            then(function(response) {
-              if (response.data.length > 0) {
-                $scope.data.address.city = response.data[0].city
-                $scope.data.address.state = response.data[0].state
-              }
-            })
-          }
-        }
-      })
+    })
+  }
+  $scope.fetchaddress()
+  $scope.saved = false
 
 
+  $scope.ChangeAdd = function(idx, value) {
+    console.log(value);
+    if (value == "use") {
+      $scope.addressview = false
+      $scope.idx = null
+      $scope.saved = true
+      Flash.create('success', 'Address Added');
 
-      $scope.saveAdd = function() {
-        if ($scope.data.address.street.length == 0) {
-          Flash.create('danger', 'Please Fill Address Details');
-          return;
-        }
-        $uibModal.open({
-          templateUrl: '/static/ngTemplates/app.ecommerce.checkout.addressmodel.html',
-          size: 'md',
-          backdrop: true,
-          resolve: {
-            add: function() {
-              return $scope.data.address;
-            }
-          },
-          controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add) {
-            $scope.adrForm = add;
-            $scope.adrForm.title = ''
-            $scope.adrForm.primary = false
-            $scope.saveAdrForm = function() {
-              if ($scope.adrForm.title.length == 0) {
-                Flash.create('danger', 'Please Mention Some Title');
-                return;
-              }
-              if ($scope.adrForm.pincode.length == 0) {
-                delete $scope.adrForm.pincode
-              }
+    } else if (value == "edit") {
+      $scope.idx = null
+      $scope.idxVal = idx
+      $scope.addressview = true
+    }
+    // mob = $scope.data.address.mobileNo
+    $scope.data.address = $scope.savedAddress[idx]
+    if ($scope.data.address.mobileNo == null || $scope.data.address.mobileNo.length == 0) {
+      $scope.data.address.mobileNo = $scope.me.profile.mobile
+    }
+    // $scope.data.address.mobileNo = mob
+    // $scope.data.address.landMark = ''
+  }
+  $scope.change = function() {
+    $scope.saved = false
+    $scope.data.address = {
+      street: '',
+      city: '',
+      state: '',
+      pincode: '',
+      country: 'India',
+      mobileNo: $scope.me.profile.mobile,
+      landMark: ''
+    }
+  }
+  $scope.cancel = function() {
+    $scope.newAdr = false
+    $scope.addressview = false
+  }
 
-              $http({
-                method: 'POST',
-                url: '/api/ecommerce/address/',
-                data: $scope.adrForm
-              }).
-              then(function(response) {
-                Flash.create('success', 'Added');
-                $scope.adrForm = response.data
-                $uibModalInstance.dismiss($scope.adrForm);
-              }, function(response) {
-                Flash.create('danger', response.status + ' : ' + response.statusText);
-              })
+  $scope.resetAdd = function() {
+    $scope.newAdr = true
+    $scope.idx = null
+    $scope.addressview = false
+    $scope.data.address = {
+      street: '',
+      city: '',
+      state: '',
+      pincode: '',
+      country: 'India',
+      mobileNo: $scope.me.profile.mobile,
+      landMark: ''
+    }
+  }
+  $scope.show = function(idx) {
+    $scope.addressview = false
+    $scope.idx = idx
+    $scope.newAdr = false
+  }
 
-            }
-          },
-        }).result.then(function() {
-
-        }, function(f) {
-          if (typeof(f) != 'string') {
-            $scope.data.address.pk = f.pk
-            $scope.savedAddress.push($scope.data.address)
-          }
-
-        });
-      }
-
-
-      $scope.calcTotal = function() {
-        $scope.total = 0;
-        $scope.totalAfterDiscount = 0;
-        if ($state.params.pk == 'cart') {
-          for (var i = 0; i < $scope.cartItems.length; i++) {
-            $scope.total = $scope.total + ($scope.cartItems[i].product.product.price * $scope.cartItems[i].qty)
-            $scope.totalAfterDiscount = $scope.totalAfterDiscount + ($scope.cartItems[i].product.product.discountedPrice * $scope.cartItems[i].qty)
-          }
-        } else {
-          $scope.total = $scope.item.product.price * $scope.item.qty
-          $scope.totalAfterDiscount = $scope.item.product.discountedPrice * $scope.item.qty
-        }
-      }
-
-
-
-      if ($state.params.pk == 'cart') {
+  $scope.$watch('data.address.pincode', function(newValue, oldValue) {
+    if (newValue != null) {
+      if (newValue.length == 6) {
         $http({
           method: 'GET',
-          url: '  /api/ecommerce/cart/?user=' + $scope.me.pk + '&typ=cart'
+          url: '/api/ecommerce/genericPincode/?pincode=' + newValue
         }).
         then(function(response) {
-          $scope.cartItems = response.data;
-          $scope.calcTotal();
-          //  for (var i = 0; i < $scope.cartItems.length; i++) {
-          //    $scope.cartProducts.push({pk:$scope.cartItems[i].product.pk , qty :$scope.cartItems[i].qty})
-          //  }
-        })
-      } else {
-        $http({
-          method: 'GET',
-          url: '/api/ecommerce/listing/' + $state.params.pk + '/'
-        }).
-        then(function(response) {
-          $scope.item = response.data;
-          $scope.item.qty = 1;
-          //  $scope.itemProduct.push({pk:$scope.item.pk, qty : $scope.item.qty })
-          $scope.calcTotal();
-        })
-      }
-
-      $scope.changeQty = function() {
-        $scope.calcTotal();
-      }
-      $scope.promoDiscount = 0
-      $scope.applyPromo = function() {
-        if ($scope.msg == '') {
-          return
-        }
-        $http({
-          method: 'GET',
-          url: '  /api/ecommerce/promoCheck/?name=' + $scope.data.promoCode
-        }).
-        then(function(response) {
-          $scope.msg = response.data.msg
-          if (response.data.msg == 'Success') {
-            $scope.promoDiscount = response.data.val;
-            $scope.totalAfterPromo = $scope.totalAfterDiscount - ($scope.promoDiscount / 100) * $scope.totalAfterDiscount
-          } else {
-            $scope.data.promoCode = ''
+          if (response.data.length > 0) {
+            $scope.data.address.city = response.data[0].city
+            $scope.data.address.state = response.data[0].state
           }
         })
       }
+    }
+  })
 
 
-      $scope.dataToSend = {}
 
-      $scope.next = function() {
-        console.log($scope.totalAfterPromo,$scope.totalAfterDiscount,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-    if($rootScope.limitValue){
-      if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
-        $rootScope.totalLimit = true
-      }
-      else{
-        $rootScope.totalLimit = false
-      }
-}
-        window.scrollTo(0, 0);
-        if ($scope.data.stage == 'review') {
-          $scope.data.stage = 'shippingDetails';
-          $scope.dataToSend.promoCode = $scope.data.promoCode;
-          $scope.dataToSend.promoCodeDiscount = $scope.promoDiscount;
-          if ($scope.cartItems != undefined) {
-            console.log('through carttttttttttttttttttt');
-            for (var i = 0; i < $scope.cartItems.length; i++) {
-              for (var j = 0; j < $scope.cartProducts.length; j++) {
-                if ($scope.cartProducts[j].pk == $scope.cartItems[i].product.pk) {
-                  console.log('updatinggggggggggggggggg');
-                  $scope.cartProducts.splice(j, 1)
-                }
-              }
-              $scope.cartProducts.push({
-                  pk: $scope.cartItems[i].product.pk,
-                  qty: $scope.cartItems[i].qty
-                })
-              }
-              $scope.dataToSend.products = $scope.cartProducts
-            } else {
-              console.log('direct buyyyyyyyyyyyyyyyyyyyyy');
-              for (var i = 0; i < $scope.itemProduct.length; i++) {
-                if ($scope.itemProduct[i].pk == $scope.item.pk) {
-                  console.log('updatinggggggggggggggggg');
-                  $scope.itemProduct.splice(i, 1)
-                }
-              }
-              $scope.itemProduct.push({
-                pk: $scope.item.pk,
-                qty: $scope.item.qty
-              })
-              $scope.dataToSend.products = $scope.itemProduct
-            }
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaa', $scope.dataToSend.products);
-          } else if ($scope.data.stage == 'shippingDetails') {
-
-            console.log($scope.data.address);
-            if ($scope.data.address.street == '' || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == '' || $scope.data.address.landMark == '') {
-              Flash.create('warning', 'Please Select Address')
-              return
-            } else {
-              $scope.dataToSend.mobile = $scope.me.profile.mobile
-              $scope.dataToSend.address = $scope.data.address
-            }
-            $scope.data.stage = 'payment';
-
-          }
+  $scope.saveAdd = function() {
+    if ($scope.data.address.street.length == 0) {
+      Flash.create('danger', 'Please Fill Address Details');
+      return;
+    }
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.checkout.addressmodel.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        add: function() {
+          return $scope.data.address;
         }
-
-        $scope.prev = function() {
-          if ($scope.data.stage == 'shippingDetails') {
-            $scope.data.stage = 'review';
-          } else if ($scope.data.stage == 'payment') {
-            $scope.data.stage = 'shippingDetails';
-          } else if ($scope.data.stage == 'onlinePayment') {
-            $scope.data.stage = 'payment';
-          }
+      },
+      controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add) {
+        $scope.adrForm = add;
+        if ($scope.adrForm.title == undefined) {          
+          $scope.adrForm.title = ''
         }
-
-        $scope.pay = function() {
-          $scope.data.stage = 'onlinePayment'
-        }
-
-        $scope.order = function() {
-          console.log("aaaaaaaaaaaaaaaaaaaa");
-          $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
-          $scope.dataToSend.modeOfShopping = 'online'
-          if ($scope.dataToSend.modeOfPayment == 'COD') {
-            $scope.dataToSend.paidAmount = 0
-          } else {
-            $scope.dataToSend.paidAmount = 0
+        $scope.adrForm.primary = false
+        $scope.saveAdrForm = function() {
+          if ($scope.adrForm.title.length == 0) {
+            Flash.create('danger', 'Please Mention Some Title');
+            return;
           }
-
-          $scope.data.stage = 'processing';
-          if ($rootScope.multiStore) {
-            console.log('multiiiiiiiiiiiiii');
-            $scope.dataToSend.storepk = $rootScope.storepk
+          if ($scope.adrForm.pincode.length == 0) {
+            delete $scope.adrForm.pincode
           }
-          console.log($scope.dataToSend);
+          var method = 'POST'
+          var url = '/api/ecommerce/address/'
+          if ($scope.adrForm.pk) {
+            method = 'PATCH'
+            url += $scope.adrForm.pk + '/'
+          }
 
           $http({
-            method: 'POST',
-            url: '  /api/ecommerce/createOrder/',
-            data: $scope.dataToSend
+            method: method,
+            url: url,
+            data: $scope.adrForm
           }).
           then(function(response) {
-            $scope.order = response.data
-            $scope.data.stage = 'confirmation';
-            $rootScope.inCart = [];
-            $rootScope.inFavourite = [];
-            $scope.item = [];
-            console.log('in cart', $rootScope.inCart);
+            Flash.create('success', 'Added');
+            $scope.adrForm = response.data
+            $uibModalInstance.dismiss($scope.adrForm);
+          }, function(response) {
+            Flash.create('danger', response.status + ' : ' + response.statusText);
           })
 
         }
+      },
+    }).result.then(function() {
 
-
-      })
-
-
-    app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash) {
-      $scope.me = $users.get('mySelf')
-
-$rootScope.addToCart=[]
-      $scope.addTCart = getCookie('addToCart')
-      if ($scope.addTCart != '') {
-        $rootScope.addToCart = JSON.parse($scope.addTCart)
+    }, function(f) {
+      if (typeof(f) != 'string') {
+        $scope.data.address.pk = f.pk
+        $scope.savedAddress.push($scope.data.address)
       }
 
-      $scope.mainPage = function() {
-        window.location = '/login';
+    });
+  }
+
+
+  $scope.calcTotal = function() {
+    $scope.total = 0;
+    $scope.totalAfterDiscount = 0;
+    if ($state.params.pk == 'cart') {
+      for (var i = 0; i < $scope.cartItems.length; i++) {
+        $scope.total = $scope.total + ($scope.cartItems[i].product.product.price * $scope.cartItems[i].qty)
+        $scope.totalAfterDiscount = $scope.totalAfterDiscount + ($scope.cartItems[i].product.product.discountedPrice * $scope.cartItems[i].qty)
       }
+    } else {
+      $scope.total = $scope.item.product.price * $scope.item.qty
+      $scope.totalAfterDiscount = $scope.item.product.discountedPrice * $scope.item.qty
+    }
+  }
 
 
 
-      function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        console.log(decodedCookie);
-        var ca = decodedCookie.split(';');
-        console.log(ca);
-        for (var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-          }
-        }
-        return "";
+  if ($state.params.pk == 'cart') {
+    $http({
+      method: 'GET',
+      url: '  /api/ecommerce/cart/?user=' + $scope.me.pk + '&typ=cart'
+    }).
+    then(function(response) {
+      $scope.cartItems = response.data;
+      $scope.calcTotal();
+      //  for (var i = 0; i < $scope.cartItems.length; i++) {
+      //    $scope.cartProducts.push({pk:$scope.cartItems[i].product.pk , qty :$scope.cartItems[i].qty})
+      //  }
+    })
+  } else {
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/listing/' + $state.params.pk + '/'
+    }).
+    then(function(response) {
+      $scope.item = response.data;
+      $scope.item.qty = 1;
+      //  $scope.itemProduct.push({pk:$scope.item.pk, qty : $scope.item.qty })
+      $scope.calcTotal();
+    })
+  }
+
+  $scope.changeQty = function() {
+    $scope.calcTotal();
+  }
+  $scope.promoDiscount = 0
+  $scope.applyPromo = function() {
+    if ($scope.msg == '') {
+      return
+    }
+    $http({
+      method: 'GET',
+      url: '  /api/ecommerce/promoCheck/?name=' + $scope.data.promoCode
+    }).
+    then(function(response) {
+      $scope.msg = response.data.msg
+      if (response.data.msg == 'Success') {
+        $scope.promoDiscount = response.data.val;
+        $scope.totalAfterPromo = $scope.totalAfterDiscount - ($scope.promoDiscount / 100) * $scope.totalAfterDiscount
+      } else {
+        $scope.data.promoCode = ''
       }
+    })
+  }
 
-      console.log(getCookie('userPincode'));
 
-      console.log('firstttttttttttttttttttttttttttttttttttttttttttttt');
-      $rootScope.multiStore = false
-      $rootScope.pin = 0
-      $rootScope.storepk = 0
-      $scope.openPinPopup = function() {
-        $uibModal.open({
-          templateUrl: '/static/ngTemplates/app.ecommerce.pincodeEnquiry.form.html',
-          size: 'md',
-          backdrop: false,
-          // resolve: {
-          //   product: function() {
-          //
-          //   }
-          // },
-          controller: 'controller.ecommerce.pincodeEnquiry.modal',
-        }).result.then(function() {
+  $scope.dataToSend = {}
 
-        }, function() {
-
-        });
+  $scope.next = function() {
+    console.log($scope.totalAfterPromo, $scope.totalAfterDiscount, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    if ($rootScope.limitValue) {
+      if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
+        $rootScope.totalLimit = true
+      } else {
+        $rootScope.totalLimit = false
       }
-      $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
-      then(function(response) {
-        console.log('ratingggggggggggggggggggg', response.data);
-        if (response.data[0] != null) {
-          if (response.data[0].flag) {
-            $rootScope.multiStore = true
-            var pincode = getCookie('userPincode')
-            console.log('pinnnnnnnnnnnnnnnn', pincode);
-            $rootScope.pin = pincode
-            if (pincode == "") {
-              $scope.openPinPopup()
-            } else {
-              $http.get('/api/POS/store/?pincode=' + pincode).
-              then(function(response) {
-                console.log(response.data);
-                if (response.data.length > 0) {
-                  $rootScope.pin = response.data[0].pincode
-                  $rootScope.storepk = response.data[0].pk
-                  $rootScope.$broadcast('filterForStore', {
-                    pin: response.data[0].pincode
-                  });
-                  $rootScope.$broadcast('filterForCategoryStore', {
-                    pin: response.data[0].pincode
-                  });
-                }
-              })
+    }
+    window.scrollTo(0, 0);
+    if ($scope.data.stage == 'review') {
+      $scope.data.stage = 'shippingDetails';
+      $scope.dataToSend.promoCode = $scope.data.promoCode;
+      $scope.dataToSend.promoCodeDiscount = $scope.promoDiscount;
+      if ($scope.cartItems != undefined) {
+        console.log('through carttttttttttttttttttt');
+        for (var i = 0; i < $scope.cartItems.length; i++) {
+          for (var j = 0; j < $scope.cartProducts.length; j++) {
+            if ($scope.cartProducts[j].pk == $scope.cartItems[i].product.pk) {
+              console.log('updatinggggggggggggggggg');
+              $scope.cartProducts.splice(j, 1)
             }
           }
+          $scope.cartProducts.push({
+            pk: $scope.cartItems[i].product.pk,
+            qty: $scope.cartItems[i].qty
+          })
         }
-      })
+        $scope.dataToSend.products = $scope.cartProducts
+      } else {
+        console.log('direct buyyyyyyyyyyyyyyyyyyyyy');
+        for (var i = 0; i < $scope.itemProduct.length; i++) {
+          if ($scope.itemProduct[i].pk == $scope.item.pk) {
+            console.log('updatinggggggggggggggggg');
+            $scope.itemProduct.splice(i, 1)
+          }
+        }
+        $scope.itemProduct.push({
+          pk: $scope.item.pk,
+          qty: $scope.item.qty
+        })
+        $scope.dataToSend.products = $scope.itemProduct
+      }
+      console.log('aaaaaaaaaaaaaaaaaaaaaaaaaa', $scope.dataToSend.products);
+    } else if ($scope.data.stage == 'shippingDetails') {
 
+      console.log($scope.data.address);
+      if ($scope.data.address.mobileNo == '' || $scope.data.address.street == '' || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == '' || $scope.data.address.landMark == '') {
+        Flash.create('warning', 'Please Fill All Details')
+        return
+      } else {
+        $scope.dataToSend.mobile = $scope.me.profile.mobile
+        $scope.dataToSend.address = $scope.data.address
+      }
+      $scope.data.stage = 'payment';
 
-      $scope.me = $users.get('mySelf')
+    }
+  }
+
+  $scope.prev = function() {
+    if ($scope.data.stage == 'shippingDetails') {
+      $scope.data.stage = 'review';
+    } else if ($scope.data.stage == 'payment') {
+      $scope.data.stage = 'shippingDetails';
+    } else if ($scope.data.stage == 'onlinePayment') {
+      $scope.data.stage = 'payment';
+    }
+  }
+
+  $scope.pay = function() {
+    $scope.data.stage = 'onlinePayment'
+  }
+
+  $scope.order = function() {
+    console.log("aaaaaaaaaaaaaaaaaaaa");
+    $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
+    $scope.dataToSend.modeOfShopping = 'online'
+    if ($scope.dataToSend.modeOfPayment == 'COD') {
+      $scope.dataToSend.paidAmount = 0
+    } else {
+      $scope.dataToSend.paidAmount = 0
+    }
+
+    $scope.data.stage = 'processing';
+    if ($rootScope.multiStore) {
+      console.log('multiiiiiiiiiiiiii');
+      $scope.dataToSend.storepk = $rootScope.storepk
+    }
+    console.log($scope.dataToSend);
+
+    $http({
+      method: 'POST',
+      url: '  /api/ecommerce/createOrder/',
+      data: $scope.dataToSend
+    }).
+    then(function(response) {
+      $scope.order = response.data
+      $scope.data.stage = 'confirmation';
       $rootScope.inCart = [];
       $rootScope.inFavourite = [];
-      $scope.data = {
-        location: null
+      $scope.item = [];
+      console.log('in cart', $rootScope.inCart);
+    })
+
+  }
+
+
+})
+
+
+app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash) {
+  $scope.me = $users.get('mySelf')
+
+  $rootScope.addToCart = []
+  $scope.addTCart = getCookie('addToCart')
+  if ($scope.addTCart != '') {
+    $rootScope.addToCart = JSON.parse($scope.addTCart)
+  }
+
+  $scope.mainPage = function() {
+    window.location = '/login';
+  }
+
+
+
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    console.log(decodedCookie);
+    var ca = decodedCookie.split(';');
+    console.log(ca);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
       }
-      $scope.params = {
-        location: null
-      } // to be used to store different parameter by the users on which the search result will be filtered out
-
-      $scope.loginPage = function() {
-        window.location = '/login';
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
       }
-      $scope.logoutPage = function() {
-        window.location = '/logout';
-      }
-      $scope.registerPage = function() {
-        window.location = '/register';
-      }
-      $scope.genericProductSearch = function(query) {
-        if ($rootScope.multiStore) {
-          surl = '/api/ecommerce/searchProduct/?search=' + query + '&pin=' + $rootScope.pin + '&multipleStore&limit=10'
-        } else {
-          surl = '/api/ecommerce/searchProduct/?search=' + query + '&limit=10'
-        }
-        return $http.get(surl).
-        then(function(response) {
-          return response.data;
-        })
-      };
+    }
+    return "";
+  }
 
-      $scope.searchProduct = {
-        product: ''
-      };
+  console.log(getCookie('userPincode'));
 
-      $scope.bannerText = false
-      $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerText').
-      then(function(response) {
-        if (response.data[0] != null) {
-          if (response.data[0].flag) {
-            $scope.bannerText = true
-          }
-        }
-      })
-      $scope.search = function() {
-        if (typeof $scope.searchProduct.product == 'object') {
-          if ($scope.searchProduct.product.typ == 'list') {
-            console.log($scope.searchProduct);
-            $state.go('details', {
-              id: $scope.searchProduct.product.pk,
-              name: $scope.searchProduct.product.name.split(' ').join('-')
-            })
-          } else {
-            $state.go('categories', {
-              name: $scope.searchProduct.product.name
-            })
-          }
-          $scope.searchProduct.product = '';
-        }
-      }
-
-      $scope.$watch('searchProduct.product', function(newValue, oldValue) {
-        if (newValue != null && typeof newValue == 'object') {
-          if (newValue.typ == 'list') {
-            console.log(newValue);
-            $state.go('details', {
-              id: newValue.pk,
-              name: newValue.name.split(' ').join('-')
-            })
-          } else {
-            $state.go('categories', {
-              name: newValue.name
-            })
-          }
-          $scope.searchProduct.product = '';
-        }
-      }, true);
-
-      $scope.slide = {
-        banners: [],
-        active: 0
-      };
-      $scope.slideMobile = {
-        banners: [],
-        active: 0
-      };
-
-      $http({
-        method: 'GET',
-        url: '/api/ecommerce/offerBanner/?level=1'
-      }).
-      then(function(response) {
-        // for (var i = 0; i < response.data.length; i++) {
-        //   s = response.data[i].params;
-        //   s = s.split(':')[1];
-        //   s = s.split('}')[0];
-        //   response.data[i].params = {id : parseInt(s)}
-        // }
-        $scope.slide.banners = response.data;
-        if ($scope.slide.banners.length > 5) {
-          $scope.slide.banners = $scope.slide.banners.slice(0, 5)
-        }
-        $scope.slide.active = 0
-        if ($scope.slide.banners.length > 1) {
-          $scope.slide.lastbanner = $scope.slide.banners.length - 1
-        } else {
-          $scope.slide.lastbanner = 0
-        }
-
-        console.log(response.data, 'fffff');
-
-        $scope.slideMobile.banners = response.data;
-        if ($scope.slideMobile.banners.length > 3) {
-          $scope.slideMobile.banners = response.data.slice(0, 3);
-        }
-        $scope.slideMobile.active = 0
-        if ($scope.slideMobile.banners.length > 1) {
-          $scope.slideMobile.lastbanner = $scope.slideMobile.banners.length - 1
-        } else {
-          $scope.slideMobile.lastbanner = 0
-        }
-        console.log($scope.slide.banners);
-        console.log($scope.slideMobile.banners);
-      })
-      $scope.changeSlide = function(index) {
-        console.log('aaaaaaaaaaaaaaaaaaaaaaa', index);
-        $scope.slide.active = index;
-      }
-
-      $scope.change = function(value) {
-        if (value == "next") {
-          if ($scope.slide.active == undefined) {
-            $scope.slide.active = 0
-          }
-          if ($scope.slide.active == $scope.slide.lastbanner) {
-            $scope.slide.active = 0;
-          } else {
-            $scope.slide.active += 1;
-          }
-        } else if (value == "previous") {
-          console.log($scope.slide.active);
-          console.log($scope.slide.active, $scope.slide.lastbanner);
-          if ($scope.slide.active == undefined) {
-            $scope.slide.active = 0;
-          } else {
-            $scope.slide.active -= 1;
-          }
-
-          if ($scope.slide.active < 0) {
-            console.log("kkkkkkkkkkkkkkkkk");
-            $scope.slide.active = $scope.slide.lastbanner
-          }
-        }
-      }
-
-
-
-
-      $interval(function() {
-        if ($scope.slide.active == undefined) {
-          $scope.slide.active = 0
-        }
-        if ($scope.slide.active == $scope.slide.lastbanner) {
-          $scope.slide.active = 0;
-        } else {
-          $scope.slide.active += 1;
-        }
-      }, 3000);
-
-
-      $scope.changeSlideMobile = function(index) {
-        $scope.slideMobile.active = index;
-      }
-
-      $interval(function() {
-        if ($scope.slideMobile.active == undefined) {
-          $scope.slideMobile.active = 0
-        }
-        if ($scope.slideMobile.active == $scope.slideMobile.lastbanner) {
-          $scope.slideMobile.active = 0;
-        } else {
-          $scope.slideMobile.active += 1;
-        }
-      }, 3000);
-
-      // $interval(function() {
-      //   $scope.slideMobile.active += 1;
-      //   if ($scope.slideMobile.active == 3) {
-      //     $scope.slideMobile.active = 0;
-      //   }
-      // }, 3000);
-
-
-      // $scope.increaseSlide = function(index) {
-      //   console.log(index,'aaaaaaaaa');
-      //   $scope.banners= index+1;
-      // }
+  console.log('firstttttttttttttttttttttttttttttttttttttttttttttt');
+  $rootScope.multiStore = false
+  $rootScope.pin = 0
+  $rootScope.storepk = 0
+  $scope.openPinPopup = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.pincodeEnquiry.form.html',
+      size: 'md',
+      backdrop: false,
+      // resolve: {
+      //   product: function() {
       //
-      // $scope.decreaseSlide = function(index) {
-      //   $scope.slide.active = index-1;
-      // }
+      //   }
+      // },
+      controller: 'controller.ecommerce.pincodeEnquiry.modal',
+    }).result.then(function() {
 
-      $scope.feedback = {
-        email: '',
-        mobile: null,
-        message: ''
-      };
+    }, function() {
 
-      // $scope.feddbackPannel = false
-      $scope.feedbackstatus = function() {
-
-        $uibModal.open({
-          templateUrl: '/static/ngTemplates/app.ecommerce.feedBack.html',
-          size: 'md',
-          backdrop: false,
-          controller: 'controller.ecommerce.feedBack.modal',
-        }).result.then(function() {
-
-        }, function() {
-
-        });
-      }
-
-      $scope.contactUs = function() {
-        $scope.me = $users.get('mySelf')
-        $uibModal.open({
-          templateUrl: '/static/ngTemplates/app.ecommerce.contact.html',
-          size: 'md',
-          backdrop: false,
-          controller: 'controller.ecommerce.contact.modal',
-        }).result.then(function() {
-
-        }, function() {
-
-        });
-      }
-      // $scope.close = function() {
-      //   $scope.feddbackPannel = false
-      // }
-
-
-
-      $scope.settings = {};
-      $http({
-        method: 'GET',
-        url: '/api/ERP/appSettings/?app=25'
-      }).
-      then(function(response) {
-        for (var i = 0; i < response.data.length; i++) {
-          $scope.settings[response.data[i].name] = response.data[i].value;
+    });
+  }
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $rootScope.multiStore = true
+        var pincode = getCookie('userPincode')
+        console.log('pinnnnnnnnnnnnnnnn', pincode);
+        $rootScope.pin = pincode
+        if (pincode == "") {
+          $scope.openPinPopup()
+        } else {
+          $http.get('/api/POS/store/?pincode=' + pincode).
+          then(function(response) {
+            console.log(response.data);
+            if (response.data.length > 0) {
+              $rootScope.pin = response.data[0].pincode
+              $rootScope.storepk = response.data[0].pk
+              $rootScope.$broadcast('filterForStore', {
+                pin: response.data[0].pincode
+              });
+              $rootScope.$broadcast('filterForCategoryStore', {
+                pin: response.data[0].pincode
+              });
+            }
+          })
         }
-        console.log($scope.settings);
-      })
+      }
+    }
+  })
 
-      $scope.data.pickUpTime = null;
-      $scope.data.dropInTime = null;
-      if ($scope.me != null) {
-        $http({
-          method: 'GET',
-          url: '/api/ecommerce/cart/?user=' + $scope.me.pk
-        }).
-        then(function(response) {
-          for (var i = 0; i < response.data.length; i++) {
-            if (response.data[i].typ == 'cart') {
-              $rootScope.inCart.push(response.data[i])
-            }
-            if (response.data[i].typ == 'favourite') {
-              $rootScope.inFavourite.push(response.data[i])
-            }
-          }
+
+  $scope.me = $users.get('mySelf')
+  $rootScope.inCart = [];
+  $rootScope.inFavourite = [];
+  $scope.data = {
+    location: null
+  }
+  $scope.params = {
+    location: null
+  } // to be used to store different parameter by the users on which the search result will be filtered out
+
+  $scope.loginPage = function() {
+    window.location = '/login';
+  }
+  $scope.logoutPage = function() {
+    window.location = '/logout';
+  }
+  $scope.registerPage = function() {
+    window.location = '/register';
+  }
+  $scope.genericProductSearch = function(query) {
+    if ($rootScope.multiStore) {
+      surl = '/api/ecommerce/searchProduct/?search=' + query + '&pin=' + $rootScope.pin + '&multipleStore&limit=10'
+    } else {
+      surl = '/api/ecommerce/searchProduct/?search=' + query + '&limit=10'
+    }
+    return $http.get(surl).
+    then(function(response) {
+      return response.data;
+    })
+  };
+
+  $scope.searchProduct = {
+    product: ''
+  };
+
+  $scope.bannerText = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerText').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.bannerText = true
+      }
+    }
+  })
+  $scope.search = function() {
+    if (typeof $scope.searchProduct.product == 'object') {
+      if ($scope.searchProduct.product.typ == 'list') {
+        console.log($scope.searchProduct);
+        $state.go('details', {
+          id: $scope.searchProduct.product.pk,
+          name: $scope.searchProduct.product.name.split(' ').join('-')
+        })
+      } else {
+        $state.go('categories', {
+          name: $scope.searchProduct.product.name
         })
       }
+      $scope.searchProduct.product = '';
+    }
+  }
+
+  $scope.$watch('searchProduct.product', function(newValue, oldValue) {
+    if (newValue != null && typeof newValue == 'object') {
+      if (newValue.typ == 'list') {
+        console.log(newValue);
+        $state.go('details', {
+          id: newValue.pk,
+          name: newValue.name.split(' ').join('-')
+        })
+      } else {
+        $state.go('categories', {
+          name: newValue.name
+        })
+      }
+      $scope.searchProduct.product = '';
+    }
+  }, true);
+
+  $scope.slide = {
+    banners: [],
+    active: 0
+  };
+  $scope.slideMobile = {
+    banners: [],
+    active: 0
+  };
+
+  $http({
+    method: 'GET',
+    url: '/api/ecommerce/offerBanner/?level=1'
+  }).
+  then(function(response) {
+    // for (var i = 0; i < response.data.length; i++) {
+    //   s = response.data[i].params;
+    //   s = s.split(':')[1];
+    //   s = s.split('}')[0];
+    //   response.data[i].params = {id : parseInt(s)}
+    // }
+    $scope.slide.banners = response.data;
+    if ($scope.slide.banners.length > 5) {
+      $scope.slide.banners = $scope.slide.banners.slice(0, 5)
+    }
+    $scope.slide.active = 0
+    if ($scope.slide.banners.length > 1) {
+      $scope.slide.lastbanner = $scope.slide.banners.length - 1
+    } else {
+      $scope.slide.lastbanner = 0
+    }
+
+    console.log(response.data, 'fffff');
+
+    $scope.slideMobile.banners = response.data;
+    if ($scope.slideMobile.banners.length > 3) {
+      $scope.slideMobile.banners = response.data.slice(0, 3);
+    }
+    $scope.slideMobile.active = 0
+    if ($scope.slideMobile.banners.length > 1) {
+      $scope.slideMobile.lastbanner = $scope.slideMobile.banners.length - 1
+    } else {
+      $scope.slideMobile.lastbanner = 0
+    }
+    console.log($scope.slide.banners);
+    console.log($scope.slideMobile.banners);
+  })
+  $scope.changeSlide = function(index) {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaa', index);
+    $scope.slide.active = index;
+  }
+
+  $scope.change = function(value) {
+    if (value == "next") {
+      if ($scope.slide.active == undefined) {
+        $scope.slide.active = 0
+      }
+      if ($scope.slide.active == $scope.slide.lastbanner) {
+        $scope.slide.active = 0;
+      } else {
+        $scope.slide.active += 1;
+      }
+    } else if (value == "previous") {
+      console.log($scope.slide.active);
+      console.log($scope.slide.active, $scope.slide.lastbanner);
+      if ($scope.slide.active == undefined) {
+        $scope.slide.active = 0;
+      } else {
+        $scope.slide.active -= 1;
+      }
+
+      if ($scope.slide.active < 0) {
+        console.log("kkkkkkkkkkkkkkkkk");
+        $scope.slide.active = $scope.slide.lastbanner
+      }
+    }
+  }
 
 
 
 
-      if($scope.me){
-    if($rootScope.addToCart.length>0){
-    if($rootScope.inCart.length>0){
-      for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        for (var j = 0; j <$rootScope.inCart.length; j++) {
-          if( $rootScope.addToCart[i].product.pk == $rootScope.inCart[j].product.pk ){
-            if($rootScope.inCart[j].typ=='cart'){
-              $http({
-                method: 'PATCH',
-                url: '/api/ecommerce/cart/' + $rootScope.inCart[j].pk + '/',
-                data: {
-                  qty: $rootScope.addToCart[i].qty
-                }
-              }).
-              then(function(response) {
-              })
-              $rootScope.inCart[i].qty = $rootScope.addToCart[i].qty
-              return
+  $interval(function() {
+    if ($scope.slide.active == undefined) {
+      $scope.slide.active = 0
+    }
+    if ($scope.slide.active == $scope.slide.lastbanner) {
+      $scope.slide.active = 0;
+    } else {
+      $scope.slide.active += 1;
+    }
+  }, 3000);
+
+
+  $scope.changeSlideMobile = function(index) {
+    $scope.slideMobile.active = index;
+  }
+
+  $interval(function() {
+    if ($scope.slideMobile.active == undefined) {
+      $scope.slideMobile.active = 0
+    }
+    if ($scope.slideMobile.active == $scope.slideMobile.lastbanner) {
+      $scope.slideMobile.active = 0;
+    } else {
+      $scope.slideMobile.active += 1;
+    }
+  }, 3000);
+
+  // $interval(function() {
+  //   $scope.slideMobile.active += 1;
+  //   if ($scope.slideMobile.active == 3) {
+  //     $scope.slideMobile.active = 0;
+  //   }
+  // }, 3000);
+
+
+  // $scope.increaseSlide = function(index) {
+  //   console.log(index,'aaaaaaaaa');
+  //   $scope.banners= index+1;
+  // }
+  //
+  // $scope.decreaseSlide = function(index) {
+  //   $scope.slide.active = index-1;
+  // }
+
+  $scope.feedback = {
+    email: '',
+    mobile: null,
+    message: ''
+  };
+
+  // $scope.feddbackPannel = false
+  $scope.feedbackstatus = function() {
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.feedBack.html',
+      size: 'md',
+      backdrop: false,
+      controller: 'controller.ecommerce.feedBack.modal',
+    }).result.then(function() {
+
+    }, function() {
+
+    });
+  }
+
+  $scope.contactUs = function() {
+    $scope.me = $users.get('mySelf')
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.contact.html',
+      size: 'md',
+      backdrop: false,
+      controller: 'controller.ecommerce.contact.modal',
+    }).result.then(function() {
+
+    }, function() {
+
+    });
+  }
+  // $scope.close = function() {
+  //   $scope.feddbackPannel = false
+  // }
+
+
+
+  $scope.settings = {};
+  $http({
+    method: 'GET',
+    url: '/api/ERP/appSettings/?app=25'
+  }).
+  then(function(response) {
+    for (var i = 0; i < response.data.length; i++) {
+      $scope.settings[response.data[i].name] = response.data[i].value;
+    }
+    console.log($scope.settings);
+  })
+
+  $scope.data.pickUpTime = null;
+  $scope.data.dropInTime = null;
+  if ($scope.me != null) {
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/cart/?user=' + $scope.me.pk
+    }).
+    then(function(response) {
+      for (var i = 0; i < response.data.length; i++) {
+        if (response.data[i].typ == 'cart') {
+          $rootScope.inCart.push(response.data[i])
+        }
+        if (response.data[i].typ == 'favourite') {
+          $rootScope.inFavourite.push(response.data[i])
+        }
+      }
+    })
+  }
+
+
+
+
+  if ($scope.me) {
+    if ($rootScope.addToCart.length > 0) {
+      if ($rootScope.inCart.length > 0) {
+        for (var i = 0; i < $rootScope.addToCart.length; i++) {
+          for (var j = 0; j < $rootScope.inCart.length; j++) {
+            if ($rootScope.addToCart[i].product.pk == $rootScope.inCart[j].product.pk) {
+              if ($rootScope.inCart[j].typ == 'cart') {
+                $http({
+                  method: 'PATCH',
+                  url: '/api/ecommerce/cart/' + $rootScope.inCart[j].pk + '/',
+                  data: {
+                    qty: $rootScope.addToCart[i].qty
+                  }
+                }).
+                then(function(response) {})
+                $rootScope.inCart[i].qty = $rootScope.addToCart[i].qty
+                return
+              } else if ($rootScope.inCart[j].typ == 'favourite') {
+                $http({
+                  method: 'PATCH',
+                  url: '/api/ecommerce/cart/' + $rootScope.inCart[j].pk + '/',
+                  data: {
+                    typ: 'cart',
+                    qty: $rootScope.addToCart[i].qty
+                  }
+                }).
+                then(function(response) {})
+                $rootScope.inCart[i].typ = 'cart'
+                $rootScope.inCart[i].qty = $rootScope.addToCart[i].qty
+                return
+              }
             }
-            else if($rootScope.inCart[j].typ=='favourite'){
-              $http({
-                method: 'PATCH',
-                url: '/api/ecommerce/cart/' + $rootScope.inCart[j].pk + '/',
-                data: {
-                  typ:'cart',
-                  qty: $rootScope.addToCart[i].qty
-                }
-              }).
-              then(function(response) {
-              })
-              $rootScope.inCart[i].typ = 'cart'
-              $rootScope.inCart[i].qty = $rootScope.addToCart[i].qty
-              return
-            }
-          }
           }
           $http({
             method: 'POST',
             url: '/api/ecommerce/cart/',
             data: {
-              typ:'cart',
+              typ: 'cart',
               qty: $rootScope.addToCart[i].qty,
-              product:$rootScope.addToCart[i].product.pk,
-                user: getPK($scope.me.url),
+              product: $rootScope.addToCart[i].product.pk,
+              user: getPK($scope.me.url),
             }
           }).
           then(function(response) {
-            if(response.data.length>0){
+            if (response.data.length > 0) {
               for (var i = 0; i < response.data.length; i++) {
                 $rootScope.inCart.push(response.data[0])
               }
@@ -2215,21 +2232,20 @@ $rootScope.addToCart=[]
             return
           })
         }
-      }
-      else{
+      } else {
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
           $http({
             method: 'POST',
             url: '/api/ecommerce/cart/',
             data: {
-              typ:'cart',
+              typ: 'cart',
               qty: $rootScope.addToCart[i].qty,
-              product:$rootScope.addToCart[i].product.pk,
+              product: $rootScope.addToCart[i].product.pk,
               user: getPK($scope.me.url),
             }
           }).
           then(function(response) {
-            if(response.data.length>0){
+            if (response.data.length > 0) {
               for (var i = 0; i < response.data.length; i++) {
                 $rootScope.inCart.push(response.data[0])
               }
@@ -2237,93 +2253,7 @@ $rootScope.addToCart=[]
             return
           })
         }
-      }
-      function setCookie(cname, cvalue, exdays) {
-        console.log('set cookie');
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays*24*60*60*1000));
-        var expires = "expires="+ d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-      }
 
-
-      detail = getCookie("addToCart");
-      if (detail != "") {
-        console.log('already there');
-        setCookie("addToCart", "" , -1);
-        // document.cookie = encodeURIComponent("addToCart") + "=deleted; expires=" + new Date(0).toUTCString()
-      }
-      window.location = '/checkout/cart';
-      $scope.cart = $rootScope.inCart;
-      $rootScope.addToCart=[]
-    }
-
-
-
-}
-
-
-      $scope.headerUrl = '/static/ngTemplates/app.ecommerce.header.html';
-      $scope.footerUrl = '/static/ngTemplates/app.ecommerce.footer.html';
-
-      $scope.$watch('data.location', function(newValue, oldValue) {
-        if (newValue != null && typeof newValue == 'object') {
-          $http({
-            method: 'GET',
-            url: '/api/ecommerce/locationDetails/?id=' + newValue.place_id
-          }).
-          then(function(response) {
-            $scope.params.location = response.data.result;
-            console.log($scope.params.location.geometry.location);
-            // lat lon is available in location.geometry.location.lat or lng
-          })
-        }
-      }, true);
-
-      $scope.getLocationSuggeations = function(query) {
-        return $http.get('/api/ecommerce/suggestLocations/?query=' + query).
-        then(function(response) {
-          return response.data.predictions;
-        })
-      }
-
-      $scope.refreshResults = function() {
-        $state.go('ecommerce', {}, {
-          reload: true
-        })
-        // if (angular.isDefined($scope.$$childHead.fetchListings)) {
-        //   $scope.$$childHead.fetchListings()
-        // }else {
-        //   $scope.$$childTail.fetchListings()
-        // }
-      }
-
-    });
-    app.controller('controller.ecommerce.pincodeEnquiry.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
-      $scope.close = function() {
-        $uibModalInstance.close();
-      }
-      $scope.form = {
-        pincode: ''
-      }
-
-      function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        console.log(decodedCookie);
-        var ca = decodedCookie.split(';');
-        console.log(ca);
-        for (var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-
-            return c.substring(name.length, c.length);
-          }
-        }
-        return "";
       }
 
       function setCookie(cname, cvalue, exdays) {
@@ -2334,246 +2264,332 @@ $rootScope.addToCart=[]
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
       }
 
-      function createCookieDetail(pincode) {
-        console.log('create cookieeeeeeeee', pincode);
-        detail = getCookie("userPincode");
-        if (detail != "") {
-          console.log('already there');
-          document.cookie = encodeURIComponent("userPincode") + "=deleted; expires=" + new Date(0).toUTCString()
+
+      detail = getCookie("addToCart");
+      if (detail != "") {
+        console.log('already there');
+        setCookie("addToCart", "", -1);
+        // document.cookie = encodeURIComponent("addToCart") + "=deleted; expires=" + new Date(0).toUTCString()
+      }
+      window.location = '/checkout/cart';
+      $scope.cart = $rootScope.inCart;
+      $rootScope.addToCart = []
+    }
+
+
+
+  }
+
+
+  $scope.headerUrl = '/static/ngTemplates/app.ecommerce.header.html';
+  $scope.footerUrl = '/static/ngTemplates/app.ecommerce.footer.html';
+
+  $scope.$watch('data.location', function(newValue, oldValue) {
+    if (newValue != null && typeof newValue == 'object') {
+      $http({
+        method: 'GET',
+        url: '/api/ecommerce/locationDetails/?id=' + newValue.place_id
+      }).
+      then(function(response) {
+        $scope.params.location = response.data.result;
+        console.log($scope.params.location.geometry.location);
+        // lat lon is available in location.geometry.location.lat or lng
+      })
+    }
+  }, true);
+
+  $scope.getLocationSuggeations = function(query) {
+    return $http.get('/api/ecommerce/suggestLocations/?query=' + query).
+    then(function(response) {
+      return response.data.predictions;
+    })
+  }
+
+  $scope.refreshResults = function() {
+    $state.go('ecommerce', {}, {
+      reload: true
+    })
+    // if (angular.isDefined($scope.$$childHead.fetchListings)) {
+    //   $scope.$$childHead.fetchListings()
+    // }else {
+    //   $scope.$$childTail.fetchListings()
+    // }
+  }
+
+});
+app.controller('controller.ecommerce.pincodeEnquiry.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
+  $scope.close = function() {
+    $uibModalInstance.close();
+  }
+  $scope.form = {
+    pincode: ''
+  }
+
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    console.log(decodedCookie);
+    var ca = decodedCookie.split(';');
+    console.log(ca);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  function setCookie(cname, cvalue, exdays) {
+    console.log('set cookie');
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function createCookieDetail(pincode) {
+    console.log('create cookieeeeeeeee', pincode);
+    detail = getCookie("userPincode");
+    if (detail != "") {
+      console.log('already there');
+      document.cookie = encodeURIComponent("userPincode") + "=deleted; expires=" + new Date(0).toUTCString()
+    }
+    setCookie("userPincode", pincode, 365);
+  }
+
+  $scope.checkPincode = function() {
+    console.log($scope.form.pincode.toString().length);
+    if ($scope.form.pincode.toString().length != 6) {
+      Flash.create('danger', "Please enter a correct Pincode");
+      return
+    }
+
+    // createCookieDetail($scope.form.pincode)
+
+    $scope.showSpinner = false
+
+    $http.get('/api/POS/store/?pincode=' + $scope.form.pincode).
+    then(function(response) {
+      console.log(response.data);
+      $scope.stores = response.data
+      if (response.data.length > 0) {
+        $rootScope.pin = response.data[0].pincode
+        createCookieDetail(response.data[0].pincode)
+        $scope.showSpinner = true
+        $rootScope.$broadcast('filterForStore', {
+          pin: response.data[0].pincode
+        });
+        $rootScope.$broadcast('filterForCategoryStore', {
+          pin: response.data[0].pincode
+        });
+        setTimeout(function() {
+          $scope.showSpinner = false
+          $uibModalInstance.close();
+        }, 2000);
+      } else {
+        $scope.form.pincode = ''
+      }
+    })
+  }
+  console.log($scope.stores, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakkkkkkkkkkkkkkkkkkk');
+});
+
+// app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
+//   $scope.close = function() {
+//     $uibModalInstance.close();
+//   }
+
+app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
+  $scope.me = $users.get('mySelf')
+  $scope.close = function() {
+    $uibModalInstance.close();
+  }
+
+  $scope.feedback = {
+    email: '',
+    subject: '',
+    mobile: null,
+    message: ''
+  };
+  $scope.sendFeedback = function() {
+    console.log($scope.me, 'aaaaaaaaa')
+    if ($scope.me == null || $scope.me == undefined) {
+      console.log('kkkkkkkkkkkkkkk')
+      if ($scope.feedback.email == '' || $scope.feedback.mobile == 5 || $scope.feedback.message == '') {
+        Flash.create("warning", "Please Add Email and Mobile")
+      } else {
+        var toSend = {
+          email: $scope.feedback.email,
+          mobile: $scope.feedback.mobile,
+          subject: $scope.feedback.subject,
+          message: $scope.feedback.message,
         }
-        setCookie("userPincode", pincode, 365);
       }
-
-      $scope.checkPincode = function() {
-        console.log($scope.form.pincode.toString().length);
-        if ($scope.form.pincode.toString().length != 6) {
-          Flash.create('danger', "Please enter a correct Pincode");
-          return
+    } else {
+      if ($scope.feedback.message == '') {
+        Flash.create("warning", "Please Add Email and Mobile")
+      } else {
+        var toSend = {
+          email: $scope.me.email,
+          mobile: $scope.me.profile.mobile,
+          subject: $scope.feedback.subject,
+          message: $scope.feedback.message,
         }
-
-        // createCookieDetail($scope.form.pincode)
-
-        $scope.showSpinner = false
-
-        $http.get('/api/POS/store/?pincode=' + $scope.form.pincode).
-        then(function(response) {
-          console.log(response.data);
-          $scope.stores = response.data
-          if (response.data.length > 0) {
-            $rootScope.pin = response.data[0].pincode
-            createCookieDetail(response.data[0].pincode)
-            $scope.showSpinner = true
-            $rootScope.$broadcast('filterForStore', {
-              pin: response.data[0].pincode
-            });
-            $rootScope.$broadcast('filterForCategoryStore', {
-              pin: response.data[0].pincode
-            });
-            setTimeout(function() {
-              $scope.showSpinner = false
-              $uibModalInstance.close();
-            }, 2000);
-          } else {
-            $scope.form.pincode = ''
-          }
-        })
-      }
-      console.log($scope.stores, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakkkkkkkkkkkkkkkkkkk');
-    });
-
-    // app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
-    //   $scope.close = function() {
-    //     $uibModalInstance.close();
-    //   }
-
-    app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
-      $scope.me = $users.get('mySelf')
-      $scope.close = function() {
-        $uibModalInstance.close();
       }
 
+    }
+    $http({
+      method: 'POST',
+      url: '/api/ecommerce/supportFeed/',
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Thank you!');
       $scope.feedback = {
         email: '',
         subject: '',
         mobile: null,
         message: ''
       };
-      $scope.sendFeedback = function() {
-        console.log($scope.me, 'aaaaaaaaa')
-        if ($scope.me == null || $scope.me == undefined) {
-          console.log('kkkkkkkkkkkkkkk')
-          if ($scope.feedback.email == '' || $scope.feedback.mobile == 5 || $scope.feedback.message == '') {
-            Flash.create("warning", "Please Add Email and Mobile")
-          }
-          else {
-            var toSend = {
-              email: $scope.feedback.email,
-              mobile: $scope.feedback.mobile,
-              subject: $scope.feedback.subject,
-              message: $scope.feedback.message,
-            }
-          }
-        }
-        else {
-          if ($scope.feedback.message == '') {
-            Flash.create("warning", "Please Add Email and Mobile")
-          } else {
-            var toSend = {
-              email: $scope.me.email,
-              mobile: $scope.me.profile.mobile,
-              subject: $scope.feedback.subject,
-              message: $scope.feedback.message,
-            }
-          }
-
-        }
-        $http({
-          method: 'POST',
-          url: '/api/ecommerce/supportFeed/',
-          data: toSend
-        }).
-        then(function(response) {
-          Flash.create('success', 'Thank you!');
-          $scope.feedback = {
-            email: '',
-            subject: '',
-            mobile: null,
-            message: ''
-          };
-        }, function(response) {
-          Flash.create('danger', response.status + ' : ' + response.statusText);
-        });
-      }
+    }, function(response) {
+      Flash.create('danger', response.status + ' : ' + response.statusText);
     });
+  }
+});
 
-    app.controller('controller.ecommerce.contact.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
-      //   $http({
-      //   method: 'GET',
-      //   url: '/api/ecommerce/frequentlyQuestions/'
-      // }).
-      // then(function(response) {
-      //   $scope.fAQ = response.data
-      // })
+app.controller('controller.ecommerce.contact.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
+  //   $http({
+  //   method: 'GET',
+  //   url: '/api/ecommerce/frequentlyQuestions/'
+  // }).
+  // then(function(response) {
+  //   $scope.fAQ = response.data
+  // })
 
-      // $scope.message = {
-      //   subject: '',
-      //   body: ''
-      // };
-      // $scope.sendMessage = function() {
-      //   $http({
-      //     method: 'POST',
-      //     url: '/api/ecommerce/support/',
-      //     data: $scope.message
-      //   }).
-      //   then(function(response) {
-      //     $scope.message = {
-      //       subject: '',
-      //       body: ''
-      //     };
-      //     Flash.create('success', response.status + ' : ' + response.statusText);
-      //   }, function(response) {
-      //     Flash.create('danger', response.status + ' : ' + response.statusText);
-      //   })
-      // }
+  // $scope.message = {
+  //   subject: '',
+  //   body: ''
+  // };
+  // $scope.sendMessage = function() {
+  //   $http({
+  //     method: 'POST',
+  //     url: '/api/ecommerce/support/',
+  //     data: $scope.message
+  //   }).
+  //   then(function(response) {
+  //     $scope.message = {
+  //       subject: '',
+  //       body: ''
+  //     };
+  //     Flash.create('success', response.status + ' : ' + response.statusText);
+  //   }, function(response) {
+  //     Flash.create('danger', response.status + ' : ' + response.statusText);
+  //   })
+  // }
 
-      $scope.close = function() {
-        $uibModalInstance.close();
+  $scope.close = function() {
+    $uibModalInstance.close();
+  }
+
+
+  $scope.sendFeedback = function() {
+    // if ($scope.me==null){
+    //   console.log("aaaaaaaa");
+    //   if ($scope.feedback.email == '') {
+    //     Flash.create('danger', 'Please provide details')
+    //   }
+    //   else{
+    //     var toSend = {
+    //       email: $scope.feedback.email,
+    //       mobile: $scope.feedback.mobile,
+    //       message: $scope.feedback.message,
+    //     }
+    //   }
+    // }
+    // else{
+    //   var toSend = {
+    //     email: $scope.feedback.email,
+    //     mobile: $scope.feedback.mobile,
+    //     message: $scope.feedback.message,
+    //   }
+    // }
+
+
+    console.log("aaaaaaaa");
+    if ($scope.feedback.email == '') {
+      Flash.create('danger', 'Please provide details')
+    } else {
+      console.log($scope.feedback.email, 'aaaaa');
+      var toSend = {
+        email: $scope.feedback.email,
+        mobile: $scope.feedback.mobile,
+        message: $scope.feedback.message,
       }
+    }
 
 
-      $scope.sendFeedback = function() {
-        // if ($scope.me==null){
-        //   console.log("aaaaaaaa");
-        //   if ($scope.feedback.email == '') {
-        //     Flash.create('danger', 'Please provide details')
-        //   }
-        //   else{
-        //     var toSend = {
-        //       email: $scope.feedback.email,
-        //       mobile: $scope.feedback.mobile,
-        //       message: $scope.feedback.message,
-        //     }
-        //   }
-        // }
-        // else{
-        //   var toSend = {
-        //     email: $scope.feedback.email,
-        //     mobile: $scope.feedback.mobile,
-        //     message: $scope.feedback.message,
-        //   }
-        // }
-
-
-        console.log("aaaaaaaa");
-        if ($scope.feedback.email == '') {
-          Flash.create('danger', 'Please provide details')
-        } else {
-          console.log($scope.feedback.email, 'aaaaa');
-          var toSend = {
-            email: $scope.feedback.email,
-            mobile: $scope.feedback.mobile,
-            message: $scope.feedback.message,
-          }
-        }
-
-
-        $http({
-          method: 'POST',
-          url: '/api/ecommerce/supportFeed/',
-          data: toSend
-        }).
-        then(function(response) {
-          Flash.create('success', 'Thank you!');
-          $scope.feedback = {
-            email: '',
-            mobile: null,
-            message: ''
-          };
-        }, function(response) {
-          Flash.create('danger', response.status + ' : ' + response.statusText);
-        });
-      }
+    $http({
+      method: 'POST',
+      url: '/api/ecommerce/supportFeed/',
+      data: toSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Thank you!');
+      $scope.feedback = {
+        email: '',
+        mobile: null,
+        message: ''
+      };
+    }, function(response) {
+      Flash.create('danger', response.status + ' : ' + response.statusText);
     });
+  }
+});
 
 
-    app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval) {
+app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval) {
 
-      document.title = 'Buy Products Online At Best Price In India | Sterling Select'
-      document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = 'Buy Products Online At Best Price In India | Sterling Select'
+  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
 
-      $scope.me = $users.get('mySelf');
-      console.log('multiiiiiiiiiiiiiiiiiiiii', $rootScope.multiStore, $rootScope.pin);
-      setTimeout(function() {
-        console.log($rootScope.pin);
-        if ($rootScope.multiStore) {
-          $rootScope.$broadcast('filterForStore', {
-            pin: $rootScope.pin
-          });
-          $rootScope.$broadcast('filterForCategoryStore', {
-            pin: $rootScope.pin
-          });
-        } else {
-          $http({
-            method: 'GET',
-            url: '/api/ecommerce/listingLite/'
-          }).
-          then(function(response) {
-            $scope.listingProducts = response.data.splice(1, 8);
-            console.log('sssssssssss', $scope.listingProducts);
-            $scope.listingRemainingProducts = response.data.slice(9, 17);
+  $scope.me = $users.get('mySelf');
+  console.log('multiiiiiiiiiiiiiiiiiiiii', $rootScope.multiStore, $rootScope.pin);
+  setTimeout(function() {
+    console.log($rootScope.pin);
+    if ($rootScope.multiStore) {
+      $rootScope.$broadcast('filterForStore', {
+        pin: $rootScope.pin
+      });
+      $rootScope.$broadcast('filterForCategoryStore', {
+        pin: $rootScope.pin
+      });
+    } else {
+      $http({
+        method: 'GET',
+        url: '/api/ecommerce/listingLite/'
+      }).
+      then(function(response) {
+        $scope.listingProducts = response.data.splice(1, 8);
+        console.log('sssssssssss', $scope.listingProducts);
+        $scope.listingRemainingProducts = response.data.slice(9, 17);
 
-        if ($rootScope.addToCart.length>0) {
+        if ($rootScope.addToCart.length > 0) {
           for (var i = 0; i < $rootScope.addToCart.length; i++) {
             for (var j = 0; j < $scope.listingProducts.length; j++) {
-              if ($scope.listingProducts[j].pk==$rootScope.addToCart[i].product.pk) {
-                $scope.listingProducts[j].added_cart=$rootScope.addToCart[i].qty
-                console.log($scope.listingProducts[j].added_cart,'aaaaaaaaaaaaaaaaaaaaaaaa');
+              if ($scope.listingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
+                $scope.listingProducts[j].added_cart = $rootScope.addToCart[i].qty
+                console.log($scope.listingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
               }
             }
             for (var j = 0; j < $scope.listingRemainingProducts.length; j++) {
-              if ($scope.listingRemainingProducts[j].pk==$rootScope.addToCart[i].product.pk) {
-                $scope.listingRemainingProducts[j].added_cart=$rootScope.addToCart[i].qty
-                console.log($scope.listingRemainingProducts[j].added_cart,'aaaaaaaaaaaaaaaaaaaaaaaa');
+              if ($scope.listingRemainingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
+                $scope.listingRemainingProducts[j].added_cart = $rootScope.addToCart[i].qty
+                console.log($scope.listingRemainingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
               }
             }
 
@@ -2581,235 +2597,236 @@ $rootScope.addToCart=[]
         }
 
 
-            console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
-          })
+        console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
+      })
 
+      $http({
+        method: 'GET',
+        url: '/api/ecommerce/genericProduct/'
+      }).
+      then(function(response) {
+        $scope.genericProducts = response.data;
+      })
+    }
+  }, 1000);
+
+  $scope.recentlyViewed = [];
+  // $scope.recentViewsArr = [];
+  //
+  if ($scope.me != null) {
+    if ($rootScope.multiStore) {
+      rurl = '/api/ecommerce/activities/?user=' + $scope.me.pk + '&typ=productView&limit=4' + '&pin=' + $rootScope.pin + '&multipleStore'
+    } else {
+      rurl = '/api/ecommerce/activities/?user=' + $scope.me.pk + '&typ=productView&limit=4'
+    }
+    $http({
+      method: 'GET',
+      url: rurl
+    }).
+    then(function(response) {
+      for (var i = 0; i < response.data.results.length; i++) {
+        $scope.recentlyViewed.push(response.data.results[i].product)
+      }
+    })
+  }
+
+  $http({
+    method: 'GET',
+    url: '/api/ecommerce/suggestedItem/'
+  }).
+  then(function(response) {
+    console.log('%%%%%%%%', response.data.results);
+    $scope.suggestedProducts = response.data.results
+
+  })
+
+
+  $scope.subSlide = {
+    banners: [],
+    active: 0
+  };
+  $scope.subSlideMobile = {
+    banners: [],
+    active: 0
+  };
+
+  $http({
+    method: 'GET',
+    url: '/api/ecommerce/offerBanner/?level=2'
+  }).
+  then(function(response) {
+    $scope.subSlide.banners = response.data;
+    if ($scope.subSlide.banners.length > 5) {
+      $scope.subSlide.banners = $scope.slide.banners.slice(0, 5)
+    }
+    if ($scope.subSlide.banners.length > 1) {
+      $scope.subSlide.lastbanner = $scope.subSlide.banners.length - 1
+      $scope.subSlide.img = $scope.subSlide.banners[0].image
+      $scope.subSlide.title = $scope.subSlide.banners[0].title
+    } else {
+      $scope.subSlide.lastbanner = 0
+    }
+
+
+    console.log(response.data, 'fffff');
+
+    $scope.subSlideMobile.banners = response.data;
+    if ($scope.subSlideMobile.banners.length > 3) {
+      $scope.subSlideMobile.banners = response.data.slice(0, 3);
+    }
+    if ($scope.subSlideMobile.banners.length > 1) {
+      $scope.subSlideMobile.lastbanner = $scope.subSlideMobile.banners.length - 1
+      $scope.subSlideMobile.img = $scope.subSlideMobile.banners[0].imagePortrait
+      $scope.subSlideMobile.title = $scope.subSlideMobile.banners[0].title
+
+    } else {
+      $scope.subSlideMobile.lastbanner = 0
+    }
+
+  })
+  // $scope.changesubSlide = function(index) {
+  //   $scope.subSlide.active = index;
+  // }
+
+
+  $interval(function() {
+    if ($scope.subSlide.active == undefined) {
+      $scope.subSlide.active = 0
+    }
+    if ($scope.subSlide.active == $scope.subSlide.lastbanner) {
+      $scope.subSlide.active = 0;
+    } else {
+      $scope.subSlide.active += 1;
+    }
+    if ($scope.subSlideMobile.banners[$scope.subSlideMobile.active] != undefined) {
+      $scope.subSlide.img = $scope.subSlide.banners[$scope.subSlide.active].image
+      $scope.subSlide.title = $scope.subSlide.banners[$scope.subSlide.active].title
+    }
+  }, 3000);
+
+  // $scope.changeSlideMobile = function(index) {
+  //   $scope.subSlideMobile.active = index;
+  // }
+
+  $interval(function() {
+    console.log("aaaaaaaaaaaaaaaaaaaaa");
+    if ($scope.subSlideMobile.active == undefined) {
+      $scope.subSlideMobile.active = 0
+    }
+    if ($scope.subSlideMobile.active == $scope.subSlideMobile.lastbanner) {
+      $scope.subSlideMobile.active = 0;
+    } else {
+      $scope.subSlideMobile.active += 1;
+    }
+    if ($scope.subSlideMobile.banners[$scope.subSlideMobile.active] != undefined) {
+      $scope.subSlideMobile.img = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].imagePortrait
+      console.log($scope.subSlideMobile.img, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+      $scope.subSlideMobile.title = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].title
+    }
+  }, 3000);
+
+
+  $scope.addToCart = function(inputPk) {
+    console.log('coming in addddddddddddddd');
+    dataToSend = {
+      product: inputPk,
+      user: getPK($scope.me.url),
+      qty: 1,
+      typ: 'cart',
+    }
+    console.log(dataToSend);
+    console.log('in cart', $rootScope.inCart);
+
+
+    for (var i = 0; i < $rootScope.inCart.length; i++) {
+      if ($rootScope.inCart[i].product.pk == dataToSend.product) {
+        if ($rootScope.inCart[i].typ == 'cart') {
+          Flash.create('warning', 'This Product is already in cart');
+          return
+        } else {
           $http({
-            method: 'GET',
-            url: '/api/ecommerce/genericProduct/'
+            method: 'PATCH',
+            url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+            data: {
+              typ: 'cart'
+            }
           }).
           then(function(response) {
-            $scope.genericProducts = response.data;
+            console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaaa');
+            Flash.create('success', 'Product added to cart');
           })
+          $rootScope.inCart[i].typ = 'cart'
+          return
         }
-      }, 1000);
 
-      $scope.recentlyViewed = [];
-      // $scope.recentViewsArr = [];
-      //
-      if ($scope.me != null) {
-        if ($rootScope.multiStore) {
-          rurl = '/api/ecommerce/activities/?user=' + $scope.me.pk + '&typ=productView&limit=4' + '&pin=' + $rootScope.pin + '&multipleStore'
-        } else {
-          rurl = '/api/ecommerce/activities/?user=' + $scope.me.pk + '&typ=productView&limit=4'
-        }
-        $http({
-          method: 'GET',
-          url: rurl
-        }).
-        then(function(response) {
-          for (var i = 0; i < response.data.results.length; i++) {
-            $scope.recentlyViewed.push(response.data.results[i].product)
+      }
+    }
+    $http({
+      method: 'POST',
+      url: '/api/ecommerce/cart/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      console.log(response.data, 'bbbbbbbbbbbbbbbbbbbbbbbbb');
+      Flash.create('success', 'Product added in cart');
+      $rootScope.inCart.push(response.data);
+    })
+  }
+
+
+  $scope.$on('filterForStore', function(event, input) {
+    console.log("recieved");
+    console.log(input);
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/listingLite/?pin=' + input.pin + '&multipleStore'
+    }).
+    then(function(response) {
+      console.log('dataaaaaaaaaaaaaaaa', response.data);
+      $scope.listingProducts = response.data.splice(0, 7);
+      console.log('sssssssssss', $scope.listingProducts);
+      $scope.listingRemainingProducts = response.data.splice(5, 8);
+      console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
+
+      if ($rootScope.addToCart.length > 0) {
+        for (var i = 0; i < $rootScope.addToCart.length; i++) {
+          for (var j = 0; j < $scope.listingProducts.length; j++) {
+            if ($scope.listingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
+              $scope.listingProducts[j].added_cart = $rootScope.addToCart[i].qty
+              console.log($scope.listingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
+            }
           }
-        })
+          for (var j = 0; j < $scope.listingRemainingProducts.length; j++) {
+            if ($scope.listingRemainingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
+              $scope.listingRemainingProducts[j].added_cart = $rootScope.addToCart[i].qty
+              console.log($scope.listingRemainingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
+            }
+          }
+
+        }
       }
 
-      $http({
-        method: 'GET',
-        url: '/api/ecommerce/suggestedItem/'
-      }).
-      then(function(response) {
-        console.log('%%%%%%%%', response.data.results);
-        $scope.suggestedProducts = response.data.results
-      })
+      // setTimeout(function () {
+      // }, 1000);
+    })
+  });
 
+  $scope.$on('filterForCategoryStore', function(event, input) {
+    console.log("recieved category");
+    console.log(input);
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/genericProduct/?pin=' + input.pin + '&multipleStore'
+    }).
+    then(function(response) {
+      console.log('categoryyyyyyyyy dataaaaaaaaaaaaaaaa', response.data);
+      $scope.genericProducts = response.data;
+      // setTimeout(function () {
+      // }, 1000);
 
-      $scope.subSlide = {
-        banners: [],
-        active: 0
-      };
-      $scope.subSlideMobile = {
-        banners: [],
-        active: 0
-      };
-
-      $http({
-        method: 'GET',
-        url: '/api/ecommerce/offerBanner/?level=2'
-      }).
-      then(function(response) {
-        $scope.subSlide.banners = response.data;
-        if ($scope.subSlide.banners.length > 5) {
-          $scope.subSlide.banners = $scope.slide.banners.slice(0, 5)
-        }
-        if ($scope.subSlide.banners.length > 1) {
-          $scope.subSlide.lastbanner = $scope.subSlide.banners.length - 1
-          $scope.subSlide.img = $scope.subSlide.banners[0].image
-          $scope.subSlide.title = $scope.subSlide.banners[0].title
-        } else {
-          $scope.subSlide.lastbanner = 0
-        }
-
-
-        console.log(response.data, 'fffff');
-
-        $scope.subSlideMobile.banners = response.data;
-        if ($scope.subSlideMobile.banners.length > 3) {
-          $scope.subSlideMobile.banners = response.data.slice(0, 3);
-        }
-        if ($scope.subSlideMobile.banners.length > 1) {
-          $scope.subSlideMobile.lastbanner = $scope.subSlideMobile.banners.length - 1
-          $scope.subSlideMobile.img = $scope.subSlideMobile.banners[0].imagePortrait
-          $scope.subSlideMobile.title = $scope.subSlideMobile.banners[0].title
-
-        } else {
-          $scope.subSlideMobile.lastbanner = 0
-        }
-
-      })
-      // $scope.changesubSlide = function(index) {
-      //   $scope.subSlide.active = index;
-      // }
-
-
-      $interval(function() {
-        if ($scope.subSlide.active == undefined) {
-          $scope.subSlide.active = 0
-        }
-        if ($scope.subSlide.active == $scope.subSlide.lastbanner) {
-          $scope.subSlide.active = 0;
-        } else {
-          $scope.subSlide.active += 1;
-        }
-        if ($scope.subSlideMobile.banners[$scope.subSlideMobile.active] != undefined) {
-          $scope.subSlide.img = $scope.subSlide.banners[$scope.subSlide.active].image
-          $scope.subSlide.title = $scope.subSlide.banners[$scope.subSlide.active].title
-        }
-      }, 3000);
-
-      // $scope.changeSlideMobile = function(index) {
-      //   $scope.subSlideMobile.active = index;
-      // }
-
-      $interval(function() {
-        console.log("aaaaaaaaaaaaaaaaaaaaa");
-        if ($scope.subSlideMobile.active == undefined) {
-          $scope.subSlideMobile.active = 0
-        }
-        if ($scope.subSlideMobile.active == $scope.subSlideMobile.lastbanner) {
-          $scope.subSlideMobile.active = 0;
-        } else {
-          $scope.subSlideMobile.active += 1;
-        }
-        if ($scope.subSlideMobile.banners[$scope.subSlideMobile.active] != undefined) {
-          $scope.subSlideMobile.img = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].imagePortrait
-          console.log($scope.subSlideMobile.img, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
-          $scope.subSlideMobile.title = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].title
-        }
-      }, 3000);
-
-
-      $scope.addToCart = function(inputPk) {
-        console.log('coming in addddddddddddddd');
-        dataToSend = {
-          product: inputPk,
-          user: getPK($scope.me.url),
-          qty: 1,
-          typ: 'cart',
-        }
-        console.log(dataToSend);
-        console.log('in cart', $rootScope.inCart);
-
-
-        for (var i = 0; i < $rootScope.inCart.length; i++) {
-          if ($rootScope.inCart[i].product.pk == dataToSend.product) {
-            if ($rootScope.inCart[i].typ == 'cart') {
-              Flash.create('warning', 'This Product is already in cart');
-              return
-            } else {
-              $http({
-                method: 'PATCH',
-                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-                data: {
-                  typ: 'cart'
-                }
-              }).
-              then(function(response) {
-                console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaaa');
-                Flash.create('success', 'Product added to cart');
-              })
-              $rootScope.inCart[i].typ = 'cart'
-              return
-            }
-
-          }
-        }
-        $http({
-          method: 'POST',
-          url: '/api/ecommerce/cart/',
-          data: dataToSend
-        }).
-        then(function(response) {
-          console.log(response.data, 'bbbbbbbbbbbbbbbbbbbbbbbbb');
-          Flash.create('success', 'Product added in cart');
-          $rootScope.inCart.push(response.data);
-        })
-      }
-
-
-      $scope.$on('filterForStore', function(event, input) {
-        console.log("recieved");
-        console.log(input);
-        $http({
-          method: 'GET',
-          url: '/api/ecommerce/listingLite/?pin=' + input.pin + '&multipleStore'
-        }).
-        then(function(response) {
-          console.log('dataaaaaaaaaaaaaaaa', response.data);
-          $scope.listingProducts = response.data.splice(0, 7);
-          console.log('sssssssssss', $scope.listingProducts);
-          $scope.listingRemainingProducts = response.data.splice(5, 8);
-          console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
-
-          if ($rootScope.addToCart.length>0) {
-          for (var i = 0; i < $rootScope.addToCart.length; i++) {
-            for (var j = 0; j < $scope.listingProducts.length; j++) {
-              if ($scope.listingProducts[j].pk==$rootScope.addToCart[i].product.pk) {
-                $scope.listingProducts[j].added_cart=$rootScope.addToCart[i].qty
-                console.log($scope.listingProducts[j].added_cart,'aaaaaaaaaaaaaaaaaaaaaaaa');
-              }
-            }
-            for (var j = 0; j < $scope.listingRemainingProducts.length; j++) {
-              if ($scope.listingRemainingProducts[j].pk==$rootScope.addToCart[i].product.pk) {
-                $scope.listingRemainingProducts[j].added_cart=$rootScope.addToCart[i].qty
-                console.log($scope.listingRemainingProducts[j].added_cart,'aaaaaaaaaaaaaaaaaaaaaaaa');
-              }
-            }
-
-          }
-}
-
-          // setTimeout(function () {
-          // }, 1000);
-        })
-      });
-
-      $scope.$on('filterForCategoryStore', function(event, input) {
-        console.log("recieved category");
-        console.log(input);
-        $http({
-          method: 'GET',
-          url: '/api/ecommerce/genericProduct/?pin=' + input.pin + '&multipleStore'
-        }).
-        then(function(response) {
-          console.log('categoryyyyyyyyy dataaaaaaaaaaaaaaaa', response.data);
-          $scope.genericProducts = response.data;
-          // setTimeout(function () {
-          // }, 1000);
-
-        })
-      });
+    })
+  });
 
 
 
-    });
+});

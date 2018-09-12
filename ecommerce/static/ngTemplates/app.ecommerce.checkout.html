@@ -1,4 +1,4 @@
-<div class="container-fluid" style="margin-bottom:20px;">
+<div class="container-fluid" style="margin-bottom:20px;padding:0px">
   <div class="col-md-10 col-md-offset-1 card bg-white" style="display:block;position:relative;min-height:760px;padding-left:0px;margin-bottom:30px;">
 
     <div class="col-md-2 hidden-sm hidden-xs  bg-purple" style="position:absolute; height:100%;">
@@ -316,7 +316,7 @@
                   <div class="col-md-12" ng-repeat="adr in savedAddress">
                     <div class="row" style="margin-top:15px">
                       <div class="col-md-1 col-xs-1 col-sm-1">
-                        <input ng-model="adr.pk" type="radio" name="radio" value="adr.pk" ng-click="show($index)">
+                        <input ng-model="check" type="radio" name="radio" value="adr.pk" ng-click="show($index)">
                       </div>
                       <div class="col-md-10 col-xs-7 col-sm-10">
                         <div class="row">
@@ -338,6 +338,9 @@
                         </div>
                         <div class="row" ng-if="addressview&&$index==idxVal">
                           <h4>Address</h4>
+                          <div class="form-group">
+                            <input type="text" class="form-control" id="ldm" ng-model="data.address.mobileNo" placeholder="Enter Mobile Number...">
+                          </div>
                           <div class="form-group">
 
                             <textarea ng-model="data.address.street" class="form-control" id="street" placeholder="Enter street.."></textarea>
@@ -370,7 +373,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="row" style="margin-bottom:35px">
+                          <!-- <div class="row" style="margin-bottom:35px">
 
                             <div class="col-sm-6 col-xs-12 col-md-6">
                               <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk == none">
@@ -378,7 +381,18 @@
                       </button>
 
                             </div>
+                          </div> -->
+                          <div class="row" style="margin-bottom:35px">
+                            <div class="hidden-xs col-md-12 col-sm-6">
+                              <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk">Update</button>
+                              <button type="button" class="btn btn-primary" ng-click="cancel()" ng-if="data.address.pk" >Cancel</button>
+                            </div>
+                            <div class="hidden-lg hidden-md hidden-sm col-xs-12 ">
+                              <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk" style="width:100%">Update</button><br/><br/>
+                              <button type="button" class="btn btn-primary" ng-click="cancel()" ng-if="data.address.pk" style="width:100%">Cancel</button>
+                            </div>
                           </div>
+
                         </div>
                       </div>
                       <div class="col-md-1 col-sm-1 col-sm-1" ng-if="$index==idx" ng-click="ChangeAdd($index,'edit')" style="cursor:pointer">
@@ -394,6 +408,9 @@
                   </div>
 
                   <div class="row" ng-if="newAdr" style="padding-left:25px;padding-right:25px">
+                    <div class="form-group">
+                      <input type="text" class="form-control" id="ldm" ng-model="data.address.mobileNo" placeholder="Enter Mobile Number...">
+                    </div>
                     <div class="form-group">
 
                       <textarea ng-model="data.address.street" class="form-control" id="street" placeholder="Enter street.."></textarea>
@@ -689,8 +706,11 @@
           </div>
           <div class="row" style="padding:20px;">
             <form >
-             <div class="form-group">
+             <div class="form-group" ng-if="!totalLimit">
                <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD"> COD <br>
+             </div>
+             <div class="form-group" ng-if="totalLimit">
+               <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD" disabled> COD (Cannot use this option as your total exceed  <i class="fa fa-inr"></i>{{limitValue}})<br>
              </div>
              <div class="form-group">
                <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="Card"> Credit Card/ Debit Card / Net Banking / UPI

@@ -65,22 +65,30 @@
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>
     <div class="row" style="margin:0px;" ng-controller="ecommerce.body" >
-      <div class="col-md-{{ cart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'10'}}" style="padding:0px;">
+      <div class="col-md-{{ cart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="me.pk">
+        <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
+      </div>
+      <div class="col-md-{{ addToCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="!me.pk">
         <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
       </div>
 
 
 
       <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;"  ng-click="checkout()" ng-if="cart.length>0 && !$state.is('checkout') && !$state.includes('account')">
-        <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.total}} )</h5>
+        <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.total.toFixed(2)}} )</h5>
+      </div>
+
+      <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;"  ng-click="mainPage()" ng-if="addToCart.length>0&&!me.pk">
+        <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.totalVal.toFixed(2)}})</h5>
       </div>
 
 
       <div ng-if="cart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
 
-        <div class="" style="position:sticky; top:10px;">
+        <div class="" style="position:sticky;top:10px;">
 
-          <img src="/static/images/grain.jpg" style="width:100%;" alt="">
+          <img ng-if="!genericImage" src="/static/images/grain.jpg" style="width:100%;" alt="">
+          <img ng-if="genericImage" src={{genericImage.cartImage}} style="width:100%;" alt="">
 
           <div class="row" style="margin:0px;">
             <div class="container-fluid">

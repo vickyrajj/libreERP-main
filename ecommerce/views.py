@@ -236,10 +236,13 @@ class CreateOrderAPI(APIView):
             obj = pObj.product
             if 'storepk' in request.data:
                 print 'multistoreeeeeeeeeeeeeeeeee'
-                storeObj = Store.objects.get(pk=int(request.data['storepk']))
-                storeQtyObj = obj.storeQty.get(store__id=storeObj.pk)
-                storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
-                storeQtyObj.save()
+                try:
+                    storeObj = Store.objects.get(pk=int(request.data['storepk']))
+                    storeQtyObj = obj.storeQty.get(store__id=storeObj.pk)
+                    storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
+                    storeQtyObj.save()
+                except:
+                    print 'No Storeeee And No Product Deduction'
             else:
                 print 'singlestoreeeeeeeeeeeeeeeeeee'
                 obj.inStock = obj.inStock - i['qty']
@@ -257,7 +260,7 @@ class CreateOrderAPI(APIView):
             'state' : str(request.data['address']['state']),
             'pincode' : str(request.data['address']['pincode']),
             'country' : str(request.data['address']['country']),
-            'mobileNo' : str(request.data['address']['mobile']),
+            'mobileNo' : str(request.data['address']['mobileNo']),
             }
             if len(str(request.data['promoCode'])) > 0:
                 data['promoCode'] = str(request.data['promoCode'])
@@ -1295,3 +1298,10 @@ class GenericPincodeViewSet(viewsets.ModelViewSet):
             print 'lllllllllllllllllllllllllllllllllllllllllllllllllllll'
             toReturn = toReturn.filter(pincode__iexact=self.request.GET['pincode'])
         return toReturn
+
+class GenericImageViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny ,)
+    queryset = GenericImage.objects.all()
+    serializer_class = genericImageSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['pincode','state','city']

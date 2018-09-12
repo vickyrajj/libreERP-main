@@ -45,13 +45,13 @@
                   </span>
                 </div>
               </div>
-              <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="!me.pk">
+              <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&!me.pk">
          <!--        <div class="col-md-6 col-xs-6 col-sm-6 text-center" style="border-right:1px solid #808080;">
                   <span ng-click="mainPage();$event.stopPropagation();" style="cursor:pointer;color:#808080;">
                     <i class="fa fa-heart  fa-3x" ></i>
                   </span>
                 </div> -->
-                <div class=" col-md-offset-6 col-md-6 col-xs-12 col-sm-12 text-center">
+                <div class=" col-md-offset-3 col-md-6 col-xs-12 col-sm-12 text-center">
                   <span ng-click="createCookieDetail();$event.stopPropagation();" style="cursor:pointer;color:#808080;">
                      <i class="fa fa-shopping-cart fa-3x" ></i>
                   </span>
@@ -59,7 +59,7 @@
               </div>
               <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&me.pk">
                 <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-                  <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="list.added_cart>0"  ng-click="decrement();$event.stopPropagation()"></i>
+                  <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="list.added_cart>0&&me.pk"  ng-click="decrement();$event.stopPropagation()"></i>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
                   <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{list.added_cart}} </span>
@@ -77,6 +77,17 @@
                     <i class="fa fa-shopping-cart fa-3x" ></i>
                   </span>
                 </div> -->
+              </div>
+              <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&!me.pk">
+                <div class="col-md-4 col-sm-4 col-xs-4 text-right">
+                  <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="list.added_cart>1&&!me.pk"  ng-click="decrementCookie();$event.stopPropagation()"></i>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
+                  <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{list.added_cart}} </span>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                  <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="incrementCookie();$event.stopPropagation()"></i>
+                </div>
               </div>
             </div>
         </div>
