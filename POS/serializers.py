@@ -12,9 +12,32 @@ import os
 from django.conf import settings as globalSettings
 from clientRelationships.models import ProductMeta
 from clientRelationships.serializers import ProductMetaSerializer
-from ERP.models import service
+from ERP.models import service , appSettingsField
 import json
+from bs4 import BeautifulSoup
+import textwrap
 
+
+#------------------------- Printer Code ------------
+
+# from __future__ import print_function
+from os import environ
+from django.forms.models import model_to_dict
+import os
+import argparse
+from twisted.internet import reactor
+from twisted.internet.defer import inlineCallbacks
+
+from autobahn.twisted.wamp import ApplicationSession, ApplicationRunner
+import requests
+
+# from escpos import printer
+# Epson = printer.Usb(0x154f,0x154f,0,0x81,0x02)
+# Print text
+from datetime import datetime
+date_obj = datetime.now()
+date = date_obj.strftime('%d/%m/%Y')
+time_sec = date_obj.strftime('%H:%M:%S')
 
 
 
@@ -182,6 +205,56 @@ class InvoiceSerializer(serializers.ModelSerializer):
                 pObj.save()
                 data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':inv}
                 InventoryLog.objects.create(**data)
+        if 'connectedDevice' in self.context['request'].data:
+            try:
+                companyName = appSettingsField.objects.get(app__id=69,name='companyName').value
+                companyAddress = appSettingsField.objects.get(app__id=69,name='companyAddress').value
+                soup1 = BeautifulSoup(companyName)
+                companyName = str(soup1.text)
+                soup2 = BeautifulSoup(companyAddress)
+                companyAddress = str(soup2.text)
+
+            except:
+                companyName = ''
+                companyAddress = ''
+
+            try:
+                toSend = model_to_dict(inv)
+                if 'storepk' in self.context['request'].data:
+                    storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
+                    storeName = ''
+                    storeAddress = ''
+                    if storeObj.name:
+                        storeName = storeObj.name
+                    if storeObj.address:
+                        storeAddress = storeObj.address
+                        if storeObj.pincode:
+                            storeAddress += ' ' + str(storeObj.pincode)
+
+                else:
+                    storeName = ''
+                    storeAddress = ''
+                date_obj = datetime.now()
+                c_date = date_obj.strftime('%d/%m/%Y')
+                c_time = date_obj.strftime('%H:%M:%S')
+                toSend['date'] = c_date
+                toSend['time'] = c_time
+                toSend['companyName'] = companyName
+                toSend['companyAddress'] = companyAddress
+                toSend['storeName'] = storeName
+                toSend['storeAddress'] = storeAddress
+                print 'postinggggggggggggggggg',date_obj
+                # toSend.pop('invoicedate', None)
+                # toSend.pop('duedate', None)
+                # toSend.pop('receivedDate', None)
+                requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
+                        json={
+                          'topic': 'service.POS.Printer.{0}'.format(self.context['request'].data['connectedDevice']),
+                          'args': [{'data':toSend}]
+                        }
+                    )
+            except:
+                print 'Server Has Not Connected'
         return inv
 
 

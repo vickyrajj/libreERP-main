@@ -85,7 +85,7 @@ def tokenAuthentication(request):
     authStatus = {'status' : 'success' , 'message' : 'Account actived, please login.' }
     return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN})
 
-
+@csrf_protect
 def generateOTP(request):
     print request.POST['id'],'kkkkkkkkllllllllllllkkkkkkkkkkk'
     key_expires = timezone.now() + datetime.timedelta(2)

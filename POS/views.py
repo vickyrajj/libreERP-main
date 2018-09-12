@@ -108,10 +108,15 @@ class ProductViewSet(viewsets.ModelViewSet):
         product=[]
         unit=0
         if 'search' in self.request.GET:
-            product = Product.objects.filter(name__contains=str(self.request.GET['search']))
-            product1  = Product.objects.filter(serialNo__contains=str(self.request.GET['search']))
+            if 'storepk' in self.request.GET:
+                storeQtylist = list(StoreQty.objects.filter(store = int(self.request.GET['storepk'])).values_list('pk',flat=True))
+                objs = Product.objects.filter(storeQty__in=storeQtylist)
+            else:
+                objs = Product.objects.all()
+            product = objs.filter(name__contains=str(self.request.GET['search']))
+            product1  = objs.filter(serialNo__contains=str(self.request.GET['search']))
             product2 = list(ProductVerient.objects.filter(sku__contains=str(self.request.GET['search'])).values_list('parent',flat=True))
-            product3  = Product.objects.filter(pk__in=product2).annotate(myUnit=Value(unit, output_field=CharField()))
+            product3  = objs.filter(pk__in=product2).annotate(myUnit=Value(unit, output_field=CharField()))
             return product | product1 | product3
         else:
             return Product.objects.all()

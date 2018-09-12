@@ -233,6 +233,17 @@ class CreateOrderAPI(APIView):
             print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
             oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b))})
             oQMp.append(oQMObj)
+            obj = pObj.product
+            if 'storepk' in request.data:
+                print 'multistoreeeeeeeeeeeeeeeeee'
+                storeObj = Store.objects.get(pk=int(request.data['storepk']))
+                storeQtyObj = obj.storeQty.get(store__id=storeObj.pk)
+                storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
+                storeQtyObj.save()
+            else:
+                print 'singlestoreeeeeeeeeeeeeeeeeee'
+                obj.inStock = obj.inStock - i['qty']
+                obj.save()
         else:
             data = {
             'user':User.objects.get(pk=request.user.pk),

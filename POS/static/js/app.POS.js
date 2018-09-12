@@ -97,7 +97,7 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
       }
     })
     $scope.posSubtotal = Math.round(subTotal)
-    return subTotal.toFixed(2);
+    return $scope.posSubtotal.toFixed(2);
   }
   $scope.subTotalTax = function() {
     var subTotalTax = 0;
@@ -109,10 +109,26 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
 
     return subTotalTax.toFixed(2);
   }
+  // $scope.productSearch = function(query) {
+  //   return $http.get('/api/POS/product/?name__contains=' + query).
+  //   then(function(response) {
+  //     return response.data;
+  //   })
+  // }
   $scope.productSearch = function(query) {
-    return $http.get('/api/POS/product/?name__contains=' + query).
+    console.log("called");
+    var url = '/api/POS/product/?search=' + query + '&limit=10'
+    if ($rootScope.multiStore) {
+      if ($rootScope.storepk>0) {
+        url = url + '&storepk=' + $rootScope.storepk
+      }else {
+        Flash.create('warning','Please Select Store First')
+        return
+      }
+    }
+    return $http.get(url).
     then(function(response) {
-      return response.data;
+      return response.data.results;
     })
   }
   $scope.instockUpdate = function(url,inStockData){
@@ -971,7 +987,16 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   $scope.productSearch = function(query) {
     console.log("called");
-    return $http.get('/api/POS/product/?search=' + query + '&limit=10').
+    var url = '/api/POS/product/?search=' + query + '&limit=10'
+    if ($rootScope.multiStore) {
+      if ($rootScope.storepk>0) {
+        url = url + '&storepk=' + $rootScope.storepk
+      }else {
+        Flash.create('warning','Please Select Store First')
+        return
+      }
+    }
+    return $http.get(url).
     then(function(response) {
       return response.data.results;
     })
@@ -1187,7 +1212,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       }
     })
     $scope.posSubtotal = Math.round(subTotal)
-    return subTotal.toFixed(2);
+    return $scope.posSubtotal.toFixed(2);
   }
   $scope.subTotalTax = function() {
     var subTotalTax = 0;
@@ -1407,8 +1432,12 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
         return;
       }
     }
-    if ($scope.form.products.length==0 || $scope.form.products.length == 1 &&  $scope.form.products[0].data == "" ) {
+    if ($scope.form.products.length==0 || $scope.form.products.length == 1 &&  typeof $scope.form.products[0].data == 'string' ) {
       Flash.create('danger' , 'There is no product to generate invoice for')
+      return;
+    }
+    if (typeof $scope.form.products[$scope.form.products.length-1].data == "string" ) {
+      Flash.create('danger' , 'Please Delete Unwanted Empty Row')
       return;
     }
     $scope.qty = 0
@@ -1437,7 +1466,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
         $scope.qty = qty
         $scope.returnAmount = 0
         $scope.cardTyp = {refNumber:''}
+        $scope.payform = {amount:null}
         $scope.addNum = function(num){
+          document.getElementById("hiddeninput").focus();
           if (num=='clear') {
             $scope.receivedAmount = $scope.receivedAmount.slice(0,-1)
           }else {
@@ -1445,17 +1476,44 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           }
           if ($scope.receivedAmount.length>0) {
             $scope.returnAmount = parseInt($scope.receivedAmount) - $scope.amount
+            $scope.payform.amount = parseInt($scope.receivedAmount)
+          }
+          else {
+            $scope.returnAmount = $scope.amount
+            $scope.payform.amount = null
+          }
+        }
+        $scope.$watch('payform.amount', function(newValue, oldValue) {
+          if (newValue==null) {
+            $scope.receivedAmount = ''
+          }else {
+            $scope.receivedAmount = newValue.toString()
+          }
+          if ($scope.receivedAmount.length>0) {
+            $scope.returnAmount = parseInt($scope.receivedAmount) - $scope.amount
           }
           else {
             $scope.returnAmount = $scope.amount
           }
-        }
+        })
+        $scope.$watch('payMode', function(newValue, oldValue) {
+          if (newValue== 'cash') {
+            console.log('paymodeeeeeeeeeeee',newValue);
+            document.getElementById("hiddeninput").focus();
+          }
+        })
         $scope.savePosPopup = function(){
             if ($scope.payMode == 'cash') {
+              document.getElementById("hiddeninput").focus();
               if ($scope.receivedAmount.length>0) {
+                if ($scope.amount > parseInt($scope.receivedAmount)) {
+                  Flash.create('danger','Please Receive Proper Amount')
+                  return
+                }
                 $scope.returnAmount = parseInt($scope.receivedAmount) - $scope.amount
                 console.log($scope.returnAmount);
               }else {
+                document.getElementById("hiddeninput").focus();
                 Flash.create('warning','Please Enter Receivd Amount')
                 return
               }
@@ -1466,7 +1524,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
               }
             }
 
-            $rootScope.$broadcast('POSPayPopup' , {payMode:$scope.payMode ,amountRecieved:$scope.amount,paymentRefNum:$scope.cardTyp.refNumber})
+            $rootScope.$broadcast('POSPayPopup' , {payMode:$scope.payMode ,amountRecieved: parseInt($scope.receivedAmount),paymentRefNum:$scope.cardTyp.refNumber})
             setTimeout(function () {
               $scope.posSaved = true
               $scope.CancelPosPopup()
@@ -1856,6 +1914,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
 
   $scope.addRow = function() {
+    if ($scope.form.products.length>0&&typeof $scope.form.products[$scope.form.products.length-1].data == "string" ) {
+      Flash.create('danger' , 'Please Fill The Current Row')
+      return;
+    }
     $scope.form.products.push({
       data: "",
       quantity: 1
@@ -1960,6 +2022,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       }else if (a.payMode == 'card') {
         toSend.paymentRefNum = a.paymentRefNum
       }
+      toSend.connectedDevice = $scope.connectData.deviceID
     }
 
     // for (var i = 0; i < f.products.length; i++) {

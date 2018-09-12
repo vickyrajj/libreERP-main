@@ -22,7 +22,8 @@
       </div>
     </div>
   </div>
-  <div class="row" ng-if="payMode=='cash'" style="margin-top:30px;margin-left:20px">
+  <input type="number" name="" value="" ng-model="payform.amount" autofocus id="hiddeninput" style="opacity:0" ng-enter="savePosPopup()">
+  <div class="row" ng-if="payMode=='cash'" style="margin-top:5px;margin-left:20px">
     <div class="col-md-6" ng-if="!posSaved">
       <span style="font-size:55px"><b>Received Amount</b></span><br>
       <span style="font-size:70px;color:green" class="text-center"><b>{{receivedAmount | number}}</b></span><br><br>
@@ -67,8 +68,8 @@
       <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('0')">
         0
       </div>
-      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('.')">
-        .
+      <div class="col-md-3 btn" style="font-size:60px;margin:5px;background-color:#deecea" ng-click="addNum('00')">
+        00
       </div>
     </div>
   </div>
@@ -86,7 +87,7 @@
       </div>
     </div>
   </div> -->
-  <div class="row" ng-if="payMode=='wallet'" style="margin-top:20px">
+  <div class="row" ng-if="payMode=='wallet'" style="margin-top:10px">
     <div class="col-md-4">
       <span style="cursor:pointer"><img src="/static/images/Paytm_logo.png" class="img" style="width:80%;height:80px" alt="" ng-click="typ='paytm'"><br><br><br><br></span>
 
@@ -105,7 +106,7 @@
       </div>
     </div>
   </div>
-  <div class="row text-center" style="margin-top:20px">
+  <div class="row text-center" style="margin-top:5px">
       <div class="btn btn-default" style="font-size:40px" ng-click="savePosPopup()" ng-if="!posSaved">
         Save
       </div>

@@ -1,15 +1,24 @@
 <div class="modal-header">
   Edit {{data.mode | humanize}} : {{data.name}}
 </div>
-
 <div ng-controller="businessManagement.productsInventory.edit" class="modal-body">
 
-  <label>Current Stock : </label> {{data.inStock}}
+  <span ng-if="!multiStores"><label>Current Stock : </label> {{data.inStock}}</span>
+  <div class="container-fluid" ng-if="multiStores">
+    <div class="well col-md-10 col-md-offset-1 zoomOnHover" ng-repeat="store in data.storeQty" style="margin-bottom:10px;font-size:20px;{{activepk==store.pk?'background-color:#009efb':''}}" ng-click="selectedStore(store,$index)">
+      <div class="col-md-9">
+        <span>{{store.store.name}}</span>
+      </div>
+      <div class="col-md-3">
+        <span>{{store.quantity}}</span>
+      </div>
+    </div>
+  </div>
 
-  <div class="form-group">
+  <div class="form-group" style="padding-top:15px">
     <label>Quantity</label>
     <div class = "input-group">
-       <input type = "number" class = "form-control" ng-model="data.qty">
+       <input type = "number" class = "form-control" ng-model="data.qty" id="updatequantity">
        <span class = "input-group-btn">
           <button type="button" class="btn btn-success" ng-click="save(true)">Increase</button>
        </span>
