@@ -76,7 +76,7 @@ app.controller("businessManagement.productsInventory.edit", function($scope, $ht
 
 });
 
-app.controller("businessManagement.productsInventory.default", function($scope, $http, Flash , $uibModal , $rootScope,$state) {
+app.controller("businessManagement.productsInventory.default", function($scope,$timeout, $http, Flash , $uibModal , $rootScope,$state) {
 
   // $http({method : 'GET' , url : '/api/POS/product/'})
 
@@ -102,8 +102,6 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     }
 
   }
-
-  console.log();
 
 
   $scope.data = {
@@ -133,13 +131,17 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     url: '/api/POS/product/',
     searchField : 'Name or SKU or Description',
     itemsNumPerView: [20, 40, 80],
-    fields : ['name' , 'price' , 'serialNo' , 'inStock'],
     options : options,
+    fields:['name' , 'price' , 'serialNo' , 'masterStock' , 'StoreStock'],
     filterSearch : true,
     multiSelect : false,
     multiselectOptions : multiselectOptions,
     editorTemplate :  '/static/ngTemplates/app.productsInventory.product.modal.html',
   }
+
+
+
+
 
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);

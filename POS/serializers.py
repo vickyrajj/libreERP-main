@@ -30,6 +30,7 @@ from twisted.internet.defer import inlineCallbacks
 
 from autobahn.twisted.wamp import ApplicationSession, ApplicationRunner
 import requests
+from django.db.models import Sum
 
 # from escpos import printer
 # Epson = printer.Usb(0x154f,0x154f,0,0x81,0x02)
@@ -91,9 +92,11 @@ class ProductSerializer(serializers.ModelSerializer):
     compositions=ProductLiteSerializer(many=True,read_only=True)
     storeQty=StoreQtySerializer(many=True,read_only=True)
     skuUnitpack = serializers.SerializerMethodField()
+    masterStock = serializers.SerializerMethodField()
+    StoreStock = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','storeQty','alias')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','storeQty','alias','masterStock','StoreStock')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
@@ -172,6 +175,15 @@ class ProductSerializer(serializers.ModelSerializer):
             if len(pvObj)>0:
                 return list(pvObj)[0]['unitPerpack']
         return None
+    def get_masterStock(self, obj):
+        return obj.inStock
+    def get_StoreStock(self, obj):
+        try:
+            val = obj.storeQty.all().aggregate(Sum('quantity'))['quantity__sum']
+            toSend = val if val else 0
+        except:
+            toSend = None
+        return toSend
 
 class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)
