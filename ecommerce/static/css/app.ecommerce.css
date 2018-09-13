@@ -1,3 +1,11 @@
+[uib-typeahead-popup=""] {
+    width:100%;
+}
+.active successText{
+	color:white;
+}
+
+
 .glassyButton{
 	border:solid 3px white;
 	border-radius:30px;

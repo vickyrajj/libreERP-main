@@ -170,11 +170,11 @@ class SearchProductAPI(APIView):
                 listingobjs = listing.objects.filter(product__in=productsList)
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
-                genericProd = list(genericList.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
+                genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('product__displayPicture') , typ= Value('list',output_field=CharField())))
             else:
-                genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
+                genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name' ) , dp = F('product__displayPicture') , typ= Value('list',output_field=CharField())))
 
             tosend = genericProd + listProd
             print tosend[0:l]
