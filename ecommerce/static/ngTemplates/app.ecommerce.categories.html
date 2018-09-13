@@ -70,7 +70,7 @@
 
   <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:20px;margin-right:20px" ng-if="showFilter==false">
     <div  class="row bg-white ">
-      <h4 class="text-center">Other Categories</h4>
+      <span ng-if="categories.length>0"><h4 class="text-center">Other Categories</h4></span>
       <div ng-repeat="r in categories" style="padding:0px;">
         <div class="col-md-12 anim-in-out anim-zoom-out">
           <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">
@@ -451,7 +451,7 @@
 
 <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:20px;margin-right:20px;" ng-if="showFilter==true">
   <div  class="row bg-white ">
-    <h4 class="text-center">Other Categories</h4>
+    <span ng-if="categories.length>0"><h4 class="text-center">Other Categories</h4></span>
     <div ng-repeat="r in categories" style="padding:0px;">
       <div class="col-md-12 anim-in-out anim-zoom-out">
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">
@@ -474,7 +474,7 @@
 </div>
 <div class="col-sm-12 col-xs-12 hidden-lg hidden-md" style="margin-top:20px">
   <div  class="row bg-white"style="width:100%;margin-left: 1px;">
-    <h4 class=" text-center" >Other Categories</h4>
+    <span ng-if="categories.length>0"><h4 class="text-center">Other Categories</h4></span>
     <div ng-repeat="r in categories" style="padding:0px;">
       <div class="col-sm-12 col-xs-12 hidden-lg hidden-md anim-in-out anim-zoom-out">
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">

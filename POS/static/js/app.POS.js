@@ -638,10 +638,11 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     })
     for (var i = 0; i < $scope.product.compositions.length; i++) {
       $scope.categoriesPk.push($scope.product.compositions[i].pk)
-      $scope.categoriesList.push({
-        category : $scope.product.compositions[i],
-        qty : $scope.compositionQtyMap[i].qty
-      })
+      var a = {category : $scope.product.compositions[i] , qty : 1}
+      if ($scope.compositionQtyMap[i]!=undefined) {
+        a.qty = $scope.compositionQtyMap[i].qty
+      }
+      $scope.categoriesList.push(a)
     }
   } else {
     $scope.mode = 'new';

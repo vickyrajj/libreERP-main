@@ -1593,7 +1593,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       },
       controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add) {
         $scope.adrForm = add;
-        if ($scope.adrForm.title == undefined) {          
+        if ($scope.adrForm.title == undefined) {
           $scope.adrForm.title = ''
         }
         $scope.adrForm.primary = false
@@ -2709,7 +2709,6 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
   // }
 
   $interval(function() {
-    console.log("aaaaaaaaaaaaaaaaaaaaa");
     if ($scope.subSlideMobile.active == undefined) {
       $scope.subSlideMobile.active = 0
     }
