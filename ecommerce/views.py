@@ -875,9 +875,10 @@ styles=getSampleStyleSheet()
 styleN = styles['Normal']
 styleH = styles['Heading1']
 
-
-settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
-
+try:
+    settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+except:
+    print "ERROR : settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()"
 
 class FullPageImage(Flowable):
     def __init__(self , img):
