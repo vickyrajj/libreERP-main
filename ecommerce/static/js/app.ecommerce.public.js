@@ -675,8 +675,8 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
   $window.scrollTo(0, 0)
   $scope.minValue;
   $scope.maxValue
-
-  document.title = $state.params.name + ' | Buy ' + $state.params.name + ' At Best Price In India | Sterling Select'
+  console.log($state.params);
+  document.title = $state.params.name.split('_').join(' ') + ' | Buy ' + $state.params.name.split('_').join(' ') + ' At Best Price In India | Sterling Select'
   document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
 
 
@@ -702,7 +702,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
 
   $http({
     method: 'GET',
-    url: '/api/ecommerce/genericProduct/?name__iexact=' + $state.params.name
+    url: '/api/ecommerce/genericProduct/?name__iexact=' + $state.params.name.split('_').join(' ')
   }).
   then(function(response) {
     $scope.category = response.data[0];

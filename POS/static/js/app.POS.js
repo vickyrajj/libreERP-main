@@ -253,29 +253,38 @@ app.controller("controller.POS.productMeta.form", function($scope, $http, Flash)
 
   $scope.saveproductMeta = function() {
     var f = $scope.configureForm;
+    if (f.description==null || f.description.length == 0 || f.code==null || f.code.length == 0 || f.taxRate==null || f.taxRate.length == 0 || f.typ==null || f.typ.length == 0) {
+      Flash.create('warning','All Fields Are Required')
+      return
+    }
     if ($scope.configureForm.pk == undefined) {
       var method = 'POST';
+      var url = '/api/clientRelationships/productMeta/'
     } else {
       var method = 'PATCH';
-      url += $scope.configureForm.pk + '/';
+      url = '/api/clientRelationships/productMeta/' + $scope.configureForm.pk + '/';
     }
     var toSend = {
       description: f.description,
       code: f.code,
       taxRate: f.taxRate,
-      hsn: f.hsn,
-      sac: f.sac
+      typ: f.typ,
 
     }
 
     $http({
       method: method,
-      url: '/api/clientRelationships/productMeta/',
+      url: url,
       data: toSend
     }).
     then(function(response) {
-      $scope.configureForm.pk = response.data.pk;
-      Flash.create('success', 'Saved');
+      if ($scope.configureForm.pk == undefined) {
+        Flash.create('success', 'Saved');
+        $scope.resetForm();
+      }else {
+        Flash.create('success', 'Updated');
+        $scope.configureForm = response.data
+      }
     })
 
   }
@@ -287,7 +296,17 @@ app.controller("controller.POS.productinfo.form", function($scope, product , $ht
     $scope.mode = 'edit';
     $scope.product = product;
     $scope.categoriesList = []
-    $scope.compositionQtyMap = JSON.parse($scope.product.compositionQtyMap)
+    $scope.storeData=[]
+    $scope.checkStore=[]
+    for (var i = 0; i < $scope.product.storeQty.length; i++) {
+      $scope.storeData.push($scope.product.storeQty[i].pk)
+      $scope.checkStore.push($scope.product.storeQty[i].store.pk)
+    }
+    if ($scope.product.compositionQtyMap == null) {
+      $scope.compositionQtyMap = []
+    }else {
+      $scope.compositionQtyMap = JSON.parse($scope.product.compositionQtyMap)
+    }
 
     $http({
       method: 'GET',
@@ -297,10 +316,11 @@ app.controller("controller.POS.productinfo.form", function($scope, product , $ht
       $scope.productData = response.data;
     })
     for (var i = 0; i < $scope.product.compositions.length; i++) {
-      $scope.categoriesList.push({
-        category : $scope.product.compositions[i],
-        qty : $scope.compositionQtyMap[i].qty
-      })
+      var a = {category : $scope.product.compositions[i] , qty : 1}
+      if ($scope.compositionQtyMap[i]!=undefined) {
+        a.qty = $scope.compositionQtyMap[i].qty
+      }
+      $scope.categoriesList.push(a)
     }
   } else {
     $scope.mode = 'new';
@@ -415,13 +435,15 @@ app.controller("controller.POS.customer.form", function($scope, customer, $http,
       return;
     }
 
-    if ($scope.invoiceMode) {
-
+    if (f.mobile==null || f.mobile.length == 0) {
+      Flash.create('warning', 'Mobile can not be left blank');
+      return;
     }
 
     var toSend = {
       name: f.name,
-      sameAsShipping: f.sameAsShipping
+      sameAsShipping: f.sameAsShipping,
+      mobile: f.mobile
     }
 
     var toPut = ['company', 'email', 'mobile', 'notes', 'pan', 'gst', 'street', 'city', 'state', 'pincode', 'country', 'streetBilling', 'cityBilling', 'stateBilling', 'pincodeBilling', 'countryBilling']
@@ -449,11 +471,12 @@ app.controller("controller.POS.customer.form", function($scope, customer, $http,
     then(function(response) {
       $scope.customer.pk = response.data.pk;
       $scope.mode = 'edit';
-      if ($scope.mode == 'new') {
-        Flash.create('success', 'Saved');
-      } else {
-        Flash.create('success', 'Created');
-      }
+      Flash.create('success', 'Saved');
+      // if ($scope.mode == 'new') {
+      //   Flash.create('success', 'Saved');
+      // } else {
+      //   Flash.create('success', 'Created');
+      // }
       if ($scope.invoiceMode) {
         console.log("will close");
         $uibModalInstance.dismiss('created||' + response.data.pk)
@@ -1771,7 +1794,7 @@ $scope.data.tableData.posProductDel= $scope.posProductDel
           for (var i = 0; i < $scope.data.productMetatableData.length; i++) {
             if ($scope.data.productMetatableData[i].pk == parseInt(target)) {
               if (action == 'edit') {
-                var title = 'ProductMeta :';
+                var title = 'ProductMeta : ';
                 var appType = 'productMetaEdit';
                 $scope.addTab({
                   title: title + $scope.data.productMetatableData[i].pk,
