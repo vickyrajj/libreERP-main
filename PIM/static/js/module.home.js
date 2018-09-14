@@ -112,6 +112,8 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
       controller: 'admin.manageUsers'
     })
+
+
     .state('home.settings', {
       url: "/settings",
       templateUrl: '/static/ngTemplates/app.home.settings.html',
@@ -370,7 +372,11 @@ app.controller("module.home.settings", function($scope, $state, $http) {
 })
 
 
-app.controller("app.settings.roles", function($scope, $state, $http ,Flash) {
+app.controller("app.settings.roles", function($scope, $state, $http ,Flash , $permissions) {
+
+
+  $scope.rolesPerm =  $permissions.myPerms('module.roles.createDelete')
+  console.log($scope.rolesPerm);
 
   $scope.roles = []
 
@@ -471,10 +477,15 @@ app.controller("app.settings.roles", function($scope, $state, $http ,Flash) {
 
 
 
-app.controller("app.settings.prescript.explore", function($scope, $state, $http ,Flash) {
+app.controller("app.settings.prescript.explore", function($scope, $state, $http ,Flash,$permissions) {
   $scope.compDetails = $scope.tab.data
 
   $scope.prescripts = []
+
+
+  $scope.prescriptPerm =  $permissions.myPerms('module.prescript.createDelete')
+
+  console.log('dddddddddd',$scope.prescriptPerm);
 
 
   $http({
@@ -616,7 +627,10 @@ app.controller("controller.home.main", function($scope, $state, $http) {
     $scope.avgRatingAll = response.data.avgRatingAll
     $scope.avgRespTimeAll = response.data.avgRespTimeAll
     $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
-    $scope.changeInChat = response.data.changeInChat
+    $scope.changeInChat = response.data.changeInData.changeInChat
+    $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
+    $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
+
   });
 
   $scope.modules = $scope.$parent.$parent.modules;

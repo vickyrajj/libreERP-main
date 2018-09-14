@@ -479,7 +479,12 @@ app.controller("cutomerController", function($scope, $http, $rootScope) {
       $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
       $scope.avgRatingAll = response.data.avgRatingAll
       $scope.avgRespTimeAll = response.data.avgRespTimeAll
-      $scope.changeInChat = response.data.changeInChat
+      $scope.changeInChat = response.data.changeInData.changeInChat
+      $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
+      $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
+      $scope.changeInFrtAvg = response.data.changeInData.changeInFrtAvg
+      $scope.changeInRespTimeAvg = response.data.changeInData.changeInRespTimeAvg
+
     });
   });
 });

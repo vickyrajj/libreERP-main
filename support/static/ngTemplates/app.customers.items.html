@@ -15,8 +15,27 @@
       </div>
       <div class="col-md-2">
         <div style="padding-right:20px;">
-          <div class="row">
+          <div ng-if="data.perms['module.customer.edit']" class="row" style="padding-bottom:10px">
             <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
+            <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
+            </span>
+          </div>
+
+          <div ng-if="data.perms['module.customer.explore']" class="row" style="padding-bottom:10px">
+            <span class="pull-right" style="cursor:pointer;">
+              <i class="fa fa-info-circle fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('info')"></i>
+            </span>
+          </div>
+
+          <div ng-if="data.perms['module.customer.knowBase']" class="row" style="padding-bottom:10px">
+            <span class="pull-right" style="cursor:pointer;">
+              <i class="fa fa-file-text fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('document')"></i>
+            </span>
+          </div>
+
+
+          <!-- <div class="row">
+            <span ng-if="data.editPerm" class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
             <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
             </span> <br><br>
             <span class="pull-right" style="cursor:pointer;">
@@ -25,7 +44,7 @@
             <span class="pull-right" style="cursor:pointer;">
               <i class="fa fa-file-text fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('document')"></i>
             </span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

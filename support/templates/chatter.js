@@ -1,8 +1,3 @@
-String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
-    return target.replace(new RegExp(search, 'g'), replacement);
-};
-
 !function(la){if("object"==typeof exports)module.exports=la();else if("function"==typeof define&&define.amd)define(la);else{var h;"undefined"!=typeof window?h=window:"undefined"!=typeof global?h=global:"undefined"!=typeof self&&(h=self);h.autobahn=la()}}(function(){return function h(p,k,b){function a(d,e){if(!k[d]){if(!p[d]){var q="function"==typeof require&&require;if(!e&&q)return q(d,!0);if(c)return c(d,!0);throw Error("Cannot find module '"+d+"'");}q=k[d]={exports:{}};p[d][0].call(q.exports,function(c){var n=
 p[d][1][c];return a(n?n:c)},q,q.exports,h,p,k,b)}return k[d].exports}for(var c="function"==typeof require&&require,e=0;e<b.length;e++)a(b[e]);return a}({1:[function(h,p,k){function b(){}h=p.exports={};h.nextTick=function(){if("undefined"!==typeof window&&window.setImmediate)return function(a){return window.setImmediate(a)};if("undefined"!==typeof window&&window.postMessage&&window.addEventListener){var a=[];window.addEventListener("message",function(c){var b=c.source;b!==window&&null!==b||"process-tick"!==
 c.data||(c.stopPropagation(),0<a.length&&a.shift()())},!0);return function(c){a.push(c);window.postMessage("process-tick","*")}}return function(a){setTimeout(a,0)}}();h.title="browser";h.browser=!0;h.env={};h.argv=[];h.on=b;h.once=b;h.off=b;h.emit=b;h.binding=function(a){throw Error("process.binding is not supported");};h.cwd=function(){return"/"};h.chdir=function(a){throw Error("process.chdir is not supported");}},{}],2:[function(h,p,k){var b=h("crypto-js");k.sign=function(a,c){return b.HmacSHA256(c,
@@ -264,93 +259,35 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-var custID = {{pk}};
-console.log('customer id....', custID);
-// var borderColor = '#ACA626';
-// var custName = 'CIOC'
-var windowColor = '{{windowColor}}'
-var custName = '{{custName}}'
-var chatSupport = '{{chat}}'
-var callBackSupport = '{{callBack}}'
-var videoAndAudioSupport = '{{videoAndAudio}}'
-var ticketSupport = '{{ticket}}'
-var nameSupport = '{{name}}'
-var dpSupport = '{{dp}}'
-var supportBubbleColor = '{{supportBubbleColor}}'
-var firstMessage = `{{firstMessage}}`;
-var iconColor = '{{iconColor}}'
-
-
-if (nameSupport=='None') {
-  nameSupport = 'Agent'
-}
-
-
-
-
-if (dpSupport=='') {
-  dpSupport = '{{serverAddress}}/static/images/img_avatar_card.png'
-}else {
-  dpSupport = '{{serverAddress}}'+'{{dp}}'
-}
-
-
-
-if (chatSupport=='True') {
-  chatSupport = true
-}else {
-  chatSupport = false
-}
-
-if (callBackSupport=='True') {
-  callBackSupport = true
-}else {
-  callBackSupport = false
-}
-
-if (videoAndAudioSupport=='True') {
-  videoAndAudioSupport = true
-}else {
-  videoAndAudioSupport = false
-}
-
-if (ticketSupport=='True') {
-  ticketSupport = true
-}else {
-  ticketSupport = false
-}
-
-
+var custID = 1;
+var borderColor = '#ACA626';
+var custName = 'CIOC'
 var uid;
 var broswer;
 var isAgentOnline = false;
 var agentPk = null;
-var notification = new Audio('{{serverAddress}}/static/audio/notification.ogg');
 
 
 
+function getBrowserName() {
+  var name;
+  if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
+    name = 'Opera'
+  }else if (navigator.userAgent.indexOf("Chrome") != -1 ) {
+    name = 'Chrome'
+  }else if (navigator.userAgent.indexOf("Safari") != -1) {
+    name = 'Safari'
+  }else if (navigator.userAgent.indexOf("Firefox") != -1) {
+    name = 'Firefox'
+  }else if ((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
+    name = 'IE'
+  }else {
+    name = 'unknown'
+  }
+  return name
+}
 
-
-
-// function getBrowserName() {
-//   var name;
-//   if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
-//     name = 'Opera'
-//   }else if (navigator.userAgent.indexOf("Chrome") != -1 ) {
-//     name = 'Chrome'
-//   }else if (navigator.userAgent.indexOf("Safari") != -1) {
-//     name = 'Safari'
-//   }else if (navigator.userAgent.indexOf("Firefox") != -1) {
-//     name = 'Firefox'
-//   }else if ((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
-//     name = 'IE'
-//   }else {
-//     name = 'unknown'
-//   }
-//   return name
-// }
-//
-// broswer = getBrowserName()
+broswer = getBrowserName()
 
 
 function setCookie(cname, cvalue, exdays) {
@@ -381,7 +318,7 @@ function getCookie(cname) {
 }
 
 
-var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
+var chat = {user : custName , messages : [ { msg:"Thanks for visiting us. If you need help simply reply to this message...", sentByMe:false , created:  new Date() } ] }
 
 
 function fetchMessages(uid) {
@@ -391,114 +328,49 @@ function fetchMessages(uid) {
       console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
-        // console.log(data);
-        console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' , data);
-        // if (data.length>0) {
-        //
-        // }
-
-
-        for (var i = 0; i < data.length; i++) {
-          // agentPk = data[i].user
-          chat.messages.push(data[i])
-        }
-        // for (var i = 0; i < data.length; i++) {
-        //
-        //   if (data[i].sentByAgent) {
-        //     var sentByMe = false;
-        //   }else {
-        //     var sentByMe = true;
-        //   }
-        //
-        //   if (data[i].message) {
-        //
-        //     if (data[i].attachmentType) {
-        //       // link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-        //       // var message = {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() }
-        //       chat.messages.push( {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() } )
-        //     }else {
-        //       chat.messages.push( { msg: data[i].message , sentByMe: sentByMe , created: data[i].created } )
-        //     }
-        //
-        //
-        //   }else if (data[i].attachment) {
-        //       if (data[i].attachmentType == 'image') {
-        //         chat.messages.push( { msg: '' , img : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-        //       }else if (data[i].attachmentType == 'audio') {
-        //           chat.messages.push( { msg: '' , audio : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-        //       }else if (data[i].attachmentType == 'video') {
-        //           chat.messages.push( { msg: '' , video : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-        //       }else if (data[i].attachmentType == 'application') {
-        //           chat.messages.push( { msg: '' , doc : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
-        //       }
-        //   }
-        //   // chat.messages.push({ msg: , sentByMe: , created:  })
-        //
-        //
-        // }
-        // scroll();
-      }
-  };
-
-  xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?uid=' + uid , true);
-  xhttp.send();
-}
-
-function fetchThread(uid) {
-  console.log('fetch thread');
-
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-      // console.log(this.readyState , this.status,'onready' , this.responseText);
-      // console.log(this);
-      if (this.readyState == 4 && this.status == 200) {
-        var data = JSON.parse(this.responseText)
-        if (data.length>0) {
-          // fetchThread(uid);
-          threadExist = true
-          console.log(data,'fffffffffffffffff');
-          chatThreadPk = data[0].pk
-          agentPk = data[0].user
-        }
         console.log(data);
-        fetchMessages(uid);
-      } else if (this.responseText == '{"PARAMS":"createCookie"}') {
-        console.log('genertate new uid');
-        // document.cookie = "uid" + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
-        uid = new Date().getTime()
-        // console.log('nn',uid ,document.cookie);
-        setCookie("uid", uid, 365);
-        fetchMessages(uid);
+        for (var i = 0; i < data.length; i++) {
 
+          if (data[i].sentByAgent) {
+            var sentByMe = false;
+          }else {
+            var sentByMe = true;
+          }
+
+          if (data[i].message) {
+            chat.messages.push( { msg: data[i].message , sentByMe: sentByMe , created: data[i].created } )
+          }else if (data[i].attachment) {
+
+              if (data[i].attachmentType == 'image') {
+                chat.messages.push( { msg: '' , img : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+              }else if (data[i].attachmentType == 'audio') {
+                  chat.messages.push( { msg: '' , audio : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+              }else if (data[i].attachmentType == 'video') {
+                  chat.messages.push( { msg: '' , video : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+              }else if (data[i].attachmentType == 'application') {
+                  chat.messages.push( { msg: '' , doc : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+              }
+          }
+          // chat.messages.push({ msg: , sentByMe: , created:  })
+
+
+        }
+        scroll();
       }
-
-
   };
 
-  xhttp.open('GET', '{{serverAddress}}/api/support/chatThread/?uid=' + uid + '&checkThread', true);
+  xhttp.open('GET', 'http://localhost:8080/api/support/supportChat/?uid=' + uid , true);
   xhttp.send();
-
 }
-
-var threadExist
-var threadResponse
-var chatThreadPk
-
 
 function checkCookie() {
   uid = getCookie("uid");
   if (uid != "") {
       // alert("Welcome again " + user);
-      console.log('cookie exu=ist');
-      fetchThread(uid);
-      // if (threadExist!=undefined && threadExist) {
-      //   fetchMessages(uid);
-      // }
+      fetchMessages(uid);
   } else {
       // uid = custID +'$'+custName+'$'+broswer.charAt(0)
       uid = new Date().getTime()
-      console.log(uid);
       if (uid != "" && uid != null) {
           setCookie("uid", uid, 365);
       }
@@ -509,114 +381,13 @@ checkCookie();
 
 
 
-// function getLoginDetails(username , phoneNumber , email) {
-//    setcookies - details
-// }
-
-function setVisitorDetails(name , phoneNumber , email) {
-  console.log('coming in chatter', name , phoneNumber , email);
-
-  detail = getCookie("uidDetails");
-  if (detail != "") {
-    console.log('already there');
-    document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
-  }
-
-  console.log(getCookie("uid") , uid , 'getttttttttttttt`');
-
-  if (uid!="") {
-    console.log(uid);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
-        if (this.readyState == 4 && this.status == 200) {
-          console.log(this.responseText);
-          var data = JSON.parse(this.responseText)
-          console.log(data,'');
-          if (data.length==0) {
-            console.log('vistor not there');
-            var xhttp = new XMLHttpRequest();
-             xhttp.onreadystatechange = function() {
-               if (this.readyState == 4 && this.status == 201) {
-                 console.log('posted successfully');
-               }
-             };
-             xhttp.open('POST', '{{serverAddress}}/api/support/visitor/', true);
-             xhttp.setRequestHeader("Content-type", "application/json");
-             xhttp.send(JSON.stringify({uid:uid,name:name,email:email,phoneNumber:phoneNumber}));
-          }
-        }
-    };
-
-    xhttp.open('GET', '{{serverAddress}}/api/support/visitor/?uid='+uid  , true);
-    xhttp.send();
-  }
-  setCookie("uidDetails", JSON.stringify({email:email , name:name , phoneNumber:phoneNumber}), 365);
-}
-
-
-function unsetVisitorDetails() {
-  detail = getCookie("uidDetails");
-  if (detail != "") {
-    document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
-  }
-}
-
-function getVisitorDetails() {
-  detail = getCookie("uidDetails");
-  if (detail != "") {
-    return detail
-  }
-}
 
 
 
-function setColors(bubbleColor , windowColor , icnClr) {
-  windowColor = windowColor
-  supportBubbleColor = bubbleColor
-  if (icnClr) {
-    iconColor = icnClr
-  }
-  setTimeout(function () {
-    headerChat.style.backgroundColor = windowColor
-    startConvoBtn.style.color =  windowColor
-    startConvoBtn.style.borderColor =  windowColor
-    headerInit.style.backgroundColor = windowColor
-    startConversation.style.borderColor = windowColor
-
-
-    chatCircle.style.background = bubbleColor
-    callCircle.style.background = bubbleColor
-    audioCircle.style.background = bubbleColor
-    videoCircle.style.background = bubbleColor
-    ticketCircle.style.background = bubbleColor
-    closeSupport.style.background = bubbleColor
-    var syMainIcon = document.getElementById('sy-main-icon')
-    syMainIcon.style.background = bubbleColor
-
-    document.getElementById('closeChatSvg').style.fill = iconColor
-    // document.getElementById('sy-main-icon').style.background = bubbleColor
-
-     chatCircleText.style.cssText  = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
-     callCircleText.style.cssText =  'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
-     audioCircleText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
-     videoCircleText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
-     ticketCircleText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
-     Syrow24hSupportText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
-
-    syMainIcon.style.color = iconColor
-    chatCircle.style.color = iconColor
-    callCircle.style.color = iconColor
-    audioCircle.style.color = iconColor
-    videoCircle.style.color = iconColor
-    ticketCircle.style.color = iconColor
-    closeSupport.style.color = iconColor
-  }, 1000);
-}
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
+  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8080/ws', realm: 'default'});
 
     connection.onopen = function (session) {
        console.log("session established!");
@@ -625,23 +396,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.log(args);
         var message;
 
-
-        if (args[0]=='T') {
-          console.log('typingggggggggggggggggggggg');
-          onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Typing..</p>';
-          // isTyping.style.display = "";
-          setTimeout(function(){
-            // isTyping.style.display = "none";
-          onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
-          }, 1500);
-          return
-        }
-
         if (args[0]=="M") {
-            // notification.play();
-            message = args[1]
-           // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
-           // chat.messages.push(args[1]);
+           message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
+           chat.messages.push(message);
            if (!chatOpen) {
              unreadMsgCount+=1;
              // unreadMsg.style.display = "";
@@ -651,7 +408,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
         }else if (args[0]=="MF") {
-          // notification.play();
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
 
           if (!chatOpen) {
@@ -668,42 +424,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
               if (this.readyState == 4 && this.status == 200) {
                 console.log(this.responseText);
                 var data = JSON.parse(this.responseText)
-                // attachment = data.attachment
-                // console.log('attachmenttttttttttt' , attachment);
-                message = data
+                attachment = data.attachment
+                console.log('attachmenttttttttttt' , attachment);
 
 
-                // if (args[1].typ=='image') {
-                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , img: attachment }
-                // }else if (args[1].typ=='audio') {
-                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , audio:attachment }
-                // }else if (args[1].typ=='video') {
-                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , video:attachment }
-                // }else if (args[1].typ=='doc') {
-                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , doc:attachment }
-                // }
+
+                if (args[1].typ=='image') {
+                   message = {msg:'' ,  sentByMe:false , created: args[1].created , img: attachment }
+                }else if (args[1].typ=='audio') {
+                   message = {msg:'' ,  sentByMe:false , created: args[1].created , audio:attachment }
+                }else if (args[1].typ=='video') {
+                   message = {msg:'' ,  sentByMe:false , created: args[1].created , video:attachment }
+                }else if (args[1].typ=='doc') {
+                   message = {msg:'' ,  sentByMe:false , created: args[1].created , doc:attachment }
+                }
 
               }
           };
 
-          xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/' + args[1].filePk + '/'  , true);
+          xhttp.open('GET', 'http://localhost:8080/api/support/supportChat/' + args[1].filePk + '/'  , true);
           xhttp.send();
 
-        }else if (args[0]=='ML') {
-          // notification.play();
-          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
-
-          if (!chatOpen) {
-            unreadMsgCount+=1;
-            // unreadMsg.style.display = "";
-            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
-          }
-           message = args[1]
-        }else if (args[0]=='AP') {
-          console.log('agent pk recieveddddddddddddddddddddddddddddddddd');
-          agentPk = args[1];
-          isAgentOnline = true;
-          return
         }else if (args[0]=='O') {
           console.log('yes online');
           isAgentOnline = true;
@@ -711,14 +452,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
           // agentName.innerHTML = '<p style="line-height: 1.75;">Syrow Agent</p>'
           return
         }else if (args[0]=='A') {
-          console.log('asigned');
-          isAgentOnline = true;
           agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[1]+'</p>'
           return
-        }else if (args[0]=='F') {
-          console.log('open feedback');
-          openFeedback(args[1])
-          return
+        }else if (args[0]=='ML') {
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
+
+          if (!chatOpen) {
+            unreadMsgCount+=1;
+            // unreadMsg.style.display = "";
+            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
+          }
+
+           message = {msg:'' ,  sentByMe:false , created: args[1].created , link:args[1].link }
+        }else if (args[0]=='AP') {
+          agentPk = args[1];
         }
 
 
@@ -731,8 +478,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
           scroll();
 
           chat.messages.push(message);
-          notification.play();
-
 
         }, 1500);
 
@@ -740,45 +485,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       }
 
-      function heartbeat() {
-        console.log('caming in heartttttttttttttttttttttttttttttttttttttt here');
-        var isOnline = true
-        return uid
-      }
-
-      function createCookieDetail(args) {
-        console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
-        console.log(args[0]);
-          detail = getCookie("uidDetails");
-          if (detail != "") {
-            console.log('already there');
-            document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
-          }
-
-          setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
-      }
-
-      session.register('service.support.createDetailCookie.'+uid, createCookieDetail).then(
-        function (res) {
-          console.log("registered to service.support.heartbeat'");
-        },
-        function (err) {
-          console.log("failed to registered: ");
-        }
-      );
-
-      session.register('service.support.heartbeat.'+uid, heartbeat).then(
-        function (res) {
-          console.log("registered to service.support.heartbeat'");
-        },
-        function (err) {
-          console.log("failed to registered: " + err);
-        }
-      );
-
       session.subscribe('service.support.chat.' + uid, supportChat).then(
         function (sub) {
-          console.log("subscribed to topic 'service.support.chat'");
+          console.log("subscribed to topic 'service.support.agent'");
         },
         function (err) {
           console.log("failed to subscribed: " + err);
@@ -790,138 +499,158 @@ document.addEventListener("DOMContentLoaded", function(event) {
     connection.open();
 
 
-    function createDiv() {
-      var body = document.getElementsByTagName("BODY")[0];
-      var mainDiv = document.createElement("mainDiv");
-      mainDiv.id="mainDiv"
 
-      mainDiv.innerHTML = '<div id="chatBox" style="width:347px; height:75vh; border-radius: 10px; background-color:#fff; position:fixed ; bottom:100px; right:10px; z-index:1500; margin-left:10px; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); overflow:auto; overflow-x:hidden; ">'+
 
-        '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:'+ windowColor +'; color:#fff;">'+
-          '<div style="padding:10px; background-size:cover; " >'+
-            '<div id="backArrow" style="float:left; cursor:pointer; padding:15px; border-radius:5px; " >'+
-              // '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
-              '<img src="{{serverAddress}}/static/images/backArrow.png" alt="Back Arrow" width="15" height="15">'+
-              // '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
+    var body = document.getElementsByTagName("BODY")[0];
+    var mainDiv = document.createElement("mainDiv");
+    mainDiv.id="mainDiv"
+
+    mainDiv.innerHTML = '<div id="chatBox" style="width:347px; height:75vh; border-radius: 10px; background-color:#fff; position:fixed ; bottom:100px; right:10px; z-index:1500; margin-left:10px; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); overflow:auto; overflow-x:hidden; ">'+
+
+      '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:#286EFA; color:#fff;">'+
+        '<div style="padding:10px; background-size:cover; " >'+
+          '<div id="backArrow" style="float:left; cursor:pointer; padding:15px; border-radius:5px; " >'+
+            '<i style="font-size:18px;" class="fa fa-angle-left" aria-hidden="true"></i>'+
+          '</div>'+
+          '<div style="float:left;">'+
+              '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:35px " alt="Samuel">'+
+          '</div>'+
+          '<div style="float:left;padding-left: 15px;" >'+
+            '<div>'+
+              '<span id="agentName" style="font-size:15px; cursor:pointer; "></span>'+
             '</div>'+
-            '<div style="float:left;">'+
-                '<img src="'+dpSupport+'" style="border-radius:50%; width:35px " alt="Samuel">'+
-            '</div>'+
-            '<div style="float:left;padding-left: 15px;" >'+
-              '<div>'+
-                '<span id="agentName" style="font-size:15px; cursor:pointer; "></span>'+
-              '</div>'+
-              '<div>'+
-                '<span id="onlineStatus"></span>'+
-              '</div>'+
-            '</div>'+
-            '<div style="float:left;padding-left: 55px;" >'+
-              '<div>'+
-                '<span id="endThisChat" style="font-size:15px; cursor:pointer; ">End Chat</span>'+
-              '</div>'+
-            '</div>'+
-            '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
-              '<span> <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
+            '<div>'+
+              '<span id="onlineStatus"></span>'+
             '</div>'+
           '</div>'+
-        '</div>'+
-
-
-        '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:'+ windowColor +'; color:#fff; padding:15px; background-size:cover; " >'+
-          '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
-          '<div style="padding:15px; padding-left:25px; " >'+
-            '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are '+ custName +' 👋 </p>'+
-
-          // ' <p style="font-size:15px; margin:0px 0px 10px; line-height: 1.75;" >We deliver excellence and committed to Spread Happiness. </p>'+
-        '  </div>'+
-        '</div>'+
-
-        '<div id="startConversation" style="margin-right:-15px; margin-left:-15px; padding:30px; padding-top:10px; height:200px; position:absolute; background-color:#fff; border-radius:5px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'" >'+
-          '<p style="font-size:12px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px;" > Start a conversation </p>'+
-          '<p style="font-size:11px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px; color:#777; "> The team typically replies in few minutes.</p>'+
-          '<div style="padding-top:5px; text-align:center;" >'+
-            '<img src="http://syrow.cioc.in/static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Agent1">'+
-            '<img src="http://syrow.cioc.in/static/images/user2-160x160.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Agent2">'+
-            '<img src="http://syrow.cioc.in/static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Agent3">'+
-            '<img src="http://syrow.cioc.in/static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Agent4">'+
-          '</div>'+
-
-          '<div style="margin-right:-15px; margin-left:-15px; color:#fff; position:absolute; top:144px; text-align:center; padding-top:5px; " >'+
-            '<button id="startConvoBtn" type="button" style="padding:13px; border-radius:20px; background-color:#fff ; color:'+ windowColor +'; border:2px solid '+ windowColor +'; text-transform:none;  font-size:11px; cursor:pointer;" >'+
-              'Start Conversation'+
-            '</button>'+
-        '  </div>'+
-        '</div>'+
-
-
-        '<div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
-        // '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
-        '</div>'+
-        '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
-          '<div style="padding:0px;" >'+
-             '<input id="inputText" style="width:70% ; height:50px; border:none; outline:none; box-shadow:none; background-color:#fff; padding-left:10px; " type="text" placeholder="Write a reply...">'+
-             '<input id="filePicker" type="file" style="display:none;"  />'+
-             '<span id="paperClip" style="width:10% ; border:none; background-color:#fff; font-size:20px; padding:0% 5%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="height:20px; width:20px;" ></span>'+
-             '<span id="paperPlane" style="width:10% ; border:none; background-color:#fff; font-size:20px; cursor:pointer;"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:40px; widtth:30px; padding-top:10px;"></span>'+
+          '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
+            '<span> <i class="fa fa-times" aria-hidden="true"></i> </span>'+
           '</div>'+
         '</div>'+
       '</div>'+
-      '<div id="closeSupport" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
-        '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
-         '<path id="closeChatSvg" style="fill:'+iconColor+'" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
-       '</svg>'+
+
+
+      '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:#286EFA; color:#fff; padding:15px; background-size:cover; " >'+
+        '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <i class="fa fa-times" aria-hidden="true"></i> </span>'+
+        '<div style="padding:15px; padding-left:25px; " >'+
+          '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are Syrow 👋 </p>'+
+
+        ' <p style="font-size:15px; margin:0px 0px 10px; line-height: 1.75;" >We deliver excellence and committed to Spread Happiness. </p>'+
+      '  </div>'+
       '</div>'+
 
-      '<div id="supportCircle" >'+
-  			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
-  				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
-  				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
-  				'<div  id="sy-sub-icons">'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Callback</span>'+
-  						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
-  					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Chat</span>'+
-  						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
-  					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Audio Call</span>'+
-  						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
-  					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Video Call</span>'+
-  						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
-  					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle" style="cursor:pointer;">'+
-  						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Ticket</span>'+
-  						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
-  					'</div>'+
-  				'</div>'+
-  			'</div>'+
-  		'</div>'
+      '<div id="startConversation" style="margin-right:-15px; margin-left:-15px; padding:30px; padding-top:10px; height:200px; position:absolute; background-color:#fff; border-radius:5px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid #286EFA" >'+
+        '<p style="font-size:12px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px;" > Start a conversation </p>'+
+        '<p style="font-size:11px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px; color:#777; "> The team typically replies in few minutes.</p>'+
+        '<div style="padding-top:5px; text-align:center;" >'+
+          '<img src="static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Agent1">'+
+          '<img src="static/images/user2-160x160.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Agent2">'+
+          '<img src="static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Agent3">'+
+          '<img src="static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Agent4">'+
+        '</div>'+
 
-
-
-      '<div id="welcomeMessage"  style="width:270px; height:76px; padding:5px 10px 5px 10px; background-color:#fff; color:#000; position:fixed; bottom:42px;  right:30px; border-radius:5px; cursor:pointer; box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.3)">'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:12px;" >Syrow</p>'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:10px; word-wrap: break-word;" >Thanks for visiting us. If you need help simply reply to this message.... </p>'+
+        '<div style="margin-right:-15px; margin-left:-15px; color:#fff; position:absolute; top:144px; text-align:center; padding-top:5px; " >'+
+          '<button id="startConvoBtn" type="button" style="padding:13px; border-radius:20px; background-color:#fff ; color:#286EFA; border:2px solid #286EFA; text-transform:none;  font-size:11px; cursor:pointer;" >'+
+            'Start Conversation'+
+          '</button>'+
+      '  </div>'+
       '</div>'+
-      '<div id="unreadMsg" style="background-color:#fff; color:#fff; width:3px; height:3px; position:fixed; bottom:42px; right:38px; z-index:9999; " >'+
 
-      '</div>'
+      '<div id="demo" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:150px; position:absolute; background-color:#fff; border-radius:5px; top:355px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid #286EFA">'+
+        '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " >  Get a demo  </p>'+
+        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Get a look inside Syrow to discover what we can do for you. </p>'+
+        '<div style="color:#fff; position:absolute; top:95px; padding-left:15px;" >'+
+          '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+            'Request a Demo'+
+          '</button>'+
+        '</div>'+
+      '</div>'+
+
+      '<div id="exploreSyrow" style="margin-right:-15px; margin-left:-15px; padding:5px 15px; height:160px; position:absolute; background-color:#fff; border-radius:5px; top:522px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid #286EFA">'+
+        '<p style="line-height:  1.75; margin:0px 0px 10px; font-size:12px; color:#483f3f; padding-bottom:0px; " > Explore Syrow </p>'+
+        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:11px; padding-top:0px; color:#777; " > Syrow is a call center company located in Bangalore providing varied call center services to its clients.</p>'+
+        '<div style="color:#fff; position:absolute; top:110px; padding-left:15px;" >'+
+          '<button type="button" style="border:none; padding:13px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+            'Explore Syrow'+
+          '</button>'+
+        '</div>'+
+      '</div>'+
+
+    ' <div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
+      '</div>'+
+      '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
+        '<div style="padding:0px;" >'+
+           '<input id="inputText" style="width:70% ; height:50px; border:none; box-shadow:none; background-color:#fff; padding-left:10px; " type="text" placeholder="Write a reply...">'+
+           '<input id="filePicker" type="file" style="display:none;"  />'+
+           '<span id="paperClip" style="width:10% ; border:none; background-color:#fff; font-size:20px; padding:0% 5%; cursor:pointer; "><i class="fa fa-paperclip " aria-hidden="true"></i></span>'+
+           '<span id="paperPlane" style="width:10% ; border:none; background-color:#fff; font-size:20px; cursor:pointer;"><i class="fa fa-paper-plane-o " aria-hidden="true"></i></span>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
 
 
-    mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
-    body.appendChild(mainDiv);
+    // '<div id="chatCircle" style="height:55px; width:55px; background-color: #286EFA; border-radius:50%; border: 1px solid #286efa; position:fixed ; bottom:10px; right:10px; z-index:1000; cursor:pointer;">'+
+    //   '<svg id="chatIconSvg" style="width:30px; height:30px; position:absolute; top:14px; left:11px;" viewBox="0 0 28 32">'+
+    //     '<path style="fill:#fff" d="M28,32 C28,32 23.2863266,30.1450667 19.4727818,28.6592 L3.43749107,28.6592 C1.53921989,28.6592 0,27.0272 0,25.0144 L0,3.6448 C0,1.632 1.53921989,0 3.43749107,0 L24.5615088,0 C26.45978,0 27.9989999,1.632 27.9989999,3.6448 L27.9989999,22.0490667 L28,22.0490667 L28,32 Z M23.8614088,20.0181333 C23.5309223,19.6105242 22.9540812,19.5633836 22.5692242,19.9125333 C22.5392199,19.9392 19.5537934,22.5941333 13.9989999,22.5941333 C8.51321617,22.5941333 5.48178311,19.9584 5.4277754,19.9104 C5.04295119,19.5629428 4.46760991,19.6105095 4.13759108,20.0170667 C3.97913051,20.2124916 3.9004494,20.4673395 3.91904357,20.7249415 C3.93763774,20.9825435 4.05196575,21.2215447 4.23660523,21.3888 C4.37862552,21.5168 7.77411059,24.5386667 13.9989999,24.5386667 C20.2248893,24.5386667 23.6203743,21.5168 23.7623946,21.3888 C23.9467342,21.2215726 24.0608642,20.9827905 24.0794539,20.7254507 C24.0980436,20.4681109 24.0195551,20.2135019 23.8614088,20.0181333 Z">'+
+    // '  </path>'+
+    // '</svg>'+
+    //
+    //   '<svg id="closeChatSvg" style="position:absolute; top:18px; left:18px; height:42px;" viewBox="0 0 28 32">'+
+    //   '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+    // '</svg>'+
+    //
+    // '</div>'+
 
-    }
+    '<div id="closeSupport" style="height:60px; width:60px; background-color: #286EFA; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
+      '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
+       '<path style="fill:#fff" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+     '</svg>'+
+    '</div>'+
+
+    '<div id="supportCircle" >'+
+			'<div class="sy-circle" onclick="" id="sy-main-icon">'+
+				'<span class="sy-text">24 Hours Support</span>'+
+				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
+				'<div  id="sy-sub-icons">'+
+					'<div id="callCircle" class="sy-circle" style="cursor:pointer;">'+
+						'<span class="sy-text">Callback</span>'+
+						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
+					'</div>'+
+					'<div id="chatCircle" class="sy-circle" style="cursor:pointer;">'+
+						'<span class="sy-text">Chat</span>'+
+						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
+					'</div>'+
+					'<div id="audioCircle" class="sy-circle" style="cursor:pointer;">'+
+						'<span class="sy-text">Audio Call</span>'+
+						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
+					'</div>'+
+					'<div id="videoCircle" class="sy-circle" style="cursor:pointer;">'+
+						'<span class="sy-text">Video Call</span>'+
+						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
+					'</div>'+
+					'<div id="ticketCircle" class="sy-circle" style="cursor:pointer;">'+
+						'<span class="sy-text">Ticket</span>'+
+						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
+					'</div>'+
+				'</div>'+
+			'</div>'+
+		'</div>'
 
 
 
-  createDiv()
+    '<div id="welcomeMessage"  style="width:270px; height:76px; padding:5px 10px 5px 10px; background-color:#fff; color:#000; position:fixed; bottom:42px;  right:30px; border-radius:5px; cursor:pointer; box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.3)">'+
+      '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:12px;" >Syrow</p>'+
+      '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:10px; word-wrap: break-word;" >Thanks for visiting us. If you need help simply reply to this message.... </p>'+
+    '</div>'+
+    '<div id="unreadMsg" style="background-color:#fff; color:#fff; width:3px; height:3px; position:fixed; bottom:42px; right:38px; z-index:9999; " >'+
 
-  // console.log(document.getElementById('ticketCircle'));
+    '</div>'
+
+
+  mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
+  body.appendChild(mainDiv);
+
+  console.log(document.getElementById('ticketCircle'));
 
 
   var allTags = document.getElementById('mainDiv').getElementsByTagName("*");
@@ -932,7 +661,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.getElementById('mainDiv').style.color = "#333";
 
 
-  // document.getElementById("emoji").innerHTML = String.fromCodePoint(0x1F604)
+
 
 
   var device;
@@ -949,8 +678,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var inputText = document.getElementById("inputText");
   var startConvoBtn = document.getElementById("startConvoBtn");
   var startConversation = document.getElementById("startConversation");
-  // var demo = document.getElementById("demo");
-  // var exploreSyrow = document.getElementById('exploreSyrow');
+  var demo = document.getElementById("demo");
+  var exploreSyrow = document.getElementById('exploreSyrow');
   var headerInit = document.getElementById('headerInit');
   var backArrow = document.getElementById('backArrow');
   var closeIconInit = document.getElementById('closeIconInit');
@@ -966,24 +695,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var ticketCircle = document.getElementById('ticketCircle');
   var closeSupport = document.getElementById('closeSupport');
   var supportCircle = document.getElementById('supportCircle');
-  // var isTyping = document.getElementById('isTyping');
-
-  var endThisChat = document.getElementById('endThisChat');
-
-
-  var chatCircleText =   document.getElementById('chatCircleText')
-  var callCircleText =   document.getElementById('callCircleText')
-  var audioCircleText =  document.getElementById('audioCircleText')
-  var videoCircleText = document.getElementById('videoCircleText')
-  var ticketCircleText = document.getElementById('ticketCircleText')
-  var Syrow24hSupportText = document.getElementById('Syrow24hSupportText')
-
-
-  endThisChat.style.display ="none"
-
-
-  // isTyping.style.display = "none";
-
 
   document.getElementById('sy-main-icon').style.display = "none";
 
@@ -991,7 +702,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById('sy-main-icon').style.display = "";
   }, 2000);
 
-  // console.log(supportCircle,'scir');
+  console.log(supportCircle,'scir');
   // console.log(document.getElementsByClassName('font-SyrowCallBack'));
   // var docTitle = document.title;
   // console.log(docTitle);
@@ -1016,422 +727,239 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //   }
   // };
 
-
-
-  // function setColors(colors) {
-  //   console.log('coming in set colorsssssssssssssssssssssssssssssss');
-  //   headerChat.style.backgroundColor = colors.main
-  //   startConvoBtn.style.color =  colors.main
-  //   console.log(startConvoBtn.style.color);
-  //   console.log(headerChat.style.backgroundColor);
-  //   console.log(colors);
-  //   // startConversation.style =  colors.main
-  //   // border-top: 2px solid '+ windowColor +'"
+  // function getKeyByValue(object, value) {
+  //   var aa = Object.keys(object).find(key => object[key] === value);
+  //   console.log(aa);
   // }
-
 
   var mainStr = "";
   var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:false} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
-
-
-  for (var i = 0; i < supportOptions.length; i++) {
-    if (supportOptions[i].name=='callCircle') {
-      supportOptions[i].value = callBackSupport;
-    }
-    if (supportOptions[i].name=='chatCircle') {
-      supportOptions[i].value = chatSupport;
-    }
-    if (supportOptions[i].name=='audioCircle') {
-      supportOptions[i].value = videoAndAudioSupport;
-    }
-    if (supportOptions[i].name=='videoCircle') {
-      supportOptions[i].value = videoAndAudioSupport;
-    }
-    if (supportOptions[i].name=='ticketCircle') {
-      supportOptions[i].value = ticketSupport;
-    }
-  }
-
-  // console.log(supportOptions,'so');
-    for (var i = 0 , rD = 0 , mB = 0 , mR=0; i < supportOptions.length; i++) {
-      if (supportOptions[i].value) {
-        rD+=2;
-        mB+=60;
-        mR+=1;
-        var itemName = 'item-'+(i+1);
-
-        supportString = "\
-          @-moz-keyframes "+ itemName +" { 100% { \
-          margin-bottom: "+mB+"px; \
-          margin-right: -"+mR+"px; \
-          opacity: 1; \
-          -webkit-transform: rotate("+rD+"deg); \
-        } }\
-        @-webkit-keyframes "+ itemName +" { 100% { \
-          margin-bottom: "+mB+"px; \
-          margin-right: -"+mR+"px; \
-          opacity: 1; \
-          -webkit-transform: rotate("+rD+"deg); \
-        } }\
-        @-ms-keyframes item-1 { 100% { \
-          margin-bottom: "+mB+"px; \
-          margin-right: -"+mR+"px; \
-          opacity: 1; \
-          -ms-transform: rotate("+rD+"deg); \
-        } }\
-        "
-        mainStr = mainStr.concat(supportString);
-      }else {
-          document.getElementById(supportOptions[i].name).style.display = "none";
-      }
-    }
-
-
-  // var xhttp = new XMLHttpRequest();
-  // xhttp.onreadystatechange = function() {
-  //     if (this.readyState == 4 && this.status == 200) {
-  //       var data = JSON.parse(this.responseText)
-  //       console.log(data);
-  //       data = data[0];
-  //       console.log('yaaaaa');
-  //
-  //       // console.log(data.chat);
-  //     }
-  // };
-  //
-  // xhttp.open('GET', '{{serverAddress}}/api/support/customerProfile/?service=' + custID , true);
-  // xhttp.send();
-// https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf
-
-
-function setStyle() {
-
-        var newStyle = document.createElement('style');
-        newStyle.appendChild(document.createTextNode("\
-        @font-face {\
-          font-family: 'Syrow';\
-          src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4');\
-          src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
-          url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
-          url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
-          url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
-          font-weight: normal;\
-          font-style: normal;\
-        }\
-          .SyrowFont {\
-          /* use !important to prevent issues with browser extensions that change fonts */\
-          font-family: 'Syrow' !important;\
-          speak: none;\
-          font-style: normal;\
-          font-weight: normal;\
-          font-variant: normal;\
-          text-transform: none;\
-          line-height: 1;\
-          /* Better Font Rendering =========== */\
-          -webkit-font-smoothing: antialiased;\
-          -moz-osx-font-smoothing: grayscale;\
-        }\
-          .font-Syrow24hSupport:before {\
-          content: '\\61';\
-        }\
-          .font-SyrowChat:before {\
-          content: '\\62';\
-        }\
-          .font-SyrowAudioCall:before {\
-          content: '\\63';\
-        }\
-          .font-SyrowVideoCall:before {\
-          content: '\\64';\
-        }\
-          .font-SyrowCallBack:before {\
-          content: '\\65';\
-        }\
-          .font-SyrowTicket:before {\
-          content: '\\66';\
-        }\
-          .sy-circle {\
-          z-index: 987654321!important;\
-          position: fixed!important;\
-          bottom: 20px;\
-          right: 40px;\
-          width: 60px!important;\
-          height: 60px!important;\
-          border-radius: 50%!important;\
-        }\
-          .sy-md-1 {\
-          font-size: 40px;\
-        }\
-          .sy-md-2 {\
-          font-size: 34px;\
-        }\
-          .sy-ops {\
-          position: absolute;\
-          top: 0;\
-          bottom: 0;\
-          width: 100%;\
-          display: -webkit-box;\
-          display: -ms-flexbox;\
-          display: flex;\
-          -webkit-box-align: center;\
-          -ms-flex-align: center;\
-          align-items: center;\
-          -webkit-box-pack: center;\
-          -ms-flex-pack: center;\
-          justify-content: center;\
-          -webkit-transition: opacity .08s linear,-webkit-transform .16s linear;\
-          transition: opacity .08s linear,-webkit-transform .16s linear;\
-          transition: transform .16s linear,opacity .08s linear;\
-          transition: transform .16s linear,opacity .08s linear,-webkit-transform .16s linear;\
-        }\
-          .sy-text {\
-          position: fixed;\
-          right: 70px;\
-          margin-top: 15px;\
-          border-radius: 15px;\
-          padding: 4px 8px;\
-          font-family: Verdana, Arial, sans-serif;\
-          font-size: 14px;\
-          display: inline-block;\
-          white-space: nowrap;\
-          max-width: 250px;\
-          overflow: hidden;\
-        }\
-          .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
-          text-decoration: none;\
-        }\
-          #sy-sub-icons .sy-circle, #sy-main-icon > .sy-text {\
-          display: none;\
-        }\
-          #sy-main-icon:hover > .sy-text {\
-          display: inline-block;\
-          right: 110px;\
-        }\
-        "+ mainStr+"\
-          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1) { \
-          display: block;\
-          -webkit-animation: item-1 0.5s forwards; \
-          -ms-animation: item-1 0.5s forwards; \
-          -moz-animation: item-1 0.5s forwards;\
-        }\
-          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2) { \
-          display: block;\
-          -webkit-animation: item-2 0.5s forwards; \
-          -ms-animation: item-2 0.5s forwards;\
-          -moz-animation: item-2 0.5s forwards; \
-        }\
-          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3) {\
-          display: block;\
-          -webkit-animation: item-3 0.5s forwards; \
-          -ms-animation: item-3 0.5s forwards; \
-          -moz-animation: item-3 0.5s forwards; \
-        }\
-          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4) { \
-          display: block;\
-          -webkit-animation: item-4 0.5s forwards; \
-          -ms-animation: item-4 0.5s forwards; \
-          -moz-animation: item-4 0.5s forwards; \
-        }\
-          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5) { \
-          display: block;\
-          -webkit-animation: item-5 0.5s forwards; \
-          -ms-animation: item-5 0.5s forwards; \
-          -moz-animation: item-5 0.5s forwards; \
-        }\
-            div.stars {\
-            width: 270px;\
-            display: inline-block;\
-          }\
-          input.star { display: none; }\
-          label.star {\
-            float: right;\
-            padding: 10px;\
-            font-size: 36px;\
-            color: #444;\
-            transition: all .2s;\
-          }\
-          input.star:checked ~ label.star:before {\
-            content: '\\2605';\
-            color: #FD4;\
-            transition: all .25s;\
-          }\
-          input.star-5:checked ~ label.star:before {\
-            color: #FE7;\
-            text-shadow: 0 0 20px #952;\
-          }\
-          input.star-1:checked ~ label.star:before { color: #F62; }\
-          label.star:hover { transform: rotate(-15deg) scale(1.3); }\
-          label.star:before {\
-            content: '\\2605';\
-          }\
-        "));
-
-        document.head.appendChild(newStyle);
-}
-
-setTimeout(function () {
-  setStyle()
-}, 1500);
-
-
-function endChat() {
-  chatClosed = true
   var xhttp = new XMLHttpRequest();
-   xhttp.onreadystatechange = function() {
-     if (this.readyState == 4 && this.status == 200) {
-       console.log('posted successfully');
+  xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText)
+        console.log(data);
+        var a = getKeyByValue(data , true)
+        console.log(a ,'aaaaaaaaaaaaaaaaa');
 
-        setCookie("chatOpenCookie", false, 365);
+        console.log('yaaaaa');
 
+        for (var i = 0; i < supportOptions.length; i++) {
+          if (supportOptions[i].name=='callCircle') {
+            supportOptions[i].value = data.callBack;
+          }
+          if (supportOptions[i].name=='chatCircle') {
+            supportOptions[i].value = data.chat;
+          }
+          if (supportOptions[i].name=='audioCircle') {
+            supportOptions[i].value = data.videoAndAudio;
+          }
+          if (supportOptions[i].name=='videoCircle') {
+            supportOptions[i].value = data.videoAndAudio;
+          }
+          if (supportOptions[i].name=='ticketCircle') {
+            supportOptions[i].value = data.ticket;
+          }
+        }
 
-       var dataToSend = {uid:uid , message: 'CHAT CLOSED BY USER' , sentByAgent:false };
+        console.log(supportOptions,'so');
+          for (var i = 0 , rD = 0 , mB = 0 , mR=0; i < supportOptions.length; i++) {
+            if (supportOptions[i].value) {
+              rD+=2;
+              mB+=60;
+              mR+=1;
+              var itemName = 'item-'+(i+1);
 
-       if (isAgentOnline) {
-         console.log('ONLINE' , agentPk);
-         connection.session.publish('service.support.agent.'+agentPk, [uid , 'M' , dataToSend ] , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
-         });
-       }
-
-
-
-     }
-   };
-   xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
-   xhttp.setRequestHeader("Content-type", "application/json");
-   xhttp.send(JSON.stringify({status:"closed"}));
-
-  openFeedback()
-}
-
-
-
-  function openFeedback(id) {
-    console.log('coming in open feedback');
-    var id = id;
-    var div = document.createElement("div");
-    div.id="offlineMessage"
-    div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Please provide your feedback below:</p>'+
-                      '<form>'+
-                        '<div class="stars">'+
-                          '<form id="stars">'+
-                            '<input class="star star-5" id="star-5" type="radio" name="star"/>'+
-                            '<label class="star star-5" for="star-5"></label>'+
-                            '<input class="star star-4" id="star-4" type="radio" name="star"/>'+
-                            '<label class="star star-4" for="star-4"></label>'+
-                            '<input class="star star-3" id="star-3" type="radio" name="star"/>'+
-                            '<label class="star star-3" for="star-3"></label>'+
-                            '<input class="star star-2" id="star-2" type="radio" name="star"/>'+
-                            '<label class="star star-2" for="star-2"></label>'+
-                            '<input class="star star-1" id="star-1" type="radio" name="star"/>'+
-                            '<label class="star star-1" for="star-1"></label>'+
-                          '</form>'+
-                        '</div>'+
-                         '<textarea id="feedbackText" style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
-                         '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-                           'Submit'+
-                         '</button>'+
-                        '</form>'+
-                      '</div> '+
-                    '</div>'
-    messageBox.appendChild(div);
-    scroll();
-    var stars = document.getElementById('stars');
-    var submitStars = document.getElementById('submitStars');
-    submitStarForm(id);
-  }
+              supportString = "\
+                @-moz-keyframes "+ itemName +" { 100% { \
+                margin-bottom: "+mB+"px; \
+                margin-right: -"+mR+"px; \
+                opacity: 1; \
+                -webkit-transform: rotate("+rD+"deg); \
+              } }\
+              @-webkit-keyframes "+ itemName +" { 100% { \
+                margin-bottom: "+mB+"px; \
+                margin-right: -"+mR+"px; \
+                opacity: 1; \
+                -webkit-transform: rotate("+rD+"deg); \
+              } }\
+              @-ms-keyframes item-1 { 100% { \
+                margin-bottom: "+mB+"px; \
+                margin-right: -"+mR+"px; \
+                opacity: 1; \
+                -ms-transform: rotate("+rD+"deg); \
+              } }\
+              "
+              mainStr = mainStr.concat(supportString);
+            }else {
+                document.getElementById(supportOptions[i].name).style.display = "none";
+            }
+          }
 
 
-  function thankYouMessage() {
-    console.log('coming in thankyou');
-    var div = document.createElement("div");
-    div.id="thankYou"
-    div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                    '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                    '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Thank You !</p>'+
-                    '</div> '+
-                    '</div>'
-  messageBox.appendChild(div);
-  scroll();
-  }
 
 
-  function submitStarForm(id) {
-    submitStars.addEventListener("click", function() {
-      console.log('somthing hereeeeee' , this);
-      // id="star-5"
-      // console.log(document.getElementById('feedbackText').value);
-      var feedbackText = document.getElementById('feedbackText')
-
-      var ratingForm = {
-        customerRating:0,
-        customerFeedback:feedbackText.value
+        // console.log(data.chat);
       }
+  };
 
-      var star1 = document.getElementById('star-1')
-      var star2 = document.getElementById('star-2')
-      var star3 = document.getElementById('star-3')
-      var star4 = document.getElementById('star-4')
-      var star5 = document.getElementById('star-5')
-
-
-      // var rating;
-      if (star1.checked) {
-        ratingForm.customerRating = 1
-      }
-      if (star2.checked) {
-        ratingForm.customerRating = 2
-      }
-      if (star3.checked) {
-        ratingForm.customerRating = 3
-      }
-      if (star4.checked) {
-        ratingForm.customerRating = 4
-      }
-      if (star5.checked) {
-        ratingForm.customerRating = 5
-      }
-
-    console.log(ratingForm);
-    ratingForm = JSON.stringify(ratingForm)
-    // feedbackText.value = ''
-      var xhttp = new XMLHttpRequest();
-       xhttp.onreadystatechange = function() {
-         if (this.readyState == 4 && this.status == 200) {
-           console.log('posted successfully');
-           console.log(ratingForm);
-           // feedbackText.value = ''
-           // star1.checked = false
-           // star2.checked = false
-           // star3.checked = false
-           // star4.checked = false
-           // star5.checked = false
-           submitStars.style.display = "none";
-           thankYouMessage()
-
-           // var dataToPublish = [uid , status , message , custID ];
-
-
-         }
-       };
-       xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
-       xhttp.setRequestHeader("Content-type", "application/json");
-       xhttp.send(ratingForm);
-    }, false);
-  }
+  xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/' + custID + '/' , true);
+  xhttp.send();
 
 
 
+  setTimeout(function(){
+
+      var newStyle = document.createElement('style');
+      newStyle.appendChild(document.createTextNode("\
+      @font-face {\
+        font-family: 'Syrow';\
+        src:  url('static/fonts/syrow/Syrow.eot?a8jyi4');\
+        src:  url('static/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
+        url('static/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
+        url('static/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
+        url('static/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
+        font-weight: normal;\
+        font-style: normal;\
+      }\
+        .SyrowFont {\
+        /* use !important to prevent issues with browser extensions that change fonts */\
+        font-family: 'Syrow' !important;\
+        speak: none;\
+        font-style: normal;\
+        font-weight: normal;\
+        font-variant: normal;\
+        text-transform: none;\
+        line-height: 1;\
+        /* Better Font Rendering =========== */\
+        -webkit-font-smoothing: antialiased;\
+        -moz-osx-font-smoothing: grayscale;\
+      }\
+        .font-Syrow24hSupport:before {\
+        content: '\\61';\
+      }\
+        .font-SyrowChat:before {\
+        content: '\\62';\
+      }\
+        .font-SyrowAudioCall:before {\
+        content: '\\63';\
+      }\
+        .font-SyrowVideoCall:before {\
+        content: '\\64';\
+      }\
+        .font-SyrowCallBack:before {\
+        content: '\\65';\
+      }\
+        .font-SyrowTicket:before {\
+        content: '\\66';\
+      }\
+        /* The below code can be optimised 10X better */\
+        .sy-circle, .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link, .sy-text {\
+        background: #286efa !important; /* background color should be dynamic */\
+        color: #fff; 					/* color should be dynamic */\
+      }\
+        .sy-circle {\
+        z-index: 987654321!important;\
+        position: fixed!important;\
+        bottom: 20px;\
+        right: 40px;\
+        width: 60px!important;\
+        height: 60px!important;\
+        border-radius: 50%!important;\
+      }\
+        .sy-md-1 {\
+        font-size: 40px;\
+      }\
+        .sy-md-2 {\
+        font-size: 34px;\
+      }\
+        .sy-ops {\
+        position: absolute;\
+        top: 0;\
+        bottom: 0;\
+        width: 100%;\
+        display: -webkit-box;\
+        display: -ms-flexbox;\
+        display: flex;\
+        -webkit-box-align: center;\
+        -ms-flex-align: center;\
+        align-items: center;\
+        -webkit-box-pack: center;\
+        -ms-flex-pack: center;\
+        justify-content: center;\
+        -webkit-transition: opacity .08s linear,-webkit-transform .16s linear;\
+        transition: opacity .08s linear,-webkit-transform .16s linear;\
+        transition: transform .16s linear,opacity .08s linear;\
+        transition: transform .16s linear,opacity .08s linear,-webkit-transform .16s linear;\
+      }\
+        .sy-text {\
+        position: fixed;\
+        right: 70px;\
+        margin-top: 15px;\
+        border-radius: 15px;\
+        padding: 4px 8px;\
+        font-family: Verdana, Arial, sans-serif;\
+        font-size: 14px;\
+        display: inline-block;\
+        white-space: nowrap;\
+        max-width: 250px;\
+        overflow: hidden;\
+      }\
+        .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
+        text-decoration: none;\
+      }\
+        #sy-sub-icons .sy-circle, #sy-main-icon > .sy-text {\
+        display: none;\
+      }\
+        #sy-main-icon:hover > .sy-text {\
+        display: inline-block;\
+        right: 110px;\
+      }\
+      "+ mainStr+"\
+        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1) { \
+        display: block;\
+        -webkit-animation: item-1 0.5s forwards; \
+        -ms-animation: item-1 0.5s forwards; \
+        -moz-animation: item-1 0.5s forwards;\
+      }\
+        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2) { \
+        display: block;\
+        -webkit-animation: item-2 0.5s forwards; \
+        -ms-animation: item-2 0.5s forwards;\
+        -moz-animation: item-2 0.5s forwards; \
+      }\
+        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3) {\
+        display: block;\
+        -webkit-animation: item-3 0.5s forwards; \
+        -ms-animation: item-3 0.5s forwards; \
+        -moz-animation: item-3 0.5s forwards; \
+      }\
+        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4) { \
+        display: block;\
+        -webkit-animation: item-4 0.5s forwards; \
+        -ms-animation: item-4 0.5s forwards; \
+        -moz-animation: item-4 0.5s forwards; \
+      }\
+        #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5) { \
+        display: block;\
+        -webkit-animation: item-5 0.5s forwards; \
+        -ms-animation: item-5 0.5s forwards; \
+        -moz-animation: item-5 0.5s forwards; \
+      }\
+      "));
+
+      document.head.appendChild(newStyle);
+
+  }, 2000);
 
 
 
 
-  agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >'+nameSupport+'</p>'
-  onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
+
+
+
+  agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >Syrow Agent</p>'
+  onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
 
   closeSupport.style.display = "none";
 
@@ -1447,38 +975,23 @@ function endChat() {
     footer.style.display = "";
     startConvoBtn.style.display = "none";
     startConversation.style.display = "none";
-    // demo.style.display ="none";
-    // exploreSyrow.style.display = "none";
+    demo.style.display ="none";
+    exploreSyrow.style.display = "none";
     headerInit.style.display = "none";
   }, false);
 
-  var chatClosed = false
+
 
   backArrow.addEventListener("click", function() {
-    console.log(chat.messages,'coming in loggggggggg');
-    if (chat.messages.length>1 && chatClosed!=true) {
-      endChat()
-      console.log('end chat');
-    }else {
-      headerChat.style.display = "none";
-      messageBox.style.display = "none";
-      footer.style.display = "none";
-      startConvoBtn.style.display = "";
-      startConversation.style.display = "";
-      // demo.style.display = "";
-      // exploreSyrow.style.display ="";
-      headerInit.style.display = "";
-    }
-
-
+    headerChat.style.display = "none";
+    messageBox.style.display = "none";
+    footer.style.display = "none";
+    startConvoBtn.style.display = "";
+    startConversation.style.display = "";
+    demo.style.display = "";
+    exploreSyrow.style.display ="";
+    headerInit.style.display = "";
   }, false);
-
-
-  endThisChat.addEventListener("click", function() {
-
-    endChat()
-  }, false);
-
 
   paperPlane.addEventListener("click", function() {
     sendMessage(inputText.value);
@@ -1530,101 +1043,40 @@ function endChat() {
 
 
     function messageDiv(message) {
-      console.log(message);
-      // console.log(chat.messages.length);
 
-      // console.log('messsaaageeeeeeeeeeeeeeeeeeeee',message);
-
-      if (message.attachment) {
-        if (message.attachmentType=='image') {
-            console.log('image');
-          attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
-        }else if (message.attachmentType=='audio') {
-            console.log('audio');
-          attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.attachment +'" controls></audio>'
-        }else if (message.attachmentType=='video') {
-            console.log('video');
-          attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.attachment +'" controls></video>'
-        }else if (message.attachmentType=='application') {
-            console.log('application');
-            attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
+      if (message.msg=='') {
+        if (message.img) {
+          attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
+        }else if (message.audio) {
+          attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
+        }else if (message.video) {
+          attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
+        }else if (message.doc) {
+            attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
+        }else if (message.link) {
+          console.log('yesssssssss' , message.link);
+        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
         }
-        // else if (message.link) {
-        //   console.log('yesssssssss' , message.link);
-        // attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
-        // }
       }
 
-      if (message.message!=null && message.attachmentType!=null) {
-        console.log('youtube link');
-        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'"frameborder="0" allowfullscreen></iframe>'
-        var msgDiv =attachedFile
-      }else {
-        if (message.attachment==null) {
-          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
-          msgDiv = pTag
-        }else {
-          msgDiv = attachedFile
-        }
-        //
-        // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
-      }
+      var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
 
-
-
-      // console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
-
-      if (!message.sentByAgent) {
-        var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
+      if (message.sentByMe) {
+        var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
+                        '<div style=" clear: both; float:right; background-color:#286EFA; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
                       '</div>'
         return msgHtml
 
       }else {
-        var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+    var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                   '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
                 '</div> '
         return msgHtml
       }
-
-
-      // if (message.msg=='') {
-      //   if (message.img) {
-      //     attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
-      //   }else if (message.audio) {
-      //     attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
-      //   }else if (message.video) {
-      //     attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
-      //   }else if (message.doc) {
-      //       attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
-      //   }else if (message.link) {
-      //     console.log('yesssssssss' , message.link);
-      //   attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
-      //   }
-      // }
-      //
-      // var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
-      //
-      // if (message.sentByMe) {
-      //   var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
-      //                   '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
-      //                     msgDiv+
-      //                   '</div>'+
-      //                 '</div>'
-      //   return msgHtml
-      //
-      // }else {
-      //   var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-      //             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-      //                msgDiv+
-      //             '</div> '+
-      //           '</div> '
-      //   return msgHtml
-      // }
 
 
 
@@ -1638,24 +1090,7 @@ function endChat() {
     function pushMessges() {
       for (var i = 0; i < chat.messages.length; i++) {
         var div = document.createElement("div");
-        console.log(chat.messages[i].message);
-        if (chat.messages[i].message=="first") {
-          // div.innerHTML = '<p>hello</p>'
-          // console.log(div,'divvvvvvvvvvv');
-          console.log(firstMessage);
-          firstMessage = firstMessage.replaceAll("&lt;",'<')
-          firstMessage = firstMessage.replaceAll("&gt;",">")
-            div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                    '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                       firstMessage+
-                    '</div> '+
-                  '</div> '
-
-          console.log(firstMessage);
-          console.log('firstttttttt' , typeof firstMessage);
-        }else {
-          div.innerHTML = messageDiv(chat.messages[i])
-        }
+        div.innerHTML = messageDiv(chat.messages[i])
         messageBox.appendChild(div);
       }
       scroll();
@@ -1668,46 +1103,6 @@ function endChat() {
     }, 2000);
 
 
-    function checkChatOpen(){
-      chatOpenCookie = getCookie("chatOpenCookie");
-      if (chatOpenCookie != "") {
-        console.log(chatOpenCookie , 'ALREadyyyyyyyyyyyyyyyy');
-        if (chatOpenCookie=='true') {
-          chatOpen = true
-          console.log('opneddd');
-          supportCircle.style.display = "none";
-          if (device=='xs' || device =='sm') {
-            closeSupport.style.display = "none";
-          }else {
-            closeSupport.style.display = "";
-          }
-          unreadMsgCount = 0;
-          chatBox.style.display = "";
-          headerChat.style.display = "";
-          messageBox.style.display = "";
-          footer.style.display = "";
-          startConvoBtn.style.display = "none";
-          startConversation.style.display = "none";
-          headerInit.style.display = "none";
-        }else {
-          chatOpen = false
-          console.log('closed');
-        }
-      }else {
-
-      }
-    }
-
-
-    setTimeout (function() {
-      checkChatOpen()
-    },2000)
-
-
-
-
-
-
 
     function scroll() {
       setTimeout(function () {
@@ -1716,88 +1111,26 @@ function endChat() {
       }, 200);
     }
 
-    // function onlineAgent() {
-    //   if (agentPk) {
-    //     setInterval(function () {
-    //       isAgentOnline = false;
-    //       onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
-    //       status = "O";
-    //       connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
-    //         acknowledge: true
-    //       }).
-    //       then(function(publication) {
-    //         console.log("check online status");
-    //       });
-    //     }, 10000);
-    //   }
-    // }
-
     function onlineAgent() {
-      console.log('in onlineAgent######333333333' , agentPk);
-      if (agentPk) {
-        // setInterval(function () {
-          // status = "O";
-          connection.session.call('service.support.heartbeat.' + agentPk, []).then(
-            function (res) {
-             console.log("Result:", res);
-             isAgentOnline = true;
-             onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
-           },
-           function (err) {
-            console.log("Error:", err);
-            isAgentOnline = false;
-            onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
-          }
-         );
-          // connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
-          //   acknowledge: true
-          // }).
-          // then(function(publication) {
-          //   console.log("check online status");
-          // });
-        // }, 30000);
-      }
+      setInterval(function () {
+        isAgentOnline = false;
+        onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
+        status = "O";
+        connection.session.publish('service.support.agent', [uid , status], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("check online status");
+        });
+      }, 10000);
     }
 
-
-    setTimeout(function(){
-      onlineAgent();
-    },2000 )
-
-    setInterval(function(){
-      onlineAgent();
-    },15000 )
-
-
-    // inputText.addEventListener("input", function(e) {
-    //   console.log(this.value);
-    //   var status = 'T'
-    //   connection.session.publish('service.support.agent', [uid , status], {}, {
-    //     acknowledge: true
-    //   }).
-    //   then(function(publication) {
-    //     console.log("Published");
-    //   });
-    //
-    // });
+    onlineAgent();
 
 
     function sendMessage(inptText) {
 
 
-      // chat.message.push(inptText)
-      // console.log(chat);
-
-      console.log(inptText,'input');
-
-      console.log(uid);
-      console.log(getCookie("uid"));
-      if (uid!=getCookie("uid")) {
-        uid = getCookie("uid");
-      }
-
-
-      console.log(uid);
       console.log(chat.messages.length);
 
 
@@ -1805,51 +1138,23 @@ function endChat() {
 
 
 
-      // if (youtubeLink) {
-      //   status = "ML";
-      //   link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-      //   var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
-      //   var dataToSend = JSON.stringify({uid: uid , message: message.link });
-      // }else {
-      //   status = "M";
-      //   var message = {msg:inptText ,  sentByMe:true , created: new Date() }
-      //   var dataToSend = JSON.stringify({uid: uid , message: message.msg });
-      // }
-
       if (youtubeLink) {
         status = "ML";
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+        var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
 
-
-        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false  };
+        var dataToSend = {uid: uid , message: message.link};
         if (agentPk) {
-          console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
-          if (!isAgentOnline) {
-            console.log('agetn oflineee');
-            dataToSend.user = null
-          }else {
-            dataToSend.user = agentPk
-          }
         }
-        var message = dataToSend
         dataToSend = JSON.stringify(dataToSend)
       }else {
         status = "M";
-        // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
-        var dataToSend = {uid: uid , message: inptText , sentByAgent:false };
-        console.log(agentPk);
+        var message = {msg:inptText ,  sentByMe:true , created: new Date() }
+        var dataToSend = {uid: uid , message: message.msg };
         if (agentPk) {
-          console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
-          if (!isAgentOnline) {
-            console.log('agetn oflineee');
-            dataToSend.user = null
-          }else {
-            dataToSend.user = agentPk
-          }
         }
-        var message = dataToSend
         dataToSend = JSON.stringify(dataToSend)
       }
 
@@ -1868,7 +1173,7 @@ function endChat() {
         console.log(isAgentOnline, ' is agent online..........');
 
         if (!isAgentOnline) {
-          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+nameSupport+'</p>'
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">Syrow Agent</p>'
           var div = document.createElement("div");
           div.id="offlineMessage"
 
@@ -1876,18 +1181,16 @@ function endChat() {
                             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                             '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
                             '<form>'+
-                              '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
+                              '<input style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
                                '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
-                               '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                               '<button type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                                  'Submit'+
                                '</button>'+
                               '</form>'+
                             '</div> '+
                           '</div>'
+          messageBox.appendChild(div);
           scroll();
-
-          // var sendEmail = document.getElementById('sendEmail');
-          // sendEmail();
           }
       }, 4000)
 
@@ -1899,75 +1202,24 @@ function endChat() {
            console.log('posted successfully');
          }
        };
-       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+       xhttp.open('POST', 'http://localhost:8080/api/support/supportChat/', true);
        xhttp.setRequestHeader("Content-type", "application/json");
        xhttp.send(dataToSend);
 
 
-       var dataToPublish = [uid , status , message ];
-       // setCookie("uidDetails", {}, 365);
 
-       // details = getCookie("uidDetails");
-       // console.log('********************8',details);
-       // if (details != "") {
-       //    dataToPublish.push(details)
-       // } else {
-       //   dataToPublish.push(false)
-       // }
 
-       if (threadExist==undefined) {
-        var dataToPublish = [uid , status , message , custID ];
-        details = getCookie("uidDetails");
-        if (details != "") {
-          console.log(details);
-           dataToPublish.push(JSON.parse(details))
-        } else {
-          dataToPublish.push(false)
-        }
+      connection.session.publish('service.support.agent', [uid , status , message ], {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published");
+      });
 
-        var dataToSend = JSON.stringify({uid: uid , company: custID});
-         var xhttp = new XMLHttpRequest();
-          xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 201) {
-              console.log('posted successfully');
-              var data = JSON.parse(this.responseText)
-              threadExist=true
-              console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-              chatThreadPk = data.pk
-              dataToPublish.push(chatThreadPk)
-              connection.session.publish('service.support.agent', dataToPublish , {}, {
-                acknowledge: true
-              }).
-              then(function(publication) {
-                console.log("Published");
-              });
-            }
-          };
-          xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-          xhttp.setRequestHeader("Content-type", "application/json");
-          xhttp.send(dataToSend);
-       }else {
-         console.log('chat threAD EXIST');
-         if (isAgentOnline) {
-           console.log('ONLINE' , agentPk);
-           connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
-             acknowledge: true
-           }).
-           then(function(publication) {
-             console.log("Published");
-           });
-         }else {
-           console.log('offline send to all');
-           connection.session.publish('service.support.agent', dataToPublish , {}, {
-             acknowledge: true
-           }).
-           then(function(publication) {
-             console.log("Published");
-           });
-         }
-         console.log('chat thread exist');
+      console.log('dddddddddddddd',isAgentOnline);
 
-       }
+
+
 
 
     }
@@ -1988,16 +1240,8 @@ function endChat() {
 
 
   function sendFile() {
-
-    status = "MF";
-
-
-    if (uid!=getCookie("uid")) {
-      uid = getCookie("uid");
-    }
-
     var file = filePicker;
-    console.log(file.files[0],'typpppppppppppppppppppppp' );
+    console.log(file.files[0] );
 
 
     console.log(chat.messages.length);
@@ -2024,121 +1268,56 @@ function endChat() {
           console.log(typ);
 
           var fileData = {
-            filePk : data.pk,
-            typ : data.attachmentType
+            filePk : data.pk
+          }
+
+          if (typ=='image') {
+              fileData.type = 'image';
+             message = {msg:'' ,  sentByMe:true , created: new Date() , img: data.attachment }
+          }else if (typ=='audio') {
+            console.log('audoooooooooo');
+              fileData.type = 'audio';
+             message = {msg:'' ,  sentByMe:true , created: new Date() , audio: data.attachment }
+          }else if (typ=='video') {
+              fileData.type = 'video';
+             message = {msg:'' ,  sentByMe:true , created: new Date() , video: data.attachment }
+          }else if (typ=='application') {
+              fileData.type = 'doc';
+             message = {msg:'' ,  sentByMe:true , created: new Date() , doc: data.attachment }
           }
 
 
-          if (agentPk) {
-            console.log('agent pk is pnline',isAgentOnline);
-            fileData.user = agentPk;
-            if (!isAgentOnline) {
-              console.log('agetn oflineee');
-              fileData.user = null
-            }else {
-              fileData.user = agentPk;
-            }
-          }
+          console.log(message);
 
           var div = document.createElement("div");
-          div.innerHTML = messageDiv(data)
+          div.innerHTML = messageDiv(message)
           messageBox.appendChild(div);
           scroll();
-          chat.messages.push(data);
+
+          chat.messages.push(message);
+
+
           filePicker.value = ""
 
-          var dataToPublish = [uid , status , fileData];
 
-
-          if (threadExist==undefined) {
-
-          var dataToPublish = [uid , status , fileData , custID ];
-          details = getCookie("uidDetails");
-          if (details != "") {
-            console.log(details);
-             dataToPublish.push(JSON.parse(details))
-          } else {
-            dataToPublish.push(false)
-          }
-
-           var dataToSend = JSON.stringify({uid: uid , company: custID});
-            var xhttp = new XMLHttpRequest();
-             xhttp.onreadystatechange = function() {
-               if (this.readyState == 4 && this.status == 201) {
-                 console.log('posted successfully');
-                 threadExist=true
-                 console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-                 chatThreadPk = data.pk
-                 dataToPublish.push(chatThreadPk)
-
-                 connection.session.publish('service.support.agent', dataToPublish, {}, {
-                   acknowledge: true
-                 }).
-                 then(function(publication) {
-                   console.log("Published");
-                 });
-
-
-               }
-             };
-             xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-             xhttp.setRequestHeader("Content-type", "application/json");
-             xhttp.send(dataToSend);
-          }else {
-            console.log('chat threAD EXIST');
-            if (isAgentOnline) {
-              console.log('ONLINE' , agentPk);
-              connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
-                acknowledge: true
-              }).
-              then(function(publication) {
-                console.log("Published");
-              });
-            }else {
-              console.log('offline send to all');
-              connection.session.publish('service.support.agent', dataToPublish , {}, {
-                acknowledge: true
-              }).
-              then(function(publication) {
-                console.log("Published");
-              });
-            }
-            console.log('chat thread exist');
-          }
-
-
-
-
+          status = "MF";
+          connection.session.publish('service.support.agent', [uid , status , fileData ], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
 
 
         }
       };
-      xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+      xhttp.open('POST', 'http://localhost:8080/api/support/supportChat/', true);
       xhttp.send(fd);
-
-
-      //
-      // if (threadExist==undefined) {
-      //  var dataToSend = JSON.stringify({uid: uid , company: custID});
-      //   var xhttp = new XMLHttpRequest();
-      //    xhttp.onreadystatechange = function() {
-      //      if (this.readyState == 4 && this.status == 201) {
-      //        console.log('posted successfully');
-      //        threadExist=true
-      //        console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-      //        chatThreadPk = data.pk
-      //      }
-      //    };
-      //    xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-      //    xhttp.setRequestHeader("Content-type", "application/json");
-      //    xhttp.send(dataToSend);
-      // }
 
 
 
 
   }
-
 
   filePicker.onchange = function(e) {
     var file = filePicker;
@@ -2148,17 +1327,9 @@ function endChat() {
 
   chatCircle.addEventListener("click", function() {
     // welcomeMessage.style.display ="none";
-    console.log(chatOpen);
+
     console.log('click');
     chatOpen = !chatOpen
-    console.log(chatOpen);
-    setCookie("chatOpenCookie", chatOpen, 365);
-
-
-
-
-
-
     if (chatOpen) {
       supportCircle.style.display = "none";
 
@@ -2194,8 +1365,6 @@ function endChat() {
     console.log('coming' , chatOpen);
     if (chatOpen) {
       chatOpen = !chatOpen
-      setCookie("chatOpenCookie", chatOpen, 365);
-
       console.log('coming here.');
       supportCircle.style.display = "";
       closeSupport.style.display = "none";
@@ -2231,15 +1400,12 @@ function endChat() {
       if (x.matches) {
         device = 'xs';
         console.log('xs');
-        // isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
-        chatBox.style.height ="100%";
-        messageBox.style.height = "72%";
-        headerChat.style.height = "15%";
-        // headerChat.style.minHeight = "60px";
-        footer.style.height = "12%";
-        // footer.style.minHeight = "60px";
+        chatBox.style.height ="100vh";
+        messageBox.style.height = "70vh";
+        headerChat.style.height = "15vh";
+        footer.style.height = "15vh";
         closeIcon.style.display = "";
         chatBox.style.right = "0px";
         chatBox.style.bottom = "0px";
@@ -2258,13 +1424,12 @@ function endChat() {
       if (x.matches) {
         device = 'sm';
         console.log('sm');
-        // isTyping.style.display = "none";
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
-        chatBox.style.height ="100%";
-        messageBox.style.height = "72%";
-        headerChat.style.height = "15%";
-        footer.style.height = "12%";
+        chatBox.style.height ="100vh";
+        messageBox.style.height = "70vh";
+        headerChat.style.height = "15vh";
+        footer.style.height = "15vh";
         closeIcon.style.display = "";
         chatBox.style.right = "0px";
         chatBox.style.bottom = "0px";
@@ -2333,9 +1498,8 @@ function endChat() {
 
 
 
-
     var xs = window.matchMedia("(max-width: 767px)")
-    console.log(xs,'xsssssssssssssssssssssss');
+    console.log('xssssssssss',xs);
     xsDevice(xs) // Call listener function at run time
     xs.addListener(xsDevice) // Attach listener function on state changes
 
@@ -2350,6 +1514,9 @@ function endChat() {
     var lg = window.matchMedia("(min-width: 1200px)")
     lgDevice(lg)
     lg.addListener(lgDevice)
+
+
+
 
 
 

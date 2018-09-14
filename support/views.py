@@ -31,6 +31,8 @@ from Crypto.Cipher import AES
 from Crypto import Random
 from django.db.models.functions import Concat
 from ERP.models import service
+from django.template.loader import render_to_string, get_template
+from django.core.mail import send_mail, EmailMessage
 import re
 regex = re.compile('^HTTP_')
 
@@ -423,7 +425,9 @@ class GethomeCal(APIView):
         totalChats = chatThreadObj.count()
 
         agentChatCount = list(chatThreadObj.values('user').annotate(count_val=Count('user')))
-        missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True).count()
+        missedChats = chatThreadObj.filter(user__isnull=True).count()
+        lastToLastWeekMissedChats = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) , user__isnull=True).count()
+        print lastToLastWeekMissedChats , 'LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL'
 
         agentLeaderBoard = []
         agL = list(chatThreadObj.filter(user__isnull=False).values_list('user',flat=True).distinct())
@@ -433,40 +437,50 @@ class GethomeCal(APIView):
             oneAgentDetails = chatThreadObj.filter(user=i)
             r = oneAgentDetails.filter(customerRating__isnull=False).aggregate(Avg('customerRating'))
             rating = r['customerRating__avg'] if r['customerRating__avg'] else 0
-            respTimeAvg = SupportChat.objects.filter(user=i, responseTime__isnull=False).aggregate(Avg('responseTime'))
+            respTimeAvg = SupportChat.objects.filter(created__range=(lastWeek,tomorrow) ,user=i, responseTime__isnull=False).aggregate(Avg('responseTime'))
             respTimeAvg = respTimeAvg['responseTime__avg'] if respTimeAvg['responseTime__avg'] else 0
             firstResTimeAvg = oneAgentDetails.aggregate(Avg('firstResponseTime'))
             firstResTimeAvg = firstResTimeAvg['firstResponseTime__avg'] if firstResTimeAvg['firstResponseTime__avg'] else 0
             agentLeaderBoard.append({'agentName':oneAgentDetails[0].user.username,'rating':rating ,'respTimeAvg':respTimeAvg ,'firstResTimeAvg':firstResTimeAvg})
         avgRatingAll=0
         avgRespTimeAll=0
+        avgRespTimeAllLtweek = 0
         firstResTimeAvgAll =0
+        firstResTimeAvgAllLtweek = 0
         if 'perticularUser' in self.request.GET:
             if int(self.request.GET['perticularUser'])>0:
                 avgChatDuration = 0
-                avgRatingAll=0
-                firstResTimeAvgAll =0
-                missedChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
+                # avgRatingAll=0
+                # firstResTimeAvgAll =0
+                missedChats = chatThreadObj.filter(user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
+                lastToLastWeekMissedChats = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) , user__isnull=True , company=int(self.request.GET['perticularUser'])).count()
                 a = chatThreadObj.filter(~Q(chatDuration=0) ,company = int(self.request.GET['perticularUser'])).aggregate(Avg('chatDuration'))
                 avgChatDuration = a['chatDuration__avg']
+                alastToLastWeek = ChatThread.objects.filter(~Q(chatDuration=0) , created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) ,company = int(self.request.GET['perticularUser'])).aggregate(Avg('chatDuration'))
+                avgChatDurationLtweek = alastToLastWeek['chatDuration__avg']
                 frt = chatThreadObj.filter(firstResponseTime__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('firstResponseTime'))
                 firstResTimeAvgAll = frt['firstResponseTime__avg']
+                frtLastToLastWeek = ChatThread.objects.filter(firstResponseTime__isnull=False, created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('firstResponseTime'))
+                firstResTimeAvgAllLtweek = frtLastToLastWeek['firstResponseTime__avg']
                 arAll = chatThreadObj.filter(customerRating__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('customerRating'))
                 avgRatingAll = arAll['customerRating__avg']
-                print avgRatingAll ,'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH'
-                totalChats = ChatThread.objects.filter(created__range=(lastWeek,tomorrow),company=int(self.request.GET['perticularUser'])).count()
-                lastToLastWeekChatCount = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek),company=int(self.request.GET['perticularUser'])).count()
+                totalChats = chatThreadObj.filter(company=int(self.request.GET['perticularUser'])).count()
+                lastToLastWeekChatCount = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)),company=int(self.request.GET['perticularUser'])).count()
                 usr = chatThreadObj.filter(company = int(self.request.GET['perticularUser']))[0].user
-                avgRespTimeAll = SupportChat.objects.filter(user=usr , responseTime__isnull=False).aggregate(Avg('responseTime'))
-                avgRespTimeAll = avgRespTimeAll['responseTime__avg'] if avgRespTimeAll['responseTime__avg'] else 0
-                print avgRespTimeAll
+
+                artAll = SupportChat.objects.filter( created__range=(lastWeek,tomorrow) ,user=usr , responseTime__isnull=False).aggregate(Avg('responseTime'))
+                avgRespTimeAll = artAll['responseTime__avg'] if artAll['responseTime__avg'] else 0
+
+                artAllLtWeek = SupportChat.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) , user=usr , responseTime__isnull=False).aggregate(Avg('responseTime'))
+                avgRespTimeAllLtweek = artAllLtWeek['responseTime__avg'] if artAllLtWeek['responseTime__avg'] else 0
+
+                print avgRespTimeAll,avgRespTimeAllLtweek , 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
         else:
-            try:
-                a = chatThreadObj.filter(~Q(chatDuration=0)).aggregate(Avg('chatDuration'))
-                avgChatDuration = a['chatDuration__avg']
-            except:
-                avgChatDuration = 0
-            print agentLeaderBoard
+            a = chatThreadObj.filter(~Q(chatDuration=0)).aggregate(Avg('chatDuration'))
+            avgChatDuration = a['chatDuration__avg']
+            alastToLastWeek = ChatThread.objects.filter(~Q(chatDuration=0) , created__range=(lastToLastWeek,lastWeek - relativedelta(days=1))).aggregate(Avg('chatDuration'))
+            avgChatDurationLtweek = alastToLastWeek['chatDuration__avg']
+
             for i in agentLeaderBoard:
                 avgRatingAll+= i['rating']
                 avgRespTimeAll+=i['respTimeAvg']
@@ -474,15 +488,53 @@ class GethomeCal(APIView):
             avgRespTimeAll = avgRespTimeAll/len(agentLeaderBoard)
             avgRatingAll = avgRatingAll/len(agentLeaderBoard)
             firstResTimeAvgAll = firstResTimeAvgAll/len(agentLeaderBoard)
-
+        changeInData = {}
         changeInChat = {}
-        print lastToLastWeekChatCount , totalChats , 'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
+        changeInAvgChatDur = {}
+        changeInFrtAvg = {}
+        changeInRespTimeAvg = {}
         if lastToLastWeekChatCount<totalChats:
             changeInChat['percentage'] = (float(totalChats - lastToLastWeekChatCount)/totalChats)*100
             changeInChat['increase'] = True
         else:
             changeInChat['percentage'] = (float(lastToLastWeekChatCount - totalChats)/lastToLastWeekChatCount)*100
             changeInChat['increase'] = False
+        changeInMissedChat = {}
+        if lastToLastWeekMissedChats<missedChats:
+            changeInMissedChat['percentage'] = (float(missedChats - lastToLastWeekChatCount)/missedChats)*100
+            changeInMissedChat['increase'] = True
+        else:
+            changeInMissedChat['percentage'] = (float(lastToLastWeekMissedChats - missedChats)/lastToLastWeekMissedChats)*100
+            changeInMissedChat['increase'] = False
+
+        if avgChatDurationLtweek<avgChatDuration:
+            changeInAvgChatDur['percentage'] = (float(avgChatDuration - avgChatDurationLtweek)/avgChatDuration)*100
+            changeInAvgChatDur['increase'] = True
+        else:
+            changeInAvgChatDur['percentage'] = (float(avgChatDurationLtweek - avgChatDuration)/avgChatDurationLtweek)*100
+            changeInAvgChatDur['increase'] = False
+
+        if firstResTimeAvgAllLtweek<firstResTimeAvgAll:
+            changeInFrtAvg['percentage'] = (float(firstResTimeAvgAll - firstResTimeAvgAllLtweek)/firstResTimeAvgAll)*100
+            changeInFrtAvg['increase'] = True
+        else:
+            changeInFrtAvg['percentage'] = (float(firstResTimeAvgAllLtweek - firstResTimeAvgAll)/firstResTimeAvgAllLtweek)*100
+            changeInFrtAvg['increase'] = False
+
+        if avgRespTimeAllLtweek<avgRespTimeAll:
+            changeInRespTimeAvg['percentage'] = (float(avgRespTimeAll - avgRespTimeAllLtweek)/avgRespTimeAll)*100
+            changeInRespTimeAvg['increase'] = True
+        else:
+            changeInRespTimeAvg['percentage'] = (float(avgRespTimeAllLtweek - avgRespTimeAll)/avgRespTimeAllLtweek)*100
+            changeInRespTimeAvg['increase'] = False
+
+
+        changeInData['changeInChat'] = changeInChat
+        changeInData['changeInMissedChat'] = changeInMissedChat
+        changeInData['changeInAvgChatDur'] =changeInAvgChatDur
+        changeInData['changeInFrtAvg'] = changeInFrtAvg
+        changeInData['changeInRespTimeAvg'] = changeInRespTimeAvg
+        print changeInData , 'Change in Dataaaaaaaaaaaaaaaaaaa####################'
         graphData = [[],[]]
         graphLabels = []
         for i in range(7):
@@ -505,7 +557,7 @@ class GethomeCal(APIView):
         #         break
         print agentChatCount,graphData
 
-        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels,'avgChatDuration':avgChatDuration,'agentLeaderBoard':agentLeaderBoard,'avgRatingAll':avgRatingAll,'avgRespTimeAll':avgRespTimeAll,'firstResTimeAvgAll':firstResTimeAvgAll,'changeInChat':changeInChat}, status = status.HTTP_200_OK)
+        return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels,'avgChatDuration':avgChatDuration,'agentLeaderBoard':agentLeaderBoard,'avgRatingAll':avgRatingAll,'avgRespTimeAll':avgRespTimeAll,'firstResTimeAvgAll':firstResTimeAvgAll,'changeInData':changeInData}, status = status.HTTP_200_OK)
 
 
 class DocumentVersionViewSet(viewsets.ModelViewSet):
@@ -529,3 +581,43 @@ class CannedResponsesViewSet(viewsets.ModelViewSet):
     queryset = CannedResponses.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['text','service']
+
+
+
+class EmailChat(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        emailAddr=[]
+        print request.data['email'],'email'
+        emailAddr.append(request.data['email'])
+
+        sObj = SupportChat.objects.filter(uid = request.data['uid'])
+        visitor = Visitor.objects.filter(uid = request.data['uid'])
+        if len(visitor)>0:
+            name = visitor[0].name
+            allChats = []
+            for a in sObj:
+                toAppend = {'user': a.user , 'message': a.message , 'created': a.created , 'uid': name }
+                if a.sentByAgent:
+                    toAppend['sentByAgent'] = True
+                    if a.attachment:
+                        # print a.attachment , 'ggggggggggggg'
+                        toAppend['attachment'] = globalSettings.SITE_ADDRESS + '/media/' + str(a.attachment)
+                else:
+                    toAppend['sentByAgent'] = False
+                    if a.attachment:
+                        toAppend['attachment'] = a.attachment
+                allChats.append(toAppend)
+            sObj = allChats
+            # print sObj , 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
+
+        ctx = {
+            'heading' : "Support Conversation",
+            'allChats' : sObj
+        }
+        print ctx
+        email_body = get_template('app.support.email.html').render(ctx)
+        msg = EmailMessage("Chat Conversation" , email_body, to= emailAddr)
+        msg.content_subtype = 'html'
+        msg.send()
+        return Response({}, status = status.HTTP_200_OK)

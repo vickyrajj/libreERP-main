@@ -115,7 +115,7 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
-
+        print request.POST
     	usernameOrEmail = request.POST['username']
         otpMode = False
         if 'otp' in request.POST:
@@ -215,6 +215,12 @@ def root(request):
 @login_required(login_url = globalSettings.LOGIN_URL)
 def home(request):
     u = request.user
+
+
+    # permissions = permission.objects.filter(user = u)
+    # print '####################################',permissions
+
+
     if u.is_superuser:
         apps = application.objects.all()
         modules = module.objects.filter(~Q(name='public'))
@@ -238,8 +244,14 @@ class userProfileAdminModeViewSet(viewsets.ModelViewSet):
 
 class userDesignationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
-    queryset = designation.objects.all()
     serializer_class = userDesignationSerializer
+    queryset = designation.objects.all()
+    def get_queryset(self):
+        if 'user' in self.request.GET:
+            return designation.objects.filter(user = self.request.GET['user'])
+        else:
+            return designation.objects.all()
+
 
 class userAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin ,)

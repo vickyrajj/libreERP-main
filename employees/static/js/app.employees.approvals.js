@@ -58,7 +58,7 @@ app.controller("businessManagement.employees.timeSheet.info", function($scope, $
       }
     }
     console.log('aaaaaa', total);
-    
+
     return total.toFixed(2);
   }
 

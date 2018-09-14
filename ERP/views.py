@@ -297,6 +297,11 @@ class permissionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = permission.objects.all()
     serializer_class = permissionSerializer
+    def get_queryset(self):
+        if 'user' in self.request.GET:
+            return permission.objects.filter(user = self.request.GET['user'])
+        else:
+            return permission.objects.all()
 
 class CompanyHolidayViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)

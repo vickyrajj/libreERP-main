@@ -325,7 +325,10 @@ app.directive('chatBox', function() {
       index: '=',
       closeChat: '=',
     },
-    controller: function($scope, $users, $uibModal, $http, ngAudio) {
+    controller: function($scope, $users, $uibModal, $http, ngAudio , Flash) {
+
+
+
       $scope.me = $users.get('mySelf');
       // console.log($scope.data,'will fetch here');
       $scope.visitorForm = ''
@@ -416,6 +419,8 @@ app.directive('chatBox', function() {
               filePk: response.data.pk
             }
 
+
+
             $scope.status = 'MF';
             connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me.username, new Date()], {}, {
               acknowledge: true
@@ -434,6 +439,9 @@ app.directive('chatBox', function() {
         }
 
         if ($scope.chatBox.messageToSend.length > 0) {
+
+
+          console.log('here ' , $scope.chatBox.messageToSend);
 
 
           var youtubeLink = $scope.chatBox.messageToSend.includes("www.youtube.com/");
@@ -458,6 +466,8 @@ app.directive('chatBox', function() {
               user: $scope.me.pk,
               sentByAgent: true
             }
+            console.log('MMMMMMMMMMMMMMMMMMMMMMMMMM ' , dataToSend);
+
           }
 
           $http({
@@ -468,6 +478,9 @@ app.directive('chatBox', function() {
           then(function(response) {
             console.log(response.data, 'dataaa');
             $scope.data.messages.push(response.data)
+
+
+            console.log('publishing here... message' ,$scope.status, response.data, $scope.me.username );
 
             connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me.username, new Date()], {}, {
               acknowledge: true
@@ -502,7 +515,7 @@ app.directive('chatBox', function() {
       });
 
 
-      $scope.chatClose = function(indx,uid, chatThreadPk) {
+      $scope.chatClose = function(indx, uid, chatThreadPk) {
         $scope.status = "F";
         connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
@@ -510,6 +523,21 @@ app.directive('chatBox', function() {
         then(function(publication) {
           console.log("Published");
         });
+
+        if ($scope.data.email) {
+
+          $http({
+            method: 'POST',
+            url: '/api/support/emailChat/',
+            data: {
+              email: $scope.data.email,
+              uid: $scope.data.uid
+            }
+          }).then(function(response) {
+            console.log('send email');
+          });
+
+        }
 
         $http({
           method: 'PATCH',
@@ -522,11 +550,11 @@ app.directive('chatBox', function() {
           Flash.create('sucess', 'Chat Has Closed')
           return
         });
-        $scope.closeChatBox(indx,$scope.data.myUserIndex)
+        $scope.closeChatBox(indx, $scope.data.myUserIndex)
       }
 
-      $scope.closeChatBox = function(indx , myUserIndex) {
-        $scope.closeChat(indx , myUserIndex)
+      $scope.closeChatBox = function(indx, myUserIndex) {
+        $scope.closeChat(indx, myUserIndex)
         $scope.data.boxOpen = false
       }
 
@@ -548,6 +576,83 @@ app.directive('chatBox', function() {
           size: 'xl',
           backdrop: true,
           controller: function($scope, $users, $uibModalInstance) {
+
+
+
+            $scope.text = ''
+            $scope.selectedContent =''
+
+            if (!window.x) {
+              x = {};
+            }
+
+            x.Selector = {};
+            x.Selector.getSelected = function() {
+              var t = '';
+              if (window.getSelection) {
+                t = window.getSelection();
+                $scope.text =  window.getSelection().toString();
+              } else if (document.getSelection) {
+                t = document.getSelection();
+                text =  document.getSelection().toString();
+              } else if (document.selection) {
+                t = document.selection.createRange().text;
+                $scope.text = document.selection.createRange().htmlText
+              }
+              return t;
+            }
+
+            var pageX;
+            var pageY;
+
+            $(document).ready(function() {
+              $(document).bind("mouseup", function(e) {
+
+                pageX = e.pageX;
+                pageY = e.pageY;
+
+                var selectedText = x.Selector.getSelected();
+                if (selectedText != '') {
+                  $('ul.custom-menu').css({
+                    'left': pageX -170,
+                    'top': pageY -70
+                  }).fadeIn(200);
+                } else {
+                  $('ul.custom-menu').fadeOut(200);
+                }
+              });
+              // $(document).on("mousedown", function(e) {
+              //   pageX = e.pageX;
+              //   pageY = e.pageY;
+              // });
+            });
+
+
+            $scope.$watch('text', function(newValue, oldValue) {
+              if (oldValue!='') {
+                $scope.selectedContent = oldValue
+              }
+            });
+
+
+
+
+            $scope.sendSelectedContent = function () {
+              setTimeout(function () {
+                console.log($scope.selectedContent);
+                $uibModalInstance.dismiss($scope.selectedContent)
+              }, 500);
+
+            }
+
+
+
+
+
+
+
+
+
             $scope.form = {
               title: ''
             }
@@ -594,17 +699,17 @@ app.directive('chatBox', function() {
 
         }, function(data) {
 
-          if (data!= 'backdrop click') {
+          if (data != 'backdrop click' && data !='') {
             console.log(data);
             $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
-            $scope.send()
+            // $scope.send()
           }
 
         });
       }
 
       $scope.getChatHistory = function(email) {
-        console.log('email ',email);
+        console.log('email ', email);
         $http({
           method: 'GET',
           url: '/api/support/getChatHistory/?email=' + email,
@@ -612,14 +717,14 @@ app.directive('chatBox', function() {
         then(function(response) {
           console.log(response.data.data);
           $scope.chatHistory = response.data.data
-          console.log(response.data.data,'ressssssssssssin chat hist');
+          console.log(response.data.data, 'ressssssssssssin chat hist');
           $scope.chatHistModal(email)
         })
       }
 
 
       $scope.chatHistModal = function(email) {
-        console.log('chatHistModal',email);
+        console.log('chatHistModal', email);
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.chatHistory.modal.html',
           size: 'xl',
@@ -646,24 +751,24 @@ app.directive('chatBox', function() {
                 }
               }
               console.log(all_text);
-               // var page = $('#all_text');
-               // var pageText = page.text().replace("<span>","").replace("</span>");
-               // var searchedText = $scope.searchForm.value
-               // var theRegEx = new RegExp("("+searchedText+")", "igm");
-               // var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
-               // page.html(newHtml);
+              // var page = $('#all_text');
+              // var pageText = page.text().replace("<span>","").replace("</span>");
+              // var searchedText = $scope.searchForm.value
+              // var theRegEx = new RegExp("("+searchedText+")", "igm");
+              // var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
+              // page.html(newHtml);
 
               for (var i = 0; i < $scope.chatData.length; i++) {
                 for (var j = 0; j < $scope.chatData[i].chatList.length; j++) {
                   if ($scope.chatData[i].chatList[j].message) {
-                    var page = $('#p'+j);
+                    var page = $('#p' + j);
                     // console.log(page.text(),'page');
                     // var page = $('#all_text');
-                    var pageText = page.text().replace("<span>","").replace("</span>");
+                    var pageText = page.text().replace("<span>", "").replace("</span>");
                     // console.log(pageText);
                     var searchedText = $scope.searchForm.value
-                    var theRegEx = new RegExp("("+searchedText+")", "igm");
-                    var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
+                    var theRegEx = new RegExp("(" + searchedText + ")", "igm");
+                    var newHtml = pageText.replace(theRegEx, "<span style='background-color:yellow'>$1</span>");
                     page.html(newHtml);
                   }
                 }
@@ -692,8 +797,8 @@ app.directive('chatBox', function() {
 
 
 
-      $scope.chatTransfer = function (uid, chatThreadPk) {
-        console.log($scope.data,'entireeeeeeeeeeeeee');
+      $scope.chatTransfer = function(uid, chatThreadPk) {
+        console.log($scope.data, 'entireeeeeeeeeeeeee');
         $scope.onlineAgents = []
         $scope.offlineAgents = []
         $http({
@@ -701,95 +806,94 @@ app.directive('chatBox', function() {
           url: '/api/support/getMyUser/?allAgents',
         }).
         then(function(response) {
-          console.log(response.data.allAgents,'@@@@@@@@@@@@@@@@@@@@@');
+          console.log(response.data.allAgents, '@@@@@@@@@@@@@@@@@@@@@');
           $scope.allAgents = response.data.allAgents
           for (var i = 0; i < $scope.allAgents.length; i++) {
-            connection.session.call('service.support.heartbeat.' + $scope.allAgents[i] , []).
+            connection.session.call('service.support.heartbeat.' + $scope.allAgents[i], []).
             then((function(i) {
-              return function (res) {
+              return function(res) {
                 $scope.onlineAgents.push($scope.allAgents[i])
               }
-            })(i) , (function(i) {
-              return function (err) {
-                console.log(err,'offline agents');
+            })(i), (function(i) {
+              return function(err) {
+                console.log(err, 'offline agents');
                 $scope.offlineAgents.push($scope.allAgents[i])
               }
             })(i))
           }
         });
         // $scope.opnpoup = function(){
-          $uibModal.open({
-            templateUrl: '/static/ngTemplates/app.support.chatTransfer.modal.html',
-            size: 'xl',
-            backdrop: true,
-            resolve: {
-              onlineAgents: function() {
-                return $scope.onlineAgents;
-              },
-              offlineAgents: function() {
-                return $scope.offlineAgents;
-              },
-              userData: function() {
-                return $scope.data;
-              }
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.chatTransfer.modal.html',
+          size: 'xl',
+          backdrop: true,
+          resolve: {
+            onlineAgents: function() {
+              return $scope.onlineAgents;
             },
-            controller: function($scope,onlineAgents,offlineAgents,userData, $users, $uibModalInstance, Flash) {
-              console.log(onlineAgents,offlineAgents);
-              $scope.me = $users.get("mySelf")
-              $scope.onlineAgents = onlineAgents
-              $scope.offlineAgents = offlineAgents
-              $scope.agentPk = 0;
-              $scope.agentForm = {
-                name:'',
-                pk:0
-              }
-              $scope.selectedAgent = function (pk) {
-                $scope.agentPk = pk
-                $scope.agentForm.name = $users.get(pk).username
-                $scope.agentForm.pk =pk
-
-              }
-
-              $scope.transferChat = function () {
-                connection.session.call('service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username , userData ]).then(
-                  function (res) {
-                    console.log(userData.chatThreadPk,$scope.agentForm.pk);
-                    $http({
-                      method: 'PATCH',
-                      url: '/api/support/chatThread/' + userData.chatThreadPk + '/',
-                      data: {
-                        user: $scope.agentForm.pk
-                      }
-                    }).
-                    then(function(response) {
-                    });
-                    Flash.create('success',"Chat Has Been Transfered Sucessfully")
-                    $uibModalInstance.dismiss('close')
-
-                 },
-                 function (err) {
-                  console.log("Error:", err);
-                  Flash.create('danger',"Chat Couldn't Transfer - Some Server Issues")
-                }
-               );
-              }
-
-
-
-
-
+            offlineAgents: function() {
+              return $scope.offlineAgents;
             },
-          }).result.then(function() {
-
-          }, function(data) {
-            if (data == 'close') {
-              console.log(data);
-              console.log($scope.index);
-              $scope.closeChatBox($scope.index ,$scope.data.myUserIndex )
-              // console.log($scope.data);
-              // console.log($scope.data.myUserIndex , 'ffffffffffffff');
+            userData: function() {
+              return $scope.data;
             }
-          });
+          },
+          controller: function($scope, onlineAgents, offlineAgents, userData, $users, $uibModalInstance, Flash) {
+            console.log(onlineAgents, offlineAgents);
+            $scope.me = $users.get("mySelf")
+            $scope.onlineAgents = onlineAgents
+            $scope.offlineAgents = offlineAgents
+            $scope.agentPk = 0;
+            $scope.agentForm = {
+              name: '',
+              pk: 0
+            }
+            $scope.selectedAgent = function(pk) {
+              $scope.agentPk = pk
+              $scope.agentForm.name = $users.get(pk).username
+              $scope.agentForm.pk = pk
+
+            }
+
+            $scope.transferChat = function() {
+              connection.session.call('service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
+                function(res) {
+                  console.log(userData.chatThreadPk, $scope.agentForm.pk);
+                  $http({
+                    method: 'PATCH',
+                    url: '/api/support/chatThread/' + userData.chatThreadPk + '/',
+                    data: {
+                      user: $scope.agentForm.pk
+                    }
+                  }).
+                  then(function(response) {});
+                  Flash.create('success', "Chat Has Been Transfered Sucessfully")
+                  $uibModalInstance.dismiss('close')
+
+                },
+                function(err) {
+                  console.log("Error:", err);
+                  Flash.create('danger', "Chat Couldn't Transfer - Some Server Issues")
+                }
+              );
+            }
+
+
+
+
+
+          },
+        }).result.then(function() {
+
+        }, function(data) {
+          if (data == 'close') {
+            console.log(data);
+            console.log($scope.index);
+            $scope.closeChatBox($scope.index, $scope.data.myUserIndex)
+            // console.log($scope.data);
+            // console.log($scope.data.myUserIndex , 'ffffffffffffff');
+          }
+        });
         // }
 
 
@@ -803,18 +907,18 @@ app.directive('chatBox', function() {
       $scope.searchCannedRes = function(val) {
         var hash = "#"
         if (val.includes('#')) {
-        // beforeHash = val.slice(0,val.indexOf(hash))
-        var textAfterHash = val.slice(val.indexOf(hash) + hash.length);
-        if (textAfterHash.length>0) {
-          return $http({
-            method: 'GET',
-            url: '/api/support/cannedResponses/?text__icontains=' + textAfterHash +'&service='+$scope.data.servicePk
-          }).
-          then(function(response) {
-            console.log(response.data);
-            // $scope.chatBox.messageToSend+=response.data.text
-            return response.data;
-          })
+          // beforeHash = val.slice(0,val.indexOf(hash))
+          var textAfterHash = val.slice(val.indexOf(hash) + hash.length);
+          if (textAfterHash.length > 0) {
+            return $http({
+              method: 'GET',
+              url: '/api/support/cannedResponses/?text__icontains=' + textAfterHash + '&service=' + $scope.data.servicePk
+            }).
+            then(function(response) {
+              console.log(response.data);
+              // $scope.chatBox.messageToSend+=response.data.text
+              return response.data;
+            })
           }
         }
       }
@@ -1196,6 +1300,8 @@ app.directive('chatWindow', function($users) {
             user: $scope.friend.pk,
             read: false
           };
+
+
           $http({
             method: 'POST',
             data: dataToSend,
@@ -1204,10 +1310,21 @@ app.directive('chatWindow', function($users) {
           then(function(response) {
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
+            console.log('sending.......', response.data.message, $scope.friend.username);
             connection.session.publish('service.chat.' + $scope.friend.username, [$scope.status, response.data.message, $scope.me.username, response.data.pk], {}, {
               acknowledge: true
             }).
-            then(function(publication) {});
+            then(function(publication) {
+              console.log('published');
+            });
+
+            // connection.session.publish('service.chat.General', [$scope.status, response.data.message, $scope.me.username, 'General'], {}, {
+            //   acknowledge: true
+            // }).
+            // then(function(publication) {
+            //   console.log('published');
+            // });
+
             $scope.chatForm.messageToSend = "";
           })
         }

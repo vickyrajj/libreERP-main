@@ -10,7 +10,13 @@ app.config(function($stateProvider) {
     }
   })
 });
-app.controller("businessManagement.reviews.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval) {
+app.controller("businessManagement.reviews.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval , $permissions) {
+
+
+  $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+
+  console.log($scope.commentPerm);
+
   $scope.msgData = $scope.tab.data
   console.log($scope.tab.data);
   $scope.reviewCommentData = []
@@ -31,6 +37,8 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     $scope.chatThreadData =response.data[0]
   });
   $scope.reviewForm = {message:''}
+
+
   $scope.postComment = function(){
     console.log($scope.msgData[0].created);
     if ($scope.reviewForm.message.length == 0) {
@@ -45,10 +53,16 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     }).
     then(function(response) {
       console.log(response.data,'dddddddddddd',typeof response.data);
+      console.log(response.data);
       $scope.reviewCommentData.push(response.data)
       $scope.reviewForm = {message:''}
+    }, function(err) {
+      console.log(err.data.detail);
+      Flash.create('danger', err.data.detail);
     });
   }
+
+
   $scope.showChart = function(){
     console.log('modalllllllllllllllll');
     $uibModal.open({
@@ -254,7 +268,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     console.log(date);
     $scope.getData(date,user,$scope.form.email,client,download)
   }
-  
+
   $scope.download = function(){
     $scope.filterData(true)
   }

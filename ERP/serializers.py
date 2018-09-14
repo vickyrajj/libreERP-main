@@ -17,11 +17,12 @@ class addressSerializer(serializers.ModelSerializer):
 
 class serviceSerializer(serializers.ModelSerializer):
     # user = userSearchSerializer(many = False , read_only = True)
+    perms = serializers.SerializerMethodField()
     address = addressSerializer(many = False, read_only = True)
     contactPerson = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson')
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms')
 
     def assignValues(self , instance , validated_data):
         if 'cin' in validated_data:
@@ -48,11 +49,26 @@ class serviceSerializer(serializers.ModelSerializer):
 
     def create(self , validated_data):
         s = service(name = validated_data['name'] , user =validated_data['user'])
-        self.assignValues(s, validated_data)
-        return s
+        u = self.context['request'].user
+        pObj =  permission.objects.filter(user = u, app__name = 'module.customer.create')
+        if len(pObj)>0:
+            self.assignValues(s, validated_data)
+            return s
+        else:
+            raise PermissionDenied()
+
+
     def update(self , instance , validated_data):
         self.assignValues(instance , validated_data)
         return instance
+    def get_perms(self , obj):
+        u = self.context['request'].user
+        perms = permission.objects.filter(user = u)
+        toReturn = {}
+        for p in perms:
+            if p.app.name == 'module.customer.edit' or p.app.name == 'module.customer.explore' or p.app.name == 'module.customer.knowBase':
+                toReturn[p.app.name] = True
+        return toReturn
 
 class serviceLiteSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)

@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'getMyUser/$' , GetMyUser.as_view()),
     url(r'getChatHistory/$' , GetChatHistory.as_view()),
     url(r'gethomeCal/$' , GethomeCal.as_view()),
+    url(r'emailChat/$' , EmailChat.as_view()),
 
 ]

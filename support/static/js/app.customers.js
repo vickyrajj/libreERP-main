@@ -12,25 +12,12 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller("businessManagement.customers", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope ,$permissions) {
+app.controller("businessManagement.customers", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope ,$permissions , $timeout) {
 
 
-  // as = $permissions.apps();
-  // if(typeof as.success == 'undefined'){
-  //   console.log('dnnnnnnnnnnnnnnnnnnn');
-  //   // $scope.buildMenu(as);
-  // } else {
-  //   as.success(function(response){
-  //     // $scope.buildMenu(response);
-  //
-  //     console.log('ffffffffffffffffffffffffffffffffffff');
-  //
-  //
-  //   });
-  // };
+  $scope.me = $users.get('mySelf')
 
-
-  // console.log($permissions.apps() , 'what is thisssssssss');
+  $scope.createPerm = $permissions.myPerms('module.customer.create')
 
   $scope.data = {
     tableData: []
@@ -68,14 +55,14 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
           var title = 'Document : ';
           var appType = 'document';
         }
-
         $scope.addTab({
           title: title + $scope.data.tableData[i].pk,
           cancel: true,
           app: appType,
           data: $scope.data.tableData[i],
-          active: true
+          active: true,
         })
+
       }
     }
   }
@@ -631,7 +618,11 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
         }
       }, function(err) {
         console.log(err, 'err');
-        Flash.create('danger', err.status + ' : ' + err.statusText + ': ' + err.data.name);
+        if (err.data.detail) {
+          Flash.create('danger', err.data.detail);
+        }else {
+          Flash.create('danger', err.status + ' : ' + err.statusText + ': ' + err.data.name);
+        }
       });
     }
 

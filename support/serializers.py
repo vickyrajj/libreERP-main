@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
-from ERP.models import service
+from ERP.models import service , permission
 # from HR.serializers import userSearchSerializer
 from rest_framework.response import Response
 from fabric.api import *
@@ -12,6 +12,7 @@ import os
 from django.conf import settings as globalSettings
 import datetime
 from django.contrib.auth.hashers import make_password,check_password
+from django.core.exceptions import SuspiciousOperation
 
 import re
 regex = re.compile('^HTTP_')
@@ -70,9 +71,15 @@ class ReviewCommentSerializer(serializers.ModelSerializer):
         fields = ( 'pk' , 'created' , 'uid', 'user' ,'chatedDate', 'message' )
     def create(self ,  validated_data):
         r = ReviewComment(**validated_data)
-        r.user = self.context['request'].user
-        r.save()
-        return r
+        u = self.context['request'].user
+        r.user = u
+        pObj =  permission.objects.filter(user = u, app__name = 'module.reviews.comment')
+        if len(pObj)>0:
+            print pObj , u , 'yes perm exist$$$$$$$$'
+            r.save()
+            return r
+        else:
+            raise PermissionDenied()
 
 class ChatThreadSerializer(serializers.ModelSerializer):
     class Meta:
@@ -149,7 +156,6 @@ class DocumentVersionSerializer(serializers.ModelSerializer):
     def create(self ,  validated_data):
         d = DocumentVersion(**validated_data)
         d.user = self.context['request'].user
-        print self.context['request'].user , '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
         d.save()
         return d
 
@@ -157,3 +163,12 @@ class CannedResponsesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CannedResponses
         fields = ( 'pk' , 'created' , 'text' ,'service')
+    def create(self ,  validated_data):
+        c = CannedResponses(**validated_data)
+        u = self.context['request'].user
+        pObj =  permission.objects.filter(user = u, app__name = 'module.prescript.createDelete')
+        if len(pObj)>0:
+            c.save()
+            return c
+        else:
+            raise PermissionDenied()
