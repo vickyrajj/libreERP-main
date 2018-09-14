@@ -123,11 +123,14 @@ def ecommerceHome(request):
             data['seoDetails']['title'] = lpObj.product.name
             data['seoDetails']['description'] = lpObj.product.description
             if len(dpList)>0:
-                data['seoDetails']['image'] = dpList[0].attachment.url
-                w, h = get_image_dimensions(dpList[0].attachment.file)
-                print w,h
-                data['seoDetails']['width'] = w
-                data['seoDetails']['height'] = h
+                try:
+                    data['seoDetails']['image'] = dpList[0].attachment.url
+                    w, h = get_image_dimensions(dpList[0].attachment.file)
+                    print w,h
+                    data['seoDetails']['width'] = w
+                    data['seoDetails']['height'] = h
+                except:
+                    print 'no such file has exists'
                 # image=Image.open(dpList[0].attachment.file)
                 # print image,image.size,image.format
 
@@ -170,11 +173,11 @@ class SearchProductAPI(APIView):
                 listingobjs = listing.objects.filter(product__in=productsList)
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
-                genericProd = list(genericList.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
+                genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('product__displayPicture') , typ= Value('list',output_field=CharField())))
             else:
-                genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name') , typ= Value('list',output_field=CharField())))
+                genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name' ) , dp = F('product__displayPicture') , typ= Value('list',output_field=CharField())))
 
             tosend = genericProd + listProd
             print tosend[0:l]
@@ -875,9 +878,10 @@ styles=getSampleStyleSheet()
 styleN = styles['Normal']
 styleH = styles['Heading1']
 
-
-settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
-
+try:
+    settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+except:
+    print "ERROR : settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()"
 
 class FullPageImage(Flowable):
     def __init__(self , img):

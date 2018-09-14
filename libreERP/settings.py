@@ -237,9 +237,9 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'django',
+#         'NAME': 'sterling',
 #         'USER': 'root',
-#         'PASSWORD': 'password',
+#         'PASSWORD': 'cioc',
 #         'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
 #         'PORT': '3306',
 #     }

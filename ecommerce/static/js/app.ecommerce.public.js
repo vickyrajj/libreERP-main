@@ -178,6 +178,41 @@ app.config(function($stateProvider) {
 
 });
 
+app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window){
+
+  $scope.$watch('match' , function(newValue , oldValue) {
+    console.log(newValue);
+  })
+
+  $scope.added = false;
+
+  for (var i = 0; i < $rootScope.inCart.length; i++) {
+    if ($scope.match.model.pk == $rootScope.inCart[i].product.pk) {
+      $scope.added = true;
+    }
+  }
+
+  $scope.addToCart = function(model) {
+    console.log();
+
+    var dataToSend = {
+      product	: model.pk,
+      qty	: 1,
+      typ	 : 'cart',
+      user: $users.get('mySelf').pk
+    }
+
+    $http({method : 'POST' , url : '/api/ecommerce/cart/' , data : dataToSend}).
+    then(function(response) {
+      $scope.added = true;
+      $rootScope.inCart.push(response.data);
+    });
+
+
+  }
+
+})
+
 app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
 
 
@@ -1925,9 +1960,9 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   }
   $scope.genericProductSearch = function(query) {
     if ($rootScope.multiStore) {
-      surl = '/api/ecommerce/searchProduct/?search=' + query + '&pin=' + $rootScope.pin + '&multipleStore&limit=10'
+      surl = '/api/ecommerce/searchProduct/?search=' + query + '&pin=' + $rootScope.pin + '&multipleStore&limit=6'
     } else {
-      surl = '/api/ecommerce/searchProduct/?search=' + query + '&limit=10'
+      surl = '/api/ecommerce/searchProduct/?search=' + query + '&limit=6'
     }
     return $http.get(surl).
     then(function(response) {
