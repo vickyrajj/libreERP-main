@@ -93,6 +93,7 @@ def generateOTP(request):
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
     user = get_object_or_404(User, username = request.POST['id'])
+    print user,type(user),'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
     ak = accountsKey(user= user, activation_key= otp,
         key_expires=key_expires , keyType = 'otp')
     ak.save()
@@ -109,7 +110,7 @@ def loginView(request):
     print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 
-
+    print 'loginnnnnnnnnnnnnnnnn',request.POST
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
     authStatus = {'status' : 'default' , 'message' : '' }
@@ -189,6 +190,7 @@ def loginView(request):
 
 
 def registerView(request):
+    print 'registerrrrrrrrrrrrrrrrrrrrrrrrrrr',request.POST
     if globalSettings.REGISTER_URL != 'register':
         return redirect(reverse(globalSettings.REGISTER_URL))
     msg = {'status' : 'default' , 'message' : '' }

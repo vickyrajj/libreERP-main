@@ -90,8 +90,8 @@
           </div>
         </div>
         <div class="row" ng-repeat="i in data.orderQtyMap">
-          <div class="col-md-1 col-sm-1 hidden-xs">
-             <input type="checkbox" ng-model="i.selected" >
+          <div class="col-md-1 col-sm-1 hidden-xs" >
+             <input type="checkbox" ng-model="i.selected" ng-show="i.status!='cancelled'&&i.status!='returned'">
           </div>
           <div class="col-md-4 col-sm-4 hidden-xs">
             {{i.productName.slice(0,25)}}
@@ -100,7 +100,7 @@
             {{i.qty}}
           </div>
           <div class="col-md-3 col-sm-3 hidden-xs">
-            <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2)}}
+            <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2) * i.qty}}
           </div>
           <div class="col-md-3 col-sm-3 hidden-xs" >
             {{i.status}}
@@ -110,7 +110,7 @@
           <div class="col-xs-12  ">
             <div class="row">
           <div class="col-xs-1  hidden-sm  hidden-md hidden-lg">
-             <input type="checkbox" ng-model="i.selected" >
+             <input type="checkbox" ng-model="i.selected" ng-show="i.status!='cancelled'&&i.status!='returned'">
           </div>
           <div class="col-xs-10 hidden-sm  hidden-md hidden-lg">
             {{i.productName.slice(0,25)}}
@@ -121,7 +121,7 @@
             {{i.qty}}
           </div>
           <div class="col-xs-5 hidden-sm hidden-md hidden-lg">
-            <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2)}}
+            <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2) * i.qty}}
           </div>
           <div class="col-xs-5 hidden-sm  hidden-md hidden-lg">
             {{i.status}}

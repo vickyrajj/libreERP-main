@@ -1155,7 +1155,7 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
                 $scope.amtToBeRefunded = 0;
 
                 for (var i = 0; i < $scope.items.length; i++) {
-                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + (($scope.items[i].totalAmount - $scope.items[i].discountAmount) * $scope.items[i].qty)
+                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + ($scope.items[i].ppAfterDiscount.toFixed(2) * $scope.items[i].qty)
                 }
 
                 $scope.cancel = function() {
@@ -1752,7 +1752,6 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
     window.scrollTo(0, 0);
     if ($scope.data.stage == 'review') {
-      $scope.data.stage = 'shippingDetails';
       $scope.dataToSend.promoCode = $scope.data.promoCode;
       $scope.dataToSend.promoCodeDiscount = $scope.promoDiscount;
       if ($scope.cartItems != undefined) {
@@ -1785,6 +1784,16 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         $scope.dataToSend.products = $scope.itemProduct
       }
       console.log('aaaaaaaaaaaaaaaaaaaaaaaaaa', $scope.dataToSend.products);
+      if ($scope.dataToSend.products.length>0) {
+        if ($scope.dataToSend.products[0].pk==undefined) {
+          Flash.create('danger','Please Select Valid Product')
+          return
+        }
+      }else {
+        Flash.create('danger','Please Select The Product')
+        return
+      }
+      $scope.data.stage = 'shippingDetails';
     } else if ($scope.data.stage == 'shippingDetails') {
 
       console.log($scope.data.address);

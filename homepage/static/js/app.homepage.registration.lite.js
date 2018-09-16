@@ -9,7 +9,7 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
   $scope.validityChecked = false;
   $scope.validityChecked2 = false;
     $scope.getOTP = function() {
-      if( !$scope.form.agree || $scope.form.mobile == undefined || $scope.form.mobile == null || $scope.form.mobile.length ==0 ){
+      if( !$scope.form.agree || $scope.form.mobile == null || $scope.form.mobile == undefined || $scope.form.mobile.length ==0 ){
           $scope.validityChecked = true;
           return;
       }
@@ -41,4 +41,3 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
     })
   }
 });
-
