@@ -1,7 +1,7 @@
 <div ng-controller="app.customer.reviews.explore">
   <div class="card">
-    <div class="card-body">
-      <div class="col-md-12" >
+    <div class="card-body row">
+      <div class="col-md-6" style="border-right:1px solid #eeeeee;">
         <h4><strong>Date : </strong>{{data[0].created | date : 'dd-MMM-yyyy'}} </h4>
         <span ng-if="chatThreadData.uid!=none"><h3><strong>Status : </strong>{{chatThreadData.status}} <span class="pull-right"><div class="btn btn-primary" ng-click="showChart()">Change Status</div></span></h3></span><hr>
 
@@ -19,6 +19,29 @@
             <div ng-if="msg.sentByAgent" class="float-right" style="clear:both;" ng-init="cal = calculateTime(data[$index-1].created , msg.created)">{{msg.created | date : 'hh:mm:a' }} , {{cal}}</div>
             <div ng-if="!msg.sentByAgent" class="float-left" style="clear:both;">{{msg.created | date : 'hh:mm:a' }}</div>
         </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row" ng-repeat="comment in reviewCommentData" style="padding-bottom:15px;">
+          <div class="col-md-10">
+            <div style="float:right; background-color:#286EFA; color:#fff; border-radius:15px 50px 50px 15px; padding:10px 10px 10px 15px;word-break: break-all !important;">
+              <p> {{comment.message}} </p>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <img ng-src="{{comment.user}}" style="border-radius:50%; width:45px;" alt="User Image">
+          </div>
+        </div>
+        <div class="row" style="padding-top:20px;">
+          <div class="col-md-10">
+            <div class="form-group">
+              <textarea class="form-control" rows="3" id="comment" placeholder="Comments... " ng-model="reviewForm.message" style="resize:none;"></textarea>
+            </div>
+          </div>
+          <div class="col-md-2" style="padding-top:20px;">
+            <button type="button" class="btn btn-primary" name="button" ng-click="postComment()"> Save  </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

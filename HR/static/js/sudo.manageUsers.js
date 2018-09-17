@@ -709,7 +709,8 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     username: '',
     firstName: '',
     lastName: '',
-    password: ''
+    password: '',
+    access:'full_access'
   };
   $scope.createUser = function() {
     dataToSend = {
@@ -729,8 +730,73 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
         username: '',
         firstName: '',
         lastName: '',
-        password: ''
+        password: '',
       };
+    }, function(response) {
+      Flash.create('danger', response.status + ' : ' + response.statusText);
+    });
+  }
+$scope.full_access_app=[];
+$scope.rest_access_app=[];
+  $http({
+    method: 'GET',
+    url: '/api/organization/role/?name=Full%20access',
+  }).
+  then(function(response) {
+    for(var i=0;i<response.data[0].applications.length;i++)
+    $scope.full_access_app[i]=response.data[0].applications[i].pk;
+    console.log($scope.full_access_app);
+  });
+  $http({
+    method: 'GET',
+    url: '/api/organization/role/?name=Restricted%20access',
+  }).
+  then(function(response) {
+    for(var i=0;i<response.data[0].applications.length;i++)
+    $scope.rest_access_app[i]=response.data[0].applications[i].pk;
+    console.log($scope.rest_access_app);
+  });
+
+
+  $scope.createCustomer = function() {
+    dataToSend = {
+      username: $scope.newUser.username,
+      first_name: $scope.newUser.firstName,
+      last_name: $scope.newUser.lastName,
+      password: $scope.newUser.password,
+      access:$scope.newUser.access
+    };
+    if($scope.newUser.access=='full_access')
+      $scope.app=$scope.full_access_app
+    else {
+      $scope.app=$scope.rest_access_app;
+    }
+    $http({
+      method: 'POST',
+      url: '/api/HR/usersAdminMode/',
+      data: dataToSend
+    }).then(function(response) {
+      $http({
+        method: 'POST',
+        url: '/api/ERP/permission/',
+        data: {
+          apps:  $scope.app,
+          user:response.data.pk
+        }
+      }).then(function(resp){
+        console.log(resp.data);
+      })
+
+      Flash.create('success', response.status + ' : ' + response.statusText);
+      console.log(response.data);
+      $scope.newUser = {
+        username: '',
+        firstName: '',
+        lastName: '',
+        password: '',
+        access:'full_access'
+      };
+
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });
