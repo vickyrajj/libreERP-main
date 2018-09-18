@@ -199,13 +199,11 @@ class permissionSerializer(serializers.ModelSerializer):
         if not user.is_superuser and user not in app.owners.all():
             raise PermissionDenied(detail=None)
         u = validated_data['user']
-        print u , user ,'user'
         permission.objects.filter(user = u).all().delete()
-        print 'GGGGGGGG' , self.context['request'].data['apps']
+        print self.context['request'].data['apps']
         for a in self.context['request'].data['apps']:
             app = application.objects.get(pk = a)
             p = permission.objects.create(app =  app, user = u , givenBy = user)
-            print a , app , p , 'TT$$$$$$$$$$$$$$$$$$$$$$$$$'
         return p
 
 class groupPermissionSerializer(serializers.ModelSerializer):

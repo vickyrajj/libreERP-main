@@ -815,13 +815,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 '<span id="onlineStatus"></span>'+
               '</div>'+
             '</div>'+
-            '<div style="float:left;padding-left: 55px;" >'+
-              '<div>'+
-                '<span id="endThisChat" style="font-size:15px; cursor:pointer; ">End Chat</span>'+
-              '</div>'+
-            '</div>'+
+            '<span id="endThisChat" style="font-size:15px; cursor:pointer; float:right; padding:15px; ">Exit</span>'+
             '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
-              '<span> <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
+              '<span> <img src="{{serverAddress}}/static/images/close.png" tooltip="" alt="Close" width="15" height="15"> </span>'+
             '</div>'+
           '</div>'+
         '</div>'+
@@ -858,9 +854,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
         '</div>'+
         '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
-          '<div style="padding:0px;" >'+
-             '<input id="inputText" style="width:70% ; height:50px; border:none; outline:none; box-shadow:none; background-color:#fff; padding-left:10px; " type="text" placeholder="Write a reply...">'+
-             '<input id="filePicker" type="file" style="display:none;"  />'+
+          '<div style="padding:0px; padding-top:10px;" >'+
+             '<textarea id="inputText" rows="4" style="border:none; resize: none; width:70%; height: 40px; outline:none; background-color:#fff; " placeholder="Write a reply..." ></textarea>'+
+             '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
              '<span id="paperClip" style="width:10% ; border:none; background-color:#fff; font-size:20px; padding:0% 5%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="height:20px; width:20px;" ></span>'+
              '<span id="paperPlane" style="width:10% ; border:none; background-color:#fff; font-size:20px; cursor:pointer;"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:40px; widtth:30px; padding-top:10px;"></span>'+
           '</div>'+
@@ -872,7 +868,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
        '</svg>'+
       '</div>'+
 
-      '<div id="supportCircle" >'+
+      '<div id="supportCircle">'+
   			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
   				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
   				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
@@ -971,6 +967,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var endThisChat = document.getElementById('endThisChat');
 
 
+  // inputText.style.display = "none"
+
+
   var chatCircleText =   document.getElementById('chatCircleText')
   var callCircleText =   document.getElementById('callCircleText')
   var audioCircleText =  document.getElementById('audioCircleText')
@@ -979,14 +978,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var Syrow24hSupportText = document.getElementById('Syrow24hSupportText')
 
 
-  endThisChat.style.display ="none"
+  // endThisChat.style.display ="none"
 
 
   // isTyping.style.display = "none";
 
 
   document.getElementById('sy-main-icon').style.display = "none";
-
+  backArrow.style.display = "none";
   setTimeout(function(){
     document.getElementById('sy-main-icon').style.display = "";
   }, 2000);
@@ -1306,9 +1305,17 @@ function endChat() {
   openFeedback()
 }
 
-
+  feedbackFormOpened = false
 
   function openFeedback(id) {
+
+    console.log(feedbackFormOpened , 'feedbackFormOpened');
+
+    if (feedbackFormOpened) {
+      return
+    }
+
+    feedbackFormOpened = true
     console.log('coming in open feedback');
     var id = id;
     var div = document.createElement("div");
@@ -1331,6 +1338,7 @@ function endChat() {
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
+                        '<input type="text" placeholder="emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
                          '<textarea id="feedbackText" style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
                          '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
@@ -1342,6 +1350,16 @@ function endChat() {
     scroll();
     var stars = document.getElementById('stars');
     var submitStars = document.getElementById('submitStars');
+
+    // disable input type here.. and remove send and attach button
+
+    inputText.disabled = true;
+    inputText.placeholder = "Chat is closed....";
+
+    paperClip.style.display = "none";
+    paperPlane.style.display = "none";
+
+
     submitStarForm(id);
   }
 
@@ -1441,6 +1459,7 @@ function endChat() {
   // unreadMsg.style.display = "none";
 
 
+
   startConvoBtn.addEventListener("click", function() {
     headerChat.style.display = "";
     messageBox.style.display = "";
@@ -1455,7 +1474,7 @@ function endChat() {
   var chatClosed = false
 
   backArrow.addEventListener("click", function() {
-    console.log(chat.messages,'coming in loggggggggg');
+    console.log(chatClosed,'back arrow clicked');
     if (chat.messages.length>1 && chatClosed!=true) {
       endChat()
       console.log('end chat');
@@ -1530,7 +1549,27 @@ function endChat() {
 
 
     function messageDiv(message) {
-      console.log(message);
+
+      function timeSince(date) {
+        t = date;
+        var now = new Date();
+        var diff = Math.floor((now - t)/60000)
+        if (diff<60) {
+          return diff+' Mins';
+        }else if (diff>=60 && diff<60*24) {
+          return Math.floor(diff/60)+' Hrs';
+        }else if (diff>=60*24) {
+          return Math.floor(diff/(60*24))+' Days';
+        }
+      }
+
+
+      // if (!message.created) {
+      //   message.timeAgo = timeSince(new Date())
+      // }else {
+        message.timeAgo = timeSince(new Date(message.created))
+      // }
+
       // console.log(chat.messages.length);
 
       // console.log('messsaaageeeeeeeeeeeeeeeeeeeee',message);
@@ -1561,12 +1600,14 @@ function endChat() {
         var msgDiv =attachedFile
       }else {
         if (message.attachment==null) {
-          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
+          console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
+          console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
+          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
           msgDiv = pTag
         }else {
           msgDiv = attachedFile
         }
-        //
+
         // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
       }
 
@@ -1579,6 +1620,7 @@ function endChat() {
                         '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
+                        '<div style="clear: both; float:right; padding-left:15px;">'+ message.timeAgo +'</div>'+
                       '</div>'
         return msgHtml
 
@@ -1587,6 +1629,7 @@ function endChat() {
                   '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
+                  '<div style="clear: both; float:left; padding-left:15px;">'+ message.timeAgo +'</div>'+
                 '</div> '
         return msgHtml
       }
@@ -1821,7 +1864,7 @@ function endChat() {
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
 
 
-        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false  };
+        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
         if (agentPk) {
           console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
@@ -1837,7 +1880,7 @@ function endChat() {
       }else {
         status = "M";
         // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
-        var dataToSend = {uid: uid , message: inptText , sentByAgent:false };
+        var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
         console.log(agentPk);
         if (agentPk) {
           console.log('agent pk is pnline',isAgentOnline);
@@ -1905,8 +1948,8 @@ function endChat() {
 
 
        var dataToPublish = [uid , status , message ];
-       // setCookie("uidDetails", {}, 365);
 
+       // setCookie("uidDetails", {}, 365);
        // details = getCookie("uidDetails");
        // console.log('********************8',details);
        // if (details != "") {
@@ -1973,13 +2016,13 @@ function endChat() {
     }
 
 
-    inputText.addEventListener("keydown", function (e) {
-        if (e.keyCode === 13) {
-          if (inputText.value.length>0) {
-            sendMessage(inputText.value)
-          }
-        }
-    }, false);
+    // inputText.addEventListener("keydown", function (e) {
+    //     if (e.keyCode === 13) {
+    //       if (inputText.value.length>0) {
+    //         sendMessage(inputText.value)
+    //       }
+    //     }
+    // }, false);
 
 
   paperClip.addEventListener("click", function() {
@@ -2153,6 +2196,9 @@ function endChat() {
     chatOpen = !chatOpen
     console.log(chatOpen);
     setCookie("chatOpenCookie", chatOpen, 365);
+
+
+    startConvoBtn.click();
 
 
 

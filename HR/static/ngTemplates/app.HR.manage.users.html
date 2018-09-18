@@ -2,48 +2,39 @@
   <breadcrumb></breadcrumb>
   <div class="container-fluid">
     <uib-tabset>
-      <uib-tab >
+      <uib-tab>
         <uib-tab-heading>
-          New  <i class="fa fa-plus"></i>
+          New <i class="fa fa-plus"></i>
         </uib-tab-heading>
         <generic-Form template="'/static/ngTemplates/app.HR.form.newUser.html'" data="newUser" submit-Fn="createUser()" form-title="'Create New User'"></generic-Form>
       </uib-tab>
 
 
-      <uib-tab >
+      <uib-tab active="searchTabActive">
         <uib-tab-heading>
-          Create Customer
+          Search <i ng-if="tab.cancel" class="fa fa-search"></i>
+        </uib-tab-heading>
+        <generic-Table callback-Fn="tableAction" data="data.tableData" config-Obj="{{config}}"></generic-Table>
+      </uib-tab>
+
+      <uib-tab>
+        <uib-tab-heading>
+          New Customer
         </uib-tab-heading>
         <generic-Form template="'/static/ngTemplates/app.HR.form.createCustomer.html'" data="newUser" submit-Fn="createCustomer()" form-title="'Create New Customer'"></generic-Form>
       </uib-tab>
 
 
-
-
-      <uib-tab active="searchTabActive">
-        <uib-tab-heading >
-          Search  <i ng-if="tab.cancel" class="fa fa-search"></i>
-        </uib-tab-heading>
-        <generic-Table callback-Fn = "tableAction" data="data.tableData" config-Obj="{{config}}"></generic-Table>
-
-      </uib-tab>
-
-
       <uib-tab>
-        <uib-tab-heading >
-          Customers  <i ng-if="tab.cancel" class="fa fa-search"></i>
+        <uib-tab-heading>
+          Customers <i ng-if="tab.cancel" class="fa fa-search"></i>
         </uib-tab-heading>
-
-        <generic-Table callback-Fn = "tableAction" data="data.tableData" config-Obj="{{config}}"></generic-Table>
-
+        <generic-Table callback-Fn="tableActionCustomer" data="dataCustomer.tableDataCustomer" config-Obj="{{configCustomer}}"></generic-Table>
       </uib-tab>
-
-
-
 
 
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
-        <uib-tab-heading >
+        <uib-tab-heading>
           {{tab.title}} <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
         </uib-tab-heading>
         <div ng-if="tab.app == 'editProfile'">

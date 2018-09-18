@@ -325,12 +325,12 @@ app.controller('sudo.manageUsers.editDesignation', function($scope, $http, Flash
   $scope.saveKra = function() {
 
     var f = $scope.kraForm;
-    console.log('kraaaaaaaa',f);
-    if (f.responsibility ==null || f.responsibility.length == 0) {
+    console.log('kraaaaaaaa', f);
+    if (f.responsibility == null || f.responsibility.length == 0) {
       Flash.create('warning', 'Responsibility Is required');
       return
     }
-    if (f.target ==null || f.target.length == 0) {
+    if (f.target == null || f.target.length == 0) {
       Flash.create('warning', 'Target Is required');
       return
     }
@@ -374,20 +374,20 @@ app.controller('sudo.manageUsers.editDesignation', function($scope, $http, Flash
   $scope.saveWeightage = function() {
     var a = 0
     for (var i = 0; i < $scope.kraForm.KRAs.length; i++) {
-      console.log($scope.kraForm.KRAs[i].weightage,typeof $scope.kraForm.KRAs[i].weightage);
+      console.log($scope.kraForm.KRAs[i].weightage, typeof $scope.kraForm.KRAs[i].weightage);
       a = a + $scope.kraForm.KRAs[i].weightage
     }
     console.log(a);
     if (a > 100) {
       Flash.create('warning', 'Sum should be lessthan 100');
       return
-    }else {
+    } else {
       for (var i = 0; i < $scope.kraForm.KRAs.length; i++) {
-        console.log('weighttttttttttttt',$scope.kraForm.KRAs[i].weightage);
+        console.log('weighttttttttttttt', $scope.kraForm.KRAs[i].weightage);
         var toSend = {
-          target:$scope.kraForm.KRAs[i].target,
-          period:$scope.kraForm.KRAs[i].period,
-          weightage:$scope.kraForm.KRAs[i].weightage
+          target: $scope.kraForm.KRAs[i].target,
+          period: $scope.kraForm.KRAs[i].period,
+          weightage: $scope.kraForm.KRAs[i].weightage
         }
         $http({
           method: 'PATCH',
@@ -476,11 +476,11 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
       bloodGroup: prof.bloodGroup,
     }
     if (prof.married) {
-      console.log(prof.anivarsary,typeof prof.anivarsary);
+      console.log(prof.anivarsary, typeof prof.anivarsary);
       dataToSend.married = prof.married;
       if (typeof prof.anivarsary == 'object') {
         dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
-      }else {
+      } else {
         dataToSend.anivarsary = prof.anivarsary
       }
     }
@@ -553,13 +553,13 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
     var f = $scope.files;
     var fd = new FormData();
 
-    var fileFields = ['displayPicture','TNCandBond', 'resume', 'certificates', 'transcripts', 'otherDocs', 'resignation', 'vehicleRegistration', 'appointmentAcceptance', 'pan', 'drivingLicense', 'cheque', 'passbook', 'sign', 'IDPhoto']
+    var fileFields = ['displayPicture', 'TNCandBond', 'resume', 'certificates', 'transcripts', 'otherDocs', 'resignation', 'vehicleRegistration', 'appointmentAcceptance', 'pan', 'drivingLicense', 'cheque', 'passbook', 'sign', 'IDPhoto']
     for (var i = 0; i < fileFields.length; i++) {
       if ($scope.files[fileFields[i]] != emptyFile) {
         fd.append(fileFields[i], $scope.files[fileFields[i]])
       }
     }
-    if (fd.displayPicture==null||fd.displayPicture==emptyFile||typeof fd.displayPicture == 'string') {
+    if (fd.displayPicture == null || fd.displayPicture == emptyFile || typeof fd.displayPicture == 'string') {
       delete fd.displayPicture
     }
 
@@ -672,10 +672,37 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     searchField: 'username',
   };
 
+
+
+  var viewsCustomer = [{
+      name: 'table',
+      icon: 'fa-bars',
+      template: '/static/ngTemplates/genericTable/genericSearchList.html',
+      itemTemplate: '/static/ngTemplates/app.HR.manage.customers.items.html'
+    }];
+
+
+
+  $scope.configCustomer = {
+    url: '/api/HR/users/',
+    views: viewsCustomer,
+    itemsNumPerView: [12, 24, 48],
+    getParams: [{
+      key: 'getCustomers',
+      value: 1
+    }],
+    searchField: 'username',
+  };
+
   $scope.tabs = [];
   $scope.searchTabActive = true;
   $scope.data = {
     tableData: []
+  };
+
+
+  $scope.dataCustomer = {
+    tableDataCustomer: []
   };
 
   $scope.closeTab = function(index) {
@@ -707,8 +734,10 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     firstName: '',
     lastName: '',
     password: '',
-    access:'full_access'
+    access: 'full_access'
   };
+
+
   $scope.createUser = function() {
     dataToSend = {
       username: $scope.newUser.username,
@@ -733,24 +762,30 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });
   }
-$scope.full_access_app=[];
-$scope.rest_access_app=[];
+
+
+  $scope.full_access_app = [];
+  $scope.rest_access_app = [];
+
+
   $http({
     method: 'GET',
     url: '/api/organization/role/?name=Full%20access',
   }).
   then(function(response) {
-    for(var i=0;i<response.data[0].applications.length;i++)
-    $scope.full_access_app[i]=response.data[0].applications[i].pk;
+    for (var i = 0; i < response.data[0].applications.length; i++)
+      $scope.full_access_app[i] = response.data[0].applications[i].pk;
     console.log($scope.full_access_app);
   });
+
+
   $http({
     method: 'GET',
     url: '/api/organization/role/?name=Restricted%20access',
   }).
   then(function(response) {
-    for(var i=0;i<response.data[0].applications.length;i++)
-    $scope.rest_access_app[i]=response.data[0].applications[i].pk;
+    for (var i = 0; i < response.data[0].applications.length; i++)
+      $scope.rest_access_app[i] = response.data[0].applications[i].pk;
     console.log($scope.rest_access_app);
   });
 
@@ -761,12 +796,12 @@ $scope.rest_access_app=[];
       first_name: $scope.newUser.firstName,
       last_name: $scope.newUser.lastName,
       password: $scope.newUser.password,
-      access:$scope.newUser.access
+      access: $scope.newUser.access
     };
-    if($scope.newUser.access=='full_access')
-      $scope.app=$scope.full_access_app
+    if ($scope.newUser.access == 'full_access')
+      $scope.app = $scope.full_access_app
     else {
-      $scope.app=$scope.rest_access_app;
+      $scope.app = $scope.rest_access_app;
     }
     $http({
       method: 'POST',
@@ -777,10 +812,10 @@ $scope.rest_access_app=[];
         method: 'POST',
         url: '/api/ERP/permission/',
         data: {
-          apps:  $scope.app,
-          user:response.data.pk
+          apps: $scope.app,
+          user: response.data.pk
         }
-      }).then(function(resp){
+      }).then(function(resp) {
         console.log(resp.data);
       })
 
@@ -791,13 +826,15 @@ $scope.rest_access_app=[];
         firstName: '',
         lastName: '',
         password: '',
-        access:'full_access'
+        access: 'full_access'
       };
 
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });
   }
+
+
 
 
   $scope.tableAction = function(target, action, mode) {
@@ -840,7 +877,7 @@ $scope.rest_access_app=[];
           url: '/api/HR/usersAdminMode/' + target + '/'
         }).
         then(function(response) {
-          console.log(response.data,'res');
+          console.log(response.data, 'res');
           $http({
             method: 'GET',
             url: '/api/mail/account/?user=' + target
@@ -867,7 +904,7 @@ $scope.rest_access_app=[];
             permissionsFormData = {
               appsToAdd: data,
               url: target,
-              role:''
+              role: ''
             }
             $scope.addTab({
               title: 'Edit permissions for ' + u.first_name + ' ' + u.last_name,
@@ -961,6 +998,41 @@ $scope.rest_access_app=[];
     }
   }
 
+
+  $scope.tableActionCustomer = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.dataCustomer.tableDataCustomer);
+
+    for (var i = 0; i < $scope.dataCustomer.tableDataCustomer.length; i++) {
+      if ($scope.dataCustomer.tableDataCustomer[i].pk == parseInt(target)) {
+        if (action == 'editCustomer') {
+          var title = 'Edit Customer :';
+          var appType = 'contactEditor';
+          console.log('Edit customer open same form');
+          console.log($scope.dataCustomer.tableDataCustomer[i]);
+          return
+        } else if (action == 'deleteCustomer') {
+          $http({method : 'DELETE' , url : '/api/HR/usersAdminMode/' + $scope.dataCustomer.tableDataCustomer[i].pk +'/'}).
+          then(function(response) {
+            $scope.dataCustomer.tableDataCustomer.splice(i , 1);
+            Flash.create('success', 'Deleted Successfully')
+          })
+          return
+        }
+        $scope.addTab({
+          title: title + $scope.data.tableData[i].name,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i
+          },
+          active: true
+        })
+      }
+    }
+  }
+
   $scope.updateUserPermissions = function(index) {
     var userData = $scope.tabs[index].data;
     if (userData.appsToAdd.length == 0) {
@@ -989,11 +1061,11 @@ $scope.rest_access_app=[];
   }
 
   $scope.role = {
-    selected:'',
-    tabIndex:'',
+    selected: '',
+    tabIndex: '',
   }
 
-  $scope.$watch('tabs[role.tabIndex].data.role' , function(newValue , oldValue) {
+  $scope.$watch('tabs[role.tabIndex].data.role', function(newValue, oldValue) {
     if (typeof newValue == 'object') {
       console.log($scope.role);
       console.log($scope.tabs[$scope.role.tabIndex].data.role);

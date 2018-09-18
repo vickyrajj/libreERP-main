@@ -277,10 +277,13 @@ connection.onopen = function(session) {
     var scope = angular.element(document.getElementById('chatTab')).scope();
     if (scope) {
       console.log(scope.myUsers);
+      console.log(scope.newUsers);
       for (var i = 0; i < scope.myUsers.length; i++) {
+        console.log(scope.myUsers[i].uid , 'call');
         session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
         then((function(i) {
           return function (res) {
+            console.log(res,'res');
             scope.myUsers[i].isOnline = true;
           }
         })(i) , (function(i) {
@@ -290,6 +293,24 @@ connection.onopen = function(session) {
           }
         })(i))
       }
+
+
+      for (var i = 0; i < scope.newUsers.length; i++) {
+        console.log(scope.newUsers[i].uid , 'newwww');
+        session.call('service.support.heartbeat.' + scope.newUsers[i].uid, []).
+        then((function(i) {
+          return function (res) {
+            scope.newUsers[i].isOnline = true;
+          }
+        })(i) , (function(i) {
+          return function (err) {
+            console.log(err,'err');
+            scope.newUsers[i].isOnline = false;
+          }
+        })(i))
+      }
+
+
     }
   }
 
