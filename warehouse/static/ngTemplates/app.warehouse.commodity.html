@@ -45,17 +45,33 @@
       <div ng-if="$index==idx">
         <div class="row" style="padding:20px">
           <div class="col-md-5">
-              <input type="number" class="form-control" value="" ng-model="commodty.quanty">
+            <input type="number" class="form-control" value="" ng-model="commodty.quanty">
           </div>
           <div class="col-md-5">
-              <button type="button" class="btn btn-primary" ng-click="checkIn(c.pk,c.qty, $index)" style="width:100px"> In </button>
-                <button type="button" class="btn btn-primary" ng-click="checkOut(c.pk,c.qty, $index)" style="width:100px"> Out </button>
+            <button type="button" class="btn btn-primary" ng-click="checkIn(c.pk,c.qty, $index)" style="width:100px"> In </button>
+            <button type="button" class="btn btn-primary" ng-click="checkOut(c.pk,c.qty, $index)" style="width:100px"> Out </button>
           </div>
         </div>
-        <div class="row">
-          <div ng-repeat="i in comodityData">
-            {{i.checkIn}} {{i.checkOut}} {{i.balance}}
+        <div class="row" ng-if="comodityData.length>0">
+          <div class="text-center">
+            <table class="table table-bordered">
+              <tr>
+                <th class="text-center">Created</th>
+                <th class="text-center">In</th>
+                <th class="text-center">Out</th>
+                <th class="text-center">Download</th>
+              </tr>
+              <tbody ng-repeat="s in comodityData">
+                <tr>
+                  <td>{{s.created}}</td>
+                  <td>{{s.checkIn}}</td>
+                  <td>{{s.checkOut}}</td>
+                  <td><i class="fa fa-download"></i></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+
         </div>
       </div>
 

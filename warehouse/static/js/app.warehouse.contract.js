@@ -173,6 +173,7 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
 
 app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
     $scope.comodities=[]
+    $scope.comodityData =[]
   $scope.addCommodity = function(){
     console.log($scope.contract,'aaaaaaaaaaaaagggggggggggggggggggggggggggggga');
     $uibModal.open({
@@ -277,6 +278,8 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             }).
             then(function(response) {
               console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+              $scope.comodityData.push(response.data)
+              $scope.commodty.quanty=0
             })
           })
         }
