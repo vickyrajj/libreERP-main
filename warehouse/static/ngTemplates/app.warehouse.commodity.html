@@ -2,31 +2,46 @@
   <div class="modal-body">
     <div class="row">
       <div class="col-md-5">
-      <label>Commodity Name</label>
-      <input type="text" class="form-control" ng-model="form.name">
-    </div>
+        <label>Commodity Name</label>
+        <input type="text" class="form-control" ng-model="form.name">
+      </div>
       <div class="col-md-5">
-      <label>Quantity</label>
-      <input type="number" class="form-control" value="" ng-model="form.qty">
-    </div>
+        <label>Quantity</label>
+        <input type="number" class="form-control" value="" ng-model="form.qty">
+      </div>
       <div class="col-md-2">
         <br/>
-      <button type="button" class="btn btn-primary" ng-click="addCommodities()" style="width:100px"> Add </button>
-    </div>
+        <button type="button" class="btn btn-primary" ng-click="addCommodities()" style="width:100px"> Add </button>
+      </div>
     </div>
   </div>
-
   <div class="row">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Products</th>
-          <th>Quantity</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
+    <div class="col-md-5">
+      Name
+    </div>
+    <div class="col-md-5">
+      Quantity
+    </div>
+    <div class="col-md-2">
+      View
+    </div>
+    <hr/>
   </div>
-
+  <div class="row">
+    <div class="card" ng-repeat="c in comodities" style="padding-bottom:0px;margin-bottom:10px">
+      <div class="card">
+        <div class="row" style="padding:10px">
+          <div class="col-md-5">
+            {{c.name}}
+          </div>
+          <div class="col-md-5">
+            {{c.qty}}
+          </div>
+          <div class="col-md-2">
+            <i class="fa fa-plus"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

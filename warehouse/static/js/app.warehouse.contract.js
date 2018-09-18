@@ -193,7 +193,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             name:$scope.form.name,
             qty:$scope.form.qty
           }
-
+          $scope.comodities=[]
           $http({
             method: 'POST',
             url: '/api/warehouse/commodity/',
@@ -203,6 +203,11 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
           })
         }
+        $http({method : 'GET' , url : '/api/warehouse/commodity/?contract=' + $scope.contract.pk}).
+        then(function(response) {
+          console.log(response.data);
+          $scope.comodities = response.data
+        })
 
       },
     }).result.then(function () {
