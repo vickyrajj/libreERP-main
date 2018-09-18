@@ -28,7 +28,7 @@
     <hr/>
   </div>
   <div class="row">
-    <div class="card" ng-repeat="c in comodities" style="padding-bottom:0px;margin-bottom:10px">
+    <div class="card" ng-repeat="c in comodities" style="padding-bottom:0px;margin-bottom:15px">
       <div class="card">
         <div class="row" style="padding:10px">
           <div class="col-md-5">
@@ -37,11 +37,28 @@
           <div class="col-md-5">
             {{c.qty}}
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2" ng-click="expand(c.pk, $index)">
             <i class="fa fa-plus"></i>
           </div>
         </div>
       </div>
+      <div ng-if="$index==idx">
+        <div class="row" style="padding:20px">
+          <div class="col-md-5">
+              <input type="number" class="form-control" value="" ng-model="commodty.quanty">
+          </div>
+          <div class="col-md-5">
+              <button type="button" class="btn btn-primary" ng-click="checkIn(c.pk,c.qty, $index)" style="width:100px"> In </button>
+                <button type="button" class="btn btn-primary" ng-click="checkOut(c.pk,c.qty, $index)" style="width:100px"> Out </button>
+          </div>
+        </div>
+        <div class="row">
+          <div ng-repeat="i in comodityData">
+            {{i.checkIn}} {{i.checkOut}} {{i.balance}}
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

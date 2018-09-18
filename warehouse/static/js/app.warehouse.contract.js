@@ -172,7 +172,7 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
 
 
 app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
-
+    $scope.comodities=[]
   $scope.addCommodity = function(){
     console.log($scope.contract,'aaaaaaaaaaaaagggggggggggggggggggggggggggggga');
     $uibModal.open({
@@ -186,6 +186,11 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       },
       controller: function($scope, contract ){
         $scope.contract = contract;
+        $http({method : 'GET' , url : '/api/warehouse/commodity/?contract=' + $scope.contract.pk}).
+        then(function(response) {
+          console.log(response.data);
+          $scope.comodities = response.data
+        })
         $scope.addCommodities=function(){
           console.log(  $scope.contract,'sssssssssssssssssssss');
           var dataToSend={
@@ -193,7 +198,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             name:$scope.form.name,
             qty:$scope.form.qty
           }
-          $scope.comodities=[]
+
           $http({
             method: 'POST',
             url: '/api/warehouse/commodity/',
@@ -201,13 +206,81 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           }).
           then(function(response) {
             console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+            $scope.comodities.push(response.data)
           })
         }
-        $http({method : 'GET' , url : '/api/warehouse/commodity/?contract=' + $scope.contract.pk}).
-        then(function(response) {
-          console.log(response.data);
-          $scope.comodities = response.data
-        })
+        $scope.expand=function(value,indx){
+          $scope.idx=indx
+          $http({method : 'GET' , url : '/api/warehouse/commodityQty/?commodity=' + value}).
+          then(function(response) {
+            console.log(response.data);
+            $scope.comodityData = response.data
+          })
+
+        }
+        $scope.commodty={
+          quanty:0
+        }
+        $scope.checkIn = function(value,qty,idx){
+          console.log(value,qty,idx);
+          $scope.comodities[idx].qty=$scope.comodities[idx].qty+$scope.commodty.quanty
+          var dataToSend={
+            qty:$scope.comodities[idx].qty
+          }
+          $http({
+            method: 'PATCH',
+            url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
+            data: dataToSend
+          }).
+          then(function(response) {
+            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+            // $scope.comodities.push(response.data)
+            var dataToSend={
+              commodity:value,
+              checkIn:$scope.commodty.quanty,
+              balance:response.data.qty
+            }
+            $http({
+              method: 'POST',
+              url: '/api/warehouse/commodityQty/',
+              data: dataToSend
+            }).
+            then(function(response) {
+              console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+            })
+          })
+
+        }
+        $scope.checkOut = function(value,qty,idx){
+          console.log(value);
+          $scope.comodities[idx].qty=$scope.comodities[idx].qty-$scope.commodty.quanty
+          var dataToSend={
+            qty:$scope.comodities[idx].qty
+          }
+          $http({
+            method: 'PATCH',
+            url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
+            data: dataToSend
+          }).
+          then(function(response) {
+            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+            // $scope.comodities.push(response.data)
+            var dataToSend={
+              commodity:value,
+              checkOut:$scope.commodty.quanty,
+              balance:response.data.qty
+            }
+            $http({
+              method: 'POST',
+              url: '/api/warehouse/commodityQty/',
+              data: dataToSend
+            }).
+            then(function(response) {
+              console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+            })
+          })
+        }
+
 
       },
     }).result.then(function () {

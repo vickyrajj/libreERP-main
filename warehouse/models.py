@@ -142,7 +142,7 @@ class CommodityQty(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     checkIn =  models.PositiveIntegerField(null = True)
     checkOut =  models.PositiveIntegerField(null = True)
-    Balance =  models.PositiveIntegerField(null = True)
+    balance =  models.PositiveIntegerField(null = True)
     commodity = models.ForeignKey(Commodity , null = True , related_name="commoditypro")
 
 @receiver(pre_save, sender=Invoice, dispatch_uid="update_invoice_details")
