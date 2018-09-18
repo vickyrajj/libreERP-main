@@ -249,7 +249,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             then(function(response) {
               console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
               $scope.comodityData.push(response.data)
-              $scope.commodty.quanty=0
+              $scope.commodty.quanty = 0;
             })
           })
 

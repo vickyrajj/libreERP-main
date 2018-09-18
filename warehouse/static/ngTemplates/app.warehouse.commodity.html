@@ -25,29 +25,29 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" style="border-bottom:1px solid grey;padding:5px;">
     <div class="col-md-5">
-      Name
+      <b>Name</b>
     </div>
     <div class="col-md-5">
-      Quantity
+      <b>Quantity</b>
     </div>
     <div class="col-md-2">
-      View
+      <b>View</b>
     </div>
-    <hr/>
   </div>
+  <br>
   <div class="row">
-    <div class="card" ng-repeat="c in comodities" style="padding-bottom:0px;margin-bottom:15px">
+    <div class="card" ng-repeat="c in comodities" style="padding-bottom:0px; margin-bottom:10px">
       <div class="card">
-        <div class="row" style="padding:10px">
+        <div class="row" style="padding:10px; padding-left:20px;">
           <div class="col-md-5">
             {{c.name}}
           </div>
           <div class="col-md-5">
             {{c.qty}}
           </div>
-          <div class="col-md-2" ng-click="expand(c.pk, $index)">
+          <div class="col-md-2" ng-click="expand(c.pk,$index)">
             <i class="fa fa-plus"></i>
           </div>
         </div>
@@ -63,19 +63,21 @@
           </div>
         </div>
         <div class="row" ng-if="comodityData.length>0">
-          <div class="text-center">
-            <table class="table table-bordered">
+          <div class="text-center" style="padding:30px;">
+            <table class="table table-bordered" style="width:100%;">
               <tr>
                 <th class="text-center">Created</th>
                 <th class="text-center">In</th>
                 <th class="text-center">Out</th>
+                <th class="text-center"> Remaining Qt. </th>
                 <th class="text-center">Download</th>
               </tr>
               <tbody ng-repeat="s in comodityData">
                 <tr>
-                  <td>{{s.created| date:'d-M-y'}}</td>
+                  <td>{{s.created|date:'d-M-y'}}</td>
                   <td>{{s.checkIn}}</td>
                   <td>{{s.checkOut}}</td>
+                  <td>{{s.balance}}</td>
                   <td><i class="fa fa-download"></i></td>
                 </tr>
               </tbody>
@@ -86,5 +88,6 @@
       </div>
 
     </div>
+
   </div>
 </div>
