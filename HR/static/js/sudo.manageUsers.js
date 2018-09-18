@@ -701,9 +701,6 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     }
   }
 
-
-
-
   // create new user
   $scope.newUser = {
     username: '',
