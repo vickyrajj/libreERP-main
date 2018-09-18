@@ -24,6 +24,7 @@ from excel_response import ExcelResponse
 from django.views.decorators.csrf import csrf_exempt
 import urllib
 import datetime
+from datetime import timedelta
 from Crypto.Cipher import DES
 import base64
 import hashlib
@@ -98,8 +99,29 @@ class GetMyUser(APIView):
                 dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
                 print dic
                 toSend.append(dic)
-
             return Response(toSend, status=status.HTTP_200_OK)
+        if 'getNewUser' in request.GET:
+            print 'getNewUser'
+            time_threshold = datetime.datetime.now() - timedelta(hours=1)
+            # results = Widget.objects.filter(created__lt=time_threshold)
+            uidsList = list(ChatThread.objects.filter(user__isnull = True ,status='started' , created__gt = time_threshold).values_list('uid',flat=True).distinct())
+            toSend = []
+            for i in uidsList:
+                try:
+                    data = Visitor.objects.get(uid=i)
+                    dic = {'uid':data.uid,'name':data.name ,'email':data.email}
+                except:
+                    dic = {'uid':i,'name':'' ,'email':''}
+                dic['companyPk'] = ChatThread.objects.filter(uid=i)[0].company.pk
+                dic['chatThreadPk'] = ChatThread.objects.filter(uid=i)[0].pk
+                dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
+                # print dic['me']
+                # print Support.objects.filter(uid = i).count() , 'CCCCCCCCCCCCCCCCCCCC'
+                toSend.append(dic)
+            print toSend , 'FFFFFFFFFFFFFFFF'
+            return Response(toSend, status=status.HTTP_200_OK)
+
+
 def createExcel(data):
     wb = Workbook()
 
@@ -158,12 +180,12 @@ class ReviewFilterCalAPIView(APIView):
             userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
             userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
             if 'customerProfilePkList' in self.request.GET:
-                print 'a###############',userCustProfile
+                # print 'a###############',userCustProfile
                 return Response(userCustProfile, status=status.HTTP_200_OK)
             userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
-            print userCompany
-            print userCustProfile
-            print userCompanyUidList
+            # print userCompany
+            # print userCustProfile
+            # print userCompanyUidList
             sobj = SupportChat.objects.filter(uid__in=userCompanyUidList)
 
         if 'date' in self.request.GET:
@@ -174,12 +196,12 @@ class ReviewFilterCalAPIView(APIView):
         if 'client' in self.request.GET:
             userCustProfile = list(CustomerProfile.objects.filter(service=self.request.GET['client']).values_list('pk',flat=True).distinct())
             userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
-            print userCustProfile,userCompanyUidList
+            # print userCustProfile,userCompanyUidList
             sobj = sobj.filter(uid__in=userCompanyUidList)
         # toSend = list(sobj.values())
         uidL = list(sobj.values_list('uid',flat=True).distinct())
         agentsList = list(ChatThread.objects.filter(~Q(status='archived'),uid__in=uidL).values_list('user',flat=True).distinct())
-        print agentsList
+        # print agentsList
         for i in agentsList:
             agentuidList = list(ChatThread.objects.filter(~Q(status='archived'),user=i).values_list('uid',flat=True).distinct())
             agSobj = sobj.filter(uid__in = agentuidList)
@@ -188,7 +210,7 @@ class ReviewFilterCalAPIView(APIView):
                 agUid = list(agSobj.filter(uid__in=uidl).values_list('uid',flat=True).distinct())
             else:
                 agUid = list(agSobj.values_list('uid',flat=True).distinct())
-            print agUid
+            # print agUid
             for j in agUid:
                 try:
                     email = Visitor.objects.get(uid=j).email
@@ -198,11 +220,11 @@ class ReviewFilterCalAPIView(APIView):
                     company = ChatThread.objects.get(uid=j).company.service.name
                 except:
                     company = ''
-                print company
+                # print company
                 agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
                 res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType','sentByAgent').annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField())))
-        print toSend
+        # print toSend
         if 'download' in self.request.GET:
             print 'downloadddddddddddddddddddddddd'
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

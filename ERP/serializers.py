@@ -193,7 +193,7 @@ class permissionSerializer(serializers.ModelSerializer):
     app = applicationSerializer(read_only = True, many = False)
     class Meta:
         model = permission
-        fields = ( 'pk' , 'app' , 'user' )
+        fields = ( 'pk' , 'app' , 'user', 'givenBy')
     def create(self , validated_data):
         user = self.context['request'].user
         if not user.is_superuser and user not in app.owners.all():

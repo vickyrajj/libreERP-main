@@ -45,9 +45,10 @@
     </div>
     <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; height:71vh; overflow-y:auto; overflow-x:hidden;">
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
+
         <div class="row container-fluid">
           <div style="float:{{message.sentByAgent ? 'right; background-color:#E4E5E9; ':'left; background-color:#DDF7C8;'}} padding:10px;margin:8px;border-radius:{{message.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-            <p ng-if="message.message.length>0 && message.attachmentType!='youtubeLink'" style="word-break: break-all !important;"> <span ng-if="message.message.includes('www.') || message.message.includes('http')"> <a href="{{message.message}}"> {{message.message}}</a> </span> <span ng-if="!message.message.includes('www.') && !message.message.includes('http')">{{message.message}}</span>              </p>
+            <p ng-if="message.message.length>0 && message.attachmentType!='youtubeLink'" style="word-wrap: break-word; !important; white-space: pre-wrap;   "> <span ng-if="message.message.includes('www.') || message.message.includes('http')"> <a href="{{message.message}}">{{message.message}}</a> </span> <span ng-if="!message.message.includes('www.') && !message.message.includes('http')">{{message.message }}</span>  </p>
             <img ng-if="message.attachmentType == 'image'" ng-src="{{message.attachment}}" style="width:250px;">
             <video ng-if="message.attachmentType == 'video'" width="280" height="240" ng-src="{{message.attachment}}" controls></video>
             <audio ng-if="message.attachmentType == 'audio'" ng-src="{{message.attachment}}" controls></audio>
@@ -56,7 +57,6 @@
               <iframe width="100%" height="215" ng-src="{{message.message | trusted}}" frameborder="0" allowfullscreen></iframe>
             </div>
           </div>
-
         </div>
 
         <div class="row container-fluid" style="{{message.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
@@ -86,7 +86,8 @@
 
     <div class="row" style="margin:0px;margin-top:10px;margin-bottom:5px;padding-top:10px;padding-bottom:10px;">
       <span class="uibTypeaheadDropup">
-        <input ng-if="chatBox.fileToSend.size==0" type="text" class="col-md-9" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" data-placement="top" style="border:none;outline:none;background-color:white;">
+        <!-- <input ng-if="chatBox.fileToSend.size==0" type="text" class="col-md-9" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" data-placement="top" style="border:none;outline:none;background-color:white;"> -->
+        <textarea ng-if="chatBox.fileToSend.size==0" class="col-md-9" rows="1" cols="80" style="border:none; outline:none; resize:none; background-color:#fff;" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" placeholder="Message" ></textarea>
       </span>
 
       <input type="file" id="filePickerChat{{index}}" style="display:none;" file-model="chatBox.fileToSend">

@@ -245,6 +245,21 @@ app.filter('getName' , function($users){
   }
 })
 
+app.filter('newlines', function () {
+    return function(text) {
+        return text.replace(/\n/g, '<br/>');
+    }
+})
+
+
+app.filter('noHTML', function () {
+    return function(text) {
+        return text
+                .replace(/&/g, '&amp;')
+                .replace(/>/g, '&gt;')
+                .replace(/</g, '&lt;');
+    }
+});
 
 
 app.filter('trusted', ['$sce', function ($sce) {
