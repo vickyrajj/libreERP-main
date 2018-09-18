@@ -581,7 +581,6 @@ app.controller("app.customer.reviews.explore", function($scope, $http) {
     }
   }
 
-
   $scope.msgData = $scope.tab.data
   console.log($scope.tab.data);
   $scope.reviewCommentData = []

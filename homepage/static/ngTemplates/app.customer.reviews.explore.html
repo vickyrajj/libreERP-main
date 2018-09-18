@@ -20,7 +20,7 @@
             <div ng-if="!msg.sentByAgent" class="float-left" style="clear:both;">{{msg.created | date : 'hh:mm:a' }}</div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6" style="padding:20px;">
         <div class="row" ng-repeat="comment in reviewCommentData" style="padding-bottom:15px;">
           <div class="col-md-10">
             <div style="float:right; background-color:#286EFA; color:#fff; border-radius:15px 50px 50px 15px; padding:10px 10px 10px 15px;word-break: break-all !important;">
@@ -41,7 +41,6 @@
             <button type="button" class="btn btn-primary" name="button" ng-click="postComment()"> Save  </button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
