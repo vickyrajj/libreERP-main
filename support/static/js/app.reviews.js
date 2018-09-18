@@ -224,14 +224,14 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   };
   $scope.changeDateType = false
   $scope.$watch('form.date', function(newValue, oldValue) {
-    // console.log(oldValue,newValue);
+    console.log(oldValue,newValue);
     if (oldValue == undefined || oldValue == null) {
       $scope.changeDateType = true
     }
   })
   $scope.filterData = function(download){
 
-    // console.log($scope.form.date,typeof($scope.form.date),$scope.oldDateValue);
+    console.log($scope.form.date,typeof($scope.form.date),$scope.oldDateValue);
     if (typeof $scope.form.date =='undefined') {
       Flash.create('warning','Please Select Proper Date')
       return

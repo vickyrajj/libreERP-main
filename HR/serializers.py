@@ -120,7 +120,7 @@ class userSerializer(serializers.ModelSerializer):
 class userAdminSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url' , 'username' , 'email' , 'first_name' , 'last_name' , 'is_staff' ,'is_active' )
+        fields = ('pk','url' , 'username' , 'email' , 'first_name' , 'last_name' , 'is_staff' ,'is_active' )
     def create(self , validated_data):
         if not self.context['request'].user.is_superuser:
             raise PermissionDenied(detail=None)
