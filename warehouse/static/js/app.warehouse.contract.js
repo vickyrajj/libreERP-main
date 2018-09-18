@@ -185,9 +185,9 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       // },
       controller: function($scope ){
         // $scope.deal = deal;
-        $scsope.addCommodities=function(){
+        $scope.addCommodities=function(){
 
-          
+
           $http({
             method: method,
             url: url,

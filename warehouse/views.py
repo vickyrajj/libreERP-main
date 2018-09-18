@@ -215,7 +215,7 @@ class PageNumCanvas(canvas.Canvas):
         """
         page_count = len(self.pages)
 
-# <<<<<<< HEAD
+
         for page in self.pages:
             self.__dict__.update(page)
             # self.draw_page_number(page_count)
@@ -225,7 +225,6 @@ class PageNumCanvas(canvas.Canvas):
         canvas.Canvas.save(self)
 
 
-# =======
 
 themeColor = colors.HexColor('#227daa')
 
