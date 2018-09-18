@@ -11,7 +11,8 @@ router.register(r'invoice' , InvoiceViewSet , base_name = 'invoice')
 router.register(r'space' , SpaceViewSet , base_name = 'space')
 router.register(r'checkin' , CheckinViewSet , base_name = 'checkin')
 router.register(r'checkout' , CheckoutViewSet , base_name = 'checkout')
-
+router.register(r'commodity' , CommodityViewSet , base_name = 'commodity')
+router.register(r'commodityQty' , CommodityQtyViewSet , base_name = 'commodityQty')
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'downloadInvoice/$' , DownloadInvoice.as_view() ),

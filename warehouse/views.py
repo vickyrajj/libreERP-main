@@ -95,7 +95,7 @@ class CommodityQtyViewSet(viewsets.ModelViewSet):
     # filter_fields = ['parent']
 
 
-themeColor = colors.HexColor('#227daa')
+# themeColor = colors.HexColor('#227daa')
 
 styles=getSampleStyleSheet()
 styleN = styles['Normal']

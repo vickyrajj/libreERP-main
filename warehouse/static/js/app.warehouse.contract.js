@@ -173,6 +173,40 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
 
 app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
 
+  $scope.addCommodity = function(){
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.warehouse.commodity.html',
+      size: 'xl',
+      backdrop : true,
+      // resolve : {
+      //   deal : function() {
+      //     return $scope.deal;
+      //   }
+      // },
+      controller: function($scope ){
+        // $scope.deal = deal;
+        $scsope.addCommodities=function(){
+
+          
+          $http({
+            method: method,
+            url: url,
+            data: dataToSend
+          }).
+          then(function(response) {
+
+          })
+        }
+
+      },
+    }).result.then(function () {
+
+    }, function () {
+
+
+    });
+  }
+
   $scope.changeStatus = function(status , indx) {
     $scope.contract.invoice[indx].status = status;
 
