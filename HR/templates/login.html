@@ -19,41 +19,19 @@
 <body>
   <div class="col-md-8" style="background-image: url('{{backgroundImage}}');background-size: cover;height:100%;position:absolute;left:0px;">
   </div>
-  <div class="col-md-4" style="background-color:#eeeeee;height:100%;position:absolute;right:0px;">
-    <form method="post" class="form-signin" action="">{% csrf_token %}
-      <h2 class="form-signin-heading" style="color:black;margin-top:200px;">Login</h2> {% if authStatus.status != 'default' %}
-      <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
-      {% endif %}
+  <div class="col-md-4 text-center" style="background-color:#eeeeee;height:100%;position:absolute;right:0px;">
 
-      <div id="alerts">
-
-      </div>
+    <img src="/static/images/i2i.png" alt="" style="margin-top:20vh;">
 
 
-      <label for="username" class="sr-only">Username/Email</label>
-      <input id="id" name="username" type="text" class="form-control" placeholder="Username/Email/Mobile" required autofocus>
-      <label for="password" class="sr-only">Password</label>
-      <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
-      <button style="margin-bottom:20px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-
-      <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a>
-
-      <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
-        <span style="color:white;">
-            <i class="fa fa-mobile fa-3x" ></i> <br>
-            <span id="otptxt">Send OTP</span>
-          </span>
-      </div>
-
-      <a href="/register" class="btn btn-success btn-block" style="margin-top:150px;">Register</a>
-          <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
-            <i class="fa fa-google-plus pull-left"></i>Login with Google
-          </a>
-          <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block">
-            <i class="fa fa-facebook pull-left"></i> Login with Facebook
-          </a>
+    <form method="post" class="form-signin" action="" style="margin-top:10vh;">{% csrf_token %}
+      <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
+        <i class="fa fa-google-plus pull-left"></i>Login with Google
+      </a>
+      <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block" >
+        <i class="fa fa-facebook pull-left"></i> Login with Facebook
+      </a>
     </form>
-
 
   </div>
   <!-- /container -->
@@ -96,7 +74,7 @@
                 $('#password').attr("placeholder", "OTP");
                 $('#password').attr("name", "otp");
                 $('#password').attr("type", "text");
-                
+
               } else if (jqXHR.status == 400) {
                 $('#alerts').append('<div class="alert alert-danger">No account</div>')
               } else {
