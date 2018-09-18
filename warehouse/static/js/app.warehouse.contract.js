@@ -174,27 +174,33 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
 app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
 
   $scope.addCommodity = function(){
+    console.log($scope.contract,'aaaaaaaaaaaaagggggggggggggggggggggggggggggga');
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.warehouse.commodity.html',
       size: 'xl',
       backdrop : true,
-      // resolve : {
-      //   deal : function() {
-      //     return $scope.deal;
-      //   }
-      // },
-      controller: function($scope ){
-        // $scope.deal = deal;
-        $scsope.addCommodities=function(){
+      resolve : {
+        contract : function() {
+          return $scope.contract;
+        }
+      },
+      controller: function($scope, contract ){
+        $scope.contract = contract;
+        $scope.addCommodities=function(){
+          console.log(  $scope.contract,'sssssssssssssssssssss');
+          var dataToSend={
+            contract:$scope.contract.pk,
+            name:$scope.form.name,
+            qty:$scope.form.qty
+          }
 
-          
           $http({
-            method: method,
-            url: url,
+            method: 'POST',
+            url: '/api/warehouse/commodity/',
             data: dataToSend
           }).
           then(function(response) {
-
+            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
           })
         }
 

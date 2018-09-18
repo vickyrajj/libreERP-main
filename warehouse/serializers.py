@@ -141,9 +141,17 @@ class CheckoutSerializer(serializers.ModelSerializer):
         return c
 
 class CommoditySerializer(serializers.ModelSerializer):
+    contract = ContractLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Commodity
         fields = ('pk' ,'created' , 'contract' , 'name' , 'qty')
+    def create(self , validated_data):
+        print 'enttttttttttttttt'
+        i=Commodity(**validated_data)
+        i.contract=Contract.objects.get(pk=self.context['request'].data['contract'])
+        i.save()
+        return i
+
 
 class CommodityQtySerializer(serializers.ModelSerializer):
     class Meta:
