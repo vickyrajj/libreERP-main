@@ -154,6 +154,13 @@ class CommoditySerializer(serializers.ModelSerializer):
 
 
 class CommodityQtySerializer(serializers.ModelSerializer):
+    commodity = CommoditySerializer(many = False , read_only = True)
     class Meta:
         model = CommodityQty
-        fields = ('pk' ,'created' , 'checkIn' , 'checkOut' , 'Balance' , 'commodity')
+        fields = ('pk' ,'created' , 'checkIn' , 'checkOut' , 'balance' , 'commodity')
+    def create(self , validated_data):
+        print 'enttttttttttttttt'
+        i=CommodityQty(**validated_data)
+        i.commodity=Commodity.objects.get(pk=self.context['request'].data['commodity'])
+        i.save()
+        return i
