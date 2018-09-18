@@ -84,8 +84,8 @@ class CommodityViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
     serializer_class = CommoditySerializer
     queryset = Commodity.objects.all()
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['parent']
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['contract']
 
 class CommodityQtyViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
@@ -226,7 +226,7 @@ class PageNumCanvas(canvas.Canvas):
 
 
 
- themeColor = colors.HexColor('#227daa')
+themeColor = colors.HexColor('#227daa')
 
 styles=getSampleStyleSheet()
 styleN = styles['Normal']
