@@ -213,7 +213,7 @@ class PageNumCanvas(canvas.Canvas):
 
 # =======
 
-# themeColor = colors.HexColor('#227daa')
+themeColor = colors.HexColor('#227daa')
 
 styles=getSampleStyleSheet()
 styleN = styles['Normal']
@@ -353,22 +353,22 @@ class PageNumCanvas(canvas.Canvas):
         p.wrapOn(self , 50*mm , 10*mm)
         p.drawOn(self , 100*mm , 10*mm)
 
-    # def drawLetterHeadFooter(self):
-    #     self.setStrokeColor(themeColor)
-    #     self.setFillColor(themeColor)
-    #     self.rect(0,0,1500,70, fill=True)
-    #     # print dir(self)
-    #     compNameStyle = styleN.clone('footerCompanyName')
-    #     compNameStyle.textColor = colors.white;
-    #     print '*******************',settingsFields.get(name = 'bankDetails').value
-    #
-    #     p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
-    #     p.wrapOn(self , 70*mm , 10*mm)
-    #     p.drawOn(self , 80*mm  , 18*mm)
-    #
-    #     p1 = Paragraph(settingsFields.get(name = 'companyAddress').value , compNameStyle)
-    #     p1.wrapOn(self , 210*mm , 10*mm)
-    #     p1.drawOn(self , 4*mm  , 10*mm)
+    def drawLetterHeadFooter(self):
+        self.setStrokeColor(themeColor)
+        self.setFillColor(themeColor)
+        self.rect(0,0,1500,70, fill=True)
+        # print dir(self)
+        compNameStyle = styleN.clone('footerCompanyName')
+        compNameStyle.textColor = colors.white;
+        print '*******************',settingsFields.get(name = 'bankDetails').value
+
+        p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
+        p.wrapOn(self , 70*mm , 10*mm)
+        p.drawOn(self , 80*mm  , 18*mm)
+
+        p1 = Paragraph(settingsFields.get(name = 'companyAddress').value , compNameStyle)
+        p1.wrapOn(self , 210*mm , 10*mm)
+        p1.drawOn(self , 4*mm  , 10*mm)
 
 
         p2 = Paragraph( settingsFields.get(name = 'contactDetails').value, compNameStyle)
