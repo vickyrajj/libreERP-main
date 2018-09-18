@@ -92,10 +92,10 @@ class CommodityQtyViewSet(viewsets.ModelViewSet):
     serializer_class = CommodityQtySerializer
     queryset = CommodityQty.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['commodty']
+    filter_fields = ['parent']
 
 
-themeColor = colors.HexColor('#227daa')
+# themeColor = colors.HexColor('#227daa')
 
 styles=getSampleStyleSheet()
 styleN = styles['Normal']
@@ -225,8 +225,7 @@ class PageNumCanvas(canvas.Canvas):
         canvas.Canvas.save(self)
 
 
-
-# themeColor = colors.HexColor('#227daa')
+themeColor = colors.HexColor('#227daa')
 
 styles=getSampleStyleSheet()
 styleN = styles['Normal']

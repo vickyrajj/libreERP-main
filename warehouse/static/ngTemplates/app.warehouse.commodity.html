@@ -67,11 +67,11 @@
         <th class="text-center">Out</th>
         <th class="text-center">Download</th>
       </tr>
-      <tbody ng-repeat="s in "  >
+      <tbody ng-repeat = "s in comodityData" >
         <tr >
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{s.created}}</td>
+          <td>{{s.checkIn}}</td>
+          <td>{{s.checkOut}}</td>
           <td><i class="fa fa-download"></i></td>
         </tr>
       </tbody>
