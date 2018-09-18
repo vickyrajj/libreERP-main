@@ -139,3 +139,13 @@ class CheckoutSerializer(serializers.ModelSerializer):
         c.parent.save()
         c.save()
         return c
+
+class CommoditySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Commodity
+        fields = ('pk' ,'created' , 'contract' , 'name' , 'qty')
+
+class CommodityQtySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommodityQty
+        fields = ('pk' ,'created' , 'checkIn' , 'checkOut' , 'Balance' , 'commodity')

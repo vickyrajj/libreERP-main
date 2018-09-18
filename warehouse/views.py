@@ -80,6 +80,20 @@ class CheckoutViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['parent']
 
+class CommodityViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated , )
+    serializer_class = CommoditySerializer
+    queryset = Commodity.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['parent']
+
+class CommodityQtyViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated , )
+    serializer_class = CommodityQtySerializer
+    queryset = CommodityQty.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['parent']
+
 
 themeColor = colors.HexColor('#227daa')
 

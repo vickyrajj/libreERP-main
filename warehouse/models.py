@@ -132,6 +132,19 @@ class Checkout(models.Model):
     value = models.FloatField(null = False)
     final = models.FloatField(null = False)
 
+class Commodity(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    contract = models.ForeignKey(Contract , null = True , related_name="commodities")
+    name = models.CharField(max_length = 100 , null = False)
+    qty =  models.PositiveIntegerField(null = True)
+
+class CommodityQty(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    checkIn =  models.PositiveIntegerField(null = True)
+    checkOut =  models.PositiveIntegerField(null = True)
+    Balance =  models.PositiveIntegerField(null = True)
+    commodity = models.ForeignKey(Commodity , null = True , related_name="commoditypro")
+
 @receiver(pre_save, sender=Invoice, dispatch_uid="update_invoice_details")
 def update_invoice_details(sender, instance, **kwargs):
     print "setting the dates"
