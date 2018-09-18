@@ -179,13 +179,13 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.warehouse.commodity.html',
       size: 'xl',
-      backdrop : true,
+      backdrop : false,
       resolve : {
         contract : function() {
           return $scope.contract;
         }
       },
-      controller: function($scope, contract ){
+      controller: function($scope, contract, $uibModalInstance){
         $scope.contract = contract;
         $http({method : 'GET' , url : '/api/warehouse/commodity/?contract=' + $scope.contract.pk}).
         then(function(response) {
@@ -248,11 +248,14 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             }).
             then(function(response) {
               console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+              $scope.comodityData.push(response.data)
+              $scope.commodty.quanty=0
             })
           })
 
         }
         $scope.checkOut = function(value,qty,idx){
+
           console.log(value);
           $scope.comodities[idx].qty=$scope.comodities[idx].qty-$scope.commodty.quanty
           var dataToSend={
@@ -283,6 +286,10 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             })
           })
         }
+
+      $scope.close=function(){
+        $uibModalInstance.dismiss('cancel');
+      }
 
 
       },

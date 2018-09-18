@@ -1,8 +1,18 @@
 <div class="container" style="padding:30px;">
+  <div class="modal-header">
+    <div class="row">
+      <div class="col-md-6 text-left">
+      <h3>  Commodity Details </h3>
+  </div>
+  <div class="col-md-6 text-right">
+      <i class="fa fa-close fa-2x" ng-click=close()></i>
+  </div>
+  </div>
+  </div>
   <div class="modal-body">
     <div class="row">
       <div class="col-md-5">
-        <label>Commodity Name</label>
+        <label>Name</label>
         <input type="text" class="form-control" ng-model="form.name">
       </div>
       <div class="col-md-5">
@@ -63,7 +73,7 @@
               </tr>
               <tbody ng-repeat="s in comodityData">
                 <tr>
-                  <td>{{s.created}}</td>
+                  <td>{{s.created| date:'d-M-y'}}</td>
                   <td>{{s.checkIn}}</td>
                   <td>{{s.checkOut}}</td>
                   <td><i class="fa fa-download"></i></td>
