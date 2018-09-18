@@ -418,7 +418,7 @@ def genInvoice(response , invoice, request):
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
 from BeautifulSoup import BeautifulSoup as bs
-import pandas as pd
+# import pandas as pd
 import re
 
 class ExternalEmailOrders(APIView):
