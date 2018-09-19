@@ -69,7 +69,8 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
     $scope.mode = 'edit';
     $http({method : 'GET' , url : '/api/PIM/blog/' + $stateParams.id + '/?state=all'}).
     then(function(response){
-      $scope.editor.url = response.data.url;
+      console.log(response.data);
+      $scope.editor.url = '/api/PIM/blog/' + response.data.pk + '/';
       $scope.editor.source = response.data.source;
       $scope.editor.title = response.data.title;
       $scope.editor.header = response.data.header;
@@ -304,7 +305,9 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
             $scope.editor.title = '';
             $scope.editor.tags = [];
             $scope.editor.mode = 'hedaer';
+            $scope.editor.shortUrl = ''
           }, function(response){
+            console.log(response);
             Flash.create('danger' , response.status + ' : ' + response.statusText);
           });
         }
@@ -313,6 +316,14 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
         text: 'Save',
         icon: false,
         onclick: function() {
+          if ($scope.editor.shortUrl == null || $scope.editor.shortUrl == '') {
+            Flash.create('danger' , 'Please Mention URL Suffix');
+            return;
+          }else if ($scope.editor.shortUrl.split(' ').length>1) {
+            Flash.create('danger' , 'URL Suffix Should Be In Proper Format');
+            return;
+          }
+          console.log($scope.editor.shortUrl.split(' '));
           tags = '';
           for (var i = 0; i < $scope.editor.tags.length; i++) {
             tags += $scope.editor.tags[i].title;
@@ -328,6 +339,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
             sourceFormat : 'html',
             state : 'saved',
             tags : tags,
+            shortUrl : $scope.editor.shortUrl
           };
 
           if ($scope.mode == 'edit') {
@@ -346,6 +358,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
             $scope.editor.title = '';
             $scope.editor.tags = [];
             $scope.editor.mode = 'hedaer';
+            $scope.editor.shortUrl = ''
           }, function(response){
             Flash.create('danger' , response.status + ' : ' + response.statusText);
           });

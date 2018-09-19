@@ -452,6 +452,9 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     if ($scope.form.paymentPortrait != null && typeof $scope.form.paymentPortrait != 'string') {
       fd.append('paymentPortrait',$scope.form.paymentPortrait);
     }
+    if ($scope.form.searchBgImage != null && typeof $scope.form.searchBgImage != 'string') {
+      fd.append('searchBgImage',$scope.form.searchBgImage);
+    }
     $http({method : 'GET' , url : '/api/ecommerce/genericImage/'}).
     then(function(response) {
       if(response.data.length==0){
@@ -467,6 +470,8 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
         then(function(response) {
             Flash.create('success', 'Added Successfully!!!!');
             return
+        }, function(err) {
+          Flash.create('danger', 'All Images Should Upload');
         });
       }
       else{

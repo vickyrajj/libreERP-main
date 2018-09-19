@@ -1,5 +1,5 @@
 <div class="container-fluid" >
-  <div class="col-md-8 col-md-offset-{{me != null ? '1' : '2' }} bg-white">
+  <div class="col-md-8 col-md-offset-{{recentlyViewed.product != none ? '1' : '2' }} bg-white">
     <div class="row hidden-sm hidden-xs" style="margin:0px 0px 30px 0px">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb" style="margin-left:-15px;margin-right:-15px">
@@ -9,9 +9,9 @@
       </nav>
     </div>
 
-    <div class="row hidden-md hidden-lg" style="margin:30px 0px 20px 0px">
+    <div class="row hidden-md hidden-lg" style="margin:35px 0px 0px 0px">
       <nav aria-label="breadcrumb">
-        <ol class="breadcrumb" style="margin-left:-15px;margin-right:-15px">
+        <ol class="breadcrumb" style="margin-left:-30px;margin-right:-30px">
           <li class="breadcrumb-item" ng-repeat="b in breadcrumbList" ><a style="cursor:pointer" ng-click="$state.go('categories', {name : b.split(' ').join('_')})" >{{b}}</a></li>
           <li class="breadcrumb-item active" aria-current="page">{{details.product.name}}</li>
         </ol>
@@ -374,7 +374,7 @@
       </div>
     </div>
 
-  <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:15px; position:sticky; top:10px; " ng-if="me != null">
+  <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:15px; position:sticky; top:10px; " ng-if="recentlyViewed.product != none">
     <h4>Recently Viewed</h4>
     <div class="row">
       <div class="col-md-12">

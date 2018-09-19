@@ -109,7 +109,7 @@ if defaultSettingsData.count()>0:
             twtLink = i.value
 
 def ecommerceHome(request):
-    print 'cameeeeeeeeeeeeeeeeeeeeeee'
+    print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
     data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
@@ -117,23 +117,28 @@ def ecommerceHome(request):
         if 'details'in urlData and len(urlData) > 2 :
             pk = urlData[-2]
             print pk
-            lpObj = listing.objects.get(pk=pk)
-            dpList = lpObj.files.all()
-            print lpObj,'**************',dpList
-            data['seoDetails']['title'] = lpObj.product.name
-            data['seoDetails']['description'] = lpObj.product.description
-            if len(dpList)>0:
-                try:
-                    data['seoDetails']['image'] = dpList[0].attachment.url
-                    w, h = get_image_dimensions(dpList[0].attachment.file)
-                    print w,h
-                    data['seoDetails']['width'] = w
-                    data['seoDetails']['height'] = h
-                except:
-                    print 'no such file has exists'
-                # image=Image.open(dpList[0].attachment.file)
-                # print image,image.size,image.format
-
+            try:
+                lpObj = listing.objects.get(pk=pk)
+                dpList = lpObj.files.all()
+                print lpObj,'**************',dpList
+                data['seoDetails']['title'] = lpObj.product.name
+                data['seoDetails']['description'] = lpObj.product.description
+                if len(dpList)>0:
+                    try:
+                        data['seoDetails']['image'] = dpList[0].attachment.url
+                        w, h = get_image_dimensions(dpList[0].attachment.file)
+                        print w,h
+                        data['seoDetails']['width'] = w
+                        data['seoDetails']['height'] = h
+                    except:
+                        print 'no such file has exists'
+                    # image=Image.open(dpList[0].attachment.file)
+                    # print image,image.size,image.format
+            except:
+                print 'please select the product'
+        if 'blog' in urlData and len(urlData) > 2 :
+            print 'blogggggggggggggggggggg'
+            data['seoDetails']['title'] = 'Sterling Select | Blog'
         if 'categories' in urlData and len(urlData) > 2 :
             data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | Sterling Select'
         if 'checkout' in urlData and len(urlData) > 2 :

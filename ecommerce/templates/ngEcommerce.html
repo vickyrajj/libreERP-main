@@ -87,8 +87,8 @@
 
         <div class="" style="position:sticky;top:10px;">
 
-          <img ng-if="!genericImage" src="/static/images/organic.png" style="width:100%;" alt="">
-          <img ng-if="genericImage" src={{genericImage.cartImage}} style="width:100%;" alt="">
+          <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="">
+          <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="">
 
           <div class="row" style="margin:0px;">
             <div class="container-fluid">

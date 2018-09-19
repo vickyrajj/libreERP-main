@@ -7,18 +7,19 @@
       <div class="col-xs-6">
         <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
       </div>
-      <div ng-if="match.model.typ == 'list' && !added" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
+      <div ng-if="match.model.typ == 'list' && !match.model.added" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
         <button type="button" class="btn btn-success" ng-click="addToCart(match.model)">
           Add to Card
         </button>
       </div>
-      <div ng-if="match.model.typ == 'list' && added" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
+      <div ng-if="match.model.typ == 'list' && match.model.added" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
         <button type="button" class="btn btn-default">
           Added
         </button>
       </div>
     </div>
     <div ng-if="$parent.$parent.$last">
-      <img src="/static/images/searchDecoration.jpg" style="width:100%;position: absolute;left: 0px;">
+      <img ng-if="genericSearchImage.searchBgImage" src="{{genericSearchImage.searchBgImage}}" style="width:100%;position: absolute;left: 0px;" alt="Search Background Image">
+      <img ng-if="!genericSearchImage.searchBgImage" src="/static/images/searchDecoration.jpg" style="width:100%;position: absolute;left: 0px;" alt="Search Background Image">
     </div>
 </a>

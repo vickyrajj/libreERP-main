@@ -35,6 +35,34 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
     startTime = new Date();
     console.log('time spent', timeSpent, 'on', $rootScope.previousState);
 
+
+    function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      console.log(decodedCookie, 'hhhhhhhhhhhhhhhhhhhhhh');
+      var ca = decodedCookie.split(';');
+      console.log(ca);
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+
+    function setCookie(cname, cvalue, exdays) {
+      console.log('set cookie');
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+      var expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
     if (me != null) {
       if ($rootScope.previousState == '') {
         console.log('logged in ');
@@ -87,6 +115,28 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
           console.log(response.data);
         })
       }
+    }else {
+      console.log('cookieeee',$rootScope.previousState);
+      if ($rootScope.previousState == 'details') {
+        console.log(fromParams);
+        var data = {
+          timeSpent: timeSpent,
+          product: fromParams.id
+        }
+        data = JSON.stringify(data)
+        dataToSend = {
+          typ: 'productView',
+          product: fromParams.id,
+          data: data
+        }
+        detail = getCookie("unknownUserRecentViewed");
+        if (detail != "") {
+          console.log('already there');
+          document.cookie = encodeURIComponent("unknownUserRecentViewed") + "=deleted; expires=" + new Date(0).toUTCString()
+        }
+        setCookie("unknownUserRecentViewed", JSON.stringify(dataToSend), 365);
+      }
+
     }
 
 
@@ -107,6 +157,13 @@ app.config(function($stateProvider) {
       url: "/details/:id/:name",
       templateUrl: '/static/ngTemplates/app.ecommerce.details.html',
       controller: 'controller.ecommerce.details'
+    })
+
+  $stateProvider
+    .state('blog', {
+      url: "/blog",
+      templateUrl: '/static/ngTemplates/app.ecommerce.blog.html',
+      controller: 'controller.ecommerce.blog'
     })
 
   $stateProvider
@@ -178,23 +235,68 @@ app.config(function($stateProvider) {
 
 });
 
-app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window){
-
-  $scope.$watch('match' , function(newValue , oldValue) {
-    console.log(newValue);
-  })
-
-  $scope.added = false;
-
-  for (var i = 0; i < $rootScope.inCart.length; i++) {
-    if ($scope.match.model.pk == $rootScope.inCart[i].product.pk) {
-      $scope.added = true;
+app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
+  console.log('bloggggggggggggggggggggggggggggggggggg');
+  $scope.showNext = false
+  $scope.showPrev = false
+  $scope.start = 0
+  $scope.rangeNo = 2
+  $scope.end = $scope.start + $scope.rangeNo
+  $scope.bData = function(start,end){
+    if (start>0) {
+      $scope.showPrev = true
+    }else {
+      $scope.showPrev = false
     }
+    if (end>=$scope.blogFullLength) {
+      $scope.showNext = false
+    }else {
+      $scope.showNext = true
+    }
+    $scope.blogData = $scope.blogFullData.slice(start,end)
+  }
+  $scope.change = function(a){
+    if (a=='nxt') {
+      $scope.start = $scope.end
+      $scope.end = $scope.start + $scope.rangeNo
+      $scope.bData($scope.start,$scope.end)
+    }else if (a=='prev') {
+      $scope.end = $scope.start
+      $scope.start = $scope.end - $scope.rangeNo
+      $scope.bData($scope.start,$scope.end)
+    }
+    window.scrollTo(0, 0);
   }
 
-  $scope.addToCart = function(model) {
-    console.log();
+  $http({
+    method: 'GET',
+    url: '/api/PIM/blog/?homeBlog'
+  }).
+  then(function(response) {
+    console.log(response.data);
+    $scope.blogFullData = response.data
+    $scope.blogFullLength = response.data.length
+    $scope.bData($scope.start,$scope.end)
+  })
 
+})
+
+
+app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window){
+  $scope.genericSearchImage = $rootScope.genericImage
+  $scope.$watch('match' , function(newValue , oldValue) {
+    $scope.match.model.added = false
+    for (var i = 0; i < $rootScope.inCart.length; i++) {
+      if ($scope.match.model.pk == $rootScope.inCart[i].product.pk) {
+        $scope.match.model.added = true;
+        break;
+
+      }
+    }
+  })
+
+
+  $scope.addToCart = function(model) {
     var dataToSend = {
       product	: model.pk,
       qty	: 1,
@@ -204,7 +306,7 @@ app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope,
 
     $http({method : 'POST' , url : '/api/ecommerce/cart/' , data : dataToSend}).
     then(function(response) {
-      $scope.added = true;
+      $scope.match.model.added = true;
       $rootScope.inCart.push(response.data);
     });
 
@@ -339,13 +441,16 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
   $scope.mainPage = function() {
     window.location = '/login';
   }
-
+  $rootScope.genericImage = {}
   $http({
     method: 'GET',
     url: '/api/ecommerce/genericImage/'
   }).
   then(function(response) {
-    $rootScope.genericImage = response.data[0]
+    console.log(response.data);
+    if (response.data.length>0) {
+      $rootScope.genericImage = response.data[0]
+    }
   })
 });
 
@@ -371,7 +476,28 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
       url: '/api/ecommerce/pages/?pageurl__icontains=' + $scope.title
     }).
     then(function(response) {
-      $scope.pageData = response.data[0]
+      console.log('pageeeeeeeeeeeeeeeee',response.data);
+      if (response.data.length>0) {
+        $scope.pageData = response.data[0];
+        $scope.typ = 'page'
+      }else {
+        $http({
+          method: 'GET',
+          url: '/api/PIM/blog/?shortUrl__icontains=' + $scope.title + '&homeBlog'
+        }).
+        then(function(response) {
+          console.log('bloggggggggggggg',response.data);
+          if (response.data.length>0) {
+            $scope.blogData = response.data[0]
+            $scope.typ = 'blog'
+          }else {
+            $scope.typ = 'nothing'            
+          }
+        }, function(err) {
+          $scope.typ = 'nothing'
+          $state.go('ecommerce', {})
+        })
+      }
     })
   }
 
@@ -613,30 +739,6 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
   }
 
-  $scope.recentlyViewed = []
-  if ($scope.me != null) {
-    if ($rootScope.multiStore) {
-      rurl = '/api/ecommerce/activities/?user=' + $scope.me.pk + '&typ=productView&limit=2' + '&pin=' + $rootScope.pin + '&multipleStore'
-    } else {
-      rurl = '/api/ecommerce/activities/?user=' + $scope.me.pk + '&typ=productView&limit=2'
-    }
-    $http({
-      method: 'GET',
-      url: rurl
-    }).
-    then(function(response) {
-      if (response.data.results.length > 0) {
-        $scope.recentlyViewed = response.data.results[0]
-        if ($scope.recentlyViewed.product.pk == $scope.details.pk) {
-          if (response.data.results.length > 1) {
-            $scope.recentlyViewed = response.data.results[1]
-          }
-        }
-      }
-
-    })
-  }
-
   function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -663,6 +765,52 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
+
+  $scope.recentlyViewed = {}
+  if ($scope.me != null) {
+    if ($rootScope.multiStore) {
+      rurl = '/api/ecommerce/activities/?user=' + $scope.me.pk + '&typ=productView&limit=2' + '&pin=' + $rootScope.pin + '&multipleStore'
+    } else {
+      rurl = '/api/ecommerce/activities/?user=' + $scope.me.pk + '&typ=productView&limit=2'
+    }
+    $http({
+      method: 'GET',
+      url: rurl
+    }).
+    then(function(response) {
+      console.log(response.data.results);
+      if (response.data.results.length > 0) {
+        if (response.data.results[0].product.pk == $scope.details.pk) {
+          if (response.data.results.length > 1) {
+            $scope.recentlyViewed = response.data.results[1]
+          }
+        }else {
+          $scope.recentlyViewed = response.data.results[0]
+        }
+      }
+
+    })
+  }else {
+    detail = getCookie("unknownUserRecentViewed");
+    if (detail != "") {
+      console.log('already there');
+      $scope.recentlyViewed = JSON.parse(detail)
+      $http({
+        method: 'GET',
+        url: '/api/ecommerce/listing/' + $scope.recentlyViewed.product + '/'
+      }).
+      then(function(response) {
+        console.log(response.data);
+        $scope.recentlyViewed.product = response.data
+
+      })
+    }
+  }
+  setTimeout(function () {
+    console.log($scope.recentlyViewed);
+  }, 1000);
+
+
 
   $scope.createCookieDetail = function(product) {
     console.log(product, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
@@ -694,6 +842,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
 
 });
+
 
 app.controller('controller.ecommerce.categories', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
   $scope.showFilter = false

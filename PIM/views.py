@@ -84,11 +84,14 @@ class chatMessageBetweenViewSet(viewsets.ModelViewSet):
         return qs.order_by('created')[:150]
 
 class blogViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = blogSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title' , 'state']
+    filter_fields = ['title' , 'state','shortUrl']
     def get_queryset(self):
+        if 'homeBlog' in self.request.GET:
+            print 'in homeeeeeeeeeeeee'
+            return blogPost.objects.all().order_by('-created')
         if 'state' not in self.request.GET and 'tags' not in self.request.GET and 'user' not in self.request.GET:
             return blogPost.objects.filter( users__in=[self.request.user,])
         if 'state' in self.request.GET:
@@ -108,6 +111,7 @@ class blogViewSet(viewsets.ModelViewSet):
 
         if 'user' in self.request.GET: # filter for a perticular user
             qs = qs.filter(users__in=[User.objects.get(username=self.request.GET['user']),])
+
 
         return qs
 

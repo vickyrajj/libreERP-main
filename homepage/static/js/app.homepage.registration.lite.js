@@ -4,6 +4,8 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
   console.log("kkkkkkkkkkkkkkk" , );
   $scope.mode = 'main';
 
+  console.log(mobile,'mobileeeeeeeeeeeeeeeeeeeeeeeeee');
+
   $scope.form = {mobile : null ,  mobileOTP: null , token: null , reg : null , agree : false};
 
   $scope.validityChecked = false;
@@ -39,5 +41,11 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
         $scope.validityChecked2 = true;
       }
     })
+  }
+  if (mobile.length>0) {
+    console.log(mobile);
+    $scope.form.mobile = mobile
+    $scope.form.agree = true
+    $scope.getOTP()
   }
 });

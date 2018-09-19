@@ -92,6 +92,7 @@ def generateOTP(request):
 
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
+    print 'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
     user = get_object_or_404(User, username = request.POST['id'])
     print user,type(user),'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
     ak = accountsKey(user= user, activation_key= otp,

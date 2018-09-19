@@ -138,10 +138,10 @@ class blogPost(models.Model):
     state = models.CharField(max_length = 20 , choices = STATE_CHOICES , default = 'saved')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    header = models.TextField(max_length = 1000 , null = True)
+    header = models.TextField(max_length = 10000 , null = True)
     users = models.ManyToManyField(User , related_name='articles' , blank = False)
     sourceFormat = models.CharField(choices = FORMAT_CHOICES , default = 'md' , max_length = 10)
-    source = models.TextField(max_length = 40000 , null = True)
+    source = models.TextField(max_length = 200000 , null = True)
     tags = models.ManyToManyField(blogCategory , related_name = 'articles' , blank = True)
     contentType = models.CharField(max_length = 15 , choices = CONTENT_TYPE_CHOICE , default = 'article')
 
@@ -154,7 +154,7 @@ class blogPost(models.Model):
     # section
     # author
 
-    shortUrl = models.CharField(max_length =100 , null = True)
+    shortUrl = models.CharField(max_length =100 , null = True,unique=True)
     ogimageUrl = models.CharField(max_length =1000 , null = True)
     ogimage = models.ImageField( upload_to= getOGImageAttachment , null = True)
     description = models.CharField(max_length =1000 , null = True)
