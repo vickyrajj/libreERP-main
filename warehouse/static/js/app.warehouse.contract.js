@@ -172,10 +172,9 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
 
 
 app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
-    $scope.comodities=[]
-    $scope.comodityData =[]
+  $scope.comodities=[]
+  $scope.comodityData =[]
   $scope.addCommodity = function(){
-    console.log($scope.contract,'aaaaaaaaaaaaagggggggggggggggggggggggggggggga');
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.warehouse.commodity.html',
       size: 'xl',
@@ -193,7 +192,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           $scope.comodities = response.data
         })
         $scope.addCommodities=function(){
-          console.log(  $scope.contract,'sssssssssssssssssssss');
           var dataToSend={
             contract:$scope.contract.pk,
             name:$scope.form.name,
@@ -206,7 +204,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             data: dataToSend
           }).
           then(function(response) {
-            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
             $scope.comodities.push(response.data)
           })
         }
@@ -214,7 +211,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           $scope.idx=indx
           $http({method : 'GET' , url : '/api/warehouse/commodityQty/?commodity=' + value}).
           then(function(response) {
-            console.log(response.data);
             $scope.comodityData = response.data
           })
         }
@@ -233,7 +229,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             data: dataToSend
           }).
           then(function(response) {
-            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
             // $scope.comodities.push(response.data)
             var dataToSend={
               commodity:value,
@@ -246,12 +241,10 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
               data: dataToSend
             }).
             then(function(response) {
-              console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
               $scope.comodityData.push(response.data)
               $scope.commodty.quanty = 0;
             })
           })
-
         }
         $scope.checkOut = function(value,qty,idx){
 
@@ -266,7 +259,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             data: dataToSend
           }).
           then(function(response) {
-            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
             // $scope.comodities.push(response.data)
             var dataToSend={
               commodity:value,
@@ -279,7 +271,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
               data: dataToSend
             }).
             then(function(response) {
-              console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
               $scope.comodityData.push(response.data)
               $scope.commodty.quanty=0
             })
@@ -290,7 +281,9 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
         $uibModalInstance.dismiss('cancel');
       }
 
+      $scope.download=function(){
 
+      }
       },
     }).result.then(function () {
 
