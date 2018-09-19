@@ -592,6 +592,110 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
 });
 
 
+app.controller('admin.editCustomer',function($scope,$http,Flash){
+
+if (typeof $scope.tab != 'undefined') {
+  console.log($scope.data);
+  $scope.newCustomer=$scope.data.tableData[$scope.tab.data.index];
+  console.log($scope.newCustomer);
+  $scope.newCustomer.access='full_access';
+  $scope.mode = 'edit';
+
+
+}else {
+  $scope.mode = 'new';
+  $scope.newCustomer = {
+    username: '',
+    first_name: '',
+    last_name: '',
+    password: '',
+    access: 'full_access'
+  };
+
+}
+
+  $scope.full_access_app = [];
+  $scope.rest_access_app = [];
+
+  $http({
+    method: 'GET',
+    url: '/api/organization/role/?name=Full%20access',
+  }).
+  then(function(response) {
+    for (var i = 0; i < response.data[0].applications.length; i++)
+      $scope.full_access_app[i] = response.data[0].applications[i].pk;
+    console.log($scope.full_access_app);
+  });
+
+
+  $http({
+    method: 'GET',
+    url: '/api/organization/role/?name=Restricted%20access',
+  }).
+  then(function(response) {
+    for (var i = 0; i < response.data[0].applications.length; i++)
+      $scope.rest_access_app[i] = response.data[0].applications[i].pk;
+    console.log($scope.rest_access_app);
+  });
+
+
+  $scope.createCustomer = function() {
+    dataToSend = {
+      username: $scope.newCustomer.username,
+      first_name: $scope.newCustomer.first_name,
+      last_name: $scope.newCustomer.last_name,
+      password: $scope.newCustomer.password,
+    };
+    if ($scope.newCustomer.access == 'full_access')
+      $scope.app = $scope.full_access_app
+    else {
+      $scope.app = $scope.rest_access_app;
+    }
+
+
+    if ($scope.mode == 'new') {
+      $scope.method="POST";
+      $scope.url='/api/HR/usersAdminMode/'
+    }else {
+      $scope.method="PATCH"
+      $scope.url='/api/HR/usersAdminMode/'+$scope.newCustomer.pk+'/'
+      // dataToSend.is_
+    }
+
+    // $http({
+    //   method: $scope.method,
+    //   url: $scope.url,
+    //   data: dataToSend
+    // }).then(function(response) {
+    //   $http({
+    //     method: 'POST',
+    //     url: '/api/ERP/permission/',
+    //     data: {
+    //       apps: $scope.app,
+    //       user: response.data.pk
+    //     }
+    //   }).then(function(resp) {
+    //     console.log(resp.data);
+    //   })
+    //
+    //   Flash.create('success', response.status + ' : ' + response.statusText);
+    //   console.log(response.data);
+    //   $scope.newCustomer = {
+    //     username: '',
+    //     firstName: '',
+    //     lastName: '',
+    //     password: '',
+    //     access: 'full_access'
+    //   };
+    //
+    // }, function(response) {
+    //   Flash.create('danger', response.status + ' : ' + response.statusText);
+    // });
+  }
+
+
+})
+
 
 
 app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flash, $users, $filter) {
@@ -668,7 +772,10 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     views: views,
     options: options,
     itemsNumPerView: [12, 24, 48],
-    // multiselectOptions: multiselectOptions,
+    getParams: [{
+      key: 'getCustomers',
+      value: 0
+    }],
     searchField: 'username',
   };
 
@@ -734,7 +841,6 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     firstName: '',
     lastName: '',
     password: '',
-    access: 'full_access'
   };
 
 
@@ -764,75 +870,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
   }
 
 
-  $scope.full_access_app = [];
-  $scope.rest_access_app = [];
 
-
-  $http({
-    method: 'GET',
-    url: '/api/organization/role/?name=Full%20access',
-  }).
-  then(function(response) {
-    for (var i = 0; i < response.data[0].applications.length; i++)
-      $scope.full_access_app[i] = response.data[0].applications[i].pk;
-    console.log($scope.full_access_app);
-  });
-
-
-  $http({
-    method: 'GET',
-    url: '/api/organization/role/?name=Restricted%20access',
-  }).
-  then(function(response) {
-    for (var i = 0; i < response.data[0].applications.length; i++)
-      $scope.rest_access_app[i] = response.data[0].applications[i].pk;
-    console.log($scope.rest_access_app);
-  });
-
-
-  $scope.createCustomer = function() {
-    dataToSend = {
-      username: $scope.newUser.username,
-      first_name: $scope.newUser.firstName,
-      last_name: $scope.newUser.lastName,
-      password: $scope.newUser.password,
-      access: $scope.newUser.access
-    };
-    if ($scope.newUser.access == 'full_access')
-      $scope.app = $scope.full_access_app
-    else {
-      $scope.app = $scope.rest_access_app;
-    }
-    $http({
-      method: 'POST',
-      url: '/api/HR/usersAdminMode/',
-      data: dataToSend
-    }).then(function(response) {
-      $http({
-        method: 'POST',
-        url: '/api/ERP/permission/',
-        data: {
-          apps: $scope.app,
-          user: response.data.pk
-        }
-      }).then(function(resp) {
-        console.log(resp.data);
-      })
-
-      Flash.create('success', response.status + ' : ' + response.statusText);
-      console.log(response.data);
-      $scope.newUser = {
-        username: '',
-        firstName: '',
-        lastName: '',
-        password: '',
-        access: 'full_access'
-      };
-
-    }, function(response) {
-      Flash.create('danger', response.status + ' : ' + response.statusText);
-    });
-  }
 
 
 
@@ -1001,16 +1039,16 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
 
   $scope.tableActionCustomer = function(target, action, mode) {
     console.log(target, action, mode);
-    console.log($scope.dataCustomer.tableDataCustomer);
+    // console.log($scope.dataCustomer.tableDataCustomer);
 
     for (var i = 0; i < $scope.dataCustomer.tableDataCustomer.length; i++) {
       if ($scope.dataCustomer.tableDataCustomer[i].pk == parseInt(target)) {
         if (action == 'editCustomer') {
-          var title = 'Edit Customer :';
-          var appType = 'contactEditor';
+          var title = 'Edit Customer :' ;
+          var appType = 'editCustomerForm';
           console.log('Edit customer open same form');
-          console.log($scope.dataCustomer.tableDataCustomer[i]);
-          return
+          // console.log($scope.dataCustomer.tableDataCustomer[i]);
+
         } else if (action == 'deleteCustomer') {
           $http({method : 'DELETE' , url : '/api/HR/usersAdminMode/' + $scope.dataCustomer.tableDataCustomer[i].pk +'/'}).
           then(function(response) {
@@ -1020,12 +1058,12 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
           return
         }
         $scope.addTab({
-          title: title + $scope.data.tableData[i].name,
+          title: title + $scope.dataCustomer.tableDataCustomer[i].pk,
           cancel: true,
           app: appType,
           data: {
-            pk: target,
-            index: i
+            pk:target,
+            index:i
           },
           active: true
         })

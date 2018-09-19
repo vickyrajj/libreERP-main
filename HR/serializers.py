@@ -132,6 +132,7 @@ class userAdminSerializer(serializers.HyperlinkedModelSerializer):
         return user
     def update (self, instance, validated_data):
         user = self.context['request'].user
+        print user,'*******************'
         if user.is_staff or user.is_superuser:
             u = User.objects.get(username = self.context['request'].data['username'])
             if (u.is_staff and user.is_superuser ) or user.is_superuser: # superuser can change password for everyone , staff can change for everyone but not fellow staffs

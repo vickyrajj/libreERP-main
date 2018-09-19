@@ -1,13 +1,13 @@
-<div class="col-md-3 animated fadeIn" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+<div class="col col-md-3 animated fadeIn">
   <div class="container-fluid">
     <div class="row">
       <div class="container-fluid card" style="padding-bottom:0px;">
         <div class="row" style="border-bottom: 1px solid #dedede;">
           <div class="col-md-4" style="padding:0px;">
-            <img style="width: 120px;height:120px;" class="img" ng-if="data.profile.displayPicture != null" ng-src="{{data.profile.displayPicture}}">
-            <img style="width: 120px;height:120px;" class="img" ng-if="data.profile.displayPicture == null" src="/static/images/userIcon.png">
+            <img style="width: 100%;height:100%;" class="img" ng-if="data.profile.displayPicture != null" ng-src="{{data.profile.displayPicture}}">
+            <img style="width: 100%;height:100%;" class="img" ng-if="data.profile.displayPicture == null" src="/static/images/userIcon.png">
           </div>
-          <div class="col-md-7" style="position:relative;display:block;">
+          <div class="col-md-6" style="position:relative;display:block;">
             <div class="row" style="padding-left:10px;">
               <h3>{{data.first_name + ' ' + data.last_name}}</h3>
             </div>
