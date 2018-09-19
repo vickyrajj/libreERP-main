@@ -220,10 +220,14 @@ class ReviewFilterCalAPIView(APIView):
                     company = ChatThread.objects.get(uid=j).company.service.name
                 except:
                     company = ''
+                try:
+                    rating = ChatThread.objects.get(uid=j).customerRating
+                except:
+                    rating = ''
                 # print company
-                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
+                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()) , rating=Value(rating, output_field=CharField()),email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
-                res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType','sentByAgent').annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField())))
+                res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType','sentByAgent').annotate(company=Value(company, output_field=CharField()), rating=Value(rating, output_field=CharField()) ,email=Value(email, output_field=CharField())))
         # print toSend
         if 'download' in self.request.GET:
             print 'downloadddddddddddddddddddddddd'

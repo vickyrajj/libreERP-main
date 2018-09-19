@@ -592,6 +592,137 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
 });
 
 
+app.controller('admin.editCustomer',function($scope,$http,Flash){
+
+if (typeof $scope.tab != 'undefined') {
+  console.log($scope.tab.data);
+
+
+  $scope.newCustomer = $scope.tab.data
+  $scope.newCustomer.password = ''
+  $scope.newCustomer.access='full_access';
+
+
+  // $scope.newCustomer=$scope.data.tableData[$scope.tab.data.index];
+  // console.log($scope.newCustomer);
+  $scope.mode = 'edit';
+
+
+}else {
+  $scope.mode = 'new';
+  $scope.newCustomer = {
+    username: '',
+    first_name: '',
+    last_name: '',
+    password: '',
+    access: 'full_access'
+  };
+
+}
+
+  $scope.full_access_app = [];
+  $scope.rest_access_app = [];
+
+  $http({
+    method: 'GET',
+    url: '/api/organization/role/?name=Full%20access',
+  }).
+  then(function(response) {
+    for (var i = 0; i < response.data[0].applications.length; i++)
+      $scope.full_access_app[i] = response.data[0].applications[i].pk;
+    console.log($scope.full_access_app);
+  });
+
+
+  $http({
+    method: 'GET',
+    url: '/api/organization/role/?name=Restricted%20access',
+  }).
+  then(function(response) {
+    for (var i = 0; i < response.data[0].applications.length; i++)
+      $scope.rest_access_app[i] = response.data[0].applications[i].pk;
+    console.log($scope.rest_access_app);
+  });
+
+
+  $scope.createCustomer = function() {
+
+    // if ($scope.newCustomer.password=='') {
+    //   Flash.create('warning', "password cannot be empty" )
+    //   return
+    // }
+
+    // if ($scope.newCustomer.access == undefined) {
+    //   Flash.create('warning', "password cannot be empty" )
+    //   return
+    // }
+    console.log($scope.newCustomer.access);
+
+    return
+
+    dataToSend = {
+      username: $scope.newCustomer.username,
+      first_name: $scope.newCustomer.first_name,
+      last_name: $scope.newCustomer.last_name,
+      password: $scope.newCustomer.password,
+    };
+
+
+    if ($scope.newCustomer.access == 'full_access')
+      $scope.app = $scope.full_access_app
+    else {
+      $scope.app = $scope.rest_access_app;
+    }
+
+
+    if ($scope.mode == 'new') {
+      $scope.method="POST";
+      $scope.urlCust='/api/HR/usersAdminMode/'
+      // $scope.urlPerm =
+    }else {
+      $scope.method="PATCH"
+      $scope.urlCust='/api/HR/usersAdminMode/'+$scope.newCustomer.pk+'/'
+      // $scope.urlPerm =
+      dataToSend.is_staff =  $scope.newCustomer.is_staff
+      dataToSend.is_active =  $scope.newCustomer.is_active
+    }
+
+    console.log(dataToSend);
+
+    $http({
+      method: $scope.method,
+      url: $scope.urlCust,
+      data: dataToSend
+    }).then(function(response) {
+      $http({
+        method: 'POST',
+        url: '/api/ERP/permission/',
+        data: {
+          apps: $scope.app,
+          user: response.data.pk
+        }
+      }).then(function(resp) {
+        console.log(resp.data);
+      })
+
+      Flash.create('success', response.status + ' : ' + response.statusText);
+      console.log(response.data);
+      $scope.newCustomer = {
+        username: '',
+        firstName: '',
+        lastName: '',
+        password: '',
+        access: 'full_access'
+      };
+
+    }, function(response) {
+      Flash.create('danger', response.status + ' : ' + response.statusText);
+    });
+  }
+
+
+})
+
 
 
 app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flash, $users, $filter) {
@@ -731,26 +862,26 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     }
   }
 
-
-
-
   // create new user
   $scope.newUser = {
     username: '',
     firstName: '',
     lastName: '',
     password: '',
-    access: 'full_access'
   };
 
 
   $scope.createUser = function() {
+
     dataToSend = {
       username: $scope.newUser.username,
       first_name: $scope.newUser.firstName,
       last_name: $scope.newUser.lastName,
       password: $scope.newUser.password
     };
+
+    console.log(dataToSend);
+
     $http({
       method: 'POST',
       url: '/api/HR/usersAdminMode/',
@@ -767,78 +898,11 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });
+
   }
 
 
-  $scope.full_access_app = [];
-  $scope.rest_access_app = [];
 
-
-  $http({
-    method: 'GET',
-    url: '/api/organization/role/?name=Full%20access',
-  }).
-  then(function(response) {
-    for (var i = 0; i < response.data[0].applications.length; i++)
-      $scope.full_access_app[i] = response.data[0].applications[i].pk;
-    console.log($scope.full_access_app);
-  });
-
-
-  $http({
-    method: 'GET',
-    url: '/api/organization/role/?name=Restricted%20access',
-  }).
-  then(function(response) {
-    for (var i = 0; i < response.data[0].applications.length; i++)
-      $scope.rest_access_app[i] = response.data[0].applications[i].pk;
-    console.log($scope.rest_access_app);
-  });
-
-
-  $scope.createCustomer = function() {
-    dataToSend = {
-      username: $scope.newUser.username,
-      first_name: $scope.newUser.firstName,
-      last_name: $scope.newUser.lastName,
-      password: $scope.newUser.password,
-      access: $scope.newUser.access
-    };
-    if ($scope.newUser.access == 'full_access')
-      $scope.app = $scope.full_access_app
-    else {
-      $scope.app = $scope.rest_access_app;
-    }
-    $http({
-      method: 'POST',
-      url: '/api/HR/usersAdminMode/',
-      data: dataToSend
-    }).then(function(response) {
-      $http({
-        method: 'POST',
-        url: '/api/ERP/permission/',
-        data: {
-          apps: $scope.app,
-          user: response.data.pk
-        }
-      }).then(function(resp) {
-        console.log(resp.data);
-      })
-
-      Flash.create('success', response.status + ' : ' + response.statusText);
-      console.log(response.data);
-      $scope.newUser = {
-        username: '',
-        firstName: '',
-        lastName: '',
-        password: '',
-        access: 'full_access'
-      };
-
-    }, function(response) {
-      Flash.create('danger', response.status + ' : ' + response.statusText);
-    });
-  }
 
 
 
@@ -1007,16 +1071,29 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
 
   $scope.tableActionCustomer = function(target, action, mode) {
     console.log(target, action, mode);
-    console.log($scope.dataCustomer.tableDataCustomer);
+    // console.log($scope.dataCustomer.tableDataCustomer);
 
     for (var i = 0; i < $scope.dataCustomer.tableDataCustomer.length; i++) {
       if ($scope.dataCustomer.tableDataCustomer[i].pk == parseInt(target)) {
         if (action == 'editCustomer') {
-          var title = 'Edit Customer :';
-          var appType = 'contactEditor';
-          console.log('Edit customer open same form');
-          console.log($scope.dataCustomer.tableDataCustomer[i]);
-          return
+          var title = 'Edit Customer :' ;
+          var appType = 'editCustomerForm';
+          // var response
+          $http({
+            method: 'GET',
+            url: '/api/HR/usersAdminMode/' + target + '/'
+          }).
+          then(function(response) {
+            console.log(response.data);
+            $scope.addTab({
+              title: title + response.data.username,
+              cancel: true,
+              app: appType,
+              data: response.data,
+              active: true
+            })
+          });
+
         } else if (action == 'deleteCustomer') {
           $http({method : 'DELETE' , url : '/api/HR/usersAdminMode/' + $scope.dataCustomer.tableDataCustomer[i].pk +'/'}).
           then(function(response) {
@@ -1025,16 +1102,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
           })
           return
         }
-        $scope.addTab({
-          title: title + $scope.data.tableData[i].name,
-          cancel: true,
-          app: appType,
-          data: {
-            pk: target,
-            index: i
-          },
-          active: true
-        })
+
       }
     }
   }
