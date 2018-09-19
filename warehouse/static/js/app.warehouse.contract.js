@@ -7,7 +7,7 @@ app.config(function($stateProvider) {
   });
 });
 
-var crmRelationTypes  = ['onetime' , 'request' , 'day' , 'hour' , 'monthly' , 'yearly', 'user']
+var crmRelationTypes = ['onetime', 'request', 'day', 'hour', 'monthly', 'yearly', 'user']
 
 app.controller("businessManagement.warehouse.contract.quote", function($scope, $state, $users, $stateParams, $http, Flash, $uibModalInstance, quoteData, ) {
   $scope.quote = quoteData;
@@ -114,15 +114,15 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
 });
 
 
-app.controller("businessManagement.warehouse.contract.notification", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside , quote , deal , $uibModalInstance) {
+app.controller("businessManagement.warehouse.contract.notification", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, quote, deal, $uibModalInstance) {
   $scope.quote = quote;
   $scope.deal = deal;
-  console.log('AAAAAAAAAA',$scope.deal);
+  console.log('AAAAAAAAAA', $scope.deal);
   $scope.send = function() {
     var contacts = []
     for (var i = 0; i < $scope.deal.contact.length; i++) {
       if ($scope.deal.contact[i].checked) {
-        console.log('CCCCCCCCC',$scope.deal.contact[i].pk);
+        console.log('CCCCCCCCC', $scope.deal.contact[i].pk);
         contacts.push($scope.deal.contact[i].pk);
       }
     }
@@ -133,14 +133,18 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
     }
 
     var toSend = {
-      sendEmail : $scope.sendEmail,
-      sendSMS : $scope.sendSMS,
-      internal : internal,
-      contacts : contacts,
-      type : $scope.notificationType,
-      contract : $scope.quote.pk
+      sendEmail: $scope.sendEmail,
+      sendSMS: $scope.sendSMS,
+      internal: internal,
+      contacts: contacts,
+      type: $scope.notificationType,
+      contract: $scope.quote.pk
     }
-    $http({method : 'POST' , url : '/api/warehouse/sendNotification/' , data : toSend}).
+    $http({
+      method: 'POST',
+      url: '/api/warehouse/sendNotification/',
+      data: toSend
+    }).
     then(function() {
 
     }, function() {
@@ -172,30 +176,33 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
 
 
 app.controller("businessManagement.warehouse.contract.explore", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
-  $scope.comodities=[]
-  $scope.comodityData =[]
-  $scope.addCommodity = function(){
+  $scope.comodities = []
+  $scope.comodityData = []
+  $scope.addCommodity = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.warehouse.commodity.html',
       size: 'xl',
-      backdrop : false,
-      resolve : {
-        contract : function() {
+      backdrop: false,
+      resolve: {
+        contract: function() {
           return $scope.contract;
         }
       },
-      controller: function($scope, contract, $uibModalInstance){
+      controller: function($scope, contract, $uibModalInstance) {
         $scope.contract = contract;
-        $http({method : 'GET' , url : '/api/warehouse/commodity/?contract=' + $scope.contract.pk}).
+        $http({
+          method: 'GET',
+          url: '/api/warehouse/commodity/?contract=' + $scope.contract.pk
+        }).
         then(function(response) {
           console.log(response.data);
           $scope.comodities = response.data
         })
-        $scope.addCommodities=function(){
-          var dataToSend={
-            contract:$scope.contract.pk,
-            name:$scope.form.name,
-            qty:$scope.form.qty
+        $scope.addCommodities = function() {
+          var dataToSend = {
+            contract: $scope.contract.pk,
+            name: $scope.form.name,
+            qty: $scope.form.qty
           }
 
           $http({
@@ -207,141 +214,168 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             $scope.comodities.push(response.data)
           })
         }
-        $scope.expand=function(value,indx){
-          $scope.idx=indx
-          $http({method : 'GET' , url : '/api/warehouse/commodityQty/?commodity=' + value}).
+        $scope.expand = function(value, indx) {
+          $scope.idx = indx
+          $http({
+            method: 'GET',
+            url: '/api/warehouse/commodityQty/?commodity=' + value
+          }).
           then(function(response) {
             $scope.comodityData = response.data
           })
         }
-        $scope.commodty={
-          quanty:0
+
+        $scope.ShowHide = function() {
+          $scope.idx = -1;
         }
-        $scope.checkIn = function(value,qty,idx){
-          console.log(value,qty,idx);
-          $scope.comodities[idx].qty=$scope.comodities[idx].qty+$scope.commodty.quanty
-          var dataToSend={
-            qty:$scope.comodities[idx].qty
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
-            data: dataToSend
-          }).
-          then(function(response) {
-            // $scope.comodities.push(response.data)
-            var dataToSend={
-              commodity:value,
-              checkIn:$scope.commodty.quanty,
-              balance:response.data.qty
+        $scope.commodty = {
+          quanty: 0
+        }
+        $scope.checkIn = function(value, qty) {
+
+          for (var i = 0; i < $scope.comodities.length; i++) {
+            if ($scope.comodities[i].pk == value) {
+              $scope.comodities[i].qty = $scope.comodities[i].qty + $scope.commodty.quanty
+              var dataToSend = {
+                qty: $scope.comodities[i].qty
+              }
+              $http({
+                method: 'PATCH',
+                url: '/api/warehouse/commodity/' + $scope.comodities[i].pk + '/',
+                data: dataToSend
+              }).
+              then(function(response) {
+                console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaa');
+                // $scope.comodities.push(response.data)
+                var dataToSend = {
+                  commodity: value,
+                  checkIn: $scope.commodty.quanty,
+                  balance: response.data.qty
+                }
+                $http({
+                  method: 'POST',
+                  url: '/api/warehouse/commodityQty/',
+                  data: dataToSend
+                }).
+                then(function(response) {
+                  console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaa');
+                  $scope.comodityData.push(response.data)
+                  $scope.commodty.quanty = 0;
+                })
+              })
             }
-            $http({
-              method: 'POST',
-              url: '/api/warehouse/commodityQty/',
-              data: dataToSend
-            }).
-            then(function(response) {
-              $scope.comodityData.push(response.data)
-              $scope.commodty.quanty = 0;
-            })
-          })
-        }
-        $scope.checkOut = function(value,qty,idx){
 
-          console.log(value);
-          $scope.comodities[idx].qty=$scope.comodities[idx].qty-$scope.commodty.quanty
-          var dataToSend={
-            qty:$scope.comodities[idx].qty
           }
-          $http({
-            method: 'PATCH',
-            url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
-            data: dataToSend
-          }).
-          then(function(response) {
-            // $scope.comodities.push(response.data)
-            var dataToSend={
-              commodity:value,
-              checkOut:$scope.commodty.quanty,
-              balance:response.data.qty
+
+        }
+        $scope.checkOut = function(value, qty) {
+          for (var i = 0; i < $scope.comodities.length; i++) {
+            if ($scope.comodities[i].pk == value) {
+              $scope.comodities[i].qty = $scope.comodities[i].qty - $scope.commodty.quanty
+              var dataToSend = {
+                qty: $scope.comodities[i].qty
+              }
+              $http({
+                method: 'PATCH',
+                url: '/api/warehouse/commodity/' + $scope.comodities[i].pk + '/',
+                data: dataToSend
+              }).
+              then(function(response) {
+                console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaa');
+                // $scope.comodities.push(response.data)
+                var dataToSend = {
+                  commodity: value,
+                  checkOut: $scope.commodty.quanty,
+                  balance: response.data.qty
+                }
+                $http({
+                  method: 'POST',
+                  url: '/api/warehouse/commodityQty/',
+                  data: dataToSend
+                }).
+                then(function(response) {
+                  console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaa');
+                  $scope.comodityData.push(response.data)
+                  $scope.commodty.quanty = 0;
+                })
+              })
             }
-            $http({
-              method: 'POST',
-              url: '/api/warehouse/commodityQty/',
-              data: dataToSend
-            }).
-            then(function(response) {
-              $scope.comodityData.push(response.data)
-              $scope.commodty.quanty=0
-            })
-          })
+
+          }
         }
 
-      $scope.close=function(){
-        $uibModalInstance.dismiss('cancel');
-      }
+        $scope.close = function() {
+          $uibModalInstance.dismiss('cancel');
+        }
 
-      $scope.download=function(){
-
-      }
       },
-    }).result.then(function () {
+    }).result.then(function() {
 
-    }, function () {
+    }, function() {
 
 
     });
   }
 
-  $scope.changeStatus = function(status , indx) {
+  $scope.changeStatus = function(status, indx) {
     $scope.contract.invoice[indx].status = status;
 
     if (status == 'billed') {
       $uibModal.open({
-        template: '<div style="padding:30px;"><div class="form-group"><label>Due Date</label>'+
-            '<div class="input-group" >'+
-                '<input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="contract.dueDate" is-open="status.opened" />' +
-                '<span class="input-group-btn">'+
-                  '<button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>'+
-                '</span>'+
-              '</div><p class="help-block">Auto set based on Deal due period.</p>'+
+        template: '<div style="padding:30px;"><div class="form-group"><label>Due Date</label>' +
+          '<div class="input-group" >' +
+          '<input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="contract.dueDate" is-open="status.opened" />' +
+          '<span class="input-group-btn">' +
+          '<button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>' +
+          '</span>' +
+          '</div><p class="help-block">Auto set based on Deal due period.</p>' +
           '</div></div>',
         size: 'sm',
-        backdrop : true,
-        resolve : {
-          contract : function() {
+        backdrop: true,
+        resolve: {
+          contract: function() {
             return $scope.contract.invoice[indx];
           },
           // deal : function() {
           //   return $scope.deal;
           // }
         },
-        controller: function($scope , contract){
+        controller: function($scope, contract) {
           $scope.contract = contract;
           var dueDate = new Date();
           // dueDate.setDate(dueDate.getDate() + contract.duePeriod);
-          console.log('kkkkkkkkkkk',$scope.contract.dueDate);
+          console.log('kkkkkkkkkkk', $scope.contract.dueDate);
           if ($scope.contract.dueDate == null) {
-            console.log('sssssssss',dueDate);
+            console.log('sssssssss', dueDate);
             $scope.contract.dueDate = dueDate;
           }
           console.log($scope.contract.dueDate);
           // $scope.deal = deal;
         },
-      }).result.then(function () {
+      }).result.then(function() {
 
       }, (function(indx, status) {
-        return function () {
+        return function() {
           console.log(indx);
           console.log($scope.contract.invoice[indx].dueDate);
 
-          $http({method : 'PATCH' , url : '/api/warehouse/invoice/' + $scope.contract.invoice[indx].pk + '/' , data : {status : status , dueDate : $scope.contract.invoice[indx].dueDate.toISOString().substring(0, 10) }}).
+          $http({
+            method: 'PATCH',
+            url: '/api/warehouse/invoice/' + $scope.contract.invoice[indx].pk + '/',
+            data: {
+              status: status,
+              dueDate: $scope.contract.invoice[indx].dueDate.toISOString().substring(0, 10)
+            }
+          }).
           then(function(response) {
-            $http({method : 'GET' , url : '/api/warehouse/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
+            $http({
+              method: 'GET',
+              url: '/api/warehouse/downloadInvoice/?saveOnly=1&contract=' + response.data.pk
+            }).
             then(function(response) {
-              Flash.create('success' , 'Saved')
+              Flash.create('success', 'Saved')
             }, function(err) {
-              Flash.create('danger' , 'Error occured')
+              Flash.create('danger', 'Error occured')
             })
           })
 
@@ -352,7 +386,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
 
 
 
-    }else if (status == 'dueElapsed') {
+    } else if (status == 'dueElapsed') {
 
       var sacCode = 998311;
       var c = $scope.contract.invoice[indx];
@@ -362,36 +396,66 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
         }
       }
 
-      var fineAmount = $scope.contract.invoice[indx].value * $scope.deal.duePenalty*(1/100)
+      var fineAmount = $scope.contract.invoice[indx].value * $scope.deal.duePenalty * (1 / 100)
 
-      $http({method : 'GET' , url : '/api/clientRelationships/productMeta/?code='+ sacCode}).
+      $http({
+        method: 'GET',
+        url: '/api/clientRelationships/productMeta/?code=' + sacCode
+      }).
       then((function(indx) {
         return function(response) {
           var quoteInEditor = $scope.contract.invoice[indx]
           var productMeta = response.data[0];
-          var subTotal = fineAmount*(1+productMeta.taxRate/100)
-          quoteInEditor.data.push({currency : $scope.deal.currency , type : 'onetime' , tax: productMeta.taxRate, desc : 'Late payment processing charges' , rate : fineAmount , quantity : 1, taxCode : productMeta.code , totalTax : fineAmount*(productMeta.taxRate/100), subtotal : subTotal })
+          var subTotal = fineAmount * (1 + productMeta.taxRate / 100)
+          quoteInEditor.data.push({
+            currency: $scope.deal.currency,
+            type: 'onetime',
+            tax: productMeta.taxRate,
+            desc: 'Late payment processing charges',
+            rate: fineAmount,
+            quantity: 1,
+            taxCode: productMeta.code,
+            totalTax: fineAmount * (productMeta.taxRate / 100),
+            subtotal: subTotal
+          })
 
           quoteInEditor.value += subTotal
           var url = '/api/warehouse/invoice/' + quoteInEditor.pk + '/'
           var method = 'PATCH'
-          var dataToSend = {deal : $scope.deal.pk , data : JSON.stringify(quoteInEditor.data) , value : quoteInEditor.value};
-          $http({method : method , url : url , data : dataToSend}).
+          var dataToSend = {
+            deal: $scope.deal.pk,
+            data: JSON.stringify(quoteInEditor.data),
+            value: quoteInEditor.value
+          };
+          $http({
+            method: method,
+            url: url,
+            data: dataToSend
+          }).
           then(function(response) {
-            $http({method : 'GET' , url : '/api/warehouse/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
+            $http({
+              method: 'GET',
+              url: '/api/warehouse/downloadInvoice/?saveOnly=1&contract=' + response.data.pk
+            }).
             then(function(response) {
-              Flash.create('success' , 'Saved')
+              Flash.create('success', 'Saved')
             }, function(err) {
-              Flash.create('error' , 'Error occured')
+              Flash.create('error', 'Error occured')
             })
           })
         }
       })(indx))
 
 
-    }else {
+    } else {
 
-      $http({method : 'PATCH' , url : '/api/warehouse/invoice/' + $scope.contract.invoice[indx].pk + '/' , data : {status : status}}).
+      $http({
+        method: 'PATCH',
+        url: '/api/warehouse/invoice/' + $scope.contract.invoice[indx].pk + '/',
+        data: {
+          status: status
+        }
+      }).
       then(function(response) {
 
       })
@@ -402,26 +466,26 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
   }
 
   $scope.contract = $scope.tab.data;
-  console.log('999999999999999999',$scope.contract);
+  console.log('999999999999999999', $scope.contract);
 
-  $scope.sendNotification = function(indx){
+  $scope.sendNotification = function(indx) {
 
     $scope.quote = $scope.contract.invoice[indx];
 
     $aside.open({
-      templateUrl : '/static/ngTemplates/app.warehouse.quote.notification.html',
+      templateUrl: '/static/ngTemplates/app.warehouse.quote.notification.html',
       placement: 'right',
       size: 'lg',
-      backdrop : false,
+      backdrop: false,
       resolve: {
-        quote : function() {
+        quote: function() {
           return $scope.quote;
         },
-        deal : function() {
+        deal: function() {
           return $scope.contract;
         },
       },
-      controller : 'businessManagement.warehouse.contract.notification'
+      controller: 'businessManagement.warehouse.contract.notification'
     })
   }
 
@@ -439,7 +503,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           $scope.contract.invoice.push(response.data[i]);
         }
       }
-      console.log(88888888888888888888,$scope.contract.invoice);
+      console.log(88888888888888888888, $scope.contract.invoice);
     })
   }
   $scope.fetchInvoice();
@@ -737,7 +801,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
         $scope.selectedCompaniesArea.push({
           color: $scope.selectedContractColour,
           company: $scope.arrays[i].array.company.name,
-          seletedBoxes:$scope.arrays[i].array.occupancy.length
+          seletedBoxes: $scope.arrays[i].array.occupancy.length
         })
         $scope.totalBoxes = $scope.totalBoxes - $scope.arrays[i].array.occupancy.length
         for (var j = 0; j < $scope.arrays[i].array.occupancy.length; j++) {
@@ -768,7 +832,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
         $scope.selectedCompaniesArea.push({
           color: $scope.selectedContractColour,
           company: $scope.contract.company.name,
-          seletedBoxes:$scope.selectingAreas.length
+          seletedBoxes: $scope.selectingAreas.length
         })
         console.log('selectedddddddddddd');
         $scope.totalBoxes = $scope.totalBoxes - $scope.selectingAreas.length
@@ -851,7 +915,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
               fill('white', gx, gy);
               $scope.totalBoxes = $scope.totalBoxes + 1
               if ($scope.mode == 'edit') {
-                $scope.selectedCompaniesArea[$scope.selectedCompaniesArea.length-1].seletedBoxes = $scope.selectingAreas.length
+                $scope.selectedCompaniesArea[$scope.selectedCompaniesArea.length - 1].seletedBoxes = $scope.selectingAreas.length
               }
               $scope.canvasData = canvas;
               $scope.dataURL = $scope.canvasData.toDataURL();
@@ -867,7 +931,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
           });
           $scope.totalBoxes = $scope.totalBoxes - 1
           if ($scope.mode == 'edit') {
-            $scope.selectedCompaniesArea[$scope.selectedCompaniesArea.length-1].seletedBoxes = $scope.selectingAreas.length
+            $scope.selectedCompaniesArea[$scope.selectedCompaniesArea.length - 1].seletedBoxes = $scope.selectingAreas.length
           }
           console.log($scope.selectedCompaniesArea);
           $scope.canvasData = canvas;
@@ -921,7 +985,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
     $scope.dates.push(i.toString());
   }
   $scope.addDate = function(date) {
-    if ($scope.contract.billingDates.indexOf(date)>=0) {
+    if ($scope.contract.billingDates.indexOf(date) >= 0) {
       return
     }
     $scope.contract.billingDates += $scope.contract.billingDates == '' ? date : ',' + date;
@@ -984,12 +1048,12 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
   $scope.$watch('contract.billingDates', function(newValue, oldValue) {
     console.log('cecking', newValue);
     if ($scope.contract.billingDates.slice(-1) == ',') {
-      $scope.contract.billingDates = $scope.contract.billingDates.slice(0,-1)
+      $scope.contract.billingDates = $scope.contract.billingDates.slice(0, -1)
     }
     console.log(newValue);
     if ($scope.contract.billingDates.length > 0) {
       $scope.contract.billingFrequency = $scope.contract.billingDates.split(',').length
-    }else {
+    } else {
       $scope.contract.billingFrequency = 0
     }
 
