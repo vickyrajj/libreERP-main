@@ -217,74 +217,86 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             console.log(response.data);
             $scope.comodityData = response.data
           })
-
+        }
+        $scope.ShowHide = function(){
+            $scope.idx = -1;
         }
         $scope.commodty={
           quanty:0
         }
         $scope.checkIn = function(value,qty,idx){
           console.log(value,qty,idx);
-          $scope.comodities[idx].qty=$scope.comodities[idx].qty+$scope.commodty.quanty
-          var dataToSend={
-            qty:$scope.comodities[idx].qty
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
-            data: dataToSend
-          }).
-          then(function(response) {
-            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
-            // $scope.comodities.push(response.data)
-            var dataToSend={
-              commodity:value,
-              checkIn:$scope.commodty.quanty,
-              balance:response.data.qty
-            }
-            $http({
-              method: 'POST',
-              url: '/api/warehouse/commodityQty/',
-              data: dataToSend
-            }).
-            then(function(response) {
-              console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
-              $scope.comodityData.push(response.data)
-              $scope.commodty.quanty = 0;
+          for (var i = 0; i < $scope.comodities.length; i++) {
+            if ($scope.comodities[i].pk == value) {
+              $scope.comodities[i].qty=$scope.comodities[i].qty+$scope.commodty.quanty
+              var dataToSend={
+                qty:$scope.comodities[i].qty
+              }
+              $http({
+                method: 'PATCH',
+                url: '/api/warehouse/commodity/'+$scope.comodities[i].pk+'/',
+                data: dataToSend
+              }).
+              then(function(response) {
+                console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+                // $scope.comodities.push(response.data)
+                var dataToSend={
+                  commodity:value,
+                  checkIn:$scope.commodty.quanty,
+                  balance:response.data.qty
+                }
+                $http({
+                  method: 'POST',
+                  url: '/api/warehouse/commodityQty/',
+                  data: dataToSend
+                }).
+                then(function(response) {
+                  console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+                  $scope.comodityData.push(response.data)
+                  $scope.commodty.quanty = 0;
+                })
             })
-          })
+          }
+
+          }
 
         }
         $scope.checkOut = function(value,qty,idx){
 
           console.log(value);
-          $scope.comodities[idx].qty=$scope.comodities[idx].qty-$scope.commodty.quanty
-          var dataToSend={
-            qty:$scope.comodities[idx].qty
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
-            data: dataToSend
-          }).
-          then(function(response) {
-            console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
-            // $scope.comodities.push(response.data)
-            var dataToSend={
-              commodity:value,
-              checkOut:$scope.commodty.quanty,
-              balance:response.data.qty
-            }
-            $http({
-              method: 'POST',
-              url: '/api/warehouse/commodityQty/',
-              data: dataToSend
-            }).
-            then(function(response) {
-              console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
-              $scope.comodityData.push(response.data)
-              $scope.commodty.quanty=0
+          for (var i = 0; i < $scope.comodities.length; i++) {
+            if ($scope.comodities[i].pk == value) {
+              $scope.comodities[i].qty=$scope.comodities[i].qty - $scope.commodty.quanty
+              var dataToSend={
+                qty:$scope.comodities[i].qty
+              }
+              $http({
+                method: 'PATCH',
+                url: '/api/warehouse/commodity/'+$scope.comodities[i].pk+'/',
+                data: dataToSend
+              }).
+              then(function(response) {
+                console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+                // $scope.comodities.push(response.data)
+                var dataToSend={
+                  commodity:value,
+                  checkIn:$scope.commodty.quanty,
+                  balance:response.data.qty
+                }
+                $http({
+                  method: 'POST',
+                  url: '/api/warehouse/commodityQty/',
+                  data: dataToSend
+                }).
+                then(function(response) {
+                  console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
+                  $scope.comodityData.push(response.data)
+                  $scope.commodty.quanty = 0;
+                })
             })
-          })
+          }
+
+          }
         }
 
       $scope.close=function(){
