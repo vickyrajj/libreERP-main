@@ -668,7 +668,10 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     views: views,
     options: options,
     itemsNumPerView: [12, 24, 48],
-    // multiselectOptions: multiselectOptions,
+    getParams: [{
+      key: 'getCustomers',
+      value: 0
+    }],
     searchField: 'username',
   };
 

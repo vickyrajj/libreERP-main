@@ -25,6 +25,7 @@ from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
 import calendar
 from rest_framework.response import Response
+from django.contrib.auth.models import User, Group
 
 def documentView(request):
     docID = None
@@ -258,12 +259,25 @@ class userAdminViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = userAdminSerializer
 
+from ERP.models import application , permission
+
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated ,)
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['username']
     serializer_class = userSerializer
     def get_queryset(self):
+
+        if 'getCustomers' in self.request.GET:
+            print self.request.GET , '************************************************8@@@@@@@@@@@222'
+            a= list(permission.objects.filter(app = application.objects.get(name = "app.customers")).values_list('user', flat=True).distinct())
+            if int(self.request.GET['getCustomers']) == 1:
+                print 'yes'
+                return User.objects.filter(pk__in=a)
+            else:
+                return User.objects.filter(~Q(pk__in=a))
+
+
         if 'mode' in self.request.GET:
             if self.request.GET['mode']=="mySelf":
                 if self.request.user.is_authenticated:
