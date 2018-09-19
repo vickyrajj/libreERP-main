@@ -217,65 +217,65 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
         $scope.commodty={
           quanty:0
         }
-        $scope.checkIn = function(value,qty,idx){
-          console.log(value,qty,idx);
-          $scope.comodities[idx].qty=$scope.comodities[idx].qty+$scope.commodty.quanty
-          var dataToSend={
-            qty:$scope.comodities[idx].qty
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
-            data: dataToSend
-          }).
-          then(function(response) {
-            // $scope.comodities.push(response.data)
-            var dataToSend={
-              commodity:value,
-              checkIn:$scope.commodty.quanty,
-              balance:response.data.qty
-            }
-            $http({
-              method: 'POST',
-              url: '/api/warehouse/commodityQty/',
-              data: dataToSend
-            }).
-            then(function(response) {
-              $scope.comodityData.push(response.data)
-              $scope.commodty.quanty = 0;
-            })
-          })
-        }
-        $scope.checkOut = function(value,qty,idx){
-
-          console.log(value);
-          $scope.comodities[idx].qty=$scope.comodities[idx].qty-$scope.commodty.quanty
-          var dataToSend={
-            qty:$scope.comodities[idx].qty
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
-            data: dataToSend
-          }).
-          then(function(response) {
-            // $scope.comodities.push(response.data)
-            var dataToSend={
-              commodity:value,
-              checkOut:$scope.commodty.quanty,
-              balance:response.data.qty
-            }
-            $http({
-              method: 'POST',
-              url: '/api/warehouse/commodityQty/',
-              data: dataToSend
-            }).
-            then(function(response) {
-              $scope.comodityData.push(response.data)
-              $scope.commodty.quanty=0
-            })
-          })
-        }
+        // $scope.checkIn = function(value,qty,idx){
+        //   console.log(value,qty,idx);
+        //   $scope.comodities[idx].qty=$scope.comodities[idx].qty+$scope.commodty.quanty
+        //   var dataToSend={
+        //     qty:$scope.comodities[idx].qty
+        //   }
+        //   $http({
+        //     method: 'PATCH',
+        //     url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
+        //     data: dataToSend
+        //   }).
+        //   then(function(response) {
+        //     // $scope.comodities.push(response.data)
+        //     var dataToSend={
+        //       commodity:value,
+        //       checkIn:$scope.commodty.quanty,
+        //       balance:response.data.qty
+        //     }
+        //     $http({
+        //       method: 'POST',
+        //       url: '/api/warehouse/commodityQty/',
+        //       data: dataToSend
+        //     }).
+        //     then(function(response) {
+        //       $scope.comodityData.push(response.data)
+        //       $scope.commodty.quanty = 0;
+        //     })
+        //   })
+        // }
+        // $scope.checkOut = function(value,qty,idx){
+        //
+        //   console.log(value);
+        //   $scope.comodities[idx].qty=$scope.comodities[idx].qty-$scope.commodty.quanty
+        //   var dataToSend={
+        //     qty:$scope.comodities[idx].qty
+        //   }
+        //   $http({
+        //     method: 'PATCH',
+        //     url: '/api/warehouse/commodity/'+$scope.comodities[idx].pk+'/',
+        //     data: dataToSend
+        //   }).
+        //   then(function(response) {
+        //     // $scope.comodities.push(response.data)
+        //     var dataToSend={
+        //       commodity:value,
+        //       checkOut:$scope.commodty.quanty,
+        //       balance:response.data.qty
+        //     }
+        //     $http({
+        //       method: 'POST',
+        //       url: '/api/warehouse/commodityQty/',
+        //       data: dataToSend
+        //     }).
+        //     then(function(response) {
+        //       $scope.comodityData.push(response.data)
+        //       $scope.commodty.quanty=0
+        //     })
+        //   })
+        // }
 
       $scope.close=function(){
         $uibModalInstance.dismiss('cancel');

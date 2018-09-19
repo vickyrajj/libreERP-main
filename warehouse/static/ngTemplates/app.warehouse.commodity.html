@@ -11,16 +11,21 @@
   </div>
   <div class="modal-body">
     <div class="row">
-      <div class="col-md-5">
+      <div class="col-md-4">
         <label>Name</label>
         <input type="text" class="form-control" ng-model="form.name">
       </div>
-      <div class="col-md-5">
+      <div class="col-md-3">
         <label>Quantity</label>
         <input type="number" class="form-control" value="" ng-model="form.qty">
       </div>
       <div class="col-md-2" style="padding-top:25px">
         <button type="button" class="btn btn-primary" ng-click="addCommodities()" style="width:100px"> Add </button>
+      </div>
+      <div class="col-md-3">
+        <label> Search</label>
+        <input type="text" class="form-control" ng-model='searchText' >
+
       </div>
     </div>
   </div>
@@ -36,7 +41,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="card" ng-repeat="c in comodities" style="padding-bottom:0px; margin-bottom:10px">
+    <div class="card" ng-repeat="c in comodities | filter : searchText" style="padding-bottom:0px; margin-bottom:10px">
       <div class="card">
         <div class="row" style="padding:10px; padding-left:20px;">
           <div class="col-md-5">
@@ -47,7 +52,7 @@
           </div>
           <div class="col-md-2" >
             <i class="fa fa-plus" ng-click="expand(c.pk,$index)"  ng-if="$index!=idx"></i>
-              <i class="fa fa-minus"  ng-if="$index==idx"></i>
+              <i class="fa fa-minus"  ng-if="$index==idx "  ng-click="ShowHide()"></i>
           </div>
         </div>
       </div>
@@ -57,8 +62,8 @@
             <input type="number" class="form-control" value="" ng-model="commodty.quanty">
           </div>
           <div class="col-md-5">
-            <button type="button" class="btn btn-primary" ng-click="checkIn(c.pk,c.qty, $index)" style="width:100px"> In </button>
-            <button type="button" class="btn btn-primary" ng-click="checkOut(c.pk,c.qty, $index)" style="width:100px"> Out </button>
+            <button type="button" class="btn btn-primary" ng-click="checkIn(c.pk,c.qty)" style="width:100px"> In </button>
+            <button type="button" class="btn btn-primary" ng-click="checkOut(c.pk,c.qty)" style="width:100px"> Out </button>
           </div>
         </div>
         <div class="row" ng-if="comodityData.length>0">
@@ -85,7 +90,7 @@
 
         </div>
       </div>
-
+  
     </div>
 
   </div>
