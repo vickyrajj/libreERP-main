@@ -499,7 +499,7 @@ class listingViewSet(viewsets.ModelViewSet):
             return listing.objects.all()
 
 class listingLiteViewSet(viewsets.ModelViewSet):
-    permission_classes = (isAdminOrReadOnly, )
+    permission_classes = (permissions.AllowAny, )
     serializer_class = listingLiteSerializer
     # queryset = listing.objects.all()
     filter_backends = [DjangoFilterBackend]
