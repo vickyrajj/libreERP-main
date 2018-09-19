@@ -5,6 +5,7 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from rest_framework import viewsets , permissions , serializers
 from API.permissions import *
 from rest_framework.views import APIView
+from excel_response import ExcelResponse
 from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse
 from clientRelationships.views import expanseReportHead,addPageNumber,PageNumCanvas,FullPageImage
@@ -95,6 +96,8 @@ class CommodityQtyViewSet(viewsets.ModelViewSet):
     filter_fields = ['commodity']
 
 
+
+
 themeColor = colors.HexColor('#227daa')
 
 styles=getSampleStyleSheet()
@@ -352,7 +355,7 @@ class PageNumCanvas(canvas.Canvas):
         canvas.Canvas.save(self)
 
 
-# >>>>>>> 20c361fdeb1f8a000ef15776e239c2834a00463c
+
     #----------------------------------------------------------------------
     def draw_page_number(self, page_count):
         """
@@ -598,6 +601,7 @@ class DashboardInvoices(APIView):
             toReturn = Invoice.objects.filter(~Q(status='received')).values('pk','contract__company__name','status','dueDate','billedDate')
         print toReturn
         return Response(toReturn, status=status.HTTP_200_OK)
+        
 
 class SendNotificationAPIView(APIView):
     renderer_classes = (JSONRenderer,)
@@ -685,3 +689,14 @@ class SendNotificationAPIView(APIView):
             requests.get(url)
 
         return Response(status=status.HTTP_200_OK)
+
+class DownloadExcelReponse(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self , request , format = None):
+        print request.GET
+        obj = Commodity.objects.filter(contract=request.GET['contractData'])
+        toReturn = []
+        for i in obj:
+            toReturn.append({"Name":i.name, "Quantity":i.qty})
+            print toReturn
+        return ExcelResponse(toReturn)
