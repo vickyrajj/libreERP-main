@@ -283,10 +283,10 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
               then(function(response) {
                 console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaa');
                 // $scope.comodities.push(response.data)
-                var dataToSend = {
-                  commodity: value,
-                  checkOut: $scope.commodty.quanty,
-                  balance: response.data.qty
+                var dataToSend={
+                  commodity:value,
+                  checkOut:$scope.commodty.quanty,
+                  balance:response.data.qty
                 }
                 $http({
                   method: 'POST',
@@ -304,9 +304,23 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           }
         }
 
-        $scope.close = function() {
-          $uibModalInstance.dismiss('cancel');
-        }
+      $scope.close=function(){
+        $uibModalInstance.dismiss('cancel');
+      }
+      $scope.excelResp = function (){
+        console.log($scope.contract);
+        // var dataToSend = {contract : $scope.contract}
+        //  $http({
+        //   method: 'GET',
+        //   url: '/api/warehouse/downloadExcelReponse/?contractData='+$scope.contract.pk,
+        // }).
+        // then(function(response) {
+        //   return response.data
+        // })
+
+              window.open('/api/warehouse/downloadExcelReponse/?contractData='+$scope.contract.pk)
+      }
+
 
       },
     }).result.then(function() {

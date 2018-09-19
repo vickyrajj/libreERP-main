@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'downloadInvoice/$' , DownloadInvoice.as_view() ),
     url(r'dashboardInvoices/$' , DashboardInvoices.as_view() ),
     url(r'sendNotification/$' , SendNotificationAPIView.as_view() ),
+    url(r'downloadExcelReponse/$' , DownloadExcelReponse.as_view() ),
 ]
