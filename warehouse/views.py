@@ -95,7 +95,7 @@ class CommodityQtyViewSet(viewsets.ModelViewSet):
     filter_fields = ['commodity']
 
 
- themeColor = colors.HexColor('#227daa')
+themeColor = colors.HexColor('#227daa')
 
 styles=getSampleStyleSheet()
 styleN = styles['Normal']
@@ -224,7 +224,7 @@ class PageNumCanvas(canvas.Canvas):
 
         canvas.Canvas.save(self)
 
- themeColor = colors.HexColor('#227daa')
+themeColor = colors.HexColor('#227daa')
 
 styles=getSampleStyleSheet()
 styleN = styles['Normal']
