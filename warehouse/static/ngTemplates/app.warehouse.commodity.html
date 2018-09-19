@@ -45,8 +45,9 @@
           <div class="col-md-5">
             {{c.qty}}
           </div>
-          <div class="col-md-2" ng-click="expand(c.pk,$index)">
-            <i class="fa fa-plus"></i>
+          <div class="col-md-2" >
+            <i class="fa fa-plus" ng-click="expand(c.pk,$index)"  ng-if="$index!=idx"></i>
+              <i class="fa fa-minus"  ng-if="$index==idx"></i>
           </div>
         </div>
       </div>

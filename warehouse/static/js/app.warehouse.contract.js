@@ -217,7 +217,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             console.log(response.data);
             $scope.comodityData = response.data
           })
-
         }
         $scope.commodty={
           quanty:0
