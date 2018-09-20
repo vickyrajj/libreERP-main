@@ -284,16 +284,44 @@ app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state,
 
 app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window){
   $scope.genericSearchImage = $rootScope.genericImage
-  $scope.$watch('match' , function(newValue , oldValue) {
-    $scope.match.model.added = false
-    for (var i = 0; i < $rootScope.inCart.length; i++) {
-      if ($scope.match.model.pk == $rootScope.inCart[i].product.pk) {
-        $scope.match.model.added = true;
-        break;
+  // if($scope.me!=null){
+    $scope.$watch('match' , function(newValue , oldValue) {
+      $scope.match.model.added = false
+      if( $rootScope.inCart!=undefined){
+        for (var i = 0; i < $rootScope.inCart.length; i++) {
+          if ($scope.match.model.pk == $rootScope.inCart[i].product.pk) {
+            $scope.match.model.added = true;
+            break;
 
+          }
+        }
+      }
+      if( $rootScope.addToCart!=undefined){
+      for (var i = 0; i < $rootScope.addToCart.length; i++) {
+        if ($scope.match.model.pk == $rootScope.addToCart[i].product.pk) {
+          $scope.match.model.added = true;
+          break;
+
+        }
       }
     }
-  })
+    })
+  // }
+
+  // if($scope.me==null){
+  //   console.log("kkkkkkkkkkhhhhhhhhhh");
+  //   $scope.$watch('match' , function(newValue , oldValue) {
+  //     $scope.match.model.added = false
+  //     for (var i = 0; i < $rootScope.inCart.length; i++) {
+  //       if ($scope.match.model.pk == $rootScope.addToCart[i].product.pk) {
+  //           console.log("kkkkkkkkkkhhhhhhhhhh" );
+  //         $scope.match.model.added = true;
+  //         break;
+  //
+  //       }
+  //     }
+  //   })
+  // }
 
 
   $scope.addToCart = function(model) {
@@ -309,10 +337,53 @@ app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope,
       $scope.match.model.added = true;
       $rootScope.inCart.push(response.data);
     });
-
-
   }
 
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    console.log(decodedCookie,'hhhhhhhhhhhhhhhhhhhhhh');
+    var ca = decodedCookie.split(';');
+    console.log(ca);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+     }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  function setCookie(cname, cvalue, exdays) {
+      console.log('set cookie');
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  $scope.addToCartCookie = function(model) {
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/listing/' + model.pk +'/'
+    }).
+    then(function(response) {
+      console.log(response.data,'aaaaaaaaaaaaaaa');
+      $scope.item = {'product':response.data,'qty':1}
+      detail = getCookie("addToCart");
+      if (detail != "") {
+      console.log('already there');
+      $rootScope.addToCart = JSON.parse(detail)
+      document.cookie = encodeURIComponent("addToCart") + "=deleted; expires=" + new Date(0).toUTCString()
+      }
+      $rootScope.addToCart.push($scope.item)
+      $scope.match.model.added = true;
+      setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+    })
+  }
 })
 
 app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
@@ -491,7 +562,7 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
             $scope.blogData = response.data[0]
             $scope.typ = 'blog'
           }else {
-            $scope.typ = 'nothing'            
+            $scope.typ = 'nothing'
           }
         }, function(err) {
           $scope.typ = 'nothing'
