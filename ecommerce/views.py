@@ -92,6 +92,7 @@ from PIL import Image
 from django.core.files.images import get_image_dimensions
 import ast
 from flask import Markup
+from PIM.models import blogPost
 
 # Create your views here.
 
@@ -113,7 +114,7 @@ def ecommerceHome(request):
     data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
-        print urlData
+        print urlData,'url detailsssssssssss'
         if 'details'in urlData and len(urlData) > 2 :
             pk = urlData[-2]
             print pk
@@ -136,7 +137,7 @@ def ecommerceHome(request):
                     # print image,image.size,image.format
             except:
                 print 'please select the product'
-        if 'blog' in urlData and len(urlData) > 2 :
+        if 'blog' in urlData and len(urlData) > 1 :
             print 'blogggggggggggggggggggg'
             data['seoDetails']['title'] = 'Sterling Select | Blog'
         if 'categories' in urlData and len(urlData) > 2 :
@@ -155,6 +156,34 @@ def ecommerceHome(request):
                 data['seoDetails']['title'] = 'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
             elif urlData[-1] == 'saved':
                 data['seoDetails']['title'] = 'Sterling Select | Saved Products'
+        if len(urlData) > 1 :
+            print 'pagessssssssssssss',urlData[1]
+            pagesChecking = Pages.objects.filter(pageurl__icontains=str(urlData[1]))
+            blogsChecking = blogPost.objects.filter(shortUrl__icontains=str(urlData[1]))
+            if len(pagesChecking)>0:
+                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+            elif len(blogsChecking)>0:
+                blogData = blogsChecking[0]
+                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+                if blogData.description is not None and len(blogData.description)>0:
+                    data['seoDetails']['description'] = blogData.description
+                    print 'Desscription existsssssssssssss'
+                else:
+                    print 'noooooooooooo Desscription existsssssssssssss'
+                try:
+                    data['seoDetails']['image'] = blogData.ogimage.url
+                    w, h = get_image_dimensions(blogData.ogimage.file)
+                    print w,h
+                    data['seoDetails']['width'] = w
+                    data['seoDetails']['height'] = h
+                    print 'og image existsssssssssssss'
+                except:
+                    print 'no such blog file has existsssssssssssss'
+                    if blogData.ogimageUrl is not None and len(blogData.ogimageUrl)>0:
+                        data['seoDetails']['image'] = blogData.ogimageUrl
+                    else:
+                        print 'so ogimageurl existsssssssssssss'
+
     return render(request , 'ngEcommerce.html' , {'data':data})
 
 class SearchProductAPI(APIView):

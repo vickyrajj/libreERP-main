@@ -237,10 +237,14 @@ app.config(function($stateProvider) {
 
 app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
   console.log('bloggggggggggggggggggggggggggggggggggg');
+  $window.scrollTo(0, 0)
+  document.title = 'Sterling Select |  Blog'
+  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping Blogs')
+
   $scope.showNext = false
   $scope.showPrev = false
   $scope.start = 0
-  $scope.rangeNo = 2
+  $scope.rangeNo = 4
   $scope.end = $scope.start + $scope.rangeNo
   $scope.bData = function(start,end){
     if (start>0) {
@@ -491,7 +495,7 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
             $scope.blogData = response.data[0]
             $scope.typ = 'blog'
           }else {
-            $scope.typ = 'nothing'            
+            $scope.typ = 'nothing'
           }
         }, function(err) {
           $scope.typ = 'nothing'

@@ -8,14 +8,14 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" style="margin:0px">
     <div class="col-md-12 bg-white" style="padding-left:20px;padding-right:20px;">
       <div class="row" style="padding:0px 10px;">
         <div class="row text-center" ng-if="blogData.length==0">
           <h3>No blog posts , Please visit again.</h3>
         </div>
         <div class="row" ng-repeat="blog in blogData" ng-if="blogData.length>0">
-          <div class="container-fluid" style="{{$index%2==0?'':'background:#eeeeee'}};margin-bottom:20px">
+          <div class="container-fluid" style="{{$index%2==0?'':'background:#eeeeee'}};margin-bottom:20px;">
             <div class="col-md-12 text-left" style="margin-left: 10px;margin-right: 10px">
               <h2 style="font-size:22px;cursor:pointer" class="text-primary"> <span ng-click="$state.go('pages' , {title : blog.shortUrl.split(' ').join('-').toLowerCase()})">{{blog.title}} </span></h2>By <span ng-repeat="u in blog.users">{{u | getName}}</span><span style="margin-left: 5px;"> | </span><span style="margin-left: 5px;">{{blog.created | date : 'MMM. dd, yyyy, HH:MM a'}}</span>
             </div>
