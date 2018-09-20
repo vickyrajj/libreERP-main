@@ -118,7 +118,7 @@ ACCOUNT_ADAPTER = 'ERP.views.AccountAdapter'
 SOCIALACCOUNT_PROVIDERS = \
         {'google':
             { 'SCOPE': ['profile', 'email', 'https://www.googleapis.com/auth/gmail.readonly'],
-            'AUTH_PARAMS': { 'access_type': 'online' } },
+            'AUTH_PARAMS': { 'access_type': 'offline' } },
         'facebook':
             {'METHOD': 'oauth2',
             'SCOPE': ['email', 'public_profile', 'user_friends'],
