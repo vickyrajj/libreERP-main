@@ -760,7 +760,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       session.register('service.support.createDetailCookie.'+uid, createCookieDetail).then(
         function (res) {
-          console.log("registered to service.support.heartbeat'");
+          console.log("registered to service.support.createDetailCookie'");
         },
         function (err) {
           console.log("failed to registered: ");
@@ -1367,6 +1367,7 @@ function endChat() {
 }
 
   feedbackFormOpened = false
+  feedbackFormSubmitted = false
 
   function openFeedback(id) {
 
@@ -1491,6 +1492,7 @@ function endChat() {
            // star5.checked = false
            submitStars.style.display = "none";
            thankYouMessage()
+           feedbackFormSubmitted = true
 
            // var dataToPublish = [uid , status , message , custID ];
 
@@ -1556,7 +1558,25 @@ function endChat() {
 
   endThisChat.addEventListener("click", function() {
 
+    if (feedbackFormOpened) {
+      // or you can use variable feedbackFormSubmitted which is true only if feedbackForm is submitted
+      // delete uid from cookies and create a new one
+      // uidDetails should remane same
+      // first welcome message should come
+      // agentPk =  null
+      // reset chat.messages  var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
+      // call pushMessges() again
+      // enable text area and display send and attach btn again
+      // threadExist == undefined
+      // chatThreadPk == undefined
+      // messageBox.innerHTML = '';
+      closeSupport.click()
+    }
+
     endChat()
+
+
+
   }, false);
 
 
@@ -1873,16 +1893,52 @@ function endChat() {
     },15000 )
 
 
-    // inputText.addEventListener("input", function(e) {
-    //   console.log(this.value);
-    //   var status = 'T'
-    //   connection.session.publish('service.support.agent', [uid , status], {}, {
-    //     acknowledge: true
-    //   }).
-    //   then(function(publication) {
-    //     console.log("Published");
-    //   });
-    //
+    function spying(inputVal) {
+      countOnchange = 0;
+      console.log('values' , inputVal);
+      //send
+
+      if (isAgentOnline) {
+        connection.session.publish('service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published");
+        });
+      }
+
+
+    }
+
+
+    var myVar;
+    var timestamp = 0
+    var myVar = false
+
+    setInterval(function () {
+      timestamp = new Date().getTime()
+      if (myVar) {
+        spying(inputText.value)
+      }
+    }, 3000);
+
+    setInterval(function () {
+      myVar =false
+    }, 2000);
+
+
+    var countOnchange = 0
+    inputText.addEventListener('input', function(evt) {
+      // console.log('coming');
+      myVar = true
+    });
+
+
+    // inputText.addEventListener('input', function(evt) {
+    //   countOnchange++
+    //   if ((countOnchange % 3) == 0) {
+    //     spying(this.value)
+    //   }
     // });
 
 
@@ -2300,6 +2356,7 @@ function endChat() {
   }
 
   closeSupport.addEventListener("click", function() {
+    //bottom close svg white color
     console.log('coming' , chatOpen);
     if (chatOpen) {
       chatOpen = !chatOpen
@@ -2314,6 +2371,7 @@ function endChat() {
 
 
   closeIcon.addEventListener("click", function() {
+    //top close icon display only in smaller screen
     if (chatOpen) {
       chatOpen = !chatOpen
       // chatIconSvg.style.display = ""

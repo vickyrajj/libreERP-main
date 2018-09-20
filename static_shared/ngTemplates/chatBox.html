@@ -65,7 +65,7 @@
         </div>
 
       </div>
-      <span class="text-muted" ng-show="isTyping">Typing... </span>
+      <span ng-if="!message.sentByAgent" style="float:left;  font-size:12px;">{{data.spying.value}}</span>
     </div>
   </div>
 

@@ -40,7 +40,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         unreadMsg: 0,
         boxOpen: false,
         companyPk: response.data[i].companyPk,
-        servicePk: response.data[i].servicePk
+        servicePk: response.data[i].servicePk,
+        spying:{value :'' , isTyping : false}
       })
 
       connection.session.publish('service.support.agent', [response.data[i].uid, 'R'], {}, {

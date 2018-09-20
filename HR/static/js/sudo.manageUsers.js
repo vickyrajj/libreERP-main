@@ -448,105 +448,129 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
     }
   }
 
+  $scope.files = {
+    "displayPicture": emptyFile,
+  }
+
   $scope.saveFirstPage = function() {
     var prof = $scope.data;
-
     console.log($scope.data);
+    var fd = new FormData();
 
-    var dataToSend = {
-      empID: prof.empID,
-      prefix: prof.prefix,
-      // dateOfBirth: prof.dateOfBirth.toJSON().split('T')[0],
 
-      gender: prof.gender,
-      permanentAddressStreet: prof.permanentAddressStreet,
-      permanentAddressCity: prof.permanentAddressCity,
-      permanentAddressPin: prof.permanentAddressPin,
-      permanentAddressState: prof.permanentAddressState,
-      permanentAddressCountry: prof.permanentAddressCountry,
-      sameAsShipping: prof.sameAsShipping,
-      localAddressStreet: prof.localAddressStreet,
-      localAddressCity: prof.localAddressCity,
-      localAddressPin: prof.localAddressPin,
-      localAddressState: prof.localAddressState,
-      localAddressCountry: prof.localAddressCountry,
-      email: prof.email,
-      mobile: prof.mobile,
-      emergency: prof.emergencyName + '::' + prof.emergencyNumber,
-      bloodGroup: prof.bloodGroup,
+    if (prof.empID=='') {
+      Flash('success' , 'Please fill eemployee id')
+      return
     }
-    if (prof.married) {
-      console.log(prof.anivarsary, typeof prof.anivarsary);
-      dataToSend.married = prof.married;
-      if (typeof prof.anivarsary == 'object') {
-        dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
-      } else {
-        dataToSend.anivarsary = prof.anivarsary
-      }
-    }
+    fd.append('empID', prof.empID)
+    fd.append('prefix', prof.prefix)
+    fd.append('gender', prof.gender)
+    fd.append('displayPicture', $scope.files.displayPicture)
 
-    if (typeof prof.dateOfBirth == 'object') {
-      dataToSend.dateOfBirth = prof.dateOfBirth.toJSON().split('T')[0]
-    } else {
-      dataToSend.dateOfBirth = prof.dateOfBirth
-    }
+
+
+
+    // var dataToSend = {
+    //   empID: prof.empID,
+    //   prefix: prof.prefix,
+    //   dateOfBirth: prof.dateOfBirth.toJSON().split('T')[0],
+    //
+    //   gender: prof.gender,
+    //   permanentAddressStreet: prof.permanentAddressStreet,
+    //   permanentAddressCity: prof.permanentAddressCity,
+    //   permanentAddressPin: prof.permanentAddressPin,
+    //   permanentAddressState: prof.permanentAddressState,
+    //   permanentAddressCountry: prof.permanentAddressCountry,
+    //   sameAsShipping: prof.sameAsShipping,
+    //   localAddressStreet: prof.localAddressStreet,
+    //   localAddressCity: prof.localAddressCity,
+    //   localAddressPin: prof.localAddressPin,
+    //   localAddressState: prof.localAddressState,
+    //   localAddressCountry: prof.localAddressCountry,
+    //   email: prof.email,
+    //   mobile: prof.mobile,
+    //   emergency: prof.emergencyName + '::' + prof.emergencyNumber,
+    //   bloodGroup: prof.bloodGroup,
+    // }
+
+
+    // if (prof.married) {
+    //   console.log(prof.anivarsary, typeof prof.anivarsary);
+    //   dataToSend.married = prof.married;
+    //   if (typeof prof.anivarsary == 'object') {
+    //     dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
+    //   } else {
+    //     dataToSend.anivarsary = prof.anivarsary
+    //   }
+    // }
+
+    // if (typeof prof.dateOfBirth == 'object') {
+    //   dataToSend.dateOfBirth = prof.dateOfBirth.toJSON().split('T')[0]
+    // } else {
+    //   dataToSend.dateOfBirth = prof.dateOfBirth
+    // }
 
     $http({
       method: 'PATCH',
       url: '/api/HR/profileAdminMode/' + prof.pk + '/',
-      data: dataToSend
-    }).
-    then(function(response) {
-      Flash.create('success', "Saved");
-    })
-  }
-
-  $scope.saveSecondPage = function() {
-
-
-    var f = $scope.data;
-    var dataToSend = {
-      website: f.website,
-      almaMater: f.almaMater,
-      pgUniversity: f.pgUniversity,
-      docUniversity: f.docUniversity,
-      fathersName: f.fathersName,
-      mothersName: f.mothersName,
-      wifesName: f.wifesName,
-      childCSV: f.childCSV,
-      note1: f.note1,
-      note2: f.note2,
-      note3: f.note3,
-    }
-
-    $http({
-      method: 'PATCH',
-      url: '/api/HR/profileAdminMode/' + f.pk + '/',
-      data: dataToSend
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
     }).
     then(function(response) {
       Flash.create('success', "Saved");
     })
 
+
   }
+
+  // $scope.saveSecondPage = function() {
+  //
+  //
+  //   var f = $scope.data;
+  //   var dataToSend = {
+  //     website: f.website,
+  //     almaMater: f.almaMater,
+  //     pgUniversity: f.pgUniversity,
+  //     docUniversity: f.docUniversity,
+  //     fathersName: f.fathersName,
+  //     mothersName: f.mothersName,
+  //     wifesName: f.wifesName,
+  //     childCSV: f.childCSV,
+  //     note1: f.note1,
+  //     note2: f.note2,
+  //     note3: f.note3,
+  //   }
+  //
+  //   $http({
+  //     method: 'PATCH',
+  //     url: '/api/HR/profileAdminMode/' + f.pk + '/',
+  //     data: dataToSend
+  //   }).
+  //   then(function(response) {
+  //     Flash.create('success', "Saved");
+  //   })
+  //
+  // }
 
   $scope.files = {
     "displayPicture": emptyFile,
-    'TNCandBond': emptyFile,
-    'resume': emptyFile,
-    'certificates': emptyFile,
-    'transcripts': emptyFile,
-    'otherDocs': emptyFile,
-    'resignation': emptyFile,
-    'vehicleRegistration': emptyFile,
-    'appointmentAcceptance': emptyFile,
-    'pan': emptyFile,
-    'drivingLicense': emptyFile,
-    'cheque': emptyFile,
-    'passbook': emptyFile,
-    'sign': emptyFile,
-    'IDPhoto': emptyFile
-
+    // 'TNCandBond': emptyFile,
+    // 'resume': emptyFile,
+    // 'certificates': emptyFile,
+    // 'transcripts': emptyFile,
+    // 'otherDocs': emptyFile,
+    // 'resignation': emptyFile,
+    // 'vehicleRegistration': emptyFile,
+    // 'appointmentAcceptance': emptyFile,
+    // 'pan': emptyFile,
+    // 'drivingLicense': emptyFile,
+    // 'cheque': emptyFile,
+    // 'passbook': emptyFile,
+    // 'sign': emptyFile,
+    // 'IDPhoto': emptyFile
   }
 
   $scope.saveFiles = function() {
@@ -580,13 +604,14 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
   }
 
   $scope.save = function() {
-    if ($scope.page == 1) {
-      $scope.saveFirstPage();
-    } else if ($scope.page == 2) {
-      $scope.saveSecondPage();
-    } else {
-      $scope.saveFiles();
-    }
+     $scope.saveFirstPage();
+    // if ($scope.page == 1) {
+    //   $scope.saveFirstPage();
+    // } else if ($scope.page == 2) {
+    //   $scope.saveSecondPage();
+    // } else {
+    //   $scope.saveFiles();
+    // }
   }
 
 });
@@ -599,7 +624,7 @@ if (typeof $scope.tab != 'undefined') {
 
 
   $scope.newCustomer = $scope.tab.data
-  $scope.newCustomer.password = ''
+  // $scope.newCustomer.password = ''
   $scope.newCustomer.access='full_access';
 
 
@@ -647,16 +672,18 @@ if (typeof $scope.tab != 'undefined') {
 
   $scope.createCustomer = function() {
 
+
+    //
     // if ($scope.newCustomer.password=='') {
     //   Flash.create('warning', "password cannot be empty" )
     //   return
     // }
-
+    //
     // if ($scope.newCustomer.access == undefined) {
     //   Flash.create('warning', "password cannot be empty" )
     //   return
     // }
-    console.log($scope.newCustomer.access);
+    console.log($scope.newCustomer);
 
     return
 

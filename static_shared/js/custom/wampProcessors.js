@@ -169,7 +169,31 @@ connection.onopen = function(session) {
 
 
     if (args[1] == 'T') {
-      console.log('typingggggggggg cccccc');
+      console.log('typingggggggggg cccccc' , args[0] , args[1] , args[2] );
+
+      for (var i = 0; i < scope.myUsers.length; i++) {
+        if (scope.myUsers[i].uid == args[0]) {
+          scope.myUsers[i].spying.value = args[2]
+          scope.myUsers[i].spying.isTyping = true
+
+          setTimeout(function() {
+            var id = document.getElementById("scrollArea" + args[0]);
+            if (id != null) {
+              console.log(id.scrollHeight);
+              id.scrollTop = id.scrollHeight;
+              console.log(id);
+            }
+          }, 300);
+
+          setTimeout(function (i) {
+            console.log('after time out');
+            scope.myUsers[i].spying.isTyping = false
+          }, 2000, (i));
+
+
+        }
+      }
+
       // console.log(scope.$$childHead.isTyping);
       // scope.$$childHead.isTyping = true;
       return
@@ -204,7 +228,8 @@ connection.onopen = function(session) {
         email:'',
         unreadMsg:0,
         boxOpen:false,
-        chatThreadPk: args[5]
+        chatThreadPk: args[5],
+        spying:{value :'' , isTyping : false}
       }
 
       // function createVisitor(email, phoneNumber , name) {
