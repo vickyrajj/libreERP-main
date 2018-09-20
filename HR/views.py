@@ -14,7 +14,7 @@ from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
-from ERP.models import application, permission , module , CompanyHolidays
+from ERP.models import application, permission , module , CompanyHolidays , service
 from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
@@ -25,6 +25,9 @@ from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
 import calendar
 from rest_framework.response import Response
+from django.contrib.auth.models import User, Group
+# from ERP.models import application , permission
+
 
 def documentView(request):
     docID = None
@@ -258,12 +261,25 @@ class userAdminViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = userAdminSerializer
 
+
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated ,)
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['username']
     serializer_class = userSerializer
     def get_queryset(self):
+
+        if 'getCustomers' in self.request.GET:
+            print self.request.GET , '************************************************8@@@@@@@@@@@222'
+            a = list(permission.objects.filter(app = application.objects.get(name = "app.customers")).values_list('user', flat=True).distinct())
+            if int(self.request.GET['getCustomers']) == 1:
+                print 'yes'
+                print service.objects.filter(contactPerson__in = a)
+                return User.objects.filter(pk__in=a)
+            else:
+                return User.objects.filter(~Q(pk__in=a))
+
+
         if 'mode' in self.request.GET:
             if self.request.GET['mode']=="mySelf":
                 if self.request.user.is_authenticated:

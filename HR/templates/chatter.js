@@ -873,39 +873,44 @@ document.addEventListener("DOMContentLoaded", function(event) {
   				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
   				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
   				'<div  id="sy-sub-icons">'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
   						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Callback</span>'+
   						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle">'+
   						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Chat</span>'+
   						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle">'+
   						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Audio Call</span>'+
   						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" >'+
   						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Video Call</span>'+
   						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle">'+
   						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Ticket</span>'+
   						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
   					'</div>'+
   				'</div>'+
   			'</div>'+
-  		'</div>'
+  		'</div>'+
 
-
-
-      '<div id="welcomeMessage"  style="width:270px; height:76px; padding:5px 10px 5px 10px; background-color:#fff; color:#000; position:fixed; bottom:42px;  right:30px; border-radius:5px; cursor:pointer; box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.3)">'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:12px;" >Syrow</p>'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:10px; word-wrap: break-word;" >Thanks for visiting us. If you need help simply reply to this message.... </p>'+
-      '</div>'+
-      '<div id="unreadMsg" style="background-color:#fff; color:#fff; width:3px; height:3px; position:fixed; bottom:42px; right:38px; z-index:9999; " >'+
-
+      '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle">'+
+        '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ; right:105px; display:none; transition: .5s" class="sy-text">Chat</span>'+
+        '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
       '</div>'
+
+
+
+      // '<div id="welcomeMessage"  style="width:270px; height:76px; padding:5px 10px 5px 10px; background-color:#fff; color:#000; position:fixed; bottom:42px;  right:30px; border-radius:5px; cursor:pointer; box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.3)">'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:12px;" >Syrow</p>'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:10px; word-wrap: break-word;" >Thanks for visiting us. If you need help simply reply to this message.... </p>'+
+      // '</div>'+
+      // '<div id="unreadMsg" style="background-color:#fff; color:#fff; width:3px; height:3px; position:fixed; bottom:42px; right:38px; z-index:9999; " >'+
+      //
+      // '</div>'
 
 
     mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
@@ -967,6 +972,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var endThisChat = document.getElementById('endThisChat');
 
 
+  var singleService = document.getElementById('singleService');
+
+
   // inputText.style.display = "none"
 
 
@@ -982,6 +990,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
   // isTyping.style.display = "none";
+
+  singleService.style.display = "none";
 
 
   document.getElementById('sy-main-icon').style.display = "none";
@@ -1052,8 +1062,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
   // console.log(supportOptions,'so');
-    for (var i = 0 , rD = 0 , mB = 0 , mR=0; i < supportOptions.length; i++) {
+    count = 0
+    for (var i = 0 , rD = 0 , mB = 0 , mR=0 ; i < supportOptions.length; i++) {
+
       if (supportOptions[i].value) {
+        count ++;
+        var activeService = supportOptions[i].name
         rD+=2;
         mB+=60;
         mR+=1;
@@ -1083,6 +1097,53 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }else {
           document.getElementById(supportOptions[i].name).style.display = "none";
       }
+
+    }
+
+    if (count==1) {
+      // alert('display only one service')
+      // display none of main
+      setTimeout(function () {
+          singleService.style.display = ""
+          supportCircle.style.display = "none"
+
+          var singleServiceText = document.getElementById('singleServiceText')
+          var singleServiceFont = document.getElementById('singleServiceFont')
+
+          singleService = document.getElementById('singleService')
+
+          singleService.addEventListener("mouseover" , function () {
+            singleServiceText.style.display = ""
+          })
+
+          singleService.addEventListener("mouseleave" , function () {
+            singleServiceText.style.display = "none"
+          })
+
+          if (activeService == 'callCircle') {
+            singleServiceText.innerHTML = "Callback"
+            singleServiceFont.className = "SyrowFont font-SyrowCallBack sy-md-2 sy-ops"
+          }else if (activeService == 'chatCircle') {
+            singleServiceText.innerHTML = "Chat"
+            singleServiceFont.className = "SyrowFont font-SyrowChat sy-md-2 sy-ops"
+            singleService.addEventListener("click" , openChat , false)
+          }else if (activeService == 'audioCircle') {
+            singleServiceText.innerHTML = "Audio Call"
+            singleServiceFont.className = "SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"
+          }else if (activeService == 'videoCircle') {
+            singleServiceText.innerHTML = "Video Call"
+            singleServiceFont.className = "SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"
+          }else if (activeService == 'ticketCircle') {
+            singleServiceText.innerHTML = "Ticket"
+            singleServiceFont.className = "SyrowFont font-SyrowTicket sy-md-1 sy-ops"
+          }
+
+      }, 1700);
+
+
+
+
+
     }
 
 
@@ -1284,7 +1345,7 @@ function endChat() {
 
        var dataToSend = {uid:uid , message: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-       if (isAgentOnline) {
+       if (isAgentOnline && feedbackFormOpened) {
          console.log('ONLINE' , agentPk);
          connection.session.publish('service.support.agent.'+agentPk, [uid , 'M' , dataToSend ] , {}, {
            acknowledge: true
@@ -2189,7 +2250,10 @@ function endChat() {
   }
 
 
-  chatCircle.addEventListener("click", function() {
+  chatCircle.addEventListener("click", openChat , false);
+
+
+  function openChat() {
     // welcomeMessage.style.display ="none";
     console.log(chatOpen);
     console.log('click');
@@ -2233,8 +2297,7 @@ function endChat() {
       // // closeChatSvg.style.display = "none"
       // chatBox.style.display = "none";
     }
-
-  }, false);
+  }
 
   closeSupport.addEventListener("click", function() {
     console.log('coming' , chatOpen);

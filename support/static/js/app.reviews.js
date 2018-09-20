@@ -14,6 +14,7 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
 
 
   $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+  $scope.me = $users.get('mySelf');
 
   console.log($scope.commentPerm);
 
