@@ -10,7 +10,7 @@ from fabric.api import *
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ('pk' ,'name' , 'cin' , 'tin' , 'telephone' , 'street','pincode','city','state','country')
+        fields = ('pk' ,'name' , 'cin' , 'tin' , 'telephone' , 'street','pincode','city','state','country',  'gst', 'statecode', 'pan')
         read_only_fields = ('user' , )
     def create(self , validated_data):
         s=Service(**validated_data)
@@ -33,7 +33,7 @@ class ContactSerializer(serializers.ModelSerializer):
         c.save()
         return c
     def update(self ,instance, validated_data):
-        for key in ['name', 'email' , 'mobile' , 'designation' , 'notes' ,]:
+        for key in ['name', 'email' , 'mobile' , 'designation' , 'notes',]:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -144,7 +144,7 @@ class CommoditySerializer(serializers.ModelSerializer):
     contract = ContractLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Commodity
-        fields = ('pk' ,'created' , 'contract' , 'name' , 'qty')
+        fields = ('pk' ,'created' , 'contract' , 'name' , 'qty', 'typ')
     def create(self , validated_data):
         print 'enttttttttttttttt'
         i=Commodity(**validated_data)

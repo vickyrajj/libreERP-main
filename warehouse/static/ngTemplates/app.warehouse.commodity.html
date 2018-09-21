@@ -11,6 +11,18 @@
   </div>
   <div class="modal-body">
     <div class="row">
+      <div class="col-md-7">
+      </div>
+      <div class="col-md-3 text-center">
+        <label> Search</label>
+        <input type="text" class="form-control" ng-model='searchText'>
+      </div>
+      <div class="col-md-2" style="padding-top:22px">
+        <button type="button" class="btn btn-primary" name="button"> <i class="fa fa-download" ng-click="excelResp()">Export Excel</i> </button>
+      </div>
+    </div>
+    <br>
+    <div class="row">
       <div class="col-md-4">
         <label>Name</label>
         <input type="text" class="form-control" ng-model="form.name">
@@ -19,24 +31,31 @@
         <label>Quantity</label>
         <input type="number" class="form-control" value="" ng-model="form.qty">
       </div>
+      <div class="col-md-3">
+        <div class="form-group">
+              <label>Type</label>
+              <select class="form-control" ng-model="form.type">
+                <option selected value="unit"> Unit</option>
+                <option value="cartan"> Cartan</option>
+                <option value="pieces">Pieces</option>
+                <option value="packages">Packages</option>
+            </select>
+        </div>
+      </div>
       <div class="col-md-1" style="padding-top:25px">
         <button type="button" class="btn btn-primary" ng-click="addCommodities()" style="width:70px"> Add </button>
-      </div>
-      <div class="col-md-3">
-        <label> Search</label>
-        <input type="text" class="form-control" ng-model='searchText' >
-      </div>
-      <div class="col-md-1" style="padding-top:29px">
-        <i class="fa fa-2x fa-download" ng-click="excelResp()"></i>
       </div>
     </div>
   </div>
   <div class="row" style="padding:5px;">
-    <div class="col-md-5">
+    <div class="col-md-4">
       <b>Name</b>
     </div>
-    <div class="col-md-5">
+    <div class="col-md-3">
       <b>Quantity</b>
+    </div>
+    <div class="col-md-3">
+      <b>Type</b>
     </div>
     <div class="col-md-2">
       <b>View</b>
@@ -46,11 +65,14 @@
     <div class="card" ng-repeat="c in comodities | filter : searchText" style="padding-bottom:0px; margin-bottom:10px">
       <div class="card">
         <div class="row" style="padding:10px; padding-left:20px;">
-          <div class="col-md-5">
+          <div class="col-md-4">
             {{c.name}}
           </div>
-          <div class="col-md-5">
+          <div class="col-md-3">
             {{c.qty}}
+          </div>
+          <div class="col-md-3">
+            {{c.typ}}
           </div>
           <div class="col-md-2" >
             <i class="fa fa-plus" ng-click="expand(c.pk,$index)"  ng-if="$index!=idx"></i>
@@ -69,6 +91,30 @@
           </div>
         </div>
         <div class="row" ng-if="comodityData.length>0">
+          <div class="row" style="padding-left:55px;">
+            <div class="col-md-4 ">
+              <label>From</label>
+              <div class="input-group" style="width:80%">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="yyyy-MM-dd" ng-model="form.from" is-open="status.open" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="status.open = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label>To</label>
+              <div class="input-group" style="width:80%">
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="yyyy-MM-dd" ng-model="form.to" is-open="status.opened" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2 text-right">
+              <label>View</label> <br>
+              <button type="button"class="btn btn-secondary pull-right" name="button" ng-click="downloadIn(c.pk)"> <i class="fa fa-download"></i></button>
+            </div>
+          </div>
           <div class="text-center" style="padding:30px;">
             <table class="table table-bordered" style="width:100%;">
               <tr>
@@ -78,7 +124,7 @@
                 <th class="text-center"> Remaining Qt. </th>
                 <th class="text-center">Download</th>
               </tr>
-              <tbody ng-repeat="s in comodityData">
+              <tbody ng-repeat="s in comodityData" >
                 <tr>
                   <td>{{s.created|date:'d-M-y'}}</td>
                   <td>{{s.checkIn}}</td>
@@ -89,10 +135,8 @@
               </tbody>
             </table>
           </div>
-
         </div>
       </div>
-
     </div>
 
   </div>

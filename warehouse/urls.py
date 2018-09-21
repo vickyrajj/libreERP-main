@@ -19,4 +19,7 @@ urlpatterns = [
     url(r'dashboardInvoices/$' , DashboardInvoices.as_view() ),
     url(r'sendNotification/$' , SendNotificationAPIView.as_view() ),
     url(r'downloadExcelReponse/$' , DownloadExcelReponse.as_view() ),
+    url(r'downloadReceipt/$' , DownloadReceipt.as_view() ),
+    url(r'downloadPdf/$' , downloadPdf, name='pdf'),
+
 ]

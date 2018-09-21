@@ -6,12 +6,13 @@ from rest_framework import viewsets , permissions , serializers
 from API.permissions import *
 from rest_framework.views import APIView
 from excel_response import ExcelResponse
+from io import BytesIO
 from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse
 from clientRelationships.views import expanseReportHead,addPageNumber,PageNumCanvas,FullPageImage
 from reportlab import *
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A4,letter
 from reportlab.lib.units import cm, mm
 from reportlab.lib import colors , utils
 from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
@@ -30,6 +31,7 @@ from django.db.models import Q
 import datetime
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+from dateutil import parser as date_parser
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
@@ -590,6 +592,7 @@ class DownloadInvoice(APIView):
 
         return response
 
+
 class DashboardInvoices(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
@@ -601,7 +604,8 @@ class DashboardInvoices(APIView):
             toReturn = Invoice.objects.filter(~Q(status='received')).values('pk','contract__company__name','status','dueDate','billedDate')
         print toReturn
         return Response(toReturn, status=status.HTTP_200_OK)
-        
+
+
 
 class SendNotificationAPIView(APIView):
     renderer_classes = (JSONRenderer,)
@@ -700,3 +704,48 @@ class DownloadExcelReponse(APIView):
             toReturn.append({"Name":i.name, "Quantity":i.qty})
             print toReturn
         return ExcelResponse(toReturn)
+
+
+class DownloadReceipt(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self , request , format = None):
+        print "aaaaaaaaaaaaaaaaaaaaaaaaa"
+        ab = date_parser.parse(request.GET["fromDate"])
+        print ab
+        time_format="%a %b %d %Y %H:%M:%S GMT (%Z)"
+        frm = datetime.datetime.strptime(ab,time_format)
+        toD = datetime.datetime.strptime(request.GET["to"],'%Y-%m-%dT%H:%M:%S.%fZ')
+        print "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        print frm
+
+        # obj = CommodityQty.objects.filter(commodity=int(request.GET['commodity']),created__range =(frm,to))
+        # print obj
+        toReturn = []
+        # for i in obj:
+        #     toReturn.append({"Remaining Qty.":i.balance, "Check In":i.checkIn, "Check Out":i.checkOut })
+        #     print toReturn
+        return ExcelResponse(toReturn)
+
+
+
+def downloadPdf(request):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="NewtoPDFGen.pdf"'
+    buffer = BytesIO()
+    # Create the PDF object, using the BytesIO object as its "file."
+    p = canvas.Canvas(buffer, pagesize=letter)
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.setFont('Helvetica', 16, leading = None)
+    abc = "Hello world!!"
+    p.drawString(50, 700, abc)
+    # Close the PDF object cleanly.
+    p.showPage()
+    p.save()
+
+    # Get the value of the BytesIO buffer and write it to the response.
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response

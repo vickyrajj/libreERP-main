@@ -31,6 +31,9 @@ class Service(models.Model):
     city = models.CharField(max_length = 100 , null = True)
     state = models.CharField(max_length = 50 , null = True)
     country = models.CharField(max_length = 50 , null = True)
+    gst = models.CharField(max_length=15, null=True)
+    pan = models.CharField(max_length=13, null=True)
+    statecode = models.PositiveIntegerField(null=True)
 
     def __str__(self):
         return self.name
@@ -132,11 +135,19 @@ class Checkout(models.Model):
     value = models.FloatField(null = False)
     final = models.FloatField(null = False)
 
+ITEM_TYPE = (
+    ('unit' , 'unit'),
+    ('cartan', 'cartan'),
+    ('pieces', 'pieces'),
+    ('packages', 'packages'),
+)
+
 class Commodity(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     contract = models.ForeignKey(Contract , null = True , related_name="commodities")
     name = models.CharField(max_length = 100 , null = False)
     qty =  models.PositiveIntegerField(null = True)
+    typ = models.CharField(max_length=10, default='unit', choices = ITEM_TYPE )
 
 class CommodityQty(models.Model):
     created = models.DateTimeField(auto_now_add = True)

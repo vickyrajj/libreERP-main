@@ -197,9 +197,9 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           var dataToSend={
             contract:$scope.contract.pk,
             name:$scope.form.name,
-            qty:$scope.form.qty
+            qty:$scope.form.qty,
+            typ:$scope.form.type
           }
-
           $http({
             method: 'POST',
             url: '/api/warehouse/commodity/',
@@ -208,6 +208,9 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           then(function(response) {
             console.log(response.data,'aaaaaaaaaaaaaaaaaaaaa');
             $scope.comodities.push(response.data)
+            $scope.form.qty = null;
+            $scope.form.name = '';
+            $scope.form.type = null;
           })
         }
         $scope.expand=function(value,indx){
@@ -304,17 +307,19 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       }
       $scope.excelResp = function (){
         console.log($scope.contract);
-        // var dataToSend = {contract : $scope.contract}
-        //  $http({
-        //   method: 'GET',
-        //   url: '/api/warehouse/downloadExcelReponse/?contractData='+$scope.contract.pk,
-        // }).
-        // then(function(response) {
-        //   return response.data
-        // })
-
-              window.open('/api/warehouse/downloadExcelReponse/?contractData='+$scope.contract.pk)
+        window.open('/api/warehouse/downloadExcelReponse/?contractData='+$scope.contract.pk)
       }
+      $scope.form={
+        from:new Date(),
+        to:new Date()
+      }
+      $scope.downloadIn = function (comm){
+        console.log(comm);
+        console.log($scope.form.from);
+        console.log($scope.form.to);
+        window.open('/api/warehouse/downloadReceipt/?commodity='+comm + '&fromDate='+$scope.form.from + '&to='+$scope.form.to)
+      }
+
 
 
       },
