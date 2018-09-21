@@ -244,7 +244,7 @@ app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state,
   $scope.showNext = false
   $scope.showPrev = false
   $scope.start = 0
-  $scope.rangeNo = 4
+  $scope.rangeNo = 3
   $scope.end = $scope.start + $scope.rangeNo
   $scope.bData = function(start,end){
     if (start>0) {
@@ -271,7 +271,15 @@ app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state,
     }
     window.scrollTo(0, 0);
   }
-
+  $http({method : 'GET' , url : '/api/ecommerce/genericImage/'}).
+  then(function(response) {
+    console.log(response.data,'imagesssssssss');
+    if (response.data.length>0) {
+      $scope.genericImage = response.data[0]
+    }else {
+      $scope.genericImage = {}
+    }
+  })
   $http({
     method: 'GET',
     url: '/api/PIM/blog/?homeBlog'

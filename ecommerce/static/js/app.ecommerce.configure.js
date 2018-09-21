@@ -455,6 +455,9 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     if ($scope.form.searchBgImage != null && typeof $scope.form.searchBgImage != 'string') {
       fd.append('searchBgImage',$scope.form.searchBgImage);
     }
+    if ($scope.form.blogPageImage != null && typeof $scope.form.blogPageImage != 'string') {
+      fd.append('blogPageImage',$scope.form.blogPageImage);
+    }
     $http({method : 'GET' , url : '/api/ecommerce/genericImage/'}).
     then(function(response) {
       if(response.data.length==0){

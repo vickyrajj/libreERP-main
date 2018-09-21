@@ -159,13 +159,13 @@ def ecommerceHome(request):
         if len(urlData) > 1 :
             print 'pagessssssssssssss',urlData[1]
             pagesChecking = Pages.objects.filter(pageurl__icontains=str(urlData[1]))
-            blogsChecking = blogPost.objects.filter(shortUrl__icontains=str(urlData[1]))
+            blogsChecking = blogPost.objects.filter(state__icontains='published',shortUrl__icontains=str(urlData[1]))
             if len(pagesChecking)>0:
                 data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
             elif len(blogsChecking)>0:
                 blogData = blogsChecking[0]
                 data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
-                if blogData.description is not None and len(blogData.description)>0:
+                if blogData.description is not None and len(blogData.description)>0 and blogData.description != 'null':
                     data['seoDetails']['description'] = blogData.description
                     print 'Desscription existsssssssssssss'
                 else:
@@ -179,7 +179,7 @@ def ecommerceHome(request):
                     print 'og image existsssssssssssss'
                 except:
                     print 'no such blog file has existsssssssssssss'
-                    if blogData.ogimageUrl is not None and len(blogData.ogimageUrl)>0:
+                    if blogData.ogimageUrl is not None and len(blogData.ogimageUrl)>0 and blogData.ogimageUrl != 'null':
                         data['seoDetails']['image'] = blogData.ogimageUrl
                     else:
                         print 'so ogimageurl existsssssssssssss'
@@ -421,7 +421,7 @@ class listingViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = listingSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['parentType']
+    filter_fields = ['parentType','product']
 
     def get_queryset(self):
         print self.request.GET,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'

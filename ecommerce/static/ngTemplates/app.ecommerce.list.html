@@ -2,8 +2,8 @@
   <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm" style="padding-right:0px;padding-left:0px;padding-top:0px;padding-bottom:20px">
     <!-- <div style="padding:10px;"> -->
       <h4 style="padding-left:18px">Categories</h4>
-      <div ng-repeat="g in genericProducts| limitTo:4" style="padding:0px;">
-        <div class="col-md-3 anim-in-out anim-zoom-out">
+      <div ng-repeat="g in genericProducts| limitTo:5" style="padding:0px;">
+        <div class="col-md-2 anim-in-out anim-zoom-out">
           <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
             <div class="row">
               <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;overflow:hidden;">
@@ -22,7 +22,7 @@
 
   <div class="col-xs-12 col-sm-12 hidden-md hidden-lg" style="padding:40px;">
       <h4>Categories</h4>
-      <div ng-repeat="g in genericProducts| limitTo:4" style="padding:0px; ">
+      <div ng-repeat="g in genericProducts| limitTo:5" style="padding:0px; ">
         <div class="col-xs-12 col-sm-6">
           <div class="container-fluid" style="cursor:pointer;padding-right:0px;padding-left:0px" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
             <div class="row">
