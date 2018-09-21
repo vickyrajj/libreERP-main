@@ -63,9 +63,9 @@
   </div>
   <div class="row">
     <div class="card" ng-repeat="c in comodities | filter : searchText" style="padding-bottom:0px; margin-bottom:10px">
-      <div class="card">
-        <div class="row" style="padding:10px; padding-left:20px;">
-          <div class="col-md-4">
+      <div class="card" ng-if="$index!=idx">
+        <div class="row" style="padding:10px; padding-left:20px;"  ng-click="expand(c.pk,$index)" >
+          <div class="col-md-5">
             {{c.name}}
           </div>
           <div class="col-md-3">
@@ -75,10 +75,24 @@
             {{c.typ}}
           </div>
           <div class="col-md-2" >
-            <i class="fa fa-plus" ng-click="expand(c.pk,$index)"  ng-if="$index!=idx"></i>
-              <i class="fa fa-minus"  ng-if="$index==idx "  ng-click="ShowHide()"></i>
+            <i class="fa fa-plus" ></i>
           </div>
         </div>
+
+      </div>
+      <div class="card"  ng-if="$index==idx " >
+        <div class="row" style="padding:10px; padding-left:20px;"  ng-click="ShowHide()" >
+          <div class="col-md-5">
+            {{c.name}}
+          </div>
+          <div class="col-md-5">
+            {{c.qty}}
+          </div>
+          <div class="col-md-2" >
+              <i class="fa fa-minus"  ></i>
+          </div>
+        </div>
+
       </div>
       <div ng-if="$index==idx">
         <div class="row" style="padding:20px">
@@ -130,7 +144,7 @@
                   <td>{{s.checkIn}}</td>
                   <td>{{s.checkOut}}</td>
                   <td>{{s.balance}}</td>
-                  <td><i class="fa fa-download"></i></td>
+                  <td><i class="fa fa-download" ng-click="download()"></i></td>
                 </tr>
               </tbody>
             </table>

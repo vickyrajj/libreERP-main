@@ -1,6 +1,6 @@
 <div>
   <breadcrumb></breadcrumb>
-  <div class="row" style="margin:15px">
+  <!-- <div class="row" style="margin:15px">
     <div class="form-group">
       <input type="text" class="form-control" placeholder="Filter By Company Name..." ng-model="serchField">
     </div>
@@ -36,10 +36,42 @@
                   <li><a href="" ng-click="changeStatus('dueElapsed', $index)">Due Elapsed</a></li>
                 </ul>
               </div>
-              <!-- <br>
-              <span ng-if="c.status == 'billed'"> <strong>Due Date:</strong> {{i.dueDate | date : 'dd-MMM-yyyy'}}</span> -->
             </td>
-            <!-- <td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div> -->
+
+  <div class="row" style="margin:15px">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Filter By Company Name..." ng-model="serchField">
+    </div>
+    <div class="row" style="margin:20px">
+      <button type="button" class="btn btn-default bgn-lg pull-right" ng-click="send()">
+      <i class="fa fa-plus"></i>  Generate
+      </button>
+    </div>
+    <div class="row" style="margin:20px" ng-if="invData.length==0">
+      <span class="text-center text-muted"><h2>No Invoices...</h2><br></span>
+    </div>
+    <div class="row" style="margin:20px" ng-if="invData.length>0">
+      <span class="text-center"><h3>Invoices</h3><br></span>
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <th>Invoice No.</th>
+            <th>Company Name</th>
+            <th>Billing Date</th>
+            <th>Due Date</th>
+            <!-- <th>Status.</th> -->
+          </tr>
+          <tr ng-repeat="i in invData">
+            <td>{{i.pk}}</td>
+            <td>{{i.contract__company__name}}</td>
+            <td>{{i.billedDate | date : 'dd-MMM-yyyy'}}</td>
+            <td>{{i.dueDate | date : 'dd-MMM-yyyy'}}</td>
+            <!-- <td>{{i.status | humanize}}
               <div class="btn-group btn-group-sm pull-right">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                   Change status <span class="caret"></span></button>
@@ -58,27 +90,4 @@
       </table>
     </div>
   </div>
-
-  <!-- <p style="text-align:center;padding-top:200px;">
-    <i class="fa fa-search-plus fa-5x"></i>
-    <i class="fa fa-building-o fa-5x "></i>
-    <br>
-    <h3 class="text-muted" style="text-align:center;"> Dashboard for Warehouse portal</h3>
-  </p> -->
 </div>
-
-<!-- <div class="shaddowed card bg-white " style="position:relative;min-height:92vh;">
-  <div class="container-fluid" style="padding:0px;">
-    <breadcrumb></breadcrumb>
-  </div>
-
-<div>
-  <breadcrumb></breadcrumb>
-  <p style="text-align:center;padding-top:200px;">
-    <i class="fa fa-search-plus fa-5x"></i>
-    <i class="fa fa-building-o fa-5x "></i>
-    <br>
-    <h3 class="text-muted" style="text-align:center;"> Dashboard for Warehouse portal</h3>
-  </p>
-
-</div> -->

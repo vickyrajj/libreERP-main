@@ -42,7 +42,6 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
       url: url
     }).
     then(function(response) {
-      console.log(response);
       $scope.invData = response.data
     })
   })
