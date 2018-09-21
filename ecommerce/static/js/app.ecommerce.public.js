@@ -852,7 +852,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     }
   }
   $scope.decrement = function(inputPk) {
-    $scope.details.added_cart --
+    $scope.details.added_cart--
       for (var i = 0; i < $rootScope.inCart.length; i++) {
         if ($rootScope.inCart[i].product.pk == inputPk) {
           if ($rootScope.inCart[i].typ == 'cart') {
@@ -884,7 +884,6 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
           }
         }
       }
-
   }
 
 
