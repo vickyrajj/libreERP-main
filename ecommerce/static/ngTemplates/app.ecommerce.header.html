@@ -7,7 +7,7 @@
 
   <div style="padding-top:2vh;" class="hidden-xs hidden-sm">
     <div class="col-xs-5" style="padding:0px;padding-left:">
-      <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;border-radius: 7px;color:rgb(24, 89, 46);height: 5vh;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}" typeahead-template-url="/static/ngTemplates/app.ecommerce.search.typehead.html">
+      <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;border-radius: 7px;color:rgb(24, 89, 46);height: 5vh;" ng-model="searchProduct.product" uib-typeahead="p as p.name.slice(0,25) for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}" typeahead-template-url="/static/ngTemplates/app.ecommerce.search.typehead.html">
     </div>
   </div>
 
@@ -80,7 +80,7 @@
 
   <div class="row bg-white ecomNav hidden-lg hidden-md " style="width:100%" >
     <div class="col-xs-12" style="padding-right:0px; padding-left:0px;">
-      <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;color:rgb(24, 89, 46);height:40px;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}" typeahead-template-url="/static/ngTemplates/app.ecommerce.search.typehead.html">
+      <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;color:rgb(24, 89, 46);height:40px;" ng-model="searchProduct.product" uib-typeahead="p as p.name.slice(0,25) for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}" typeahead-template-url="/static/ngTemplates/app.ecommerce.search.typehead.html">
     </div>
   </div>
 </div>
