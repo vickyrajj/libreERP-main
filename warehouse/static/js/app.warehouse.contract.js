@@ -198,7 +198,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           console.log(response.data);
           $scope.comodities = response.data
         })
-<<<<<<< HEAD
+
         $scope.addCommodities=function(){
           console.log(  $scope.contract,'sssssssssssssssssssss');
           var dataToSend={
@@ -206,13 +206,12 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
             name:$scope.form.name,
             qty:$scope.form.qty,
             typ:$scope.form.type
-=======
+        }
         $scope.addCommodities = function() {
           var dataToSend = {
             contract: $scope.contract.pk,
             name: $scope.form.name,
             qty: $scope.form.qty
->>>>>>> 852c0911fb0f116018999a5dff9e7ee60ea960ac
           }
           $http({
             method: 'POST',
@@ -344,7 +343,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
 
     });
   }
-
+}
   $scope.changeStatus = function(status, indx) {
     $scope.contract.invoice[indx].status = status;
 
