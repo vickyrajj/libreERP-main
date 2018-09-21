@@ -14,6 +14,7 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
 
 
   $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+  $scope.me = $users.get('mySelf');
 
   console.log($scope.commentPerm);
 
@@ -22,7 +23,9 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
   $scope.reviewCommentData = []
   $http({
     method: 'GET',
-    url: '/api/support/reviewComment/?user='+$scope.msgData[0].user_id+'&uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+    // url: '/api/support/reviewComment/?user='+$scope.msgData[0].user_id+'&uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+    url: '/api/support/reviewComment/?uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);

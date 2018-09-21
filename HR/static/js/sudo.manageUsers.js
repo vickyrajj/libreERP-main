@@ -685,7 +685,7 @@ if (typeof $scope.tab != 'undefined') {
     // }
     console.log($scope.newCustomer);
 
-    return
+    // return
 
     dataToSend = {
       username: $scope.newCustomer.username,

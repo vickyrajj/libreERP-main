@@ -1400,7 +1400,7 @@ function endChat() {
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
-                        '<input type="text" placeholder="emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
+                        '<input type="text" id="emailId" placeholder="emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
                          '<textarea id="feedbackText" style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
                          '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
@@ -1911,36 +1911,40 @@ function endChat() {
     }
 
 
-    var myVar;
-    var timestamp = 0
-    var myVar = false
-
-    setInterval(function () {
-      timestamp = new Date().getTime()
-      if (myVar) {
-        spying(inputText.value)
-      }
-    }, 3000);
-
-    setInterval(function () {
-      myVar =false
-    }, 2000);
-
-
-    var countOnchange = 0
-    inputText.addEventListener('input', function(evt) {
-      // console.log('coming');
-      myVar = true
-    });
-
+    // var myVar;
+    // var timestamp = 0
+    // var myVar = false
+    //
+    // setInterval(function () {
+    //   timestamp = new Date().getTime()
+    //   if (myVar) {
+    //     spying(inputText.value)
+    //   }
+    // }, 3000);
+    //
+    // setInterval(function () {
+    //   myVar =false
+    // }, 2000);
+    //
+    //
+    // var countOnchange = 0
 
     // inputText.addEventListener('input', function(evt) {
-    //   countOnchange++
-    //   if ((countOnchange % 3) == 0) {
-    //     spying(this.value)
-    //   }
+    //   console.log('coming');
+    //   myVar = true
+    //
     // });
 
+    inputText.addEventListener('keydown', function(evt) {
+      // countOnchange++
+      console.log(evt.keyCode);
+      console.log(this.value);
+      if (evt.keyCode==32 || evt.keyCode == 8) {
+        spying(this.value)
+      }
+      // if ((countOnchange % 4) == 0) {
+      // }
+    });
 
     function sendMessage(inptText) {
 

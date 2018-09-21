@@ -69,7 +69,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         companyPk: response.data[i].companyPk,
         email:'',
         boxOpen:false,
-        chatThreadPk: response.data[i].chatThreadPk
+        chatThreadPk: response.data[i].chatThreadPk,
+        spying:{value :'' , isTyping : false}
       })
     }
   });

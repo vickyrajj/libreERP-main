@@ -28,13 +28,16 @@
     </div>
     <div ng-if="commentPerm" class="col-md-6" style="padding:20px;">
       <div class="row" ng-repeat="comment in reviewCommentData" style="padding-bottom:15px;">
-        <div class="col-md-10">
-          <div style="float:right; background-color:#286EFA; color:#fff; border-radius:15px 50px 50px 15px; padding:10px 10px 10px 15px;word-break: break-all !important;">
+        <div class="col-md-9">
+          <div style="background-color:{{comment.user==msgData[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; border-radius:15px 50px 50px 15px; padding:10px 10px 10px 15px;word-break: break-all !important;">
             <p> {{comment.message}} </p>
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1" style="padding-right:0px">
           <img ng-src="{{comment.user | getDP}}" style="border-radius:50%; width:45px;" alt="User Image">
+        </div>
+        <div class="col-md-2" style="padding:0px" >
+          <h5> {{comment.user | getName }}</h5>
         </div>
       </div>
       <div class="row" style="padding-top:20px;">
