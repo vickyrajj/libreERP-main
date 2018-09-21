@@ -486,7 +486,7 @@ app.directive('chatBox', function() {
               acknowledge: true
             }).
             then(function(publication) {
-              console.log("Published");
+              console.log("Published" , $scope.data.uid);
             });
 
             $scope.chatBox.messageToSend = ''

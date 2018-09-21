@@ -262,7 +262,7 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-
+var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
 
 var custID = {{pk}};
 console.log('customer id....', custID);
@@ -326,6 +326,8 @@ var broswer;
 var isAgentOnline = false;
 var agentPk = null;
 var notification = new Audio('{{serverAddress}}/static/audio/notification.ogg');
+var emailRecieved = false
+
 
 
 
@@ -470,6 +472,33 @@ function fetchThread(uid) {
         // console.log('nn',uid ,document.cookie);
         setCookie("uid", uid, 365);
         fetchMessages(uid);
+
+
+
+
+
+        // setTimeout(function () {
+        //   // console.log(session);
+        //
+        //   // alert(connection)
+        //   // alert(connection.session)
+        //
+        //   connection.session.subscribe('service.support.chat.' + uid, supportChat).then(
+        //     function (sub) {
+        //       console.log("subscribed to topic 'service.support.chat'" , uid );
+        //     },
+        //     function (err) {
+        //       console.log("failed to subscribed: " + err);
+        //     }
+        //   );
+        //
+        //
+        //
+        // }, 4000 );
+
+
+
+
 
       }
 
@@ -616,12 +645,12 @@ function setColors(bubbleColor , windowColor , icnClr) {
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
+  // var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
 
     connection.onopen = function (session) {
        console.log("session established!");
 
-      function supportChat(args) {
+      var supportChat = function(args) {
         console.log(args);
         var message;
 
@@ -740,11 +769,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       }
 
+      uid = getCookie("uid");
       function heartbeat() {
         console.log('caming in heartttttttttttttttttttttttttttttttttttttt here');
         var isOnline = true
         return uid
       }
+
 
       function createCookieDetail(args) {
         console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
@@ -754,7 +785,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
             console.log('already there');
             document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
           }
-
+          if (args[0].email!='') {
+            emailRecieved = true
+          }
+          console.log(emailRecieved);
           setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
       }
 
@@ -778,16 +812,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       session.subscribe('service.support.chat.' + uid, supportChat).then(
         function (sub) {
-          console.log("subscribed to topic 'service.support.chat'");
+          console.log("subscribed to topic 'service.support.chat'" , uid );
         },
         function (err) {
           console.log("failed to subscribed: " + err);
         }
       );
 
+
     };
 
     connection.open();
+
 
 
     function createDiv() {
@@ -1400,7 +1436,7 @@ function endChat() {
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
-                        '<input type="text" id="emailId" placeholder="emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
+                        '<input type="text" id="emailId" placeholder="Emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
                          '<textarea id="feedbackText" style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
                          '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
@@ -1420,6 +1456,12 @@ function endChat() {
 
     paperClip.style.display = "none";
     paperPlane.style.display = "none";
+
+    if (emailRecieved) {
+      // ratingForm.email = emailId
+      var emailId = document.getElementById('emailId')
+      emailId.style.display = "none"
+    }
 
 
     submitStarForm(id);
@@ -1441,6 +1483,8 @@ function endChat() {
 
 
   function submitStarForm(id) {
+
+
     submitStars.addEventListener("click", function() {
       console.log('somthing hereeeeee' , this);
       // id="star-5"
@@ -1451,6 +1495,16 @@ function endChat() {
         customerRating:0,
         customerFeedback:feedbackText.value
       }
+
+      var emailId = document.getElementById('emailId').value
+
+
+      if (!emailRecieved) {
+        ratingForm.email = emailId
+      }
+
+
+
 
       var star1 = document.getElementById('star-1')
       var star2 = document.getElementById('star-2')
@@ -1484,25 +1538,20 @@ function endChat() {
          if (this.readyState == 4 && this.status == 200) {
            console.log('posted successfully');
            console.log(ratingForm);
-           // feedbackText.value = ''
-           // star1.checked = false
-           // star2.checked = false
-           // star3.checked = false
-           // star4.checked = false
-           // star5.checked = false
            submitStars.style.display = "none";
            thankYouMessage()
            feedbackFormSubmitted = true
-
            // var dataToPublish = [uid , status , message , custID ];
-
-
          }
        };
        xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
        xhttp.setRequestHeader("Content-type", "application/json");
        xhttp.send(ratingForm);
+
     }, false);
+
+
+
   }
 
 

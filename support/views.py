@@ -221,7 +221,6 @@ class ReviewFilterCalAPIView(APIView):
             # print agUid
             for j in agUid:
                 cmntDate =  sobj.filter(uid = j)[0].created
-                print cmntDate , '************************************************8'
                 try:
                     email = Visitor.objects.get(uid=j).email
                 except:

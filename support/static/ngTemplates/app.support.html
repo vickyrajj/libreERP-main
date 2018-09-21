@@ -28,7 +28,7 @@
               <a>
                 <div class="row" style="cursor:pointer">
                   <div class="container-fluid">
-                    <div class="col-md-10"  ng-click="addToChat($index); x.unreadMsg=0">
+                    <div class="col-md-10"  ng-click="addToChat($index , x.uid); x.unreadMsg=0">
                       <div class="row">
                         <span> {{x.uid.split("$")[1]}}</span>
                       </div>
