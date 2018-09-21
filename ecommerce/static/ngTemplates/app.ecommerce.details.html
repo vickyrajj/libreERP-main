@@ -74,7 +74,7 @@
               </span>
             </div>
           </div> -->
-          <div class="col-md-12 " ng-if="showOptions">
+          <div class="col-md-12 " ng-if="showOptions&&details.added_cart==0">
             <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding:5px 0px;">
               <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
                   <span style="font-size:15px;"><b> Add To Cart </b></span>
@@ -82,25 +82,61 @@
               </span>
             </div>
           </div>
+          <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
+            <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding-top:15px;">
+              <div class="col-md-4 col-sm-4 col-xs-4 text-right">
+                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="details.added_cart>0&&me.pk"  ng-click="decrement(details.pk);$event.stopPropagation()"></i>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
+                <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{details.added_cart}} </span>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-4 text-left">
+                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="increment(details.pk);$event.stopPropagation()"></i>
+              </div>
+              <!-- <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
+                  <span style="font-size:15px;"><b> Add To Cart </b></span>
+              <i class="fa fa-shopping-cart fa-2x"></i>
+              </span> -->
+
+            </div>
+          </div>
           <div class="col-md-12" ng-if="!showOptions">
             <span style="font-size:25px;color:#ef4a1e">Out Of Stock... Please Try Later</span>
           </div>
         </div>
         <div class="row" style="padding:10px;" ng-if="me == null">
-          <div class="col-md-6">
+          <!-- <div class="col-md-6">
             <div class="row container-fluid text-center" style="background-color:#ec1616; color:white; padding:5px 0px;">
               <span ng-click="loginPage()" style="cursor:pointer;">
                 <span style="font-size:15px;"><b> Buy Now </b></span>
               <i class="fa fa-bolt fa-2x"></i>
               </span>
             </div>
-          </div>
-          <div class="col-md-6 ">
-            <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding:5px 0px;">
-              <span ng-click="createCookieDetail(details)" style="cursor:pointer;">
-                  <span style="font-size:15px;"><b> Add To Cart </b></span>
+          </div> -->
+          <div class="col-md-12" ng-if="details.added_cart==0">
+            <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding:5px 0px;" >
+              <span ng-click="createCookieDetail(details)" style="cursor:pointer;" >
+                  <span style="font-size:15px;"><b> Add To Cart</b></span>
               <i class="fa fa-shopping-cart fa-2x"></i>
               </span>
+            </div>
+          </div>
+          <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
+            <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding-top:15px;">
+              <div class="col-md-4 col-sm-4 col-xs-4 text-right">
+                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="details.added_cart>1&&!me.pk"  ng-click="decrementCookie(details);$event.stopPropagation()"></i>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
+                <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{details.added_cart}} </span>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-4 text-left">
+                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="incrementCookie(details);$event.stopPropagation()"></i>
+              </div>
+              <!-- <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
+                  <span style="font-size:15px;"><b> Add To Cart </b></span>
+              <i class="fa fa-shopping-cart fa-2x"></i>
+              </span> -->
+
             </div>
           </div>
         </div>
