@@ -92,6 +92,7 @@ from PIL import Image
 from django.core.files.images import get_image_dimensions
 import ast
 from flask import Markup
+from PIM.models import blogPost
 
 # Create your views here.
 
@@ -126,28 +127,36 @@ def success_response(request):
 
 
 def ecommerceHome(request):
-    print 'cameeeeeeeeeeeeeeeeeeeeeee'
+    print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
     data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
-        print urlData
+        print urlData,'url detailsssssssssss'
         if 'details'in urlData and len(urlData) > 2 :
             pk = urlData[-2]
             print pk
-            lpObj = listing.objects.get(pk=pk)
-            dpList = lpObj.files.all()
-            print lpObj,'**************',dpList
-            data['seoDetails']['title'] = lpObj.product.name
-            data['seoDetails']['description'] = lpObj.product.description
-            if len(dpList)>0:
-                data['seoDetails']['image'] = dpList[0].attachment.url
-                w, h = get_image_dimensions(dpList[0].attachment.file)
-                print w,h
-                data['seoDetails']['width'] = w
-                data['seoDetails']['height'] = h
-                # image=Image.open(dpList[0].attachment.file)
-                # print image,image.size,image.format
-
+            try:
+                lpObj = listing.objects.get(pk=pk)
+                dpList = lpObj.files.all()
+                print lpObj,'**************',dpList
+                data['seoDetails']['title'] = lpObj.product.name
+                data['seoDetails']['description'] = lpObj.product.description
+                if len(dpList)>0:
+                    try:
+                        data['seoDetails']['image'] = dpList[0].attachment.url
+                        w, h = get_image_dimensions(dpList[0].attachment.file)
+                        print w,h
+                        data['seoDetails']['width'] = w
+                        data['seoDetails']['height'] = h
+                    except:
+                        print 'no such file has exists'
+                    # image=Image.open(dpList[0].attachment.file)
+                    # print image,image.size,image.format
+            except:
+                print 'please select the product'
+        if 'blog' in urlData and len(urlData) > 1 :
+            print 'blogggggggggggggggggggg'
+            data['seoDetails']['title'] = 'Sterling Select | Blog'
         if 'categories' in urlData and len(urlData) > 2 :
             data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | Sterling Select'
         if 'checkout' in urlData and len(urlData) > 2 :
@@ -164,6 +173,34 @@ def ecommerceHome(request):
                 data['seoDetails']['title'] = 'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
             elif urlData[-1] == 'saved':
                 data['seoDetails']['title'] = 'Sterling Select | Saved Products'
+        if len(urlData) > 1 :
+            print 'pagessssssssssssss',urlData[1]
+            pagesChecking = Pages.objects.filter(pageurl__icontains=str(urlData[1]))
+            blogsChecking = blogPost.objects.filter(state__icontains='published',shortUrl__icontains=str(urlData[1]))
+            if len(pagesChecking)>0:
+                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+            elif len(blogsChecking)>0:
+                blogData = blogsChecking[0]
+                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+                if blogData.description is not None and len(blogData.description)>0 and blogData.description != 'null':
+                    data['seoDetails']['description'] = blogData.description
+                    print 'Desscription existsssssssssssss'
+                else:
+                    print 'noooooooooooo Desscription existsssssssssssss'
+                try:
+                    data['seoDetails']['image'] = blogData.ogimage.url
+                    w, h = get_image_dimensions(blogData.ogimage.file)
+                    print w,h
+                    data['seoDetails']['width'] = w
+                    data['seoDetails']['height'] = h
+                    print 'og image existsssssssssssss'
+                except:
+                    print 'no such blog file has existsssssssssssss'
+                    if blogData.ogimageUrl is not None and len(blogData.ogimageUrl)>0 and blogData.ogimageUrl != 'null':
+                        data['seoDetails']['image'] = blogData.ogimageUrl
+                    else:
+                        print 'so ogimageurl existsssssssssssss'
+
     return render(request , 'ngEcommerce.html' , {'data':data})
 
 class SearchProductAPI(APIView):
@@ -188,10 +225,10 @@ class SearchProductAPI(APIView):
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
                 genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('product__displayPicture') , typ= Value('list',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') , typ= Value('list',output_field=CharField())))
             else:
                 genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name' ) , dp = F('product__displayPicture') , typ= Value('list',output_field=CharField())))
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name' ) , dp = F('files__attachment') , typ= Value('list',output_field=CharField())))
 
             tosend = genericProd + listProd
             print tosend[0:l]
@@ -401,7 +438,7 @@ class listingViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = listingSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['parentType']
+    filter_fields = ['parentType','product']
 
     def get_queryset(self):
         print self.request.GET,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
@@ -508,7 +545,7 @@ class listingViewSet(viewsets.ModelViewSet):
             return listing.objects.all()
 
 class listingLiteViewSet(viewsets.ModelViewSet):
-    permission_classes = (isAdminOrReadOnly, )
+    permission_classes = (permissions.AllowAny, )
     serializer_class = listingLiteSerializer
     # queryset = listing.objects.all()
     filter_backends = [DjangoFilterBackend]

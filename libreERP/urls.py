@@ -25,13 +25,13 @@ urlpatterns = [
     url(r'^logout', logoutView , name ='logout'),
     url(r'^corporate/', index , name ='index'),
     # url(r'^events/', eventHome, name = 'event'), # public blogs app
-    url(r'^blogs/', include('blogs.urls')), # public blogs app
+    # url(r'^blogs/', include('blogs.urls')), # public blogs app
     url(r'^api-auth/', include('rest_framework.urls', namespace ='rest_framework')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^robots\.txt', include('robots.urls')),
     url(r'^generateOTP', generateOTP, name="generateOTP"),
     url(r'^documents', documentView , name ='document'),
-    url(r'^blog/$', blog , name ='blog'),
+    # url(r'^blog/$', blog , name ='blog'),
     url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
     # url(r'^customer/login/', customerLoginView , name ='customerLogin'),
     # url(r'^customerhome/', customerHomeView , name ='customerhome'),

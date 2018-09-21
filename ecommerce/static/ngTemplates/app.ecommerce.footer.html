@@ -108,7 +108,8 @@
       <!-- <span style="font-size:12px;" ng-click="$state.go('pages' , {title : 'Terms of Use'.split(' ').join('-').toLowerCase()})">Terms of Use</span><br> -->
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Cancellations'.split(' ').join('-').toLowerCase()})">Cancellations</span><br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Returns'.split(' ').join('-').toLowerCase()})">Returns</span><br>
-      <span style="font-size:12px;cursor:pointer;" ng-click="$state.go('pages' , {title : 'Privacy Policy'.split(' ').join('-').toLowerCase()})">Privacy Policy</span>
+      <span style="font-size:12px;cursor:pointer;" ng-click="$state.go('pages' , {title : 'Privacy Policy'.split(' ').join('-').toLowerCase()})">Privacy Policy</span><br>
+      <span style="font-size:12px;cursor:pointer;" ng-click="$state.go('blog' , {title : 'Blog'.split(' ').join('-').toLowerCase()})">Blog</span>
 
     </div>
     <div class="col-md-3 text-center">
@@ -172,7 +173,8 @@
       <!-- <span style="font-size:12px;" ng-click="$state.go('pages' , {title : 'Terms of Use'.split(' ').join('-').toLowerCase()})">Terms of Use</span><br> -->
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Cancellations'.split(' ').join('-').toLowerCase()})">Cancellations</span><br>
       <span style="cursor:pointer;" ng-click="$state.go('pages' , {title : 'Returns'.split(' ').join('-').toLowerCase()})">Returns</span><br>
-      <span style="font-size:12px;cursor:pointer;" ng-click="$state.go('pages' , {title : 'Privacy Policy'.split(' ').join('-').toLowerCase()})">Privacy Policy</span>
+      <span style="font-size:12px;cursor:pointer;" ng-click="$state.go('pages' , {title : 'Privacy Policy'.split(' ').join('-').toLowerCase()})">Privacy Policy</span><br>
+      <span style="font-size:12px;cursor:pointer;" ng-click="$state.go('blog' , {})">Blog</span>
     </div>
 
     <div class="col-xs-12 text-center" style="padding-top:15px">
@@ -228,8 +230,8 @@
       <!-- <h4><span style="padding-left:30px"></span>Payment Methods</h4> -->
       <div class="row">
         <div class="col-md-12 hidden-sm hidden-xs">
-          <img ng-if="!genericImage" src="/static/images/payment-methods.svg" alt="Payment Methods" width="100%;" >
-          <img ng-if="genericImage" src="{{genericImage.paymentImage}}" alt="Payment Methods" width="100%;" >
+          <img ng-if="genericImage.paymentImage" src="{{genericImage.paymentImage}}" alt="Payment Methods" width="100%;" >
+          <img ng-if="!genericImage.paymentImage" src="/static/images/payment-methods.svg" alt="Payment Methods" width="100%;" >
         </div>
       </div>
     </div>
@@ -242,8 +244,8 @@
       <!-- <h4><span style="padding-left:30px"></span>Payment Methods</h4> -->
       <div class="row">
         <div class=" col-xs-12 col-sm-12 hidden-md hidden-lg">
-          <img ng-if="!genericImage" src="/static/images/paymentlogo123.png" alt="Payment Methods" width="100%;" >
-            <img ng-if="genericImage" src="{{genericImage.paymentPortrait}}" alt="Payment Methods" width="100%;" >
+          <img ng-if="!genericImage.paymentPortrait" src="/static/images/paymentlogo123.png" alt="Payment Methods" width="100%;" >
+            <img ng-if="genericImage.paymentPortrait" src="{{genericImage.paymentPortrait}}" alt="Payment Methods" width="100%;" >
         </div>
       </div>
           <!-- <div class="row">

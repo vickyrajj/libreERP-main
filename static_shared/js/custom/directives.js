@@ -689,6 +689,7 @@ app.directive('productCard', function() {
             }
           }
         }
+        console.log($scope.list,'aaaaaaaaaaaaaaaaaaaaaaaaa');
           $scope.list.added_cart++
           $scope.item = {'product':$scope.list,'qty':$scope.list.added_cart}
           detail = getCookie("addToCart");

@@ -7,18 +7,69 @@
       <div class="col-xs-6">
         <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
       </div>
-      <div ng-if="match.model.typ == 'list' && !added" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
+      <div ng-if="match.model.typ == 'list' && !match.model.added && me.pk" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
         <button type="button" class="btn btn-success" ng-click="addToCart(match.model)">
-          Add to Card
+          Add to Cart
         </button>
       </div>
-      <div ng-if="match.model.typ == 'list' && added" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
-        <button type="button" class="btn btn-default">
+      <div ng-if="match.model.typ == 'list' && match.model.added>0 && me.pk" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
+        <!-- <button type="button" class="btn btn-default">
           Added
+        </button> -->
+        <div class="col-md-10 col-sm-10 col-xs-10 text-right">
+          <span>
+            <i class="fa fa-minus-circle fa-lg" style="cursor:pointer;margin-right:10px" ng-if="match.model.added>0&&me.pk"  ng-click="decrementCart(match.model);$event.stopPropagation()"></i>
+          <span style="font-size:20px; padding:0px 0px 0px 0px;margin-right:10px"> {{match.model.added}} </span>
+        <i class="fa fa-plus-circle fa-lg" style="cursor:pointer"  ng-click="incrementCart(match.model);$event.stopPropagation()"></i></span>
+
+        </div>
+        <!-- <div class="col-md-4 col-sm-4 col-xs-4 text-right">
+          <i class="fa fa-minus-circle fa-lg" style="cursor:pointer" ng-if="match.model.added>0&&me.pk"  ng-click="decrementCart(match.model);$event.stopPropagation()"></i>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3 text-center" style="bottom: 10px">
+          <span style="font-size:20px; padding:0px 0px 0px 0px;"> {{match.model.added}} </span>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-4">
+          <i class="fa fa-plus-circle fa-lg" style="cursor:pointer"  ng-click="incrementCart(match.model);$event.stopPropagation()"></i>
+        </div> -->
+      </div>
+      <div ng-if="match.model.typ == 'list' && !match.model.added&& !me.pk" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
+        <button type="button" class="btn btn-success" ng-click="addToCartCookie(match.model)">
+          Add to Cart
         </button>
+      </div>
+      <div ng-if="match.model.typ == 'list' && match.model.added>0 && !me.pk" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
+        <div class="col-md-10 col-sm-10 col-xs-10 text-right">
+          <span>
+            <i class="fa fa-minus-circle fa-lg" style="cursor:pointer;margin-right:10px" ng-if="match.model.added>0&&!me.pk"  ng-click="decrementCart(match.model);$event.stopPropagation()"></i>
+          <span style="font-size:20px; padding:0px 0px 0px 0px;margin-right:10px"> {{match.model.added}} </span>
+        <i class="fa fa-plus-circle fa-lg" style="cursor:pointer"  ng-click="incrementCart(match.model);$event.stopPropagation()"></i></span>
+
+        </div>
+        <!-- <div class="col-md-4 col-sm-4 col-xs-4 text-right">
+          <i class="fa fa-minus-circle fa-lg" style="cursor:pointer" ng-if="match.model.added>1&&!me.pk"  ng-click="decrementCookie(match.model);$event.stopPropagation()"></i>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3 text-center" style="bottom: 10px">
+          <span style="font-size:20px; padding:0px 0px 0px 0px;"> {{match.model.added}} </span>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-4">
+          <i class="fa fa-plus-circle fa-lg" style="cursor:pointer"  ng-click="incrementCookie(match.model);$event.stopPropagation()"></i>
+        </div> -->
+        <!-- <button type="button" class="btn btn-default">
+          Added
+        </button> -->
       </div>
     </div>
     <div ng-if="$parent.$parent.$last">
-      <img src="/static/images/searchDecoration.jpg" style="width:100%;position: absolute;left: 0px;">
+
+      <style media="screen">
+        body{
+          overflow: hidden;
+          height: 100vh;
+        }
+      </style>
+
+      <img ng-if="genericSearchImage.searchBgImage" src="{{genericSearchImage.searchBgImage}}" style="width:100%;position: absolute;left: 0px;" alt="Search Background Image">
+      <img ng-if="!genericSearchImage.searchBgImage" src="/static/images/searchDecoration.jpg" style="width:100%;position: absolute;left: 0px;" alt="Search Background Image">
     </div>
 </a>

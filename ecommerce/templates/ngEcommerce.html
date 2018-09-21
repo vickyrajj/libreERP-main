@@ -64,7 +64,7 @@
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>
-    <div class="row" style="margin:0px;padding-top:{{!$state.includes('ecommerce') ?  '60px':'10px'}}" ng-controller="ecommerce.body" >
+    <div class="row" style="margin:0px;padding-top:{{!$state.includes('ecommerce') ?  '9.5vh':'10px'}}" ng-controller="ecommerce.body" >
       <div class="col-md-{{ cart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="me.pk">
         <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
       </div>
@@ -87,8 +87,8 @@
 
         <div class="" style="position:sticky;top:10px;">
 
-          <img ng-if="!genericImage" src="/static/images/organic.png" style="width:100%;" alt="">
-          <img ng-if="genericImage" src={{genericImage.cartImage}} style="width:100%;" alt="">
+          <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
+          <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
 
           <div class="row" style="margin:0px;">
             <div class="container-fluid">
@@ -129,7 +129,9 @@
 
         <div class="" style="position:sticky; top:10px;">
 
-          <img src="/static/images/organic.png" style="width:100%;" alt="">
+          <!-- <img src="/static/images/organic.png" style="width:100%;" alt=""> -->
+          <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
+          <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
 
           <div class="row" style="margin:0px;">
             <div class="container-fluid">

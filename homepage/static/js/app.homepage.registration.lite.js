@@ -4,12 +4,14 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
   console.log("kkkkkkkkkkkkkkk" , );
   $scope.mode = 'main';
 
+  console.log(mobile,'mobileeeeeeeeeeeeeeeeeeeeeeeeee');
+
   $scope.form = {mobile : null ,  mobileOTP: null , token: null , reg : null , agree : false};
 
   $scope.validityChecked = false;
   $scope.validityChecked2 = false;
     $scope.getOTP = function() {
-      if( !$scope.form.agree || $scope.form.mobile == undefined || $scope.form.mobile == null || $scope.form.mobile.length ==0 ){
+      if( !$scope.form.agree || $scope.form.mobile == null || $scope.form.mobile == undefined || $scope.form.mobile.length ==0 ){
           $scope.validityChecked = true;
           return;
       }
@@ -40,5 +42,10 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
       }
     })
   }
+  if (mobile.length>0) {
+    console.log(mobile);
+    $scope.form.mobile = mobile
+    $scope.form.agree = true
+    $scope.getOTP()
+  }
 });
-

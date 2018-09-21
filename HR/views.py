@@ -22,7 +22,7 @@ import random, string
 import requests
 from django.utils import timezone
 from rest_framework.views import APIView
-
+from ecommerce.models import GenericImage
 
 def documentView(request):
     docID = None
@@ -92,7 +92,9 @@ def generateOTP(request):
 
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
+    print 'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
     user = get_object_or_404(User, username = request.POST['id'])
+    print user,type(user),'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
     ak = accountsKey(user= user, activation_key= otp,
         key_expires=key_expires , keyType = 'otp')
     ak.save()
@@ -109,6 +111,15 @@ def loginView(request):
     print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 
+    print 'loginnnnnnnnnnnnnnnnn',request.POST
+    backgroundImage = globalSettings.LOGIN_PAGE_IMAGE
+    genericImg = GenericImage.objects.all()
+    try:
+        if len(genericImg)>0:
+            if genericImg[0].backgroundImage:
+                backgroundImage = genericImg[0].backgroundImage.url
+    except:
+        print 'no login imageeee'
 
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
@@ -180,7 +191,8 @@ def loginView(request):
     if 'mode' in request.GET and request.GET['mode'] == 'api':
         return JsonResponse(authStatus , status = statusCode)
 
-    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+
+    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': backgroundImage , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
     # if not globalSettings.LOGIN_TEMPLATE:
     #     return render(request,"login.html" , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
     #
@@ -189,6 +201,7 @@ def loginView(request):
 
 
 def registerView(request):
+    print 'registerrrrrrrrrrrrrrrrrrrrrrrrrrr',request.POST
     if globalSettings.REGISTER_URL != 'register':
         return redirect(reverse(globalSettings.REGISTER_URL))
     msg = {'status' : 'default' , 'message' : '' }

@@ -73,7 +73,7 @@
       <span ng-if="categories.length>0"><h4 class="text-center">Other Categories</h4></span>
       <div ng-repeat="r in categories" style="padding:0px;">
         <div class="col-md-12 anim-in-out anim-zoom-out">
-          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">
+          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name.split(' ').join('_')})">
             <div class="row">
                 <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
               <img style="width: 100%; height:120px;" class="img" ng-src="{{r.visual}}" >
@@ -454,7 +454,7 @@
     <span ng-if="categories.length>0"><h4 class="text-center">Other Categories</h4></span>
     <div ng-repeat="r in categories" style="padding:0px;">
       <div class="col-md-12 anim-in-out anim-zoom-out">
-        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">
+        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name.split(' ').join('_')})">
           <div class="row">
               <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
             <img style="width: 100%; height:120px;" class="img" ng-src="{{r.visual}}" >
@@ -477,7 +477,7 @@
     <span ng-if="categories.length>0"><h4 class="text-center">Other Categories</h4></span>
     <div ng-repeat="r in categories" style="padding:0px;">
       <div class="col-sm-12 col-xs-12 hidden-lg hidden-md anim-in-out anim-zoom-out">
-        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name})">
+        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name.split(' ').join('_')})">
           <div class="row">
               <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
             <img style="width: 100%; height:120px;" class="img" ng-src="{{r.visual}}" >

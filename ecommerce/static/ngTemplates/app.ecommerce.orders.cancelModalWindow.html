@@ -23,7 +23,7 @@
         {{i.qty}}
       </div>
       <div class="col-md-3 col-xs-3">
-        <i class="fa fa-inr"></i> {{i.totalAmount - i.discountAmount}}
+        <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2) * i.qty}}
       </div>
     </div>
     <hr>
