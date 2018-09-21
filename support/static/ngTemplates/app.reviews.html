@@ -58,10 +58,10 @@
           <!-- <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table> -->
           <div class="row" style="padding-top:25px">
 
-            <div class="col-md-3" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData">
-              {{data[0].numOfComments}} {{data[0].statusChat}}
+            <div class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData">
+              <!-- {{data[0].numOfComments}} {{data[0].statusChat}} -->
               <div class="container-fluid card" style="padding-bottom:0px">
-                <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:140px; opacity:0.8;letter-spacing:0.6px">
+                <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:170px; opacity:0.8;letter-spacing:0.6px">
                   <div class="col-md-12">
                     <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}
                        <span ng-if="data[0].rating == 5" class="pull-right">
@@ -80,11 +80,15 @@
                           <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
                           <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
                       </span>
+
                     </h5>
-                    <h5 style="font-weight:501">UID : {{data[0].uid}}</h5>
+                    <h5 style="font-weight:501">UID : {{data[0].uid}}
+                      <span class="pull-right" style="color:#286090 ;font-size:15px">{{data[0].numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
+                    </h5>
                     <h5 style="font-weight:501">Client : {{data[0].company}}</h5>
                     <h5 style="font-weight:501" ng-if="data[0].email" >Visitor's Email :  {{data[0].email}}</h5>
                     <h5 style="font-weight:501" ng-if="data[0].chatDuration!=0">Chat Duration :  {{data[0].chatDuration}} Min</h5>
+                    <h5 style="font-weight:501" ng-if="data[0].statusChat" >Status :  {{data[0].statusChat}}</h5>
                   </div>
                 </div>
                 <div class="row container-fluid" style="padding-top:10px;height:50px;background-color:#286090; opacity:1">
@@ -111,7 +115,7 @@
             <div class="col-md-3" style="margin-bottom:10px; padding-left:10px;padding-right:10px;" ng-repeat="data in archivedData">
               <!-- {{data[0]}} -->
               <div class="container-fluid card" style="padding-bottom:0px">
-                <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:120px; opacity:0.8;letter-spacing:0.6px">
+                <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:150px; opacity:0.8;letter-spacing:0.6px">
                   <div class="col-md-12">
                     <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}
                        <span ng-if="data[0].rating == 5" class="pull-right">
@@ -131,9 +135,12 @@
                           <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
                       </span>
                     </h5>
-                    <h5 style="font-weight:501">UID : {{data[0].uid}}</h5>
+                    <h5 style="font-weight:501">UID : {{data[0].uid}}
+                      <span class="pull-right" style="color:#286090 ;font-size:15px">{{data[0].numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
+                    </h5>
                     <h5 style="font-weight:501">Client : {{data[0].company}}</h5>
                     <h5 style="font-weight:501" ng-if="data[0].email" >Visitor's Email :  {{data[0].email}}</h5>
+                      <h5 style="font-weight:501" ng-if="data[0].chatDuration!=0">Chat Duration :  {{data[0].chatDuration}} Min</h5>
                     <!-- <i class="fa fa-star" style="color:#fbd73f" aria-hidden="true"></i> -->
                   </div>
                 </div>
@@ -149,7 +156,6 @@
           </div>
         </div>
       </uib-tab>
-
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
         <uib-tab-heading>
           {{tab.title}}
