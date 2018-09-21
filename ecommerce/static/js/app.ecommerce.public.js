@@ -299,7 +299,7 @@ app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope,
   $scope.me = $users.get('mySelf');
   // if($scope.me!=null){
     $scope.$watch('match' , function(newValue , oldValue) {
-      console.log($scope.match.model);
+      console.log($scope.match);
       $scope.match.model.added = 0
       if($scope.me){
         if( $rootScope.inCart!=undefined){
