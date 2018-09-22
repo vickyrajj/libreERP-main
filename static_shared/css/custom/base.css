@@ -380,6 +380,23 @@ body {
 	color: #fff;
 }
 
+/* (1920x1080) Full HD Display */
+@media  screen and (max-width: 1920px) {
+    /* insert styles here */
+    .mainUIView{
+      margin:0.5vh;
+      margin-top: 7vh;
+    }
+}
+
+/* (1366x768) WXGA Display */
+@media  screen and (max-width: 1366px) {
+  .mainUIView{
+    margin:0.5vh;
+    margin-top: 8.5vh;
+  }
+}
+
 .nav-sidebar-inverse> li > a {
   color:white;
   border-right: solid 6px var(--themeMain);
@@ -397,11 +414,11 @@ body {
 
 
 .breadcrumbTheme {
-    background-color: var(--themeMain);
+    /*background-color: var(--themeMain);*/
     border-radius: 0px;
 }
 .breadcrumbTheme a {
-  color: white;
+  color: grey;
 }
 
 .shaddowed{

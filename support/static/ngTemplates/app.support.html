@@ -28,7 +28,7 @@
               <a>
                 <div class="row" style="cursor:pointer">
                   <div class="container-fluid">
-                    <div class="col-md-10"  ng-click="addToChat($index); x.unreadMsg=0">
+                    <div class="col-md-10"  ng-click="addToChat($index , x.uid); x.unreadMsg=0">
                       <div class="row">
                         <span> {{x.uid.split("$")[1]}}</span>
                       </div>
@@ -71,7 +71,7 @@
                       </div>
                       <div class="row">
                         <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i><span> {{x.uid}}</span>
-                        <span>( {{x.messages.length}} )</span>
+                        <span ng-if="x.messages.length>0" >( {{x.messages.length}} )</span>
                       </div>
                     </div>
                   </div>

@@ -297,6 +297,8 @@ class permissionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = permission.objects.all()
     serializer_class = permissionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user' , 'app']
     def get_queryset(self):
         if 'user' in self.request.GET:
             return permission.objects.filter(user = self.request.GET['user'])

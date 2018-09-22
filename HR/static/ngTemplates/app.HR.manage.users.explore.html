@@ -1,5 +1,5 @@
 <div class="container-fluid" style="padding:20px;" ng-controller="sudo.manageUsers.explore">
-  <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:70vh;">
+  <div class="col-md-4" style="border-right:solid 2px #eeeeee;min-height:70vh;">
     <div class="row">
       <div class="container-fluid text-center">
         <img ng-src="{{data.userPK | getDP}}" class="img img-circle" style="height:100px;width:100px;margin-bottom:20px;"> <br>
@@ -9,8 +9,9 @@
       </div>
     </div>
 
-    <div class="row" style="margin-top:20px;">
+    <!-- {{data}} -->
 
+    <div class="row" style="margin-top:20px;">
       <div class="row">
         <div class="col-md-5 text-right">
           <label># Employee ID : </label> <br>
@@ -45,36 +46,44 @@
       </div>
     </div>
 
-    <div class="row" style="margin-top:20px;" ng-if="profile.designation.reportingTo">
+    <div class="row" style="margin-top:20px;">
       <label>Reporting Manager</label> <br>
       <div class="container-fluid ">
         <div class="col-md-3">
           <img ng-src="{{profile.designation.reportingTo | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
         </div>
         <div class="col-md-9">
-          <span>{{profile.designation.reportingTo | getName}}</span> <br>
-          <span class="text-muted">#{{profile.designation.reportingTo | getID}}</span> <br>
+          <span>{{designation.reportingTo | getName}}</span> <br>
+          <!-- <span class="text-muted">#{{designation.reportingTo | getID}}</span> <br> -->
         </div>
       </div>
     </div>
 
-    <div class="row" style="margin-top:20px;" ng-if="profile.designation.secondaryApprover">
+    <div class="row" style="margin-top:20px;" ng-if="designation.secondaryApprover">
       <label>Secondary Manager</label> <br>
       <div class="container-fluid ">
         <div class="col-md-3">
-          <img ng-src="{{profile.designation.secondaryApprover | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
+          <img ng-src="{{designation.secondaryApprover | getDP}}" class="img img-circle pull-right" style="height:50px;width:50px;"> <br>
         </div>
         <div class="col-md-9">
-          <span>{{profile.designation.secondaryApprover | getName}}</span> <br>
-          <span class="text-muted">#{{profile.designation.secondaryApprover | getID}}</span> <br>
+          <span>{{designation.secondaryApprover | getName}}</span> <br>
+          <!-- <span class="text-muted">#{{designation.secondaryApprover | getID}}</span> <br> -->
         </div>
       </div>
     </div>
 
   </div>
-  <div class="col-md-6">
+  <div class="col-md-5">
     <div class="container-fluid">
-      <div class="row" style="padding:20px;">
+      <div class="row">
+        <h2 style="">Details of {{data.userPK | getName }}</h2><br>
+        <p> <strong>Gender</strong>: {{data.gender}}</p>
+        <p> <strong>Division</strong>: {{designation.division}}</p>
+        <p> <strong>Department</strong>: {{data.department}}</p>
+
+      </div>
+
+      <!-- <div class="row" style="padding:20px;">
         <div class="row">
           <div class="col-md-3 text-right">
             <label>Local Address :</label> <br>
@@ -88,9 +97,9 @@
             <span>{{data.localAddressCountry}}<span ng-if="!data.localAddressCountry" class="text-danger">NA</span></span><br>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="row" style="padding:20px;">
+      <!-- <div class="row" style="padding:20px;">
         <div class="row">
           <div class="col-md-3 text-right">
             <label>Permanent Address :</label> <br>
@@ -104,9 +113,9 @@
             <span>{{data.permanentAddressCountry}}<span ng-if="!data.permanentAddressCountry" class="text-danger">NA</span></span>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="row" style="padding:20px;">
+      <!-- <div class="row" style="padding:20px;">
         <div class="row">
           <div class="col-md-3 text-right">
             <label>Father's name :</label>
@@ -258,10 +267,10 @@
             <a ng-href="{{data.passbook}}" target="_blank">{{data.passbook.split('/')[data.passbook.split('/').length-1] }}</a>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
-  <div class="col-md-3">
+  <!-- <div class="col-md-3">
     <div class="row" style="margin-top:20px;">
       <label>Work locations</label> <br> <br>
       <div class="row" ng-repeat="u in profile.designation.unitsObj">
@@ -271,8 +280,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-md-3">
+  </div> -->
+  <!-- <div class="col-md-3">
     <div class="row" style="margin-top:20px;">
       <label>Payroll Details of {{data.userPK | getName}}</label> <br> <br>
       <div class="row">
@@ -407,5 +416,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>

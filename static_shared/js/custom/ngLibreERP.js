@@ -28,7 +28,7 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
   $scope.headerUrl = '/static/ngTemplates/header.html',
     $scope.sideMenu = '/static/ngTemplates/sideMenu.html',
     $scope.themeObj = {
-      main: '#005173',
+      main: '#1E88E5',
       highlight: '#04414f'
     };
   $scope.dashboardAccess = false;
@@ -170,7 +170,15 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
   $scope.$watch('terminal.command.username', function(newValue, oldValue) {
     console.log(newValue);
     if (typeof newValue != 'undefined') {
-      $scope.terminal.showCommandOptions = true;
+      // $scope.terminal.showCommandOptions = true;
+      $scope.addIMWindow($scope.terminal.command.pk);
+      $scope.terminal.command.username = '';
+      $scope.terminal = {
+        command: '',
+        show: false,
+        showCommandOptions: false
+      };
+
     }
   });
 

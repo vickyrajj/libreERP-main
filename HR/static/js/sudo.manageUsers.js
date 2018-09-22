@@ -325,12 +325,12 @@ app.controller('sudo.manageUsers.editDesignation', function($scope, $http, Flash
   $scope.saveKra = function() {
 
     var f = $scope.kraForm;
-    console.log('kraaaaaaaa',f);
-    if (f.responsibility ==null || f.responsibility.length == 0) {
+    console.log('kraaaaaaaa', f);
+    if (f.responsibility == null || f.responsibility.length == 0) {
       Flash.create('warning', 'Responsibility Is required');
       return
     }
-    if (f.target ==null || f.target.length == 0) {
+    if (f.target == null || f.target.length == 0) {
       Flash.create('warning', 'Target Is required');
       return
     }
@@ -374,20 +374,20 @@ app.controller('sudo.manageUsers.editDesignation', function($scope, $http, Flash
   $scope.saveWeightage = function() {
     var a = 0
     for (var i = 0; i < $scope.kraForm.KRAs.length; i++) {
-      console.log($scope.kraForm.KRAs[i].weightage,typeof $scope.kraForm.KRAs[i].weightage);
+      console.log($scope.kraForm.KRAs[i].weightage, typeof $scope.kraForm.KRAs[i].weightage);
       a = a + $scope.kraForm.KRAs[i].weightage
     }
     console.log(a);
     if (a > 100) {
       Flash.create('warning', 'Sum should be lessthan 100');
       return
-    }else {
+    } else {
       for (var i = 0; i < $scope.kraForm.KRAs.length; i++) {
-        console.log('weighttttttttttttt',$scope.kraForm.KRAs[i].weightage);
+        console.log('weighttttttttttttt', $scope.kraForm.KRAs[i].weightage);
         var toSend = {
-          target:$scope.kraForm.KRAs[i].target,
-          period:$scope.kraForm.KRAs[i].period,
-          weightage:$scope.kraForm.KRAs[i].weightage
+          target: $scope.kraForm.KRAs[i].target,
+          period: $scope.kraForm.KRAs[i].period,
+          weightage: $scope.kraForm.KRAs[i].weightage
         }
         $http({
           method: 'PATCH',
@@ -448,118 +448,142 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
     }
   }
 
+  $scope.files = {
+    "displayPicture": emptyFile,
+  }
+
   $scope.saveFirstPage = function() {
     var prof = $scope.data;
-
     console.log($scope.data);
+    var fd = new FormData();
 
-    var dataToSend = {
-      empID: prof.empID,
-      prefix: prof.prefix,
-      // dateOfBirth: prof.dateOfBirth.toJSON().split('T')[0],
 
-      gender: prof.gender,
-      permanentAddressStreet: prof.permanentAddressStreet,
-      permanentAddressCity: prof.permanentAddressCity,
-      permanentAddressPin: prof.permanentAddressPin,
-      permanentAddressState: prof.permanentAddressState,
-      permanentAddressCountry: prof.permanentAddressCountry,
-      sameAsShipping: prof.sameAsShipping,
-      localAddressStreet: prof.localAddressStreet,
-      localAddressCity: prof.localAddressCity,
-      localAddressPin: prof.localAddressPin,
-      localAddressState: prof.localAddressState,
-      localAddressCountry: prof.localAddressCountry,
-      email: prof.email,
-      mobile: prof.mobile,
-      emergency: prof.emergencyName + '::' + prof.emergencyNumber,
-      bloodGroup: prof.bloodGroup,
+    if (prof.empID=='') {
+      Flash('success' , 'Please fill eemployee id')
+      return
     }
-    if (prof.married) {
-      console.log(prof.anivarsary,typeof prof.anivarsary);
-      dataToSend.married = prof.married;
-      if (typeof prof.anivarsary == 'object') {
-        dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
-      }else {
-        dataToSend.anivarsary = prof.anivarsary
-      }
-    }
+    fd.append('empID', prof.empID)
+    fd.append('prefix', prof.prefix)
+    fd.append('gender', prof.gender)
+    fd.append('displayPicture', $scope.files.displayPicture)
 
-    if (typeof prof.dateOfBirth == 'object') {
-      dataToSend.dateOfBirth = prof.dateOfBirth.toJSON().split('T')[0]
-    } else {
-      dataToSend.dateOfBirth = prof.dateOfBirth
-    }
+
+
+
+    // var dataToSend = {
+    //   empID: prof.empID,
+    //   prefix: prof.prefix,
+    //   dateOfBirth: prof.dateOfBirth.toJSON().split('T')[0],
+    //
+    //   gender: prof.gender,
+    //   permanentAddressStreet: prof.permanentAddressStreet,
+    //   permanentAddressCity: prof.permanentAddressCity,
+    //   permanentAddressPin: prof.permanentAddressPin,
+    //   permanentAddressState: prof.permanentAddressState,
+    //   permanentAddressCountry: prof.permanentAddressCountry,
+    //   sameAsShipping: prof.sameAsShipping,
+    //   localAddressStreet: prof.localAddressStreet,
+    //   localAddressCity: prof.localAddressCity,
+    //   localAddressPin: prof.localAddressPin,
+    //   localAddressState: prof.localAddressState,
+    //   localAddressCountry: prof.localAddressCountry,
+    //   email: prof.email,
+    //   mobile: prof.mobile,
+    //   emergency: prof.emergencyName + '::' + prof.emergencyNumber,
+    //   bloodGroup: prof.bloodGroup,
+    // }
+
+
+    // if (prof.married) {
+    //   console.log(prof.anivarsary, typeof prof.anivarsary);
+    //   dataToSend.married = prof.married;
+    //   if (typeof prof.anivarsary == 'object') {
+    //     dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
+    //   } else {
+    //     dataToSend.anivarsary = prof.anivarsary
+    //   }
+    // }
+
+    // if (typeof prof.dateOfBirth == 'object') {
+    //   dataToSend.dateOfBirth = prof.dateOfBirth.toJSON().split('T')[0]
+    // } else {
+    //   dataToSend.dateOfBirth = prof.dateOfBirth
+    // }
 
     $http({
       method: 'PATCH',
       url: '/api/HR/profileAdminMode/' + prof.pk + '/',
-      data: dataToSend
-    }).
-    then(function(response) {
-      Flash.create('success', "Saved");
-    })
-  }
-
-  $scope.saveSecondPage = function() {
-
-
-    var f = $scope.data;
-    var dataToSend = {
-      website: f.website,
-      almaMater: f.almaMater,
-      pgUniversity: f.pgUniversity,
-      docUniversity: f.docUniversity,
-      fathersName: f.fathersName,
-      mothersName: f.mothersName,
-      wifesName: f.wifesName,
-      childCSV: f.childCSV,
-      note1: f.note1,
-      note2: f.note2,
-      note3: f.note3,
-    }
-
-    $http({
-      method: 'PATCH',
-      url: '/api/HR/profileAdminMode/' + f.pk + '/',
-      data: dataToSend
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
     }).
     then(function(response) {
       Flash.create('success', "Saved");
     })
 
+
   }
+
+  // $scope.saveSecondPage = function() {
+  //
+  //
+  //   var f = $scope.data;
+  //   var dataToSend = {
+  //     website: f.website,
+  //     almaMater: f.almaMater,
+  //     pgUniversity: f.pgUniversity,
+  //     docUniversity: f.docUniversity,
+  //     fathersName: f.fathersName,
+  //     mothersName: f.mothersName,
+  //     wifesName: f.wifesName,
+  //     childCSV: f.childCSV,
+  //     note1: f.note1,
+  //     note2: f.note2,
+  //     note3: f.note3,
+  //   }
+  //
+  //   $http({
+  //     method: 'PATCH',
+  //     url: '/api/HR/profileAdminMode/' + f.pk + '/',
+  //     data: dataToSend
+  //   }).
+  //   then(function(response) {
+  //     Flash.create('success', "Saved");
+  //   })
+  //
+  // }
 
   $scope.files = {
     "displayPicture": emptyFile,
-    'TNCandBond': emptyFile,
-    'resume': emptyFile,
-    'certificates': emptyFile,
-    'transcripts': emptyFile,
-    'otherDocs': emptyFile,
-    'resignation': emptyFile,
-    'vehicleRegistration': emptyFile,
-    'appointmentAcceptance': emptyFile,
-    'pan': emptyFile,
-    'drivingLicense': emptyFile,
-    'cheque': emptyFile,
-    'passbook': emptyFile,
-    'sign': emptyFile,
-    'IDPhoto': emptyFile
-
+    // 'TNCandBond': emptyFile,
+    // 'resume': emptyFile,
+    // 'certificates': emptyFile,
+    // 'transcripts': emptyFile,
+    // 'otherDocs': emptyFile,
+    // 'resignation': emptyFile,
+    // 'vehicleRegistration': emptyFile,
+    // 'appointmentAcceptance': emptyFile,
+    // 'pan': emptyFile,
+    // 'drivingLicense': emptyFile,
+    // 'cheque': emptyFile,
+    // 'passbook': emptyFile,
+    // 'sign': emptyFile,
+    // 'IDPhoto': emptyFile
   }
 
   $scope.saveFiles = function() {
     var f = $scope.files;
     var fd = new FormData();
 
-    var fileFields = ['displayPicture','TNCandBond', 'resume', 'certificates', 'transcripts', 'otherDocs', 'resignation', 'vehicleRegistration', 'appointmentAcceptance', 'pan', 'drivingLicense', 'cheque', 'passbook', 'sign', 'IDPhoto']
+    var fileFields = ['displayPicture', 'TNCandBond', 'resume', 'certificates', 'transcripts', 'otherDocs', 'resignation', 'vehicleRegistration', 'appointmentAcceptance', 'pan', 'drivingLicense', 'cheque', 'passbook', 'sign', 'IDPhoto']
     for (var i = 0; i < fileFields.length; i++) {
       if ($scope.files[fileFields[i]] != emptyFile) {
         fd.append(fileFields[i], $scope.files[fileFields[i]])
       }
     }
-    if (fd.displayPicture==null||fd.displayPicture==emptyFile||typeof fd.displayPicture == 'string') {
+    if (fd.displayPicture == null || fd.displayPicture == emptyFile || typeof fd.displayPicture == 'string') {
       delete fd.displayPicture
     }
 
@@ -580,17 +604,153 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
   }
 
   $scope.save = function() {
-    if ($scope.page == 1) {
-      $scope.saveFirstPage();
-    } else if ($scope.page == 2) {
-      $scope.saveSecondPage();
-    } else {
-      $scope.saveFiles();
-    }
+     $scope.saveFirstPage();
+    // if ($scope.page == 1) {
+    //   $scope.saveFirstPage();
+    // } else if ($scope.page == 2) {
+    //   $scope.saveSecondPage();
+    // } else {
+    //   $scope.saveFiles();
+    // }
   }
 
 });
 
+
+app.controller('admin.editCustomer',function($scope,$http,Flash){
+
+if (typeof $scope.tab != 'undefined') {
+  console.log($scope.tab.data);
+
+
+  $scope.newCustomer = $scope.tab.data
+  // $scope.newCustomer.password = ''
+  $scope.newCustomer.access='full_access';
+
+
+  // $scope.newCustomer=$scope.data.tableData[$scope.tab.data.index];
+  // console.log($scope.newCustomer);
+  $scope.mode = 'edit';
+
+
+}else {
+  $scope.mode = 'new';
+  $scope.newCustomer = {
+    username: '',
+    first_name: '',
+    last_name: '',
+    password: '',
+    access: 'full_access'
+  };
+
+}
+
+  $scope.full_access_app = [];
+  $scope.rest_access_app = [];
+
+  $http({
+    method: 'GET',
+    url: '/api/organization/role/?name__icontains=Full Access',
+  }).
+  then(function(response) {
+    console.log(response.data);
+    for (var i = 0; i < response.data[0].applications.length; i++)
+      $scope.full_access_app[i] = response.data[0].applications[i].pk;
+    console.log($scope.full_access_app);
+  });
+
+
+  $http({
+    method: 'GET',
+    url: '/api/organization/role/?name__icontains=Restricted Access',
+  }).
+  then(function(response) {
+    console.log(response.data);
+    for (var i = 0; i < response.data[0].applications.length; i++)
+      $scope.rest_access_app[i] = response.data[0].applications[i].pk;
+    console.log($scope.rest_access_app);
+  });
+
+
+  $scope.createCustomer = function() {
+
+
+    //
+    // if ($scope.newCustomer.password=='') {
+    //   Flash.create('warning', "password cannot be empty" )
+    //   return
+    // }
+    //
+    // if ($scope.newCustomer.access == undefined) {
+    //   Flash.create('warning', "password cannot be empty" )
+    //   return
+    // }
+    console.log($scope.newCustomer);
+
+    // return
+
+    dataToSend = {
+      username: $scope.newCustomer.username,
+      first_name: $scope.newCustomer.first_name,
+      last_name: $scope.newCustomer.last_name,
+      password: $scope.newCustomer.password,
+    };
+
+
+    if ($scope.newCustomer.access == 'full_access')
+      $scope.app = $scope.full_access_app
+    else {
+      $scope.app = $scope.rest_access_app;
+    }
+
+
+    if ($scope.mode == 'new') {
+      $scope.method="POST";
+      $scope.urlCust='/api/HR/usersAdminMode/'
+      // $scope.urlPerm =
+    }else {
+      $scope.method="PATCH"
+      $scope.urlCust='/api/HR/usersAdminMode/'+$scope.newCustomer.pk+'/'
+      // $scope.urlPerm =
+      dataToSend.is_staff =  $scope.newCustomer.is_staff
+      dataToSend.is_active =  $scope.newCustomer.is_active
+    }
+
+    console.log(dataToSend);
+
+    $http({
+      method: $scope.method,
+      url: $scope.urlCust,
+      data: dataToSend
+    }).then(function(response) {
+      $http({
+        method: 'POST',
+        url: '/api/ERP/permission/',
+        data: {
+          apps: $scope.app,
+          user: response.data.pk
+        }
+      }).then(function(resp) {
+        console.log(resp.data);
+      })
+
+      Flash.create('success', response.status + ' : ' + response.statusText);
+      console.log(response.data);
+      $scope.newCustomer = {
+        username: '',
+        firstName: '',
+        lastName: '',
+        password: '',
+        access: 'full_access'
+      };
+
+    }, function(response) {
+      Flash.create('danger', response.status + ' : ' + response.statusText);
+    });
+  }
+
+
+})
 
 
 
@@ -668,7 +828,32 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     views: views,
     options: options,
     itemsNumPerView: [12, 24, 48],
-    // multiselectOptions: multiselectOptions,
+    getParams: [{
+      key: 'getCustomers',
+      value: 0
+    }],
+    searchField: 'username',
+  };
+
+
+
+  var viewsCustomer = [{
+      name: 'table',
+      icon: 'fa-bars',
+      template: '/static/ngTemplates/genericTable/genericSearchList.html',
+      itemTemplate: '/static/ngTemplates/app.HR.manage.customers.items.html'
+    }];
+
+
+
+  $scope.configCustomer = {
+    url: '/api/HR/users/',
+    views: viewsCustomer,
+    itemsNumPerView: [12, 24, 48],
+    getParams: [{
+      key: 'getCustomers',
+      value: 1
+    }],
     searchField: 'username',
   };
 
@@ -676,6 +861,11 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
   $scope.searchTabActive = true;
   $scope.data = {
     tableData: []
+  };
+
+
+  $scope.dataCustomer = {
+    tableDataCustomer: []
   };
 
   $scope.closeTab = function(index) {
@@ -701,23 +891,26 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     }
   }
 
-
-
-
   // create new user
   $scope.newUser = {
     username: '',
     firstName: '',
     lastName: '',
-    password: ''
+    password: '',
   };
+
+
   $scope.createUser = function() {
+
     dataToSend = {
       username: $scope.newUser.username,
       first_name: $scope.newUser.firstName,
       last_name: $scope.newUser.lastName,
       password: $scope.newUser.password
     };
+
+    console.log(dataToSend);
+
     $http({
       method: 'POST',
       url: '/api/HR/usersAdminMode/',
@@ -729,12 +922,18 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
         username: '',
         firstName: '',
         lastName: '',
-        password: ''
+        password: '',
       };
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
     });
+
   }
+
+
+
+
+
 
 
   $scope.tableAction = function(target, action, mode) {
@@ -777,7 +976,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
           url: '/api/HR/usersAdminMode/' + target + '/'
         }).
         then(function(response) {
-          console.log(response.data,'res');
+          console.log(response.data, 'res');
           $http({
             method: 'GET',
             url: '/api/mail/account/?user=' + target
@@ -804,7 +1003,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
             permissionsFormData = {
               appsToAdd: data,
               url: target,
-              role:''
+              role: ''
             }
             $scope.addTab({
               title: 'Edit permissions for ' + u.first_name + ' ' + u.last_name,
@@ -898,6 +1097,45 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     }
   }
 
+
+  $scope.tableActionCustomer = function(target, action, mode) {
+    console.log(target, action, mode);
+    // console.log($scope.dataCustomer.tableDataCustomer);
+
+    for (var i = 0; i < $scope.dataCustomer.tableDataCustomer.length; i++) {
+      if ($scope.dataCustomer.tableDataCustomer[i].pk == parseInt(target)) {
+        if (action == 'editCustomer') {
+          var title = 'Edit Customer :' ;
+          var appType = 'editCustomerForm';
+          // var response
+          $http({
+            method: 'GET',
+            url: '/api/HR/usersAdminMode/' + target + '/'
+          }).
+          then(function(response) {
+            console.log(response.data);
+            $scope.addTab({
+              title: title + response.data.username,
+              cancel: true,
+              app: appType,
+              data: response.data,
+              active: true
+            })
+          });
+
+        } else if (action == 'deleteCustomer') {
+          $http({method : 'DELETE' , url : '/api/HR/usersAdminMode/' + $scope.dataCustomer.tableDataCustomer[i].pk +'/'}).
+          then(function(response) {
+            $scope.dataCustomer.tableDataCustomer.splice(i , 1);
+            Flash.create('success', 'Deleted Successfully')
+          })
+          return
+        }
+
+      }
+    }
+  }
+
   $scope.updateUserPermissions = function(index) {
     var userData = $scope.tabs[index].data;
     if (userData.appsToAdd.length == 0) {
@@ -926,11 +1164,11 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
   }
 
   $scope.role = {
-    selected:'',
-    tabIndex:'',
+    selected: '',
+    tabIndex: '',
   }
 
-  $scope.$watch('tabs[role.tabIndex].data.role' , function(newValue , oldValue) {
+  $scope.$watch('tabs[role.tabIndex].data.role', function(newValue, oldValue) {
     if (typeof newValue == 'object') {
       console.log($scope.role);
       console.log($scope.tabs[$scope.role.tabIndex].data.role);

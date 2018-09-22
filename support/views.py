@@ -24,6 +24,7 @@ from excel_response import ExcelResponse
 from django.views.decorators.csrf import csrf_exempt
 import urllib
 import datetime
+from datetime import timedelta
 from Crypto.Cipher import DES
 import base64
 import hashlib
@@ -98,8 +99,29 @@ class GetMyUser(APIView):
                 dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
                 print dic
                 toSend.append(dic)
-
             return Response(toSend, status=status.HTTP_200_OK)
+        if 'getNewUser' in request.GET:
+            print 'getNewUser'
+            time_threshold = datetime.datetime.now() - timedelta(hours=1)
+            # results = Widget.objects.filter(created__lt=time_threshold)
+            uidsList = list(ChatThread.objects.filter(user__isnull = True ,status='started' , created__gt = time_threshold).values_list('uid',flat=True).distinct())
+            toSend = []
+            for i in uidsList:
+                try:
+                    data = Visitor.objects.get(uid=i)
+                    dic = {'uid':data.uid,'name':data.name ,'email':data.email}
+                except:
+                    dic = {'uid':i,'name':'' ,'email':''}
+                dic['companyPk'] = ChatThread.objects.filter(uid=i)[0].company.pk
+                dic['chatThreadPk'] = ChatThread.objects.filter(uid=i)[0].pk
+                dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
+                # print dic['me']
+                # print Support.objects.filter(uid = i).count() , 'CCCCCCCCCCCCCCCCCCCC'
+                toSend.append(dic)
+            print toSend , 'FFFFFFFFFFFFFFFF'
+            return Response(toSend, status=status.HTTP_200_OK)
+
+
 def createExcel(data):
     wb = Workbook()
 
@@ -158,12 +180,12 @@ class ReviewFilterCalAPIView(APIView):
             userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
             userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
             if 'customerProfilePkList' in self.request.GET:
-                print 'a###############',userCustProfile
+                # print 'a###############',userCustProfile
                 return Response(userCustProfile, status=status.HTTP_200_OK)
             userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
-            print userCompany
-            print userCustProfile
-            print userCompanyUidList
+            # print userCompany
+            # print userCustProfile
+            # print userCompanyUidList
             sobj = SupportChat.objects.filter(uid__in=userCompanyUidList)
 
         if 'date' in self.request.GET:
@@ -174,22 +196,31 @@ class ReviewFilterCalAPIView(APIView):
         if 'client' in self.request.GET:
             userCustProfile = list(CustomerProfile.objects.filter(service=self.request.GET['client']).values_list('pk',flat=True).distinct())
             userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
-            print userCustProfile,userCompanyUidList
+            # print userCustProfile,userCompanyUidList
             sobj = sobj.filter(uid__in=userCompanyUidList)
         # toSend = list(sobj.values())
         uidL = list(sobj.values_list('uid',flat=True).distinct())
-        agentsList = list(ChatThread.objects.filter(~Q(status='archived'),uid__in=uidL).values_list('user',flat=True).distinct())
-        print agentsList
+        if 'status' in self.request.GET:
+            if self.request.GET['status']=='archived':
+                agentsList = list(ChatThread.objects.filter(status='archived',uid__in=uidL).values_list('user',flat=True).distinct())
+        else:
+            agentsList = list(ChatThread.objects.filter(~Q(status='archived'),uid__in=uidL).values_list('user',flat=True).distinct())
+        # print agentsList
         for i in agentsList:
-            agentuidList = list(ChatThread.objects.filter(~Q(status='archived'),user=i).values_list('uid',flat=True).distinct())
+            if 'status' in self.request.GET:
+                if self.request.GET['status']=='archived':
+                    agentuidList = list(ChatThread.objects.filter(status='archived',user=i).values_list('uid',flat=True).distinct())
+            else:
+                agentuidList = list(ChatThread.objects.filter(~Q(status='archived'),user=i).values_list('uid',flat=True).distinct())
             agSobj = sobj.filter(uid__in = agentuidList)
             if 'email' in self.request.GET:
                 uidl = list(Visitor.objects.filter(email=self.request.GET['email']).values_list('uid',flat=True).distinct())
                 agUid = list(agSobj.filter(uid__in=uidl).values_list('uid',flat=True).distinct())
             else:
                 agUid = list(agSobj.values_list('uid',flat=True).distinct())
-            print agUid
+            # print agUid
             for j in agUid:
+                cmntDate =  sobj.filter(uid = j)[0].created
                 try:
                     email = Visitor.objects.get(uid=j).email
                 except:
@@ -198,11 +229,27 @@ class ReviewFilterCalAPIView(APIView):
                     company = ChatThread.objects.get(uid=j).company.service.name
                 except:
                     company = ''
-                print company
-                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
+                try:
+                    rating = ChatThread.objects.get(uid=j).customerRating
+                except:
+                    rating = ''
+                try:
+                    chatDuration = ChatThread.objects.get(uid=j).chatDuration
+                except:
+                    chatDuration = ''
+                try:
+                    numOfComments = ReviewComment.objects.filter(uid=j, chatedDate=cmntDate).count()
+                except:
+                    numOfComments = ''
+                try:
+                    statusChat = ChatThread.objects.get(uid=j).status
+                except:
+                    statusChat = ''
+                # print company
+                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()) , rating=Value(rating, output_field=CharField()), chatDuration=Value(chatDuration, output_field=CharField()) , statusChat=Value(statusChat, output_field=CharField()) , numOfComments=Value(numOfComments, output_field=CharField()) ,email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
-                res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType','sentByAgent').annotate(company=Value(company, output_field=CharField()),email=Value(email, output_field=CharField())))
-        print toSend
+                res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType','sentByAgent').annotate(company=Value(company, output_field=CharField()), rating=Value(rating, output_field=CharField()), numOfComments=Value(numOfComments, output_field=CharField()) , chatDuration=Value(chatDuration, output_field=CharField())  ,email=Value(email, output_field=CharField())))
+        # print toSend
         if 'download' in self.request.GET:
             print 'downloadddddddddddddddddddddddd'
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -454,15 +501,15 @@ class GethomeCal(APIView):
                 missedChats = chatThreadObj.filter(user__isnull=True,company=int(self.request.GET['perticularUser'])).count()
                 lastToLastWeekMissedChats = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) , user__isnull=True , company=int(self.request.GET['perticularUser'])).count()
                 a = chatThreadObj.filter(~Q(chatDuration=0) ,company = int(self.request.GET['perticularUser'])).aggregate(Avg('chatDuration'))
-                avgChatDuration = a['chatDuration__avg']
+                avgChatDuration = a['chatDuration__avg'] if a['chatDuration__avg'] else 0
                 alastToLastWeek = ChatThread.objects.filter(~Q(chatDuration=0) , created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) ,company = int(self.request.GET['perticularUser'])).aggregate(Avg('chatDuration'))
-                avgChatDurationLtweek = alastToLastWeek['chatDuration__avg']
+                avgChatDurationLtweek = alastToLastWeek['chatDuration__avg'] if alastToLastWeek['chatDuration__avg'] else 0
                 frt = chatThreadObj.filter(firstResponseTime__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('firstResponseTime'))
-                firstResTimeAvgAll = frt['firstResponseTime__avg']
+                firstResTimeAvgAll =  frt['firstResponseTime__avg'] if frt['firstResponseTime__avg'] else 0
                 frtLastToLastWeek = ChatThread.objects.filter(firstResponseTime__isnull=False, created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('firstResponseTime'))
-                firstResTimeAvgAllLtweek = frtLastToLastWeek['firstResponseTime__avg']
+                firstResTimeAvgAllLtweek = frtLastToLastWeek['firstResponseTime__avg'] if frtLastToLastWeek['firstResponseTime__avg'] else 0
                 arAll = chatThreadObj.filter(customerRating__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('customerRating'))
-                avgRatingAll = arAll['customerRating__avg']
+                avgRatingAll = arAll['customerRating__avg'] if arAll['customerRating__avg'] else 0
                 totalChats = chatThreadObj.filter(company=int(self.request.GET['perticularUser'])).count()
                 lastToLastWeekChatCount = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)),company=int(self.request.GET['perticularUser'])).count()
                 usr = chatThreadObj.filter(company = int(self.request.GET['perticularUser']))[0].user
@@ -488,10 +535,11 @@ class GethomeCal(APIView):
                 avgRatingAll = avgRatingAll/len(agentLeaderBoard)
                 firstResTimeAvgAll = firstResTimeAvgAll/len(agentLeaderBoard)
         changeInData = {}
-        changeInChat = {}
-        changeInAvgChatDur = {}
-        changeInFrtAvg = {}
-        changeInRespTimeAvg = {}
+        changeInChat = {'percentage':0 , 'increase' : False}
+        changeInAvgChatDur = {'percentage':0 , 'increase' : False}
+        changeInFrtAvg = {'percentage':0 , 'increase' : False}
+        changeInRespTimeAvg = {'percentage':0 , 'increase' : False}
+        changeInMissedChat = {'percentage':0 , 'increase' : False}
         if lastToLastWeekChatCount<totalChats:
             changeInChat['percentage'] = (float(totalChats - lastToLastWeekChatCount)/totalChats)*100
             changeInChat['increase'] = True

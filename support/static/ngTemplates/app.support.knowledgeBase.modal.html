@@ -16,7 +16,6 @@
                   </h4>
                 </div>
                 <div id="{{d.pk}}" class="panel-collapse collapse">
-                  <!-- <div class="panel-body">{{d.text}}</div> -->
                   <span ng-bind-html="d.text"></span>
                 </div>
               </div>
@@ -45,20 +44,14 @@
                           <i class="fa fa-4x {{d.docs.split('documentations/')[1] | fileTypeIcon}}"></i>
                         </div>
                       </div>
-                      <!-- {{d.docs}} -->
 
-                      <!-- <i class="fa fa-2x {{}} | fileTypeIcon }}"></i> -->
                     </div>
                   </div>
                 </a>
                 </div>
               </div>
             </div>
-            <!-- <div class="col-md-2" style="padding-left:0px">
-              <div ng-if="d.docs!=none" style="padding-top:40px;">
-                <button type="button" class="btn btn-primary" ng-click="sendDocument(d.docs)">Send</button>
-              </div>
-            </div> -->
+
           </span>
         </div>
       </div>

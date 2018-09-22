@@ -14,6 +14,7 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
 
 
   $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+  $scope.me = $users.get('mySelf');
 
   console.log($scope.commentPerm);
 
@@ -22,7 +23,9 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
   $scope.reviewCommentData = []
   $http({
     method: 'GET',
-    url: '/api/support/reviewComment/?user='+$scope.msgData[0].user_id+'&uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+    // url: '/api/support/reviewComment/?user='+$scope.msgData[0].user_id+'&uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+    url: '/api/support/reviewComment/?uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
@@ -180,6 +183,42 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
 
   $scope.form = {date:new Date(),user:'',email:'',client:''}
   $scope.reviewData = []
+  $scope.archivedData=[]
+
+function archived(){
+  console.log('called');
+}
+
+  $scope.getArchData = function(date,user,email,client,download){
+    console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
+    var url = '/api/support/reviewHomeCal/?status=archived'
+    if (date!=null&&typeof date == 'object') {
+      url += '&date=' + date.toJSON().split('T')[0]
+    }
+    if (typeof user == 'object') {
+      url += '&user=' + user.pk
+    }
+    if (typeof client == 'object') {
+      url += '&client=' + client.pk
+    }
+    if (email.length > 0 && email.indexOf('@') > 0) {
+      url += '&email=' + email
+    }
+    if (download) {
+      $window.open(url+'&download','_blank');
+    }else {
+      $http({
+        method: 'GET',
+        url: url,
+      }).
+      then(function(response) {
+        // $scope.custDetails = response.data[0]
+        console.log(response.data,'dddddddddddd',typeof response.data);
+        $scope.archivedData =response.data
+      });
+    }
+  }
+
   $scope.getData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
     var url = '/api/support/reviewHomeCal/?'
@@ -210,6 +249,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }
   }
   $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+  $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
     then(function(response){
@@ -224,14 +264,14 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   };
   $scope.changeDateType = false
   $scope.$watch('form.date', function(newValue, oldValue) {
-    // console.log(oldValue,newValue);
+    console.log(oldValue,newValue);
     if (oldValue == undefined || oldValue == null) {
       $scope.changeDateType = true
     }
   })
   $scope.filterData = function(download){
 
-    // console.log($scope.form.date,typeof($scope.form.date),$scope.oldDateValue);
+    console.log($scope.form.date,typeof($scope.form.date),$scope.oldDateValue);
     if (typeof $scope.form.date =='undefined') {
       Flash.create('warning','Please Select Proper Date')
       return
@@ -267,6 +307,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }
     console.log(date);
     $scope.getData(date,user,$scope.form.email,client,download)
+    $scope.getArchData(date,user,$scope.form.email,client,download)
   }
 
   $scope.download = function(){
@@ -299,7 +340,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       data: $scope.reviewData[target],
       active: true
     })
-
     // for (var i = 0; i < $scope.reviewData.length; i++) {
     //   if ($scope.reviewData[i].pk == parseInt(target)) {
     //     if (action == 'edit') {
@@ -320,6 +360,17 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     //   }
     // }
   }
+  $scope.tableArchAction = function(target) {
+    // console.log(target, action, mode);
+    console.log($scope.archivedData[target]);
+    var appType = 'Info';
+    $scope.addTab({
+      title: 'Agent : ' + $scope.archivedData[target][0].uid,
+      cancel: true,
+      app: 'AgentInfo',
+      data: $scope.archivedData[target],
+      active: true
+    })}
 
   $scope.tabs = [];
   $scope.searchTabActive = true;

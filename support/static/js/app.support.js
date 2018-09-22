@@ -22,16 +22,14 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
 
 
-
-
   $http({
     method: 'GET',
     url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
   }).then(function(response) {
     // console.log(response.data , 'distinct resssssssssss');
     for (var i = 0; i < response.data.length; i++) {
-      console.log(response.data);
-      console.log(response.data[i].chatThreadPk);
+      console.log(response.data[i]);
+      // console.log(response.data[i].chatThreadPk);
       $scope.myUsers.push({
         name: response.data[i].name,
         email: response.data[i].email,
@@ -42,7 +40,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         unreadMsg: 0,
         boxOpen: false,
         companyPk: response.data[i].companyPk,
-        servicePk: response.data[i].servicePk
+        servicePk: response.data[i].servicePk,
+        spying:{value :'' , isTyping : false}
       })
 
       connection.session.publish('service.support.agent', [response.data[i].uid, 'R'], {}, {
@@ -52,6 +51,27 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         console.log("Published");
       });
 
+    }
+  });
+
+  $http({
+    method: 'GET',
+    url: '/api/support/getMyUser/?getNewUser=1',
+  }).then(function(response) {
+    console.log(response.data , 'Got unhamdled');
+    for (var i = 0; i < response.data.length; i++) {
+      console.log(response.data[i]);
+      $scope.newUsers.push({
+        name: '',
+        uid: response.data[i].uid,
+        messages: [],
+        isOnline: true,
+        companyPk: response.data[i].companyPk,
+        email:'',
+        boxOpen:false,
+        chatThreadPk: response.data[i].chatThreadPk,
+        spying:{value :'' , isTyping : false}
+      })
     }
   });
 
@@ -86,7 +106,19 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     $scope.msgText = $scope.templates[data].msg;
   }
 
-  $scope.addToChat = function(indx) {
+  $scope.addToChat = function(indx , uid ) {
+
+
+    // $scope.status = 'AP';
+    // connection.session.publish('service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
+    //   acknowledge: true
+    // }).
+    // then(function(publication) {
+    //   console.log("Published");
+    // });
+
+
+
     console.log('comingggg in add to chat');
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
@@ -94,6 +126,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         return
       }
     }
+
     if ($scope.chatsInView.length < 4) {
       $scope.myUsers[indx].myUserIndex = indx
       $scope.chatsInView.push($scope.myUsers[indx])
@@ -206,12 +239,11 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     });
 
     $scope.status = 'AP';
-
     connection.session.publish('service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
       acknowledge: true
     }).
     then(function(publication) {
-      console.log("Published");
+      console.log("Published AP" , uid);
     });
 
 

@@ -175,6 +175,38 @@ app.config(function($stateProvider) {
       }
     })
 
+
+    .state('home.customerReviews', {
+      url: "/customerReviews",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.customerReviews.html',
+          controller: 'businessManagement.customerReviews',
+        }
+      }
+    })
+
+    .state('home.customerKnowledgeBase', {
+      url: "/customerKnowledgeBase",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.customerKnowledgeBase.html',
+          controller: 'businessManagement.customerKnowledgeBase',
+        }
+      }
+    })
+
+
+    .state('home.customerSettings', {
+      url: "/customerSettings",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.customerSettings.html',
+          controller: 'businessManagement.customerSettings',
+        }
+      }
+    })
+
     // .state('home.organization', {
     //   url: "/organization",
     //   views: {

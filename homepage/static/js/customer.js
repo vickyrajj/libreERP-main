@@ -59,6 +59,9 @@ app.controller("app.customer.reviews", function($scope, $state, $http, $rootScop
   $rootScope.state = 'Reviews';
   $scope.reviewData = []
 
+
+    $scope.form = {date:new Date(),email:''}
+
   console.log('in review function');
 
   $http({
@@ -108,6 +111,74 @@ app.controller("app.customer.reviews", function($scope, $state, $http, $rootScop
       $scope.tabs.push(input)
     }
   }
+
+  $scope.getData = function(date,email,download){
+    console.log('@@@@@@@@@@@@@@@@@@',date,email,download);
+    var url = '/api/support/reviewHomeCal/?'
+    if (date!=null&&typeof date == 'object') {
+      url += '&date=' + date.toJSON().split('T')[0]
+    }
+    if (email.length > 0 && email.indexOf('@') > 0) {
+      url += '&email=' + email
+    }
+    if (download) {
+      $window.open(url+'&download','_blank');
+    }else {
+      $http({
+        method: 'GET',
+        url: url,
+      }).
+      then(function(response) {
+        // $scope.custDetails = response.data[0]
+        console.log(response.data,'dddddddddddd',typeof response.data);
+        $scope.reviewData =response.data
+      });
+    }
+  }
+
+
+  $scope.changeDateType = false
+  $scope.$watch('form.date', function(newValue, oldValue) {
+    console.log(oldValue,newValue);
+    if (oldValue == undefined || oldValue == null) {
+      $scope.changeDateType = true
+    }
+  })
+
+
+  $scope.filterData = function(download){
+
+    // console.log($scope.form.date,typeof($scope.form.date),$scope.oldDateValue);
+    if (typeof $scope.form.date =='undefined') {
+      Flash.create('warning','Please Select Proper Date')
+      return
+    }
+    if ($scope.form.email==undefined) {
+      Flash.create('warning','Please Select Valid Email')
+      return
+    }
+    console.log($scope.form);
+
+    if ($scope.changeDateType&&$scope.form.date!=null) {
+      console.log('update');
+      console.log($scope.form.date);
+      res = new Date($scope.form.date)
+      console.log(res);
+      var date = new Date(res.setDate(res.getDate() + 1))
+    }else {
+      console.log('no changeeeeeee');
+      var date = $scope.form.date
+    }
+    console.log(date);
+    $scope.getData(date,$scope.form.email,download)
+  }
+
+  $scope.download = function(){
+    $scope.filterData(true)
+  }
+
+
+
 
 })
 app.controller("app.customer.settings", function($scope, $state, $http, $rootScope) {

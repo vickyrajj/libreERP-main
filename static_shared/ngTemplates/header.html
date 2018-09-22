@@ -1,6 +1,6 @@
-<nav class="navbar navbar-default navbar-fixed-top animated slideInDown"  style="{{sideMenuVisibility ? 'margin-left:13%;': ''}}">
+<nav class="navbar navbar-default navbar-fixed-top animated slideInDown"  style="{{sideMenuVisibility ? 'margin-left:13%;': ''}};background:var(--themeMain)">
   <div class="container-fluid" style="height:100%;">
-    <div class="navbar-header"  style="height: 102%;">
+    <div class="navbar-header"  style="height: 100%;">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navBar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
@@ -15,10 +15,10 @@
       <!-- <a class="navbar-brand" href="/" style="margin-left:50px;">
         <img ng-src="{{brandLogo}}" height="40" style="margin-top:-10px;max-width:100px;" />
       </a> -->
-      <a class="navbar-brand" href="/" style="margin-left:10px;padding-top:0px;margin-top:-15px;color:#53cada">
+      <a class="navbar-brand" href="/" style="margin-left:10px;padding-top:0px;margin-top:-15px;color:white;">
         <h1>Syrow</h1>
       </a>
-      <div class="navbar-brand" style="margin-right:30px;"><i class="fa fa-angle-right"></i> ERP  </div>
+      <div class="navbar-brand" style="margin-right:30px;color:white"></div>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navBar" style="height:5vh;">
@@ -29,7 +29,7 @@
 
   		<ul class="nav navbar-nav navbar-right" style="margin-right:20px;height:5vh;">
   			<li class="dropdown" style="height:100%;">
-  			  <a class="dropdown-toggle" style="padding-top:1.5vh;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{me.url | getName}}  <span class="glyphicon glyphicon-chevron-down"></span></a>
+  			  <a class="dropdown-toggle" style="padding-top:1.5vh;color:white" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{me.url | getName}}  <span class="glyphicon glyphicon-chevron-down"></span></a>
   			  <ul class="dropdown-menu">
     				<li><img class="img-responsive" width="200px" src="/static/images/userIcon.png" ng-src="{{me.profile.displayPicture}}" style="top:-5px; position:relative; width:200px"></li>
     				<li>
@@ -47,7 +47,7 @@
   		</ul>
       <ul class = "nav navbar-nav navbar-right" style="height:5vh;">
         <li class="dropdown" style="height:100%;">
-          <a class="dropdown-toggle" data-toggle="dropdown" style="width:55px;padding-top:1.5vh;" role="button" aria-haspopup="true" aria-expanded="false">
+          <a class="dropdown-toggle" data-toggle="dropdown" style="width:55px;padding-top:1.5vh;color:white" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-envelope-o fa-lg"></i>
             <span ng-if="instantMessagesCount > 0" class="label label-success" style="position: absolute;top: 5px;">{{instantMessagesCount}}</span>
           </a>
@@ -64,7 +64,7 @@
           </ul>
         </li>
         <li class="dropdown" style="height:100%;">
-          <a class="dropdown-toggle" style="width:55px;padding-top:1.5vh;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          <a class="dropdown-toggle" style="width:55px;padding-top:1.5vh;color:white" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-flag-o fa-lg"></i>
             <span ng-if="notificationsCount > 0" class="label label-warning" style="position: absolute;top: 5px;">{{notificationsCount}}</span>
           </a>
@@ -83,12 +83,12 @@
       </ul> <!-- /. notification icons group -->
       <div style="position:relative;padding-top:0.5vh;">
         <form  class="navbar-form navbar-right" role="search" style="position:absolute;right:270px;">
-          <i style="margin:10px;" ng-click="terminal.show = !terminal.show;" class="fa fa-terminal noselect"></i>
+          <i style="color:white;" ng-click="terminal.show = !terminal.show;" class="fa fa-search noselect"></i>
           <input ng-if="terminal.show" focus-me="terminal.show" type="text" class="form-control animated fadeIn" placeholder="Enter command" ng-enter="parseCommand()" ng-blur="closeTerminal()" ng-model = "terminal.command" style="width:500px;" uib-typeahead="user as getName(user) for user in userSearch($viewValue)">
           <div style="position:absolute;top:45px;background:white;width:87%;left:10%;padding:0px;" ng-if="terminal.showCommandOptions && terminal.show" class="card" >
             <ul class="nav-horizontal" style="background:white;">
               <li style="padding:10px;" class="text-center" ng-click="commandOptionsClicked('im')"><i class="fa fa-whatsapp fa-2x"></i> <br> Chat</li>
-              <li style="padding:10px;" class="text-center" ng-click="commandOptionsClicked('social')"><i class="fa fa-facebook fa-2x"></i> <br> Social</li>
+              <!-- <li style="padding:10px;" class="text-center" ng-click="commandOptionsClicked('social')"><i class="fa fa-facebook fa-2x"></i> <br> Social</li> -->
             </ul>
           </div>
         </form>

@@ -262,7 +262,7 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-
+var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
 
 var custID = {{pk}};
 console.log('customer id....', custID);
@@ -326,6 +326,8 @@ var broswer;
 var isAgentOnline = false;
 var agentPk = null;
 var notification = new Audio('{{serverAddress}}/static/audio/notification.ogg');
+var emailRecieved = false
+
 
 
 
@@ -470,6 +472,33 @@ function fetchThread(uid) {
         // console.log('nn',uid ,document.cookie);
         setCookie("uid", uid, 365);
         fetchMessages(uid);
+
+
+
+
+
+        // setTimeout(function () {
+        //   // console.log(session);
+        //
+        //   // alert(connection)
+        //   // alert(connection.session)
+        //
+        //   connection.session.subscribe('service.support.chat.' + uid, supportChat).then(
+        //     function (sub) {
+        //       console.log("subscribed to topic 'service.support.chat'" , uid );
+        //     },
+        //     function (err) {
+        //       console.log("failed to subscribed: " + err);
+        //     }
+        //   );
+        //
+        //
+        //
+        // }, 4000 );
+
+
+
+
 
       }
 
@@ -616,12 +645,12 @@ function setColors(bubbleColor , windowColor , icnClr) {
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
+  // var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
 
     connection.onopen = function (session) {
        console.log("session established!");
 
-      function supportChat(args) {
+      var supportChat = function(args) {
         console.log(args);
         var message;
 
@@ -740,11 +769,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       }
 
+      uid = getCookie("uid");
       function heartbeat() {
         console.log('caming in heartttttttttttttttttttttttttttttttttttttt here');
         var isOnline = true
         return uid
       }
+
 
       function createCookieDetail(args) {
         console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
@@ -754,13 +785,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
             console.log('already there');
             document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
           }
-
+          if (args[0].email!='') {
+            emailRecieved = true
+          }
+          console.log(emailRecieved);
           setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
       }
 
       session.register('service.support.createDetailCookie.'+uid, createCookieDetail).then(
         function (res) {
-          console.log("registered to service.support.heartbeat'");
+          console.log("registered to service.support.createDetailCookie'");
         },
         function (err) {
           console.log("failed to registered: ");
@@ -778,16 +812,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       session.subscribe('service.support.chat.' + uid, supportChat).then(
         function (sub) {
-          console.log("subscribed to topic 'service.support.chat'");
+          console.log("subscribed to topic 'service.support.chat'" , uid );
         },
         function (err) {
           console.log("failed to subscribed: " + err);
         }
       );
 
+
     };
 
     connection.open();
+
 
 
     function createDiv() {
@@ -815,13 +851,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 '<span id="onlineStatus"></span>'+
               '</div>'+
             '</div>'+
-            '<div style="float:left;padding-left: 55px;" >'+
-              '<div>'+
-                '<span id="endThisChat" style="font-size:15px; cursor:pointer; ">End Chat</span>'+
-              '</div>'+
-            '</div>'+
+            '<span id="endThisChat" style="font-size:15px; cursor:pointer; float:right; padding:15px; ">Exit</span>'+
             '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
-              '<span> <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
+              '<span> <img src="{{serverAddress}}/static/images/close.png" tooltip="" alt="Close" width="15" height="15"> </span>'+
             '</div>'+
           '</div>'+
         '</div>'+
@@ -858,9 +890,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
         '</div>'+
         '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
-          '<div style="padding:0px;" >'+
-             '<input id="inputText" style="width:70% ; height:50px; border:none; outline:none; box-shadow:none; background-color:#fff; padding-left:10px; " type="text" placeholder="Write a reply...">'+
-             '<input id="filePicker" type="file" style="display:none;"  />'+
+          '<div style="padding:0px; padding-top:10px;" >'+
+             '<textarea id="inputText" rows="4" style="border:none; resize: none; width:70%; height: 40px; outline:none; background-color:#fff; " placeholder="Write a reply..." ></textarea>'+
+             '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
              '<span id="paperClip" style="width:10% ; border:none; background-color:#fff; font-size:20px; padding:0% 5%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="height:20px; width:20px;" ></span>'+
              '<span id="paperPlane" style="width:10% ; border:none; background-color:#fff; font-size:20px; cursor:pointer;"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:40px; widtth:30px; padding-top:10px;"></span>'+
           '</div>'+
@@ -872,44 +904,49 @@ document.addEventListener("DOMContentLoaded", function(event) {
        '</svg>'+
       '</div>'+
 
-      '<div id="supportCircle" >'+
+      '<div id="supportCircle">'+
   			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
   				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
   				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
   				'<div  id="sy-sub-icons">'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
   						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Callback</span>'+
   						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle">'+
   						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Chat</span>'+
   						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle">'+
   						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Audio Call</span>'+
   						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" >'+
   						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Video Call</span>'+
   						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
   					'</div>'+
-  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle" style="cursor:pointer;">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle">'+
   						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Ticket</span>'+
   						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
   					'</div>'+
   				'</div>'+
   			'</div>'+
-  		'</div>'
+  		'</div>'+
 
-
-
-      '<div id="welcomeMessage"  style="width:270px; height:76px; padding:5px 10px 5px 10px; background-color:#fff; color:#000; position:fixed; bottom:42px;  right:30px; border-radius:5px; cursor:pointer; box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.3)">'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:12px;" >Syrow</p>'+
-        '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:10px; word-wrap: break-word;" >Thanks for visiting us. If you need help simply reply to this message.... </p>'+
-      '</div>'+
-      '<div id="unreadMsg" style="background-color:#fff; color:#fff; width:3px; height:3px; position:fixed; bottom:42px; right:38px; z-index:9999; " >'+
-
+      '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle">'+
+        '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ; right:105px; display:none; transition: .5s" class="sy-text">Chat</span>'+
+        '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
       '</div>'
+
+
+
+      // '<div id="welcomeMessage"  style="width:270px; height:76px; padding:5px 10px 5px 10px; background-color:#fff; color:#000; position:fixed; bottom:42px;  right:30px; border-radius:5px; cursor:pointer; box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.3)">'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:12px;" >Syrow</p>'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:10px; word-wrap: break-word;" >Thanks for visiting us. If you need help simply reply to this message.... </p>'+
+      // '</div>'+
+      // '<div id="unreadMsg" style="background-color:#fff; color:#fff; width:3px; height:3px; position:fixed; bottom:42px; right:38px; z-index:9999; " >'+
+      //
+      // '</div>'
 
 
     mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
@@ -971,6 +1008,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var endThisChat = document.getElementById('endThisChat');
 
 
+  var singleService = document.getElementById('singleService');
+
+
+  // inputText.style.display = "none"
+
+
   var chatCircleText =   document.getElementById('chatCircleText')
   var callCircleText =   document.getElementById('callCircleText')
   var audioCircleText =  document.getElementById('audioCircleText')
@@ -979,14 +1022,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var Syrow24hSupportText = document.getElementById('Syrow24hSupportText')
 
 
-  endThisChat.style.display ="none"
+  // endThisChat.style.display ="none"
 
 
   // isTyping.style.display = "none";
 
+  singleService.style.display = "none";
+
 
   document.getElementById('sy-main-icon').style.display = "none";
-
+  backArrow.style.display = "none";
   setTimeout(function(){
     document.getElementById('sy-main-icon').style.display = "";
   }, 2000);
@@ -1053,8 +1098,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
   // console.log(supportOptions,'so');
-    for (var i = 0 , rD = 0 , mB = 0 , mR=0; i < supportOptions.length; i++) {
+    count = 0
+    for (var i = 0 , rD = 0 , mB = 0 , mR=0 ; i < supportOptions.length; i++) {
+
       if (supportOptions[i].value) {
+        count ++;
+        var activeService = supportOptions[i].name
         rD+=2;
         mB+=60;
         mR+=1;
@@ -1084,6 +1133,53 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }else {
           document.getElementById(supportOptions[i].name).style.display = "none";
       }
+
+    }
+
+    if (count==1) {
+      // alert('display only one service')
+      // display none of main
+      setTimeout(function () {
+          singleService.style.display = ""
+          supportCircle.style.display = "none"
+
+          var singleServiceText = document.getElementById('singleServiceText')
+          var singleServiceFont = document.getElementById('singleServiceFont')
+
+          singleService = document.getElementById('singleService')
+
+          singleService.addEventListener("mouseover" , function () {
+            singleServiceText.style.display = ""
+          })
+
+          singleService.addEventListener("mouseleave" , function () {
+            singleServiceText.style.display = "none"
+          })
+
+          if (activeService == 'callCircle') {
+            singleServiceText.innerHTML = "Callback"
+            singleServiceFont.className = "SyrowFont font-SyrowCallBack sy-md-2 sy-ops"
+          }else if (activeService == 'chatCircle') {
+            singleServiceText.innerHTML = "Chat"
+            singleServiceFont.className = "SyrowFont font-SyrowChat sy-md-2 sy-ops"
+            singleService.addEventListener("click" , openChat , false)
+          }else if (activeService == 'audioCircle') {
+            singleServiceText.innerHTML = "Audio Call"
+            singleServiceFont.className = "SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"
+          }else if (activeService == 'videoCircle') {
+            singleServiceText.innerHTML = "Video Call"
+            singleServiceFont.className = "SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"
+          }else if (activeService == 'ticketCircle') {
+            singleServiceText.innerHTML = "Ticket"
+            singleServiceFont.className = "SyrowFont font-SyrowTicket sy-md-1 sy-ops"
+          }
+
+      }, 1700);
+
+
+
+
+
     }
 
 
@@ -1285,7 +1381,7 @@ function endChat() {
 
        var dataToSend = {uid:uid , message: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-       if (isAgentOnline) {
+       if (isAgentOnline && feedbackFormOpened) {
          console.log('ONLINE' , agentPk);
          connection.session.publish('service.support.agent.'+agentPk, [uid , 'M' , dataToSend ] , {}, {
            acknowledge: true
@@ -1306,9 +1402,18 @@ function endChat() {
   openFeedback()
 }
 
-
+  feedbackFormOpened = false
+  feedbackFormSubmitted = false
 
   function openFeedback(id) {
+
+    console.log(feedbackFormOpened , 'feedbackFormOpened');
+
+    if (feedbackFormOpened) {
+      return
+    }
+
+    feedbackFormOpened = true
     console.log('coming in open feedback');
     var id = id;
     var div = document.createElement("div");
@@ -1331,6 +1436,7 @@ function endChat() {
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
+                        '<input type="text" id="emailId" placeholder="Emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
                          '<textarea id="feedbackText" style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
                          '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
@@ -1342,6 +1448,22 @@ function endChat() {
     scroll();
     var stars = document.getElementById('stars');
     var submitStars = document.getElementById('submitStars');
+
+    // disable input type here.. and remove send and attach button
+
+    inputText.disabled = true;
+    inputText.placeholder = "Chat is closed....";
+
+    paperClip.style.display = "none";
+    paperPlane.style.display = "none";
+
+    if (emailRecieved) {
+      // ratingForm.email = emailId
+      var emailId = document.getElementById('emailId')
+      emailId.style.display = "none"
+    }
+
+
     submitStarForm(id);
   }
 
@@ -1361,6 +1483,8 @@ function endChat() {
 
 
   function submitStarForm(id) {
+
+
     submitStars.addEventListener("click", function() {
       console.log('somthing hereeeeee' , this);
       // id="star-5"
@@ -1371,6 +1495,16 @@ function endChat() {
         customerRating:0,
         customerFeedback:feedbackText.value
       }
+
+      var emailId = document.getElementById('emailId').value
+
+
+      if (!emailRecieved) {
+        ratingForm.email = emailId
+      }
+
+
+
 
       var star1 = document.getElementById('star-1')
       var star2 = document.getElementById('star-2')
@@ -1404,24 +1538,20 @@ function endChat() {
          if (this.readyState == 4 && this.status == 200) {
            console.log('posted successfully');
            console.log(ratingForm);
-           // feedbackText.value = ''
-           // star1.checked = false
-           // star2.checked = false
-           // star3.checked = false
-           // star4.checked = false
-           // star5.checked = false
            submitStars.style.display = "none";
            thankYouMessage()
-
+           feedbackFormSubmitted = true
            // var dataToPublish = [uid , status , message , custID ];
-
-
          }
        };
        xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
        xhttp.setRequestHeader("Content-type", "application/json");
        xhttp.send(ratingForm);
+
     }, false);
+
+
+
   }
 
 
@@ -1441,6 +1571,7 @@ function endChat() {
   // unreadMsg.style.display = "none";
 
 
+
   startConvoBtn.addEventListener("click", function() {
     headerChat.style.display = "";
     messageBox.style.display = "";
@@ -1455,7 +1586,7 @@ function endChat() {
   var chatClosed = false
 
   backArrow.addEventListener("click", function() {
-    console.log(chat.messages,'coming in loggggggggg');
+    console.log(chatClosed,'back arrow clicked');
     if (chat.messages.length>1 && chatClosed!=true) {
       endChat()
       console.log('end chat');
@@ -1476,7 +1607,25 @@ function endChat() {
 
   endThisChat.addEventListener("click", function() {
 
+    if (feedbackFormOpened) {
+      // or you can use variable feedbackFormSubmitted which is true only if feedbackForm is submitted
+      // delete uid from cookies and create a new one
+      // uidDetails should remane same
+      // first welcome message should come
+      // agentPk =  null
+      // reset chat.messages  var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
+      // call pushMessges() again
+      // enable text area and display send and attach btn again
+      // threadExist == undefined
+      // chatThreadPk == undefined
+      // messageBox.innerHTML = '';
+      closeSupport.click()
+    }
+
     endChat()
+
+
+
   }, false);
 
 
@@ -1530,7 +1679,27 @@ function endChat() {
 
 
     function messageDiv(message) {
-      console.log(message);
+
+      function timeSince(date) {
+        t = date;
+        var now = new Date();
+        var diff = Math.floor((now - t)/60000)
+        if (diff<60) {
+          return diff+' Mins';
+        }else if (diff>=60 && diff<60*24) {
+          return Math.floor(diff/60)+' Hrs';
+        }else if (diff>=60*24) {
+          return Math.floor(diff/(60*24))+' Days';
+        }
+      }
+
+
+      // if (!message.created) {
+      //   message.timeAgo = timeSince(new Date())
+      // }else {
+        message.timeAgo = timeSince(new Date(message.created))
+      // }
+
       // console.log(chat.messages.length);
 
       // console.log('messsaaageeeeeeeeeeeeeeeeeeeee',message);
@@ -1561,12 +1730,14 @@ function endChat() {
         var msgDiv =attachedFile
       }else {
         if (message.attachment==null) {
-          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
+          console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
+          console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
+          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
           msgDiv = pTag
         }else {
           msgDiv = attachedFile
         }
-        //
+
         // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
       }
 
@@ -1579,6 +1750,7 @@ function endChat() {
                         '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
+                        '<div style="clear: both; float:right; padding-left:15px;">'+ message.timeAgo +'</div>'+
                       '</div>'
         return msgHtml
 
@@ -1587,6 +1759,7 @@ function endChat() {
                   '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
+                  '<div style="clear: both; float:left; padding-left:15px;">'+ message.timeAgo +'</div>'+
                 '</div> '
         return msgHtml
       }
@@ -1769,18 +1942,58 @@ function endChat() {
     },15000 )
 
 
-    // inputText.addEventListener("input", function(e) {
-    //   console.log(this.value);
-    //   var status = 'T'
-    //   connection.session.publish('service.support.agent', [uid , status], {}, {
-    //     acknowledge: true
-    //   }).
-    //   then(function(publication) {
-    //     console.log("Published");
-    //   });
+    function spying(inputVal) {
+      countOnchange = 0;
+      console.log('values' , inputVal);
+      //send
+
+      if (isAgentOnline) {
+        connection.session.publish('service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published");
+        });
+      }
+
+
+    }
+
+
+    // var myVar;
+    // var timestamp = 0
+    // var myVar = false
+    //
+    // setInterval(function () {
+    //   timestamp = new Date().getTime()
+    //   if (myVar) {
+    //     spying(inputText.value)
+    //   }
+    // }, 3000);
+    //
+    // setInterval(function () {
+    //   myVar =false
+    // }, 2000);
+    //
+    //
+    // var countOnchange = 0
+
+    // inputText.addEventListener('input', function(evt) {
+    //   console.log('coming');
+    //   myVar = true
     //
     // });
 
+    inputText.addEventListener('keydown', function(evt) {
+      // countOnchange++
+      console.log(evt.keyCode);
+      console.log(this.value);
+      if (evt.keyCode==32 || evt.keyCode == 8) {
+        spying(this.value)
+      }
+      // if ((countOnchange % 4) == 0) {
+      // }
+    });
 
     function sendMessage(inptText) {
 
@@ -1821,7 +2034,7 @@ function endChat() {
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
 
 
-        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false  };
+        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
         if (agentPk) {
           console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
@@ -1837,7 +2050,7 @@ function endChat() {
       }else {
         status = "M";
         // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
-        var dataToSend = {uid: uid , message: inptText , sentByAgent:false };
+        var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
         console.log(agentPk);
         if (agentPk) {
           console.log('agent pk is pnline',isAgentOnline);
@@ -1905,8 +2118,8 @@ function endChat() {
 
 
        var dataToPublish = [uid , status , message ];
-       // setCookie("uidDetails", {}, 365);
 
+       // setCookie("uidDetails", {}, 365);
        // details = getCookie("uidDetails");
        // console.log('********************8',details);
        // if (details != "") {
@@ -1973,13 +2186,13 @@ function endChat() {
     }
 
 
-    inputText.addEventListener("keydown", function (e) {
-        if (e.keyCode === 13) {
-          if (inputText.value.length>0) {
-            sendMessage(inputText.value)
-          }
-        }
-    }, false);
+    // inputText.addEventListener("keydown", function (e) {
+    //     if (e.keyCode === 13) {
+    //       if (inputText.value.length>0) {
+    //         sendMessage(inputText.value)
+    //       }
+    //     }
+    // }, false);
 
 
   paperClip.addEventListener("click", function() {
@@ -2146,13 +2359,19 @@ function endChat() {
   }
 
 
-  chatCircle.addEventListener("click", function() {
+  chatCircle.addEventListener("click", openChat , false);
+
+
+  function openChat() {
     // welcomeMessage.style.display ="none";
     console.log(chatOpen);
     console.log('click');
     chatOpen = !chatOpen
     console.log(chatOpen);
     setCookie("chatOpenCookie", chatOpen, 365);
+
+
+    startConvoBtn.click();
 
 
 
@@ -2187,10 +2406,10 @@ function endChat() {
       // // closeChatSvg.style.display = "none"
       // chatBox.style.display = "none";
     }
-
-  }, false);
+  }
 
   closeSupport.addEventListener("click", function() {
+    //bottom close svg white color
     console.log('coming' , chatOpen);
     if (chatOpen) {
       chatOpen = !chatOpen
@@ -2205,6 +2424,7 @@ function endChat() {
 
 
   closeIcon.addEventListener("click", function() {
+    //top close icon display only in smaller screen
     if (chatOpen) {
       chatOpen = !chatOpen
       // chatIconSvg.style.display = ""
