@@ -65,7 +65,14 @@
         </div>
 
       </div>
-      <span ng-if="!message.sentByAgent" style="float:left;  font-size:12px;">{{data.spying.value}}</span>
+
+      <div class="row container-fluid">
+        <span ng-if="!message.sentByAgent" style="float:left; font-size:12px;">{{data.spying.value}}</span>
+        <img ng-if="data.spying.isTyping" src="/static/images/pencil.gif" width="50px;" alt="">
+      </div>
+
+
+
     </div>
   </div>
 

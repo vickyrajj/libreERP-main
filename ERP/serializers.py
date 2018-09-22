@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from fabric.api import *
 import os
 from django.conf import settings as globalSettings
+from support.models import CannedResponses
 
 class addressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,11 +19,12 @@ class addressSerializer(serializers.ModelSerializer):
 class serviceSerializer(serializers.ModelSerializer):
     # user = userSearchSerializer(many = False , read_only = True)
     perms = serializers.SerializerMethodField()
+    noOfPrescript = serializers.SerializerMethodField()
     address = addressSerializer(many = False, read_only = True)
     contactPerson = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms')
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms','noOfPrescript')
 
     def assignValues(self , instance , validated_data):
         if 'cin' in validated_data:
@@ -69,6 +71,9 @@ class serviceSerializer(serializers.ModelSerializer):
             if p.app.name == 'module.customer.edit' or p.app.name == 'module.customer.explore' or p.app.name == 'module.customer.knowBase':
                 toReturn[p.app.name] = True
         return toReturn
+    def get_noOfPrescript(self , obj):
+        c = CannedResponses.objects.filter(service = obj.pk).count()
+        return c
 
 class serviceLiteSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)
@@ -201,6 +206,9 @@ class permissionSerializer(serializers.ModelSerializer):
         u = validated_data['user']
         permission.objects.filter(user = u).all().delete()
         print self.context['request'].data['apps']
+        if 1 not in self.context['request'].data['apps']:
+            # print 'dashboard not there'
+            self.context['request'].data['apps'].append(1)
         for a in self.context['request'].data['apps']:
             app = application.objects.get(pk = a)
             p = permission.objects.create(app =  app, user = u , givenBy = user)

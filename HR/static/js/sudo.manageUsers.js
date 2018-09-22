@@ -734,13 +734,16 @@ if (typeof $scope.tab != 'undefined') {
 
       Flash.create('success', response.status + ' : ' + response.statusText);
       console.log(response.data);
-      $scope.newCustomer = {
-        username: '',
-        firstName: '',
-        lastName: '',
-        password: '',
-        access: 'full_access'
-      };
+
+      if ($scope.mode == 'new') {
+        $scope.newCustomer = {
+          username: '',
+          firstName: '',
+          lastName: '',
+          password: '',
+          access: 'full_access'
+        };
+      }
 
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);

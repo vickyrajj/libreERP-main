@@ -375,7 +375,6 @@ app.controller("module.home.settings", function($scope, $state, $http) {
   }
 
 
-
   $scope.tabs = [];
   $scope.searchTabActive = true;
 

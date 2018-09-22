@@ -1988,7 +1988,7 @@ function endChat() {
       // countOnchange++
       console.log(evt.keyCode);
       console.log(this.value);
-      if (evt.keyCode==32 || evt.keyCode == 8) {
+      if (evt.keyCode==32 || evt.keyCode == 8 || evt.keyCode == 13 ) {
         spying(this.value)
       }
       // if ((countOnchange % 4) == 0) {
