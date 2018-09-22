@@ -2,7 +2,7 @@
   <div class="row">
 
 
-    <div class="{{commentPerm ? 'col-md-6':'col-md-12'}}" style="border-right:1px solid #eeeeee;">
+    <div class="col-md-6" style="border-right:1px solid #eeeeee;">
       <h3><strong>Date : </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</h3>
       <span ng-if="chatThreadData.uid!=none"><h3><strong>Status : </strong>{{chatThreadData.status}} <span class="pull-right"><div class="btn btn-primary" ng-click="showChart()">Change Status</div></span></h3>
       </span>
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div ng-if="commentPerm" class="col-md-6" style="padding:20px;">
+    <div class="col-md-6" style="padding:20px;">
       <div class="row" ng-repeat="comment in reviewCommentData" style="padding-bottom:15px;">
         <div class="col-md-9">
           <div style="background-color:{{comment.user==msgData[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; border-radius:15px 50px 50px 15px; padding:10px 10px 10px 15px;word-break: break-all !important;">
@@ -40,7 +40,7 @@
           <h5> {{comment.user | getName }}</h5>
         </div>
       </div>
-      <div class="row" style="padding-top:20px;">
+      <div class="row" style="padding-top:20px;" ng-if="commentPerm" >
         <div class="col-md-10">
           <div class="form-group">
             <textarea class="form-control" rows="3" id="comment" placeholder="Comments... " ng-model="reviewForm.message" style="resize:none;"></textarea>

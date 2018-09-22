@@ -12,7 +12,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller("businessManagement.customerReviews", function($scope, $state, $http, $rootScope) {
+app.controller("businessManagement.customerReviews", function($scope, $state, $users , $http, $rootScope) {
   $rootScope.state = 'Reviews';
   $scope.reviewData = []
 
@@ -141,9 +141,13 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
 
 
 
-app.controller("app.customerReviews.explore", function($scope, $http) {
+app.controller("app.customerReviews.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , $interval , $permissions) {
   console.log($scope.tab.data);
   $scope.data = $scope.tab.data
+
+  $scope.reviewForm = {message:''}
+  $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+  console.log($scope.commentPerm,'permissionnnnnnnnnnnnn');
 
   $scope.calculateTime = function(user, agent) {
     console.log('inside cal cccccccccccc');
@@ -173,6 +177,7 @@ app.controller("app.customerReviews.explore", function($scope, $http) {
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
     $scope.reviewCommentData =response.data
+    console.log($scope.reviewCommentData);
   });
 
   $scope.postComment = function(){

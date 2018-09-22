@@ -1,5 +1,5 @@
 <div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
-  <div class="container-fluid card" style="padding-bottom:10px; height:120px">
+  <div class="container-fluid card" style="padding-bottom:10px;min-height:150px">
     <div class="row" style="height:60px;">
       <div class="col-md-10" style="position:relative;display:block;">
         <div class="row" style="padding-left:10px;">
@@ -15,9 +15,15 @@
       </div>
     </div>
     <div class="row" ng-if="data.contactPerson" style="padding-left:15px;">
-      <strong>Contact Person:</strong> {{data.contactPerson.first_name}} {{data.contactPerson.last_name}}
+      <strong><i class="fa fa-globe"></i> </strong> <a href="{{compDetails.web}}" target="_blank">{{data.web}}</a>
     </div>
-    <div class="row" ng-if="data.noOfPrescript>0" style="padding-left:15px;">
+    <div class="row" ng-if="data.contactPerson" style="padding-left:15px;">
+      <strong>Telephone:</strong> {{data.telephone}}
+    </div>
+    <div class="row" style="padding-left:15px;">
+      <strong>Contact Person:</strong> {{data.contactPerson[0].first_name}} {{data.contactPerson[0].last_name}}
+    </div>
+    <div class="row" style="padding-left:15px;">
       <strong>No of Prescipts:</strong> {{data.noOfPrescript}}
     </div>
   </div>

@@ -92,6 +92,8 @@ app.factory('$permissions', function($http){
         for (var i = 0; i < myPerms.length; i++) {
           if (myPerms[i].app.name == input) {
             return true
+          }else {
+            return false
           }
         }
       }
