@@ -270,7 +270,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
 
         if 'getCustomers' in self.request.GET:
-            a = list(permission.objects.filter(app = application.objects.get(name = "app.customers")).values_list('user', flat=True).distinct())
+            a = list(permission.objects.filter(app = application.objects.get(name = "app.customer.access")).values_list('user', flat=True).distinct())
             if int(self.request.GET['getCustomers']) == 1:
                 return User.objects.filter(pk__in=a)
             else:
