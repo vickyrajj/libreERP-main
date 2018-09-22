@@ -1,5 +1,6 @@
 <div class="" ng-controller="sideMenu">
-  <div class="row" style="margin:0px;">
+  <!-- {{sideMenuVisibility}} -->
+  <div ng-if="sideMenuVisibility" class="row" style="margin:0px;">
     <div class="container-fluid" style="background-image: url('/static/images/nav-menu-header-bg4.jpg');background-size: cover;padding:20px;padding-bottom:30px;padding-left:40px;">
       <div class="row">
         <img ng-src="{{user.pk | getDP}}" class="img img-circle pull-left" style="width:100px;">
@@ -8,6 +9,17 @@
         <span style="font-size:18px;color:white;">{{user.pk | getName}}</span>
       </div>
     </div>
+  </div>
+  <!-- <div ng-if="!sideMenuVisibility" style="margin:0px;">
+      <div class="row" style="padding:15px; margin-left:10px; margin-top:40px;" >
+          <img ng-src="{{user.pk | getDP}}" class="img img-circle pull-left" style="width:50px;">
+      </div>
+      <div class="row text-center">
+        <span style="font-size:12px; padding-left:5px;">{{user.pk | getName}}</span>
+      </div>
+  </div> -->
+  <div ng-if="!sideMenuVisibility" class="row" style="width:5%; padding:15px;">
+    <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;" >
   </div>
   <div class="row" style="border-bottom:solid 2px #eeeeee;">
     <div class="container-fluid" >
@@ -24,7 +36,8 @@
       <ul class="nav nav-sidebar padded" style="width:100%;">
         <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" >
           <a ui-sref="{{a.state}}" style="padding-right:30px;padding-left:30px;">
-            <div align="center"><i class="fa {{a.icon}} fa-2x pull-left"></i> {{a.dispName | humanize}}</div>
+            <div ng-if="sideMenuVisibility" align="center"><i class="fa {{a.icon}} fa-2x pull-left"></i> {{a.dispName | humanize}}</div>
+            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;" ><i class="fa {{a.icon}} fa-2x pull-left zoomOnHover"></i></div>
           </a>
         </li>
       </ul>
