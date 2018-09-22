@@ -147,7 +147,7 @@ class Activities(models.Model):
     user = models.ForeignKey(User, null = False , related_name = 'ecommerceActivities')
     product = models.ForeignKey(listing, null = True)
     typ =  models.CharField(choices = ACTIVITIES_TYPE_CHOICES , max_length = 10 , default='loggedIn')
-    data = models.CharField(max_length = 200 , null = True)
+    data = models.CharField(max_length = 500 , null = True)
 
 class Address(models.Model):
     user = models.ForeignKey(User , related_name = 'userAddress' , null = True , blank = True)
