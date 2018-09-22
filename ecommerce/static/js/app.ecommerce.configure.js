@@ -455,6 +455,9 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     if ($scope.form.searchBgImage != null && typeof $scope.form.searchBgImage != 'string') {
       fd.append('searchBgImage',$scope.form.searchBgImage);
     }
+    if ($scope.form.blogPageImage != null && typeof $scope.form.blogPageImage != 'string') {
+      fd.append('blogPageImage',$scope.form.blogPageImage);
+    }
     $http({method : 'GET' , url : '/api/ecommerce/genericImage/'}).
     then(function(response) {
       if(response.data.length==0){
@@ -677,17 +680,19 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
     } else if ($scope.form.mode == 'genericProduct') {
       fs = [];
       console.log(d.fields);
-      if (d.fields.length == 0) {
-        Flash.create('warning', 'No fields selected')
-        return;
-      }
+      // if (d.fields.length == 0) {
+      //   Flash.create('warning', 'No fields selected')
+      //   return;
+      // }
       console.log(d.bannerImage,'aaaaaaaaaaaaaa');
       if (d.bannerImage== null || typeof d.bannerImage == 'string'||d.bannerImage.name=='') {
         Flash.create('warning', 'Please add the Banner Image')
         return;
       }
-      for (var i = 0; i < d.fields.length; i++) {
-        fs.push(d.fields[i].pk);
+      if(d.fields.length > 0){
+        for (var i = 0; i < d.fields.length; i++) {
+          fs.push(d.fields[i].pk);
+        }
       }
 
       var fd = new FormData();

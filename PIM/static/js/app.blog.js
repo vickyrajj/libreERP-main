@@ -1,6 +1,6 @@
 app.controller("controller.home.blog", function($scope , $state , $users ,  $stateParams , $http , Flash) {
   $scope.me = $users.get('mySelf');
-  $scope.editor = {source : '' , tags : [] , title : '' , header : '' , mode : 'header' , shortUrl : '', ogimage : emptyFile , ogimageUrl : '' , description : '', tagsCSV : '' ,section : '' , author : ''};
+  $scope.editor = {source : '' , tags : [] , title : '' , header : '' , mode : 'header' , shortUrl : '', ogimage : emptyFile , ogimageUrl : '' , description : '', tagsCSV : '' ,section : '' , author : '',sugProduct:'',sugProductPk:[],suggestedProducts:[]};
   $scope.filter = {text : '' , tags :[] , month : new Date() , state : 'published' , user : 'all'};
   $scope.itemsPerPage = 5;
   $scope.pageNo = 0;
@@ -83,6 +83,10 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
       $scope.editor.section = response.data.section;
       $scope.editor.author = response.data.author;
       $scope.editor.mode = 'header';
+      for (var i = 0; i < response.data.suggestedProducts.length; i++) {
+        $scope.editor.suggestedProducts.push(response.data.suggestedProducts[i])
+        $scope.editor.sugProductPk.push(response.data.suggestedProducts[i].pk)
+      }
     })
   } else if ($stateParams.action == 'new') {
     $scope.mode = 'new';
@@ -213,6 +217,33 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
     return $http.get('/api/PIM/blogTags/?title__contains=' + query)
   };
 
+  $scope.productSearch = function(query){
+    return $http.get('/api/ecommerce/listing/?product__name__icontains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
+  $scope.addProduct = function(product){
+    console.log(product);
+    if (typeof product != 'object') {
+      Flash.create('warning' , 'Please Select Suggested Product')
+      return;
+    }
+    if ($scope.editor.sugProductPk.indexOf(product.pk)> -1) {
+      Flash.create('warning' , 'This Product Has Already Added')
+      return;
+    }
+    $scope.editor.suggestedProducts.push(product)
+    $scope.editor.sugProductPk.push(product.pk)
+    $scope.editor.sugProduct = ''
+  }
+
+  $scope.removeProduct = function(idx){
+    $scope.editor.suggestedProducts.splice(idx,1)
+    $scope.editor.sugProductPk.splice(idx,1)
+
+  }
+
   $scope.tinymceOptions = {
     selector: 'textarea',
     content_css : '/static/css/bootstrap.min.css',
@@ -284,6 +315,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
           fd.append('section' , $scope.editor.section);
           fd.append('author' , $scope.editor.author);
           fd.append('description' , $scope.editor.description);
+          fd.append('suggestedProducts' , $scope.editor.sugProductPk);
           console.log($scope.mode);
           if ($scope.mode == 'edit') {
             console.log('edittttttttttt');
@@ -306,6 +338,15 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
             $scope.editor.tags = [];
             $scope.editor.mode = 'hedaer';
             $scope.editor.shortUrl = ''
+            $scope.editor.tagsCSV = '';
+            $scope.editor.section = '';
+            $scope.editor.author = '';
+            $scope.editor.description = '';
+            $scope.editor.ogimage = emptyFile;
+            $scope.editor.ogimageUrl = '';
+            $scope.editor.sugProductPk = [];
+            $scope.editor.suggestedProducts = [];
+
           }, function(response){
             console.log(response);
             Flash.create('danger' , response.status + ' : ' + response.statusText);

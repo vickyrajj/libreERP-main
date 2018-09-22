@@ -159,13 +159,13 @@ def ecommerceHome(request):
         if len(urlData) > 1 :
             print 'pagessssssssssssss',urlData[1]
             pagesChecking = Pages.objects.filter(pageurl__icontains=str(urlData[1]))
-            blogsChecking = blogPost.objects.filter(shortUrl__icontains=str(urlData[1]))
+            blogsChecking = blogPost.objects.filter(state__icontains='published',shortUrl__icontains=str(urlData[1]))
             if len(pagesChecking)>0:
                 data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
             elif len(blogsChecking)>0:
                 blogData = blogsChecking[0]
                 data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
-                if blogData.description is not None and len(blogData.description)>0:
+                if blogData.description is not None and len(blogData.description)>0 and blogData.description != 'null':
                     data['seoDetails']['description'] = blogData.description
                     print 'Desscription existsssssssssssss'
                 else:
@@ -179,7 +179,7 @@ def ecommerceHome(request):
                     print 'og image existsssssssssssss'
                 except:
                     print 'no such blog file has existsssssssssssss'
-                    if blogData.ogimageUrl is not None and len(blogData.ogimageUrl)>0:
+                    if blogData.ogimageUrl is not None and len(blogData.ogimageUrl)>0 and blogData.ogimageUrl != 'null':
                         data['seoDetails']['image'] = blogData.ogimageUrl
                     else:
                         print 'so ogimageurl existsssssssssssss'
@@ -208,10 +208,10 @@ class SearchProductAPI(APIView):
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
                 genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('product__displayPicture') , typ= Value('list',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') , typ= Value('list',output_field=CharField())))
             else:
                 genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name' ) , dp = F('product__displayPicture') , typ= Value('list',output_field=CharField())))
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name' ) , dp = F('files__attachment') , typ= Value('list',output_field=CharField())))
 
             tosend = genericProd + listProd
             print tosend[0:l]
@@ -329,7 +329,6 @@ class CreateOrderAPI(APIView):
             print promoAmount
             a = '#'
             docID = str(a) + str(orderObj.pk)
-            print docID,'aaaaaaaaaaaaaaaaaaaaabbbbbbbbb'
             for i in orderObj.orderQtyMap.all():
                 price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
                 price=round(price, 2)
@@ -340,34 +339,35 @@ class CreateOrderAPI(APIView):
                 value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
             grandTotal=round(grandTotal, 2)
-            ctx = {
-                'heading' : "Invoice Details",
-                'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
-                'linkUrl': globalSettings.BRAND_NAME,
-                'sendersAddress' : globalSettings.SEO_TITLE,
-                # 'sendersPhone' : '122004',
-                'grandTotal':grandTotal,
-                'total': total,
-                'value':value,
-                'docID':docID,
-                'data':orderObj,
-                'promoAmount':promoAmount,
-                'linkedinUrl' : lkLink,
-                'fbUrl' : fbLink,
-                'twitterUrl' : twtLink,
-            }
-            print ctx
-            email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-            # email_subject = "Order Details:"
-            # msgBody = " Your Order has been placed and details are been attached"
-            contactData.append(str(orderObj.user.email))
-            print 'aaaaaaaaaaaaaaa'
-            msg = EmailMessage("Order Details" , email_body, to= contactData  )
-            msg.content_subtype = 'html'
-            # a = str(f).split('media_root/')[1]
-            # b = str(a).split("', mode")[0]
-            # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
-            msg.send()
+            if orderObj.user.email:
+                ctx = {
+                    'heading' : "Invoice Details",
+                    'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+                    'linkUrl': globalSettings.BRAND_NAME,
+                    'sendersAddress' : globalSettings.SEO_TITLE,
+                    # 'sendersPhone' : '122004',
+                    'grandTotal':grandTotal,
+                    'total': total,
+                    'value':value,
+                    'docID':docID,
+                    'data':orderObj,
+                    'promoAmount':promoAmount,
+                    'linkedinUrl' : lkLink,
+                    'fbUrl' : fbLink,
+                    'twitterUrl' : twtLink,
+                }
+                print ctx
+                email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+                # email_subject = "Order Details:"
+                # msgBody = " Your Order has been placed and details are been attached"
+                contactData.append(str(orderObj.user.email))
+                print 'aaaaaaaaaaaaaaa'
+                msg = EmailMessage("Order Details" , email_body, to= contactData  )
+                msg.content_subtype = 'html'
+                # a = str(f).split('media_root/')[1]
+                # b = str(a).split("', mode")[0]
+                # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
+                msg.send()
             return Response({'paymentMode':orderObj.paymentMode,'dt':orderObj.created,'odnumber':orderObj.pk}, status = status.HTTP_200_OK)
 
 
@@ -421,7 +421,7 @@ class listingViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = listingSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['parentType']
+    filter_fields = ['parentType','product']
 
     def get_queryset(self):
         print self.request.GET,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'

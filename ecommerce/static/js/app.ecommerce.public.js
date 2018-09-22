@@ -244,7 +244,7 @@ app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state,
   $scope.showNext = false
   $scope.showPrev = false
   $scope.start = 0
-  $scope.rangeNo = 4
+  $scope.rangeNo = 3
   $scope.end = $scope.start + $scope.rangeNo
   $scope.bData = function(start,end){
     if (start>0) {
@@ -271,7 +271,15 @@ app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state,
     }
     window.scrollTo(0, 0);
   }
-
+  $http({method : 'GET' , url : '/api/ecommerce/genericImage/'}).
+  then(function(response) {
+    console.log(response.data,'imagesssssssss');
+    if (response.data.length>0) {
+      $scope.genericImage = response.data[0]
+    }else {
+      $scope.genericImage = {}
+    }
+  })
   $http({
     method: 'GET',
     url: '/api/PIM/blog/?homeBlog'
@@ -291,6 +299,7 @@ app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope,
   $scope.me = $users.get('mySelf');
   // if($scope.me!=null){
     $scope.$watch('match' , function(newValue , oldValue) {
+      console.log($scope.match);
       $scope.match.model.added = 0
       if($scope.me){
         if( $rootScope.inCart!=undefined){
@@ -398,7 +407,6 @@ app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope,
           }
         }
       }
-
   }
 
   function getCookie(cname) {
@@ -466,7 +474,6 @@ app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope,
       }
     }
   }
-
 })
 
 app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
@@ -1808,7 +1815,7 @@ app.controller('controller.ecommerce.account.support', function($scope, $rootSco
       Flash.create("warning", "Please add all details")
     } else {
       dataToSend = {
-        email: $scope.me.email,
+        email: $scope.message.email,
         mobile: $scope.me.profile.mobile,
         invoiceNo: $scope.message.invoiceNo,
         subject: $scope.message.subject,
@@ -2254,6 +2261,21 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash) {
   $scope.me = $users.get('mySelf')
+  $rootScope.companyPhone =''
+  $rootScope.companyEmail =''
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=phone').
+  then(function(response) {
+    $rootScope.companyPhone = response.data[0].value
+  })
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=email').
+  then(function(response) {
+    $rootScope.companyEmail = response.data[0].value
+  })
+
+
+
+
+
 
   $rootScope.addToCart = []
   $scope.addTCart = getCookie('addToCart')
@@ -2563,6 +2585,21 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     });
   }
 
+  $scope.faq = function() {
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.FAQ.html',
+      size: 'lg',
+      backdrop: false,
+      controller: 'controller.ecommerce.FAQ.modal',
+    }).result.then(function() {
+
+    }, function() {
+
+    });
+  }
+
+
   $scope.contactUs = function() {
     $scope.me = $users.get('mySelf')
     $uibModal.open({
@@ -2835,11 +2872,84 @@ app.controller('controller.ecommerce.pincodeEnquiry.modal', function($scope, $ro
   console.log($scope.stores, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakkkkkkkkkkkkkkkkkkk');
 });
 
-// app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
-//   $scope.close = function() {
-//     $uibModalInstance.close();
-//   }
+app.controller('controller.ecommerce.FAQ.modal', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance) {
+$scope.me = $users.get('mySelf')
 
+  $scope.close = function() {
+    $uibModalInstance.close();
+  }
+
+
+  $http({
+    method: 'GET',
+    url: '/api/ecommerce/frequentlyQuestions/'
+  }).
+  then(function(response) {
+    $scope.fAQ = response.data
+  })
+  $scope.ind=-1
+  $scope.collapsed=function(indx){
+    console.log(indx);
+    $scope.ind=indx
+  }
+
+  $scope.message = {
+    email:'',
+    mobile:'',
+    invoiceNo: '',
+    subject: '',
+    body: ''
+  };
+  $scope.sendMessage = function() {
+    if ($scope.me == null || $scope.me == undefined) {
+      if ($scope.message.invoiceNo == '' || $scope.message.body == ''|| $scope.message.mobile == ''|| $scope.message.email == '') {
+        Flash.create("warning", "Please Add Email and Mobile")
+      } else {
+        var dataToSend = {
+          email: $scope.message.email,
+          mobile: $scope.message.mobile,
+          invoiceNo: $scope.message.invoiceNo,
+          subject: $scope.message.subject,
+          message: $scope.message.body
+        }
+      }
+    } else {
+      if ($scope.message.invoiceNo == '' || $scope.message.body == ''|| $scope.message.email == '') {
+        Flash.create("warning", "Please Add Email and Mobile")
+      } else {
+        var dataToSend = {
+          email: $scope.message.email,
+          mobile: $scope.me.profile.mobile,
+          invoiceNo: $scope.message.invoiceNo,
+          subject: $scope.message.subject,
+          message: $scope.message.body
+        }
+      }
+
+    }
+
+    console.log(dataToSend);
+    $http({
+      method: 'POST',
+      url: '/api/ecommerce/supportFeed/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      $scope.message = {
+        email:'',
+        mobile:'',
+        invoiceNo: '',
+        subject: '',
+        body: ''
+      };
+      Flash.create('success', response.status + ' : ' + response.statusText);
+    }, function(response) {
+      Flash.create('danger', response.status + ' : ' + response.statusText);
+    })
+  }
+
+
+});
 app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
   $scope.me = $users.get('mySelf')
   $scope.close = function() {
@@ -2867,11 +2977,11 @@ app.controller('controller.ecommerce.feedBack.modal', function($scope, $rootScop
         }
       }
     } else {
-      if ($scope.feedback.message == '') {
+      if ($scope.feedback.email == '' || $scope.feedback.message == '') {
         Flash.create("warning", "Please Add Email and Mobile")
       } else {
         var toSend = {
-          email: $scope.me.email,
+          email: $scope.feedback.email,
           mobile: $scope.me.profile.mobile,
           subject: $scope.feedback.subject,
           message: $scope.feedback.message,
@@ -3010,7 +3120,7 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
         url: '/api/ecommerce/listingLite/'
       }).
       then(function(response) {
-        $scope.listingProducts = response.data.splice(1, 8);
+        $scope.listingProducts = response.data.splice(0, 8);
         console.log('sssssssssss', $scope.listingProducts);
         $scope.listingRemainingProducts = response.data.slice(9, 17);
 

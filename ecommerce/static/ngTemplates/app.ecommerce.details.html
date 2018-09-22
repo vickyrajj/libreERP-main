@@ -36,7 +36,7 @@
             <div class="row container-fluid">
               <!-- <uib-rating ng-model="ratings.averageRating.rating__avg" max="5" readonly="true" aria-labelledby="default-rating" style="font-size:20px;color:#e2a900;" class="text-muted"></uib-rating> -->
               <!-- <span style="background-color:red; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg==none"> 0.0 <i class="fa fa-star" aria-hidden="true"></i></span> -->
-              <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg!=none"> {{details.rating.rating__avg| number : 1}} <i class="fa fa-star" aria-hidden="true"></i></span><span ng-if="showRatings"> {{details.rating_count}} Ratings & Reviews</span>
+              <span ng-if="showRatings" style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg!=none"> {{details.rating.rating__avg| number : 1}} <i class="fa fa-star" aria-hidden="true"></i></span><span ng-if="showRatings"> {{details.rating_count}} Ratings & Reviews</span>
 
             </div>
             <div class="row container-fluid" style="padding-top:14px;">
@@ -75,7 +75,7 @@
             </div>
           </div> -->
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart==0">
-            <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding:5px 0px;">
+            <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;">
               <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
                   <span style="font-size:15px;"><b> Add To Cart </b></span>
               <i class="fa fa-shopping-cart fa-2x"></i>
@@ -83,7 +83,7 @@
             </div>
           </div>
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
-            <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding-top:15px;">
+            <div class="row container-fluid text-center" style="padding-top:15px;">
               <div class="col-md-4 col-sm-4 col-xs-4 text-right">
                 <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="details.added_cart>0&&me.pk"  ng-click="decrement(details.pk);$event.stopPropagation()"></i>
               </div>
@@ -114,7 +114,7 @@
             </div>
           </div> -->
           <div class="col-md-12" ng-if="details.added_cart==0">
-            <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding:5px 0px;" >
+            <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;" >
               <span ng-click="createCookieDetail(details)" style="cursor:pointer;" >
                   <span style="font-size:15px;"><b> Add To Cart</b></span>
               <i class="fa fa-shopping-cart fa-2x"></i>
@@ -122,7 +122,7 @@
             </div>
           </div>
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
-            <div class="row container-fluid text-center" style="background-color:#164cec; color:white; padding-top:15px;">
+            <div class="row container-fluid text-center" style="padding-top:15px;">
               <div class="col-md-4 col-sm-4 col-xs-4 text-right">
                 <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="details.added_cart>1&&!me.pk"  ng-click="decrementCookie(details);$event.stopPropagation()"></i>
               </div>

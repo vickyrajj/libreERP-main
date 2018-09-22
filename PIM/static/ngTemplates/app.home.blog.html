@@ -70,6 +70,31 @@
             <label>Author</label>
             <input type="text" class="form-control" ng-model="editor.author">
           </div>
+
+        </div>
+      </div>
+      <hr>
+      <div class="row container-fluid" style="margin-bottom:20px;">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Suggested Products </label>
+            <div class="input-group">
+              <input uib-typeahead="product as product.product.name for product in productSearch($viewValue)" ng-model="editor.sugProduct" type="text" class="form-control" placeholder="Search by product name">
+              <span class="input-group-btn">
+              <button type="button" class="btn btn-success" ng-click="addProduct(editor.sugProduct)">Add <i class="fa fa-plus"></i></button>
+            </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="col-md-5 col-md-offset-1 card" ng-repeat="p in editor.suggestedProducts" style="padding:10px;margin-top:10px">
+            <div class="col-md-10">
+              <span>{{p.product.name}}</span>
+            </div>
+            <div class="col-md-2">
+              <i class="fa fa-times fa-lg" ng-click="removeProduct($index)" style="cursor:pointer"></i>
+            </div>
+          </div>
         </div>
       </div>
 

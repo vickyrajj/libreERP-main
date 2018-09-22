@@ -295,3 +295,4 @@ class GenericImage(models.Model):
     paymentImage = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)
     paymentPortrait = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)
     searchBgImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    blogPageImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)

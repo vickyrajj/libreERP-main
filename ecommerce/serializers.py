@@ -50,13 +50,15 @@ class genericProductSerializer(serializers.ModelSerializer):
         #     pass
 
         gp.save()
-        flds = self.context['request'].data['fields']
-        if isinstance(flds , str) or isinstance(flds , unicode):
-            flds = flds.split(',')
-        for f in flds:
-            gp.fields.add(field.objects.get(pk = f))
+        if self.context['request'].data['fields']:
+            flds = self.context['request'].data['fields']
+            print flds,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            if isinstance(flds , str) or isinstance(flds , unicode):
+                flds = flds.split(',')
+            for f in flds:
+                gp.fields.add(field.objects.get(pk = f))
 
-        gp.save()
+            gp.save()
         return gp
     def update(self , instance , validated_data):
         u = self.context['request'].user
@@ -71,12 +73,15 @@ class genericProductSerializer(serializers.ModelSerializer):
             instance.parent = genericProduct.objects.get(pk=int(self.context['request'].data['parent']))
         instance.fields.clear()
         instance.save()
-        flds = self.context['request'].data['fields']
-        if isinstance(flds , str) or isinstance(flds , unicode):
-            flds = flds.split(',')
-        for f in flds:
-            instance.fields.add(field.objects.get(pk = f))
-        instance.save()
+        print type(self.context['request'].data['fields']),'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        if self.context['request'].data['fields']:
+            print type(self.context['request'].data['fields']),'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            flds = self.context['request'].data['fields']
+            if isinstance(flds , str) or isinstance(flds , unicode):
+                flds = flds.split(',')
+            for f in flds:
+                instance.fields.add(field.objects.get(pk = f))
+            instance.save()
         return instance
 
 
@@ -468,4 +473,4 @@ class genericPincodeSerializer(serializers.ModelSerializer):
 class genericImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenericImage
-        fields = ( 'pk', 'backgroundImage' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage')
+        fields = ( 'pk', 'backgroundImage' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage')

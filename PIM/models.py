@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from time import time
+from ecommerce.models import listing
 
 # Create your models here.
 def getThemeImageUploadPath(instance , filename ):
@@ -161,6 +162,7 @@ class blogPost(models.Model):
     tagsCSV = models.CharField(max_length =1000 , null = True) # comma seperated value
     section = models.CharField(max_length =100 , null = True)
     author = models.CharField(max_length =100 , null = True)
+    suggestedProducts = models.ManyToManyField(listing , related_name='blogSuggetProducts' , blank = True)
 
 class blogLike(models.Model):
     parent = models.ForeignKey(blogPost , related_name = 'likes')
