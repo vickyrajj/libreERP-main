@@ -165,43 +165,43 @@ app.config(function($stateProvider) {
       }
     })
 
-    .state('home.reviews', {
-      url: "/reviews",
+    .state('home.qualityCheck', {
+      url: "/qualityCheck",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.reviews.html',
+          templateUrl: '/static/ngTemplates/app.qualityCheck.html',
           controller: 'businessManagement.reviews',
         }
       }
     })
 
 
-    .state('home.customerReviews', {
-      url: "/customerReviews",
+    .state('home.reviews', {
+      url: "/reviews",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.customerReviews.html',
+          templateUrl: '/static/ngTemplates/app.reviews.html',
           controller: 'businessManagement.customerReviews',
         }
       }
     })
 
-    .state('home.customerKnowledgeBase', {
-      url: "/customerKnowledgeBase",
+    .state('home.knowledgeBase', {
+      url: "/knowledgeBase",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.customerKnowledgeBase.html',
+          templateUrl: '/static/ngTemplates/app.knowledgeBase.html',
           controller: 'businessManagement.customerKnowledgeBase',
         }
       }
     })
 
 
-    .state('home.customerSettings', {
-      url: "/customerSettings",
+    .state('home.uiSettings', {
+      url: "/uiSettings",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.customerSettings.html',
+          templateUrl: '/static/ngTemplates/app.uiSettings.html',
           controller: 'businessManagement.customerSettings',
         }
       }

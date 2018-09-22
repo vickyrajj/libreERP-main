@@ -1,10 +1,10 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.customerSettings', {
-    url: "/customerReviews",
+  $stateProvider.state('businessManagement.uiSettings', {
+    url: "/uiSettings",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.customerSettings.html',
+        templateUrl: '/static/ngTemplates/app.uiSettings.html',
         controller: 'businessManagement.customerSettings',
       }
     }
