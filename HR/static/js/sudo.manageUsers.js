@@ -650,9 +650,10 @@ if (typeof $scope.tab != 'undefined') {
 
   $http({
     method: 'GET',
-    url: '/api/organization/role/?name=Full%20access',
+    url: '/api/organization/role/?name__icontains=Full Access',
   }).
   then(function(response) {
+    console.log(response.data);
     for (var i = 0; i < response.data[0].applications.length; i++)
       $scope.full_access_app[i] = response.data[0].applications[i].pk;
     console.log($scope.full_access_app);
@@ -661,9 +662,10 @@ if (typeof $scope.tab != 'undefined') {
 
   $http({
     method: 'GET',
-    url: '/api/organization/role/?name=Restricted%20access',
+    url: '/api/organization/role/?name__icontains=Restricted Access',
   }).
   then(function(response) {
+    console.log(response.data);
     for (var i = 0; i < response.data[0].applications.length; i++)
       $scope.rest_access_app[i] = response.data[0].applications[i].pk;
     console.log($scope.rest_access_app);

@@ -17,13 +17,30 @@
     </div>
     <div class="form-group">
       <label>Contact Person</label>
-      <input type="text " class="form-control" ng-model="form.contactPerson" uib-typeahead="u as u.first_name for u in userSearch($viewValue)">
+      <div class="input-group">
+        <input type="text " class="form-control" ng-model="form.cpName" uib-typeahead="u as u.username for u in userSearch($viewValue)" placeholder="Search by username">
+        <span class="input-group-btn">
+        <button type="button" class="btn btn-success" ng-click="addPerson(form.cpName)">Add <i class="fa fa-plus"></i></button>
+      </span>
+      </div>
     </div>
-    <div class="row" ng-if="form.contactPerson.pk!=none">
-      <div class="col-md-6 col-md-offset-1 card" style="padding:10px;font-size:16px">
+    <!-- <div class="form-group">
+      <label>Contact Person</label>
+      <input type="text " class="form-control" ng-model="form.contactPerson" uib-typeahead="u as u.first_name for u in userSearch($viewValue)">
+    </div> -->
+    <div class="row" ng-if="form.contactPerson.length>0" style="margin:10px">
+      <div class="col-md-5 col-md-offset-1 card" ng-repeat="person in form.contactPerson" style="padding:10px;margin-top:10px">
+        <div class="col-md-10" style="font-size:18px">
+          <span>{{person.username}}</span>
+        </div>
+        <div class="col-md-2">
+          <i class="fa fa-times fa-lg" ng-click="removePerson($index)" style="cursor:pointer"></i>
+        </div>
+      </div>
+      <!-- <div class="col-md-6 col-md-offset-1 card" style="padding:10px;font-size:16px">
         <strong>Name:</strong> {{form.contactPerson.first_name}} {{form.contactPerson.last_name}}<br>
         <strong>Mobile:</strong> {{form.contactPerson.profile.mobile}} <br>
-      </div>
+      </div> -->
     </div>
     <div class="form-group">
       <label>Mobile</label>
