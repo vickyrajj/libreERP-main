@@ -188,7 +188,7 @@ connection.onopen = function(session) {
           setTimeout(function (i) {
             console.log('after time out');
             scope.myUsers[i].spying.isTyping = false
-          }, 2000, (i));
+          }, 2500, (i));
 
 
         }

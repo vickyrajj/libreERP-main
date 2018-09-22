@@ -19,10 +19,10 @@
       </div>
   </div> -->
   <div ng-if="!sideMenuVisibility" class="row" style="width:5%; padding:15px;">
-    <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;" >
+    <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;">
   </div>
   <div class="row" style="border-bottom:solid 2px #eeeeee;">
-    <div class="container-fluid" >
+    <div class="container-fluid">
       <div class="col-md-3 basicAppLink text-center" ng-repeat="a in fixedApps" ng-class="{active: $state.is(a.state)}" ng-click="$state.go(a.state)">
         <span>
           <i class="fa fa-{{a.icon}} fa-2x"></i>
@@ -34,10 +34,20 @@
   <div class="row">
     <div class="container-fluid">
       <ul class="nav nav-sidebar padded" style="width:100%;">
-        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" >
+        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps">
           <a ui-sref="{{a.state}}" style="padding-right:30px;padding-left:30px;">
-            <div ng-if="sideMenuVisibility" align="center"><i class="fa {{a.icon}} fa-2x pull-left"></i> {{a.dispName | humanize}}</div>
-            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;" ><i class="fa {{a.icon}} fa-2x pull-left zoomOnHover"></i></div>
+            <div ng-if="sideMenuVisibility" align="left">
+              <div class="row">
+
+                <div class="col-md-2 text-right">
+                  <i class="fa {{a.icon}} fa-2x pull-left"></i>
+                </div>
+                <div class="col-md-10">
+                  {{a.dispName | humanize}}
+                </div>
+              </div>
+            </div>
+            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;"><i class="fa {{a.icon}} fa-2x pull-left zoomOnHover"></i></div>
           </a>
         </li>
       </ul>

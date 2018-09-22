@@ -1,5 +1,5 @@
 <div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
-  <div class="container-fluid card" style="padding-bottom:10px;">
+  <div class="container-fluid card" style="padding-bottom:10px;min-height:270px">
     <div class="row text-center" style="border-bottom: 1px solid #dedede;height:90px">
       <div class="col-md-12" style="position:relative;display:block;">
         <div class="row" style="padding-left:10px;">
@@ -7,11 +7,13 @@
         </div>
       </div>
     </div>
-    <div class="row container-fluid" style="padding-top:20px;height:100px;">
+    <div class="row container-fluid" style="padding-top:20px;">
       <div class="col-md-10" style="font-size:17px">
+        <strong><i class="fa fa-globe"></i> </strong> <a href="{{compDetails.web}}" target="_blank">{{data.web}}</a> <br>
         <strong>Telephone:</strong> {{data.telephone}} <br>
-        <strong>Contact Person:</strong> {{data.contactPerson.first_name}} {{data.contactPerson.last_name}}<br>
-        <strong>Mobile:</strong> {{data.mobile}}
+        <strong>Mobile:</strong> {{data.mobile}}<br>
+        <strong>No Of Process:</strong> {{data.noOfProcess}}<br>
+        <strong>Contact Person:</strong> {{data.contactPerson[0].first_name}} {{data.contactPerson[0].last_name}}<br>
       </div>
       <div class="col-md-2">
         <div style="padding-right:20px;">

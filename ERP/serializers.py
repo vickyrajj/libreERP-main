@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from fabric.api import *
 import os
 from django.conf import settings as globalSettings
+from support.models import CannedResponses ,CompanyProcess , CustomerProfile
+from collections import Counter
 
 class addressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,11 +20,14 @@ class addressSerializer(serializers.ModelSerializer):
 class serviceSerializer(serializers.ModelSerializer):
     # user = userSearchSerializer(many = False , read_only = True)
     perms = serializers.SerializerMethodField()
+    noOfPrescript = serializers.SerializerMethodField()
+    noOfProcess = serializers.SerializerMethodField()
+    noOfactiveServices = serializers.SerializerMethodField()
     address = addressSerializer(many = False, read_only = True)
     contactPerson = userSearchSerializer(many = True , read_only = True)
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms')
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms','noOfPrescript','noOfProcess','noOfactiveServices')
 
     def assignValues(self , instance , validated_data):
         print validated_data,self.context['request'].data
@@ -48,7 +53,7 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.contactPerson.clear()
             for person in self.context['request'].data['contactPerson']:
                     instance.contactPerson.add(User.objects.get(pk = int(person)))
-        # instance.save()
+        instance.save()
 
     def create(self , validated_data):
         s = service(name = validated_data['name'] , user =validated_data['user'])
@@ -73,6 +78,26 @@ class serviceSerializer(serializers.ModelSerializer):
             if p.app.name == 'module.customer.edit' or p.app.name == 'module.customer.explore' or p.app.name == 'module.customer.knowBase':
                 toReturn[p.app.name] = True
         return toReturn
+
+    def get_noOfPrescript(self , obj):
+        c = CannedResponses.objects.filter(service = obj.pk).count()
+        return c
+
+    def get_noOfProcess(self , obj):
+        c = CompanyProcess.objects.filter(service = obj.pk).count()
+        return c
+
+    def get_noOfactiveServices(self , obj):
+        o = CustomerProfile.objects.filter(service = obj.pk)
+        if len(o)>0:
+            try:
+                c = o[0].__dict__.values().count(True)
+                # print Counter(o[0].__dict__.values())[True],'sssssssssssssssssssssssssssssssss'
+            except:
+                c = 0
+        else:
+            c = 0
+        return c
 
 class serviceLiteSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)
@@ -205,6 +230,9 @@ class permissionSerializer(serializers.ModelSerializer):
         u = validated_data['user']
         permission.objects.filter(user = u).all().delete()
         print self.context['request'].data['apps']
+        if 1 not in self.context['request'].data['apps']:
+            # print 'dashboard not there'
+            self.context['request'].data['apps'].append(1)
         for a in self.context['request'].data['apps']:
             app = application.objects.get(pk = a)
             p = permission.objects.create(app =  app, user = u , givenBy = user)
