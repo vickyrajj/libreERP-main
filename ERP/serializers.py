@@ -19,12 +19,13 @@ class serviceSerializer(serializers.ModelSerializer):
     # user = userSearchSerializer(many = False , read_only = True)
     perms = serializers.SerializerMethodField()
     address = addressSerializer(many = False, read_only = True)
-    contactPerson = userSearchSerializer(many = False , read_only = True)
+    contactPerson = userSearchSerializer(many = True , read_only = True)
     class Meta:
         model = service
         fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms')
 
     def assignValues(self , instance , validated_data):
+        print validated_data,self.context['request'].data
         if 'cin' in validated_data:
             instance.cin = validated_data['cin']
         if 'tin' in validated_data:
@@ -43,9 +44,11 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.web = validated_data['web']
         if 'address' in self.context['request'].data and self.context['request'].data['address'] is not None:
             instance.address_id = int(self.context['request'].data['address'])
-        if 'contactPerson' in self.context['request'].data and self.context['request'].data['contactPerson'] is not None:
-            instance.contactPerson_id = int(self.context['request'].data['contactPerson'])
-        instance.save()
+        if 'contactPerson' in self.context['request'].data:
+            instance.contactPerson.clear()
+            for person in self.context['request'].data['contactPerson']:
+                    instance.contactPerson.add(User.objects.get(pk = int(person)))
+        # instance.save()
 
     def create(self , validated_data):
         s = service(name = validated_data['name'] , user =validated_data['user'])
@@ -61,6 +64,7 @@ class serviceSerializer(serializers.ModelSerializer):
     def update(self , instance , validated_data):
         self.assignValues(instance , validated_data)
         return instance
+
     def get_perms(self , obj):
         u = self.context['request'].user
         perms = permission.objects.filter(user = u)
