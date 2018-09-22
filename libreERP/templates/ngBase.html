@@ -96,11 +96,11 @@
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
 
-    <div ng-show="sideMenuVisibility" style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:13%;min-height:100vh;position:fixed;" class="sideMenuView" ng-include="sideMenu">
+    <div  style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:13%;min-height:100vh;position:fixed;" class="sideMenuView" ng-include="sideMenu">
     </div>
 
     {% verbatim %}
-    <div class="col-md-1 mainUIViewParent" style="{{sideMenuVisibility ? 'width:87%;margin-left:13%;': 'width:100%;'}}">
+    <div class="col-md-1 mainUIViewParent" style="{{sideMenuVisibility ? 'width:87%;margin-left:13%;': 'width:96%; margin-left:4%;'}}">
     {% endverbatim %}
       <div ng-include="headerUrl"></div>
       <div style="" class="mainUIView" ui-view ng-if="modules.length>0">

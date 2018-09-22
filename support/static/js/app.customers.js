@@ -476,7 +476,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
   $scope.me = $users.get('mySelf')
   $scope.userSearch = function(query) {
-    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    return $http.get('/api/HR/userSearch/?getCustomers&username__contains=' + query).
     then(function(response) {
       return response.data;
     })
@@ -545,6 +545,32 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       web: ''
     }
   }
+
+
+
+  $scope.$watch('form.contactPerson' , function (oldValue,newValue) {
+
+
+    console.log(oldValue , newValue);
+
+    if (typeof newValue == 'object') {
+      $http({
+        method:'GET',
+        url:'/api/ERP/service/?contactPerson='+ $scope.form.contactPerson.pk
+      }).
+      then(function(response) {
+        if (response.data.length>0) {
+          Flash.create('warning' , 'You can not add this person')
+          // return ;
+        }
+      })
+    }
+
+
+
+
+  })
+
 
   $scope.saveCompanyDetails = function() {
     var f = $scope.form
