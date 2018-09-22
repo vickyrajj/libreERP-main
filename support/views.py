@@ -427,7 +427,6 @@ class GethomeCal(APIView):
         agentChatCount = list(chatThreadObj.values('user').annotate(count_val=Count('user')))
         missedChats = chatThreadObj.filter(user__isnull=True).count()
         lastToLastWeekMissedChats = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) , user__isnull=True).count()
-        print lastToLastWeekMissedChats , 'LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL'
 
         agentLeaderBoard = []
         agL = list(chatThreadObj.filter(user__isnull=False).values_list('user',flat=True).distinct())
@@ -474,20 +473,20 @@ class GethomeCal(APIView):
                 artAllLtWeek = SupportChat.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) , user=usr , responseTime__isnull=False).aggregate(Avg('responseTime'))
                 avgRespTimeAllLtweek = artAllLtWeek['responseTime__avg'] if artAllLtWeek['responseTime__avg'] else 0
 
-                print avgRespTimeAll,avgRespTimeAllLtweek , 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
         else:
             a = chatThreadObj.filter(~Q(chatDuration=0)).aggregate(Avg('chatDuration'))
-            avgChatDuration = a['chatDuration__avg']
+            avgChatDuration = a['chatDuration__avg'] if a['chatDuration__avg'] else 0
             alastToLastWeek = ChatThread.objects.filter(~Q(chatDuration=0) , created__range=(lastToLastWeek,lastWeek - relativedelta(days=1))).aggregate(Avg('chatDuration'))
-            avgChatDurationLtweek = alastToLastWeek['chatDuration__avg']
+            avgChatDurationLtweek = alastToLastWeek['chatDuration__avg'] if alastToLastWeek['chatDuration__avg'] else 0
 
             for i in agentLeaderBoard:
                 avgRatingAll+= i['rating']
                 avgRespTimeAll+=i['respTimeAvg']
                 firstResTimeAvgAll+=i['firstResTimeAvg']
-            avgRespTimeAll = avgRespTimeAll/len(agentLeaderBoard)
-            avgRatingAll = avgRatingAll/len(agentLeaderBoard)
-            firstResTimeAvgAll = firstResTimeAvgAll/len(agentLeaderBoard)
+            if len(agentLeaderBoard) > 0:
+                avgRespTimeAll = avgRespTimeAll/len(agentLeaderBoard)
+                avgRatingAll = avgRatingAll/len(agentLeaderBoard)
+                firstResTimeAvgAll = firstResTimeAvgAll/len(agentLeaderBoard)
         changeInData = {}
         changeInChat = {}
         changeInAvgChatDur = {}
@@ -496,36 +495,51 @@ class GethomeCal(APIView):
         if lastToLastWeekChatCount<totalChats:
             changeInChat['percentage'] = (float(totalChats - lastToLastWeekChatCount)/totalChats)*100
             changeInChat['increase'] = True
-        else:
+        elif totalChats<lastToLastWeekChatCount:
             changeInChat['percentage'] = (float(lastToLastWeekChatCount - totalChats)/lastToLastWeekChatCount)*100
+            changeInChat['increase'] = False
+        else:
+            changeInChat['percentage'] = 0.0
             changeInChat['increase'] = False
         changeInMissedChat = {}
         if lastToLastWeekMissedChats<missedChats:
             changeInMissedChat['percentage'] = (float(missedChats - lastToLastWeekChatCount)/missedChats)*100
             changeInMissedChat['increase'] = True
-        else:
+        elif missedChats< lastToLastWeekMissedChats:
             changeInMissedChat['percentage'] = (float(lastToLastWeekMissedChats - missedChats)/lastToLastWeekMissedChats)*100
+            changeInMissedChat['increase'] = False
+        else:
+            changeInMissedChat['percentage'] = 0.0
             changeInMissedChat['increase'] = False
 
         if avgChatDurationLtweek<avgChatDuration:
             changeInAvgChatDur['percentage'] = (float(avgChatDuration - avgChatDurationLtweek)/avgChatDuration)*100
             changeInAvgChatDur['increase'] = True
-        else:
+        elif avgChatDuration<avgChatDurationLtweek:
             changeInAvgChatDur['percentage'] = (float(avgChatDurationLtweek - avgChatDuration)/avgChatDurationLtweek)*100
+            changeInAvgChatDur['increase'] = False
+        else:
+            changeInAvgChatDur['percentage'] = 0.0
             changeInAvgChatDur['increase'] = False
 
         if firstResTimeAvgAllLtweek<firstResTimeAvgAll:
             changeInFrtAvg['percentage'] = (float(firstResTimeAvgAll - firstResTimeAvgAllLtweek)/firstResTimeAvgAll)*100
             changeInFrtAvg['increase'] = True
-        else:
+        elif firstResTimeAvgAll<firstResTimeAvgAllLtweek:
             changeInFrtAvg['percentage'] = (float(firstResTimeAvgAllLtweek - firstResTimeAvgAll)/firstResTimeAvgAllLtweek)*100
+            changeInFrtAvg['increase'] = False
+        else:
+            changeInFrtAvg['percentage'] = 0.0
             changeInFrtAvg['increase'] = False
 
         if avgRespTimeAllLtweek<avgRespTimeAll:
             changeInRespTimeAvg['percentage'] = (float(avgRespTimeAll - avgRespTimeAllLtweek)/avgRespTimeAll)*100
             changeInRespTimeAvg['increase'] = True
-        else:
+        elif avgRespTimeAll<avgRespTimeAllLtweek:
             changeInRespTimeAvg['percentage'] = (float(avgRespTimeAllLtweek - avgRespTimeAll)/avgRespTimeAllLtweek)*100
+            changeInRespTimeAvg['increase'] = False
+        else:
+            changeInRespTimeAvg['percentage'] = 0.0
             changeInRespTimeAvg['increase'] = False
 
 
@@ -547,7 +561,6 @@ class GethomeCal(APIView):
             received = dateChat.filter(user__isnull=False).count()
             graphData[0].append(received)
             graphData[1].append(missed)
-            print dt,received,missed,datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'),round((datetime.datetime.now()-datetime.datetime.combine(dt, datetime.datetime.min.time())).total_seconds() / 60.0 ,2)
             graphLabels.append(datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'))
         # for idx,i in enumerate(agentChatCount):
         #     if not i['user']:
