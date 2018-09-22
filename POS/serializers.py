@@ -108,6 +108,7 @@ class ProductSerializer(serializers.ModelSerializer):
         print validated_data
         p = Product(**validated_data)
         p.user = self.context['request'].user
+	p.save()
         if 'compositions' in self.context['request'].data:
             p.compositions.clear()
             for c in self.context['request'].data['compositions']:
