@@ -149,6 +149,10 @@ connection.onopen = function(session) {
             scope.sound.play();
             scope.myUsers[i].messages.push(args[2])
             scope.myUsers[i].unreadMsg += 1
+          }else if (args[1] == 'CL') {
+            scope.sound.play();
+            scope.myUsers[i].messages.push(args[2])
+            scope.myUsers[i].unreadMsg += 1
           }
           console.log('scroll');
 

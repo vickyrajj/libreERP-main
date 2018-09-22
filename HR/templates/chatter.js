@@ -1379,11 +1379,11 @@ function endChat() {
         setCookie("chatOpenCookie", false, 365);
 
 
-       var dataToSend = {uid:uid , message: 'CHAT CLOSED BY USER' , sentByAgent:false };
+       var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
        if (isAgentOnline && feedbackFormOpened) {
          console.log('ONLINE' , agentPk);
-         connection.session.publish('service.support.agent.'+agentPk, [uid , 'M' , dataToSend ] , {}, {
+         connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
            acknowledge: true
          }).
          then(function(publication) {

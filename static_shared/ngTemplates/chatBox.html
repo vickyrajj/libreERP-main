@@ -56,6 +56,16 @@
             <div ng-if="message.attachmentType == 'youtubeLink'">
               <iframe width="100%" height="215" ng-src="{{message.message | trusted}}" frameborder="0" allowfullscreen></iframe>
             </div>
+            <div ng-if="message.userEndedChat">
+              <div class="row">
+                <div class="col-md-6">
+                  <img ng-src="/static/images/userEndedChat.png" style="width:150px;">
+                </div>
+                <div class="col-md-6">
+                  <p style="margin-top:45px;" >Chat Closed By User</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
