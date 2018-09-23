@@ -93,6 +93,7 @@ ul.tools li {
 
 .navbar{
   height:5vh;
+  border: none;
 }
 
 .navbar a{
@@ -318,9 +319,12 @@ ul.tools li {
 }
 
 body {
-  background-color: #eee;
+  /*background-color: #eee;*/
 }
 
+.navbar{
+  margin-bottom:0px !important;
+}
 .hoverableDiv :hover{
   background-color: #e0e0e0;
   border-radius: 4px;
@@ -384,16 +388,16 @@ body {
 @media  screen and (max-width: 1920px) {
     /* insert styles here */
     .mainUIView{
-      margin:0.5vh;
-      margin-top: 7vh;
+      /*margin:0.5vh;*/
+      margin-top: 5.7vh;
     }
 }
 
 /* (1366x768) WXGA Display */
 @media  screen and (max-width: 1366px) {
   .mainUIView{
-    margin:0.5vh;
-    margin-top: 8.5vh;
+    /*margin:0.5vh;*/
+    margin-top: 5.7vh;
   }
 }
 
@@ -536,7 +540,7 @@ body {
 
 
 
-/*.navbar-default {
+.navbar-default {
   background-color: var(--themeMain);
   border-color:var(--headerNavbarHighlight);
 }
@@ -552,6 +556,7 @@ body {
 .navbar-default .navbar-nav > li > a {
   color: #ffffff;
 }
+
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
   color: #ffffff;
   background-color: var(--headerNavbarHighlight);
@@ -591,7 +596,7 @@ body {
     color: #ffffff;
     background-color: var(--headerNavbarHighlight);
   }
-}*/
+}
 
 
 .bs-callout {

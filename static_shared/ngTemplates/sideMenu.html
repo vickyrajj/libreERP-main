@@ -1,4 +1,4 @@
-<div class="" ng-controller="sideMenu">
+<div class="" ng-controller="sideMenu" style="">
   <!-- {{sideMenuVisibility}} -->
   <div ng-if="sideMenuVisibility" class="row" style="margin:0px;">
     <div class="container-fluid" style="background-image: url('/static/images/nav-menu-header-bg4.jpg');background-size: cover;padding:20px;padding-bottom:30px;padding-left:40px;">
@@ -19,9 +19,9 @@
       </div>
   </div> -->
   <div ng-if="!sideMenuVisibility" class="row" style="width:5%; padding:15px;">
-    <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;">
+    <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;margin-left:20px;">
   </div>
-  <div class="row" style="border-bottom:solid 2px #eeeeee;">
+  <div class="row" style="{{sideMenuVisibility ? 'border-bottom:solid 2px #eeeeee;':''}}">
     <div class="container-fluid">
       <div class="col-md-3 basicAppLink text-center" ng-repeat="a in fixedApps" ng-class="{active: $state.is(a.state)}" ng-click="$state.go(a.state)">
         <span>
