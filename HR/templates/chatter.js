@@ -262,7 +262,7 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: 'ws://ws.cioc.in:443/ws', realm: 'default'});
 
 var custID = {{pk}};
 console.log('customer id....', custID);
@@ -645,7 +645,7 @@ function setColors(bubbleColor , windowColor , icnClr) {
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  // var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8090/ws', realm: 'default'});
+  // var connection = new autobahn.Connection({url: 'ws://ws.cioc.in:443/ws', realm: 'default'});
 
     connection.onopen = function (session) {
        console.log("session established!");

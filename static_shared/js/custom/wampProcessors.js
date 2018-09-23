@@ -1,5 +1,5 @@
 var connection = new autobahn.Connection({
-  url: 'ws://' + 'wamp.cioc.in' + ':8090/ws',
+  url: 'wss://' + 'ws.cioc.in' + ':443/ws',
   realm: 'default'
 });
 

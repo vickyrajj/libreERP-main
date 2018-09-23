@@ -387,7 +387,7 @@ checkCookie();
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  var connection = new autobahn.Connection({url: 'ws://wamp.cioc.in:8080/ws', realm: 'default'});
+  var connection = new autobahn.Connection({url: 'wss://ws.cioc.in:443/ws', realm: 'default'});
 
     connection.onopen = function (session) {
        console.log("session established!");
