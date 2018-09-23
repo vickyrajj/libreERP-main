@@ -335,6 +335,7 @@ app.directive('chatBox', function() {
       $scope.isTyping = false;
       $scope.chatHistBtn = false;
       $scope.chatHistory = []
+      console.log($scope.data);
       console.log('adsd', $scope.data);
       if ($scope.data.email.length > 0) {
         $http({
@@ -342,6 +343,7 @@ app.directive('chatBox', function() {
           url: '/api/support/visitor/?email=' + $scope.data.email,
         }).
         then(function(response) {
+          console.log(response);
           if (response.data.length > 1) {
             $scope.chatHistBtn = true
           }
@@ -926,6 +928,7 @@ app.directive('chatBox', function() {
 
 
       $scope.editUserDetails = function(uid) {
+        console.log($scope.visitorForm);
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.editUserDetails.modal.html',
           size: 'md',
@@ -938,6 +941,7 @@ app.directive('chatBox', function() {
           controller: function($scope, visitorData, $users, $uibModalInstance, Flash) {
             $scope.uid = uid
             console.log(uid);
+            console.log(visitorData);
 
             if (typeof visitorData == 'string') {
               $scope.form = {

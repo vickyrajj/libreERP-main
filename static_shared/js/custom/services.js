@@ -93,7 +93,9 @@ app.factory('$permissions', function($http){
           if (myPerms[i].app.name == input) {
             return true
           }else {
-            return false
+            if (i == myPerms.length-1) {
+              return false;
+            }
           }
         }
       }

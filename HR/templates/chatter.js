@@ -886,10 +886,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         '</div>'+
 
 
-        '<div id="messageBox" style="height:50vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
+        '<div id="messageBox" style="height:49vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
         // '<div id="isTyping" style="position:absolute; bottom:70px; font-size:11px; left:20px;" > Typing... </div>'+
         '</div>'+
-        '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:10vh;">'+
+        '<div id="syrowBranding" style="height:2vh; background-color:'+ windowColor +'; text-align:center;">'+
+        '<span style="color:#fff; font-weight:bolder; font-size:11px;" > We run on Syrow </span>'+
+        '</div>'+
+        '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:9vh;">'+
           '<div style="padding:0px; padding-top:10px;" >'+
              '<textarea id="inputText" rows="4" style="border:none; resize: none; width:70%; height: 40px; outline:none; background-color:#fff; " placeholder="Write a reply..." ></textarea>'+
              '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
@@ -980,6 +983,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var closeIcon = document.getElementById("closeIcon");
   var headerChat = document.getElementById("headerChat");
   var messageBox = document.getElementById("messageBox");
+  var syrowBranding = document.getElementById("syrowBranding");
   var footer = document.getElementById("footer");
   var paperClip = document.getElementById("paperClip");
   var filePicker = document.getElementById('filePicker');
@@ -1381,7 +1385,7 @@ function endChat() {
 
        var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-       if (isAgentOnline && feedbackFormOpened) {
+       if (feedbackFormOpened) {
          console.log('ONLINE' , agentPk);
          connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
            acknowledge: true
@@ -1620,6 +1624,7 @@ function endChat() {
       // chatThreadPk == undefined
       // messageBox.innerHTML = '';
       closeSupport.click()
+      return
     }
 
     endChat()
@@ -1693,16 +1698,28 @@ function endChat() {
         }
       }
 
+      function timeWithDate(date) {
+        var abc  = date
+        // var date = abc.getDate();
+        // var month = abc.getMonth();
+        // var year = abc.getFullYear();
 
-      // if (!message.created) {
-      //   message.timeAgo = timeSince(new Date())
-      // }else {
-        message.timeAgo = timeSince(new Date(message.created))
-      // }
+        var hours = abc.getHours();
+        var minutes = abc.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        console.log(strTime);
+        // var dateString = date + "-" +(month + 1) + "-" + year;
+        // return dateString + ', ' + strTime
+        return strTime
+      }
 
-      // console.log(chat.messages.length);
 
-      // console.log('messsaaageeeeeeeeeeeeeeeeeeeee',message);
+      // message.timeAgo = timeSince(new Date(message.created))
+      message.timeDate = timeWithDate(new Date(message.created))
 
       if (message.attachment) {
         if (message.attachmentType=='image') {
@@ -1750,7 +1767,7 @@ function endChat() {
                         '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
-                        '<div style="clear: both; float:right; padding-left:15px;">'+ message.timeAgo +'</div>'+
+                        '<div style="clear: both; float:right; padding-left:15px;">'+ message.timeDate +'</div>'+
                       '</div>'
         return msgHtml
 
@@ -1759,7 +1776,7 @@ function endChat() {
                   '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
-                  '<div style="clear: both; float:left; padding-left:15px;">'+ message.timeAgo +'</div>'+
+                  '<div style="clear: both; float:left; padding-left:15px;">'+ message.timeDate +'</div>'+
                 '</div> '
         return msgHtml
       }
@@ -1947,14 +1964,14 @@ function endChat() {
       console.log('values' , inputVal);
       //send
 
-      if (isAgentOnline) {
+      // if (isAgentOnline) {
         connection.session.publish('service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
           acknowledge: true
         }).
         then(function(publication) {
-          console.log("Published");
+          console.log("Published"+ agentPk);
         });
-      }
+      // }
 
 
     }
@@ -2455,10 +2472,11 @@ function endChat() {
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
         chatBox.style.height ="100%";
-        messageBox.style.height = "72%";
+        messageBox.style.height = "71%";
         headerChat.style.height = "15%";
+        syrowBranding.style.height = "2%";
         // headerChat.style.minHeight = "60px";
-        footer.style.height = "12%";
+        footer.style.height = "11%";
         // footer.style.minHeight = "60px";
         closeIcon.style.display = "";
         chatBox.style.right = "0px";
@@ -2482,9 +2500,10 @@ function endChat() {
         closeSupport.style.display = "none";
         chatBox.style.width ="100%";
         chatBox.style.height ="100%";
-        messageBox.style.height = "72%";
+        messageBox.style.height = "71%";
         headerChat.style.height = "15%";
-        footer.style.height = "12%";
+        syrowBranding.style.height = "2%";
+        footer.style.height = "11%";
         closeIcon.style.display = "";
         chatBox.style.right = "0px";
         chatBox.style.bottom = "0px";
@@ -2507,9 +2526,10 @@ function endChat() {
           console.log('md');
           chatBox.style.width ="347px";
           chatBox.style.height ="70vh";
-          messageBox.style.height = "50vh";
+          messageBox.style.height = "49vh";
           headerChat.style.height = "10vh";
-          footer.style.height = "10vh";
+          footer.style.height = "9vh";
+          syrowBranding.style.height = "2vh";
           closeIcon.style.display = "none"
           chatBox.style.right = "10px";
           chatBox.style.bottom = "100px";
@@ -2532,9 +2552,10 @@ function endChat() {
           device = 'lg';
           chatBox.style.width ="347px";
           chatBox.style.height ="70vh";
-          messageBox.style.height = "50vh";
+          messageBox.style.height = "49vh";
           headerChat.style.height = "10vh";
-          footer.style.height = "10vh";
+          footer.style.height = "9vh";
+          syrowBranding.style.height = "2vh";
           closeIcon.style.display = "none"
           chatBox.style.right = "10px";
           chatBox.style.bottom = "100px";

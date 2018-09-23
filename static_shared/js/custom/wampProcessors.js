@@ -128,6 +128,7 @@ connection.onopen = function(session) {
             //   scope.myUsers[i].boxOpen = false
             // }
             scope.myUsers[i].unreadMsg += 1
+            scope.myUsers[i].spying.value = ''
             // scope.myUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created:  args[2].created })
           } else if (args[1] == 'MF') {
             scope.sound.play();
@@ -140,6 +141,7 @@ connection.onopen = function(session) {
                 console.log(this.responseText);
                 var data = JSON.parse(this.responseText)
                 scope.myUsers[i].messages.push(data)
+                scope.myUsers[i].spying.value = ''
               }
             };
             xhttp.open('GET', '/api/support/supportChat/' + args[2].filePk + '/', true);
@@ -149,10 +151,12 @@ connection.onopen = function(session) {
             scope.sound.play();
             scope.myUsers[i].messages.push(args[2])
             scope.myUsers[i].unreadMsg += 1
+            scope.myUsers[i].spying.value = ''
           }else if (args[1] == 'CL') {
             scope.sound.play();
             scope.myUsers[i].messages.push(args[2])
             scope.myUsers[i].unreadMsg += 1
+            //chat closed by user
           }
           console.log('scroll');
 

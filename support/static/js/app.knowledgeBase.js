@@ -1,10 +1,10 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.customerKnowledgeBase', {
-    url: "/customerReviews",
+  $stateProvider.state('businessManagement.knowledgeBase', {
+    url: "/knowledgeBase",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.customerKnowledgeBase.html',
+        templateUrl: '/static/ngTemplates/app.knowledgeBase.html',
         controller: 'businessManagement.customerKnowledgeBase',
       }
     }
