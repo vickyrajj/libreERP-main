@@ -11,6 +11,7 @@ import os
 from django.conf import settings as globalSettings
 from support.models import CannedResponses ,CompanyProcess , CustomerProfile
 from collections import Counter
+from django.db.models import Q
 
 class addressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -230,10 +231,14 @@ class permissionSerializer(serializers.ModelSerializer):
         u = validated_data['user']
         permission.objects.filter(user = u).all().delete()
         print self.context['request'].data['apps']
-        if 1 not in self.context['request'].data['apps']:
+        apps = self.context['request'].data['apps']
+        if u.is_superuser:
+            apps = list(application.objects.filter(~Q(name = 'app.customer.access') ).values_list('pk', flat=True).distinct())
+            print apps , 'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH'
+        if 1 not in apps:
             # print 'dashboard not there'
-            self.context['request'].data['apps'].append(1)
-        for a in self.context['request'].data['apps']:
+            apps.append(1)
+        for a in apps:
             app = application.objects.get(pk = a)
             p = permission.objects.create(app =  app, user = u , givenBy = user)
         return p

@@ -249,7 +249,7 @@ class ReviewFilterCalAPIView(APIView):
                     agentCommentCount = ReviewComment.objects.filter(uid=j, chatedDate=cmntDate, user = ChatThread.objects.get(uid=j).user).count()
                 except:
                     agentCommentCount = ''
-                print agentCommentCount
+                # print agentCommentCount
                 # print company
                 agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()) , rating=Value(rating, output_field=CharField()), chatDuration=Value(chatDuration, output_field=CharField()) , statusChat=Value(statusChat, output_field=CharField()) , numOfComments=Value(numOfComments, output_field=CharField()), agentCommentCount=Value(agentCommentCount,output_field=CharField()), email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment')))
                 toSend.append(agUidObj)
