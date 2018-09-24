@@ -156,6 +156,7 @@ connection.onopen = function(session) {
             scope.sound.play();
             scope.myUsers[i].messages.push(args[2])
             scope.myUsers[i].unreadMsg += 1
+            scope.myUsers[i].spying.value=''
             //chat closed by user
           }
           console.log('scroll');

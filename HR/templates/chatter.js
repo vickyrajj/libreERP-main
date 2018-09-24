@@ -1102,11 +1102,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
   // console.log(supportOptions,'so');
-    count = 0
+    serviceCount = 0
     for (var i = 0 , rD = 0 , mB = 0 , mR=0 ; i < supportOptions.length; i++) {
 
       if (supportOptions[i].value) {
-        count ++;
+        serviceCount ++;
         var activeService = supportOptions[i].name
         rD+=2;
         mB+=60;
@@ -1140,7 +1140,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
 
-    if (count==1) {
+    if (serviceCount==1) {
       // alert('display only one service')
       // display none of main
       setTimeout(function () {
@@ -1150,7 +1150,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
           var singleServiceText = document.getElementById('singleServiceText')
           var singleServiceFont = document.getElementById('singleServiceFont')
 
-          singleService = document.getElementById('singleService')
+          // singleService = document.getElementById('singleService')
 
           singleService.addEventListener("mouseover" , function () {
             singleServiceText.style.display = ""
@@ -1890,7 +1890,9 @@ function endChat() {
 
 
     setTimeout (function() {
-      checkChatOpen()
+      // if (serviceCount!=1) {
+        checkChatOpen()
+      // }
     },2000)
 
 
@@ -2381,22 +2383,20 @@ function endChat() {
 
   function openChat() {
     // welcomeMessage.style.display ="none";
-    console.log(chatOpen);
-    console.log('click');
+    // console.log(chatOpen);
+    // console.log('click');
     chatOpen = !chatOpen
-    console.log(chatOpen);
+    // console.log(chatOpen);
     setCookie("chatOpenCookie", chatOpen, 365);
-
 
     startConvoBtn.click();
 
-
-
-
-
-
     if (chatOpen) {
       supportCircle.style.display = "none";
+
+      if (serviceCount==1) {
+        singleService.style.display = "none";
+      }
 
       console.log('oddddd' , device);
 
@@ -2405,7 +2405,6 @@ function endChat() {
       }else {
         closeSupport.style.display = "";
       }
-
       // unreadMsg.style.display = "none";
       unreadMsgCount = 0;
       // chatIconSvg.style.display = "none"
@@ -2433,7 +2432,14 @@ function endChat() {
       setCookie("chatOpenCookie", chatOpen, 365);
 
       console.log('coming here.');
-      supportCircle.style.display = "";
+      // supportCircle.style.display = "";
+      if (serviceCount==1) {
+        supportCircle.style.display = "none";
+        singleService.style.display = "";
+
+      }else {
+        supportCircle.style.display = "";
+      }
       closeSupport.style.display = "none";
       chatBox.style.display = "none";
     }
@@ -2448,7 +2454,14 @@ function endChat() {
       // closeChatSvg.style.display = "none"
       chatBox.style.display = "none";
       // chatCircle.style.display = ""
-      supportCircle.style.display = ""
+      // supportCircle.style.display = ""
+      if (serviceCount==1) {
+        supportCircle.style.display = "none";
+        singleService.style.display = "";
+
+      }else {
+        supportCircle.style.display = "";
+      }
     }
   } , false);
 
@@ -2458,7 +2471,15 @@ function endChat() {
       // chatIconSvg.style.display = ""
       // closeChatSvg.style.display = "none"
       chatBox.style.display = "none";
-      supportCircle.style.display = ""
+      // supportCircle.style.display = ""
+
+      if (serviceCount==1) {
+        supportCircle.style.display = "none";
+        singleService.style.display = "";
+
+      }else {
+        supportCircle.style.display = "";
+      }
     }
   } , false);
 
@@ -2485,9 +2506,19 @@ function endChat() {
           if (chatOpen) {
             // chatCircle.style.display = "none";
             supportCircle.style.display = "none";
+            singleService.style.display = "none";
           }else {
             // chatCircle.style.display = ""
-            supportCircle.style.display = "";
+
+
+            if (serviceCount==1) {
+              supportCircle.style.display = "none";
+              singleService.style.display = "";
+
+            }else {
+              supportCircle.style.display = "";
+            }
+
           }
       }
     }
@@ -2512,9 +2543,16 @@ function endChat() {
 
             // chatCircle.style.display = "none";
             supportCircle.style.display = "none";
+            singleService.style.display = "none";
           }else {
             // chatCircle.style.display = ""
-            supportCircle.style.display = "";
+            if (serviceCount==1) {
+              supportCircle.style.display = "none";
+              singleService.style.display = "";
+
+            }else {
+              supportCircle.style.display = "";
+            }
           }
 
       }
@@ -2538,10 +2576,21 @@ function endChat() {
             // chatCircle.style.display = ""
             closeSupport.style.display = "";
             supportCircle.style.display = "none";
+            singleService.style.display = "none";
           }else {
             closeSupport.style.display = "none";
             // chatCircle.style.display = ""
-            supportCircle.style.display = "";
+            // supportCircle.style.display = "";
+            // singleService.style.display = "";
+
+            if (serviceCount==1) {
+              supportCircle.style.display = "none";
+              singleService.style.display = "";
+
+            }else {
+              supportCircle.style.display = "";
+            }
+
           }
       }
     }
@@ -2564,10 +2613,19 @@ function endChat() {
             closeSupport.style.display = "";
             // chatCircle.style.display = ""
             supportCircle.style.display = "none";
+            singleService.style.display = "none";
           }else {
             closeSupport.style.display = "none";
             // chatCircle.style.display = ""
-            supportCircle.style.display = "";
+            // supportCircle.style.display = "";
+            // singleService.style.display = "";
+            if (serviceCount==1) {
+              supportCircle.style.display = "none";
+              singleService.style.display = "";
+
+            }else {
+              supportCircle.style.display = "";
+            }
           }
       }
     }

@@ -234,9 +234,7 @@ class permissionSerializer(serializers.ModelSerializer):
         apps = self.context['request'].data['apps']
         if u.is_superuser:
             apps = list(application.objects.filter(~Q(name = 'app.customer.access') ).values_list('pk', flat=True).distinct())
-            print apps , 'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH'
         if 1 not in apps:
-            # print 'dashboard not there'
             apps.append(1)
         for a in apps:
             app = application.objects.get(pk = a)
