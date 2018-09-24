@@ -959,9 +959,9 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }
 
 
-  $scope.getSuggestion = function() {
-
-  }
+  // $scope.getSuggestion = function() {
+  //
+  // }
 
 
 
@@ -1719,20 +1719,38 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
     })
   }
 
-
+  $scope.showMessage = false
   $scope.$watch('form.pincode', function(newValue, oldValue) {
     if (newValue != null) {
       if (newValue.length == 6) {
         $http({
           method: 'GET',
-          url: '/api/ecommerce/genericPincode/?pincode=' + newValue
+          url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
         }).
         then(function(response) {
           if (response.data.length > 0) {
+            $scope.showMessage = false
             $scope.form.city = response.data[0].city
             $scope.form.state = response.data[0].state
           }
+          else{
+            $scope.showMessage = true
+          }
+          $http({
+            method: 'GET',
+            url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
+          }).
+          then(function(response) {
+            if(response.data.length==0){
+              $scope.showMessage = true
+            }
         })
+        })
+      }
+      else if (newValue.length < 6) {
+        $scope.showMessage = false
+        $scope.form.city = ''
+        $scope.form.state = ''
       }
     }
   })
@@ -1762,8 +1780,8 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
 
 
   $scope.saveAddress = function() {
-    if ($scope.form.title.length == 0) {
-      Flash.create('warning', 'Title Is Required')
+    if ($scope.form.title.length == 0 || $scope.form.city.length == 0 ||  $scope.form.state.length == 0) {
+      Flash.create('warning', 'Fill the required Data')
       return
     }
     dataToSend = $scope.form;
@@ -1991,20 +2009,38 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     $scope.idx = idx
     $scope.newAdr = false
   }
-
+  $scope.showMessage = false
   $scope.$watch('data.address.pincode', function(newValue, oldValue) {
     if (newValue != null) {
       if (newValue.length == 6) {
         $http({
           method: 'GET',
-          url: '/api/ecommerce/genericPincode/?pincode=' + newValue
+          url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
         }).
         then(function(response) {
           if (response.data.length > 0) {
+            $scope.showMessage = false
             $scope.data.address.city = response.data[0].city
             $scope.data.address.state = response.data[0].state
           }
+          else{
+            $scope.showMessage = true
+          }
+          $http({
+            method: 'GET',
+            url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
+          }).
+          then(function(response) {
+            if(response.data.length==0){
+              $scope.showMessage = true
+            }
         })
+      })
+      }
+      else if (newValue.length < 6) {
+        $scope.showMessage = false
+        $scope.data.address.city = ''
+        $scope.data.address.state = ''
       }
     }
   })

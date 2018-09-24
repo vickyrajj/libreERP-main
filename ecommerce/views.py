@@ -683,6 +683,8 @@ class PincodeViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly , )
     queryset = Pincode.objects.all()
     serializer_class = pincodeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['pincodes']
 
 
 

@@ -10,7 +10,8 @@
   <div class="col-md-12  hidden-xs hidden-sm  anim-in-out anim-zoom-out" style="padding-right:0px;padding-left:0px;margin-bottom:20px;border-bottom: solid 4px #eeeeee;overflow:hidden;height:40vh;background: url('{{category.bannerImage}}') no-repeat center center;background-size: cover;">
   </div>
 <div class="col-xs-12 col-sm-12 hidden-md hidden-lg  anim-in-out anim-zoom-out" style="padding-left:0px;padding-right:0px;margin-bottom:20px">
-  <img style="width: 100%; height:250px;" class="img" ng-src="{{category.visual}}">
+    <div style="width: 100%; height:250px;background: url('{{category.visual}}') no-repeat center center;background-size: cover;"> </div>
+  <!-- <img style="width: 100%; height:250px;" class="img" ng-src="{{category.visual}}"> -->
 </div>
   </div>
 
@@ -479,9 +480,13 @@
       <div class="col-sm-12 col-xs-12 hidden-lg hidden-md anim-in-out anim-zoom-out">
         <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : r.name.split(' ').join('_')})">
           <div class="row">
-              <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-            <img style="width: 100%; height:120px;" class="img" ng-src="{{r.visual}}" >
-            <img style="width: 100%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.visual==null">
+              <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;" >
+                <div  style="padding-right:0px;padding-left:0px;overflow:hidden;height:280px;background: url('{{r.visual}}') no-repeat center center;background-size: cover;">
+                </div>
+                <div  style="padding-right:0px;padding-left:0px;overflow:hidden;height:280px;background: url('/static/images/ecommerce.jpg') no-repeat center center;background-size: cover;" ng-if="r.visual==null">
+                </div>
+            <!-- <img style="width: 100%; height:120px;" class="img" ng-src="{{r.visual}}" >
+            <img style="width: 100%; height:120px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.visual==null"> -->
           </div>
         </div>
           <div class="row container-fluid" style="padding:0px;margin-bottom:10px">

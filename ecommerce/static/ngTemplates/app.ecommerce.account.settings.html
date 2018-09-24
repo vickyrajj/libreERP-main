@@ -54,9 +54,10 @@
         <label>Primary Address </label>
       </div>
       <div class="row text-center" style="padding-top:35px">
-        <button ng-click="saveAddress()" type="button" class="btn btn-primary">
+        <button ng-click="saveAddress()" type="button" class="btn btn-primary" ng-if="!showMessage">
           Save
         </button>
+        <span ng-if="showMessage">Sorry!! We Don't Service in this Area </span>
       </div>
     </div>
     <div class="col-md-6 col-xs-12" style="padding-left:55px" ng-if="savedAddress.length>0">
