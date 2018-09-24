@@ -270,11 +270,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
 
         if 'getCustomers' in self.request.GET:
-            print self.request.GET , '************************************************8@@@@@@@@@@@222'
-            a = list(permission.objects.filter(app = application.objects.get(name = "app.customers")).values_list('user', flat=True).distinct())
+            a = list(permission.objects.filter(app = application.objects.get(name = "app.customer.access")).values_list('user', flat=True).distinct())
             if int(self.request.GET['getCustomers']) == 1:
-                print 'yes'
-                print service.objects.filter(contactPerson__in = a)
                 return User.objects.filter(pk__in=a)
             else:
                 return User.objects.filter(~Q(pk__in=a))
@@ -307,6 +304,9 @@ class UserSearchViewSet(viewsets.ModelViewSet):
             else :
                 return User.objects.all().order_by('-date_joined')
         else:
+            if 'getCustomers' in self.request.GET:
+                a = list(permission.objects.filter(app = application.objects.get(name = "app.customer.access")).values_list('user', flat=True).distinct())
+                return User.objects.filter(pk__in=a)
             return User.objects.all().order_by('-date_joined')
 
 class GroupViewSet(viewsets.ModelViewSet):

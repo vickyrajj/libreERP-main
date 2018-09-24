@@ -1,7 +1,7 @@
-<div class="shaddowed card" style="min-height:93vh;position:relative;background-color:#f8f8f8">
+<div class="" style="min-height:93vh;position:relative;background-color:#f8f8f8">
 
   <breadcrumb></breadcrumb>
-  <div class="container-fluid" style="color:black">
+  <div ng-if="!isCustomer" class="container-fluid" style="color:black">
 
     <div class="row">
       <div class="col-md-12">
@@ -203,5 +203,165 @@
     </div>
 
   </div>
+
+
+  <div ng-if="isCustomer" class="container-fluid" style="color:black">
+    <div class="row">
+      <div class="col-sm-12">
+        <h3>Activity <span>Past 7 Days</span></h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 ">
+        <div class="container-fluid" style="background-color:#fff;">
+          <div class="row" style="padding:25px">
+            <!-- <div class="row"> -->
+              <div class="col-sm-9">
+                <h4># Of Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+              </div>
+              <div class="col-sm-3 text-right">
+                <h4><i class="fa fa-sort-{{changeInChat.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInChat.percentage.toFixed(2)}}%</h4>
+              </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+              <div class="col-sm-12" style="padding-top:25px">
+                <h3>{{totalChats}}</h3>
+              </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+              <div class="col-sm-12" style="padding-top:25px">
+                <!-- <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="barlabels"> chart-series="series"</canvas> -->
+                <canvas id="bar" class="chart chart-bar" chart-data="barData" chart-labels="barlabels" chart-series="series" chart-colors="barColours" chart-options="sharesOptions">
+                  </canvas>
+              </div>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 ">
+        <div class="container-fluid" style="background-color:#fff;">
+          <div class="row" style="padding:25px">
+            <!-- <div class="row"> -->
+              <div class="col-sm-9">
+                <h4># Of Missed Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+              </div>
+              <!-- <div class="col-sm-3 text-right">
+                <h4><i class="fa fa-sort-desc fa-lg" style="color:#bcd46e"></i> &nbsp;77.78%</h4>
+              </div> -->
+              <div class="col-sm-3 text-right">
+                <h4><i class="fa fa-sort-{{changeInMissedChat.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInMissedChat.percentage.toFixed(2)}}%</h4>
+              </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+              <div class="col-sm-12" style="padding-top:25px">
+                <h3>{{missedChats}}</h3>
+              </div>
+            <!-- </div> -->
+          </div>
+        </div>
+        <div class="container-fluid" style="background-color:#fff;margin-top:20px">
+          <div class="row" style="padding:25px">
+            <!-- <div class="row"> -->
+              <div class="col-sm-9">
+                <h4>Average Chat Duration &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+              </div>
+              <!-- <div class="col-sm-3 text-right">
+                <h4><i class="fa fa-sort-asc fa-lg" style="color:#e85c30"></i> &nbsp;19.44%</h4>
+              </div> -->
+              <div class="col-sm-3 text-right">
+                <h4><i class="fa fa-sort-{{changeInAvgChatDur.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInAvgChatDur.percentage.toFixed(2)}}%</h4>
+              </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+              <div class="col-sm-12" style="padding-top:25px">
+                <h3>{{avgChatDuration.toFixed(2)}} Min</h3>
+              </div>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row" style="margin-top:20px">
+      <div class="col-sm-12">
+        <h3>Satisfaction <span>Past 7 Days</span></h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 ">
+        <div class="container-fluid" style="background-color:#fff;">
+          <div class="row" style="padding:25px">
+            <!-- <div class="row"> -->
+              <div class="col-sm-9">
+                <h4>Average Rating &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+              </div>
+              <div class="col-sm-3 text-right">
+                <h4><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;2.94%</h4>
+              </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+              <div class="col-sm-12" style="padding-top:25px">
+                <h3>{{avgRatingAll.toFixed(2)}}</h3>
+              </div>
+            <!-- </div> -->
+          </div>
+        </div>
+
+      </div>
+      <div class="col-sm-6 ">
+        <div class="container-fluid" style="background-color:#fff;">
+          <div class="row" style="padding:25px">
+            <!-- <div class="row"> -->
+              <div class="col-sm-9">
+                <h4>Average Response Time(ART) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+              </div>
+              <div class="col-sm-3 text-right">
+                <h4><i class="fa fa-sort-{{changeInRespTimeAvg.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInRespTimeAvg.percentage.toFixed(2)}}%</h4>
+              </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+              <div class="col-sm-12" style="padding-top:25px">
+                <h3>{{avgRespTimeAll.toFixed(2)}} Min</h3>
+              </div>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="container-fluid" style="background-color:#fff;margin-top:20px">
+          <div class="row" style="padding:25px">
+            <!-- <div class="row"> -->
+              <div class="col-sm-9">
+                <h4>Average First Response Time(AFRT) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+              </div>
+              <div class="col-sm-3 text-right">
+                <h4><i class="fa fa-sort-{{changeInFrtAvg.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInFrtAvg.percentage.toFixed(2)}}%</h4>
+              </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+              <div class="col-sm-12" style="padding-top:25px">
+                <h3>{{firstResTimeAvgAll.toFixed(2)}} Min</h3>
+              </div>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
 
 </div>

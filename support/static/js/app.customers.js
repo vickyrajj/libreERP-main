@@ -476,7 +476,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
   $scope.me = $users.get('mySelf')
   $scope.userSearch = function(query) {
-    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    return $http.get('/api/HR/userSearch/?getCustomers&username__contains=' + query).
     then(function(response) {
       return response.data;
     })
@@ -514,6 +514,11 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
   if ($scope.tab != undefined) {
     $scope.mode = 'edit';
     $scope.form = $scope.tab.data;
+    $scope.form.cpName = ''
+    $scope.form.contactPersonPks = []
+    for (var i = 0; i < $scope.form.contactPerson.length; i++) {
+      $scope.form.contactPersonPks.push($scope.form.contactPerson[i].pk)
+    }
     if ($scope.form.address == null) {
       $scope.form.address = {
         street: null,
@@ -530,7 +535,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       name: '',
       telephone: '',
       about: '',
-      contactPerson: '',
+      contactPerson: [],
+      contactPersonPks: [],
+      cpName:'',
       mobile: '',
       address: {
         street: null,
@@ -546,19 +553,77 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     }
   }
 
+  $scope.addPerson = function(person){
+    console.log(person);
+    if (typeof person != 'object') {
+      Flash.create('warning' , 'Please Select Suggested Person')
+      return;
+    }
+    if ($scope.form.contactPersonPks.indexOf(person.pk)> -1) {
+      Flash.create('warning' , 'This Person Has Already Added')
+      return;
+    }
+    $http({
+      method:'GET',
+      url:'/api/ERP/service/?contactPerson='+ person.pk
+    }).
+    then(function(response) {
+      if (response.data.length>0) {
+        Flash.create('warning' , 'You can not add this person')
+        return ;
+      }else {
+        $scope.form.contactPerson.push(person)
+        $scope.form.contactPersonPks.push(person.pk)
+        $scope.form.cpName = ''
+      }
+    })
+
+  }
+
+  $scope.removePerson = function(idx){
+    $scope.form.contactPerson.splice(idx,1)
+    $scope.form.contactPersonPks.splice(idx,1)
+
+  }
+
+  // $scope.$watch('form.contactPerson' , function (oldValue,newValue) {
+  //
+  //
+  //   console.log(oldValue , newValue);
+  //
+  //   if (typeof newValue == 'object') {
+  //     $http({
+  //       method:'GET',
+  //       url:'/api/ERP/service/?contactPerson='+ $scope.form.contactPerson.pk
+  //     }).
+  //     then(function(response) {
+  //       if (response.data.length>0) {
+  //         Flash.create('warning' , 'You can not add this person')
+  //         // return ;
+  //       }
+  //     })
+  //   }
+  //
+  //
+  //
+  //
+  // })
+
+
   $scope.saveCompanyDetails = function() {
     var f = $scope.form
     if (f.name.length == 0) {
       Flash.create('warning', 'Name Is Required')
       return
     }
-    if (f.contactPerson != null && f.contactPerson.length > 0 && typeof f.contactPerson != 'object') {
-      Flash.create('warning', 'Contact Person Must Be Suggested One')
-      return
-    }
+    // if (f.contactPerson != null && f.contactPerson.length > 0 && typeof f.contactPerson != 'object') {
+    //   Flash.create('warning', 'Contact Person Must Be Suggested One')
+    //   return
+    // }
     $scope.toSend = {
       name: f.name,
-      user: $scope.me.pk
+      user: $scope.me.pk,
+      contactPerson : $scope.form.contactPersonPks
     }
     if (f.telephone != null && f.telephone.length > 0) {
       $scope.toSend.telephone = f.telephone
@@ -581,9 +646,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     if (f.web != null && f.web.length > 0) {
       $scope.toSend.web = f.web
     }
-    if (f.contactPerson != null && typeof f.contactPerson == 'object') {
-      $scope.toSend.contactPerson = f.contactPerson.pk
-    }
+    // if (f.contactPerson != null && typeof f.contactPerson == 'object') {
+    //   $scope.toSend.contactPerson = f.contactPerson.pk
+    // }
 
     console.log($scope.toSend);
     $scope.companysave = function() {

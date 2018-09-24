@@ -158,10 +158,11 @@ class serviceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = serviceSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
-    def get_queryset(self):
-        u = self.request.user
-        return service.objects.all()
+    filter_fields = ['name','user','contactPerson']
+    queryset = service.objects.all()
+    # def get_queryset(self):
+    #     u = self.request.user
+    #     return service.objects.all()
 
 class registerDeviceApi(APIView):
     renderer_classes = (JSONRenderer,)
@@ -259,7 +260,8 @@ class applicationViewSet(viewsets.ModelViewSet):
         else:
             if 'user' in self.request.GET:
                 return getApps(User.objects.get(username = self.request.GET['user']))
-            return application.objects.filter(inMenu = True)
+            print 'super Userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
+            return application.objects.filter(inMenu = True).exclude(Q(name = 'app.reviews') | Q(name='app.uiSettings') | Q(name='app.knowledgeBase'))
 
 class applicationAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin,)
@@ -297,6 +299,8 @@ class permissionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = permission.objects.all()
     serializer_class = permissionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user' , 'app']
     def get_queryset(self):
         if 'user' in self.request.GET:
             return permission.objects.filter(user = self.request.GET['user'])

@@ -9,6 +9,9 @@ from rest_framework.response import Response
 from fabric.api import *
 import os
 from django.conf import settings as globalSettings
+from support.models import CannedResponses ,CompanyProcess , CustomerProfile
+from collections import Counter
+from django.db.models import Q
 
 class addressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,13 +21,17 @@ class addressSerializer(serializers.ModelSerializer):
 class serviceSerializer(serializers.ModelSerializer):
     # user = userSearchSerializer(many = False , read_only = True)
     perms = serializers.SerializerMethodField()
+    noOfPrescript = serializers.SerializerMethodField()
+    noOfProcess = serializers.SerializerMethodField()
+    noOfactiveServices = serializers.SerializerMethodField()
     address = addressSerializer(many = False, read_only = True)
-    contactPerson = userSearchSerializer(many = False , read_only = True)
+    contactPerson = userSearchSerializer(many = True , read_only = True)
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms')
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms','noOfPrescript','noOfProcess','noOfactiveServices')
 
     def assignValues(self , instance , validated_data):
+        print validated_data,self.context['request'].data
         if 'cin' in validated_data:
             instance.cin = validated_data['cin']
         if 'tin' in validated_data:
@@ -43,8 +50,10 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.web = validated_data['web']
         if 'address' in self.context['request'].data and self.context['request'].data['address'] is not None:
             instance.address_id = int(self.context['request'].data['address'])
-        if 'contactPerson' in self.context['request'].data and self.context['request'].data['contactPerson'] is not None:
-            instance.contactPerson_id = int(self.context['request'].data['contactPerson'])
+        if 'contactPerson' in self.context['request'].data:
+            instance.contactPerson.clear()
+            for person in self.context['request'].data['contactPerson']:
+                    instance.contactPerson.add(User.objects.get(pk = int(person)))
         instance.save()
 
     def create(self , validated_data):
@@ -61,6 +70,7 @@ class serviceSerializer(serializers.ModelSerializer):
     def update(self , instance , validated_data):
         self.assignValues(instance , validated_data)
         return instance
+
     def get_perms(self , obj):
         u = self.context['request'].user
         perms = permission.objects.filter(user = u)
@@ -69,6 +79,26 @@ class serviceSerializer(serializers.ModelSerializer):
             if p.app.name == 'module.customer.edit' or p.app.name == 'module.customer.explore' or p.app.name == 'module.customer.knowBase':
                 toReturn[p.app.name] = True
         return toReturn
+
+    def get_noOfPrescript(self , obj):
+        c = CannedResponses.objects.filter(service = obj.pk).count()
+        return c
+
+    def get_noOfProcess(self , obj):
+        c = CompanyProcess.objects.filter(service = obj.pk).count()
+        return c
+
+    def get_noOfactiveServices(self , obj):
+        o = CustomerProfile.objects.filter(service = obj.pk)
+        if len(o)>0:
+            try:
+                c = o[0].__dict__.values().count(True)
+                # print Counter(o[0].__dict__.values())[True],'sssssssssssssssssssssssssssssssss'
+            except:
+                c = 0
+        else:
+            c = 0
+        return c
 
 class serviceLiteSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)
@@ -201,7 +231,14 @@ class permissionSerializer(serializers.ModelSerializer):
         u = validated_data['user']
         permission.objects.filter(user = u).all().delete()
         print self.context['request'].data['apps']
-        for a in self.context['request'].data['apps']:
+        apps = self.context['request'].data['apps']
+        if u.is_superuser:
+            apps = list(application.objects.filter(~Q(name = 'app.customer.access') ).values_list('pk', flat=True).distinct())
+            print apps , 'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH'
+        if 1 not in apps:
+            # print 'dashboard not there'
+            apps.append(1)
+        for a in apps:
             app = application.objects.get(pk = a)
             p = permission.objects.create(app =  app, user = u , givenBy = user)
         return p

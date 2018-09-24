@@ -110,6 +110,21 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         if 'user' in self.context['request'].data:
             instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
         instance.save()
+
+        if 'email' in self.context['request'].data:
+            print 'getting email here' , self.context['request'].data['email']
+            email = self.context['request'].data['email']
+            uid = instance.uid
+            vObj = Visitor.objects.filter(uid = uid)
+            if len(vObj)>0:
+                print 'hree'
+                vObj[0].email = email
+                vObj[0].save()
+            else:
+                v = Visitor.objects.create(uid = uid , email = email)
+                # Visitor(uid = uid , email = email)
+                v.save()
+
         return instance
 
 class CompanyProcessSerializer(serializers.ModelSerializer):

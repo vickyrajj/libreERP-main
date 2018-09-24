@@ -106,7 +106,19 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     $scope.msgText = $scope.templates[data].msg;
   }
 
-  $scope.addToChat = function(indx) {
+  $scope.addToChat = function(indx , uid ) {
+
+
+    // $scope.status = 'AP';
+    // connection.session.publish('service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
+    //   acknowledge: true
+    // }).
+    // then(function(publication) {
+    //   console.log("Published");
+    // });
+
+
+
     console.log('comingggg in add to chat');
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
@@ -114,6 +126,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         return
       }
     }
+
     if ($scope.chatsInView.length < 4) {
       $scope.myUsers[indx].myUserIndex = indx
       $scope.chatsInView.push($scope.myUsers[indx])
@@ -226,12 +239,11 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     });
 
     $scope.status = 'AP';
-
     connection.session.publish('service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
       acknowledge: true
     }).
     then(function(publication) {
-      console.log("Published");
+      console.log("Published AP" , uid);
     });
 
 
