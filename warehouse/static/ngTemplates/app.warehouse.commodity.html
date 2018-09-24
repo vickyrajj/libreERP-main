@@ -65,7 +65,7 @@
     <div class="card" ng-repeat="c in comodities | filter : searchText" style="padding-bottom:0px; margin-bottom:10px">
       <div class="card" ng-if="$index!=idx">
         <div class="row" style="padding:10px; padding-left:20px;"  ng-click="expand(c.pk,$index)" >
-          <div class="col-md-5">
+          <div class="col-md-4">
             {{c.name}}
           </div>
           <div class="col-md-3">
@@ -82,11 +82,14 @@
       </div>
       <div class="card"  ng-if="$index==idx " >
         <div class="row" style="padding:10px; padding-left:20px;"  ng-click="ShowHide()" >
-          <div class="col-md-5">
+          <div class="col-md-4">
             {{c.name}}
           </div>
-          <div class="col-md-5">
+          <div class="col-md-3">
             {{c.qty}}
+          </div>
+          <div class="col-md-3">
+            {{c.typ}}
           </div>
           <div class="col-md-2" >
               <i class="fa fa-minus"  ></i>

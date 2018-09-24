@@ -12,7 +12,7 @@ from django.http import HttpResponse
 from clientRelationships.views import expanseReportHead,addPageNumber,PageNumCanvas,FullPageImage
 from reportlab import *
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4,letter
+from reportlab.lib.pagesizes import A4,letter, landscape,inch
 from reportlab.lib.units import cm, mm
 from reportlab.lib import colors , utils
 from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
@@ -531,8 +531,6 @@ def genInvoice(response , contract,invoiceobj, request):
 
     #add some flowables
 
-
-
     story = []
 
     expHead = expanseReportHead(request , contract)
@@ -710,42 +708,85 @@ class DownloadReceipt(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def get(self , request , format = None):
         print "aaaaaaaaaaaaaaaaaaaaaaaaa"
-        ab = date_parser.parse(request.GET["fromDate"])
-        print ab
-        time_format="%a %b %d %Y %H:%M:%S GMT (%Z)"
-        frm = datetime.datetime.strptime(ab,time_format)
-        toD = datetime.datetime.strptime(request.GET["to"],'%Y-%m-%dT%H:%M:%S.%fZ')
-        print "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        print frm
-
-        # obj = CommodityQty.objects.filter(commodity=int(request.GET['commodity']),created__range =(frm,to))
-        # print obj
+        frm = datetime.datetime.strptime(request.GET["fromDate"],'%Y-%m-%dT%H:%M:%S.%fZ' )
+        toD = datetime.datetime.strptime(request.GET["to"],'%Y-%m-%dT%H:%M:%S.%fZ' )
+        obj = CommodityQty.objects.filter(commodity=int(request.GET['commodity']),created__range =(datetime.datetime.combine(frm, datetime.time.min),datetime.datetime.combine(toD, datetime.time.max)))
+        print obj
         toReturn = []
-        # for i in obj:
-        #     toReturn.append({"Remaining Qty.":i.balance, "Check In":i.checkIn, "Check Out":i.checkOut })
-        #     print toReturn
+        for i in obj:
+            toReturn.append({"Dtae":i.created, "Check In":i.checkIn, "Check Out":i.checkOut, "Remaining Qty.":i.balance })
+            print toReturn
         return ExcelResponse(toReturn)
 
 
+def drawTable(response):
+        cm = 2.54
+        elements = []
+        s = getSampleStyleSheet()
+        s = s["BodyText"]
+        s.wordWrap = 'CJK'
+        doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
+        data=[
+                ['Description', 'No.of Packages', 'Weight/Vol', 'Comments'],
+                ['61513333333333333333333333333333', '2', '3', '4'],
+                ['555555555555555555555555\n5555555555555555555555555555555555555555555555', '6', '7', '8'],
+                ['9', '10', '11', '12'],
+                ['13', '14', '15', '16'],
+             ]
+        data2 = [[Paragraph(cell, s) for cell in row] for row in data]
+        table = Table(data2)
+        style = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ])
+
+        gapdata=[
+                [''],
+                ['']
+             ]
+        data4 = [[Paragraph(cell, s) for cell in row] for row in gapdata]
+        gaptable = Table(data4)
+
+        data1=[
+                ['Customer/Driver Signature','','', 'ABA Warehouse LLP'],
+                ['Name','','', 'Authority Signatory']
+             ]
+        data3 = [[Paragraph(cell, s) for cell in row] for row in data1]
+        table1 = Table(data3,rowHeights=(25*cm, 10*cm))
+        styleforbottom = TableStyle([
+                            ('BACKGROUND',(0,0),(1,1),colors.white),
+                            ('ALIGN',(0,0),(1,-1),'LEFT'),
+                            ('VALIGN',(0,0),(-1,-1),'TOP'),
+                            ('ALIGN',(0,1),(-1,1),'LEFT'),
+                            ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ])
+        datatop=[
+                ['Company Details','Contract/Agent Details'],
+                ['ABA Warehouse Bangolre','CIOC Banglore']
+             ]
+        dat = [[Paragraph(cell, s) for cell in row] for row in datatop]
+        toptable = Table(dat,rowHeights=(10*cm,30*cm))
+        styleforTop= TableStyle([
+                            ('BACKGROUND',(0,0),(1,1),colors.white),
+                            ('VALIGN',(0,0),(-1,-1),'TOP'),
+                            ('LINEBEFORE', (0,0), (-2,2), 0.25, colors.black),
+                            ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ])
+        toptable.setStyle(styleforTop)
+        table.setStyle(style)
+        table1.setStyle(styleforbottom)
+        elements.append(toptable)
+        elements.append(table)
+        elements.append(gaptable)
+        elements.append(gaptable)
+        elements.append(table1)
+        doc.build(elements)
 
 def downloadPdf(request):
-    # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="NewtoPDFGen.pdf"'
-    buffer = BytesIO()
-    # Create the PDF object, using the BytesIO object as its "file."
-    p = canvas.Canvas(buffer, pagesize=letter)
-    # Draw things on the PDF. Here's where the PDF generation happens.
-    # See the ReportLab documentation for the full list of functionality.
-    p.setFont('Helvetica', 16, leading = None)
-    abc = "Hello world!!"
-    p.drawString(50, 700, abc)
-    # Close the PDF object cleanly.
-    p.showPage()
-    p.save()
-
-    # Get the value of the BytesIO buffer and write it to the response.
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
+    response['Content-Disposition'] = 'attachment; filename=somefilename.pdf'
+    drawTable(response)
     return response
