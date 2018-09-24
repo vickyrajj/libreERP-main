@@ -40,7 +40,7 @@
       <div ng-if="match.model.typ == 'list' && match.model.added>0 && !me.pk" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
         <div class="col-md-10 col-sm-10 col-xs-10 text-right">
           <span>
-            <i class="fa fa-minus-circle fa-2x" style="cursor:pointer;margin-right:10px" ng-if="match.model.added>1&&!me.pk"  ng-click="decrementCookie(match.model);$event.stopPropagation()"></i>
+            <i class="fa fa-minus-circle fa-2x" style="cursor:pointer;margin-right:10px" ng-if="!me.pk"  ng-click="decrementCookie(match.model);$event.stopPropagation()"></i>
           <span style="font-size:20px; padding:0px 0px 0px 0px;margin-right:10px"> {{match.model.added}} </span>
         <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="incrementCookie(match.model);$event.stopPropagation()"></i></span>
 

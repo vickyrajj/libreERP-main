@@ -469,8 +469,19 @@ app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope,
     $scope.match.model.added--
     for (var i = 0; i < $rootScope.addToCart.length; i++) {
       if ($rootScope.addToCart[i].product.pk == details.pk) {
-          $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
-          setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+          // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
+          // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+          if($scope.match.model.added==0){
+            setCookie("addToCart", "", -1, '/');
+            $rootScope.addToCart.splice(i , 1);
+            setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+            return
+          }
+          else{
+            $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
+            setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+            return
+          }
       }
     }
   }
@@ -581,11 +592,25 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
     console.log(indx, value)
     if (value == "increase") {
       $rootScope.addToCart[indx].qty++
+      setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
+      return
     }
     if (value == "decrease") {
       $rootScope.addToCart[indx].qty--
+      if($rootScope.addToCart[indx].qty==0){
+        setCookie("addToCart", "", -1, '/');
+        $rootScope.addToCart.splice(indx , 1);
+        setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+        return
+      }
+      else{
+        $rootScope.addToCart[indx].qty = $rootScope.addToCart[indx].qty-1
+        setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+        return
+      }
+
     }
-    setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
+
   }
 
 
@@ -1006,11 +1031,23 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     }
 
     $scope.decrementCookie = function(details) {
+      console.log("aaaaaaaaaaaaaaaaaaa");
       $scope.details.added_cart--
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
         if ($rootScope.addToCart[i].product.pk == details.pk) {
-            $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
-            setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+            // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
+            // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+            if($scope.details.added_cart==0){
+              setCookie("addToCart", "", -1, '/');
+              $rootScope.addToCart.splice(i , 1);
+              setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+              return
+            }
+            else{
+              $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
+              setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+              return
+            }
         }
       }
     }

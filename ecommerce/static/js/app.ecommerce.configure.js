@@ -432,6 +432,12 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     })
 
   }
+
+  $scope.delete=function(indx){
+    console.log(indx,'kkkkkkkkkkkkkkkkkk');
+  }
+
+  
   $http({method : 'GET' , url : '/api/ecommerce/addPincode/'}).
   then(function(response) {
     $scope.pincodelist=response.data

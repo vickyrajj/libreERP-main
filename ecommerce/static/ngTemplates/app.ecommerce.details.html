@@ -124,7 +124,7 @@
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
             <div class="row container-fluid text-center" style="padding-top:15px;">
               <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="details.added_cart>1&&!me.pk"  ng-click="decrementCookie(details);$event.stopPropagation()"></i>
+                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="!me.pk"  ng-click="decrementCookie(details);$event.stopPropagation()"></i>
               </div>
               <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
                 <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{details.added_cart}} </span>
