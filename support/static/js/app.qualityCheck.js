@@ -221,20 +221,26 @@ function archived(){
     }
   }
 
+  // $scope.filterParams=[];
+
   $scope.getData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
     var url = '/api/support/reviewHomeCal/?'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
+      // $scope.filterParams.push({key : 'date' , value :date.toJSON().split('T')[0]})
     }
     if (typeof user == 'object') {
       url += '&user=' + user.pk
+      // $scope.filterParams.push({key : 'user' , value :user.pk})
     }
     if (typeof client == 'object') {
       url += '&client=' + client.pk
+      // $scope.filterParams.push({key : 'client' , value :client.pk})
     }
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
+      // $scope.filterParams.push({key : 'email' , value :email})
     }
     if (download) {
       $window.open(url+'&download','_blank');
@@ -315,19 +321,22 @@ function archived(){
   $scope.download = function(){
     $scope.filterData(true)
   }
+
+
   // views = [{
   //   name: 'list',
   //   icon: 'fa-th-large',
   //   template: '/static/ngTemplates/genericTable/genericSearchList.html',
-  //   itemTemplate: '/static/ngTemplates/app.reviews.items.html',
+  //   itemTemplate: '/static/ngTemplates/app.qualityCheck.items.html',
   // }, ];
   //
   //
   // $scope.config = {
   //   views: views,
-  //   url: '/api/support/supportChat/',
+  //   url: '/api/support/reviewHomeCal/',
   //   searchField: 'name',
   //   itemsNumPerView: [16, 32, 48],
+  //   getParams:$scope.filterParams
   // }
 
 

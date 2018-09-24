@@ -16,6 +16,7 @@ app.directive('genericTable' , function(){
 app.controller('genericTable' , function($scope , $http, $templateCache, $timeout , $users , Flash , $uibModal) {
 
   $scope.config = JSON.parse($scope.configObj);
+  console.log($scope.configObj);
 
   $scope.data = [];
   $scope.searchText = '';
@@ -176,6 +177,7 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
     console.log("came");
     var fetch = {method : '' , url : ''};
     // getting the data from the server based on the state of the filter params
+
     if (typeof $scope.getStr == 'undefined' && $scope.searchField!='') {
       return;
     }
@@ -212,7 +214,7 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
 
     $http({method: fetch.method, url: fetch.url , params : paramToSend }).
       then(function(response) {
-        // console.log(response);
+        console.log(response);
         $scope.pageCount = Math.floor(response.data.count/$scope.itemsPerView)+(response.data.count%$scope.itemsPerView == 0 ? 0 : 1);
         if ($scope.pageCount<$scope.pageList[0]) {
           $scope.pageList = [1];

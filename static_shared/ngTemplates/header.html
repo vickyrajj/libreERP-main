@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top animated slideInDown"  style="{{sideMenuVisibility ? 'margin-left:13%;': 'margin-left:5%'}};background:var(--themeMain)">
+<nav class="navbar navbar-default navbar-fixed-top animated slideInDown" id="aaaaaaa" style="{{sideMenuVisibility ? 'margin-left:13%': 'margin-left:5%'}};background:var(--themeMain)" >
   <div class="container-fluid" style="height:100%;">
     <div class="navbar-header"  style="height: 100%;">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navBar" aria-expanded="false" aria-controls="navbar">
@@ -97,6 +97,6 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-<div ng-repeat="friend in imWindows">
+<div ng-repeat="friend in imWindows" >
   <chat-window friend-url="friend.url" pos="$index" id="chatWindow{{friend.username}}" cancel="closeIMWindow($index)"></chat-window>
 </div>

@@ -34,20 +34,21 @@
   <div class="row">
     <div class="container-fluid">
       <ul class="nav nav-sidebar padded" style="width:100%;">
-        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps">
-          <a ui-sref="{{a.state}}" style="padding-right:30px;padding-left:30px;">
+        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" style="" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
+          <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:205%;border-radius:0% 25% 25% 0%' : ''}}">
             <div ng-if="sideMenuVisibility" align="left">
-              <div class="row">
-
-                <div class="col-md-2 text-right">
-                  <i class="fa {{a.icon}} fa-2x pull-left"></i>
+              <div class="row container-fluid">
+                <div class="col-md-3">
+                  <i class="fa {{a.icon}} fa-2x"></i>
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-9">
                   {{a.dispName | humanize}}
                 </div>
               </div>
             </div>
-            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;"><i class="fa {{a.icon}} fa-2x pull-left zoomOnHover"></i></div>
+            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;overflow-x:visible;"><i class="fa {{a.icon}} fa-2x pull-left zoomOnHover" style="margin-left:15px"></i>
+              <span ng-if="onHover" style="float:right;">{{a.dispName}}</span>
+            </div>
           </a>
         </li>
       </ul>
