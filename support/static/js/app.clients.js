@@ -1,10 +1,10 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.customers', {
-    url: "/customers",
+  $stateProvider.state('businessManagement.clients', {
+    url: "/clients",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.customers.html',
+        templateUrl: '/static/ngTemplates/app.clients.html',
         controller: 'businessManagement.customers',
       }
     }
@@ -17,7 +17,7 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
 
   $scope.me = $users.get('mySelf')
 
-  $scope.createPerm = $permissions.myPerms('module.customer.create')
+  $scope.customerCreatePerm = $permissions.myPerms('module.customer.create')
 
   $scope.data = {
     tableData: []

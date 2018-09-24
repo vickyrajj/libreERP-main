@@ -83,7 +83,7 @@
       </ul> <!-- /. notification icons group -->
       <div style="position:relative;padding-top:0.5vh;">
         <form  class="navbar-form navbar-right" role="search" style="position:absolute;right:270px;">
-          <i style="color:white;" ng-click="terminal.show = !terminal.show;" class="fa fa-search noselect"></i>
+          <i style="color:white;" ng-click="terminal.show = !terminal.show;" class="fa fa-search fa-lg noselect"></i>
           <input ng-if="terminal.show" focus-me="terminal.show" type="text" class="form-control animated fadeIn" placeholder="Enter command" ng-enter="parseCommand()" ng-blur="closeTerminal()" ng-model = "terminal.command" style="width:500px;" uib-typeahead="user as getName(user) for user in userSearch($viewValue)">
           <div style="position:absolute;top:45px;background:white;width:87%;left:10%;padding:0px;" ng-if="terminal.showCommandOptions && terminal.show" class="card" >
             <ul class="nav-horizontal" style="background:white;">

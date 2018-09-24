@@ -58,6 +58,7 @@ class serviceSerializer(serializers.ModelSerializer):
 
     def create(self , validated_data):
         s = service(name = validated_data['name'] , user =validated_data['user'])
+        s.save()
         u = self.context['request'].user
         pObj =  permission.objects.filter(user = u, app__name = 'module.customer.create')
         if len(pObj)>0:

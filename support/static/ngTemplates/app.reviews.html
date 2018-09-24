@@ -1,4 +1,4 @@
-<div class="shaddowed card bg-white" style="min-height:93vh;">
+<div class=" bg-white" style="min-height:93vh;">
 
   <breadcrumb></breadcrumb>
 
@@ -48,6 +48,7 @@
                     <div class="row" style="padding:0px 10px; min-height:140px;">
                       <!-- {{r[0]}} -->
                       <div class="col-md-8">
+                        <h6>Agent Name : {{r[0].user_id | getName}}</h6>
                         <h6>UID : {{r[0].uid}}</h6>
                         <h6>Date : {{r[0].created | date : "dd-MMM-yyyy"}}</h6>
                         <h6 ng-if="r[0].email">Visitor's Email : {{r[0].email}}</h6>

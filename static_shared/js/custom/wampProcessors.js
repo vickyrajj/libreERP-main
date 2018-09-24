@@ -1,5 +1,5 @@
 var connection = new autobahn.Connection({
-  url: 'ws://' + 'wamp.cioc.in' + ':8090/ws',
+  url: 'wss://' + 'ws.cioc.in' + ':443/ws',
   realm: 'default'
 });
 
@@ -158,6 +158,12 @@ connection.onopen = function(session) {
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value=''
             //chat closed by user
+          }else if (args[1] == 'FB') {
+            scope.sound.play();
+            scope.myUsers[i].messages.push(args[2])
+            scope.myUsers[i].unreadMsg += 1
+            scope.myUsers[i].spying.value=''
+            //feedback from user with stars
           }
           console.log('scroll');
 

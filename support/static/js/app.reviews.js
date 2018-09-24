@@ -141,9 +141,12 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
 
 
 
-app.controller("app.customerReviews.explore", function($scope, $http) {
+app.controller("app.customerReviews.explore", function($scope, $http, $permissions) {
   console.log($scope.tab.data);
   $scope.data = $scope.tab.data
+  $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+
+  $scope.reviewForm = {message:''}
 
   $scope.calculateTime = function(user, agent) {
     console.log('inside cal cccccccccccc');

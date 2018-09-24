@@ -155,11 +155,11 @@ app.config(function($stateProvider) {
         }
       }
     })
-    .state('home.customers', {
-      url: "/customers",
+    .state('home.clients', {
+      url: "/clients",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.customers.html',
+          templateUrl: '/static/ngTemplates/app.clients.html',
           controller: 'businessManagement.customers',
         }
       }
