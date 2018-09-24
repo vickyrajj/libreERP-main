@@ -591,12 +591,12 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
   $scope.updateCookieDetail = function(indx, value) {
     console.log(indx, value)
     if (value == "increase") {
-      $rootScope.addToCart[indx].qty++
+      $rootScope.addToCart[indx].qty+1
       setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
       return
     }
     if (value == "decrease") {
-      $rootScope.addToCart[indx].qty--
+      $rootScope.addToCart[indx].qty-1
       if($rootScope.addToCart[indx].qty==0){
         setCookie("addToCart", "", -1, '/');
         $rootScope.addToCart.splice(indx , 1);
