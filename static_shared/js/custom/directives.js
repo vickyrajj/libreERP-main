@@ -814,11 +814,12 @@ app.directive('chatBox', function() {
             connection.session.call('service.support.heartbeat.' + $scope.allAgents[i], []).
             then((function(i) {
               return function(res) {
+                console.log('online' , i);
                 $scope.onlineAgents.push($scope.allAgents[i])
               }
             })(i), (function(i) {
               return function(err) {
-                console.log(err, 'offline agents');
+                // console.log(err, 'offline agents');
                 $scope.offlineAgents.push($scope.allAgents[i])
               }
             })(i))

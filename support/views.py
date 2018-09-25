@@ -102,7 +102,7 @@ class GetMyUser(APIView):
             return Response(toSend, status=status.HTTP_200_OK)
         if 'getNewUser' in request.GET:
             print 'getNewUser'
-            time_threshold = datetime.datetime.now() - timedelta(hours=1)
+            time_threshold = datetime.datetime.now() - timedelta(hours=4)
             # results = Widget.objects.filter(created__lt=time_threshold)
             uidsList = list(ChatThread.objects.filter(user__isnull = True ,status='started' , created__gt = time_threshold).values_list('uid',flat=True).distinct())
             toSend = []
@@ -371,7 +371,7 @@ class ChatThreadViewSet(viewsets.ModelViewSet):
     serializer_class = ChatThreadSerializer
     queryset = ChatThread.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['uid','status']
+    filter_fields = ['uid','status','user']
     def get_queryset(self):
         if 'uid' in self.request.GET and 'checkThread' in self.request.GET:
             threadObj = ChatThread.objects.filter(uid = self.request.GET['uid'])
