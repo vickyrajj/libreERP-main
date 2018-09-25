@@ -100,8 +100,8 @@
 
             </div>
           </div>
-          <div class="col-md-12" ng-if="!showOptions">
-            <span style="font-size:25px;color:#ef4a1e">Out Of Stock... Please Try Later</span>
+          <div class="col-md-12" ng-if="!showOptions||details.in_stock=='false'">
+            <span style="font-size:25px;color:#ef4a1e">Out Of Stock..</span>
           </div>
         </div>
         <div class="row" style="padding:10px;" ng-if="me == null">
@@ -113,7 +113,7 @@
               </span>
             </div>
           </div> -->
-          <div class="col-md-12" ng-if="details.added_cart==0">
+          <div class="col-md-12" ng-if="showOptions&&details.added_cart==0">
             <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;" >
               <span ng-click="createCookieDetail(details)" style="cursor:pointer;" >
                   <span style="font-size:15px;"><b> Add To Cart</b></span>
@@ -138,6 +138,9 @@
               </span> -->
 
             </div>
+          </div>
+          <div class="col-md-12" ng-if="!showOptions||details.in_stock=='false'">
+            <span style="font-size:25px;color:#ef4a1e">Out Of Stock..</span>
           </div>
         </div>
 

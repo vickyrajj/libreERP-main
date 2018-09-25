@@ -128,11 +128,12 @@ class listingSerializer(serializers.ModelSerializer):
     product = POSProductSerializer(many = False , read_only = True)
     added_cart = serializers.SerializerMethodField()
     added_saved = serializers.SerializerMethodField()
+    in_stock = serializers.SerializerMethodField()
     # parentType = genericProductSerializer(many = False , read_only = True)
 
     class Meta:
         model = listing
-        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved')
+        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock')
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
@@ -203,6 +204,11 @@ class listingSerializer(serializers.ModelSerializer):
         else:
             return 0
 
+    def get_in_stock(self , obj):
+        if obj.product.inStock>0:
+            return 'true'
+        else:
+            return 'false'
 
 
 from django.db.models import Avg
@@ -215,10 +221,10 @@ class listingLiteSerializer(serializers.ModelSerializer):
     rating_count = serializers.SerializerMethodField()
     added_cart = serializers.SerializerMethodField()
     added_saved = serializers.SerializerMethodField()
-
+    in_stock = serializers.SerializerMethodField()
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock')
     def get_rating(self , obj):
         return obj.ratings.all().aggregate(Avg('rating'))
 
@@ -240,6 +246,12 @@ class listingLiteSerializer(serializers.ModelSerializer):
             return Cart.objects.filter(product=obj.pk,user=self.context['request'].user,typ='favourite').count()
         else:
             return 0
+
+    def get_in_stock(self , obj):
+        if obj.product.inStock>0:
+            return 'true'
+        else:
+            return 'false'
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

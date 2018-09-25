@@ -1,7 +1,7 @@
 <div  style="cursor:pointer;">
   <div  ng-click="openDetails(list.pk,list.product.name.split(' ').join('-'))" style="margin-bottom:15px;margin-left:15px;margin-right:15px">
     <div class="row" class="text-center">
-      <span ng-if="list.product.discount>0" style="position:absolute;background-color:green;color:white;padding-right:15px;padding-left:15px; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:20px">{{list.product.discount}}% Off </span>
+      <span ng-if="list.product.discount>0" style="position:absolute;background-color:green;color:white;padding-right:15px;padding-left:15px; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px">{{list.product.discount}}% Off </span>
       <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;overflow:hidden;">
         <img style="width: 100%;" class="img" ng-src="{{list.files[0].attachment}}" ng-if="list.files.length>0">
         <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" ng-if="list.files==null">
@@ -31,7 +31,7 @@
               <i class="fa fa-inr"></i>{{list.product.discountedPrice.toFixed(2)}}
             </span>
             <div>
-              <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&me.pk">
+              <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&me.pk&&list.in_stock=='true'">
                 <div class="col-md-6 col-xs-6 col-sm-6 text-center" style="border-right:1px solid #808080;">
                   <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:#808080;" ng-if="list.added_saved==0&&me.pk">
                     <i class="fa fa-heart  fa-3x"></i>
@@ -46,7 +46,7 @@
                   </span>
                 </div>
               </div>
-              <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&!me.pk">
+              <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&!me.pk&&list.in_stock=='true'">
          <!-- <div class="col-md-6 col-xs-6 col-sm-6 text-center" style="border-right:1px solid #808080;">
                   <span ng-click="mainPage();$event.stopPropagation();" style="cursor:pointer;color:#808080;">
                     <i class="fa fa-heart  fa-3x" ></i>
@@ -78,6 +78,9 @@
                     <i class="fa fa-shopping-cart fa-3x" ></i>
                   </span>
                 </div> -->
+              </div>
+              <div  style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.in_stock=='false'">
+                <span style="font-size:18px;color:#ef4a1e">Out Of Stock..</span>
               </div>
               <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&!me.pk">
                 <div class="col-md-4 col-sm-4 col-xs-4 text-right">

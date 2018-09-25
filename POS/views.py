@@ -101,7 +101,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     # queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
     # search_fields = ('name', 'serialNo', 'description', 'serialId')
-    filter_fields = ['name','haveComposition','serialNo',]
+    filter_fields = ['name','haveComposition','serialNo','inStock']
 
     # filter_fields = ['name','haveComposition']
     def get_queryset(self):

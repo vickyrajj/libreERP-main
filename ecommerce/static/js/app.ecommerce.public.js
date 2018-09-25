@@ -2722,6 +2722,16 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     })
   }
 
+  if ($scope.me != null) {
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/order/?user=' + $scope.me.pk
+    }).
+    then(function(response) {
+        $rootScope.inInvoice = response.data
+    })
+  }
+
 
 
 
