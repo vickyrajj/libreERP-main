@@ -3,9 +3,24 @@
 
 
     <div class="col-md-6" style="border-right:1px solid #eeeeee;">
-      <h3><strong>Date : </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</h3>
-      <span ng-if="chatThreadData.uid!=none"><h3><strong>Status : </strong>{{chatThreadData.status}} <span class="pull-right"><div class="btn btn-primary" ng-click="showChart()">Change Status</div></span></h3>
+      <div class="row">
+        <div class="col-md-6">
+          <h4><strong>Date : </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</h4>
+          <span > <h4><strong>Agent Name :  </strong>{{msgData[0].user_id | getName}}</h4></span>
+            <span ng-if="msgData[0].chatDuration>0.0"> <h4><strong>Chat Duration : </strong>{{msgData[0].chatDuration}} Min </h4></span>
+            <span ng-if="msgData[0].customerFeedback"> <h4><strong>Feedback : </strong>{{msgData[0].customerFeedback}}</h4></span>
+        </div>
+        <div class="col-md-5">
+          <span ng-if="msgData[0].company"> <h4><strong>Client : </strong>{{msgData[0].company}}</h4></span>
+          <span ng-if="msgData[0].email"> <h4><strong>Visitor's Email : </strong>  {{msgData[0].email}}</h4></span>
+          <span ng-if="msgData[0].customerRating"> <h4><strong>Rating : </strong>{{msgData[0].customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></h4></span>
+
+        </div>
+      </div>
+      <span ng-if="chatThreadData.uid!=none"><h4><strong>Status : </strong>{{chatThreadData.status}} <span class="pull-right"><div class="btn btn-primary" ng-click="showChart()">Change Status</div></span></h4>
       </span>
+
+
       <hr>
       <div class="row" ng-repeat="msg in msgData">
         <!-- <h3>{{msg.message}}</h3> -->

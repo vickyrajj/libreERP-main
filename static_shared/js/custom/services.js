@@ -54,6 +54,7 @@ app.factory('$permissions', function($http){
   $http({method : 'GET' , url : '/api/ERP/permission/?user='+myPk}).
   then(function(response){
     myPerms = response.data;
+    console.log(myPerms);
   })
 
 
@@ -87,7 +88,6 @@ app.factory('$permissions', function($http){
       // similar to above
 
     }, myPerms : function(input) {
-      // console.log(input);
       if (typeof input != 'undefined') {
         for (var i = 0; i < myPerms.length; i++) {
           if (myPerms[i].app.name == input) {

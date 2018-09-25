@@ -31,8 +31,15 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       main: '#1E88E5',
       highlight: '#04414f'
     };
+    $scope.showw=false;
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
+  $timeout(function() {
+    $scope.isCustomer = $permissions.myPerms('app.customer.access')
+    console.log($scope.isCustomer);
+    $scope.showw=true;
+  }, 3500);
+
 
   function setCookie(cname,cvalue,exdays) {
       var d = new Date();

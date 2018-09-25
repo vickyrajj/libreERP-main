@@ -20,7 +20,7 @@ app.controller("businessManagement.customerSettings", function($scope, $state, $
     plugins: 'advlist autolink link image lists charmap preview imagetools paste table insertdatetime code searchreplace ',
     skin: 'lightgray',
     theme: 'modern',
-    height: 100,
+    height: 200,
     toolbar: 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
   };
 
