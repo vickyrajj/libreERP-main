@@ -12,7 +12,7 @@
           Add to Cart
         </button>
       </div>
-      <div ng-if="match.model.typ == 'list' && me.pk&&match.model.inStock==0 " class="col-xs-4 text-right" style="padding-top:7px;font-size:18px;color:#ef4a1e" ng-click="$event.stopPropagation();">
+      <div ng-if="match.model.typ == 'list' && me.pk&&match.model.inStock<=0 " class="col-xs-4 text-right" style="padding-top:7px;font-size:18px;color:#ef4a1e" ng-click="$event.stopPropagation();">
         Out of Stock
       </div>
       <div ng-if="match.model.typ == 'list' && match.model.added>0 && me.pk&&match.model.inStock>0" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
@@ -40,7 +40,7 @@
           Add to Cart
         </button>
       </div>
-      <div ng-if="match.model.typ == 'list' && !me.pk&&match.model.inStock==0" class="col-xs-4 text-right" style="padding-top:7px;font-size:18px;color:#ef4a1e" ng-click="$event.stopPropagation();">
+      <div ng-if="match.model.typ == 'list' && !me.pk&&match.model.inStock<=0" class="col-xs-4 text-right" style="padding-top:7px;font-size:18px;color:#ef4a1e" ng-click="$event.stopPropagation();">
           Out of Stock
       </div>
       <div ng-if="match.model.typ == 'list' && match.model.added>0 && !me.pk&&match.model.inStock>0" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">

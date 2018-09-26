@@ -2266,7 +2266,6 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
               return
           }
           else{
-            console.log($scope.cartItems[i].qty,'aaaaaaaaaafffffffffffffaaaaaaaa');
             if( $scope.cartItems[i].qty<=0||$scope.cartItems[i].qty==undefined){
               Flash.create('danger','Please Select Valid quantity')
               return
