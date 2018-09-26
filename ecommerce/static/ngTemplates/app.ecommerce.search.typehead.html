@@ -35,7 +35,7 @@
           <i class="fa fa-plus-circle fa-lg" style="cursor:pointer"  ng-click="incrementCart(match.model);$event.stopPropagation()"></i>
         </div> -->
       </div>
-      <div ng-if="match.model.typ == 'list' &&  !me.pk&&match.model.inStock>0" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
+      <div ng-if="match.model.typ == 'list'&& !match.model.added  &&  !me.pk&&match.model.inStock>0" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
         <button type="button" class="btn btn-success" ng-click="addToCartCookie(match.model)">
           Add to Cart
         </button>
