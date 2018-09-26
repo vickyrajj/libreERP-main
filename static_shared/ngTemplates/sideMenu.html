@@ -18,7 +18,7 @@
         <span style="font-size:12px; padding-left:5px;">{{user.pk | getName}}</span>
       </div>
   </div> -->
-  <div ng-if="!sideMenuVisibility" class="row" style="width:5%; padding:15px;">
+  <div ng-if="!sideMenuVisibility" class="row" style="{{mobileView ? ';':'width:30%;'}};padding:15px;">
     <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;margin-left:20px;">
   </div>
   <div class="row" style="{{sideMenuVisibility ? 'border-bottom:solid 2px #eeeeee;':''}}">
@@ -47,7 +47,7 @@
               </div>
             </div>
             <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;overflow-x:visible;"><i class="fa {{a.icon}} fa-2x pull-left zoomOnHover" style="margin-left:15px"></i>
-              <span ng-if="onHover" style="float:right;">{{a.dispName}}</span>
+              <span ng-if="onHover" style="float:right;">{{a.dispName | humanize}}</span>
             </div>
           </a>
         </li>

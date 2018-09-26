@@ -66,6 +66,34 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
 
 
+$scope.mobileView=false;
+
+setInterval(function(){
+
+  if($(window).width() < 600) {
+    document.getElementById('asdf').addEventListener('click', function() {
+        if($(window).width() < 600) {
+        $scope.sideMenuVisibility=false
+      }
+
+    })
+
+      $scope.mobileView=true;
+      if(!$scope.sideMenuVisibility)
+        {
+          document.getElementById('aqwe').style.margin='0%';
+          document.getElementById('abababa').style.width='100%';
+          document.getElementById('buuu').style.display='none'
+        }
+  }else{
+      $scope.mobileView=false;
+  }
+},10)
+  // $(window).on('mouseover', function() {
+  //
+  // })
+
+
 $scope.onHover=false;
 console.log($scope.onHover);
   $scope.sideMenuVisibility = true;

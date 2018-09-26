@@ -1388,6 +1388,11 @@ setTimeout(function () {
 
 function endChat() {
   chatClosed = true
+
+  if (feedbackFormOpened) {
+    return
+  }
+
   var xhttp = new XMLHttpRequest();
    xhttp.onreadystatechange = function() {
      if (this.readyState == 4 && this.status == 200) {
@@ -1398,15 +1403,12 @@ function endChat() {
 
        var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-       if (feedbackFormOpened) {
-         console.log('ONLINE' , agentPk);
-         connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
-         });
-       }
+       connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
+         acknowledge: true
+       }).
+       then(function(publication) {
+         console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+       });
 
 
 

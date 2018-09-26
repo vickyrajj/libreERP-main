@@ -20,6 +20,10 @@ ul.tools li {
 
 
 /* The whole thing */
+
+
+
+
 .custom-menu {
     display: none;
     z-index: 1000;
@@ -389,7 +393,7 @@ body {
     /* insert styles here */
     .mainUIView{
       /*margin:0.5vh;*/
-      margin-top: 5.7vh;
+      margin-top: 4.7vh;
     }
 }
 
@@ -397,7 +401,7 @@ body {
 @media  screen and (max-width: 1366px) {
   .mainUIView{
     /*margin:0.5vh;*/
-    margin-top: 5.7vh;
+    margin-top: 4.7vh;
   }
 }
 

@@ -96,14 +96,14 @@
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     {% verbatim %}
-    <div  style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:{{sideMenuVisibility ? '13':'5'}}%;min-height:100vh;position:fixed;border-right:solid 2px  var(--themeMain);z-index:100;" class="sideMenuView" ng-include="sideMenu">
+    <div id="buuu" style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:{{sideMenuVisibility ? '13':'5'}}%;{{mobileView ? 'width:31%': ';'}};min-height:100vh;position:fixed;border-right:solid 2px  var(--themeMain);z-index:100;" class="sideMenuView" ng-include="sideMenu">
     </div>
 
 
-    <div class="col-md-1 mainUIViewParent" style="{{sideMenuVisibility ? 'width:87%': 'width:95%;'}};padding:0px;right:0px;position:absolute;">
+    <div class="col-md-1 mainUIViewParent" id="abababa" style="{{sideMenuVisibility ? 'width:87%': 'width:95%;'}};{{mobileView ? 'width:70%': ';'}}; padding:0px;right:0px;position:absolute;">
     {% endverbatim %}
       <div ng-include="headerUrl"></div>
-      <div style="" class="mainUIView" ui-view ng-if="modules.length>0">
+      <div id="asdf" style="" class="mainUIView" ui-view ng-if="modules.length>0">
 
         <style>
 

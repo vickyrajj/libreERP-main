@@ -11,7 +11,7 @@ app.config(function($stateProvider) {
   })
 });
 
-app.controller("businessManagement.customerSettings", function($scope, $state, $http, $rootScope) {
+app.controller("businessManagement.customerSettings", function($scope, $state, $http, $rootScope,Flash) {
 
   $scope.tinymceOptions = {
     selector: 'textarea',
@@ -82,6 +82,8 @@ app.controller("businessManagement.customerSettings", function($scope, $state, $
     }).
     then(function(response) {
       console.log(response.data);
+      Flash.create('success', 'Saved')
+
     });
   }
 })
