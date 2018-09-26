@@ -494,17 +494,17 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
 
   $scope.var1 = "hello";
 
-  $scope.cart = $rootScope.inCart;
+  // $scope.cart = $rootScope.inCart;
   console.log($scope.cart);
   $scope.data = {
     total: 0
   };
 
-  $scope.$watch('cart', function(newValue, oldValue) {
+  $scope.$watch('inCart', function(newValue, oldValue) {
     $scope.data.total = 0;
     console.log("called cart");
-    for (var i = 0; i < $scope.cart.length; i++) {
-      $scope.data.total += $scope.cart[i].product.product.discountedPrice * $scope.cart[i].qty
+    for (var i = 0; i < $rootScope.inCart.length; i++) {
+      $scope.data.total += $rootScope.inCart[i].product.product.discountedPrice * $rootScope.inCart[i].qty
     }
   }, true)
 
@@ -2255,24 +2255,28 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.dataToSend.promoCode = $scope.data.promoCode;
       $scope.dataToSend.promoCodeDiscount = $scope.promoDiscount;
       if ($scope.cartItems != undefined) {
-        console.log('through carttttttttttttttttttt');
         for (var i = 0; i < $scope.cartItems.length; i++) {
           for (var j = 0; j < $scope.cartProducts.length; j++) {
             if ($scope.cartProducts[j].pk == $scope.cartItems[i].product.pk) {
-              console.log('updatinggggggggggggggggg');
               $scope.cartProducts.splice(j, 1)
             }
           }
-          console.log($scope.cartItems[i].product.in_stock,'sssssssssssssssssssssss');
           if($scope.cartItems[i].product.in_stock=='false'){
               Flash.create('danger','Please Select Valid Products')
               return
           }
           else{
-            $scope.cartProducts.push({
-              pk: $scope.cartItems[i].product.pk,
-              qty: $scope.cartItems[i].qty
-            })
+            console.log($scope.cartItems[i].qty,'aaaaaaaaaafffffffffffffaaaaaaaa');
+            if( $scope.cartItems[i].qty<=0||$scope.cartItems[i].qty==undefined){
+              Flash.create('danger','Please Select Valid quantity')
+              return
+            }
+            else{
+              $scope.cartProducts.push({
+                pk: $scope.cartItems[i].product.pk,
+                qty: $scope.cartItems[i].qty
+              })
+            }
           }
         }
         $scope.dataToSend.products = $scope.cartProducts
