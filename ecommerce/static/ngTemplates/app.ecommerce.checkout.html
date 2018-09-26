@@ -157,8 +157,12 @@
                     </div>
                   </div>
 
-                  <div class="col-md-1" style="padding-top: 50px;">
+                  <div class="col-md-1" style="padding-top: 50px;" ng-if="c.product.in_stock=='true'">
                     <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 60px;" min="1">
+                  </div>
+                  <div class="col-md-1" style="padding-top: 50px;" ng-if="c.product.in_stock=='false'">
+                    <span style="color:#ef4a1e">Out Of Stock</span>
+                    <button class="btn btn-primary" ng-click="addWishList($index,c.pk)">Add to Wishlist <i class="fa fa-heart"></i></button>
                   </div>
                   <div class="col-md-2" style="padding-top: 50px;padding-left:50px;">
                     <p> <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
@@ -195,6 +199,7 @@
                   <div class="col-xs-3">
                     <input type="number" ng-change="changeQty()" ng-model="item.qty" name="" value="" style="width: 40px;" min="1">
                   </div>
+
                   <div class="col-xs-3">
                     <span>Total :</span>
                   </div>
@@ -226,11 +231,15 @@
                   </div>
 
                   <div class="row" style="padding-top:20px;">
-                    <div class="col-xs-2">
+                    <div class="col-xs-2" ng-if="c.product.in_stock=='true'">
                       <span>Qty :</span>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-3" ng-if="c.product.in_stock=='true'">
                       <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 40px;" min="1">
+                    </div>
+                    <div class="col-xs-5"  ng-if="c.product.in_stock=='false'">
+                      <span style="color:#ef4a1e">Out Of Stock</span>
+                      <button class="btn btn-primary" ng-click="addWishList($index,c.pk)">Add to Wishlist <i class="fa fa-heart"></i></button>
                     </div>
                     <div class="col-xs-3">
                       <span>Total :</span>

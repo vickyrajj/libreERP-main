@@ -58,7 +58,7 @@
                   </span>
                 </div>
               </div>
-              <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&me.pk">
+              <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&me.pk&&list.in_stock=='true'">
                 <div class="col-md-4 col-sm-4 col-xs-4 text-right">
                   <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="list.added_cart>0&&me.pk"  ng-click="decrement();$event.stopPropagation()"></i>
                 </div>
@@ -80,9 +80,9 @@
                 </div> -->
               </div>
               <div  style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.in_stock=='false'">
-                <span style="font-size:18px;color:#ef4a1e">Out Of Stock..</span>
+                <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
               </div>
-              <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&!me.pk">
+              <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&!me.pk&&list.in_stock=='true'">
                 <div class="col-md-4 col-sm-4 col-xs-4 text-right">
                   <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="!me.pk"  ng-click="decrementCookie();$event.stopPropagation()"></i>
                 </div>

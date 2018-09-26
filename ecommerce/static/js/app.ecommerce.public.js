@@ -520,6 +520,8 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
 
 
 
+
+
   $scope.changeQty = function(value, data) {
     console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     for (var i = 0; i < $rootScope.inCart.length; i++) {
@@ -611,6 +613,29 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
     }
 
   }
+
+
+
+
+
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/listing/'
+    }).
+    then(function(response) {
+      for (var i = 0; i < response.data.length; i++) {
+        for (var j = 0; j < $rootScope.addToCart.length; j++) {
+          if(response.data[i].pk==$rootScope.addToCart[j].product.pk){
+            $rootScope.addToCart[j].in_stock=response.data[i].in_stock
+
+          }
+        }
+      }
+
+    })
+
+
+
 
 
   $scope.$watch('addToCart', function(newValue, oldValue) {
@@ -1398,7 +1423,8 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
           then(function(response) {})
           $scope.data.tableData[i].typ = 'favourite';
           $scope.data.tableData.splice(i, 1)
-          $rootScope.inCart[i].typ = 'favourite'
+          $rootScope.inCart.splice(i,1)
+          $rootScope.inFavourite.push($scope.data.tableData[i])
         } else if (action == 'unfavourite') {
           console.log("aaaaaaaaaaaaaaaaaa");
           $http({
@@ -1477,9 +1503,11 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
             }
           }).
           then(function(response) {})
-          // $rootScope.inCart.push($scope.data.tableData[i])
+          $rootScope.inCart.push($scope.data.tableData[i])
           $scope.data.tableData.splice(i, 1)
+          $rootScope.inFavourite.splice(i, 1)
           $rootScope.inCart[i].typ = 'cart'
+          $rootScope.inCart[i].qty = 1
         } else if (action == 'deleteItem') {
           console.log("jjjjjjjjjjjjjjjjjjjj");
           $http({
@@ -1487,10 +1515,11 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
             url: '/api/ecommerce/cart/' + $scope.data.tableData[i].pk + '/'
           }).
           then(function(response) {
-            Flash.create('success', 'Item removed from cart');
+            Flash.create('success', 'Item removed from favourite');
           })
           $scope.data.tableData.splice(i, 1)
-          $rootScope.inCart.splice(i, 1)
+          $rootScope.inFavourite.splice(i, 1)
+          // $rootScope.inCart.splice(i, 1)
           // $scope.calcTotal();
         }
       }
@@ -2234,10 +2263,17 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
               $scope.cartProducts.splice(j, 1)
             }
           }
-          $scope.cartProducts.push({
-            pk: $scope.cartItems[i].product.pk,
-            qty: $scope.cartItems[i].qty
-          })
+          console.log($scope.cartItems[i].product.in_stock,'sssssssssssssssssssssss');
+          if($scope.cartItems[i].product.in_stock=='false'){
+              Flash.create('danger','Please Select Valid Products')
+              return
+          }
+          else{
+            $scope.cartProducts.push({
+              pk: $scope.cartItems[i].product.pk,
+              qty: $scope.cartItems[i].qty
+            })
+          }
         }
         $scope.dataToSend.products = $scope.cartProducts
       } else {
@@ -2323,6 +2359,24 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $rootScope.inFavourite = [];
       $scope.item = [];
       console.log('in cart', $rootScope.inCart);
+    })
+
+  }
+
+
+  $scope.addWishList=function(i,value){
+    $http({
+      method: 'PATCH',
+      url: '/api/ecommerce/cart/' + value + '/',
+      data: {
+        typ: 'favourite',
+        qty: null
+      }
+    }).
+    then(function(response) {
+      $scope.cartItems.splice(i,1)
+      $rootScope.inCart.splice(i,1)
+      $scope.calcTotal()
     })
 
   }
