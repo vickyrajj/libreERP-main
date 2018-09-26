@@ -65,7 +65,7 @@
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>
     <div class="row" style="margin:0px;padding-top:{{!$state.includes('ecommerce') ?  '9.5vh':'10px'}}" ng-controller="ecommerce.body" >
-      <div class="col-md-{{ cart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="me.pk">
+      <div class="col-md-{{ inCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="me.pk">
         <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
       </div>
       <div class="col-md-{{ addToCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="!me.pk">
@@ -83,7 +83,7 @@
       </div>
 
 
-      <div ng-if="cart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
+      <div ng-if="inCart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
 
         <div class="" style="position:sticky;top:10px;">
 
@@ -96,7 +96,7 @@
             </div>
           </div>
 
-          <div ng-repeat="p in cart" style="border-bottom:solid 2px #eeeeee; ">
+          <div ng-repeat="p in inCart" style="border-bottom:solid 2px #eeeeee; ">
             <h5 style="margin:10px;">{{p.product.product.name}}</h5>
 
             <div class="row" style="margin:0px;">
