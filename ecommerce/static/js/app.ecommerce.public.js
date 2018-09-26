@@ -494,8 +494,8 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
 
   $scope.var1 = "hello";
 
-  // $scope.cart = $rootScope.inCart;
-  // console.log($scope.cart);
+  $scope.cart = $rootScope.inCart;
+  console.log($scope.cart);
   $scope.data = {
     total: 0
   };
@@ -503,8 +503,8 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
   $scope.$watch('cart', function(newValue, oldValue) {
     $scope.data.total = 0;
     console.log("called cart");
-    for (var i = 0; i < $rootScope.inCart.length; i++) {
-      $scope.data.total += $rootScope.inCart[i].product.product.discountedPrice * $rootScope.inCart[i].qty
+    for (var i = 0; i < $scope.cart.length; i++) {
+      $scope.data.total += $scope.cart[i].product.product.discountedPrice * $scope.cart[i].qty
     }
   }, true)
 
