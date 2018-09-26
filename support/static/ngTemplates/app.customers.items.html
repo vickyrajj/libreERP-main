@@ -1,4 +1,4 @@
-<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
+<!-- <div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;">
   <div class="container-fluid card" style="padding-bottom:10px;min-height:270px">
     <div class="row text-center" style="border-bottom: 1px solid #dedede;height:90px">
       <div class="col-md-12" style="position:relative;display:block;">
@@ -35,18 +35,56 @@
             </span>
           </div>
 
-
-          <!-- <div class="row">
-            <span ng-if="data.editPerm" class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
-            <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
-            </span> <br><br>
-            <span class="pull-right" style="cursor:pointer;">
-              <i class="fa fa-info-circle fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('info')"></i>
-            </span><br><br>
-            <span class="pull-right" style="cursor:pointer;">
-              <i class="fa fa-file-text fa-lg" style="margin-top:0px;" ng-click="rowActionClicked('document')"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="col col-md-3 animated fadeIn" style="margin-bottom:15px;;cursor:pointer" ng-click="rowActionClicked('customerExplore')">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="container-fluid card" style="padding-bottom:0px;">
+        <div class="row" style="border-bottom: 1px solid #dedede;height:100px;">
+          <div class="col-md-4" style="padding:0px;">
+            <img style="height:95px;" class="img" ng-if="data.profile.displayPicture != null" ng-src="{{data.profile.displayPicture}}">
+            <img style="height:95px;" class="img" ng-if="data.profile.displayPicture == null" src="/static/images/userIcon.png">
+          </div>
+          <div class="col-md-8 text-center" style="position:relative;display:block;">
+            <span class="text-muted" style="position:absolute; top:10px;right:10px;">
+              <i class="fa fa-hashtag"></i> <span style="font-size:14px;">{{data.pk}}</span>
             </span>
+            <div class="row" style="padding-top:10px">
+              <h3>{{data.first_name + ' ' + data.last_name}}</h3>
+            </div>
+          </div>
+          <!-- <div class="col-md-1" style="position:relative;display:block;">
+            <div class="row" style="padding-top:30px" >
+                <i class="fa fa-pencil fa-lg" style="cursor:pointer;" ng-click="rowActionClicked('editCustomer')" ></i>
+            </div>
           </div> -->
+        </div>
+        <div class="row" style="padding:10px;height:70px;border-bottom: 1px solid #dedede;font-size:17px">
+          <!-- <div class="col-md-12"> -->
+            <div class="row">
+              <div class="col-md-2">
+                <strong><i style="width:20px;" class="fa fa-user"></i> </strong>
+              </div>
+              <div class="col-md-10">
+                <span>{{data.username}}</span>
+              </div>
+            </div>
+            <div class="row" ng-if="data.email != null">
+              <div class="col-md-2">
+                <strong><i style="width:20px;" class="fa fa-envelope"></i> </strong>
+              </div>
+              <div class="col-md-10">
+                <span>{{data.email}}</span>
+              </div>
+            </div>
+            <div class="row" ng-if="data.profile.mobile == null && data.email == null">
+              <span class="text-muted">No contact details</span>
+            </div>
+          <!-- </div> -->
         </div>
       </div>
     </div>

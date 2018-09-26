@@ -254,3 +254,26 @@ class Leave(models.Model):
     comment = models.CharField(max_length = 10000 , null = True)
     approvedStage = models.PositiveIntegerField(null = True,default=0)
     approvedMatrix = models.PositiveIntegerField(null = True,default=1)
+
+class SMS(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    frm = models.CharField(max_length = 12 , null = True)
+    to = models.CharField(max_length = 12 , null = True)
+    body = models.CharField(max_length = 500 , null = True)
+    dated = models.DateTimeField(auto_now_add = True)
+    user = models.ForeignKey(User , related_name = "smsAuthored" , null=True)
+    spam = models.BooleanField(default = False)
+
+class Call(models.Model):
+    dated = models.DateTimeField(auto_now_add = True)
+    created = models.DateTimeField(auto_now_add = True)
+    duration = models.CharField(max_length = 12 , null = True)
+    incoming = models.BooleanField(default = False)
+    frmOrTo = models.CharField(max_length = 12 , null = True)
+    user = models.ForeignKey(User , related_name = "callAuthored" , null=True)
+
+class Location(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    lat = models.CharField(max_length = 12 , null = True)
+    lon = models.CharField(max_length = 12 , null = True)
+    user = models.ForeignKey(User , related_name = "locationAuthored" , null=True)

@@ -33,8 +33,12 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
 
   $scope.config = {
     views: views,
-    url: '/api/ERP/service/',
+    url: '/api/HR/users/',
     searchField: 'name',
+    getParams: [{
+      key: 'getCustomers',
+      value: 1
+    }],
     itemsNumPerView: [16, 32, 48],
   }
 
@@ -48,9 +52,9 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
         if (action == 'edit') {
           var title = 'Edit : ';
           var appType = 'companyEdit';
-        } else if (action == 'info') {
+        } else if (action == 'customerExplore') {
           var title = 'Details : ';
-          var appType = 'companyInfo';
+          var appType = 'customerExplore';
         } else if (action == 'document') {
           var title = 'Document : ';
           var appType = 'document';
@@ -94,106 +98,108 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
 });
 
 app.controller("businessManagement.customers.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
-  $scope.compDetails = $scope.tab.data
-  $scope.custDetails = {}
-  $http({
-    method: 'GET',
-    url: '/api/support/customerProfile/?service=' + $scope.compDetails.pk,
-  }).
-  then(function(response) {
-    $scope.custDetails = response.data[0]
-    console.log($scope.custDetails, 'dddddddddddd');
-  });
-
-  $scope.openChartPopoup = function(pk) {
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',
-      size: 'md',
-      backdrop: true,
-      resolve: {
-        cPk: function() {
-          return $scope.custDetails.pk;
-        }
-      },
-      controller: function($scope, $users, $timeout, $uibModalInstance, cPk) {
-        $scope.cpk;
-        $http({
-          method: 'GET',
-          url: '/api/support/script/chatter/?pk=' + cPk,
-        }).
-        then(function(response) {
-          console.log('reeeeeeeeeeeeeeeeeeesssssssssss', response.data);
-          $scope.cpk = response.data.data
-          console.log($scope.cpk);
-        });
-
-        $timeout(function() {
-          console.log(window.location.host, 'hosttttttt');
-          $scope.src = '<script src="' + "http://" + window.location.host + "/script/chatter-" + $scope.cpk + ".js" + '"></script>'
-        }, 600);
-
-      },
-    })
-
-  }
-
-
-
-  $scope.fetchProcess = function() {
-    $scope.process_list =[]
-    $http({
-      method: 'GET',
-      url: 'api/support/companyProcess/?service='+$scope.compDetails.pk
-    }).
-    then(function(response) {
-      console.log(response.data, 'response');
-      $scope.process_list = response.data
-    });
-  }
-
-  $scope.fetchProcess()
-
-
-
-  $scope.add_process1 = function() {
-    if ($scope.process_text) {
-      for (var i = 0; i < $scope.process_list.length; i++) {
-        if ($scope.process_list[i] == $scope.process_text) {
-          Flash.create('warning', 'This process Is Already Added')
-          return
-        }
-      }
-      $http({
-        method: 'POST',
-        url: 'api/support/companyProcess/',
-        data: {
-          text: $scope.process_text,
-          service: $scope.compDetails.pk
-        }
-      }).
-      then(function(response) {
-        console.log(response.data, 'response');
-          $scope.process_list.push(response.data)
-          $scope.process_text = ''
-      });
-
-      // $scope.process_list.push($scope.process_text)
-    } else {
-      Flash.create('warning', 'Mention Some process')
-    }
-  }
-
-  $scope.close_process = function(indx) {
-    // console.log('closingl',indx,$scope.process_list);
-
-    $http({method : 'DELETE' , url : '/api/support/companyProcess/' + $scope.process_list[indx].pk + '/'}).
-    then(function(response){
-      Flash.create('success' , 'Deleted Successfully')
-      $scope.process_list.splice(indx, 1)
-    })
-
-
-  }
+    console.log($scope.tab.data);
+    $scope.data = $scope.tab.data
+  // $scope.compDetails = $scope.tab.data
+  // $scope.custDetails = {}
+  // $http({
+  //   method: 'GET',
+  //   url: '/api/support/customerProfile/?service=' + $scope.compDetails.pk,
+  // }).
+  // then(function(response) {
+  //   $scope.custDetails = response.data[0]
+  //   console.log($scope.custDetails, 'dddddddddddd');
+  // });
+  //
+  // $scope.openChartPopoup = function(pk) {
+  //   $uibModal.open({
+  //     templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',
+  //     size: 'md',
+  //     backdrop: true,
+  //     resolve: {
+  //       cPk: function() {
+  //         return $scope.custDetails.pk;
+  //       }
+  //     },
+  //     controller: function($scope, $users, $timeout, $uibModalInstance, cPk) {
+  //       $scope.cpk;
+  //       $http({
+  //         method: 'GET',
+  //         url: '/api/support/script/chatter/?pk=' + cPk,
+  //       }).
+  //       then(function(response) {
+  //         console.log('reeeeeeeeeeeeeeeeeeesssssssssss', response.data);
+  //         $scope.cpk = response.data.data
+  //         console.log($scope.cpk);
+  //       });
+  //
+  //       $timeout(function() {
+  //         console.log(window.location.host, 'hosttttttt');
+  //         $scope.src = '<script src="' + "http://" + window.location.host + "/script/chatter-" + $scope.cpk + ".js" + '"></script>'
+  //       }, 600);
+  //
+  //     },
+  //   })
+  //
+  // }
+  //
+  //
+  //
+  // $scope.fetchProcess = function() {
+  //   $scope.process_list =[]
+  //   $http({
+  //     method: 'GET',
+  //     url: 'api/support/companyProcess/?service='+$scope.compDetails.pk
+  //   }).
+  //   then(function(response) {
+  //     console.log(response.data, 'response');
+  //     $scope.process_list = response.data
+  //   });
+  // }
+  //
+  // $scope.fetchProcess()
+  //
+  //
+  //
+  // $scope.add_process1 = function() {
+  //   if ($scope.process_text) {
+  //     for (var i = 0; i < $scope.process_list.length; i++) {
+  //       if ($scope.process_list[i] == $scope.process_text) {
+  //         Flash.create('warning', 'This process Is Already Added')
+  //         return
+  //       }
+  //     }
+  //     $http({
+  //       method: 'POST',
+  //       url: 'api/support/companyProcess/',
+  //       data: {
+  //         text: $scope.process_text,
+  //         service: $scope.compDetails.pk
+  //       }
+  //     }).
+  //     then(function(response) {
+  //       console.log(response.data, 'response');
+  //         $scope.process_list.push(response.data)
+  //         $scope.process_text = ''
+  //     });
+  //
+  //     // $scope.process_list.push($scope.process_text)
+  //   } else {
+  //     Flash.create('warning', 'Mention Some process')
+  //   }
+  // }
+  //
+  // $scope.close_process = function(indx) {
+  //   // console.log('closingl',indx,$scope.process_list);
+  //
+  //   $http({method : 'DELETE' , url : '/api/support/companyProcess/' + $scope.process_list[indx].pk + '/'}).
+  //   then(function(response){
+  //     Flash.create('success' , 'Deleted Successfully')
+  //     $scope.process_list.splice(indx, 1)
+  //   })
+  //
+  //
+  // }
 
 })
 

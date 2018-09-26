@@ -250,3 +250,18 @@ class ProfileOrgChartsSerializer(serializers.ModelSerializer):
         read_only_fields = ('profile',)
     def get_profile(self, obj):
         return obj.user.profile.pk
+
+class SMSSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SMS
+        fields = ('pk', 'created' , 'frm','to','body','dated','user','spam' )
+
+class CallSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Call
+        fields = ('pk', 'created' , 'duration','incoming','frmOrTo','user' )
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ('pk', 'created' , 'lat','lon','user' )

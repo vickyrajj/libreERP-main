@@ -1,4 +1,4 @@
-<div ng-controller="businessManagement.customers.explore" style="padding-top:20px;">
+<!-- <div ng-controller="businessManagement.customers.explore" style="padding-top:20px;">
   <div class="col-md-12">
     <div class="col-md-8" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
       <div class="row text-center">
@@ -64,9 +64,6 @@
       </div>
     </div>
       </div>
-
-      <!-- <div class="row" style="margin-top:10px;" ng-if="compDetails.contactPerson.pk!=none">
-      </div> -->
     </div>
     <div class="col-md-4">
       <span class="text-center"><h3>Supports</h3></span>
@@ -131,6 +128,27 @@
             <span ng-bind-html="custDetails.firstMessage"></span>
           </div>
         </div> <br>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div class="container-fluid" style="padding:20px;" ng-controller="businessManagement.customers.explore">
+  <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:70vh;">
+    <div class="row">
+      <div class="container-fluid text-center">
+        <img ng-src="{{data.userPK | getDP}}" class="img img-circle" style="height:100px;width:100px;margin-bottom:20px;"> <br>
+        <span class="text-muted" style="font-size:18px;">{{data.pk | getName }}</span> <br><br>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="container-fluid">
+      <div class="row">
+        <h2 style="">Details of {{data.pk | getName }}</h2><br>
+        <h5><strong>Username:</strong> {{data.username}}
+          <h5><strong>Email:</strong> {{data.email}}
       </div>
     </div>
   </div>

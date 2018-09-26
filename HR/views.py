@@ -480,3 +480,24 @@ class OrgChartAPI(APIView):
         }
 
         return Response(toReturn )
+
+class SMSViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = SMS.objects.all()
+    serializer_class = SMSSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['user' ]
+
+class callViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Call.objects.all()
+    serializer_class = CallSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['user' ]
+
+class locationViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['user' ]

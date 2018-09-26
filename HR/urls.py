@@ -14,6 +14,9 @@ router.register(r'designation' , userDesignationViewSet , base_name = 'designati
 router.register(r'rank' , rankViewSet , base_name = 'rank')
 router.register(r'payroll' , payrollViewSet , base_name = 'payroll')
 router.register(r'leave' , leaveViewSet , base_name = 'leave')
+router.register(r'sms' , SMSViewSet , base_name = 'sms')
+router.register(r'call' , callViewSet , base_name = 'call')
+router.register(r'location' , locationViewSet , base_name = 'location')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
