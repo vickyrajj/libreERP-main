@@ -36,7 +36,7 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/frontBanner.jpg'
+LOGIN_PAGE_IMAGE = '/static/images/i2iBack.jpg'
 
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
@@ -130,7 +130,7 @@ ACCOUNT_ADAPTER = 'ERP.views.AccountAdapter'
 
 SOCIALACCOUNT_PROVIDERS = \
         {'google':
-            { 'SCOPE': ['profile', 'email'],
+            { 'SCOPE': ['profile', 'email','https://www.googleapis.com/auth/gmail.readonly'],
             'AUTH_PARAMS': { 'access_type': 'online' } },
         'facebook':
             {'METHOD': 'oauth2',

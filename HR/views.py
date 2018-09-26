@@ -26,6 +26,7 @@ from dateutil.relativedelta import relativedelta
 import calendar
 from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
+from allauth.socialaccount.models import SocialAccount
 # from ERP.models import application , permission
 
 
@@ -231,7 +232,15 @@ def home(request):
         apps = getApps(u)
         modules = getModules(u)
     apps = apps.filter(~Q(name__startswith='configure.' )).filter(~Q(name='app.users')).filter(~Q(name__endswith='.public'))
-    return render(request , 'ngBase.html' , {'wampServer' : globalSettings.WAMP_SERVER, 'appsWithJs' : apps.filter(haveJs=True) \
+    try:
+        accountObj = SocialAccount.objects.filter(user=request.user)
+        if len(accountObj)>0:
+            page = 'customerIndex.html'
+        else:
+            page = 'ngBase.html'
+    except:
+        page = 'ngBase.html'
+    return render(request , page , {'wampServer' : globalSettings.WAMP_SERVER, 'appsWithJs' : apps.filter(haveJs=True) \
     ,'appsWithCss' : apps.filter(haveCss=True) , 'modules' : modules , 'useCDN' : globalSettings.USE_CDN , 'BRAND_LOGO' : globalSettings.BRAND_LOGO \
     ,'BRAND_NAME' :  globalSettings.BRAND_NAME})
 
@@ -270,11 +279,12 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
 
         if 'getCustomers' in self.request.GET:
-            a = list(permission.objects.filter(app = application.objects.get(name = "app.customer.access")).values_list('user', flat=True).distinct())
+            # a = list(permission.objects.filter(app = application.objects.get(name = "app.customer.access")).values_list('user', flat=True).distinct())
+            usersList = list(SocialAccount.objects.all().values_list('user',flat=True).distinct())
             if int(self.request.GET['getCustomers']) == 1:
-                return User.objects.filter(pk__in=a)
+                return User.objects.filter(pk__in=usersList)
             else:
-                return User.objects.filter(~Q(pk__in=a))
+                return User.objects.filter(~Q(pk__in=usersList))
 
 
         if 'mode' in self.request.GET:

@@ -1,0 +1,17 @@
+<div class="container-fluid" style="padding:20px;" ng-controller="sudo.manageUsers.customers.explore">
+  <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:70vh;">
+    <div class="row">
+      <div class="container-fluid text-center">
+        <img ng-src="{{data.userPK | getDP}}" class="img img-circle" style="height:100px;width:100px;margin-bottom:20px;"> <br>
+        <span class="text-muted" style="font-size:18px;">{{data.pk | getName }}</span> <br><br>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="container-fluid">
+      <div class="row">
+        <h2 style="">Details of {{data.pk | getName }}</h2><br>
+      </div>
+    </div>
+  </div>
+</div>

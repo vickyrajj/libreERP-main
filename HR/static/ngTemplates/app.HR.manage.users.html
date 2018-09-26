@@ -17,14 +17,13 @@
         <generic-Table callback-Fn="tableAction" data="data.tableData" config-Obj="{{config}}"></generic-Table>
       </uib-tab>
 
-      <uib-tab>
+      <!-- <uib-tab>
         <uib-tab-heading>
           New Customer
         </uib-tab-heading>
-        <!-- <generic-Form template="'/static/ngTemplates/app.HR.form.createCustomer.html'"  form-title="'Create New Customer'"></generic-Form> -->
         <div ng-include="'/static/ngTemplates/app.HR.form.createCustomer.html'" ></div>
 
-      </uib-tab>
+      </uib-tab> -->
 
 
       <uib-tab>
@@ -49,10 +48,6 @@
           <div ng-include="'/static/ngTemplates/app.HR.form.editPermissions.html'"></div>
         </div>
 
-        <div ng-if="tab.app == 'editDesignation'">
-          <div ng-include="'/static/ngTemplates/app.HR.form.editDesignation.html'" data="tab.data" submit-Fn="editDesignation($index)" form-title="tab.title"></div>
-        </div>
-
         <!-- <div ng-if="tab.app == 'editPayroll'">
           <div ng-include="'/static/ngTemplates/app.HR.form.editPayroll.html'"></div>
 
@@ -60,8 +55,8 @@
         <div ng-if="tab.app == 'viewProfile'">
           <div ng-include="'/static/ngTemplates/app.HR.manage.users.explore.html'"></div>
         </div>
-        <div ng-if="tab.app == 'editCustomerForm'">
-          <div ng-include="'/static/ngTemplates/app.HR.form.createCustomer.html'" data="tab.data" ></div>
+        <div ng-if="tab.app == 'CustomerExplore'">
+          <div ng-include="'/static/ngTemplates/app.HR.manage.customers.explore.html'" data="tab.data" ></div>
         </div>
 
       </uib-tab>

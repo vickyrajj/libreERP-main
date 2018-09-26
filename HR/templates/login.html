@@ -19,17 +19,23 @@
 <body>
   <div class="col-md-8" style="background-image: url('{{backgroundImage}}');background-size: cover;height:100%;position:absolute;left:0px;">
   </div>
-  <div class="col-md-4" style="background-color:#eeeeee;height:100%;position:absolute;right:0px;">
-    <form method="post" class="form-signin" action="">{% csrf_token %}
-      <h2 class="form-signin-heading" style="color:black;margin-top:200px;">Login</h2> {% if authStatus.status != 'default' %}
+  <div class="col-md-4 text-center" style="background-color:#eeeeee;height:100%;position:absolute;right:0px;">
+    <img src="/static/images/i2i.png" alt="" style="margin-top:10vh;">
+    <form method="post" class="form-signin" action="" style="margin-top:7vh">
+      {% csrf_token %}
+      <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
+        <i class="fa fa-google-plus pull-left"></i>Login with Google
+      </a>
+      <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block" >
+        <i class="fa fa-facebook pull-left"></i> Login with Facebook
+      </a>
+
+      <h2 class="form-signin-heading" style="color:black;margin-top:7vh">Login</h2>
+      {% if authStatus.status != 'default' %}
       <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
       {% endif %}
-
       <div id="alerts">
-
       </div>
-
-
       <label for="username" class="sr-only">Username/Email</label>
       <input id="id" name="username" type="text" class="form-control" placeholder="Username/Email/Mobile" required autofocus>
       <label for="password" class="sr-only">Password</label>

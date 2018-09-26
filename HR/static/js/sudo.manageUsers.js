@@ -12,6 +12,12 @@ app.controller('admin.manageUsers.mailAccount', function($scope, $http) {
   }
 });
 
+app.controller('sudo.manageUsers.customers.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
+
+  $scope.data = $scope.tab.data;
+  console.log($scope.data);
+})
+
 app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
   $scope.data = $scope.tab.data;
@@ -955,7 +961,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
                 console.log("will add tab profile : ");
                 console.log(response);
                 $scope.addTab({
-                  title: 'Edit Profile for ' + u.first_name + ' ' + u.last_name,
+                  title: 'Edit Profile for : ' + u.pk,
                   cancel: true,
                   app: 'editProfile',
                   data: response,
@@ -1029,7 +1035,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
                 console.log("will add tab profile : ");
                 console.log(response);
                 $scope.addTab({
-                  title: 'Profile for ' + u.first_name + ' ' + u.last_name,
+                  title: 'Profile Details for : ' + u.pk,
                   cancel: true,
                   app: 'viewProfile',
                   data: response,
@@ -1041,32 +1047,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
             })(target));
           }
         }
-      } else if (action == 'editDesignation') {
-        for (var i = 0; i < $scope.data.tableData.length; i++) {
-          if ($scope.data.tableData[i].pk == target) {
-            u = $users.get(target)
-            $http.get('/api/HR/designation/' + $scope.data.tableData[i].designation + '/').
-            success((function(target) {
-              return function(response) {
-                response.userPK = target;
-                // console.log(target);
-                u = $users.get(target)
-                console.log("will add tab profile : ");
-                console.log(response);
-                $scope.addTab({
-                  title: 'Edit Designation for ' + u.first_name + ' ' + u.last_name,
-                  cancel: true,
-                  app: 'editDesignation',
-                  data: response,
-                  active: true
-                })
-
-                console.log($scope.tabs);
-              }
-            })(target));
-          }
-        }
-      } else if (action == 'editPayroll') {
+      }else if (action == 'editPayroll') {
         for (var i = 0; i < $scope.data.tableData.length; i++) {
           if ($scope.data.tableData[i].pk == target) {
             u = $users.get(target)
@@ -1107,9 +1088,9 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
 
     for (var i = 0; i < $scope.dataCustomer.tableDataCustomer.length; i++) {
       if ($scope.dataCustomer.tableDataCustomer[i].pk == parseInt(target)) {
-        if (action == 'editCustomer') {
-          var title = 'Edit Customer :' ;
-          var appType = 'editCustomerForm';
+        if (action == 'customerExplore') {
+          var title = 'Customer Details For : ' ;
+          var appType = 'CustomerExplore';
           // var response
           $http({
             method: 'GET',
@@ -1118,7 +1099,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
           then(function(response) {
             console.log(response.data);
             $scope.addTab({
-              title: title + response.data.username,
+              title: title + response.data.pk,
               cancel: true,
               app: appType,
               data: response.data,
@@ -1126,13 +1107,6 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
             })
           });
 
-        } else if (action == 'deleteCustomer') {
-          $http({method : 'DELETE' , url : '/api/HR/usersAdminMode/' + $scope.dataCustomer.tableDataCustomer[i].pk +'/'}).
-          then(function(response) {
-            $scope.dataCustomer.tableDataCustomer.splice(i , 1);
-            Flash.create('success', 'Deleted Successfully')
-          })
-          return
         }
 
       }

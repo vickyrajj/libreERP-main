@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block specific_head %}
+  <title>CIOC</title>
+{% endblock %}
+
+{% block specific_css %}
+<link href="{% static 'css/agency.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
+{% endblock %}
+{% block header %}
+
+
+
+
+{% endblock %}
+<!-- Header -->
+{% block content %}
+
+
+<div class="row ">
+  <div class="col-md-10 col-md-offset-1 text-center">
+    <div class="row" style="padding-top:20px;;padding-bottom:20px;font-size:25px;height:10vh">
+      <span >Thank you for granting the consent</span>
+    </div>
+    <div class="row" style="height:80vh">
+      <img src="/static/images/borrow-money-online.jpg" alt="" height="100%"> <br>
+    </div>
+    <div class="row" style="height:8vh;margin-top:10px;font-size:22px">
+      <a href="/logout">Logout</a>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+{% block specific_js %}
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/classie.js' %}"></script>
+<script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>
+<script src="{% static 'js/agency.js' %}"></script>
+<script src="{% static 'js/angular.min.js' %}"></script>
+<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+<script src="{% static 'js/app.homepage.js' %}"></script>
+
+{% endblock %}
