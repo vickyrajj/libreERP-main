@@ -1,138 +1,3 @@
-<!-- <div ng-controller="businessManagement.customers.explore" style="padding-top:20px;">
-  <div class="col-md-12">
-    <div class="col-md-8" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
-      <div class="row text-center">
-        <h2><i class="fa fa-building-o"></i> &nbsp;{{compDetails.name}}</h2>
-        <h4 ng-if="compDetails.web.length>0"><i class="fa fa-globe"></i> &nbsp;<a href="{{compDetails.web}}" target="_blank">{{compDetails.web}}</a></h4>
-        <h4 ng-if="compDetails.telephone.length>0"><i class="fa fa-phone-square"></i> &nbsp;{{compDetails.telephone}}</h4>
-      </div>
-      <div class="row" style="margin-top:20px;font-size:18px;padding:5px 15px" ng-if="compDetails.about.length>0">
-        <span ng-if="compDetails.logo.length>0"><strong>Logo : </strong>{{compDetails.logo}}<br></span>
-        <span ng-if="compDetails.cin.length>0"><strong>CIN : </strong>{{compDetails.cin}}<br></span>
-        <span ng-if="compDetails.tin.length>0"><strong>TIN : </strong>{{compDetails.tin}}<br></span>
-      </div>
-      <span ng-if="custDetails.userApiKey.length>0" style="font-size:18px"><strong>apiKey : </strong>{{custDetails.userApiKey}}<br></span>
-      <div class="row" style="margin-top:20px;font-size:18px;padding:5px 15px" ng-if="compDetails.about.length>0">
-        <span><strong>About : </strong><br></span> {{compDetails.about}}
-      </div>
-      <div class="row" style="margin-top:30px;">
-        <div class="col-md-6" ng-if="compDetails.address.pk!=none">
-          <span class="text-center"><h4><b>Address</b></h4><br></span>
-          <div class="col-md-2">
-            <i class="fa fa-map-marker fa-3x pull-right" style="color:#8faec2;"></i>
-          </div>
-          <div class="col-md-10" style="font-size:18px">
-            <span>{{compDetails.address.street}}</span> <br>
-            <span>{{compDetails.address.city}} - {{compDetails.address.pincode}}</span> <br>
-            <span>{{compDetails.address.state}} , {{compDetails.address.country}}</span> <br>
-          </div>
-        </div>
-        <div class="col-md-6" ng-if="compDetails.contactPerson.pk!=none" style="padding-left:20px">
-          <span class="text-center"><h4><b>Contact Person</b></h4><br></span>
-          <div class="row">
-            <div class="col-md-2">
-              <i class="fa fa-user fa-2x pull-right" style="color:#8faec2;"></i>
-            </div>
-            <div class="col-md-10" style="font-size:18px">
-              <span>{{compDetails.contactPerson.first_name}}</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <i class="fa fa-mobile-phone fa-2x pull-right" style="color:#8faec2;"></i>
-            </div>
-            <div class="col-md-10" style="font-size:18px">
-              <span>{{compDetails.mobile}}</span>
-            </div>
-          </div>
-        </div>
-      </div><br><br>
-      <div class="col-md-8">
-        <label>Processes</label> <br>
-        <div class="input-group">
-        <input type="text" class="form-control" placeholder="Process" ng-model="process_text">
-        <span class="input-group-addon" ng-click="add_process1()" style="cursor:pointer">Add</span>
-        </div>
-        <div class="row" style="padding-top:15px;">
-        <div class="col-md-6" ng-repeat="pl in process_list" style="margin-top:10px;">
-        <div class="container-fluid card">
-          <i class="fa fa-times fa-lg pull-right" style="padding-top:10px;cursor:pointer" ng-click="close_process($index)"></i>
-          <div class="row container-fluid" style="padding-top:10px;">
-            <h4>{{pl.text}}</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <span class="text-center"><h3>Supports</h3></span>
-      <div class="row" ng-if="custDetails.supportBubbleColor.length>0" style="padding-left:10px">
-        <div class="col-md-6">
-          <h4><i class="fa fa-gg-circle"></i> &nbsp; SupportBubble Colour</h4>
-        </div>
-        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.supportBubbleColor}};margin-top:10px">
-          <h3> </h3>
-        </div>
-        <br>
-      </div>
-      <div class="row" ng-if="custDetails.windowColor.length>0" style="padding-left:10px">
-        <div class="col-md-6">
-          <h4><i class="fa fa-desktop"></i> &nbsp; Window Colour</h4>
-        </div>
-        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.windowColor}};margin-top:10px">
-          <h3> </h3>
-        </div>
-        <br>
-      </div>
-
-      <div class="row" ng-if="custDetails.iconColor.length>0" style="padding-left:10px">
-        <div class="col-md-6">
-          <h4><i class="fa fa-desktop"></i> &nbsp; Icon Colour</h4>
-        </div>
-        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.iconColor}};margin-top:10px">
-          <h3> </h3>
-        </div>
-        <br>
-      </div>
-
-      <div class="row" style="padding-left:25px">
-        <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-primary" ng-if="custDetails.chat" ng-click="openChartPopoup(compDetails)">Generate Script</span></h4><br>
-        <h4><i class="fa fa-phone"></i> &nbsp; Call &nbsp;<i class="fa {{custDetails.call?'fa-check':'fa-times'}}" style="color:{{custDetails.call?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-envelope"></i> &nbsp; Email &nbsp;<i class="fa {{custDetails.email?'fa-check':'fa-times'}}" style="color:{{custDetails.email?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-video-camera"></i> &nbsp; Video&Audio &nbsp;<i class="fa {{custDetails.videoAndAudio?'fa-check':'fa-times'}}" style="color:{{custDetails.videoAndAudio?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-bar-chart-o"></i> &nbsp; VR &nbsp;<i class="fa {{custDetails.vr?'fa-check':'fa-times'}}" style="color:{{custDetails.vr?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-phone"></i> &nbsp; Call Back &nbsp;<i class="fa {{custDetails.callBack?'fa-check':'fa-times'}}" style="color:{{custDetails.callBack?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-ticket"></i> &nbsp; Ticket &nbsp;<i class="fa {{custDetails.ticket?'fa-check':'fa-times'}}" style="color:{{custDetails.ticket?'green':'red'}}"></i></i></h4><br>
-        <div class="row" ng-if="custDetails.name.length>0" style="padding-left:10px">
-          <div class="col-md-4">
-            <h4><i class="fa fa-desktop"></i> &nbsp; Name </h4>
-          </div>
-          <div class="col-md-8">
-            <h4> {{custDetails.name}}  </h4>
-          </div>
-        </div><br>
-        <div class="row" ng-if="custDetails.dp" style="padding-left:10px">
-          <div class="col-md-4">
-            <h4><i class="fa  fa-picture-o"></i> &nbsp; Picture </h4>
-          </div>
-          <div class="col-md-8">
-            <h4> <img src="{{custDetails.dp}}" width="100px" alt="">  </h4>
-          </div>
-        </div>
-        <div class="row" ng-if="custDetails.firstMessage.length>0">
-          <div class="col-md-4">
-            <h4> <i class="fa fa-commenting-o"></i> &nbsp;First Message</h4>
-          </div>
-          <div class="col-md-8">
-            <span ng-bind-html="custDetails.firstMessage"></span>
-          </div>
-        </div> <br>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 
 <div class="container-fluid" style="padding:20px;" ng-controller="businessManagement.customers.explore">
   <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:70vh;">
@@ -141,14 +6,57 @@
         <img ng-src="{{data.userPK | getDP}}" class="img img-circle" style="height:100px;width:100px;margin-bottom:20px;"> <br>
         <span class="text-muted" style="font-size:18px;">{{data.pk | getName }}</span> <br><br>
       </div>
+      <button type="button" class="btn btn-primary" ng-click="getToken()">Generate</button>
     </div>
   </div>
   <div class="col-md-9">
     <div class="container-fluid">
       <div class="row">
-        <h2 style="">Details of {{data.pk | getName }}</h2><br>
-        <h5><strong>Username:</strong> {{data.username}}
-          <h5><strong>Email:</strong> {{data.email}}
+        <h2>Details of {{data.pk | getName }}</h2><br>
+        <h5><strong>Username:</strong> {{data.username}}</h5>
+        <h5><strong>Email:</strong> {{data.email}}</h5>
+        <h5><strong>Mobile:</strong> <span>{{data.profile.mobile}}</span>   <button type="button" class="btn btn-default" ng-click="showEdit()" ng-if="mobileEdit">Edit <i class="fa fa-pencil"></i></button> </h5>
+        <div class="input-group col-md-4" ng-if="status">
+          <input type="text" class="form-control" ng-model="form.mobile" />
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-primary" ng-click="saveMobile()">Save</button>
+        </span>
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <uib-tabset>
+          <uib-tab>
+            <uib-tab-heading>
+              SMS <i class="fa fa-envelope"></i>
+            </uib-tab-heading>
+            <generic-Table  callback-Fn="tableAction" data="dataVal.smsData" config-Obj="{{smsConfig}}"></generic-Table>
+          </uib-tab>
+          <uib-tab active="searchTabActive">
+            <uib-tab-heading>
+              Call <i class="fa fa-phone"></i>
+            </uib-tab-heading>
+            <generic-Table callback-Fn="tableAction" data="dataVal.callData" config-Obj="{{callConfig}}"></generic-Table>
+          </uib-tab>
+          <uib-tab >
+            <uib-tab-heading>
+              Location <i  class="fa fa-map-marker"></i>
+            </uib-tab-heading>
+            <generic-Table callback-Fn="tableAction" data="dataVal.locationData" config-Obj="{{locationConfig}}"></generic-Table>
+          </uib-tab>
+          <uib-tab >
+            <uib-tab-heading>
+              Contact <i  class="fa fa-address-book"></i>
+            </uib-tab-heading>
+            <generic-Table callback-Fn="tableAction" data="dataVal.mobileContactData" config-Obj="{{mobileContactConfig}}"></generic-Table>
+          </uib-tab>
+          <!-- <uib-tab >
+            <uib-tab-heading>
+              Email <i  class="fa fa-address-book"></i>
+            </uib-tab-heading>
+            <generic-Table callback-Fn="tableAction" data="dataVal.emailData" config-Obj="{{emailConfig}}"></generic-Table>
+          </uib-tab> -->
+          </uib-tabset>
       </div>
     </div>
   </div>

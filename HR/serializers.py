@@ -255,13 +255,73 @@ class SMSSerializer(serializers.ModelSerializer):
     class Meta:
         model = SMS
         fields = ('pk', 'created' , 'frm','to','body','dated','user','spam' )
+        read_only_fields=('user',)
+    def create(self , validated_data):
+        d = SMS(**validated_data)
+        try:
+            user = User.objects.get(profile__mobile__contains = self.context['request'].data['to'])
+            d.user=user
+        except:
+            user = User.objects.get(profile__mobile__contains = self.context['request'].data['frm'])
+            d.user=user
+        finally:
+            pass
+
+        d.save()
+        return d
+
 
 class CallSerializer(serializers.ModelSerializer):
     class Meta:
         model = Call
-        fields = ('pk', 'created' , 'duration','incoming','frmOrTo','user' )
+        fields = ('pk', 'created' ,'dated', 'duration','typ','frmOrTo','user','owner' )
+    def create(self , validated_data):
+        print self.context['request'].data
+        d = Call(**validated_data)
+        try:
+            user = User.objects.get(profile__mobile__contains = self.context['request'].data['owner'])
+            d.user=user
+        except:
+            pass
+        finally:
+            pass
+
+        d.save()
+        return d
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ('pk', 'created' , 'lat','lon','user' )
+        fields = ('pk', 'created' , 'lat','lon','user','owner' )
+    def create(self , validated_data):
+        print self.context['request'].data
+        d = Location(**validated_data)
+        try:
+            user = User.objects.get(profile__mobile__contains = self.context['request'].data['owner'])
+            d.user=user
+        except:
+            pass
+        finally:
+            pass
+
+        d.save()
+        return d
+
+class MobileContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MobileContact
+        fields = ('pk', 'name' ,'mobile', 'user','owner' )
+    def create(self , validated_data):
+
+        d = MobileContact(**validated_data)
+
+        try:
+            user = User.objects.get(profile__mobile__contains = self.context['request'].data['owner'])
+            d.user=user
+        except:
+            pass
+        finally:
+            pass
+
+        d.save()
+        return d

@@ -17,9 +17,11 @@ router.register(r'leave' , leaveViewSet , base_name = 'leave')
 router.register(r'sms' , SMSViewSet , base_name = 'sms')
 router.register(r'call' , callViewSet , base_name = 'call')
 router.register(r'location' , locationViewSet , base_name = 'location')
+router.register(r'mobilecontact' , MobileContactViewSet , base_name = 'mobilecontact')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'leavesCal/$' , LeavesCalAPI.as_view()),
     url(r'profileOrgCharts/$' , OrgChartAPI.as_view()),
+    url(r'emailSave/$' , emailSaveAPI.as_view()),
 ]

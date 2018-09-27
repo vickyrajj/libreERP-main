@@ -26,7 +26,7 @@ from dateutil.relativedelta import relativedelta
 import calendar
 from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
-from allauth.socialaccount.models import SocialAccount
+from allauth.socialaccount.models import *
 # from ERP.models import application , permission
 
 
@@ -482,22 +482,43 @@ class OrgChartAPI(APIView):
         return Response(toReturn )
 
 class SMSViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     queryset = SMS.objects.all()
     serializer_class = SMSSerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['user' ]
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['frm','user']
 
 class callViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     queryset = Call.objects.all()
     serializer_class = CallSerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['user' ]
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['frmOrTo','user' ]
 
 class locationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['user' ]
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['lat','user' ]
+
+class MobileContactViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    queryset = MobileContact.objects.all()
+    serializer_class = MobileContactSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name','user' ]
+
+class emailSaveAPI(APIView):
+    def get(self , request , format = None):
+        socialAcc = SocialAccount.objects.get(user=request.GET['userId'])
+        tokens = SocialToken.objects.get(pk = socialAcc.pk)
+        with open('HR/storage.json') as json_file:
+            data = json.load(json_file)
+            print type(data)
+            print tokens.token,'gggggggg'
+            data['token_response']['access_token'] = tokens.token
+            data['access_token'] = tokens.token
+            data['client_secret'] = tokens.token_secret
+            json.dumps(data)
+        return JsonResponse({} ,status =200 )

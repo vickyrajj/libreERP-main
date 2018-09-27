@@ -257,23 +257,40 @@ class Leave(models.Model):
 
 class SMS(models.Model):
     created = models.DateTimeField(auto_now_add = True)
-    frm = models.CharField(max_length = 12 , null = True)
-    to = models.CharField(max_length = 12 , null = True)
-    body = models.CharField(max_length = 500 , null = True)
-    dated = models.DateTimeField(auto_now_add = True)
+    frm = models.CharField(max_length = 15 , null = True)
+    to = models.CharField(max_length = 15 , null = True)
+    body = models.CharField(max_length = 1500 , null = True)
+    dated = models.DateTimeField(auto_now_add = False)
     user = models.ForeignKey(User , related_name = "smsAuthored" , null=True)
     spam = models.BooleanField(default = False)
+    class Meta:
+        unique_together = ('body', 'frm',)
+
+TYPE_CHOICES = (
+    ('INCOMING','INCOMING'),
+    ('OUTGOING','OUTGOING'),
+    ('MISSED','MISSED')
+)
+
 
 class Call(models.Model):
-    dated = models.DateTimeField(auto_now_add = True)
+    dated = models.DateTimeField(auto_now_add = False)
     created = models.DateTimeField(auto_now_add = True)
-    duration = models.CharField(max_length = 12 , null = True)
-    incoming = models.BooleanField(default = False)
-    frmOrTo = models.CharField(max_length = 12 , null = True)
+    duration = models.CharField(max_length = 15 , null = True)
+    typ = models.CharField(choices = TYPE_CHOICES , max_length = 100 , default = 'INCOMING')
+    frmOrTo = models.CharField(max_length = 15 , null = True)
+    owner = models.CharField(max_length = 15 , null = True)
     user = models.ForeignKey(User , related_name = "callAuthored" , null=True)
 
 class Location(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     lat = models.CharField(max_length = 12 , null = True)
     lon = models.CharField(max_length = 12 , null = True)
+    owner = models.CharField(max_length = 15 , null = True)
     user = models.ForeignKey(User , related_name = "locationAuthored" , null=True)
+
+class MobileContact(models.Model):
+    name =  models.CharField(max_length = 25 , null = True)
+    mobile = models.CharField(max_length = 15 , null = True)
+    owner = models.CharField(max_length = 15 , null = True)
+    user = models.ForeignKey(User , related_name = "contactAuthored" , null=True)
