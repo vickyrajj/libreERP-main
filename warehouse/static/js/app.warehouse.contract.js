@@ -186,6 +186,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
         }
       },
       controller: function($scope, contract, $uibModalInstance){
+        console.log("aaaaaaaaaaddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
         $scope.contract = contract;
         $http({method : 'GET' , url : '/api/warehouse/commodity/?contract=' + $scope.contract.pk}).
         then(function(response) {
@@ -302,16 +303,26 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           }
         }
 
+
+        // $scope.downloadStatus=function(checkin,checkout,pk){
+        //   console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        //   $http({method : 'GET' , url : '/api/warehouse/downloadInvoice/?saveOnly=1&contract=' + response.data.pk}).
+        //   then(function(response) {
+        //     Flash.create('success' , 'Saved')
+        //   })
+        // }
+
       $scope.close=function(){
         $uibModalInstance.dismiss('cancel');
       }
-      $scope.excelResp = function (){
+      $scope.downloadItems = function (){
         console.log($scope.contract);
         window.open('/api/warehouse/downloadExcelReponse/?contractData='+$scope.contract.pk)
       }
+      var date = new Date();
       $scope.form={
-        from:new Date(),
-        to:new Date()
+        from: new Date(date.getFullYear(), date.getMonth(), 1),
+        to:new Date(date.getFullYear(), date.getMonth() + 1, 0)
       }
       $scope.downloadIn = function (comm){
         console.log(comm);
@@ -319,9 +330,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
         console.log($scope.form.to);
         window.open('/api/warehouse/downloadReceipt/?commodity='+comm + '&fromDate='+$scope.form.from.toJSON() + '&to='+$scope.form.to.toJSON())
       }
-
-
-
       },
     }).result.then(function () {
 

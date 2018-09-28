@@ -719,22 +719,55 @@ class DownloadReceipt(APIView):
         return ExcelResponse(toReturn)
 
 
-def drawTable(response):
+def genCargo(response,commodityData,companyData,request):
         cm = 2.54
         elements = []
         s = getSampleStyleSheet()
         s = s["BodyText"]
         s.wordWrap = 'CJK'
+
+        # datatop=[
+        #         ['Company Details','Contract/Agent Details'],
+        #         ['ABA Warehouse Bangolre','CIOC Banglore']
+        #      ]
+        # dat = [[Paragraph(cell, s) for cell in row] for row in datatop]
+        # toptable = Table(dat,rowHeights=(10*cm,30*cm))
+        # styleforTop= TableStyle([
+        #                     ('BACKGROUND',(0,0),(1,1),colors.white),
+        #                     ('VALIGN',(0,0),(-1,-1),'TOP'),
+        #                     ('LINEBEFORE', (0,0), (-2,2), 0.25, colors.black),
+        #                     ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+        #                    ])
+        #
         doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
-        data=[
-                ['Description', 'No.of Packages', 'Weight/Vol', 'Comments'],
-                ['61513333333333333333333333333333', '2', '3', '4'],
-                ['555555555555555555555555\n5555555555555555555555555555555555555555555555', '6', '7', '8'],
-                ['9', '10', '11', '12'],
-                ['13', '14', '15', '16'],
-             ]
-        data2 = [[Paragraph(cell, s) for cell in row] for row in data]
-        table = Table(data2)
+        # datat=[
+        #         ['Description', 'No.of Packages', 'Weight/Vol', 'Comments'],
+        #         ['61513333333333333333333333333333', '2', '3', '4'],
+        #         ['555555555555555555555555\n5555555555555555555555555555555555555555555555', '6', '7', '8'],
+        #         ['9', '10', '11', '12'],
+        #         ['13', '14', '15', '16'],
+        #      ]
+        # datat2 = [[Paragraph(cell, s) for cell in row] for row in datat]
+        rows = [['Agent/Contractor Name \n Anchor LOgistics India Pvt Ltd  \n SY. NO. 19/4, KANEKALLU VILLAGE \n (OPPOSITE MARIGOLD LOGISTICS PVT LTD) \n JADIGENAHALLI HOBLI, HOSKOTE TALUK, \n KADUGODI POST, BANGALORE 560067 \n GSTIN : 29AAGCA0033L1ZS', str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\n \n'  ]]
+        tablet = Table(rows, colWidths=(95.5*mm, 95.5*mm))
+        row1 = [['Description','No.of Packages','Weight/Vol', 'Comments'],['This is to confirm receipt of the following goods into the Warehouse\n'  + str(commodityData.commodity.name) + '\n \n \n \n Bill of Entry No: \n Date: \n Container Number: \n Truck Number: \n Driver Name: \n','\n' + str(commodityData.checkIn) + '\n \n \n \n  \n \n \n \n \n','' ,'']]
+        table = Table(row1, colWidths=(115*mm, 27*mm,25*mm, 25*mm))
+
+
+        # data=[
+        #         ['Description', 'No.of Packages', 'Weight/Vol', 'Comments'],
+        #         [commodityData.commodity.name + "\n Bill Of Entry No:\n Date: ", '2', '3', '4'],
+        #
+        #      ]
+        # style = TableStyle([
+        #                    ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+        #                    ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+        #                    ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+        #                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+        #                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+        #                    ])
+        # data2 = [[Paragraph(cell, s) for cell in row] for row in data]
+        # table = Table(data2)
         style = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'RIGHT'),
                            ('VALIGN',(0,0),(0,-1),'MIDDLE'),
@@ -763,30 +796,36 @@ def drawTable(response):
                             ('ALIGN',(0,1),(-1,1),'LEFT'),
                             ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                            ])
-        datatop=[
-                ['Company Details','Contract/Agent Details'],
-                ['ABA Warehouse Bangolre','CIOC Banglore']
-             ]
-        dat = [[Paragraph(cell, s) for cell in row] for row in datatop]
-        toptable = Table(dat,rowHeights=(10*cm,30*cm))
-        styleforTop= TableStyle([
-                            ('BACKGROUND',(0,0),(1,1),colors.white),
-                            ('VALIGN',(0,0),(-1,-1),'TOP'),
-                            ('LINEBEFORE', (0,0), (-2,2), 0.25, colors.black),
-                            ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                           ])
-        toptable.setStyle(styleforTop)
+
+        # toptable.setStyle(styleforTop)
         table.setStyle(style)
+        tablet.setStyle(style)
         table1.setStyle(styleforbottom)
-        elements.append(toptable)
+        # elements.append(toptable)
+        elements.append(tablet)
         elements.append(table)
         elements.append(gaptable)
         elements.append(gaptable)
         elements.append(table1)
         doc.build(elements)
 
-def downloadPdf(request):
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=somefilename.pdf'
-    drawTable(response)
-    return response
+# def downloadPdf(request):
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename=somefilename.pdf'
+#     drawTable(response)
+#     return response
+
+class DownloadPdf(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        response = HttpResponse(content_type='application/pdf')
+        commodityData = CommodityQty.objects.get(id = request.GET['valPK'])
+        companyData = Contract.objects.get(id = commodityData.commodity.contract.pk)
+        response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , commodityData.pk)
+        genCargo(response,commodityData,companyData,request)
+        # f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/invoice%s_%s.pdf' %
+        #                       ( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, commodityData.pk)), 'wb')
+        # f.write(response.content)
+        # f.close()
+        # # return Response(status=status.HTTP_200_OK)
+        return response

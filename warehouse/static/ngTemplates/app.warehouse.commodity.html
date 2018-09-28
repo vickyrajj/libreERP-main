@@ -13,12 +13,13 @@
     <div class="row">
       <div class="col-md-7">
       </div>
-      <div class="col-md-3 text-center">
-        <label> Search</label>
+      <div class="col-md-3 text-left">
+        <label> Search</label></br>
         <input type="text" class="form-control" ng-model='searchText'>
       </div>
-      <div class="col-md-2" style="padding-top:22px">
-        <button type="button" class="btn btn-primary" name="button"> <i class="fa fa-download" ng-click="excelResp()">Export Excel</i> </button>
+      <div class="col-md-2 text-left" style="padding-top:22px">
+        <label> Export Excel</label></br>
+        <button type="button" class="btn btn-primary" name="button" ng-click="downloadItems()"> <i class="fa fa-download" ></i> </button>
       </div>
     </div>
     <br>
@@ -128,7 +129,7 @@
               </div>
             </div>
             <div class="col-md-2 text-right">
-              <label>View</label> <br>
+              <label>Download Excel</label> <br>
               <button type="button"class="btn btn-secondary pull-right" name="button" ng-click="downloadIn(c.pk)"> <i class="fa fa-download"></i></button>
             </div>
           </div>
@@ -140,6 +141,7 @@
                 <th class="text-center">Out</th>
                 <th class="text-center"> Remaining Qt. </th>
                 <th class="text-center">Download</th>
+
               </tr>
               <tbody ng-repeat="s in comodityData" >
                 <tr>
@@ -147,7 +149,13 @@
                   <td>{{s.checkIn}}</td>
                   <td>{{s.checkOut}}</td>
                   <td>{{s.balance}}</td>
-                  <td><i class="fa fa-download" ng-click="download()"></i></td>
+                  <td>
+                    <!-- <i class="fa fa-download" ng-click="downloadStatus(s.checkIn,s.checkOut,s.pk)"></i> -->
+                    <a ng-if="s.checkIn!=null" href="/api/warehouse/downloadPdf/?valPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                    <a ng-if="s.checkOut!=null" href="/api/warehouse/downloadPdf/?valPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                  </td>
+
+                    <!-- <a href="/api/warehouse/downloadPdf/"><i class="fa fa-2x fa-download">PDF</i> </a> -->
                 </tr>
               </tbody>
             </table>
