@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'leavesCal/$' , LeavesCalAPI.as_view()),
     url(r'profileOrgCharts/$' , OrgChartAPI.as_view()),
     url(r'emailSave/$' , emailSaveAPI.as_view()),
+    url(r'emailDataSave/$' , emailDataSaveAPI.as_view()),
 ]

@@ -255,7 +255,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
 
 
 $scope.getToken = function(){
-  console.log("AAAA");
   $http({
     method: 'GET',
     url: '/api/HR/emailSave/?userId=' +$scope.data.pk
@@ -264,6 +263,16 @@ $scope.getToken = function(){
   })
 
 }
+
+$scope.createData = function(){
+  $http({
+    method: 'GET',
+    url: '/api/HR/emailDataSave/'
+  }).
+  then(function(response) {
+  })
+}
+
 
 
 })

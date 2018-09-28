@@ -513,12 +513,21 @@ class emailSaveAPI(APIView):
     def get(self , request , format = None):
         socialAcc = SocialAccount.objects.get(user=request.GET['userId'])
         tokens = SocialToken.objects.get(pk = socialAcc.pk)
-        with open('HR/storage.json') as json_file:
+        with open('HR/storage.json','r+') as json_file:
             data = json.load(json_file)
-            print type(data)
-            print tokens.token,'gggggggg'
             data['token_response']['access_token'] = tokens.token
             data['access_token'] = tokens.token
-            data['client_secret'] = tokens.token_secret
+            data['refresh_token'] = tokens.token_secret
             json.dumps(data)
+            json_file.close()
+            jsonFile = open("HR/storage.json", "w+")
+            jsonFile.write(json.dumps(data))
+            jsonFile.close()
+        return JsonResponse({} ,status =200 )
+
+class emailDataSaveAPI(APIView):
+    def get(self , request , format = None):
+        print request.GET
+        import gmailread.py
+        a = gmailread.py.allData()
         return JsonResponse({} ,status =200 )
