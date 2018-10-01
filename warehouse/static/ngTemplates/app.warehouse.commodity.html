@@ -151,8 +151,8 @@
                   <td>{{s.balance}}</td>
                   <td>
                     <!-- <i class="fa fa-download" ng-click="downloadStatus(s.checkIn,s.checkOut,s.pk)"></i> -->
-                    <a ng-if="s.checkIn!=null" href="/api/warehouse/downloadPdf/?valPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
-                    <a ng-if="s.checkOut!=null" href="/api/warehouse/downloadPdf/?valPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                    <a ng-if="s.checkIn!=null" href="/api/warehouse/downloadPdfCheckIn/?valPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                    <a ng-if="s.checkOut!=null" href="/api/warehouse/downloadPdfCheckOut/?valPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
                   </td>
 
                     <!-- <a href="/api/warehouse/downloadPdf/"><i class="fa fa-2x fa-download">PDF</i> </a> -->

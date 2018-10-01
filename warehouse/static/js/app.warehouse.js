@@ -196,6 +196,20 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
 
   }
 
+  $http({
+    method: 'GET',
+    url: '/api/warehouse/contract'
+  }).
+  then(function(response) {
+    $scope.invoiceData = response.data
+  }, function(err) {
+    Flash.create('error', 'Error occured')
+  })
+
+
+
+
+
 })
 // app.config(function($stateProvider){
 //

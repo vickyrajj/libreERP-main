@@ -28,6 +28,7 @@ from .models import *
 from .serializers import *
 from django.conf import settings as globalSettings
 from django.db.models import Q
+import time
 import datetime
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
@@ -725,53 +726,42 @@ def genCargo(response,commodityData,companyData,request):
         s = getSampleStyleSheet()
         s = s["BodyText"]
         s.wordWrap = 'CJK'
-
-        # datatop=[
-        #         ['Company Details','Contract/Agent Details'],
-        #         ['ABA Warehouse Bangolre','CIOC Banglore']
-        #      ]
-        # dat = [[Paragraph(cell, s) for cell in row] for row in datatop]
-        # toptable = Table(dat,rowHeights=(10*cm,30*cm))
-        # styleforTop= TableStyle([
-        #                     ('BACKGROUND',(0,0),(1,1),colors.white),
-        #                     ('VALIGN',(0,0),(-1,-1),'TOP'),
-        #                     ('LINEBEFORE', (0,0), (-2,2), 0.25, colors.black),
-        #                     ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-        #                    ])
-        #
+        x = datetime.datetime.now()
+        date = x.strftime("%x")
         doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
-        # datat=[
-        #         ['Description', 'No.of Packages', 'Weight/Vol', 'Comments'],
-        #         ['61513333333333333333333333333333', '2', '3', '4'],
-        #         ['555555555555555555555555\n5555555555555555555555555555555555555555555555', '6', '7', '8'],
-        #         ['9', '10', '11', '12'],
-        #         ['13', '14', '15', '16'],
-        #      ]
-        # datat2 = [[Paragraph(cell, s) for cell in row] for row in datat]
-        rows = [['Agent/Contractor Name \n Anchor LOgistics India Pvt Ltd  \n SY. NO. 19/4, KANEKALLU VILLAGE \n (OPPOSITE MARIGOLD LOGISTICS PVT LTD) \n JADIGENAHALLI HOBLI, HOSKOTE TALUK, \n KADUGODI POST, BANGALORE 560067 \n GSTIN : 29AAGCA0033L1ZS', str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\n \n'  ]]
-        tablet = Table(rows, colWidths=(95.5*mm, 95.5*mm))
-        row1 = [['Description','No.of Packages','Weight/Vol', 'Comments'],['This is to confirm receipt of the following goods into the Warehouse\n'  + str(commodityData.commodity.name) + '\n \n \n \n Bill of Entry No: \n Date: \n Container Number: \n Truck Number: \n Driver Name: \n','\n' + str(commodityData.checkIn) + '\n \n \n \n  \n \n \n \n \n','' ,'']]
-        table = Table(row1, colWidths=(115*mm, 27*mm,25*mm, 25*mm))
-
-
-        # data=[
-        #         ['Description', 'No.of Packages', 'Weight/Vol', 'Comments'],
-        #         [commodityData.commodity.name + "\n Bill Of Entry No:\n Date: ", '2', '3', '4'],
-        #
-        #      ]
-        # style = TableStyle([
-        #                    ('ALIGN',(1,1),(-3,-3),'RIGHT'),
-        #                    ('VALIGN',(0,0),(0,-1),'MIDDLE'),
-        #                    ('ALIGN',(0,-1),(-1,-1),'CENTER'),
-        #                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-        #                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-        #                    ])
-        # data2 = [[Paragraph(cell, s) for cell in row] for row in data]
-        # table = Table(data2)
-        style = TableStyle([
+        rowhead = [['CARGO RECEIPT\n']]
+        tablehead = Table(rowhead, colWidths=(191*mm))
+        stylehead = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'RIGHT'),
                            ('VALIGN',(0,0),(0,-1),'MIDDLE'),
                            ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+                           ])
+        tablehead.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),15),
+                        ]))
+
+        row0 = [[' Agent/Contractor Name : \n Anchor Logistics India Pvt Ltd  \n SY. NO. 19/4, KANEKALLU VILLAGE \n (OPPOSITE MARIGOLD LOGISTICS PVT LTD) \n JADIGENAHALLI HOBLI, HOSKOTE TALUK, \n KADUGODI POST, BANGALORE 560067 \n GSTIN : 29AAGCA0033L1ZS', 'Customer Details : \n' + str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\n '  ]]
+        table0 = Table(row0, colWidths=(95.5*mm, 95.5*mm))
+        row1 = [['Description','No.of Packages','Weight/Vol', 'Comments'],['This is to confirm receipt of the following goods into the Warehouse\n'  + str(commodityData.commodity.name) + '\n \n \n \n Bill of Entry No: \n Date: \n Container Number: \n Truck Number: \n Driver Name: \n','\n' + str(commodityData.checkIn) + '\n \n \n \n  \n \n \n \n \n','' ,'']]
+        table = Table(row1, colWidths=(114*mm, 27*mm,25*mm, 25*mm))
+        rowdetails = [['Receipt No : 0'+str(commodityData.pk)+ '\nDated : ' +date+'\nDate of Warehousing : ' +commodityData.created.strftime("%x") ,'Invoice No : ALWH'+str(commodityData.pk)+ ' \nInvoice Date: ' +commodityData.created.strftime("%x") + ' \n \n']]
+        tabledetails = Table(rowdetails, colWidths=(95.5*mm, 95.5*mm))
+        row2 = [['','' ,'' ,'']]
+        table2 = Table(row2, colWidths=(114*mm, 27*mm,25*mm, 25*mm))
+        row3 = [['','']]
+        table3 = Table(row3, colWidths=(166*mm,25*mm))
+        stylebottom = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ])
+        style = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                            ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                            ])
@@ -784,7 +774,7 @@ def genCargo(response,commodityData,companyData,request):
         gaptable = Table(data4)
 
         data1=[
-                ['Customer/Driver Signature','','', 'ABA Warehouse LLP'],
+                ['Customer/Driver Signature : ','','', 'ABA Warehouse LLP : '],
                 ['Name','','', 'Authority Signatory']
              ]
         data3 = [[Paragraph(cell, s) for cell in row] for row in data1]
@@ -796,17 +786,161 @@ def genCargo(response,commodityData,companyData,request):
                             ('ALIGN',(0,1),(-1,1),'LEFT'),
                             ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                            ])
+        row4 = [['PAN:AASFA0730D  SERVICE TAX:AASFA0730DSDOO1']]
+        table4 = Table(row4, colWidths=(191*mm))
+        row5 = [['SUBJECT TO BANGALORE JURDISDICTION']]
+        table5 = Table(row5, colWidths=(191*mm))
+        rowfoot = [['Sy.No. 19/4, Kanekallu Village, Jadigenahalli Hobli, Hoskote Taluk, Kadugodi Post, Bangalore - 560067']]
+        tablefoot = Table(rowfoot, colWidths=(191*mm))
+        stylefoot = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('LINEABOVE', (0,1), (-1,-1), 0.25, colors.black),
+                           ])
+        tablefoot.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),6),
+                        ]))
+
+
 
         # toptable.setStyle(styleforTop)
+        tablehead.setStyle(stylehead)
         table.setStyle(style)
-        tablet.setStyle(style)
+        table0.setStyle(style)
+        tabledetails.setStyle(style)
+        table2.setStyle(style)
+        table3.setStyle(style)
         table1.setStyle(styleforbottom)
+        table4.setStyle(stylebottom)
+        table5.setStyle(stylebottom)
+        tablefoot.setStyle(stylefoot)
         # elements.append(toptable)
-        elements.append(tablet)
+        elements.append(tablehead)
+        elements.append(table0)
+        elements.append(tabledetails)
         elements.append(table)
+        elements.append(table2)
+        elements.append(table3)
         elements.append(gaptable)
         elements.append(gaptable)
         elements.append(table1)
+        elements.append(table4)
+        elements.append(table5)
+        elements.append(tablefoot)
+        doc.build(elements)
+
+def genChallan(response,commodityData,companyData,request):
+        cm = 2.54
+        elements = []
+        s = getSampleStyleSheet()
+        s = s["BodyText"]
+        s.wordWrap = 'CJK'
+        x = datetime.datetime.now()
+        date = x.strftime("%x")
+        doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
+        rowhead = [['DELIVERY CHALLAN\n']]
+        tablehead = Table(rowhead, colWidths=(191*mm))
+        stylehead = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+                           ])
+        tablehead.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),15),
+                        ]))
+
+        row0 = [[' Agent/Contractor Name : \n Anchor Logistics India Pvt Ltd  \n SY. NO. 19/4, KANEKALLU VILLAGE \n (OPPOSITE MARIGOLD LOGISTICS PVT LTD) \n JADIGENAHALLI HOBLI, HOSKOTE TALUK, \n KADUGODI POST, BANGALORE 560067 \n GSTIN : 29AAGCA0033L1ZS \n \n \n', 'Customer Details : \n' + str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\nGSTIN : ' + companyData.company.gst + '\nPAN : ' + companyData.company.pan + '\nTIN : '  + companyData.company.tin + '\n']]
+        table0 = Table(row0, colWidths=(95.5*mm, 95.5*mm))
+        row1 = [['Commodity','Packages','Weight', 'Types Of \nPackages','Value' , 'AWB No' , 'B/E or S/B No' ,'Date'],[str(commodityData.commodity.name) , str(commodityData.checkOut) ,'',str(commodityData.commodity.typ),'','','',commodityData.created.strftime("%x") ],['' , '' ,'','','','','','']]
+        table = Table(row1, colWidths=(41*mm, 20*mm,20*mm, 20*mm,20*mm, 20*mm,25*mm, 25*mm))
+        rowdetails = [['Delivery Challan No : 0'+str(commodityData.pk) + '\nDated :' + date +  '\n  \n  ','Vehicle No : \nTime No : \nTime Out : \n']]
+        tabledetails = Table(rowdetails, colWidths=(95.5*mm, 95.5*mm))
+        row2 = [['\nThe above cargo is being deleivered as received from the Indian Customs/Airline/Shipper/Warehouse .\n']]
+        table2 = Table(row2, colWidths=(191*mm))
+        row3 = [['Mode of Delivery :']]
+        table3 = Table(row3, colWidths=(191*mm))
+        row6 = [['Type of Vehicle :']]
+        table6 = Table(row6, colWidths=(191*mm))
+        row7 = [['Driver Name :']]
+        table7 = Table(row7, colWidths=(191*mm))
+        row8 = [['Driver Mobile Number :']]
+        table8 = Table(row8, colWidths=(191*mm))
+        stylebottom = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ])
+        style = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ])
+
+        gapdata=[
+                [''],
+                ['']
+             ]
+        data4 = [[Paragraph(cell, s) for cell in row] for row in gapdata]
+        gaptable = Table(data4)
+
+        data1=[
+                ['For Anchor Logistics India Pvt Ltd,',' Receivers Name/Signature : _____________________'],
+                ['\n','\n Contact Number : ______________________________'],['\n\n\n________________________________________\nDelivery Agent Signature\n','\n\n\n_____________________________________________\n                 Company Seal\n']
+             ]
+        # data3 = [[Paragraph(cell, s) for cell in row] for row in data1]
+        table1 = Table(data1, colWidths=(100*mm, 90*mm))
+        styleforbottom = TableStyle([
+                            ('BACKGROUND',(0,0),(1,1),colors.white),
+                            ('ALIGN',(0,0),(1,-1),'LEFT'),
+                            ('VALIGN',(0,0),(-1,-1),'TOP'),
+                            ('ALIGN',(0,1),(-1,1),'LEFT'),
+                            ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+                           ])
+        rowfoot = [['Sy.No. 19/4, Kanekallu Village, Jadigenahalli Hobli, Hoskote Taluk, Kadugodi Post, Bangalore - 560067']]
+        tablefoot = Table(rowfoot, colWidths=(191*mm))
+        stylefoot = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('LINEABOVE', (0,0), (-1,0), 0.25, colors.black),
+                           ])
+        tablefoot.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),6),
+                        ]))
+
+
+
+        # toptable.setStyle(styleforTop)
+        tablehead.setStyle(stylehead)
+        table.setStyle(style)
+        table0.setStyle(style)
+        tabledetails.setStyle(style)
+        table2.setStyle(style)
+        table3.setStyle(style)
+        table6.setStyle(style)
+        table7.setStyle(style)
+        table8.setStyle(style)
+        table1.setStyle(styleforbottom)
+        tablefoot.setStyle(stylefoot)
+
+        # elements.append(toptable)
+        elements.append(tablehead)
+        elements.append(table0)
+        elements.append(tabledetails)
+        elements.append(table)
+        elements.append(table2)
+        elements.append(table3)
+        elements.append(table6)
+        elements.append(table7)
+        elements.append(table8)
+        elements.append(gaptable)
+        elements.append(gaptable)
+        elements.append(table1)
+        elements.append(tablefoot)
         doc.build(elements)
 
 # def downloadPdf(request):
@@ -815,17 +949,201 @@ def genCargo(response,commodityData,companyData,request):
 #     drawTable(response)
 #     return response
 
-class DownloadPdf(APIView):
+class DownloadPdfCheckIn(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
         response = HttpResponse(content_type='application/pdf')
         commodityData = CommodityQty.objects.get(id = request.GET['valPK'])
         companyData = Contract.objects.get(id = commodityData.commodity.contract.pk)
-        response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , commodityData.pk)
+        response['Content-Disposition'] = 'attachment; filename="cargodownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , commodityData.pk)
         genCargo(response,commodityData,companyData,request)
         # f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/invoice%s_%s.pdf' %
         #                       ( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, commodityData.pk)), 'wb')
         # f.write(response.content)
         # f.close()
         # # return Response(status=status.HTTP_200_OK)
+        return response
+
+class DownloadPdfCheckOut(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        response = HttpResponse(content_type='application/pdf')
+        commodityData = CommodityQty.objects.get(id = request.GET['valPK'])
+        companyData = Contract.objects.get(id = commodityData.commodity.contract.pk)
+        response['Content-Disposition'] = 'attachment; filename="challandownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , commodityData.pk)
+        genChallan(response,commodityData,companyData,request)
+        return response
+
+
+
+def genMonthlyInvoice(response,contract,request):
+        cm = 2.54
+        elements = []
+        s = getSampleStyleSheet()
+        s = s["BodyText"]
+        s.wordWrap = 'CJK'
+        x = datetime.datetime.now()
+        date = x.strftime("%x")
+        now = datetime.datetime.now()
+        doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
+        rowhead = [['TAX INVOICE\n']]
+        tablehead = Table(rowhead, colWidths=(191*mm))
+        stylehead = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+                           ])
+        tablehead.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),15),
+                        ]))
+
+        row0 = [['Anchor Logistics India Pvt Ltd'], ['SY. NO. 19/4, KANEKALLU VILLAGE \n(OPPOSITE MARIGOLD LOGISTICS PVT LTD) \nJADIGENAHALLI HOBLI, HOSKOTE TALUK, \nKADUGODI POST, BANGALORE 560067 \nGSTIN : 29AAGCA0033L1ZS \n']]
+        table0 = Table(row0, colWidths=(191*mm))
+        style0 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+                           ('FONTSIZE',(0,0),(0,0),15),
+                           ])
+        row1 = [['BILL TO : \n' + str(contract.company.name) + '\n' + str(contract.company.street) + '\n' + str(contract.company.city) + '\n' + str(contract.company.state) + '-' + str(contract.company.pincode) + '\n' + str(contract.company.country) +'\nTel : ' + str(contract.company.telephone)+'\nGSTIN : ' + str(contract.company.gst) ,'Number : ALWH18/ 172 \nDate : ' +date+ '\nFor : Storage & Handling ' +str(now.month) + ' - ' +str(now.year)  ]]
+        table1 = Table(row1, colWidths=(95.5*mm, 95.5*mm))
+        style1 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+                           ])
+        row2 = [['DESCRIPTION','SAC Code','SPACE/SR', 'RATE','UNIT' , 'AMOUNT']]
+        table2 = Table(row2, colWidths=(90*mm, 20*mm,20*mm, 20*mm,20*mm, 20*mm))
+        style2 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ])
+        row3 = [['','','', '','' , '','']]
+        table3 = Table(row3, colWidths=(90*mm, 20*mm,20*mm, 20*mm,10*mm,10*mm, 20*mm))
+        row4 = [['','','']]
+        table4 = Table(row4, colWidths=(110*mm, 60*mm,20*mm))
+        style4 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (-1,-1), (-1,-1), 0.25, colors.black),
+                           ('BOX', (-1,-1), (-1,-1), 0.25, colors.black),
+                           ])
+        row5 = [['','','']]
+        table5 = Table(row5, colWidths=(110*mm, 60*mm,20*mm))
+        row6 = [['','','']]
+        table6 = Table(row6, colWidths=(110*mm, 60*mm,20*mm))
+        row7 = [['','','']]
+        table7 = Table(row7, colWidths=(110*mm, 60*mm,20*mm))
+        row8 = [['','','']]
+        table8 = Table(row8, colWidths=(110*mm, 60*mm,20*mm))
+        row9 = [['','','']]
+        table9 = Table(row9, colWidths=(110*mm, 60*mm,20*mm))
+
+        # rowdetails = [['Delivery Challan No : 0'+str(commodityData.pk) + '\nDated :' + date +  '\n  \n  ','Vehicle No : \nTime No : \nTime Out : \n']]
+        # tabledetails = Table(rowdetails, colWidths=(95.5*mm, 95.5*mm))
+        # row2 = [['\nThe above cargo is being deleivered as received from the Indian Customs/Airline/Shipper/Warehouse .\n']]
+        # table2 = Table(row2, colWidths=(191*mm))
+        # row3 = [['Mode of Delivery :']]
+        # table3 = Table(row3, colWidths=(191*mm))
+        # row6 = [['Type of Vehicle :']]
+        # table6 = Table(row6, colWidths=(191*mm))
+        # row7 = [['Driver Name :']]
+        # table7 = Table(row7, colWidths=(191*mm))
+        # row8 = [['Driver Mobile Number :']]
+        # table8 = Table(row8, colWidths=(191*mm))
+        # stylebottom = TableStyle([
+        #                    ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+        #                    ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+        #                    ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+        #                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+        #                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+        #                    ])
+        # style = TableStyle([
+        #                    ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+        #                    ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+        #                    ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+        #                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+        #                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+        #                    ])
+        #
+        # gapdata=[
+        #         [''],
+        #         ['']
+        #      ]
+        # data4 = [[Paragraph(cell, s) for cell in row] for row in gapdata]
+        # gaptable = Table(data4)
+        #
+        # data1=[
+        #         ['For Anchor Logistics India Pvt Ltd,',' Receivers Name/Signature : _____________________'],
+        #         ['\n','\n Contact Number : ______________________________'],['\n\n\n________________________________________\nDelivery Agent Signature\n','\n\n\n_____________________________________________\n                 Company Seal\n']
+        #      ]
+        # # data3 = [[Paragraph(cell, s) for cell in row] for row in data1]
+        # table1 = Table(data1, colWidths=(100*mm, 90*mm))
+        # styleforbottom = TableStyle([
+        #                     ('BACKGROUND',(0,0),(1,1),colors.white),
+        #                     ('ALIGN',(0,0),(1,-1),'LEFT'),
+        #                     ('VALIGN',(0,0),(-1,-1),'TOP'),
+        #                     ('ALIGN',(0,1),(-1,1),'LEFT'),
+        #                     ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+        #                    ])
+        # rowfoot = [['Sy.No. 19/4, Kanekallu Village, Jadigenahalli Hobli, Hoskote Taluk, Kadugodi Post, Bangalore - 560067']]
+        # tablefoot = Table(rowfoot, colWidths=(191*mm))
+        # stylefoot = TableStyle([
+        #                    ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+        #                    ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+        #                    ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+        #                    ('LINEABOVE', (0,0), (-1,0), 0.25, colors.black),
+        #                    ])
+        # tablefoot.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),6),
+        #                 ]))
+
+
+
+        tablehead.setStyle(stylehead)
+        table0.setStyle(style0)
+        table1.setStyle(style1)
+        table2.setStyle(style2)
+        table3.setStyle(style2)
+        table4.setStyle(style4)
+        table5.setStyle(style4)
+        table6.setStyle(style4)
+        table7.setStyle(style4)
+        table8.setStyle(style4)
+        table9.setStyle(style4)
+
+
+        elements.append(tablehead)
+        elements.append(table0)
+        elements.append(table1)
+        elements.append(table2)
+        elements.append(table3)
+        elements.append(table4)
+        elements.append(table5)
+        elements.append(table6)
+        elements.append(table7)
+        elements.append(table8)
+        elements.append(table9)
+        doc.build(elements)
+
+
+class DownloadMonthlyInvoice(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print 'dddddddddd'
+        print request.GET['valPK'],'aaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        response = HttpResponse(content_type='application/pdf')
+        contract = Contract.objects.get(id = request.GET['valPK'])
+        print contract
+        # companyData = Contract.objects.get(id = commodityData.commodity.contract.pk)
+        response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , contract.pk)
+        genMonthlyInvoice(response,contract,request)
         return response

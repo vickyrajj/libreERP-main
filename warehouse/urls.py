@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'sendNotification/$' , SendNotificationAPIView.as_view() ),
     url(r'downloadExcelReponse/$' , DownloadExcelReponse.as_view() ),
     url(r'downloadReceipt/$' , DownloadReceipt.as_view() ),
-    url(r'downloadPdf/$' , DownloadPdf.as_view() ),
+    url(r'downloadPdfCheckIn/$' , DownloadPdfCheckIn.as_view() ),
+    url(r'downloadPdfCheckOut/$' , DownloadPdfCheckOut.as_view() ),
+    url(r'downloadMonthlyInvoice/$' , DownloadMonthlyInvoice.as_view() ),
 
 ]
