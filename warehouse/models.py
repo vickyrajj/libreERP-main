@@ -33,7 +33,7 @@ class Service(models.Model):
     country = models.CharField(max_length = 50 , null = True)
     gst = models.CharField(max_length=15, null=True)
     pan = models.CharField(max_length=13, null=True)
-    statecode = models.PositiveIntegerField(null=True)
+
 
     def __str__(self):
         return self.name

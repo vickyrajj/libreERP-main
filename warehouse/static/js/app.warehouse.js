@@ -205,7 +205,9 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
   }, function(err) {
     Flash.create('error', 'Error occured')
   })
-
+  var date = new Date();
+  $scope.frmDate = new Date(date.getFullYear(), date.getMonth(), 1),
+  $scope.toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
 
 

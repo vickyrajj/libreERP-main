@@ -68,7 +68,7 @@
             <th>Company Name</th>
             <th>From Date</th>
             <th>To Date</th>
-            <th>Status</th>
+            <!-- <th>Status</th> -->
             <th>Down;oad</th>
 
           </tr>
@@ -77,7 +77,7 @@
             <td>{{i.company.name}}</td>
             <td>
               <div class="input-group" >
-                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="logger.when" is-open="start.opened" />
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="frmDate" is-open="start.opened" />
                 <span class="input-group-btn">
                   <button type="button" class="btn btn-default" ng-click="start.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
@@ -85,13 +85,13 @@
             </td>
             <td>
               <div class="input-group" >
-                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="logger.when" is-open="end.opened" />
+                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="toDate" is-open="end.opened" />
                 <span class="input-group-btn">
                   <button type="button" class="btn btn-default" ng-click="end.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
               </div>
             </td>
-            <td>{{i.status | humanize}}
+            <!-- <td>{{i.status | humanize}}
               <div class="btn-group btn-group-sm pull-right">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                   Change status <span class="caret"></span></button>
@@ -104,8 +104,8 @@
                   <li><a href="" ng-click="changeStatus('dueElapsed', $index)">Due Elapsed</a></li>
                 </ul>
               </div>
-            </td>
-            <td><a class="btn btn-primary" href="/api/warehouse/downloadMonthlyInvoice/?valPK={{i.pk}}"> <i class = "fa fa-download"></i> </a> </td>
+            </td> -->
+            <td><a class="btn btn-primary" href="/api/warehouse/downloadMonthlyInvoice/?valPK={{i.pk}}&from={{frmDate.toJSON()}}&to={{toDate.toJSON()}}"> <i class = "fa fa-download"></i> </a> </td>
           </tr>
         </tbody>
       </table>

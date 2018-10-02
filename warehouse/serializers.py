@@ -10,7 +10,7 @@ from fabric.api import *
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ('pk' ,'name' , 'cin' , 'tin' , 'telephone' , 'street','pincode','city','state','country',  'gst', 'statecode', 'pan')
+        fields = ('pk' ,'name' , 'cin' , 'tin' , 'telephone' , 'street','pincode','city','state','country',  'gst',  'pan')
         read_only_fields = ('user' , )
     def create(self , validated_data):
         s=Service(**validated_data)

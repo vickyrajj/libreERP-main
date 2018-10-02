@@ -33,6 +33,7 @@ import datetime
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 from dateutil import parser as date_parser
+from num2words import num2words
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
@@ -726,9 +727,18 @@ def genCargo(response,commodityData,companyData,request):
         s = getSampleStyleSheet()
         s = s["BodyText"]
         s.wordWrap = 'CJK'
+        MARGIN_SIZE = 8 * mm
+        PAGE_SIZE = A4
+
+        # c = canvas.Canvas("hello.pdf")
+        # c.drawString(9*cm, 19*cm, "Hello World!")
+
+        doc = SimpleDocTemplate(response, pagesize = PAGE_SIZE,
+            leftMargin = MARGIN_SIZE, rightMargin = MARGIN_SIZE,
+            topMargin = 4*MARGIN_SIZE, bottomMargin = 3*MARGIN_SIZE)
         x = datetime.datetime.now()
         date = x.strftime("%x")
-        doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
+        # doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
         rowhead = [['CARGO RECEIPT\n']]
         tablehead = Table(rowhead, colWidths=(191*mm))
         stylehead = TableStyle([
@@ -741,7 +751,39 @@ def genCargo(response,commodityData,companyData,request):
         tablehead.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),15),
                         ]))
 
-        row0 = [[' Agent/Contractor Name : \n Anchor Logistics India Pvt Ltd  \n SY. NO. 19/4, KANEKALLU VILLAGE \n (OPPOSITE MARIGOLD LOGISTICS PVT LTD) \n JADIGENAHALLI HOBLI, HOSKOTE TALUK, \n KADUGODI POST, BANGALORE 560067 \n GSTIN : 29AAGCA0033L1ZS', 'Customer Details : \n' + str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\n '  ]]
+        tableHeaderStyle = styles['Normal'].clone('tableHeaderStyle')
+        tableHeaderStyle.textColor = colors.white;
+        tableHeaderStyle.fontSize = 7
+        compStyle = styleN.clone('footerCompanyName')
+        compStyle.textColor = colors.black;
+        story=[]
+        heading = Paragraph('<strong>Agent/Contractor Name : </strong>' , compStyle)
+        story.append(heading)
+        cmpName = Paragraph(settingsFields.get(name = 'companyName').value +'<br/><br/>', compStyle)
+        story.append(cmpName)
+        cmpAddr = Paragraph(settingsFields.get(name = 'companyAddress').value +'<br/><br/>', compStyle)
+        story.append(cmpAddr)
+        cmpGst = Paragraph('GSTIN : ' +settingsFields.get(name = 'gst').value +'<br/><br/>' , compStyle)
+        story.append(cmpGst)
+
+    # customer = []
+    # # heading = Paragraph('<strong>Agent/Contractor Name : </strong>' , compStyle)
+    # headingcus = Paragraph('<strong>Agent/Contractor Name : </strong>' , compStyle)
+    # customer.append(headingcus)
+    # name = Paragraph(str(companyData.company.name) + '</br>'   , compStyle)
+    # customer.append(name)
+    # street = Paragraph( str(companyData.company.street) + '</br>'  , compStyle)
+    # customer.append(street)
+    # city = Paragraph( str(companyData.company.city) + '</br>'   , compStyle)
+    # customer.append(city)
+    # state =Paragraph( str(companyData.company.state) + '-' + str(companyData.company.pincode) + '<br/>'  , compStyle)
+    # customer.append(state)
+    # country = Paragraph( str(companyData.company.country) + '</br>'  , compStyle)
+    # customer.append(country)
+
+
+
+        row0 = [[story, 'Customer Details : \n' + str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\n '  ]]
         table0 = Table(row0, colWidths=(95.5*mm, 95.5*mm))
         row1 = [['Description','No.of Packages','Weight/Vol', 'Comments'],['This is to confirm receipt of the following goods into the Warehouse\n'  + str(commodityData.commodity.name) + '\n \n \n \n Bill of Entry No: \n Date: \n Container Number: \n Truck Number: \n Driver Name: \n','\n' + str(commodityData.checkIn) + '\n \n \n \n  \n \n \n \n \n','' ,'']]
         table = Table(row1, colWidths=(114*mm, 27*mm,25*mm, 25*mm))
@@ -774,7 +816,7 @@ def genCargo(response,commodityData,companyData,request):
         gaptable = Table(data4)
 
         data1=[
-                ['Customer/Driver Signature : ','','', 'ABA Warehouse LLP : '],
+                ['Customer/Driver Signature : ','','', 'Anchor LOgistic India Pvt Ltd '],
                 ['Name','','', 'Authority Signatory']
              ]
         data3 = [[Paragraph(cell, s) for cell in row] for row in data1]
@@ -790,15 +832,15 @@ def genCargo(response,commodityData,companyData,request):
         table4 = Table(row4, colWidths=(191*mm))
         row5 = [['SUBJECT TO BANGALORE JURDISDICTION']]
         table5 = Table(row5, colWidths=(191*mm))
-        rowfoot = [['Sy.No. 19/4, Kanekallu Village, Jadigenahalli Hobli, Hoskote Taluk, Kadugodi Post, Bangalore - 560067']]
+        rowfoot = [[cmpAddr]]
         tablefoot = Table(rowfoot, colWidths=(191*mm))
         stylefoot = TableStyle([
-                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
                            ('VALIGN',(0,0),(0,-1),'MIDDLE'),
                            ('ALIGN',(0,-1),(-1,-1),'CENTER'),
                            ('LINEABOVE', (0,1), (-1,-1), 0.25, colors.black),
                            ])
-        tablefoot.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),6),
+        tablefoot.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),3),
                         ]))
 
 
@@ -835,9 +877,18 @@ def genChallan(response,commodityData,companyData,request):
         s = getSampleStyleSheet()
         s = s["BodyText"]
         s.wordWrap = 'CJK'
+        MARGIN_SIZE = 8 * mm
+        PAGE_SIZE = A4
+
+
+        doc = SimpleDocTemplate(response, pagesize = PAGE_SIZE,
+            leftMargin = MARGIN_SIZE, rightMargin = MARGIN_SIZE,
+            topMargin = 4*MARGIN_SIZE, bottomMargin = 3*MARGIN_SIZE)
         x = datetime.datetime.now()
         date = x.strftime("%x")
-        doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
+
+
+        # doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
         rowhead = [['DELIVERY CHALLAN\n']]
         tablehead = Table(rowhead, colWidths=(191*mm))
         stylehead = TableStyle([
@@ -849,8 +900,18 @@ def genChallan(response,commodityData,companyData,request):
                            ])
         tablehead.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),15),
                         ]))
+        compStyle = styleN.clone('footerCompanyName')
+        compStyle.textColor = colors.black;
+        story=[]
+        heading = Paragraph('<strong>Agent/Contractor Name : </strong>' , compStyle)
+        story.append(heading)
+        cmpName = Paragraph(settingsFields.get(name = 'companyName').value +'<br/><br/>', compStyle)
+        story.append(cmpName)
+        cmpAddr = Paragraph(settingsFields.get(name = 'companyAddress').value , compStyle)
+        story.append(cmpAddr)
 
-        row0 = [[' Agent/Contractor Name : \n Anchor Logistics India Pvt Ltd  \n SY. NO. 19/4, KANEKALLU VILLAGE \n (OPPOSITE MARIGOLD LOGISTICS PVT LTD) \n JADIGENAHALLI HOBLI, HOSKOTE TALUK, \n KADUGODI POST, BANGALORE 560067 \n GSTIN : 29AAGCA0033L1ZS \n \n \n', 'Customer Details : \n' + str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\nGSTIN : ' + companyData.company.gst + '\nPAN : ' + companyData.company.pan + '\nTIN : '  + companyData.company.tin + '\n']]
+
+        row0 = [[story, 'Customer Details : \n' + str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\nGSTIN : ' + companyData.company.gst + '\nPAN : ' + companyData.company.pan + '\nTIN : '  + companyData.company.tin + '\n']]
         table0 = Table(row0, colWidths=(95.5*mm, 95.5*mm))
         row1 = [['Commodity','Packages','Weight', 'Types Of \nPackages','Value' , 'AWB No' , 'B/E or S/B No' ,'Date'],[str(commodityData.commodity.name) , str(commodityData.checkOut) ,'',str(commodityData.commodity.typ),'','','',commodityData.created.strftime("%x") ],['' , '' ,'','','','','','']]
         table = Table(row1, colWidths=(41*mm, 20*mm,20*mm, 20*mm,20*mm, 20*mm,25*mm, 25*mm))
@@ -901,15 +962,15 @@ def genChallan(response,commodityData,companyData,request):
                             ('ALIGN',(0,1),(-1,1),'LEFT'),
                             ('BOX', (0,0), (-1,-1), 0.25, colors.white),
                            ])
-        rowfoot = [['Sy.No. 19/4, Kanekallu Village, Jadigenahalli Hobli, Hoskote Taluk, Kadugodi Post, Bangalore - 560067']]
+        rowfoot = [[cmpAddr]]
         tablefoot = Table(rowfoot, colWidths=(191*mm))
         stylefoot = TableStyle([
-                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
                            ('VALIGN',(0,0),(0,-1),'MIDDLE'),
                            ('ALIGN',(0,-1),(-1,-1),'CENTER'),
                            ('LINEABOVE', (0,0), (-1,0), 0.25, colors.black),
                            ])
-        tablefoot.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),6),
+        tablefoot.setStyle(TableStyle([('FONTSIZE',(0,-1),(-1,-1),3),
                         ]))
 
 
@@ -974,18 +1035,71 @@ class DownloadPdfCheckOut(APIView):
         genChallan(response,commodityData,companyData,request)
         return response
 
+ones = ["", "one ","two ","three ","four ", "five ", "six ","seven ","eight ","nine ","ten ","eleven ","twelve ", "thirteen ", "fourteen ", "fifteen ","sixteen ","seventeen ", "eighteen ","nineteen "]
+
+twenties = ["","","twenty ","thirty ","forty ", "fifty ","sixty ","seventy ","eighty ","ninety "]
+
+thousands = ["","thousand ","million ", "billion ", "trillion ", "quadrillion ", "quintillion ", "sextillion ", "septillion ","octillion ", "nonillion ", "decillion ", "undecillion ", "duodecillion ", "tredecillion ", "quattuordecillion ", "quindecillion", "sexdecillion ", "septendecillion ", "octodecillion ", "novemdecillion ", "vigintillion "]
 
 
-def genMonthlyInvoice(response,contract,request):
+def num999(n):
+    c = n % 10 # singles digit
+    b = ((n % 100) - c) / 10 # tens digit
+    a = ((n % 1000) - (b * 10) - c) / 100 # hundreds digit
+    t = ""
+    h = ""
+    if a != 0 and b == 0 and c == 0:
+        t = ones[a] + "hundred "
+    elif a != 0:
+        t = ones[a] + "hundred and "
+    if b <= 1:
+        h = ones[n%100]
+    elif b > 1:
+        h = twenties[b] + ones[c]
+    st = t + h
+    return st
+
+def num2word(num):
+	if num == 0: return 'zero'
+        i = 3
+        n = str(num)
+        word = ""
+        k = 0
+        while(i == 3):
+            nw = n[-i:]
+            n = n[:-i]
+            if int(nw) == 0:
+                word = num999(int(nw)) + thousands[int(nw)] + word
+            else:
+                word = num999(int(nw)) + thousands[k] + word
+            if n == '':
+                i = i+1
+            k += 1
+            return word[:-1]
+
+
+
+def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,request):
         cm = 2.54
         elements = []
         s = getSampleStyleSheet()
         s = s["BodyText"]
         s.wordWrap = 'CJK'
+        MARGIN_SIZE = 8 * mm
+        PAGE_SIZE = A4
+
+        # c = canvas.Canvas("hello.pdf")
+        # c.drawString(9*cm, 19*cm, "Hello World!")
+
+        doc = SimpleDocTemplate(response, pagesize = PAGE_SIZE,
+        leftMargin = MARGIN_SIZE, rightMargin = MARGIN_SIZE,
+        topMargin = 4*MARGIN_SIZE, bottomMargin = 3*MARGIN_SIZE)
         x = datetime.datetime.now()
         date = x.strftime("%x")
+        days = abs((frmDate-toDate).days)
         now = datetime.datetime.now()
-        doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
+
+        # doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
         rowhead = [['TAX INVOICE\n']]
         tablehead = Table(rowhead, colWidths=(191*mm))
         stylehead = TableStyle([
@@ -997,9 +1111,51 @@ def genMonthlyInvoice(response,contract,request):
                            ])
         tablehead.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),15),
                         ]))
+        compStyle = styleN.clone('footerCompanyName')
+        compStyle.textColor = colors.black;
 
-        row0 = [['Anchor Logistics India Pvt Ltd'], ['SY. NO. 19/4, KANEKALLU VILLAGE \n(OPPOSITE MARIGOLD LOGISTICS PVT LTD) \nJADIGENAHALLI HOBLI, HOSKOTE TALUK, \nKADUGODI POST, BANGALORE 560067 \nGSTIN : 29AAGCA0033L1ZS \n']]
-        table0 = Table(row0, colWidths=(191*mm))
+        cmpName = Paragraph(settingsFields.get(name = 'companyName').value , compStyle)
+
+        cmpAddr = Paragraph(settingsFields.get(name = 'companyAddress').value , compStyle)
+
+        cmpBankDetails = Paragraph(settingsFields.get(name = 'bankDetails').value , compStyle)
+
+        cmpTin = Paragraph('<strong>CIN No : </strong>' +settingsFields.get(name = 'cin').value  , compStyle)
+
+        cmpPan = Paragraph('<strong>PAN No : </strong>' +settingsFields.get(name = 'pan').value  , compStyle)
+
+        cmpGst = Paragraph('<strong>GSTIN : </strong>' +settingsFields.get(name = 'gst').value  , compStyle)
+
+        billTo = Paragraph('<strong>BILL TO : <br/> </strong>'  + str(contract.company.name) + '<br/> ' + str(contract.company.street) + '<br/> ' + str(contract.company.city) + '<br/> ' + str(contract.company.state) + '-' + str(contract.company.pincode) + '<br/> ' + str(contract.company.country) +'<br/> Tel : ' + str(contract.company.telephone)+'<br/> GSTIN : ' + str(contract.company.gst)  , compStyle)
+
+        descdata = Paragraph('Warehouse Charges for the period/month - ' +str(month) + ' - ' +str(year)   , compStyle)
+
+        price =  Paragraph(str(contract.rate), compStyle)
+        sqrt = int(contract.areas.areaLength)*int(contract.quantity)
+        area = Paragraph(str(sqrt), compStyle)
+        total = int(contract.rate)*sqrt*days
+
+        if(str(contract.company.gst[0:2])=='29'):
+            gst = 9
+            cgst = 9
+            igst = 0
+            gsttotal = (int(total) * int(gst))/100
+            cgsttotal = (int(total) * int(cgst))/100
+            igsttotal = 0
+
+        else:
+            gst = 0
+            cgst = 0
+            igst = 18
+            gsttotal = 0
+            cgsttotal = 0
+            igsttotal = (int(total) * int(igst))/100
+        totaltax = gsttotal + cgsttotal + igsttotal
+        gtotal = total + totaltax
+        gtotalText = num2words(int(gtotal))
+        # contract.areas.areaLength
+        row0 = [[cmpName,''], [cmpAddr]]
+        table0 = Table(row0, colWidths=(73*mm,117*mm))
         style0 = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'RIGHT'),
                            ('VALIGN',(0,0),(0,-1),'MIDDLE'),
@@ -1008,7 +1164,7 @@ def genMonthlyInvoice(response,contract,request):
                            ('BOX', (0,0), (-1,-1), 0.25, colors.white),
                            ('FONTSIZE',(0,0),(0,0),15),
                            ])
-        row1 = [['BILL TO : \n' + str(contract.company.name) + '\n' + str(contract.company.street) + '\n' + str(contract.company.city) + '\n' + str(contract.company.state) + '-' + str(contract.company.pincode) + '\n' + str(contract.company.country) +'\nTel : ' + str(contract.company.telephone)+'\nGSTIN : ' + str(contract.company.gst) ,'Number : ALWH18/ 172 \nDate : ' +date+ '\nFor : Storage & Handling ' +str(now.month) + ' - ' +str(now.year)  ]]
+        row1 = [[billTo ,'Number : ALWH18/ 172 \nDate : ' +str(toDate).split(' ')[0]+ '\nFor : Storage & Handling ' +str(month) + ' - ' +str(year)  ]]
         table1 = Table(row1, colWidths=(95.5*mm, 95.5*mm))
         style1 = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'RIGHT'),
@@ -1017,7 +1173,7 @@ def genMonthlyInvoice(response,contract,request):
                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
                            ('BOX', (0,0), (-1,-1), 0.25, colors.white),
                            ])
-        row2 = [['DESCRIPTION','SAC Code','SPACE/SR', 'RATE','UNIT' , 'AMOUNT']]
+        row2 = [['DESCRIPTION','SAC Code','SPACE/Sft', 'RATE','UNIT' , 'AMOUNT']]
         table2 = Table(row2, colWidths=(90*mm, 20*mm,20*mm, 20*mm,20*mm, 20*mm))
         style2 = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -1026,86 +1182,55 @@ def genMonthlyInvoice(response,contract,request):
                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                            ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                            ])
-        row3 = [['','','', '','' , '','']]
+        row3 = [[descdata,'996729',area, price,'1' , '',total]]
         table3 = Table(row3, colWidths=(90*mm, 20*mm,20*mm, 20*mm,10*mm,10*mm, 20*mm))
-        row4 = [['','','']]
+        row4 = [[cmpBankDetails,'Basic Amount', total],['','SGST    @    '+str(gst)+'%',str(gsttotal)],['','CGST    @    '+str(cgst)+'%',str(cgsttotal)],['','IGST     @    '+str(igst)+'%',str(igsttotal)],['','Income Tax Amount',str(totaltax)],[cmpPan,'Total',str(gtotal)]]
         table4 = Table(row4, colWidths=(110*mm, 60*mm,20*mm))
         style4 = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'CENTER'),
                            ('VALIGN',(0,0),(0,-1),'MIDDLE'),
                            ('ALIGN',(0,-1),(-1,-1),'LEFT'),
-                           ('INNERGRID', (-1,-1), (-1,-1), 0.25, colors.black),
-                           ('BOX', (-1,-1), (-1,-1), 0.25, colors.black),
+                           ('INNERGRID', (-1,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (-1,0), (-1,-1), 0.25, colors.black),
+                           ('SPAN',(0,0),(0,-2)),
                            ])
-        row5 = [['','','']]
-        table5 = Table(row5, colWidths=(110*mm, 60*mm,20*mm))
-        row6 = [['','','']]
-        table6 = Table(row6, colWidths=(110*mm, 60*mm,20*mm))
-        row7 = [['','','']]
-        table7 = Table(row7, colWidths=(110*mm, 60*mm,20*mm))
-        row8 = [['','','']]
-        table8 = Table(row8, colWidths=(110*mm, 60*mm,20*mm))
-        row9 = [['','','']]
-        table9 = Table(row9, colWidths=(110*mm, 60*mm,20*mm))
+        row5 = [[cmpTin,'Rupees : ' +str(gtotalText)],[cmpGst]]
+        table5 = Table(row5, colWidths=(70*mm, 120*mm))
+        style5 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (-1,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (-1,0), (-1,-1), 0.25, colors.black),
+                           ('INNERGRID', (-1,-1), (-1,-1), 0.25, colors.white),
+                           ('BOX', (-1,-1), (-1,-1), 0.25, colors.white),
+                           ('LINEABOVE', (-1,-1), (-1,-1), 0.25, colors.black),
+                           ])
+        payment = Paragraph('Make all payments to " '+settingsFields.get(name = 'companyName').value + ' " by T/T/NEFT to our <strong>Bank A/C as above.</strong>' , compStyle)
+        row6 = [[payment],['Total invoice amount due in 10 Days. Overdue accounts subject to a service charge of 3% per month.\n']]
+        table6 = Table(row6, colWidths=(190*mm))
+        style6 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
 
-        # rowdetails = [['Delivery Challan No : 0'+str(commodityData.pk) + '\nDated :' + date +  '\n  \n  ','Vehicle No : \nTime No : \nTime Out : \n']]
-        # tabledetails = Table(rowdetails, colWidths=(95.5*mm, 95.5*mm))
-        # row2 = [['\nThe above cargo is being deleivered as received from the Indian Customs/Airline/Shipper/Warehouse .\n']]
-        # table2 = Table(row2, colWidths=(191*mm))
-        # row3 = [['Mode of Delivery :']]
-        # table3 = Table(row3, colWidths=(191*mm))
-        # row6 = [['Type of Vehicle :']]
-        # table6 = Table(row6, colWidths=(191*mm))
-        # row7 = [['Driver Name :']]
-        # table7 = Table(row7, colWidths=(191*mm))
-        # row8 = [['Driver Mobile Number :']]
-        # table8 = Table(row8, colWidths=(191*mm))
-        # stylebottom = TableStyle([
-        #                    ('ALIGN',(1,1),(-3,-3),'RIGHT'),
-        #                    ('VALIGN',(0,0),(0,-1),'MIDDLE'),
-        #                    ('ALIGN',(0,-1),(-1,-1),'CENTER'),
-        #                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-        #                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-        #                    ])
-        # style = TableStyle([
-        #                    ('ALIGN',(1,1),(-3,-3),'RIGHT'),
-        #                    ('VALIGN',(0,0),(0,-1),'MIDDLE'),
-        #                    ('ALIGN',(0,-1),(-1,-1),'LEFT'),
-        #                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-        #                    ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-        #                    ])
-        #
-        # gapdata=[
-        #         [''],
-        #         ['']
-        #      ]
-        # data4 = [[Paragraph(cell, s) for cell in row] for row in gapdata]
-        # gaptable = Table(data4)
-        #
-        # data1=[
-        #         ['For Anchor Logistics India Pvt Ltd,',' Receivers Name/Signature : _____________________'],
-        #         ['\n','\n Contact Number : ______________________________'],['\n\n\n________________________________________\nDelivery Agent Signature\n','\n\n\n_____________________________________________\n                 Company Seal\n']
-        #      ]
-        # # data3 = [[Paragraph(cell, s) for cell in row] for row in data1]
-        # table1 = Table(data1, colWidths=(100*mm, 90*mm))
-        # styleforbottom = TableStyle([
-        #                     ('BACKGROUND',(0,0),(1,1),colors.white),
-        #                     ('ALIGN',(0,0),(1,-1),'LEFT'),
-        #                     ('VALIGN',(0,0),(-1,-1),'TOP'),
-        #                     ('ALIGN',(0,1),(-1,1),'LEFT'),
-        #                     ('BOX', (0,0), (-1,-1), 0.25, colors.white),
-        #                    ])
-        # rowfoot = [['Sy.No. 19/4, Kanekallu Village, Jadigenahalli Hobli, Hoskote Taluk, Kadugodi Post, Bangalore - 560067']]
-        # tablefoot = Table(rowfoot, colWidths=(191*mm))
-        # stylefoot = TableStyle([
-        #                    ('ALIGN',(1,1),(-3,-3),'RIGHT'),
-        #                    ('VALIGN',(0,0),(0,-1),'MIDDLE'),
-        #                    ('ALIGN',(0,-1),(-1,-1),'CENTER'),
-        #                    ('LINEABOVE', (0,0), (-1,0), 0.25, colors.black),
-        #                    ])
-        # tablefoot.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),6),
-        #                 ]))
-
+                           ])
+        row7 = [['This is a computer generated invoices and does not require a signature'],['THANK YOU FOR YOUR BUSINESS!']]
+        table7 = Table(row7, colWidths=(190*mm))
+        style7 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('ALIGN',(0,0),(0,0),'CENTER'),
+                           ('INNERGRID', (-1,-1), (-1,-1), 0.25, colors.white),
+                           ('BOX', (-1,-1), (-1,-1), 0.25, colors.white),
+                           ('LINEABOVE', (0,0), (0,0), 0.25, colors.black),
+                           ])
+        table7.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),6),
+                                    ('FONTSIZE',(-1,-1),(-1,-1),12),
+                        ]))
 
 
         tablehead.setStyle(stylehead)
@@ -1114,13 +1239,9 @@ def genMonthlyInvoice(response,contract,request):
         table2.setStyle(style2)
         table3.setStyle(style2)
         table4.setStyle(style4)
-        table5.setStyle(style4)
-        table6.setStyle(style4)
-        table7.setStyle(style4)
-        table8.setStyle(style4)
-        table9.setStyle(style4)
-
-
+        table5.setStyle(style5)
+        table6.setStyle(style6)
+        table7.setStyle(style7)
         elements.append(tablehead)
         elements.append(table0)
         elements.append(table1)
@@ -1130,20 +1251,25 @@ def genMonthlyInvoice(response,contract,request):
         elements.append(table5)
         elements.append(table6)
         elements.append(table7)
-        elements.append(table8)
-        elements.append(table9)
+
         doc.build(elements)
 
 
 class DownloadMonthlyInvoice(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        print 'dddddddddd'
-        print request.GET['valPK'],'aaaaaaaaaaaaaaaaaaaaaaaaaaa'
         response = HttpResponse(content_type='application/pdf')
+        print request.GET['to'],'before' , type(request.GET['from'])
+        frmDate = datetime.datetime.strptime(request.GET["from"],'%Y-%m-%dT%H:%M:%S.%fZ' )
+        toDate =  datetime.datetime.strptime(request.GET["to"],'%Y-%m-%dT%H:%M:%S.%fZ' )
+
+        month =  toDate.month
+        year =  toDate.year
+        # frmDate = datetime.datetime.strptime('2018-09-30T18:30:00.000Z', '%Y-%m-%d')
+        # print frmDate,'aaaaaaa'
+
         contract = Contract.objects.get(id = request.GET['valPK'])
-        print contract
         # companyData = Contract.objects.get(id = commodityData.commodity.contract.pk)
         response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , contract.pk)
-        genMonthlyInvoice(response,contract,request)
+        genMonthlyInvoice(response,contract,frmDate,toDate,month,year,request)
         return response
