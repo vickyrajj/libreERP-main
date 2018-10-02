@@ -73,7 +73,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         })
       }
     });
-  }, 500);
+  }, 1000);
 
 
 
