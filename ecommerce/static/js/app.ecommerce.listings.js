@@ -119,6 +119,13 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
     if (files.length != 0) {
       dataToSend.files = files;
     }
+
+    filesPk = []
+    for (var i = 0; i < form.files.length; i++) {
+      filesPk.push(form.files[i].pk);
+      console.log(filesPk,'ggggggggggggggggggggggg');
+    }
+
     // for (key in form) {
     //   if (key != 'files' && key !='file') {
     //     if (key == 'product') {

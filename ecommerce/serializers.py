@@ -133,7 +133,7 @@ class listingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = listing
-        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock')
+        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock','filesPk')
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
@@ -224,7 +224,7 @@ class listingLiteSerializer(serializers.ModelSerializer):
     in_stock = serializers.SerializerMethodField()
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock','filesPk')
     def get_rating(self , obj):
         return obj.ratings.all().aggregate(Avg('rating'))
 
