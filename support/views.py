@@ -18,7 +18,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 import requests
-import libreERP.Checksum as Checksum
+# import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
 
