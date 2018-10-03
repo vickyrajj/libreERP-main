@@ -16,3 +16,6 @@ gitPython==2.0.6
 pycrypto
 django-bootstrap-form==3.2.1
 django-robots
+python-dateutil
+django_excel_response
+xlsxwriter

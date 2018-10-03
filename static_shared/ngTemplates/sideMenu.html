@@ -18,7 +18,7 @@
         <span style="font-size:12px; padding-left:5px;">{{user.pk | getName}}</span>
       </div>
   </div> -->
-  <div ng-if="!sideMenuVisibility" class="row" style="width:5%; padding:15px;">
+  <div ng-if="!sideMenuVisibility" class="row" style="{{mobileView ? ';':'width:30%;'}};padding:15px;">
     <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;margin-left:20px;">
   </div>
   <div class="row" style="{{sideMenuVisibility ? 'border-bottom:solid 2px #eeeeee;':''}}">
@@ -34,8 +34,8 @@
   <div class="row">
     <div class="container-fluid">
       <ul class="nav nav-sidebar padded" style="width:100%;">
-        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" style="" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
-          <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:205%;border-radius:0% 25% 25% 0%' : ''}}">
+        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" style="width:transition:10s" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
+          <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:215%;border-radius:0 30px 30px 0' : ''}}">
             <div ng-if="sideMenuVisibility" align="left">
               <div class="row container-fluid">
                 <div class="col-md-3">
@@ -47,7 +47,7 @@
               </div>
             </div>
             <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;overflow-x:visible;"><i class="fa {{a.icon}} fa-2x pull-left zoomOnHover" style="margin-left:15px"></i>
-              <span ng-if="onHover" style="float:right;">{{a.dispName}}</span>
+              <span ng-if="onHover" style="float:right;">{{a.dispName | humanize}}</span>
             </div>
           </a>
         </li>

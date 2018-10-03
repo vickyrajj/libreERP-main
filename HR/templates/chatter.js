@@ -853,8 +853,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 '<span id="onlineStatus"></span>'+
               '</div>'+
             '</div>'+
-            // '<span id="endThisChat" style="font-size:15px; cursor:pointer; float:right; padding:15px; ">Exit</span>'+
-            '<img id="endThisChat" src="{{serverAddress}}/static/images/exit.png" style="color:#fff;font-size:15px;cursor:pointer;float:right;padding:15px;width:50px;" alt="Exit">'+
+            // '<span id="exitBtn" style="font-size:15px; cursor:pointer; float:right; padding:15px; ">Exit</span>'+
+            '<img id="exitBtn" src="{{serverAddress}}/static/images/exit.png" style="color:#fff;font-size:15px;cursor:pointer;float:right;padding:15px;width:50px;" alt="Exit">'+
             '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
               '<span> <img src="{{serverAddress}}/static/images/close.png" tooltip="" alt="Close" width="15" height="15"> </span>'+
             '</div>'+
@@ -897,10 +897,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         '</div>'+
         '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:9vh;">'+
           '<div style="padding:0px; padding-top:10px;" >'+
-             '<textarea id="inputText" rows="2" style="border:none;font-size:14px; resize: none; width:75%; height: 40px; outline:none; background-color:#fff;padding:5px; " placeholder="Write a reply..." ></textarea>'+
+             '<textarea id="inputText" rows="2" style="border:none; font-size:17px; resize:none;width:70%; height:40px;outline:none;background-color:#fff;" placeholder="Write a reply..." ></textarea>'+
              '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
              '<span id="paperClip" style="margin-left:3%;border:none; background-color:#fff; font-size:15px; padding:1% 0%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style=" width:22px;padding-top:1%" ></span>'+
-             '<span id="paperPlane" style="width:10%;border:none; background-color:#fff; font-size:15px; cursor:pointer;float:right"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="width:40px; padding-top:1%;"></span>'+
+             '<span id="paperPlane" style="width:12%;border:none; background-color:#fff; font-size:15px; cursor:pointer;float:right"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="width:40px; padding-top:1%;"></span>'+
           '</div>'+
         '</div>'+
         '<button id="startNewChatBtn" type="button" style="background-color:#fff;color:'+windowColor+';cursor:pointer;width:100%;height:9vh;border:0px;"> <span style="font-size:14px;font-weight:bolder;" >Sart New Conversation </span> </button>'+
@@ -1014,7 +1014,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var supportCircle = document.getElementById('supportCircle');
   // var isTyping = document.getElementById('isTyping');
 
-  var endThisChat = document.getElementById('endThisChat');
+  var exitBtn = document.getElementById('exitBtn');
 
 
   var singleService = document.getElementById('singleService');
@@ -1031,7 +1031,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var Syrow24hSupportText = document.getElementById('Syrow24hSupportText')
 
 
-  // endThisChat.style.display ="none"
+  // exitBtn.style.display ="none"
+
+  videoCircle.addEventListener('click',function () {
+    // alert('open Video')
+    // window.open('http://192.168.1.124:1337/'+uid);
+    var body = document.getElementsByTagName("BODY")[0]
+
+    var iframeDiv = document.createElement('div')
+    iframeDiv.id = "iframeDiv"
+    var iFrame = document.createElement('iframe')
+    iFrame.src = 'http://192.168.1.124:1337/'+uid
+    iFrame.style.position = "fixed";
+    iFrame.style.top = "25%";
+    iFrame.style.left = "25%";
+    iFrame.style.width = "50%";
+    iFrame.style.height = "50%";
+    iframeDiv.appendChild(iFrame)
+    body.appendChild(iframeDiv)
+
+    dataToPublish = [uid, 'VC', [] , custID, 'http://192.168.1.124:1337/'+uid]
+
+    connection.session.publish('service.support.agent', dataToPublish , {}, {
+      acknowledge: true
+    }).
+    then(function(publication) {
+      console.log("Published");
+    });
+
+  })
 
 
   // isTyping.style.display = "none";
@@ -1388,6 +1416,11 @@ setTimeout(function () {
 
 function endChat() {
   chatClosed = true
+
+  if (feedbackFormOpened) {
+    return
+  }
+
   var xhttp = new XMLHttpRequest();
    xhttp.onreadystatechange = function() {
      if (this.readyState == 4 && this.status == 200) {
@@ -1398,15 +1431,12 @@ function endChat() {
 
        var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-       if (feedbackFormOpened) {
-         console.log('ONLINE' , agentPk);
-         connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
-         });
-       }
+       connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
+         acknowledge: true
+       }).
+       then(function(publication) {
+         console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+       });
 
 
 
@@ -1701,17 +1731,19 @@ function endChat() {
   })
 
 
-  endThisChat.addEventListener("click", function() {
+  exitBtn.addEventListener("click", function() {
 
-    if (feedbackFormOpened) {
-
-      closeSupport.click()
+    if (threadExist==undefined) {
       return
     }
 
+
+
+    if (feedbackFormOpened) {
+      closeSupport.click()
+      return
+    }
     endChat()
-
-
 
   }, false);
 

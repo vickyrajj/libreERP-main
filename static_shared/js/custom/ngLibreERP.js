@@ -31,8 +31,15 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       main: '#1E88E5',
       highlight: '#04414f'
     };
+    $scope.showw=false;
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
+  $timeout(function() {
+    $scope.isCustomer = $permissions.myPerms('app.customer.access')
+    console.log($scope.isCustomer);
+    $scope.showw=true;
+  }, 3500);
+
 
   function setCookie(cname,cvalue,exdays) {
       var d = new Date();
@@ -57,6 +64,34 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       return "";
   }
 
+
+
+$scope.mobileView=false;
+
+setInterval(function(){
+
+  if($(window).width() < 600) {
+    document.getElementById('mainUI').addEventListener('click', function() {
+        if($(window).width() < 600) {
+        $scope.sideMenuVisibility=false
+      }
+
+    })
+
+      $scope.mobileView=true;
+      if(!$scope.sideMenuVisibility)
+        {
+          document.getElementById('navbarTop').style.margin='0%';
+          document.getElementById('mainUIParent').style.width='100%';
+          document.getElementById('sideMenu').style.display='none'
+        }
+  }else{
+      $scope.mobileView=false;
+  }
+},10)
+  // $(window).on('mouseover', function() {
+  //
+  // })
 
 
 $scope.onHover=false;

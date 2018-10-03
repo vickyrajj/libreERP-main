@@ -83,6 +83,9 @@ connection.onopen = function(session) {
     function userExist() {
       for (var i = 0; i < scope.newUsers.length; i++) {
         if (scope.newUsers[i].uid == args[0]) {
+          if (scope.newUsers[i].type=='videoCall') {
+            return false;
+          }
           console.log('yes');
           if (args[1] == 'M') {
             scope.sound.play();
@@ -301,10 +304,15 @@ connection.onopen = function(session) {
         xhttp.open('GET', '/api/support/supportChat/' + args[2].filePk + '/', true);
         xhttp.send();
 
-
         // return true
       } else if (args[1] == 'ML') {
         scope.sound.play();
+        scope.newUsers.push(detail)
+      } else if (args[1] == 'VC') {
+        detail.type = 'videoCall'
+        detail.url = args[4];
+        //video chat
+        console.log(args , 'video');
         scope.newUsers.push(detail)
       }
     }

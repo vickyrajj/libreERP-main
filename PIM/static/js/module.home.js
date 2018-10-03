@@ -677,8 +677,10 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
           $scope.missedChats = response.data.missedChats
           $scope.agentChatCount = response.data.agentChatCount
           $scope.barData = response.data.graphData
-          console.log($scope.barData);
+
           $scope.barlabels = response.data.graphLabels
+          console.log($scope.barData);
+          console.log($scope.barlabels);
           $scope.avgChatDuration = response.data.avgChatDuration
           $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
           $scope.avgRatingAll = response.data.avgRatingAll
@@ -704,6 +706,8 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
         $scope.agentChatCount = response.data.agentChatCount
         $scope.barData = response.data.graphData
         $scope.barlabels = response.data.graphLabels
+        console.log($scope.barData);
+        console.log($scope.barlabels);
         $scope.avgChatDuration = response.data.avgChatDuration
         $scope.agentLeaderBoard = response.data.agentLeaderBoard
         $scope.avgRatingAll = response.data.avgRatingAll
