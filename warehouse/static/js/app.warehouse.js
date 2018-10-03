@@ -46,6 +46,92 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
     })
   })
 
+
+  $scope.extraData = function(contractPk,frmDate,toDate){
+    console.log(frmDate,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.warehouse.invoice.html',
+      size: 'xl',
+      backdrop : false,
+      resolve : {
+        contract : function() {
+          return contractPk;
+        },
+        frmDate : function() {
+          return $scope.frmDate
+        },
+        toDate : function() {
+          return $scope.toDate
+        }
+      },
+      controller: function($scope, contract,frmDate,toDate, $uibModalInstance){
+        console.log(contract,'aaaaaaaaaaaaaaaaaaaaaaaaaa')
+        $scope.contractPk = contract
+        $scope.frmDate = frmDate.toJSON();
+        $scope.toDate = toDate.toJSON();
+        $scope.form = {
+          quantity: 0,
+          amount: 0,
+          qty : 0,
+          rate: 0,
+          productMeta: ''
+        };
+        $scope.searchTaxCode = function(c) {
+          return $http.get('/api/clientRelationships/productMeta/?code__contains=' + c).
+          then(function(response) {
+            return response.data;
+          })
+        }
+        $scope.$watch('form.productMeta', function(newValue, oldValue) {
+          console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+          if (typeof newValue == 'object') {
+            $scope.showTaxCodeDetails = true;
+          } else {
+            $scope.showTaxCodeDetails = false;
+          }
+        })
+        $scope.$watch('form.qty', function(newValue, oldValue) {
+          console.log(typeof newValue,'aaaaaaaaaaaaaaaaaaaaaaaaa',newValue);
+          if (newValue > 0) {
+            $scope.form.amount = newValue * $scope.form.rate;
+          } else {
+            $scope.form.amount = 0;
+          }
+        })
+
+        $scope.dataDetails=[]
+        $scope.add = function(){
+          $scope.dataDetails.push($scope.form)
+          $scope.form ={}
+        }
+
+      $scope.close=function(){
+        $uibModalInstance.dismiss('cancel');
+      }
+      // $scope.download = function(){
+      //   console.log($scope.dataDetails);
+      //   $http({
+      //     method: 'GET',
+      //     url: '/api/warehouse/downloadMonthlyInvoice/?valPK='+$scope.contractPk+'&from='+ $scope.frmDate+'&to='+$scope.toDate+'&dataDetails='+$scope.dataDetails,
+      //
+      //
+      //   }).
+      //   then(function(response) {
+      //
+      //   })
+      // }
+
+
+
+      },
+    }).result.then(function () {
+
+    }, function () {
+
+
+    });
+  }
+
   $scope.changeStatus = function(status, indx) {
     $scope.invData[indx].status = status;
 
@@ -213,6 +299,8 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
 
 
 })
+
+
 // app.config(function($stateProvider){
 //
 //   $stateProvider
