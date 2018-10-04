@@ -337,7 +337,7 @@ def getChatterScript(request , fileName):
     print globalSettings.SITE_ADDRESS
     print request.get_host()
     print request.META.get('REMOTE_ADDR')
-    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor ,'iconColor':obj.iconColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS}
+    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor ,'iconColor':obj.iconColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS , "wampServer" : globalSettings.WAMP_SERVER}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url
     if obj.name:

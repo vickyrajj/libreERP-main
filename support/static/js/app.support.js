@@ -40,7 +40,9 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           boxOpen: false,
           companyPk: response.data[i].companyPk,
           servicePk: response.data[i].servicePk,
-          spying:{value :'' , isTyping : false}
+          spying:{value :'' , isTyping : false},
+          video:false,
+          videoUrl:''
         })
 
         connection.session.publish('service.support.agent', [response.data[i].uid, 'R'], {}, {
@@ -69,7 +71,9 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           email:'',
           boxOpen:false,
           chatThreadPk: response.data[i].chatThreadPk,
-          spying:{value :'' , isTyping : false}
+          spying:{value :'' , isTyping : false},
+          video:false,
+          videoUrl:''
         })
       }
     });
@@ -197,27 +201,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
   $scope.assignUser = function(indx, uid) {
 
-    if ($scope.newUsers[indx].type=='videoCall') {
-      // alert('open i frame')
-      var body = document.getElementsByTagName("BODY")[0]
-      var iframeDiv = document.createElement('div')
-      iframeDiv.id = "iframeDiv"
-      var iFrame = document.createElement('iframe')
-      iFrame.src = $scope.newUsers[indx].url
-      iFrame.style.position = "fixed";
-      iFrame.style.top = "25%";
-      iFrame.style.left = "25%";
-      iFrame.style.width = "50%";
-      iFrame.style.height = "50%";
-      iframeDiv.appendChild(iFrame)
-      body.appendChild(iframeDiv)
-      // window.open($scope.newUsers[indx].url);
-      return
-    }
-
     $scope.myUsers.push($scope.newUsers[indx]);
     $scope.newUsers.splice(indx, 1);
-
 
     $http({
       method: 'GET',

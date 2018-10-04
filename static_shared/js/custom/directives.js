@@ -325,7 +325,7 @@ app.directive('chatBox', function() {
       index: '=',
       closeChat: '=',
     },
-    controller: function($scope, $users, $uibModal, $http, ngAudio , Flash) {
+    controller: function($scope, $users, $uibModal, $http, ngAudio , Flash , $sce) {
 
 
 
@@ -337,6 +337,7 @@ app.directive('chatBox', function() {
       $scope.chatHistory = []
       console.log($scope.data);
       console.log('adsd', $scope.data);
+
       if ($scope.data.email.length > 0) {
         $http({
           method: 'GET',

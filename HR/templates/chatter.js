@@ -262,7 +262,7 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-var connection = new autobahn.Connection({url: 'wss://ws.cioc.in:443/ws', realm: 'default'});
+var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
 
 var custID = {{pk}};
 console.log('customer id....', custID);
@@ -732,6 +732,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
           console.log('agent pk recieveddddddddddddddddddddddddddddddddd');
           agentPk = args[1];
           isAgentOnline = true;
+          // videoCallAccepted = true
+          // checkVideoCallAccepted()
           return
         }else if (args[0]=='O') {
           console.log('yes online');
@@ -875,10 +877,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
           '<p style="font-size:12px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px;" > Start a conversation </p>'+
           '<p style="font-size:11px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px; color:#777; "> The team typically replies in few minutes.</p>'+
           '<div style="padding-top:5px; text-align:center;" >'+
-            '<img src="https://syrow.cioc.in/static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Agent1">'+
-            '<img src="https://syrow.cioc.in/static/images/user2-160x160.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Agent2">'+
-            '<img src="https://syrow.cioc.in/static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Agent3">'+
-            '<img src="https://syrow.cioc.in/static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Agent4">'+
+            '<img src="{{serverAddress}}/static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Agent1">'+
+            '<img src="{{serverAddress}}/static/images/user2-160x160.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Agent2">'+
+            '<img src="{{serverAddress}}/static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Agent3">'+
+            '<img src="{{serverAddress}}/static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Agent4">'+
           '</div>'+
 
           '<div style="margin-right:-15px; margin-left:-15px; color:#fff; position:absolute; top:144px; text-align:center; padding-top:5px; " >'+
@@ -1032,34 +1034,127 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
   // exitBtn.style.display ="none"
+  // var videoCallAccepted = false;
 
   videoCircle.addEventListener('click',function () {
+
+
+    if (threadExist==undefined) {
+      dataToPublish = [uid, 'VCS', [] , custID]
+      details = getCookie("uidDetails");
+      if (details != "") {
+        console.log(details);
+         dataToPublish.push(JSON.parse(details))
+      } else {
+        dataToPublish.push(false)
+      }
+
+      var dataToSend = JSON.stringify({uid: uid , company: custID, typ: 'video'});
+      var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 201) {
+           console.log('posted successfully');
+           var data = JSON.parse(this.responseText)
+           threadExist=true
+           chatThreadPk = data.pk
+           dataToPublish.push(chatThreadPk)
+           dataToPublish.push('http://192.168.1.124:1337/'+uid)
+           connection.session.publish('service.support.agent', dataToPublish , {}, {
+             acknowledge: true
+           }).
+           then(function(publication) {
+             console.log("Published");
+           });
+         }
+       };
+       xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(dataToSend);
+    }else {
+
+      dataToPublish = [uid, 'VCS', [] , custID, 'http://192.168.1.124:1337/'+uid]
+      if (isAgentOnline) {
+        console.log('ONLINE' , agentPk);
+        connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published service.support.agent."+agentPk);
+        });
+      }else {
+        console.log('offline send to all');
+        connection.session.publish('service.support.agent', dataToPublish , {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published");
+        });
+      }
+
+    }
+
+
+
     // alert('open Video')
     // window.open('http://192.168.1.124:1337/'+uid);
     var body = document.getElementsByTagName("BODY")[0]
-
     var iframeDiv = document.createElement('div')
-    iframeDiv.id = "iframeDiv"
-    var iFrame = document.createElement('iframe')
-    iFrame.src = 'http://192.168.1.124:1337/'+uid
-    iFrame.style.position = "fixed";
-    iFrame.style.top = "25%";
-    iFrame.style.left = "25%";
-    iFrame.style.width = "50%";
-    iFrame.style.height = "50%";
+
+    iframeDiv.id = "iframeDiv";
+    iframeDiv.style.position = "fixed";
+    iframeDiv.style.top = "25%";
+    iframeDiv.style.left = "25%";
+    iframeDiv.style.width = "50%";
+    iframeDiv.style.height = "50%";
+    // iframeDiv.style.display = "none";
+
+    var span = document.createElement('span')
+    span.id = "closeVideo"
+    span.innerHTML = '<img src="{{serverAddress}}/static/images/close.png" alt="Close" width="10" height="10">';
+    span.style.position =  "absolute";
+    span.style.right = "7px";
+    span.style.top = "3px";
+    span.style.backgroundColor = "black";
+    span.style.padding = "3px";
+    span.style.cursor = "pointer";
+
+
+    iframeDiv.appendChild(span)
+
+    var iFrame = document.createElement('iframe');
+    iFrame.src = 'http://192.168.1.124:1337/'+uid;
+    iFrame.style.width = "100%";
+    iFrame.scrolling = "no";
+    iFrame.style.height = "100%";
     iframeDiv.appendChild(iFrame)
     body.appendChild(iframeDiv)
 
-    dataToPublish = [uid, 'VC', [] , custID, 'http://192.168.1.124:1337/'+uid]
+    // checkVideoCallAccepted()
 
-    connection.session.publish('service.support.agent', dataToPublish , {}, {
-      acknowledge: true
-    }).
-    then(function(publication) {
-      console.log("Published");
-    });
 
+    span.addEventListener('click',function () {
+      iFrame.src = '';
+      iframeDiv.parentNode.removeChild(iframeDiv);
+
+      dataToPublish = [uid, 'VCC']
+      connection.session.publish('service.support.agent', dataToPublish , {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published");
+      });
+    })
+
+    
   })
+
+  // function checkVideoCallAccepted() {
+  //   if (videoCallAccepted) {
+  //     iframeDiv.style.display = "";
+  //   }else {
+  //     iframeDiv.style.display = "none";
+  //   }
+  // }
 
 
   // isTyping.style.display = "none";
@@ -1718,7 +1813,7 @@ function endChat() {
 
     connection.onclose = function(reason, details) {
       console.log("Connection lost: ");
-      var connection = new autobahn.Connection({url: 'wss://ws.cioc.in:443/ws', realm: 'default'});
+      var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
       connection.open()
     }
 
