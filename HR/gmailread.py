@@ -29,12 +29,13 @@ import time
 import dateutil.parser as parser
 import datetime
 import csv
-
-
+import os
+print os.getcwd()
 # Creating a storage.JSON file with authentication details
 SCOPES = 'https://www.googleapis.com/auth/gmail.modify' # we are using modify and not readonly, as we will be marking the messages Read
-store = file.Storage('storage.json')
+store = file.Storage(os.path.join( os.getcwd() , 'HR' , 'storage.json'))
 creds = store.get()
+print creds
 if not creds or creds.invalid:
     flow = client.flow_from_clientsecrets('client_secret.json', SCOPES)
     creds = tools.run_flow(flow, store)
@@ -200,5 +201,5 @@ def getFirstMessage():
 # btwDates('2018/09/1','2018/09/03')
 # fromOrBeforeDate('2018/09/23','after')
 # fromOrBeforeDate('2013/01/23','before')
-firstmessage = getFirstMessage()
-print firstmessage
+# firstmessage = getFirstMessage()
+# print firstmessage

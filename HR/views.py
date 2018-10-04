@@ -528,6 +528,6 @@ class emailSaveAPI(APIView):
 class emailDataSaveAPI(APIView):
     def get(self , request , format = None):
         print request.GET
-        import gmailread.py
-        a = gmailread.py.allData()
+        import gmailread
+        a = gmailread.allData()
         return JsonResponse({} ,status =200 )
