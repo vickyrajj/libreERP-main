@@ -91,6 +91,7 @@ class Product(models.Model):
     discount = models.PositiveIntegerField(default = 0)
     storeQty = models.ManyToManyField(StoreQty , related_name="productStore" , blank = True)
     alias = models.CharField(max_length = 500 , null = True)
+    howMuch = models.FloatField(null=True)
     def __str__(self):
         return self.name
 
@@ -135,6 +136,7 @@ class ProductVerient(models.Model):
     parent = models.ForeignKey(Product , related_name='parentProducts')
     sku = models.CharField(max_length=10000,null=True)
     unitPerpack = models.PositiveIntegerField(default = 0)
+    price = models.FloatField(null=True)
 
 # class ProductMetaList(models.Model):
 #     user = models.ForeignKey(User ,null = False , related_name ="productMetaList")
