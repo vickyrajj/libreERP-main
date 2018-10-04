@@ -71,7 +71,7 @@ $scope.mobileView=false;
 setInterval(function(){
 
   if($(window).width() < 600) {
-    document.getElementById('asdf').addEventListener('click', function() {
+    document.getElementById('mainUI').addEventListener('click', function() {
         if($(window).width() < 600) {
         $scope.sideMenuVisibility=false
       }
@@ -81,9 +81,9 @@ setInterval(function(){
       $scope.mobileView=true;
       if(!$scope.sideMenuVisibility)
         {
-          document.getElementById('aqwe').style.margin='0%';
-          document.getElementById('abababa').style.width='100%';
-          document.getElementById('buuu').style.display='none'
+          document.getElementById('navbarTop').style.margin='0%';
+          document.getElementById('mainUIParent').style.width='100%';
+          document.getElementById('sideMenu').style.display='none'
         }
   }else{
       $scope.mobileView=false;

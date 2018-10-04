@@ -549,7 +549,7 @@ app.directive('chatBox', function() {
           }
         }).
         then(function(response) {
-          Flash.create('sucess', 'Chat Has Closed')
+          Flash.create('success', 'Chat Has Closed')
           return
         });
         $scope.closeChatBox(indx, $scope.data.myUserIndex)

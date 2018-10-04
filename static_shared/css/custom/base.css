@@ -389,21 +389,26 @@ body {
 }
 
 /* (1920x1080) Full HD Display */
-@media  screen and (max-width: 1920px) {
-    /* insert styles here */
+/* @media  screen and (max-width: 1920px) {
     .mainUIView{
-      /*margin:0.5vh;*/
-      margin-top: 4.7vh;
+      margin-top: 5vh;
     }
-}
+} */
 
 /* (1366x768) WXGA Display */
-@media  screen and (max-width: 1366px) {
+/* @media  screen and (max-width: 1366px) {
   .mainUIView{
-    /*margin:0.5vh;*/
-    margin-top: 4.7vh;
+    margin-top: 5vh;
   }
+} */
+
+
+.mainUIView{
+  margin-top: 5vh;
 }
+
+
+
 
 .nav-sidebar-inverse> li > a {
   color:white;

@@ -73,7 +73,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         })
       }
     });
-  }, 500);
+  }, 1000);
 
 
 
@@ -196,6 +196,25 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   // $scope.comments = [{msg:"hii,how are you,i am fine",date:"2nd march",time:"2.00 pm"},{msg:"hello,how are you",date:"3nd march",time:"6.00 pm"},{msg:"In computer programming, a comment is a programmer-readable explanation or annotation in the source code of a computer program. They are added with the purpose of making the source code easier for humans to understand, and are generally ignored by compilers and interpreters.",date:"5th march",time:"4.00 pm"},{msg:"yups,how are you",date:"1st march",time:"8.00 pm"}]
 
   $scope.assignUser = function(indx, uid) {
+
+    if ($scope.newUsers[indx].type=='videoCall') {
+      // alert('open i frame')
+      var body = document.getElementsByTagName("BODY")[0]
+      var iframeDiv = document.createElement('div')
+      iframeDiv.id = "iframeDiv"
+      var iFrame = document.createElement('iframe')
+      iFrame.src = $scope.newUsers[indx].url
+      iFrame.style.position = "fixed";
+      iFrame.style.top = "25%";
+      iFrame.style.left = "25%";
+      iFrame.style.width = "50%";
+      iFrame.style.height = "50%";
+      iframeDiv.appendChild(iFrame)
+      body.appendChild(iframeDiv)
+      // window.open($scope.newUsers[indx].url);
+      return
+    }
+
     $scope.myUsers.push($scope.newUsers[indx]);
     $scope.newUsers.splice(indx, 1);
 
