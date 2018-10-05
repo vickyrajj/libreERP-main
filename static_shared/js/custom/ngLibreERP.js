@@ -59,6 +59,33 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
 
 
+
+  $scope.mobileView=false;
+
+  setInterval(function(){
+
+    if($(window).width() < 600) {
+      document.getElementById('mainUI').addEventListener('click', function() {
+          if($(window).width() < 600) {
+          $scope.sideMenuVisibility=false
+        }
+
+      })
+
+        $scope.mobileView=true;
+        if(!$scope.sideMenuVisibility)
+          {
+            document.getElementById('navbarTop').style.margin='0%';
+            document.getElementById('mainUIParent').style.width='100%';
+            document.getElementById('sideMenu').style.display='none'
+          }
+    }else{
+        $scope.mobileView=false;
+    }
+  },10)
+
+
+$scope.onHover=false;
   $scope.sideMenuVisibility = true;
   // retrive it back
   var sideMenuVisibility=getCookie("sideMenuVisibility");
