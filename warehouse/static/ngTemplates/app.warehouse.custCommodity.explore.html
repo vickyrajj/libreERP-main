@@ -1,23 +1,22 @@
-<div class="container" style="padding:30px;">
-  <div class="modal-header">
+<div class="container-fluid" ng-controller="businessManagement.warehouse.custCommodity.explore" style="padding-top:10px;">
+  <div class="col-md-12" style="min-height:70vh;border-right:solid 2px #eeeeee;padding-top:20px;">
     <div class="row">
-      <div class="col-md-6 text-left">
-      <h3>  Commodity Details </h3>
-  </div>
-  <div class="col-md-5 text-right">
-      <i class="fa fa-close fa-2x" ng-click=close()></i>
-  </div>
-  </div>
-  </div>
-  <div class="modal-body">
+      <div class="container-fluid">
+        <span style="font-size:20px;" >Name : {{contact.contact.name}}</span><br/>
+        <span style="font-size:20px;" >Phone :  {{contact.contact.mobile}}</span><br/>
+        <span style="font-size:20px;" >Email : {{contact.contact.email}}</span><br/>
+        <span style="font-size:20px;" >GSTIN : {{contact.contact.company.gst}}</span><br/>
+      </div>
+    </div>
     <div class="row">
+          <h1>  Commodity Details </h1>
       <div class="col-md-7">
       </div>
       <div class="col-md-3 text-left">
         <label> Search</label></br>
         <input type="text" class="form-control" ng-model='searchText'>
       </div>
-      <div class="col-md-2 text-left" >
+      <div class="col-md-2 text-left">
         <label> Export Excel</label></br>
         <button type="button" class="btn btn-primary" name="button" ng-click="downloadItems()"> <i class="fa fa-download" ></i> </button>
       </div>
@@ -47,7 +46,7 @@
         <button type="button" class="btn btn-primary" ng-click="addCommodities()" style="width:70px"> Add </button>
       </div>
     </div>
-  </div>
+
   <div class="row" style="padding:5px;" ng-if="comodities.length>0">
     <div class="col-md-4">
       <b>Name</b>
@@ -85,6 +84,7 @@
               <i class="fa fa-trash" ng-click=delete(c.pk,$index);$event.stopPropagation();></i>
           </div>
         </div>
+
       </div>
       <div class="card"  ng-if="$index==idx " >
         <div class="row" style="padding:10px; padding-left:20px;"  ng-click="ShowHide()" >
@@ -98,12 +98,13 @@
             {{c.typ}}
           </div>
           <div class="col-md-2" >
-              <i class="fa fa-minus"></i>
+              <i class="fa fa-minus"  ></i>
           </div>
           <div class="col-md-2" >
-              <i class="fa fa-trash" ng-click=delete(c.pk,$index);$event.stopPropagation();></i>
+              <i class="fa fa-trash " ng-click=delete(c.pk,$index);$event.stopPropagation();></i>
           </div>
         </div>
+
       </div>
       <div ng-if="$index==idx">
         <div class="row" style="padding:20px">
@@ -148,6 +149,7 @@
                 <th class="text-center">Out</th>
                 <th class="text-center"> Remaining Qt. </th>
                 <th class="text-center">Download</th>
+
               </tr>
               <tbody ng-repeat="s in comodityData" >
                 <tr>
@@ -157,9 +159,10 @@
                   <td>{{s.balance}}</td>
                   <td>
                     <!-- <i class="fa fa-download" ng-click="downloadStatus(s.checkIn,s.checkOut,s.pk)"></i> -->
-                    <a ng-if="s.checkIn!=null" href="/api/warehouse/downloadPdfCheckIn/?valPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
-                    <a ng-if="s.checkOut!=null" href="/api/warehouse/downloadPdfCheckOut/?valPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                    <a ng-if="s.checkIn!=null" href="/api/warehouse/downloadPdfCheckIn/?commPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
+                    <a ng-if="s.checkOut!=null" href="/api/warehouse/downloadPdfCheckOut/?commPK={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a>
                   </td>
+
                     <!-- <a href="/api/warehouse/downloadPdf/"><i class="fa fa-2x fa-download">PDF</i> </a> -->
                 </tr>
               </tbody>
@@ -168,6 +171,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
+  </div>

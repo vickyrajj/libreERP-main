@@ -140,17 +140,32 @@ class CheckoutSerializer(serializers.ModelSerializer):
         c.save()
         return c
 
+class CustomerCommoditySerializer(serializers.ModelSerializer):
+    contact = ContactSerializer(many = False , read_only = True)
+    class Meta:
+        model = CustomerCommodity
+        fields = ('pk' ,'created' , 'contact' )
+    def create(self , validated_data):
+        i=CustomerCommodity(**validated_data)
+        i.contact=Contact.objects.get(pk=self.context['request'].data['contact'])
+        i.save()
+        return i
+
+
 class CommoditySerializer(serializers.ModelSerializer):
     contract = ContractLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Commodity
-        fields = ('pk' ,'created' , 'contract' , 'name' , 'qty', 'typ')
+        fields = ('pk' ,'created' , 'contract' , 'name' , 'qty', 'typ','customercommodity')
     def create(self , validated_data):
-        print 'enttttttttttttttt'
         i=Commodity(**validated_data)
-        i.contract=Contract.objects.get(pk=self.context['request'].data['contract'])
+        if 'contract' in self.context['request'].data:
+            i.contract=Contract.objects.get(pk=self.context['request'].data['contract'])
+        if 'customercommodity' in self.context['request'].data:
+            i.customercommodity = CustomerCommodity.objects.get(pk=self.context['request'].data['customercommodity'])
         i.save()
         return i
+
 
 
 class CommodityQtySerializer(serializers.ModelSerializer):

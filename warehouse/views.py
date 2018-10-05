@@ -87,12 +87,19 @@ class CheckoutViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['parent']
 
+class CustomerCommodityViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated , )
+    serializer_class = CustomerCommoditySerializer
+    queryset = CustomerCommodity.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['contact']
+
 class CommodityViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
     serializer_class = CommoditySerializer
     queryset = Commodity.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['contract']
+    filter_fields = ['contract','customercommodity']
 
 class CommodityQtyViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
@@ -699,8 +706,10 @@ class SendNotificationAPIView(APIView):
 class DownloadExcelReponse(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def get(self , request , format = None):
-        print request.GET
-        obj = Commodity.objects.filter(contract=request.GET['contractData'])
+        if 'contractData' in request.GET:
+            obj = Commodity.objects.filter(contract=request.GET['contractData'])
+        else:
+            obj = Commodity.objects.filter(customercommodity=request.GET['contactData'])
         toReturn = []
         for i in obj:
             toReturn.append({"Name":i.name, "Quantity":i.qty,'Type':i.typ})
@@ -723,7 +732,7 @@ class DownloadReceipt(APIView):
         return ExcelResponse(toReturn)
 
 
-def genCargo(response,commodityData,companyData,request):
+def genCargo(response,commodityData,customerData,companyData,request):
         cm = 2.54
         elements = []
         s = getSampleStyleSheet()
@@ -767,31 +776,45 @@ def genCargo(response,commodityData,companyData,request):
         story.append(cmpAddr)
         cmpGst = Paragraph('GSTIN : ' +settingsFields.get(name = 'gst').value +'<br/><br/>' , compStyle)
         story.append(cmpGst)
-
         customer = []
-        heading = Paragraph('<strong>Agent/Contractor Name : </strong>' , compStyle)
+        heading = Paragraph('<strong>Customer Details : </strong>' , compStyle)
         # headingcus = Paragraph('<strong>Agent/Contractor Name : </strong>' , compStyle)
         customer.append(heading)
-        print customer,'lllllllllllllllllllllllllllllllllllllllllll'
-        name = Paragraph(str(companyData.company.name), compStyle)
-        customer.append(name)
-        street = Paragraph( str(companyData.company.street)   , compStyle)
-        customer.append(street)
-        city = Paragraph( str(companyData.company.city)    , compStyle)
-        customer.append(city)
-        state =Paragraph( str(companyData.company.state)+ ' - ' + str(companyData.company.pincode)   , compStyle)
-        customer.append(state)
-        country = Paragraph( str(companyData.company.country)  , compStyle)
-        customer.append(country)
-        space = Paragraph('<br/> <br/> <br/> '  , compStyle)
-        customer.append(space)
+        if companyData != 'null':
+            name = Paragraph(str(companyData.company.name), compStyle)
+            customer.append(name)
+            street = Paragraph( str(companyData.company.street)   , compStyle)
+            customer.append(street)
+            city = Paragraph( str(companyData.company.city)    , compStyle)
+            customer.append(city)
+            state =Paragraph( str(companyData.company.state)+ ' - ' + str(companyData.company.pincode)   , compStyle)
+            customer.append(state)
+            country = Paragraph( str(companyData.company.country)  , compStyle)
+            customer.append(country)
+            space = Paragraph('<br/> <br/> <br/> '  , compStyle)
+            customer.append(space)
+        else:
+            name = Paragraph(str(customerData.contact.name), compStyle)
+            customer.append(name)
+            cname = Paragraph(str(customerData.contact.company.name), compStyle)
+            customer.append(cname)
+            street = Paragraph( str(customerData.contact.company.street)   , compStyle)
+            customer.append(street)
+            city = Paragraph( str(customerData.contact.company.city)    , compStyle)
+            customer.append(city)
+            state =Paragraph( str(customerData.contact.company.state) + ' - '  + str(customerData.contact.company.pincode)    , compStyle)
+            customer.append(state)
+            country = Paragraph( str(customerData.contact.company.country)  , compStyle)
+            customer.append(country)
+            space = Paragraph('<br/> <br/> <br/> '  , compStyle)
+            customer.append(space)
 
         row0 = [[story, customer ]]
         # row0 = [[story, 'Customer Details : \n' + str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\n '  ]]
         table0 = Table(row0, colWidths=(95.5*mm, 95.5*mm))
         row1 = [['Description','No.of Packages','Weight/Vol', 'Comments'],['This is to confirm receipt of the following goods into the Warehouse\n'  + str(commodityData.commodity.name) + '\n \n \n \n Bill of Entry No: \n Date: \n Container Number: \n Truck Number: \n Driver Name: \n','\n' + str(commodityData.checkIn) + '\n \n \n \n  \n \n \n \n \n','' ,'']]
         table = Table(row1, colWidths=(114*mm, 27*mm,25*mm, 25*mm))
-        rowdetails = [['Receipt No : 0'+str(commodityData.pk)+ '\nDated : ' +date+'\nDate of Warehousing : ' +commodityData.created.strftime("%x") ,'Invoice No : ALWH'+str(commodityData.pk)+ ' \nInvoice Date: ' +commodityData.created.strftime("%x") + ' \n \n']]
+        rowdetails = [['Receipt No : 0'+str(commodityData.pk)+ '\nDate of Warehousing : ' +commodityData.created.strftime("%x") ,'\nDocument Ref. No :  \nDocument Date:  \n ']]
         tabledetails = Table(rowdetails, colWidths=(95.5*mm, 95.5*mm))
         row2 = [['','' ,'' ,'']]
         table2 = Table(row2, colWidths=(114*mm, 27*mm,25*mm, 25*mm))
@@ -877,7 +900,7 @@ def genCargo(response,commodityData,companyData,request):
         elements.append(tablefoot)
         doc.build(elements)
 
-def genChallan(response,commodityData,companyData,request):
+def genChallan(response,commodityData,customerData,companyData,request):
         cm = 2.54
         elements = []
         s = getSampleStyleSheet()
@@ -916,21 +939,45 @@ def genChallan(response,commodityData,companyData,request):
         cmpAddr = Paragraph(settingsFields.get(name = 'companyAddress').value , compStyle)
         story.append(cmpAddr)
         customer = []
-        heading = Paragraph('<strong>Agent/Contractor Name : </strong>' , compStyle)
+        heading = Paragraph('<strong>Customer Details : </strong>' , compStyle)
         # headingcus = Paragraph('<strong>Agent/Contractor Name : </strong>' , compStyle)
-        customer.append(heading)
-        name = Paragraph(str(companyData.company.name), compStyle)
-        customer.append(name)
-        street = Paragraph( str(companyData.company.street)   , compStyle)
-        customer.append(street)
-        city = Paragraph( str(companyData.company.city)    , compStyle)
-        customer.append(city)
-        state =Paragraph( str(companyData.company.state)+' - ' + str(companyData.company.pincode)   , compStyle)
-        customer.append(state)
-        country = Paragraph( str(companyData.company.country)  , compStyle)
-        customer.append(country)
-        space = Paragraph('<br/> '  , compStyle)
-        customer.append(space)
+        if companyData != 'null':
+            name = Paragraph(str(companyData.company.name), compStyle)
+            customer.append(name)
+            street = Paragraph( str(companyData.company.street)   , compStyle)
+            customer.append(street)
+            city = Paragraph( str(companyData.company.city)    , compStyle)
+            customer.append(city)
+            state =Paragraph( str(companyData.company.state)+ ' - ' + str(companyData.company.pincode)   , compStyle)
+            customer.append(state)
+            country = Paragraph( str(companyData.company.country)  , compStyle)
+            customer.append(country)
+            gst = Paragraph('<strong> GSTIN : </strong>' + str(companyData.company.gst)  , compStyle)
+            customer.append(gst)
+            pan = Paragraph('<strong> PAN : </strong>' + str(companyData.company.pan)  , compStyle)
+            customer.append(gst)
+            space = Paragraph('<br/>'  , compStyle)
+            customer.append(space)
+        else:
+            name = Paragraph(str(customerData.contact.name), compStyle)
+            customer.append(name)
+            cname = Paragraph(str(customerData.contact.company.name), compStyle)
+            customer.append(cname)
+            street = Paragraph( str(customerData.contact.company.street)   , compStyle)
+            customer.append(street)
+            city = Paragraph( str(customerData.contact.company.city)    , compStyle)
+            customer.append(city)
+            state =Paragraph( str(customerData.contact.company.state) + ' - '  + str(customerData.contact.company.pincode)    , compStyle)
+            customer.append(state)
+            country = Paragraph( str(customerData.contact.company.country)  , compStyle)
+            customer.append(country)
+            gst = Paragraph('<strong> GSTIN :  </strong>' + str(customerData.contact.company.gst)  , compStyle)
+            customer.append(gst)
+            pan = Paragraph('<strong> PAN :  </strong>' + str(customerData.contact.company.pan)  , compStyle)
+            customer.append(pan)
+            space = Paragraph('<br/> '  , compStyle)
+            customer.append(space)
+
 
         row0 = [[story, customer ]]
         # row0 = [[story, 'Customer Details : \n' + str(companyData.company.name) + '\n' + str(companyData.company.street) + '\n' + str(companyData.company.city) + '\n' + str(companyData.company.state) + '-' + str(companyData.company.pincode) + '\n' + str(companyData.company.country) +'\nGSTIN : ' + companyData.company.gst + '\nPAN : ' + companyData.company.pan + '\nTIN : '  + companyData.company.tin + '\n']]
@@ -1036,10 +1083,16 @@ class DownloadPdfCheckIn(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
         response = HttpResponse(content_type='application/pdf')
-        commodityData = CommodityQty.objects.get(id = request.GET['valPK'])
-        companyData = Contract.objects.get(id = commodityData.commodity.contract.pk)
+        if 'valPK' in request.GET:
+            commodityData = CommodityQty.objects.get(id = request.GET['valPK'])
+            companyData = Contract.objects.get(id = commodityData.commodity.contract.pk)
+            customerData = "null"
+        else:
+            commodityData = CommodityQty.objects.get(id = request.GET['commPK'])
+            customerData = CustomerCommodity.objects.get(id = commodityData.commodity.customercommodity.pk)
+            companyData = 'null'
         response['Content-Disposition'] = 'attachment; filename="cargodownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , commodityData.pk)
-        genCargo(response,commodityData,companyData,request)
+        genCargo(response,commodityData,customerData,companyData,request)
         # f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/invoice%s_%s.pdf' %
         #                       ( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, commodityData.pk)), 'wb')
         # f.write(response.content)
@@ -1051,10 +1104,16 @@ class DownloadPdfCheckOut(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
         response = HttpResponse(content_type='application/pdf')
-        commodityData = CommodityQty.objects.get(id = request.GET['valPK'])
-        companyData = Contract.objects.get(id = commodityData.commodity.contract.pk)
+        if 'valPK' in request.GET:
+            commodityData = CommodityQty.objects.get(id = request.GET['valPK'])
+            companyData = Contract.objects.get(id = commodityData.commodity.contract.pk)
+            customerData = "null"
+        else:
+            commodityData = CommodityQty.objects.get(id = request.GET['commPK'])
+            customerData = CustomerCommodity.objects.get(id = commodityData.commodity.customercommodity.pk)
+            companyData = 'null'
         response['Content-Disposition'] = 'attachment; filename="challandownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , commodityData.pk)
-        genChallan(response,commodityData,companyData,request)
+        genChallan(response,commodityData,customerData,companyData,request)
         return response
 
 ones = ["", "one ","two ","three ","four ", "five ", "six ","seven ","eight ","nine ","ten ","eleven ","twelve ", "thirteen ", "fourteen ", "fifteen ","sixteen ","seventeen ", "eighteen ","nineteen "]
@@ -1120,10 +1179,11 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         date = x.strftime("%x")
         days = abs((frmDate-toDate).days)
         now = datetime.datetime.now()
+        idDate =  toDate.strftime("%y")
 
         # doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
-        rowhead = [['TAX INVOICE\n']]
-        tablehead = Table(rowhead, colWidths=(191*mm))
+        # rowhead = [['TAX INVOICE\n']]
+        # tablehead = Table(rowhead, colWidths=(191*mm))
         stylehead = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'RIGHT'),
                            ('VALIGN',(0,0),(0,-1),'MIDDLE'),
@@ -1131,8 +1191,8 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
                            ('BOX', (0,0), (-1,-1), 0.25, colors.white),
                            ])
-        tablehead.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),15),
-                        ]))
+        # tablehead.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),15),
+        #                 ]))
         compStyle = styleN.clone('footerCompanyName')
         compStyle.textColor = colors.black;
 
@@ -1157,24 +1217,24 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         area = Paragraph(str(sqrt), compStyle)
         cost = int(contract.rate)*sqrt*3
 
-        # numbers = random.sample(range(10), 2)
-        # invId = (''.join(map(str, numbers)))
+        numbers = random.sample(range(10), 2)
+        invId = (''.join(map(str, numbers)))
         bamount = 0
 
 
-
+        taxi = Paragraph('<font size="20"> TAX INVOICE </font>' , compStyle)
         # contract.areas.areaLength
-        row0 = [[cmpName,''], [cmpAddr]]
-        table0 = Table(row0, colWidths=(73*mm,117*mm))
+        row0 = [[cmpName,'',taxi], [cmpAddr,'','']]
+        table0 = Table(row0, colWidths=(73*mm,17*mm,100*mm))
         style0 = TableStyle([
-                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+
                            ('VALIGN',(0,0),(0,-1),'MIDDLE'),
                            ('ALIGN',(0,-1),(-1,-1),'LEFT'),
                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
                            ('BOX', (0,0), (-1,-1), 0.25, colors.white),
                            ('FONTSIZE',(0,0),(0,0),15),
                            ])
-        row1 = [[billTo ,'Number : ALWH18/'+str(month)+str(contract.pk)+str(year)+ ' \nDate : ' +str(toDate).split(' ')[0]+ '\nFor : Storage & Handling ' +str(month) + ' - ' +str(year)  ]]
+        row1 = [[billTo ,'Number : ALWH18/'+str(month)+str(invId)+str(idDate)+ ' \nDate : ' +str(toDate).split(' ')[0]+ '\nFor : Storage & Handling ' +str(month) + ' - ' +str(year)  ]]
         table1 = Table(row1, colWidths=(95.5*mm, 95.5*mm))
         style1 = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'RIGHT'),
@@ -1280,7 +1340,7 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
                         ]))
 
 
-        tablehead.setStyle(stylehead)
+        # tablehead.setStyle(stylehead)
         table0.setStyle(style0)
         table1.setStyle(style1)
         table2.setStyle(style2)
@@ -1289,7 +1349,7 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         table5.setStyle(style5)
         table6.setStyle(style6)
         table7.setStyle(style7)
-        elements.append(tablehead)
+        # elements.append(tablehead)
         elements.append(table0)
         elements.append(table1)
         elements.append(table2)
@@ -1316,6 +1376,7 @@ class DownloadMonthlyInvoice(APIView):
         to =  datetime.datetime.strptime(request.GET["to"],'%Y-%m-%dT%H:%M:%S.%fZ' )
         frmDate = frm + timedelta(days=1)
         toDate = to + timedelta(days=1)
+
         month =  toDate.month
         year =  toDate.year
         contract = Contract.objects.get(id = request.GET['valPK'])

@@ -1,0 +1,31 @@
+<div class="container-fluid" ng-controller="businessManagement.warehouse.contract.form">
+  <div class="col-md-12">
+    <h3>Create Contact Commodity</h3>
+      <div class="row">
+        <div class="col-md-6" >
+          <div class="form-group">
+            <label>Contact</label>
+            <input type="text" class="form-control" ng-model="form.contact" uib-typeahead="contact as contact.name for contact in contactSearch($viewValue)">
+          </div>
+          <div class="form-group">
+            <label>Commodity Name</label>
+            <input type="text" class="form-control" ng-model="form.name">
+          </div>
+          <div class="form-group">
+            <label>Commodity Quantity</label>
+            <input type="number" class="form-control" value="" ng-model="form.qty">
+          </div>
+          <div class="form-group">
+          <label>Commodity Type</label>
+          <select class="form-control" ng-model="form.type">
+            <option selected value="unit"> Unit</option>
+            <option value="cartan"> Cartan</option>
+            <option value="pieces">Pieces</option>
+            <option value="packages">Packages</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-primary" ng-click="addCustCommodities()" style="width:70px"> Add </button>
+        </div>
+      </div>
+  </div>
+</div>

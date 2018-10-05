@@ -1,0 +1,14 @@
+<div class="col-md-3" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-click="rowActionClicked('details')">
+  <div class="container-fluid card" style="padding-bottom:10px;padding-top:10px;">
+    <div class = "row" style="padding-left:15px">
+      <i class="fa fa-handshake-o fa-3x pull-right" style="color:#42618b;"></i>
+      <span style="font-size:18px;"><b>Name : </b>  {{data.contact.name}}</span> <br>
+      <span style="font-size:18px;"><b>Mobile : </b>  {{data.contact.mobile}} </span><br>
+      <span style="font-size:18px;"><b>Email : </b>  {{data.contact.email}} </span><br>
+      <span style="font-size:18px;"><b>GSTIN : </b>  {{data.contact.company.gst}} </span><br>
+  </div>
+  <div class = "row pull-right" style="padding-right:10px">
+    <i class = "fa fa-trash fa-2x" ng-click="rowActionClicked('delete')" ></i>
+  </div>
+</div>
+</div>

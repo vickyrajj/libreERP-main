@@ -142,12 +142,17 @@ ITEM_TYPE = (
     ('packages', 'packages'),
 )
 
+class CustomerCommodity(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    contact = models.ForeignKey(Contact , null = False , related_name="commoditiescontact")
+
 class Commodity(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     contract = models.ForeignKey(Contract , null = True , related_name="commodities")
     name = models.CharField(max_length = 100 , null = False)
     qty =  models.PositiveIntegerField(null = True)
     typ = models.CharField(max_length=10, default='unit', choices = ITEM_TYPE )
+    customercommodity = models.ForeignKey(CustomerCommodity , null = True , related_name="contactcommodities")
 
 class CommodityQty(models.Model):
     created = models.DateTimeField(auto_now_add = True)
