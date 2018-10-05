@@ -43,6 +43,9 @@ def getChequeDocsPath(instance , filename):
 def getPassbookDocsPath(instance , filename):
     return 'HR/doc/passbook/%s_%s' % (str(time()).replace('.', '_'), filename)
 
+def getEmailAttachmentPath(instance , filename):
+    return 'HR/email/attachment/%s_%s' % (str(time()).replace('.', '_'), filename)
+
 class Document(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     issuedBy = models.ForeignKey(User , related_name='certificatesIssued')
@@ -84,6 +87,7 @@ class profile(models.Model):
         ('F' , 'Female'),
         ('O' , 'Other'),
     )
+    gmailAge = models.DateField(null = True)
     empID = models.PositiveIntegerField(unique = True , null = True)
     displayPicture = models.ImageField(upload_to = getDisplayPicturePath, null=True)
     dateOfBirth = models.DateField( null= True )
@@ -294,3 +298,36 @@ class MobileContact(models.Model):
     mobile = models.CharField(max_length = 15 , null = True)
     owner = models.CharField(max_length = 15 , null = True)
     user = models.ForeignKey(User , related_name = "contactAuthored" , null=True)
+
+class EmailAttachment(models.Model):
+    name = models.CharField(max_length = 200 , null = True)
+    size = models.CharField(max_length = 10 , null = True) # in KB
+    attachment = models.FileField(upload_to = getEmailAttachmentPath , null = False)
+    emailID = models.EmailField(null = False)
+
+class Email(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    dated = models.DateTimeField(auto_now_add = False)
+    frm = models.CharField(max_length = 300 , null = False)
+    cc = models.CharField(max_length = 300 , null = False)
+    toMe = models.BooleanField(default = False)
+    spam = models.BooleanField(default = False)
+    body = models.CharField(max_length = 20000 , null = False)
+    bodyTxt = models.CharField(max_length = 10000 , null = False)
+    category = models.CharField(null = True , max_length = 30)
+    user = models.ForeignKey(User , related_name="emails" , null = False)
+    files = models.ManyToManyField(EmailAttachment , related_name='parent' , blank = True)
+    value = models.FloatField(null = True)
+
+ACCOUNT_TYPE_CHOICES = (
+    ('savings' , 'savings'),
+    ('current' , 'current'),
+    ('credit' , 'credit'),
+    ('loan' , 'loan'),
+)
+
+class BankAccount(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    bank = models.CharField(max_length = 300)
+    accNumber = models.CharField(max_length = 100)
+    typ = models.CharField(max_length = 10 , default = 'savings' , choices = ACCOUNT_TYPE_CHOICES)

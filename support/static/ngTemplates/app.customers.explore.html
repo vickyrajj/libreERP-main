@@ -1,30 +1,87 @@
 
 <div class="container-fluid" style="padding:20px;" ng-controller="businessManagement.customers.explore">
-  <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:70vh;">
-    <div class="row">
-      <div class="container-fluid text-center">
-        <img ng-src="{{data.userPK | getDP}}" class="img img-circle" style="height:100px;width:100px;margin-bottom:20px;"> <br>
-        <span class="text-muted" style="font-size:18px;">{{data.pk | getName }}</span> <br><br>
-      </div>
-      <button type="button" class="btn btn-primary" ng-click="getToken()">Generate</button>
-    <button type="button" class="btn btn-primary" ng-click="createData()">Create</button>
-    </div>
-  </div>
-  <div class="col-md-9">
+
+  <!-- <div class="col-md-9"> -->
     <div class="container-fluid">
       <div class="row">
-        <h2>Details of {{data.pk | getName }}</h2><br>
-        <h5><strong>Username:</strong> {{data.username}}</h5>
-        <h5><strong>Email:</strong> {{data.email}}</h5>
-        <h5><strong>Mobile:</strong> <span>{{data.profile.mobile}}</span>   <button type="button" class="btn btn-default" ng-click="showEdit()" ng-if="mobileEdit">Edit <i class="fa fa-pencil"></i></button> </h5>
-        <div class="input-group col-md-4" ng-if="status">
-          <input type="text" class="form-control" ng-model="form.mobile" />
-          <span class="input-group-btn">
-          <button type="button" class="btn btn-primary" ng-click="saveMobile()">Save</button>
-        </span>
+
+        <div class="col-md-2" style="border-right:solid 2px #eeeeee;">
+          <div class="row">
+            <div class="container-fluid text-center">
+              <img ng-src="{{data.userPK | getDP}}" class="img img-circle" style="height:100px;width:100px;margin-bottom:5px;"> <br>
+              <span class="text-muted" style="font-size:18px;">{{data.pk | getName }}</span> <br><br>
+            </div>
+
+          </div>
         </div>
+
+        <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
+          <h5><strong>User ID:</strong> {{data.pk}}</h5>
+          <h5><strong>Loan ID:</strong> DUMMY</h5>
+          <h5><strong>Email:</strong> {{data.email}}
+          <button type="button" class="btn btn-primary btn-sm" ng-click="getToken();createData()">Fetch</button></h5>
+          <h5><strong>Mobile:</strong> <span>{{data.profile.mobile}}</span>   <button type="button" class="btn btn-default" ng-click="showEdit()" ng-if="mobileEdit">Edit <i class="fa fa-pencil"></i></button> </h5>
+          <div class="input-group col-md-4" ng-if="status">
+            <input type="text" class="form-control" ng-model="form.mobile" />
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-primary" ng-click="saveMobile()">Save</button>
+          </span>
+          </div>
+        </div>
+
+        <div class="col-md-7" style="padding-left:20px;">
+          <div class="row">
+            <div class="col-md-4 ">
+              <div class="container-fluid card" style="border:solid 2px #759ff1;">
+                <div class="col-md-4" style="padding-top:20px;">
+                  <img src="/static/images/bank-clip-account.png" style="width:100%;">
+                </div>
+                <div class="col-md-8">
+                  <h3>3</h3>
+                  Bank accounts
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4" >
+              <div class="container-fluid card" style="border:solid 2px #ffcd37;">
+                <div class="col-md-4" style="padding-top:20px;">
+                  <img src="/static/images/loan_icon.png" style="width:100%;">
+                </div>
+                <div class="col-md-8">
+                  <h3>4</h3>
+                  Loan account
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4" >
+              <div class="container-fluid card" style="border:solid 2px #759ff1;">
+                <div class="col-md-4" style="padding-top:20px;">
+                  <img src="/static/images/creditCard.png" style="width:100%;">
+                </div>
+                <div class="col-md-8">
+                  <h3>1</h3>
+                  Credit Cards
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
       </div>
-      <br/>
+
+      <div class="row">
+
+        <canvas height="30vh" id="line" class="chart chart-line" chart-data="chartData"
+        chart-labels="labels" chart-series="series" chart-options="options"
+        chart-dataset-override="datasetOverride" chart-click="onClick">
+        </canvas
+
+      </div>
+
       <div class="row">
         <uib-tabset>
           <uib-tab>
@@ -60,5 +117,5 @@
           </uib-tabset>
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 </div>
