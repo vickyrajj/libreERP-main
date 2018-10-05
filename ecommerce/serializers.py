@@ -425,7 +425,25 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
             price = obj.product.product.price
         return price
     def get_ppAfterDiscount(self, obj):
-        return obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
+        if obj.prodSku is not None:
+            # print obj.prodSku
+            # toReturn = 10
+            if obj.prodSku == obj.product.product.serialNo:
+                toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
+            else:
+                toReturn = ProductVerient.objects.filter(sku = obj.prodSku)[0].price
+        else:
+            toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
+        # if obj.prodSku is not None:
+        #     if obj.prodSku == obj.product.product.serialNo:
+        #         toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
+        #     else:
+        #         toReturn = obj.product.product.price
+        # else:
+        #     toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
+        # return toReturn
+        print toReturn
+        return toReturn
 
 # class OrderQtyMapLiteSerializer(serializers.ModelSerializer):
 #     productName = serializers.SerializerMethodField()
