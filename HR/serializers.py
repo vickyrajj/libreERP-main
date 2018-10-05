@@ -12,7 +12,7 @@ class userProfileLiteSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     class Meta:
         model = profile
-        fields = ('displayPicture' , 'prefix' ,'pk' )
+        fields = ('displayPicture' , 'prefix' ,'pk' ,'mobile')
 
 class userSearchSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
@@ -120,7 +120,7 @@ class userSerializer(serializers.ModelSerializer):
 class userAdminSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url' , 'username' , 'email' , 'first_name' , 'last_name' , 'is_staff' ,'is_active' )
+        fields = ('pk','url' , 'username' , 'email' , 'first_name' , 'last_name' , 'is_staff' ,'is_active' )
     def create(self , validated_data):
         if not self.context['request'].user.is_superuser:
             raise PermissionDenied(detail=None)
@@ -132,6 +132,7 @@ class userAdminSerializer(serializers.HyperlinkedModelSerializer):
         return user
     def update (self, instance, validated_data):
         user = self.context['request'].user
+        print user,'*******************'
         if user.is_staff or user.is_superuser:
             u = User.objects.get(username = self.context['request'].data['username'])
             if (u.is_staff and user.is_superuser ) or user.is_superuser: # superuser can change password for everyone , staff can change for everyone but not fellow staffs

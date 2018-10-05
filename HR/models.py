@@ -8,6 +8,8 @@ from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from django.contrib import admin
 from organization.models import *
+from organization.models import *
+from ERP.models import application
 
 
 def getSignaturesPath(instance , filename):
@@ -83,7 +85,7 @@ class profile(models.Model):
         ('O' , 'Other'),
     )
     empID = models.PositiveIntegerField(unique = True , null = True)
-    displayPicture = models.ImageField(upload_to = getDisplayPicturePath)
+    displayPicture = models.ImageField(upload_to = getDisplayPicturePath, null=True)
     dateOfBirth = models.DateField( null= True )
     anivarsary = models.DateField( null= True )
     married = models.BooleanField(default = False)
@@ -179,7 +181,6 @@ class designation(models.Model):
     secondaryApprover = models.ForeignKey(User , related_name = "alsoApproving" , null=True)
 
 User.designation = property(lambda u : designation.objects.get_or_create(user = u)[0])
-
 
 class payroll(models.Model):
     user = models.ForeignKey(User , related_name = "payrollAuthored" , null=False)

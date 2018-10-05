@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top animated slideInDown"  style="{{sideMenuVisibility ? 'margin-left:13%;': ''}}">
+<nav class="navbar navbar-default navbar-fixed-top animated slideInDown"  id="navbarTop" style="{{sideMenuVisibility ? 'margin-left:13%': 'margin-left:5%;'}};{{mobileView ? 'margin-left:31%':''}};">
   <div class="container-fluid" style="height:100%;">
     <div class="navbar-header"  style="height: 102%;">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navBar" aria-expanded="false" aria-controls="navbar">
@@ -79,7 +79,7 @@
         </li>
       </ul> <!-- /. notification icons group -->
       <div style="position:relative;padding-top:0.5vh;">
-        <form  class="navbar-form navbar-right" role="search" style="position:absolute;right:270px;">
+        <form  class="navbar-form navbar-right" role="search" style="position:absolute;right:270px;color:white">
           <i style="margin:10px;" ng-click="terminal.show = !terminal.show;" class="fa fa-terminal noselect"></i>
           <input ng-if="terminal.show" focus-me="terminal.show" type="text" class="form-control animated fadeIn" placeholder="Enter command" ng-enter="parseCommand()" ng-blur="closeTerminal()" ng-model = "terminal.command" style="width:500px;" uib-typeahead="user as getName(user) for user in userSearch($viewValue)">
           <div style="position:absolute;top:45px;background:white;width:87%;left:10%;padding:0px;" ng-if="terminal.showCommandOptions && terminal.show" class="card" >

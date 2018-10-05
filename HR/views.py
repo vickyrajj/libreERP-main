@@ -14,7 +14,7 @@ from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
-from ERP.models import application, permission , module , CompanyHolidays
+from ERP.models import application, permission , module , CompanyHolidays , service
 from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
@@ -25,6 +25,9 @@ from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
 import calendar
 from rest_framework.response import Response
+from django.contrib.auth.models import User, Group
+# from ERP.models import application , permission
+
 
 def documentView(request):
     docID = None
@@ -115,7 +118,7 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
-
+        print request.POST
     	usernameOrEmail = request.POST['username']
         otpMode = False
         if 'otp' in request.POST:
@@ -215,6 +218,12 @@ def root(request):
 @login_required(login_url = globalSettings.LOGIN_URL)
 def home(request):
     u = request.user
+
+
+    # permissions = permission.objects.filter(user = u)
+    # print '####################################',permissions
+
+
     if u.is_superuser:
         apps = application.objects.all()
         modules = module.objects.filter(~Q(name='public'))
@@ -238,13 +247,20 @@ class userProfileAdminModeViewSet(viewsets.ModelViewSet):
 
 class userDesignationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
-    queryset = designation.objects.all()
     serializer_class = userDesignationSerializer
+    queryset = designation.objects.all()
+    def get_queryset(self):
+        if 'user' in self.request.GET:
+            return designation.objects.filter(user = self.request.GET['user'])
+        else:
+            return designation.objects.all()
+
 
 class userAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin ,)
     queryset = User.objects.all()
     serializer_class = userAdminSerializer
+
 
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated ,)
@@ -252,6 +268,15 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_fields = ['username']
     serializer_class = userSerializer
     def get_queryset(self):
+
+        if 'getCustomers' in self.request.GET:
+            a = list(permission.objects.filter(app = application.objects.get(name = "app.customer.access")).values_list('user', flat=True).distinct())
+            if int(self.request.GET['getCustomers']) == 1:
+                return User.objects.filter(pk__in=a)
+            else:
+                return User.objects.filter(~Q(pk__in=a))
+
+
         if 'mode' in self.request.GET:
             if self.request.GET['mode']=="mySelf":
                 if self.request.user.is_authenticated:
@@ -279,6 +304,9 @@ class UserSearchViewSet(viewsets.ModelViewSet):
             else :
                 return User.objects.all().order_by('-date_joined')
         else:
+            if 'getCustomers' in self.request.GET:
+                a = list(permission.objects.filter(app = application.objects.get(name = "app.customer.access")).values_list('user', flat=True).distinct())
+                return User.objects.filter(pk__in=a)
             return User.objects.all().order_by('-date_joined')
 
 class GroupViewSet(viewsets.ModelViewSet):
