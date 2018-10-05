@@ -88,17 +88,86 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
   $scope.serviceName = SERVICE_NAME;
   $scope.modules = $permissions.module();
 
-  $scope.sideMenuVisibility = true;
 
 
-  // $scope.$on('toggleSideMenu' , function(evt) {
-  //   console.log("toggle data");
-  // })
+  function setCookie(cname,cvalue,exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires=" + d.toGMTString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
 
 
-  $scope.toggleSideMenu = function() {
-    $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
-  }
+
+  $scope.mobileView=false;
+
+  setInterval(function(){
+
+    if($(window).width() < 700) {
+      document.getElementById('mainUI').addEventListener('click', function() {
+          if($(window).width() < 700) {
+          $scope.sideMenuVisibility=false
+        }
+
+      })
+
+        $scope.mobileView=true;
+        if(!$scope.sideMenuVisibility)
+          {
+            document.getElementById('navbarTop').style.margin='0%';
+            document.getElementById('mainUIParent').style.width='100%';
+            document.getElementById('sideMenu').style.display='none'
+          }
+    }else{
+        $scope.mobileView=false;
+    }
+  },10)
+
+
+
+
+  $scope.onHover=false;
+  console.log($scope.onHover);
+    $scope.sideMenuVisibility = true;
+    // retrive it back
+    var sideMenuVisibility=getCookie("sideMenuVisibility");
+    console.log(getCookie("sideMenuVisibility"))
+    if (sideMenuVisibility == "false") {
+        $scope.sideMenuVisibility=false;
+       } else {
+       $scope.sideMenuVisibility=true;
+    }
+
+    $scope.toggleSideMenu = function() {
+      $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
+      console.log($scope.sideMenuVisibility);
+      if ($scope.sideMenuVisibility === false) {
+          sideMenuVisibility='false';
+         } else {
+         sideMenuVisibility='true';
+      }
+      // save it in cookies
+      setCookie('sideMenuVisibility',sideMenuVisibility,30);
+      console.log(getCookie('sideMenuVisibility'))
+    }
+
+
 
 
 
