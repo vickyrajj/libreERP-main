@@ -16,8 +16,6 @@ def getContractDoc(instance,filename):
 
 
 
-
-
 class Customer(models.Model):
     user = models.ForeignKey(User , related_name = 'posContacts' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
@@ -134,7 +132,7 @@ class ProductVerient(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey(Product , related_name='parentProducts')
-    sku = models.CharField(max_length=10000,null=True)
+    sku = models.CharField(max_length=10000,null=True, unique = True)
     unitPerpack = models.PositiveIntegerField(default = 0)
     price = models.FloatField(null=True)
 

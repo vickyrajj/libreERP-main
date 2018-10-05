@@ -127,7 +127,9 @@ class Cart(models.Model):
     product = models.ForeignKey(listing, null = False)
     user = models.ForeignKey(User, null = False)
     qty = models.PositiveIntegerField(null = True)
-    typ = models.CharField(choices = CART_TYPE_CHOICES , max_length = 10 , default = 'cart')
+    typ = models.CharField(choices = CART_TYPE_CHOICES, max_length = 10, default = 'cart')
+    prodSku = models.CharField(max_length = 50, null = True, blank = True)
+    prodVarPrice = models.PositiveIntegerField(null = True , blank = True)
 
 User.cart = property(lambda u : Cart.objects.get_or_create(user = u)[0])
 
@@ -214,6 +216,7 @@ class OrderQtyMap(models.Model):
     courierName =  models.CharField(max_length=100 ,null = True , blank = True)
     courierAWBNo =  models.CharField(max_length=50 ,null = True , blank = True)
     notes =  models.CharField(max_length=500 ,null = True , blank = True)
+    prodSku = models.CharField(max_length = 50, null = True, blank = True)
 
 
 class Order(models.Model):

@@ -262,17 +262,31 @@ class CreateOrderAPI(APIView):
             # if type(i['pk']) == 'string':
             #     int(i['pk'])
             print i,'77777777777777',request.data['promoCodeDiscount'],type(request.data['promoCodeDiscount'])
+            print i['prodSku'], 'prodSku'
             pObj = listing.objects.get(pk = i['pk'])
-            pp = pObj.product.price
-            if pp > 0:
-                a = pp - (pObj.product.discount*pp)/100
-                print a ,type(a)
-                b = a - (int(request.data['promoCodeDiscount'])*a)/100
+            if pObj.product.serialNo == i['prodSku']:
+                pp = pObj.product.price
+                if pp > 0:
+                    a = pp - (pObj.product.discount*pp)/100
+                    print a ,type(a)
+                    b = a - (int(request.data['promoCodeDiscount'])*a)/100
+                else:
+                    b=0
             else:
-                b=0
+                prodVar = ProductVerient.objects.get(sku = i['prodSku'])
+                pp = prodVar.price
+                print pp ,'pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp'
+                if pp > 0:
+                    # a = pp - (pObj.product.discount*pp)/100
+                    # print a ,type(a)
+                    b = pp - (int(request.data['promoCodeDiscount'])*pp)/100
+                else:
+                    b=0
+
             totalAmount += b * i['qty']
+            print totalAmount , 'totalAmounttotalAmounttotalAmounttotalAmount'
             print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b))})
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b)),'prodSku':i['prodSku']})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:

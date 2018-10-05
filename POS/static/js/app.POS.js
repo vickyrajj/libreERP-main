@@ -975,6 +975,9 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
         'unitPerpack': 1
       }
       Flash.create('success', 'Saved');
+    }, function(err) {
+      console.log(err);
+      Flash.create('danger' , err.statusText)
     })
   }
 

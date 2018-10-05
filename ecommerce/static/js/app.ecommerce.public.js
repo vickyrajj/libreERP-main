@@ -502,9 +502,20 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
 
   $scope.$watch('inCart', function(newValue, oldValue) {
     $scope.data.total = 0;
+    var price = 0;
     console.log("called cart");
     for (var i = 0; i < $rootScope.inCart.length; i++) {
-      $scope.data.total += $rootScope.inCart[i].product.product.discountedPrice * $rootScope.inCart[i].qty
+
+      console.log($rootScope.inCart[i].prodSku , $rootScope.inCart[i].product.product.serialNo);
+      if ($rootScope.inCart[i].prodSku==$rootScope.inCart[i].product.product.serialNo){
+        console.log('if');
+        price = $rootScope.inCart[i].product.product.discountedPrice
+      }else {
+        console.log('else');
+        price = $rootScope.inCart[i].prodVarPrice
+      }
+      $scope.data.total += price * $rootScope.inCart[i].qty
+      console.log($scope.data.total);
     }
   }, true)
 
@@ -1344,6 +1355,9 @@ app.controller('controller.ecommerce.account', function($scope, $rootScope, $sta
 });
 
 app.controller('controller.ecommerce.account.cart', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $rootScope) {
+
+  console.log('coming in cart controller');
+
   $scope.data = {
     tableData: [],
   };
@@ -1443,8 +1457,14 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
 
   $scope.calcTotal = function() {
     $scope.total = 0;
+    var price = 0;
     for (var i = 0; i < $scope.data.tableData.length; i++) {
-      $scope.total = $scope.total + ($scope.data.tableData[i].product.product.discountedPrice * $scope.data.tableData[i].qty)
+      if ($scope.data.tableData[i].prodSku!=$scope.data.tableData[i].product.product.serialNo) {
+        price = $scope.data.tableData[i].prodVarPrice
+      }else {
+        price = $scope.data.tableData[i].product.product.discountedPrice
+      }
+      $scope.total = $scope.total + (price * $scope.data.tableData[i].qty)
     }
     return $scope.total
   }
@@ -2177,10 +2197,19 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $scope.calcTotal = function() {
     $scope.total = 0;
     $scope.totalAfterDiscount = 0;
+    var price = 0;
+    var discountedPrice = 0;
     if ($state.params.pk == 'cart') {
       for (var i = 0; i < $scope.cartItems.length; i++) {
-        $scope.total = $scope.total + ($scope.cartItems[i].product.product.price * $scope.cartItems[i].qty)
-        $scope.totalAfterDiscount = $scope.totalAfterDiscount + ($scope.cartItems[i].product.product.discountedPrice * $scope.cartItems[i].qty)
+        if ($scope.cartItems[i].prodSku==$scope.cartItems[i].product.product.serialNo) {
+          price = $scope.cartItems[i].product.product.price
+          discountedPrice = $scope.cartItems[i].product.product.discountedPrice
+        }else {
+          price = $scope.cartItems[i].prodVarPrice
+          discountedPrice = $scope.cartItems[i].prodVarPrice
+        }
+        $scope.total = $scope.total + (price * $scope.cartItems[i].qty)
+        $scope.totalAfterDiscount = $scope.totalAfterDiscount + (discountedPrice * $scope.cartItems[i].qty)
       }
     } else {
       $scope.total = $scope.item.product.price * $scope.item.qty
@@ -2271,9 +2300,16 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
               return
             }
             else{
+              // var prodSku
+              // if ($scope.cartItems[i].prodSku==$scope.cartItems[i].product.product.serialNo) {
+              //   prodSku = $scope.cartItems[i].product.product.serialNo
+              // }else {
+              //     prodSku = $scope.cartItems[i].prodSku
+              // }
               $scope.cartProducts.push({
                 pk: $scope.cartItems[i].product.pk,
-                qty: $scope.cartItems[i].qty
+                qty: $scope.cartItems[i].qty,
+                prodSku: $scope.cartItems[i].prodSku
               })
             }
           }
@@ -2289,7 +2325,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         }
         $scope.itemProduct.push({
           pk: $scope.item.pk,
-          qty: $scope.item.qty
+          qty: $scope.item.qty,
+          prodSku: $scope.item.product.serialNo
         })
         $scope.dataToSend.products = $scope.itemProduct
       }
@@ -3404,7 +3441,7 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
     }
     if ($scope.subSlideMobile.banners[$scope.subSlideMobile.active] != undefined) {
       $scope.subSlideMobile.img = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].imagePortrait
-      console.log($scope.subSlideMobile.img, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+      // console.log($scope.subSlideMobile.img, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
       $scope.subSlideMobile.title = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].title
     }
   }, 3000);

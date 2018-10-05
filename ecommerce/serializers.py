@@ -8,7 +8,7 @@ from HR.serializers import userSearchSerializer
 from rest_framework.response import Response
 from API.permissions import has_application_permission
 from ERP.serializers import serviceLiteSerializer, addressSerializer
-from POS.models import Product,Store,StoreQty
+from POS.models import Product,Store,StoreQty,ProductVerient
 from POS.serializers import ProductSerializer
 import json
 from HR.models import *
@@ -112,7 +112,7 @@ class POSProductSerializer(serializers.ModelSerializer):
     storeQty=StoreQtySerializer(many=True,read_only=True)
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name' , 'price' , 'discount','discountedPrice' ,'description','inStock','storeQty','howMuch')
+        fields = ('pk' , 'user' ,'name' , 'price' , 'discount','discountedPrice' ,'serialNo' ,'description','inStock','storeQty','howMuch','unit')
     def get_discountedPrice(self, obj):
         if obj.discount>0:
             # discountedPrice = obj.price - ((obj.discount / obj.price )* 100)
@@ -129,11 +129,12 @@ class listingSerializer(serializers.ModelSerializer):
     added_cart = serializers.SerializerMethodField()
     added_saved = serializers.SerializerMethodField()
     in_stock = serializers.SerializerMethodField()
+    product_variants = serializers.SerializerMethodField()
     # parentType = genericProductSerializer(many = False , read_only = True)
 
     class Meta:
         model = listing
-        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock')
+        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock','product_variants')
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
@@ -210,6 +211,10 @@ class listingSerializer(serializers.ModelSerializer):
         else:
             return 'false'
 
+    def get_product_variants(self , obj):
+        prodVar = ProductVerient.objects.filter(parent = obj.product.pk)
+        return prodVar.values()
+
 
 from django.db.models import Avg
 
@@ -222,9 +227,10 @@ class listingLiteSerializer(serializers.ModelSerializer):
     added_cart = serializers.SerializerMethodField()
     added_saved = serializers.SerializerMethodField()
     in_stock = serializers.SerializerMethodField()
+    product_variants = serializers.SerializerMethodField()
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock','product_variants')
     def get_rating(self , obj):
         return obj.ratings.all().aggregate(Avg('rating'))
 
@@ -252,6 +258,11 @@ class listingLiteSerializer(serializers.ModelSerializer):
             return 'true'
         else:
             return 'false'
+
+    def get_product_variants(self , obj):
+        prodVar = ProductVerient.objects.filter(parent = obj.product.pk)
+        return prodVar.values()
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -292,9 +303,11 @@ class CartSerializer(serializers.ModelSerializer):
     product = listingSerializer(many = False , read_only = True)
     class Meta:
         model = Cart
-        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ')
+        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice')
     def create(self , validated_data):
     	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+
     	try:
     		c=Cart.objects.get(product = self.context['request'].data['product'] ,user=self.context['request'].user)
     		if self.context['request'].data['qty'] > 0:
@@ -308,9 +321,14 @@ class CartSerializer(serializers.ModelSerializer):
                     return
 
     	except:
+                print 'except'
        	 	c = Cart(**validated_data)
        	 	c.product = listing.objects.get(pk = self.context['request'].data['product'])
-
+                if 'prodSku' in self.context['request'].data:
+                    prodVar = ProductVerient.objects.filter(sku = self.context['request'].data['prodSku'])
+                    if len(prodVar) > 0:
+                        print 'imnideifffffffffffffffffffffffffffffffffffffffffffff'
+                        c.prodVarPrice = prodVar[0].price
         	c.save()
         return c
 
@@ -379,7 +397,7 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
     trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku')
 
     def update(self ,instance, validated_data):
         print 'updateeeeeeeeeeeeeeeeeee'
@@ -398,7 +416,14 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
     def get_productName(self, obj):
         return obj.product.product.name
     def get_productPrice(self, obj):
-        return obj.product.product.price
+        if obj.prodSku is not None:
+            if obj.prodSku == obj.product.product.serialNo:
+                price = obj.product.product.price
+            else:
+                price = ProductVerient.objects.filter(sku = obj.prodSku)[0].price
+        else:
+            price = obj.product.product.price
+        return price
     def get_ppAfterDiscount(self, obj):
         return obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
 

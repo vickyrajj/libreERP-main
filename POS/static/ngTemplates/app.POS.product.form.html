@@ -144,10 +144,9 @@
             <p class="text-muted">Price</p>
           </div>
           <div class="col-md-3">
-            <p class="text-muted">Items per pack</p>
+            <p class="text-muted">{{product.unit=='Quantity' ? 'Items per pack': 'Multiple'}}</p>
           </div>
         </div>
-
 
 
         <div class="row">
@@ -171,8 +170,14 @@
           </div>
         </div>
 
+        <div class="row">
+          <div class="col-md-12">
+            <p>Preview: {{product.howMuch * productVerientForm.unitPerpack}} {{product.unit=='Quantity' ? 'pcs': product.unit}}</p>
+          </div>
+        </div>
 
-        <div class="row" style="margin-top: 30px;padding:5px 20px">
+
+        <div class="row" style="margin-top: 20px;padding:5px 20px">
           <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 15px;" ng-repeat="data in productData">
             <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
               <div class="col-md-12">
