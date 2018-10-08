@@ -13,7 +13,7 @@ from .models import *
 # Create your views here.
 from reportlab import *
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A4,A6,A1,landscape
 from reportlab.lib.units import cm, mm
 from reportlab.lib import colors , utils
 from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, PageBreak, BaseDocTemplate, PageTemplate, SimpleDocTemplate, Flowable
@@ -31,10 +31,11 @@ import pytz
 import requests
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
-# from openpyxl import load_workbook
+from openpyxl import load_workbook
 from io import BytesIO
 import re
 from rest_framework import filters
+from django.db.models import F ,Value,CharField
 
 
 
@@ -45,13 +46,82 @@ class CustomerViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name' ]
 
+class StoreViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny, )
+    serializer_class = StoreSerializer
+    # queryset = Store.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name' ]
+    def get_queryset(self):
+        toReturn = Store.objects.all()
+        # if 'pincode' in self.request.GET:
+        #     toReturn = toReturn.filter(pincode__icontains=int(self.request.GET['pincode']))
+        # return toReturn
+        if 'pincode' in self.request.GET:
+            # toReturn = toReturn.filter(pincode__range=(int(self.request.GET['pincode'])-150,int(self.request.GET['pincode'])+150))
+            val = int(self.request.GET['pincode'])
+            lt = toReturn.filter(pincode__range=(val-150,val)).order_by('-pincode')
+            gt = toReturn.filter(pincode__range=(val,val+150)).order_by('pincode')
+            if lt.count()>0 and gt.count()==0:
+                toReturn = lt.first()
+            elif gt.count()>0 and lt.count()==0:
+                toReturn = gt.first()
+            elif gt.count()==0 and lt.count()==0:
+                toReturn = gt
+            else:
+                if gt[0].pincode - val < val-lt[0].pincode:
+                    print 'greaterrrrrrrrrrrrr'
+                    toReturn = gt.first()
+                elif val-lt[0].pincode < gt[0].pincode - val:
+                    print 'lessssssssssss'
+                    toReturn = lt.first()
+                else:
+                    print 'equallllllllll'
+                    toReturn = lt.first()
+            try:
+                print toReturn.pk
+                toReturn = Store.objects.filter(pk=toReturn.pk)
+            except:
+                print 'in excepttttttttttttttttt'
+                toReturn = toReturn
+            print toReturn
+        return toReturn
+
+class StoreQtyViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = StoreQtySerializer
+    queryset = StoreQty.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['name' ]
+
+
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny, )
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+    # queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
-    search_fields = ('name', 'serialNo', 'description', 'serialId')
-    filter_fields = ['name','haveComposition']
+    # search_fields = ('name', 'serialNo', 'description', 'serialId')
+    filter_fields = ['name','haveComposition','serialNo','inStock']
+
+    # filter_fields = ['name','haveComposition']
+    def get_queryset(self):
+        product=[]
+        unit=0
+        if 'search' in self.request.GET:
+            if 'storepk' in self.request.GET:
+                storeQtylist = list(StoreQty.objects.filter(store = int(self.request.GET['storepk'])).values_list('pk',flat=True))
+                objs = Product.objects.filter(storeQty__in=storeQtylist)
+            else:
+                objs = Product.objects.all()
+            product = objs.filter(name__contains=str(self.request.GET['search']))
+            product1  = objs.filter(serialNo__contains=str(self.request.GET['search']))
+            product2 = list(ProductVerient.objects.filter(sku__contains=str(self.request.GET['search'])).values_list('parent',flat=True))
+            product3  = objs.filter(pk__in=product2).annotate(myUnit=Value(unit, output_field=CharField()))
+            return product | product1 | product3
+        else:
+            return Product.objects.all()
+
+
     # filter_backends = (filters.SearchFilter,)
 
 # class InvoiceViewSet(viewsets.ModelViewSet):
@@ -135,9 +205,10 @@ styles=getSampleStyleSheet()
 styleN = styles['Normal']
 styleH = styles['Heading1']
 
-
-settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
-
+try:
+    settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+except:
+    print "ERROR : settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()"
 
 class expanseReportHead(Flowable):
 
@@ -276,7 +347,7 @@ class PageNumCanvas(canvas.Canvas):
         p2.drawOn(self , 40*mm  , 4*mm)
 
         from svglib.svglib import svg2rlg
-        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'cioc_icon.svg'))
+        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'company_icon.svg'))
         sx=sy=0.5
         drawing.width,drawing.height = drawing.minWidth()*sx, drawing.height*sy
         drawing.scale(sx,sy)
@@ -315,13 +386,14 @@ def genInvoice(response , invoice, request):
     tableHeaderStyle.textColor = colors.white;
     tableHeaderStyle.fontSize = 7
 
-    pHeadProd = Paragraph('<strong>Product/<br/>Service</strong>' , tableHeaderStyle)
+    pHeadProd = Paragraph('<strong>Product /<br/>Service</strong>' , tableHeaderStyle)
     pHeadDetails = Paragraph('<strong>Details</strong>' , tableHeaderStyle)
-    pHeadTaxCode = Paragraph('<strong>HSN/<br/>SAC</strong>' , tableHeaderStyle)
-    pHeadQty = Paragraph('<strong>Qty</strong>' , tableHeaderStyle)
+    pHeadTaxCode = Paragraph('<strong>HSN / SAC</strong>' , tableHeaderStyle)
     pHeadPrice = Paragraph('<strong>Rate</strong>' , tableHeaderStyle)
+    pHeadQty = Paragraph('<strong>Qty</strong>' , tableHeaderStyle)
     # pHeadTotal = Paragraph('<strong>Total</strong>' , tableHeaderStyle)
-    pHeadsubTotalTax  = Paragraph('<strong>IGST <br/> Tax</strong>' , tableHeaderStyle)
+    # pHeadTotalPrice  = Paragraph('<strong>Total Price</strong>' , tableHeaderStyle)
+    pHeadsubTotalTax = Paragraph('<strong>IGST / Tax</strong>' , tableHeaderStyle)
     pHeadsubTotal = Paragraph('<strong>Sub Total</strong>' , tableHeaderStyle)
 
     # # bookingTotal , bookingHrs = getBookingAmount(o)
@@ -331,7 +403,10 @@ def genInvoice(response , invoice, request):
     # pFooterTotal = Paragraph('%s' % (1090) , styles['Normal'])
     # pFooterGrandTotal = Paragraph('%s' % ('INR 150') , tableHeaderStyle)
 
-    data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty, pHeadsubTotalTax ,pHeadsubTotal ]]
+    if invoice.customer is not None:
+        data = [[ pHeadProd, pHeadDetails, pHeadTaxCode, pHeadPrice , pHeadQty,pHeadsubTotalTax,pHeadsubTotal ]]
+    else:
+        data = [[ pHeadDetails, pHeadQty, pHeadPrice ,pHeadsubTotal ]]
 
 
     totalQuant = 0
@@ -342,38 +417,44 @@ def genInvoice(response , invoice, request):
 
     for i in json.loads(invoice.products):
         print '***********',i
+        print i['data']['price']
+        print i['data']['productMeta']
         pDescSrc = i['data']['name']
 
         totalQuant += i['quantity']
 
-        print i
         #
         # if 'price' not in i:
         #     print "Continuing"
         #     continue
 
-        i['subTotalTax'] = i['data']['price'] * i['quantity'] * ( i['data']['productMeta']['taxRate']/float(100))
+        i['subTotalTax'] = i['data']['price'] * i['quantity'] * ( i['data']['productMeta']['taxRate']/float(100)) if i['data']['productMeta'] and  i['data']['productMeta']['taxRate'] else 0
 
-        i['subTotal'] = i['data']['price'] * i['quantity'] * (1+ i['data']['productMeta']['taxRate']/float(100))
+        i['subTotal'] = i['data']['price'] * i['quantity'] + i['subTotalTax']
 
         totalTax += i['subTotalTax']
         grandTotal += i['subTotal']
+        if  i['data']['productMeta'] and i['data']['productMeta']['code'] and i['data']['productMeta']['taxRate']:
+            taxCode = '%s(%s %%)' %(i['data']['productMeta']['code'] , i['data']['productMeta']['taxRate'])
+        else:
+            taxCode = ''
 
-        pBodyProd = Paragraph('Product' , tableBodyStyle)
+        pBodyProd = Paragraph('Service' if i['data']['productMeta'] and i['data']['productMeta']['typ'] == 'SAC' else 'Product' , tableBodyStyle)
         pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
-        pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
-        pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
-        # if 'taxCode' in i:
-        taxCode = '%s(%s %%)' %(i['data']['productMeta']['code'] , i['data']['productMeta']['taxRate'])
-        # else:
-            # taxCode = ''
-
         pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
-        pBodysubTotalTax = Paragraph(str(i['subTotalTax']) , tableBodyStyle)
-        pBodyTotal = Paragraph(str(i['quantity']*i['data']['price']) , tableBodyStyle)
-        pBodySubTotal = Paragraph(str(i['subTotal']) , tableBodyStyle)
+        if invoice.customer is not None:
+            pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
+        else:
+            pBodyPrice = Paragraph(str(i['data']['price'] + (i['data']['price'] * i['data']['productMeta']['taxRate']/float(100) if i['data']['productMeta'] and  i['data']['productMeta']['taxRate'] else 0)) , tableBodyStyle)
+        pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
+        # pBodyTotal = Paragraph(str(i['quantity']*i['data']['price']) , tableBodyStyle)
+        pBodysubTotalTax = Paragraph(str(round(i['subTotalTax'],2)) , tableBodyStyle)
+        pBodySubTotal = Paragraph(str(round(i['subTotal'],2)) , tableBodyStyle)
 
-        data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodyTotal, pBodysubTotalTax , pBodySubTotal])
+        if invoice.customer is not None:
+            data.append([pBodyProd, pBodyTitle,pBodyTaxCode, pBodyPrice, pBodyQty, pBodysubTotalTax , pBodySubTotal])
+        else:
+            data.append([pBodyTitle, pBodyQty, pBodyPrice, pBodySubTotal])
 
     invoice.subTotal = grandTotal
     # invoice.saveInvoiceForm()
@@ -381,34 +462,59 @@ def genInvoice(response , invoice, request):
     tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
     tableGrandStyle.fontSize = 10
 
+    if invoice.customer is not None:
+        data += [['', '','','', '',Paragraph(str(round(totalTax,2)) , tableBodyStyle)  , Paragraph(str(round(grandTotal,2)) , tableBodyStyle) ],
+                ['', '', '', '',  Paragraph('Total (INR)' , tableGrandStyle), '', Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
+    else:
+        data += [['',Paragraph('Total (INR)' , tableGrandStyle), '', Paragraph(str(round(grandTotal,2)) , tableGrandStyle)]]
 
-    data += [['', '','','', '', '',Paragraph(str(totalTax) , tableBodyStyle)  , Paragraph(str(grandTotal) , tableBodyStyle) ],
-            ['', '', '', '', '',  Paragraph('sub Total (INR)' , tableHeaderStyle), '' , Paragraph(str(grandTotal) , tableGrandStyle)]]
     t=Table(data)
-    ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
-                ('VALIGN',(0,1),(-1,-3),'TOP'),
-                ('VALIGN',(0,-2),(-1,-2),'TOP'),
-                ('VALIGN',(0,-1),(-1,-1),'TOP'),
-                ('SPAN',(-3,-1),(-2,-1)),
-                ('TEXTCOLOR',(0,0),(-1,0) , colors.white),
-                ('BACKGROUND',(0,0),(-1,0) , themeColor),
-                ('LINEABOVE',(0,0),(-1,0),0.25,themeColor),
-                ('LINEABOVE',(0,1),(-1,1),0.25,themeColor),
-                ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
-                ('BACKGROUND',(-3,-1),(-1,-1) , themeColor),
-                ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
-                ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.gray),
-                # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
-            ])
-    t.setStyle(ts)
-    t._argW[0] = 1.5*cm
-    t._argW[1] = 6*cm
-    t._argW[2] = 2.4*cm
-    t._argW[3] = 2*cm
-    t._argW[4] = 2*cm
-    t._argW[5] = 2*cm
-    t._argW[6] = 1.6*cm
-    t._argW[7] = 2*cm
+
+    if invoice.customer is not None:
+        ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                    ('VALIGN',(0,1),(-1,-3),'TOP'),
+                    ('VALIGN',(0,-2),(-1,-2),'TOP'),
+                    ('VALIGN',(0,-1),(-1,-1),'TOP'),
+                    ('SPAN',(-3,-1),(-2,-1)),
+                    ('TEXTCOLOR',(0,0),(-1,0) , colors.white),
+                    ('BACKGROUND',(0,0),(-1,0) , themeColor),
+                    ('LINEABOVE',(0,0),(-1,0),0.25,themeColor),
+                    ('LINEABOVE',(0,1),(-1,1),0.25,themeColor),
+                    ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
+                    ('BACKGROUND',(-3,-1),(-1,-1) , themeColor),
+                    ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
+                    ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.gray),
+                    # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
+                ])
+        t.setStyle(ts)
+        t._argW[0] = 1.5*cm
+        t._argW[1] = 6*cm
+        t._argW[2] = 2.7*cm
+        t._argW[3] = 2.3*cm
+        t._argW[4] = 1.8*cm
+        t._argW[5] = 2.5*cm
+        t._argW[6] = 3*cm
+    else:
+        ts = TableStyle([('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                    ('VALIGN',(0,1),(-1,-3),'TOP'),
+                    ('VALIGN',(0,-2),(-1,-2),'TOP'),
+                    ('VALIGN',(0,-1),(-1,-1),'TOP'),
+                    ('SPAN',(-3,-1),(-2,-1)),
+                    ('TEXTCOLOR',(0,0),(-1,0) , colors.white),
+                    ('BACKGROUND',(0,0),(-1,0) , themeColor),
+                    ('LINEABOVE',(0,0),(-1,0),0.25,themeColor),
+                    ('LINEABOVE',(0,1),(-1,1),0.25,themeColor),
+                    # ('BACKGROUND',(-2,-2),(-1,-2) , colors.HexColor('#eeeeee')),
+                    ('BACKGROUND',(-3,-1),(-1,-1) , themeColor),
+                    # ('LINEABOVE',(-2,-2),(-1,-2),0.25,colors.gray),
+                    ('LINEABOVE',(0,-1),(-1,-1),0.25,colors.gray),
+                    # ('LINEBELOW',(0,-1),(-1,-1),0.25,colors.gray),
+                ])
+        t.setStyle(ts)
+        t._argW[0] = 8*cm
+        t._argW[1] = 3*cm
+        t._argW[2] = 4*cm
+        t._argW[3] = 5*cm
 
 
     story = []
@@ -419,24 +525,27 @@ def genInvoice(response , invoice, request):
     story.append(Spacer(2.5,0.75*cm))
 
     adrs = invoice.customer
+    print '***********',invoice.customer
+    if invoice.customer is not None:
+        if invoice.customer.gst is None:
+            tin = 'NA'
+        else:
+            tin = invoice.customer.gst
 
-    if invoice.customer.gst is None:
-        tin = 'NA'
+        summryParaSrc = """
+        <font size='11'><strong>Customer details :</strong></font> <br/><br/>
+        <font size='9'>
+        %s<br/>
+        %s<br/>
+        %s<br/>
+        %s<br/>
+        %s , %s<br/>
+        %s<br/>
+        <strong>GSTIN : </strong>%s<br/>
+        </font>
+        """ %(invoice.customer.name , invoice.customer.company , invoice.customer.street , invoice.customer.city ,invoice.customer.state , invoice.customer.pincode , invoice.customer.country , tin)
     else:
-        tin = invoice.customer.gst
-
-    summryParaSrc = """
-    <font size='11'><strong>Customer details:</strong></font> <br/><br/>
-    <font size='9'>
-    %s<br/>
-    %s<br/>
-    %s<br/>
-    %s<br/>
-    %s , %s<br/>
-    %s<br/>
-    <strong>GSTIN:</strong>%s<br/>
-    </font>
-    """ %(invoice.customer.name , invoice.customer.company , invoice.customer.street , invoice.customer.city ,invoice.customer.state , invoice.customer.pincode , invoice.customer.country , tin)
+        summryParaSrc = ''
     story.append(Paragraph(summryParaSrc , styleN))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
@@ -453,17 +562,24 @@ class SalesGraphAPIView(APIView):
         if "date" in request.data:
             # one day sale
             d = datetime.datetime.strptime(request.data["date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            print d,'dateeeeeeeeeeeeeeee'
             invcs = Invoice.objects.filter(invoicedate = d)
             custs = Customer.objects.filter(created__range = (datetime.datetime.combine(d, datetime.time.min), datetime.datetime.combine(d, datetime.time.max)))
 
         else:
             frm = datetime.datetime.strptime(request.data["from"], '%Y-%m-%dT%H:%M:%S.%fZ')
             to = datetime.datetime.strptime(request.data["to"], '%Y-%m-%dT%H:%M:%S.%fZ')
-            invcs = Invoice.objects.filter(invoicedate__range=(frm, to))
-            custs = Customer.objects.filter(created__range = (frm , to))
+            invcs = Invoice.objects.filter(invoicedate__range=(datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
+            custs = Customer.objects.filter(created__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
 
-        totalSales = invcs.aggregate(Sum('grandTotal'))
-        totalCollections = invcs.aggregate(Sum('amountRecieved'))
+        totalSales = invcs.aggregate(Sum('grandTotal'))  if invcs.count() > 0 else {'grandTotal__sum':0}
+        totalCollections = invcs.aggregate(Sum('amountRecieved'))  if invcs.count() > 0 else {'amountRecieved__sum':0}
+        print type(totalSales),type(totalCollections),'kkkk'
+        if 'grandTotal__sum' in totalSales and type(totalSales['grandTotal__sum']) == float:
+            totalSales['grandTotal__sum'] = round(totalSales['grandTotal__sum'],2)
+        if 'amountRecieved__sum' in totalCollections and type(totalCollections['amountRecieved__sum']) == float:
+            totalCollections['amountRecieved__sum'] = round(totalCollections['amountRecieved__sum'],2)
+
         sales =  invcs.count()
         custCount = custs.count()
 
@@ -522,7 +638,7 @@ class GetNextAvailableInvoiceIDAPIView(APIView):
 
 
 from BeautifulSoup import BeautifulSoup as bs
-import pandas as pd
+# import pandas as pd
 import re
 
 class ExternalEmailOrders(APIView):
@@ -977,7 +1093,7 @@ class PageNumberCanvas(canvas.Canvas):
         p2.drawOn(self , 40*mm  , 4*mm)
 
         from svglib.svglib import svg2rlg
-        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'cioc_icon.svg'))
+        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'company_icon.svg'))
         sx=sy=0.5
         drawing.width,drawing.height = drawing.minWidth()*sx, drawing.height*sy
         drawing.scale(sx,sy)

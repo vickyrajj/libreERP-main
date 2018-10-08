@@ -4,9 +4,37 @@
 <html ng-app="app" ng-controller="ecommerce.main" id="main">
   <head>
     <meta charset="utf-8">
-    <title>Ecommerce</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{data.seoDetails.title}}</title>
+
     <base href="/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{data.seoDetails.description}}"/>
+    <link rel="canonical" href="{{data.seoDetails.url}}" />
+    <link rel="publisher" href="{{data.seoDetails.publisher}}"/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{data.seoDetails.title}}" />
+    <meta property="og:description" content="{{data.seoDetails.description}}" />
+    <meta property="og:url" content="{{data.seoDetails.url}}" />
+    <meta property="og:site_name" content="{{data.seoDetails.site_name}}" />
+    <meta property="og:updated_time" content="2018-08-02T07:17:53+00:00" />
+    <meta property="og:image" content="https://{{ request.get_host }}{{data.seoDetails.image}}" />
+    <meta property="og:image:secure_url" content="https://{{ request.get_host }}{{data.seoDetails.image}}" />
+    <meta property="og:image:width" content="{{data.seoDetails.width}}" />
+    <meta property="og:image:height" content="{{data.seoDetails.height}}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:description" content="{{data.seoDetails.description}}" />
+    <meta name="twitter:title" content="{{data.seoDetails.title}}" />
+    <meta name="twitter:site" content="{{data.seoDetails.site_name}}" />
+    <meta name="twitter:image" content="https://{{ request.get_host }}{{data.seoDetails.image}}" />
+    <meta name="twitter:creator" content="{{data.seoDetails.twitter_creator}}" />
+    <meta property="article:author" content="{{data.seoDetails.author}}" />
+
+
+
+
+
     <!-- stock css libraries -->
     {% if useCDN %}
       <link rel="stylesheet" href="https://bootswatch.com/paper/bootstrap.min.css" charset="utf-8">
@@ -30,13 +58,133 @@
     <link rel="stylesheet" href="{% static 'css/custom/base.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/app.ecommerce.css' %}" charset="utf-8">
   </head>
-  <body style="background-image: url(/static/images/ecommerce_home_back.png);">
+  <body style="background-color:white;">
+  <!-- <body style="background-image: url(/static/images/sterlingSelect_banner.jpg);"> -->
+    {%  verbatim %}
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>
-    <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
+    <div class="row" style="margin:0px;padding-top:{{!$state.includes('ecommerce') ?  '9.5vh':'10px'}}" ng-controller="ecommerce.body" >
+      <div class="col-md-{{ inCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="me.pk">
+        <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
+      </div>
+      <div class="col-md-{{ addToCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="!me.pk">
+        <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
+      </div>
+
+
+
+      <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer"  ng-click="checkout()" ng-if="inCart.length>0 && !$state.is('checkout') && !$state.includes('account')">
+        <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.total.toFixed(2)}} )</h5>
+      </div>
+
+      <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer"  ng-click="mainPage()" ng-if="addToCart.length>0&&!me.pk">
+        <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.totalVal.toFixed(2)}})</h5>
+      </div>
+
+
+      <div ng-if="inCart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
+
+        <div class="" style="position:sticky;top:10px;">
+
+          <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
+          <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
+
+          <div class="row" style="margin:0px;">
+            <div class="container-fluid">
+              <h2>Cart</h2>
+            </div>
+          </div>
+
+          <div ng-repeat="p in inCart" style="border-bottom:solid 2px #eeeeee; ">
+            <h5 ng-if="p.prod_var==undefined" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch}}{{p.product.product.unit | getUnit}}</h5>
+            <h5 ng-if="p.prod_var" style="margin:10px;">{{p.product.product.name}} {{p.prod_var.unitPerpack * p.product.product.howMuch }}{{p.product.product.unit | getUnit}}</h5>
+            <!-- {{p.prod_var}} -->
+            <div class="row" style="margin:0px;">
+              <div class="col-sm-4 text-right">
+                <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >0" ng-click="changeQty(p.product.pk , 'decrease');"></i>
+              </div>
+              <div class="col-sm-4 text-center">
+                {{p.qty}}
+              </div>
+              <div class="col-sm-4 text-left" >
+                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="changeQty(p.product.pk , 'increase');"></i>
+              </div>
+            </div>
+
+            <div class="row" style="margin:0px;padding-left:20px;">
+              <i class="fa fa-inr"></i>
+              <span ng-if="p.prodSku==p.product.product.serialNo">{{(p.product.product.discountedPrice * p.qty).toFixed(2) }}</span>
+              <span ng-if="p.prodSku!=p.product.product.serialNo">{{(p.prodVarPrice * p.qty).toFixed(2)}}</span>
+            </div>
+
+            <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.product.in_stock=='false'">
+              <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
+            </div>
+
+          </div>
+
+          <div class="text-center bg-blue" style="padding:20px;cursor:pointer;" ng-click="checkout()">
+            Checkout ( <i class="fa fa-inr" ></i> {{data.total.toFixed(2)}} )
+          </div>
+        </div>
+
+      </div>
+
+
+      <div ng-if="addToCart.length>0&&!me.pk" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
+
+        <div class="" style="position:sticky; top:10px;">
+
+          <!-- <img src="/static/images/organic.png" style="width:100%;" alt=""> -->
+          <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
+          <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
+
+          <div class="row" style="margin:0px;">
+            <div class="container-fluid">
+              <h2>Cart</h2>
+            </div>
+          </div>
+
+          <div ng-repeat="p in addToCart" style="border-bottom:solid 2px #eeeeee;">
+            <h5 style="margin:10px;">{{p.product.product.name}}</h5>
+
+            <div class="row" style="margin:0px;">
+              <div class="col-sm-4 text-right">
+                <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-click="updateCookieDetail($index , 'decrease');"></i>
+              </div>
+              <div class="col-sm-4 text-center">
+                {{p.qty}}
+              </div>
+              <div class="col-sm-4 text-left" >
+                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="updateCookieDetail($index , 'increase');"></i>
+              </div>
+            </div>
+
+
+            <div class="row" style="margin:0px;padding-left:20px;">
+              <i class="fa fa-inr"></i>
+              <span ng-if="p.prodSku==p.product.product.serialNo">{{(p.product.product.discountedPrice * p.qty).toFixed(2) }}</span>
+              <span ng-if="p.prodSku!=p.product.product.serialNo">{{(p.prodVarPrice * p.qty).toFixed(2)}}</span>
+            </div>
+
+
+            <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.in_stock=='false'">
+              <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
+            </div>
+
+          </div>
+
+          <div class="text-center bg-blue" style="padding:20px;cursor:pointer;" ng-click="mainPage()">
+            Checkout ( <i class="fa fa-inr" ></i> {{data.totalVal.toFixed(2)}} )
+          </div>
+        </div>
+
+      </div>
+    </div>
     <div ng-include="footerUrl"></div>
 
+    {%  endverbatim %}
     <!-- contains very common ng templates used in the directives -->
     <!-- Stock JS libraries -->
 
@@ -68,6 +216,7 @@
     <script src="{% static 'js/angular-flash.js' %}"></script>
     <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
     <script src="{% static 'js/anim-in-out.js' %}"></script>
+    <script src="{% static 'js/angular-bootstrap-confirm.min.js' %}"></script>
     <!-- Custom JS files -->
     <script type="text/javascript">
       var wampServer = '{{wampServer}}';
@@ -81,5 +230,7 @@
     <script src="{% static 'js/custom/directive.table.js' %}"></script>
     <script src="{% static 'js/custom/directives.native.js' %}"></script>
     <script src="{% static 'js/custom/filters.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-meta/1.0.3/ngMeta.min.js"></script>
+
   </body>
 </html>

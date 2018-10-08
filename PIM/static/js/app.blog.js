@@ -1,6 +1,6 @@
 app.controller("controller.home.blog", function($scope , $state , $users ,  $stateParams , $http , Flash) {
   $scope.me = $users.get('mySelf');
-  $scope.editor = {source : '' , tags : [] , title : '' , header : '' , mode : 'header' , shortUrl : '', ogimage : emptyFile , ogimageUrl : '' , description : '', tagsCSV : '' ,section : '' , author : ''};
+  $scope.editor = {source : '' , tags : [] , title : '' , header : '' , mode : 'header' , shortUrl : '', ogimage : emptyFile , ogimageUrl : '' , description : '', tagsCSV : '' ,section : '' , author : '',sugProduct:'',sugProductPk:[],suggestedProducts:[]};
   $scope.filter = {text : '' , tags :[] , month : new Date() , state : 'published' , user : 'all'};
   $scope.itemsPerPage = 5;
   $scope.pageNo = 0;
@@ -69,7 +69,8 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
     $scope.mode = 'edit';
     $http({method : 'GET' , url : '/api/PIM/blog/' + $stateParams.id + '/?state=all'}).
     then(function(response){
-      $scope.editor.url = response.data.url;
+      console.log(response.data);
+      $scope.editor.url = '/api/PIM/blog/' + response.data.pk + '/';
       $scope.editor.source = response.data.source;
       $scope.editor.title = response.data.title;
       $scope.editor.header = response.data.header;
@@ -82,6 +83,10 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
       $scope.editor.section = response.data.section;
       $scope.editor.author = response.data.author;
       $scope.editor.mode = 'header';
+      for (var i = 0; i < response.data.suggestedProducts.length; i++) {
+        $scope.editor.suggestedProducts.push(response.data.suggestedProducts[i])
+        $scope.editor.sugProductPk.push(response.data.suggestedProducts[i].pk)
+      }
     })
   } else if ($stateParams.action == 'new') {
     $scope.mode = 'new';
@@ -170,7 +175,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
 
 
   $scope.edit = function(){
-    $state.go('home.blog' , { id : $scope.articleInView.pk , action : 'edit'});
+    $state.go('admin.blog' , { id : $scope.articleInView.pk , action : 'edit'});
   }
 
   $scope.comment = {text :''};
@@ -193,7 +198,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
 
   $scope.goBack = function(){
     $scope.mode = 'list';
-    $state.go('home.blog' , { id : '', action : 'list'});
+    $state.go('admin.blog' , { id : '', action : 'list'});
   }
 
   $scope.viewArticle = function(index){ // if we have the data in the scope and just want to read the artile
@@ -211,6 +216,33 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
   $scope.loadTags = function(query) {
     return $http.get('/api/PIM/blogTags/?title__contains=' + query)
   };
+
+  $scope.productSearch = function(query){
+    return $http.get('/api/ecommerce/listing/?product__name__icontains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
+  $scope.addProduct = function(product){
+    console.log(product);
+    if (typeof product != 'object') {
+      Flash.create('warning' , 'Please Select Suggested Product')
+      return;
+    }
+    if ($scope.editor.sugProductPk.indexOf(product.pk)> -1) {
+      Flash.create('warning' , 'This Product Has Already Added')
+      return;
+    }
+    $scope.editor.suggestedProducts.push(product)
+    $scope.editor.sugProductPk.push(product.pk)
+    $scope.editor.sugProduct = ''
+  }
+
+  $scope.removeProduct = function(idx){
+    $scope.editor.suggestedProducts.splice(idx,1)
+    $scope.editor.sugProductPk.splice(idx,1)
+
+  }
 
   $scope.tinymceOptions = {
     selector: 'textarea',
@@ -259,7 +291,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
           fd.append('sourceFormat' ,'html');
           fd.append('state' ,'published');
           fd.append('tags' , tags);
-          
+
           if ($scope.editor.ogimage ==emptyFile && ($scope.editor.ogimageUrl == '' || $scope.editor.ogimageUrl == undefined)) {
             Flash.create('danger' , 'Either the OG image file OR og image url is required')
             return;
@@ -283,8 +315,10 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
           fd.append('section' , $scope.editor.section);
           fd.append('author' , $scope.editor.author);
           fd.append('description' , $scope.editor.description);
-
+          fd.append('suggestedProducts' , $scope.editor.sugProductPk);
+          console.log($scope.mode);
           if ($scope.mode == 'edit') {
+            console.log('edittttttttttt');
             method = 'PATCH';
             url = '/api/PIM/blog/' + $stateParams.id +'/';
           } else if ($scope.mode == 'new') {
@@ -303,7 +337,18 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
             $scope.editor.title = '';
             $scope.editor.tags = [];
             $scope.editor.mode = 'hedaer';
+            $scope.editor.shortUrl = ''
+            $scope.editor.tagsCSV = '';
+            $scope.editor.section = '';
+            $scope.editor.author = '';
+            $scope.editor.description = '';
+            $scope.editor.ogimage = emptyFile;
+            $scope.editor.ogimageUrl = '';
+            $scope.editor.sugProductPk = [];
+            $scope.editor.suggestedProducts = [];
+
           }, function(response){
+            console.log(response);
             Flash.create('danger' , response.status + ' : ' + response.statusText);
           });
         }
@@ -312,6 +357,14 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
         text: 'Save',
         icon: false,
         onclick: function() {
+          if ($scope.editor.shortUrl == null || $scope.editor.shortUrl == '') {
+            Flash.create('danger' , 'Please Mention URL Suffix');
+            return;
+          }else if ($scope.editor.shortUrl.split(' ').length>1) {
+            Flash.create('danger' , 'URL Suffix Should Be In Proper Format');
+            return;
+          }
+          console.log($scope.editor.shortUrl.split(' '));
           tags = '';
           for (var i = 0; i < $scope.editor.tags.length; i++) {
             tags += $scope.editor.tags[i].title;
@@ -327,6 +380,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
             sourceFormat : 'html',
             state : 'saved',
             tags : tags,
+            shortUrl : $scope.editor.shortUrl
           };
 
           if ($scope.mode == 'edit') {
@@ -345,6 +399,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
             $scope.editor.title = '';
             $scope.editor.tags = [];
             $scope.editor.mode = 'hedaer';
+            $scope.editor.shortUrl = ''
           }, function(response){
             Flash.create('danger' , response.status + ' : ' + response.statusText);
           });
@@ -355,9 +410,9 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
         icon: false,
         onclick: function() {
           if ($scope.mode == 'edit') {
-            $state.go('home.blog' , { action:'list'} )
+            $state.go('admin.blog' , { action:'list'} )
           } else {
-            $state.go('home.blog' , {id : '' , action:'list'} )
+            $state.go('admin.blog' , {id : '' , action:'list'} )
           }
 
         }

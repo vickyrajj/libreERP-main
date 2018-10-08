@@ -43,6 +43,25 @@ app.filter('getCRMDP', function() {
   }
 })
 
+app.filter('getUnit', function() {
+  return function (input) {
+    if (input=='Kilogram') {
+      toReturn = 'Kg'
+    }else if (input=='Gram') {
+      toReturn = 'gm'
+    }else if (input=='Litre') {
+      toReturn = 'lt'
+    }else if (input=='Millilitre') {
+      toReturn = 'ml'
+    }else if (input=='Ton') {
+      toReturn = 'Ton'
+    }else {
+      toReturn = input
+    }
+    return toReturn
+  }
+})
+
 
 app.filter('fileTypeIcon' , function(){
   return function(input){

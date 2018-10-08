@@ -13,14 +13,14 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>MRP</label>
-            <input type="text" class="form-control" ng-model="product.price">
+            <input type="number" min="0" class="form-control" ng-model="product.price">
           </div>
         </div>
 
         <div class="col-md-6">
           <div class="form-group">
             <label>Cost</label>
-            <input type="number" class="form-control" ng-model="product.cost">
+            <input type="number" min="0" class="form-control" ng-model="product.cost">
           </div>
         </div>
       </div>
@@ -39,7 +39,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>In Stock.</label>
-            <input type="tel" class="form-control" ng-model="product.inStock">
+            <input type="number" min="0" class="form-control" ng-model="product.inStock">
           </div>
 
         </div>
@@ -47,7 +47,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>logistics</label>
-            <input type="number" class="form-control" ng-model="product.logistics">
+            <input type="number" min="0" class="form-control" ng-model="product.logistics">
           </div>
         </div>
       </div>
@@ -75,9 +75,38 @@
         </button> <br> {{product.productMeta.description}} <br><strong>Code Type : </strong> {{product.productMeta.typ}} <br> <strong>Code : </strong> {{product.productMeta.code}} <br> <strong>Tax Rate :</strong>{{product.productMeta.taxRate}}</span>
       </div>
 
+      <div class="form-group">
+        <label>Discount Offered</label>
+        <span class="text-muted">(in %)</span>
+        <input type="number" class="form-control" min="0" ng-model="product.discount">
+      </div>
+
+      <div class="form-group">
+        <label>Unit Type</label>
+        <select class="form-control" ng-model="product.unit">
+          <option value="Ton">Ton</option>
+          <option value="Kilogram">Kilogram</option>
+          <option value="Gram">Gram</option>
+          <option value="Litre">Litre</option>
+          <option value="Millilitre">Millilitre</option>
+          <option value="Quantity">Quantity</option>
+        </select>
+      </div>
+
 
     </div>
     <div class="col-md-4">
+
+      <div class="form-group">
+      <label>How Much</label>
+      <span class="text-muted" ng-if="product.unit">(in {{product.unit}})</span>
+      <input type="text" class="form-control"  ng-model="product.howMuch" >
+    </div>
+
+      <div class="form-group">
+        <label>Alias</label>
+        <input type="text" class="form-control" ng-model="product.alias">
+      </div>
 
       <div class="form-group">
         <label>Description</label>
@@ -86,8 +115,8 @@
 
       <div class="row" ng-if="product.pk" style="padding:5px 20px">
 
-        <label>Secondary SKU</label>
-        <div class="row" >
+        <!-- <label>Secondary SKU</label>
+        <div class="row">
           <div class="col-md-8">
             <div class="form-group">
               <input type="text" class="form-control" ng-model="productVerientForm.sku">
@@ -104,23 +133,104 @@
               </div>
             </div>
           </div>
+        </div> -->
+
+
+        <div class="row">
+          <div class="col-md-6">
+              <label>Secondary SKU</label>
+          </div>
+          <div class="col-md-3" style="padding:0px">
+            <p class="text-muted">Price</p>
+          </div>
+          <div class="col-md-3">
+            <p class="text-muted">{{product.unit=='Quantity' ? 'Items per pack': 'Multiple'}}</p>
+          </div>
         </div>
-        <div class="row" style="margin-top: 30px;padding:5px 20px">
+
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <input type="text" class="form-control" ng-model="productVerientForm.sku" placeholder="product variant...">
+            </div>
+          </div>
+          <div class="col-md-3" style="padding:0px">
+            <div class="form-group">
+              <input type="text" class="form-control" ng-model="productVerientForm.price" placeholder="price..." >
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack" placeholder="No. of items per pack">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-primary" ng-click="saveUnits()">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <p>Preview: {{product.howMuch * productVerientForm.unitPerpack}} {{product.unit=='Quantity' ? 'pcs': product.unit}}</p>
+          </div>
+        </div>
+
+
+        <div class="row" style="margin-top: 20px;padding:5px 20px">
           <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 15px;" ng-repeat="data in productData">
             <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
               <div class="col-md-12">
-                <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br/><br/>
-                <span><strong>Units / Pack:</strong>{{data.unitPerpack}}</span>
+                <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br/>
+                <span><strong>Units / Pack:</strong>{{data.unitPerpack}}</span><br/>
+                <span><strong>Price : </strong>{{data.price}}</span>
                 <!-- <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a> -->
                 <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
                   style="padding-bottom: 9px;"> <i class="fa fa-trash fa-lg"></i> </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="row" ng-if="multiStores">
+        <div class="col-md-12">
+          <label>Store</label>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <input type="text" ng-model="storeDetail.store" class="form-control" uib-typeahead="s as s.name for s in storeStore($viewValue)" placeholder="Search and select">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="input-group">
+                <input type="text" class="form-control" ng-model="storeDetail.quantity" placeholder="No. of products">
+
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-primary" ng-click="savestore()">Add</button>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="row" style="margin-top: 30px;padding:5px 20px">
+            <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top:15px;" ng-repeat="c in product.storeQty">
+              <div class="row" style="padding:15px;font-size:17px">
+                <div class="col-md-10">
+                  <span><strong>Name : </strong> {{c.store.name}}</span><br/>
+                  <span><strong>Quantity : </strong> {{c.quantity}}</span>
+                </div>
+                <div class="col-md-2 text-right">
+                  <i class="fa fa-pencil fa-lg" ng-click="editStore($index)" style="cursor:pointer"></i><br>
+                  <i class="fa fa-trash fa-lg" style="cursor:pointer;margin-top:10px" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteStore(c.pk , $index)" confirm-button-type="danger" cancel-button-type="default"></i>
+                </div>
+                <!-- <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteStore(c.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
+                style="padding-bottom: 9px;margin-top:16px;margin-right:12px"> <i class="fa fa-trash fa-lg"></i> </button> -->
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
-
-
     </div>
 
     <div class="col-md-4" ng-if="product.pk">
@@ -130,7 +240,7 @@
           <input type="text" ng-model="categoryForm.category" class="form-control" uib-typeahead="c as c.name for c in categorySearch($viewValue)" placeholder="Search and select">
         </div>
         <div class="col-md-3">
-          <input type="number" ng-model="categoryForm.qty" class="form-control" >
+          <input type="number" ng-model="categoryForm.qty" class="form-control">
         </div>
         <div class="col-md-2">
           <button type="button" class="btn btn-primary" ng-click="addCategories()">Add <i class="fa fa-plus"></i></button>

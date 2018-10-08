@@ -1,58 +1,127 @@
-<div class="row" style="margin-top:20px;margin:0px;">
-  <div class="col-md-8 col-md-offset-2 ">
-    <div ng-repeat="l in listingProducts">
-      <div class="col-md-3 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
-        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
-          <div class="row">
-            <img style="width: 100%; height:100px;" class="img" ng-src="{{l.files[0].attachment}}" ng-if="l.files.length>0">
-            <img style="width: 100%; height:100px;" class="img" src="/static/images/ecommerce.jpg" ng-if="l.files==null">
-          </div>
-          <div class="row">
-            <div class=" card bg-white" style="padding-bottom:0px;">
-              <div class="row container-fluid" style="padding:10px 20px; ">
-                <h5 style="margin:0px;  height:80px;">{{l.product.name}}</h5>
-                <span style="font-size:15px;"> Price : </span>
-                <span class="pull-right" style="font-size:15px;">
-                {{l.product.price}} <i class="fa fa-inr"></i>
-                </span>
+<div class="row" style="margin:0px;">
+  <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm" style="padding-right:0px;padding-left:0px;padding-top:0px;padding-bottom:20px">
+    <!-- <div style="padding:10px;"> -->
+      <h4 style="padding-left:18px">Categories</h4>
+      <div ng-repeat="g in genericProducts| limitTo:5" style="padding:0px;">
+        <div class="col-md-2 anim-in-out anim-zoom-out" style="width: 20%">
+          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
+            <div class="row">
+              <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;overflow:hidden;">
+                <img style="width: 100%;" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
+                <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none">
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- <div class="row" style="margin:0px;">
-  <div class="col-md-offset-2 col-md-8 " style="padding:40px;" >
-    <div style="padding:10px;" class="row card bg-white">
-      <h4>Featured Categories</h4>
-      <div class="row" style="">
-        <div class="col-md-3" ng-repeat="p in products | limitTo:4" style="padding:0px;">
-          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : p.name})">
-          <img style="width: 100%;height:180px" class="img" ng-src="{{p.visual}}" ng-if="p.visual.length>0">
-          <img style="width: 100%;height:180px" class="img" src="/static/images/ecommerce.jpg" ng-if="p.visual==none">
-        </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<div class="row" style="margin:0px;">
-  <div class="col-md-offset-2 col-md-8 " style="padding:40px;">
-    <div style="padding:10px;" class="row card bg-white">
-      <h4>Featured Categories</h4>
-      <div ng-repeat="p in products| limitTo:4" style="padding:0px;">
-        <div class="col-md-3 anim-in-out anim-zoom-out">
-          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : p.name})">
-            <div class="row">
-              <img style="width: 100%;height:180px" class="img" ng-src="{{p.visual}}" ng-if="p.visual.length>0">
-              <img style="width: 100%;height:180px" class="img" src="/static/images/ecommerce.jpg" ng-if="p.visual==none">
-            </div>
             <div class="row" style="padding-top:5px;">
-              <h5 class="text-center" style="margin:0px;">{{p.name}}</h5>
+              <h5 class="text-center" style="margin:0px;">{{g.name}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- </div> -->
+  </div>
+
+  <div class="col-xs-12 col-sm-12 hidden-md hidden-lg" style="padding:40px;">
+      <h4>Categories</h4>
+      <div ng-repeat="g in genericProducts| limitTo:5" style="padding:0px; ">
+        <div class="col-xs-12 col-sm-6">
+          <div class="container-fluid" style="cursor:pointer;padding-right:0px;padding-left:0px" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
+            <div class="row">
+              <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
+                <div  style="padding-right:0px;padding-left:0px;overflow:hidden;height:280px;background: url('{{g.visual}}') no-repeat center center;background-size: cover;">
+                </div>
+                <div  style="padding-right:0px;padding-left:0px;overflow:hidden;height:280px;background: url('/static/images/ecommerce.jpg') no-repeat center center;background-size: cover;" ng-if="g.visual==null">
+                </div>
+                <!-- <img style="width:100%;height:280px" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
+                <img style="width:100%;height:280px" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none"> -->
+              </div>
+            </div>
+            <div class="row" style="padding-top:5px; padding-bottom:20px;">
+              <h5 class="text-center" style="margin:0px;">{{g.name}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+<div class="row" style="margin:0px">
+  <div class="col-md-8 col-md-offset-2 hidden-xs hidden-sm">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row" >
+          <div class="col-md-3" ng-repeat=" l in listingProducts">
+            <product-card list="l" add-cart="addToCart" ></product-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-xs-10 col-sm-10 col-xs-offset-1  hidden-md hidden-lg">
+    <div class="row">
+      <div class=" col-xs-12 col-sm-6" ng-repeat="l in listingProducts" >
+        <product-card list="l"  add-cart="addToCart"></product-card>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" style="margin:0px">
+  <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm" style="padding-left:20px;padding-right:40px;">
+    <div class="row" ng-if="subSlide.banners.length > 0">
+      <div style="height:43vh;margin-left:10px;padding-left:0px;padding-right:0px;overflow:hidden;padding:0px;" class="col-md-12 text-center  hidden-xs hidden-sm">
+        <img class="anim-in-out anim-fade" data-anim-speed="100" style="width:100%;cursor:pointer;" ng-src="{{subSlide.img}}" ng-click="$state.go('pages' , {title : subSlide.title.split(' ').join('-').toLowerCase()})" />
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-offset-1 col-sm-offset-1 col-xs-10 col-sm-10 hidden-lg hidden-md" style="padding-right:20px;padding-left:20px">
+    <div class="row" ng-if="subSlideMobile.banners.length > 0">
+      <div ng-if="$state.is('ecommerce')" style="position:relative;height:45vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;padding-left:0px;padding-right:0px" class="card col-sm-12 col-xs-12 hidden-md hidden-lg">
+        <img class="anim-in-out anim-fade" data-anim-speed="100" style="width:100%;cursor:pointer;height:45vh" ng-src="{{subSlideMobile.img}}" ng-click="$state.go('pages' , {title : subSlideMobile.title.split(' ').join('-').toLowerCase()})" />
+      </div>
+    </div>
+    </iv>
+  </div>
+</div>
+
+<div class="row" style="margin:0px">
+  <div class="col-md-8 col-md-offset-2 hidden-xs hidden-sm">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row" >
+          <div class="col-md-3" ng-repeat=" l in listingRemainingProducts">
+                <product-card list="l" add-cart="addToCart"></product-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-10 col-sm-10 col-xs-offset-1 hidden-md hidden-lg">
+    <div class="row">
+      <div class=" col-xs-12 col-sm-6" ng-repeat="l in listingRemainingProducts">
+        <product-card list="l" add-cart="addToCart"></product-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="row" style="margin:0px;" ng-if="me != null">
+
+  <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm" style="padding:20px; padding-top:0px;">
+    <div style="padding:10px;" class="row">
+      <h4>Recently Viewed</h4>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row" >
+            <div class="col-md-3" ng-repeat=" l in recentlyViewed">
+                  <product-card list="l" add-cart="addToCart"></product-card>
             </div>
           </div>
         </div>
@@ -60,28 +129,3 @@
     </div>
   </div>
 </div>
-
-<!-- <div class="row" style="margin:20px;">
-  <div class="col-md-8 col-md-offset-2 ">
-    <div ng-repeat="l in products" >
-      <div class="col-md-4 anim-in-out anim-zoom-out" style="margin-bottom:15px;">
-        <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : l.pk})">
-          <div class="row" >
-            <img style="width: 100%;height:300px" class="img" ng-src="{{l.visual}}" ng-if="l.visual.length>0">
-            <img style="width: 100%;height:300px" class="img" src="/static/images/ecommerce.jpg" ng-if="l.visual==none">
-          </div>
-          <div class="row" >
-            <div class="container-fluid card bg-white" style="padding:10px;">
-              <h4>{{l.name}}</h4>
-              <span class="pull-right">
-                Starts from  <span style="font-size:20px;margin-left:10px;">
-                  {{l.minCost}} <i class="fa fa-inr"></i>
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->

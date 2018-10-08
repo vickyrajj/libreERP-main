@@ -4,13 +4,13 @@
 
 <meta name="description" content="{{blogobj.description}}"/>
 <link rel="canonical" href="{{ request.build_absolute_uri }}" />
-<link rel="publisher" href="https://plus.google.com/b/105723801328437605094/"/>
+<link rel="publisher" href="{{seoDetails.publisher}}"/>
 <meta property="og:locale" content="en_US" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="{{blogobj.title}}" />
 <meta property="og:description" content="{{blogobj.description}}" />
 <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-<meta property="og:site_name" content="24 Tutors" />
+<meta property="og:site_name" content="{{seoDetails.site_name}}" />
 <meta property="article:publisher" content="https://www.facebook.com/24tutorsIndia/" />
 {% for tag in tagsCSV %}
 <meta property="article:tag" content="{{tag}}" />{% endfor %}
@@ -25,9 +25,9 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:description" content="{{blogobj.description}}" />
 <meta name="twitter:title" content="{{blogobj.title}}" />
-<meta name="twitter:site" content="@monomerce" />
+<meta name="twitter:site" content="{{seoDetails.site_name}}" />
 <meta name="twitter:image" content="https://{{ request.get_host }}{{blogobj.ogimage.url}}" />
-<meta name="twitter:creator" content="@monomerce" />
+<meta name="twitter:creator" content="{{seoDetails.twitter_creator}}" />
 
 <meta property="article:author" content="{{user}}" />
 

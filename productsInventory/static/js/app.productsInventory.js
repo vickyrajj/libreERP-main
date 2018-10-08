@@ -26,33 +26,70 @@ app.config(function($stateProvider) {
 
 app.controller("businessManagement.productsInventory.edit", function($scope, $http, Flash , $rootScope) {
 
+  console.log($scope.data);
+  $scope.activepk = 0
+  $scope.selectedStore=function(store,idx){
+    $scope.activepk = store.pk
+    $scope.storeindex = idx
+    $scope.storeSelected = store
+    document.getElementById("updatequantity").focus();
+  }
 
   $scope.save = function(increase) {
+    if ($rootScope.multiStores) {
+      if ($scope.activepk == 0) {
+        Flash.create('warning','Please Select The Store')
+        return
+      }else {
+        if (increase) {
+          var final = $scope.data.qty + $scope.storeSelected.quantity;
+        }else{
+          var final =  $scope.storeSelected.quantity - $scope.data.qty;
+        }
+        $http({method : 'PATCH' , url : '/api/POS/storeQty/' + $scope.storeSelected.pk + '/' , data : {quantity : final}}).then(function(response) {
+          $scope.data.storeQty[$scope.storeindex] = response.data;
+          $scope.data.qty = 0;
+          Flash.create('success' , 'Saved');
+          // $rootScope.$broadcast('closeEditModalWindow' , {})
 
-    if (increase) {
-      var final = $scope.data.qty + $scope.data.inStock;
-    }else{
-      var final =  $scope.data.inStock - $scope.data.qty;
+        })
+      }
+    }else {
+      if (increase) {
+        var final = $scope.data.qty + $scope.data.inStock;
+      }else{
+        var final =  $scope.data.inStock - $scope.data.qty;
+      }
+      $http({method : 'PATCH' , url : '/api/POS/product/' + $scope.data.pk + '/' , data : { inStock : final , typ : "user" }}).then(function(response) {
+        $scope.data.inStock = response.data.inStock;
+        $scope.data.qty = 0;
+        Flash.create('success' , 'Saved');
+        $rootScope.$broadcast('closeEditModalWindow' , {})
+        console.log("broadcast : closeEditModalWindow");
+        // console.log($scope.$parent);
+        // $scope.$parent.$uibModalInstance.dismiss();
+      })
     }
 
-
-    $http({method : 'PATCH' , url : '/api/POS/product/' + $scope.data.pk + '/' , data : { inStock : final , typ : "user" }}).then(function(response) {
-      $scope.data.inStock = response.data.inStock;
-      $scope.data.qty = 0;
-      Flash.create('success' , 'Saved');
-      $rootScope.$broadcast('closeEditModalWindow' , {})
-      console.log("broadcast : closeEditModalWindow");
-      // console.log($scope.$parent);
-      // $scope.$parent.$uibModalInstance.dismiss();
-    })
   }
 
 
 });
 
-app.controller("businessManagement.productsInventory.default", function($scope, $http, Flash , $uibModal , $rootScope,$state) {
+app.controller("businessManagement.productsInventory.default", function($scope,$timeout, $http, Flash , $uibModal , $rootScope,$state) {
 
   // $http({method : 'GET' , url : '/api/POS/product/'})
+
+  $rootScope.multiStores = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg',response.data);
+    if(response.data[0]!=null){
+      if (response.data[0].flag) {
+        $rootScope.multiStores = true
+      }
+    }
+  })
 
   $scope.refreshDashboard = function(input) {
     console.log(input);
@@ -65,8 +102,6 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     }
 
   }
-
-  console.log();
 
 
   $scope.data = {
@@ -96,23 +131,27 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     url: '/api/POS/product/',
     searchField : 'Name or SKU or Description',
     itemsNumPerView: [20, 40, 80],
-    fields : ['name' , 'price' , 'serialNo' , 'inStock'],
     options : options,
+    fields:['name' , 'price' , 'serialNo' , 'masterStock' , 'StoreStock'],
     filterSearch : true,
     multiSelect : false,
     multiselectOptions : multiselectOptions,
     editorTemplate :  '/static/ngTemplates/app.productsInventory.product.modal.html',
   }
 
+
+
+
+
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);
 
     if (action == 'reorderingReport') {
 
-      window.open( "/api/POS/reorderingReport", "_blank")
+      window.open( "/api/POS/reorderingReport/", "_blank")
       // $scope.openProductForm();
     } else if (action == 'stockReport') {
-      window.open( "/api/POS/stockReport", "_blank")
+      window.open( "/api/POS/stockReport/", "_blank")
     } else if (action == 'Reorder') {
       $state.go('businessManagement.productsInventory.purchaseOrder')
     }else {

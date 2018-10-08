@@ -200,7 +200,7 @@ class PageNumCanvas(canvas.Canvas):
         p2.drawOn(self , 40*mm  , 4*mm)
 
         from svglib.svglib import svg2rlg
-        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'cioc_icon.svg'))
+        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'company_icon.svg'))
         sx=sy=0.5
         drawing.width,drawing.height = drawing.minWidth()*sx, drawing.height*sy
         drawing.scale(sx,sy)

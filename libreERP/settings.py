@@ -20,12 +20,13 @@ MESSAGE_TAGS = {
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEFAULT_APPS_ON_REGISTER = ['app.tutor.account' , 'app.tutor.previousSessions' , 'app.tutor.studentHome']
+# DEFAULT_APPS_ON_REGISTER = ['app.tutor.account' , 'app.tutor.previousSessions' , 'app.tutor.studentHome']
+DEFAULT_APPS_ON_REGISTER = []
 # the apps to which the user will be given access to upon registeration through public registeration site
 
 ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user will be redirected to this url
 
-SITE_ADDRESS = 'http://skinstore.monomerce.com' # the url prefix of the site
+SITE_ADDRESS = 'http://sterlingselect.com' # the url prefix of the site
 
 ROOT_APP = 'ERP' # the default app
 ECOMMERCE_APP = {
@@ -36,7 +37,8 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpg'
+LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpeg'
+LOGIN_PAGE_LOGO = '/static/images/company_icon.svg'
 
 SHOW_COMMON_APPS = False
 
@@ -58,10 +60,10 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.106', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.113' , "192.168.1.104"]
+ALLOWED_HOSTS = ['192.168.1.124', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.116' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.121','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10']
 
 
-LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
+LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
 
 LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed one logged out
@@ -69,10 +71,27 @@ LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = 'monomerce.com'
+BRAND_NAME = 'sterlingselect.com'
 SERVICE_NAME = 'Inventory, Sales and Ecommerce'
-BRAND_LOGO = '/static/images/mono_icon.svg'
+BRAND_LOGO = '/static/images/logo1.png'
 BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
+SMART_REGISTRATION = True
+
+SEO_TITLE = 'Sterling Select'
+SEO_DESCRIPTION = 'Sterling Select Online Shopping'
+SEO_IMG = '/static/images/company_icon.png'
+SEO_IMG_WIDTH = 1024
+SEO_IMG_HEIGHT = 719
+
+
+SEO_AUTHOR = 'sterlingselect.com'
+SEO_TWITTER_CREATOR = '@sterlingselect'
+SEO_TWITTER_SITE = '@sterlingselect'
+SEO_SITE_NAME = 'STERLING SELECT'
+SEO_URL = 'https://sterlingselect.com/'
+SEO_PUBLISHER = 'https://plus.google.com/b/105723801328437605094/'
+
+LITE_REGISTRATION = True
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -99,24 +118,24 @@ INSTALLED_APPS = (
     'PIM', # personal information manager
     'social', # social networking client
     'homepage', # landing page
-    'mail', # mail application
     'businessManagement', # BM application
     'ecommerce', # ecommerce
     'blogs', # publically accesible blogging site
-	'finance',# billing , invoicing , finance etc
-	'events',# to manage events like test, hackathon or something like that
 	'clientRelationships',# CRM like sales force
 	'POS',# POS terminal like tally
-	'workforceManagement',# canvas
     'support',# canvas
-	'employees',# employees details
-	'payroll',# payroll
-	'performance',# performance
-	'recruitment',# recruitment
-	'organization',# organization
-	'logistic',# logistics
-	'assets',# assets
 	'productsInventory',# inventory for POS products
+    # 'mail', # mail application
+    # 'employees',# employees details
+    # 'events',# to manage events like test, hackathon or something like that
+    # 'finance',# billing , invoicing , finance etc
+    # 'organization',# organization
+    # 'payroll',# payroll
+    # 'logistic',# logistics
+    # 'performance',# performance
+    # 'recruitment',# recruitment
+    # 'assets',# assets
+    # 'workforceManagement',# canvas
 )
 
 
@@ -218,9 +237,9 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'django',
+#         'NAME': 'sterling',
 #         'USER': 'root',
-#         'PASSWORD': 'password',
+#         'PASSWORD': 'cioc',
 #         'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
 #         'PORT': '3306',
 #     }
@@ -286,7 +305,7 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = 'skinstore.monomerce.com'
+WAMP_SERVER = 'wamp.cioc.in'
 
 PAYMENT_SUCCESS_REDIRECT ='http://24tutors.com/ERP/#/studentHome?mode=success'
 

@@ -23,6 +23,11 @@ app.config(function($stateProvider){
     templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
     controller: 'admin.manageUsers'
   })
+  .state('admin.blog', {
+    url: "/blog/:id?action",
+    templateUrl: '/static/ngTemplates/app.home.blog.html',
+    controller: 'controller.home.blog'
+  })
 
   .state('admin.settings', {
     url: "/settings",
@@ -66,9 +71,9 @@ app.controller('admin.menu' , function($scope , $users , Flash , $permissions){
     for (var i = 0; i < apps.length; i++) {
       a = apps[i];
       parts = a.name.split('.');
-      if (a.module != 2 || a.name.indexOf('sudo') == -1 || parts.length > 2) {
-        continue;
-      }
+      // if (a.module != 2 || a.name.indexOf('sudo') == -1 || parts.length > 2) {
+      //   continue;
+      // }
       a.state = a.name.replace('sudo' , 'admin')
       a.dispName = parts[parts.length -1];
       $scope.apps.push(a);

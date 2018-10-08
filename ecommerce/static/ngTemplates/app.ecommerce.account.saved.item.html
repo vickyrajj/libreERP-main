@@ -1,20 +1,28 @@
-<div class="col-md-3" style="padding-bottom:30px;"  ng-controller="controller.ecommerce.account.saved.item">
+<div class="col-md-3 col-sm-6 col-xs-12" style="padding-bottom:30px;"  ng-controller="controller.ecommerce.account.saved.item">
   <div class="container-fluid">
     <div class="row" >
-      <img style="width: 100%; height:100px;" class="img" ng-src="{{data.product.files[0].attachment}}" >
+      <img style="width: 100%; height:150px;" class="img" ng-src="{{data.product.files[0].attachment}}" >
     </div>
-    <div class="row" >
+    <div class="row">
       <div class=" card bg-white" style="padding-bottom:0px;">
         <div class="row container-fluid" style="padding:10px 20px; height:110px; " >
           <h5 style="margin:0px" >{{data.product.product.name}}</h5>
-          <span style="font-size:15px;" > Price : </span>
-          <span class="pull-right" style="font-size:15px;">
-          {{data.product.product.price}} <i class="fa fa-inr"></i>
-          </span>
+          <span style="font-size:15px;" > Price :  <i class="fa fa-inr"></i>{{data.product.product.price}}</span>
+          <!-- <span  style="font-size:15px;">
+           <i class="fa fa-inr"></i>{{data.product.product.price}}
+          </span> -->
         </div>
         <hr style="margin:0px;">
-        <div class="row container-fluid text-center" style="background-color:#2980B9; color:white; margin:0px; padding:10px;" >
-          <span style="cursor:pointer" ng-click="rowActionClicked('unfavourite')"> Remove from saved items</span>
+        <!-- <div class="row container-fluid text-center" style="background-color:#2980B9; color:white; margin:0px; padding:10px;">
+          <span style="cursor:pointer" ng-click="rowActionClicked('unfavourite')"> Add to cart</span>
+        </div> -->
+        <div class="row container-fluid" style="background-color:#2980B9; color:white; margin:0px; padding:10px;" >
+          <div class="col-md-6 col-sm-6 col-xs-6 text-center">
+            <i class="fa {{data.typ=='favourite'? 'fa-shopping-cart':'fa-heart'}} fa-2x" style="cursor:pointer;" ng-click="rowActionClicked(data.typ=='cart'? 'favourite':'unfavourite')" ></i>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-6 text-center" >
+            <i class="fa fa-trash-o fa-2x" style="cursor:pointer;" ng-click="rowActionClicked('deleteItem')"></i>
+          </div>
         </div>
       </div>
     </div>

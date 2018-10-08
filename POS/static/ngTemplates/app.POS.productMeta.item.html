@@ -1,21 +1,19 @@
 <div class="col-md-3" style="padding-bottom:10px;padding-left:10px;padding-right:10px;">
-  <div class="container-fluid card" style="padding:30px;padding-top:0px;min-height:20vh;">
-    <div class="row">
+  <div class="container-fluid card" style="min-height:20vh;">
       <div class="row">
-        <div class="col-md-10">
-          <span>{{data.description }}</span>
+        <div class="col-md-12 text-center" style="font-size:17px;padding-top:10px">
+          {{data.description }}
         </div>
       </div>
       <hr>
-    </div>
-    <div class="row" style="position:relative;">
+    <div class="row">
         <!-- Service Type:<strong>{{data.hsn}}</strong>  <br> -->
         <div class="col-md-8">
-          Tax Code:<strong>{{data.code}}</strong>  <br>
-          Tax Rate:<strong>{{data.taxRate}}</strong> <br>
+          Tax Code : <strong>{{data.code}}</strong><br>
+          Tax Rate : <strong>{{data.taxRate}}</strong>
         </div>
         <div class="col-md-2">
-          <i class="fa-lg {{data.submitted ? '': 'fa fa-pencil'}}"style="position:absolute;right:20px;bottom:-10px;cursor:pointer;" ng-click = "rowActionClicked('edit')"></i>
+          <i class="fa fa-pencil fa-lg " style="position:absolute;right:20px;bottom:-10px;cursor:pointer;" ng-click = "rowActionClicked('edit')"></i>
         </div>
         <div class="col-md-2">
           <i mwl-confirm
@@ -25,7 +23,7 @@
           cancel-text="No"
           on-confirm="rowActionClicked('delete')"
           confirm-button-type="danger"
-          cancel-button-type="default" data-placement="bottom" class="fa-lg {{data.submitted ? '': 'fa fa-trash'}}"style="position:absolute;right:20px;bottom:-10px;cursor:pointer;"></i>
+          cancel-button-type="default" class="fa fa-trash fa-lg" style="position:absolute;right:20px;bottom:-10px;cursor:pointer;"></i>
         </div>
 
     </div>

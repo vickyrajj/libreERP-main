@@ -274,12 +274,26 @@ class moduleViewSet(viewsets.ModelViewSet):
         return getModules(u , includeAll)
 
 def getApps(user):
+    print 'appssssssssssssssssssssssss',appSettingsField.objects.get(app=25,name='multipleStore')
     aa = []
     for a in user.accessibleApps.all().values('app'):
         aa.append(a['app'])
     if user.appsManaging.all().count()>0:
-        return application.objects.filter(pk__in = aa).exclude(pk__in = user.appsManaging.all().values('pk')).exclude(module = module.objects.get(name = 'public')) | user.appsManaging.all()
-    return application.objects.filter(pk__in = aa)
+        try:
+            if appSettingsField.objects.get(app=25,name='multipleStore').flag:
+                return application.objects.filter(pk__in = aa).exclude(pk__in = user.appsManaging.all().values('pk')).exclude(module = module.objects.get(name = 'public')) | user.appsManaging.all()
+            else:
+                return application.objects.filter(pk__in = aa).exclude(pk__in = user.appsManaging.all().values('pk')).exclude(module = module.objects.get(name = 'public')).exclude(name='app.productsInventory.store') | user.appsManaging.all()
+        except:
+            return application.objects.filter(pk__in = aa).exclude(pk__in = user.appsManaging.all().values('pk')).exclude(module = module.objects.get(name = 'public')) | user.appsManaging.all()
+    try:
+        if appSettingsField.objects.get(app=25,name='multipleStore').flag:
+            return application.objects.filter(pk__in = aa)
+        else:
+            return application.objects.filter(pk__in = aa).exclude(name='app.productsInventory.store')
+    except:
+        return application.objects.filter(pk__in = aa)
+
 
 class applicationViewSet(viewsets.ModelViewSet):
     permission_classes = (readOnly,)
@@ -293,7 +307,14 @@ class applicationViewSet(viewsets.ModelViewSet):
         else:
             if 'user' in self.request.GET:
                 return getApps(User.objects.get(username = self.request.GET['user']))
-            return application.objects.filter()
+            print 'cameeeeeeeeeeeeeeeeee',appSettingsField.objects.get(app=25,name='multipleStore').flag
+            try:
+                if appSettingsField.objects.get(app=25,name='multipleStore').flag:
+                    return application.objects.filter()
+                else:
+                    return application.objects.filter().exclude(name='app.productsInventory.store')
+            except:
+                return application.objects.filter()
 
 class applicationAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin,)
@@ -312,7 +333,7 @@ class applicationSettingsViewSet(viewsets.ModelViewSet):
     queryset = appSettingsField.objects.all()
     serializer_class = applicationSettingsSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['app']
+    filter_fields = ['app' , 'name']
 
 class applicationSettingsAdminViewSet(viewsets.ModelViewSet):
     # permission_classes = (isAdmin,)

@@ -19,9 +19,10 @@ from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
 import random, string
+import requests
 from django.utils import timezone
 from rest_framework.views import APIView
-
+from ecommerce.models import GenericImage
 
 def documentView(request):
     docID = None
@@ -84,23 +85,41 @@ def tokenAuthentication(request):
     authStatus = {'status' : 'success' , 'message' : 'Account actived, please login.' }
     return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN})
 
-
+@csrf_exempt
 def generateOTP(request):
     print request.POST
+    print request.POST['id'],'kkkkkkkkllllllllllllkkkkkkkkkkk'
+
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
+    print 'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
     user = get_object_or_404(User, username = request.POST['id'])
+    print user,type(user),'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
     ak = accountsKey(user= user, activation_key= otp,
         key_expires=key_expires , keyType = 'otp')
     ak.save()
     print ak.activation_key
     # send a SMS with the OTP
+    url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(request.POST['id'] , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(otp))
+    requests.get(url)
     return JsonResponse({} ,status =200 )
 
 @csrf_exempt
 def loginView(request):
 
     # print request.META['HTTP_USER_AGENT']
+    print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
+
+    print 'loginnnnnnnnnnnnnnnnn',request.POST
+    backgroundImage = globalSettings.LOGIN_PAGE_IMAGE
+    genericImg = GenericImage.objects.all()
+    try:
+        if len(genericImg)>0:
+            if genericImg[0].backgroundImage:
+                backgroundImage = genericImg[0].backgroundImage.url
+    except:
+        print 'no login imageeee'
 
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
@@ -112,7 +131,7 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
-
+        print request.POST,'lllllllllllllddddddddddddd'
     	usernameOrEmail = request.POST['username']
         otpMode = False
         if 'otp' in request.POST:
@@ -172,9 +191,17 @@ def loginView(request):
     if 'mode' in request.GET and request.GET['mode'] == 'api':
         return JsonResponse(authStatus , status = statusCode)
 
-    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+
+    return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': backgroundImage , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+    # if not globalSettings.LOGIN_TEMPLATE:
+    #     return render(request,"login.html" , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+    #
+    # else:
+    #     return render(request,"login.lite.html" , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , 'logoImage': globalSettings.LOGIN_PAGE_LOGO ,"brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+
 
 def registerView(request):
+    print 'registerrrrrrrrrrrrrrrrrrrrrrrrrrr',request.POST
     if globalSettings.REGISTER_URL != 'register':
         return redirect(reverse(globalSettings.REGISTER_URL))
     msg = {'status' : 'default' , 'message' : '' }
@@ -184,6 +211,7 @@ def registerView(request):
     	password = request.POST['password']
         if User.objects.filter(email = email).exists():
             msg = {'status' : 'danger' , 'message' : 'Email ID already exists' }
+            print msg,'emaillllllllll'
         else:
             user = User.objects.create(username = email.replace('@' , '').replace('.' ,''))
             user.first_name = name
@@ -217,7 +245,7 @@ def home(request):
         apps = getApps(u)
         modules = getModules(u)
 
-    defaultRoute = 'businessManagement/productsInventory'
+    defaultRoute = 'admin'
 
 
     if globalSettings.SHOW_COMMON_APPS:

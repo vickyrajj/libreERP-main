@@ -16,8 +16,6 @@ def getContractDoc(instance,filename):
 
 
 
-
-
 class Customer(models.Model):
     user = models.ForeignKey(User , related_name = 'posContacts' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
@@ -46,11 +44,35 @@ class Customer(models.Model):
 
 from clientRelationships.models import ProductMeta
 
+UNIT_CHOICES = (
+    ('Ton' , 'Ton'),
+    ('Kilogram' , 'Kilogram'),
+    ('Gram' , 'Gram'),
+    ('Litre' , 'Litre'),
+    ('Millilitre' , 'Millilitre'),
+    ('Quantity' , 'Quantity'),
+)
+
+class Store(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    name = models.CharField(max_length = 100 , null = False)
+    address = models.CharField(max_length = 500 , null = False)
+    pincode = models.PositiveIntegerField(null= True )
+    mobile = models.CharField(max_length = 12 , null = True)
+    email = models.EmailField(null = True)
+
+class StoreQty(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    store = models.ForeignKey(Store , related_name="POSStoreDetail")
+    quantity = models.PositiveIntegerField(default = 0)
+
+
 class Product(models.Model):
     user = models.ForeignKey(User , related_name = 'posProducts' , null = False) # the user created it
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length = 100 , null = False)
+    unit = models.CharField(choices = UNIT_CHOICES , max_length = 10 , null = True)
     productMeta = models.ForeignKey(ProductMeta , related_name="POSProducts" , null = True, blank = True)
     price = models.FloatField(null=False)
     displayPicture = models.ImageField(upload_to=getPOSProductUploadPath,null=True, blank = True)
@@ -64,6 +86,10 @@ class Product(models.Model):
     haveComposition = models.BooleanField(default = False)
     compositions = models.ManyToManyField("self" , related_name="parent" , blank = True)
     compositionQtyMap = models.CharField(max_length = 1000 , null = True, blank = True)
+    discount = models.PositiveIntegerField(default = 0)
+    storeQty = models.ManyToManyField(StoreQty , related_name="productStore" , blank = True)
+    alias = models.CharField(max_length = 500 , null = True)
+    howMuch = models.FloatField(null=True)
     def __str__(self):
         return self.name
 
@@ -108,6 +134,7 @@ class ProductVerient(models.Model):
     parent = models.ForeignKey(Product , related_name='parentProducts')
     sku = models.CharField(max_length=255,null=True)
     unitPerpack = models.PositiveIntegerField(default = 0)
+    price = models.FloatField(null=True)
 
 # class ProductMetaList(models.Model):
 #     user = models.ForeignKey(User ,null = False , related_name ="productMetaList")
@@ -214,6 +241,8 @@ class InventoryLog(models.Model):
     typ = models.CharField(choices = TYPE_CHOICES , max_length = 10 , null = True)
     before = models.PositiveIntegerField(default = 0)
     after = models.PositiveIntegerField(default = 0)
+    internalOrder = models.PositiveIntegerField(null = True)
+    internalInvoice = models.ForeignKey(Invoice,null=True, related_name ="log")
     externalOrder = models.ForeignKey(ExternalOrders ,null = True , related_name ="externalOrders")
 
     class Meta:
