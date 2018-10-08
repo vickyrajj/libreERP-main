@@ -509,6 +509,13 @@ class MobileContactViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name','user' ]
 
+class EmailViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    queryset = Email.objects.all()
+    serializer_class = EmailSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['messageId','user']
+
 class emailSaveAPI(APIView):
     def get(self , request , format = None):
         socialAcc = SocialAccount.objects.get(user=request.GET['userId'])

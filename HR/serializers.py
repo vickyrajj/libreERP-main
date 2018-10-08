@@ -8,6 +8,18 @@ from PIM.serializers import *
 import datetime
 from django.core.exceptions import ObjectDoesNotExist , SuspiciousOperation
 
+class EmailAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailAttachment
+        fields = ('pk' , 'name', 'size' , 'attachment' , 'emailID')
+
+class EmailSerializer(serializers.ModelSerializer):
+    files = EmailAttachmentSerializer(many=True , read_only=True)
+    class Meta:
+        model = Email
+        fields = ('pk' , 'user', 'dated' , 'frm' , 'cc' ,'toMe' ,'spam' ,'body' ,'bodyTxt','category','value','messageId','files' , 'subject')
+        read_only_fields=('user',)
+
 class userProfileLiteSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     class Meta:

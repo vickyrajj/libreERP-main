@@ -1,0 +1,16 @@
+<div class="modal-header bg-blue">
+  <div class="container-fluid">
+    <h4>
+      <span class="pull-right">
+        {{msg.frm}} {{msg.dated | date: "dd-MMM-yyyy hh:mm a"}}
+      </span>
+      <i class="fa fa-arrow-circle-o-left pull-left fa-lg" ng-click="cancel()" style="cursor:pointer;"></i>
+      <span class="text-center">{{msg.subject}}</span>
+    </h4>
+  </div>
+</div>
+<div class="row" style="padding:10px;display:block;box-sizing:border-box;">
+  <div class="container-fluid">
+    <div ng-bind-html="msg.body"></div>
+  </div>
+</div>

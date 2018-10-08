@@ -302,7 +302,7 @@ class MobileContact(models.Model):
 class EmailAttachment(models.Model):
     name = models.CharField(max_length = 200 , null = True)
     size = models.CharField(max_length = 10 , null = True) # in KB
-    attachment = models.FileField(upload_to = getEmailAttachmentPath , null = False)
+    attachment = models.FileField(null = False)
     emailID = models.EmailField(null = False)
 
 class Email(models.Model):
@@ -318,9 +318,10 @@ class Email(models.Model):
     user = models.ForeignKey(User , related_name="emails" , null = False)
     files = models.ManyToManyField(EmailAttachment , related_name='parent' , blank = True)
     value = models.FloatField(null = True)
-
-    class Meta:
-        unique_together = ('cc' , 'frm' , 'body' , 'dated')
+    messageId = models.CharField(max_length = 100 , null = False , unique=True)
+    subject = models.CharField(max_length = 1500 , null = True)
+    # class Meta:
+    #     unique_together = ('cc' , 'frm' , 'body' , 'dated')
 
 
 ACCOUNT_TYPE_CHOICES = (

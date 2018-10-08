@@ -97,7 +97,18 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
 
 });
 
-app.controller("businessManagement.customers.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("customer.emails.details", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside,deal,$uibModalInstance,$sce) {
+  $scope.msg = deal
+
+  if (typeof $scope.msg.body == 'string') {
+    $scope.msg.body = $sce.trustAsHtml(deal.body);
+  }
+
+  $scope.cancel = function(e) {
+    $uibModalInstance.dismiss();
+  };
+})
+app.controller("businessManagement.customers.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside) {
   $scope.data = $scope.tab.data
   $scope.form={mobile:''}
   $scope.status = false
@@ -137,7 +148,8 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     smsData: [],
     callData: [],
     locationData: [],
-    mobileContactData: []
+    mobileContactData: [],
+    emailData:[]
   };
 
 
@@ -161,6 +173,13 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     icon: 'fa-th-large',
     template: '/static/ngTemplates/genericTable/tableDefault.html',
     // itemTemplate: '/static/ngTemplates/app.customers.location.item.html',
+  }, ];
+
+  mobileContactviews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/tableDefault.html',
+    // itemTemplate: '/static/ngTemplates/app.customers.mobileContact.item.html',
   }, ];
 
   mobileContactviews = [{
@@ -208,7 +227,45 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     getParams : [{key : 'user' , value : $scope.data.pk}],
     itemsNumPerView: [16, 32, 48],
   }
+  var options = {main : {icon : 'fa-info', text: 'Info'}};
+  $scope.emailConfig = {
+    views: mobileContactviews,
+    url: '/api/HR/email/',
+    searchField: 'messageId',
+    getParams : [{key : 'user' , value : $scope.data.pk}],
+    itemsNumPerView: [16, 32, 48],
+    fields:['dated','subject','frm','messageId'],
+    options : options,
+  }
 
+  $scope.emailtableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.dataVal.emailData);
+
+    if (action == 'Info') {
+      console.log("email infooooooo");
+      for (var i = 0; i < $scope.dataVal.emailData.length; i++) {
+        if ($scope.dataVal.emailData[i].pk == parseInt(target)) {
+          $scope.openEmailInfo(i);
+        }
+      }
+    }
+  }
+
+  $scope.openEmailInfo = function(idx) {
+    $aside.open({
+      templateUrl : '/static/ngTemplates/app.customer.email.info.html',
+      placement: 'right',
+      size: 'xl',
+      resolve: {
+        deal : function() {
+          return $scope.dataVal.emailData[idx];
+        },
+      },
+      controller : 'customer.emails.details'
+    })
+
+  }
 
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);

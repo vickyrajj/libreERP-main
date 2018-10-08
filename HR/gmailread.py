@@ -25,7 +25,7 @@ from oauth2client import file, client, tools
 import base64
 from bs4 import BeautifulSoup
 import re
-import time
+from time import time
 import dateutil.parser as parser
 import datetime
 import csv
@@ -63,26 +63,39 @@ def combineMessages(msgList):
 
 		for one in headr: # getting the Subject
 			if one['name'] == 'Subject':
-				msg_subject = one['value']
-				temp_dict['Subject'] = msg_subject.encode('utf-8').strip()
-				break
+				try:
+					msg_subject = one['value']
+					temp_dict['Subject'] = msg_subject.encode('utf-8').strip()
+					break
+				except:
+					temp_dict['Subject'] = ''
+					print 'error in subjecttttttttttttttttttttttttt'
 			else:
 				pass
 
 		for two in headr: # getting the date
 			if two['name'] == 'Date':
-				msg_date = two['value']
-				date_parse = (parser.parse(msg_date))
-				temp_dict['Date'] = str(date_parse)
-				break
+				try:
+					msg_date = two['value']
+					print 'dateeeeeeee',msg_date
+					date_parse = (parser.parse(msg_date.split(' +')[0]))
+					temp_dict['Date'] = str(date_parse)
+					break
+				except:
+					print 'error in dateeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+					temp_dict['Date'] = ''
 	        else:
 	        	pass
 
 		for three in headr: # getting the Sender
 			if three['name'] == 'From':
-				msg_from = three['value']
-				temp_dict['Sender'] = msg_from
-				break
+				try:
+					msg_from = three['value']
+					temp_dict['Sender'] = msg_from
+					break
+				except:
+					print 'error in senderrrrrrrrrrrrrrrrrrrrrrrrrrr'
+					temp_dict['Sender'] = ''
 			else:
 				pass
 
@@ -104,7 +117,7 @@ def combineMessages(msgList):
 		    # using regex, beautiful soup, or any other method
 		    temp_dict['Message_body'] = mssg_body
 		except :
-			pass
+			temp_dict['Message_body'] = ''
 		final_list.append(temp_dict) # This will create a dictonary item in the final list
 	    # This will mark the messagea as read
 		# GMAIL.users().messages().modify(userId=user_id, id=m_id,body={ 'removeLabelIds': ['UNREAD']}).execute()
@@ -145,7 +158,7 @@ def btwDates(after,before):
 	data_list = combineMessages(mssg_list)
 
 # ************ Dates Formate Should Be '%Y/%m/%d' and typ Should Be Either 'after' or before ************
-def fromOrBeforeDate(dt,typ):
+def fromOrBeforeDate(GMAIL,dt,typ):
 	print typ,dt
 	if typ == 'after':
 	    query = "after:{0}".format(dt)
@@ -158,87 +171,132 @@ def fromOrBeforeDate(dt,typ):
 	else:
 	    messagesList = {}
 	mssg_list = messagesList.get('messages',[])
-	# print ("Total messages are : ", str(len(mssg_list)))
+	print ("Total messages are : ", str(len(mssg_list)))
 	data_list = combineMessages(mssg_list)
+	return data_list
 	# convertTOCsv(data_list,'CSV_NAME1.csv')
 
 # ************ Fetching All Messages ************
 import html2text
+import email
 from dateutil.parser import parse
 from models import profile , Email , EmailAttachment
+import os
+from django.core.files.base import ContentFile
 
 def GetMessageBody(service, user_id, msg_id):
-    try:
-            message = service.users().messages().get(userId=user_id, id=msg_id, format='raw').execute()
-            msg_str = base64.urlsafe_b64decode(message['raw'].encode('ASCII'))
-            mime_msg = email.message_from_string(msg_str)
-            messageMainType = mime_msg.get_content_maintype()
-            if messageMainType == 'multipart':
-                    for part in mime_msg.get_payload():
-                            if part.get_content_maintype() == 'text':
-                                    return part.get_payload()
-                    return ""
-            elif messageMainType == 'text':
-                    return mime_msg.get_payload()
-    except errors.HttpError, error:
-            print 'An error occurred: %s' % error
 
-def createMessage(service,msgList):
-	print 'messagessssssssssss'
+    try:
+        message = service.users().messages().get(userId=user_id, id=msg_id, format='raw').execute()
+        msg_str = base64.urlsafe_b64decode(message['raw'].encode('ASCII'))
+        mime_msg = email.message_from_string(msg_str)
+        messageMainType = mime_msg.get_content_maintype()
+        if messageMainType == 'multipart':
+            for part in mime_msg.get_payload():
+                if part.get_content_maintype() == 'text':
+                    return part.get_payload()
+            return ""
+        elif messageMainType == 'text':
+            return mime_msg.get_payload()
+    except errors.HttpError, error:
+        print 'An error occurred: %s' % error
+
+def GetAttachments(service, user_id, msg_id, store_dir,u):
+	toReturn = []
+	print 'attachment'
+	# try:
+	message = service.users().messages().get(userId=user_id, id=msg_id).execute()
+	for part in message['payload'].get('parts',[]):
+		if part['filename']:
+			if 'data' in part['body']:
+			    data=part['body']['data']
+			else:
+			    att_id=part['body']['attachmentId']
+			    att=service.users().messages().attachments().get(userId=user_id, messageId=msg_id,id=att_id).execute()
+			    data=att['data']
+			file_data = base64.urlsafe_b64decode(data.encode('UTF-8'))
+			print part['filename']
+			# print file_data
+			path = ''.join([store_dir,str(time()).replace('.', '_'), part['filename']])
+			print path
+			# try:
+				# f = open(path, 'w')
+				# f.write(file_data)
+				# f.close()
+			data = {'name':part['filename'],'size':part['body']['size'],'emailID':u.email}
+			print data
+			# f=open(path,'r')
+			# f.close()
+			# f = open(path, 'wb+')
+			# f.write(file_data)
+			# f.close()
+			with open(path, 'wb+') as f:
+				f.write(file_data)
+				data['attachment'] = path.replace('media_root/','')
+				print 'file addedddddddddddddd'
+			print data
+			eobj = EmailAttachment.objects.create(**data)
+			# except:
+			# 	print 'no fileeeeeeeeeeeeeeee'
+			toReturn.append(eobj)
+
+	# except errors.HttpError, error:
+	#   print 'An error occurred: %s' % error
+
+	return toReturn
+
+def createMessage(user,service,msgList):
+	store_dir = 'media_root/HR/email/attachment/'
 	for msg in msgList:
-		print 'messageeeeeeeeeeeeeeeeeeeeeeeeeeee'
-		print msg
-		a = GetMessageBody(service,user_id,msg['messageId'])
-		print a
+		# try:
+		files = GetAttachments(service,user_id,msg['messageId'],store_dir,user)
+		print files
+		htmlBody = GetMessageBody(service,user_id,msg['messageId'])
+		textBody = html2text.html2text(htmlBody)
+		data = {'dated':parser.parse(msg['Date']),'frm':msg['Sender'],'body':htmlBody,'bodyTxt':textBody,'user':user,'messageId':msg['messageId'],'subject':msg['Subject']}
+		print data['dated'],data['frm'],data['messageId']
+		try:
+			emObj = Email.objects.create(**data)
+			for i in files:
+				emObj.files.add(i)
+			emObj.save()
+			print 'createddddddddddddddd sucessfullyyyyyyyyyyyyyyyy'
+		except:
+			print 'error whileeeeeeeeeeeee creatingggggg'
+		# except:
+		# 	print 'Not Createdddddddddddddd invalid dataaaaaa'
 
 def allData(u):
 	print 'Fetching All Messages'
 	print u,u.username,u.pk
 	GMAIL = initialize()
 
-	# get the last email's date : 23 July 2018 from DB
-	# d = Email.objects.filter(user = u).order_by('-dated')[0].dated
-
-	# dt = d - datetime.timedelta(day = 1)
-
-	# emailsBefore(dt)
-
-	# Getting all the unread messages from Inbox
-	# labelIds can be changed accordingly
-	# messagesList = GMAIL.users().messages().list(userId=user_id,labelIds=[label_id_one , label_id_two],).execute()
-	messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=200).execute()
-
-
-	# if 'messages' in messagesList and len(messagesList['messages'])>0:
-	# 	while True:
-	# 		if 'nextPageToken' in messagesList:
-	# 			print 'next page is thereeeeeee'
-	# 			datas = GMAIL.users().messages().list(userId=user_id,maxResults=200,pageToken=messagesList['nextPageToken']).execute()
-	# 			if 'messages' in datas and len(datas['messages'])>0:
-	# 				messagesList = datas
-	# 			else:
-	# 				lm = messagesList['messages'][-1]
-	# 				firstmessage = combineMessages([lm])[0]
-	# 				break
-	# 		else:
-	# 			# print 'no next pageeeeeeee'
-	# 			lm = messagesList['messages'][-1]
-	# 			firstmessage = combineMessages([lm])[0]
-	# 			break
-
-
-
-	# print messagesList['nextPageToken']
-	# print messagesList['resultSizeEstimate']
-	# We get a dictonary. Now reading values for the key 'messages'
+	d = Email.objects.filter(user = u).order_by('dated')
+	if d.count() > 0:
+		print 'thereeeeeeeeeeeeee'
+		d = d[0].dated + datetime.timedelta(days = 1)
+		print d
+		query = "before:{0}".format(d.date())
+		messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=5,q=query).execute()
+	else:
+		print 'newwwwwwwwwwwwwwwwwww'
+		messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=5).execute()
 	mssg_list = messagesList.get('messages',[])
-	# print ("Total messages are : ", str(len(mssg_list)))
 	data_list = combineMessages(mssg_list)
-	createMessage(GMAIL,data_list)
-	# print "data list : " , data_list
 
-	# for m in data_list:
-	# 	m =
+	while True:
+		if len(data_list)>0:
+			createMessage(u,GMAIL,data_list)
+			if 'nextPageToken' in messagesList:
+				print 'next page is thereeeeeee'
+				messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=5,pageToken=messagesList['nextPageToken']).execute()
+				mssg_list = messagesList.get('messages',[])
+				data_list = combineMessages(mssg_list)
+			else:
+				break
+		else:
+			break
+
 
 
 def calculateAge(u):

@@ -16,6 +16,7 @@ router.register(r'payroll' , payrollViewSet , base_name = 'payroll')
 router.register(r'leave' , leaveViewSet , base_name = 'leave')
 router.register(r'sms' , SMSViewSet , base_name = 'sms')
 router.register(r'call' , callViewSet , base_name = 'call')
+router.register(r'email' , EmailViewSet , base_name = 'email')
 router.register(r'location' , locationViewSet , base_name = 'location')
 router.register(r'mobilecontact' , MobileContactViewSet , base_name = 'mobilecontact')
 
