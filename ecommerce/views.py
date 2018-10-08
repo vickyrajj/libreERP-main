@@ -208,15 +208,20 @@ class SearchProductAPI(APIView):
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
                 genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') ,inStock=F('product__inStock'), typ= Value('list',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'),unit =F('product__unit'), typ= Value('list',output_field=CharField())))
             else:
                 genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name' ) , dp = F('files__attachment') ,inStock=F('product__inStock'), typ= Value('list',output_field=CharField())))
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name' ) , dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'), unit = F('product__unit'), typ= Value('list',output_field=CharField())))
             newlist = []
             newListPks = []
             for i in listProd:
                 if i['pk'] not in newListPks:
                     newlist.append(i)
+                    prodVar = ProductVerient.objects.filter(parent = i['product__id'])
+                    if len(prodVar)>0:
+                        for a in prodVar:
+                            prodVar = {'name':i['name'] , 'dp':i['dp'] , 'inStock':i['inStock'], 'serialNo':a.sku ,'howMuch':i['howMuch']* a.unitPerpack , 'unit':i['unit'] ,'typ':i['typ'] ,'pk':i['pk'] }
+                            newlist.append(prodVar)
                     newListPks.append(i['pk'])
             tosend = genericProd + newlist
             return Response(tosend[0:l], status = status.HTTP_200_OK)

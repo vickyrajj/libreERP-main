@@ -15,15 +15,19 @@
             <h5 ng-if="l.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name}}</h5>
           </div> -->
           <div>
-            <h5 ng-if="list.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name.slice(0,35)}}...</h5>
-            <h5 ng-if="list.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name}}</h5>
+            <h5 ng-if="list.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name.slice(0,35)}} {{selectedProdVar.qty}}{{selectedProdVar.unit}}</h5>
+            <h5 ng-if="list.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name}} {{selectedProdVar.qty}}{{selectedProdVar.unit}}</h5>
           </div>
 
           <!-- <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee">
             <option ng-repeat="pv in prodVarList" >{{pv.qty}} {{pv.unit}} - Rs{{pv.amnt}}</option>
           </select> -->
-          <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee" ng-options="pv.str for pv in prodVarList" ng-model="selectedProdVar">
-          </select>
+          <div style="height:40px;">
+            <span ng-show="prodVarList.length>1">
+            <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee" ng-options="pv.str for pv in prodVarList" ng-model="selectedProdVar">
+            </select></span>
+          </div>
+
 
           <span style="font-size:15px;padding-left:10px"> Price : </span>
           <span ng-if="list.product.serialNo==selectedProdVar.sku">

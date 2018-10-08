@@ -27,7 +27,8 @@
       <div class="col-md-6 col-xs-12" style="height:100%;right:0px;">
         <div class="row container-fluid">
           <p style="padding-bottom:0px;">
-            <strong style="font-size:20px;">{{details.product.name}}</strong>
+            <strong ng-if="prodVariant==''" style="font-size:20px;">{{details.product.name}} {{details.product.howMuch}}{{details.product.unit | getUnit}}</strong> <br>
+            <strong ng-if="prodVariant" style="font-size:20px;">{{details.product.name}} {{details.product.howMuch * prodVariant.unitPerpack}}{{details.product.unit | getUnit}}</strong>
           </p>
           <hr style="margin-top:0px;margin-bottom:5px;">
         </div>
@@ -53,11 +54,12 @@
               <span ng-if="data.priceModel=='weight'">/ per Kg</span>
             </span> -->
             <div class="row">
-              <span style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>
+              <span  ng-if="prodVariant==''" style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>
                 <span ng-if="details.product.discount>0">{{details.product.discountedPrice.toFixed(2)}} </span>
                 <span ng-if="details.product.discount>0" class="text-muted" ><strike>{{details.product.price}}</strike> </span>
                 <span ng-if="details.product.discount==0">{{details.product.price}} </span>
               </span>
+              <span ng-if="prodVariant" style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>{{prodVariant.price}}</span>
             </div>
             <div class="row">
               <span style="padding-left:10px;" ng-if="details.product.discount>0" class="text-muted" style="font-size:20px;" >{{details.product.discount}} % Off</span>

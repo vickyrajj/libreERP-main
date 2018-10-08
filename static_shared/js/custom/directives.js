@@ -636,7 +636,7 @@ app.directive('productCard', function() {
       list: '=',
       // addCart: '='
     },
-    controller: function($scope, $state, $http, Flash, $rootScope, $users) {
+    controller: function($scope, $state, $http, Flash, $rootScope, $users , $filter) {
 
       // console.log($scope.list,'aaaaa');
       $scope.me = $users.get('mySelf');
@@ -644,23 +644,23 @@ app.directive('productCard', function() {
       $scope.prod_var = $scope.list.product_variants;
       $scope.prodVarList = []
 
-      if ($scope.list.product.unit=='Kilogram') {
-        $scope.list.product.unit = 'Kg'
-      }else if ($scope.list.product.unit=='Gram') {
-        $scope.list.product.unit = 'gm'
-      }else if ($scope.list.product.unit=='Litre') {
-        $scope.list.product.unit = 'lt'
-      }else if ($scope.list.product.unit=='Millilitre') {
-        $scope.list.product.unit = 'ml'
-      }else if ($scope.list.product.unit=='Ton') {
-        $scope.list.product.unit = 'Ton'
-      }else {
-        $scope.list.product.unit = $scope.list.product.unit
-      }
+      $scope.list.product.unit = $filter('getUnit')($scope.list.product.unit);
+      // if ($scope.list.product.unit=='Kilogram') {
+      //   $scope.list.product.unit = 'Kg'
+      // }else if ($scope.list.product.unit=='Gram') {
+      //   $scope.list.product.unit = 'gm'
+      // }else if ($scope.list.product.unit=='Litre') {
+      //   $scope.list.product.unit = 'lt'
+      // }else if ($scope.list.product.unit=='Millilitre') {
+      //   $scope.list.product.unit = 'ml'
+      // }else if ($scope.list.product.unit=='Ton') {
+      //   $scope.list.product.unit = 'Ton'
+      // }else {
+      //   $scope.list.product.unit = $scope.list.product.unit
+      // }
 
       // $scope.list.price = $scope.list.product.discountedPrice
       console.log($scope.list.added_cart);
-
 
       var str = $scope.list.product.howMuch +' '+$scope.list.product.unit + ' - Rs '+ $scope.list.product.discountedPrice
       $scope.prodVarList = [ {str:str, qty : $scope.list.product.howMuch , amnt: $scope.list.product.discountedPrice , unit: $scope.list.product.unit, sku: $scope.list.product.serialNo} ];
@@ -691,7 +691,6 @@ app.directive('productCard', function() {
         //   console.log('watch');
         //   $scope.list.product.price = newValue.amnt
         // }
-
         if (newValue.sku!=undefined) {
           if ($scope.list.product.serialNo == newValue.sku ){
             console.log('parent');
@@ -707,11 +706,13 @@ app.directive('productCard', function() {
 
       })
 
-      $scope.openDetails = function(id, name) {
+      $scope.openDetails = function(id, name , sku) {
+        console.log($scope.selectedProdVar.sku);
         console.log('calling open details ', id, name);
         $state.go('details', {
           id: id,
-          name: name
+          name: name,
+          sku: $scope.selectedProdVar.sku
         })
       }
       // $scope.mainPage = function(){
@@ -816,6 +817,13 @@ app.directive('productCard', function() {
               }).
               then(function(response) {
                 Flash.create('success', 'Product added in cart');
+                // console.log(response.data);
+                var prod_variants = response.data.product.product_variants
+                for (var i = 0; i < prod_variants.length; i++) {
+                  if (prod_variants[i].sku == response.data.prodSku) {
+                    response.data.prod_var = prod_variants[i]
+                  }
+                }
                 $rootScope.inCart.push(response.data);
               })
           })

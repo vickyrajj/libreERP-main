@@ -6,6 +6,10 @@
       </div>
       <div class="col-xs-6">
         <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+        {{match.model.howMuch}}{{match.model.unit | getUnit}}
+        <!-- <ul  ng-if="match.model.prodVar.length>0">
+          <li ng-repeat="a in match.model.prodVar">{{a.sku}}</li>
+        </ul> -->
       </div>
       <div ng-if="match.model.typ == 'list' && !match.model.added && me.pk&&match.model.inStock>0 " class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
         <button type="button" class="btn btn-success" ng-click="addToCart(match.model)">

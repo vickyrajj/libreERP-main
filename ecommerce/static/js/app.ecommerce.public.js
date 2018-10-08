@@ -154,7 +154,7 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('details', {
-      url: "/details/:id/:name",
+      url: "/details/:id/:name/:sku",
       templateUrl: '/static/ngTemplates/app.ecommerce.details.html',
       controller: 'controller.ecommerce.details'
     })
@@ -342,15 +342,26 @@ app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope,
 
 
   $scope.addToCart = function(model) {
+    console.log('coming here',model);
     var dataToSend = {
       product	: model.pk,
       qty	: 1,
       typ	 : 'cart',
-      user: $users.get('mySelf').pk
+      user: $users.get('mySelf').pk,
+      prodSku: model.serialNo
     }
+    console.log(dataToSend);
     $http({method : 'POST' , url : '/api/ecommerce/cart/' , data : dataToSend}).
     then(function(response) {
       $scope.match.model.added = 1;
+
+      var prod_variants = response.data.product.product_variants
+      for (var i = 0; i < prod_variants.length; i++) {
+        if (prod_variants[i].sku == response.data.prodSku) {
+          response.data.prod_var = prod_variants[i]
+        }
+      }
+
       $rootScope.inCart.push(response.data);
     });
   }
@@ -505,7 +516,6 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
     var price = 0;
     console.log("called cart");
     for (var i = 0; i < $rootScope.inCart.length; i++) {
-
       console.log($rootScope.inCart[i].prodSku , $rootScope.inCart[i].product.product.serialNo);
       if ($rootScope.inCart[i].prodSku==$rootScope.inCart[i].product.product.serialNo){
         console.log('if');
@@ -761,6 +771,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.offset = 0
   $scope.reviews = []
   $scope.showOptions = true
+  $scope.prodVariant = ''
   $scope.getRatings = function(offset) {
     $http({
       method: 'GET',
@@ -777,6 +788,13 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }).
   then(function(response) {
     $scope.details = response.data
+
+    for (var i = 0; i < $scope.details.product_variants.length; i++) {
+      if ($scope.details.product_variants[i].sku == $state.params.sku) {
+        $scope.prodVariant = $scope.details.product_variants[i]
+      }
+    }
+
     if(!$scope.me){
       if ($rootScope.addToCart != undefined) {
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
@@ -883,8 +901,14 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
         product: inputPk,
         user: getPK($scope.me.url),
         qty: 1,
-        typ: 'cart',
+        typ: 'cart'
       }
+      if ($scope.prodVariant=='') {
+        dataToSend.prodSku = $scope.details.product.serialNo
+      }else {
+        dataToSend.prodSku = $scope.prodVariant.sku
+      }
+
       $http({
         method: 'POST',
         url: '/api/ecommerce/cart/',
@@ -893,6 +917,15 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       then(function(response) {
         Flash.create('success', 'Product added in cart');
         $scope.details.added_cart=1
+
+        var prod_variants = response.data.product.product_variants
+        for (var i = 0; i < prod_variants.length; i++) {
+          if (prod_variants[i].sku == response.data.prodSku) {
+            response.data.prod_var = prod_variants[i]
+          }
+        }
+
+
         $rootScope.inCart.push(response.data);
         return
       })
@@ -1387,6 +1420,17 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
   console.log('in cartttttttttt', $rootScope.inCart);
   document.title = 'Sterling Select | Shopping Cart'
   document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+
+  $timeout(function () {
+    for (var i = 0; i < $scope.data.tableData.length; i++) {
+      var prod_variants = $scope.data.tableData[i].product.product_variants
+      for (var j = 0; j < prod_variants.length; j++) {
+        if (prod_variants[j].sku == $scope.data.tableData[i].prodSku) {
+          $scope.data.tableData[i].prod_var = prod_variants[j]
+        }
+      }
+    }
+  }, 800);
 
   $scope.tableAction = function(target, action, mode) {
     for (var i = 0; i < $scope.data.tableData.length; i++) {
@@ -2227,9 +2271,14 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     then(function(response) {
       $scope.cartItems = response.data;
       $scope.calcTotal();
-      //  for (var i = 0; i < $scope.cartItems.length; i++) {
-      //    $scope.cartProducts.push({pk:$scope.cartItems[i].product.pk , qty :$scope.cartItems[i].qty})
-      //  }
+       for (var i = 0; i < $scope.cartItems.length; i++) {
+         var prod_variants = $scope.cartItems[i].product.product_variants
+         for (var j = 0; j < prod_variants.length; j++) {
+           if (prod_variants[j].sku == $scope.cartItems[i].prodSku) {
+             $scope.cartItems[i].prod_var = prod_variants[j]
+           }
+         }
+       }
     })
   } else {
     $http({
@@ -2595,7 +2644,8 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
         console.log(newValue);
         $state.go('details', {
           id: newValue.pk,
-          name: newValue.name.split(' ').join('-')
+          name: newValue.name.split(' ').join('-'),
+          sku: newValue.serialNo
         })
       } else {
         $state.go('categories', {
@@ -2807,6 +2857,15 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     then(function(response) {
       for (var i = 0; i < response.data.length; i++) {
         if (response.data[i].typ == 'cart') {
+
+          var prod_variants = response.data[i].product.product_variants
+
+          for (var j = 0; j < prod_variants.length; j++) {
+            if (prod_variants[j].sku == response.data[i].prodSku) {
+              response.data[i].prod_var = prod_variants[j]
+            }
+          }
+
           $rootScope.inCart.push(response.data[i])
         }
         if (response.data[i].typ == 'favourite') {

@@ -301,6 +301,7 @@ class offerBannerSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     product = listingSerializer(many = False , read_only = True)
+    # prod_varName = serializers.SerializerMethodField()
     class Meta:
         model = Cart
         fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice')
@@ -331,6 +332,15 @@ class CartSerializer(serializers.ModelSerializer):
                         c.prodVarPrice = prodVar[0].price
         	c.save()
         return c
+    # def get_prod_varName(self , obj):
+    #     # print
+    #     # prodVar = ProductVerient.objects.filter(parent = obj.product.pk)
+    #     if obj.prodSku is not None:
+    #         prodVar = ProductVerient.objects.filter(sku = obj.prodSku)
+    #         nameStr = str(prodVar[0].unitPerpack * obj.product.product.howMuch) +' '+ obj.product.product.unit
+    #         return nameStr
+    #     else:
+    #         return None
 
 
 class ActivitiesSerializer(serializers.ModelSerializer):
@@ -391,13 +401,15 @@ class TrackingLogSerializer(serializers.ModelSerializer):
         return l
 
 class OrderQtyMapSerializer(serializers.ModelSerializer):
+    product = listingSerializer(many = False , read_only = True)
     productName = serializers.SerializerMethodField()
     productPrice = serializers.SerializerMethodField()
     ppAfterDiscount = serializers.SerializerMethodField()
+    prodVar = serializers.SerializerMethodField()
     trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar')
 
     def update(self ,instance, validated_data):
         print 'updateeeeeeeeeeeeeeeeeee'
@@ -426,24 +438,21 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
         return price
     def get_ppAfterDiscount(self, obj):
         if obj.prodSku is not None:
-            # print obj.prodSku
-            # toReturn = 10
             if obj.prodSku == obj.product.product.serialNo:
                 toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
             else:
                 toReturn = ProductVerient.objects.filter(sku = obj.prodSku)[0].price
         else:
             toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
-        # if obj.prodSku is not None:
-        #     if obj.prodSku == obj.product.product.serialNo:
-        #         toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
-        #     else:
-        #         toReturn = obj.product.product.price
-        # else:
-        #     toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
-        # return toReturn
-        print toReturn
         return toReturn
+    def get_prodVar(self, obj):
+        if obj.prodSku is not None:
+            if obj.prodSku == obj.product.product.serialNo:
+                return None
+            else:
+                return ProductVerient.objects.filter(sku = obj.prodSku).values()
+        else:
+            return None
 
 # class OrderQtyMapLiteSerializer(serializers.ModelSerializer):
 #     productName = serializers.SerializerMethodField()
