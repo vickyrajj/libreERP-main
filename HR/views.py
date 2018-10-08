@@ -512,6 +512,7 @@ class MobileContactViewSet(viewsets.ModelViewSet):
 class emailSaveAPI(APIView):
     def get(self , request , format = None):
         socialAcc = SocialAccount.objects.get(user=request.GET['userId'])
+        print socialAcc
         tokens = SocialToken.objects.get(pk = socialAcc.pk)
         with open('HR/storage.json','r+') as json_file:
             data = json.load(json_file)
@@ -524,10 +525,20 @@ class emailSaveAPI(APIView):
             jsonFile.write(json.dumps(data))
             jsonFile.close()
         return JsonResponse({} ,status =200 )
-
+import gmailread
 class emailDataSaveAPI(APIView):
     def get(self , request , format = None):
         print request.GET
-        import gmailread
-        a = gmailread.allData()
+
+
+
+
+
+        u = User.objects.get(pk  = request.GET['userId'])
+        print "Age : ", u.profile.gmailAge
+        # if u.profile.gmailAge is None:
+        # gmailread.calculateAge(u)
+
+        a = gmailread.allData(u)
+
         return JsonResponse({} ,status =200 )

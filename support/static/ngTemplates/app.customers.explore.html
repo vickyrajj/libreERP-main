@@ -18,8 +18,9 @@
         <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
           <h5><strong>User ID:</strong> {{data.pk}}</h5>
           <h5><strong>Loan ID:</strong> DUMMY</h5>
+          <h5><strong>Gmail Creation date :</strong> {{data.profile.gmailAge | date : 'dd-MMM-yyyy'}}
           <h5><strong>Email:</strong> {{data.email}}
-          <button type="button" class="btn btn-primary btn-sm" ng-click="getToken();createData()">Fetch</button></h5>
+          <button type="button" class="btn btn-primary btn-sm" ng-click="getToken();">Fetch</button></h5>
           <h5><strong>Mobile:</strong> <span>{{data.profile.mobile}}</span>   <button type="button" class="btn btn-default" ng-click="showEdit()" ng-if="mobileEdit">Edit <i class="fa fa-pencil"></i></button> </h5>
           <div class="input-group col-md-4" ng-if="status">
             <input type="text" class="form-control" ng-model="form.mobile" />
@@ -76,10 +77,8 @@
       <div class="row">
 
         <canvas height="30vh" id="line" class="chart chart-line" chart-data="chartData"
-        chart-labels="labels" chart-series="series" chart-options="options"
-        chart-dataset-override="datasetOverride" chart-click="onClick">
-        </canvas
-
+        chart-labels="labels" chart-series="series" chart-options="debtVsSavingsChartoptions" chart-click="onClick">
+        </canvas>
       </div>
       <hr>
       <div class="row">
@@ -96,7 +95,11 @@
 
             <div class="col-md-3">
               <div class="container-fluid">
-                <img src="/static/images/callStats.png" style="width:100%;" alt="">
+
+                <canvas id="base" class="chart-horizontal-bar"
+                  chart-data="calldata" chart-labels="calllabels" >
+                </canvas>
+
               </div>
             </div>
             <div class="col-md-1">
@@ -104,7 +107,9 @@
             </div>
             <div class="col-md-3">
               <div class="container-fluid">
-                <img src="/static/images/callStats.png" style="width:100%;" alt="">
+                <canvas id="base" class="chart-horizontal-bar"
+                  chart-data="calldata" chart-labels="calllabels" >
+                </canvas>
               </div>
             </div>
             <div class="col-md-1">
@@ -113,7 +118,9 @@
 
             <div class="col-md-3">
               <div class="container-fluid">
-                <img src="/static/images/callStats.png" style="width:100%;" alt="">
+                <canvas id="base" class="chart-horizontal-bar"
+                  chart-data="calldata" chart-labels="calllabels" >
+                </canvas>
               </div>
             </div>
 
@@ -177,12 +184,19 @@
             </uib-tab-heading>
             <generic-Table callback-Fn="tableAction" data="dataVal.mobileContactData" config-Obj="{{mobileContactConfig}}"></generic-Table>
           </uib-tab>
-          <!-- <uib-tab >
+
+          <uib-tab >
+            <uib-tab-heading>
+              Bank Statements <i  class="fa fa-address-book"></i>
+            </uib-tab-heading>
+            <!-- <generic-Table callback-Fn="tableAction" data="dataVal.mobileContactData" config-Obj="{{mobileContactConfig}}"></generic-Table> -->
+          </uib-tab>
+          <uib-tab >
             <uib-tab-heading>
               Email <i  class="fa fa-address-book"></i>
             </uib-tab-heading>
-            <generic-Table callback-Fn="tableAction" data="dataVal.emailData" config-Obj="{{emailConfig}}"></generic-Table>
-          </uib-tab> -->
+            <!-- <generic-Table callback-Fn="tableAction" data="dataVal.emailData" config-Obj="{{emailConfig}}"></generic-Table> -->
+          </uib-tab>
           </uib-tabset>
       </div>
     </div>

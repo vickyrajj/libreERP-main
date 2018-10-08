@@ -260,6 +260,7 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
       url: '/api/HR/emailSave/?userId=' +$scope.data.pk
     }).
     then(function(response) {
+      $scope.createData()
     })
 
   }
@@ -267,34 +268,47 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   $scope.createData = function(){
     $http({
       method: 'GET',
-      url: '/api/HR/emailDataSave/'
+      url: '/api/HR/emailDataSave/?userId=' +$scope.data.pk
     }).
     then(function(response) {
+
+      $http({method : 'GET' , url : '/api/HR/users/' +  $scope.data.pk +'/'  }).
+      then( function(response) {
+        $scope.data = response.data;
+      })
+
+
     })
   }
 
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+  $scope.labels = ["January", "February", "March", "April", "May", "June", "July" , "Aug" , "Sep" , "Oct" , "Nov" , "Dec"];
   $scope.series = ['Series A', 'Series B'];
   $scope.chartData = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
+    [65, 59, 80, 81, 56, 55, 40, 55 , 22, 54, 22, 99, 22],
+    [28, 48, 40, 19, 86, 27, 90, 55 , 22, 54, 22, 99, 22]
   ];
   $scope.onClick = function (points, evt) {
     console.log(points, evt);
   };
-  $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-  $scope.options = {
+  $scope.debtVsSavingsChartoptions = {
     scales: {
-      yAxes: [
-        {
-          gridLines : {
-              display : false
-          }
+          xAxes: [{
+            display: true
+          }],
+          yAxes: [{
+            display: false
+          }],
         }
-      ]
-    }
   };
 
+
+  $scope.calllabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+  // $scope.callseries = ['Series A', 'Series B'];
+
+  $scope.calldata = [
+    [65, 59, 80, 81, 56, 55, 40],
+    // [28, 48, 40, 19, 86, 27, 90]
+  ];
 
 
 

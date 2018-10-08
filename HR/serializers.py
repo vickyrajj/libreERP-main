@@ -12,7 +12,7 @@ class userProfileLiteSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     class Meta:
         model = profile
-        fields = ('displayPicture' , 'prefix' ,'pk' ,'mobile')
+        fields = ('displayPicture' , 'prefix' ,'pk' ,'mobile' , 'gmailAge')
 
 class userSearchSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
@@ -48,7 +48,7 @@ class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:
         model = profile
-        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'email')
+        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'email', 'gmailAge')
         read_only_fields = ('website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' , )
 
 class userProfileAdminModeSerializer(serializers.ModelSerializer):

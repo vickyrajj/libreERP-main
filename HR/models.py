@@ -87,7 +87,7 @@ class profile(models.Model):
         ('F' , 'Female'),
         ('O' , 'Other'),
     )
-    gmailAge = models.DateField(null = True)
+    gmailAge = models.DateTimeField(null = True)
     empID = models.PositiveIntegerField(unique = True , null = True)
     displayPicture = models.ImageField(upload_to = getDisplayPicturePath, null=True)
     dateOfBirth = models.DateField( null= True )
@@ -318,6 +318,10 @@ class Email(models.Model):
     user = models.ForeignKey(User , related_name="emails" , null = False)
     files = models.ManyToManyField(EmailAttachment , related_name='parent' , blank = True)
     value = models.FloatField(null = True)
+
+    class Meta:
+        unique_together = ('cc' , 'frm' , 'body' , 'dated')
+
 
 ACCOUNT_TYPE_CHOICES = (
     ('savings' , 'savings'),
