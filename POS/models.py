@@ -106,7 +106,7 @@ class ProductVerient(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey(Product , related_name='parentProducts')
-    sku = models.CharField(max_length=10000,null=True)
+    sku = models.CharField(max_length=255,null=True)
     unitPerpack = models.PositiveIntegerField(default = 0)
 
 # class ProductMetaList(models.Model):
