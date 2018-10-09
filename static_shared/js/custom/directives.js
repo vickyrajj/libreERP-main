@@ -662,12 +662,12 @@ app.directive('productCard', function() {
       // $scope.list.price = $scope.list.product.discountedPrice
       console.log($scope.list.added_cart);
 
-      var str = $scope.list.product.howMuch +' '+$scope.list.product.unit + ' - Rs '+ $scope.list.product.discountedPrice
+      var str = $filter('convertUnit')($scope.list.product.howMuch , $scope.list.product.unit) + ' - Rs '+ $scope.list.product.discountedPrice
       $scope.prodVarList = [ {str:str, qty : $scope.list.product.howMuch , amnt: $scope.list.product.discountedPrice , unit: $scope.list.product.unit, sku: $scope.list.product.serialNo} ];
 
       if ($scope.prod_var) {
         for (var i = 0; i < $scope.prod_var.length; i++) {
-          str = $scope.prod_var[i].unitPerpack * $scope.list.product.howMuch +' '+ $scope.list.product.unit + ' - Rs ' +$scope.prod_var[i].price
+          str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.list.product.howMuch , $scope.list.product.unit) + ' - Rs ' +$scope.prod_var[i].price
           $scope.prodVarList.push( {str:str , qty : $scope.prod_var[i].unitPerpack * $scope.list.product.howMuch , amnt: $scope.prod_var[i].price , unit: $scope.list.product.unit , sku:$scope.prod_var[i].sku } )
         }
       }
@@ -691,6 +691,7 @@ app.directive('productCard', function() {
         //   console.log('watch');
         //   $scope.list.product.price = newValue.amnt
         // }
+        $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
         if (newValue.sku!=undefined) {
           if ($scope.list.product.serialNo == newValue.sku ){
             console.log('parent');
@@ -708,7 +709,7 @@ app.directive('productCard', function() {
 
       $scope.openDetails = function(id, name , sku) {
         console.log($scope.selectedProdVar.sku);
-        console.log('calling open details ', id, name);
+        console.log('calling open list ', id, name);
         $state.go('details', {
           id: id,
           name: name,
@@ -884,10 +885,13 @@ app.directive('productCard', function() {
       }
 
       $scope.increment = function() {
-        $scope.list.added_cart++
         for (var i = 0; i < $rootScope.inCart.length; i++) {
           if ($rootScope.inCart[i].product.pk == $scope.list.pk) {
             if ($rootScope.inCart[i].typ == 'cart') {
+              if ($rootScope.inCart[i].prodSku!=$scope.selectedProdVar.sku) {
+                Flash.create('warning' , 'You cant buy product and combo together')
+                return
+              }
               $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
               $http({
                 method: 'PATCH',
@@ -901,6 +905,7 @@ app.directive('productCard', function() {
             }
           }
         }
+        $scope.list.added_cart++
       }
       $scope.decrement = function() {
         $scope.list.added_cart --
