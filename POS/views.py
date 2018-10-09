@@ -31,7 +31,7 @@ import pytz
 import requests
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
-# from openpyxl import load_workbook
+from openpyxl import load_workbook
 from io import BytesIO
 import re
 from rest_framework import filters
@@ -101,7 +101,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     # queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
     # search_fields = ('name', 'serialNo', 'description', 'serialId')
-    filter_fields = ['name','haveComposition','serialNo',]
+    filter_fields = ['name','haveComposition','serialNo','inStock']
 
     # filter_fields = ['name','haveComposition']
     def get_queryset(self):

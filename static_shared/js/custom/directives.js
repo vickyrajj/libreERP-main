@@ -628,7 +628,7 @@ app.directive('chatWindow', function($users) {
 
 app.directive('productCard', function() {
   return {
-    templateUrl: '/static/ngTemplates/productCart.html',
+    templateUrl: '/static/ngTemplates/productCard.html',
     restrict: 'E',
     transclude: true,
     replace: true,
@@ -636,18 +636,84 @@ app.directive('productCard', function() {
       list: '=',
       // addCart: '='
     },
-    controller: function($scope, $state, $http, Flash, $rootScope, $users) {
+    controller: function($scope, $state, $http, Flash, $rootScope, $users , $filter) {
 
       // console.log($scope.list,'aaaaa');
       $scope.me = $users.get('mySelf');
-      $scope.openDetails = function(id, name) {
-        console.log('calling open details ', id, name);
 
+      $scope.prod_var = $scope.list.product_variants;
+      $scope.prodVarList = []
+
+      $scope.list.product.unit = $filter('getUnit')($scope.list.product.unit);
+      // if ($scope.list.product.unit=='Kilogram') {
+      //   $scope.list.product.unit = 'Kg'
+      // }else if ($scope.list.product.unit=='Gram') {
+      //   $scope.list.product.unit = 'gm'
+      // }else if ($scope.list.product.unit=='Litre') {
+      //   $scope.list.product.unit = 'lt'
+      // }else if ($scope.list.product.unit=='Millilitre') {
+      //   $scope.list.product.unit = 'ml'
+      // }else if ($scope.list.product.unit=='Ton') {
+      //   $scope.list.product.unit = 'Ton'
+      // }else {
+      //   $scope.list.product.unit = $scope.list.product.unit
+      // }
+
+      // $scope.list.price = $scope.list.product.discountedPrice
+      console.log($scope.list.added_cart);
+
+      var str = $scope.list.product.howMuch +' '+$scope.list.product.unit + ' - Rs '+ $scope.list.product.discountedPrice
+      $scope.prodVarList = [ {str:str, qty : $scope.list.product.howMuch , amnt: $scope.list.product.discountedPrice , unit: $scope.list.product.unit, sku: $scope.list.product.serialNo} ];
+
+      if ($scope.prod_var) {
+        for (var i = 0; i < $scope.prod_var.length; i++) {
+          str = $scope.prod_var[i].unitPerpack * $scope.list.product.howMuch +' '+ $scope.list.product.unit + ' - Rs ' +$scope.prod_var[i].price
+          $scope.prodVarList.push( {str:str , qty : $scope.prod_var[i].unitPerpack * $scope.list.product.howMuch , amnt: $scope.prod_var[i].price , unit: $scope.list.product.unit , sku:$scope.prod_var[i].sku } )
+        }
+      }
+
+      if ($scope.list.added_cart>0) {
+        // $scope.list.product.serialNo ==
+        for (var i = 0; i < $rootScope.inCart.length; i++) {
+          for (var j = 0; j < $scope.prodVarList.length; j++) {
+            if ($rootScope.inCart[i].prodSku== $scope.prodVarList[j].sku) {
+              $scope.selectedProdVar=$scope.prodVarList[j];
+            }
+          }
+        }
+      }else {
+        $scope.selectedProdVar=$scope.prodVarList[0];
+      }
+
+
+      $scope.$watch('selectedProdVar', function(newValue, oldValue) {
+        // if (oldValue.str != newValue.str) {
+        //   console.log('watch');
+        //   $scope.list.product.price = newValue.amnt
+        // }
+        if (newValue.sku!=undefined) {
+          if ($scope.list.product.serialNo == newValue.sku ){
+            console.log('parent');
+            // $scope.list.price = $scope.list.product.discountedPrice
+          }else {
+            // $scope.list.product.price = newValue.amnt
+            console.log('child');
+            $scope.list.price = newValue.amnt
+          }
+        }
+
+
+
+      })
+
+      $scope.openDetails = function(id, name , sku) {
+        console.log($scope.selectedProdVar.sku);
+        console.log('calling open details ', id, name);
         $state.go('details', {
           id: id,
-          name: name
+          name: name,
+          sku: $scope.selectedProdVar.sku
         })
-
       }
       // $scope.mainPage = function(){
       // window.location = '/login';
@@ -742,6 +808,7 @@ app.directive('productCard', function() {
                 user: getPK($scope.me.url),
                 qty: 1,
                 typ: 'cart',
+                prodSku: $scope.selectedProdVar.sku
               }
               $http({
                 method: 'POST',
@@ -750,6 +817,13 @@ app.directive('productCard', function() {
               }).
               then(function(response) {
                 Flash.create('success', 'Product added in cart');
+                // console.log(response.data);
+                var prod_variants = response.data.product.product_variants
+                for (var i = 0; i < prod_variants.length; i++) {
+                  if (prod_variants[i].sku == response.data.prodSku) {
+                    response.data.prod_var = prod_variants[i]
+                  }
+                }
                 $rootScope.inCart.push(response.data);
               })
           })
@@ -878,12 +952,23 @@ app.directive('productCard', function() {
         $scope.list.added_cart--
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
           if ($rootScope.addToCart[i].product.pk == $scope.list.pk) {
-              $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
-              setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+              // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
+              // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+              if($scope.list.added_cart==0){
+                setCookie("addToCart", "", -1, '/');
+                $rootScope.addToCart.splice(i , 1);
+                setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+                return
+              }
+              else{
+                $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
+                setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+                return
+              }
           }
+
         }
       }
-
 
       // $scope.updateCookieDetail=function(indx, value) {
       //   console.log(productId, value)

@@ -458,7 +458,7 @@ body {
 
 
 
-/*.navbar-default {
+.navbar-default {
   background-color: var(--themeMain);
   border-color:var(--headerNavbarHighlight);
 }
@@ -513,7 +513,7 @@ body {
     color: #ffffff;
     background-color: var(--headerNavbarHighlight);
   }
-}*/
+}
 
 
 .bs-callout {

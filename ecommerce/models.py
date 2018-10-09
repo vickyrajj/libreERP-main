@@ -127,7 +127,9 @@ class Cart(models.Model):
     product = models.ForeignKey(listing, null = False)
     user = models.ForeignKey(User, null = False)
     qty = models.PositiveIntegerField(null = True)
-    typ = models.CharField(choices = CART_TYPE_CHOICES , max_length = 10 , default = 'cart')
+    typ = models.CharField(choices = CART_TYPE_CHOICES, max_length = 10, default = 'cart')
+    prodSku = models.CharField(max_length = 50, null = True, blank = True)
+    prodVarPrice = models.PositiveIntegerField(null = True , blank = True)
 
 User.cart = property(lambda u : Cart.objects.get_or_create(user = u)[0])
 
@@ -147,7 +149,7 @@ class Activities(models.Model):
     user = models.ForeignKey(User, null = False , related_name = 'ecommerceActivities')
     product = models.ForeignKey(listing, null = True)
     typ =  models.CharField(choices = ACTIVITIES_TYPE_CHOICES , max_length = 10 , default='loggedIn')
-    data = models.CharField(max_length = 200 , null = True)
+    data = models.CharField(max_length = 500 , null = True)
 
 class Address(models.Model):
     user = models.ForeignKey(User , related_name = 'userAddress' , null = True , blank = True)
@@ -214,6 +216,7 @@ class OrderQtyMap(models.Model):
     courierName =  models.CharField(max_length=100 ,null = True , blank = True)
     courierAWBNo =  models.CharField(max_length=50 ,null = True , blank = True)
     notes =  models.CharField(max_length=500 ,null = True , blank = True)
+    prodSku = models.CharField(max_length = 50, null = True, blank = True)
 
 
 class Order(models.Model):
@@ -290,9 +293,9 @@ class GenericPincode(models.Model):
     pin_status = models.CharField( max_length = 2, default = "1")
 
 class GenericImage(models.Model):
-    backgroundImage = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)
-    cartImage = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)
-    paymentImage = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)
-    paymentPortrait = models.ImageField(null = False , upload_to = getEcommerceCenericImageUploadPath)
+    backgroundImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    cartImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    paymentImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    paymentPortrait = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     searchBgImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     blogPageImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)

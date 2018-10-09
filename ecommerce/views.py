@@ -225,13 +225,22 @@ class SearchProductAPI(APIView):
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
                 genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') , typ= Value('list',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'),unit =F('product__unit'), typ= Value('list',output_field=CharField())))
             else:
                 genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name' ) , dp = F('files__attachment') , typ= Value('list',output_field=CharField())))
-
-            tosend = genericProd + listProd
-            print tosend[0:l]
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name' ) , dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'), unit = F('product__unit'), typ= Value('list',output_field=CharField())))
+            newlist = []
+            newListPks = []
+            for i in listProd:
+                if i['pk'] not in newListPks:
+                    newlist.append(i)
+                    prodVar = ProductVerient.objects.filter(parent = i['product__id'])
+                    if len(prodVar)>0:
+                        for a in prodVar:
+                            prodVar = {'name':i['name'] , 'dp':i['dp'] , 'inStock':i['inStock'], 'serialNo':a.sku ,'howMuch':i['howMuch']* a.unitPerpack , 'unit':i['unit'] ,'typ':i['typ'] ,'pk':i['pk'] }
+                            newlist.append(prodVar)
+                    newListPks.append(i['pk'])
+            tosend = genericProd + newlist
             return Response(tosend[0:l], status = status.HTTP_200_OK)
 
 class PromoCheckAPI(APIView):
@@ -275,17 +284,31 @@ class CreateOrderAPI(APIView):
             # if type(i['pk']) == 'string':
             #     int(i['pk'])
             print i,'77777777777777',request.data['promoCodeDiscount'],type(request.data['promoCodeDiscount'])
+            print i['prodSku'], 'prodSku'
             pObj = listing.objects.get(pk = i['pk'])
-            pp = pObj.product.price
-            if pp > 0:
-                a = pp - (pObj.product.discount*pp)/100
-                print a ,type(a)
-                b = a - (int(request.data['promoCodeDiscount'])*a)/100
+            if pObj.product.serialNo == i['prodSku']:
+                pp = pObj.product.price
+                if pp > 0:
+                    a = pp - (pObj.product.discount*pp)/100
+                    print a ,type(a)
+                    b = a - (int(request.data['promoCodeDiscount'])*a)/100
+                else:
+                    b=0
             else:
-                b=0
+                prodVar = ProductVerient.objects.get(sku = i['prodSku'])
+                pp = prodVar.price
+                print pp ,'pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp'
+                if pp > 0:
+                    # a = pp - (pObj.product.discount*pp)/100
+                    # print a ,type(a)
+                    b = pp - (int(request.data['promoCodeDiscount'])*pp)/100
+                else:
+                    b=0
+
             totalAmount += b * i['qty']
+            print totalAmount , 'totalAmounttotalAmounttotalAmounttotalAmount'
             print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b))})
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b)),'prodSku':i['prodSku']})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:
@@ -346,7 +369,6 @@ class CreateOrderAPI(APIView):
             print promoAmount
             a = '#'
             docID = str(a) + str(orderObj.pk)
-            print docID,'aaaaaaaaaaaaaaaaaaaaabbbbbbbbb'
             for i in orderObj.orderQtyMap.all():
                 price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
                 price=round(price, 2)
@@ -357,34 +379,35 @@ class CreateOrderAPI(APIView):
                 value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
             grandTotal=round(grandTotal, 2)
-            ctx = {
-                'heading' : "Invoice Details",
-                'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
-                'linkUrl': globalSettings.BRAND_NAME,
-                'sendersAddress' : globalSettings.SEO_TITLE,
-                # 'sendersPhone' : '122004',
-                'grandTotal':grandTotal,
-                'total': total,
-                'value':value,
-                'docID':docID,
-                'data':orderObj,
-                'promoAmount':promoAmount,
-                'linkedinUrl' : lkLink,
-                'fbUrl' : fbLink,
-                'twitterUrl' : twtLink,
-            }
-            print ctx
-            email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-            # email_subject = "Order Details:"
-            # msgBody = " Your Order has been placed and details are been attached"
-            contactData.append(str(orderObj.user.email))
-            print 'aaaaaaaaaaaaaaa'
-            msg = EmailMessage("Order Details" , email_body, to= contactData  )
-            msg.content_subtype = 'html'
-            # a = str(f).split('media_root/')[1]
-            # b = str(a).split("', mode")[0]
-            # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
-            msg.send()
+            if orderObj.user.email:
+                ctx = {
+                    'heading' : "Invoice Details",
+                    'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+                    'linkUrl': globalSettings.BRAND_NAME,
+                    'sendersAddress' : globalSettings.SEO_TITLE,
+                    # 'sendersPhone' : '122004',
+                    'grandTotal':grandTotal,
+                    'total': total,
+                    'value':value,
+                    'docID':docID,
+                    'data':orderObj,
+                    'promoAmount':promoAmount,
+                    'linkedinUrl' : lkLink,
+                    'fbUrl' : fbLink,
+                    'twitterUrl' : twtLink,
+                }
+                print ctx
+                email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+                # email_subject = "Order Details:"
+                # msgBody = " Your Order has been placed and details are been attached"
+                contactData.append(str(orderObj.user.email))
+                print 'aaaaaaaaaaaaaaa'
+                msg = EmailMessage("Order Details" , email_body, to= contactData  )
+                msg.content_subtype = 'html'
+                # a = str(f).split('media_root/')[1]
+                # b = str(a).split("', mode")[0]
+                # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
+                msg.send()
             return Response({'paymentMode':orderObj.paymentMode,'dt':orderObj.created,'odnumber':orderObj.pk}, status = status.HTTP_200_OK)
 
 
@@ -700,6 +723,8 @@ class PincodeViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly , )
     queryset = Pincode.objects.all()
     serializer_class = pincodeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['pincodes']
 
 
 

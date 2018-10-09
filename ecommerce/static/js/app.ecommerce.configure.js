@@ -432,6 +432,12 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     })
 
   }
+
+  $scope.delete=function(indx){
+    console.log(indx,'kkkkkkkkkkkkkkkkkk');
+  }
+
+  
   $http({method : 'GET' , url : '/api/ecommerce/addPincode/'}).
   then(function(response) {
     $scope.pincodelist=response.data
@@ -680,17 +686,19 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
     } else if ($scope.form.mode == 'genericProduct') {
       fs = [];
       console.log(d.fields);
-      if (d.fields.length == 0) {
-        Flash.create('warning', 'No fields selected')
-        return;
-      }
+      // if (d.fields.length == 0) {
+      //   Flash.create('warning', 'No fields selected')
+      //   return;
+      // }
       console.log(d.bannerImage,'aaaaaaaaaaaaaa');
       if (d.bannerImage== null || typeof d.bannerImage == 'string'||d.bannerImage.name=='') {
         Flash.create('warning', 'Please add the Banner Image')
         return;
       }
-      for (var i = 0; i < d.fields.length; i++) {
-        fs.push(d.fields[i].pk);
+      if(d.fields.length > 0){
+        for (var i = 0; i < d.fields.length; i++) {
+          fs.push(d.fields[i].pk);
+        }
       }
 
       var fd = new FormData();

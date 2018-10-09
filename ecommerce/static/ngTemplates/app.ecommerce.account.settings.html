@@ -51,10 +51,11 @@
       </div>
       <div class="form-group">
         <input type="checkbox" ng-model="form.primary">
-        <label>Primary Address </label>
+        <label>Primary Address </label></br>
+        <span ng-if="showMessage" style="color:red">Sorry!! We Don't Service in this Area </span>
       </div>
       <div class="row text-center" style="padding-top:35px">
-        <button ng-click="saveAddress()" type="button" class="btn btn-primary">
+        <button ng-click="saveAddress()" type="button" class="btn btn-primary" >
           Save
         </button>
       </div>

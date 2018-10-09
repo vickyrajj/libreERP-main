@@ -1,16 +1,25 @@
-<div class="col-md-3 col-sm-6 col-xs-12 " style="padding-bottom:30px;"  ng-controller="controller.ecommerce.account.cart.item">
+<div class="col-md-3 col-sm-6 col-xs-12 " style="padding-bottom:30px;" >
   <div class="container-fluid card  bg-white" style="padding-bottom:0px;">
     <div class="row" style="overflow:hidden;">
       <img style="width: 100%;" class="img" ng-src="{{data.product.files[0].attachment}}" >
     </div>
+    <!-- {{data}} -->
+    <!-- {{data.product.product.serialNo}} -->
     <div class="row" >
       <div class="" style="padding-bottom:0px;">
         <div class="row container-fluid" style="padding:10px 20px; height:100px;">
-          <h5 ng-if="data.product.product.name.length>30" style="margin:0px;  height:50px;">{{data.product.product.name.slice(0,30)}}...</h5>
-          <h5 ng-if="data.product.product.name.length<=30" style="margin:0px;  height:50px;">{{data.product.product.name}}</h5>
+          <!-- <h5 ng-if="data.product.product.name.length>30" style="margin:0px;  height:50px;">{{data.product.product.name.slice(0,30)}}...</h5>
+          <h5 ng-if="data.product.product.name.length<=30" style="margin:0px;  height:50px;">{{data.product.product.name}}</h5> -->
+
+          <h5 ng-if="data.prod_var==undefined" style="margin:0px;  height:50px;">{{data.product.product.name}} {{data.product.product.howMuch}}{{data.product.product.unit | getUnit}}</h5>
+          <h5 ng-if="data.prod_var" style="margin:0px;  height:50px;">{{data.product.product.name}} {{data.prod_var.unitPerpack * data.product.product.howMuch }}{{data.product.product.unit | getUnit}}</h5>
+          
           <span style="font-size:15px;" > Price : </span>
-          <span  style="font-size:15px;padding-left:10px">
+          <span ng-if="data.prodSku==data.product.product.serialNo"  style="font-size:15px;padding-left:10px">
             <i class="fa fa-inr"></i>{{data.product.product.discountedPrice.toFixed(2)}}
+          </span>
+          <span ng-if="data.prodSku!=data.product.product.serialNo"  style="font-size:15px;padding-left:10px">
+            <i class="fa fa-inr"></i>{{data.prodVarPrice.toFixed(2)}}
           </span>
         </div>
         <hr style="margin:0px;" >

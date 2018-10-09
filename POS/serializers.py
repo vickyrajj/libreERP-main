@@ -86,7 +86,7 @@ class StoreQtySerializer(serializers.ModelSerializer):
 class ProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name',  'price', 'displayPicture','serialNo', 'cost','haveComposition' , 'inStock','discount','alias')
+        fields = ('pk' , 'user' ,'name',  'price', 'displayPicture','serialNo', 'cost','haveComposition' , 'inStock','discount','alias','howMuch')
 
 class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
@@ -98,7 +98,7 @@ class ProductSerializer(serializers.ModelSerializer):
     StoreStock = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','storeQty','alias','productOption','masterStock','StoreStock')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','storeQty','alias','howMuch','productOption','masterStock','StoreStock')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
@@ -108,6 +108,7 @@ class ProductSerializer(serializers.ModelSerializer):
         print validated_data
         p = Product(**validated_data)
         p.user = self.context['request'].user
+	p.save()
         if 'compositions' in self.context['request'].data:
             p.compositions.clear()
             for c in self.context['request'].data['compositions']:
@@ -145,7 +146,7 @@ class ProductSerializer(serializers.ModelSerializer):
             il = InventoryLog(before = instance.inStock , after = validated_data['inStock'],product = instance,typ = 'user' , user = self.context['request'].user)
             il.save()
 
-        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap','unit','storeQty','alias']:
+        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap','unit','storeQty','alias','howMuch']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -405,7 +406,7 @@ class VendorServicesLiteSerializer(serializers.ModelSerializer):
 class ProductVerientSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVerient
-        fields = ('pk','created','updated','sku','unitPerpack')
+        fields = ('pk','created','updated','sku','unitPerpack','price','parent')
     def create(self , validated_data):
         v = ProductVerient(**validated_data)
         v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))
