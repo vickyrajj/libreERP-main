@@ -145,8 +145,8 @@
                   <div class="col-md-3" style="height:100px;padding-top: 50px;">
                     <!-- <h5 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h5>
                     <h5 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h5> -->
-                    <h5 ng-if="c.prod_var==undefined" style="margin:0px; height:50px;">{{c.product.product.name}} {{c.product.product.howMuch | convertUnit: c.product.product.unit}}</h5>
-                    <h5 ng-if="c.prod_var" style="margin:0px;  height:50px;">{{c.product.product.name}} {{c.prod_var.unitPerpack * c.product.product.howMuch | convertUnit: c.product.product.unit}}</h5>
+                    <h5 ng-if="c.prod_var==undefined" style="margin:0px; height:50px;"> {{c.product.product.name}}<span ng-if="c.product.product.howMuch!=null">  {{c.product.product.howMuch | convertUnit: c.product.product.unit}} </span> </h5>
+                    <h5 ng-if="c.prod_var" style="margin:0px;  height:50px;">{{c.product.product.name}} <span ng-if="c.product.product.howMuch!=null"> {{c.prod_var.unitPerpack * c.product.product.howMuch | convertUnit: c.product.product.unit}}</span></h5>
 
                   </div>
                   <div class="col-md-3">
@@ -229,8 +229,8 @@
                     </div>
                     <div class="col-xs-6">
                       <div class="row" style="padding:0px">
-                        <h6 ng-if="c.prod_var==undefined" style="margin:0px; height:50px;">{{c.product.product.name}} {{c.product.product.howMuch | convertUnit: c.product.product.unit}}</h6>
-                        <h6 ng-if="c.prod_var" style="margin:0px;  height:50px;">{{c.product.product.name}} {{c.prod_var.unitPerpack * c.product.product.howMuch | convertUnit: c.product.product.unit}}</h6>
+                        <h6 ng-if="c.prod_var==undefined" style="margin:0px; height:50px;"> {{c.product.product.name}}<span ng-if="c.product.product.howMuch!=null"> {{c.product.product.howMuch | convertUnit: c.product.product.unit}}</span> </h6>
+                        <h6 ng-if="c.prod_var" style="margin:0px;  height:50px;">{{c.product.product.name}} <span ng-if="c.product.product.howMuch!=null">  {{c.prod_var.unitPerpack * c.product.product.howMuch | convertUnit: c.product.product.unit}} </span> </h6>
                         <!-- <h6 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h6>
                         <h6 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h6> -->
                       </div>

@@ -62,6 +62,10 @@ class media(models.Model):
     link = models.TextField(null = True , max_length = 300) # can be youtube link or an image link
     attachment = models.FileField(upload_to = getEcommercePictureUploadPath , null = True ) # can be image , video or document
     mediaType = models.CharField(choices = MEDIA_TYPE_CHOICES , max_length = 10 , default = 'image')
+    imageIndex = models.PositiveIntegerField(default=0)
+    class Meta:
+        ordering = [('imageIndex'),]
+
 
 
 class DataField(models.Model):
@@ -83,6 +87,7 @@ class listing(models.Model):
     dfs = models.ManyToManyField(DataField , blank = True)
     def __repr__(self):
         return  "Listing : " + self.product.name + self.specifications
+
 
     #l.dfs = [{name : 'screenSize' , value : '5'} , {name : 'brand' , value : 'nokia'}]
 

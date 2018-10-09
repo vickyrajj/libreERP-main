@@ -691,7 +691,9 @@ app.directive('productCard', function() {
         //   console.log('watch');
         //   $scope.list.product.price = newValue.amnt
         // }
-        $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
+        if ($scope.selectedProdVar.qty!=null) {
+          $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
+        }
         if (newValue.sku!=undefined) {
           if ($scope.list.product.serialNo == newValue.sku ){
             console.log('parent');

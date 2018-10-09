@@ -88,7 +88,7 @@ class genericProductSerializer(serializers.ModelSerializer):
 class mediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = media
-        fields = ('pk' , 'link' , 'attachment' , 'mediaType')
+        fields = ('pk' , 'link' , 'attachment' , 'mediaType','imageIndex')
     def create(self ,  validated_data):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
@@ -96,6 +96,18 @@ class mediaSerializer(serializers.ModelSerializer):
         m.user = u
         m.save()
         return m
+    def update(self , instance , validated_data):
+        u = self.context['request'].user
+        has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.configure'])
+        for key in ['link' , 'attachment' , 'mediaType','imageIndex']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.user = u
+        instance.save()
+        return instance
+
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
@@ -148,6 +160,7 @@ class listingSerializer(serializers.ModelSerializer):
         l.save()
         if 'files' in self.context['request'].data:
             for m in self.context['request'].data['files']:
+                print m,'mmmmmmmmmmmmmmmmmmmmmmm'
                 l.files.add(media.objects.get(pk = m))
 
         for s in json.loads(l.specifications):
@@ -157,6 +170,8 @@ class listingSerializer(serializers.ModelSerializer):
 
         l.save()
         return l
+
+
 
 
 
@@ -184,8 +199,13 @@ class listingSerializer(serializers.ModelSerializer):
                 instance.dfs.add(dF)
 
         if 'files' in self.context['request'].data:
+            instance.files.clear()
             for m in self.context['request'].data['files']:
+                print m,'mmmmmmmmmmmmvvvvvvvvvv'
+                # mObj = media.objects.get(pk = m)
+                # mObj.id =
                 instance.files.add(media.objects.get(pk = m))
+
         instance.save()
         return instance
 
