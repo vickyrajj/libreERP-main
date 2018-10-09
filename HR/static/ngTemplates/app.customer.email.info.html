@@ -1,16 +1,25 @@
 <div class="modal-header bg-blue">
   <div class="container-fluid">
-    <h4>
+    <div class="row">
+      <i class="fa fa-arrow-circle-o-left pull-left fa-2x" ng-click="cancel()" style="cursor:pointer;"></i>
       <span class="pull-right">
-        {{msg.frm}} {{msg.dated | date: "dd-MMM-yyyy hh:mm a"}}
+        {{msg.frm}} &nbsp; {{msg.dated | date: "dd-MMM-yyyy hh:mm a"}}
       </span>
-      <i class="fa fa-arrow-circle-o-left pull-left fa-lg" ng-click="cancel()" style="cursor:pointer;"></i>
-      <span class="text-center">{{msg.subject}}</span>
-    </h4>
+    </div>
+    <div class="row text-center">
+      <h4>{{msg.subject}}</h4>
+    </div>
   </div>
 </div>
-<div class="row" style="padding:10px;display:block;box-sizing:border-box;">
+<div class="modal-body" style="padding:10px;display:block;box-sizing:border-box;">
   <div class="container-fluid">
-    <div ng-bind-html="msg.body"></div>
+    <div class="row">
+      <div ng-bind-html="msg.body" class="col-md-12"></div>
+    </div>
+    <hr>
+    <span ng-if="msg.files.length>0"><h4>Attachments</h4></span>
+    <div class="well col-md-6" ng-repeat="file in msg.files">
+      <a href="{{file.attachment}}" target="_blank"><h4>{{file.attachment.split('/').reverse()[0].slice(13)}}</h4></a>
+    </div>
   </div>
 </div>

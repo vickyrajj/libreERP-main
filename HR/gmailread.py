@@ -184,6 +184,18 @@ from models import profile , Email , EmailAttachment
 import os
 from django.core.files.base import ContentFile
 
+def GetHTMLMessageBody(service, user_id, msg_id):
+	toReturn = '<p></p>'
+	try:
+		message = service.users().messages().get(userId=user_id, id=msg_id).execute()
+		for part in message['payload'].get('parts',[]):
+			if part['mimeType'] == 'text/html':
+				toReturn = part['body']['data']
+	except errors.HttpError, error:
+	    print 'An error occurred: %s' % error
+	return toReturn
+
+
 def GetMessageBody(service, user_id, msg_id):
 
     try:
@@ -201,70 +213,60 @@ def GetMessageBody(service, user_id, msg_id):
     except errors.HttpError, error:
         print 'An error occurred: %s' % error
 
+
 def GetAttachments(service, user_id, msg_id, store_dir,u):
 	toReturn = []
 	print 'attachment'
-	# try:
-	message = service.users().messages().get(userId=user_id, id=msg_id).execute()
-	for part in message['payload'].get('parts',[]):
-		if part['filename']:
-			if 'data' in part['body']:
-			    data=part['body']['data']
-			else:
-			    att_id=part['body']['attachmentId']
-			    att=service.users().messages().attachments().get(userId=user_id, messageId=msg_id,id=att_id).execute()
-			    data=att['data']
-			file_data = base64.urlsafe_b64decode(data.encode('UTF-8'))
-			print part['filename']
-			# print file_data
-			path = ''.join([store_dir,str(time()).replace('.', '_'), part['filename']])
-			print path
-			# try:
-				# f = open(path, 'w')
-				# f.write(file_data)
-				# f.close()
-			data = {'name':part['filename'],'size':part['body']['size'],'emailID':u.email}
-			print data
-			# f=open(path,'r')
-			# f.close()
-			# f = open(path, 'wb+')
-			# f.write(file_data)
-			# f.close()
-			with open(path, 'wb+') as f:
-				f.write(file_data)
-				data['attachment'] = path.replace('media_root/','')
-				print 'file addedddddddddddddd'
-			print data
-			eobj = EmailAttachment.objects.create(**data)
-			# except:
-			# 	print 'no fileeeeeeeeeeeeeeee'
-			toReturn.append(eobj)
+	try:
+		message = service.users().messages().get(userId=user_id, id=msg_id).execute()
+		for part in message['payload'].get('parts',[]):
+			if part['filename']:
+				if 'data' in part['body']:
+				    data=part['body']['data']
+				else:
+				    att_id=part['body']['attachmentId']
+				    att=service.users().messages().attachments().get(userId=user_id, messageId=msg_id,id=att_id).execute()
+				    data=att['data']
+				file_data = base64.urlsafe_b64decode(data.encode('UTF-8'))
+				print part['filename']
+				path = ''.join([store_dir,str(time()).replace('.', '_'), part['filename']])
+				try:
+					data = {'name':part['filename'],'size':part['body']['size'],'emailID':u.email}
+					print data
+					with open(path, 'wb+') as f:
+						f.write(file_data)
+						data['attachment'] = path.replace('media_root/','')
+						print 'file addedddddddddddddd'
+					print data
+					eobj = EmailAttachment.objects.create(**data)
+				except:
+					print 'no fileeeeeeeeeeeeeeee'
+				toReturn.append(eobj)
 
-	# except errors.HttpError, error:
-	#   print 'An error occurred: %s' % error
+	except errors.HttpError, error:
+	  print 'An error occurred: %s' % error
 
 	return toReturn
 
 def createMessage(user,service,msgList):
 	store_dir = 'media_root/HR/email/attachment/'
 	for msg in msgList:
-		# try:
-		files = GetAttachments(service,user_id,msg['messageId'],store_dir,user)
-		print files
-		htmlBody = GetMessageBody(service,user_id,msg['messageId'])
-		textBody = html2text.html2text(htmlBody)
-		data = {'dated':parser.parse(msg['Date']),'frm':msg['Sender'],'body':htmlBody,'bodyTxt':textBody,'user':user,'messageId':msg['messageId'],'subject':msg['Subject']}
-		print data['dated'],data['frm'],data['messageId']
 		try:
-			emObj = Email.objects.create(**data)
-			for i in files:
-				emObj.files.add(i)
-			emObj.save()
-			print 'createddddddddddddddd sucessfullyyyyyyyyyyyyyyyy'
+			files = GetAttachments(service,user_id,msg['messageId'],store_dir,user)
+			print 'filessssssssssss',msg['Subject'],files
+			htmlBody = GetMessageBody(service,user_id,msg['messageId'])
+			textBody = html2text.html2text(htmlBody)
+			data = {'dated':parser.parse(msg['Date']),'frm':msg['Sender'],'body':htmlBody,'bodyTxt':textBody,'user':user,'messageId':msg['messageId'],'subject':msg['Subject']}
+			try:
+				emObj = Email.objects.create(**data)
+				for i in files:
+					emObj.files.add(i)
+				emObj.save()
+				print 'createddddddddddddddd sucessfullyyyyyyyyyyyyyyyy'
+			except:
+				print 'error whileeeeeeeeeeeee creatingggggg'
 		except:
-			print 'error whileeeeeeeeeeeee creatingggggg'
-		# except:
-		# 	print 'Not Createdddddddddddddd invalid dataaaaaa'
+			print 'Not Createdddddddddddddd invalid dataaaaaa'
 
 def allData(u):
 	print 'Fetching All Messages'
@@ -277,10 +279,10 @@ def allData(u):
 		d = d[0].dated + datetime.timedelta(days = 1)
 		print d
 		query = "before:{0}".format(d.date())
-		messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=5,q=query).execute()
+		messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=100,q=query).execute()
 	else:
 		print 'newwwwwwwwwwwwwwwwwww'
-		messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=5).execute()
+		messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=100).execute()
 	mssg_list = messagesList.get('messages',[])
 	data_list = combineMessages(mssg_list)
 
@@ -289,15 +291,13 @@ def allData(u):
 			createMessage(u,GMAIL,data_list)
 			if 'nextPageToken' in messagesList:
 				print 'next page is thereeeeeee'
-				messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=5,pageToken=messagesList['nextPageToken']).execute()
+				messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=100,pageToken=messagesList['nextPageToken']).execute()
 				mssg_list = messagesList.get('messages',[])
 				data_list = combineMessages(mssg_list)
 			else:
 				break
 		else:
 			break
-
-
 
 def calculateAge(u):
 	GMAIL = initialize()
