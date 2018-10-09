@@ -62,6 +62,10 @@ class media(models.Model):
     link = models.TextField(null = True , max_length = 300) # can be youtube link or an image link
     attachment = models.FileField(upload_to = getEcommercePictureUploadPath , null = True ) # can be image , video or document
     mediaType = models.CharField(choices = MEDIA_TYPE_CHOICES , max_length = 10 , default = 'image')
+    imageIndex = models.PositiveIntegerField(default=0)
+    class Meta:
+        ordering = [('imageIndex'),]
+
 
 
 class DataField(models.Model):
@@ -80,10 +84,10 @@ class listing(models.Model):
     files = models.ManyToManyField(media , related_name='listings' ,blank=True)
     parentType = models.ForeignKey(genericProduct , related_name='products' , null = True)
     source = models.TextField(max_length = 40000 , null = True ,blank=True)# ths may contain the html source for the description giving the admin a way to full featured webpage description
-    filesPk = models.CharField(max_length=100 ,null = False, blank = True)
     dfs = models.ManyToManyField(DataField , blank = True)
     def __repr__(self):
         return  "Listing : " + self.product.name + self.specifications
+
 
     #l.dfs = [{name : 'screenSize' , value : '5'} , {name : 'brand' , value : 'nokia'}]
 
