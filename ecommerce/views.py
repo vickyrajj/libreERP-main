@@ -208,16 +208,21 @@ class SearchProductAPI(APIView):
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
                 genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') ,dpId = F('files__imageIndex') , inStock=F('product__inStock'), typ= Value('list',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'),unit =F('product__unit') , dpId = F('files__imageIndex'), typ= Value('list',output_field=CharField())))
             else:
                 genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name') , dp = F('files__attachment') , dpId = F('files__imageIndex') ,inStock=F('product__inStock'), typ= Value('list',output_field=CharField())))
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name' ) , dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'), dpId = F('files__imageIndex') , unit = F('product__unit'), typ= Value('list',output_field=CharField())))
             newlist = []
             newListPks = []
             for i in listProd:
                 if i['pk'] not in newListPks:
                     if i['dpId'] == 0:
                         newlist.append(i)
+                        prodVar = ProductVerient.objects.filter(parent = i['product__id'])
+                        if len(prodVar)>0:
+                            for a in prodVar:
+                                prodVar = {'name':i['name'] , 'dp':i['dp'] , 'inStock':i['inStock'], 'serialNo':a.sku ,'howMuch':i['howMuch']* a.unitPerpack , 'unit':i['unit'] ,'typ':i['typ'] ,'pk':i['pk'] }
+                                newlist.append(prodVar)
                         newListPks.append(i['pk'])
             tosend = genericProd + newlist
             return Response(tosend[0:l], status = status.HTTP_200_OK)
@@ -263,17 +268,31 @@ class CreateOrderAPI(APIView):
             # if type(i['pk']) == 'string':
             #     int(i['pk'])
             print i,'77777777777777',request.data['promoCodeDiscount'],type(request.data['promoCodeDiscount'])
+            print i['prodSku'], 'prodSku'
             pObj = listing.objects.get(pk = i['pk'])
-            pp = pObj.product.price
-            if pp > 0:
-                a = pp - (pObj.product.discount*pp)/100
-                print a ,type(a)
-                b = a - (int(request.data['promoCodeDiscount'])*a)/100
+            if pObj.product.serialNo == i['prodSku']:
+                pp = pObj.product.price
+                if pp > 0:
+                    a = pp - (pObj.product.discount*pp)/100
+                    print a ,type(a)
+                    b = a - (int(request.data['promoCodeDiscount'])*a)/100
+                else:
+                    b=0
             else:
-                b=0
+                prodVar = ProductVerient.objects.get(sku = i['prodSku'])
+                pp = prodVar.price
+                print pp ,'pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp'
+                if pp > 0:
+                    # a = pp - (pObj.product.discount*pp)/100
+                    # print a ,type(a)
+                    b = pp - (int(request.data['promoCodeDiscount'])*pp)/100
+                else:
+                    b=0
+
             totalAmount += b * i['qty']
+            print totalAmount , 'totalAmounttotalAmounttotalAmounttotalAmount'
             print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b))})
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b)),'prodSku':i['prodSku']})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:

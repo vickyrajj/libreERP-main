@@ -111,7 +111,7 @@
                     <img style="width: 100%; height:150px;" class="img" src="/static/images/ecommerce.jpg" ng-if="item.files==null">
                   </div>
                   <div class="col-md-3" style="height:100px;">
-                    <h5 ng-if="item.product.name.length>30" style="margin:0px;  height:50px;">{{item.product.name.slice(0,30)}}...</h5>
+                    <h5 ng-if="item.product.name.length>30 && " style="margin:0px;  height:50px;">{{item.product.name.slice(0,30)}}...</h5>
                     <h5 ng-if="item.product.name.length<=30" style="margin:0px;  height:50px;">{{item.product.name}}</h5>
                   </div>
                   <div class="col-md-3">
@@ -143,16 +143,24 @@
                     <img style="width: 70%;" class="img" src="/static/images/ecommerce.jpg" ng-if="c.product.files==null">
                   </div>
                   <div class="col-md-3" style="height:100px;padding-top: 50px;">
-                    <h5 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h5>
-                    <h5 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h5>
+                    <!-- <h5 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h5>
+                    <h5 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h5> -->
+                    <h5 ng-if="c.prod_var==undefined" style="margin:0px; height:50px;"> {{c.product.product.name}}<span ng-if="c.product.product.howMuch!=null">  {{c.product.product.howMuch | convertUnit: c.product.product.unit}} </span> </h5>
+                    <h5 ng-if="c.prod_var" style="margin:0px;  height:50px;">{{c.product.product.name}} <span ng-if="c.product.product.howMuch!=null"> {{c.prod_var.unitPerpack * c.product.product.howMuch | convertUnit: c.product.product.unit}}</span></h5>
+
                   </div>
                   <div class="col-md-3">
-                    <div class="row container-fluid">
-                      <div class="col-md-6" style="padding-top: 50px;>
-                          <span class=" pull-right "  ng-if="c.product.product.discount>0" > <strike> <i class="fa fa-inr"></i> {{c.product.product.price.toFixed(2)}} </strike> </span>
+                    <div class="row container-fluid" ng-if="c.prodSku==c.product.product.serialNo">
+                      <div class="col-md-6" style="padding-top: 50px;">
+                          <span class="pull-right"  ng-if="c.product.product.discount>0" > <strike> <i class="fa fa-inr"></i> {{c.product.product.price.toFixed(2)}} </strike> </span>
                       </div>
                       <div class="col-md-6" style="padding-top: 50px;">
                         <span><i class="fa fa-inr"></i> {{c.product.product.discountedPrice.toFixed(2)}}</span>
+                      </div>
+                    </div>
+                    <div class="row container-fluid" ng-if="c.prodSku!=c.product.product.serialNo">
+                      <div class="col-md-offset-6 col-md-6" style="padding-top: 50px;">
+                        <span><i class="fa fa-inr"></i> {{c.prodVarPrice.toFixed(2)}}</span>
                       </div>
                     </div>
                   </div>
@@ -165,7 +173,8 @@
                     <button class="btn btn-primary" ng-click="addWishList($index,c.pk)">Add to Wishlist <i class="fa fa-heart"></i></button>
                   </div>
                   <div class="col-md-2" style="padding-top: 50px;padding-left:50px;">
-                    <p> <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
+                    <p ng-if="c.prodSku==c.product.product.serialNo"> <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
+                    <p ng-if="c.prodSku!=c.product.product.serialNo"> <i class="fa fa-inr"></i> {{(c.prodVarPrice * c.qty).toFixed(2) }} </p>
                   </div>
                 </div>
               </div>
@@ -220,12 +229,17 @@
                     </div>
                     <div class="col-xs-6">
                       <div class="row" style="padding:0px">
-                        <h6 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h6>
-                        <h6 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h6>
+                        <h6 ng-if="c.prod_var==undefined" style="margin:0px; height:50px;"> {{c.product.product.name}}<span ng-if="c.product.product.howMuch!=null"> {{c.product.product.howMuch | convertUnit: c.product.product.unit}}</span> </h6>
+                        <h6 ng-if="c.prod_var" style="margin:0px;  height:50px;">{{c.product.product.name}} <span ng-if="c.product.product.howMuch!=null">  {{c.prod_var.unitPerpack * c.product.product.howMuch | convertUnit: c.product.product.unit}} </span> </h6>
+                        <!-- <h6 ng-if="c.product.product.name.length>30" style="margin:0px;  height:50px;">{{c.product.product.name.slice(0,30)}}...</h6>
+                        <h6 ng-if="c.product.product.name.length<=30" style="margin:0px;  height:50px;">{{c.product.product.name}}</h6> -->
                       </div>
-                      <div class="row" style="padding:0px">
+                      <div ng-if="c.prodSku==c.product.product.serialNo" class="row" style="padding:0px">
                         <span ng-if="c.product.product.discount>0" style="padding-right:5px;"> <strike> <i class="fa fa-inr"></i> {{c.product.product.price.toFixed(2)}} </strike> </span>
                         <span><i class="fa fa-inr"></i>{{c.product.product.discountedPrice.toFixed(2)}}</span>
+                      </div>
+                      <div ng-if="c.prodSku!=c.product.product.serialNo" class="row" style="padding:0px">
+                        <span><i class="fa fa-inr"></i>{{c.prodVarPrice.toFixed(2)}}</span>
                       </div>
                     </div>
                   </div>
@@ -245,7 +259,8 @@
                       <span>Total :</span>
                     </div>
                     <div class="col-xs-4">
-                      <p> <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
+                      <p ng-if="c.prodSku==c.product.product.serialNo"> <i class="fa fa-inr"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
+                      <p ng-if="c.prodSku!=c.product.product.serialNo"> <i class="fa fa-inr"></i> {{(c.prodVarPrice * c.qty).toFixed(2) }}  </p>
                     </div>
                   </div>
 

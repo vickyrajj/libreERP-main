@@ -85,10 +85,13 @@
 
       <div ng-if="inCart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
 
-        <div class="" style="position:sticky;top:10px;">
+        <div style="position:sticky;top:10px; border-top:solid 2px #eeeeee;">
 
-          <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
-          <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
+          <div ng-if="showCartImage">
+            <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
+            <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
+
+          </div>
 
           <div class="row" style="margin:0px;">
             <div class="container-fluid">
@@ -97,8 +100,9 @@
           </div>
 
           <div ng-repeat="p in inCart" style="border-bottom:solid 2px #eeeeee; ">
-            <h5 style="margin:10px;">{{p.product.product.name}}</h5>
-
+            <h5 ng-if="p.prod_var==undefined" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch}}{{p.product.product.unit | getUnit}}</h5>
+            <h5 ng-if="p.prod_var" style="margin:10px;">{{p.product.product.name}} {{p.prod_var.unitPerpack * p.product.product.howMuch }}{{p.product.product.unit | getUnit}}</h5>
+            <!-- {{p.prod_var}} -->
             <div class="row" style="margin:0px;">
               <div class="col-sm-4 text-right">
                 <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >0" ng-click="changeQty(p.product.pk , 'decrease');"></i>
@@ -112,7 +116,9 @@
             </div>
 
             <div class="row" style="margin:0px;padding-left:20px;">
-              <i class="fa fa-inr"></i>  {{(p.product.product.discountedPrice * p.qty).toFixed(2) }}
+              <i class="fa fa-inr"></i>
+              <span ng-if="p.prodSku==p.product.product.serialNo">{{(p.product.product.discountedPrice * p.qty).toFixed(2) }}</span>
+              <span ng-if="p.prodSku!=p.product.product.serialNo">{{(p.prodVarPrice * p.qty).toFixed(2)}}</span>
             </div>
 
             <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.product.in_stock=='false'">
@@ -143,7 +149,7 @@
             </div>
           </div>
 
-          <div ng-repeat="p in addToCart" style="border-bottom:solid 2px #eeeeee; ">
+          <div ng-repeat="p in addToCart" style="border-bottom:solid 2px #eeeeee;">
             <h5 style="margin:10px;">{{p.product.product.name}}</h5>
 
             <div class="row" style="margin:0px;">
@@ -160,8 +166,12 @@
 
 
             <div class="row" style="margin:0px;padding-left:20px;">
-              <i class="fa fa-inr"></i>  {{(p.product.product.discountedPrice*p.qty).toFixed(2)}}
+              <i class="fa fa-inr"></i>
+              <span ng-if="p.prodSku==p.product.product.serialNo">{{(p.product.product.discountedPrice * p.qty).toFixed(2) }}</span>
+              <span ng-if="p.prodSku!=p.product.product.serialNo">{{(p.prodVarPrice * p.qty).toFixed(2)}}</span>
             </div>
+
+
             <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.in_stock=='false'">
               <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
             </div>

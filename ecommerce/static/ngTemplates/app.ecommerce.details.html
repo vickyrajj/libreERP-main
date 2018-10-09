@@ -1,9 +1,9 @@
-<div class="container-fluid" >
+<div class="container-fluid">
   <div class="col-md-8 col-md-offset-{{recentlyViewed.product != none ? '1' : '2' }} bg-white">
     <div class="row hidden-sm hidden-xs" style="margin:0px 0px 30px 0px">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb" style="margin-left:-15px;margin-right:-15px">
-          <li class="breadcrumb-item" ng-repeat="b in breadcrumbList" ><a style="cursor:pointer" ng-click="$state.go('categories', {name : b.split(' ').join('_')})" >{{b}}</a></li>
+          <li class="breadcrumb-item" ng-repeat="b in breadcrumbList"><a style="cursor:pointer" ng-click="$state.go('categories', {name : b.split(' ').join('_')})">{{b}}</a></li>
           <li class="breadcrumb-item active" aria-current="page">{{details.product.name}}</li>
         </ol>
       </nav>
@@ -12,7 +12,7 @@
     <div class="row hidden-md hidden-lg" style="margin:35px 0px 0px 0px">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb" style="margin-left:-30px;margin-right:-30px">
-          <li class="breadcrumb-item" ng-repeat="b in breadcrumbList" ><a style="cursor:pointer" ng-click="$state.go('categories', {name : b.split(' ').join('_')})" >{{b}}</a></li>
+          <li class="breadcrumb-item" ng-repeat="b in breadcrumbList"><a style="cursor:pointer" ng-click="$state.go('categories', {name : b.split(' ').join('_')})">{{b}}</a></li>
           <li class="breadcrumb-item active" aria-current="page">{{details.product.name}}</li>
         </ol>
       </nav>
@@ -26,9 +26,17 @@
       </div>
       <div class="col-md-6 col-xs-12" style="height:100%;right:0px;">
         <div class="row container-fluid">
-          <p style="padding-bottom:0px;">
-            <strong style="font-size:20px;">{{details.product.name}}</strong>
-          </p>
+          <div class="{{prodVarList.length>1? 'col-md-6':'col-md-12'}}">
+            <p style="padding-bottom:0px;">
+              <strong style="font-size:20px;">{{details.product.name}} {{quantity}}</strong> <br>
+            </p>
+          </div>
+          <div class="col-md-6">
+            <span ng-show="prodVarList.length>1">
+              <select class="form-control" style="border:1px solid #eee" ng-options="pv.str for pv in prodVarList" ng-model="selectedProdVar">
+              </select>
+            </span>
+          </div>
           <hr style="margin-top:0px;margin-bottom:5px;">
         </div>
         <div class="row">
@@ -36,12 +44,14 @@
             <div class="row container-fluid">
               <!-- <uib-rating ng-model="ratings.averageRating.rating__avg" max="5" readonly="true" aria-labelledby="default-rating" style="font-size:20px;color:#e2a900;" class="text-muted"></uib-rating> -->
               <!-- <span style="background-color:red; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg==none"> 0.0 <i class="fa fa-star" aria-hidden="true"></i></span> -->
-              <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg!=none&&showRatings"> {{details.rating.rating__avg| number : 1}} <i class="fa fa-star" aria-hidden="true"></i></span><span ng-if="showRatings"> {{details.rating_count}} Ratings & Reviews</span>
+              <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg!=none&&showRatings"> {{details.rating.rating__avg| number : 1}} <i class="fa fa-star" aria-hidden="true"></i></span>
+              <span
+                ng-if="showRatings"> {{details.rating_count}} Ratings & Reviews</span>
 
             </div>
             <div class="row container-fluid" style="padding-top:14px;">
               <i class="fa fa-money fa-1x text-muted"></i> Cash on delivery : Yes
-               <!-- {{data.priceModel=='time' ? 'pickup' : 'delivery'}} : {{data.providerOptions[offeringInView].cod ? 'Yes' : 'No'}} <br> -->
+              <!-- {{data.priceModel=='time' ? 'pickup' : 'delivery'}} : {{data.providerOptions[offeringInView].cod ? 'Yes' : 'No'}} <br> -->
               <!-- <i class="fa fa-retweet fa-1x text-muted"></i> Free returns : {{data.providerOptions[offeringInView].freeReturns ? 'Yes' : 'No'}} <br> -->
             </div>
           </div>
@@ -53,14 +63,15 @@
               <span ng-if="data.priceModel=='weight'">/ per Kg</span>
             </span> -->
             <div class="row">
-              <span style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>
+              <span ng-if="details.product.serialNo==selectedProdVar.sku" style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>
                 <span ng-if="details.product.discount>0">{{details.product.discountedPrice.toFixed(2)}} </span>
-                <span ng-if="details.product.discount>0" class="text-muted" ><strike>{{details.product.price}}</strike> </span>
-                <span ng-if="details.product.discount==0">{{details.product.price}} </span>
+              <span ng-if="details.product.discount>0" class="text-muted"><strike>{{details.product.price}}</strike> </span>
+              <span ng-if="details.product.discount==0">{{details.product.price}} </span>
               </span>
+              <span ng-if="details.product.serialNo!=selectedProdVar.sku" style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>{{selectedProdVar.amnt}}</span>
             </div>
             <div class="row">
-              <span style="padding-left:10px;" ng-if="details.product.discount>0" class="text-muted" style="font-size:20px;" >{{details.product.discount}} % Off</span>
+              <span style="padding-left:10px;" ng-if="details.product.discount>0" class="text-muted" style="font-size:20px;">{{details.product.discount}} % Off</span>
             </div>
 
           </div>
@@ -85,13 +96,13 @@
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
             <div class="row container-fluid text-center" style="padding-top:15px;">
               <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="details.added_cart>0&&me.pk"  ng-click="decrement(details.pk);$event.stopPropagation()"></i>
+                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="details.added_cart>0&&me.pk" ng-click="decrement(details.pk);$event.stopPropagation()"></i>
               </div>
               <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
                 <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{details.added_cart}} </span>
               </div>
               <div class="col-md-4 col-sm-4 col-xs-4 text-left">
-                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="increment(details.pk);$event.stopPropagation()"></i>
+                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="increment(details.pk);$event.stopPropagation()"></i>
               </div>
               <!-- <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
                   <span style="font-size:15px;"><b> Add To Cart </b></span>
@@ -114,8 +125,8 @@
             </div>
           </div> -->
           <div class="col-md-12" ng-if="showOptions&&details.added_cart==0">
-            <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;" >
-              <span ng-click="createCookieDetail(details)" style="cursor:pointer;" >
+            <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;">
+              <span ng-click="createCookieDetail(details)" style="cursor:pointer;">
                   <span style="font-size:15px;"><b> Add To Cart</b></span>
               <i class="fa fa-shopping-cart fa-2x"></i>
               </span>
@@ -124,13 +135,13 @@
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
             <div class="row container-fluid text-center" style="padding-top:15px;">
               <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="!me.pk"  ng-click="decrementCookie(details);$event.stopPropagation()"></i>
+                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="!me.pk" ng-click="decrementCookie(details);$event.stopPropagation()"></i>
               </div>
               <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
                 <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{details.added_cart}} </span>
               </div>
               <div class="col-md-4 col-sm-4 col-xs-4 text-left">
-                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="incrementCookie(details);$event.stopPropagation()"></i>
+                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="incrementCookie(details);$event.stopPropagation()"></i>
               </div>
               <!-- <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
                   <span style="font-size:15px;"><b> Add To Cart </b></span>
@@ -196,8 +207,8 @@
         <div class="row" ng-if="showRatings">
           <div class="col-md-4 hidden-sm hidden-xs" style="padding-top:20px;">
             <div class="col-md-5 hidden-sm hidden-xs text-center">
-              <span  ng-if="details.rating.rating__avg==none">None</span> <br>
-              <span  ng-if="details.rating.rating__avg!=none">{{details.rating.rating__avg| number : 1}}/5</span> <br>
+              <span ng-if="details.rating.rating__avg==none">None</span> <br>
+              <span ng-if="details.rating.rating__avg!=none">{{details.rating.rating__avg| number : 1}}/5</span> <br>
               <i class="fa fa-star" style="color:#e3bc18;font-size:80px;"></i>
             </div>
             <div class="col-md-7 hidden-sm hidden-xs">
@@ -207,27 +218,27 @@
               </div>
             </div>
           </div>
-          <div class="col-md-8 hidden-sm hidden-xs"  ng-if="me != null">
+          <div class="col-md-8 hidden-sm hidden-xs" ng-if="me != null">
             <h5>Have you used this product before ?  <small style="margin-left:20px;">Give us your review</small> </h5>
-            <uib-rating ng-model="form.rating" max="5" min="1" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" ></uib-rating> <br>
+            <uib-rating ng-model="form.rating" max="5" min="1" readonly="!form.ratable" style="font-size:30px;color:#e2a900;"></uib-rating> <br>
             <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
               <i class="fa fa-pencil-square-o"></i>  Write a review
             </button>
             <div ng-if="form.reviewEditor">
               <div class="col-md-10 hidden-sm hidden-xs">
                 <input type="text" placeholder="Tittle.." ng-model="form.reviewHeading" style="background:white;width:100%">
-                <textarea style="margin-top:20px"class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
+                <textarea style="margin-top:20px" class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
               </div>
               <div class="col-md-2 hidden-sm hidden-xs btn-group-vertical" style="padding-top:47px">
                 <div class="btn-group">
-                <button type="button" class="btn btn-success" ng-click="sendReview()">
+                  <button type="button" class="btn btn-success" ng-click="sendReview()">
                 <i class="fa fa-plus"></i> Add
                 </button>
-                <button type="button" class="btn btn-default" ng-click="form.reviewEditor = false">
+                  <button type="button" class="btn btn-default" ng-click="form.reviewEditor = false">
                   <i class="fa fa-close"></i> Close
                 </button>
+                </div>
               </div>
-            </div>
             </div>
           </div>
 
@@ -235,8 +246,8 @@
         <div class="row" ng-if="showRatings">
           <div class="col-sm-12 col-xs-12  hidden-md hidden-lg">
             <div class="col-sm-6 col-xs-6  hidden-md hidden-lg text-center">
-              <span  ng-if="details.rating.rating__avg==none">None</span> <br>
-              <span  ng-if="details.rating.rating__avg!=none">{{details.rating.rating__avg| number : 1}}/5</span> <br>
+              <span ng-if="details.rating.rating__avg==none">None</span> <br>
+              <span ng-if="details.rating.rating__avg!=none">{{details.rating.rating__avg| number : 1}}/5</span> <br>
               <i class="fa fa-star" style="color:#e3bc18;font-size:80px;"></i>
             </div>
             <div class="col-sm-6 col-xs-6 hidden-md hidden-lg" style="padding-top:20px">
@@ -246,39 +257,39 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-12 col-xs-12 hidden-md hidden-lg text-center"  ng-if="me != null">
+          <div class="col-sm-12 col-xs-12 hidden-md hidden-lg text-center" ng-if="me != null">
             <h5>Have you used this product before ?  <small ><br/>Give us your review</small> </h5>
-            <uib-rating ng-model="form.rating" max="5" min="1" readonly="!form.ratable" style="font-size:30px;color:#e2a900;" ></uib-rating> <br>
+            <uib-rating ng-model="form.rating" max="5" min="1" readonly="!form.ratable" style="font-size:30px;color:#e2a900;"></uib-rating> <br>
             <button type="button" class="btn btn-default" ng-click="form.reviewEditor = true;" ng-if="!form.reviewEditor&&me != null">
               <i class="fa fa-pencil-square-o"></i>  Write a review
             </button>
             <div ng-if="form.reviewEditor">
               <div class="row">
-              <div class="col-sm-12 hidden-md hidden-lg" >
-                <input type="text" placeholder="Tittle.." ng-model="form.reviewHeading" style="background:white;width:100%">
-                <textarea style="margin-top:20px"class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
+                <div class="col-sm-12 hidden-md hidden-lg">
+                  <input type="text" placeholder="Tittle.." ng-model="form.reviewHeading" style="background:white;width:100%">
+                  <textarea style="margin-top:20px" class="form-control" ng-model="form.reviewText" autofocus="true" placeholder="Write a review..."></textarea>
+                </div>
               </div>
-            </div>
               <div class="row">
-              <div class="col-sm-12  hidden-md hidden-lg btn-group" style="padding-top:10px">
-                <button type="button" class="btn btn-success" ng-click="sendReview()">
+                <div class="col-sm-12  hidden-md hidden-lg btn-group" style="padding-top:10px">
+                  <button type="button" class="btn btn-success" ng-click="sendReview()">
                 <i class="fa fa-plus"></i> Add
                 </button>
-                <button type="button" class="btn btn-default" ng-click="form.reviewEditor = false">
+                  <button type="button" class="btn btn-default" ng-click="form.reviewEditor = false">
                   <i class="fa fa-close"></i> Close
                 </button>
 
+                </div>
               </div>
             </div>
-            </div>
-              <hr>
+            <hr>
           </div>
 
           <hr>
         </div>
         <div class="row text-center" ng-if="me != null&&reviews.length==0&&showRatings">
           <!-- <h4>No reviews yet. Be the first to review</h4> -->
-            <h4>Write a review</h4>
+          <h4>Write a review</h4>
         </div>
         <div class="row" ng-if="reviewsCount!=0">
 
@@ -291,7 +302,7 @@
                 <div class="col-md-3" style="padding-left:35px;">
                   <div class="row">
                     <uib-rating ng-model="r.rating" max="5" readonly="true" style="font-size:17px;color:#e2a900;padding-left:0px"></uib-rating>
-                      <span class="label success" style="background-color:green">Verified User</span></br>
+                    <span class="label success" style="background-color:green">Verified User</span></br>
                     <span class="text-muted"> By {{r.user.first_name}} {{r.user.last_name}} On {{r.created | date : 'dd-MMM-yyyy'}}</span>
 
                   </div>
@@ -318,26 +329,26 @@
             <nav>
               <ul class="pager">
                 <li><a href="" ng-if="offset>0" ng-click="prevReviews()">Previous</a></li>
-                <li><a href="" ng-if="next!=none"  ng-click="nextReviews()">Next</a></li>
+                <li><a href="" ng-if="next!=none" ng-click="nextReviews()">Next</a></li>
               </ul>
             </nav>
           </div>
         </div>
       </div>
     </div>
-    <div class="row" style="margin:0px;" >
+    <div class="row" style="margin:0px;">
       <div class=" col-md-10 hidden-xs hidden-sm" style="padding:40px; padding-top:0px;width:100%">
-          <h4>Suggested Products</h4>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="row" >
-                <div class="col-md-3" ng-repeat=" l in suggest">
-                  <product-card list="l" add-cart="addToCart"></product-card>
-                </div>
+        <h4>Suggested Products</h4>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-3" ng-repeat=" l in suggest">
+                <product-card list="l" add-cart="addToCart"></product-card>
               </div>
             </div>
           </div>
-          <!-- <div ng-repeat="r in suggest" style="padding:0px;">
+        </div>
+        <!-- <div ng-repeat="r in suggest" style="padding:0px;">
             <div class="col-md-3 anim-in-out anim-zoom-out">
               <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.pk,name:r.product.name.split(' ').join('-')})">
                 <div class="row">
@@ -372,13 +383,13 @@
 
       <div class="col-xs-12 hidden-md hidden-lg" style="padding:40px; padding-top:0px;">
         <!-- <div style="padding:10px;" class="row card bg-white"> -->
-          <h4 class="text-center">Suggested Products</h4>
-          <div class="row">
-            <div class=" col-xs-12 col-sm-6" ng-repeat="l in suggest">
-              <product-card list="l" add-cart="addToCart"></product-card>
-            </div>
+        <h4 class="text-center">Suggested Products</h4>
+        <div class="row">
+          <div class=" col-xs-12 col-sm-6" ng-repeat="l in suggest">
+            <product-card list="l" add-cart="addToCart"></product-card>
           </div>
-          <!-- <div ng-repeat="r in suggest" style="padding:0px;">
+        </div>
+        <!-- <div ng-repeat="r in suggest" style="padding:0px;">
             <div class="col-xs-12 col-sm-6 anim-in-out anim-zoom-out" style="margin-bottom:15px">
               <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.pk,name:r.product.name.split(' ').join('-')})">
                 <div class="row">
@@ -410,18 +421,18 @@
               </div>
             </div>
           </div> -->
-        </div>
       </div>
     </div>
+  </div>
 
   <div class="col-md-2 hidden-xs hidden-sm" style="margin-left:15px; position:sticky; top:10px; " ng-if="recentlyViewed.product != none">
     <h4>Recently Viewed</h4>
     <div class="row">
       <div class="col-md-12">
-            <product-card list="recentlyViewed.product" add-cart="addToCart"></product-card>
+        <product-card list="recentlyViewed.product" add-cart="addToCart"></product-card>
       </div>
     </div>
-      <!-- <product-card list="recentlyViewed"></product-card> -->
+    <!-- <product-card list="recentlyViewed"></product-card> -->
     <!-- <div style="padding:10px;" class="row card bg-white">
         <div class="col-md-12 anim-in-out anim-zoom-out">
           <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : recentlyViewed.product.pk,name:recentlyViewed.product.product.name.split(' ').join('-')})">
