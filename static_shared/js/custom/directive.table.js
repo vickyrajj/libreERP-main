@@ -76,7 +76,7 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
     searchInpt.width(bbx2.x - bbx1.x - bbx1.width - 100)
 
 
-  },200)
+  },1500)
 
   $scope.$on('forceInsetdata', function(event, input) {
     // console.log($scope.data);
