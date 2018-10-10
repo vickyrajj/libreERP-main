@@ -1050,7 +1050,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     iframeDiv.appendChild(iFrame)
     body.appendChild(iframeDiv)
 
-    dataToPublish = [uid, 'VC', [] , custID, 'http://192.168.1.124:1337/'+uid]
+    dataToPublish = [uid, 'VC', [] , custID, 'http://192.168.1.109:1337/'+uid]
 
     connection.session.publish('service.support.agent', dataToPublish , {}, {
       acknowledge: true
