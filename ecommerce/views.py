@@ -297,7 +297,7 @@ class CreateOrderAPI(APIView):
                     b=0
             else:
                 prodVar = ProductVerient.objects.get(sku = i['prodSku'])
-                pp = prodVar.price
+                pp = prodVar.discountedPrice
                 print pp ,'pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp'
                 if pp > 0:
                     # a = pp - (pObj.product.discount*pp)/100
@@ -371,13 +371,23 @@ class CreateOrderAPI(APIView):
             a = '#'
             docID = str(a) + str(orderObj.pk)
             for i in orderObj.orderQtyMap.all():
-                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
-                price=round(price, 2)
-                totalPrice=i.qty*price
-                totalPrice=round(totalPrice, 2)
-                total+=totalPrice
-                total=round(total, 2)
-                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+                if i.prodSku == i.product.product.serialNo:
+                    price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                    price=round(price, 2)
+                    totalPrice=i.qty*price
+                    totalPrice=round(totalPrice, 2)
+                    total+=totalPrice
+                    total=round(total, 2)
+                    value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+                else:
+                    prodData = ProductVerient.objects.get(sku = i.prodSku)
+                    price = prodData.discountedPrice
+                    price=round(price, 2)
+                    totalPrice=i.qty*price
+                    totalPrice=round(totalPrice, 2)
+                    total+=totalPrice
+                    total=round(total, 2)
+                    value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
             grandTotal=round(grandTotal, 2)
             if orderObj.user.email:
@@ -1175,14 +1185,54 @@ def genInvoice(response, contract, request):
     tableData=[['Product','Quantity','Price','Total Price']]
     for i in contract.orderQtyMap.all():
         if str(i.status)!='cancelled':
-            print i.product.product.name, i.product.product.discount, i.product.product.price
-            price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
-            price=round(price, 2)
-            totalprice = i.qty*price
-            totalprice=round(totalprice, 2)
-            total+=totalprice
-            total=round(total, 2)
-            tableData.append([i.product.product.name,i.qty,price,totalprice])
+            if i.prodSku == i.product.product.serialNo:
+                print i.product.product.name, i.product.product.discount, i.product.product.price
+                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                price=round(price, 2)
+                totalprice = i.qty*price
+                totalprice=round(totalprice, 2)
+                total+=totalprice
+                total=round(total, 2)
+                qtyData = i.product.product.howMuch
+                if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
+                    if qtyData >1000:
+                        qtyValue = str(qtyData/1000) + ' Kg'
+                    else:
+                        qtyValue = str(qtyData) + ' gm'
+                elif str(i.product.product.unit)=='Millilitre' or str(i.product.product.unit)=='ml':
+                    if qtyData>1000:
+                        qtyValue = str(qtyData/1000) + ' lt'
+                    else:
+                        qtyValue = str(qtyData) + ' ml'
+                else:
+                  qtyValue = qtyData
+
+                name = str(i.product.product.name) + ' '  + str(qtyValue)
+                tableData.append([name,i.qty,price,totalprice])
+            else:
+                prodData = ProductVerient.objects.get(sku = i.prodSku)
+                price = prodData.discountedPrice
+                price=round(price, 2)
+                totalprice = i.qty*price
+                totalprice=round(totalprice, 2)
+                total+=totalprice
+                total=round(total, 2)
+                qtyData = i.product.product.howMuch * prodData.unitPerpack
+                if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
+                    if qtyData >1000:
+                        qtyValue = str(qtyData/1000) + ' Kg'
+                    else:
+                        qtyValue = str(qtyData) + ' gm'
+                elif str(i.product.product.unit)=='Millilitre' or str(i.product.product.unit)=='ml':
+                    if qtyData>1000:
+                        qtyValue = str(qtyData/1000) + ' lt'
+                    else:
+                        qtyValue = str(qtyData) + ' ml'
+                else:
+                  qtyValue = qtyData
+                name = str(i.product.product.name) + ' ' + str(qtyValue)
+                tableData.append([name,i.qty,price,totalprice])
+
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal, 2)
     tableData.append(['','','TOTAL (INR)',total])

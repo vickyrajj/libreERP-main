@@ -346,7 +346,7 @@ class CartSerializer(serializers.ModelSerializer):
                     prodVar = ProductVerient.objects.filter(sku = self.context['request'].data['prodSku'])
                     if len(prodVar) > 0:
                         print 'imnideifffffffffffffffffffffffffffffffffffffffffffff'
-                        c.prodVarPrice = prodVar[0].price
+                        c.prodVarPrice = prodVar[0].discountedPrice
         	c.save()
         return c
     def get_prod_howMuch(self , obj):
@@ -452,7 +452,11 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
             if obj.prodSku == obj.product.product.serialNo:
                 price = obj.product.product.price
             else:
-                price = ProductVerient.objects.filter(sku = obj.prodSku)[0].price
+                prod = ProductVerient.objects.filter(sku = obj.prodSku)
+                if len(prod)>0:
+                    price = prod[0].price
+                else:
+                    price = obj.product.product.price
         else:
             price = obj.product.product.price
         return price
@@ -461,7 +465,11 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
             if obj.prodSku == obj.product.product.serialNo:
                 toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
             else:
-                toReturn = ProductVerient.objects.filter(sku = obj.prodSku)[0].price
+                prod = ProductVerient.objects.filter(sku = obj.prodSku)
+                if len(prod)>0:
+                    toReturn = prod[0].discountedPrice
+                else:
+                    toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
         else:
             toReturn = obj.product.product.price - (obj.product.product.price * obj.product.product.discount)/100
         return toReturn
