@@ -6,7 +6,8 @@
       </div>
       <div class="col-xs-6">
         <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
-        {{match.model.howMuch}}{{match.model.unit | getUnit}}
+        <span ng-if="match.model.howMuch==null">{{match.model.howMuch}}{{match.model.unit | getUnit}}</span>
+        <span ng-if="match.model.howMuch!=null">{{match.model.howMuch | convertUnit :match.model.unit}} </span>
         <!-- <ul  ng-if="match.model.prodVar.length>0">
           <li ng-repeat="a in match.model.prodVar">{{a.sku}}</li>
         </ul> -->

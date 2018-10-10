@@ -795,7 +795,6 @@ app.directive('productCard', function() {
 
       $scope.addToCart = function() {
           $scope.list.added_cart++
-          // $scope.addCart(id)
           $http({
             method: 'GET',
             url: '/api/ecommerce/cart/?user=' + $scope.me.pk
@@ -851,11 +850,6 @@ app.directive('productCard', function() {
                 $rootScope.inCart.push(response.data);
               })
           })
-          // for (var i = 0; i < $rootScope.inCart.length; i++) {
-          //   console.log("cameeeeeeeeeeeeeeeeeeeeeeee",$rootScope.inCart[i].product.pk, $scope.list.pk);
-          //
-          // }
-
       }
       $scope.wishlist = function() {
 
