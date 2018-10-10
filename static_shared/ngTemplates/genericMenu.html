@@ -3,8 +3,8 @@
 </div>
 <hr>
 <div style="position:absolute;left:0px;width:100%;">
-  <ul class="nav nav-sidebar-inverse padded" style="width:100%;">
-    <li ng-repeat="app in apps" ng-class="{active: isActive($index)}" class="ripple">
+  <ul class="nav padded" style="width:100%;">
+    <li ng-repeat="app in apps" style="{{isActive($index) ? 'background-color:#eeeeee':''}}" class="ripple">
       <a ui-sref="{{app.state}}" >
         <div align="center">
           <i class="fa {{app.icon}} fa-2x pull-left"></i>
