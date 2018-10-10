@@ -90,7 +90,7 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
     $scope.onHover=false;
     console.log($scope.onHover);
-      $scope.sideMenuVisibility = true;
+      $scope.sideMenuVisibility = false;
       // retrive it back
       var sideMenuVisibility=getCookie("sideMenuVisibility");
       console.log(getCookie("sideMenuVisibility"))
