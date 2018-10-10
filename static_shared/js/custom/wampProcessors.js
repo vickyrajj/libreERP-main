@@ -1,7 +1,8 @@
 var connection = new autobahn.Connection({
-  url: 'wss://' + 'ws.cioc.in' + ':443/ws',
+  url: wampServer,
   realm: 'default'
 });
+
 
 // "onopen" handler will fire when WAMP session has been established ..
 connection.onopen = function(session) {
@@ -83,9 +84,6 @@ connection.onopen = function(session) {
     function userExist() {
       for (var i = 0; i < scope.newUsers.length; i++) {
         if (scope.newUsers[i].uid == args[0]) {
-          if (scope.newUsers[i].type=='videoCall') {
-            return false;
-          }
           console.log('yes');
           if (args[1] == 'M') {
             scope.sound.play();
@@ -114,6 +112,11 @@ connection.onopen = function(session) {
           } else if (args[1] == 'ML') {
             scope.sound.play();
             scope.newUsers[i].messages.push(args[2])
+          }else if (args[1] == 'VCS') {
+            scope.sound.play();
+            scope.newUsers[i].video = true
+            scope.newUsers[i].videoUrl = args[4]
+            //this is for video call
           }
 
 
@@ -167,6 +170,15 @@ connection.onopen = function(session) {
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value=''
             //feedback from user with stars
+          }else if (args[1] == 'VCS') {
+            scope.sound.play();
+            scope.myUsers[i].video = true
+            scope.myUsers[i].videoUrl = args[4]
+            //this is for video call
+          }else if (args[1] == 'VCC') {
+            console.log('video call closed by visitor');
+            // scope.myUsers[i].video = false
+            //this is for video call closed
           }
           console.log('scroll');
 
@@ -247,7 +259,9 @@ connection.onopen = function(session) {
         unreadMsg:0,
         boxOpen:false,
         chatThreadPk: args[5],
-        spying:{value :'' , isTyping : false}
+        spying:{value :'' , isTyping : false},
+        video:false,
+        videoUrl:''
       }
 
       // function createVisitor(email, phoneNumber , name) {
@@ -308,11 +322,10 @@ connection.onopen = function(session) {
       } else if (args[1] == 'ML') {
         scope.sound.play();
         scope.newUsers.push(detail)
-      } else if (args[1] == 'VC') {
-        detail.type = 'videoCall'
-        detail.url = args[4];
-        //video chat
-        console.log(args , 'video');
+      }else if (args[1] == 'VCS') {
+        scope.sound.play();
+        detail.video = true;
+        detail.videoUrl = args[6]
         scope.newUsers.push(detail)
       }
     }

@@ -85,6 +85,7 @@ class ChatThread(models.Model):
     userDeviceIp = models.CharField(max_length = 100 , null = True , blank=True)
     chatDuration = models.FloatField(null=True, blank=True , default=0)
     firstResponseTime = models.FloatField(null=True, blank=True)
+    typ = models.CharField(max_length = 100 , null = True , blank=True)
 
 
 class CompanyProcess(models.Model):
