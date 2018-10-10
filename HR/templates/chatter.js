@@ -1102,10 +1102,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     iframeDiv.id = "iframeDiv";
     iframeDiv.style.position = "fixed";
-    iframeDiv.style.top = "25%";
-    iframeDiv.style.left = "25%";
+    // iframeDiv.style.top = "25%";
+    iframeDiv.style.bottom = "100px";
+    iframeDiv.style.left = "24%";
     iframeDiv.style.width = "50%";
-    iframeDiv.style.height = "50%";
+    iframeDiv.style.height = "70vh";
     // iframeDiv.style.display = "none";
 
     var span = document.createElement('span')
@@ -1145,7 +1146,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
     })
 
-    
+
   })
 
   // function checkVideoCallAccepted() {
