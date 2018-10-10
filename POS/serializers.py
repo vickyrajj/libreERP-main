@@ -404,14 +404,25 @@ class VendorServicesLiteSerializer(serializers.ModelSerializer):
 
 
 class ProductVerientSerializer(serializers.ModelSerializer):
+    # discountedPrice = serializers.SerializerMethodField()
     class Meta:
         model = ProductVerient
-        fields = ('pk','created','updated','sku','unitPerpack','price','parent')
+        fields = ('pk','created','updated','sku','unitPerpack','price','parent','discountedPrice')
     def create(self , validated_data):
         v = ProductVerient(**validated_data)
         v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))
+        # if self.context['request'].data['price'] is None:
+        #     price = 0
+        # else:
+        price = self.context['request'].data['price']
+        v.discountedPrice = float(price) - (v.parent.discount / 100.00 ) *  float(price)
         v.save()
         return v
+    # def get_discountedPrice(self , obj):
+    #     if obj.price is None:
+    #         obj.price = 0
+    #     print obj.price , obj.parent.discount , '&&&&&&&&&'
+    #     return obj.price - (obj.parent.discount / 100.00 ) *  obj.price
 
 
 

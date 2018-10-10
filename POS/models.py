@@ -135,6 +135,7 @@ class ProductVerient(models.Model):
     sku = models.CharField(max_length=255,null=True)
     unitPerpack = models.PositiveIntegerField(default = 0)
     price = models.FloatField(null=True)
+    discountedPrice = models.FloatField(default = 0.0)
 
 # class ProductMetaList(models.Model):
 #     user = models.ForeignKey(User ,null = False , related_name ="productMetaList")

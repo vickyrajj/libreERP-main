@@ -948,13 +948,13 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.increment = function(inputPk) {
 
     for (var i = 0; i < $rootScope.inCart.length; i++) {
-      if ($rootScope.inCart[i].product.pk == inputPk) {
+      if ($rootScope.inCart[i].prodSku == $scope.selectedProdVar.sku) {
         if ($rootScope.inCart[i].typ == 'cart') {
           console.log($rootScope.inCart[i]);
-            if ($rootScope.inCart[i].prodSku!=$scope.selectedProdVar.sku) {
-              Flash.create('warning' , 'You cant buy product and combo together')
-              return
-            }
+            // if ($rootScope.inCart[i].prodSku!=$scope.selectedProdVar.sku) {
+            //   Flash.create('warning' , 'You cant buy product and combo together')
+            //   return
+            // }
 
             $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
             $http({
@@ -976,7 +976,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.decrement = function(inputPk) {
     $scope.details.added_cart--
       for (var i = 0; i < $rootScope.inCart.length; i++) {
-        if ($rootScope.inCart[i].product.pk == inputPk) {
+        if ($rootScope.inCart[i].prodSku == $scope.selectedProdVar.sku) {
           if ($rootScope.inCart[i].typ == 'cart') {
             if ($scope.details.added_cart == 0) {
               $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
@@ -1234,7 +1234,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     if ($scope.prod_var) {
       for (var i = 0; i < $scope.prod_var.length; i++) {
         str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch , $scope.details.product.unit) + ' - Rs ' +$scope.prod_var[i].price
-        $scope.prodVarList.push( {str:str , qty : $scope.prod_var[i].unitPerpack * $scope.details.product.howMuch , amnt: $scope.prod_var[i].price , unit: $scope.details.product.unit , sku:$scope.prod_var[i].sku } )
+        $scope.prodVarList.push( {str:str , qty : $scope.prod_var[i].unitPerpack * $scope.details.product.howMuch , amnt: $scope.prod_var[i].price , unit: $scope.details.product.unit , sku:$scope.prod_var[i].sku , disc:$scope.prod_var[i].discountedPrice } )
       }
     }
 
@@ -1261,10 +1261,32 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       if (newValue.sku!=undefined) {
         if ($scope.details.product.serialNo == newValue.sku ){
           console.log('parent');
+
+          for (var i = 0; i < $rootScope.inCart.length; i++) {
+              if(newValue.sku==$rootScope.inCart[i].prodSku){
+                console.log($rootScope.inCart[i].qty , 'if');
+                $scope.details.added_cart = $rootScope.inCart[i].qty
+                return
+              }
+              else{
+                  $scope.details.added_cart = 0
+              }
+          }
+
           // $scope.list.price = $scope.list.product.discountedPrice
         }else {
           // $scope.list.product.price = newValue.amnt
           console.log('child');
+          for (var i = 0; i < $rootScope.inCart.length; i++) {
+              if(newValue.sku==$rootScope.inCart[i].prodSku){
+                console.log($rootScope.inCart[i].qty , 'if');
+                $scope.details.added_cart = $rootScope.inCart[i].qty
+                return
+              }
+              else{
+                  $scope.details.added_cart = 0
+              }
+          }
           $scope.details.price = newValue.amnt
         }
       }
@@ -1506,17 +1528,17 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
   document.title = 'Sterling Select | Shopping Cart'
   document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
 
-  $timeout(function () {
-    for (var i = 0; i < $scope.data.tableData.length; i++) {
-      var prod_variants = $scope.data.tableData[i].product.product_variants
-      for (var j = 0; j < prod_variants.length; j++) {
-        if (prod_variants[j].sku == $scope.data.tableData[i].prodSku) {
-          $scope.data.tableData[i].prod_var = prod_variants[j]
-          console.log($scope.data.tableData[i].prod_var);
-        }
-      }
-    }
-  }, 800);
+  // $timeout(function () {
+  //   for (var i = 0; i < $scope.data.tableData.length; i++) {
+  //     var prod_variants = $scope.data.tableData[i].product.product_variants
+  //     for (var j = 0; j < prod_variants.length; j++) {
+  //       if (prod_variants[j].sku == $scope.data.tableData[i].prodSku) {
+  //         $scope.data.tableData[i].prod_var = prod_variants[j]
+  //         console.log($scope.data.tableData[i].prod_var);
+  //       }
+  //     }
+  //   }
+  // }, 1000);
 
   $scope.tableAction = function(target, action, mode) {
     for (var i = 0; i < $scope.data.tableData.length; i++) {
@@ -2344,7 +2366,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           discountedPrice = $scope.cartItems[i].product.product.discountedPrice
         }else {
           price = $scope.cartItems[i].prodVarPrice
-          discountedPrice = $scope.cartItems[i].prodVarPrice
+          discountedPrice = $scope.cartItems[i].prod_var.discountedPrice
         }
         $scope.total = $scope.total + (price * $scope.cartItems[i].qty)
         $scope.totalAfterDiscount = $scope.totalAfterDiscount + (discountedPrice * $scope.cartItems[i].qty)
@@ -2366,7 +2388,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.cartItems = response.data;
       console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-      $scope.calcTotal();
+
        for (var i = 0; i < $scope.cartItems.length; i++) {
          var prod_variants = $scope.cartItems[i].product.product_variants
          for (var j = 0; j < prod_variants.length; j++) {
@@ -2375,6 +2397,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
            }
          }
        }
+       $scope.calcTotal();
     })
   } else {
     $http({
@@ -2416,7 +2439,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $scope.dataToSend = {}
 
   $scope.next = function() {
-    console.log($scope.totalAfterPromo, $scope.totalAfterDiscount, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    console.log($scope.totalAfterPromo, $scope.totalAfterDiscount, '**************************8');
     if ($rootScope.limitValue) {
       if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
         $rootScope.totalLimit = true
@@ -2428,10 +2451,12 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     if ($scope.data.stage == 'review') {
       $scope.dataToSend.promoCode = $scope.data.promoCode;
       $scope.dataToSend.promoCodeDiscount = $scope.promoDiscount;
+      console.log($scope.cartItems , $scope.cartProducts, '$$$$$$$$$$$$$$$$$$$');
       if ($scope.cartItems != undefined) {
         for (var i = 0; i < $scope.cartItems.length; i++) {
           for (var j = 0; j < $scope.cartProducts.length; j++) {
-            if ($scope.cartProducts[j].pk == $scope.cartItems[i].product.pk) {
+            if ($scope.cartProducts[j].prodSku == $scope.cartItems[i].prodSku) {
+
               $scope.cartProducts.splice(j, 1)
             }
           }
