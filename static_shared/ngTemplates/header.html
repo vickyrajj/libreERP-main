@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top animated slideInDown"  style="{{sideMenuVisibility ? 'margin-left:13%;': ''}}">
+<nav class="navbar navbar-default navbar-fixed-top animated slideInDown"  id="navbarTop" style="{{sideMenuVisibility ? 'margin-left:13%': 'margin-left:5%;'}};{{mobileView ? 'margin-left:31%':''}};">
   <div class="container-fluid" style="height:100%;">
     <div class="navbar-header"  style="height: 102%;">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navBar" aria-expanded="false" aria-controls="navbar">
@@ -12,8 +12,9 @@
         <i style="margin-top:-10px;" class="fa fa-bars fa-2x"></i>
       </a>
 
-      <a class="navbar-brand" href="/" style="margin-left:50px;">
-        <img ng-src="{{brandLogo}}" height="40" style="margin-top:-10px;max-width:100px;" />
+      <a class="navbar-brand" href="/" style="margin-left:30px;padding:7px">
+        <!-- <img ng-src="{{brandLogo}}" height="40" style="margin-top:-10px;max-width:100px;" /> -->
+        <span><h1 style="margin:0px;">CIOC</h1></span> 
       </a>
       <div class="navbar-brand" style="margin-right:30px;"><i class="fa fa-angle-right"></i> HMS  </div>
     </div>
