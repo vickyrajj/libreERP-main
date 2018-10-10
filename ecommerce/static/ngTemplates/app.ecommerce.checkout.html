@@ -160,7 +160,8 @@
                     </div>
                     <div class="row container-fluid" ng-if="c.prodSku!=c.product.product.serialNo">
                       <div class="col-md-offset-6 col-md-6" style="padding-top: 50px;">
-                        <span><i class="fa fa-inr"></i> {{c.prodVarPrice.toFixed(2)}}</span>
+                        <span ng-if="c.prodVarPrice != c.prod_var.discountedPrice" style="padding-right:5px;"> <strike> <i class="fa fa-inr"></i> {{c.prodVarPrice.toFixed(2)}} </strike> </span>
+                      <span><i class="fa fa-inr"></i>{{c.prod_var.discountedPrice.toFixed(2)}}</span>
                       </div>
                     </div>
                   </div>
@@ -239,7 +240,8 @@
                         <span><i class="fa fa-inr"></i>{{c.product.product.discountedPrice.toFixed(2)}}</span>
                       </div>
                       <div ng-if="c.prodSku!=c.product.product.serialNo" class="row" style="padding:0px">
-                        <span><i class="fa fa-inr"></i>{{c.prodVarPrice.toFixed(2)}}</span>
+                          <span ng-if="c.prodVarPrice == c.discountedPrice" style="padding-right:5px;"> <strike> <i class="fa fa-inr"></i> {{c.prodVarPrice.toFixed(2)}} </strike> </span>
+                        <span><i class="fa fa-inr"></i>{{c.discountedPrice.toFixed(2)}}</span>
                       </div>
                     </div>
                   </div>

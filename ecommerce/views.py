@@ -109,6 +109,23 @@ if defaultSettingsData.count()>0:
         elif i.name == 'linkedInLink':
             twtLink = i.value
 
+from payu.gateway import get_hash , payu_url
+from uuid import uuid4
+
+def makePayment():
+    data = {
+        'txnid':uuid4().hex, 'amount':10.00, 'productinfo': 'Sample Product',
+        'firstname': 'test', 'email': 'test@example.com', 'udf1': 'Userdefined field',
+    }
+    hash_value = get_hash(data)
+
+
+def success_response(request):
+    hash_value = check_hash(request.POST)
+    if check_hash(request.POST):
+        return HttpResponse("Transaction has been Successful.")
+
+
 def ecommerceHome(request):
     print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
     data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}

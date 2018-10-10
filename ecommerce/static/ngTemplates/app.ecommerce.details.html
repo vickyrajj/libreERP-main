@@ -68,7 +68,11 @@
               <span ng-if="details.product.discount>0" class="text-muted"><strike>{{details.product.price}}</strike> </span>
               <span ng-if="details.product.discount==0">{{details.product.price}} </span>
               </span>
-              <span ng-if="details.product.serialNo!=selectedProdVar.sku" style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>{{selectedProdVar.amnt}}</span>
+              <span ng-if="details.product.serialNo!=selectedProdVar.sku" style="font-size:30px;padding-left:10px">
+                <span ng-if = "selectedProdVar.amnt == selectedProdVar.disc"><i class="fa fa-inr"></i>{{selectedProdVar.amnt}}</span>
+                <span ng-if = "selectedProdVar.amnt != selectedProdVar.disc" class="text-muted"><strike>{{selectedProdVar.amnt}}</strike> </span>
+                <span ng-if = "selectedProdVar.amnt != selectedProdVar.disc">{{selectedProdVar.disc}} </span>
+            </span>
             </div>
             <div class="row">
               <span style="padding-left:10px;" ng-if="details.product.discount>0" class="text-muted" style="font-size:20px;">{{details.product.discount}} % Off</span>

@@ -125,7 +125,7 @@ INSTALLED_APPS = (
 	'POS',# POS terminal like tally
     'support',# canvas
 	'productsInventory',# inventory for POS products
-    # 'mail', # mail application
+    'payu', # payubiz payment integration
     # 'employees',# employees details
     # 'events',# to manage events like test, hackathon or something like that
     # 'finance',# billing , invoicing , finance etc
@@ -137,6 +137,14 @@ INSTALLED_APPS = (
     # 'assets',# assets
     # 'workforceManagement',# canvas
 )
+
+
+PAYU_MERCHANT_KEY = "gtKFFx",
+
+PAYU_MERCHANT_SALT = "eCwWELxi",
+
+# And add the PAYU_MODE to 'TEST' for testing and 'LIVE' for production.
+PAYU_MODE = "TEST"
 
 
 SITE_ID = 1

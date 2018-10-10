@@ -170,11 +170,6 @@ class listingSerializer(serializers.ModelSerializer):
 
         l.save()
         return l
-
-
-
-
-
     def update(self , instance , validated_data):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.listings'])
@@ -211,7 +206,7 @@ class listingSerializer(serializers.ModelSerializer):
 
     def get_added_cart(self , obj):
         if self.context['request'].user.is_authenticated:
-            cart = Cart.objects.filter(product=obj.pk,user=self.context['request'].user,typ='cart')
+            cart = Cart.objects.filter(product=obj.pk,user=self.context['request'].user,typ='cart',)
             if cart.count()>0:
                 return cart[0].qty
             else:
@@ -321,16 +316,17 @@ class offerBannerSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     product = listingSerializer(many = False , read_only = True)
-    # prod_varName = serializers.SerializerMethodField()
+    prod_howMuch = serializers.SerializerMethodField()
     class Meta:
         model = Cart
-        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice')
+        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice','prod_howMuch')
     def create(self , validated_data):
     	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 
 
     	try:
-    		c=Cart.objects.get(product = self.context['request'].data['product'] ,user=self.context['request'].user)
+                print 'try'
+    		c=Cart.objects.get(product = self.context['request'].data['product'] , prodSku = self.context['request'].data['prodSku'] ,user=self.context['request'].user)
     		if self.context['request'].data['qty'] > 0:
     			c.typ = self.context['request'].data['typ']
     			c.qty = self.context['request'].data['qty']
@@ -345,6 +341,7 @@ class CartSerializer(serializers.ModelSerializer):
                 print 'except'
        	 	c = Cart(**validated_data)
        	 	c.product = listing.objects.get(pk = self.context['request'].data['product'])
+                print self.context['request'].data,'paramsssssss'
                 if 'prodSku' in self.context['request'].data:
                     prodVar = ProductVerient.objects.filter(sku = self.context['request'].data['prodSku'])
                     if len(prodVar) > 0:
@@ -352,15 +349,18 @@ class CartSerializer(serializers.ModelSerializer):
                         c.prodVarPrice = prodVar[0].price
         	c.save()
         return c
-    # def get_prod_varName(self , obj):
-    #     # print
-    #     # prodVar = ProductVerient.objects.filter(parent = obj.product.pk)
-    #     if obj.prodSku is not None:
-    #         prodVar = ProductVerient.objects.filter(sku = obj.prodSku)
-    #         nameStr = str(prodVar[0].unitPerpack * obj.product.product.howMuch) +' '+ obj.product.product.unit
-    #         return nameStr
-    #     else:
-    #         return None
+    def get_prod_howMuch(self , obj):
+        # print
+        # prodVar = ProductVerient.objects.filter(parent = obj.product.pk)
+        if obj.prodSku is not None:
+            prodVar = ProductVerient.objects.filter(sku = obj.prodSku)
+            if len(prodVar) > 0:
+                return prodVar[0].unitPerpack * obj.product.product.howMuch
+            prod = Product.objects.filter(serialNo = obj.prodSku)
+            if len(prod) > 0:
+                return prod[0].howMuch
+        else:
+            return None
 
 
 class ActivitiesSerializer(serializers.ModelSerializer):
