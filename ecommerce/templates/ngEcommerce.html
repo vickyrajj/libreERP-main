@@ -85,10 +85,13 @@
 
       <div ng-if="inCart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
 
-        <div class="" style="position:sticky;top:10px;">
+        <div style="position:sticky;top:10px; border-top:solid 2px #eeeeee;">
 
-          <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
-          <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
+          <div ng-if="showCartImage">
+            <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
+            <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
+
+          </div>
 
           <div class="row" style="margin:0px;">
             <div class="container-fluid">

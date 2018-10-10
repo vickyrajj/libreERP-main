@@ -17,7 +17,7 @@ app.directive('ecommerceListingEditor', function () {
   };
 });
 
-app.controller('ecommerce.form.listing' , function($scope , $state , $stateParams , $http , Flash){
+app.controller('ecommerce.form.listing' , function($scope , $state , $stateParams , $http , Flash,$filter){
   $scope.data = {mode : 'select' , form : {} };
   $scope.config = JSON.parse($scope.configObj);
   console.log('rrrrrrrrrrrrr',$scope.config);
@@ -93,7 +93,7 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
 
 
   $scope.resetForm = function(){
-    $scope.data.form = {mediaType : '' , files : [] , file : emptyFile , url : '', source : '', product : ''
+    $scope.data.form = {mediaType : '' , files : [] , file : emptyFile , url : '', source : '', product : '',
     }
   }
 
@@ -108,17 +108,65 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
     form = $scope.data.form;
     console.log(form);
     dataToSend = {}
-    // for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
-    //   f = $scope.data.genericProduct.fields[i];
-    //   dataToSend[f.name] = f.default;
-    // }
+    for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
+      f = $scope.data.genericProduct.fields[i];
+      dataToSend[f.name] = f.default;
+    }
+
     files = [];
-    for (var i = 0; i < form.files.length; i++) {
+    form.files = $filter('orderBy')(form.files, 'imageIndex');
+    for (var i = 0; i < form.files.length; i++) {;
+      $http({
+        method: 'PATCH',
+        url: '/api/ecommerce/media/' + form.files[i].pk + '/',
+        data: {
+          imageIndex : form.files[i].imageIndex
+        }
+      }).
+      then(function(response) {
+        console.log(response.data);
+        Flash.create('success', 'Updated');
+      })
       files.push(form.files[i].pk);
     }
     if (files.length != 0) {
       dataToSend.files = files;
     }
+    // files = [];
+    // console.log( form.files,'aaaaaaaaaaa');
+    // $scope.files = form.files
+    // $scope.files = $filter('orderBy')(form.files, 'imageIndex');
+
+
+    // for (var i = 0; i < form.files.length; i++) {
+    //   for (var j = 0; j < $scope.files.length; j++) {
+    //     console.log(i,$scope.files[j].imageIndex);
+    //     if(i==$scope.files[j].imageIndex)
+    //         var temp = form.files[i].attachment
+    //         var y = $scope.files[j].attachment
+    //         form.files[i].attachment = y
+    //         $scope.files[j].attachment =temp
+    //
+    //   }
+    //
+    //   console.log(form.files,'bbbbbbbbbbbbb');
+    //
+    // }
+    //
+    // $scope.files = $filter('orderBy')(form.files, 'imageIndex');
+    // console.log($scope.files);
+    // console.log(form.files);
+    //
+    // for (var i = 0; i < form.files.length; i++) {
+    //   console.log(form.files[i].attachment,'kkkkkkkkkkkkkkkkkk');
+    //   form.files[i].attachment = $scope.files[i].attachment
+    //   console.log(form.files[i].attachment,'jjjjjjjjjjjjjjjjjjjjjjjjj');
+    // }
+
+    // if (files.length != 0) {
+    //   dataToSend.files = files;
+    // }
+
     // for (key in form) {
     //   if (key != 'files' && key !='file') {
     //     if (key == 'product') {
@@ -275,7 +323,7 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
 
 });
 
-app.controller('businessManagement.ecommerce.listings' , function($scope ,$rootScope, $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('businessManagement.ecommerce.listings' , function($scope ,$rootScope, $http , $aside , $state, Flash , $users , $filter , $permissions,$filter,$timeout){
 
   $scope.getConfig = function(mode , data){
     toReturn = {};

@@ -15,8 +15,8 @@
             <h5 ng-if="l.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name}}</h5>
           </div> -->
           <div>
-            <h5 ng-if="list.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name.slice(0,35)}} {{selectedProdVar.qty}}{{selectedProdVar.unit}}</h5>
-            <h5 ng-if="list.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name}} {{selectedProdVar.qty}}{{selectedProdVar.unit}}</h5>
+            <h5 ng-if="list.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name.slice(0,35)}} {{quantity}}</h5>
+            <h5 ng-if="list.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name}} {{quantity}}</h5>
           </div>
 
           <!-- <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee">

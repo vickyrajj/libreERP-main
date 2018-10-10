@@ -342,6 +342,18 @@ app.controller('ecommerce.search.typeheadResult' ,  function($scope, $rootScope,
 
 
   $scope.addToCart = function(model) {
+
+    for (var i = 0; i < $rootScope.inCart.length; i++) {
+      if ($rootScope.inCart[i].product.pk == model.pk) {
+        if ($rootScope.inCart[i].prodSku!=model.serialNo) {
+          Flash.create('warning' , 'You cant buy product and combo together')
+          return
+        }
+      }
+    }
+
+
+
     console.log('coming here',model);
     var dataToSend = {
       product	: model.pk,
@@ -735,11 +747,11 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
 
 });
 
-app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window, ngMeta) {
+app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window, ngMeta, $filter, Flash) {
 
   $scope.me = $users.get('mySelf');
   $scope.showRatings = false
-  console.log('cominggggggggggggggggggggg', $scope.me, $state.params);
+  console.log('paramssssssss', $scope.me, $state.params);
   document.title = $state.params.name + ' Online At Best Price Only On Sterling Select'
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=rating').
   then(function(response) {
@@ -771,7 +783,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.offset = 0
   $scope.reviews = []
   $scope.showOptions = true
-  $scope.prodVariant = ''
+  // $scope.prodVariant = ''
   $scope.getRatings = function(offset) {
     $http({
       method: 'GET',
@@ -789,11 +801,11 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   then(function(response) {
     $scope.details = response.data
 
-    for (var i = 0; i < $scope.details.product_variants.length; i++) {
-      if ($scope.details.product_variants[i].sku == $state.params.sku) {
-        $scope.prodVariant = $scope.details.product_variants[i]
-      }
-    }
+    // for (var i = 0; i < $scope.details.product_variants.length; i++) {
+    //   if ($scope.details.product_variants[i].sku == $state.params.sku) {
+    //     $scope.prodVariant = $scope.details.product_variants[i]
+    //   }
+    // }
 
     if(!$scope.me){
       if ($rootScope.addToCart != undefined) {
@@ -837,6 +849,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       url: lurl
     }).
     then(function(response) {
+      console.log("ghhhghfhfhffgfgfdfg");
       $scope.suggest = response.data
     });
   });
@@ -906,7 +919,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       if ($scope.prodVariant=='') {
         dataToSend.prodSku = $scope.details.product.serialNo
       }else {
-        dataToSend.prodSku = $scope.prodVariant.sku
+        dataToSend.prodSku = $scope.selectedProdVar.sku
       }
 
       $http({
@@ -933,23 +946,32 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }
 
   $scope.increment = function(inputPk) {
-    $scope.details.added_cart++
+
     for (var i = 0; i < $rootScope.inCart.length; i++) {
       if ($rootScope.inCart[i].product.pk == inputPk) {
         if ($rootScope.inCart[i].typ == 'cart') {
-          $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
-          $http({
-            method: 'PATCH',
-            url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-            data: {
-              qty: $rootScope.inCart[i].qty
+          console.log($rootScope.inCart[i]);
+            if ($rootScope.inCart[i].prodSku!=$scope.selectedProdVar.sku) {
+              Flash.create('warning' , 'You cant buy product and combo together')
+              return
             }
-          }).
-          then(function(response) {
-          })
+
+            $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
+            $http({
+              method: 'PATCH',
+              url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+              data: {
+                qty: $rootScope.inCart[i].qty
+              }
+            }).
+            then(function(response) {
+            })
+
+
         }
       }
     }
+    $scope.details.added_cart++
   }
   $scope.decrement = function(inputPk) {
     $scope.details.added_cart--
@@ -1138,9 +1160,13 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
         if (response.data.results[0].product.pk == $scope.details.pk) {
           if (response.data.results.length > 1) {
             $scope.recentlyViewed = response.data.results[1]
+            console.log($scope.recentlyViewed.product.files,'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
+
           }
         }else {
           $scope.recentlyViewed = response.data.results[0]
+          console.log($scope.recentlyViewed,'kkkkkkkkkkkkkkkkkkkkkkk');
+
         }
       }
 
@@ -1155,8 +1181,8 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
         url: '/api/ecommerce/listing/' + $scope.recentlyViewed.product + '/'
       }).
       then(function(response) {
-        console.log(response.data);
         $scope.recentlyViewed.product = response.data
+        console.log("hhhhhhhhhhhhhhhhhhh",$scope.recentlyViewed.product);
 
       })
     }
@@ -1178,7 +1204,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       }
     }
 
-        $scope.details.added_cart++
+      $scope.details.added_cart++
       $scope.item = {
         'product': product,
         'qty': 1
@@ -1193,6 +1219,66 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     $rootScope.addToCart.push($scope.item)
     setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
   }
+
+
+
+
+  $scope.getProdVar = function () {
+
+    $scope.prod_var = $scope.details.product_variants;
+    $scope.prodVarList = []
+    $scope.details.product.unit = $filter('getUnit')($scope.details.product.unit);
+    var str = $filter('convertUnit')($scope.details.product.howMuch , $scope.details.product.unit) + ' - Rs '+ $scope.details.product.discountedPrice
+    $scope.prodVarList = [ {str:str, qty : $scope.details.product.howMuch , amnt: $scope.details.product.discountedPrice , unit: $scope.details.product.unit, sku: $scope.details.product.serialNo} ];
+
+    if ($scope.prod_var) {
+      for (var i = 0; i < $scope.prod_var.length; i++) {
+        str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch , $scope.details.product.unit) + ' - Rs ' +$scope.prod_var[i].price
+        $scope.prodVarList.push( {str:str , qty : $scope.prod_var[i].unitPerpack * $scope.details.product.howMuch , amnt: $scope.prod_var[i].price , unit: $scope.details.product.unit , sku:$scope.prod_var[i].sku } )
+      }
+    }
+
+    console.log($state.params.sku);
+    for (var i = 0; i < $scope.prodVarList.length; i++) {
+      console.log($scope.prodVarList);
+      if ($scope.prodVarList[i].sku == $state.params.sku) {
+        console.log($state.params.sku);
+        $scope.selectedProdVar=$scope.prodVarList[i];
+      }else {
+        $scope.selectedProdVar=$scope.prodVarList[0];
+      }
+    }
+
+
+    console.log($scope.selectedProdVar);
+
+    $scope.$watch('selectedProdVar', function(newValue, oldValue) {
+      if ($scope.selectedProdVar.qty!=null) {
+        $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
+      }
+      console.log($scope.quantity , 'rrrr');
+
+      if (newValue.sku!=undefined) {
+        if ($scope.details.product.serialNo == newValue.sku ){
+          console.log('parent');
+          // $scope.list.price = $scope.list.product.discountedPrice
+        }else {
+          // $scope.list.product.price = newValue.amnt
+          console.log('child');
+          $scope.details.price = newValue.amnt
+        }
+      }
+    })
+
+  }
+
+
+  $timeout(function () {
+    $scope.getProdVar()
+  }, 800);
+
+
+
 
 
 
@@ -1302,6 +1388,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     }).
     then(function(response) {
       $scope.listingSearch = response.data;
+
       if ($rootScope.addToCart.length > 0) {
         console.log("gggggggggggggggggggggggggggggggggggggg");
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
@@ -1366,6 +1453,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
     }).
     then(function(response) {
       $scope.listingSearch = response.data;
+
       if ($rootScope.addToCart.length > 0) {
         console.log("gggggggggggggggggggggggggggggggggggggg");
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
@@ -1387,10 +1475,7 @@ app.controller('controller.ecommerce.account', function($scope, $rootScope, $sta
   // for the dashboard of the account tab
 });
 
-app.controller('controller.ecommerce.account.cart', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $rootScope) {
-
-  console.log('coming in cart controller');
-
+app.controller('controller.ecommerce.account.cart', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $rootScope,$filter) {
   $scope.data = {
     tableData: [],
   };
@@ -1427,6 +1512,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
       for (var j = 0; j < prod_variants.length; j++) {
         if (prod_variants[j].sku == $scope.data.tableData[i].prodSku) {
           $scope.data.tableData[i].prod_var = prod_variants[j]
+          console.log($scope.data.tableData[i].prod_var);
         }
       }
     }
@@ -1499,6 +1585,13 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
     }
   }
 
+
+  console.log($scope.data.tableData.length,'kkkkkkkkkkggggggggkkkkkkkkkkk');
+
+
+
+
+
   $scope.calcTotal = function() {
     $scope.total = 0;
     var price = 0;
@@ -1514,6 +1607,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
   }
 
 
+
   $scope.checkout = function() {
     $state.go('checkout', {
       pk: 'cart'
@@ -1522,7 +1616,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
 
 });
 
-app.controller('controller.ecommerce.account.saved', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash) {
+app.controller('controller.ecommerce.account.saved', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash,$filter) {
 
   console.log('coming in save controller..');
 
@@ -1551,13 +1645,13 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
     deletable: true,
     itemsNumPerView: [8, 16, 32],
   }
+  console.log( $scope.data.tableData);
   document.title = 'Sterling Select | Saved Products'
   document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
   $scope.tableAction = function(target, action, mode) {
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'unfavourite') {
-          console.log("aaaaaaaaaaaaaaaaaa");
           $http({
             method: 'PATCH',
             url: '/api/ecommerce/cart/' + $scope.data.tableData[i].pk + '/',
@@ -1996,7 +2090,7 @@ app.controller('controller.ecommerce.account', function($scope, $rootScope, $sta
 });
 
 
-app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash) {
+app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash , $filter) {
   $rootScope.totalLimit = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=orderLimit').
   then(function(response) {
@@ -2190,7 +2284,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           return $scope.data.address;
         }
       },
-      controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add) {
+      controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add,) {
         $scope.adrForm = add;
         if ($scope.adrForm.title == undefined) {
           $scope.adrForm.title = ''
@@ -2270,6 +2364,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }).
     then(function(response) {
       $scope.cartItems = response.data;
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
       $scope.calcTotal();
        for (var i = 0; i < $scope.cartItems.length; i++) {
          var prod_variants = $scope.cartItems[i].product.product_variants
@@ -2478,6 +2574,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   $scope.me = $users.get('mySelf')
   $rootScope.companyPhone =''
   $rootScope.companyEmail =''
+  $scope.showCartImage = false;
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=phone').
   then(function(response) {
     $rootScope.companyPhone = response.data[0].value
@@ -2485,6 +2582,16 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=email').
   then(function(response) {
     $rootScope.companyEmail = response.data[0].value
+  })
+
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=isCartImage').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.showCartImage = true
+      }
+    }
   })
 
 
@@ -2604,6 +2711,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     }
     return $http.get(surl).
     then(function(response) {
+      console.log(response.data,'lllllllllllllllll');
       return response.data;
     })
   };
@@ -3333,7 +3441,7 @@ app.controller('controller.ecommerce.contact.modal', function($scope, $rootScope
 });
 
 
-app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval) {
+app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval,$filter) {
 
   document.title = 'Buy Products Online At Best Price In India | Sterling Select'
   document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
@@ -3356,11 +3464,12 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
       }).
       then(function(response) {
         $scope.listingProducts = response.data.splice(0, 8);
+
         console.log('sssssssssss', $scope.listingProducts);
         $scope.listingRemainingProducts = response.data.slice(9, 17);
 
-        if ($rootScope.addToCart.length > 0) {
           for (var i = 0; i < $rootScope.addToCart.length; i++) {
+            if ($rootScope.addToCart.length > 0) {
             for (var j = 0; j < $scope.listingProducts.length; j++) {
               if ($scope.listingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
                 $scope.listingProducts[j].added_cart = $rootScope.addToCart[i].qty
@@ -3408,6 +3517,7 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
       for (var i = 0; i < response.data.results.length; i++) {
         $scope.recentlyViewed.push(response.data.results[i].product)
       }
+
     })
   }
 
@@ -3564,8 +3674,10 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
     then(function(response) {
       console.log('dataaaaaaaaaaaaaaaa', response.data);
       $scope.listingProducts = response.data.splice(0, 7);
+
       console.log('sssssssssss', $scope.listingProducts);
       $scope.listingRemainingProducts = response.data.splice(5, 8);
+
       console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
 
       if ($rootScope.addToCart.length > 0) {
