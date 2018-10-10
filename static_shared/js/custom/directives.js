@@ -772,69 +772,64 @@ app.directive('productCard', function() {
         setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
       }
 
-      $scope.addToCart = function() {
+      $scope.addToCart = function(sku) {
           $scope.list.added_cart++
           // $scope.addCart(id)
-          $http({
-            method: 'GET',
-            url: '/api/ecommerce/cart/?user=' + $scope.me.pk
-          }).
-          then(function(response) {
-            for (var i = 0; i < response.data.length; i++) {
-              if (response.data[i].product.pk == $scope.list.pk) {
-                if (response.data[i].typ == 'cart') {
-                  Flash.create('warning', 'This Product is already in cart');
-                  return
-                } else if (response.data[i].typ == 'favourite') {
-                  console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-                  $scope.list.added_saved = 0
-
-                  $http({
-                    method: 'PATCH',
-                    url: '/api/ecommerce/cart/' + response.data[i].pk + '/',
-                    data: {
-                      qty: 1,
-                      typ: 'cart'
-                    }
-                  }).
-                  then(function(response) {
-                    Flash.create('success', 'Product added to cart');
-                    $rootScope.inCart.push(response.data);
-                  })
-                  response.data[i].typ = 'cart'
-                  return
-                }
-              }
-            }
-              dataToSend = {
-                product: $scope.list.pk,
-                user: getPK($scope.me.url),
-                qty: 1,
-                typ: 'cart',
-                prodSku: $scope.selectedProdVar.sku
-              }
-              $http({
-                method: 'POST',
-                url: '/api/ecommerce/cart/',
-                data: dataToSend
-              }).
-              then(function(response) {
-                Flash.create('success', 'Product added in cart');
-                // console.log(response.data);
-                var prod_variants = response.data.product.product_variants
-                for (var i = 0; i < prod_variants.length; i++) {
-                  if (prod_variants[i].sku == response.data.prodSku) {
-                    response.data.prod_var = prod_variants[i]
-                  }
-                }
-                $rootScope.inCart.push(response.data);
-              })
-          })
-          // for (var i = 0; i < $rootScope.inCart.length; i++) {
-          //   console.log("cameeeeeeeeeeeeeeeeeeeeeeee",$rootScope.inCart[i].product.pk, $scope.list.pk);
+          // $http({
+          //   method: 'GET',
+          //   url: '/api/ecommerce/cart/?user=' + $scope.me.pk
+          // }).
+          // then(function(response) {
+          //   for (var i = 0; i < response.data.length; i++) {
+          //     if (response.data[i].product.pk == $scope.list.pk) {
+          //       if (response.data[i].typ == 'cart') {
+          //         Flash.create('warning', 'This Product is already in cart');
+          //         return
+          //       } else if (response.data[i].typ == 'favourite') {
+          //         console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+          //         $scope.list.added_saved = 0
           //
-          // }
-
+          //         $http({
+          //           method: 'PATCH',
+          //           url: '/api/ecommerce/cart/' + response.data[i].pk + '/',
+          //           data: {
+          //             qty: 1,
+          //             typ: 'cart'
+          //           }
+          //         }).
+          //         then(function(response) {
+          //           Flash.create('success', 'Product added to cart');
+          //           $rootScope.inCart.push(response.data);
+          //         })
+          //         response.data[i].typ = 'cart'
+          //         return
+          //       }
+          //     }
+          //   }
+          //     dataToSend = {
+          //       product: $scope.list.pk,
+          //       user: getPK($scope.me.url),
+          //       qty: 1,
+          //       typ: 'cart',
+          //       prodSku: $scope.selectedProdVar.sku
+          //     }
+          //     $http({
+          //       method: 'POST',
+          //       url: '/api/ecommerce/cart/',
+          //       data: dataToSend
+          //     }).
+          //     then(function(response) {
+          //       Flash.create('success', 'Product added in cart');
+          //       // console.log(response.data);
+          //       var prod_variants = response.data.product.product_variants
+          //       for (var i = 0; i < prod_variants.length; i++) {
+          //         if (prod_variants[i].sku == response.data.prodSku) {
+          //           response.data.prod_var = prod_variants[i]
+          //         }
+          //       }
+          //       $rootScope.inCart.push(response.data);
+          //     })
+          // })
       }
       $scope.wishlist = function() {
 
