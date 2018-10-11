@@ -473,26 +473,49 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
     }).
     then(function(response) {
       console.log(response.data, 'aaaaaaaaaaaaaaa');
-      $scope.item = {
-        'product': response.data,
-        'qty': 1
+      console.log(model.serialNo);
+      console.log(response.data.product.howMuch);
+      if (response.data.product.howMuch==null) {
+        return
       }
+      for (var i = 0; i < response.data.product_variants.length; i++) {
+        if(response.data.product_variants[i].sku == model.serialNo){
+          console.log('hereeeee');
+            $scope.item = {'productName':response.data.product.name,'qty':1 , 'prodSku': response.data.product_variants[i].sku , 'prod_howMuch':response.data.product_variants[i].unitPerpack * response.data.product.howMuch , 'price':response.data.product_variants[i].discountedPrice ,'unit':response.data.product.unit , 'prodPk': response.data.pk}
+            break;
+        }else {
+          $scope.item = {'productName':response.data.product.name,'qty':1 , 'prodSku': response.data.product.serialNo , 'prod_howMuch':response.data.product.howMuch , 'price':response.data.product.discountedPrice ,'unit':response.data.product.unit , 'prodPk': response.data.pk}
+        }
+      }
+
+      if (response.data.product_variants.length==0) {
+        $scope.item = {'productName':response.data.product.name,'qty':1 , 'prodSku': response.data.product.serialNo , 'prod_howMuch':response.data.product.howMuch , 'price':response.data.product.discountedPrice ,'unit':response.data.product.unit , 'prodPk': response.data.pk}
+      }
+
+      // $scope.item = {'productName':response.data.product.name,'qty':1 , 'prodSku': $scope.match.model.serialNo , 'prod_howMuch':$scope.match.model.howMuch , 'price':$scope.selectedProdVar.amnt ,'unit':$scope.match.model.unit , 'prodPk': $scope.list.pk}
+      //
+      // $scope.item = {
+      //   'product': response.data,
+      //   'qty': 1
+      // }
       detail = getCookie("addToCart");
       if (detail != "") {
         console.log('already there');
         $rootScope.addToCart = JSON.parse(detail)
         document.cookie = encodeURIComponent("addToCart") + "=deleted; expires=" + new Date(0).toUTCString()
       }
+      console.log($scope.item);
       $rootScope.addToCart.push($scope.item)
       $scope.match.model.added = 1;
       setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
+      console.log($rootScope.addToCart);
     })
   }
   $scope.incrementCookie = function(details) {
     $scope.match.model.added++
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
         console.log(details.pk, 'aaaaaaaaaaaaa');
-        if ($rootScope.addToCart[i].product.pk == details.pk) {
+        if ($rootScope.addToCart[i].prodSku == details.serialNo) {
           $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty + 1
           setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
         }
@@ -502,7 +525,7 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
   $scope.decrementCookie = function(details) {
     $scope.match.model.added--
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        if ($rootScope.addToCart[i].product.pk == details.pk) {
+        if ($rootScope.addToCart[i].prodSku == details.serialNo) {
           // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
           // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
           if ($scope.match.model.added == 0) {
@@ -661,21 +684,25 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
 
 
 
-  $http({
-    method: 'GET',
-    url: '/api/ecommerce/listing/'
-  }).
-  then(function(response) {
-    for (var i = 0; i < response.data.length; i++) {
-      for (var j = 0; j < $rootScope.addToCart.length; j++) {
-        if (response.data[i].pk == $rootScope.addToCart[j].product.pk) {
-          $rootScope.addToCart[j].in_stock = response.data[i].in_stock
+  // $http({
+  //   method: 'GET',
+  //   url: '/api/ecommerce/listingLite/'
+  // }).
+  // then(function(response) {
+  //   for (var i = 0; i < response.data.length; i++) {
+  //     for (var j = 0; j < $rootScope.addToCart.length; j++) {
+  //       console.log(response.data[i] , 'hhhhhhhhhhhhhh');
+  //       if (response.data[i].pk == $rootScope.addToCart[j].product.pk) {
+  //         $rootScope.addToCart[j].in_stock = response.data[i].in_stock
+  //
+  //       }
+  //     }
+  //   }
+  //
+  // })
 
-        }
-      }
-    }
 
-  })
+
 
 
 
@@ -685,7 +712,7 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
     $scope.data.totalVal = 0;
     if ($rootScope.addToCart != undefined) {
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        $scope.data.totalVal += $rootScope.addToCart[i].product.product.discountedPrice * $rootScope.addToCart[i].qty
+        $scope.data.totalVal += $rootScope.addToCart[i].price * $rootScope.addToCart[i].qty
       }
     }
   }, true)
@@ -817,15 +844,15 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     //   }
     // }
 
-    if (!$scope.me) {
-      if ($rootScope.addToCart != undefined) {
-        for (var i = 0; i < $rootScope.addToCart.length; i++) {
-          if ($rootScope.addToCart[i].product.pk == $scope.details.pk) {
-            $scope.details.added_cart = $rootScope.addToCart[i].qty
-          }
-        }
-      }
-    }
+    // if (!$scope.me) {
+    //   if ($rootScope.addToCart != undefined) {
+    //     for (var i = 0; i < $rootScope.addToCart.length; i++) {
+    //       if ($rootScope.addToCart[i].prodSku == $scope.details.prodSku) {
+    //         $scope.details.added_cart = $rootScope.addToCart[i].qty
+    //       }
+    //     }
+    //   }
+    // }
     if ($rootScope.multiStore) {
       for (var i = 0; i < $scope.details.product.storeQty.length; i++) {
         if ($scope.details.product.storeQty[i].store.pincode == $rootScope.pin) {
@@ -1121,7 +1148,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     $scope.details.added_cart++
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
         console.log(details.pk, 'aaaaaaaaaaaaa');
-        if ($rootScope.addToCart[i].product.pk == details.pk) {
+        if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
           $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty + 1
           setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
         }
@@ -1132,7 +1159,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     console.log("aaaaaaaaaaaaaaaaaaa");
     $scope.details.added_cart--
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        if ($rootScope.addToCart[i].product.pk == details.pk) {
+        if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
           // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
           // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
           if ($scope.details.added_cart == 0) {
@@ -1204,7 +1231,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     console.log(product, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     if ($rootScope.addToCart != undefined) {
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        if ($rootScope.addToCart[i].product.pk == product.pk) {
+        if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
           Flash.create("warning", "Product Already in Cart")
           return
         }
@@ -1212,10 +1239,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     }
 
     $scope.details.added_cart++
-      $scope.item = {
-        'product': product,
-        'qty': 1
-      }
+      $scope.item = {'productName':$scope.details.product.name,'qty':1 , 'prodSku': $scope.selectedProdVar.sku , 'prod_howMuch':$scope.selectedProdVar.qty , 'price':$scope.selectedProdVar.amnt ,'unit':$scope.selectedProdVar.unit , 'prodPk': $scope.details.pk}
+
+      // $scope.item = {
+      //   'product': product,
+      //   'qty': 1
+      // }
     detail = getCookie("addToCart");
     $rootScope.addToCart = []
     if (detail != "") {
@@ -1279,9 +1308,8 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       console.log($scope.quantity, 'rrrr');
 
       if (newValue.sku != undefined) {
-        if ($scope.details.product.serialNo == newValue.sku) {
-          console.log('parent');
 
+        if ($scope.me) {
           for (var i = 0; i < $rootScope.inCart.length; i++) {
             if (newValue.sku == $rootScope.inCart[i].prodSku) {
               console.log($rootScope.inCart[i].qty, 'if');
@@ -1291,20 +1319,29 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
               $scope.details.added_cart = 0
             }
           }
+        }else {
+          for (var i = 0; i < $rootScope.addToCart.length; i++) {
+            if (newValue.sku == $rootScope.addToCart[i].prodSku) {
+              console.log($rootScope.addToCart[i].qty, 'if');
+              $scope.details.added_cart = $rootScope.addToCart[i].qty
+              return
+            } else {
+              $scope.details.added_cart = 0
+            }
+          }
+        }
+
+
+
+
+        if ($scope.details.product.serialNo == newValue.sku) {
+          console.log('parent');
 
           // $scope.list.price = $scope.list.product.discountedPrice
         } else {
           // $scope.list.product.price = newValue.amnt
           console.log('child');
-          for (var i = 0; i < $rootScope.inCart.length; i++) {
-            if (newValue.sku == $rootScope.inCart[i].prodSku) {
-              console.log($rootScope.inCart[i].qty, 'if');
-              $scope.details.added_cart = $rootScope.inCart[i].qty
-              return
-            } else {
-              $scope.details.added_cart = 0
-            }
-          }
+
           $scope.details.price = newValue.amnt
         }
       }
@@ -1604,11 +1641,11 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
               typ: 'favourite'
             }
           }).
-          then(function(response) {})
+          then(function(response) {$rootScope.inFavourite.push(response.data)})
           $scope.data.tableData[i].typ = 'favourite';
           $scope.data.tableData.splice(i, 1)
           $rootScope.inCart.splice(i, 1)
-          $rootScope.inFavourite.push($scope.data.tableData[i])
+
         } else if (action == 'unfavourite') {
           console.log("aaaaaaaaaaaaaaaaaa");
           $http({
@@ -1700,13 +1737,12 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
               qty: 1
             }
           }).
-          then(function(response) {})
-          console.log(response.data,'kkkkkkkkkkkkkkkkkk');
-          $rootScope.inCart.push($scope.data.tableData[i])
+          then(function(response) {
+              console.log(response.data,'kkkkkkkkkkkkkkkkkk');
+              $rootScope.inCart.push(response.data)
+          })
           $scope.data.tableData.splice(i, 1)
           $rootScope.inFavourite.splice(i, 1)
-          $rootScope.inCart[i].typ = 'cart'
-          $rootScope.inCart[i].qty = 1
         } else if (action == 'deleteItem') {
           console.log("jjjjjjjjjjjjjjjjjjjj");
           $http({
@@ -3035,11 +3071,14 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
 
   if ($scope.me) {
+    console.log($rootScope.addToCart , 'gggggggggggggggggggggg');
+    console.log($rootScope.inCart);
     if ($rootScope.addToCart.length > 0) {
       if ($rootScope.inCart.length > 0) {
+        console.log("comeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
           for (var j = 0; j < $rootScope.inCart.length; j++) {
-            if ($rootScope.addToCart[i].product.pk == $rootScope.inCart[j].product.pk) {
+            if ($rootScope.addToCart[i].prodSku == $rootScope.inCart[j].prodSku) {
               if ($rootScope.inCart[j].typ == 'cart') {
                 $http({
                   method: 'PATCH',
@@ -3050,22 +3089,43 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
                 }).
                 then(function(response) {})
                 $rootScope.inCart[i].qty = $rootScope.addToCart[i].qty
-                return
-              } else if ($rootScope.inCart[j].typ == 'favourite') {
-                $http({
-                  method: 'PATCH',
-                  url: '/api/ecommerce/cart/' + $rootScope.inCart[j].pk + '/',
-                  data: {
-                    typ: 'cart',
-                    qty: $rootScope.addToCart[i].qty
-                  }
-                }).
-                then(function(response) {})
-                $rootScope.inCart[i].typ = 'cart'
-                $rootScope.inCart[i].qty = $rootScope.addToCart[i].qty
-                return
+
               }
+              //  else if ($rootScope.inCart[j].typ == 'favourite') {
+              //   $http({
+              //     method: 'PATCH',
+              //     url: '/api/ecommerce/cart/' + $rootScope.inCart[j].pk + '/',
+              //     data: {
+              //       typ: 'cart',
+              //       qty: $rootScope.addToCart[i].qty
+              //     }
+              //   }).
+              //   then(function(response) {})
+              //   $rootScope.inCart[i].typ = 'cart'
+              //   $rootScope.inCart[i].qty = $rootScope.addToCart[i].qty
+              //   return
+              // }
             }
+          }
+
+          for (var j = 0; j < $rootScope.inFavourite.length; j++) {
+              if ($rootScope.addToCart[i].prodSku == $rootScope.inFavourite[j].prodSku) {
+                if ($rootScope.inFavourite[j].typ == 'favourite') {
+                  $http({
+                    method: 'PATCH',
+                    url: '/api/ecommerce/cart/' + $rootScope.inFavourite[j].pk + '/',
+                    data: {
+                      typ: 'cart',
+                      qty: $rootScope.addToCart[i].qty
+                    }
+                  }).
+                  then(function(response) {
+                    $rootScope.inCart.push(response.data)
+                    $rootScope.inFavourite.splice(i, 1)
+                  })
+
+                }
+              }
           }
           $http({
             method: 'POST',
@@ -3073,8 +3133,9 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
             data: {
               typ: 'cart',
               qty: $rootScope.addToCart[i].qty,
-              product: $rootScope.addToCart[i].product.pk,
+              product: $rootScope.addToCart[i].prodPk,
               user: getPK($scope.me.url),
+              prodSku: $rootScope.addToCart[i].prodSku
             }
           }).
           then(function(response) {
@@ -3083,10 +3144,11 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
                 $rootScope.inCart.push(response.data[0])
               }
             }
-            return
+
           })
         }
       } else {
+        console.log('posdtttttttttttttttttttttttttttt');
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
           $http({
             method: 'POST',
@@ -3094,8 +3156,9 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
             data: {
               typ: 'cart',
               qty: $rootScope.addToCart[i].qty,
-              product: $rootScope.addToCart[i].product.pk,
+              product: $rootScope.addToCart[i].prodPk,
               user: getPK($scope.me.url),
+              prodSku: $rootScope.addToCart[i].prodSku
             }
           }).
           then(function(response) {
@@ -3104,7 +3167,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
                 $rootScope.inCart.push(response.data[0])
               }
             }
-            return
+          
           })
         }
 
@@ -3506,23 +3569,23 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
         console.log('sssssssssss', $scope.listingProducts);
         $scope.listingRemainingProducts = response.data.slice(9, 17);
 
-        for (var i = 0; i < $rootScope.addToCart.length; i++) {
-          if ($rootScope.addToCart.length > 0) {
-            for (var j = 0; j < $scope.listingProducts.length; j++) {
-              if ($scope.listingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
-                $scope.listingProducts[j].added_cart = $rootScope.addToCart[i].qty
-                console.log($scope.listingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
-              }
-            }
-            for (var j = 0; j < $scope.listingRemainingProducts.length; j++) {
-              if ($scope.listingRemainingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
-                $scope.listingRemainingProducts[j].added_cart = $rootScope.addToCart[i].qty
-                console.log($scope.listingRemainingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
-              }
-            }
-
-          }
-        }
+        // for (var i = 0; i < $rootScope.addToCart.length; i++) {
+        //   if ($rootScope.addToCart.length > 0) {
+        //     for (var j = 0; j < $scope.listingProducts.length; j++) {
+        //       if ($scope.listingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
+        //         $scope.listingProducts[j].added_cart = $rootScope.addToCart[i].qty
+        //         console.log($scope.listingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
+        //       }
+        //     }
+        //     for (var j = 0; j < $scope.listingRemainingProducts.length; j++) {
+        //       if ($scope.listingRemainingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
+        //         $scope.listingRemainingProducts[j].added_cart = $rootScope.addToCart[i].qty
+        //         console.log($scope.listingRemainingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
+        //       }
+        //     }
+        //
+        //   }
+        // }
 
 
         console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);

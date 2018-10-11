@@ -64,7 +64,7 @@
             <div class="fa fa-trash-o pull-right fa-2x" style="cursor:pointer;color:red" mwl-confirm title="Cancel Item" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderItemCancel($index)" confirm-button-type="default"
               cancel-button-type="default" ng-if="order.status!='failed' && pData.status=='created' || pData.status=='packed'">
             </div>
-            <div class="btn btn-default btn-sm pull-right" ng-if="pData.courierName==null||pData.courierAWBNo==null||pData.notes==null && order.status!='failed'" ng-click="openManifest($index)">
+            <div class="btn btn-default btn-sm pull-right" ng-if="(pData.courierNaime==null||pData.courierAWBNo==null||pData.notes==null && order.status!='failed') && pData.status!='cancelled'" ng-click="openManifest($index)">
               Generate Manifest
             </div>
             <div class="btn-group pull-right" ng-if="order.status!='failed' && pData.courierName!=null && pData.courierAWBNo!=null && pData.notes!=null">
@@ -75,8 +75,8 @@
             </div>
 
             <div class="row">
-              <h3 ng-if="pData.prodVar==undefined"> {{pData.productName}} {{pData.product.product.howMuch}}{{pData.product.product.unit}}</h3>
-              <h3 ng-if="pData.prodVar"> {{pData.productName}} {{pData.prodVar[0].unitPerpack * pData.product.product.howMuch}}{{pData.product.product.unit}} </h3>
+              <h3 ng-if="pData.prodVar==undefined"> {{pData.productName}} {{pData.product.product.howMuch | convertUnit:pData.product.product.unit}}</h3>
+              <h3 ng-if="pData.prodVar"> {{pData.productName}} {{pData.prodVar[0].unitPerpack * pData.product.product.howMuch | convertUnit: pData.product.product.unit}} </h3>
             </div>
             <div class="row">
               <div class="col-md-2">
@@ -86,13 +86,13 @@
                 <span style="font-size:15px;">Quantity : {{pData.qty}}</span>
               </div>
               <div class="col-md-3">
-                <span style="font-size:15px;">Total Price : <i class="fa fa-inr"></i> {{pData.totalAmount}}</span>
+                <span style="font-size:15px;">Total Price : <i class="fa fa-inr"></i> {{pData.totalAmount * pData.qty}}</span>
               </div>
               <div class="col-md-2">
-                <span style="font-size:15px;">Discount : <i class="fa fa-inr"></i> {{pData.discountAmount}} </span>
+                <span style="font-size:15px;">Discount : <i class="fa fa-inr"></i> {{pData.discountAmount * pData.qty}} </span>
               </div>
               <div class="col-md-3">
-                <span style="font-size:15px;">Paid Amount : <i class="fa fa-inr"></i> {{pData.totalAmount - pData.discountAmount}} </span>
+                <span style="font-size:15px;">Paid Amount : <i class="fa fa-inr"></i> {{pData.ppAfterDiscount * pData.qty}} </span>
               </div>
             </div>
             <hr>
