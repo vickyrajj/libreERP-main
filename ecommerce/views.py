@@ -759,16 +759,39 @@ def manifest(response,item):
     now = datetime.datetime.now()
     print item.pk , order.pk
     print now.year,now.month,now.day
-
+    total = (item.totalAmount-item.discountAmount) * item.qty
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=1*cm,leftMargin=0.2*cm,rightMargin=0.2*cm)
     elements = []
+
+    print item.prodSku,'aaaaaaaaaaaaaaaaaaaaaa'
+    if item.prodSku != item.product.product.serialNo:
+        product = ProductVerient.objects.get(sku=item.prodSku)
+        qtyData = product.unitPerpack * item.product.product.howMuch
+    else:
+        qtyData =  item.product.product.howMuch
+
+    if str(item.product.product.unit)=='Gram' or str(item.product.product.unit)=='gm':
+        if qtyData >1000:
+            qtyValue = str(qtyData/1000) + ' Kg'
+        else:
+            qtyValue = str(qtyData) + ' gm'
+    elif str(item.product.product.unit)=='Millilitre' or str(item.product.product.unit)=='ml':
+        if qtyData>1000:
+            qtyValue = str(qtyData/1000) + ' lt'
+        else:
+            qtyValue = str(qtyData) + ' ml'
+    else:
+      qtyValue = qtyData
+
+    name = str(item.product.product.name)+ ' ' + str(qtyValue)
+
 
     elements.append(HRFlowable(width="100%", thickness=1, color=black,spaceAfter=10))
     if order.paymentMode == 'card':
         txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>PREPAID - DO NOT COLLECT CASH</b></para>'
     else:
-        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(item.totalAmount-item.discountAmount)
+        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(total)
     elements.append(Paragraph(txt1, styles['Normal']))
     elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
@@ -787,7 +810,7 @@ def manifest(response,item):
     txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'address').value)
     elements.append(Paragraph(txt4, styles['Normal']))
     elements.append(Spacer(1, 3))
-    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat/tinNo').value,settingsFields.get(name = 'cstNo').value)
+    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat/tinNo').value,settingsFields.get(name = 'cstNo').value)
     elements.append(Paragraph(txt5, styles['Normal']))
     elements.append(Spacer(1, 10))
     invNo = str(now.year)+str(now.month)+str(now.day)+str(order.pk)
@@ -795,9 +818,8 @@ def manifest(response,item):
     elements.append(Paragraph(txt6, styles['Normal']))
     # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=10))
     elements.append(Spacer(1, 30))
-
-    pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(item.product.product.name),styles['Normal'])
-    tableData=[['Product','Price','Qty','Discount','Final Price'],[pd,item.totalAmount,item.qty,item.discountAmount,item.totalAmount-item.discountAmount],['TOTAL','','','',item.totalAmount-item.discountAmount]]
+    pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(name),styles['Normal'])
+    tableData=[['Product','Price','Qty','Discount','Final Price'],[pd,item.totalAmount,item.qty,item.discountAmount,total],['TOTAL','','','',total]]
 
     t1=Table(tableData,colWidths=[1.7*inch , 0.5*inch , 0.5*inch, 0.7*inch , 0.7*inch])
     t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),('BOX', (0,0), (-1,-1), 0.25, colors.black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
@@ -806,7 +828,7 @@ def manifest(response,item):
     # elements.append(Indenter(left=-10))
     elements.append(Spacer(1, 10))
     if order.paymentMode != 'card':
-        txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(item.totalAmount-item.discountAmount)
+        txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(total)
         elements.append(Paragraph(txt7, styles['Normal']))
     # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=20,spaceAfter=5))
     elements.append(Spacer(1, 20))
