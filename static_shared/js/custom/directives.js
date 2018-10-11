@@ -708,13 +708,16 @@ app.directive('productCard', function() {
                 }
             }
             for (var i = 0; i < $rootScope.inFavourite.length; i++) {
-                if(newValue.sku==$rootScope.inFavourite[i].prodSku){
-                  $scope.list.added_saved = 1
-                  return
-                }
-                else{
-                    $scope.list.added_saved = 0
-                }
+            if($rootScope.inFavourite[i]!=undefined){
+              if(newValue.sku==$rootScope.inFavourite[i].prodSku){
+                $scope.list.added_saved = 1
+                return
+              }
+              else{
+                  $scope.list.added_saved = 0
+              }
+            }
+
             }
             // $scope.list.price = $scope.list.product.discountedPrice
 
@@ -724,6 +727,7 @@ app.directive('productCard', function() {
             console.log('child',newValue.sku);
             for (var i = 0; i < $rootScope.inCart.length; i++) {
                 if(newValue.sku==$rootScope.inCart[i].prodSku){
+                    console.log("aaaaaaaaaaaaaaaaaaaaaaa");
                   $scope.list.added_cart = $rootScope.inCart[i].qty
                   return
                 }
@@ -732,13 +736,18 @@ app.directive('productCard', function() {
                 }
             }
             for (var i = 0; i < $rootScope.inFavourite.length; i++) {
-                if(newValue.sku==$rootScope.inFavourite[i].prodSku){
-                  $scope.list.added_saved = 1
-                  return
+              console.log($rootScope.inFavourite[i],'aaaaaaaaaaaaaa');
+                if($rootScope.inFavourite[i]!=undefined){
+                  if(newValue.sku==$rootScope.inFavourite[i].prodSku){
+                    console.log("ssssssssssssssssssssssssssssssss");
+                    $scope.list.added_saved = 1
+                    return
+                  }
+                  else{
+                      $scope.list.added_saved = 0
+                  }
                 }
-                else{
-                    $scope.list.added_saved = 0
-                }
+
             }
             $scope.list.price = newValue.amnt
           }
@@ -858,12 +867,12 @@ app.directive('productCard', function() {
               then(function(response) {
                 Flash.create('success', 'Product added in cart');
                 // console.log(response.data);
-                var prod_variants = response.data.product.product_variants
-                for (var i = 0; i < prod_variants.length; i++) {
-                  if (prod_variants[i].sku == response.data.prodSku) {
-                    response.data.prod_var = prod_variants[i]
-                  }
-                }
+                // var prod_variants = response.data.product.product_variants
+                // for (var i = 0; i < prod_variants.length; i++) {
+                //   if (prod_variants[i].sku == response.data.prodSku) {
+                //     response.data.prod_var = prod_variants[i]
+                //   }
+                // }
                 $rootScope.inCart.push(response.data);
               })
           })

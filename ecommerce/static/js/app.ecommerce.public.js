@@ -1604,11 +1604,11 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
               typ: 'favourite'
             }
           }).
-          then(function(response) {})
+          then(function(response) {$rootScope.inFavourite.push(response.data)})
           $scope.data.tableData[i].typ = 'favourite';
           $scope.data.tableData.splice(i, 1)
           $rootScope.inCart.splice(i, 1)
-          $rootScope.inFavourite.push($scope.data.tableData[i])
+
         } else if (action == 'unfavourite') {
           console.log("aaaaaaaaaaaaaaaaaa");
           $http({
@@ -1700,13 +1700,12 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
               qty: 1
             }
           }).
-          then(function(response) {})
-          console.log(response.data,'kkkkkkkkkkkkkkkkkk');
-          $rootScope.inCart.push($scope.data.tableData[i])
+          then(function(response) {
+              console.log(response.data,'kkkkkkkkkkkkkkkkkk');
+              $rootScope.inCart.push(response.data)
+          })
           $scope.data.tableData.splice(i, 1)
           $rootScope.inFavourite.splice(i, 1)
-          $rootScope.inCart[i].typ = 'cart'
-          $rootScope.inCart[i].qty = 1
         } else if (action == 'deleteItem') {
           console.log("jjjjjjjjjjjjjjjjjjjj");
           $http({

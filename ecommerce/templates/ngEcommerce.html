@@ -100,8 +100,9 @@
           </div>
 
           <div ng-repeat="p in inCart" style="border-bottom:solid 2px #eeeeee; ">
-            <h5 ng-if="p.prod_var==undefined" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch | convertUnit:p.product.product.unit }}</h5>
-            <h5 ng-if="p.prod_var" style="margin:10px;">{{p.product.product.name}} {{p.prod_var.unitPerpack * p.product.product.howMuch | convertUnit : p.product.product.unit}}</h5>
+
+            <h5 ng-if="p.prod_howMuch==null" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch | convertUnit:p.product.product.unit }}</h5>
+            <h5 ng-if="p.prod_howMuch" style="margin:10px;">{{p.product.product.name}} {{p.prod_howMuch| convertUnit : p.product.product.unit}}</h5>
             <!-- {{p.prod_var}} -->
             <div class="row" style="margin:0px;">
               <div class="col-sm-4 text-right">
