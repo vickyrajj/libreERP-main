@@ -1701,6 +1701,7 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
             }
           }).
           then(function(response) {})
+          console.log(response.data,'kkkkkkkkkkkkkkkkkk');
           $rootScope.inCart.push($scope.data.tableData[i])
           $scope.data.tableData.splice(i, 1)
           $rootScope.inFavourite.splice(i, 1)
