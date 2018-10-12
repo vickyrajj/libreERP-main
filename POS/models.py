@@ -65,6 +65,9 @@ class StoreQty(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     store = models.ForeignKey(Store , related_name="POSStoreDetail")
     quantity = models.PositiveIntegerField(default = 0)
+    # product fk to prod
+    # prodVar
+    # master boole
 
 
 class Product(models.Model):
