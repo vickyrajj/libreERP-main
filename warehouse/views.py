@@ -1220,19 +1220,23 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         numbers = random.sample(range(10), 2)
         invId = (''.join(map(str, numbers)))
         bamount = 0
+        from reportlab.platypus.flowables import Image as GNAA
+        story = []
+        logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'logo1.png')
+        im = GNAA(logo, width=200, height=80)
+        story.append(im)
 
-
-        taxi = Paragraph('<font size="20"> TAX INVOICE </font>' , compStyle)
+        taxi = Paragraph('<font size="18"> TAX INVOICE </font>' , compStyle)
         # contract.areas.areaLength
-        row0 = [[cmpName,'',taxi], [cmpAddr,'','']]
+        row0 = [[cmpName,'',taxi], [cmpAddr,'',story]]
         table0 = Table(row0, colWidths=(73*mm,17*mm,100*mm))
         style0 = TableStyle([
-
                            ('VALIGN',(0,0),(0,-1),'MIDDLE'),
                            ('ALIGN',(0,-1),(-1,-1),'LEFT'),
                            ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
                            ('BOX', (0,0), (-1,-1), 0.25, colors.white),
                            ('FONTSIZE',(0,0),(0,0),15),
+                           ('SPAN',(-1,-1),(-1,-1)),
                            ])
         row1 = [[billTo ,'Number : ALWH18/'+str(month)+str(invId)+str(idDate)+ ' \nDate : ' +str(toDate).split(' ')[0]+ '\nFor : Storage & Handling ' +str(month) + ' - ' +str(year)  ]]
         table1 = Table(row1, colWidths=(95.5*mm, 95.5*mm))
@@ -1360,6 +1364,9 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         elements.append(table7)
 
         doc.build(elements)
+
+
+
 
 
 class DownloadMonthlyInvoice(APIView):
