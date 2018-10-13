@@ -136,14 +136,13 @@ class Store(models.Model):
 
 class StoreQty(models.Model):
     created = models.DateTimeField(auto_now_add = True)
-    store = models.ForeignKey(Store , related_name="POSStoreDetail")
+    store = models.ForeignKey(Store , related_name="POSStoreDetail", blank=True, null=True)
     quantity = models.PositiveIntegerField(default = 0)
     product = models.ForeignKey(Product , related_name="storeProduct")
     productVariant = models.ForeignKey(ProductVerient , related_name="storeProdVar", blank=True, null=True)
     master = models.BooleanField(default = False)
-
-class Meta:
-    unique_together = ('store' , 'product' , 'master')
+    class Meta:
+        unique_together = ('store' , 'product' , 'master')
 
 # class ProductMetaList(models.Model):
 #     user = models.ForeignKey(User ,null = False , related_name ="productMetaList")

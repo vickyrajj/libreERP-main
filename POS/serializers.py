@@ -54,35 +54,6 @@ class CustomerSerializer(serializers.ModelSerializer):
         c.save()
         return c
 
-class StoreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Store
-        fields = ('pk' ,'created' , 'name' , 'address' , 'pincode' , 'mobile' , 'email')
-
-class StoreQtySerializer(serializers.ModelSerializer):
-    store = StoreSerializer(many = False , read_only = True)
-    class Meta:
-        model = StoreQty
-        fields = ('pk' ,'created', 'store' , 'quantity' )
-    def create(self , validated_data):
-        s = StoreQty(**validated_data)
-        if 'store' in self.context['request'].data:
-            s.store = Store.objects.get(pk=self.context['request'].data['store'])
-        print s.store,'aaaaaaaaaaaaaaaaaaa'
-        s.save()
-        return s
-
-    def update(self ,instance, validated_data):
-        for key in ['quantity']:
-            try:
-                setattr(instance , key , validated_data[key])
-            except:
-                pass
-        if 'store' in self.context['request'].data:
-            instance.store = Store.objects.get(pk=self.context['request'].data['store'])
-        instance.save()
-        return instance
-
 class ProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -192,7 +163,62 @@ class ProductSerializer(serializers.ModelSerializer):
     #         toSend = None
     #     return toSend
 
+class ProductVerientSerializer(serializers.ModelSerializer):
+    # discountedPrice = serializers.SerializerMethodField()
+    class Meta:
+        model = ProductVerient
+        fields = ('pk','created','updated','sku','unitPerpack','price','parent','discountedPrice')
+    def create(self , validated_data):
+        v = ProductVerient(**validated_data)
+        v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))
+        # if self.context['request'].data['price'] is None:
+        #     price = 0
+        # else:
+        price = self.context['request'].data['price']
+        v.discountedPrice = float(price) - (v.parent.discount / 100.00 ) *  float(price)
+        v.save()
+        return v
+    # def get_discountedPrice(self , obj):
+    #     if obj.price is None:
+    #         obj.price = 0
+    #     print obj.price , obj.parent.discount , '&&&&&&&&&'
+    #     return obj.price - (obj.parent.discount / 100.00 ) *  obj.price
 
+class StoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = ('pk' ,'created' , 'name' , 'address' , 'pincode' , 'mobile' , 'email')
+
+class StoreQtySerializer(serializers.ModelSerializer):
+    store = StoreSerializer(many = False , read_only = True)
+    product = ProductSerializer(many = False , read_only = True)
+    productVariant = ProductVerientSerializer(many = False , read_only = True)
+    class Meta:
+        model = StoreQty
+        fields = ('pk' ,'created', 'store' , 'quantity' ,'product','productVariant','master')
+    def create(self , validated_data):
+        s = StoreQty(**validated_data)
+        if 'store' in self.context['request'].data:
+            s.store = Store.objects.get(pk=self.context['request'].data['store'])
+        if 'productVariant' in self.context['request'].data:
+            s.productVariant = ProductVerient.objects.get(pk=self.context['request'].data['productVariant'])
+        if 'product' in self.context['request'].data:
+            s.product = Product.objects.get(pk=self.context['request'].data['product'])
+        if 'master' in self.context['request'].data:
+            s.master = self.context['request'].data['master']
+        s.save()
+        return s
+
+    def update(self ,instance, validated_data):
+        for key in ['quantity']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'store' in self.context['request'].data:
+            instance.store = Store.objects.get(pk=self.context['request'].data['store'])
+        instance.save()
+        return instance
 
 class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)
@@ -399,29 +425,6 @@ class VendorServicesLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = VendorServices
         fields = ('pk','vendor','product','rate','fulfilmentTime','logistics','service')
-
-
-class ProductVerientSerializer(serializers.ModelSerializer):
-    # discountedPrice = serializers.SerializerMethodField()
-    class Meta:
-        model = ProductVerient
-        fields = ('pk','created','updated','sku','unitPerpack','price','parent','discountedPrice')
-    def create(self , validated_data):
-        v = ProductVerient(**validated_data)
-        v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))
-        # if self.context['request'].data['price'] is None:
-        #     price = 0
-        # else:
-        price = self.context['request'].data['price']
-        v.discountedPrice = float(price) - (v.parent.discount / 100.00 ) *  float(price)
-        v.save()
-        return v
-    # def get_discountedPrice(self , obj):
-    #     if obj.price is None:
-    #         obj.price = 0
-    #     print obj.price , obj.parent.discount , '&&&&&&&&&'
-    #     return obj.price - (obj.parent.discount / 100.00 ) *  obj.price
-
 
 
 class ExternalOrdersSerializer(serializers.ModelSerializer):

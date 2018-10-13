@@ -54,7 +54,6 @@
             <i class="fa fa-minus-circle fa-2x" style="cursor:pointer;margin-right:10px" ng-if="!me.pk"  ng-click="decrementCookie(match.model);$event.stopPropagation()"></i>
           <span style="font-size:20px; padding:0px 0px 0px 0px;margin-right:10px"> {{match.model.added}} </span>
         <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="incrementCookie(match.model);$event.stopPropagation()"></i></span>
-
         </div>
         <!-- <div class="col-md-4 col-sm-4 col-xs-4 text-right">
           <i class="fa fa-minus-circle fa-lg" style="cursor:pointer" ng-if="match.model.added>1&&!me.pk"  ng-click="decrementCookie(match.model);$event.stopPropagation()"></i>
@@ -78,8 +77,10 @@
           height: 100vh;
         }
       </style>
+      <div ng-if="searchImage">
+        <img ng-if="genericSearchImage.searchBgImage" src="{{genericSearchImage.searchBgImage}}" style="width:100%;position: absolute;left: 0px;" alt="Search Background Image">
+        <img ng-if="!genericSearchImage.searchBgImage" src="/static/images/searchDecoration.jpg" style="width:100%;position: absolute;left: 0px;" alt="Search Background Image">
+      </div>
 
-      <img ng-if="genericSearchImage.searchBgImage" src="{{genericSearchImage.searchBgImage}}" style="width:100%;position: absolute;left: 0px;" alt="Search Background Image">
-      <img ng-if="!genericSearchImage.searchBgImage" src="/static/images/searchDecoration.jpg" style="width:100%;position: absolute;left: 0px;" alt="Search Background Image">
     </div>
 </a>

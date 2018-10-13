@@ -346,6 +346,18 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
   //   })
   // }
 
+  $scope.searchImage = false
+
+
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=searchImage').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.searchImage = true
+      }
+    }
+  });
+
 
   $scope.addToCart = function(model) {
 
@@ -3167,7 +3179,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
                 $rootScope.inCart.push(response.data[0])
               }
             }
-          
+
           })
         }
 
@@ -3564,10 +3576,10 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
         url: '/api/ecommerce/listingLite/'
       }).
       then(function(response) {
-        $scope.listingProducts = response.data.splice(0, 8);
+        $scope.listingProducts = response.data.splice(0, 12);
 
         console.log('sssssssssss', $scope.listingProducts);
-        $scope.listingRemainingProducts = response.data.slice(9, 17);
+        $scope.listingRemainingProducts = response.data.slice(13, 21);
 
         // for (var i = 0; i < $rootScope.addToCart.length; i++) {
         //   if ($rootScope.addToCart.length > 0) {
