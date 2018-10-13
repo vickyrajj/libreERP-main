@@ -1,5 +1,17 @@
 <div class=" bg-white " style="position:relative;min-height:92vh;" >
   <breadcrumb></breadcrumb>
+  <div class="row" ng-if="multiStores">
+    <div class="col-md-4">
+      <div class="container-fluid">
+        <h3> <label>Store: </label> {{store.name}}</h3>
+      </div>
+    </div>
+    <div class="col-md-offset-4 col-md-4">
+      <div class="container-fluid">
+        <button type="button" class="btn btn-primary pull-right" ng-click="selectStore(store.pk)">Change</button>
+      </div>
+    </div>
+  </div>
 
   <div style="padding-right:10px;padding-left:10px;" id="dashboard">
     <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction">

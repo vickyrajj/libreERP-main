@@ -234,6 +234,7 @@ app.controller('ecommerce.form.listing' , function($scope , $state , $stateParam
   }
 
   $scope.postMedia = function(){
+    console.log($scope.data.form.file);
     var fd = new FormData();
     fd.append( 'mediaType' , $scope.data.form.mediaType);
     fd.append( 'link' , $scope.data.form.url);

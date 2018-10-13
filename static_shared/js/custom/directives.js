@@ -643,6 +643,9 @@ app.directive('productCard', function() {
 
       $scope.prod_var = $scope.list.product_variants;
       $scope.prodVarList = []
+      $scope.qtyToAddInit = {
+        qty:1
+      }
 
       console.log($scope.list);
       $scope.list.product.unit = $filter('getUnit')($scope.list.product.unit);
@@ -802,8 +805,8 @@ app.directive('productCard', function() {
             }
           }
         }
-          $scope.list.added_cart++
-          $scope.item = {'productName':$scope.list.product.name,'qty':1 , 'prodSku': $scope.selectedProdVar.sku , 'prod_howMuch':$scope.selectedProdVar.qty , 'price':$scope.selectedProdVar.amnt ,'unit':$scope.selectedProdVar.unit , 'prodPk': $scope.list.pk}
+          $scope.list.added_cart = $scope.qtyToAddInit.qty
+          $scope.item = {'productName':$scope.list.product.name,'qty':$scope.qtyToAddInit.qty , 'prodSku': $scope.selectedProdVar.sku , 'prod_howMuch':$scope.selectedProdVar.qty , 'price':$scope.selectedProdVar.amnt ,'unit':$scope.selectedProdVar.unit , 'prodPk': $scope.list.pk}
           detail = getCookie("addToCart");
          $rootScope.addToCart=[]
           if (detail != "") {
@@ -815,8 +818,17 @@ app.directive('productCard', function() {
         setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
       }
 
+      $scope.$watch('qtyToAddInit.qty', function(newValue, oldValue) {
+        if (newValue<=0) {
+          $scope.qtyToAddInit.qty = 1
+        }
+      })
+
+
+
       $scope.addToCart = function() {
-          $scope.list.added_cart++
+        console.log($scope.qtyToAddInit.qty,'qtyyyyyyyyyyy');
+          $scope.list.added_cart = $scope.qtyToAddInit.qty
           $http({
             method: 'GET',
             url: '/api/ecommerce/cart/?user=' + $scope.me.pk
@@ -833,7 +845,7 @@ app.directive('productCard', function() {
                     method: 'PATCH',
                     url: '/api/ecommerce/cart/' + response.data[i].pk + '/',
                     data: {
-                      qty: 1,
+                      qty: $scope.qtyToAddInit.qty,
                       typ: 'cart'
                     }
                   }).
@@ -850,7 +862,7 @@ app.directive('productCard', function() {
               dataToSend = {
                 product: $scope.list.pk,
                 user: getPK($scope.me.url),
-                qty: 1,
+                qty: $scope.qtyToAddInit.qty,
                 typ: 'cart',
                 prodSku: $scope.selectedProdVar.sku
               }
@@ -943,9 +955,11 @@ app.directive('productCard', function() {
           }
         }
         $scope.list.added_cart++
+        $scope.qtyToAddInit.qty=$scope.list.added_cart
       }
       $scope.decrement = function() {
         $scope.list.added_cart --
+        $scope.qtyToAddInit.qty=$scope.list.added_cart
           for (var i = 0; i < $rootScope.inCart.length; i++) {
             if ($rootScope.inCart[i].prodSku == $scope.selectedProdVar.sku) {
               if ($rootScope.inCart[i].typ == 'cart') {
@@ -982,6 +996,7 @@ app.directive('productCard', function() {
 
       $scope.incrementCookie = function() {
         $scope.list.added_cart++
+        $scope.qtyToAddInit.qty=$scope.list.added_cart
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
           if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
               $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty+1
@@ -992,6 +1007,7 @@ app.directive('productCard', function() {
 
       $scope.decrementCookie = function() {
         $scope.list.added_cart--
+        $scope.qtyToAddInit.qty=$scope.list.added_cart
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
           if ($rootScope.addToCart[i].prodSku ==  $scope.selectedProdVar.sku) {
               // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
