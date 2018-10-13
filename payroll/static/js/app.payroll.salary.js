@@ -29,31 +29,62 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
 
   $scope.data = $scope.tab.data;
 
-  $scope.yearInView = 2014;
+  $scope.joiningDate =new Date($scope.data.joiningDate);
+  $scope.joiningDateYear = $scope.joiningDate.getFullYear();
+  $scope.joiningMonth =  $scope.joiningDate.getMonth();
+  if($scope.data.lastWorkingDate!=null){
+    $scope.lastWorkingDate =new Date($scope.data.lastWorkingDate);
+    $scope.lastWorkingYear = $scope.lastWorkingDate.getFullYear();
+    $scope.lastWorkingMonth = $scope.lastWorkingDate.getMonth();
+  }
+  else{
+    $scope.lastWorkingDate = new Date();
+    $scope.lastWorkingYear = $scope.lastWorkingDate.getFullYear();
+    $scope.lastWorkingMonth = $scope.lastWorkingDate.getMonth();
+  }
 
-  $scope.joiningDate = new Date('2014-04-02');
-  $scope.lastWorkingDate = new Date();
 
-  $scope.$watch('yearInView', function(newValue, oldValue) {
 
-    if (newValue == 2014) {
-      $scope.months = ['04', '05', '06', '07', '08', '09', '10', '11', '12']
-    } else if (newValue == 2015) {
-      $scope.months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
-    } else if (newValue == new Date()) {
-      $scope.months == new Date();
+  $scope.currentDate = new Date()
+  $scope.currentYear = new Date().getFullYear()
+  if ($scope.lastWorkingYear<$scope.currentYear) {
+    $scope.currentYear = $scope.lastWorkingYear
+    $scope.currentDate = $scope.lastWorkingDate
+  }
+
+
+
+  $scope.$watch('currentYear', function(newValue, oldValue) {
+
+    console.log($scope.joiningMonth,$scope.lastWorkingMonth);
+    $scope.monthsData =[]
+    $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    if($scope.joiningDateYear==$scope.lastWorkingYear){
+      if($scope.joiningMonth==$scope.lastWorkingMonth){
+        $scope.monthsData.push($scope.months[$scope.joiningMonth])
+      }
+      else{
+        $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.lastWorkingMonth)
+      }
     }
-
+    else if(newValue==$scope.joiningDateYear){
+      $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.months.length)
+    }
+    else if(newValue==$scope.lastWorkingYear){
+      $scope.monthsData =  $scope.months.splice(0,$scope.lastWorkingMonth+1)
+    }
+    else{
+      $scope.monthsData = $scope.months
+    }
   })
 
   $scope.next = function() {
-    $scope.yearInView += 1;
+    $scope.currentYear += 1;
   }
 
   $scope.prev = function() {
-    $scope.yearInView -= 1;
+    $scope.currentYear -= 1;
   }
-
 
 })
 
