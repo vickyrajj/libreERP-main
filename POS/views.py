@@ -91,8 +91,8 @@ class StoreQtyViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = StoreQtySerializer
     queryset = StoreQty.objects.all()
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['name' ]
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['store']
 
 
 class ProductViewSet(viewsets.ModelViewSet):

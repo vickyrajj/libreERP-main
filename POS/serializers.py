@@ -54,35 +54,6 @@ class CustomerSerializer(serializers.ModelSerializer):
         c.save()
         return c
 
-class StoreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Store
-        fields = ('pk' ,'created' , 'name' , 'address' , 'pincode' , 'mobile' , 'email')
-
-class StoreQtySerializer(serializers.ModelSerializer):
-    store = StoreSerializer(many = False , read_only = True)
-    class Meta:
-        model = StoreQty
-        fields = ('pk' ,'created', 'store' , 'quantity' )
-    def create(self , validated_data):
-        s = StoreQty(**validated_data)
-        if 'store' in self.context['request'].data:
-            s.store = Store.objects.get(pk=self.context['request'].data['store'])
-        print s.store,'aaaaaaaaaaaaaaaaaaa'
-        s.save()
-        return s
-
-    def update(self ,instance, validated_data):
-        for key in ['quantity']:
-            try:
-                setattr(instance , key , validated_data[key])
-            except:
-                pass
-        if 'store' in self.context['request'].data:
-            instance.store = Store.objects.get(pk=self.context['request'].data['store'])
-        instance.save()
-        return instance
-
 class ProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -91,19 +62,17 @@ class ProductLiteSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
     compositions=ProductLiteSerializer(many=True,read_only=True)
-    storeQty=StoreQtySerializer(many=True,read_only=True)
     skuUnitpack = serializers.SerializerMethodField()
     productOption = serializers.SerializerMethodField()
-    masterStock = serializers.SerializerMethodField()
-    StoreStock = serializers.SerializerMethodField()
+    # masterStock = serializers.SerializerMethodField()
+    # StoreStock = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','storeQty','alias','howMuch','productOption','masterStock','StoreStock')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','alias','howMuch','productOption')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
         print self.context['request'].data
-        print self.context['request'].data['storeQty'],'llllllllllllllllllllllllllllllllll'
         print 'entered','***************'
         print validated_data
         p = Product(**validated_data)
@@ -116,10 +85,10 @@ class ProductSerializer(serializers.ModelSerializer):
         if 'productMeta' in self.context['request'].data:
             print self.context['request'].data['productMeta']
             p.productMeta = ProductMeta.objects.get(pk=int(self.context['request'].data['productMeta']))
-        if 'storeQty' in self.context['request'].data:
-            p.storeQty.clear()
-            for c in self.context['request'].data['storeQty']:
-                p.storeQty.add(StoreQty.objects.get(pk = c))
+        # if 'storeQty' in self.context['request'].data:
+        #     p.storeQty.clear()
+        #     for c in self.context['request'].data['storeQty']:
+        #         p.storeQty.add(StoreQty.objects.get(pk = c))
         p.save()
         return p
 
@@ -146,7 +115,7 @@ class ProductSerializer(serializers.ModelSerializer):
             il = InventoryLog(before = instance.inStock , after = validated_data['inStock'],product = instance,typ = 'user' , user = self.context['request'].user)
             il.save()
 
-        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap','unit','storeQty','alias','howMuch']:
+        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap','unit','alias','howMuch']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -160,13 +129,13 @@ class ProductSerializer(serializers.ModelSerializer):
             print self.context['request'].data['compositions'],type(self.context['request'].data['compositions'])
             for c in self.context['request'].data['compositions'].split(','):
                 instance.compositions.add(Product.objects.get(pk = int(c)))
-        if 'storeQty' in self.context['request'].data:
-            print self.context['request'].data['storeQty'],'ssssssssssssssssssss',len(self.context['request'].data['storeQty'])
-            if len(self.context['request'].data['storeQty']) > 0:
-                instance.storeQty.clear()
-                for c in self.context['request'].data['storeQty'].split(','):
-                    print type(c), c
-                    instance.storeQty.add(StoreQty.objects.get(pk = int(c)))
+        # if 'storeQty' in self.context['request'].data:
+        #     print self.context['request'].data['storeQty'],'ssssssssssssssssssss',len(self.context['request'].data['storeQty'])
+        #     if len(self.context['request'].data['storeQty']) > 0:
+        #         instance.storeQty.clear()
+        #         for c in self.context['request'].data['storeQty'].split(','):
+        #             print type(c), c
+        #             instance.storeQty.add(StoreQty.objects.get(pk = int(c)))
 
 
         instance.save()
@@ -184,17 +153,72 @@ class ProductSerializer(serializers.ModelSerializer):
             return settingObj[0].flag
         except:
             return None
-    def get_masterStock(self, obj):
-        return obj.inStock
-    def get_StoreStock(self, obj):
-        try:
-            val = obj.storeQty.all().aggregate(Sum('quantity'))['quantity__sum']
-            toSend = val if val else 0
-        except:
-            toSend = None
-        return toSend
+    # def get_masterStock(self, obj):
+    #     return obj.inStock
+    # def get_StoreStock(self, obj):
+    #     try:
+    #         val = obj.storeQty.all().aggregate(Sum('quantity'))['quantity__sum']
+    #         toSend = val if val else 0
+    #     except:
+    #         toSend = None
+    #     return toSend
 
+class ProductVerientSerializer(serializers.ModelSerializer):
+    # discountedPrice = serializers.SerializerMethodField()
+    class Meta:
+        model = ProductVerient
+        fields = ('pk','created','updated','sku','unitPerpack','price','parent','discountedPrice')
+    def create(self , validated_data):
+        v = ProductVerient(**validated_data)
+        v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))
+        # if self.context['request'].data['price'] is None:
+        #     price = 0
+        # else:
+        price = self.context['request'].data['price']
+        v.discountedPrice = float(price) - (v.parent.discount / 100.00 ) *  float(price)
+        v.save()
+        return v
+    # def get_discountedPrice(self , obj):
+    #     if obj.price is None:
+    #         obj.price = 0
+    #     print obj.price , obj.parent.discount , '&&&&&&&&&'
+    #     return obj.price - (obj.parent.discount / 100.00 ) *  obj.price
 
+class StoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = ('pk' ,'created' , 'name' , 'address' , 'pincode' , 'mobile' , 'email')
+
+class StoreQtySerializer(serializers.ModelSerializer):
+    store = StoreSerializer(many = False , read_only = True)
+    product = ProductSerializer(many = False , read_only = True)
+    productVariant = ProductVerientSerializer(many = False , read_only = True)
+    class Meta:
+        model = StoreQty
+        fields = ('pk' ,'created', 'store' , 'quantity' ,'product','productVariant','master')
+    def create(self , validated_data):
+        s = StoreQty(**validated_data)
+        if 'store' in self.context['request'].data:
+            s.store = Store.objects.get(pk=self.context['request'].data['store'])
+        if 'productVariant' in self.context['request'].data:
+            s.productVariant = ProductVerient.objects.get(pk=self.context['request'].data['productVariant'])
+        if 'product' in self.context['request'].data:
+            s.product = Product.objects.get(pk=self.context['request'].data['product'])
+        if 'master' in self.context['request'].data:
+            s.master = self.context['request'].data['master']
+        s.save()
+        return s
+
+    def update(self ,instance, validated_data):
+        for key in ['quantity']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'store' in self.context['request'].data:
+            instance.store = Store.objects.get(pk=self.context['request'].data['store'])
+        instance.save()
+        return instance
 
 class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)
@@ -401,29 +425,6 @@ class VendorServicesLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = VendorServices
         fields = ('pk','vendor','product','rate','fulfilmentTime','logistics','service')
-
-
-class ProductVerientSerializer(serializers.ModelSerializer):
-    # discountedPrice = serializers.SerializerMethodField()
-    class Meta:
-        model = ProductVerient
-        fields = ('pk','created','updated','sku','unitPerpack','price','parent','discountedPrice')
-    def create(self , validated_data):
-        v = ProductVerient(**validated_data)
-        v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))
-        # if self.context['request'].data['price'] is None:
-        #     price = 0
-        # else:
-        price = self.context['request'].data['price']
-        v.discountedPrice = float(price) - (v.parent.discount / 100.00 ) *  float(price)
-        v.save()
-        return v
-    # def get_discountedPrice(self , obj):
-    #     if obj.price is None:
-    #         obj.price = 0
-    #     print obj.price , obj.parent.discount , '&&&&&&&&&'
-    #     return obj.price - (obj.parent.discount / 100.00 ) *  obj.price
-
 
 
 class ExternalOrdersSerializer(serializers.ModelSerializer):

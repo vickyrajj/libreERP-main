@@ -53,18 +53,7 @@ UNIT_CHOICES = (
     ('Quantity' , 'Quantity'),
 )
 
-class Store(models.Model):
-    created = models.DateTimeField(auto_now_add = True)
-    name = models.CharField(max_length = 100 , null = False)
-    address = models.CharField(max_length = 500 , null = False)
-    pincode = models.PositiveIntegerField(null= True )
-    mobile = models.CharField(max_length = 12 , null = True)
-    email = models.EmailField(null = True)
 
-class StoreQty(models.Model):
-    created = models.DateTimeField(auto_now_add = True)
-    store = models.ForeignKey(Store , related_name="POSStoreDetail")
-    quantity = models.PositiveIntegerField(default = 0)
 
 
 class Product(models.Model):
@@ -87,7 +76,7 @@ class Product(models.Model):
     compositions = models.ManyToManyField("self" , related_name="parent" , blank = True)
     compositionQtyMap = models.CharField(max_length = 1000 , null = True, blank = True)
     discount = models.PositiveIntegerField(default = 0)
-    storeQty = models.ManyToManyField(StoreQty , related_name="productStore" , blank = True)
+    # storeQty = models.ManyToManyField(StoreQty , related_name="productStore" , blank = True)
     alias = models.CharField(max_length = 500 , null = True)
     howMuch = models.FloatField(null=True)
     def __str__(self):
@@ -136,6 +125,24 @@ class ProductVerient(models.Model):
     unitPerpack = models.PositiveIntegerField(default = 0)
     price = models.FloatField(null=True)
     discountedPrice = models.FloatField(default = 0.0)
+
+class Store(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    name = models.CharField(max_length = 100 , null = False)
+    address = models.CharField(max_length = 500 , null = False)
+    pincode = models.PositiveIntegerField(null= True )
+    mobile = models.CharField(max_length = 12 , null = True)
+    email = models.EmailField(null = True)
+
+class StoreQty(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    store = models.ForeignKey(Store , related_name="POSStoreDetail", blank=True, null=True)
+    quantity = models.PositiveIntegerField(default = 0)
+    product = models.ForeignKey(Product , related_name="storeProduct")
+    productVariant = models.ForeignKey(ProductVerient , related_name="storeProdVar", blank=True, null=True)
+    master = models.BooleanField(default = False)
+    class Meta:
+        unique_together = ('store' , 'product' , 'master')
 
 # class ProductMetaList(models.Model):
 #     user = models.ForeignKey(User ,null = False , related_name ="productMetaList")

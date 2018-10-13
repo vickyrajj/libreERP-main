@@ -45,8 +45,7 @@
               <!-- <uib-rating ng-model="ratings.averageRating.rating__avg" max="5" readonly="true" aria-labelledby="default-rating" style="font-size:20px;color:#e2a900;" class="text-muted"></uib-rating> -->
               <!-- <span style="background-color:red; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg==none"> 0.0 <i class="fa fa-star" aria-hidden="true"></i></span> -->
               <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg!=none&&showRatings"> {{details.rating.rating__avg| number : 1}} <i class="fa fa-star" aria-hidden="true"></i></span>
-              <span
-                ng-if="showRatings"> {{details.rating_count}} Ratings & Reviews</span>
+              <span ng-if="showRatings"> {{details.rating_count}} Ratings & Reviews</span>
 
             </div>
             <div class="row container-fluid" style="padding-top:14px;">
@@ -70,9 +69,9 @@
               </span>
               <span ng-if="details.product.serialNo!=selectedProdVar.sku" style="font-size:30px;padding-left:10px">
                 <span ng-if = "selectedProdVar.amnt == selectedProdVar.disc"><i class="fa fa-inr"></i>{{selectedProdVar.amnt}}</span>
-                <span ng-if = "selectedProdVar.amnt != selectedProdVar.disc" class="text-muted"><strike>{{selectedProdVar.amnt}}</strike> </span>
-                <span ng-if = "selectedProdVar.amnt != selectedProdVar.disc">{{selectedProdVar.disc}} </span>
-            </span>
+              <span ng-if="selectedProdVar.amnt != selectedProdVar.disc" class="text-muted"><strike>{{selectedProdVar.amnt}}</strike> </span>
+              <span ng-if="selectedProdVar.amnt != selectedProdVar.disc">{{selectedProdVar.disc}} </span>
+              </span>
             </div>
             <div class="row">
               <span style="padding-left:10px;" ng-if="details.product.discount>0" class="text-muted" style="font-size:20px;">{{details.product.discount}} % Off</span>
@@ -98,7 +97,7 @@
             </div>
           </div>
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
-            <div class="row container-fluid text-center" style="padding-top:15px;">
+            <!-- <div class="row container-fluid text-center" style="padding-top:15px;">
               <div class="col-md-4 col-sm-4 col-xs-4 text-right">
                 <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="details.added_cart>0&&me.pk" ng-click="decrement(details.pk);$event.stopPropagation()"></i>
               </div>
@@ -108,11 +107,23 @@
               <div class="col-md-4 col-sm-4 col-xs-4 text-left">
                 <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="increment(details.pk);$event.stopPropagation()"></i>
               </div>
-              <!-- <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
-                  <span style="font-size:15px;"><b> Add To Cart </b></span>
-              <i class="fa fa-shopping-cart fa-2x"></i>
-              </span> -->
-
+            </div> -->
+            <div class="row container-fluid" style="padding:0px 15px;">
+              <div class="col-xs-offset-3 col-xs-1" style="padding:0px;">
+                <button type="button" class="btn btn-default decrementBtn" ng-if="details.added_cart>0&&me.pk" ng-click="decrement(details.pk);">
+                  <i class="fa fa-minus" style="font-size:14px;"></i>
+                </button>
+              </div>
+              <div class="col-xs-4" style="padding:0px;">
+                <button type="button" name="button" class="inCartBtn btn btn-sm btn-default" ng-click="$event.stopPropagation()">
+                  {{details.added_cart}} in Cart
+                </button>
+              </div>
+              <div class="col-xs-1" style="padding:0px;">
+                <button type="button" class="btn btn-default incrementBtn" ng-click="increment(details.pk);">
+                  <i class="fa fa-plus" style="font-size:14px;"></i>
+                </button>
+              </div>
             </div>
           </div>
           <div class="col-md-12" ng-if="!showOptions||details.in_stock=='false'">
@@ -137,7 +148,7 @@
             </div>
           </div>
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
-            <div class="row container-fluid text-center" style="padding-top:15px;">
+            <!-- <div class="row container-fluid text-center" style="padding-top:15px;">
               <div class="col-md-4 col-sm-4 col-xs-4 text-right">
                 <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="!me.pk" ng-click="decrementCookie(details);$event.stopPropagation()"></i>
               </div>
@@ -147,11 +158,25 @@
               <div class="col-md-4 col-sm-4 col-xs-4 text-left">
                 <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="incrementCookie(details);$event.stopPropagation()"></i>
               </div>
-              <!-- <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
-                  <span style="font-size:15px;"><b> Add To Cart </b></span>
-              <i class="fa fa-shopping-cart fa-2x"></i>
-              </span> -->
+            </div> -->
 
+
+            <div class="row container-fluid" style="padding:0px 15px;">
+              <div class="col-xs-offset-3 col-xs-1" style="padding:0px;">
+                <button type="button" class="btn btn-default decrementBtn" ng-if="!me.pk" ng-click="decrementCookie(details);">
+                  <i class="fa fa-minus" style="font-size:14px;"></i>
+                </button>
+              </div>
+              <div class="col-xs-4" style="padding:0px;">
+                <button type="button" name="button" class="inCartBtn btn btn-sm btn-default" ng-click="$event.stopPropagation()">
+                  {{details.added_cart}} in Cart
+                </button>
+              </div>
+              <div class="col-xs-1" style="padding:0px;">
+                <button type="button" class="btn btn-default incrementBtn" ng-click="incrementCookie(details);">
+                  <i class="fa fa-plus" style="font-size:14px;"></i>
+                </button>
+              </div>
             </div>
           </div>
           <div class="col-md-12" ng-if="!showOptions||details.in_stock=='false'">

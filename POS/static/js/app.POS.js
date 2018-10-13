@@ -296,12 +296,12 @@ app.controller("controller.POS.productinfo.form", function($scope, product, $htt
     $scope.mode = 'edit';
     $scope.product = product;
     $scope.categoriesList = []
-    $scope.storeData = []
-    $scope.checkStore = []
-    for (var i = 0; i < $scope.product.storeQty.length; i++) {
-      $scope.storeData.push($scope.product.storeQty[i].pk)
-      $scope.checkStore.push($scope.product.storeQty[i].store.pk)
-    }
+    // $scope.storeData = []
+    // $scope.checkStore = []
+    // for (var i = 0; i < $scope.product.storeQty.length; i++) {
+    //   $scope.storeData.push($scope.product.storeQty[i].pk)
+    //   $scope.checkStore.push($scope.product.storeQty[i].store.pk)
+    // }
     if ($scope.product.compositionQtyMap == null) {
       $scope.compositionQtyMap = []
     } else {
@@ -638,17 +638,17 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     category: '',
     qty: 1
   }
-  $scope.storeData = []
-  $scope.checkStore = []
-  $scope.storeData.pk = []
+  // $scope.storeData = []
+  // $scope.checkStore = []
+  // $scope.storeData.pk = []
 
   if (product.pk != undefined) {
     $scope.mode = 'edit';
     $scope.product = product;
-    for (var i = 0; i < $scope.product.storeQty.length; i++) {
-      $scope.storeData.push($scope.product.storeQty[i].pk)
-      $scope.checkStore.push($scope.product.storeQty[i].store.pk)
-    }
+    // for (var i = 0; i < $scope.product.storeQty.length; i++) {
+    //   $scope.storeData.push($scope.product.storeQty[i].pk)
+    //   $scope.checkStore.push($scope.product.storeQty[i].store.pk)
+    // }
     if ($scope.product.compositionQtyMap == null) {
       $scope.compositionQtyMap = []
     } else {
@@ -700,40 +700,40 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     'quantity': ''
   }
 
-  $scope.savestore = function() {
-    console.log($scope.storeDetail, $scope.storeData, $scope.checkStore);
-    if ($scope.checkStore.indexOf($scope.storeDetail.store.pk) >= 0) {
-      Flash.create('warning', 'This Store Has Already Added')
-      return
-    }
-    var method = 'POST'
-    var url = '/api/POS/storeQty/'
-    if ($scope.storeDetail.editpk != undefined && $scope.storeDetail.editpk > 0) {
-      method = 'PATCH'
-      url = url + $scope.storeDetail.editpk + '/'
-    }
-    var sendData = {
-      store: $scope.storeDetail.store.pk,
-      quantity: $scope.storeDetail.quantity
-    }
-    $http({
-      method: method,
-      url: url,
-      data: sendData,
-    }).
-    then(function(response) {
-      Flash.create('success', 'Saved')
-      console.log(response.data);
-      $scope.product.storeQty.push(response.data)
-      $scope.storeData.push(response.data.pk)
-      $scope.checkStore.push(response.data.store.pk)
-      $scope.storeDetail = {
-        'store': '',
-        'quantity': ''
-      }
-    })
-
-  }
+  // $scope.savestore = function() {
+  //   console.log($scope.storeDetail, $scope.storeData, $scope.checkStore);
+  //   if ($scope.checkStore.indexOf($scope.storeDetail.store.pk) >= 0) {
+  //     Flash.create('warning', 'This Store Has Already Added')
+  //     return
+  //   }
+  //   var method = 'POST'
+  //   var url = '/api/POS/storeQty/'
+  //   if ($scope.storeDetail.editpk != undefined && $scope.storeDetail.editpk > 0) {
+  //     method = 'PATCH'
+  //     url = url + $scope.storeDetail.editpk + '/'
+  //   }
+  //   var sendData = {
+  //     store: $scope.storeDetail.store.pk,
+  //     quantity: $scope.storeDetail.quantity
+  //   }
+  //   $http({
+  //     method: method,
+  //     url: url,
+  //     data: sendData,
+  //   }).
+  //   then(function(response) {
+  //     Flash.create('success', 'Saved')
+  //     console.log(response.data);
+  //     $scope.product.storeQty.push(response.data)
+  //     $scope.storeData.push(response.data.pk)
+  //     $scope.checkStore.push(response.data.store.pk)
+  //     $scope.storeDetail = {
+  //       'store': '',
+  //       'quantity': ''
+  //     }
+  //   })
+  //
+  // }
 
   $scope.addCategories = function() {
     if (typeof $scope.categoryForm.category != 'object') {
@@ -776,7 +776,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   });
 
   $scope.save = function() {
-    console.log($scope.storeData.length, 'lllllllllllllllllllllllll');
+    // console.log($scope.storeData.length, 'lllllllllllllllllllllllll');
     console.log('entered', $scope.product.discount, 'aaaa');
     // console.log($scope.product.productMeta);
     // console.log($scope.product.productMeta.pk);
@@ -805,10 +805,10 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       Flash.create('warning', 'Enter valid MRP');
       return;
     }
-    if (f.inStock == undefined) {
-      Flash.create('warning', 'Add a valid number of items In Stock');
-      return;
-    }
+    // if (f.inStock == undefined) {
+    //   Flash.create('warning', 'Add a valid number of items In Stock');
+    //   return;
+    // }
     if (f.price.length == 0 || f.price < 0) {
       Flash.create('warning', 'MRP Is Required');
       return;
@@ -822,7 +822,11 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       return;
     }
 
-    if (isNaN($scope.product.howMuch)) {
+    if (f.unit==null) {
+      Flash.create('warning', 'Please select unit type');
+      return;
+    }
+    if (isNaN(f.howMuch) || f.howMuch==null) {
       Flash.create('warning', 'Enter valid How much');
       return;
     }
@@ -832,7 +836,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     fd.append('cost', f.cost);
     fd.append('serialNo', f.serialNo);
     fd.append('description', f.description);
-    fd.append('inStock', f.inStock);
+    // fd.append('inStock', f.inStock);
     fd.append('logistics', f.logistics);
     fd.append('serialId', f.serialId);
     fd.append('reorderTrashold', f.reorderTrashold);
@@ -862,7 +866,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     } else {
       fd.append('haveComposition', false);
     }
-    fd.append('storeQty', $scope.storeData)
+    // fd.append('storeQty', $scope.storeData)
     // if($scope.storeData.length>0){
     //
     //   fd.append('storeQty' , $scope.storeData)
@@ -907,33 +911,33 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
 
   }
 
-  $scope.deleteStore = function(pk, ind) {
-    $http({
-      method: 'DELETE',
-      url: '/api/POS/storeQty/' + pk + '/'
-    }).
-    then((function(ind) {
-      return function(response) {
-        $scope.product.storeQty.splice(ind, 1);
-        $scope.storeData.splice(ind, 1);
-        $scope.checkStore.splice(ind, 1);
-        Flash.create('success', 'Deleted');
-      }
-    })(ind))
-
-  }
-  $scope.editStore = function(ind) {
-    console.log($scope.product.storeQty[ind]);
-    $scope.storeDetail = {
-      'store': $scope.product.storeQty[ind].store,
-      'quantity': $scope.product.storeQty[ind].quantity,
-      'editpk': $scope.product.storeQty[ind].pk
-    }
-    $scope.product.storeQty.splice(ind, 1);
-    $scope.storeData.splice(ind, 1);
-    $scope.checkStore.splice(ind, 1);
-
-  }
+  // $scope.deleteStore = function(pk, ind) {
+  //   $http({
+  //     method: 'DELETE',
+  //     url: '/api/POS/storeQty/' + pk + '/'
+  //   }).
+  //   then((function(ind) {
+  //     return function(response) {
+  //       $scope.product.storeQty.splice(ind, 1);
+  //       $scope.storeData.splice(ind, 1);
+  //       $scope.checkStore.splice(ind, 1);
+  //       Flash.create('success', 'Deleted');
+  //     }
+  //   })(ind))
+  //
+  // }
+  // $scope.editStore = function(ind) {
+  //   console.log($scope.product.storeQty[ind]);
+  //   $scope.storeDetail = {
+  //     'store': $scope.product.storeQty[ind].store,
+  //     'quantity': $scope.product.storeQty[ind].quantity,
+  //     'editpk': $scope.product.storeQty[ind].pk
+  //   }
+  //   $scope.product.storeQty.splice(ind, 1);
+  //   $scope.storeData.splice(ind, 1);
+  //   $scope.checkStore.splice(ind, 1);
+  //
+  // }
 
   $scope.productVerientForm = {
     'sku': '',
