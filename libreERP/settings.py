@@ -91,7 +91,7 @@ SEO_SITE_NAME = 'STERLING SELECT'
 SEO_URL = 'https://sterlingselect.com/'
 SEO_PUBLISHER = 'https://plus.google.com/b/105723801328437605094/'
 
-LITE_REGISTRATION = True
+LITE_REGISTRATION = False
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
