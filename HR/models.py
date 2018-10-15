@@ -82,7 +82,12 @@ class profile(models.Model):
         ('F' , 'Female'),
         ('O' , 'Other'),
     )
+    EMPLOYEE_TYPE_CHOICES = (
+        ('full time' , 'full time'),
+        ('part time' , 'part time'),
+    )
     empID = models.PositiveIntegerField(unique = True , null = True)
+    empType = models.CharField(choices = EMPLOYEE_TYPE_CHOICES , default = 'full time' , max_length = 4)
     displayPicture = models.ImageField(upload_to = getDisplayPicturePath)
     dateOfBirth = models.DateField( null= True )
     anivarsary = models.DateField( null= True )
@@ -214,6 +219,10 @@ class payroll(models.Model):
     notice = models.PositiveIntegerField(null=True , default=0)
     probation = models.PositiveIntegerField(null=True , default=0)
     probationNotice = models.PositiveIntegerField(null=True , default=0)
+    pfAccNo = models.CharField(max_length = 20 , null = True)
+    pfUniNo = models.CharField(max_length = 200 , null = True)
+    pfAmnt = models.PositiveIntegerField(null=True , default=0)
+    esic = models.CharField(max_length = 20 , null = True)
 
 User.payroll = property(lambda u : payroll.objects.get_or_create(user = u)[0])
 

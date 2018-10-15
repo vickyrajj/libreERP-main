@@ -32,21 +32,25 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
   $scope.joiningDate =new Date($scope.data.joiningDate);
   $scope.joiningDateYear = $scope.joiningDate.getFullYear();
   $scope.joiningMonth =  $scope.joiningDate.getMonth();
+
+  $scope.currentDate = new Date()
+  $scope.currentYear = new Date().getFullYear()
+  $scope.currentMonth =  new Date().getMonth();
+
   if($scope.data.lastWorkingDate!=null){
     $scope.lastWorkingDate =new Date($scope.data.lastWorkingDate);
     $scope.lastWorkingYear = $scope.lastWorkingDate.getFullYear();
     $scope.lastWorkingMonth = $scope.lastWorkingDate.getMonth();
   }
   else{
-    $scope.lastWorkingDate = new Date();
-    $scope.lastWorkingYear = $scope.lastWorkingDate.getFullYear();
-    $scope.lastWorkingMonth = $scope.lastWorkingDate.getMonth();
+    $scope.lastWorkingDate = $scope.currentDate
+    $scope.lastWorkingYear = $scope.currentYear
+    $scope.lastWorkingMonth = $scope.currentMonth
   }
 
 
 
-  $scope.currentDate = new Date()
-  $scope.currentYear = new Date().getFullYear()
+
   if ($scope.lastWorkingYear<$scope.currentYear) {
     $scope.currentYear = $scope.lastWorkingYear
     $scope.currentDate = $scope.lastWorkingDate
@@ -59,12 +63,12 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
     console.log($scope.joiningMonth,$scope.lastWorkingMonth);
     $scope.monthsData =[]
     $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    if($scope.joiningDateYear==$scope.lastWorkingYear){
+    if($scope.joiningDateYear==$scope.lastWorkingYear){;
       if($scope.joiningMonth==$scope.lastWorkingMonth){
         $scope.monthsData.push($scope.months[$scope.joiningMonth])
       }
       else{
-        $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.lastWorkingMonth)
+        $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.lastWorkingMonth-1)
       }
     }
     else if(newValue==$scope.joiningDateYear){
@@ -92,19 +96,51 @@ app.controller("workforceManagement.salary.payslips.info", function($scope, $sta
 
   $scope.data = $scope.tab.data;
 
-  $scope.months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "Octobar", "November", "December"]
-  //
-    $scope.reportData = [];
 
+  $scope.months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "Octobar", "November", "December"]
+  $scope.pay={}
+  $scope.updateReport = function(){
+    if($scope.data.dateOfProcessing==undefined||$scope.data.dateOfProcessing==null){
+      Flash.create('danger', 'Please select Date of Processing');
+      return
+    }
+    else if (typeof $scope.data.dateOfProcessing == 'object') {
+    $scope.data.dateOfProcessing =$scope.data.dateOfProcessing.toJSON().split('T')[0]
+    } else {
+      $scope.data.dateOfProcessing = $scope.data.dateOfProcessing
+    }
+    if($scope.pay.status==true){
+      $scope.status = "approved"
+    }
+    else{
+      $scope.status = "submitted"
+    }
     $http({
-    method: 'GET',
-    url: '/api/payroll/payslip/?month='+$scope.data.month
-  }).
-  then(function(response) {
-    $scope.reportData = response.data;
-    console.log($scope.reportData);
-    // console.log($scope.checkin.pk);
-  })
+      method: 'PATCH',
+      url: '/api/payroll/report/' + $scope.data.pk + '/',
+      data: {
+        dateOfProcessing: $scope.data.dateOfProcessing,
+        status : $scope.status
+      }
+    }).
+    then(function(response) {
+      $scope.data = response.data
+    })
+
+  }
+
+
+  //
+  //   $scope.reportData = [];
+  //   $scope.total=0.0
+  //   $scope.tds=0.0
+  //   $http({
+  //   method: 'GET',
+  //   url: '/api/payroll/payslip/?month='+$scope.data.month
+  // }).
+  // then(function(response) {
+  //   $scope.reportData = response.data;
+  // })
 
 
 
@@ -133,9 +169,9 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
   $scope.data = []
 
   $scope.daysInMonth = new Date(parseInt($scope.selectedYear), parseInt($scope.selectedMonth), 0).getDate();
-
+  $scope.addedData =[]
   $scope.initializeSheet = function() {
-
+    $scope.addedData =[]
     var toDelete = [];
     for (var i = 0; i < $scope.report.payslips.length; i++) {
       toDelete.push($scope.report.payslips[i].payslipID);
@@ -158,8 +194,6 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
     }).
     then(function(response) {
       $scope.report.payslips = [];
-      console.log('******************', response.data);
-
       for (var i = 0; i < response.data.length; i++) {
         response.data[i].adHoc = 0;
         response.data[i].reimbursement = 0;
@@ -226,6 +260,8 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
     }
   }
 
+
+
   $scope.saveIndividualPayslip = function(id, indx) {
     var url = '/api/payroll/payslip/'
     if (id == undefined) {
@@ -256,14 +292,21 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
     then((function(indx) {
       return function(response) {
         $scope.report.payslips[indx].payslipID = response.data.pk;
+
+        if (method = 'POST') {
+
+          $scope.addedData.push(response.data)
+        }
+        else{
+          $scope.addedData[indx] = response.data
+        }
       }
     })(indx))
   }
 
+
+
   $scope.fetchOrCreate = function() {
-
-
-
     $http({
       method: 'GET',
       url: '/api/payroll/report/?month=' + $scope.selectedMonth + '&year=' + $scope.selectedYear
@@ -289,6 +332,7 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
         $scope.report = response.data[0];
         for (var i = 0; i < $scope.report.payslips.length; i++) {
           $scope.report.payslips[i].payslipID = $scope.report.payslips[i].pk;
+          $scope.addedData.push($scope.report.payslips[i])
         }
 
 
@@ -296,19 +340,46 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
     })
   }
 
-  $scope.save = function(submit) {
+
+
+  $scope.save = function(status) {
     // make a POST request with : total , totalTDS
-    var toSend = {
-      total: 0,
-      totalTDS: 0
+
+    $scope.total =0.0
+    $scope.totalTDS =0.0
+    console.log($scope.addedData.payslips);
+    if($scope.addedData.length>0){
+      for (var i = 0; i <$scope.addedData.length; i++) {
+        $scope.total+=  $scope.addedData[i].amount
+        $scope.totalTDS +=  $scope.addedData[i].tds
+      }
     }
-    if (submit) {
-      toSend.status = 'submitted';
+    else{
+      Flash.create('danger', 'Please select Employees');
+      return
+    }
+    if(status=='save'){
+      var toSend = {
+        total:Math.round($scope.total),
+        totalTDS: Math.round($scope.totalTDS),
+        status:'created'
+      }
+    }
+    else if(status=='submit'){
+      var toSend = {
+        total:Math.round($scope.total),
+        totalTDS: Math.round($scope.totalTDS),
+        status:'submitted'
+      }
     }
 
+
+    // if (submit) {
+    //   toSend.status = 'submitted';
+    // }
     $http({
       method: 'PATCH',
-      url: '/api/payroll/' + $scope.report.pk + '/',
+      url: '/api/payroll/report/' + $scope.report.pk + '/',
       data: toSend
     }).
     then(function() {
@@ -322,15 +393,16 @@ app.controller("workforceManagement.salary.payroll.report", function($scope, $st
   }
 
   $scope.cancel = function(e) {
-    console.log("eeeeeeeeeeeeee");
     $uibModalInstance.dismiss();
   };
 
   $scope.$watch('selectedYear', function() {
+    $scope.addedData =[]
     $scope.fetchOrCreate();
   })
 
   $scope.$watch('selectedMonth', function() {
+    $scope.addedData =[]
     $scope.fetchOrCreate();
   })
 
@@ -441,12 +513,13 @@ app.controller("workforceManagement.salary", function($scope, $state, $users, $s
     template: '/static/ngTemplates/genericTable/genericSearchList.html',
     itemTemplate: '/static/ngTemplates/app.payroll.salary.reportitems.html',
   }, ];
-
+  var getParams = [{key : 'status!' , value :"created"}];
   $scope.config = {
     views: views,
     url: '/api/payroll/report',
     searchField: 'username',
     itemsNumPerView: [8, 16, 24],
+    getParams : getParams,
     multiselectOptions: multiselectOptions,
   }
 

@@ -58,7 +58,7 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
         fields = ( 'pk','empID', 'married', 'dateOfBirth' ,'displayPicture' , 'anivarsary' , 'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry','sameAsLocal',
         'localAddressStreet' , 'localAddressCity' , 'localAddressPin' , 'localAddressState' , 'localAddressCountry', 'prefix', 'gender' , 'email', 'mobile' , 'emergency' , 'website',
         'sign', 'IDPhoto' , 'TNCandBond' , 'resume' ,  'certificates', 'transcripts' , 'otherDocs' , 'almaMater' , 'pgUniversity' , 'docUniversity' , 'fathersName' , 'mothersName' , 'wifesName' , 'childCSV', 'resignation','vehicleRegistration', 'appointmentAcceptance','pan', 'drivingLicense','cheque','passbook',
-        'note1' , 'note2' , 'note3', 'bloodGroup')
+        'note1' , 'note2' , 'note3', 'bloodGroup','empType')
     def update(self , instance , validated_data):
         u = self.context['request'].user
         if not u.is_staff:
@@ -67,7 +67,7 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
         for key in ['empID','married', 'dateOfBirth' , 'displayPicture' ,'anivarsary' ,'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry','sameAsLocal',
         'localAddressStreet' , 'localAddressCity' , 'localAddressPin' , 'localAddressState' , 'localAddressCountry', 'prefix', 'gender' , 'email', 'mobile' , 'emergency' , 'website',
         'sign', 'IDPhoto' , 'TNCandBond' , 'resume' ,  'certificates', 'transcripts' , 'otherDocs' , 'almaMater' , 'pgUniversity' , 'docUniversity' , 'fathersName' , 'mothersName' , 'wifesName' , 'childCSV', 'resignation','vehicleRegistration', 'appointmentAcceptance','pan', 'drivingLicense','cheque','passbook',
-        'note1' , 'note2' , 'note3', 'bloodGroup']:
+        'note1' , 'note2' , 'note3', 'bloodGroup','empType']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -81,10 +81,10 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
 class payrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = payroll
-        fields = ('pk','user','created','updated','hra','special','lta','basic','taxSlab','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate','alHold','mlHold','adHocLeavesHold','notice','probation','probationNotice')
+        fields = ('pk','user','created','updated','hra','special','lta','basic','taxSlab','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate','alHold','mlHold','adHocLeavesHold','notice','probation','probationNotice','pan','pfAccNo','pfUniNo','pfAmnt','esic')
 
     def update(self ,instance, validated_data):
-        for key in ['hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate','alHold','mlHold','adHocLeavesHold','notice','probation','probationNotice']:
+        for key in ['hra','special','lta','basic','adHoc','policyNumber','provider','amount','noticePeriodRecovery','al','ml','adHocLeaves','joiningDate','off','accountNumber','ifscCode','bankName','deboarded','lastWorkingDate','alHold','mlHold','adHocLeavesHold','notice','probation','probationNotice','pan','pfAccNo','pfUniNo','pfAmnt','esic']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -95,7 +95,7 @@ class payrollSerializer(serializers.ModelSerializer):
 class payrollLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = payroll
-        fields = ('pk','user', 'al','ml','adHocLeaves','joiningDate','off','alHold','mlHold','adHocLeavesHold')
+        fields = ('pk','user', 'al','ml','adHocLeaves','joiningDate','off','alHold','mlHold','adHocLeavesHold','pan','pfAccNo','pfUniNo','pfAmnt','esic')
 
 class userSerializer(serializers.ModelSerializer):
     profile = userProfileSerializer(many=False , read_only=True)

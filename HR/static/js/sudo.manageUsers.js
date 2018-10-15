@@ -67,12 +67,12 @@ app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $stat
 });
 
 app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $users) {
-  console.log($scope.tab.data);
+  console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa');
   $scope.user = $users.get($scope.tab.data.user);
 
   $scope.form = $scope.tab.data;
   $scope.save = function() {
-    console.log(typeof $scope.form.joiningDate);
+    console.log('AAAAAAAAAA');
     // make patch request
     var f = $scope.form;
     dataToSend = {
@@ -100,7 +100,10 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
       deboarded: f.deboarded,
       PFUan: f.PFUan,
       pan: f.pan,
-
+      pfAccNo: f.pfAccNo,
+      pfUniNo: f.pfUniNo,
+      pfAmnt: f.pfAmnt,
+      esic:f.esic
 
     }
 
@@ -116,8 +119,10 @@ app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $u
     //   dataToSend.lastWorkingDate = f.lastWorkingDate
     // }
 
-    if (f.lastWorkingDate != null) {
+    if (typeof f.joiningDate == 'object') {
       dataToSend.lastWorkingDate = f.lastWorkingDate.toJSON().split('T')[0]
+    }else {
+      dataToSend.lastWorkingDate = f.lastWorkingDate
     }
 
 
@@ -244,6 +249,7 @@ app.controller('sudo.manageUsers.editDesignation', function($scope, $http, Flash
 
   console.log('pppppppppppppppppppp', $scope.tab.data);
   $scope.save = function() {
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     // make patch request
     var f = $scope.form;
     console.log(f);
@@ -458,6 +464,7 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
 
     var dataToSend = {
       empID: prof.empID,
+      empType: prof.empType,
       prefix: prof.prefix,
       // dateOfBirth: prof.dateOfBirth.toJSON().split('T')[0],
 
@@ -480,7 +487,12 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
     }
     if (prof.married) {
       dataToSend.married = prof.married;
-      dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
+      // dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
+      if (typeof prof.anivarsary == 'object') {
+        dataToSend.anivarsary = prof.anivarsary.toJSON().split('T')[0]
+      } else {
+        dataToSend.anivarsary = prof.anivarsary
+      }
     }
 
     if (typeof prof.dateOfBirth == 'object') {

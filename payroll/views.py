@@ -65,19 +65,21 @@ class payslipViewSet(viewsets.ModelViewSet):
     queryset = Payslip.objects.all()
     serializer_class = payslipSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['month','year' ]
+    filter_fields = ['month','year','status']
 
 class payrollReportViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = PayrollReport.objects.all()
     serializer_class = payrollReportSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['month','year' ]
+    filter_fields = ['month','year','status']
 
 
 #code for pdf
-def payslip(response ,paySlip,userObj, request):
+def payslip(response ,paySlip,userObj,report, request):
     # print '999999999999999999999999999999999999999',paySlip.hra,userObj.first_name+' '+userObj.last_name
+    months = ["","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
     now = datetime.datetime.now()
     monthdays=calendar.monthrange(now.year, now.month)[1]
     currencyType='INR'
@@ -89,12 +91,9 @@ def payslip(response ,paySlip,userObj, request):
     paidHolidays=1
     accountNumber=paySlip.accountNumber
 
-    print '99999999999999',paySlip.joiningDate.year
-    print paySlip.joiningDate.year,userObj.pk
-    print str(paySlip.joiningDate.year)+str(userObj.pk)
+    print userObj.designation.department,'aaaaaaaaaaaaaaaaaaaaaaaaa'
 
-
-    (empCode,name,location,department,grade,designation,pfNo,escisNo,pan,sbs)=(str(paySlip.joiningDate.year)+str(userObj.pk) ,userObj.first_name+' '+userObj.last_name,'Bangalore','Software','A','Software developer','','','',paySlip.basic)
+    (empCode,name,location,department,grade,designation,pfNo,escisNo,pan,sbs)=(str(paySlip.joiningDate.year)+str(userObj.pk) ,userObj.first_name+' '+userObj.last_name,'Bangalore',userObj.designation.department.dept_name,'E.1',userObj.designation.role.name,userObj.payroll.pfAccNo,userObj.payroll.esic,userObj.payroll.pan,paySlip.basic)
     (days,ml,al,cl,adHocLeaves,balanceSL,balanceCL,balanceCO)=(daysPresent+paidHolidays,paySlip.ml,paySlip.al,0,paySlip.adHocLeaves,0,0,0)
     # (basicSalary,hra,cn,cr,mr,oe)=(sbs,50000,40000,0,40000,0)
     (basic,hra,special,lta,adHoc,amount)=(paySlip.basic,paySlip.hra,paySlip.special,paySlip.lta,paySlip.adHoc,paySlip.amount)
@@ -115,11 +114,13 @@ def payslip(response ,paySlip,userObj, request):
     elements = []
 
     a=[Paragraph("<para fontSize=25 alignment='Left' textColor=#6375d4><strong>CIOC</strong></para>",styles['Normal']),
-       Paragraph("<b>CIOC FMCG Pvt ltd.</b><br/>",styledict['center']),
-       Paragraph("<para fontSize=7 alignment='center'>4th Floor,Venkateshwara Heritage,Kudlu Hosa Road,opp Sai Purna Premium Apartment,Sai Meadows,Kudlu,Bengaluru,Karnataka-560068<br/> <b>www.cioc.co.in</b> </para>",styles['Normal']),
-       Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
+       Paragraph(str(settingsFields.get(name = 'companyName').value )+'<br/><br/>',styledict['center']),
+       Paragraph(str(settingsFields.get(name = 'companyAddress').value)+'<br/>',styledict['center']),
+        Paragraph('<strong>www.cioc.co.in </strong><br/>' ,styledict['center']),
+
+       Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(months[report.month],report.year),styles['Normal'])
        ]
-    p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To {0},ICICI Bank LTD.".format(accountNumber),styles['Normal'])
+    p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To "+str(userObj.payroll.accountNumber)+' '+str(userObj.payroll.bankName),styles['Normal'])
 
     data=[[a,'','',''],['','','',''],['Emp Code : %s'%(empCode),'Name : %s'%(name),'',''],['Location : %s'%(location),'Department :%s'%(department),'Grade : %s'%(grade),'Designation : %s'%(designation)],
           ['PF No : %s'%(pfNo),'ESIC No : %s'%(escisNo),'PAN : %s'%(pan),'Standard Basic Salary : %s %d'%(s,sbs)],['Days Paid : %d'%(days),'Days Present : %d'%(daysPresent),'Paid Holidays : %d'%(paidHolidays),'Lwp/Absent : %d'%(absent)],
@@ -142,14 +143,15 @@ def payslip(response ,paySlip,userObj, request):
 class GetPayslip(APIView):
     def get(self , request , format = None):
         print 'enterrrrrrrrrrrrrrrrrr'
-        print request.GET['payslip']
-        p = payroll.objects.get(user = request.GET['payslip'])
-        q = User.objects.get(id = request.GET['payslip'])
+        print request.GET['payslip'],request.GET
+        payrol = payroll.objects.get(user = request.GET['payslip'])
+        user = User.objects.get(id = request.GET['payslip'])
+        report = PayrollReport.objects.get(id = request.GET['report'])
         # payslip(7,request)
         # print 'ttttttttttttt'
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
-        payslip(response , p , q , request)
+        payslip(response , payrol , user ,report, request)
         return response
 
 #code for excelSheet

@@ -1,30 +1,44 @@
 <div style="padding-top:20px;" ng-controller="workforceManagement.salary.payslips.info">
   <div class="col-md-12">
-    <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
-      <div class="row text-center">
-      </div>
-      <div class="row" style="position:relative;min-height:250px;">
+    <div class="col-md-3" style="border-right:solid 2px #eeeeee;position:relative;">
+      <!-- <div class="row" style="position:relative;">
         <i class="fa fa-user-o" style="font-size:260px;color:#fcf7f7;margin-left:80px;margin-top:140px;"></i>
         <div class="container-fluid" style="position:absolute;top:0px;width:100%;">
           <span class="text-muted" style="font-size:15px;"> <i class="fa fa-user-o" style="width:20px;"></i> Payroll for {{months[data.month]}}</span>
-          <div class="row" style="margin-top:10px;">
+          <div class="row" style="margin-top:10px;"> -->
             <div class="col-md-12">
-              <span>Month:{{months[data.month]}}</span><br>
-              <span>Year:{{data.year}}</span><br>
-              <span style="font-size:15px">Total:{{data.total}} <span ng-if="!data.total" class="text-danger">NA</span></span><br>
-              <span style="font-size:15px">TDS :{{data.totalTDS}} <span ng-if="!data.totalTDS" class="text-danger">NA</span></span><br>
-              <span style="font-size:15px">Date of Processing:{{data.dateOfProcessing}} <span ng-if="!data.dateOfProcessing" class="text-danger">NA</span> </span><br>
+              <span style="font-size:25px"><strong>{{months[data.month]}} - {{data.year}}</strong></span><br>
+              <span style="font-size:20px"><strong>Total : </strong>{{data.total}}<span ng-if="!data.total" class="text-danger">NA</span></span><br>
+              <span style="font-size:20px"><strong>TDS : </strong>{{data.totalTDS}} <span ng-if="!data.totalTDS" class="text-danger">NA</span></span><br>
+              <br>
             </div>
           </div>
-          <div class="pull-right">
+          <div class="col-md-2" ng-if="data.status=='submitted'">
+            <span style="font-size:15px">Date of Processing</span>
+            <div class="input-group">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.dateOfProcessing" is-open="status.opened" />
+              <span class="input-group-btn" >
+                <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-2 " style="margin-top: 21px;"  ng-if="data.status == 'submitted'">
+            <switch ng-model="pay.status" class="green pull-right"></switch><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approval :</span>
+          </div>
+          <div class="col-md-2 text-right" style="margin-top: 21px;"  ng-if="data.status == 'submitted'">
+            <button class="btn btn-primary" ng-click="updateReport()">Save</button>
+          </div>
+            <div class="col-md-3 text-left" style="margin-top: 21px;"  ng-if="data.status=='approved'">
+          <div >
             <a style="cursor:pointer;" target="_blank" href="/api/payroll/payslipsReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
           </div>
         </div>
       </div>
+      <!-- </div>
     </div>
-    <div class="col-md-9">
-      <div class="container-fluid" ng-include="'/static/ngTemplates/app.payroll.salary.reportexplore.html'">
-      </div>
+  </div> -->
+  <div class="col-md-12">
+    <div class="container-fluid" ng-include="'/static/ngTemplates/app.payroll.salary.reportexplore.html'">
     </div>
   </div>
 </div>
