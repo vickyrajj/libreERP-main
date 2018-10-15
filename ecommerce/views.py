@@ -219,13 +219,15 @@ class SearchProductAPI(APIView):
                     store = Store.objects.get(pincode=int(self.request.GET['pin']))
                 except:
                     return listing.objects.all()
-                storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-                productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+                # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
+                # print productsList , 'productsList'
                 listingobjs = listing.objects.filter(product__in=productsList)
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
                 genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'),unit =F('product__unit') , dpId = F('files__imageIndex'), typ= Value('list',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name'), dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'),unit =F('product__unit') , dpId = F('files__imageIndex'), typ= Value('list',output_field=CharField())))
             else:
                 genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
                 listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name' ) , dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'), dpId = F('files__imageIndex') , unit = F('product__unit'), typ= Value('list',output_field=CharField())))
@@ -442,8 +444,9 @@ class genericProductViewSet(viewsets.ModelViewSet):
                 store = Store.objects.get(pincode=int(self.request.GET['pin']))
             except:
                 return listing.objects.all()
-            storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-            productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+            # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
             listingList = list(listing.objects.filter(product__in=productsList).values_list('parentType',flat=True))
             genericList = genericProduct.objects.filter(pk__in=listingList)
             if 'genericValue' in  self.request.GET:
@@ -502,8 +505,9 @@ class listingViewSet(viewsets.ModelViewSet):
                         store = Store.objects.get(pincode=int(self.request.GET['pin']))
                     except:
                         return listing.objects.all()
-                    storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-                    productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                    # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+                    # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                    productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
                     toReturn = toReturn.filter(product__in=productsList)
                     multiproductLst = productsList
 
@@ -607,8 +611,9 @@ class listingLiteViewSet(viewsets.ModelViewSet):
                 store = Store.objects.get(pincode=int(self.request.GET['pin']))
             except:
                 return listing.objects.all()
-            storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-            productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+            # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
             listingList = listing.objects.filter(product__in=productsList)
             if 'parentValue' in  self.request.GET:
                 return listingList.filter(parentType=self.request.GET['parentValue']).exclude(pk = self.request.GET['detailValue'] )[0:4]
@@ -680,8 +685,9 @@ class ActivitiesViewSet(viewsets.ModelViewSet):
                 store = Store.objects.get(pincode=int(self.request.GET['pin']))
             except:
                 return listing.objects.all()
-            storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-            productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+            # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
             listingList = list(listing.objects.filter(product__in=productsList).values_list('pk',flat=True))
             a = a.filter(product__in = listingList)
         pPk = []

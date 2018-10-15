@@ -71,6 +71,8 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       if (response.data[0].flag) {
         $rootScope.multiStores = true
         $scope.selectStore()
+      }else {
+        $scope.fetchProdInventory()
       }
     }
   })
@@ -84,49 +86,68 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
         }
       }
     }
+  }
 
+  $scope.prodInventories = []
+  $scope.openCard = false;
+  $scope.toggle = function (indx) {
+    $scope.prodInventories[indx].open = !$scope.prodInventories[indx].open
   }
 
 
   $scope.fetchProdInventory = function () {
-    $scope.fetchInventory = true
-    $scope.data = {
-      tableData: [],
-    };
-
-    views = [{
-      name: 'list',
-      icon: 'fa-th-large',
-      template: '/static/ngTemplates/genericTable/genericSearchList.html',
-      itemTemplate: '/static/ngTemplates/app.productsInventory.item.html',
-    }, ];
-
-    var multiselectOptions = [{
-        icon: 'fa fa-plus',
-        text: 'New'
-      }, {
-        icon: 'fa fa-shopping-cart',
-        text: 'Reorder'
-      }, {
-        icon: 'fa fa-file',
-        text: 'stockReport'
-      },
-      {
-        icon: 'fa fa-file',
-        text: 'reorderingReport'
-      }
-
-    ];
-
-
-    $scope.config = {
-      views: views,
-      url: '/api/POS/storeQty/',
-      searchField: 'name',
-      itemsNumPerView: [10, 20, 40],
-      multiselectOptions: multiselectOptions,
-      getParams : [{key : 'prodInventory' , value : 1}]
+    if ($rootScope.multiStores) {
+      url = '/api/POS/storeQty/?store='+$scope.currentStore.pk
+    }else {
+      url = '/api/POS/storeQty/?master=true'
     }
+
+    $http({
+      method:'GET',
+      url:url
+    }).then(function (response) {
+      console.log(response.data);
+      $scope.prodInventories = response.data
+      for (var i = 0; i < $scope.prodInventories.length; i++) {
+        $scope.prodInventories[i].open = false
+      }
+    })
+
+    // $scope.data = {
+    //   tableData: [],
+    // };
+    //
+    // views = [{
+    //   name: 'list',
+    //   icon: 'fa-th-large',
+    //   template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    //   itemTemplate: '/static/ngTemplates/app.productsInventory.item.html',
+    // },];
+    //
+    // var multiselectOptions = [{
+    //     icon: 'fa fa-plus',
+    //     text: 'New'
+    //   }, {
+    //     icon: 'fa fa-shopping-cart',
+    //     text: 'Reorder'
+    //   }, {
+    //     icon: 'fa fa-file',
+    //     text: 'stockReport'
+    //   },
+    //   {
+    //     icon: 'fa fa-file',
+    //     text: 'reorderingReport'
+    //   }];
+    //
+    //
+    // $scope.config = {
+    //   views: views,
+    //   url: '/api/POS/storeQty/',
+    //   searchField: 'name',
+    //   itemsNumPerView: [2, 4, 6],
+    //   multiselectOptions: multiselectOptions,
+    //   getParams : [{key : 'prodInventory' , value : 1}]
+    // }
 
     // var views = [{
     //   name: 'list',
@@ -177,72 +198,14 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     //   editorTemplate: '/static/ngTemplates/app.productsInventory.product.modal.html',
     // }
 
-    if ($rootScope.multiStores) {
-      $scope.config.getParams = [{
-        key: 'store',
-        value: $scope.currentStore.pk
-      }]
-    }
+    // if ($rootScope.multiStores) {
+    //   $scope.config.getParams.push({
+    //     key: 'store',
+    //     value: $scope.currentStore.pk
+    //   })
+    // }
 
   }
-
-  if (!$rootScope.multiStores) {
-    $scope.fetchInventory = false
-    $scope.fetchProdInventory()
-  }
-
-
-  $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-
-    if (action == 'reorderingReport') {
-
-      window.open("/api/POS/reorderingReport/", "_blank")
-      // $scope.openProductForm();
-    } else if (action == 'stockReport') {
-      window.open("/api/POS/stockReport/", "_blank")
-    } else if (action == 'Reorder') {
-      $state.go('businessManagement.productsInventory.purchaseOrder')
-    } else if (action == 'New') {
-      console.log('open uib modal ');
-      $scope.productInventoryModal()
-    } else {
-      for (var i = 0; i < $scope.data.tableData.length; i++) {
-        if ($scope.data.tableData[i].pk == parseInt(target)) {
-          if (action == 'editMaster') {
-            $scope.openProductForm(i);
-            console.log('editing');
-          } else if(action=='edit') {
-            $scope.editQuantity(i);
-          }else {
-            $scope.openProductInfo(i);
-            console.log('info');
-          }
-        }
-      }
-    }
-  }
-
-
-  $scope.editQuantity = function(idx) {
-    $scope.productData = $scope.data.tableData[idx]
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.productsInventory.product.modal.html',
-      size: 'lg',
-      backdrop: true,
-      resolve:{
-        productData:function () {
-          return $scope.productData
-        }
-      },
-      controller:'businessManagement.productsInventory.edit'
-    }).result.then(function() {}, function() {
-
-    });
-  }
-
-
-
 
   $scope.selectStore = function(pk) {
     //this fn will be called if multistore
@@ -251,7 +214,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.productsInventory.selectStoreModal.html',
       size: 'lg',
-      backdrop: true,
+      backdrop: false,
       controller: function($scope, $timeout, $http, Flash, $uibModal, $rootScope, $state, $uibModalInstance) {
 
         $http({
@@ -282,15 +245,79 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
 
       },
     }).result.then(function() {}, function(store) {
-      // if ($scope.currentStore) {
-      //   if ($scope.currentStore.pk != store.pk) {
-      //     $scope.currentStore = store
-      //   }
-      // } else {
-      //   $scope.currentStore = store
-      // }
-      $scope.currentStore = store
-      $scope.fetchProdInventory()
+      if ($scope.currentStore) {
+        if ($scope.currentStore.pk != store.pk) {
+          $scope.currentStore = store
+          $scope.fetchProdInventory()
+        }
+      } else {
+        $scope.currentStore = store
+        $scope.fetchProdInventory()
+      }
+    });
+  }
+
+
+  $scope.topButtonsClick = function (action) {
+    if (action == 'reorderingReport') {
+      window.open("/api/POS/reorderingReport/", "_blank")
+      // $scope.openProductForm();
+    } else if (action == 'stockReport') {
+      window.open("/api/POS/stockReport/", "_blank")
+    } else if (action == 'Reorder') {
+      $state.go('businessManagement.productsInventory.purchaseOrder')
+    } else if (action == 'New') {
+      $scope.productInventoryModal()
+    }
+  }
+
+
+  // $scope.tableAction = function(target, action, mode) {
+  //   console.log(target, action, mode);
+  //
+  //   if (action == 'reorderingReport') {
+  //
+  //     window.open("/api/POS/reorderingReport/", "_blank")
+  //     // $scope.openProductForm();
+  //   } else if (action == 'stockReport') {
+  //     window.open("/api/POS/stockReport/", "_blank")
+  //   } else if (action == 'Reorder') {
+  //     $state.go('businessManagement.productsInventory.purchaseOrder')
+  //   } else if (action == 'New') {
+  //     console.log('open uib modal ');
+  //     $scope.productInventoryModal()
+  //   } else {
+  //     for (var i = 0; i < $scope.data.tableData.length; i++) {
+  //       if ($scope.data.tableData[i].pk == parseInt(target)) {
+  //         if (action == 'editMaster') {
+  //           $scope.openProductForm(i);
+  //           console.log('editing');
+  //         } else if(action=='edit') {
+  //           $scope.editQuantity(i);
+  //         }else {
+  //           $scope.openProductInfo(i);
+  //           console.log('info');
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
+
+  $scope.editQuantity = function(idx) {
+    $scope.productData = $scope.prodInventories[idx]
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.productsInventory.product.modal.html',
+      size: 'lg',
+      backdrop: true,
+      resolve:{
+        productData:function () {
+          return $scope.productData
+        }
+      },
+      controller:'businessManagement.productsInventory.edit'
+    }).result.then(function() {}, function() {
+
     });
   }
 
@@ -318,7 +345,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       },
       controller:'businessManagement.productsInventory.inventoryForm',
     }).result.then(function() {}, function() {
-
+      $scope.fetchProdInventory()
     });
   }
 
@@ -419,6 +446,7 @@ app.controller("businessManagement.productsInventory.inventoryForm", function($s
     var dataToSend = {}
     if ($rootScope.multiStores) {
       dataToSend.store = storePk
+      dataToSend.master = false
     }else {
       dataToSend.master = true;
     }

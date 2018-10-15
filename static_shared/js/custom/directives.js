@@ -796,6 +796,9 @@ app.directive('productCard', function() {
       }
 
        $scope.createCookieDetail=function() {
+         if ($scope.qtyToAddInit.qty=='' || $scope.qtyToAddInit.qty<=0) {
+           $scope.qtyToAddInit.qty = 1
+         }
         console.log($rootScope.addToCart,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         if($rootScope.addToCart!=undefined){
            for(var i=0;i<$rootScope.addToCart.length;i++){
@@ -819,14 +822,23 @@ app.directive('productCard', function() {
       }
 
       $scope.$watch('qtyToAddInit.qty', function(newValue, oldValue) {
+        console.log(typeof newValue);
+
         if (newValue<=0) {
-          $scope.qtyToAddInit.qty = 1
+          console.log(typeof newValue , 'sdf');
         }
+
+        // if (newValue<='') {
+        //   $scope.qtyToAddInit.qty = 1
+        // }
       })
 
 
 
       $scope.addToCart = function() {
+        if ($scope.qtyToAddInit.qty=='' || $scope.qtyToAddInit.qty<=0) {
+          $scope.qtyToAddInit.qty = 1
+        }
         console.log($scope.qtyToAddInit.qty,'qtyyyyyyyyyyy');
           $scope.list.added_cart = $scope.qtyToAddInit.qty
           $http({

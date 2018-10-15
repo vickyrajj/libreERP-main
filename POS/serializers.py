@@ -193,6 +193,7 @@ class StoreQtySerializer(serializers.ModelSerializer):
     store = StoreSerializer(many = False , read_only = True)
     product = ProductSerializer(many = False , read_only = True)
     productVariant = ProductVerientSerializer(many = False , read_only = True)
+    # some = serializers.SerializerMethodField()
     class Meta:
         model = StoreQty
         fields = ('pk' ,'created', 'store' , 'quantity' ,'product','productVariant','master')
@@ -219,6 +220,11 @@ class StoreQtySerializer(serializers.ModelSerializer):
             instance.store = Store.objects.get(pk=self.context['request'].data['store'])
         instance.save()
         return instance
+
+    # def get_some(self, obj):
+    #     print obj,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    #     print model_to_dict(obj)
+    #     return StoreSerializer( Store.objects.get(pk=3) ).data
 
 class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)

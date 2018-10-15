@@ -142,7 +142,7 @@ class StoreQty(models.Model):
     productVariant = models.ForeignKey(ProductVerient , related_name="storeProdVar", blank=True, null=True)
     master = models.BooleanField(default = False)
     class Meta:
-        unique_together = ('store' , 'product' , 'master')
+        unique_together = ('store' , 'product' , 'master', 'productVariant')
 
 # class ProductMetaList(models.Model):
 #     user = models.ForeignKey(User ,null = False , related_name ="productMetaList")

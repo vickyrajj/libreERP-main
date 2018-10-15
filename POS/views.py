@@ -90,9 +90,25 @@ class StoreViewSet(viewsets.ModelViewSet):
 class StoreQtyViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = StoreQtySerializer
-    queryset = StoreQty.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['store']
+    # queryset = StoreQty.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['store']
+
+    def get_queryset(self):
+        print self.request.GET , 'get'
+
+        allObj = StoreQty.objects.all()
+
+        if 'store' in self.request.GET:
+            allObj = allObj.filter(store = self.request.GET['store'])
+            toReturn = allObj
+        elif 'master' in self.request.GET:
+            # allObj = allObj.filter(master = True).annotate(some=Value("sai",output_field=CharField()))
+            allObj = allObj.filter(master = True)
+            toReturn = allObj
+        else:
+            toReturn = allObj
+        return toReturn
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -130,6 +146,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 #     queryset = Product.objects.all()
 #     filter_backends = [DjangoFilterBackend]
 #     filter_fields = ['name']
+
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = InvoiceSerializer
