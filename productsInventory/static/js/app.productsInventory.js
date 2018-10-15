@@ -101,13 +101,31 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       itemTemplate: '/static/ngTemplates/app.productsInventory.item.html',
     }, ];
 
+    var multiselectOptions = [{
+        icon: 'fa fa-plus',
+        text: 'New'
+      }, {
+        icon: 'fa fa-shopping-cart',
+        text: 'Reorder'
+      }, {
+        icon: 'fa fa-file',
+        text: 'stockReport'
+      },
+      {
+        icon: 'fa fa-file',
+        text: 'reorderingReport'
+      }
+
+    ];
+
 
     $scope.config = {
       views: views,
       url: '/api/POS/storeQty/',
       searchField: 'name',
       itemsNumPerView: [10, 20, 40],
-      // getParams : [{key : 'result' , value : 'won'}]
+      multiselectOptions: multiselectOptions,
+      getParams : [{key : 'prodInventory' , value : 1}]
     }
 
     // var views = [{
@@ -227,6 +245,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
 
 
   $scope.selectStore = function(pk) {
+    //this fn will be called if multistore
     console.log(pk);
     $scope.fetchInventory = false
     $uibModal.open({

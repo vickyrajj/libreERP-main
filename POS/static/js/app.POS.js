@@ -292,6 +292,8 @@ app.controller("controller.POS.productMeta.form", function($scope, $http, Flash)
 
 app.controller("controller.POS.productinfo.form", function($scope, product, $http) {
 
+  console.log(product);
+
   if (product.pk != undefined) {
     $scope.mode = 'edit';
     $scope.product = product;
