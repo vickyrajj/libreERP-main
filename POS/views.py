@@ -90,9 +90,9 @@ class StoreViewSet(viewsets.ModelViewSet):
 class StoreQtyViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = StoreQtySerializer
-    # queryset = StoreQty.objects.all()
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['store']
+    queryset = StoreQty.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['store','master','product']
 
     def get_queryset(self):
         print self.request.GET , 'get'
@@ -189,6 +189,12 @@ class ProductVerientViewSet(viewsets.ModelViewSet):
     queryset = ProductVerient.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['parent']
+
+
+# class ProductInventoryViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated, )
+#     serializer_class = ProductInventorySerializer
+#     queryset = Product.objects.all()
 
 # class ProductMetaListViewSet(viewsets.ModelViewSet):
 #     permission_classes = (permissions.IsAuthenticated , )
@@ -901,6 +907,42 @@ class ExternalEmailOrders(APIView):
         # print dir(request.FILES['attachment'])
         # print request.FILES['attachment'].size
         return Response({"saved" : True},status=status.HTTP_200_OK)
+
+
+class ProductInventoryAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print 'cameeeeeeeeeeeee'
+        toReturn = []
+        if 'store' in request.GET:
+            print 'multistoreeeeeeeeeeeeeee'
+            productsList = list(StoreQty.objects.filter(store=request.GET['store']).values('product').distinct().values('product__pk','product__name'))
+
+        elif 'master' in request.GET:
+            print 'singlestoreeeeeeeeeeeeeeeeeee'
+            productsList = list(StoreQty.objects.filter(master=True).values('product').distinct().values('product__pk','product__name'))
+        else:
+            productsList = list(StoreQty.objects.all().values('product').distinct().values('product__pk','product__name'))
+
+
+
+        print productsList
+        for i in productsList:
+            data = list(StoreQty.objects.filter(product=i['product__pk']).values('pk','product','productVariant','productVariant__sku','product__serialNo','quantity'))
+            toReturn.append({'productName':i['product__name'],'data':data})
+
+        #
+        # response = HttpResponse(content_type='application/pdf')
+        # print request.GET['invoice']
+        # o = Invoice.objects.get(id = request.GET['invoice'])
+        # response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
+        # genInvoice(response , o , request)
+        # # f = open('./media_root/invoicedownload%s%s.pdf'%(o.pk, o.status) , 'wb')
+        # # f.write(response.content)
+        # # f.close()
+        # if 'saveOnly' in request.GET:
+        # return response
+        return Response(toReturn,status=status.HTTP_200_OK)
 
 
 class InvoicePrint(APIView):

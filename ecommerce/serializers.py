@@ -160,7 +160,6 @@ class listingSerializer(serializers.ModelSerializer):
         l.save()
         if 'files' in self.context['request'].data:
             for m in self.context['request'].data['files']:
-                print m,'mmmmmmmmmmmmmmmmmmmmmmm'
                 l.files.add(media.objects.get(pk = m))
 
         for s in json.loads(l.specifications):
@@ -208,9 +207,9 @@ class listingSerializer(serializers.ModelSerializer):
         if self.context['request'].user.is_authenticated:
             cart = Cart.objects.filter(product=obj.pk,user=self.context['request'].user,typ='cart',)
             if cart.count()>0:
-                return cart[0].qty
+                return 0
             else:
-                return cart.count()
+                return 0
         else:
             return 0
 
@@ -256,9 +255,11 @@ class listingLiteSerializer(serializers.ModelSerializer):
         if self.context['request'].user.is_authenticated:
             cart = Cart.objects.filter(product=obj.pk,user=self.context['request'].user,typ='cart')
             if cart.count()>0:
-                return cart[0].qty
+                return 0
+                # return cart[0].qty
             else:
-                return cart.count()
+                return 0
+                # return cart.count()
         else:
             return 0
 

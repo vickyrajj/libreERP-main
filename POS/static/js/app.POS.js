@@ -252,6 +252,7 @@ app.controller("controller.POS.productMeta.form", function($scope, $http, Flash)
 
 
   $scope.saveproductMeta = function() {
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     var f = $scope.configureForm;
     if (f.description == null || f.description.length == 0 || f.code == null || f.code.length == 0 || f.taxRate == null || f.taxRate.length == 0 || f.typ == null || f.typ.length == 0) {
       Flash.create('warning', 'All Fields Are Required')

@@ -54,6 +54,9 @@ class CustomerSerializer(serializers.ModelSerializer):
         c.save()
         return c
 
+
+
+
 class ProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -225,6 +228,28 @@ class StoreQtySerializer(serializers.ModelSerializer):
     #     print obj,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     #     print model_to_dict(obj)
     #     return StoreSerializer( Store.objects.get(pk=3) ).data
+
+
+
+# class StoreQtyLiteSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = StoreQty
+#         fields = ('pk' ,'created', 'store' , 'quantity' ,'product','productVariant','master')
+
+# class ProductVerientLiteInventorySerializer(serializers.ModelSerializer):
+#     # discountedPrice = serializers.SerializerMethodField()
+#     storeProdVar = StoreQtyLiteSerializer(many = True , read_only = True)
+#     class Meta:
+#         model = ProductVerient
+#         fields = ('pk','created','updated','sku','unitPerpack','price','storeProdVar','discountedPrice')
+
+
+# class ProductInventorySerializer(serializers.ModelSerializer):
+#     parentProducts = ProductVerientLiteInventorySerializer(many = True , read_only = True)
+#     class Meta:
+#         model = Product
+#         fields = ('pk' , 'user' ,'name',  'price', 'displayPicture','serialNo', 'cost','haveComposition' , 'inStock','discount','alias','howMuch' , 'parentProducts')
+
 
 class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)

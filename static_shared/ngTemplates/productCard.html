@@ -152,7 +152,7 @@
                   </button>
                 </div>
                 <div class="col-xs-8" style="padding:0px;">
-                  <button type="button" name="button" class="inCartBtn btn btn-sm btn-default" ng-click="$event.stopPropagation()">
+                  <button type="button" name="button" class="inCartBtn btn btn-sm btn-default"  ng-click="$event.stopPropagation()">
                     {{list.added_cart}} in Cart
                   </button>
                 </div>
@@ -173,7 +173,7 @@
                   </span>
                 </div> -->
             </div>
-            <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.in_stock=='false'">
+            <div style=" padding:10px 10px 10px 10px;margin:0px;" ng-if="list.in_stock=='false'">
               <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
             </div>
             <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&!me.pk&&list.in_stock=='true'">

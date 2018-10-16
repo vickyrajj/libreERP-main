@@ -106,11 +106,13 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       method:'GET',
       url:url
     }).then(function (response) {
-      console.log(response.data);
+      console.log(response.data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
       $scope.prodInventories = response.data
       for (var i = 0; i < $scope.prodInventories.length; i++) {
         $scope.prodInventories[i].open = false
+
       }
+
     })
 
     // $scope.data = {

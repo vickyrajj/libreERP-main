@@ -983,6 +983,7 @@ app.directive('productCard', function() {
                   }).
                   then(function(response) {
                     Flash.create('success', 'Removed From Cart');
+                    $scope.qtyToAddInit.qty = 1
 
                   })
                   $rootScope.inCart.splice(i, 1)
@@ -997,6 +998,7 @@ app.directive('productCard', function() {
                     }
                   }).
                   then(function(response) {
+
                   })
 
                 }
