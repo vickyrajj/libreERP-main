@@ -10,6 +10,9 @@
               <span style="font-size:25px"><strong>{{months[data.month]}} - {{data.year}}</strong></span><br>
               <span style="font-size:20px"><strong>Total : </strong>{{data.total}}<span ng-if="!data.total" class="text-danger">NA</span></span><br>
               <span style="font-size:20px"><strong>TDS : </strong>{{data.totalTDS}} <span ng-if="!data.totalTDS" class="text-danger">NA</span></span><br>
+              <!-- <span style="font-size:20px"><strong>Bank Transaction : </strong> <span  class="text-danger">NA</span></span><br> -->
+              <!-- <span style="font-size:20px"><strong>TDS Report : </strong><span  class="text-danger">NA</span></span><br>
+              <span style="font-size:20px"><strong>PF Report  : </strong> <span  class="text-danger">NA</span></span><br> -->
               <br>
             </div>
           </div>
@@ -29,11 +32,25 @@
             <button class="btn btn-primary" ng-click="updateReport()">Save</button>
           </div>
             <div class="col-md-3 text-left" style="margin-top: 21px;"  ng-if="data.status=='approved'">
-          <div >
+          <div class="text-center">
+            <strong>Bank Transaction</strong></br/>
             <a style="cursor:pointer;" target="_blank" href="/api/payroll/payslipsReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
+          </div>
+          </div>
+            <div class="col-md-3 text-left" style="margin-top: 21px;"  ng-if="data.status=='approved'">
+          <div class="text-center">
+            <strong>TDS Report</strong></br/>
+            <a style="cursor:pointer;" target="_blank" href="/api/payroll/tdsReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
+          </div>
+        </div>
+          <div class="col-md-3 text-left" style="margin-top: 21px;"  ng-if="data.status=='approved'">
+          <div class="text-center">
+            <strong>PF Report</strong></br/>
+            <a style="cursor:pointer;" target="_blank" href="/api/payroll/pfReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
           </div>
         </div>
       </div>
+
       <!-- </div>
     </div>
   </div> -->

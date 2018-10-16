@@ -262,3 +262,4 @@ class Leave(models.Model):
     comment = models.CharField(max_length = 10000 , null = True)
     approvedStage = models.PositiveIntegerField(null = True,default=0)
     approvedMatrix = models.PositiveIntegerField(null = True,default=1)
+    accounted = models.BooleanField(default = False)

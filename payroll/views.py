@@ -52,10 +52,11 @@ from reportlab.lib.units import inch, cm
 import calendar
 # import datetime
 from forex_python.converter import CurrencyCodes
-from HR.models import payroll
+from HR.models import payroll,Leave
 from django.contrib.auth.models import User
 from finance.models import ExpenseSheet
 from rest_framework.response import Response
+from excel_response import ExcelResponse
 
 
 
@@ -78,29 +79,39 @@ class payrollReportViewSet(viewsets.ModelViewSet):
 #code for pdf
 def payslip(response ,paySlip,userObj,report, request):
     # print '999999999999999999999999999999999999999',paySlip.hra,userObj.first_name+' '+userObj.last_name
+    # casualleaves = 0
+    # sickleaves = 0
+    # earnedleaves = 0
+    # if leaves!="null":
+    #     for i in leaves:
+    #         if i.status == "approved":
+    #             if i.category == 'ML':
+    #                 sickleaves +=days
+            # casualleaves=
     months = ["","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
     now = datetime.datetime.now()
-    monthdays=calendar.monthrange(now.year, now.month)[1]
+    monthdays=calendar.monthrange(report.year, report.month)[1]
+    print monthdays,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     currencyType='INR'
     s=CurrencyCodes().get_symbol(currencyType) # currencysymbol
     if currencyType == 'INR':
         s='Rs.'
-    absent=3
-    daysPresent=monthdays-absent
-    paidHolidays=1
+    absent=0
+    daysPresent=monthdays
+    paidHolidays=0
     accountNumber=paySlip.accountNumber
 
-    print userObj.designation.department,'aaaaaaaaaaaaaaaaaaaaaaaaa'
+    (empCode,name,location,department,grade,designation,pfNo,escisNo,pan,sbs)=(str(paySlip.joiningDate.year)+str(userObj.pk) ,userObj.first_name+' '+userObj.last_name,'Bangalore',userObj.designation.department.dept_name,'E.1',userObj.designation.role.name,userObj.payroll.pfAccNo,userObj.payroll.esic,userObj.payroll.pan,userObj.payroll.basic)
+    (days,ml,al,cl,adHocLeaves,balanceSL,balanceCL,balanceCO)=(daysPresent,userObj.payroll.ml,userObj.payroll.al,0,userObj.payroll.adHocLeaves,0,0,0)
 
-    (empCode,name,location,department,grade,designation,pfNo,escisNo,pan,sbs)=(str(paySlip.joiningDate.year)+str(userObj.pk) ,userObj.first_name+' '+userObj.last_name,'Bangalore',userObj.designation.department.dept_name,'E.1',userObj.designation.role.name,userObj.payroll.pfAccNo,userObj.payroll.esic,userObj.payroll.pan,paySlip.basic)
-    (days,ml,al,cl,adHocLeaves,balanceSL,balanceCL,balanceCO)=(daysPresent+paidHolidays,paySlip.ml,paySlip.al,0,paySlip.adHocLeaves,0,0,0)
+    taxded =( (userObj.payroll.basic + userObj.payroll.special + userObj.payroll.amount)*userObj.payroll.taxSlab)/100
     # (basicSalary,hra,cn,cr,mr,oe)=(sbs,50000,40000,0,40000,0)
-    (basic,hra,special,lta,adHoc,amount)=(paySlip.basic,paySlip.hra,paySlip.special,paySlip.lta,paySlip.adHoc,paySlip.amount)
-    (spf,pdf,iol,od)=(10000,50000,0,0)
+    (basic,hra,special,lta,adHoc,amount,pf)=(userObj.payroll.basic,userObj.payroll.hra,userObj.payroll.special,userObj.payroll.lta,userObj.payroll.adHoc,userObj.payroll.amount,userObj.payroll.pfAmnt)
+    (spf,pdf,iol,od)=(userObj.payroll.pfAmnt,taxded,0,0)
     totalEarnings,deductions=(0,0)
     # for i in (basicSalary,hra,cn,cr,oe):
-    for i in (basic,hra,special,lta,adHoc,amount):
+    for i in (basic,hra,special,lta,adHoc,amount,pf):
         totalEarnings+=i
     for i in (spf,pdf,iol,od):
         deductions+=i
@@ -112,6 +123,11 @@ def payslip(response ,paySlip,userObj,report, request):
     doc.request = request
     # container for the 'Flowable' objects
     elements = []
+
+    if userObj.profile.empType == "full time":
+        emptax = "Professional Tax Deduction"
+    else:
+        emptax = "Tax Deduction"
 
     a=[Paragraph("<para fontSize=25 alignment='Left' textColor=#6375d4><strong>CIOC</strong></para>",styles['Normal']),
        Paragraph(str(settingsFields.get(name = 'companyName').value )+'<br/><br/>',styledict['center']),
@@ -125,15 +141,15 @@ def payslip(response ,paySlip,userObj,report, request):
     data=[[a,'','',''],['','','',''],['Emp Code : %s'%(empCode),'Name : %s'%(name),'',''],['Location : %s'%(location),'Department :%s'%(department),'Grade : %s'%(grade),'Designation : %s'%(designation)],
           ['PF No : %s'%(pfNo),'ESIC No : %s'%(escisNo),'PAN : %s'%(pan),'Standard Basic Salary : %s %d'%(s,sbs)],['Days Paid : %d'%(days),'Days Present : %d'%(daysPresent),'Paid Holidays : %d'%(paidHolidays),'Lwp/Absent : %d'%(absent)],
           ['Sick Leaves : %d'%(ml),'Annual Leaves : %d'%(al),'Compensatory Leaves : %d'%(cl),'AdHoc Leaves : %d'%(adHocLeaves)],['Balance SL : %d'%(balanceSL),'Balance CL : %d'%(balanceCL),'Balance CO : %d'%(balanceCO),''],['Earnings','Amount','Deductions','Amount'],
-          ['Basic Salary' ,s+' '+str(basic),'Saturatory Provident Fund',s+' '+str(spf)],['HRA',s+' '+str(hra),'Professional Tax Deduction',s+' '+str(pdf)],['Conveyance',s+' '+str(special),'Interest On Loan',s+' '+str(iol)],['Conveyance Reimbursement',s+' '+str(lta),'Other Deduction ',s+' '+str(od)],['Medical Reimbursement',s+' '+str(adHoc),'',''],['Other Earnings',s+' '+str(amount),'',''],
+          ['Basic Salary' ,s+' '+str(basic),'Saturatory Provident Fund',s+' '+str(spf)],['HRA',s+' '+str(hra),str(emptax),s+' '+str(pdf)],['Conveyance',s+' '+str(special),'Interest On Loan',s+' '+str(iol)],['Conveyance Reimbursement',s+' '+str(lta),'Other Deduction ',s+' '+str(od)],['Medical Reimbursement',s+' '+str(adHoc),'',''],['Employee Contribution towards PF',s+' '+str(pf),'',''],['Other Earnings',s+' '+str(amount),'',''],
           ['Total Earnings ',s+' '+str(totalEarnings),'Total Deduction',s+' '+str(deductions)],['','','','Net Pay : %s %d'%(s,netpay)],[p1,'','',''],]
 
     lines=[('LINEBELOW',(0,1),(-1,1),0.5,black),('LINEBELOW',(0,4),(-1,4),0.5,black),('LINEBELOW',(0,7),(-1,7),0.5,black),('LINEBELOW',(0,8),(-1,8),0.5,black),
-           ('LINEBELOW',(0,14),(-1,14),0.5,black),('LINEBELOW',(0,15),(-1,15),0.5,black),('LINEBELOW',(0,16),(-1,16),0.5,black),('LINEBEFORE',(2,8),(2,16),0.5,black)]
+           ('LINEBELOW',(0,15),(-1,15),0.5,black),('LINEBELOW',(0,16),(-1,16),0.5,black),('LINEBELOW',(0,17),(-1,17),0.5,black),('LINEBEFORE',(2,8),(2,17),0.5,black)]
     spans=[('SPAN',(0,0),(-1,1)),('SPAN',(1,2),(-1,2)),('SPAN',(0,-1),(-1,-1))]
-    aligns=[('ALIGN',(1,8),(1,15),'RIGHT'),('ALIGN',(-1,8),(-1,16),'RIGHT')]
-    rheights=18*[0.3*inch]
-    rheights[1]=0.5*inch
+    aligns=[('ALIGN',(1,8),(1,16),'RIGHT'),('ALIGN',(-1,8),(-1,17),'RIGHT')]
+    rheights=19*[0.3*inch]
+    rheights[1]=0.7*inch
     t1=Table(data,rowHeights=rheights)
     t1.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.75, black),]+lines+spans+aligns))
     elements.append(t1)
@@ -142,44 +158,50 @@ def payslip(response ,paySlip,userObj,report, request):
 
 class GetPayslip(APIView):
     def get(self , request , format = None):
-        print 'enterrrrrrrrrrrrrrrrrr'
-        print request.GET['payslip'],request.GET
         payrol = payroll.objects.get(user = request.GET['payslip'])
         user = User.objects.get(id = request.GET['payslip'])
         report = PayrollReport.objects.get(id = request.GET['report'])
-        # payslip(7,request)
-        # print 'ttttttttttttt'
+        # leaves = Leave.objects.filter(user = request.GET['payslip'])
+        # if leaves:
+        #     leaves=leaves
+        # else:
+        #     leaves='null'
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
         payslip(response , payrol , user ,report, request)
         return response
 
 #code for excelSheet
-
-from excel_response import ExcelResponse
-
 class PayslipsReport(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def get(self , request , format = None):
         objs = Payslip.objects.filter(report_id = request.GET['report'])
-
         toReturn = []
-
         for o in objs:
-            toReturn.append({"Employee Name" : o.user.first_name + ' ' + o.user.last_name , "payslipID" : o.pk , "totalPayable" : o.totalPayable,"tds" : o.tds , "accountNumber" : o.user.payroll.accountNumber ,"bankName" : o.user.payroll.bankName , "ifscCode" : o.user.payroll.ifscCode, "pan" : o.user.payroll.pan , "PFUan" : o.user.payroll.PFUan})
+            toReturn.append({"Employee Name" : o.user.first_name + ' ' + o.user.last_name , "payslipID" : o.pk , "totalPayable" : o.totalPayable,"tds" : o.tds , "accountNumber" : o.user.payroll.accountNumber ,"bankName" : o.user.payroll.bankName , "ifscCode" : o.user.payroll.ifscCode, "pan" : o.user.payroll.pan , "PF Account Number" : o.user.payroll.pfAccNo})
+        return ExcelResponse(toReturn)
 
+class TDSslipsReport(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self , request , format = None):
+        objs = Payslip.objects.filter(report_id = request.GET['report'])
+        toReturn = []
+        for o in objs:
+            toReturn.append({"Employee Name" : o.user.first_name + ' ' + o.user.last_name , "payslipID" : o.pk,"total" : o.amount , "tds" : o.tds , "totalPayable" : o.totalPayable, "pan" : o.user.payroll.pan })
+        return ExcelResponse(toReturn)
 
-
-
+class PFslipsReport(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self , request , format = None):
+        objs = Payslip.objects.filter(report_id = request.GET['report'])
+        toReturn = []
+        for o in objs:
+            toReturn.append({"Employee Name" : o.user.first_name + ' ' + o.user.last_name , "payslipID" : o.pk ,  "PF Account Number" : o.user.payroll.pfAccNo ,  "PF Universal Number" : o.user.payroll.pfUniNo ,"PF  Amount" : o.user.payroll.pfAmnt})
         return ExcelResponse(toReturn)
 
 class GetReimbursement(APIView):
     renderer_classes = (JSONRenderer,)
-    # serializer_class = ExpenseSheetSerializer(data=request.data)
-
     def get(self , request , format = None):
-        # expenseObj=ExpenseSheet.objects.all(user_id=request.GET['user'] , approved = 'Yes')
-
         expenseObj=ExpenseSheet.objects.filter(user_id=request.GET['user'] , approved = 'Yes')
         amt = 0
         for i in expenseObj:
