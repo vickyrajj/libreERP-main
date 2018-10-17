@@ -15,73 +15,124 @@
 
   <div class="container-fluid">
     <div class="row ">
-      <div class="btn-group pull-right">
-        <button type="button" class="btn btn-default" ng-click="topButtonsClick('New')"><i class="fa fa-plus"></i> New </button>
-        <button type="button" class="btn btn-default" ng-click="topButtonsClick('Reorder')"><i class="fa fa-shopping-cart"></i> Reorder</button>
-        <button type="button" class="btn btn-default" ng-click="topButtonsClick('stockReport')"><i class="fa fa-file"></i> Stock Report</button>
-        <button type="button" class="btn btn-default" ng-click="topButtonsClick('reorderingReport')"><i class="fa fa-file"></i> Reordering Report</button>
+      <div class="col-md-6 text-right">
+        <div class="form-group">
+          <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()"/>
+        </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-md-2 text-center">
-        <h4><label>No</label></h4>
+        <button type="button" class="btn btn-default" ng-click="prev()" ng-disabled="offset==0?true:false" style="width:100px"> <i class="fa fa-arrow-left"> </i> Prev </button>
+        <button type="button" class="btn btn-default" ng-click="next()" style="width:100px"> Next <i class="fa fa-arrow-right"></i>  </button>
       </div>
-      <div class="col-md-4 text-center">
-        <h4><label>Product</label></h4>
-      </div>
-      <div class="col-md-3 text-center">
-        <h4><label>Quantity</label></h4>
-      </div>
-      <div class="col-md-3 text-center">
-        <h4><label>Edit</label></h4>
+      <div class="col-md-4">
+        <div class="btn-group pull-right">
+          <button type="button" class="btn btn-default" ng-click="topButtonsClick('New')"><i class="fa fa-plus"></i> New </button>
+          <button type="button" class="btn btn-default" ng-click="topButtonsClick('Reorder')"><i class="fa fa-shopping-cart"></i> Reorder</button>
+          <button type="button" class="btn btn-default" ng-click="topButtonsClick('stockReport')"><i class="fa fa-file"></i> Stock Report</button>
+          <button type="button" class="btn btn-default" ng-click="topButtonsClick('reorderingReport')"><i class="fa fa-file"></i> Reordering Report</button>
+        </div>
       </div>
     </div>
+
   </div>
 
   <div class="container-fluid" style="margin-top:15px;" ng-repeat="pi in prodInventories">
-    <div class="card" ng-click="toggle($index)">
+    <div class="card" ng-click="toggle(pi.productPk,$index)">
       <div class="row container-fluid">
-        <div class="col-md-2 text-center">
-          <h4>{{$index+1}}</h4>
+        <div class="col-md-2 text-center" style="position:relative;display:border-box;overflow:hidden;background-size:cover;">
+          <!-- <h4>{{$index+1}}</h4> -->
+          <img ng-src="{{'/media/' +pi.productdp}}" style="width:100%;height:100px" />
         </div>
-        <div class="col-md-4 text-center">
-          <h4>{{pi.product.name}} {{pi.some}}
-            <!-- <span ng-if="data.productVariant==null"> {{data.product.howMuch | convertUnit: data.product.unit}} </span> -->
-            <!-- <span ng-if="data.productVariant"> {{data.productVariant.unitPerpack * data.product.howMuch | convertUnit: data.product.unit}} </span> -->
-           </h4>
-        </div>
-        <div class="col-md-3 text-center">
+        <div class="col-md-10 text-left">
+          <h3><strong>{{pi.productName}}</strong></h3>
+          <div class="col-md-3">
+            <span style="font-size:18px"><strong>Serial Id : </strong>{{pi.productSerialId}} </span>
+          </div>
+          <div class="col-md-2">
+            <span style="font-size:18px"><strong> Unit : </strong>{{pi.productUnit}} </span>
+          </div>
+          <div class="col-md-2">
+            <span style="font-size:18px"><strong> Price : </strong>{{pi.productPrice}} </span>
+          </div>
+          <div class="col-md-2">
+            <span style="font-size:18px"><strong> Discount : </strong>{{pi.productDiscount}}% </span>
+          </div>
+          <!-- <div class="col-md-2 text-right">
+          <i class="fa fa-pencil fa-2x"></i> &nbsp;&nbsp;
+          <i class="fa fa-info fa-2x"></i>
+        </div> -->
+        <!-- <div class="col-md-3 text-center">
           <h4>{{pi.quantity}}</h4>
-        </div>
-        <div class="col-md-3 text-center">
-          <!-- <h4><label>Product Variant : </label> {{data.productVariant}}</h4> -->
-          <div class="row" style="margin:10px 0px;">
+        </div> -->
+        <!-- <div class="col-md-3 text-center"> -->
+        <!-- <h4><label>Product Variant : </label> {{data.productVariant}}</h4> -->
+        <!-- <div class="row" style="margin:10px 0px;">
             <div class="btn-group">
-              <button type="button" class="btn btn-default" ng-click="editQuantity($index)">Edit</button>
-              <!-- <button type="button" class="btn btn-default" ng-click="toggle($index)">Info</button> -->
-              <!-- <button type="button" class="btn btn-default" ng-click="rowActionClicked('editMaster')">Edit Master</button> -->
-            </div>
+              <button type="button" class="btn btn-default" ng-click="editQuantity($index)">Edit</button> -->
+        <!-- <button type="button" class="btn btn-default" ng-click="toggle($index)">Info</button> -->
+        <!-- <button type="button" class="btn btn-default" ng-click="rowActionClicked('editMaster')">Edit Master</button> -->
+        <!-- </div>
           </div>
 
-        </div>
+        </div> -->
       </div>
       <div class="row container-fluid" ng-if="pi.open">
-        <div class="col-md-offset-2 col-md-3 text-center">
-            <h4>{{pi.product.name}}
-              <span ng-if="pi.productVariant==null"> {{pi.product.howMuch | convertUnit: pi.product.unit}} </span>
-              <span ng-if="pi.productVariant"> {{pi.productVariant.unitPerpack * pi.product.howMuch | convertUnit: pi.product.unit}} </span>
-            </h4>
-        </div>
-        <div class="col-md-3">
+        <div class="col-md-offset-2 col-md-8">
+          <table class="table table-striped" style="margin-top:20px;">
+            <th>
+              SKU
+            </th>
+            <th>
+              Product Weight
+            </th>
+            <th>
+              Quantity
+            </th>
+            <th>
+              Save
+            </th>
+            <tr ng-repeat="f in pi.data">
+              <td>
 
+                <span ng-if="f.productVariant__sku!=null">{{f.productVariant__sku}}</span>
+                <span ng-if="f.productVariant__sku==null">{{f.product__serialNo}}</span>
+              </td>
+              <td>
+                <span ng-if="f.productVariant__sku==null">
+                  {{f.product__howMuch | convertUnit: f.product__unit }}
+                </span>
+                <span ng-if="f.productVariant__sku!=null">
+                  {{f.product__howMuch * f.productVariant__unitPerpack | convertUnit: f.product__unit}}
+                </span>
+              </td>
+              <td>
+                <span>
+                  <input type="text" class="form-control" placeholder="" ng-model='f.quantity' ng-click="$event.stopPropagation();">
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-primary" ng-click=saveStore(f.pk,f.quantity);$event.stopPropagation();>Save</button>
+              </td>
+            </tr>
+          </table>
         </div>
-        <div class="col-md-3">
+        <!-- <div class="col-md-offset-2 col-md-3 text-center">
+             <h4>{{pi.product.name}}
+               <span ng-if="pi.productVariant==null"> {{pi.product.howMuch | convertUnit: pi.product.unit}} </span>
+               <span ng-if="pi.productVariant"> {{pi.productVariant.unitPerpack * pi.product.howMuch | convertUnit: pi.product.unit}} </span>
+             </h4>
+         </div>
+         <div class="col-md-3">
 
-        </div>
-        <div class="col-md-3">
+         </div>
+         <div class="col-md-3">
 
-        </div>
+         </div>
+         <div class="col-md-3">
+
+         </div> -->
       </div>
+
     </div>
   </div>
 

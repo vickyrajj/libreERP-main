@@ -912,23 +912,35 @@ class ExternalEmailOrders(APIView):
 class ProductInventoryAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        print 'cameeeeeeeeeeeee'
+
+        print 'cameeeeeeeeeeeee',request.GET
+        offset = int(request.GET['offset'])
+        limit = offset + int(request.GET['limit'])
+        print offset,limit
         toReturn = []
         if 'store' in request.GET:
+            storeQtyObj = StoreQty.objects.filter(store=request.GET['store'])
+            if 'search' in request.GET:
+                storeQtyObj = storeQtyObj.filter(product__name__icontains=request.GET['search'])
             print 'multistoreeeeeeeeeeeeeee'
-            productsList = list(StoreQty.objects.filter(store=request.GET['store']).values('product').distinct().values('product__pk','product__name'))
         elif 'master' in request.GET:
             print 'singlestoreeeeeeeeeeeeeeeeeee'
-            productsList = list(StoreQty.objects.filter(master=True).values('product').distinct().values('product__pk','product__name'))
+            storeQtyObj = StoreQty.objects.filter(master=True)
+            if 'search' in request.GET:
+                storeQtyObj = storeQtyObj.filter(product__name__icontains=request.GET['search'])
         else:
-            productsList = list(StoreQty.objects.all().values('product').distinct().values('product__pk','product__name'))
+            storeQtyObj = StoreQty.objects.all()
+
+
+        productsList = list(storeQtyObj.values('product').distinct().values('product__pk','product__name','product__displayPicture','product__unit','product__serialId','product__price','product__discount'))
 
         print productsList
         for i in productsList:
-            data = list(StoreQty.objects.filter(product=i['product__pk']).values('pk','product','product__price','productVariant','productVariant__sku','product__serialNo','quantity','productVariant__price'))
-            toReturn.append({'productName':i['product__name'],'data':data})
+            data = list(storeQtyObj.filter(product=i['product__pk']).values('pk','product','product__price','product__howMuch','productVariant','productVariant__sku','productVariant__unitPerpack','product__serialNo','product__unit','quantity','productVariant__price'))
+            toReturn.append({'productPk':i['product__pk'],'productName':i['product__name'],'productUnit':i['product__unit'],'productSerialId':i['product__serialId'],'productdp':i['product__displayPicture'],'productPrice':i['product__price'],'productDiscount':i['product__discount'],'data':data})
 
-        return Response(toReturn,status=status.HTTP_200_OK)
+        print toReturn[offset : limit]
+        return Response(toReturn[offset : limit],status=status.HTTP_200_OK)
 
 
 class InvoicePrint(APIView):

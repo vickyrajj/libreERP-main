@@ -91,7 +91,7 @@
 
 
   <hr style="margin:0px;border: solid 2px #DCDCDC;">
-<div ng-if="$state.is('ecommerce') && bannerText" style="position:relative;height:70vh;padding-top:9.4vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
+<div ng-if="$state.is('ecommerce') && bannerText&&bannerImage" style="position:relative;height:70vh;padding-top:9.4vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
   <img style="width:100%;cursor:pointer;height:57vh;background-attachment: fixed;background-position: center;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
 
   <!-- <div class="anim-in-out anim-zoom-out" style="padding-right:0px;padding-left:0px;margin-bottom:20px;border-bottom: solid 4px #eeeeee;overflow:hidden;height:40vh;background: url('{{b.image}}') no-repeat center center;background-size: cover;">
@@ -110,7 +110,7 @@
   </div>
 </div>
 
-<div ng-if="$state.is('ecommerce')&& !bannerText" style="position:relative;height:70vh;;width:100%;padding-top:9.4vh;display:border-box;overflow:hidden;background-size:cover;" class="hidden-xs hidden-sm ">
+<div ng-if="$state.is('ecommerce')&& !bannerText &&bannerImage" style="position:relative;height:70vh;;width:100%;padding-top:9.4vh;display:border-box;overflow:hidden;background-size:cover;" class="hidden-xs hidden-sm ">
 
     <!-- <img style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;position:absolute;z-index:none;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/><br/> -->
 
@@ -137,7 +137,7 @@
 </div>
 
 
-<div ng-if="$state.is('ecommerce')&& bannerText" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+<div ng-if="$state.is('ecommerce')&& bannerText&&bannerImage" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
   <img class="anim-in-out" data-anim-speed="100" style="height:100%;cursor:pointer;" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
 
 <!-- <div ng-if="$state.is('ecommerce')" style="position:relative;height:88vh ;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
@@ -155,7 +155,7 @@
 </div>
 
 
-<div ng-if="$state.is('ecommerce')&& !bannerText" style="position:relative;height:60vh;padding-top:65px;margin-bottom:10px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+<div ng-if="$state.is('ecommerce')&& !bannerText&&bannerImage" style="position:relative;height:60vh;padding-top:65px;margin-bottom:10px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
 
   <img ng-repeat="b in slide.banners" style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;position:absolute;z-index:none;background: url('{{b.imagePortrait}}') no-repeat center center;background-size: cover;"  ng-if="$index == slide.active" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/><br/>
   <div class="col-xs-12" style="padding-left:0px">
@@ -168,6 +168,10 @@
 </div>
 </div>
 </div>
+<div ng-if="!bannerText && !bannerImage" style="position:relative;height:10vh;;width:100%;padding-top:1vh;display:border-box;overflow:hidden;background-size:cover;" >
+</div>
+
+
 
 <!-- <div ng-init="showFeedback=false;" class="bg-white card" style="position:fixed; top:35vh;right:{{!showFeedback ? '0' : '0'}}px;transition:right 0.1s linear;
   width:350px;height:460px; z-index:10;border-left:solid 5px #136ab1;" ng-if="feddbackPannel">

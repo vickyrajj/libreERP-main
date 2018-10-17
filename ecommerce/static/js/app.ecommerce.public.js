@@ -2680,6 +2680,17 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     }
   })
 
+  $scope.bannerImage = false
+
+
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerImage').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.bannerImage = true
+      }
+    }
+  });
 
 
 
