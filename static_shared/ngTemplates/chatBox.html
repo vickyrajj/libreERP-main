@@ -88,8 +88,8 @@
         </div>
 
         <div class="row container-fluid" style="{{message.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
-          <span ng-if="!message.sentByAgent" style="float:left;  font-size:11px; " class="text-muted">{{message.created | timeAgo}}</span>
-          <span ng-if="message.sentByAgent" style="float:right;  font-size:11px; " class="text-muted">{{message.user | getName}}, {{message.created | timeAgo}}</span>
+          <span ng-if="!message.sentByAgent" style="float:left;  font-size:11px; " class="text-muted">{{message.created | getTime}}</span>
+          <span ng-if="message.sentByAgent" style="float:right;  font-size:11px; " class="text-muted">{{message.user | getName}}, {{message.created | getTime}}</span>
         </div>
 
       </div>
