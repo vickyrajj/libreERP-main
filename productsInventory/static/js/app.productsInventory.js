@@ -97,9 +97,9 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
 
   $scope.fetchProdInventory = function () {
     if ($rootScope.multiStores) {
-      url = '/api/POS/storeQty/?store='+$scope.currentStore.pk
+      url = '/api/POS/productInventoryAPI/?store='+$scope.currentStore.pk
     }else {
-      url = '/api/POS/storeQty/?master=true'
+      url = '/api/POS/productInventoryAPI/?master=true'
     }
 
     $http({
@@ -107,11 +107,11 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       url:url
     }).then(function (response) {
       console.log(response.data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-      $scope.prodInventories = response.data
-      for (var i = 0; i < $scope.prodInventories.length; i++) {
-        $scope.prodInventories[i].open = false
-
-      }
+      // $scope.prodInventories = response.data
+      // for (var i = 0; i < $scope.prodInventories.length; i++) {
+      //   $scope.prodInventories[i].open = false
+      //
+      // }
 
     })
 
