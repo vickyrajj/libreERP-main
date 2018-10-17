@@ -39,9 +39,9 @@
   <div class="container-fluid" style="margin-top:15px;" ng-repeat="pi in prodInventories">
     <div class="card" ng-click="toggle(pi.productPk,$index)">
       <div class="row container-fluid">
-        <div class="col-md-2 text-center" style="position:relative;display:border-box;overflow:hidden;background-size:cover;">
+        <div class="col-md-1 text-center">
           <!-- <h4>{{$index+1}}</h4> -->
-          <img ng-src="{{'/media/' +pi.productdp}}" style="width:100%;height:100px" />
+          <img ng-src="{{'/media/' +pi.productdp}}" style="width:100%" />
         </div>
         <div class="col-md-10 text-left">
           <h3><strong>{{pi.productName}}</strong></h3>
