@@ -3572,6 +3572,18 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
 
   $scope.me = $users.get('mySelf');
   console.log('multiiiiiiiiiiiiiiiiiiiii', $rootScope.multiStore, $rootScope.pin);
+
+  $scope.secondBanner = false
+
+
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=secondBanner').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.secondBanner = true
+      }
+    }
+  });
   setTimeout(function() {
     console.log($rootScope.pin);
     if ($rootScope.multiStore) {
