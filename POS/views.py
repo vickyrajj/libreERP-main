@@ -125,8 +125,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         unit=0
         if 'search' in self.request.GET:
             if 'storepk' in self.request.GET:
-                storeQtylist = list(StoreQty.objects.filter(store = int(self.request.GET['storepk'])).values_list('pk',flat=True))
-                objs = Product.objects.filter(storeQty__in=storeQtylist)
+                # storeQtylist = list(StoreQty.objects.filter(store = int(self.request.GET['storepk'])).values_list('pk',flat=True))
+                productPkList = list(StoreQty.objects.filter(store = int(self.request.GET['storepk'])).values_list('product',flat=True))
+                objs = Product.objects.filter(pk__in=productPkList)
             else:
                 objs = Product.objects.all()
             product = objs.filter(name__contains=str(self.request.GET['search']))
@@ -919,10 +920,11 @@ class ProductInventoryAPIView(APIView):
         print offset,limit
         toReturn = []
         if 'store' in request.GET:
+            print 'multistoreeeeeeeeeeeeeee',request.GET['store']
             storeQtyObj = StoreQty.objects.filter(store=request.GET['store'])
+            print 'storeQtyObj',storeQtyObj
             if 'search' in request.GET:
                 storeQtyObj = storeQtyObj.filter(product__name__icontains=request.GET['search'])
-            print 'multistoreeeeeeeeeeeeeee'
         elif 'master' in request.GET:
             print 'singlestoreeeeeeeeeeeeeeeeeee'
             storeQtyObj = StoreQty.objects.filter(master=True)
@@ -936,7 +938,7 @@ class ProductInventoryAPIView(APIView):
 
         print productsList
         for i in productsList:
-            data = list(storeQtyObj.filter(product=i['product__pk']).values('pk','product','product__price','product__howMuch','productVariant','productVariant__sku','productVariant__unitPerpack','product__serialNo','product__unit','quantity','productVariant__price'))
+            data = list(storeQtyObj.filter(product=i['product__pk']).values('pk','product','product__price','product__howMuch','productVariant','productVariant__sku','productVariant__unitPerpack','product__serialNo','product__unit','quantity','productVariant__price' ,'productVariant__serialId' ))
             toReturn.append({'productPk':i['product__pk'],'productName':i['product__name'],'productUnit':i['product__unit'],'productSerialId':i['product__serialId'],'productdp':i['product__displayPicture'],'productPrice':i['product__price'],'productDiscount':i['product__discount'],'data':data})
 
         print toReturn[offset : limit]
