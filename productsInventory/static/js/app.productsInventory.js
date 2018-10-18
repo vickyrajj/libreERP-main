@@ -64,6 +64,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
   // $http({method : 'GET' , url : '/api/POS/product/'})
   $scope.currentStore = '';
   $rootScope.multiStores = false
+  $scope.searchText='';
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
   then(function(response) {
     console.log('ratingggggggggggggggggggg', response.data);
@@ -72,7 +73,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
         $rootScope.multiStores = true
         $scope.selectStore()
       }else {
-        $scope.fetchProdInventory()
+        $scope.fetchProdInventory(0)
       }
     }
   })
@@ -90,16 +91,24 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
 
   $scope.prodInventories = []
   $scope.openCard = false;
-  $scope.toggle = function (indx) {
-    $scope.prodInventories[indx].open = !$scope.prodInventories[indx].open
+  $scope.toggle = function (pk,indx) {
+    // $scope.prodInventories[indx].open = !$scope.prodInventories[indx].open
+    for (var i = 0; i < $scope.prodInventories.length; i++) {
+      if($scope.prodInventories[i].productPk==pk){
+        $scope.prodInventories[i].open = !$scope.prodInventories[i].open
+      }
+    }
   }
 
 
-  $scope.fetchProdInventory = function () {
+
+  $scope.offset=0
+  $scope.fetchProdInventory = function (offset) {
+    console.log(offset);
     if ($rootScope.multiStores) {
-      url = '/api/POS/productInventoryAPI/?store='+$scope.currentStore.pk
+      url = '/api/POS/productInventoryAPI/?store='+$scope.currentStore.pk+'&limit=4&offset=' + offset+'&search='+$scope.searchText
     }else {
-      url = '/api/POS/productInventoryAPI/?master=true'
+      url = '/api/POS/productInventoryAPI/?master=true&limit=4&offset=' + offset+'&search='+$scope.searchText
     }
 
     $http({
@@ -107,13 +116,72 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       url:url
     }).then(function (response) {
       console.log(response.data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-      // $scope.prodInventories = response.data
-      // for (var i = 0; i < $scope.prodInventories.length; i++) {
-      //   $scope.prodInventories[i].open = false
-      //
-      // }
+      $scope.prodInventories = response.data
+      if($scope.prodInventories.length>0){
+        for (var i = 0; i < $scope.prodInventories.length; i++) {
+          $scope.prodInventories[i].open = false
+        }
+      }
+      else{
+        $scope.offset=$scope.offset-4
+        $scope.fetchProdInventory($scope.offset)
+      }
 
     })
+
+      $scope.enterFun=function(){
+        $scope.fetchProdInventory($scope.offset)
+      }
+      $scope.next = function(){
+          $scope.offset = $scope.offset + 4
+          $scope.fetchProdInventory($scope.offset)
+      }
+
+      $scope.prev = function(){
+        if($scope.offset==0){
+          return
+        }
+          $scope.offset = $scope.offset - 4
+          $scope.fetchProdInventory($scope.offset)
+      }
+
+        //
+        //   if ($scope.reviews.length < 4) {
+        //     $scope.prodInventories = response.data
+        //     // $scope.prodInventories.push(response.data)
+        //   } else {
+        //     $scope.offset += 4
+        //     $scope.fetchProdInventory($scope.offset)
+        //   }
+        //   for (var i = 0; i < $scope.prodInventories.length; i++) {
+        //     $scope.prodInventories[i].open = false
+        //
+        //   }
+        //
+        // })
+        //
+        // $scope.next = function() {
+        //   $scope.offset = $scope.offset + 4
+        //   $scope.fetchProdInventory($scope.offset)
+        //
+        // }
+        // $scope.prev = function() {
+        //   $scope.offset = $scope.offset - 4
+        //   $scope.fetchProdInventory($scope.offset)
+        //
+        // }
+
+    $scope.saveStore = function(store, quantity){
+      console.log(store, quantity,'llllllllllllllllll');
+      $http({
+        method: 'PATCH',
+        url: '/api/POS/storeQty/' + store + '/',
+        data: {
+          quantity: quantity
+        }
+      }).then(function(response) {
+      })
+    }
 
     // $scope.data = {
     //   tableData: [],
@@ -218,7 +286,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       size: 'lg',
       backdrop: false,
       controller: function($scope, $timeout, $http, Flash, $uibModal, $rootScope, $state, $uibModalInstance) {
-
+        $scope.offset=0
         $http({
           method: 'GET',
           url: '/api/POS/store/'
@@ -250,11 +318,11 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       if ($scope.currentStore) {
         if ($scope.currentStore.pk != store.pk) {
           $scope.currentStore = store
-          $scope.fetchProdInventory()
+          $scope.fetchProdInventory($scope.offset)
         }
       } else {
         $scope.currentStore = store
-        $scope.fetchProdInventory()
+        $scope.fetchProdInventory($scope.offset)
       }
     });
   }
@@ -326,6 +394,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
 
 
   $scope.productInventoryModal = function() {
+    $scope.offset = 0
     if ($rootScope.multiStores && $scope.currentStore.pk==undefined) {
       Flash.create('warning','please select store first')
       return
@@ -347,7 +416,7 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       },
       controller:'businessManagement.productsInventory.inventoryForm',
     }).result.then(function() {}, function() {
-      $scope.fetchProdInventory()
+      $scope.fetchProdInventory($scope.offset)
     });
   }
 
@@ -414,9 +483,10 @@ app.controller("businessManagement.productsInventory.inventoryForm", function($s
   }
 
   $scope.productSearch = function (query) {
-    return $http.get('/api/POS/product/?name__icontains=' + query).
+    return $http.get('/api/POS/product/?name__icontains=' + query +'&limit=10').
     then(function(response) {
-      return response.data;
+      console.log(response.data);
+      return response.data.results;
     })
   }
   $scope.prodVarList = []

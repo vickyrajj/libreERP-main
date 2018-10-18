@@ -816,10 +816,10 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       Flash.create('warning', 'MRP Is Required');
       return;
     }
-    if (f.inStock.length == 0 || f.inStock < 0) {
-      Flash.create('warning', 'Add a valid number of items In Stock');
-      return;
-    }
+    // if (f.inStock.length == 0 || f.inStock < 0) {
+    //   Flash.create('warning', 'Add a valid number of items In Stock');
+    //   return;
+    // }
     if (f.discount < 0 || f.discount > 100 || f.price.length < 0) {
       Flash.create('warning', 'discount should in range 0-100');
       return;
