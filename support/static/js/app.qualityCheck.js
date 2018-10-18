@@ -54,6 +54,7 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     agent:null,
     visitor:null
   };
+  console.log($scope.msgData[0].typ);
   $scope.typ=$scope.msgData[0].typ
   if($scope.msgData[0].typ=='audio'){
     $scope.audio_chat={
@@ -61,13 +62,14 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
       visitor:'/static/videos/local'+$scope.msgData[0].uid+'.mp3'
     }
   }
+
   else if($scope.msgData[0].typ=='video'){
     $scope.video_chat={
       agent:'/static/videos/agent'+$scope.msgData[0].uid+'.webm',
-      visitor:'/static/videosp/local'+$scope.msgData[0].uid+'.webm'
+      visitor:'/static/videos/local'+$scope.msgData[0].uid+'.webm'
     }
   }
-
+console.log($scope.video_chat.agent);
 var stream_agent,stream_visitor,canvas_agent,canvas_visitor,ctx_agent,ctx_visitor;
 
 
