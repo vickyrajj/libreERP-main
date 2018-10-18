@@ -5,6 +5,8 @@
 	color:white;
 }
 
+:root { --themeColor: red;}
+
 
 .glassyButton{
 	border:solid 3px white;

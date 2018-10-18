@@ -93,6 +93,7 @@ from django.core.files.images import get_image_dimensions
 import ast
 from flask import Markup
 from PIM.models import blogPost
+from django.db.models.functions import Concat
 
 # Create your views here.
 
@@ -128,7 +129,7 @@ def success_response(request):
 
 def ecommerceHome(request):
     print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
-    data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
+    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
         print urlData,'url detailsssssssssss'
@@ -264,6 +265,23 @@ class PromoCheckAPI(APIView):
             else:
                 toReturn = 'Invalid Promocode'
             return Response({'msg':toReturn,'val':val}, status = status.HTTP_200_OK)
+
+
+class CategorySortListAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def get(self , request , format = None):
+        # toReturn = []
+        gpList = list(genericProduct.objects.filter(parent__isnull=True).values('name','pk').annotate(img=Concat(Value('/media/'),'visual')))
+        print gpList
+        for i in gpList:
+            chilData = list(genericProduct.objects.filter(parent=i['pk']).values('name','pk').annotate(img=Concat(Value('/media/'),'visual')))
+            if len(chilData)>0:
+                i['child'] = chilData
+            else:
+                i['child'] = []
+
+        return Response(gpList, status = status.HTTP_200_OK)
 
 
 

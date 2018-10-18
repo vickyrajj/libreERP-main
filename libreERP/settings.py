@@ -39,6 +39,7 @@ ECOMMERCE_APP = {
 
 LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpeg'
 LOGIN_PAGE_LOGO = '/static/images/company_icon.svg'
+ICON_LOGO = '/static/images/sterlin_select.png'
 
 SHOW_COMMON_APPS = False
 
