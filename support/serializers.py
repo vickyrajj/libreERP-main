@@ -101,7 +101,8 @@ class ChatThreadSerializer(serializers.ModelSerializer):
         if 'status' in self.context['request'].data and instance.status=='started':
             print 'changinggggggggggggggggggg',self.context['request'].data['status']
             uidMsg = SupportChat.objects.filter(uid=instance.uid)
-            instance.chatDuration = round((uidMsg[uidMsg.count()-1].created - uidMsg[0].created).total_seconds()/60.0 , 2)
+            if len(uidMsg)>0:
+                instance.chatDuration = round((uidMsg[uidMsg.count()-1].created - uidMsg[0].created).total_seconds()/60.0 , 2)
         for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user']:
             try:
                 setattr(instance , key , validated_data[key])

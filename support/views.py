@@ -257,9 +257,13 @@ class ReviewFilterCalAPIView(APIView):
                     customerRating = ChatThread.objects.get(uid=j).customerRating
                 except:
                     customerRating = ''
+                try:
+                    typ = ChatThread.objects.get(uid=j).typ
+                except:
+                    typ = ''
                 # print agentCommentCount
                 # print company
-                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()) , rating=Value(rating, output_field=CharField()), chatDuration=Value(chatDuration, output_field=CharField()) , statusChat=Value(statusChat, output_field=CharField()) , numOfComments=Value(numOfComments, output_field=CharField()), agentCommentCount=Value(agentCommentCount,output_field=CharField()), email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment'),customerFeedback=Value(customerFeedback,output_field=CharField()),customerRating=Value(customerRating,output_field=CharField())))
+                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()) , rating=Value(rating, output_field=CharField()), chatDuration=Value(chatDuration, output_field=CharField()) , statusChat=Value(statusChat, output_field=CharField()) , numOfComments=Value(numOfComments, output_field=CharField()), agentCommentCount=Value(agentCommentCount,output_field=CharField()), email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment'),customerFeedback=Value(customerFeedback,output_field=CharField()),customerRating=Value(customerRating,output_field=CharField()),typ=Value(typ,output_field=CharField())))
                 toSend.append(agUidObj)
                 res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType','sentByAgent').annotate(company=Value(company, output_field=CharField()), rating=Value(rating, output_field=CharField()), numOfComments=Value(numOfComments, output_field=CharField()) , chatDuration=Value(chatDuration, output_field=CharField())  ,email=Value(email, output_field=CharField())))
         # print toSend
