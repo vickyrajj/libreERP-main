@@ -2682,17 +2682,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     }
   })
 
-  $scope.bannerImage = false
 
-
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerImage').
-  then(function(response) {
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.bannerImage = true
-      }
-    }
-  });
 
 
 
@@ -2793,6 +2783,28 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     // console.log('resettinggggggggg');
     $scope.childData = {}
   }
+
+
+  $scope.bannerImage = false
+
+
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerImage').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.bannerImage = true
+      }
+      if ($scope.bannerImage) {
+        $scope.paddingTop = '9.5vh';
+      }else {
+        $scope.paddingTop = '0px;';
+      }
+    }
+  });
+
+
+
+
   // $scope.closedropDowns = function(event){
   //   console.log(event);
   //   event.x = 0
@@ -3259,6 +3271,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
   $scope.headerUrl = '/static/ngTemplates/app.ecommerce.header.html';
   $scope.footerUrl = '/static/ngTemplates/app.ecommerce.footer.html';
+
 
   $scope.$watch('data.location', function(newValue, oldValue) {
     if (newValue != null && typeof newValue == 'object') {

@@ -14,10 +14,10 @@
         </div>
         <!-- ng-show="onBtnEnter||onDropdownEnter" -->
         <div  style="position:absolute;top:7vh;min-width:200px" ng-show="onBtnEnter||onDropdownEnter||onChildEnter">
-          <div class="well" ng-mouseenter="onDropdownEnter = true;"  ng-mouseleave="onDropdownEnter = false" style="text-align:left;padding-bottom:0px;padding-top:5px;min-height:60vh;border:1px solid #2980b9;{{onDropdownEnter||onChildEnter ?'border-right:none':''}}">
+          <div class="well" ng-mouseenter="onDropdownEnter = true;"  ng-mouseleave="onDropdownEnter = false" style="text-align:left;padding-bottom:0px;padding-top:5px;min-height:60vh;border:1px solid var(--themeColor);{{onDropdownEnter||onChildEnter ?'border-right:none':''}}">
               <p ng-repeat="c in categoriesList" style="cursor:pointer;margin-bottom:2px;font-size:18px;color:{{c.pk==childData.pk?'#e47911':''}}" ng-style="overStyle" ng-mouseenter="overStyle={color: '#e47911'};selectedOne(c)" ng-click="$state.go('categories' , {name : c.name.split(' ').join('_')})" class="zoomOnHover" >{{c.name}} &nbsp;<i class="fa fa-chevron-right text-right"  style="{{c.pk==childData.pk?'font-size:15px':'font-size:12px;color:#716e71'}}"></i>
               <div  style="position:absolute;left:100%;top:0px;min-width:300px" ng-show="onDropdownEnter||onChildEnter">
-                <div class="well" ng-mouseenter="onChildEnter = true"  ng-mouseleave="onChildEnter = false" style="text-align:left;padding-bottom:5px;min-height:60vh;border:1px solid #2980b9;border-left:none;position:relative">
+                <div class="well" ng-mouseenter="onChildEnter = true"  ng-mouseleave="onChildEnter = false" style="text-align:left;padding-bottom:5px;min-height:60vh;border:1px solid var(--themeColor);border-left:none;position:relative">
                   <!-- <div class="text-center" style="font-size:22px;">{{childData.name}}</div> -->
                     <p ng-repeat="child in childData.child" style="cursor:pointer;margin-bottom:2px;font-size:18px" ng-style="overStyle" ng-mouseenter="overStyle={color: '#e47911'}"  ng-mouseleave="overStyle={color: ''}" ng-click="$state.go('categories' , {name : child.name.split(' ').join('_')})" class="zoomOnHover">{{child.name}}</p>
                   <span>
