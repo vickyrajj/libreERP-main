@@ -7,9 +7,17 @@
         <h4 ng-if="compDetails.telephone.length>0"><i class="fa fa-phone-square"></i> &nbsp;{{compDetails.telephone}}</h4>
       </div>
       <div class="row" style="margin-top:20px;font-size:18px;padding:5px 15px" ng-if="compDetails.about.length>0">
-        <span ng-if="compDetails.logo.length>0"><strong>Logo : </strong>{{compDetails.logo}}<br></span>
-        <span ng-if="compDetails.cin.length>0"><strong>CIN : </strong>{{compDetails.cin}}<br></span>
-        <span ng-if="compDetails.tin.length>0"><strong>TIN : </strong>{{compDetails.tin}}<br></span>
+        <div class="col-sm-8">
+          <span ng-if="compDetails.logo.length>0"><strong>Logo : </strong>{{compDetails.logo}}<br></span>
+          <span ng-if="compDetails.cin.length>0"><strong>CIN : </strong>{{compDetails.cin}}<br></span>
+          <span ng-if="compDetails.tin.length>0"><strong>TIN : </strong>{{compDetails.tin}}<br></span>
+        </div>
+        <div class="col-sm-4">
+          <span class="btn btn-primary pull-right" ng-if="custDetails.chat" ng-click="openChartPopoup(compDetails)">Generate Script</span>
+
+        </div>
+
+
       </div>
       <span ng-if="custDetails.userApiKey.length>0" style="font-size:18px"><strong>apiKey : </strong>{{custDetails.userApiKey}}<br></span>
       <div class="row" style="margin-top:20px;font-size:18px;padding:5px 15px" ng-if="compDetails.about.length>0">
@@ -100,7 +108,7 @@
       </div>
 
       <div class="row" style="padding-left:25px">
-        <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-primary" ng-if="custDetails.chat" ng-click="openChartPopoup(compDetails)">Generate Script</span></h4><br>
+        <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i>&nbsp;&nbsp;&nbsp;&nbsp;</h4><br>
         <h4><i class="fa fa-phone"></i> &nbsp; Call &nbsp;<i class="fa {{custDetails.call?'fa-check':'fa-times'}}" style="color:{{custDetails.call?'green':'red'}}"></i></i></h4><br>
         <h4><i class="fa fa-envelope"></i> &nbsp; Email &nbsp;<i class="fa {{custDetails.email?'fa-check':'fa-times'}}" style="color:{{custDetails.email?'green':'red'}}"></i></i></h4><br>
         <h4><i class="fa fa-video-camera"></i> &nbsp; Video&Audio &nbsp;<i class="fa {{custDetails.videoAndAudio?'fa-check':'fa-times'}}" style="color:{{custDetails.videoAndAudio?'green':'red'}}"></i></i></h4><br>
