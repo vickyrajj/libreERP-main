@@ -22,7 +22,10 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
 
   $scope.msgData = $scope.tab.data
   console.log($scope.tab.data);
-  $scope.reviewCommentData = []
+  $scope.reviewCommentData = [];
+
+
+
   $http({
     method: 'GET',
     // url: '/api/support/reviewComment/?user='+$scope.msgData[0].user_id+'&uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
@@ -43,18 +46,213 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
   });
   $scope.reviewForm = {message:''}
 
-
-  $scope.postComment = function(){
-    console.log($scope.msgData[0].created);
-    if ($scope.reviewForm.message.length == 0) {
-      Flash.create('warning','Please Write Some Comment')
-      return
+  $scope.audio_chat={
+    agent:null,
+    visitor:null
+  };
+  $scope.video_chat={
+    agent:null,
+    visitor:null
+  };
+  $scope.typ=$scope.msgData[0].typ
+  if($scope.msgData[0].typ=='audio'){
+    $scope.audio_chat={
+      agent:'/static/videos/agent'+$scope.msgData[0].uid+'.mp3',
+      visitor:'/static/videos/local'+$scope.msgData[0].uid+'.mp3'
     }
-    var toSend = {message:$scope.reviewForm.message,uid:$scope.msgData[0].uid,chatedDate:$scope.msgData[0].created.split('T')[0]}
+  }
+  else if($scope.msgData[0].typ=='video'){
+    $scope.video_chat={
+      agent:'/static/videos/agent'+$scope.msgData[0].uid+'.webm',
+      visitor:'/static/videosp/local'+$scope.msgData[0].uid+'.webm'
+    }
+  }
+
+var stream_agent,stream_visitor,canvas_agent,canvas_visitor,ctx_agent,ctx_visitor;
+
+
+setTimeout(function () {
+
+  if($scope.video_chat||$scope.audio_chat){
+
+    if ($scope.video_chat.agent) {
+
+        stream_agent  = document.getElementById("vid_agent");
+        stream_visitor  = document.getElementById("vid_visitor");
+        canvas_agent = document.getElementById('canvas_agent');
+        canvas_visitor = document.getElementById('canvas_visitor');
+        ctx_agent = canvas_agent.getContext('2d');
+        ctx_visitor = canvas_visitor.getContext('2d');
+        w=200; h=200;
+        canvas_agent.width = w;
+        canvas_agent.height = h;
+        canvas_visitor.width = w;
+        canvas_visitor.height = h;
+
+    }
+    else if($scope.audio_chat.agent){
+        stream_agent  = document.getElementById("aud_agent");
+        stream_visitor  = document.getElementById("aud_visitor");
+          console.log(stream_agent);
+
+    }
+  }
+
+}, 900);
+
+
+
+  setTimeout(function () {
+
+  if(stream_agent.readyState>0&&stream_agent.readyState>0){
+
+    console.log(stream_agent);
+
+
+        console.log(stream_agent.duration);
+          $scope.slider = {
+              value: 0,
+              options: {
+                  floor: 0,
+                  ceil: stream_agent.duration,
+                  step: 0,
+                  rightToLeft: false
+              }
+          };
+
+          $scope.vol_slider = {
+            value: 10,
+            options: {
+              floor:0,
+              ceil:10,
+              showSelectionBar: true,
+              getSelectionBarColor: function(value) {
+               if (value <= 3)
+                   return 'red';
+               if (value <= 6)
+                   return 'orange';
+               if (value <= 9)
+                   return 'yellow';
+               return '#2AE02A';
+             }
+           }
+         };
+
+          var clear_int;
+
+          function kuchb(){
+
+            clear_int=setInterval(function () {
+              $scope.slider.options.ceil=stream_agent.duration;
+              console.log($scope.slider.value);
+              console.log(stream_agent.duration);
+
+              if($scope.slider.value+1>=stream_agent.duration){
+                clearInterval(clear_int);
+                $scope.play_pause=false;
+                $scope.slider.value=0;
+                stream_agent.pause();
+                stream_visitor.pause();
+              }
+              else{
+                $scope.slider.value=stream_agent.currentTime;
+              }
+            },500);
+
+          }
+
+          $scope.$watch('vol_slider.value', function(newValue, oldValue) {
+            stream_agent.volume=newValue/10;
+            stream_visitor.volume=newValue/10;
+          });
+          $scope.$watch('slider.value', function(newValue, oldValue) {
+            console.log(newValue+'  '+oldValue);
+            if(newValue-oldValue>1||oldValue-newValue>1){
+              stream_agent.currentTime=newValue
+              stream_visitor.currentTime=newValue
+            }
+
+          });
+
+
+          $scope.play_video=function(){
+            $scope.play_pause=true;
+            stream_agent.play();
+            stream_visitor.play();
+            kuchb();
+          }
+
+          $scope.pause_video=function(){
+            $scope.play_pause=false;
+            stream_agent.pause();
+            stream_visitor.pause();
+            clearInterval(clear_int)
+          }
+
+  }
+}, 1500);
+
+  // $scope.screenshots =[];
+$scope.snap=function() {
+    ctx_agent.fillRect(0, 0, w, h);
+    ctx_agent.drawImage(vid_agent, 0, 0, w, h);
+    ctx_visitor.fillRect(0, 0, w, h);
+    ctx_visitor.drawImage(vid_visitor, 0, 0, w, h);
+
+
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.qualityCheck.capture.modal.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        data: function(){
+          return $scope.msgData[0].uid
+        }
+      },
+      controller: function($scope, $users, $uibModalInstance,data, Flash) {
+        console.log("model opened");
+        $scope.uidd=data;
+        $scope.imgsrc_agent =canvas_agent.toDataURL();
+        $scope.imgsrc_visitor =canvas_visitor.toDataURL();
+        $scope.timeOfCapture=vid_agent.currentTime;
+
+
+        $scope.onSend_Capture =function(){
+            if ($scope.reviewForm.message.length == 0) {
+              Flash.create('warning','Please Write Some Comment')
+              return
+            }
+            var fd = new FormData();
+            fd.append('message', $scope.reviewForm.message);
+            fd.append('uid', $scope.uidd);
+            fd.append('timestamp', $scope.timeOfCapture);
+            fd.append('visitor_capture', $scope.imgsrc_visitor);
+            fd.append('agent_capture', $scope.imgsrc_agent);
+            console.log($scope.imgsrc_agent);
+            console.log("Sending..");
+
+            var toSend={message:$scope.reviewForm.message,uid:$scope.uidd,timestamp:$scope.timeOfCapture,visitor_capture:$scope.imgsrc_visitor,agent_capture:$scope.imgsrc_agent}
+            SendingPostRequest(fd);
+          }
+      },
+      }).result.then(function() {
+
+    }, function(data) {
+      console.log(data);
+    });
+};
+
+  function SendingPostRequest(toSend){
+    console.log("Posting....");
     $http({
       method: 'POST',
       url: '/api/support/reviewComment/',
-      data : toSend
+      data : toSend,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
     }).
     then(function(response) {
       console.log(response.data,'dddddddddddd',typeof response.data);
@@ -65,6 +263,17 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
       console.log(err.data.detail);
       Flash.create('danger', err.data.detail);
     });
+  }
+
+
+  $scope.postComment = function(){
+    console.log($scope.msgData[0].created);
+    if ($scope.reviewForm.message.length == 0) {
+      Flash.create('warning','Please Write Some Comment')
+      return
+    }
+    var toSend = {message:$scope.reviewForm.message,uid:$scope.msgData[0].uid,chatedDate:$scope.msgData[0].created.split('T')[0]}
+    SendingPostRequest(toSend);
   }
 
 
