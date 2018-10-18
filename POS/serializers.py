@@ -170,7 +170,7 @@ class ProductVerientSerializer(serializers.ModelSerializer):
     # discountedPrice = serializers.SerializerMethodField()
     class Meta:
         model = ProductVerient
-        fields = ('pk','created','updated','sku','unitPerpack','price','parent','discountedPrice')
+        fields = ('pk','created','updated','sku','unitPerpack','price','parent','discountedPrice','serialId')
     def create(self , validated_data):
         v = ProductVerient(**validated_data)
         v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))
@@ -269,20 +269,43 @@ class InvoiceSerializer(serializers.ModelSerializer):
         if 'products' in validated_data:
             productList = json.loads(validated_data['products'])
             for i in productList:
-                print i['data']['pk'],i['quantity']
-                pObj = Product.objects.get(pk=i['data']['pk'])
+                print i['data']['productVariant'],'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+                # print i['data']['pk'],i['quantity']
+
+
                 if 'storepk' in self.context['request'].data:
-                    print 'multistoreeeeeeeeeeeeeeeeee'
                     storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
-                    storeQtyObj = pObj.storeQty.get(store__id=storeObj.pk)
+
+                    if i['data']['productVariant'] != None:
+                        prodVarObj = ProductVerient.objects.get(pk=i['data']['productVariant']['pk'])
+                        pObj = prodVarObj
+                        prodObj = Product.objects.get(pk=i['data']['product']['pk'])
+                        storeQtyObj = StoreQty.objects.get(store__id = storeObj.pk ,productVariant__id = prodVarObj.pk, product__id = prodObj.pk)
+                    else:
+                        prodObj = Product.objects.get(pk=i['data']['product']['pk'])
+                        pObj = prodObj
+                        storeQtyObj = StoreQty.objects.get(store__id = storeObj.pk , product__id = prodObj.pk)
+
                     storeQtyObj.quantity = storeQtyObj.quantity - i['quantity']
                     storeQtyObj.save()
                 else:
-                    print 'singlestoreeeeeeeeeeeeeeeeeee'
-                    pObj.inStock = pObj.inStock - i['quantity']
-                pObj.save()
+                    if i['data']['productVariant'] != None:
+                        prodVarObj = ProductVerient.objects.get(pk=i['data']['productVariant']['pk'])
+                        prodObj = Product.objects.get(pk=i['data']['product']['pk'])
+                        pObj = prodVarObj
+                        storeQtyObj = StoreQty.objects.get(productVariant__id = prodVarObj.pk, master=True, product__id = prodObj.pk)
+                    else:
+                        prodObj = Product.objects.get(pk=i['data']['product']['pk'])
+                        pObj = prodObj
+                        storeQtyObj = StoreQty.objects.get(product__id = prodObj.pk, master=True)
+
+                    storeQtyObj.quantity = storeQtyObj.quantity - i['quantity']
+                    storeQtyObj.save()
+
+
+                # pObj.save()
                 data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':inv}
-                InventoryLog.objects.create(**data)
+                # InventoryLog.objects.create(**data)
         if 'connectedDevice' in self.context['request'].data:
             try:
                 companyName = appSettingsField.objects.get(app__id=69,name='companyName').value

@@ -6,10 +6,10 @@
 <!-- ======= -->
       <!-- <span ng-if="list.product.discount>0" style="position:absolute;background-color:green;color:white;padding-right:15px;padding-left:15px; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px">{{list.product.discount}}% Off </span> -->
 
-        <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:#808080;position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved==0&&me.pk" >
+      <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:#808080;position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved==0&&me.pk">
           <i class="fa fa-heart  fa-2x"></i>
         </span>
-        <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved>0&&me.pk">
+      <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved>0&&me.pk">
           <i class="fa fa-heart  fa-2x"></i>
         </span>
 <!-- >>>>>>> 5914b6605e8b12ecc3274b667ed7849afaba6917 -->
@@ -20,14 +20,14 @@
     </div>
     <div class="row">
       <div class=" card bg-white" style="padding-bottom:0px;">
-        <div class="row container-fluid" style="padding:10px 20px;height:210px ">
+        <div class="row container-fluid" style="padding:10px 20px;height:210px">
           <!-- <div >
             <h5 ng-if="l.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name.slice(0,35)}}...</h5>
             <h5 ng-if="l.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name}}</h5>
           </div> -->
           <div>
-            <h5 ng-if="list.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name.slice(0,35)}} {{quantity}}</h5>
-            <h5 ng-if="list.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name}} {{quantity}}</h5>
+            <h5 ng-if="list.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name.slice(0,35)}}</h5>
+            <h5 ng-if="list.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name}}</h5>
           </div>
 
           <!-- <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee">
@@ -35,24 +35,25 @@
           </select> -->
           <div style="height:40px;">
             <span ng-show="prodVarList.length>1">
-            <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee" ng-options="pv.str for pv in prodVarList" ng-model="selectedProdVar">
-            </select></span>
+              <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee" ng-options="pv.str for pv in prodVarList" ng-model="selectedProdVar">
+              </select>
+            </span>
           </div>
 
 
           <span style="font-size:15px;padding-left:10px"> Price : </span>
           <span ng-if="list.product.serialNo==selectedProdVar.sku">
             <span style="font-size:15px;">
-                <span ng-if="list.product.discount>0" class="text-muted" >
-                  <strike>   <i class="fa fa-inr"></i>{{list.product.price}}</strike>
-                </span>
-          <span ng-if="list.product.discount==0">
-                   <i class="fa fa-inr"></i>{{list.product.price}}
-                </span>
-          </span>
+              <span ng-if="list.product.discount>0" class="text-muted" >
+                <strike>   <i class="fa fa-inr"></i>{{list.product.price}}</strike>
+              </span>
+              <span ng-if="list.product.discount==0">
+                 <i class="fa fa-inr"></i>{{list.product.price}}
+              </span>
+            </span>
           <span ng-if="list.product.discount>0" style="font-size:15px;">
               <i class="fa fa-inr"></i>{{list.product.discountedPrice.toFixed(2)}}
-            </span>
+          </span>
           </span>
           <span ng-if="list.product.serialNo!=selectedProdVar.sku&&selectedProdVar.amnt == selectedProdVar.disc">
               <i class="fa fa-inr"></i>{{selectedProdVar.amnt}}
@@ -88,7 +89,7 @@
                   </div>
                 </div>
                 <div class="col-xs-3" style="padding-left:10px;" ng-click="addToCart();$event.stopPropagation();">
-                  <button type="button" class="btn btn-default" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;"  >
+                  <button type="button" class="btn btn-default" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;">
                   Add <i class="fa fa-shopping-cart"></i>
                 </button>
                 </div>
@@ -123,7 +124,7 @@
                   </div>
                 </div>
                 <div class="col-xs-4" style="padding-left:10px;" ng-click="createCookieDetail();$event.stopPropagation();">
-                  <button type="button" class="btn btn-default" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;" >
+                  <button type="button" class="btn btn-default" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;">
                   Add <i class="fa fa-shopping-cart"></i>
                 </button>
                 </div>
@@ -163,7 +164,7 @@
                   </button>
                 </div>
                 <div class="col-xs-8" style="padding:0px;">
-                  <button type="button" name="button" class="inCartBtn btn btn-sm btn-default"  ng-click="$event.stopPropagation()">
+                  <button type="button" name="button" class="inCartBtn btn btn-sm btn-default" ng-click="$event.stopPropagation()">
                     {{list.added_cart}} in Cart
                   </button>
                 </div>

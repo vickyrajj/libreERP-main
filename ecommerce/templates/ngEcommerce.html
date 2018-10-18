@@ -64,7 +64,7 @@
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>
-    <div class="row" style="margin:0px;padding-top:{{!$state.includes('ecommerce') ?  '9.5vh':'10px'}}" ng-controller="ecommerce.body" >
+    <div class="row" style="margin:0px;{{!$state.includes('ecommerce') ?  'padding-top:'+ paddingTop  :'padding-top:10px'}};" ng-controller="ecommerce.body" >
       <div class="col-md-{{ inCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="me.pk">
         <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
       </div>

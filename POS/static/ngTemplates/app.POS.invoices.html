@@ -217,15 +217,16 @@
         <input type="number" class="form-control-pos" ng-model="item.quantity" ng-if="item.data.pk" style="font-size:{{posShowAll?'17px':'35px'}};text-align: center;height:40px" min="1">
       </td>
       <td>
-        <input type="float" class="form-control-pos" ng-model="item.data.price" ng-if="item.data.pk&&posShowAll" style="font-size:17px;text-align: center;">
-        <input type="float" class="form-control-pos" value="{{(item.data.price + (item.data.productMeta!= none?(item.data.productMeta.taxRate*item.data.price/100):0)).toFixed(2)}}" ng-if="item.data.pk&&!posShowAll" style="font-size:35px;text-align: center;" >
+        <input type="float" class="form-control-pos" ng-model="item.data.product.price" ng-if="item.data.pk&&posShowAll" style="font-size:17px;text-align: center;">
+        <input type="float" class="form-control-pos" value="{{item.data.productVariant!=null?item.data.productVariant.discountedPrice:item.data.product.price}}" ng-if="item.data.pk&&!posShowAll" style="font-size:35px;text-align: center;" >
+        <!-- {{item.data.product.price}} -->
       </td>
       <td ng-if="posShowAll">
         <span ng-if="item.data.pk">{{item.data.productMeta!= none?item.quantity*(item.data.productMeta.taxRate*item.data.price/100).toFixed(2):0}}</span>
 
       </td>
       <td>
-        <span ng-if="item.data.pk">{{item.data.productMeta!= none?(item.quantity*(item.data.productMeta.taxRate*item.data.price/100 + item.data.price)).toFixed(2):(item.quantity*item.data.price).toFixed(2)}}</span>
+        <span ng-if="item.data.pk">{{(item.quantity * (item.data.productVariant!=null?item.data.productVariant.discountedPrice:item.data.product.price)).toFixed(2)}}</span>
 
       </td>
       <td>

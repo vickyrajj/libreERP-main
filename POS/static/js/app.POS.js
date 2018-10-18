@@ -825,11 +825,11 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       return;
     }
 
-    if (f.unit==null) {
+    if (f.unit == null) {
       Flash.create('warning', 'Please select unit type');
       return;
     }
-    if (isNaN(f.howMuch) || f.howMuch==null) {
+    if (isNaN(f.howMuch) || f.howMuch == null) {
       Flash.create('warning', 'Enter valid How much');
       return;
     }
@@ -945,7 +945,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   $scope.productVerientForm = {
     'sku': '',
     'unitPerpack': 2,
-    'price':''
+    'price': '',
+    'serialId': ''
   }
 
   $scope.productData = [];
@@ -963,11 +964,17 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       return
     }
 
+    if (f.serialId == null || f.serialId.length == 0) {
+      Flash.create('warning', 'Please enter Secondary Serial Id')
+      return
+    }
+
     var toSend = {
       parent: $scope.product.pk,
       sku: f.sku,
       unitPerpack: f.unitPerpack,
-      price: f.price
+      price: f.price,
+      serialId: f.serialId
     }
 
     $http({
@@ -979,12 +986,13 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       $scope.productData.push(response.data);
       $scope.productVerientForm = {
         'sku': '',
-        'unitPerpack': 1
+        'unitPerpack': 2,
+        'serialId': ''
       }
       Flash.create('success', 'Saved');
     }, function(err) {
       console.log(err);
-      Flash.create('danger' , err.statusText)
+      Flash.create('danger', err.statusText)
     })
   }
 
@@ -1000,7 +1008,7 @@ function getMonday(date) {
 }
 
 
-app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside) {
+app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter) {
 
   // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
   $scope.posShowAll = true
@@ -1091,20 +1099,41 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
 
   $scope.productSearch = function(query) {
-    console.log("called");
-    var url = '/api/POS/product/?search=' + query + '&limit=10'
-    if ($rootScope.multiStore) {
-      if ($rootScope.storepk > 0) {
-        url = url + '&storepk=' + $rootScope.storepk
+    if (query.length > 0) {
+
+      console.log("called1");
+      var url = '/api/POS/storeQty/?product__name__contains' + query + '&limit=10'
+      // var url = '/api/POS/product/?search=' + query + '&limit=10'
+      if ($rootScope.multiStore) {
+        if ($rootScope.storepk > 0) {
+          url = url + '&storepk=' + $rootScope.storepk
+        } else {
+          Flash.create('warning', 'Please Select Store First')
+          return
+        }
       } else {
-        Flash.create('warning', 'Please Select Store First')
-        return
+        url = url + '&master=true'
       }
+      return $http.get(url).
+      then(function(response) {
+        // console.log(response.data.results);
+        // return response.data.results;
+        var res;
+
+        for (var i = 0; i < response.data.results.length; i++) {
+          res = response.data.results[i]
+          if (res.productVariant) {
+            // console.log(res.productVariant);
+            res.name = res.product.name + ' ' + $filter('convertUnit')(res.productVariant.unitPerpack * res.product.howMuch, res.product.unit)
+          } else {
+            res.name = res.product.name + ' ' + $filter('convertUnit')(res.product.howMuch, res.product.unit)
+          }
+        }
+
+        return response.data.results;
+      })
     }
-    return $http.get(url).
-    then(function(response) {
-      return response.data.results;
-    })
+
   }
 
   $scope.data = {
@@ -1321,11 +1350,18 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   $scope.subTotal = function() {
     var subTotal = 0;
+    // console.log($scope.form.products);
     angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != null && item.data.productMeta != undefined) {
-        subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
-      } else {
-        subTotal += (item.quantity * item.data.price);
+      // console.log('hhhhhhhhhhhhhhhhhhh');
+      // if (item.data.productMeta != null && item.data.productMeta != undefined) {
+      //   subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
+      // } else {
+      //   subTotal += (item.quantity * item.data.price);
+      // }
+      if (item.data.productVariant!=null) {
+        subTotal += item.quantity * item.data.productVariant.discountedPrice
+      }else {
+        subTotal += item.quantity * item.data.product.price
       }
     })
     $scope.posSubtotal = Math.round(subTotal)
@@ -1581,7 +1617,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       },
       controller: function($scope, amount, qty, $uibModalInstance) {
 
-        console.log('in popupppppp', amount, typeof(amount));
+
+
+
+        console.log('in popupppppp',qty ,  amount, typeof(amount));
         $scope.payMode = 'cash'
         $scope.receivedAmount = ''
         $scope.posSaved = false
@@ -2096,6 +2135,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   }, true)
 
   $scope.saveInvoice = function(a) {
+
+
+    console.log(a);
     //  $scope.form.invoiceDate =
 
     $scope.form.invoiceDateVal = new Date($scope.form.invoiceDate);
@@ -2104,9 +2146,11 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     $scope.form.deuDateVal = new Date($scope.form.deuDate);
     $scope.form.deuDt = new Date($scope.form.deuDateVal.getTime() + (24 * 60 * 60 * 1000));
 
-
+    console.log($scope.form , 'form');
 
     var f = $scope.form;
+
+    console.log($scope.form);
 
 
     if (a == undefined) {
