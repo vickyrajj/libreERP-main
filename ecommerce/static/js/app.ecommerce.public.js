@@ -2657,6 +2657,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 
 app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash) {
+  console.log('logooooooooooooooooooooo',ICON_LOGO);
+  $rootScope.ICON_LOGO = ICON_LOGO
   $scope.me = $users.get('mySelf')
   $rootScope.companyPhone = ''
   $rootScope.companyEmail = ''
@@ -2680,17 +2682,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     }
   })
 
-  $scope.bannerImage = false
 
-
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerImage').
-  then(function(response) {
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.bannerImage = true
-      }
-    }
-  });
 
 
 
@@ -2779,7 +2771,48 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       }
     }
   })
+  $scope.onBtnEnter = false
+  $scope.onDropdownEnter = false
+  $scope.onChildEnter = false
+  $scope.SortByCategory = false
+  $scope.selectedOne = function(data){
+    // console.log('dataaaaaaaaaaaaaaaa',data);
+    $scope.childData = data
+  }
+  $scope.resetAll = function(){
+    // console.log('resettinggggggggg');
+    $scope.childData = {}
+  }
 
+
+  $scope.bannerImage = false
+
+
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerImage').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.bannerImage = true
+      }
+      if ($scope.bannerImage) {
+        $scope.paddingTop = '9.5vh';
+      }else {
+        $scope.paddingTop = '0px;';
+      }
+    }
+  });
+
+
+
+
+  // $scope.closedropDowns = function(event){
+  //   console.log(event);
+  //   event.x = 0
+  //   event.offsetX = 0
+  //   // $scope.onBtnEnter = false
+  //   // $scope.onDropdownEnter = false
+  //   // $scope.onChildEnter = false
+  // }
 
   $scope.me = $users.get('mySelf')
   $rootScope.inCart = [];
@@ -2800,6 +2833,21 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   $scope.registerPage = function() {
     window.location = '/register';
   }
+
+  $http.get('/api/ERP/appSettingsAdminMode/?name=SortByCategory').
+  then(function(response) {
+    console.log('SortByCategory',response.data);
+    if (response.data.length>0) {
+      $scope.SortByCategory = response.data[0].flag
+    }
+  })
+
+  $http.get('/api/ecommerce/categorySortList/').
+  then(function(response) {
+    console.log('categories Listtttttttttt',response.data);
+    $scope.categoriesList = response.data
+  })
+
   $scope.genericProductSearch = function(query) {
     if ($rootScope.multiStore) {
       surl = '/api/ecommerce/searchProduct/?search=' + query + '&pin=' + $rootScope.pin + '&multipleStore&limit=6'
@@ -3223,6 +3271,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
   $scope.headerUrl = '/static/ngTemplates/app.ecommerce.header.html';
   $scope.footerUrl = '/static/ngTemplates/app.ecommerce.footer.html';
+
 
   $scope.$watch('data.location', function(newValue, oldValue) {
     if (newValue != null && typeof newValue == 'object') {

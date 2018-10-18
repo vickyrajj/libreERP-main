@@ -64,7 +64,7 @@ app.filter('getUnit', function() {
 
 app.filter('convertUnit', function() {
   return function (qty, unit) {
-    console.log('in filter cponvert' ,qty, unit );
+    // console.log('in filter cponvert' ,qty, unit );
     if (unit=='Gram' || unit=='gm') {
       if (qty>=1000) {
         toReturn = qty/1000 + ' Kg'

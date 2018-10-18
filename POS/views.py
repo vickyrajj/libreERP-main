@@ -936,7 +936,6 @@ class ProductInventoryAPIView(APIView):
 
         productsList = list(storeQtyObj.values('product').distinct().values('product__pk','product__name','product__displayPicture','product__unit','product__serialId','product__price','product__discount'))
 
-        print productsList
         for i in productsList:
             data = list(storeQtyObj.filter(product=i['product__pk']).values('pk','product','product__price','product__howMuch','productVariant','productVariant__sku','productVariant__unitPerpack','product__serialNo','product__unit','quantity','productVariant__price' ,'productVariant__serialId' ))
             toReturn.append({'productPk':i['product__pk'],'productName':i['product__name'],'productUnit':i['product__unit'],'productSerialId':i['product__serialId'],'productdp':i['product__displayPicture'],'productPrice':i['product__price'],'productDiscount':i['product__discount'],'data':data})
