@@ -1018,7 +1018,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   var exitBtn = document.getElementById('exitBtn');
 
-
   var singleService = document.getElementById('singleService');
 
 
@@ -1037,117 +1036,167 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // var videoCallAccepted = false;
 
   videoCircle.addEventListener('click',function () {
+    console.log(windowColor,'ffffffffffffffffffffffff');
+    var winCol = windowColor.split('#')[1]
+    var urlforConferenceForAgent= 'http://192.168.1.124:1337/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
+    var urlforConference =  'http://192.168.1.124:1337/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
+    openVideoIframe(urlforConference , urlforConferenceForAgent)
+    console.log('working');
+    openChat()
+  })
 
+  audioCircle.addEventListener('click',function () {
+    console.log(windowColor,'ffffffffffffffffffffffff');
+    var winCol = windowColor.split('#')[1]
 
-    if (threadExist==undefined) {
-      dataToPublish = [uid, 'VCS', [] , custID]
-      details = getCookie("uidDetails");
-      if (details != "") {
-        console.log(details);
-         dataToPublish.push(JSON.parse(details))
-      } else {
-        dataToPublish.push(false)
-      }
+    var urlforConferenceForAgent= 'http://192.168.1.124:1337/'+uid+'?audio_video=audio&windowColor='+winCol;
+    var urlforConference =  urlforConferenceForAgent+'&agent=false';
+    openVideoIframe(urlforConference , urlforConferenceForAgent)
+    console.log('working');
+    openChat()
+  })
 
-      var dataToSend = JSON.stringify({uid: uid , company: custID, typ: 'video'});
-      var xhttp = new XMLHttpRequest();
-       xhttp.onreadystatechange = function() {
-         if (this.readyState == 4 && this.status == 201) {
-           console.log('posted successfully');
-           var data = JSON.parse(this.responseText)
-           threadExist=true
-           chatThreadPk = data.pk
-           dataToPublish.push(chatThreadPk)
-           dataToPublish.push('http://192.168.1.124:1337/'+uid)
-           connection.session.publish('service.support.agent', dataToPublish , {}, {
-             acknowledge: true
-           }).
-           then(function(publication) {
-             console.log("Published");
-           });
-         }
-       };
-       xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-       xhttp.setRequestHeader("Content-type", "application/json");
-       xhttp.send(dataToSend);
-    }else {
+  var videoOpened = false
 
-      dataToPublish = [uid, 'VCS', [] , custID, 'http://192.168.1.124:1337/'+uid]
-      if (isAgentOnline) {
-        console.log('ONLINE' , agentPk);
-        connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("Published service.support.agent."+agentPk);
-        });
-      }else {
-        console.log('offline send to all');
-        connection.session.publish('service.support.agent', dataToPublish , {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("Published");
-        });
-      }
+  var openVideoIframe =   function(urlforConference , urlforConferenceForAgent){
 
+    chatBox.style.borderRadius = "0px 10px 10px 0px"
+    headerChat.style.borderRadius = "0px 10px 0px 0px"
+
+    if (videoOpened) {
+      return
     }
 
+    videoOpened = true
+
+        if (threadExist==undefined) {
+          dataToPublish = [uid, 'VCS', [] , custID]
+          details = getCookie("uidDetails");
+          if (details != "") {
+            console.log(details);
+             dataToPublish.push(JSON.parse(details))
+          } else {
+            dataToPublish.push(false)
+          }
+
+          var dataToSend = JSON.stringify({uid: uid , company: custID, typ: 'video'});
+          var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 201) {
+               console.log('posted successfully');
+               var data = JSON.parse(this.responseText)
+               threadExist=true
+               chatThreadPk = data.pk
+               dataToPublish.push(chatThreadPk)
+               dataToPublish.push(urlforConferenceForAgent)
+               connection.session.publish('service.support.agent', dataToPublish , {}, {
+                 acknowledge: true
+               }).
+               then(function(publication) {
+                 console.log("Published");
+               });
+             }
+           };
+           xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+           xhttp.setRequestHeader("Content-type", "application/json");
+           xhttp.send(dataToSend);
+        }else {
+
+          dataToPublish = [uid, 'VCS', [] , custID, urlforConferenceForAgent]
+          if (isAgentOnline) {
+            console.log('ONLINE' , agentPk);
+            connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published service.support.agent."+agentPk);
+            });
+          }else {
+            console.log('offline send to all');
+            connection.session.publish('service.support.agent', dataToPublish , {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }
+
+        }
+
+        var typ = urlforConference.split('&')[1]
+
+        // alert('open Video')
+        // window.open('http://192.168.1.124:1337/'+uid);
+        var body = document.getElementsByTagName("BODY")[0]
+        var iframeDiv = document.createElement('div')
+
+        iframeDiv.id = "iframeDiv";
+        iframeDiv.style.position = "fixed";
+
+        if (typ=='audio') {
+            iframeDiv.style.height = "6vh";
+        }else {
+            iframeDiv.style.height = "70vh";
+        }
+
+        // iframeDiv.style.top = "25%";
+        iframeDiv.style.bottom = "100px";
+        iframeDiv.style.left = "24%";
+        iframeDiv.style.width = "50%";
+        // iframeDiv.style.height = "70vh";
 
 
-    // alert('open Video')
-    // window.open('http://192.168.1.124:1337/'+uid);
-    var body = document.getElementsByTagName("BODY")[0]
-    var iframeDiv = document.createElement('div')
 
-    iframeDiv.id = "iframeDiv";
-    iframeDiv.style.position = "fixed";
-    // iframeDiv.style.top = "25%";
-    iframeDiv.style.bottom = "100px";
-    iframeDiv.style.left = "24%";
-    iframeDiv.style.width = "50%";
-    iframeDiv.style.height = "70vh";
-    // iframeDiv.style.display = "none";
+        // iframeDiv.style.display = "none";
 
-    var span = document.createElement('span')
-    span.id = "closeVideo"
-    span.innerHTML = '<img src="{{serverAddress}}/static/images/close.png" alt="Close" width="10" height="10">';
-    span.style.position =  "absolute";
-    span.style.right = "7px";
-    span.style.top = "3px";
-    span.style.backgroundColor = "black";
-    span.style.padding = "3px";
-    span.style.cursor = "pointer";
+        // var span = document.createElement('span')
+        // span.id = "closeVideo"
+        // span.innerHTML = '<img src="{{serverAddress}}/static/images/close.png" alt="Close" width="10" height="10">';
+        // span.style.position = "absolute";
+        // span.style.right = "7px";
+        // span.style.top = "3px";
+        // span.style.backgroundColor = windowColor;
+        // span.style.padding = "3px";
+        // span.style.cursor = "pointer";
 
 
-    iframeDiv.appendChild(span)
+        // iframeDiv.appendChild(span)
 
-    var iFrame = document.createElement('iframe');
-    iFrame.src = 'http://192.168.1.124:1337/'+uid;
-    iFrame.style.width = "100%";
-    iFrame.scrolling = "no";
-    iFrame.style.height = "100%";
-    iframeDiv.appendChild(iFrame)
-    body.appendChild(iframeDiv)
-
-    // checkVideoCallAccepted()
+        var iFrame = document.createElement('iframe');
+        iFrame.id = "iFrame1"
+        iFrame.src = urlforConference;
+        iFrame.style.width = "100%";
+        iFrame.scrolling = "no";
+        iFrame.style.height = "100%";
 
 
-    span.addEventListener('click',function () {
-      iFrame.src = '';
-      iframeDiv.parentNode.removeChild(iframeDiv);
+        // if (typ=='audio') {
+        //     iFrame.style.border = "0px";
+        // }else {
+        //     iFrame.style.border = "3px solid"+windowColor;
+        // }
 
-      dataToPublish = [uid, 'VCC']
-      connection.session.publish('service.support.agent', dataToPublish , {}, {
-        acknowledge: true
-      }).
-      then(function(publication) {
-        console.log("Published");
-      });
-    })
+        // iFrame.style.border = "3px solid"+windowColor;
+        iframeDiv.appendChild(iFrame)
+        body.appendChild(iframeDiv)
+
+        // checkVideoCallAccepted()
 
 
-  })
+        // span.addEventListener('click',function () {
+        //   videoOpened = false
+        //   iFrame.src = '';
+        //   iframeDiv.parentNode.removeChild(iframeDiv);
+        //
+        //   dataToPublish = [uid, 'VCC']
+        //   connection.session.publish('service.support.agent', dataToPublish , {}, {
+        //     acknowledge: true
+        //   }).
+        //   then(function(publication) {
+        //     console.log("Published");
+        //   });
+        // })
+    }
 
   // function checkVideoCallAccepted() {
   //   if (videoCallAccepted) {
@@ -2648,6 +2697,17 @@ function endChat() {
   }
 
   closeSupport.addEventListener("click", function() {
+    chatBox.style.borderRadius = "10px 10px 10px 10px"
+    headerChat.style.borderRadius = "10px 10px 0px 0px"
+
+    if (videoOpened) {
+      var iframeDiv = document.getElementById('iframeDiv')
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      iframeDiv.parentNode.removeChild(iframeDiv);
+    }
+
+    videoOpened = false
     //bottom close svg white color
     console.log('coming' , chatOpen);
     if (chatOpen) {
