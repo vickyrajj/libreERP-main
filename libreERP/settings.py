@@ -39,6 +39,7 @@ ECOMMERCE_APP = {
 
 LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpeg'
 LOGIN_PAGE_LOGO = '/static/images/company_icon.svg'
+ICON_LOGO = '/static/images/sterlin_select.png'
 
 SHOW_COMMON_APPS = False
 
@@ -60,7 +61,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.106', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.116' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.121','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10']
+ALLOWED_HOSTS = ['192.168.1.124', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.116' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.123','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10']
 
 
 LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
@@ -73,7 +74,7 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 BRAND_NAME = 'sterlingselect.com'
 SERVICE_NAME = 'Inventory, Sales and Ecommerce'
-BRAND_LOGO = '/static/images/company_icon.svg'
+BRAND_LOGO = '/static/images/logo1.png'
 BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
 SMART_REGISTRATION = True
 
@@ -91,7 +92,7 @@ SEO_SITE_NAME = 'STERLING SELECT'
 SEO_URL = 'https://sterlingselect.com/'
 SEO_PUBLISHER = 'https://plus.google.com/b/105723801328437605094/'
 
-LITE_REGISTRATION = True
+LITE_REGISTRATION = False
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -125,7 +126,7 @@ INSTALLED_APPS = (
 	'POS',# POS terminal like tally
     'support',# canvas
 	'productsInventory',# inventory for POS products
-    # 'mail', # mail application
+    'payu', # payubiz payment integration
     # 'employees',# employees details
     # 'events',# to manage events like test, hackathon or something like that
     # 'finance',# billing , invoicing , finance etc
@@ -137,6 +138,14 @@ INSTALLED_APPS = (
     # 'assets',# assets
     # 'workforceManagement',# canvas
 )
+
+
+PAYU_MERCHANT_KEY = "gtKFFx",
+
+PAYU_MERCHANT_SALT = "eCwWELxi",
+
+# And add the PAYU_MODE to 'TEST' for testing and 'LIVE' for production.
+PAYU_MODE = "TEST"
 
 
 SITE_ID = 1

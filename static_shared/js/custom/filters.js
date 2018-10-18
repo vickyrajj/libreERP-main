@@ -43,6 +43,47 @@ app.filter('getCRMDP', function() {
   }
 })
 
+app.filter('getUnit', function() {
+  return function (input) {
+    if (input=='Kilogram') {
+      toReturn = 'Kg'
+    }else if (input=='Gram') {
+      toReturn = 'gm'
+    }else if (input=='Litre') {
+      toReturn = 'lt'
+    }else if (input=='Millilitre') {
+      toReturn = 'ml'
+    }else if (input=='Ton') {
+      toReturn = 'Ton'
+    }else {
+      toReturn = input
+    }
+    return toReturn
+  }
+})
+
+app.filter('convertUnit', function() {
+  return function (qty, unit) {
+    // console.log('in filter cponvert' ,qty, unit );
+    if (unit=='Gram' || unit=='gm') {
+      if (qty>1000) {
+        toReturn = qty/1000 + ' Kg'
+      }else {
+        toReturn = qty + ' gm'
+      }
+    }else if (unit=='Millilitre' || unit=='ml') {
+      if (qty>1000) {
+        toReturn = qty/1000 + ' lt'
+      }else {
+        toReturn = qty + ' ml'
+      }
+    }else {
+      toReturn = qty + unit
+    }
+    return toReturn
+  }
+})
+
 
 app.filter('fileTypeIcon' , function(){
   return function(input){

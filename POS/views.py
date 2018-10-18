@@ -31,11 +31,11 @@ import pytz
 import requests
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
-# from openpyxl import load_workbook
+from openpyxl import load_workbook
 from io import BytesIO
 import re
 from rest_framework import filters
-from django.db.models import F ,Value,CharField
+from django.db.models import F ,Value,CharField,Subquery
 
 
 
@@ -91,8 +91,24 @@ class StoreQtyViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = StoreQtySerializer
     queryset = StoreQty.objects.all()
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['name' ]
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['store','master','product']
+
+    # def get_queryset(self):
+    #     print self.request.GET , 'get'
+    #
+    #     allObj = StoreQty.objects.all()
+    #
+    #     if 'store' in self.request.GET:
+    #         allObj = allObj.filter(store = self.request.GET['store'])
+    #         toReturn = allObj
+    #     elif 'master' in self.request.GET:
+    #         # allObj = allObj.filter(master = True).annotate(some=Value("sai",output_field=CharField()))
+    #         allObj = allObj.filter(master = True)
+    #         toReturn = allObj
+    #     else:
+    #         toReturn = allObj
+    #     return toReturn
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -101,7 +117,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     # queryset = Product.objects.all()
     filter_backends = [DjangoFilterBackend , filters.SearchFilter]
     # search_fields = ('name', 'serialNo', 'description', 'serialId')
-    filter_fields = ['name','haveComposition','serialNo',]
+    filter_fields = ['name','haveComposition','serialNo','inStock']
 
     # filter_fields = ['name','haveComposition']
     def get_queryset(self):
@@ -130,6 +146,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 #     queryset = Product.objects.all()
 #     filter_backends = [DjangoFilterBackend]
 #     filter_fields = ['name']
+
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = InvoiceSerializer
@@ -172,6 +189,12 @@ class ProductVerientViewSet(viewsets.ModelViewSet):
     queryset = ProductVerient.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['parent']
+
+
+# class ProductInventoryViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated, )
+#     serializer_class = ProductInventorySerializer
+#     queryset = Product.objects.all()
 
 # class ProductMetaListViewSet(viewsets.ModelViewSet):
 #     permission_classes = (permissions.IsAuthenticated , )
@@ -884,6 +907,29 @@ class ExternalEmailOrders(APIView):
         # print dir(request.FILES['attachment'])
         # print request.FILES['attachment'].size
         return Response({"saved" : True},status=status.HTTP_200_OK)
+
+
+class ProductInventoryAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print 'cameeeeeeeeeeeee'
+        toReturn = []
+        if 'store' in request.GET:
+            print 'multistoreeeeeeeeeeeeeee'
+            productsList = list(StoreQty.objects.filter(store=request.GET['store']).values('product').distinct().values('product__pk','product__name'))
+        elif 'master' in request.GET:
+            print 'singlestoreeeeeeeeeeeeeeeeeee'
+            productsList = list(StoreQty.objects.filter(master=True).values('product').distinct().values('product__pk','product__name'))
+        else:
+            productsList = list(StoreQty.objects.all().values('product').distinct().values('product__pk','product__name'))
+
+        print productsList
+        print StoreQty.objects.filter(product__in=[1440,1437]).values('product','product__name').distinct().annotate(data=Subquery(StoreQty.objects.filter(product=F('product__pk')).values()))
+        for i in productsList:
+            data = list(StoreQty.objects.filter(product=i['product__pk']).values('pk','product','product__price','productVariant','productVariant__sku','product__serialNo','quantity','productVariant__price'))
+            toReturn.append({'productName':i['product__name'],'data':data})
+
+        return Response(toReturn,status=status.HTTP_200_OK)
 
 
 class InvoicePrint(APIView):

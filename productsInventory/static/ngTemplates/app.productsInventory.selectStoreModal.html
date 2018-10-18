@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <h4>Select Store</h4>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-4" ng-repeat="s in stores">
+      <div class="card" ng-click="storeSelected($index)" style="{{selectedStore.pk==s.pk ? 'background-color:#1a9fe7; color:#fff':''}}; cursor:pointer;">
+        <div class="container-fluid">
+          <h5><label> Name :</label> {{s.name}}</h5>
+          <h5><label> Pincode :</label> {{s.pincode}}</h5>
+          <h5><label> Mobile :</label> {{s.mobile}}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" name="button" class="btn btn-primary" ng-click="go()">Ok</button>
+</div>

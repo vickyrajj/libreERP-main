@@ -13,7 +13,7 @@ app.directive('genericTable' , function(){
   };
 });
 
-app.controller('genericTable' , function($scope , $http, $templateCache, $timeout , $users , Flash , $uibModal) {
+app.controller('genericTable' , function($scope , $http, $templateCache, $timeout , $users , Flash , $uibModal , $timeout) {
 
   $scope.config = JSON.parse($scope.configObj);
 
@@ -65,6 +65,18 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
       }
     }
   });
+
+  $timeout(function() {
+    var searchInpt = $('#genericTableSearch');
+
+    console.log(searchInpt);
+    bbx1 = searchInpt.next()[0].getBoundingClientRect();
+    bbx2 = searchInpt.prev()[0].getBoundingClientRect();
+
+    searchInpt.width(bbx2.x - bbx1.x - bbx1.width - 100)
+
+
+  },1500)
 
   $scope.$on('forceInsetdata', function(event, input) {
     // console.log($scope.data);

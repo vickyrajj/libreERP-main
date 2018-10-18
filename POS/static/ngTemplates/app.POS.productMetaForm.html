@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-controller="controller.POS.productMeta.form">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <h3 ng-if="configureForm.pk">Edit Product Meta : {{configureForm.description}}</h3>
       <h3 ng-if="!configureForm.pk">Create Product Meta</h3>
       <div class="form-group">
@@ -25,6 +25,14 @@
       <div class="btn-group btn-group-sm">
         <button type="button" class="btn btn-success" ng-click="saveproductMeta()">Save</button>
         <button type="button" class="btn btn-danger" ng-click="resetForm()">Reset</button>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="row" style="margin:20px 15px">
+        <div class="container-fluid">
+          <generic-Table data="data.productMetatableData" config-Obj="{{configProductMeta}}" callback-Fn="tableActionProductMeta"></generic-Table>
+        </div>
       </div>
     </div>
   </div>

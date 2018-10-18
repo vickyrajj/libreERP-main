@@ -93,6 +93,7 @@ from django.core.files.images import get_image_dimensions
 import ast
 from flask import Markup
 from PIM.models import blogPost
+from django.db.models.functions import Concat
 
 # Create your views here.
 
@@ -109,9 +110,26 @@ if defaultSettingsData.count()>0:
         elif i.name == 'linkedInLink':
             twtLink = i.value
 
+from payu.gateway import get_hash , payu_url
+from uuid import uuid4
+
+def makePayment():
+    data = {
+        'txnid':uuid4().hex, 'amount':10.00, 'productinfo': 'Sample Product',
+        'firstname': 'test', 'email': 'test@example.com', 'udf1': 'Userdefined field',
+    }
+    hash_value = get_hash(data)
+
+
+def success_response(request):
+    hash_value = check_hash(request.POST)
+    if check_hash(request.POST):
+        return HttpResponse("Transaction has been Successful.")
+
+
 def ecommerceHome(request):
     print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
-    data = {'wampServer' : globalSettings.WAMP_SERVER, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
+    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
         print urlData,'url detailsssssssssss'
@@ -202,19 +220,31 @@ class SearchProductAPI(APIView):
                     store = Store.objects.get(pincode=int(self.request.GET['pin']))
                 except:
                     return listing.objects.all()
-                storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-                productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+                # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
+                # print productsList , 'productsList'
                 listingobjs = listing.objects.filter(product__in=productsList)
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
                 genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name'), dp = F('files__attachment') , typ= Value('list',output_field=CharField())))
+                listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name'), dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'),unit =F('product__unit') , dpId = F('files__imageIndex'), typ= Value('list',output_field=CharField())))
             else:
                 genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk').annotate(name=F('product__name' ) , dp = F('files__attachment') , typ= Value('list',output_field=CharField())))
-
-            tosend = genericProd + listProd
-            print tosend[0:l]
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name' ) , dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'), dpId = F('files__imageIndex') , unit = F('product__unit'), typ= Value('list',output_field=CharField())))
+            newlist = []
+            newListPks = []
+            for i in listProd:
+                if i['pk'] not in newListPks:
+                    if i['dpId'] == 0:
+                        newlist.append(i)
+                        prodVar = ProductVerient.objects.filter(parent = i['product__id'])
+                        if len(prodVar)>0:
+                            for a in prodVar:
+                                prodVar = {'name':i['name'] , 'dp':i['dp'] , 'inStock':i['inStock'], 'serialNo':a.sku ,'howMuch':i['howMuch']* a.unitPerpack , 'unit':i['unit'] ,'typ':i['typ'] ,'pk':i['pk'] }
+                                newlist.append(prodVar)
+                        newListPks.append(i['pk'])
+            tosend = genericProd + newlist
             return Response(tosend[0:l], status = status.HTTP_200_OK)
 
 class PromoCheckAPI(APIView):
@@ -235,6 +265,23 @@ class PromoCheckAPI(APIView):
             else:
                 toReturn = 'Invalid Promocode'
             return Response({'msg':toReturn,'val':val}, status = status.HTTP_200_OK)
+
+
+class CategorySortListAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def get(self , request , format = None):
+        # toReturn = []
+        gpList = list(genericProduct.objects.filter(parent__isnull=True).values('name','pk').annotate(img=Concat(Value('/media/'),'visual')))
+        print gpList
+        for i in gpList:
+            chilData = list(genericProduct.objects.filter(parent=i['pk']).values('name','pk').annotate(img=Concat(Value('/media/'),'visual')))
+            if len(chilData)>0:
+                i['child'] = chilData
+            else:
+                i['child'] = []
+
+        return Response(gpList, status = status.HTTP_200_OK)
 
 
 
@@ -258,17 +305,31 @@ class CreateOrderAPI(APIView):
             # if type(i['pk']) == 'string':
             #     int(i['pk'])
             print i,'77777777777777',request.data['promoCodeDiscount'],type(request.data['promoCodeDiscount'])
+            print i['prodSku'], 'prodSku'
             pObj = listing.objects.get(pk = i['pk'])
-            pp = pObj.product.price
-            if pp > 0:
-                a = pp - (pObj.product.discount*pp)/100
-                print a ,type(a)
-                b = a - (int(request.data['promoCodeDiscount'])*a)/100
+            if pObj.product.serialNo == i['prodSku']:
+                pp = pObj.product.price
+                if pp > 0:
+                    a = pp - (pObj.product.discount*pp)/100
+                    print a ,type(a)
+                    b = a - (int(request.data['promoCodeDiscount'])*a)/100
+                else:
+                    b=0
             else:
-                b=0
+                prodVar = ProductVerient.objects.get(sku = i['prodSku'])
+                pp = prodVar.discountedPrice
+                print pp ,'pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp'
+                if pp > 0:
+                    # a = pp - (pObj.product.discount*pp)/100
+                    # print a ,type(a)
+                    b = pp - (int(request.data['promoCodeDiscount'])*pp)/100
+                else:
+                    b=0
+
             totalAmount += b * i['qty']
+            print totalAmount , 'totalAmounttotalAmounttotalAmounttotalAmount'
             print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b))})
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b)),'prodSku':i['prodSku']})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:
@@ -329,45 +390,55 @@ class CreateOrderAPI(APIView):
             print promoAmount
             a = '#'
             docID = str(a) + str(orderObj.pk)
-            print docID,'aaaaaaaaaaaaaaaaaaaaabbbbbbbbb'
             for i in orderObj.orderQtyMap.all():
-                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
-                price=round(price, 2)
-                totalPrice=i.qty*price
-                totalPrice=round(totalPrice, 2)
-                total+=totalPrice
-                total=round(total, 2)
-                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+                if i.prodSku == i.product.product.serialNo:
+                    price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                    price=round(price, 2)
+                    totalPrice=i.qty*price
+                    totalPrice=round(totalPrice, 2)
+                    total+=totalPrice
+                    total=round(total, 2)
+                    value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+                else:
+                    prodData = ProductVerient.objects.get(sku = i.prodSku)
+                    price = prodData.discountedPrice
+                    price=round(price, 2)
+                    totalPrice=i.qty*price
+                    totalPrice=round(totalPrice, 2)
+                    total+=totalPrice
+                    total=round(total, 2)
+                    value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
             grandTotal=round(grandTotal, 2)
-            ctx = {
-                'heading' : "Invoice Details",
-                'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
-                'linkUrl': globalSettings.BRAND_NAME,
-                'sendersAddress' : globalSettings.SEO_TITLE,
-                # 'sendersPhone' : '122004',
-                'grandTotal':grandTotal,
-                'total': total,
-                'value':value,
-                'docID':docID,
-                'data':orderObj,
-                'promoAmount':promoAmount,
-                'linkedinUrl' : lkLink,
-                'fbUrl' : fbLink,
-                'twitterUrl' : twtLink,
-            }
-            print ctx
-            email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-            # email_subject = "Order Details:"
-            # msgBody = " Your Order has been placed and details are been attached"
-            contactData.append(str(orderObj.user.email))
-            print 'aaaaaaaaaaaaaaa'
-            msg = EmailMessage("Order Details" , email_body, to= contactData  )
-            msg.content_subtype = 'html'
-            # a = str(f).split('media_root/')[1]
-            # b = str(a).split("', mode")[0]
-            # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
-            msg.send()
+            if orderObj.user.email:
+                ctx = {
+                    'heading' : "Invoice Details",
+                    'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+                    'linkUrl': globalSettings.BRAND_NAME,
+                    'sendersAddress' : globalSettings.SEO_TITLE,
+                    # 'sendersPhone' : '122004',
+                    'grandTotal':grandTotal,
+                    'total': total,
+                    'value':value,
+                    'docID':docID,
+                    'data':orderObj,
+                    'promoAmount':promoAmount,
+                    'linkedinUrl' : lkLink,
+                    'fbUrl' : fbLink,
+                    'twitterUrl' : twtLink,
+                }
+                print ctx
+                email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+                # email_subject = "Order Details:"
+                # msgBody = " Your Order has been placed and details are been attached"
+                contactData.append(str(orderObj.user.email))
+                print 'aaaaaaaaaaaaaaa'
+                msg = EmailMessage("Order Details" , email_body, to= contactData  )
+                msg.content_subtype = 'html'
+                # a = str(f).split('media_root/')[1]
+                # b = str(a).split("', mode")[0]
+                # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
+                msg.send()
             return Response({'paymentMode':orderObj.paymentMode,'dt':orderObj.created,'odnumber':orderObj.pk}, status = status.HTTP_200_OK)
 
 
@@ -391,8 +462,9 @@ class genericProductViewSet(viewsets.ModelViewSet):
                 store = Store.objects.get(pincode=int(self.request.GET['pin']))
             except:
                 return listing.objects.all()
-            storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-            productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+            # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
             listingList = list(listing.objects.filter(product__in=productsList).values_list('parentType',flat=True))
             genericList = genericProduct.objects.filter(pk__in=listingList)
             if 'genericValue' in  self.request.GET:
@@ -424,6 +496,16 @@ class listingViewSet(viewsets.ModelViewSet):
     filter_fields = ['parentType','product']
 
     def get_queryset(self):
+
+        # abc =  listing.objects.all()
+        # for i in abc:
+        #     print i.files.order_by('imageIndex')
+
+
+        #     for im in imagelist:
+        #         print im.imageIndex , im.pk ,'uuuuuuuurrrrrrrrrrrrrllllllllllllllllll'
+        # print abc
+
         print self.request.GET,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         data = self.request.GET
         if 'recursive' in data:
@@ -441,8 +523,9 @@ class listingViewSet(viewsets.ModelViewSet):
                         store = Store.objects.get(pincode=int(self.request.GET['pin']))
                     except:
                         return listing.objects.all()
-                    storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-                    productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                    # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+                    # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+                    productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
                     toReturn = toReturn.filter(product__in=productsList)
                     multiproductLst = productsList
 
@@ -525,7 +608,9 @@ class listingViewSet(viewsets.ModelViewSet):
                 #                 print 'kkkkkkkkkkkkkkkkkk'
                 return toReturn
         else:
+            # return listing.objects.all()
             return listing.objects.all()
+
 
 class listingLiteViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny, )
@@ -544,8 +629,9 @@ class listingLiteViewSet(viewsets.ModelViewSet):
                 store = Store.objects.get(pincode=int(self.request.GET['pin']))
             except:
                 return listing.objects.all()
-            storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-            productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+            # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
             listingList = listing.objects.filter(product__in=productsList)
             if 'parentValue' in  self.request.GET:
                 return listingList.filter(parentType=self.request.GET['parentValue']).exclude(pk = self.request.GET['detailValue'] )[0:4]
@@ -617,8 +703,9 @@ class ActivitiesViewSet(viewsets.ModelViewSet):
                 store = Store.objects.get(pincode=int(self.request.GET['pin']))
             except:
                 return listing.objects.all()
-            storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
-            productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            # storeQtylist = list(StoreQty.objects.filter(store = store.pk).values_list('pk',flat=True))
+            # productsList = list(Product.objects.filter(storeQty__in=storeQtylist).values_list('pk',flat=True))
+            productsList = list(StoreQty.objects.filter(store = store.pk).values_list('product',flat=True))
             listingList = list(listing.objects.filter(product__in=productsList).values_list('pk',flat=True))
             a = a.filter(product__in = listingList)
         pPk = []
@@ -683,6 +770,8 @@ class PincodeViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly , )
     queryset = Pincode.objects.all()
     serializer_class = pincodeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['pincodes']
 
 
 
@@ -694,16 +783,39 @@ def manifest(response,item):
     now = datetime.datetime.now()
     print item.pk , order.pk
     print now.year,now.month,now.day
-
+    total = (item.totalAmount-item.discountAmount) * item.qty
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=1*cm,leftMargin=0.2*cm,rightMargin=0.2*cm)
     elements = []
+
+    print item.prodSku,'aaaaaaaaaaaaaaaaaaaaaa'
+    if item.prodSku != item.product.product.serialNo:
+        product = ProductVerient.objects.get(sku=item.prodSku)
+        qtyData = product.unitPerpack * item.product.product.howMuch
+    else:
+        qtyData =  item.product.product.howMuch
+
+    if str(item.product.product.unit)=='Gram' or str(item.product.product.unit)=='gm':
+        if qtyData >1000:
+            qtyValue = str(qtyData/1000) + ' Kg'
+        else:
+            qtyValue = str(qtyData) + ' gm'
+    elif str(item.product.product.unit)=='Millilitre' or str(item.product.product.unit)=='ml':
+        if qtyData>1000:
+            qtyValue = str(qtyData/1000) + ' lt'
+        else:
+            qtyValue = str(qtyData) + ' ml'
+    else:
+      qtyValue = qtyData
+
+    name = str(item.product.product.name)+ ' ' + str(qtyValue)
+
 
     elements.append(HRFlowable(width="100%", thickness=1, color=black,spaceAfter=10))
     if order.paymentMode == 'card':
         txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>PREPAID - DO NOT COLLECT CASH</b></para>'
     else:
-        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(item.totalAmount-item.discountAmount)
+        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(total)
     elements.append(Paragraph(txt1, styles['Normal']))
     elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
@@ -722,7 +834,7 @@ def manifest(response,item):
     txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'address').value)
     elements.append(Paragraph(txt4, styles['Normal']))
     elements.append(Spacer(1, 3))
-    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat/tinNo').value,settingsFields.get(name = 'cstNo').value)
+    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat/tinNo').value,settingsFields.get(name = 'cstNo').value)
     elements.append(Paragraph(txt5, styles['Normal']))
     elements.append(Spacer(1, 10))
     invNo = str(now.year)+str(now.month)+str(now.day)+str(order.pk)
@@ -730,9 +842,8 @@ def manifest(response,item):
     elements.append(Paragraph(txt6, styles['Normal']))
     # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=10))
     elements.append(Spacer(1, 30))
-
-    pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(item.product.product.name),styles['Normal'])
-    tableData=[['Product','Price','Qty','Discount','Final Price'],[pd,item.totalAmount,item.qty,item.discountAmount,item.totalAmount-item.discountAmount],['TOTAL','','','',item.totalAmount-item.discountAmount]]
+    pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(name),styles['Normal'])
+    tableData=[['Product','Price','Qty','Discount','Final Price'],[pd,item.totalAmount,item.qty,item.discountAmount,total],['TOTAL','','','',total]]
 
     t1=Table(tableData,colWidths=[1.7*inch , 0.5*inch , 0.5*inch, 0.7*inch , 0.7*inch])
     t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),('BOX', (0,0), (-1,-1), 0.25, colors.black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
@@ -741,7 +852,7 @@ def manifest(response,item):
     # elements.append(Indenter(left=-10))
     elements.append(Spacer(1, 10))
     if order.paymentMode != 'card':
-        txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(item.totalAmount-item.discountAmount)
+        txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(total)
         elements.append(Paragraph(txt7, styles['Normal']))
     # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=20,spaceAfter=5))
     elements.append(Spacer(1, 20))
@@ -1120,14 +1231,54 @@ def genInvoice(response, contract, request):
     tableData=[['Product','Quantity','Price','Total Price']]
     for i in contract.orderQtyMap.all():
         if str(i.status)!='cancelled':
-            print i.product.product.name, i.product.product.discount, i.product.product.price
-            price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
-            price=round(price, 2)
-            totalprice = i.qty*price
-            totalprice=round(totalprice, 2)
-            total+=totalprice
-            total=round(total, 2)
-            tableData.append([i.product.product.name,i.qty,price,totalprice])
+            if i.prodSku == i.product.product.serialNo:
+                print i.product.product.name, i.product.product.discount, i.product.product.price
+                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                price=round(price, 2)
+                totalprice = i.qty*price
+                totalprice=round(totalprice, 2)
+                total+=totalprice
+                total=round(total, 2)
+                qtyData = i.product.product.howMuch
+                if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
+                    if qtyData >1000:
+                        qtyValue = str(qtyData/1000) + ' Kg'
+                    else:
+                        qtyValue = str(qtyData) + ' gm'
+                elif str(i.product.product.unit)=='Millilitre' or str(i.product.product.unit)=='ml':
+                    if qtyData>1000:
+                        qtyValue = str(qtyData/1000) + ' lt'
+                    else:
+                        qtyValue = str(qtyData) + ' ml'
+                else:
+                  qtyValue = qtyData
+
+                name = str(i.product.product.name) + ' '  + str(qtyValue)
+                tableData.append([name,i.qty,price,totalprice])
+            else:
+                prodData = ProductVerient.objects.get(sku = i.prodSku)
+                price = prodData.discountedPrice
+                price=round(price, 2)
+                totalprice = i.qty*price
+                totalprice=round(totalprice, 2)
+                total+=totalprice
+                total=round(total, 2)
+                qtyData = i.product.product.howMuch * prodData.unitPerpack
+                if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
+                    if qtyData >1000:
+                        qtyValue = str(qtyData/1000) + ' Kg'
+                    else:
+                        qtyValue = str(qtyData) + ' gm'
+                elif str(i.product.product.unit)=='Millilitre' or str(i.product.product.unit)=='ml':
+                    if qtyData>1000:
+                        qtyValue = str(qtyData/1000) + ' lt'
+                    else:
+                        qtyValue = str(qtyData) + ' ml'
+                else:
+                  qtyValue = qtyData
+                name = str(i.product.product.name) + ' ' + str(qtyValue)
+                tableData.append([name,i.qty,price,totalprice])
+
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal, 2)
     tableData.append(['','','TOTAL (INR)',total])

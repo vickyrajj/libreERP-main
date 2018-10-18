@@ -65,7 +65,7 @@
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>
     <div class="row" style="margin:0px;padding-top:{{!$state.includes('ecommerce') ?  '9.5vh':'10px'}}" ng-controller="ecommerce.body" >
-      <div class="col-md-{{ cart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="me.pk">
+      <div class="col-md-{{ inCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="me.pk">
         <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
       </div>
       <div class="col-md-{{ addToCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;" ng-if="!me.pk">
@@ -74,7 +74,7 @@
 
 
 
-      <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer"  ng-click="checkout()" ng-if="cart.length>0 && !$state.is('checkout') && !$state.includes('account')">
+      <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer"  ng-click="checkout()" ng-if="inCart.length>0 && !$state.is('checkout') && !$state.includes('account')">
         <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.total.toFixed(2)}} )</h5>
       </div>
 
@@ -83,12 +83,15 @@
       </div>
 
 
-      <div ng-if="cart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
+      <div ng-if="inCart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
 
-        <div class="" style="position:sticky;top:10px;">
+        <div style="position:sticky;top:10px; border-top:solid 2px #eeeeee;">
 
-          <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
-          <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
+          <div ng-if="showCartImage">
+            <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
+            <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
+
+          </div>
 
           <div class="row" style="margin:0px;">
             <div class="container-fluid">
@@ -96,9 +99,11 @@
             </div>
           </div>
 
-          <div ng-repeat="p in cart" style="border-bottom:solid 2px #eeeeee; ">
-            <h5 style="margin:10px;">{{p.product.product.name}}</h5>
+          <div ng-repeat="p in inCart" style="border-bottom:solid 2px #eeeeee; ">
 
+            <h5 ng-if="p.prod_howMuch==null" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch | convertUnit:p.product.product.unit }}</h5>
+            <h5 ng-if="p.prod_howMuch" style="margin:10px;">{{p.product.product.name}} {{p.prod_howMuch| convertUnit : p.product.product.unit}}</h5>
+            <!-- {{p.prod_var}} -->
             <div class="row" style="margin:0px;">
               <div class="col-sm-4 text-right">
                 <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >0" ng-click="changeQty(p.product.pk , 'decrease');"></i>
@@ -111,10 +116,15 @@
               </div>
             </div>
 
-            <div class="row" style="margin:0px;padding-left:20px;" >
-              <i class="fa fa-inr"></i>  {{(p.product.product.discountedPrice * p.qty).toFixed(2) }}
+            <div class="row" style="margin:0px;padding-left:20px;">
+              <i class="fa fa-inr"></i>
+              <span ng-if="p.prodSku==p.product.product.serialNo">{{(p.product.product.discountedPrice * p.qty).toFixed(2) }}</span>
+              <span ng-if="p.prodSku!=p.product.product.serialNo">{{(p.prodVarPrice * p.qty).toFixed(2)}}</span>
             </div>
 
+            <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.product.in_stock=='false'">
+              <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
+            </div>
           </div>
 
           <div class="text-center bg-blue" style="padding:20px;cursor:pointer;" ng-click="checkout()">
@@ -139,12 +149,12 @@
             </div>
           </div>
 
-          <div ng-repeat="p in addToCart" style="border-bottom:solid 2px #eeeeee; ">
-            <h5 style="margin:10px;">{{p.product.product.name}}</h5>
+          <div ng-repeat="p in addToCart" style="border-bottom:solid 2px #eeeeee;">
+            <h5 style="margin:10px;">{{p.productName}} {{p.prod_howMuch | convertUnit:p.unit}}</h5>
 
             <div class="row" style="margin:0px;">
               <div class="col-sm-4 text-right">
-                <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >1" ng-click="updateCookieDetail($index , 'decrease');"></i>
+                <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-click="updateCookieDetail($index , 'decrease');"></i>
               </div>
               <div class="col-sm-4 text-center">
                 {{p.qty}}
@@ -154,8 +164,15 @@
               </div>
             </div>
 
-            <div class="row" style="margin:0px;padding-left:20px;" >
-              <i class="fa fa-inr"></i>  {{(p.product.product.discountedPrice*p.qty).toFixed(2)}}
+
+            <div class="row" style="margin:0px;padding-left:20px;">
+              <i class="fa fa-inr"></i>
+              <span >{{p.price}}</span>
+            </div>
+
+
+            <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.in_stock=='false'">
+              <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
             </div>
 
           </div>
@@ -206,6 +223,7 @@
     <script type="text/javascript">
       var wampServer = '{{wampServer}}';
       var wampBindName = "{{user.username}}";
+      var ICON_LOGO = "{{data.icon_logo}}";
     </script>
     <script src="{% static 'js/app.ecommerce.public.js' %}"></script>
     <script src="{% static 'js/custom/wampProcessors.js' %}"></script>

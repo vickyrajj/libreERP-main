@@ -94,13 +94,14 @@
              <input type="checkbox" ng-model="i.selected" ng-show="i.status!='cancelled'&&i.status!='returned'">
           </div>
           <div class="col-md-4 col-sm-4 hidden-xs">
-            {{i.productName.slice(0,25)}}
+            <span ng-if="i.prodVar==undefined"> {{i.productName.slice(0,25)}} {{i.product.product.howMuch}}{{i.product.product.unit | getUnit}}</span>
+            <span ng-if="i.prodVar"> {{i.productName.slice(0,25)}} {{i.prodVar[0].unitPerpack * i.product.product.howMuch| convertUnit:i.product.product.unit}} </span>
           </div>
           <div class="col-md-1 col-sm-1 hidden-xs">
             {{i.qty}}
           </div>
           <div class="col-md-3 col-sm-3 hidden-xs">
-            <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2) * i.qty}}
+            <i class="fa fa-inr"></i> {{(i.ppAfterDiscount * i.qty).toFixed(2)}}
           </div>
           <div class="col-md-3 col-sm-3 hidden-xs" >
             {{i.status}}
@@ -121,7 +122,7 @@
             {{i.qty}}
           </div>
           <div class="col-xs-5 hidden-sm hidden-md hidden-lg">
-            <i class="fa fa-inr"></i> {{i.ppAfterDiscount.toFixed(2) * i.qty}}
+            <i class="fa fa-inr"></i> {{(i.ppAfterDiscount * i.qty).toFixed(2)}}
           </div>
           <div class="col-xs-5 hidden-sm  hidden-md hidden-lg">
             {{i.status}}

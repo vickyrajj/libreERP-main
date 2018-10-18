@@ -27,8 +27,12 @@
           <div class="container-fluid" style="cursor:pointer;padding-right:0px;padding-left:0px" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
             <div class="row">
               <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-                <img style="width:100%;height:280px" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
-                <img style="width:100%;height:280px" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none">
+                <div  style="padding-right:0px;padding-left:0px;overflow:hidden;height:280px;background: url('{{g.visual}}') no-repeat center center;background-size: cover;">
+                </div>
+                <div  style="padding-right:0px;padding-left:0px;overflow:hidden;height:280px;background: url('/static/images/ecommerce.jpg') no-repeat center center;background-size: cover;" ng-if="g.visual==null">
+                </div>
+                <!-- <img style="width:100%;height:280px" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
+                <img style="width:100%;height:280px" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none"> -->
               </div>
             </div>
             <div class="row" style="padding-top:5px; padding-bottom:20px;">
@@ -38,7 +42,6 @@
         </div>
       </div>
     </div>
-
 </div>
 
 

@@ -23,15 +23,15 @@
           <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.POS.productMetaForm.html'">
           </div>
         </uib-tab>
-        <uib-tab active="searchTabActive">
-          <uib-tab-heading>
+        <!-- <uib-tab active="searchTabActive"> -->
+          <!-- <uib-tab-heading>
             Browse
             <i class="fa fa-list-ul"></i>
           </uib-tab-heading>
           <div class="container-fluid">
             <generic-Table data="data.productMetatableData" config-Obj="{{configProductMeta}}" callback-Fn="tableActionProductMeta"></generic-Table>
           </div>
-        </uib-tab>
+        </uib-tab> -->
         <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
           <uib-tab-heading>
             {{tab.title}}
