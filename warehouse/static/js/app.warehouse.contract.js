@@ -880,7 +880,6 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
           company: $scope.contract.company.name,
           seletedBoxes: $scope.selectingAreas.length
         })
-        console.log('selectedddddddddddd');
         $scope.totalBoxes = $scope.totalBoxes - $scope.selectingAreas.length
         for (var i = 0; i < $scope.selectingAreas.length; i++) {
           var gx = $scope.selectingAreas[i].row

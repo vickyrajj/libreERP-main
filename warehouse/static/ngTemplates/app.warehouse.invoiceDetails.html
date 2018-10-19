@@ -1,0 +1,37 @@
+<div class="container" style="padding:30px;">
+  <div class="modal-header">
+    <div class="row">
+      <div class="col-md-6">
+    <h3>Invoice Details</h3>
+  </div>
+    <div class="col-md-6 text-left">
+    <div class="input-group">
+      <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="selectDate" is-open="status.opened" />
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+      </span>
+    </div>
+  </div>
+  </div>
+  </div>
+  <div class="modal-body">
+    <table class="table table-bordered" style="width:100%;">
+      <tr>
+        <th class="text-center">Name</th>
+        <th class="text-center">From</th>
+        <th class="text-center">To</th>
+        <th class="text-center"> Total</th>
+      </tr>
+      <tbody ng-repeat="s in invoice">
+        <tr>
+          <td>{{s.contract.company.name}}</td>
+          <td>{{s.fromDate}}</td>
+          <td>{{s.toDate}}</td>
+          <td>{{s.grandTotal}}</td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

@@ -64,7 +64,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = InvoiceSerializer
     queryset = Invoice.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['contract','status']
+    filter_fields = ['contract','status','toDate','created']
 
 class SpaceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
@@ -1215,7 +1215,7 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         price =  Paragraph(str(contract.rate), compStyle)
         sqrt = int(contract.areas.areaLength)*int(contract.quantity)
         area = Paragraph(str(sqrt), compStyle)
-        cost = int(contract.rate)*sqrt*3
+        cost = int(contract.rate)*sqrt*30
 
         numbers = random.sample(range(10), 2)
         invId = (''.join(map(str, numbers)))
@@ -1390,5 +1390,5 @@ class DownloadMonthlyInvoice(APIView):
         year =  toDate.year
         contract = Contract.objects.get(id = request.GET['valPK'])
         response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , contract.pk)
-        genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,request)    
+        genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,request)
         return response

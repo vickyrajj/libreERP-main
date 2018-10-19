@@ -32,11 +32,12 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
   $scope.serchField = ''
   $scope.$watch('serchField', function(newValue, oldValue) {
     console.log(newValue);
-    if (newValue.length == 0) {
-      var url = '/api/warehouse/dashboardInvoices/'
-    } else {
-      var url = '/api/warehouse/dashboardInvoices/?cName=' + newValue
-    }
+    var url = '/api/warehouse/contract/'
+    // if (newValue.length == 0) {
+    //   var url = '/api/warehouse/dashboardInvoices/'
+    // } else {
+    //   var url = '/api/warehouse/dashboardInvoices/?cName=' + newValue
+    // }
     $http({
       method: 'GET',
       url: url
@@ -45,8 +46,30 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
       $scope.invData = response.data
     })
   })
+  $scope.invoiceDetails = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.warehouse.invoiceDetails.html',
+      size: 'xl',
+      backdrop: true,
+      resolve: {
+      },
+      controller: function($scope, $uibModalInstance) {
 
+        $scope.selectDate = new Date()
 
+        $scope.$watch('selectDate', function(newValue, oldValue) {
+        $http({
+          method: 'GET',
+          url: '/api/warehouse/invoice/?created='+ newValue +'/'
+        }).
+        then(function(response) {
+          console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+          $scope.invoice = response.data
+        });
+      })
+      }
+    })
+  }
   $scope.extraData = function(contractPk, frmDate, toDate) {
     console.log(frmDate, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     $uibModal.open({
@@ -68,8 +91,20 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
 
         $scope.dataDetails = []
         $scope.contractPk = contract
-        $scope.frmDate = frmDate.toJSON();
-        $scope.toDate = toDate.toJSON();
+
+        $http({
+          method: 'GET',
+          url: '/api/warehouse/contract/' + $scope.contractPk + '/'
+        }).
+        then(function(response) {
+          console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+          $scope.contract = response.data
+        });
+
+
+        $scope.frmDate = frmDate;
+        $scope.toDate = toDate;
+
         $scope.form = {
           quantity: 0,
           amount: 0,
@@ -120,67 +155,58 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         //   })
         // }
 
-        return $http.get('/api/Warehouse/contract/' + $scope.contractPk).
-        then(function(response) {
-          return response.data;
-        })
 
-        $scope.createInvoice = function(id, from, to) {
+
+        $scope.createInvoice = function() {
+          console.log();
           $scope.total = 0
-          if($scope.dataDetails.length>0){
+          if ($scope.dataDetails.length > 0) {
             for (var i = 0; i < $scope.dataDetails.length; i++) {
               $scope.amount = $scope.dataDetails[i].amount
               console.log($scope.amount);
-              $scope.total+=$scope.amount
+              $scope.total += $scope.amount
             }
-            console.log($scope.total,'aaaaaaaaaaaaa');
           }
 
-          // for (var i = 0; i < $scope.invoiceData.length; i++) {
-          //   if ($scope.invoiceData[i].pk == id) {
-          //     $scope.price = $scope.invoiceData[i].rate
-          //     $scope.sqrt = $scope.invoiceData[i].areas.areaLength*$scope.invoiceData[i].quantity
-          //     $scope.cost = $scope.invoiceData[i].rate*$scope.sqrt*3
-          //     if ($scope.invoiceData[i].company.gst.slice(0, 2) == '29') {
-          //       $scope.gst = 9
-          //       $scope.cgst = 9
-          //       $scope.igst = 0
-          //       $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
-          //     } else {
-          //       $scope.gst = 0
-          //       $scope.cgst = 0
-          //       $scope.igst = 18
-          //       $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
-          //     }
-          //       $scope.tax = ($scope.cost * $scope.taxtot)/100
-          //       $scope.grandtot = $scope.cost + $scope.tax
-          //       console.log($scope.grandtot ,'hhhhhhhhhhhhhhhhhhhhhhh');
-          //
-          //
-          //   }
-          // }
+          $scope.price = $scope.contract.rate
+          $scope.sqrt = $scope.contract.areas.areaLength * $scope.contract.quantity
+          $scope.cost = $scope.contract.rate * $scope.sqrt * 30
+          if ($scope.contract.company.gst.slice(0, 2) == '29') {
+            $scope.gst = 9
+            $scope.cgst = 9
+            $scope.igst = 0
+            $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
+          } else {
+            $scope.gst = 0
+            $scope.cgst = 0
+            $scope.igst = 18
+            $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
+          }
+          $scope.tot = $scope.cost + $scope.total
+          $scope.tax = ($scope.tot * $scope.taxtot) / 100
+          $scope.grandtot = $scope.tot + $scope.tax
+          $scope.grandtot = Math.round($scope.grandtot)
+          var dataToSend = {
+            contract: $scope.contract.pk,
+            data: JSON.stringify($scope.dataDetails),
+            fromDate: $scope.frmDate.toJSON().split('T')[0],
+            toDate: $scope.toDate.toJSON().split('T')[0],
+            value: $scope.tot,
+            grandTotal: $scope.grandtot
+
+          }
 
 
-          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa", id, from, to);
-          //
-          // var dataToSend = {
-          //   contract : id,
-          //
-          // }
-          //
-          //
-          // $http({
-          //   method: 'POST',
-          //   url: '/api/warehouse/invoice/',
-          //   data: dataToSend
-          // }).
-          // then(function(response) {
-          //   $scope.timelineItems.unshift(response.data);
-          //   $scope.resetLogger();
-          //   Flash.create('success', 'Saved');
-          // }, function(err) {
-          //   Flash.create('danger', 'Error');
-          // })
+          $http({
+            method: 'POST',
+            url: '/api/warehouse/invoice/',
+            data: dataToSend
+          }).
+          then(function(response) {
+            Flash.create('success', 'Saved');
+          }, function(err) {
+            Flash.create('danger', 'Error');
+          })
 
 
 
@@ -201,8 +227,8 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
       if ($scope.invoiceData[i].pk == id) {
 
         $scope.price = $scope.invoiceData[i].rate
-        $scope.sqrt = $scope.invoiceData[i].areas.areaLength*$scope.invoiceData[i].quantity
-        $scope.cost = $scope.invoiceData[i].rate*$scope.sqrt*3
+        $scope.sqrt = $scope.invoiceData[i].areas.areaLength * $scope.invoiceData[i].quantity
+        $scope.cost = $scope.invoiceData[i].rate * $scope.sqrt * 3
         if ($scope.invoiceData[i].company.gst.slice(0, 2) == '29') {
           $scope.gst = 9
           $scope.cgst = 9
@@ -214,37 +240,34 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           $scope.igst = 18
           $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
         }
-          $scope.tax = ($scope.cost * $scope.taxtot)/100
-          $scope.grandtot = $scope.cost + $scope.tax
-          console.log($scope.grandtot ,'hhhhhhhhhhhhhhhhhhhhhhh');
-
-
+        $scope.tax = ($scope.cost * $scope.taxtot) / 100
+        $scope.grandtot = $scope.cost + $scope.tax
+        $scope.grandtot = Math.round($scope.grandtot)
       }
     }
 
 
     console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa", id, from, to);
-    //
-    // var dataToSend = {
-    //   contract : id,
-    //
-    // }
-    //
-    //
-    // $http({
-    //   method: 'POST',
-    //   url: '/api/warehouse/invoice/',
-    //   data: dataToSend
-    // }).
-    // then(function(response) {
-    //   $scope.timelineItems.unshift(response.data);
-    //   $scope.resetLogger();
-    //   Flash.create('success', 'Saved');
-    // }, function(err) {
-    //   Flash.create('danger', 'Error');
-    // })
+    var dataToSend = {
+      contract: id,
+      fromDate: $scope.frmDate.toJSON().split('T')[0],
+      toDate: $scope.toDate.toJSON().split('T')[0],
+      value: $scope.cost,
+      grandTotal: $scope.grandtot
+
+    }
 
 
+    $http({
+      method: 'POST',
+      url: '/api/warehouse/invoice/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+    }, function(err) {
+      Flash.create('danger', 'Error');
+    })
 
   }
 
@@ -411,10 +434,6 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
   var date = new Date();
   $scope.frmDate = new Date(date.getFullYear(), date.getMonth(), 1),
     $scope.toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-
-
-
-
 })
 
 

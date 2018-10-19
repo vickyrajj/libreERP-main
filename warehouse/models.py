@@ -103,6 +103,8 @@ class Invoice(models.Model):
     billedDate = models.DateTimeField(null = True)
     recievedDate = models.DateTimeField(null = True)
     archivedDate = models.DateTimeField(null = True)
+    fromDate = models.DateField(null = True)
+    toDate = models.DateField(null = True)
     grandTotal = models.PositiveIntegerField(default=0)
 
 class Checkin(models.Model):
