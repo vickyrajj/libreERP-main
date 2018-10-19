@@ -1222,7 +1222,7 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         bamount = 0
         from reportlab.platypus.flowables import Image as GNAA
         story = []
-        logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'logo1.png')
+        logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'logo3.png')
         im = GNAA(logo, width=200, height=80)
         story.append(im)
 
