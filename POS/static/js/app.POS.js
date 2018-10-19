@@ -245,6 +245,9 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
     then(function(response) {
       // $scope.form.pk = response.data.pk;
       Flash.create('success', 'Saved');
+    },function (err) {
+      console.log(err);
+      Flash.create('danger', err.data.detail);
     })
   }
 
