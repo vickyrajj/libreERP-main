@@ -106,7 +106,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
         model=Invoice
         fields = ('pk','contract','data','value','status','created' ,'updated' ,'dueDate','grandTotal')
     def create(self , validated_data):
-        print 'enttttttttttttttt'
         i=Invoice(**validated_data)
         i.contract=Contract.objects.get(pk=self.context['request'].data['contract'])
         i.save()

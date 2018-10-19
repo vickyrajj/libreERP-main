@@ -1362,8 +1362,10 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         elements.append(table5)
         elements.append(table6)
         elements.append(table7)
-
         doc.build(elements)
+
+
+
 
 
 
@@ -1388,5 +1390,5 @@ class DownloadMonthlyInvoice(APIView):
         year =  toDate.year
         contract = Contract.objects.get(id = request.GET['valPK'])
         response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , contract.pk)
-        genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,request)
+        genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,request)    
         return response

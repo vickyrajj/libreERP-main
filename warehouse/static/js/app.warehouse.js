@@ -47,32 +47,33 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
   })
 
 
-  $scope.extraData = function(contractPk,frmDate,toDate){
-    console.log(frmDate,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+  $scope.extraData = function(contractPk, frmDate, toDate) {
+    console.log(frmDate, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.warehouse.invoice.html',
       size: 'xl',
-      backdrop : false,
-      resolve : {
-        contract : function() {
+      backdrop: false,
+      resolve: {
+        contract: function() {
           return contractPk;
         },
-        frmDate : function() {
+        frmDate: function() {
           return $scope.frmDate
         },
-        toDate : function() {
+        toDate: function() {
           return $scope.toDate
         }
       },
-      controller: function($scope, contract,frmDate,toDate, $uibModalInstance){
-        console.log(contract,'aaaaaaaaaaaaaaaaaaaaaaaaaa')
+      controller: function($scope, contract, frmDate, toDate, $uibModalInstance) {
+
+        $scope.dataDetails = []
         $scope.contractPk = contract
         $scope.frmDate = frmDate.toJSON();
         $scope.toDate = toDate.toJSON();
         $scope.form = {
           quantity: 0,
           amount: 0,
-          qty : 0,
+          qty: 0,
           rate: 0,
           productMeta: ''
         };
@@ -83,7 +84,6 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           })
         }
         $scope.$watch('form.productMeta', function(newValue, oldValue) {
-          console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
           if (typeof newValue == 'object') {
             $scope.showTaxCodeDetails = true;
           } else {
@@ -91,7 +91,6 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           }
         })
         $scope.$watch('form.qty', function(newValue, oldValue) {
-          console.log(typeof newValue,'aaaaaaaaaaaaaaaaaaaaaaaaa',newValue);
           if (newValue > 0) {
             $scope.form.amount = newValue * $scope.form.rate;
           } else {
@@ -99,38 +98,156 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           }
         })
 
-        $scope.dataDetails=[]
-        $scope.add = function(){
+
+        $scope.add = function() {
           $scope.dataDetails.push($scope.form)
-          $scope.form ={}
+          $scope.form = {}
         }
 
-      $scope.close=function(){
-        $uibModalInstance.dismiss('cancel');
-      }
-      // $scope.download = function(){
-      //   console.log($scope.dataDetails);
-      //   $http({
-      //     method: 'GET',
-      //     url: '/api/warehouse/downloadMonthlyInvoice/?valPK='+$scope.contractPk+'&from='+ $scope.frmDate+'&to='+$scope.toDate+'&dataDetails='+$scope.dataDetails,
-      //
-      //
-      //   }).
-      //   then(function(response) {
-      //
-      //   })
-      // }
+        $scope.close = function() {
+          $uibModalInstance.dismiss('cancel');
+        }
+        // $scope.download = function(){
+        //   console.log($scope.dataDetails);
+        //   $http({
+        //     method: 'GET',
+        //     url: '/api/warehouse/downloadMonthlyInvoice/?valPK='+$scope.contractPk+'&from='+ $scope.frmDate+'&to='+$scope.toDate+'&dataDetails='+$scope.dataDetails,
+        //
+        //
+        //   }).
+        //   then(function(response) {
+        //
+        //   })
+        // }
 
+        return $http.get('/api/Warehouse/contract/' + $scope.contractPk).
+        then(function(response) {
+          return response.data;
+        })
+
+        $scope.createInvoice = function(id, from, to) {
+          $scope.total = 0
+          if($scope.dataDetails.length>0){
+            for (var i = 0; i < $scope.dataDetails.length; i++) {
+              $scope.amount = $scope.dataDetails[i].amount
+              console.log($scope.amount);
+              $scope.total+=$scope.amount
+            }
+            console.log($scope.total,'aaaaaaaaaaaaa');
+          }
+
+          // for (var i = 0; i < $scope.invoiceData.length; i++) {
+          //   if ($scope.invoiceData[i].pk == id) {
+          //     $scope.price = $scope.invoiceData[i].rate
+          //     $scope.sqrt = $scope.invoiceData[i].areas.areaLength*$scope.invoiceData[i].quantity
+          //     $scope.cost = $scope.invoiceData[i].rate*$scope.sqrt*3
+          //     if ($scope.invoiceData[i].company.gst.slice(0, 2) == '29') {
+          //       $scope.gst = 9
+          //       $scope.cgst = 9
+          //       $scope.igst = 0
+          //       $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
+          //     } else {
+          //       $scope.gst = 0
+          //       $scope.cgst = 0
+          //       $scope.igst = 18
+          //       $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
+          //     }
+          //       $scope.tax = ($scope.cost * $scope.taxtot)/100
+          //       $scope.grandtot = $scope.cost + $scope.tax
+          //       console.log($scope.grandtot ,'hhhhhhhhhhhhhhhhhhhhhhh');
+          //
+          //
+          //   }
+          // }
+
+
+          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa", id, from, to);
+          //
+          // var dataToSend = {
+          //   contract : id,
+          //
+          // }
+          //
+          //
+          // $http({
+          //   method: 'POST',
+          //   url: '/api/warehouse/invoice/',
+          //   data: dataToSend
+          // }).
+          // then(function(response) {
+          //   $scope.timelineItems.unshift(response.data);
+          //   $scope.resetLogger();
+          //   Flash.create('success', 'Saved');
+          // }, function(err) {
+          //   Flash.create('danger', 'Error');
+          // })
+
+
+
+        }
 
 
       },
-    }).result.then(function () {
+    }).result.then(function() {
 
-    }, function () {
+    }, function() {
 
 
     });
   }
+
+  $scope.createInvoice = function(id, from, to) {
+    for (var i = 0; i < $scope.invoiceData.length; i++) {
+      if ($scope.invoiceData[i].pk == id) {
+
+        $scope.price = $scope.invoiceData[i].rate
+        $scope.sqrt = $scope.invoiceData[i].areas.areaLength*$scope.invoiceData[i].quantity
+        $scope.cost = $scope.invoiceData[i].rate*$scope.sqrt*3
+        if ($scope.invoiceData[i].company.gst.slice(0, 2) == '29') {
+          $scope.gst = 9
+          $scope.cgst = 9
+          $scope.igst = 0
+          $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
+        } else {
+          $scope.gst = 0
+          $scope.cgst = 0
+          $scope.igst = 18
+          $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
+        }
+          $scope.tax = ($scope.cost * $scope.taxtot)/100
+          $scope.grandtot = $scope.cost + $scope.tax
+          console.log($scope.grandtot ,'hhhhhhhhhhhhhhhhhhhhhhh');
+
+
+      }
+    }
+
+
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa", id, from, to);
+    //
+    // var dataToSend = {
+    //   contract : id,
+    //
+    // }
+    //
+    //
+    // $http({
+    //   method: 'POST',
+    //   url: '/api/warehouse/invoice/',
+    //   data: dataToSend
+    // }).
+    // then(function(response) {
+    //   $scope.timelineItems.unshift(response.data);
+    //   $scope.resetLogger();
+    //   Flash.create('success', 'Saved');
+    // }, function(err) {
+    //   Flash.create('danger', 'Error');
+    // })
+
+
+
+  }
+
 
   $scope.changeStatus = function(status, indx) {
     $scope.invData[indx].status = status;
@@ -293,7 +410,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
   })
   var date = new Date();
   $scope.frmDate = new Date(date.getFullYear(), date.getMonth(), 1),
-  $scope.toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    $scope.toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
 
 

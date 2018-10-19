@@ -2,68 +2,71 @@
   <div class="modal-header">
     <div class="row">
       <div class="col-md-6 text-left">
-      <h3>  Invoice </h3>
-  </div>
-  <div class="col-md-5 text-right">
-      <i class="fa fa-close fa-2x" ng-click=close()></i>
-  </div>
-  </div>
+        <h3> Invoice </h3>
+      </div>
+      <div class="col-md-5 text-right">
+        <i class="fa fa-close fa-2x" ng-click=close()></i>
+      </div>
+    </div>
   </div>
   <div class="modal-body">
     <div class="row">
-    <div class="col-md-4">
-    <div class="form-group">
-      <label>Service class code</label>
-      <input type="text" class="form-control" ng-model="form.productMeta" uib-typeahead="meta as meta.code for meta in searchTaxCode($viewValue)" ng-if="!showTaxCodeDetails">
-      <span ng-if="showTaxCodeDetails"> <button type="button" class="btn btn-default btn-sm" ng-click="form.productMeta = ''">
-        Edit <i class="fa fa-pencil"></i>
-      </button> <br> {{form.productMeta.description}} <br><strong>Code Type : </strong> {{form.productMeta.typ}} <br> <strong>Code : </strong> {{form.productMeta.code}} <br> <strong>Tax Rate :</strong>{{form.productMeta.taxRate}}</span>
-    </div>
-  </div>
-    <div class="col-md-2">
-      <div class="form-group">
-        <label>Rate</label>
-        <input type="number" ng-model="form.rate" class="form-control">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Service class code</label>
+          <input type="text" class="form-control" ng-model="form.productMeta" uib-typeahead="meta as meta.code for meta in searchTaxCode($viewValue)" ng-if="!showTaxCodeDetails">
+          <span ng-if="showTaxCodeDetails"> <button type="button" class="btn btn-default btn-sm" ng-click="form.productMeta = ''">
+              Edit <i class="fa fa-pencil"></i>
+            </button> <br> {{form.productMeta.description}} <br><strong>Code Type : </strong> {{form.productMeta.typ}} <br> <strong>Code : </strong> {{form.productMeta.code}} <br> <strong>Tax Rate :</strong>{{form.productMeta.taxRate}}</span>
+        </div>
       </div>
-    </div>
-    <div class="col-md-2">
-      <div class="form-group">
-        <label>Qty</label>
-        <input type="number" ng-model="form.qty" class="form-control">
+      <div class="col-md-2">
+        <div class="form-group">
+          <label>Rate</label>
+          <input type="number" ng-model="form.rate" class="form-control">
+        </div>
       </div>
-    </div>
-    <div class="col-md-2">
-      <div class="form-group">
-        <label>Amount</label>
-        <input type="number" ng-model="form.amount" class="form-control">
+      <div class="col-md-1">
+        <div class="form-group">
+          <label>Qty</label>
+          <input type="number" ng-model="form.qty" class="form-control">
+        </div>
       </div>
-    </div>
-    <div class="col-md-1" style="padding-top:20px">
-      <button type="button" class="btn btn-default" ng-click="add()">Add</button>
-    </div>
-    <div class="col-md-1" style="padding-top:20px">
-      <a class="btn btn-primary" href="/api/warehouse/downloadMonthlyInvoice/?valPK={{contractPk}}&from={{frmDate}}&to={{toDate}}&dataDetails={{dataDetails}}"> <i class = "fa fa-download"></i> </a>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" ng-model="form.amount" class="form-control">
+        </div>
+      </div>
+      <div class="col-md-1" style="padding-top:20px">
+        <button type="button" class="btn btn-default" ng-click="add()">Add</button>
+      </div>
+      <div class="col-md-1" style="padding-top:20px">
+        <a class="btn btn-primary" href="/api/warehouse/downloadMonthlyInvoice/?valPK={{contractPk}}&from={{frmDate}}&to={{toDate}}&dataDetails={{dataDetails}}"> <i class="fa fa-download"></i> </a>
 
 
+      </div>
+      <div class="col-md-1" style="padding-top:20px">
+        <button class="btn btn-default" ng-click="createInvoice(i.pk,frmDate,toDate)"> Save </button>
+      </div>
     </div>
-  </div>
-  <div class="row" ng-if="dataDetails.length>0">
-    <table class="table table-striped">
-      <tbody>
-        <tr>
-          <th style="width:26.3%">Description</th>
-          <th style="width:8.33%">Rate</th>
-          <th style="width:8.33%">Qty</th>
-          <th style="width:8.33%">Amount</th>
-        </tr>
-        <tr ng-repeat="d in dataDetails">
-          <td style="width:26.3%">{{d.productMeta.description}}</td>
-          <td style="width:8.33%">{{d.rate}}</td>
-          <td style="width:8.33%">{{d.qty}}</td>
-          <td style="width:8.33%">{{d.amount}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="row" ng-if="dataDetails.length>0">
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <th style="width:26.3%">Description</th>
+            <th style="width:8.33%">Rate</th>
+            <th style="width:8.33%">Qty</th>
+            <th style="width:8.33%">Amount</th>
+          </tr>
+          <tr ng-repeat="d in dataDetails">
+            <td style="width:26.3%">{{d.productMeta.description}}</td>
+            <td style="width:8.33%">{{d.rate}}</td>
+            <td style="width:8.33%">{{d.qty}}</td>
+            <td style="width:8.33%">{{d.amount}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
