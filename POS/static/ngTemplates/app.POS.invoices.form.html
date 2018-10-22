@@ -169,22 +169,24 @@
       <td>
         <input type="float" class="form-control-pos" value="{{item.data.productVariant!=null?item.data.productVariant.price:item.data.product.price}}" ng-if="item.data.pk&&posShowAll" style="text-align: center;">
         <input type="float" class="form-control-pos" value="{{item.data.productVariant!=null?item.data.productVariant.price:item.data.product.price}}" ng-if="item.data.pk&&!posShowAll" style="text-align: center;" >
-
       </td>
-      <td>
 
+      <td>
         <span ng-if="item.data.productVariant!=null"> {{item.data.product.productMeta ? (item.quantity * (item.data.product.productMeta.taxRate * item.data.productVariant.price / 100)).toFixed(2) : 0}}</span>
 
         <span ng-if="item.data.productVariant==null"> {{item.data.product.productMeta ? (item.quantity * (item.data.product.productMeta.taxRate * item.data.product.price / 100)).toFixed(2) : 0}}</span>
       </td>
+
       <td>
         <span ng-if="item.data.productVariant!=null">{{ ((item.quantity * item.data.productVariant.price) +  (item.data.product.productMeta ? (item.quantity * (item.data.product.productMeta.taxRate * item.data.productVariant.price / 100)) : 0)) }}</span>
 
         <span ng-if="item.data.productVariant==null">{{ ((item.quantity * item.data.product.price) +  (item.data.product.productMeta ? (item.quantity * (item.data.product.productMeta.taxRate * item.data.product.price / 100)) : 0)).toFixed(2) }}</span>
       </td>
+
       <td>
         <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
       </td>
+      
     </tr>
     <tr>
       <td>
