@@ -2227,6 +2227,15 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       country: 'India',
       mobileNo: $scope.me.profile.mobile,
       landMark: ''
+    },
+    billingAddress: {
+      street: '',
+      city: '',
+      state: '',
+      pincode: '',
+      country: 'India',
+      mobileNo: $scope.me.profile.mobile,
+      billingLandMark: ''
     }
   };
 
@@ -2353,6 +2362,26 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
   })
 
+  $scope.$watch('data.billingAddress.pincode', function(newValue, oldValue) {
+    if (newValue != null) {
+      if (newValue.length == 6) {
+        $http({
+          method: 'GET',
+          url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
+        }).
+        then(function(response) {
+          if (response.data.length > 0) {
+            $scope.data.billingAddress.city = response.data[0].city
+            $scope.data.billingAddress.state = response.data[0].state
+          }
+        })
+      } else if (newValue.length < 6) {
+        $scope.data.billingAddress.city = ''
+        $scope.data.billingAddress.state = ''
+      }
+    }
+  })
+
 
 
   $scope.saveAdd = function() {
@@ -2369,7 +2398,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           return $scope.data.address;
         }
       },
-      controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add, ) {
+      controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add ) {
         $scope.adrForm = add;
         if ($scope.adrForm.title == undefined) {
           $scope.adrForm.title = ''
@@ -2499,7 +2528,22 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   }
 
 
-  $scope.dataToSend = {}
+
+
+
+
+  $scope.dataToSend = {sameAsShipping:true}
+
+  $scope.$watch('dataToSend.sameAsShipping' , function(newValue , oldValue) {
+    console.log(newValue);
+    if (newValue == false) {
+      $scope.showFields = true;
+
+    }else {
+      $scope.showFields = false;
+      $scope.dataToSend.billingAddress = ''
+    }
+  })
 
   $scope.next = function() {
     console.log($scope.totalAfterPromo, $scope.totalAfterDiscount, '**************************8');
@@ -2574,13 +2618,19 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.data.stage = 'shippingDetails';
     } else if ($scope.data.stage == 'shippingDetails') {
 
-      console.log($scope.data.address);
+
       if ($scope.data.address.mobileNo == '' || $scope.data.address.street == '' || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == '' || $scope.data.address.landMark == '') {
         Flash.create('warning', 'Please Fill All Details')
         return
       } else {
         $scope.dataToSend.mobile = $scope.me.profile.mobile
         $scope.dataToSend.address = $scope.data.address
+        if($scope.dataToSend.sameAsShipping == true){
+          $scope.dataToSend.billingAddress = $scope.data.address
+        }
+        else{
+            $scope.dataToSend.billingAddress = $scope.data.billingAddress
+        }
       }
       $scope.data.stage = 'payment';
 
@@ -2617,6 +2667,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.dataToSend.storepk = $rootScope.storepk
     }
     console.log($scope.dataToSend);
+
+
+
 
     $http({
       method: 'POST',

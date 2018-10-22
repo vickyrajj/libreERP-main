@@ -359,6 +359,12 @@ class CreateOrderAPI(APIView):
             'pincode' : str(request.data['address']['pincode']),
             'country' : str(request.data['address']['country']),
             'mobileNo' : str(request.data['address']['mobileNo']),
+            'billingLandMark' : str(request.data['billingAddress']['landMark']),
+            'billingStreet' : str(request.data['billingAddress']['street']),
+            'billingCity' : str(request.data['billingAddress']['city']),
+            'billingState' : str(request.data['billingAddress']['state']),
+            'billingPincode' : str(request.data['billingAddress']['pincode']),
+            'billingCountry' : str(request.data['billingAddress']['country']),
             }
             if len(str(request.data['promoCode'])) > 0:
                 data['promoCode'] = str(request.data['promoCode'])

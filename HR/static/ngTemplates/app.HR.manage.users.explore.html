@@ -11,30 +11,30 @@
 
     <div class="row" style="margin-top:20px;">
 
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-5 text-right">
           <label># Employee ID : </label> <br>
         </div>
         <div class="col-md-7">
           <span>{{data.empID}}</span> <br>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col-md-5 text-right">
-          <label><i class="fa fa-envelope-o"></i> Official : </label> <br>
+          <label><i class="fa fa-envelope-o"></i> Email ID : </label> <br>
         </div>
         <div class="col-md-7">
           <span>{{data.email}}</span> <br>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-5 text-right">
           <label><i class="fa fa-envelope-o"></i> Personal : </label><br>
         </div>
         <div class="col-md-7">
           <span>{{data.email}}<span ng-if="!data.email" class="text-danger">NA</span></span> <br>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col-md-5 text-right">
           <label><i class="fa fa-phone"></i> Mobile : </label><br>
@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div class="row" style="margin-top:20px;" ng-if="profile.designation.reportingTo">
+    <!-- <div class="row" style="margin-top:20px;" ng-if="profile.designation.reportingTo">
       <label>Reporting Manager</label> <br>
       <div class="container-fluid ">
         <div class="col-md-3">
@@ -56,9 +56,9 @@
           <span class="text-muted">#{{profile.designation.reportingTo | getID}}</span> <br>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="row" style="margin-top:20px;" ng-if="profile.designation.secondaryApprover">
+    <!-- <div class="row" style="margin-top:20px;" ng-if="profile.designation.secondaryApprover">
       <label>Secondary Manager</label> <br>
       <div class="container-fluid ">
         <div class="col-md-3">
@@ -69,7 +69,7 @@
           <span class="text-muted">#{{profile.designation.secondaryApprover | getID}}</span> <br>
         </div>
       </div>
-    </div>
+    </div> -->
 
   </div>
   <div class="col-md-6">
@@ -90,7 +90,7 @@
         </div>
       </div>
 
-      <div class="row" style="padding:20px;">
+      <!-- <div class="row" style="padding:20px;">
         <div class="row">
           <div class="col-md-3 text-right">
             <label>Permanent Address :</label> <br>
@@ -104,9 +104,9 @@
             <span>{{data.permanentAddressCountry}}<span ng-if="!data.permanentAddressCountry" class="text-danger">NA</span></span>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="row" style="padding:20px;">
+      <!-- <div class="row" style="padding:20px;">
         <div class="row">
           <div class="col-md-3 text-right">
             <label>Father's name :</label>
@@ -258,10 +258,10 @@
             <a ng-href="{{data.passbook}}" target="_blank">{{data.passbook.split('/')[data.passbook.split('/').length-1] }}</a>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
-  <div class="col-md-3">
+  <!-- <div class="col-md-3">
     <div class="row" style="margin-top:20px;">
       <label>Work locations</label> <br> <br>
       <div class="row" ng-repeat="u in profile.designation.unitsObj">
@@ -271,8 +271,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-md-3">
+  </div> -->
+  <!-- <div class="col-md-3">
     <div class="row" style="margin-top:20px;">
       <label>Payroll Details of {{data.userPK | getName}}</label> <br> <br>
       <div class="row">
@@ -407,5 +407,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>

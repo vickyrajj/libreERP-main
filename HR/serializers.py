@@ -82,8 +82,8 @@ class userSerializer(serializers.ModelSerializer):
     payroll = payrollLiteSerializer(many = False , read_only = True)
     class Meta:
         model = User
-        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' , 'designation' ,'profile'  ,'settings' , 'password' , 'social', 'payroll')
-        read_only_fields = ('designation' , 'profile' , 'settings' ,'social', 'payroll' )
+        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' , 'designation' ,'profile'  ,'settings' , 'password' , 'social', 'payroll', 'is_active')
+        read_only_fields = ('designation' , 'profile' , 'settings' ,'social', 'payroll'  )
         extra_kwargs = {'password': {'write_only': True} }
     def create(self , validated_data):
         raise PermissionDenied(detail=None)

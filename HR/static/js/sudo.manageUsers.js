@@ -10,7 +10,59 @@ app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
   }
 });
 
+app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
+  $scope.data = $scope.tab.data;
+  console.log($scope.data);
+
+
+  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.data.pk);
+  $http({
+    method: 'GET',
+    url: '/api/HR/payroll/?user=' + $scope.data.userPK
+  }).
+  then(function(response) {
+    $scope.payroll = response.data[0];
+    console.log($scope.payroll);
+  })
+  console.log('((((((((((((((()))))))))))))))', $scope.data.userPK);
+  $http({
+    method: 'GET',
+    url: '/api/HR/designation/?user=' + $scope.data.userPK
+  }).
+  then(function(response) {
+    console.log(response.data, '&&&&&&&&&&&&&&&&&&&&&&&7');
+    $scope.designation = response.data[0];
+    console.log($scope.designation);
+
+
+    // if (typeof $scope.designation.division == 'number') {
+    //   $http({
+    //     method: 'GET',
+    //     url: '/api/organization/divisions/' + $scope.designation.division + '/'
+    //   }).
+    //   then(function(response) {
+    //     $scope.designation.division = response.data;
+    //   })
+    // }
+
+    // if (typeof $scope.designation.unit == 'number') {
+    //   $http({
+    //     method: 'GET',
+    //     url: '/api/organization/unit/' + $scope.designation.unit + '/'
+    //   }).
+    //   then(function(response) {
+    //     $scope.designation.unit = response.data;
+    //   })
+    //
+    // }
+
+  })
+
+
+
+
+});
 
 app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
 
@@ -70,7 +122,63 @@ app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
 });
 
 
-app.controller('admin.manageUsers' , function($scope , $http , $aside , $state , Flash , $users , $filter){
+app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
+
+
+  $scope.data = $scope.tab.data;
+
+
+  $scope.save = function() {
+    var prof = $scope.data;
+
+    if(prof.mobile == null||prof.mobile == undefined ||prof.mobile.length==0){
+        Flash.create('danger', "Plaese add the Mobile Number");
+        return;
+    }
+
+    if(prof.email == null||prof.email == undefined ||prof.email.length==0){
+        Flash.create('danger', "Plaese add the Email id");
+        return;
+    }
+
+    var dataToSend = {
+      prefix: prof.prefix,
+      // dateOfBirth: prof.dateOfBirth.toJSON().split('T')[0],
+
+      gender: prof.gender,
+      permanentAddressStreet: prof.permanentAddressStreet,
+      permanentAddressCity: prof.permanentAddressCity,
+      permanentAddressPin: prof.permanentAddressPin,
+      permanentAddressState: prof.permanentAddressState,
+      permanentAddressCountry: prof.permanentAddressCountry,
+      sameAsShipping: prof.sameAsShipping,
+      localAddressStreet: prof.localAddressStreet,
+      localAddressCity: prof.localAddressCity,
+      localAddressPin: prof.localAddressPin,
+      localAddressState: prof.localAddressState,
+      localAddressCountry: prof.localAddressCountry,
+      email: prof.email,
+      mobile: prof.mobile,
+    }
+
+    $http({
+      method: 'PATCH',
+      url: '/api/HR/profileAdminMode/' + prof.pk + '/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      Flash.create('success', "Saved");
+    })
+  }
+
+
+
+
+
+});
+
+
+app.controller('admin.manageUsers' , function($scope , $http , $aside , $state , Flash , $users , $filter,$timeout){
 
   // var views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
   //     {name : 'thumbnail' , icon : 'fa-th-large' , template : '/static/ngTemplates/empSearch/tableThumbnail.html'},
@@ -140,6 +248,10 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
     //     {name : 'graph' , icon : 'fa-pie-chart' , template : '/static/ngTemplates/empSearch/tableGraph.html'}
     //   ];
 
+    $scope.data = {
+      tableData: [],
+    }
+
     var views = [{
         name: 'table',
         icon: 'fa-bars',
@@ -164,10 +276,10 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
           icon: '',
           text: 'editProfile'
         },
-        {
-          icon: '',
-          text: 'editDesignation'
-        },
+        // {
+        //   icon: '',
+        //   text: 'editDesignation'
+        // },
         {
           icon: '',
           text: 'editPermissions'
@@ -176,10 +288,10 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
           icon: '',
           text: 'editMaster'
         },
-        {
-          icon: '',
-          text: 'editPayroll'
-        },
+        // {
+        //   icon: '',
+        //   text: 'editPayroll'
+        // },
         {
           icon: '',
           text: 'viewProfile'
@@ -210,11 +322,9 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
       searchField: 'username',
     };
 
+
     $scope.tabs = [];
     $scope.searchTabActive = true;
-    $scope.data = {
-      tableData: []
-    };
 
     $scope.closeTab = function(index) {
       $scope.tabs.splice(index, 1)
@@ -253,6 +363,8 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
       Flash.create('danger', response.status + ' : ' + response.statusText );
     });
   }
+
+
 
   $scope.tableAction = function(target, action, mode) {
   // target is the url of the object
