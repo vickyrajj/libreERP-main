@@ -63,13 +63,13 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           url: '/api/warehouse/invoice/?created='+ newValue +'/'
         }).
         then(function(response) {
-          console.log(response.data, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
           $scope.invoice = response.data
         });
       })
       }
     })
   }
+
   $scope.extraData = function(contractPk, frmDate, toDate) {
     console.log(frmDate, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     $uibModal.open({
@@ -207,12 +207,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           }, function(err) {
             Flash.create('danger', 'Error');
           })
-
-
-
         }
-
-
       },
     }).result.then(function() {
 
@@ -245,9 +240,6 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         $scope.grandtot = Math.round($scope.grandtot)
       }
     }
-
-
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa", id, from, to);
     var dataToSend = {
       contract: id,
       fromDate: $scope.frmDate.toJSON().split('T')[0],
