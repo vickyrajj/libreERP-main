@@ -62,9 +62,16 @@ class ContractViewSet(viewsets.ModelViewSet):
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
     serializer_class = InvoiceSerializer
-    queryset = Invoice.objects.all()
+    # queryset = Invoice.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['contract','status','toDate','created']
+    filter_fields = ['contract','status','toDate']
+    def get_queryset(self):
+        if 'createdval' in self.request.GET:
+            frm = datetime.datetime.strptime(self.request.GET['createdval'],'%Y-%m-%dT%H:%M:%S.%fZ' )
+            toD = datetime.datetime.strptime(self.request.GET['createdval'],'%Y-%m-%dT%H:%M:%S.%fZ' )
+            return Invoice.objects.filter(created__range =(datetime.datetime.combine(frm, datetime.time.min),datetime.datetime.combine(toD, datetime.time.max)))
+        else:
+            return Invoice.objects.all()
 
 class SpaceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )

@@ -58,9 +58,10 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         $scope.selectDate = new Date()
 
         $scope.$watch('selectDate', function(newValue, oldValue) {
+
         $http({
           method: 'GET',
-          url: '/api/warehouse/invoice/?created='+ newValue +'/'
+          url: '/api/warehouse/invoice/?createdval='+ newValue.toJSON() 
         }).
         then(function(response) {
           $scope.invoice = response.data
