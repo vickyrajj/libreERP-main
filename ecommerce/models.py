@@ -45,6 +45,7 @@ class genericProduct(models.Model): # such as MI5, Nokia N8 etc
     visual = models.ImageField(upload_to=getEcommerceProductVisualUploadPath , null = True)
     bannerImage = models.ImageField(upload_to=getEcommerceGenericProductBannerUploadPath , null = True)
     parent = models.ForeignKey('self' , related_name='children' , null= True)
+    restricted = models.BooleanField(default = False)
     def __repr__(self):
         return  "Generic Product : " + self.name
 

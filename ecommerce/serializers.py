@@ -36,7 +36,7 @@ class genericProductSerializer(serializers.ModelSerializer):
     parent = genericProductLiteSerializer(many = False, read_only = True)
     class Meta:
         model = genericProduct
-        fields = ('pk' , 'fields' , 'name' , 'minCost' , 'visual' , 'bannerImage' , 'parent')
+        fields = ('pk' , 'fields' , 'name' , 'minCost' , 'visual' , 'bannerImage' , 'parent' ,'restricted')
     def create(self , validated_data):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.configure'])
@@ -64,7 +64,7 @@ class genericProductSerializer(serializers.ModelSerializer):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.configure'])
 
-        for key in ['name', 'minCost', 'visual', 'bannerImage']:
+        for key in ['name', 'minCost', 'visual', 'bannerImage','restricted']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
