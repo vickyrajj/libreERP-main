@@ -51,7 +51,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="row" >
-          <div class="col-md-3" ng-repeat=" l in listingProducts">
+          <div class="col-md-3" ng-repeat=" l in listingProductsData1">
             <product-card list="l" add-cart="addToCart" ></product-card>
           </div>
         </div>
@@ -62,7 +62,7 @@
 
   <div class="col-xs-10 col-sm-10 col-xs-offset-1  hidden-md hidden-lg">
     <div class="row">
-      <div class=" col-xs-12 col-sm-6" ng-repeat="l in listingProducts" >
+      <div class=" col-xs-12 col-sm-6" ng-repeat="l in listingProductsData1" >
         <product-card list="l"  add-cart="addToCart"></product-card>
       </div>
     </div>
@@ -92,7 +92,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="row" >
-          <div class="col-md-3" ng-repeat=" l in listingRemainingProducts">
+          <div class="col-md-3" ng-repeat=" l in listingProductsData2">
                 <product-card list="l" add-cart="addToCart"></product-card>
           </div>
         </div>
@@ -102,11 +102,15 @@
 
   <div class="col-xs-10 col-sm-10 col-xs-offset-1 hidden-md hidden-lg">
     <div class="row">
-      <div class=" col-xs-12 col-sm-6" ng-repeat="l in listingRemainingProducts">
+      <div class=" col-xs-12 col-sm-6" ng-repeat="l in listingProductsData2">
         <product-card list="l" add-cart="addToCart"></product-card>
       </div>
     </div>
   </div>
+</div>
+
+<div class="row text-center" style="padding:15px;">
+  <button type="button" class="btn btn-default" ng-click="showMore()" >Show More</button>
 </div>
 
 

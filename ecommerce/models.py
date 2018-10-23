@@ -241,11 +241,17 @@ class Order(models.Model):
     approved = models.NullBooleanField()
     status = models.CharField(choices = ORDERSTATUS_CHOICES , max_length = 10 , default='created')
     landMark = models.CharField(max_length=100 , null = True , blank = True)
+    billingLandMark = models.CharField(max_length=100 , null = True , blank = True)
     street = models.CharField(max_length=300 , null = True , blank = True)
+    billingStreet =  models.CharField(max_length=300 , null = True , blank = True)
     city = models.CharField(max_length=100 , null = True , blank = True)
+    billingCity = models.CharField(max_length=100 , null = True , blank = True)
     state = models.CharField(max_length=50 , null = True , blank = True)
+    billingState = models.CharField(max_length=50 , null = True , blank = True)
     pincode = models.PositiveIntegerField(null = True , blank = True)
+    billingPincode =  models.PositiveIntegerField(null = True , blank = True)
     country = models.CharField(max_length = 50 , null = True , blank = True)
+    billingCountry = models.CharField(max_length = 50 , null = True , blank = True)
     mobileNo = models.CharField(max_length=15 ,null = True , blank = True)
 
 

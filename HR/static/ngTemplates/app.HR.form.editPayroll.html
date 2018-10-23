@@ -20,6 +20,10 @@
       <input type="tel" class="form-control" ng-model="form.basic" required placeholder="Basic">
     </div>
     <div class="form-group">
+      <label >Tax Slab</label>
+      <input type="tel" class="form-control" ng-model="form.taxSlab" required placeholder="Tax Slab">
+    </div>
+    <div class="form-group">
       <label >AdHOC</label>
       <input type="tel" class="form-control" ng-model="form.adHoc" required placeholder="Ad-HOC">
     </div>
@@ -41,6 +45,18 @@
     <div>
       <input type="checkbox" ng-model="form.noticePeriodRecovery">
         <span>Notice Period Recovery</span>
+    </div>
+    <div class="form-group">
+      <label >Notice Period</label>
+      <input type="tel" class="form-control" ng-model="form.notice" required placeholder="NP">
+    </div>
+    <div class="form-group">
+      <label >Probation Period</label>
+      <input type="tel" class="form-control" ng-model="form.probation" required placeholder="PP">
+    </div>
+    <div class="form-group">
+      <label >Notice Period During Probation Period</label>
+      <input type="tel" class="form-control" ng-model="form.probationNotice" required placeholder="Notice Period During Probation Period">
     </div>
     <div class="form-group">
       <h4>Leaves</h4>
@@ -97,6 +113,26 @@
     <div class="form-group">
       <label >Bank Name</label>
       <input type="tel" class="form-control" ng-model="form.bankName" required placeholder="Bank Details">
+    </div>
+    <div class="form-group">
+      <label >Pan</label>
+      <input type="text" class="form-control" ng-model="form.pan" required placeholder="PAN Number">
+    </div>
+    <div class="form-group">
+      <label >PF Account No</label>
+      <input type="text" class="form-control" ng-model="form.pfAccNo" required placeholder="PF Account Number">
+    </div>
+    <div class="form-group">
+      <label >PF Universal No</label>
+      <input type="text" class="form-control" ng-model="form.pfUniNo" required placeholder="PF Universal Number">
+    </div>
+    <div class="form-group">
+      <label >PF Amount</label>
+      <input type="number" class="form-control" ng-model="form.pfAmnt" required placeholder="PF Amount">
+    </div>
+    <div class="form-group">
+      <label >ESIC</label>
+      <input type="text" class="form-control" ng-model="form.esic" required placeholder="ESIC Number">
     </div>
     <div class="col-md-6 text-left" style="margin-top: 27px;">
       <button ng-click="save()" type="button" class="btn btn-success">Save</button>
