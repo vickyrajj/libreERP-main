@@ -437,7 +437,7 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     console.log(indx,'kkkkkkkkkkkkkkkkkk');
   }
 
-  
+
   $http({method : 'GET' , url : '/api/ecommerce/addPincode/'}).
   then(function(response) {
     $scope.pincodelist=response.data
@@ -585,6 +585,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
       default: '',
       fields: [],
       minCost: 0,
+      restricted:false,
       visual: emptyFile,
       bannerImage:emptyFile
     }
@@ -705,6 +706,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
       fd.append('name', d.name);
       fd.append('fields', fs);
       fd.append('minCost', d.minCost);
+      fd.append('restricted', d.restricted);
       if (d.parent != null && d.parent.pk != undefined) {
         fd.append('parent', d.parent.pk);
       }
@@ -743,6 +745,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
             default: '',
             fields: [],
             minCost: 0,
+            restricted:false,
             visual: emptyFile,
             bannerImage:emptyFile
           };
@@ -777,6 +780,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
             default: '',
             fields: [],
             minCost: 0,
+            restricted:false,
             visual: emptyFile,
             bannerImage:emptyFile
           }

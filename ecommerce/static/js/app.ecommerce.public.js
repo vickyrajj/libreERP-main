@@ -3720,6 +3720,9 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
 
   $scope.secondBanner = false
 
+  $scope.listProdLimit = 24;
+  $scope.listProdOffset = 0;
+
 
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=secondBanner').
   then(function(response) {
@@ -3729,6 +3732,8 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
       }
     }
   });
+
+
   setTimeout(function() {
     console.log($rootScope.pin);
     if ($rootScope.multiStore) {
@@ -3741,13 +3746,11 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
     } else {
       $http({
         method: 'GET',
-        url: '/api/ecommerce/listingLite/'
+        url: '/api/ecommerce/listingLite/?limit='+$scope.listProdLimit
       }).
       then(function(response) {
-        $scope.listingProducts = response.data.splice(0, 12);
-
-        console.log('sssssssssss', $scope.listingProducts);
-        $scope.listingRemainingProducts = response.data.slice(13, 21);
+        $scope.listingProductsData1 = response.data.results.slice(0, 12);
+        $scope.listingProductsData2 = response.data.results.slice(12, 24);
 
         // for (var i = 0; i < $rootScope.addToCart.length; i++) {
         //   if ($rootScope.addToCart.length > 0) {
@@ -3766,9 +3769,6 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
         //
         //   }
         // }
-
-
-        console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
       })
 
       $http({
@@ -3790,8 +3790,31 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
   }, 1000);
 
 
+  $scope.showMore = function () {
+    $scope.listProdLimit = 12
+    $scope.listProdOffset = $scope.listProdOffset + 24;
+    if ($rootScope.multiStore) {
+      $rootScope.$broadcast('filterForStore', {
+        pin: $rootScope.pin
+      });
+      $rootScope.$broadcast('filterForCategoryStore', {
+        pin: $rootScope.pin
+      });
+    } else {
+      $http({
+        method: 'GET',
+        url: '/api/ecommerce/listingLite/?limit='+$scope.listProdLimit+'&offset='+$scope.listProdOffset
+      }).
+      then(function(response) {
+        console.log(response.data.results);
+        $scope.listingProductsData2 = $scope.listingProductsData2.concat(response.data.results)
+        console.log($scope.listingProductsData1);
+        console.log($scope.listingProductsData2);
 
-
+        // $scope.listingProductsData2 = response.data.results.slice(0, 12);
+    });
+  }
+}
 
   $scope.recentlyViewed = [];
   // $scope.recentViewsArr = [];
@@ -3962,32 +3985,24 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
     console.log(input);
     $http({
       method: 'GET',
-      url: '/api/ecommerce/listingLite/?pin=' + input.pin + '&multipleStore'
+      url: '/api/ecommerce/listingLite/?pin=' + input.pin + '&multipleStore&limit=24'
     }).
     then(function(response) {
-      console.log('dataaaaaaaaaaaaaaaa', response.data);
-      $scope.listingProducts = response.data.splice(0, 7);
-
-      console.log('sssssssssss', $scope.listingProducts);
-      $scope.listingRemainingProducts = response.data.splice(5, 8);
-
-      console.log('sssssssssssfffffffffffffffffff', $scope.listingRemeiningProducts);
+      $scope.listingProductsData1 = response.data.results.slice(0, 12);
+      $scope.listingProductsData2 = response.data.results.slice(12, 24);
 
       if ($rootScope.addToCart.length > 0) {
         for (var i = 0; i < $rootScope.addToCart.length; i++) {
-          for (var j = 0; j < $scope.listingProducts.length; j++) {
-            if ($scope.listingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
-              $scope.listingProducts[j].added_cart = $rootScope.addToCart[i].qty
-              console.log($scope.listingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
+          for (var j = 0; j < $scope.listingProductsData1.length; j++) {
+            if ($scope.listingProductsData1[j].pk == $rootScope.addToCart[i].product.pk) {
+              $scope.listingProductsData1[j].added_cart = $rootScope.addToCart[i].qty
             }
           }
-          for (var j = 0; j < $scope.listingRemainingProducts.length; j++) {
-            if ($scope.listingRemainingProducts[j].pk == $rootScope.addToCart[i].product.pk) {
-              $scope.listingRemainingProducts[j].added_cart = $rootScope.addToCart[i].qty
-              console.log($scope.listingRemainingProducts[j].added_cart, 'aaaaaaaaaaaaaaaaaaaaaaaa');
+          for (var j = 0; j < $scope.listingProductsData2.length; j++) {
+            if ($scope.listingProductsData2[j].pk == $rootScope.addToCart[i].product.pk) {
+              $scope.listingProductsData2[j].added_cart = $rootScope.addToCart[i].qty
             }
           }
-
         }
       }
 
