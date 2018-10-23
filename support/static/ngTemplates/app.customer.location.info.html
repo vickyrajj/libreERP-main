@@ -1,0 +1,14 @@
+<div class="modal-header bg-blue">
+  <div class="row text-center" style="padding-left:15px">
+    <h4>
+      <span ><i class="fa fa-arrow-circle-o-left pull-left fa-2x" ng-click="cancel()" style="cursor:pointer;"></i></span>
+      {{msg.user | getName}}
+    </h4>
+  </div>
+</div>
+<div class="modal-body" style="padding:10px;display:block;box-sizing:border-box;">
+  <div class="container-fluid" style="padding:15px;">
+  <ng-map center="{{msg.lat}},{{msg.lon}}" zoom="15" style="height:80vh;">
+    <marker position="{{msg.lat}},{{msg.lon}}"></marker>
+  </ng-map>
+</div>

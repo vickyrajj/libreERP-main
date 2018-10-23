@@ -1,0 +1,27 @@
+<div class="container-fluid" ng-controller="customer.explore.location" style="paddin-top:20px">
+  <div class="" ng-repeat="item in data track by $index">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-3 text-right" style="padding-top:15px">
+          <span ng-if="$index==0">{{item.created | date : 'dd-MMM-yyyy hh:mm a'}}</span>
+          <span ng-if="$index>0&&!sameDate(data[$index - 1].created,item.created)">{{item.created | date : 'dd-MMM-yyyy hh:mm a'}}</span>
+        </div>
+        <div class="col-md-9" style="border-left:3px solid green">
+          <div class="card" style="min-height:40px;padding:10px;margin-top:5px;padding-right:0px">
+            <div class="col-md-12" style="padding-right:0px">
+              <div class="col-md-4">
+                <strong>Latitude : {{item.lat}}</strong>
+              </div>
+              <div class="col-md-4">
+                <strong>Longitude : {{item.lon}}</strong>
+              </div>
+              <div class="col-md-4 text-right" style="padding-right:0px;padding-top:0px;margin-top:-5px">
+                <span class="btn btn-primary btn-sm " ng-click="seeLocation(item)"><i class="fa fa-map-marker"></i>&nbsp; See Location</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

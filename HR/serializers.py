@@ -9,9 +9,16 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist , SuspiciousOperation
 
 class EmailAttachmentSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
     class Meta:
         model = EmailAttachment
-        fields = ('pk' , 'name', 'size' , 'attachment' , 'emailID')
+        fields = ('pk' , 'name', 'size' , 'attachment' , 'emailID' , 'name')
+    def get_name(self , obj):
+        try:
+            name = str(obj.attachment.name.split('_')[1])[2:]
+        except:
+            name = str(obj.attachment.name.split('_')[1])
+        return name
 
 class EmailSerializer(serializers.ModelSerializer):
     files = EmailAttachmentSerializer(many=True , read_only=True)
@@ -284,9 +291,10 @@ class SMSSerializer(serializers.ModelSerializer):
 
 
 class CallSerializer(serializers.ModelSerializer):
+    contactName = serializers.SerializerMethodField()
     class Meta:
         model = Call
-        fields = ('pk', 'created' ,'dated', 'duration','typ','frmOrTo','user','owner' )
+        fields = ('pk', 'created' ,'dated', 'duration','typ','frmOrTo','user','owner','contactName' )
     def create(self , validated_data):
         print self.context['request'].data
         d = Call(**validated_data)
@@ -300,6 +308,15 @@ class CallSerializer(serializers.ModelSerializer):
 
         d.save()
         return d
+    def get_contactName(self , obj):
+        cn = None
+        try:
+            mobj = MobileContact.objects.filter(mobile__icontains=str(obj.frmOrTo))
+            if mobj.count()>0 and mobj[0].name:
+                cn = mobj[0].name
+        except:
+            pass
+        return cn
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -319,10 +336,15 @@ class LocationSerializer(serializers.ModelSerializer):
         d.save()
         return d
 
+
 class MobileContactSerializer(serializers.ModelSerializer):
+    incomingCallsCount = serializers.SerializerMethodField()
+    outgouingCallsCount = serializers.SerializerMethodField()
+    missedCallsCount = serializers.SerializerMethodField()
+    totalCallsCount = serializers.SerializerMethodField()
     class Meta:
         model = MobileContact
-        fields = ('pk', 'name' ,'mobile', 'user','owner' )
+        fields = ('pk', 'name' ,'mobile', 'user','owner','incomingCallsCount','outgouingCallsCount','missedCallsCount','totalCallsCount' )
     def create(self , validated_data):
 
         d = MobileContact(**validated_data)
@@ -337,3 +359,42 @@ class MobileContactSerializer(serializers.ModelSerializer):
 
         d.save()
         return d
+    def get_incomingCallsCount(self , obj):
+        try:
+            ct = Call.objects.filter(user=obj.user,typ='INCOMING',frmOrTo=obj.mobile).count()
+        except:
+            ct = 0
+        return ct
+    def get_outgouingCallsCount(self , obj):
+        try:
+            ct = Call.objects.filter(user=obj.user,typ='OUTGOING',frmOrTo=obj.mobile).count()
+        except:
+            ct = 0
+        return ct
+    def get_missedCallsCount(self , obj):
+        try:
+            ct = Call.objects.filter(user=obj.user,typ='MISSED',frmOrTo=obj.mobile).count()
+        except:
+            ct = 0
+        return ct
+    def get_totalCallsCount(self , obj):
+        try:
+            ct = Call.objects.filter(user=obj.user,frmOrTo=obj.mobile).count()
+        except:
+            ct = 0
+        return ct
+
+class BankAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankAccount
+        fields = ('pk', 'created' , 'user', 'accNumber','bankName', 'typ' ,'ifscCode' )
+
+class BankStatementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankStatement
+        fields = ('pk', 'created' , 'attachment','bankAct')
+
+class RawDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RawData
+        fields = ('pk', 'created' , 'bankstatement', 'dat','description','firstLCat','secondLCat','debit','credit','balance')

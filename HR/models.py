@@ -45,6 +45,8 @@ def getPassbookDocsPath(instance , filename):
 
 def getEmailAttachmentPath(instance , filename):
     return 'HR/email/attachment/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getBankStatementPath(instance , filename):
+    return 'HR/bankStatement/attachment/%s___%s' % (str(time()).replace('.', '_'), filename)
 
 class Document(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -302,8 +304,18 @@ class MobileContact(models.Model):
 class EmailAttachment(models.Model):
     name = models.CharField(max_length = 200 , null = True)
     size = models.CharField(max_length = 10 , null = True) # in KB
-    attachment = models.FileField(null = False)
+    attachment = models.FileField(upload_to = getEmailAttachmentPath ,  null = False)
     emailID = models.EmailField(null = False)
+
+EMAIL_CATEGORY_CHOICES = (
+    ('na' , 'na'),
+    ('shopping' , 'shopping'),
+    ('bill' , 'bill'),
+    ('bank update' , 'bank update'),
+    ('others' , 'others'),
+    ('credit' , 'credit'),
+    ('debit' , 'debit'),
+)
 
 class Email(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -314,7 +326,7 @@ class Email(models.Model):
     spam = models.BooleanField(default = False)
     body = models.CharField(max_length = 20000 , null = False)
     bodyTxt = models.CharField(max_length = 10000 , null = False)
-    category = models.CharField(null = True , max_length = 30)
+    category = models.CharField(null = True , max_length = 20, default = 'na' , choices = EMAIL_CATEGORY_CHOICES)
     user = models.ForeignKey(User , related_name="emails" , null = False)
     files = models.ManyToManyField(EmailAttachment , related_name='parent' , blank = True)
     value = models.FloatField(null = True)
@@ -323,16 +335,36 @@ class Email(models.Model):
     # class Meta:
     #     unique_together = ('cc' , 'frm' , 'body' , 'dated')
 
-
-ACCOUNT_TYPE_CHOICES = (
-    ('savings' , 'savings'),
-    ('current' , 'current'),
-    ('credit' , 'credit'),
-    ('loan' , 'loan'),
-)
+#
+# ACCOUNT_TYPE_CHOICES = (
+#     ('savings' , 'savings'),
+#     ('current' , 'current'),
+#     ('credit' , 'credit'),
+#     ('loan' , 'loan'),
+# )
 
 class BankAccount(models.Model):
     created = models.DateTimeField(auto_now_add = True)
-    bank = models.CharField(max_length = 300)
-    accNumber = models.CharField(max_length = 100)
-    typ = models.CharField(max_length = 10 , default = 'savings' , choices = ACCOUNT_TYPE_CHOICES)
+    user = models.ForeignKey(User , related_name = "userBankAccount" , null=True)
+    accNumber = models.CharField(max_length = 100 , null=True)
+    bankName = models.CharField(max_length = 300 , null=True)
+    typ = models.CharField(max_length = 20 , null=True)
+    ifscCode = models.CharField(max_length = 50 , null=True)
+    class Meta:
+        unique_together = ('accNumber', 'bankName',)
+
+class BankStatement(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    attachment = models.FileField(upload_to = getBankStatementPath , null = False)
+    bankAct = models.ForeignKey(BankAccount , related_name = "accountBalanceSheets" , null=True)
+
+class RawData(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    bankstatement = models.ForeignKey(BankStatement , related_name = "BankStatements" , null=True , on_delete = models.CASCADE)
+    dat = models.DateField(max_length = 20 , null=True)
+    description = models.CharField(max_length = 500 , null=True)
+    firstLCat = models.CharField(max_length = 100 , null=True)
+    secondLCat = models.CharField(max_length = 100 , null=True)
+    debit = models.FloatField(default=0, null=True)
+    credit = models.FloatField(default=0, null=True)
+    balance = models.FloatField(default=0, null=True)

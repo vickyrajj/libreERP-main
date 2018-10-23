@@ -1,3 +1,5 @@
+
+
 app.config(function($stateProvider) {
 
   $stateProvider.state('businessManagement.customers', {
@@ -107,7 +109,114 @@ app.controller("customer.emails.details", function($scope, $state, $users, $stat
   $scope.cancel = function(e) {
     $uibModalInstance.dismiss();
   };
+  $scope.changeCategory = function() {
+    $http({
+      method: 'PATCH',
+      url: '/api/HR/email/' + $scope.msg.pk + '/',
+      data: {'category':$scope.msg.category},
+    }).
+    then(function(response) {
+      Flash.create('success', 'Updated');
+    }, function(response) {
+      Flash.create('danger', response.status + ' : ' + response.statusText);
+    });
+  };
 })
+
+app.controller("customer.location.details", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside,deal,$uibModalInstance,$sce) {
+  $scope.msg = deal
+
+  $scope.cancel = function(e) {
+    $uibModalInstance.dismiss();
+  };
+  $scope.changeCategory = function() {
+    $http({
+      method: 'PATCH',
+      url: '/api/HR/email/' + $scope.msg.pk + '/',
+      data: {'category':$scope.msg.category},
+    }).
+    then(function(response) {
+      Flash.create('success', 'Updated');
+    }, function(response) {
+      Flash.create('danger', response.status + ' : ' + response.statusText);
+    });
+  };
+})
+
+app.controller("customer.bankStatement.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside) {
+
+  $scope.form = {xlFile : emptyFile , success : false}
+  console.log('uploadddddddddd',$scope.$parent.$parent.getParams[0].value);
+  $scope.upload = function() {
+    if ($scope.form.xlFile == emptyFile) {
+      Flash.create('warning' , 'Please Select Proper Excel File')
+      return
+    }
+    var fd = new FormData()
+    fd.append('excelFile' , $scope.form.xlFile);
+    fd.append('user' , $scope.$parent.$parent.getParams[0].value);
+    $http({
+      method: 'POST',
+      url: '/api/HR/bankStatementUpload/',
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+      Flash.create('success' , 'Created');
+      $scope.form.success = true;
+    })
+  }
+
+})
+
+app.controller("customer.explore.call", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside) {
+  $scope.sameDate = function(prev , curr) {
+    if (typeof curr == 'string') {
+      prev = new Date(prev);
+      curr = new Date(curr);
+    }
+    return curr.getFullYear() === prev.getFullYear() &&
+    curr.getMonth() === prev.getMonth() &&
+    curr.getDate() === prev.getDate()
+  }
+})
+
+app.controller("customer.explore.location", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside) {
+  $scope.sameDate = function(prev , curr) {
+    if (typeof curr == 'string') {
+      prev = new Date(prev);
+      curr = new Date(curr);
+    }
+    return curr.getFullYear() === prev.getFullYear() &&
+    curr.getMonth() === prev.getMonth() &&
+    curr.getDate() === prev.getDate()
+  }
+
+  $scope.openLocationInfo = function(dt) {
+    $aside.open({
+      templateUrl : '/static/ngTemplates/app.customer.location.info.html',
+      placement: 'right',
+      size: 'xl',
+      resolve: {
+        deal : function() {
+          return dt;
+        },
+      },
+      controller : 'customer.location.details'
+    })
+
+  }
+
+  $scope.seeLocation = function(dat){
+    console.log(dat);
+    $scope.openLocationInfo(dat);
+  }
+})
+
+
 app.controller("businessManagement.customers.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside) {
   $scope.data = $scope.tab.data
   $scope.form={mobile:''}
@@ -149,6 +258,7 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     callData: [],
     locationData: [],
     mobileContactData: [],
+    bankStatementsData: [],
     emailData:[]
   };
 
@@ -164,29 +274,22 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   callviews = [{
     name: 'list',
     icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/tableDefault.html',
+    template: '/static/ngTemplates/app.callsList.html',
     // itemTemplate: '/static/ngTemplates/app.customers.call.item.html',
   }, ];
 
   locationviews = [{
     name: 'list',
     icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/tableDefault.html',
+    template: '/static/ngTemplates/app.loctionList.html',
     // itemTemplate: '/static/ngTemplates/app.customers.location.item.html',
   }, ];
 
   mobileContactviews = [{
     name: 'list',
     icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/tableDefault.html',
-    // itemTemplate: '/static/ngTemplates/app.customers.mobileContact.item.html',
-  }, ];
-
-  mobileContactviews = [{
-    name: 'list',
-    icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/tableDefault.html',
-    // itemTemplate: '/static/ngTemplates/app.customers.mobileContact.item.html',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.customers.contacts.items.html',
   }, ];
 
 
@@ -196,6 +299,7 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     url: '/api/HR/sms/',
     searchField: 'frm',
     getParams : [{key : 'user' , value : $scope.data.pk}],
+    fields : ['frm','to','body','dated'],
     itemsNumPerView: [16, 32, 48],
 
   }
@@ -211,6 +315,7 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     // {icon : 'fa fa-bar-chart-o' , text : 'Performance' },
     // {icon : 'fa fa-envelope-o' , text : 'message' },
   ];
+  var options = {main : {icon : 'fa-map-marker', text: 'Location'}};
 
   $scope.locationConfig = {
     views: locationviews,
@@ -218,7 +323,8 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     searchField: 'lat',
     getParams : [{key : 'user' , value : $scope.data.pk}],
     itemsNumPerView: [16, 32, 48],
-    multiselectOptions:multiselectOptions
+    multiselectOptions:multiselectOptions,
+    // options: options
   }
   $scope.mobileContactConfig = {
     views: mobileContactviews,
@@ -227,39 +333,80 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     getParams : [{key : 'user' , value : $scope.data.pk}],
     itemsNumPerView: [16, 32, 48],
   }
-  var options = {main : {icon : 'fa-info', text: 'Info'}};
+  // var options = {main : {icon : 'fa-info', text: 'Info'}};
+
+  bankStatementViews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/tableDefault.html',
+    // itemTemplate: '/static/ngTemplates/app.customers.emails.items.html',
+  }, ];
+
+  $scope.bankStatementConfig = {
+    views: bankStatementViews,
+    url: '/api/HR/bankStatement/',
+    searchField: 'name',
+    getParams : [{key : 'bankAct__user' , value : $scope.data.pk}],
+    itemsNumPerView: [16, 32, 48],
+    canCreate : true,
+    editorTemplate : '/static/ngTemplates/app.customer.bankStatement.form.html',
+  }
+
+  emailViews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.customers.emails.items.html',
+  }, ];
+
+  var multiselectOptions = [{icon : 'fa fa-envelope-o' , text : 'fetchNew' },{icon : 'fa fa-envelope' , text : 'fetchOld' }];
   $scope.emailConfig = {
-    views: mobileContactviews,
+    views: emailViews,
     url: '/api/HR/email/',
-    searchField: 'messageId',
+    filterSearch: true,
+    searchField: 'subject or frm',
     getParams : [{key : 'user' , value : $scope.data.pk}],
     itemsNumPerView: [16, 32, 48],
-    fields:['dated','subject','frm','messageId'],
-    options : options,
+    multiselectOptions, multiselectOptions,
+    drills : [
+      {icon : 'fa fa-bars' , name : 'Options' , btnClass : 'default' , options : [
+        {key : 'Inbox', value : true},
+        {key : 'Sent', value : true},
+      ]}
+    ]
   }
 
   $scope.emailtableAction = function(target, action, mode) {
     console.log(target, action, mode);
     console.log($scope.dataVal.emailData);
-
-    if (action == 'Info') {
-      console.log("email infooooooo");
-      for (var i = 0; i < $scope.dataVal.emailData.length; i++) {
-        if ($scope.dataVal.emailData[i].pk == parseInt(target)) {
-          $scope.openEmailInfo(i);
+    if (mode == 'multi') {
+      if (action == 'fetchNew') {
+        console.log('fetch new messagessss');
+        $scope.getToken('new')
+      }else if (action == 'fetchOld') {
+        console.log('fetch old messagessssssssss');
+        $scope.getToken('old')
+      }
+    }else {
+      if (action == 'Info') {
+        console.log("email infooooooo");
+        for (var i = 0; i < $scope.dataVal.emailData.length; i++) {
+          if ($scope.dataVal.emailData[i].pk == parseInt(target)) {
+            $scope.openEmailInfo($scope.dataVal.emailData[i]);
+          }
         }
       }
     }
   }
 
-  $scope.openEmailInfo = function(idx) {
+  $scope.openEmailInfo = function(dt) {
     $aside.open({
       templateUrl : '/static/ngTemplates/app.customer.email.info.html',
       placement: 'right',
       size: 'xl',
       resolve: {
         deal : function() {
-          return $scope.dataVal.emailData[idx];
+          return dt;
         },
       },
       controller : 'customer.emails.details'
@@ -284,6 +431,14 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
       });
 
     }
+    // if (action == 'Location') {
+    //   console.log("Location infooooooo");
+    //   for (var i = 0; i < $scope.dataVal.locationData.length; i++) {
+    //     if ($scope.dataVal.locationData[i].pk == parseInt(target)) {
+    //       $scope.openLocationInfo($scope.dataVal.locationData[i]);
+    //     }
+    //   }
+    // }
   }
 
   $scope.tabs = [];
@@ -311,21 +466,21 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   }
 
 
-  $scope.getToken = function(){
+  $scope.getToken = function(typ){
     $http({
       method: 'GET',
       url: '/api/HR/emailSave/?userId=' +$scope.data.pk
     }).
     then(function(response) {
-      $scope.createData()
+      $scope.createData(typ)
     })
 
   }
 
-  $scope.createData = function(){
+  $scope.createData = function(typ){
     $http({
       method: 'GET',
-      url: '/api/HR/emailDataSave/?userId=' +$scope.data.pk
+      url: '/api/HR/emailDataSave/?userId=' +$scope.data.pk + '&typ=' + typ
     }).
     then(function(response) {
 
@@ -340,10 +495,11 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
 
   $scope.labels = ["January", "February", "March", "April", "May", "June", "July" , "Aug" , "Sep" , "Oct" , "Nov" , "Dec"];
   $scope.series = ['Series A', 'Series B'];
-  $scope.chartData = [
-    [65, 59, 80, 81, 56, 55, 40, 55 , 22, 54, 22, 99, 22],
-    [28, 48, 40, 19, 86, 27, 90, 55 , 22, 54, 22, 99, 22]
-  ];
+  // $scope.chartData = [
+  //   [65, 59, 80, 81, 56, 55, 40, 55 , 22, 54, 22, 99, 22],
+  //   [28, 48, 40, 19, 86, 27, 90, 55 , 22, 54, 22, 99, 22]
+  // ];
+  $scope.chartData = [[],[]];
   $scope.onClick = function (points, evt) {
     console.log(points, evt);
   };
@@ -353,19 +509,60 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
             display: true
           }],
           yAxes: [{
-            display: false
+            display: true
           }],
         }
   };
 
 
-  $scope.calllabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-  // $scope.callseries = ['Series A', 'Series B'];
+  $scope.incNumber = [];
+  $scope.incCount = [];
+  $scope.outNumber = [];
+  $scope.outCount = [];
+  $scope.msdNumber = [];
+  $scope.msdCount = [];
+  $scope.bankRawYearsList = []
+  $scope.graphIdx = 0
+  $scope.graphYearsLength = 0
+  $http({
+    method: 'GET',
+    url: '/api/HR/userCallHistoryGraph/?user=' + $scope.data.pk
+  }).
+  then(function(response) {
+    console.log(response.data);
+    $scope.incNumber = response.data.incNumber
+    $scope.incCount = response.data.incCount
+    $scope.outNumber = response.data.outNumber
+    $scope.outCount = response.data.outCount
+    $scope.msdNumber = response.data.msdNumber
+    $scope.msdCount = response.data.msdCount
+    $scope.bankRawYearsList = response.data.bankRawYearsList
+    $scope.graphYearsLength = $scope.bankRawYearsList.length
+    if ($scope.bankRawYearsList.length>0) {
+      $scope.graphIdx = $scope.bankRawYearsList.length - 1
+    }
+  })
 
-  $scope.calldata = [
-    [65, 59, 80, 81, 56, 55, 40],
-    // [28, 48, 40, 19, 86, 27, 90]
-  ];
+  $scope.prevGraph = function(){
+    $scope.graphIdx = $scope.graphIdx - 1
+    $scope.fetchGraphDetils($scope.graphIdx)
+  }
+  $scope.nextGraph = function(){
+    $scope.graphIdx = $scope.graphIdx + 1
+    $scope.fetchGraphDetils($scope.graphIdx)
+  }
+
+  $scope.fetchGraphDetils = function(idx){
+    console.log('fetchingggggg on ',$scope.bankRawYearsList[idx]);
+    $http({
+      method: 'GET',
+      url: '/api/HR/fetchGraphData/?year=' + $scope.bankRawYearsList[idx] + '&user=' +  $scope.data.pk
+    }).
+    then(function(response) {
+      console.log(response.data);
+      $scope.chartData = [response.data.debList,response.data.cdtList];
+    })
+  }
 
 
 

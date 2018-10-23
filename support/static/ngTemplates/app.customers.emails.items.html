@@ -1,0 +1,19 @@
+<div class="col-md-12 animated fadeIn" style="padding-bottom:5px;">
+    <div class="row">
+      <div class="container-fluid card text-left" style="padding:10px;padding-right:0px;font-size:15px;">
+        <div class="col-md-2">
+          {{data.dated | date : 'dd-MMM-yyyy : hh:mm a'}}
+        </div>
+        <div class="col-md-4">
+          {{data.frm}}
+        </div>
+        <div class="col-md-4">
+          {{data.subject}}
+        </div>
+        <div class="col-md-2 text-right" style="padding-right:5px">
+          <span ng-if="data.files.length>0" style="padding-right:40px;font-size:22px">{{data.files.length}} &nbsp; <i class="fa fa-paperclip"></i></span>
+          <span class="btn btn-primary btn-sm" style="font-size:15px;margin-top:-5px;margin-bottom:-5px" ng-click="rowActionClicked('Info')"><i class="fa fa-info-circle fa-lg"></i> Read</span>
+        </div>
+      </div>
+    </div>
+</div>

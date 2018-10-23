@@ -204,12 +204,13 @@ def GetMessageBody(service, user_id, msg_id):
         mime_msg = email.message_from_string(msg_str)
         messageMainType = mime_msg.get_content_maintype()
         if messageMainType == 'multipart':
-            for part in mime_msg.get_payload():
-                if part.get_content_maintype() == 'text':
-                    return part.get_payload()
-            return ""
+			ret = ""
+			for part in mime_msg.get_payload():
+				if part.get_content_maintype() == 'text':
+				    ret = part.get_payload(decode=True)
+			return ret
         elif messageMainType == 'text':
-            return mime_msg.get_payload()
+            return mime_msg.get_payload(decode=True)
     except errors.HttpError, error:
         print 'An error occurred: %s' % error
 
@@ -232,12 +233,10 @@ def GetAttachments(service, user_id, msg_id, store_dir,u):
 				path = ''.join([store_dir,str(time()).replace('.', '_'), part['filename']])
 				try:
 					data = {'name':part['filename'],'size':part['body']['size'],'emailID':u.email}
-					print data
 					with open(path, 'wb+') as f:
 						f.write(file_data)
 						data['attachment'] = path.replace('media_root/','')
 						print 'file addedddddddddddddd'
-					print data
 					eobj = EmailAttachment.objects.create(**data)
 				except:
 					print 'no fileeeeeeeeeeeeeeee'
@@ -256,7 +255,7 @@ def createMessage(user,service,msgList):
 			print 'filessssssssssss',msg['Subject'],files
 			htmlBody = GetMessageBody(service,user_id,msg['messageId'])
 			textBody = html2text.html2text(htmlBody)
-			data = {'dated':parser.parse(msg['Date']),'frm':msg['Sender'],'body':htmlBody,'bodyTxt':textBody,'user':user,'messageId':msg['messageId'],'subject':msg['Subject']}
+			data = {'dated':parser.parse(msg['Date']),'category':'na','frm':msg['Sender'],'body':htmlBody,'bodyTxt':textBody,'user':user,'messageId':msg['messageId'],'subject':msg['Subject']}
 			try:
 				emObj = Email.objects.create(**data)
 				for i in files:
@@ -268,17 +267,25 @@ def createMessage(user,service,msgList):
 		except:
 			print 'Not Createdddddddddddddd invalid dataaaaaa'
 
-def allData(u):
+def allData(u,typ):
 	print 'Fetching All Messages'
-	print u,u.username,u.pk
 	GMAIL = initialize()
-
+	# a = GetMessageBody(GMAIL,'me','1668f60f5f5e4490')
+	# print a
 	d = Email.objects.filter(user = u).order_by('dated')
 	if d.count() > 0:
 		print 'thereeeeeeeeeeeeee'
-		d = d[0].dated + datetime.timedelta(days = 1)
+		print d[0].dated,d.reverse()[0].dated
+		if typ == 'new':
+			print 'fetching newwwwwwwwwwwwwwwwwww'
+			d = d.reverse()[0].dated + datetime.timedelta(days = -1)
+			query = "after:{0}".format(d.date())
+		else:
+			print 'fetching oldddddddddddddddd'
+			d = d[0].dated + datetime.timedelta(days = 1)
+			query = "before:{0}".format(d.date())
 		print d
-		query = "before:{0}".format(d.date())
+		print query
 		messagesList = GMAIL.users().messages().list(userId=user_id,maxResults=100,q=query).execute()
 	else:
 		print 'newwwwwwwwwwwwwwwwwww'

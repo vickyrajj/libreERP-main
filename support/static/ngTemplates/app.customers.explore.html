@@ -14,13 +14,14 @@
 
           </div>
         </div>
-
         <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
           <h5><strong>User ID:</strong> {{data.pk}}</h5>
           <h5><strong>Loan ID:</strong> DUMMY</h5>
-          <h5><strong>Gmail Creation date :</strong> {{data.profile.gmailAge | date : 'dd-MMM-yyyy'}}
+          <h5><strong>Gmail Creation date :</strong> {{data.profile.gmailAge | date : 'dd-MMM-yyyy'}}</h5>
+          <h5 ng-if="dataVal.smsData.length>0 && dataVal.smsData[0].dated"><strong>SMS History Since :</strong> {{dataVal.smsData[0].dated | date : 'dd-MMM-yyyy'}}</h5>
           <h5><strong>Email:</strong> {{data.email}}
-          <button type="button" class="btn btn-primary btn-sm" ng-click="getToken();">Fetch</button></h5>
+          <!-- <button type="button" class="btn btn-primary btn-sm" ng-click="getToken();">Fetch</button> -->
+        </h5>
           <h5><strong>Mobile:</strong> <span>{{data.profile.mobile}}</span>   <button type="button" class="btn btn-default" ng-click="showEdit()" ng-if="mobileEdit">Edit <i class="fa fa-pencil"></i></button> </h5>
           <div class="input-group col-md-4" ng-if="status">
             <input type="text" class="form-control" ng-model="form.mobile" />
@@ -74,12 +75,34 @@
 
       </div>
 
-      <div class="row">
+      <div class="row" ng-if="bankRawYearsList.length>0">
 
-        <canvas height="30vh" id="line" class="chart chart-line" chart-data="chartData"
-        chart-labels="labels" chart-series="series" chart-options="debtVsSavingsChartoptions" chart-click="onClick">
-        </canvas>
+        <div class="col-md-12 text-center">
+          {{bankRawYearsList[graphIdx]}}
+        </div>
+        <div class="col-md-12">
+          <div class="col-md-1">
+            <span class="btn btn-default" style="padding:15px" ng-click="prevGraph()" ng-if="graphIdx>0"><i class="fa fa-chevron-left fa-lg"></i></span>
+          </div>
+          <div class="col-md-10" style="padding:10px 0px">
+            <canvas height="30vh" id="line" class="chart chart-line" chart-data="chartData"
+            chart-labels="labels" chart-series="series" chart-options="debtVsSavingsChartoptions" chart-click="onClick">
+          </canvas>
+          </div>
+          <div class="col-md-1">
+            <span class="btn btn-default" style="padding:15px" ng-click="nextGraph()" ng-if="graphIdx<graphYearsLength-1>0"><i class="fa fa-chevron-right fa-lg"></i></span>
+          </div>
+
+        </div>
+
       </div>
+
+      <div class="row" ng-if="bankRawYearsList.length==0">
+
+        <span class="text-center"><h3>No Bank Transactions Yet</h3></span>
+
+      </div>
+
       <hr>
       <div class="row">
         <div class="container-fluid">
@@ -95,11 +118,10 @@
 
             <div class="col-md-3">
               <div class="container-fluid">
-
                 <canvas id="base" class="chart-horizontal-bar"
-                  chart-data="calldata" chart-labels="calllabels" >
+                  chart-data="incCount" chart-labels="incNumber" ng-if="incNumber.length>0" height="300px">
                 </canvas>
-
+                <h3 ng-if="incNumber.length==0">No Incoming Calls Yet</h3>
               </div>
             </div>
             <div class="col-md-1">
@@ -108,19 +130,20 @@
             <div class="col-md-3">
               <div class="container-fluid">
                 <canvas id="base" class="chart-horizontal-bar"
-                  chart-data="calldata" chart-labels="calllabels" >
+                  chart-data="outCount" chart-labels="outNumber" ng-if="outNumber.length>0" height="300px">
                 </canvas>
+                <h3 ng-if="outNumber.length==0">No Outgoing Calls Yet</h3>
               </div>
             </div>
             <div class="col-md-1">
               <img src="/static/images/missCall.png" style="width:70px;" alt="">
             </div>
-
             <div class="col-md-3">
               <div class="container-fluid">
                 <canvas id="base" class="chart-horizontal-bar"
-                  chart-data="calldata" chart-labels="calllabels" >
+                  chart-data="msdCount" chart-labels="msdNumber" ng-if="msdNumber.length>0" height="300px">
                 </canvas>
+                <h3 ng-if="msdNumber.length==0">No Missed Calls Yet</h3>
               </div>
             </div>
 
@@ -189,7 +212,7 @@
             <uib-tab-heading>
               Bank Statements <i  class="fa fa-address-book"></i>
             </uib-tab-heading>
-            <!-- <generic-Table callback-Fn="tableAction" data="dataVal.mobileContactData" config-Obj="{{mobileContactConfig}}"></generic-Table> -->
+            <generic-Table callback-Fn="tableAction" data="dataVal.bankStatementsData" config-Obj="{{bankStatementConfig}}"></generic-Table>
           </uib-tab>
           <uib-tab >
             <uib-tab-heading>

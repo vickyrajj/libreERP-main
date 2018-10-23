@@ -17,16 +17,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='BankAccount',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('bank', models.CharField(max_length=300)),
-                ('accNumber', models.CharField(max_length=100)),
-                ('typ', models.CharField(choices=[(b'savings', b'savings'), (b'current', b'current'), (b'credit', b'credit'), (b'loan', b'loan')], default=b'savings', max_length=10)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Email',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

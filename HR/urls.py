@@ -19,6 +19,9 @@ router.register(r'call' , callViewSet , base_name = 'call')
 router.register(r'email' , EmailViewSet , base_name = 'email')
 router.register(r'location' , locationViewSet , base_name = 'location')
 router.register(r'mobilecontact' , MobileContactViewSet , base_name = 'mobilecontact')
+router.register(r'bankAccount' , BankAccountViewSet , base_name = 'bankAccount')
+router.register(r'bankStatement' , BankStatementViewSet , base_name = 'bankStatement')
+router.register(r'rawData' , RawDataViewSet , base_name = 'rawData')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
@@ -26,4 +29,7 @@ urlpatterns = [
     url(r'profileOrgCharts/$' , OrgChartAPI.as_view()),
     url(r'emailSave/$' , emailSaveAPI.as_view()),
     url(r'emailDataSave/$' , emailDataSaveAPI.as_view()),
+    url(r'userCallHistoryGraph/$' , UserCallHistoryGraphAPI.as_view()),
+    url(r'bankStatementUpload/$' , BankStatementUploadAPI.as_view()),
+    url(r'fetchGraphData/$' , FetchGraphDataAPI.as_view()),
 ]

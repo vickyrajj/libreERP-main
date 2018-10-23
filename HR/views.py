@@ -16,7 +16,7 @@ from .serializers import *
 from API.permissions import *
 from ERP.models import application, permission , module , CompanyHolidays , service
 from ERP.views import getApps, getModules
-from django.db.models import Q
+from django.db.models import Q,Count
 from django.http import JsonResponse
 import random, string
 from django.utils import timezone
@@ -27,6 +27,13 @@ import calendar
 from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
 from allauth.socialaccount.models import *
+from rest_framework import filters
+from openpyxl import load_workbook,Workbook
+from openpyxl.writer.excel import save_virtual_workbook
+from openpyxl.styles import Font
+from io import BytesIO
+from django.db.models.functions import Extract , ExtractDay, ExtractMonth, ExtractYear
+from django.db.models import Sum , Avg
 # from ERP.models import application , permission
 
 
@@ -483,38 +490,140 @@ class OrgChartAPI(APIView):
 
 class SMSViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    queryset = SMS.objects.all()
+    # queryset = SMS.objects.all()
     serializer_class = SMSSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['frm','user']
+    def get_queryset(self):
+        return SMS.objects.all().order_by('dated')
 
 class callViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    queryset = Call.objects.all()
+    # queryset = Call.objects.all()
     serializer_class = CallSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['frmOrTo','user' ]
+    filter_fields = ['frmOrTo','user','typ' ]
+    def get_queryset(self):
+        return Call.objects.all().order_by('-dated')
 
 class locationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    queryset = Location.objects.all()
+    # queryset = Location.objects.all()
     serializer_class = LocationSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['lat','user' ]
+    def get_queryset(self):
+        return Location.objects.all().order_by('-created')
 
 class MobileContactViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = MobileContact.objects.all()
     serializer_class = MobileContactSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name','user' ]
+    filter_fields = ['name','user','mobile' ]
 
 class EmailViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    queryset = Email.objects.all()
+    # queryset = Email.objects.all()
     serializer_class = EmailSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['messageId','user']
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_fields = ['messageId','user','subject']
+    search_fields = ('subject', 'frm')
+    def get_queryset(self):
+        print self.request.GET
+        userEmail = User.objects.get(pk=int(self.request.GET['user'])).email
+        userEmail = '<'+str(userEmail)+'>'
+        print userEmail
+        ret = Email.objects.all().order_by('-dated')
+        if int(self.request.GET['Inbox']) and not int(self.request.GET['Sent']):
+            print 'onlyyy inboxxxxxxxxxx'
+            ret = ret.exclude(frm__endswith=userEmail)
+        if int(self.request.GET['Sent']) and not int(self.request.GET['Inbox']):
+            print 'onlyyyyyyy senttttttttttt'
+            ret = ret.filter(frm__endswith=userEmail)
+        if not int(self.request.GET['Sent']) and not int(self.request.GET['Inbox']):
+            print 'nothingggggggggggg'
+            ret = Email.objects.none()
+        return ret
+
+class UserCallHistoryGraphAPI(APIView):
+    def get(self , request , format = None):
+        user = request.GET['user']
+        print user
+        userObj = User.objects.get(pk=int(user))
+        userCallObj = userObj.callAuthored.all()
+        incObj = list(userCallObj.filter(typ='INCOMING').values('frmOrTo').annotate(cout=Count('frmOrTo')).order_by('-cout'))[:10]
+        outObj = list(userCallObj.filter(typ='OUTGOING').values('frmOrTo').annotate(cout=Count('frmOrTo')).order_by('-cout'))[:10]
+        msdObj = list(userCallObj.filter(typ='MISSED').values('frmOrTo').annotate(cout=Count('frmOrTo')).order_by('-cout'))[:10]
+        incCount = []
+        incNumber = []
+        outCount = []
+        outNumber = []
+        msdCount = []
+        msdNumber = []
+        for i in incObj:
+            incCount.append(i['cout'])
+            try:
+                mobj = MobileContact.objects.filter(mobile__icontains=str(i['frmOrTo']))
+                if mobj.count()>0 and mobj[0].name:
+                    incNumber.append(mobj[0].name)
+                else:
+                    incNumber.append(i['frmOrTo'])
+            except:
+                incNumber.append(i['frmOrTo'])
+        for i in outObj:
+            outCount.append(i['cout'])
+            try:
+                mobj = MobileContact.objects.filter(mobile__icontains=str(i['frmOrTo']))
+                if mobj.count()>0 and mobj[0].name:
+                    outNumber.append(mobj[0].name)
+                else:
+                    outNumber.append(i['frmOrTo'])
+            except:
+                outNumber.append(i['frmOrTo'])
+        for i in msdObj:
+            msdCount.append(i['cout'])
+            try:
+                mobj = MobileContact.objects.filter(mobile__icontains=str(i['frmOrTo']))
+                if mobj.count()>0 and mobj[0].name:
+                    msdNumber.append(mobj[0].name)
+                else:
+                    msdNumber.append(i['frmOrTo'])
+            except:
+                msdNumber.append(i['frmOrTo'])
+
+        try:
+            bankRawYearsList = sorted(list(RawData.objects.filter(bankstatement__bankAct__user=userObj).annotate(year=ExtractYear('dat')).values_list('year',flat=True).distinct()))
+        except:
+            bankRawYearsList = []
+        toReturn = {'incCount':incCount,'incNumber':incNumber,'outCount':outCount,'outNumber':outNumber,'msdCount':msdCount,'msdNumber':msdNumber,'bankRawYearsList':bankRawYearsList}
+
+        return JsonResponse(toReturn ,status =200 )
+
+class FetchGraphDataAPI(APIView):
+    def get(self , request , format = None):
+        print request.GET
+        yer = request.GET['year']
+        userObj = User.objects.get(pk=int(request.GET['user']))
+        rawObj = RawData.objects.filter(bankstatement__bankAct__user=userObj)
+        debList = []
+        cdtList = []
+        for i in range(1,13):
+            start = datetime.date(int(yer),i,1) + relativedelta(months=-1)
+            end = start + relativedelta(months=1,days=-1)
+            print start,end
+            deb = rawObj.filter(dat__range=(start,end)).aggregate(total=Sum('debit')).values()
+            deb = round(deb[0],2) if deb[0] else 0
+            cdt = rawObj.filter(dat__range=(start,end)).aggregate(total=Sum('credit')).values()
+            cdt = round(cdt[0],2) if cdt[0] else 0
+            print deb,cdt
+            debList.append(deb)
+            cdtList.append(cdt)
+        print debList
+        print cdtList
+
+        return JsonResponse({'debList':debList,'cdtList':cdtList} ,status =200 )
+
 
 class emailSaveAPI(APIView):
     def get(self , request , format = None):
@@ -536,16 +645,101 @@ import gmailread
 class emailDataSaveAPI(APIView):
     def get(self , request , format = None):
         print request.GET
-
-
-
-
-
+        typ = request.GET['typ']
         u = User.objects.get(pk  = request.GET['userId'])
         print "Age : ", u.profile.gmailAge
         # if u.profile.gmailAge is None:
         # gmailread.calculateAge(u)
 
-        a = gmailread.allData(u)
+        a = gmailread.allData(u,typ)
 
         return JsonResponse({} ,status =200 )
+
+class BankAccountViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    queryset = BankAccount.objects.all()
+    serializer_class = BankAccountSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user' ]
+
+class BankStatementViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    queryset = BankStatement.objects.all()
+    serializer_class = BankStatementSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['bankAct' ]
+
+class RawDataViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    queryset = RawData.objects.all()
+    serializer_class = RawDataSerializer
+
+
+class BankStatementUploadAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+
+    def post(self , request , format = None):
+        res = []
+        excelFile = request.FILES['excelFile']
+        userObj = User.objects.get(pk=int(request.FILES['user']))
+        wb = load_workbook(filename = BytesIO(excelFile.read()) ,  read_only=True)
+
+        bStatementObj = ''
+        for ws in wb.worksheets:
+            wsTitle = ws.title
+            if wsTitle.lower() == 'analysis':
+                print 'analysissssssssssss'
+                try:
+                    bAccountObj = BankAccount.objects.get(accNumber=str(ws['B4'].value),bankName=str(ws['B5'].value),user=userObj)
+                    print 'thereeeeeee'
+                except:
+                    print 'newwwwwwwww'
+                    data = {'user':userObj,'accNumber':str(ws['B4'].value),'bankName':str(ws['B5'].value),'typ':str(ws['B6'].value).upper()}
+                    if str(ws['B7'].value)!='null':
+                        data['ifscCode'] = str(ws['B7'].value)
+                    bAccountObj = BankAccount.objects.create(**data)
+
+                data = {'bankAct':bAccountObj,'attachment':excelFile}
+                bStatementObj = BankStatement.objects.create(**data)
+
+            elif  wsTitle.lower() == 'raw data':
+                print 'raw Dataaaaaaaaaa',bStatementObj
+                for i in range(2,ws.max_row+1):
+                    data = {}
+                    try:
+                        data['bankstatement'] = bStatementObj
+                        try:
+                            data['dat'] = ws['B'+str(i)].value.date()
+                        except:
+                            print 'dateeeeeeee is not addedddddddddd'
+                        try:
+                            data['description'] = str(ws['D'+str(i)].value)
+                        except:
+                            data['description'] = ws['D'+str(i)].value
+                        try:
+                            data['firstLCat'] = str(ws['E'+str(i)].value)
+                        except:
+                            data['firstLCat'] = ws['E'+str(i)].value
+                        try:
+                            data['secondLCat'] = str(ws['F'+str(i)].value)
+                        except:
+                            data['secondLCat'] = ws['F'+str(i)].value
+                        try:
+                            data['debit'] = float(ws['G'+str(i)].value)
+                        except:
+                            data['debit'] = ws['G'+str(i)].value
+                        try:
+                            data['credit'] = float(ws['H'+str(i)].value)
+                        except:
+                            data['credit'] = ws['H'+str(i)].value
+                        try:
+                            data['balance'] = float(ws['I'+str(i)].value)
+                        except:
+                            data['balance'] = ws['I'+str(i)].value
+
+                        rawObj = RawData.objects.create(**data)
+
+                    except:
+                        print 'row numberrrrrrrrrrrrr {0} in rawData - {1} is not created'.format(i,wsTitle)
+
+        return Response(res, status=status.HTTP_200_OK)

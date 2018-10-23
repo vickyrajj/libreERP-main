@@ -1,0 +1,39 @@
+<div class="modal-header bg-blue">
+  <div class="container-fluid">
+    <div class="row">
+      <i class="fa fa-arrow-circle-o-left pull-left fa-2x" ng-click="cancel()" style="cursor:pointer;"></i>
+      <span class="pull-right">
+        {{msg.frm}} &nbsp; {{msg.dated | date: "dd-MMM-yyyy hh:mm a"}}
+      </span>
+    </div>
+    <div class="row text-center">
+      <h4>{{msg.subject}}
+        <span class="pull-right" style="padding-right:50px">
+          <select class="form-control" ng-model="msg.category" ng-change="changeCategory()">
+            <option value="na">Not Available</option>
+            <option value="shopping">Shopping</option>
+            <option value="bill">Bill</option>
+            <option value="bank update">Bank Update</option>
+            <option value="others">Others</option>
+            <option value="credit">Credit</option>
+            <option value="debit">Debit</option>
+          </select>
+        </span>
+      </h4>
+    </div>
+  </div>
+</div>
+<div class="modal-body" style="padding:10px;display:block;box-sizing:border-box;">
+  <div class="container-fluid">
+    <div class="row">
+      <div ng-bind-html="msg.body" class="col-md-12"></div>
+    </div>
+    <div class="row" style="padding:5px 25px" ng-if="msg.files.length>0">
+      <hr>
+      <span><h4>Attachments <span class="pull-right">Total - {{msg.files.length}}</span></h4></span>
+    </div>
+    <div class="well col-md-6" ng-repeat="file in msg.files">
+      <a href="{{file.attachment}}" target="_blank"><h4>{{file.name}}</h4></a>
+    </div>
+  </div>
+</div>

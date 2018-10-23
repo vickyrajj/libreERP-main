@@ -1,0 +1,17 @@
+<div ng-controller="customer.bankStatement.form">
+  <div class="modal-header text-center">
+    <h4>Upload BankStatement Excel</h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label>Excel file</label>
+      <input type="file" file-model="form.xlFile">
+    </div>
+    <div class="alert alert-success" role="alert" ng-if="form.success" style="margin-bottom:20px;">
+      File Uploaded Sucessfully
+    </div>
+    <button type="button" class="btn btn-primary" ng-click="upload()">
+      Upload
+    </button>
+  </div>
+</div>

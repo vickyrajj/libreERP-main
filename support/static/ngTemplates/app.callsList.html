@@ -1,0 +1,29 @@
+<div class="container-fluid" ng-controller="customer.explore.call" style="paddin-top:20px">
+  <div class="" ng-repeat="item in data track by $index">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-3 text-right" style="padding-top:15px">
+          <span ng-if="$index==0">{{item.dated | date : 'dd-MMM-yyyy hh:mm a'}}</span>
+          <span ng-if="$index>0&&!sameDate(data[$index - 1].dated,item.dated)">{{item.dated | date : 'dd-MMM-yyyy hh:mm a'}}</span>
+        </div>
+        <div class="col-md-8" style="border-left:3px solid green">
+          <div class="card" style="min-height:40px;padding:10px;margin-top:5px;border-right:3px solid {{item.typ=='MISSED'?'#cb443c':item.typ=='INCOMING'?'#0d9d39':'#c6b11d'}}">
+            <div class="col-md-12">
+              <div class="col-md-2">
+                <span ng-if="item.typ=='MISSED'"><img src="/static/images/missCall.png" style="width:30px;" alt=""></span>
+                <span ng-if="item.typ=='INCOMING'"><img src="/static/images/incommingCall.png" style="width:20px;" alt=""></span>
+                <span ng-if="item.typ=='OUTGOING'"><img src="/static/images/outgoingCall.png" style="width:20px;" alt=""></span>
+              </div>
+              <div class="col-md-7">
+                <strong>{{item.frmOrTo}} <span ng-if="item.contactName">({{item.contactName}})</span></strong>
+              </div>
+              <div class="col-md-3">
+                <span class="pull-right">{{item.duration}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
