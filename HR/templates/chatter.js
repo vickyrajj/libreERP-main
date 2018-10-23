@@ -647,6 +647,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // var connection = new autobahn.Connection({url: 'ws://ws.cioc.in:443/ws', realm: 'default'});
 
+
+
     connection.onopen = function (session) {
        console.log("session established!");
 
@@ -827,8 +829,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     };
 
     connection.open();
-
-
 
     function createDiv() {
       var body = document.getElementsByTagName("BODY")[0];
@@ -1035,30 +1035,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // exitBtn.style.display ="none"
   // var videoCallAccepted = false;
 
+
+
   videoCircle.addEventListener('click',function () {
-    console.log(windowColor,'ffffffffffffffffffffffff');
      winCol = windowColor.split('#')[1]
      urlforConferenceForAgent= 'http://192.168.1.109:1337/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
      urlforConference =  'http://192.168.1.109:1337/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
     openVideoIframe(urlforConference , urlforConferenceForAgent,'video')
-    console.log('working');
     openChat()
   })
 
   audioCircle.addEventListener('click',function () {
-    console.log(windowColor,'ffffffffffffffffffffffff');
      winCol = windowColor.split('#')[1]
 
      urlforConferenceForAgent= 'http://192.168.1.109:1337/'+uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
      urlforConference =  'http://192.168.1.109:1337/'+uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
     openVideoIframe(urlforConference , urlforConferenceForAgent , 'audio')
-    console.log('working');
     openChat()
   })
 
   var videoOpened = false
+  var getFrameContent;
 
   var openVideoIframe =   function(urlforConference , urlforConferenceForAgent, ptanhi){
+
+
+
 
     chatBox.style.borderRadius = "0px 10px 10px 0px"
     headerChat.style.borderRadius = "0px 10px 0px 0px"
@@ -1170,7 +1172,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
         iFrame.style.width = "100%";
         iFrame.scrolling = "no";
         iFrame.style.height = "100%";
-        iFrame.style.border='none'
+        iFrame.style.border='none';
+        console.log(iFrame);
+      setTimeout(function () {
+          getFrameContent = document.getElementById("iFrame1").contentWindow;
+      }, 1000);
 
 
         // if (typ=='audio') {
@@ -1877,24 +1883,41 @@ function endChat() {
     feedbackFormSubmitted = false
 
   })
+  window.addEventListener("message", receiveMessage, false);
+
+  function receiveMessage(event)
+  {
+    if (event.origin== "http://192.168.1.109:1337"){
+
+      document.getElementById('iframeDiv').style.display="none"
+      setTimeout(function () {
+        if (videoOpened){
+          document.getElementById('iframeDiv').style.display="block"
+          var iframeDiv = document.getElementById('iframeDiv')
+          var iFrame = document.getElementById('iFrame1')
+          iFrame.src = '';
+          iframeDiv.parentNode.removeChild(iframeDiv);
+
+        }
+      }, 5000);
+    }
+  }
 
 
   exitBtn.addEventListener("click", function() {
 
+      if(getFrameContent!=undefined){
+        getFrameContent.postMessage('userleft','http://192.168.1.109:1337');
+      }
     if (threadExist==undefined) {
       return
     }
-
-
-
     if (feedbackFormOpened) {
       closeSupport.click()
       return
     }
     endChat()
-
   }, false);
-
 
   paperPlane.addEventListener("click", function() {
     sendMessage(inputText.value);
@@ -2703,12 +2726,12 @@ function endChat() {
     chatBox.style.borderRadius = "10px 10px 10px 10px"
     headerChat.style.borderRadius = "10px 10px 0px 0px"
 
-    if (videoOpened) {
-      var iframeDiv = document.getElementById('iframeDiv')
-      var iFrame = document.getElementById('iFrame1')
-      iFrame.src = '';
-      iframeDiv.parentNode.removeChild(iframeDiv);
-    }
+    // if (videoOpened) {
+    //   var iframeDiv = document.getElementById('iframeDiv')
+    //   var iFrame = document.getElementById('iFrame1')
+    //   iFrame.src = '';
+    //   iframeDiv.parentNode.removeChild(iframeDiv);
+    // }
 
     videoOpened = false
     //bottom close svg white color

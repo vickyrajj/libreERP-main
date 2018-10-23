@@ -75,15 +75,27 @@ connection.onopen = function(session) {
     }
   };
 
+var isfocused=true;
+
   supportChatResponse = function(args) {
+    window.onblur = function (){
+    	isfocused=false;
+    }
+    window.onfocus = function (){
+    	isfocused=true;
+    }
+    console.log(isfocused+' focused');
     var scope = angular.element(document.getElementById('chatTab')).scope();
 
     // console.log(args);
+    // scope.notii();
     console.log(args);
 
     function userExist() {
       for (var i = 0; i < scope.newUsers.length; i++) {
         if (scope.newUsers[i].uid == args[0]) {
+
+          scope.onNotification(scope.newUsers[i].uid,args[2].message);
           console.log('yes');
           if (args[1] == 'M') {
             scope.sound.play();
@@ -126,6 +138,16 @@ connection.onopen = function(session) {
       }
       for (var i = 0; i < scope.myUsers.length; i++) {
         if (scope.myUsers[i].uid == args[0]) {
+          console.log('in my userssssss');
+          if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='M'){
+            scope.onNotification(scope.myUsers[i].uid,args[2].message,i);
+          }
+          else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='VCS'){
+            scope.onNotification(scope.myUsers[i].uid,"Video call!!!",i);
+          }
+          else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='MF'){
+            scope.onNotification(scope.myUsers[i].uid,"Media File Receicved",i);
+          }
           console.log('yes');
           if (args[1] == 'M') {
             scope.sound.play();
@@ -171,6 +193,7 @@ connection.onopen = function(session) {
             scope.myUsers[i].spying.value=''
             //feedback from user with stars
           }else if (args[1] == 'VCS') {
+            console.log('videossssss');
             scope.sound.play();
             scope.myUsers[i].video = true
             scope.myUsers[i].videoUrl = args[4]
@@ -181,7 +204,6 @@ connection.onopen = function(session) {
             //this is for video call closed
           }
           console.log('scroll');
-
           setTimeout(function() {
             var id = document.getElementById("scrollArea" + args[0]);
             if (id != null) {
@@ -242,6 +264,13 @@ connection.onopen = function(session) {
       console.log('yesssssssssssss');
 
     } else {
+      if(args[1]=='M'){
+        scope.onNotification(args[0],args[2].message);
+      }
+      else if(args[1]=='VCS'){
+          scope.onNotification(args[0],'Video Coming');
+      }
+
       console.log(args,'hereeeeeeeeeeeeeeeeee');
       if ((args[1] == 'M' || args[1] == 'MF' || args[1] == 'ML') && args[2].user) {
         console.log(args[2].user ,'ffffffffffffffffffff');

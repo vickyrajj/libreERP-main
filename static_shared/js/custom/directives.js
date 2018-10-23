@@ -325,7 +325,9 @@ app.directive('chatBox', function() {
       index: '=',
       closeChat: '=',
     },
-    controller: function($scope, $users, $uibModal, $http, ngAudio , Flash , $sce) {
+    controller: function($scope, $users, $uibModal, $http, ngAudio , Flash , $sce,webNotification) {
+
+      
 
 
 

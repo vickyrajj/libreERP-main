@@ -67,6 +67,10 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
     }
   }
 
+  // setInterval(function () {
+  //   console.log(window.windowState);
+  // }, 5000);
+
   $scope.tabs = [];
   $scope.searchTabActive = true;
 
