@@ -1347,12 +1347,33 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
 
         if ($scope.details.product.serialNo == newValue.sku) {
-          console.log('parent');
+          console.log('parent',$scope.details);
 
           // $scope.list.price = $scope.list.product.discountedPrice
+          for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
+            console.log('lllllllllllll');
+            if ($scope.details.variantsInStoreQty[i].productVariant==null && $scope.details.variantsInStoreQty[i].store==$scope.storePK) {
+              $scope.selectedProdVar.inStock = $scope.details.variantsInStoreQty[i].quantity
+              console.log('yes');
+              break;
+            }else {
+              $scope.selectedProdVar.inStock = 0
+            }
+          }
         } else {
           // $scope.list.product.price = newValue.amnt
           console.log('child');
+
+          for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
+            console.log($scope.details.variantsInStoreQty[i].productVariant , $scope.selectedProdVar.pk);
+            if ($scope.details.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk &&$scope.details.variantsInStoreQty[i].store==$scope.storePK) {
+              $scope.selectedProdVar.inStock = $scope.details.variantsInStoreQty[i].quantity
+              console.log('yes');
+              break;
+            }else {
+              $scope.selectedProdVar.inStock = 0
+            }
+          }
 
           $scope.details.price = newValue.amnt
         }

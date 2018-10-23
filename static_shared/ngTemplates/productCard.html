@@ -181,7 +181,7 @@
                   </span>
                 </div> -->
             </div>
-            <div style=" padding:10px 10px 10px 10px;margin:0px;" ng-if="selectedProdVar.inStock==0">
+            <div style=" padding:10px 10px 10px 10px;margin:0px;" ng-if="selectedProdVar.inStock==0||!selectedProdVar.inStock">
               <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
             </div>
             <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0&&!me.pk&&selectedProdVar.inStock>0">
