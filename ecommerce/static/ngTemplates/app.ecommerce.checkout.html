@@ -1,15 +1,15 @@
 <div class="container-fluid" style="margin-bottom:20px;padding:0px">
   <div class="col-md-10 col-md-offset-1 card bg-white" style="display:block;position:relative;min-height:760px;padding-left:0px;margin-bottom:30px;">
 
-    <div class="col-md-2 hidden-sm hidden-xs  bg-purple" style="position:absolute; height:100%;">
-      <div class="row" style="padding-left:40%; padding-top:20px;">
+    <div class="col-md-2 hidden-sm hidden-xs" style="position:absolute; height:100%;background-color:var(--themeColor)">
+      <div class="row" style="padding-left:40%; padding-top:20px;color:white">
         <i class="fa fa-shopping-cart fa-4x"></i>
       </div>
       <h4 style="text-align:center;text-transform:capitalize;color:white;">
         Checkout
       </h4>
       <hr>
-      <div style="position:absolute;left:0px;width:100%;display:block;" class="bg-purple">
+      <div style="position:absolute;left:0px;width:100%;display:block;background-color:var(--themeColor)" >
         <ul class="nav padded sidebar-checkout" style="width:100%;padding:0px;margin:0px;display:block;height:603px;">
           <li ng-class="{activeTab: data.stage == 'review'}">
             <a>
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div class="row bg-purple hidden-md hidden-lg" style="margin-left:0px; padding-bottom:25px; ">
+    <div class="row hidden-md hidden-lg" style="margin-left:0px; padding-bottom:25px;background-color:var(--themeColor) ">
       <div class="col-xs-12">
         <h4 style="color:white;margin-top:50px;">
         <i class="fa fa-shopping-cart fa-2x" ></i> Checkout
@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    <div class="row bg-purple hidden-md hidden-lg" style="margin-left:0px; height:15vh;  padding-bottom:25px; " ng-if="data.stage=='!confirmation'">
+    <div class="row  hidden-md hidden-lg" style="margin-left:0px; height:15vh;  padding-bottom:25px;background-color:var(--themeColor) " ng-if="data.stage=='!confirmation'">
       <div class="col-xs-4 text-center  " ng-class="{activeTopTab: data.stage == 'review'}">
         <div class="row " style="padding:0px;">
           <i class="fa fa-check"></i>
@@ -491,7 +491,7 @@
 
 
                 <div class="row card" style="margin-bottom:15px" ng-if="!saved&&savedAddress.length>0">
-                  <div class="row card bg-blue" style="margin-left:0px;margin-right:0px">
+                  <div class="row card" style="margin-left:0px;margin-right:0px;background-color:var(--themeColor)">
                     <h5 style="padding-left:10px;color:white"> DELIVERY ADDRESS </h5>
                   </div>
                   <div class="col-md-12" ng-repeat="adr in savedAddress">
@@ -521,7 +521,7 @@
                           </div>
                         </div>
                         <div class="row" ng-if="addressview&&$index==idxVal">
-                          <h4>Address</h4>
+                          <h4>Shipping Address</h4>
                           <div class="form-group">
                             <input type="text" class="form-control" id="ldm" ng-model="data.address.mobileNo" placeholder="Enter Mobile Number...">
                           </div>
@@ -557,55 +557,52 @@
                               </div>
                             </div>
                           </div>
-                          <div class="row" style="margin-bottom:35px">
+                          <div class="row" style="margin-bottom:10px">
                             <div class="hidden-xs col-md-12 col-sm-6">
                               <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk">Update</button>
                               <button type="button" class="btn btn-primary" ng-click="cancel()" ng-if="data.address.pk" >Cancel</button>
                             </div>
-                            <div class="checkbox hidden-xs col-md-12 col-sm-6">
-                              <label><input type="checkbox" value="checked" ng-model="dataToSend.sameAsShipping">&nbsp; Billing Address Same as Shipping</label>
-                            </div>
-                            <div ng-if = "showFields">
-                              <div class="form-group">
-
-                                <textarea ng-model="data.billingAddress.street" class="form-control" id="street" placeholder="Enter street.."></textarea>
-                              </div>
-                              <div class="form-group">
-
-                                <input type="text" class="form-control" id="ldm" ng-model="data.billingAddress.landMark" placeholder="Enter Landmark..">
-                              </div>
-                              <div class="row">
-                                <div class="col-md-6 col-xs-12 col-sm-6">
-                                  <div class="form-group">
-                                    <input ng-model="data.billingAddress.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
-                                  </div>
-                                </div>
-                                <div class="col-md-6 col-xs-12 col-sm-6">
-                                  <div class="form-group">
-                                    <input ng-model="data.billingAddress.state" type="text" class="form-control" id="state" placeholder="Enter State.." disabled>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-6 col-xs-12 col-sm-6">
-                                  <div class="form-group">
-                                    <input ng-model="data.billingAddress.city" type="text" class="form-control" id="city" placeholder="Enter City.." disabled>
-                                  </div>
-                                </div>
-                                <div class="col-md-6 col-xs-12 col-sm-6">
-                                  <div class="form-group">
-                                    <input ng-model="data.billingAddress.country" type="text" class="form-control" id="country" placeholder="Enter Country.." disabled>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
                             <div class="hidden-lg hidden-md hidden-sm col-xs-12 ">
                               <button type="button" class="btn btn-warning" ng-click="saveAdd()" ng-if="data.address.pk" style="width:100%">Update</button><br/><br/>
                               <button type="button" class="btn btn-primary" ng-click="cancel()" ng-if="data.address.pk" style="width:100%">Cancel</button>
                             </div>
                           </div>
-
+                          <div class="checkbox row" style="padding-left:15px">
+                            <label><input type="checkbox" value="checked" ng-model="dataToSend.sameAsShipping">&nbsp; Billing Address Same as Shipping</label>
+                          </div>
+                          <div ng-if ="showFields" >
+                              <h4>Billing Address</h4>
+                            <div class="form-group">
+                              <textarea ng-model="data.billingAddress.street" class="form-control" id="street" placeholder="Enter street.."></textarea>
+                            </div>
+                            <div class="form-group">
+                              <input type="text" class="form-control" id="ldm" ng-model="data.billingAddress.landMark" placeholder="Enter Landmark..">
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6 col-xs-12 col-sm-6">
+                                <div class="form-group">
+                                  <input ng-model="data.billingAddress.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
+                                </div>
+                              </div>
+                              <div class="col-md-6 col-xs-12 col-sm-6">
+                                <div class="form-group">
+                                  <input ng-model="data.billingAddress.state" type="text" class="form-control" id="state" placeholder="Enter State.." disabled>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6 col-xs-12 col-sm-6">
+                                <div class="form-group">
+                                  <input ng-model="data.billingAddress.city" type="text" class="form-control" id="city" placeholder="Enter City.." disabled>
+                                </div>
+                              </div>
+                              <div class="col-md-6 col-xs-12 col-sm-6">
+                                <div class="form-group">
+                                  <input ng-model="data.billingAddress.country" type="text" class="form-control" id="country" placeholder="Enter Country.." disabled>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div class="col-md-1 col-sm-1 col-sm-1" ng-if="$index==idx" ng-click="ChangeAdd($index,'edit')" style="cursor:pointer">
@@ -620,6 +617,7 @@
                     Add a New Address
                   </div>
                   <div class="row" ng-if="newAdr" style="padding-left:25px;padding-right:25px">
+                    <h4>Shipping Address</h4>
                     <div class="form-group">
                       <input type="text" class="form-control" id="ldm" ng-model="data.address.mobileNo" placeholder="Enter Mobile Number...">
                     </div>
@@ -655,7 +653,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row" style="margin-bottom:35px">
+                    <div class="row" style="margin-bottom:10px">
                       <div class="hidden-xs col-md-12 col-sm-6" ng-if="showMessage">
                         <span style="color:red">Sorry!! We Don't Service in this Area
                       </div>
@@ -679,29 +677,50 @@
                       <i class="fa fa-close fa-lg"></i> &nbsp;Cancel
                       </button>
                       </div>
+
+
+                    </div>
+                    <div class="checkbox row" style="padding-left:15px">
+                      <label><input type="checkbox" value="checked" ng-model="dataToSend.sameAsShipping">&nbsp; Billing Address Same as Shipping</label>
+                    </div>
+                    <div ng-if = "showFields">
+                        <h4>Billing Address</h4>
+                      <div class="form-group">
+
+                        <textarea ng-model="data.billingAddress.street" class="form-control" id="street" placeholder="Enter street.."></textarea>
+                      </div>
+                      <div class="form-group">
+
+                        <input type="text" class="form-control" id="ldm" ng-model="data.billingAddress.landMark" placeholder="Enter Landmark..">
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                          <div class="form-group">
+                            <input ng-model="data.billingAddress.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                          <div class="form-group">
+                            <input ng-model="data.billingAddress.state" type="text" class="form-control" id="state" placeholder="Enter State.." disabled>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                          <div class="form-group">
+                            <input ng-model="data.billingAddress.city" type="text" class="form-control" id="city" placeholder="Enter City.." disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-xs-12 col-sm-6">
+                          <div class="form-group">
+                            <input ng-model="data.billingAddress.country" type="text" class="form-control" id="country" placeholder="Enter Country.." disabled>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <div class="row card" style="margin-bottom:15px;padding-bottom:0px" ng-if="saved">
-
-
                     <div class="row card bg-blue" style="margin-left:0px;margin-right:0px">
                       <h5 style="padding-left:10px;color:white"> DELIVERY ADDRESS </h5>
                     </div>

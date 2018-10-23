@@ -1327,7 +1327,7 @@ def genInvoice(response, contract, request):
     %s<br/>
     </font>
     </para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo),styles['Normal'])
+    """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.mobileNo),styles['Normal'])
 
 
     summryParaSrc1 = Paragraph("""

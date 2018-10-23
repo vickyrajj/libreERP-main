@@ -35,13 +35,21 @@
 
       </div>
 
-
-      <label for="username" class="sr-only">Mobile Number</label>
-      <input id="username" name="username" type="text" maxlength="10" class="form-control" placeholder="Mobile Number" required autofocus>
-    <!--   <input id="otp" name="otp" type="text" class="form-control" placeholder="OTP" required autofocus> -->
-      <label for="password" class="sr-only">Password</label>
-      <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
-      <button id="signIn" style="margin-bottom:20px; margin-top:10px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <div class="form-group">
+      <div class="col-md-2 col-sm-2 col-xs-2 text-right" style="padding-top:10px">
+      <span>+91</span>
+      </div>
+      <div class="col-md-10 col-sm-10 col-xs-10  ">
+        <label for="username" class="sr-only">Mobile Number</label>
+       <input id="username" name="username" type="text" maxlength="10" class="form-control" placeholder="Mobile Number" required autofocus>
+     </div>
+       <!--   <input id="otp" name="otp" type="text" class="form-control" placeholder="OTP" required autofocus> -->
+       <div class="col-md-12">
+       <label for="password" class="sr-only">Password</label>
+       <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
+       <button id="signIn" style="margin-bottom:20px; margin-top:10px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+     </div>
+     </div>
 
    <!--    <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a><br/> -->
       <a style="color:black;" href="registerPage">New User?</a>
@@ -68,6 +76,11 @@
     </form>
 
 
+
+
+    <div class="col-md-12 col-sm-12 col-xs-12 text-right" style="margin-top:60%">
+      <a href="/admin/login/?next=/admin/">Admin Login</a>
+    </div>
   </div>
  <!--  <div class="col-xs-12 col-sm-12 hidden-lg hidden-md" style="background-image: url('{{backgroundImage}}');background-size: cover;height:40vh;position:absolute;left:0px;margin-top:350px">
   </div>

@@ -1784,6 +1784,33 @@ app.controller('controller.ecommerce.account.cart.item', function($scope, $rootS
 
 })
 
+app.controller('controller.ecommerce.account.orders.item', function($scope, $rootScope, $http, $state,$uibModal) {
+  $scope.showDetails = function(val){
+    $scope.trackItem = val
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.orders.trackModal.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        items: function() {
+          return $scope.trackItem;
+        }
+      },
+      controller: function($scope, items, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance) {
+
+        console.log(items,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+
+        $scope.trackItems = items
+
+
+
+      }
+
+  })
+}
+
+})
+
 app.controller('controller.ecommerce.account.orders', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash) {
 
 
@@ -1848,6 +1875,8 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
               }
             }
           }
+
+
 
           if ($scope.itemsToBeDeleted.length > 0) {
             $uibModal.open({
@@ -2625,7 +2654,11 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       } else {
         $scope.dataToSend.mobile = $scope.me.profile.mobile
         $scope.dataToSend.address = $scope.data.address
-        if($scope.dataToSend.sameAsShipping == true){
+        if($scope.data.billingAddress.state==''&&$scope.dataToSend.sameAsShipping == false){
+          Flash.create('warning', 'Please Add Billing Address')
+          return
+        }
+        else if($scope.dataToSend.sameAsShipping == true){
           $scope.dataToSend.billingAddress = $scope.data.address
         }
         else{
@@ -2633,7 +2666,6 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         }
       }
       $scope.data.stage = 'payment';
-
     }
   }
 
@@ -2734,6 +2766,17 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       }
     }
   })
+$scope.maxCategories = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=maxCategories').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.maxCategories = true
+      }
+    }
+  })
+
+
 
 
 
@@ -3736,7 +3779,19 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
         $scope.genericProducts = response.data;
       })
     }
+
+    $interval(function() {
+      if($scope.maxCategories==true&&$scope.genericProducts.length>5){
+        $scope.tmpCategory=$scope.genericProducts.slice(0,1)
+        $scope.genericProducts.splice(0,1)
+        $scope.genericProducts.push($scope.tmpCategory[0])
+      }
+    }, 3000)
   }, 1000);
+
+
+
+
 
   $scope.recentlyViewed = [];
   // $scope.recentViewsArr = [];
@@ -3951,6 +4006,15 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
     then(function(response) {
       console.log('categoryyyyyyyyy dataaaaaaaaaaaaaaaa', response.data);
       $scope.genericProducts = response.data;
+
+
+      $interval(function() {
+        if($scope.maxCategories==true&&$scope.genericProducts.length>5){
+          $scope.tmpCategory=$scope.genericProducts.slice(0,1)
+          $scope.genericProducts.splice(0,1)
+          $scope.genericProducts.push($scope.tmpCategory[0])
+        }
+      }, 3000)
       // setTimeout(function () {
       // }, 1000);
 
