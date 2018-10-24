@@ -1,0 +1,59 @@
+
+  <div class="modal-header">
+
+  </div>
+
+  <div class="row modal-body">
+    <div class="row">
+    <div class = "col-md-offset-1 col-md-10" >
+      <div ng-if="trackItems.trackingLog.length>0">
+    <table class="table table-striped" >
+      <tbody>
+        <tr>
+          <th style="width:30%">Data and Time</th>
+          <th style="width:70%">Activity</th>
+        </tr>
+        <tr ng-repeat="log in trackItems.trackingLog">
+          <td style="width:30%">{{log.time | date : 'dd-MMM-yyyy : hh:mm a'}}</td>
+          <td style="width:70%">{{log.logTxt}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div  ng-if="trackItems.trackingLog.length==0" class="text-center">
+      <h3>Your Order is yet to be confirmed</h3>
+    </div>
+  </div>
+  <div class="col-md-1">
+  </div>
+</div>
+<!-- <div class="row" style="padding-left:20px">
+  <div class="col-md-12 col-sm-12 hidden-xs">
+<div class="form-inline">
+<label> Packed </label>
+<label style="width:18%"></label>
+<label> Packed </label>
+<label style="width:18%"></label>
+<label> Packed </label>
+<label style="width:18%"></label>
+<label> Packed </label>
+</div>
+</div>
+</div>
+<div class="row" style="padding-left:20px">
+  <div class="col-md-12 col-sm-12 hidden-xs">
+<div class="form-inline">
+<label style="border-radius: 50%;height:30px;width:30px;color:white;border:1px solid var(--themeColor);{{trackItems.status=='packed' || 'shipped' || 'inTransit' || 'reachedNearestHub' || 'outForDelivery' || 'delivered'?'background-color:var(--themeColor)':'background-color:white'}}"> Packed </label>
+<label style="width:20%;height:0.5vh;{{trackItems.status== 'packed' || 'shipped' || 'inTransit' || 'reachedNearestHub' || 'outForDelivery' || 'delivered'?'background-color:var(--themeColor)':'background-color:white'}};border:1px solid var(--themeColor)"></label>
+<label style="border-radius: 50%;{{trackItems.status== 'shipped' || 'inTransit' || 'reachedNearestHub' || 'outForDelivery' || 'delivered'?'background-color:white':'background-color:var(--themeColor)'}};height:30px;width:30px;color:white;border:1px solid var(--themeColor)"> Packed </label>
+<label style="width:20%;height:0.5vh;{{trackItems.status==  'inTransit' || 'reachedNearestHub' || 'outForDelivery' || 'delivered'?'background-color:white':'background-color:var(--themeColor)'}}"></label>
+<label style="border-radius: 50%;{{trackItems.status==  'inTransit' || 'reachedNearestHub' || 'outForDelivery' || 'delivered'?'background-color:white':'background-color:var(--themeColor)'}};height:30px;width:30px;color:white;border:1px solid var(--themeColor)"> Packed </label>
+<label style="width:20%;height:0.5vh;{{trackItems.status==   'reachedNearestHub' || 'outForDelivery' || 'delivered'?'background-color:white':'background-color:var(--themeColor)'}}"></label>
+<label style="border-radius: 50%;{{trackItems.status==  'reachedNearestHub' || 'outForDelivery' || 'delivered'?'background-color:white':'background-color:var(--themeColor)'}};height:30px;width:30px;color:white;border:1px solid var(--themeColor)"> Packed </label>
+</div>
+</div>
+
+
+
+</div> -->
+</div>

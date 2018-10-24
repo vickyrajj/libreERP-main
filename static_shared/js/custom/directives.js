@@ -641,6 +641,16 @@ app.directive('productCard', function() {
       // console.log($scope.list,'aaaaa');
       $scope.me = $users.get('mySelf');
 
+
+      console.log($scope.list.variantsInStoreQty,'variantsInStoreQty');
+      console.log($rootScope.multiStore , $rootScope.storepk);
+
+      if ($rootScope.multiStore) {
+        $scope.storePK = $rootScope.storepk
+      }else {
+        $scope.storePK = null
+      }
+
       $scope.prod_var = $scope.list.product_variants;
       $scope.prodVarList = []
       $scope.qtyToAddInit = {
@@ -672,7 +682,7 @@ app.directive('productCard', function() {
       if ($scope.prod_var) {
         for (var i = 0; i < $scope.prod_var.length; i++) {
           str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.list.product.howMuch , $scope.list.product.unit) + ' - Rs ' +$scope.prod_var[i].discountedPrice
-          $scope.prodVarList.push( {str:str , qty : $scope.prod_var[i].unitPerpack * $scope.list.product.howMuch , amnt: $scope.prod_var[i].price , unit: $scope.list.product.unit , sku:$scope.prod_var[i].sku , disc:$scope.prod_var[i].discountedPrice  } )
+          $scope.prodVarList.push( {pk:$scope.prod_var[i].id, str:str , qty : $scope.prod_var[i].unitPerpack * $scope.list.product.howMuch , amnt: $scope.prod_var[i].price , unit: $scope.list.product.unit , sku:$scope.prod_var[i].sku , disc:$scope.prod_var[i].discountedPrice  } )
         }
       }
 
@@ -709,7 +719,7 @@ app.directive('productCard', function() {
                 if(newValue.sku==$rootScope.inCart[i].prodSku){
                   // console.log($rootScope.inCart[i].qty , 'if');
                   $scope.list.added_cart = $rootScope.inCart[i].qty
-                  return
+                  break;
                 }
                 else{
                     $scope.list.added_cart = 0
@@ -719,7 +729,7 @@ app.directive('productCard', function() {
             if($rootScope.inFavourite[i]!=undefined){
               if(newValue.sku==$rootScope.inFavourite[i].prodSku){
                 $scope.list.added_saved = 1
-                return
+                break;
               }
               else{
                   $scope.list.added_saved = 0
@@ -731,7 +741,7 @@ app.directive('productCard', function() {
             for (var i = 0; i < $rootScope.addToCart.length; i++) {
                 if(newValue.sku==$rootScope.addToCart[i].prodSku){
                   $scope.list.added_cart = $rootScope.addToCart[i].qty
-                  return
+                  break;
                 }
                 else{
                     $scope.list.added_cart = 0
@@ -739,21 +749,37 @@ app.directive('productCard', function() {
             }
           }
 
-
-
-
           if ($scope.list.product.serialNo == newValue.sku ){
-            // console.log('parent',newValue.sku );
+            console.log('parent',newValue.sku );
+
+            for (var i = 0; i < $scope.list.variantsInStoreQty.length; i++) {
+              if ($scope.list.variantsInStoreQty[i].productVariant==null && $scope.list.variantsInStoreQty[i].store==$scope.storePK) {
+                $scope.selectedProdVar.inStock = $scope.list.variantsInStoreQty[i].quantity
+                console.log('yes');
+                break;
+              }else {
+                $scope.selectedProdVar.inStock = 0
+              }
+            }
 
           }else {
-            // console.log('child',newValue.sku);
+            console.log('child',newValue.sku);
+
+            for (var i = 0; i < $scope.list.variantsInStoreQty.length; i++) {
+              console.log($scope.list.variantsInStoreQty[i].productVariant , $scope.selectedProdVar.pk);
+              if ($scope.list.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk && $scope.list.variantsInStoreQty[i].store==$scope.storePK) {
+                $scope.selectedProdVar.inStock = $scope.list.variantsInStoreQty[i].quantity
+                console.log('yes');
+                break;
+              }else {
+                $scope.selectedProdVar.inStock = 0
+              }
+            }
 
             $scope.list.price = newValue.amnt
           }
+
         }
-
-
-
       })
 
       $scope.openDetails = function(id, name , sku) {

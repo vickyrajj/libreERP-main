@@ -1,0 +1,56 @@
+<div class="row">
+  <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header bg-black" style="background: url({{user.socialData.coverPic}}) no-repeat scroll center center / cover">
+    </div>
+    <div class="widget-user-image">
+      <img class="img-circle" ng-src="{{user.pk | getDP}}">
+    </div>
+
+  </div><!-- /.widget-user -->
+</div>
+
+<div class="row">
+  <h4 class="profile-username text-center">{{user.pk | getName}}</h4>
+  <ul class="list-group list-group-unbordered">
+    <li class="list-group-item">Projects <span class="pull-right badge bg-blue">31</span></li>
+    <li class="list-group-item">Tasks <span class="pull-right badge bg-orange">5</span></li>
+    <li class="list-group-item">Completed Projects <span class="pull-right badge bg-green">12</span></li>
+    <li class="list-group-item">Followers <span class="pull-right badge bg-red">{{user.socialData.followers.length}}</span></li>
+  </ul>
+  <div align="center" ng-if="!myProfile" >
+    <div class="btn-group">
+      <button ng-if="!isFollowing" class="btn btn-success" ng-click="follow()"><i class="fa fa-user-plus"></i> Follow</button>
+      <button ng-if="isFollowing" class="btn btn-success" ng-click="follow()">Unfollow</button>
+      <button class="btn btn-default" ng-click="openChat()"><i class="fa fa-envelope-o"></i></button>
+    </div>
+  </div>
+
+  <!-- About Me Box -->
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h4 class="box-title">About Me</h4>
+      <p class="text-muted" align="justify">{{user.socialData.aboutMe}}</p>
+      <hr>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+      <strong><i class="fa fa-book margin-r-5"></i>  Education</strong>
+      <br>
+      <br>
+      <p class="text-muted"> <i class="fa fa-minus"></i>
+        {{user.profile.almaMater}}
+      </p>
+      <hr>
+      <strong><i class="fa fa-flask margin-r-5"></i> Department</strong>
+      <p class="text-muted">{{user.designationData.department}}</p>
+      <hr>
+      <strong><i class="fa fa-file-text-o margin-r-5"></i> Status</strong>
+      <p class="text-muted">{{user.socialData.status}}</p>
+      <hr>
+      <strong><i class="fa fa-envelope margin-r-5"></i> Contact</strong>
+      <h5 class="description-text"><i class="fa fa-at"></i>{{user.username}} , <i class="fa fa-mobile"></i>&nbsp;&nbsp; {{user.profile.mobile}}</h5>
+    </div><!-- /.box-body -->
+  </div><!-- /.box -->
+</div>
+<!-- Profile Image -->

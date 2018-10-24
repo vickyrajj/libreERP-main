@@ -5,7 +5,9 @@
 	color:white;
 }
 
+
 :root { --themeColor: #006b38;}
+
 
 
 .glassyButton{
@@ -15,6 +17,7 @@
 	color:white;
 	cursor:pointer;
 }
+
 .glassyButton:hover{
 	background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;
 

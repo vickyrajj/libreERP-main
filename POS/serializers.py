@@ -269,42 +269,11 @@ class InvoiceSerializer(serializers.ModelSerializer):
         if 'products' in validated_data:
             productList = json.loads(validated_data['products'])
             for i in productList:
-                print i['data']['productVariant'],'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
-                # print i['data']['pk'],i['quantity']
-
-
-                if 'storepk' in self.context['request'].data:
-                    storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
-
-                    if i['data']['productVariant'] != None:
-                        prodVarObj = ProductVerient.objects.get(pk=i['data']['productVariant']['pk'])
-                        pObj = prodVarObj
-                        prodObj = Product.objects.get(pk=i['data']['product']['pk'])
-                        storeQtyObj = StoreQty.objects.get(store__id = storeObj.pk ,productVariant__id = prodVarObj.pk, product__id = prodObj.pk)
-                    else:
-                        prodObj = Product.objects.get(pk=i['data']['product']['pk'])
-                        pObj = prodObj
-                        storeQtyObj = StoreQty.objects.get(store__id = storeObj.pk , product__id = prodObj.pk)
-
-                    storeQtyObj.quantity = storeQtyObj.quantity - i['quantity']
-                    storeQtyObj.save()
-                else:
-                    if i['data']['productVariant'] != None:
-                        prodVarObj = ProductVerient.objects.get(pk=i['data']['productVariant']['pk'])
-                        prodObj = Product.objects.get(pk=i['data']['product']['pk'])
-                        pObj = prodVarObj
-                        storeQtyObj = StoreQty.objects.get(productVariant__id = prodVarObj.pk, master=True, product__id = prodObj.pk)
-                    else:
-                        prodObj = Product.objects.get(pk=i['data']['product']['pk'])
-                        pObj = prodObj
-                        storeQtyObj = StoreQty.objects.get(product__id = prodObj.pk, master=True)
-
-                    storeQtyObj.quantity = storeQtyObj.quantity - i['quantity']
-                    storeQtyObj.save()
-
-
-                # pObj.save()
-                data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':inv}
+                print i['data']['pk'],'$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+                storeQtyObj = StoreQty.objects.get(pk= i['data']['pk'])
+                storeQtyObj.quantity = storeQtyObj.quantity - i['quantity']
+                storeQtyObj.save()
+                # data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':inv}
                 # InventoryLog.objects.create(**data)
         if 'connectedDevice' in self.context['request'].data:
             try:
@@ -366,59 +335,78 @@ class InvoiceSerializer(serializers.ModelSerializer):
         else:
             productList = []
         print 'sssssssssssssss',oldData,productList
-        # sameDataPk = []
-        for idx1,i in enumerate(oldData):
-            pObj = Product.objects.get(pk=i['data']['pk'])
-            for idx2,j in enumerate(productList):
+
+        for i in oldData:
+            for j in productList:
                 if i['data']['pk']==j['data']['pk']:
+                    print i['data']['pk'],'pkppppppppppppppp'
                     if i['quantity'] > j['quantity']:
-                        print 'increasedddddddddddddddd and inventory created'
-                        if 'storepk' in self.context['request'].data:
-                            print 'multistoreeeeeeeeeeeeeeeeee'
-                            storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
-                            storeQtyObj = pObj.storeQty.get(store__id=storeObj.pk)
-                            storeQtyObj.quantity = storeQtyObj.quantity + (i['quantity'] - j['quantity'])
-                            storeQtyObj.save()
-                        else:
-                            print 'singlestoreeeeeeeeeeeeeeeeeee'
-                            pObj.inStock = pObj.inStock + (i['quantity'] - j['quantity'])
-                        pObj.save()
-                        data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'after':j['quantity'],'internalInvoice':instance}
-                        InventoryLog.objects.create(**data)
+                        print 'reduced'
+                        try:
+                            storeQtyObj = StoreQty.objects.get(pk = i['data']['pk'])
+                        except:
+                            raise PermissionDenied(detail={'PARAMS' : 'Product doesnt exist anymore'} )
+                        storeQtyObj.quantity = storeQtyObj.quantity + (i['quantity'] - j['quantity'])
+                        storeQtyObj.save()
                     elif j['quantity'] > i['quantity']:
-                        print 'decreasedddddddddddddddd and inventory created'
-                        if 'storepk' in self.context['request'].data:
-                            print 'multistoreeeeeeeeeeeeeeeeee'
-                            storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
-                            storeQtyObj = pObj.storeQty.get(store__id=storeObj.pk)
-                            storeQtyObj.quantity = storeQtyObj.quantity - (j['quantity'] - i['quantity'])
-                            storeQtyObj.save()
-                        else:
-                            print 'singlestoreeeeeeeeeeeeeeeeeee'
-                            pObj.inStock = pObj.inStock - (j['quantity'] - i['quantity'])
-                        pObj.save()
-                        data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'after':j['quantity'],'internalInvoice':instance}
-                        InventoryLog.objects.create(**data)
+                        print 'increased'
+                        try:
+                            storeQtyObj = StoreQty.objects.get(pk = i['data']['pk'])
+                        except:
+                            raise PermissionDenied(detail={'PARAMS' : 'Product doesnt exist anymore'} )
+                        storeQtyObj.quantity = storeQtyObj.quantity - (j['quantity'] - i['quantity'])
+                        storeQtyObj.save()
                     else:
-                        print 'no changeeeeeeeeee'
-                    del productList[idx2]
-                    # sameDataPk.append(idx2)
-                    break
-            else:
-                print 'deletedddddddddddddddd and inventory created'
-                pObj.inStock = pObj.inStock + i['quantity']
-                pObj.save()
-                data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'internalInvoice':instance}
-                InventoryLog.objects.create(**data)
-        for idx3,i in enumerate(productList):
-            # if idx3 in sameDataPk:
-            #     continue
-            print 'new producttttttttttttttt and inventory created'
-            pObj = Product.objects.get(pk=i['data']['pk'])
-            pObj.inStock = pObj.inStock - i['quantity']
-            pObj.save()
-            data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':instance}
-            InventoryLog.objects.create(**data)
+                        print 'no changes'
+        # for idx1,i in enumerate(oldData):
+        #     pObj = Product.objects.get(pk=i['data']['pk'])
+        #     for idx2,j in enumerate(productList):
+        #         if i['data']['pk']==j['data']['pk']:
+        #             if i['quantity'] > j['quantity']:
+        #                 print 'increasedddddddddddddddd and inventory created'
+        #                 if 'storepk' in self.context['request'].data:
+        #                     print 'multistoreeeeeeeeeeeeeeeeee'
+        #                     storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
+        #                     storeQtyObj = pObj.storeQty.get(store__id=storeObj.pk)
+        #                     storeQtyObj.quantity = storeQtyObj.quantity + (i['quantity'] - j['quantity'])
+        #                     storeQtyObj.save()
+        #                 else:
+        #                     print 'singlestoreeeeeeeeeeeeeeeeeee'
+        #                     pObj.inStock = pObj.inStock + (i['quantity'] - j['quantity'])
+        #                 pObj.save()
+        #                 data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'after':j['quantity'],'internalInvoice':instance}
+        #                 InventoryLog.objects.create(**data)
+        #             elif j['quantity'] > i['quantity']:
+        #                 print 'decreasedddddddddddddddd and inventory created'
+        #                 if 'storepk' in self.context['request'].data:
+        #                     print 'multistoreeeeeeeeeeeeeeeeee'
+        #                     storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
+        #                     storeQtyObj = pObj.storeQty.get(store__id=storeObj.pk)
+        #                     storeQtyObj.quantity = storeQtyObj.quantity - (j['quantity'] - i['quantity'])
+        #                     storeQtyObj.save()
+        #                 else:
+        #                     print 'singlestoreeeeeeeeeeeeeeeeeee'
+        #                     pObj.inStock = pObj.inStock - (j['quantity'] - i['quantity'])
+        #                 pObj.save()
+        #                 data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'after':j['quantity'],'internalInvoice':instance}
+        #                 InventoryLog.objects.create(**data)
+        #             else:
+        #                 print 'no changeeeeeeeeee'
+        #             del productList[idx2]
+        #             break
+        #     else:
+        #         print 'deletedddddddddddddddd and inventory created'
+        #         pObj.inStock = pObj.inStock + i['quantity']
+        #         pObj.save()
+        #         data = {'user':self.context['request'].user,'product':pObj,'typ':'system','before':i['quantity'],'internalInvoice':instance}
+        #         InventoryLog.objects.create(**data)
+        # for idx3,i in enumerate(productList):
+        #     print 'new producttttttttttttttt and inventory created'
+        #     pObj = Product.objects.get(pk=i['data']['pk'])
+        #     pObj.inStock = pObj.inStock - i['quantity']
+        #     pObj.save()
+        #     data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':instance}
+        #     InventoryLog.objects.create(**data)
 
 
         for key in ['serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate']:

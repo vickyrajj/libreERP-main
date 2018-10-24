@@ -54,6 +54,12 @@
     <link rel="stylesheet" href="{% static 'css/angular-aside.min.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/ng-tags-input.min.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/anim-in-out.css' %}" charset="utf-8">
+
+
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" charset="utf-8">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.css' %}" charset="utf-8">
+
+
     <!-- custom css -->
     <link rel="stylesheet" href="{% static 'css/custom/base.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/app.ecommerce.css' %}" charset="utf-8">
@@ -74,11 +80,11 @@
 
 
 
-      <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer"  ng-click="checkout()" ng-if="inCart.length>0 && !$state.is('checkout') && !$state.includes('account')">
+      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor)"  ng-click="checkout()" ng-if="inCart.length>0 && !$state.is('checkout') && !$state.includes('account')">
         <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.total.toFixed(2)}} )</h5>
       </div>
 
-      <div class="hidden-lg hidden-md bg-blue text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer"  ng-click="mainPage()" ng-if="addToCart.length>0&&!me.pk">
+      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor)"  ng-click="mainPage()" ng-if="addToCart.length>0&&!me.pk">
         <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.totalVal.toFixed(2)}})</h5>
       </div>
 
@@ -127,7 +133,7 @@
             </div>
           </div>
 
-          <div class="text-center bg-blue" style="padding:20px;cursor:pointer;" ng-click="checkout()">
+          <div class="text-center" style="padding:20px;cursor:pointer;background-color:var(--themeColor);color:white" ng-click="checkout()">
             Checkout ( <i class="fa fa-inr" ></i> {{data.total.toFixed(2)}} )
           </div>
         </div>
@@ -177,7 +183,7 @@
 
           </div>
 
-          <div class="text-center bg-blue" style="padding:20px;cursor:pointer;" ng-click="mainPage()">
+          <div class="text-center" style="padding:20px;cursor:pointer;background-color:var(--themeColor);color:white" ng-click="mainPage()">
             Checkout ( <i class="fa fa-inr" ></i> {{data.totalVal.toFixed(2)}} )
           </div>
         </div>
@@ -233,6 +239,11 @@
     <script src="{% static 'js/custom/directive.table.js' %}"></script>
     <script src="{% static 'js/custom/directives.native.js' %}"></script>
     <script src="{% static 'js/custom/filters.js' %}"></script>
+
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/angular-owl-carousel-2.js' %}"></script>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-meta/1.0.3/ngMeta.min.js"></script>
 
   </body>

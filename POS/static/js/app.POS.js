@@ -12,7 +12,10 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller("controller.POS.invoice.form", function($scope, invoice, $http, Flash, $rootScope) {
+app.controller("controller.POS.invoice.form", function($scope, invoice, $http, Flash, $rootScope, $filter) {
+
+
+  console.log(invoice,'invoiceinvoiceinvoiceinvoiceinvoice');
 
   if (invoice.pk != undefined) {
     $scope.mode = 'edit';
@@ -89,24 +92,36 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
 
   $scope.subTotal = function() {
     var subTotal = 0;
-    angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != null && item.data.productMeta != undefined) {
-        subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
-      } else {
-        subTotal += (item.quantity * item.data.price);
+    var item;
+    for (var i = 0; i < $scope.form.products.length; i++) {
+      if ($scope.form.products[i].data!="" && $scope.form.products[i].data.product!=undefined) {
+        item = $scope.form.products[i]
+        var taxRate = item.data.product.productMeta!= null && item.data.product.productMeta!= undefined? item.data.product.productMeta.taxRate : 0;
+        if (item.data.productVariant!=null) {
+          subTotal += item.quantity * (item.data.productVariant.price + (taxRate * item.data.productVariant.price / 100))
+        }else {
+          subTotal += item.quantity * (item.data.product.price + (taxRate * item.data.product.price / 100))
+        }
       }
-    })
+    }
     $scope.posSubtotal = Math.round(subTotal)
     return $scope.posSubtotal.toFixed(2);
   }
   $scope.subTotalTax = function() {
     var subTotalTax = 0;
-    angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != null && item.data.productMeta != undefined) {
-        subTotalTax += item.quantity * (item.data.productMeta.taxRate * item.data.price / 100);
-      }
-    })
+    var item;
+    for (var i = 0; i < $scope.form.products.length; i++) {
+      item = $scope.form.products[i]
+      if ($scope.form.products[i].data!="" && $scope.form.products[i].data.product!=undefined ) {
+        var taxRate = item.data.product.productMeta != null && item.data.product.productMeta != undefined ? item.data.product.productMeta.taxRate : 0;
 
+        if (item.data.productVariant!=null) {
+          subTotalTax += item.quantity * (taxRate * item.data.productVariant.price / 100)
+        }else {
+          subTotalTax += item.quantity * (taxRate * item.data.product.price / 100)
+        }
+      }
+    }
     return subTotalTax.toFixed(2);
   }
   // $scope.productSearch = function(query) {
@@ -116,20 +131,42 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
   //   })
   // }
   $scope.productSearch = function(query) {
-    console.log("called");
-    var url = '/api/POS/product/?search=' + query + '&limit=10'
-    if ($rootScope.multiStore) {
-      if ($rootScope.storepk > 0) {
-        url = url + '&storepk=' + $rootScope.storepk
+    if (query.length > 0) {
+
+      console.log("called1");
+      var url = '/api/POS/storeQty/?product__name__contains' + query + '&limit=10'
+      // var url = '/api/POS/product/?search=' + query + '&limit=10'
+      if ($rootScope.multiStore) {
+        console.log($rootScope.storepk);
+        if ($rootScope.storepk > 0) {
+          url = url + '&store=' + $rootScope.storepk
+        } else {
+          Flash.create('warning', 'Please Select Store First')
+          return
+        }
       } else {
-        Flash.create('warning', 'Please Select Store First')
-        return
+        url = url + '&master=true'
       }
+      return $http.get(url).
+      then(function(response) {
+        // console.log(response.data.results);
+        // return response.data.results;
+        var res;
+        for (var i = 0; i < response.data.results.length; i++) {
+          res = response.data.results[i]
+          console.log(res);
+          if (res.productVariant) {
+            // console.log(res.productVariant);
+            res.name = res.product.name + ' ' + $filter('convertUnit')(res.productVariant.unitPerpack * res.product.howMuch, res.product.unit)
+          } else {
+            res.name = res.product.name + ' ' + $filter('convertUnit')(res.product.howMuch, res.product.unit)
+          }
+        }
+
+        return response.data.results;
+      })
     }
-    return $http.get(url).
-    then(function(response) {
-      return response.data.results;
-    })
+
   }
   $scope.instockUpdate = function(url, inStockData) {
     $http({
@@ -208,6 +245,9 @@ app.controller("controller.POS.invoice.form", function($scope, invoice, $http, F
     then(function(response) {
       // $scope.form.pk = response.data.pk;
       Flash.create('success', 'Saved');
+    },function (err) {
+      console.log(err);
+      Flash.create('danger', err.data.detail);
     })
   }
 
@@ -1105,8 +1145,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       var url = '/api/POS/storeQty/?product__name__contains' + query + '&limit=10'
       // var url = '/api/POS/product/?search=' + query + '&limit=10'
       if ($rootScope.multiStore) {
+        console.log($rootScope.storepk);
         if ($rootScope.storepk > 0) {
-          url = url + '&storepk=' + $rootScope.storepk
+          url = url + '&store=' + $rootScope.storepk
         } else {
           Flash.create('warning', 'Please Select Store First')
           return
@@ -1119,9 +1160,9 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
         // console.log(response.data.results);
         // return response.data.results;
         var res;
-
         for (var i = 0; i < response.data.results.length; i++) {
           res = response.data.results[i]
+          console.log(res);
           if (res.productVariant) {
             // console.log(res.productVariant);
             res.name = res.product.name + ' ' + $filter('convertUnit')(res.productVariant.unitPerpack * res.product.howMuch, res.product.unit)
@@ -1350,31 +1391,36 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
   $scope.subTotal = function() {
     var subTotal = 0;
-    // console.log($scope.form.products);
-    angular.forEach($scope.form.products, function(item) {
-      // console.log('hhhhhhhhhhhhhhhhhhh');
-      // if (item.data.productMeta != null && item.data.productMeta != undefined) {
-      //   subTotal += (item.quantity * (item.data.productMeta.taxRate * item.data.price / 100 + item.data.price));
-      // } else {
-      //   subTotal += (item.quantity * item.data.price);
-      // }
-      if (item.data.productVariant!=null) {
-        subTotal += item.quantity * item.data.productVariant.discountedPrice
-      }else {
-        subTotal += item.quantity * item.data.product.price
+    var item;
+    for (var i = 0; i < $scope.form.products.length; i++) {
+      if ($scope.form.products[i].data!="" && $scope.form.products[i].data.product!=undefined) {
+        item = $scope.form.products[i]
+        var taxRate = item.data.product.productMeta!= null && item.data.product.productMeta!= undefined? item.data.product.productMeta.taxRate : 0;
+        if (item.data.productVariant!=null) {
+          subTotal += item.quantity * (item.data.productVariant.price + (taxRate * item.data.productVariant.price / 100))
+        }else {
+          subTotal += item.quantity * (item.data.product.price + (taxRate * item.data.product.price / 100))
+        }
       }
-    })
+    }
     $scope.posSubtotal = Math.round(subTotal)
     return $scope.posSubtotal.toFixed(2);
   }
   $scope.subTotalTax = function() {
     var subTotalTax = 0;
-    angular.forEach($scope.form.products, function(item) {
-      if (item.data.productMeta != null && item.data.productMeta != undefined) {
-        subTotalTax += item.quantity * (item.data.productMeta.taxRate * item.data.price / 100);
-      }
-    })
+    var item;
+    for (var i = 0; i < $scope.form.products.length; i++) {
+      item = $scope.form.products[i]
+      if ($scope.form.products[i].data!="" && $scope.form.products[i].data.product!=undefined ) {
+        var taxRate = item.data.product.productMeta != null && item.data.product.productMeta != undefined ? item.data.product.productMeta.taxRate : 0;
 
+        if (item.data.productVariant!=null) {
+          subTotalTax += item.quantity * (taxRate * item.data.productVariant.price / 100)
+        }else {
+          subTotalTax += item.quantity * (taxRate * item.data.product.price / 100)
+        }
+      }
+    }
     return subTotalTax.toFixed(2);
   }
 
@@ -2200,6 +2246,8 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       }
       toSend.connectedDevice = $scope.connectData.deviceID
     }
+
+    console.log(toSend);
 
     // for (var i = 0; i < f.products.length; i++) {
     //   console.log("products............................");
