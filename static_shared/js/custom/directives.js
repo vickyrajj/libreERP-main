@@ -327,9 +327,24 @@ app.directive('chatBox', function() {
     },
     controller: function($scope, $users, $uibModal, $http, ngAudio , Flash , $sce,webNotification) {
 
-      
+
+      setTimeout(function () {
+        if(document.getElementById("iframeChat")!=null)
+          $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
+      }, 1000);
+      $scope.captureImage=function(){
+        $scope.getFrameContent.postMessage('captureImage','http://192.168.1.109:1337');
+      }
 
 
+      window.addEventListener("message", receiveMessage, false);
+
+      function receiveMessage(event)
+      {
+        if (event.origin== "http://192.168.1.109:1337"){
+          console.log(event.data+' ******************');
+        }
+      }
 
       $scope.me = $users.get('mySelf');
       // console.log($scope.data,'will fetch here');

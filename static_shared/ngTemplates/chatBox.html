@@ -22,6 +22,7 @@
             <span ng-if="closed" style="font-size:18px;color:red">Chat Closed</span>
           </div>
         </div>
+        <button ng-click="captureImage()">click</button>
       </div>
       <div class="row" style="padding:10px;padding-bottom:0px">
         <div class="col-md-8" style="padding-right:0px;">
@@ -47,7 +48,7 @@
       <!-- <span style="position:absolute; right:7px; top:3px; background-color:black; padding:3px;"><i class="fa fa-times-circle"></i></span> -->
       <!-- {{data.video}}
       {{data.videoUrl}} -->
-      <iframe ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
+      <iframe id="iframeChat" ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
     </div>
     <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; {{data.video ? 'height:51vh;' : 'height:71vh;'}} overflow-y:auto; overflow-x:hidden;">
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
