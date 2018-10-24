@@ -329,7 +329,23 @@ app.directive('chatBox', function() {
 
 
 
+      setTimeout(function() {
+        if (document.getElementById("iframeChat") != null)
+          $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
+      }, 1000);
+      $scope.captureImage = function() {
+        $scope.getFrameContent.postMessage('captureImage', 'http://192.168.1.124:1337');
+      }
 
+
+      window.addEventListener("message", receiveMessage, false);
+
+      function receiveMessage(event) {
+        if (event.origin == "http://192.168.1.124:1337") {
+          console.log(event.data + ' ******************');
+          $scope.takeSnapshot(event.data)
+        }
+      }
 
       $scope.me = $users.get('mySelf');
       // console.log($scope.data,'will fetch here');
@@ -343,14 +359,15 @@ app.directive('chatBox', function() {
 
 
 
-      $scope.takeSnapshot = function() {
+      $scope.takeSnapshot = function(imageUrl) {
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.takeSnapshot.modal.html',
           size: 'lg',
           backdrop: true,
-          controller: function($scope, $users, $uibModalInstance, $timeout) {
+          controller: function($scope, $users, $uibModalInstance, $timeout, $rootScope) {
 
-            $scope.imageUrl;
+            $scope.imageUrl = imageUrl;
+            console.log($scope.imageUrl);
 
             $scope.bgCanvasImage = function() {
               $scope.canvas.setBackgroundImage($scope.imageUrl, $scope.canvas.renderAll.bind($scope.canvas), {
@@ -359,32 +376,277 @@ app.directive('chatBox', function() {
               });
             }
 
+            $scope.showCanvas = false;
+
 
             $timeout(function() {
               $scope.canvas = new fabric.Canvas('snapshotCanvas', {
                 selection: false
               });
 
+              $scope.showCanvas = true;
+
 
               var modalBody = document.getElementById('modalBody');
-              $scope.canvas.setWidth(modalBody.offsetWidth - 25);
+              $scope.canvas.setWidth(800);
               $scope.canvas.setHeight(500);
 
-              console.log($scope.canvas);
+              $rootScope.rectangles = [];
+              $rootScope.circles = [];
+              $rootScope.triangles = [];
+              $scope.textData;
+              $scope.data = {
+                "objects": []
+              };
 
+
+              $scope.isEraser = false;
+              $scope.size = 3;
+              $scope.eraserSize = 1;
               $scope.col = '#000000';
-              $scope.canvas.isDrawingMode = true;
+              $scope.mode = null;
+              // $scope.HeightCount = 0;
+
+              $scope.startx;
+              $scope.starty;
+              $scope.endx;
+              $scope.endy;
+
               fabric.Object.prototype.selectable = false;
 
+              $scope.SetPen = function() {
+                $scope.canvas.isDrawingMode = true;
+                $scope.canvas.freeDrawingBrush.color = $scope.col;
+                $scope.canvas.freeDrawingBrush.width = $scope.size;
+              }
+
+              $scope.SetPen();
+              $scope.mode = 'line'
 
               $scope.setColor = function(col) {
+                $scope.col = col;
                 $scope.canvas.freeDrawingBrush.color = col;
               }
 
-              $scope.clear = function() {
+              $scope.canvas.on('path:created', function(options) {
+                //console.log(options.path.path);
+                $scope.temp = {
+                  timestamp: new Date().getTime(),
+                  type: options.path.type,
+                  originX: options.path.originX,
+                  originY: options.path.originY,
+                  left: options.path.left,
+                  top: options.path.top,
+                  fill: options.path.fill,
+                  strokeLineCap: options.path.strokeLineCap,
+                  stroke: options.path.stroke,
+                  strokeWidth: options.path.strokeWidth,
+                  pathOffset: options.path.pathOffset,
+                  path: options.path.path,
+                  lockMovementX: true,
+                  lockMovementY: true,
+                  hasControls: false,
+                  hasBorders: false,
+                  selectable: false,
+                  hoverCursor: 'default',
+                  objectCaching: false
+                };
+
+                //push path into $scope.data
+                $scope.data['objects'].push($scope.temp);
+                //console.log(options.path);
+                // $scope.data['objects'].push(options.path);
+              });
+
+              $scope.canvas.on('object:moving', function(options) {
+                if (options.target.type == "image") {
+                  for (var i = 0; i < $scope.data.objects.length; i++) {
+                    if ($scope.data.objects[i].timestamp == options.target.timestamp) {
+                      $scope.data.objects[i].top = options.target.top;
+                      $scope.data.objects[i].left = options.target.left;
+                    }
+                  }
+                } else {
+                  console.log("ffffffffffff");
+                }
+              })
+
+              // $scope.canvas.on('selection:cleared', function()
+              //   {
+              //      $scope.canvas.off('object:moving');
+              //    });
+
+              $scope.canvas.on('mouse:down', function(options) {
+                $scope.pointer = $scope.canvas.getPointer(options.e);
+                $scope.startx = $scope.pointer.x;
+                $scope.starty = $scope.pointer.y;
+
+                console.log($scope.mode);
+
+                if ($scope.mode == "text") {
+                  $scope.newText = new fabric.IText('', {
+                    fontWeight: 'normal',
+                    fontFamily: 'Times New Roman',
+                    fontSize: 20,
+                    objectCaching: false
+                  });
+                  $scope.canvas.add($scope.newText);
+                  $scope.canvas.centerObject($scope.newText);
+                  $scope.newText.set({
+                    left: $scope.startx,
+                    top: $scope.starty
+                  });
+                  $scope.canvas.setActiveObject($scope.newText);
+                  $scope.newText.enterEditing();
+                  $scope.newText.selectAll();
+                }
+
+              });
+
+              $scope.canvas.on('mouse:move', function(options) {
+                $scope.pointer = $scope.canvas.getPointer(options.e);
+                $scope.endx = $scope.pointer.x;
+                $scope.endy = $scope.pointer.y;
+              });
+
+              $scope.canvas.on('mouse:up', function() {
+
+                if ($scope.mode == "text") {
+                  $scope.canvas.on('text:editing:exited', function(e) {
+                    console.log("text:" + e.target.text);
+
+                    $scope.temp = {
+                      timestamp: new Date().getTime(),
+                      type: $scope.newText.type,
+                      originX: $scope.newText.originX,
+                      originY: $scope.newText.originY,
+                      left: $scope.newText.left,
+                      top: $scope.newText.top,
+                      fill: $scope.newText.fill,
+                      strokeWidth: $scope.newText.strokeWidth,
+                      scaleX: $scope.newText.scaleX,
+                      scaleY: $scope.newText.scaleY,
+                      opacity: $scope.newText.opacity,
+                      visible: $scope.newText.visible,
+                      text: e.target.text,
+                      fontSize: $scope.newText.fontSize,
+                      fontWeight: $scope.newText.fontWeight,
+                      fontFamily: $scope.newText.fontFamily,
+                      fontStyle: $scope.newText.fontStyle,
+                      lineHeight: $scope.newText.lineHeight,
+                      textDecoration: $scope.newText.textDecoration,
+                      textAlign: $scope.newText.textAlign,
+                      lockMovementX: true,
+                      lockMovementY: true,
+                      hasControls: false,
+                      hasBorders: false,
+                      selectable: false,
+                      hoverCursor: 'default'
+                    }
+                    //$scope.canvas.clear();
+                    // $scope.data['objects'].push($scope.newText);
+                    $scope.data['objects'].push($scope.temp);
+                    redraw();
+                    $scope.canvas.off('text:editing:exited');
+                  });
+
+                  //redraw();
+
+                  fabric.Object.prototype.selectable = true;
+                  $scope.canvas.isDrawingMode = false;
+                  $scope.canvas.selection = true;
+                  return false;
+                }
+
+                if ($scope.endy - $scope.starty < 0) {
+                  // if drag towards top
+                  var tempy = $scope.starty;
+                  $scope.starty = $scope.endy;
+                  $scope.endy = tempy;
+                }
+
+                if ($scope.endx - $scope.startx < 0) {
+                  //  if drag towards left
+                  var tempx = $scope.startx;
+                  $scope.startx = $scope.endx;
+                  $scope.endx = tempx;
+                }
+
+                if ($scope.mode == "rect") {
+                  $scope.temp = {
+                    timestamp: new Date().getTime(),
+                    type: $scope.mode,
+                    left: $scope.startx,
+                    top: $scope.starty,
+                    width: $scope.endx - $scope.startx,
+                    height: $scope.endy - $scope.starty,
+                    fill: '',
+                    stroke: $scope.col,
+                    strokeWidth: $scope.size,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasBorders: false,
+                    selectable: false,
+                    hoverCursor: 'default'
+                  };
+                  $scope.data['objects'].push($scope.temp);
+                } else if ($scope.mode == "circle") {
+                  $scope.temp = {
+                    type: $scope.mode,
+                    left: $scope.startx,
+                    top: $scope.starty,
+                    radius: ($scope.endx - $scope.startx) / 2,
+                    fill: '',
+                    stroke: $scope.col,
+                    strokeWidth: $scope.size,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasBorders: false,
+                    selectable: false,
+                    hoverCursor: 'default'
+                  };
+                  $scope.data['objects'].push($scope.temp);
+                } else if ($scope.mode == "triangle") {
+                  $scope.temp = {
+                    type: $scope.mode,
+                    left: $scope.startx,
+                    top: $scope.starty,
+                    originX: 'left',
+                    originY: 'top',
+                    width: $scope.endx - $scope.startx,
+                    height: $scope.endy - $scope.starty,
+                    fill: '',
+                    stroke: $scope.col,
+                    strokeWidth: $scope.size,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasBorders: false,
+                    selectable: false,
+                    hoverCursor: 'default'
+                  };
+                  $scope.data['objects'].push($scope.temp);
+                }
+
+                redraw();
+
+              });
+
+
+              redraw();
+
+              function redraw() {
+                $rootScope.dataString = JSON.stringify($scope.data);
+                console.log("In redraw");
                 $scope.canvas.clear();
-                $scope.bgCanvasImage();
+                //console.log("clear and load data");
+                $scope.canvas.loadFromJSON($scope.dataString, $scope.canvas.renderAll.bind($scope.canvas));
+                $scope.bgCanvasImage()
+
               }
+
 
 
             }, 1000);
@@ -427,6 +689,7 @@ app.directive('chatBox', function() {
         }).result.then(function() {}, function(data) {
 
           $scope.chatBox.fileToSend = data;
+          $scope.send();
         });
       }
 
