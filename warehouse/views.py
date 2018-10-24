@@ -1229,8 +1229,8 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         bamount = 0
         from reportlab.platypus.flowables import Image as GNAA
         story = []
-        logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'logo3.png')
-        im = GNAA(logo, width=200, height=80)
+        logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'logo4.png')
+        im = GNAA(logo, width=150, height=100)
         story.append(im)
 
         taxi = Paragraph('<font size="18"> TAX INVOICE </font>' , compStyle)
@@ -1388,8 +1388,8 @@ class DownloadMonthlyInvoice(APIView):
         else:
             details = 'null'
         # print details[0]['productMeta']['description'],'dddddddddddd'
-        frm = datetime.datetime.strptime(request.GET["from"],'%Y-%m-%dT%H:%M:%S.%fZ' )
-        to =  datetime.datetime.strptime(request.GET["to"],'%Y-%m-%dT%H:%M:%S.%fZ' )
+        frm = datetime.datetime.strptime(request.GET["from"],'%Y-%m-%dT%H:%M:%S.%fZ')
+        to =  datetime.datetime.strptime(request.GET["to"],'%Y-%m-%dT%H:%M:%S.%fZ')
         frmDate = frm + timedelta(days=1)
         toDate = to + timedelta(days=1)
 
