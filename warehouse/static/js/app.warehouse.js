@@ -61,7 +61,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
 
         $http({
           method: 'GET',
-          url: '/api/warehouse/invoice/?createdval='+ newValue.toJSON() 
+          url: '/api/warehouse/invoice/?createdval='+ newValue.toJSON()
         }).
         then(function(response) {
           $scope.invoice = response.data
@@ -186,7 +186,9 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           $scope.tot = $scope.cost + $scope.total
           $scope.tax = ($scope.tot * $scope.taxtot) / 100
           $scope.grandtot = $scope.tot + $scope.tax
+          console.log($scope.grandtot,'aaaaaaaaaaaaaaaaaaaaaa');
           $scope.grandtot = Math.round($scope.grandtot)
+          console.log($scope.grandtot,'aaaaaaaaaaaaaaaaaaaaaa');
           var dataToSend = {
             contract: $scope.contract.pk,
             data: JSON.stringify($scope.dataDetails),
@@ -224,7 +226,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
 
         $scope.price = $scope.invoiceData[i].rate
         $scope.sqrt = $scope.invoiceData[i].areas.areaLength * $scope.invoiceData[i].quantity
-        $scope.cost = $scope.invoiceData[i].rate * $scope.sqrt * 3
+        $scope.cost = $scope.invoiceData[i].rate * $scope.sqrt * 30
         if ($scope.invoiceData[i].company.gst.slice(0, 2) == '29') {
           $scope.gst = 9
           $scope.cgst = 9
@@ -238,7 +240,9 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         }
         $scope.tax = ($scope.cost * $scope.taxtot) / 100
         $scope.grandtot = $scope.cost + $scope.tax
+        console.log($scope.grandtot,'aaaaaaaaaaaaaaaaaaaaaa');
         $scope.grandtot = Math.round($scope.grandtot)
+        console.log($scope.grandtot,'aaaaaaaaaaaaaaaaaaaaaa');
       }
     }
     var dataToSend = {

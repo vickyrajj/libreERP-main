@@ -1378,6 +1378,12 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
 
 
 
+
+
+
+
+
+
 class DownloadMonthlyInvoice(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
@@ -1388,10 +1394,20 @@ class DownloadMonthlyInvoice(APIView):
         else:
             details = 'null'
         # print details[0]['productMeta']['description'],'dddddddddddd'
-        frm = datetime.datetime.strptime(request.GET["from"],'%Y-%m-%dT%H:%M:%S.%fZ')
-        to =  datetime.datetime.strptime(request.GET["to"],'%Y-%m-%dT%H:%M:%S.%fZ')
+        if request.GET["from"].startswith('"') and request.GET["from"].endswith('"'):
+            frmDate =eval(request.GET["from"])
+        else:
+            frmDate =request.GET["from"]
+
+        if request.GET["to"].startswith('"') and request.GET["to"].endswith('"'):
+            toDate = eval(request.GET["to"])
+        else:
+            toDate = request.GET["to"]
+        frm = datetime.datetime.strptime(frmDate,'%Y-%m-%dT%H:%M:%S.%fZ' )
+        to =  datetime.datetime.strptime(toDate,'%Y-%m-%dT%H:%M:%S.%fZ' )
         frmDate = frm + timedelta(days=1)
         toDate = to + timedelta(days=1)
+
 
         month =  toDate.month
         year =  toDate.year
