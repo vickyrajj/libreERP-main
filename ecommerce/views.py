@@ -272,14 +272,25 @@ class CategorySortListAPI(APIView):
     permission_classes = (permissions.AllowAny ,)
     def get(self , request , format = None):
         # toReturn = []
-        gpList = list(genericProduct.objects.filter(parent__isnull=True).values('name','pk').annotate(img=Concat(Value('/media/'),'visual')))
+        gpList = list(genericProduct.objects.filter(parent__isnull=True).values('name','pk','restricted').annotate(img=Concat(Value('/media/'),'visual')))
         print gpList
-        for i in gpList:
-            chilData = list(genericProduct.objects.filter(parent=i['pk']).values('name','pk').annotate(img=Concat(Value('/media/'),'visual')))
-            if len(chilData)>0:
-                i['child'] = chilData
+        user = request.user
+        for idx, val in enumerate(gpList):
+            if val['restricted']==True:
+                if user.is_staff==True:
+                    chilData = list(genericProduct.objects.filter(parent=val['pk']).values('name','pk').annotate(img=Concat(Value('/media/'),'visual')))
+                    if len(chilData)>0:
+                        val['child'] = chilData
+                    else:
+                        val['child'] = []
+                else:
+                    del gpList[idx]
             else:
-                i['child'] = []
+                chilData = list(genericProduct.objects.filter(parent=val['pk']).values('name','pk').annotate(img=Concat(Value('/media/'),'visual')))
+                if len(chilData)>0:
+                    val['child'] = chilData
+                else:
+                    val['child'] = []
 
         return Response(gpList, status = status.HTTP_200_OK)
 
@@ -318,7 +329,6 @@ class CreateOrderAPI(APIView):
             else:
                 prodVar = ProductVerient.objects.get(sku = i['prodSku'])
                 pp = prodVar.discountedPrice
-                print pp ,'pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp'
                 if pp > 0:
                     # a = pp - (pObj.product.discount*pp)/100
                     # print a ,type(a)
@@ -327,24 +337,54 @@ class CreateOrderAPI(APIView):
                     b=0
 
             totalAmount += b * i['qty']
-            print totalAmount , 'totalAmounttotalAmounttotalAmounttotalAmount'
-            print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
+            print pObj , '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+            # print totalAmount , 'totalAmounttotalAmounttotalAmounttotalAmount'
+            # print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
             oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b)),'prodSku':i['prodSku']})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:
                 print 'multistoreeeeeeeeeeeeeeeeee'
+                storeObj = Store.objects.get(pk=int(request.data['storepk']))
                 try:
-                    storeObj = Store.objects.get(pk=int(request.data['storepk']))
-                    storeQtyObj = obj.storeQty.get(store__id=storeObj.pk)
-                    storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
-                    storeQtyObj.save()
-                except:
-                    print 'No Storeeee And No Product Deduction'
+                    if i['prodSku']==obj.serialId:
+                        print 'parentttttt, multistoreeeeeeeeeeeeeeeeee',storeObj.name
+                        storeQtyObj = StoreQty.objects.get(store__id = storeObj.pk, product__id = obj.pk, productVariant__isnull = True)
+                        if i['qty']>storeQtyObj.quantity:
+                            print 'error raise exception'
+                        storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
+                        storeQtyObj.save()
+                    else:
+                        print 'childddddddddd, multistoreeeeeeeeeeeeeeeeee'
+                        prodVar = ProductVerient.objects.get(parent__id = obj.pk , sku = i['prodSku'])
+                        storeQtyObj = StoreQty.objects.get(store__id = storeObj.pk, product__id = obj.pk, productVariant__id = prodVar.pk)
+                        if i['qty']>storeQtyObj.quantity:
+                            print 'error raise exception'
+                        storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
+                        storeQtyObj.save()
+                except :
+                    print 'no deduction in qantity , item doesnt exist in storeQty'
+
             else:
-                print 'singlestoreeeeeeeeeeeeeeeeeee'
-                obj.inStock = obj.inStock - i['qty']
-                obj.save()
+                try:
+                    if i['prodSku']==obj.serialId:
+                        print 'parent , single store'
+                        storeQtyObj = StoreQty.objects.get(master = True , product__id = obj.pk, productVariant__isnull = True)
+                        if i['qty']>storeQtyObj.quantity:
+                            print 'error raise exception'
+                        storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
+                        storeQtyObj.save()
+                    else:
+                        print 'childddddddddd , single store'
+                        prodVar = ProductVerient.objects.get(parent__id = obj.pk , sku = i['prodSku'])
+                        storeQtyObj = StoreQty.objects.get(master = True, product__id = obj.pk, productVariant__id = prodVar.pk)
+                        if i['qty']>storeQtyObj.quantity:
+                            print 'error raise exception'
+                        storeQtyObj.quantity = storeQtyObj.quantity - i['qty']
+                        storeQtyObj.save()
+                except :
+                    print 'no deduction in qantity , item doesnt exist in storeQty'
+
         else:
             data = {
             'user':User.objects.get(pk=request.user.pk),
@@ -359,6 +399,12 @@ class CreateOrderAPI(APIView):
             'pincode' : str(request.data['address']['pincode']),
             'country' : str(request.data['address']['country']),
             'mobileNo' : str(request.data['address']['mobileNo']),
+            'billingLandMark' : str(request.data['billingAddress']['landMark']),
+            'billingStreet' : str(request.data['billingAddress']['street']),
+            'billingCity' : str(request.data['billingAddress']['city']),
+            'billingState' : str(request.data['billingAddress']['state']),
+            'billingPincode' : str(request.data['billingAddress']['pincode']),
+            'billingCountry' : str(request.data['billingAddress']['country']),
             }
             if len(str(request.data['promoCode'])) > 0:
                 data['promoCode'] = str(request.data['promoCode'])
@@ -1321,7 +1367,7 @@ def genInvoice(response, contract, request):
     %s<br/>
     </font>
     </para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo),styles['Normal'])
+    """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.mobileNo),styles['Normal'])
 
 
     summryParaSrc1 = Paragraph("""

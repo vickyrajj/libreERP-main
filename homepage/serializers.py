@@ -42,7 +42,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 u.email = d['email']
                 u.last_name = d['lastName']
                 u.set_password(d['password'])
-                u.is_active = True
+                if globalSettings.AUTO_ACTIVE_ON_REGISTER == False:
+                    u.is_active = False
+                else:
+                    u.is_active = True
+                # u.is_active = True
                 u.save()
                 print 'ddddddddddddddddd'
                 for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
