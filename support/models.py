@@ -62,6 +62,9 @@ class ReviewComment(models.Model):
     user = models.ForeignKey(User , related_name = 'reviewedUser' , null = True)
     message = models.CharField(max_length = 1000 , null = True)
     chatedDate = models.DateField(null=True)
+    timestamp= models.CharField(max_length = 50 , null = True )
+    visitor_capture=models.FileField(upload_to = getSupportChatAttachment , null = True,blank=True)
+    agent_capture=models.FileField(upload_to = getSupportChatAttachment , null = True,blank=True)
 
 CHATTHREAD_STATUS_CHOICES = (
     ('started' , 'started'),

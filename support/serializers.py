@@ -68,8 +68,9 @@ class VisitorSerializer(serializers.ModelSerializer):
 class ReviewCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewComment
-        fields = ( 'pk' , 'created' , 'uid', 'user' ,'chatedDate', 'message' )
+        fields = ( 'pk' , 'created' , 'uid', 'user' ,'chatedDate', 'message','timestamp','visitor_capture','agent_capture' )
     def create(self ,  validated_data):
+        print '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
         r = ReviewComment(**validated_data)
         u = self.context['request'].user
         r.user = u
@@ -77,8 +78,10 @@ class ReviewCommentSerializer(serializers.ModelSerializer):
         if len(pObj)>0:
             print pObj , u , 'yes perm exist$$$$$$$$'
             r.save()
+            print 'yyyyyyyyyyyyyyyyyyy'
             return r
         else:
+            print 'dddddddddd'
             raise PermissionDenied()
 
 class ChatThreadSerializer(serializers.ModelSerializer):

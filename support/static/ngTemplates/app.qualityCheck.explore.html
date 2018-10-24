@@ -25,7 +25,7 @@
         <div ng-if="video_chat.agent">
           <div class="col-md-6">
             <video id="vid_agent" style="width:100%" height="240">
-                <!-- <source src="/home/cioc/Desktop/libreERP-main/media_root/1234.webm" type="video/webm"> -->
+
                   <source ng-src="{{video_chat.visitor}}" type="video/webm">
 
             </video>
@@ -34,7 +34,6 @@
           <canvas id="canvas_agent" style="display:none"></canvas>
           <canvas id="canvas_visitor" style="display:none"></canvas>
           <video id="vid_visitor" class="col-md-6"height="240">
-              <!-- <source src="/home/cioc/Desktop/libreERP-main/media_root/1234.webm" type="video/webm"> -->
               <source ng-src="{{video_chat.agent}}" type="video/webm">
           </video>
         </div>
@@ -78,11 +77,10 @@
 <!-- ************************************** -->
 
       <hr>
-      <div class="row" ng-repeat="msg in msgData">
-
+      <div class="row col-sm-12" ng-repeat="msg in msgData">
 
         <!-- <h3>{{msg.message}}</h3> -->
-        <div class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+        <div class="container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
           <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;">
             <h4>{{msg.message}}</h4></p>
           <img ng-if="msg.attachmentType == 'image'" ng-src="{{msg.file}}" style="width:250px;">
@@ -104,6 +102,10 @@
         <div class="col-md-9">
           <div style="background-color:{{comment.user==msgData[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; border-radius:15px 50px 50px 15px; padding:10px 10px 10px 15px;word-break: break-all !important;">
             <p> {{comment.message}} </p>
+          </div>
+          <div ng-if="comment.agent_capture">
+            <img ng-src="{{comment.agent_capture}}" alt="">
+            <img ng-src="{{comment.visitor_capture}}" alt="">
           </div>
         </div>
         <div class="col-md-1" style="padding-right:0px">
