@@ -325,9 +325,9 @@ app.directive('chatBox', function() {
       index: '=',
       closeChat: '=',
     },
-    controller: function($scope, $users, $uibModal, $http, ngAudio , Flash , $sce,webNotification) {
+    controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
 
-      
+
 
 
 
@@ -339,6 +339,97 @@ app.directive('chatBox', function() {
       $scope.chatHistory = []
       console.log($scope.data);
       console.log('adsd', $scope.data);
+
+
+
+
+      $scope.takeSnapshot = function() {
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.takeSnapshot.modal.html',
+          size: 'lg',
+          backdrop: true,
+          controller: function($scope, $users, $uibModalInstance, $timeout) {
+
+            $scope.imageUrl;
+
+            $scope.bgCanvasImage = function() {
+              $scope.canvas.setBackgroundImage($scope.imageUrl, $scope.canvas.renderAll.bind($scope.canvas), {
+                backgroundImageOpacity: 0.5,
+                backgroundImageStretch: false
+              });
+            }
+
+
+            $timeout(function() {
+              $scope.canvas = new fabric.Canvas('snapshotCanvas', {
+                selection: false
+              });
+
+
+              var modalBody = document.getElementById('modalBody');
+              $scope.canvas.setWidth(modalBody.offsetWidth - 25);
+              $scope.canvas.setHeight(500);
+
+              console.log($scope.canvas);
+
+              $scope.col = '#000000';
+              $scope.canvas.isDrawingMode = true;
+              fabric.Object.prototype.selectable = false;
+
+
+              $scope.setColor = function(col) {
+                $scope.canvas.freeDrawingBrush.color = col;
+              }
+
+              $scope.clear = function() {
+                $scope.canvas.clear();
+                $scope.bgCanvasImage();
+              }
+
+
+            }, 1000);
+
+
+
+
+            $scope.sendImage = function() {
+
+              function dataURItoBlob(dataURI) {
+                // convert base64/URLEncoded data component to raw binary data held in a string
+                var byteString;
+                if (dataURI.split(',')[0].indexOf('base64') >= 0)
+                  byteString = atob(dataURI.split(',')[1]);
+                else
+                  byteString = unescape(dataURI.split(',')[1]);
+
+                // separate out the mime component
+                var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+                // write the bytes of the string to a typed array
+                var ia = new Uint8Array(byteString.length);
+                for (var i = 0; i < byteString.length; i++) {
+                  ia[i] = byteString.charCodeAt(i);
+                }
+
+                return new Blob([ia], {
+                  type: mimeString
+                });
+              }
+
+
+              var blob = dataURItoBlob($scope.canvas.toDataURL('png'));
+              $uibModalInstance.dismiss(blob)
+
+
+            }
+
+          },
+        }).result.then(function() {}, function(data) {
+
+          $scope.chatBox.fileToSend = data;
+        });
+      }
+
 
       if ($scope.data.email.length > 0) {
         $http({
@@ -446,7 +537,7 @@ app.directive('chatBox', function() {
         if ($scope.chatBox.messageToSend.length > 0) {
 
 
-          console.log('here ' , $scope.chatBox.messageToSend);
+          console.log('here ', $scope.chatBox.messageToSend);
 
 
           var youtubeLink = $scope.chatBox.messageToSend.includes("www.youtube.com/");
@@ -471,7 +562,7 @@ app.directive('chatBox', function() {
               user: $scope.me.pk,
               sentByAgent: true
             }
-            console.log('MMMMMMMMMMMMMMMMMMMMMMMMMM ' , dataToSend);
+            console.log('MMMMMMMMMMMMMMMMMMMMMMMMMM ', dataToSend);
 
           }
 
@@ -485,13 +576,13 @@ app.directive('chatBox', function() {
             $scope.data.messages.push(response.data)
 
 
-            console.log('publishing here... message' ,$scope.status, response.data, $scope.me.username );
+            console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
 
             connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me.username, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
-              console.log("Published" , $scope.data.uid);
+              console.log("Published", $scope.data.uid);
             });
 
             $scope.chatBox.messageToSend = ''
@@ -585,7 +676,7 @@ app.directive('chatBox', function() {
 
 
             $scope.text = ''
-            $scope.selectedContent =''
+            $scope.selectedContent = ''
 
             if (!window.x) {
               x = {};
@@ -596,10 +687,10 @@ app.directive('chatBox', function() {
               var t = '';
               if (window.getSelection) {
                 t = window.getSelection();
-                $scope.text =  window.getSelection().toString();
+                $scope.text = window.getSelection().toString();
               } else if (document.getSelection) {
                 t = document.getSelection();
-                text =  document.getSelection().toString();
+                text = document.getSelection().toString();
               } else if (document.selection) {
                 t = document.selection.createRange().text;
                 $scope.text = document.selection.createRange().htmlText
@@ -619,8 +710,8 @@ app.directive('chatBox', function() {
                 var selectedText = x.Selector.getSelected();
                 if (selectedText != '') {
                   $('ul.custom-menu').css({
-                    'left': pageX -170,
-                    'top': pageY -70
+                    'left': pageX - 170,
+                    'top': pageY - 70
                   }).fadeIn(200);
                 } else {
                   $('ul.custom-menu').fadeOut(200);
@@ -634,7 +725,7 @@ app.directive('chatBox', function() {
 
 
             $scope.$watch('text', function(newValue, oldValue) {
-              if (oldValue!='') {
+              if (oldValue != '') {
                 $scope.selectedContent = oldValue
               }
             });
@@ -642,8 +733,8 @@ app.directive('chatBox', function() {
 
 
 
-            $scope.sendSelectedContent = function () {
-              setTimeout(function () {
+            $scope.sendSelectedContent = function() {
+              setTimeout(function() {
                 console.log($scope.selectedContent);
                 $uibModalInstance.dismiss($scope.selectedContent)
               }, 500);
@@ -704,7 +795,7 @@ app.directive('chatBox', function() {
 
         }, function(data) {
 
-          if (data != 'backdrop click' && data !='') {
+          if (data != 'backdrop click' && data != '') {
             console.log(data);
             $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
             // $scope.send()
@@ -817,7 +908,7 @@ app.directive('chatBox', function() {
             connection.session.call('service.support.heartbeat.' + $scope.allAgents[i], []).
             then((function(i) {
               return function(res) {
-                console.log('online' , i);
+                console.log('online', i);
                 $scope.onlineAgents.push($scope.allAgents[i])
               }
             })(i), (function(i) {

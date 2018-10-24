@@ -1,0 +1,38 @@
+
+<div class="modal-header">
+  <div class="container-fluid">
+    <div class="row">
+      <h4>Draw</h4>
+    </div>
+  </div>
+
+</div>
+<div class="modal-body" id="modalBody">
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-6">
+          <div class="col-xs-2" style="padding-right:0px;" >
+            <div ng-click="setColor('blue')" style="background-color:blue; width:15px; height:15px; cursor:pointer;" ></div>
+          </div>
+          <div class="col-xs-2" style="padding-right:0px;" >
+            <div ng-click="setColor('green')" style="background-color:green; width:15px; height:15px; cursor:pointer;" ></div>
+          </div>
+          <div class="col-xs-2" style="padding-right:0px;" >
+            <div ng-click="setColor('red')" style="background-color:red; width:15px; height:15px; cursor:pointer;" ></div>
+          </div>
+          <div class="col-xs-2" style="padding-right:0px;" >
+            <div ng-click="setColor('orange')" style="background-color:orange; width:15px; height:15px; cursor:pointer;" ></div>
+          </div>
+          <div class="col-xs-2" style="padding-right:0px;" >
+            <div ng-click="setColor('black')" style="background-color:black; width:15px; height:15px; cursor:pointer;" ></div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:15px;">
+        <canvas id="snapshotCanvas"></canvas>
+      </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="sendImage()">Send</button>
+</div>

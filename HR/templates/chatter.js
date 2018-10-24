@@ -1035,12 +1035,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // exitBtn.style.display ="none"
   // var videoCallAccepted = false;
 
+  var webRtcAddress = 'http://192.168.1.124:1337/'
+
 
 
   videoCircle.addEventListener('click',function () {
      winCol = windowColor.split('#')[1]
-     urlforConferenceForAgent= 'http://192.168.1.109:1337/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
-     urlforConference =  'http://192.168.1.109:1337/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
+     urlforConferenceForAgent= webRtcAddress +uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
+     urlforConference =  webRtcAddress +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
     openVideoIframe(urlforConference , urlforConferenceForAgent,'video')
     openChat()
   })
@@ -1048,8 +1050,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   audioCircle.addEventListener('click',function () {
      winCol = windowColor.split('#')[1]
 
-     urlforConferenceForAgent= 'http://192.168.1.109:1337/'+uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
-     urlforConference =  'http://192.168.1.109:1337/'+uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
+     urlforConferenceForAgent= webRtcAddress +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
+     urlforConference =  webRtcAddress +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
     openVideoIframe(urlforConference , urlforConferenceForAgent , 'audio')
     openChat()
   })
@@ -1128,7 +1130,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // var typ = urlforConference.split('&')[1]
 
         // alert('open Video')
-        // window.open('http://192.168.1.124:1337/'+uid);
+        // window.open(webRtcAddress+uid);
         var body = document.getElementsByTagName("BODY")[0]
         var iframeDiv = document.createElement('div')
 
@@ -1887,7 +1889,7 @@ function endChat() {
 
   function receiveMessage(event)
   {
-    if (event.origin== "http://192.168.1.109:1337"){
+    if (event.origin== webRtcAddress){
 
       document.getElementById('iframeDiv').style.display="none"
       setTimeout(function () {
@@ -1907,7 +1909,7 @@ function endChat() {
   exitBtn.addEventListener("click", function() {
 
       if(getFrameContent!=undefined){
-        getFrameContent.postMessage('userleft','http://192.168.1.109:1337');
+        getFrameContent.postMessage('userleft',webRtcAddress );
       }
     if (threadExist==undefined) {
       return
