@@ -1906,7 +1906,9 @@ function endChat() {
 
       document.getElementById('iframeDiv').style.display="none"
       setTimeout(function () {
-        if (videoOpened){
+        if (videoOpened || audioOpened){
+          chatBox.style.borderRadius = "10px 10px 10px 10px"
+          headerChat.style.borderRadius = "10px 10px 0px 0px"
           document.getElementById('iframeDiv').style.display="block"
           var iframeDiv = document.getElementById('iframeDiv')
           var iFrame = document.getElementById('iFrame1')
