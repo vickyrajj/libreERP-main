@@ -1311,9 +1311,8 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     }
 
 
-    console.log($scope.selectedProdVar);
-
     $scope.$watch('selectedProdVar', function(newValue, oldValue) {
+
       if ($scope.selectedProdVar.qty != null) {
         $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
       }
@@ -1365,7 +1364,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
           console.log('child');
 
           for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
-            console.log($scope.details.variantsInStoreQty[i].productVariant , $scope.selectedProdVar.pk);
+            console.log($scope.details.variantsInStoreQty[i].productVariant , $scope.selectedProdVar);
             if ($scope.details.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk &&$scope.details.variantsInStoreQty[i].store==$scope.storePK) {
               $scope.selectedProdVar.inStock = $scope.details.variantsInStoreQty[i].quantity
               console.log('yes');
@@ -1377,6 +1376,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
           $scope.details.price = newValue.amnt
         }
+        console.log($scope.selectedProdVar.inStock,'ffffffffff');
       }
     })
 

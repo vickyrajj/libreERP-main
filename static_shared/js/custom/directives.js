@@ -766,7 +766,7 @@ app.directive('productCard', function() {
             console.log('child',newValue.sku);
 
             for (var i = 0; i < $scope.list.variantsInStoreQty.length; i++) {
-              console.log($scope.list.variantsInStoreQty[i].productVariant , $scope.selectedProdVar.pk);
+              console.log($scope.list.variantsInStoreQty[i].productVariant , $scope.selectedProdVar);
               if ($scope.list.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk && $scope.list.variantsInStoreQty[i].store==$scope.storePK) {
                 $scope.selectedProdVar.inStock = $scope.list.variantsInStoreQty[i].quantity
                 console.log('yes');
