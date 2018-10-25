@@ -4,7 +4,7 @@
 
     <div class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData">
       <!-- {{data[0].numOfComments}} {{data[0].statusChat}} -->
-      <div class="container-fluid card" style="padding-bottom:0px">
+      <div class="container-fluid card" style="padding-bottom:0px" ng-click="tableAction($index)">
         <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:170px; opacity:0.8;letter-spacing:0.6px">
           <div class="col-md-12">
             <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}

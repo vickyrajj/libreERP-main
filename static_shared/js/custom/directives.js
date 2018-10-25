@@ -332,8 +332,11 @@ app.directive('chatBox', function() {
       setTimeout(function() {
         if (document.getElementById("iframeChat") != null)
           $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
-      }, 1000);
+      }, 2000);
       $scope.captureImage = function() {
+        if ($scope.getFrameContent==undefined) {
+          $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
+        }
         $scope.getFrameContent.postMessage('captureImage', 'http://192.168.1.124:1337');
       }
 

@@ -50,7 +50,7 @@
       <!-- <span style="position:absolute; right:7px; top:3px; background-color:black; padding:3px;"><i class="fa fa-times-circle"></i></span> -->
       <!-- {{data.video}}
       {{data.videoUrl}} -->
-      <i style="position:relative; right:7px; top:3px;" ng-click="captureImage()" class="fa fa-camera" aria-hidden="true"></i>
+      <i style="position:absolute; right:7px; top:118px; color:#fff; cursor:pointer;" ng-click="captureImage()" class="fa fa-camera" aria-hidden="true"></i>
       <iframe id="iframeChat" ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
     </div>
     <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; {{data.video ? 'height:51vh;' : 'height:71vh;'}} overflow-y:auto; overflow-x:hidden;">

@@ -219,23 +219,38 @@ $scope.snap=function() {
         $scope.imgsrc_visitor =canvas_visitor.toDataURL();
         $scope.timeOfCapture=vid_agent.currentTime;
 
+        function dataURItoBlob(dataURI) {
+          var byteString = atob(dataURI.split(',')[1]);
+          var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+          var ab = new ArrayBuffer(byteString.length);
+          var ia = new Uint8Array(ab);
+          for (var i = 0; i < byteString.length; i++) {
+              ia[i] = byteString.charCodeAt(i);
+          }
+          var blob = new Blob([ab], {type: mimeString});
+          return blob;
+        }
+
+        $scope.smmmm=dataURItoBlob($scope.imgsrc_agent);
+        $scope.suuuu=dataURItoBlob($scope.imgsrc_visitor);
 
         $scope.onSend_Capture =function(){
             if ($scope.reviewForm.message.length == 0) {
               Flash.create('warning','Please Write Some Comment')
               return
             }
+            $scope.timeOfGeneration=new Date().toISOString();
             var fd = new FormData();
             fd.append('message', $scope.reviewForm.message);
             fd.append('uid', $scope.uidd);
             fd.append('timestamp', $scope.timeOfCapture);
-            fd.append('visitor_capture', $scope.imgsrc_visitor);
-            fd.append('agent_capture', $scope.imgsrc_agent);
-            console.log($scope.imgsrc_agent);
+            fd.append('visitor_capture', $scope.suuuu);
+            fd.append('agent_capture', $scope.smmmm);
+            fd.append('chatedDate', $scope.timeOfGeneration.split('T')[0]);
             console.log("Sending..");
-
-            var toSend={message:$scope.reviewForm.message,uid:$scope.uidd,timestamp:$scope.timeOfCapture,visitor_capture:$scope.imgsrc_visitor,agent_capture:$scope.imgsrc_agent}
+            // var toSend={message:$scope.reviewForm.message,uid:$scope.uidd,timestamp:$scope.timeOfCapture,visitor_capture:$scope.imgsrc_visitor,agent_capture:$scope.imgsrc_agent}
             SendingPostRequest(fd);
+            $uibModalInstance.dismiss()
           }
       },
       }).result.then(function() {
@@ -246,7 +261,7 @@ $scope.snap=function() {
 };
 
   function SendingPostRequest(toSend){
-    console.log("Posting....");
+    console.log("Posting....",toSend);
     $http({
       method: 'POST',
       url: '/api/support/reviewComment/',
@@ -257,10 +272,9 @@ $scope.snap=function() {
       }
     }).
     then(function(response) {
-      console.log(response.data,'dddddddddddd',typeof response.data);
       console.log(response.data);
       $scope.reviewCommentData.push(response.data)
-      $scope.reviewForm = {message:''}
+      $scope.reviewForm = {message:'',visitor_capture:'',visitor_capture:''}
     }, function(err) {
       console.log(err.data.detail);
       Flash.create('danger', err.data.detail);
@@ -274,8 +288,13 @@ $scope.snap=function() {
       Flash.create('warning','Please Write Some Comment')
       return
     }
-    var toSend = {message:$scope.reviewForm.message,uid:$scope.msgData[0].uid,chatedDate:$scope.msgData[0].created.split('T')[0]}
-    SendingPostRequest(toSend);
+
+    var fd1 = new FormData();
+    fd1.append('message', $scope.reviewForm.message);
+    fd1.append('uid', $scope.msgData[0].uid);
+    fd1.append('chatedDate', $scope.msgData[0].created.split('T')[0]);
+    console.log(fd1);
+    SendingPostRequest(fd1);
   }
 
 

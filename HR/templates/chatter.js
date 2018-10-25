@@ -1083,7 +1083,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             dataToPublish.push(false)
           }
 
-          var dataToSend = JSON.stringify({uid: uid , company: custID, typ: 'video'});
+          var dataToSend = JSON.stringify({uid: uid , company: custID, typ: ptanhi});
           var xhttp = new XMLHttpRequest();
            xhttp.onreadystatechange = function() {
              if (this.readyState == 4 && this.status == 201) {
@@ -1889,7 +1889,7 @@ function endChat() {
 
   function receiveMessage(event)
   {
-    if (event.origin== webRtcAddress){
+    if (event.origin== "http://192.168.1.124:1337"){
 
       document.getElementById('iframeDiv').style.display="none"
       setTimeout(function () {
@@ -1909,7 +1909,7 @@ function endChat() {
   exitBtn.addEventListener("click", function() {
 
       if(getFrameContent!=undefined){
-        getFrameContent.postMessage('userleft',webRtcAddress );
+        getFrameContent.postMessage('userleft','http://192.168.1.124:1337' );
       }
     if (threadExist==undefined) {
       return
