@@ -53,7 +53,11 @@
       <i style="position:absolute; right:7px; top:118px; color:#fff; cursor:pointer;" ng-click="captureImage()" class="fa fa-camera" aria-hidden="true"></i>
       <iframe id="iframeChat" ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
     </div>
-    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; {{data.video ? 'height:51vh;' : 'height:71vh;'}} overflow-y:auto; overflow-x:hidden;">
+    <div ng-if="data.audio" class="container-fluid" style="height:20vh; padding:0px;">
+      <iframe id="iframeChat" ng-src="{{data.audioUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
+    </div>
+
+    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; {{data.video || data.audio ? 'height:51vh;' : 'height:71vh;'}} overflow-y:auto; overflow-x:hidden;">
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
 
         <div class="row container-fluid">

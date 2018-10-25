@@ -129,6 +129,11 @@ var isfocused=true;
             scope.newUsers[i].video = true
             scope.newUsers[i].videoUrl = args[4]
             //this is for video call
+          }else if (args[1] == 'AC') {
+            scope.sound.play();
+            scope.newUsers[i].audio = true
+            scope.newUsers[i].audioUrl = args[4]
+            //this is for audio call
           }
 
 
@@ -144,6 +149,8 @@ var isfocused=true;
           }
           else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='VCS'){
             scope.onNotification(scope.myUsers[i].uid,"Video call!!!",i);
+          }else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='AC'){
+            scope.onNotification(scope.myUsers[i].uid,"Audio call!!!",i);
           }
           else if((!scope.myUsers[i].boxOpen||!isfocused) && args[1]=='MF'){
             scope.onNotification(scope.myUsers[i].uid,"Media File Receicved",i);
@@ -202,6 +209,11 @@ var isfocused=true;
             console.log('video call closed by visitor');
             // scope.myUsers[i].video = false
             //this is for video call closed
+          }else if (args[1] == 'AC') {
+            scope.sound.play();
+            scope.myUsers[i].audio = true
+            scope.myUsers[i].audioUrl = args[4]
+            //this is for audio call
           }
           console.log('scroll');
           setTimeout(function() {
@@ -269,6 +281,8 @@ var isfocused=true;
       }
       else if(args[1]=='VCS'){
           scope.onNotification(args[0],'Video Coming');
+      }else if(args[1]=='AC'){
+          scope.onNotification(args[0],'Audio Coming');
       }
 
       console.log(args,'hereeeeeeeeeeeeeeeeee');
@@ -355,6 +369,11 @@ var isfocused=true;
         scope.sound.play();
         detail.video = true;
         detail.videoUrl = args[6]
+        scope.newUsers.push(detail)
+      }else if (args[1] == 'AC') {
+        scope.sound.play();
+        detail.audio = true;
+        detail.audioUrl = args[6]
         scope.newUsers.push(detail)
       }
     }

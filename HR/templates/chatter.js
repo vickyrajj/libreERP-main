@@ -1035,7 +1035,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // exitBtn.style.display ="none"
   // var videoCallAccepted = false;
 
-  var webRtcAddress = 'http://192.168.1.124:1337/'
+  var webRtcAddress = 'http://192.168.0.10:1337/'
 
 
 
@@ -1073,8 +1073,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     videoOpened = true
 
+    if (ptanhi=='video') {
+      var callType = 'VCS'
+    }else if(ptanhi=='audio'){
+      var callType = 'AC'
+    }
+
         if (threadExist==undefined) {
-          dataToPublish = [uid, 'VCS', [] , custID]
+          dataToPublish = [uid, callType, [] , custID]
           details = getCookie("uidDetails");
           if (details != "") {
             console.log(details);
@@ -1106,7 +1112,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
            xhttp.send(dataToSend);
         }else {
 
-          dataToPublish = [uid, 'VCS', [] , custID, urlforConferenceForAgent]
+          dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
           if (isAgentOnline) {
             console.log('ONLINE' , agentPk);
             connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
@@ -1889,7 +1895,7 @@ function endChat() {
 
   function receiveMessage(event)
   {
-    if (event.origin== "http://192.168.1.124:1337"){
+    if (event.origin== "http://192.168.0.10:1337"){
 
       document.getElementById('iframeDiv').style.display="none"
       setTimeout(function () {
@@ -1909,7 +1915,7 @@ function endChat() {
   exitBtn.addEventListener("click", function() {
 
       if(getFrameContent!=undefined){
-        getFrameContent.postMessage('userleft','http://192.168.1.124:1337' );
+        getFrameContent.postMessage('userleft','http://192.168.0.10:1337' );
       }
     if (threadExist==undefined) {
       return
