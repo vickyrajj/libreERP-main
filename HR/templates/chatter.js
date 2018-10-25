@@ -1057,6 +1057,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   })
 
   var videoOpened = false
+  var audioOpened = false
   var getFrameContent;
 
   var openVideoIframe =   function(urlforConference , urlforConferenceForAgent, ptanhi){
@@ -1064,18 +1065,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
-    chatBox.style.borderRadius = "0px 10px 10px 0px"
-    headerChat.style.borderRadius = "0px 10px 0px 0px"
-
-    if (videoOpened) {
+    if (videoOpened || audioOpened) {
       return
     }
 
-    videoOpened = true
+
 
     if (ptanhi=='video') {
+      videoOpened = true
       var callType = 'VCS'
+      chatBox.style.borderRadius = "0px 10px 10px 0px"
+      headerChat.style.borderRadius = "0px 10px 0px 0px"
     }else if(ptanhi=='audio'){
+      audioOpened = true
       var callType = 'AC'
     }
 
@@ -1145,15 +1147,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         if (ptanhi=='audio') {
             iframeDiv.style.height = "5vh";
-            iframeDiv.style.width = "30%";
+            iframeDiv.style.width = "346px";
+            iframeDiv.style.bottom = "205px";
+            iframeDiv.style.right = "11px";
+            iframeDiv.style.zIndex = "99999999"
         }else {
             iframeDiv.style.height = "70vh";
             iframeDiv.style.width = "50%";
+            iframeDiv.style.bottom = "100px";
+            iframeDiv.style.right = "357px";
         }
 
         // iframeDiv.style.top = "25%";
-        iframeDiv.style.bottom = "100px";
-        iframeDiv.style.right = "357px";
+        // iframeDiv.style.bottom = "100px";
+        // iframeDiv.style.right = "357px";
 
         // iframeDiv.style.height = "70vh";
 
@@ -2731,17 +2738,17 @@ function endChat() {
   }
 
   closeSupport.addEventListener("click", function() {
-    chatBox.style.borderRadius = "10px 10px 10px 10px"
-    headerChat.style.borderRadius = "10px 10px 0px 0px"
 
-    // if (videoOpened) {
-    //   var iframeDiv = document.getElementById('iframeDiv')
-    //   var iFrame = document.getElementById('iFrame1')
-    //   iFrame.src = '';
-    //   iframeDiv.parentNode.removeChild(iframeDiv);
-    // }
-
+    if (videoOpened || audioOpened) {
+      chatBox.style.borderRadius = "10px 10px 10px 10px"
+      headerChat.style.borderRadius = "10px 10px 0px 0px"
+      var iframeDiv = document.getElementById('iframeDiv')
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      iframeDiv.parentNode.removeChild(iframeDiv);
+    }
     videoOpened = false
+    audioOpened = false
     //bottom close svg white color
     console.log('coming' , chatOpen);
     if (chatOpen) {
@@ -2764,6 +2771,16 @@ function endChat() {
 
 
   closeIcon.addEventListener("click", function() {
+    if (videoOpened || audioOpened) {
+      chatBox.style.borderRadius = "10px 10px 10px 10px"
+      headerChat.style.borderRadius = "10px 10px 0px 0px"
+      var iframeDiv = document.getElementById('iframeDiv')
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      iframeDiv.parentNode.removeChild(iframeDiv);
+    }
+    videoOpened = false
+    audioOpened = false
     //top close icon display only in smaller screen
     if (chatOpen) {
       chatOpen = !chatOpen
@@ -2822,6 +2839,11 @@ function endChat() {
         chatBox.style.right = "0px";
         chatBox.style.bottom = "0px";
         closeIconInit.style.display = "";
+        if (audioOpened) {
+          iframeDiv.style.width = "100%";
+          iframeDiv.style.bottom = "14%";
+          iframeDiv.style.right = "0px";
+        }
           if (chatOpen) {
             document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
             // chatCircle.style.display = "none";
@@ -2864,6 +2886,11 @@ function endChat() {
         chatBox.style.right = "0px";
         chatBox.style.bottom = "0px";
         closeIconInit.style.display = "";
+        if (audioOpened) {
+          iframeDiv.style.width = "100%";
+          iframeDiv.style.bottom = "14%";
+          iframeDiv.style.right = "0px";
+        }
           if (chatOpen) {
              document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
             // chatCircle.style.display = "none";
@@ -2903,6 +2930,11 @@ function endChat() {
           chatBox.style.right = "10px";
           chatBox.style.bottom = "100px";
           closeIconInit.style.display = "none";
+          if (audioOpened) {
+            iframeDiv.style.width = "346px";
+            iframeDiv.style.bottom = "205px";
+            iframeDiv.style.right = "11px";
+          }
           if (chatOpen) {
             // body.style.overflow = "hidden";
             // chatCircle.style.display = ""
@@ -2946,6 +2978,11 @@ function endChat() {
           chatBox.style.right = "10px";
           chatBox.style.bottom = "100px";
           closeIconInit.style.display = "none";
+          if (audioOpened) {
+            iframeDiv.style.width = "346px";
+            iframeDiv.style.bottom = "205px";
+            iframeDiv.style.right = "11px";
+          }
           if (chatOpen) {
             closeSupport.style.display = "";
             // chatCircle.style.display = ""

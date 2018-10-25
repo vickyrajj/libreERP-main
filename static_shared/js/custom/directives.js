@@ -340,6 +340,14 @@ app.directive('chatBox', function() {
         $scope.getFrameContent.postMessage('captureImage', 'http://192.168.0.10:1337');
       }
 
+      if ($scope.data.audio) {
+        $scope.msgDivHeight = 66
+      }else if ($scope.data.video) {
+        $scope.msgDivHeight = 51
+      }else {
+        $scope.msgDivHeight = 71
+      }
+
 
       window.addEventListener("message", receiveMessage, false);
 
