@@ -675,6 +675,7 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
     }
     $http({method : 'PATCH' , url : userData.url.replace('users' , 'usersAdminMode') , data : dataToSend }).
     then(function(response){
+      console.log(response.data,'gggggfffffffff');
        Flash.create('success', response.status + ' : ' + response.statusText);
     }, function(response){
        Flash.create('danger', response.status + ' : ' + response.statusText);

@@ -29,11 +29,11 @@ app.config(function($stateProvider){
     controller: 'controller.home.blog'
   })
 
-  .state('admin.files', {
-    url: "/files/:id?action",
-    templateUrl: '/static/ngTemplates/app.home.files.html',
-    controller: 'controller.home.files'
-  })
+  // .state('admin.files', {
+  //   url: "/files/:id?action",
+  //   templateUrl: '/static/ngTemplates/app.home.files.html',
+  //   controller: 'controller.home.files'
+  // })
 
 
   .state('admin.settings', {
