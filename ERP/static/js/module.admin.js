@@ -31,9 +31,16 @@ app.config(function($stateProvider){
 
   // .state('admin.files', {
   //   url: "/files/:id?action",
-  //   templateUrl: '/static/ngTemplates/app.home.files.html',
-  //   controller: 'controller.home.files'
+  //   templateUrl: '/static/ngTemplates/app.ERP.files.html',
+  //   controller: 'controller.ERP.files'
   // })
+
+
+  .state('admin.files', {
+    url: "/files/:id?action",
+    templateUrl: '/static/ngTemplates/app.home.files.html',
+    controller: 'controller.home.files'
+  })
 
 
   .state('admin.settings', {

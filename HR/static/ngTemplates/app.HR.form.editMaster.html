@@ -16,18 +16,26 @@
     <input type="password" class="form-control" ng-model="data.password" placeholder="Password" >
   </div>
 </div>
-
+  <div ng-controller="admin.manageUsers.mailAccount">
 <div class="col-md-6">
+  <div class="row">
+  <div class="col-md-2">
   <div class="form-group">
     <label >Active ?</label>
     <input type="checkbox" ng-model="data.is_active" >
   </div>
+</div>
+<div class="col-md-6">
+  <!-- <button class="btn btn-primary" ng-click = 'activate(data.pk)'>Activate</button> -->
+    <button type="button" class="btn btn-primary" ng-click="addActive()">Activate</button>
+</div>
+</div>
   <div class="form-group">
     <label >Staff ?</label>
     <input type="checkbox" ng-model="data.is_staff" >
   </div>
   <hr>
-  <div ng-controller="admin.manageUsers.mailAccount">
+
     <div class="form-group">
       <button type="button" class="btn btn-primary" ng-click="generateMailPasskey()">Generate Passkey</button>
     </div>

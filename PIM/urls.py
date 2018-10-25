@@ -22,4 +22,5 @@ router.register(r'chatMessageBetween' , chatMessageBetweenViewSet, base_name = '
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'imageFetch/$' , ImageFetchApi.as_view()),
 ]

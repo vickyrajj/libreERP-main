@@ -29,6 +29,11 @@ app.config(function($stateProvider ){
     templateUrl: '/static/ngTemplates/app.home.blog.html',
     controller: 'controller.home.blog'
   })
+  .state('home.files', {
+    url: "/files/:id?action",
+    templateUrl: '/static/ngTemplates/app.home.files.html',
+    controller: 'controller.home.files'
+  })
   .state('home.calendar', {
     url: "/calendar",
     templateUrl: '/static/ngTemplates/app.home.calendar.html',

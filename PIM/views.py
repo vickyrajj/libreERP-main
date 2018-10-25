@@ -5,6 +5,12 @@ from .serializers import *
 from API.permissions import *
 from models import *
 import json
+from rest_framework.views import APIView
+from django.conf import settings as globalSettings
+import os
+from rest_framework.response import Response
+import cv2
+import glob
 
 class settingsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, isOwner, )
@@ -148,3 +154,37 @@ class pageViewSet(viewsets.ModelViewSet):
     serializer_class = pageSerializer
     def get_queryset(self):
         return page.objects.filter(user = self.request.user ).order_by('-created')
+
+class ImageFetchApi(APIView):
+    permission_classes = (permissions.AllowAny ,)
+
+    def get(self, request , format = None):
+        img=''
+        images =[]
+        for img in glob.glob(os.path.join('static_shared','images' , '*')):
+            # n= cv2.imread(img)
+            print img
+            link = '/static/images/'
+            img_string = img.split('static_shared/images/')[1]
+            image = link+img_string
+            images.append(image)
+        return Response(images , status = status.HTTP_200_OK)
+        # 
+        # def get(self, request , format = None):
+        #     print self.request.GET,'aaaaaaaaaaaaaaa'
+        #     if request.GET['value'] == 'static':
+        #         img=''
+        #         images =[]
+        #         for img in glob.glob(os.path.join('static_shared','images' , '*')):
+        #             # n= cv2.imread(img)
+        #             print img
+        #             link = '/static/images/'
+        #             img_string = img.split('static_shared/images/')[1]
+        #             image = link+img_string
+        #             images.append(image)
+        #     else:
+        #         images =[]
+        #     return Response(images , status = status.HTTP_200_OK)
+    def post(self, request, format=None):
+
+        return Response(status = status.HTTP_200_OK)
