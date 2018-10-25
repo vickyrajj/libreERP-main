@@ -442,3 +442,43 @@ class OrgChartAPI(APIView):
         }
 
         return Response(toReturn )
+
+##----------Attendance api---
+import sys
+import time
+from zklib import zklib
+from datetime import *
+from zklib import zkconst
+from operator import itemgetter
+from performance.models import TimeSheet
+
+
+class FeatchAttendanceDataApi(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        zk = zklib.ZKLib("192.168.1.201", 4370)
+        ret = zk.connect()
+        attendance = zk.getAttendance()
+        for a in attendance:
+            u = User.objects.get(pk = a[0])
+            print a , a[2].date()
+
+            ts = TimeSheet.objects.filter(user = u , date = a[2].date())
+
+            if ts.count()==0:
+                timesheet= TimeSheet(user = u , date = a[2].date())
+                timesheet.save()
+            else:
+                timesheet= ts[0]
+
+            if timesheet.checkIn is None or int(a[2].strftime("%s"))*1000 < int(timesheet.checkIn.strftime("%s"))*1000 :
+                timesheet.checkIn = a[2]
+            if timesheet.checkOut is None or int(a[2].strftime("%s"))*1000   > int(timesheet.checkOut.strftime("%s"))*1000:
+                timesheet.checkOut= a[2]
+
+            timesheet.save()
+
+            # get the TimeSheet object for the date a[2]
+            # already exists else create
+
+        return Response(status=status.HTTP_200_OK)
