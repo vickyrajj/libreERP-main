@@ -25,6 +25,7 @@ from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
 import calendar
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 
 def documentView(request):
     docID = None
@@ -456,7 +457,7 @@ from performance.models import TimeSheet
 class FeatchAttendanceDataApi(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        zk = zklib.ZKLib("192.168.1.201", 4370)
+        zk = zklib.ZKLib("192.168.0.201", 4370)
         ret = zk.connect()
         attendance = zk.getAttendance()
         for a in attendance:
