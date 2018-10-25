@@ -15,7 +15,7 @@ $scope.imagesSearch=''
     //     value :'media'
     //   }
     // }
-    console.log(dataToSend,'adffffffffffffff');
+    // console.log(dataToSend,'adffffffffffffff');
   $http({
     method: 'GET',
     url: '/api/PIM/imageFetch/',
