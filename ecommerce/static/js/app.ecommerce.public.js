@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule', 'ngMeta']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule', 'ngMeta' , 'angular-owl-carousel-2']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider) {
 
@@ -1289,6 +1289,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       for (var i = 0; i < $scope.prod_var.length; i++) {
         str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' - Rs ' + $scope.prod_var[i].price
         $scope.prodVarList.push({
+          pk:$scope.prod_var[i].id,
           str: str,
           qty: $scope.prod_var[i].unitPerpack * $scope.details.product.howMuch,
           amnt: $scope.prod_var[i].price,
@@ -2763,6 +2764,37 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 
 app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash) {
+
+
+  $scope.$watch('slide.active' , function(newValue , oldValue) {
+    if (newValue == undefined) {
+      return;
+    }
+
+    $(".owl-carousel").trigger("to.owl.carousel", [newValue, 1])
+
+
+
+
+
+  })
+
+
+  var owlAPi;
+
+  $scope.properties = {
+      // autoHeight:true,
+      // animateIn: 'fadeIn',
+      lazyLoad: true,
+      items: 1,
+      loop : true,
+      autoplay : true,
+      autoplayTimeout : 3000
+  };
+
+
+
+
   console.log('logooooooooooooooooooooo',ICON_LOGO);
   $rootScope.ICON_LOGO = ICON_LOGO
   $scope.me = $users.get('mySelf')
@@ -2787,7 +2819,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       }
     }
   })
-$scope.maxCategories = false
+  $scope.maxCategories = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=maxCategories').
   then(function(response) {
     if (response.data[0] != null) {
@@ -3104,18 +3136,16 @@ $scope.maxCategories = false
   }
 
 
-
-
-  $interval(function() {
-    if ($scope.slide.active == undefined) {
-      $scope.slide.active = 0
-    }
-    if ($scope.slide.active == $scope.slide.lastbanner) {
-      $scope.slide.active = 0;
-    } else {
-      $scope.slide.active += 1;
-    }
-  }, 3000);
+  // $interval(function() {
+  //   if ($scope.slide.active == undefined) {
+  //     $scope.slide.active = 0
+  //   }
+  //   if ($scope.slide.active == $scope.slide.lastbanner) {
+  //     $scope.slide.active = 0;
+  //   } else {
+  //     $scope.slide.active += 1;
+  //   }
+  // }, 1000);
 
 
   $scope.changeSlideMobile = function(index) {
@@ -3936,21 +3966,21 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
   //   $scope.subSlideMobile.active = index;
   // }
 
-  $interval(function() {
-    if ($scope.subSlideMobile.active == undefined) {
-      $scope.subSlideMobile.active = 0
-    }
-    if ($scope.subSlideMobile.active == $scope.subSlideMobile.lastbanner) {
-      $scope.subSlideMobile.active = 0;
-    } else {
-      $scope.subSlideMobile.active += 1;
-    }
-    if ($scope.subSlideMobile.banners[$scope.subSlideMobile.active] != undefined) {
-      $scope.subSlideMobile.img = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].imagePortrait
-      // console.log($scope.subSlideMobile.img, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
-      $scope.subSlideMobile.title = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].title
-    }
-  }, 3000);
+  // $interval(function() {
+  //   if ($scope.subSlideMobile.active == undefined) {
+  //     $scope.subSlideMobile.active = 0
+  //   }
+  //   if ($scope.subSlideMobile.active == $scope.subSlideMobile.lastbanner) {
+  //     $scope.subSlideMobile.active = 0;
+  //   } else {
+  //     $scope.subSlideMobile.active += 1;
+  //   }
+  //   if ($scope.subSlideMobile.banners[$scope.subSlideMobile.active] != undefined) {
+  //     $scope.subSlideMobile.img = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].imagePortrait
+  //     // console.log($scope.subSlideMobile.img, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+  //     $scope.subSlideMobile.title = $scope.subSlideMobile.banners[$scope.subSlideMobile.active].title
+  //   }
+  // }, 3000);
 
 
   $scope.addToCart = function(inputPk) {

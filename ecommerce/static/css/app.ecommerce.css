@@ -5,7 +5,9 @@
 	color:white;
 }
 
-:root { --themeColor: green;}
+
+:root { --themeColor: #006b38;}
+
 
 
 .glassyButton{

@@ -68,7 +68,7 @@
   </div>
 
   <div class="col-md-1 text-left hidden-xs hidden-sm" ng-if="me.pk" style="padding:0px">
-    <span ng-click="openPinPopup()" style="cursor:pointer;font-size:17px;color:var(--themeColor);margin-right: -4px;" ng-if="pin!=0&&pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>
+    <span ng-click="openPinPopup()" style="cursor:pointer;font-size:17px;color:var(--themeColor);margin-right: -4px;" ng-if="pin!=0 && pin != '' " title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>
   </div>
 
   <div class="col-md-4 text-right hidden-xs hidden-sm" ng-if="!me.pk">
@@ -128,21 +128,9 @@
   </div>
 </div>
 
-<!-- <<<<<<< HEAD
-<div ng-if="$state.is('ecommerce') && bannerText" style="position:relative;height:70vh;padding-top:9.4vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
-  <img style="width:100%;cursor:pointer;height:57vh;background-attachment: fixed;background-position: center;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"
-  />
-======= -->
-
-
   <hr style="margin:0px;border: solid 2px #DCDCDC;">
-<div ng-if="$state.is('ecommerce') && bannerText&&bannerImage" style="position:relative;height:70vh;padding-top:9.4vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
+<div ng-if="$state.is('ecommerce') && bannerText && bannerImage" style="position:relative;height:70vh;padding-top:9.4vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
   <img style="width:100%;cursor:pointer;height:57vh;background-attachment: fixed;background-position: center;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
-<!-- >>>>>>> 5914b6605e8b12ecc3274b667ed7849afaba6917 -->
-
-  <!-- <div class="anim-in-out anim-zoom-out" style="padding-right:0px;padding-left:0px;margin-bottom:20px;border-bottom: solid 4px #eeeeee;overflow:hidden;height:40vh;background: url('{{b.image}}') no-repeat center center;background-size: cover;">
-  </div> -->
-
 
 
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:5vh;margin:0px;">
@@ -157,47 +145,36 @@
   </div>
 </div>
 
-<div ng-if="$state.is('ecommerce')&& !bannerText &&bannerImage" style="position:relative;height:70vh;;width:100%;padding-top:9.4vh;display:border-box;overflow:hidden;background-size:cover;" class="hidden-xs hidden-sm ">
+<div ng-if="$state.is('ecommerce')&& !bannerText && bannerImage" style="position:relative;height:70vh;;width:100%;padding-top:9.4vh;display:border-box;overflow:hidden;background-size:cover;" class="hidden-xs hidden-sm ">
 
-  <!-- <img style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;position:absolute;z-index:none;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/><br/> -->
-
-
-  <div style="padding-right:0px;padding-left:0px;overflow:hidden;height:60vh;background: url('{{b.image}}') no-repeat center center;background-size: cover;" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})" ng-repeat="b in slide.banners"
-    ng-if="$index == slide.active">
-  </div>
+  <!-- <div style="padding-right:0px;padding-left:0px;overflow:hidden;height:60vh;background: url('{{b.image}}') no-repeat center center;background-size: cover;" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})" ng-repeat="b in slide.banners"
+    ng-if="$index == slide.active" >
+  </div> -->
 
 
-  <div class="col-md-12" style="padding-left:0px;position:absolute;top:25vh;">
+  <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
+
+
+      <img class="owl-lazy" style="width:100%;" data-ng-repeat="b in slide.banners" data-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
+
+
+  </ng-owl-carousel>
+
+
+  <div class="col-md-12" style="padding-left:0px;position:absolute;top:25vh;z-index:9;">
     <button class="previous round text-center" style="background-color:white;color:#808080;position:absolute;font-size:50px;width:60px;border:0px white; box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px;border-radius:0px 30px 30px 0px;" ng-click="change('previous')">&#8249; </button>
     <button class="next round text-center" style="background-color: white ;color: #808080;position:absolute;right: 0;font-size:50px;padding-right:10px;border:0px white;box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px;width:60px;border-radius:30px 0px 0px 30px"
       ng-click="change('next')">&#8250;
       </button>
   </div>
 
-  <!-- <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:4vh;margin:0px;">
-    <ul style="padding:0px;">
-      <li ng-click="changeSlide($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:{{100/slide.banners.length}}%;height:60px;cursor:pointer;" ng-repeat="s in slide.banners track by $index" class="text-center {{($index == slide.active || onHover) ? 'activeSlideTab' : ''}}">
-        <span style="color:{{($index == slide.active || onHover) ? '#3c3c3c' : 'white'}};position:relative;top:-15px;margin-right: 105px;">
-          {{s.title | uppercase}}
-        </span>
-      </li>
-    </ul>
-  </div> -->
 </div>
 
 
-<!-- <<<<<<< HEAD
-<div ng-if="$state.is('ecommerce')&& bannerText" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
-  <img class="anim-in-out" data-anim-speed="100" style="height:100%;cursor:pointer;" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"
-  />
-======= -->
-<div ng-if="$state.is('ecommerce')&& bannerText&&bannerImage" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+
+
+<div ng-if="$state.is('ecommerce')&& bannerText && bannerImage" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
   <img class="anim-in-out" data-anim-speed="100" style="height:100%;cursor:pointer;" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
-<!-- >>>>>>> 5914b6605e8b12ecc3274b667ed7849afaba6917 -->
-
-  <!-- <div ng-if="$state.is('ecommerce')" style="position:relative;height:88vh ;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
-  <img class="anim-in-out anim-fade" data-anim-speed="100" ng-click="$state.go(slideMobile.banners[slideMobile.active].state , slideMobile.banners[slideMobile.active].params)" style="width:100%;" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}"/> -->
-
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:6vh;margin:0px;">
     <ul style="padding:0px;">
       <li ng-click="changeSlideMobile($index)" ng-init="onHover = False;" ng-mouseenter="onHover = true;" ng-mouseleave="onHover = false;" style="display:inline-block;min-width:{{100/slideMobile.banners.length}}%;height:80px;cursor:pointer;" ng-repeat="s in slideMobile.banners track by $index"
@@ -211,11 +188,14 @@
 </div>
 
 
-<div ng-if="$state.is('ecommerce')&& !bannerText&&bannerImage" style="position:relative;height:60vh;padding-top:65px;margin-bottom:10px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+<div ng-if="$state.is('ecommerce')&& !bannerText&&bannerImage" style="position:relative;padding-top:65px;height:51vh;margin-bottom:10px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
 
-  <img ng-repeat="b in slide.banners" style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;position:absolute;z-index:none;background: url('{{b.imagePortrait}}') no-repeat center center;background-size: cover;"
-    ng-if="$index == slide.active" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})" /><br/>
-  <div class="col-xs-12" style="padding-left:0px">
+  <!-- <img ng-repeat="b in slide.banners" style="width:100%;cursor:pointer;height:60vh;background-attachment: fixed;background-position: center;position:absolute;z-index:none;background: url('{{b.imagePortrait}}') no-repeat center center;background-size: cover;"
+    ng-if="$index == slide.active" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})" /><br/> -->
+      <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
+          <img class="owl-lazy" style="width:100%" data-ng-repeat="b in slide.banners" data-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
+      </ng-owl-carousel>
+  <!-- <div class="col-xs-12" style="padding-left:0px">
     <div class="col-xs-6 text-left" style="margin-left:0px;left:0px;padding-top:8%;padding-left:0px">
       <button href="#" class="previous round text-right" style="background-color:white;color: black;position:absolute;font-size:50px;padding-right:10px;border:0px white;height:100px; box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);border-radius:0px 30px 30px 0px;"
         ng-click="change('previous')">&#8249; </button>
@@ -225,69 +205,7 @@
       <button href="#" class="next round text-left" style="background-color: white;color: black;position:absolute;float: left;font-size:50px;padding-right:23px;padding-left:10px;border:0px white;box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px;width:60px;border-radius:30px 0px 0px 30px"
         ng-click="change('next')">&#8250;</button>
     </div>
-  </div>
+  </div> -->
 </div>
 <div ng-if="!bannerText && !bannerImage" style="position:relative;height:10vh;;width:100%;padding-top:1vh;display:border-box;overflow:hidden;background-size:cover;" >
 </div>
-
-
-
-<!-- <div ng-init="showFeedback=false;" class="bg-white card" style="position:fixed; top:35vh;right:{{!showFeedback ? '0' : '0'}}px;transition:right 0.1s linear;
-  width:350px;height:460px; z-index:10;border-left:solid 5px #136ab1;" ng-if="feddbackPannel">
-  <div style="position:absolute;right:290px;width:150px;height:32px;top:100px;background-color:#136ab1;cursor:pointer;
-    transform: rotate(-90deg);border-radius : 6px 6px 0px 0px; padding-right:20px;padding-left:20px;" ng-click="showFeedback = !showFeedback;">
-    <span style="font-size:18px;color:white;letter-spacing: 3px;">Feedback
-    </span>
-  </div>
-
-  <div class="container-fluid" style="margin:10px;">
-<div class="row">
-  <div class="col-md-12 col-sm-8">
-    <div class="row">
-      <div class="col-md-12 col-sm-12"  style="padding-left:0px">
-      <strong>Send us your feeback / message / complaint or query.</strong>
-    </div>
-  </div>
-    <div class="row" style="margin-top:20px;">
-        <div class="col-md-12 col-sm-12" style="padding-left:0px">
-      <div class="form-group">
-        <label> Email</label>
-        <input type="email" ng-model="feedback.email" class="form-control" placeholder="Enter your email address" >
-      </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 col-sm-12">
-      <div class="form-group">
-        <label> Mobile</label>
-        <input type="number" ng-model="feedback.mobile" class="form-control" placeholder="Enter your mobile number">
-      </div>
-    </div>
-  </div>
-  <div class="row">
-      <div class="col-md-12 col-sm-12">
-      <div class="form-group">
-        <label> Message</label>
-        <textarea rows="3" ng-model="feedback.message" class="form-control" placeholder="Enter your message/feedback"> </textarea>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-      <div class="col-md-12 col-sm-12">
-      <div style="position:absolute;">
-        <button type="button" class="btn btn-success" ng-click="sendFeedback()">
-          Send
-        </button>
-        <button type="button" class="btn btn-default" ng-click="close()">
-          Cancel
-        </button>
-      </div>
-    </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-</div>
- </div> -->

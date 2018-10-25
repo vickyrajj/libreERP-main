@@ -44,6 +44,36 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 u.set_password(d['password'])
                 if globalSettings.AUTO_ACTIVE_ON_REGISTER == False:
                     u.is_active = False
+                    adminData =  User.objects.get(pk=1)
+                    print adminData.email
+
+
+                    msgBody = ['Provide the user permission for new registered customer Name : <strong>%s</strong> with EmailID : <strong>%s</strong>' %(u.first_name , u.email) ]
+
+                    ctx = {
+                        'heading' : 'Welcome to Ecommerce',
+                        'recieverName' : 'Admin',
+                        'message': msgBody,
+                        'linkUrl': 'sterlingselect.com',
+                        'linkText' : 'View Online',
+                        'sendersAddress' : 'sterlingselect',
+                        'sendersPhone' : '841101',
+                        'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
+                        'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
+                        'twitterUrl' : 'twitter.com',
+                        'brandName' : globalSettings.BRAND_NAME,
+                    }
+
+                    email_body = get_template('app.homepage.permission.html').render(ctx)
+                    print email_body
+                    email_subject = 'Permission for the new user'
+                    sentEmail=[]
+                    sentEmail.append(str(adminData.email))
+                    # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                    msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                    msg.content_subtype = 'html'
+                    msg.send()
+
                 else:
                     u.is_active = True
                 # u.is_active = True

@@ -29,6 +29,13 @@ app.config(function($stateProvider){
     controller: 'controller.home.blog'
   })
 
+  .state('admin.files', {
+    url: "/files/:id?action",
+    templateUrl: '/static/ngTemplates/app.home.files.html',
+    controller: 'controller.home.files'
+  })
+
+
   .state('admin.settings', {
     url: "/settings",
     views: {
@@ -55,6 +62,8 @@ app.config(function($stateProvider){
     templateUrl: '/static/ngTemplates/app.ERP.settings.configure.html',
     controller: 'admin.settings.configure'
   })
+
+
 
 });
 
