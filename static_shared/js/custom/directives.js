@@ -337,14 +337,22 @@ app.directive('chatBox', function() {
         if ($scope.getFrameContent==undefined) {
           $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
         }
-        $scope.getFrameContent.postMessage('captureImage', 'http://192.168.1.124:1337');
+        $scope.getFrameContent.postMessage('captureImage', 'http://192.168.0.10:1337');
+      }
+
+      if ($scope.data.audio) {
+        $scope.msgDivHeight = 66
+      }else if ($scope.data.video) {
+        $scope.msgDivHeight = 51
+      }else {
+        $scope.msgDivHeight = 71
       }
 
 
       window.addEventListener("message", receiveMessage, false);
 
       function receiveMessage(event) {
-        if (event.origin == "http://192.168.1.124:1337") {
+        if (event.origin == "http://192.168.0.10:1337") {
           console.log(event.data + ' ******************');
           $scope.takeSnapshot(event.data)
         }
