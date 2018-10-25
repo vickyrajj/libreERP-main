@@ -231,8 +231,8 @@ $scope.snap=function() {
           return blob;
         }
 
-        $scope.smmmm=dataURItoBlob($scope.imgsrc_agent);
-        $scope.suuuu=dataURItoBlob($scope.imgsrc_visitor);
+        $scope.blob_of_agent_image=dataURItoBlob($scope.imgsrc_agent);
+        $scope.blob_of_visitor_image=dataURItoBlob($scope.imgsrc_visitor);
 
         $scope.onSend_Capture =function(){
             if ($scope.reviewForm.message.length == 0) {
@@ -244,8 +244,8 @@ $scope.snap=function() {
             fd.append('message', $scope.reviewForm.message);
             fd.append('uid', $scope.uidd);
             fd.append('timestamp', $scope.timeOfCapture);
-            fd.append('visitor_capture', $scope.suuuu);
-            fd.append('agent_capture', $scope.smmmm);
+            fd.append('visitor_capture', $scope.blob_of_visitor_image);
+            fd.append('agent_capture', $scope.blob_of_agent_image);
             fd.append('chatedDate', $scope.timeOfGeneration.split('T')[0]);
             console.log("Sending..");
             // var toSend={message:$scope.reviewForm.message,uid:$scope.uidd,timestamp:$scope.timeOfCapture,visitor_capture:$scope.imgsrc_visitor,agent_capture:$scope.imgsrc_agent}
