@@ -325,24 +325,28 @@ app.directive('chatBox', function() {
       index: '=',
       closeChat: '=',
     },
-    controller: function($scope, $users, $uibModal, $http, ngAudio , Flash , $sce,webNotification) {
+    controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
 
 
-      setTimeout(function () {
-        if(document.getElementById("iframeChat")!=null)
+
+      setTimeout(function() {
+        if (document.getElementById("iframeChat") != null)
           $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
-      }, 1000);
-      $scope.captureImage=function(){
-        $scope.getFrameContent.postMessage('captureImage','http://192.168.1.109:1337');
+      }, 2000);
+      $scope.captureImage = function() {
+        if ($scope.getFrameContent==undefined) {
+          $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
+        }
+        $scope.getFrameContent.postMessage('captureImage', 'http://192.168.1.124:1337');
       }
 
 
       window.addEventListener("message", receiveMessage, false);
 
-      function receiveMessage(event)
-      {
-        if (event.origin== "http://192.168.1.109:1337"){
-          console.log(event.data+' ******************');
+      function receiveMessage(event) {
+        if (event.origin == "http://192.168.1.124:1337") {
+          console.log(event.data + ' ******************');
+          $scope.takeSnapshot(event.data)
         }
       }
 
@@ -354,6 +358,344 @@ app.directive('chatBox', function() {
       $scope.chatHistory = []
       console.log($scope.data);
       console.log('adsd', $scope.data);
+
+
+
+
+      $scope.takeSnapshot = function(imageUrl) {
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.takeSnapshot.modal.html',
+          size: 'lg',
+          backdrop: true,
+          controller: function($scope, $users, $uibModalInstance, $timeout, $rootScope) {
+
+            $scope.imageUrl = imageUrl;
+            console.log($scope.imageUrl);
+
+            $scope.bgCanvasImage = function() {
+              $scope.canvas.setBackgroundImage($scope.imageUrl, $scope.canvas.renderAll.bind($scope.canvas), {
+                backgroundImageOpacity: 0.5,
+                backgroundImageStretch: false
+              });
+            }
+
+            $scope.showCanvas = false;
+
+
+            $timeout(function() {
+              $scope.canvas = new fabric.Canvas('snapshotCanvas', {
+                selection: false
+              });
+
+              $scope.showCanvas = true;
+
+
+              var modalBody = document.getElementById('modalBody');
+              $scope.canvas.setWidth(800);
+              $scope.canvas.setHeight(500);
+
+              $rootScope.rectangles = [];
+              $rootScope.circles = [];
+              $rootScope.triangles = [];
+              $scope.textData;
+              $scope.data = {
+                "objects": []
+              };
+
+
+              $scope.isEraser = false;
+              $scope.size = 3;
+              $scope.eraserSize = 1;
+              $scope.col = '#000000';
+              $scope.mode = null;
+              // $scope.HeightCount = 0;
+
+              $scope.startx;
+              $scope.starty;
+              $scope.endx;
+              $scope.endy;
+
+              fabric.Object.prototype.selectable = false;
+
+              $scope.SetPen = function() {
+                $scope.canvas.isDrawingMode = true;
+                $scope.canvas.freeDrawingBrush.color = $scope.col;
+                $scope.canvas.freeDrawingBrush.width = $scope.size;
+              }
+
+              $scope.SetPen();
+              $scope.mode = 'line'
+
+              $scope.setColor = function(col) {
+                $scope.col = col;
+                $scope.canvas.freeDrawingBrush.color = col;
+              }
+
+              $scope.canvas.on('path:created', function(options) {
+                //console.log(options.path.path);
+                $scope.temp = {
+                  timestamp: new Date().getTime(),
+                  type: options.path.type,
+                  originX: options.path.originX,
+                  originY: options.path.originY,
+                  left: options.path.left,
+                  top: options.path.top,
+                  fill: options.path.fill,
+                  strokeLineCap: options.path.strokeLineCap,
+                  stroke: options.path.stroke,
+                  strokeWidth: options.path.strokeWidth,
+                  pathOffset: options.path.pathOffset,
+                  path: options.path.path,
+                  lockMovementX: true,
+                  lockMovementY: true,
+                  hasControls: false,
+                  hasBorders: false,
+                  selectable: false,
+                  hoverCursor: 'default',
+                  objectCaching: false
+                };
+
+                //push path into $scope.data
+                $scope.data['objects'].push($scope.temp);
+                //console.log(options.path);
+                // $scope.data['objects'].push(options.path);
+              });
+
+              $scope.canvas.on('object:moving', function(options) {
+                if (options.target.type == "image") {
+                  for (var i = 0; i < $scope.data.objects.length; i++) {
+                    if ($scope.data.objects[i].timestamp == options.target.timestamp) {
+                      $scope.data.objects[i].top = options.target.top;
+                      $scope.data.objects[i].left = options.target.left;
+                    }
+                  }
+                } else {
+                  console.log("ffffffffffff");
+                }
+              })
+
+              // $scope.canvas.on('selection:cleared', function()
+              //   {
+              //      $scope.canvas.off('object:moving');
+              //    });
+
+              $scope.canvas.on('mouse:down', function(options) {
+                $scope.pointer = $scope.canvas.getPointer(options.e);
+                $scope.startx = $scope.pointer.x;
+                $scope.starty = $scope.pointer.y;
+
+                console.log($scope.mode);
+
+                if ($scope.mode == "text") {
+                  $scope.newText = new fabric.IText('', {
+                    fontWeight: 'normal',
+                    fontFamily: 'Times New Roman',
+                    fontSize: 20,
+                    objectCaching: false
+                  });
+                  $scope.canvas.add($scope.newText);
+                  $scope.canvas.centerObject($scope.newText);
+                  $scope.newText.set({
+                    left: $scope.startx,
+                    top: $scope.starty
+                  });
+                  $scope.canvas.setActiveObject($scope.newText);
+                  $scope.newText.enterEditing();
+                  $scope.newText.selectAll();
+                }
+
+              });
+
+              $scope.canvas.on('mouse:move', function(options) {
+                $scope.pointer = $scope.canvas.getPointer(options.e);
+                $scope.endx = $scope.pointer.x;
+                $scope.endy = $scope.pointer.y;
+              });
+
+              $scope.canvas.on('mouse:up', function() {
+
+                if ($scope.mode == "text") {
+                  $scope.canvas.on('text:editing:exited', function(e) {
+                    console.log("text:" + e.target.text);
+
+                    $scope.temp = {
+                      timestamp: new Date().getTime(),
+                      type: $scope.newText.type,
+                      originX: $scope.newText.originX,
+                      originY: $scope.newText.originY,
+                      left: $scope.newText.left,
+                      top: $scope.newText.top,
+                      fill: $scope.newText.fill,
+                      strokeWidth: $scope.newText.strokeWidth,
+                      scaleX: $scope.newText.scaleX,
+                      scaleY: $scope.newText.scaleY,
+                      opacity: $scope.newText.opacity,
+                      visible: $scope.newText.visible,
+                      text: e.target.text,
+                      fontSize: $scope.newText.fontSize,
+                      fontWeight: $scope.newText.fontWeight,
+                      fontFamily: $scope.newText.fontFamily,
+                      fontStyle: $scope.newText.fontStyle,
+                      lineHeight: $scope.newText.lineHeight,
+                      textDecoration: $scope.newText.textDecoration,
+                      textAlign: $scope.newText.textAlign,
+                      lockMovementX: true,
+                      lockMovementY: true,
+                      hasControls: false,
+                      hasBorders: false,
+                      selectable: false,
+                      hoverCursor: 'default'
+                    }
+                    //$scope.canvas.clear();
+                    // $scope.data['objects'].push($scope.newText);
+                    $scope.data['objects'].push($scope.temp);
+                    redraw();
+                    $scope.canvas.off('text:editing:exited');
+                  });
+
+                  //redraw();
+
+                  fabric.Object.prototype.selectable = true;
+                  $scope.canvas.isDrawingMode = false;
+                  $scope.canvas.selection = true;
+                  return false;
+                }
+
+                if ($scope.endy - $scope.starty < 0) {
+                  // if drag towards top
+                  var tempy = $scope.starty;
+                  $scope.starty = $scope.endy;
+                  $scope.endy = tempy;
+                }
+
+                if ($scope.endx - $scope.startx < 0) {
+                  //  if drag towards left
+                  var tempx = $scope.startx;
+                  $scope.startx = $scope.endx;
+                  $scope.endx = tempx;
+                }
+
+                if ($scope.mode == "rect") {
+                  $scope.temp = {
+                    timestamp: new Date().getTime(),
+                    type: $scope.mode,
+                    left: $scope.startx,
+                    top: $scope.starty,
+                    width: $scope.endx - $scope.startx,
+                    height: $scope.endy - $scope.starty,
+                    fill: '',
+                    stroke: $scope.col,
+                    strokeWidth: $scope.size,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasBorders: false,
+                    selectable: false,
+                    hoverCursor: 'default'
+                  };
+                  $scope.data['objects'].push($scope.temp);
+                } else if ($scope.mode == "circle") {
+                  $scope.temp = {
+                    type: $scope.mode,
+                    left: $scope.startx,
+                    top: $scope.starty,
+                    radius: ($scope.endx - $scope.startx) / 2,
+                    fill: '',
+                    stroke: $scope.col,
+                    strokeWidth: $scope.size,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasBorders: false,
+                    selectable: false,
+                    hoverCursor: 'default'
+                  };
+                  $scope.data['objects'].push($scope.temp);
+                } else if ($scope.mode == "triangle") {
+                  $scope.temp = {
+                    type: $scope.mode,
+                    left: $scope.startx,
+                    top: $scope.starty,
+                    originX: 'left',
+                    originY: 'top',
+                    width: $scope.endx - $scope.startx,
+                    height: $scope.endy - $scope.starty,
+                    fill: '',
+                    stroke: $scope.col,
+                    strokeWidth: $scope.size,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    hasControls: false,
+                    hasBorders: false,
+                    selectable: false,
+                    hoverCursor: 'default'
+                  };
+                  $scope.data['objects'].push($scope.temp);
+                }
+
+                redraw();
+
+              });
+
+
+              redraw();
+
+              function redraw() {
+                $rootScope.dataString = JSON.stringify($scope.data);
+                console.log("In redraw");
+                $scope.canvas.clear();
+                //console.log("clear and load data");
+                $scope.canvas.loadFromJSON($scope.dataString, $scope.canvas.renderAll.bind($scope.canvas));
+                $scope.bgCanvasImage()
+
+              }
+
+
+
+            }, 1000);
+
+
+
+
+            $scope.sendImage = function() {
+
+              function dataURItoBlob(dataURI) {
+                // convert base64/URLEncoded data component to raw binary data held in a string
+                var byteString;
+                if (dataURI.split(',')[0].indexOf('base64') >= 0)
+                  byteString = atob(dataURI.split(',')[1]);
+                else
+                  byteString = unescape(dataURI.split(',')[1]);
+
+                // separate out the mime component
+                var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+                // write the bytes of the string to a typed array
+                var ia = new Uint8Array(byteString.length);
+                for (var i = 0; i < byteString.length; i++) {
+                  ia[i] = byteString.charCodeAt(i);
+                }
+
+                return new Blob([ia], {
+                  type: mimeString
+                });
+              }
+
+
+              var blob = dataURItoBlob($scope.canvas.toDataURL('png'));
+              $uibModalInstance.dismiss(blob)
+
+
+            }
+
+          },
+        }).result.then(function() {}, function(data) {
+
+          $scope.chatBox.fileToSend = data;
+          $scope.send();
+        });
+      }
+
 
       if ($scope.data.email.length > 0) {
         $http({
@@ -461,7 +803,7 @@ app.directive('chatBox', function() {
         if ($scope.chatBox.messageToSend.length > 0) {
 
 
-          console.log('here ' , $scope.chatBox.messageToSend);
+          console.log('here ', $scope.chatBox.messageToSend);
 
 
           var youtubeLink = $scope.chatBox.messageToSend.includes("www.youtube.com/");
@@ -486,7 +828,7 @@ app.directive('chatBox', function() {
               user: $scope.me.pk,
               sentByAgent: true
             }
-            console.log('MMMMMMMMMMMMMMMMMMMMMMMMMM ' , dataToSend);
+            console.log('MMMMMMMMMMMMMMMMMMMMMMMMMM ', dataToSend);
 
           }
 
@@ -500,13 +842,13 @@ app.directive('chatBox', function() {
             $scope.data.messages.push(response.data)
 
 
-            console.log('publishing here... message' ,$scope.status, response.data, $scope.me.username );
+            console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
 
             connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me.username, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
-              console.log("Published" , $scope.data.uid);
+              console.log("Published", $scope.data.uid);
             });
 
             $scope.chatBox.messageToSend = ''
@@ -600,7 +942,7 @@ app.directive('chatBox', function() {
 
 
             $scope.text = ''
-            $scope.selectedContent =''
+            $scope.selectedContent = ''
 
             if (!window.x) {
               x = {};
@@ -611,10 +953,10 @@ app.directive('chatBox', function() {
               var t = '';
               if (window.getSelection) {
                 t = window.getSelection();
-                $scope.text =  window.getSelection().toString();
+                $scope.text = window.getSelection().toString();
               } else if (document.getSelection) {
                 t = document.getSelection();
-                text =  document.getSelection().toString();
+                text = document.getSelection().toString();
               } else if (document.selection) {
                 t = document.selection.createRange().text;
                 $scope.text = document.selection.createRange().htmlText
@@ -634,8 +976,8 @@ app.directive('chatBox', function() {
                 var selectedText = x.Selector.getSelected();
                 if (selectedText != '') {
                   $('ul.custom-menu').css({
-                    'left': pageX -170,
-                    'top': pageY -70
+                    'left': pageX - 170,
+                    'top': pageY - 70
                   }).fadeIn(200);
                 } else {
                   $('ul.custom-menu').fadeOut(200);
@@ -649,7 +991,7 @@ app.directive('chatBox', function() {
 
 
             $scope.$watch('text', function(newValue, oldValue) {
-              if (oldValue!='') {
+              if (oldValue != '') {
                 $scope.selectedContent = oldValue
               }
             });
@@ -657,8 +999,8 @@ app.directive('chatBox', function() {
 
 
 
-            $scope.sendSelectedContent = function () {
-              setTimeout(function () {
+            $scope.sendSelectedContent = function() {
+              setTimeout(function() {
                 console.log($scope.selectedContent);
                 $uibModalInstance.dismiss($scope.selectedContent)
               }, 500);
@@ -719,7 +1061,7 @@ app.directive('chatBox', function() {
 
         }, function(data) {
 
-          if (data != 'backdrop click' && data !='') {
+          if (data != 'backdrop click' && data != '') {
             console.log(data);
             $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
             // $scope.send()
@@ -832,7 +1174,7 @@ app.directive('chatBox', function() {
             connection.session.call('service.support.heartbeat.' + $scope.allAgents[i], []).
             then((function(i) {
               return function(res) {
-                console.log('online' , i);
+                console.log('online', i);
                 $scope.onlineAgents.push($scope.allAgents[i])
               }
             })(i), (function(i) {

@@ -1,0 +1,55 @@
+<div class="modal-header" style="background-color:#f8f8f8">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-1">
+        <span style="font-size:15px;">Draw</span>
+      </div>
+      <div class="col-xs-1">
+        <i ng-click="SetPen(); mode='line'" style="cursor:pointer;" class="fa fa-2x fa-pencil"></i>
+      </div>
+      <div class="col-xs-6">
+        <div class="col-xs-2" style="padding-right:0px;">
+          <div ng-click="setColor('blue')" style="background-color:blue; width:20px; height:20px; cursor:pointer;"></div>
+        </div>
+        <div class="col-xs-2" style="padding-right:0px;">
+          <div ng-click="setColor('green')" style="background-color:green; width:20px; height:20px; cursor:pointer;"></div>
+        </div>
+        <div class="col-xs-2" style="padding-right:0px;">
+          <div ng-click="setColor('red')" style="background-color:red; width:20px; height:20px; cursor:pointer;"></div>
+        </div>
+        <div class="col-xs-2" style="padding-right:0px;">
+          <div ng-click="setColor('orange')" style="background-color:orange; width:20px; height:20px; cursor:pointer;"></div>
+        </div>
+        <div class="col-xs-2" style="padding-right:0px;">
+          <div ng-click="setColor('black')" style="background-color:black; width:20px; height:20px; cursor:pointer;"></div>
+        </div>
+        <div class="col-xs-2" style="padding-right:0px;">
+          <div ng-click="setColor('white')" style="border:1px solid black; background-color:white; width:20px; height:20px; cursor:pointer;"></div>
+        </div>
+      </div>
+      <div class="col-xs-2">
+        <div class="dropdown">
+          <button type="button" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" ng-click="fabric.Object.prototype.selectable = false; canvas.isDrawingMode = false; canvas.selection = false;">
+            Shapes <i class="fa fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu">
+              <li><a ng-click="mode = 'rect'">Rectangle</a></li>
+              <li><a ng-click="mode = 'circle'">Circle</a></li>
+              <li><a ng-click="mode = 'triangle'">Triangle</a></li>
+            </ul>
+        </div>
+      </div>
+      <div class="col-xs-2">
+        <button type="button" class="btn btn-primary" ng-click="sendImage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="modal-body" id="modalBody">
+  <div class="container-fluid">
+    <div class="row" style="margin-top:15px;">
+      <canvas id="snapshotCanvas"></canvas>
+    </div>
+  </div>
+</div>
