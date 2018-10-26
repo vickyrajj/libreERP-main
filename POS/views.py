@@ -70,21 +70,15 @@ class StoreViewSet(viewsets.ModelViewSet):
                 toReturn = gt
             else:
                 if gt[0].pincode - val < val-lt[0].pincode:
-                    print 'greaterrrrrrrrrrrrr'
                     toReturn = gt.first()
                 elif val-lt[0].pincode < gt[0].pincode - val:
-                    print 'lessssssssssss'
                     toReturn = lt.first()
                 else:
-                    print 'equallllllllll'
                     toReturn = lt.first()
             try:
-                print toReturn.pk
                 toReturn = Store.objects.filter(pk=toReturn.pk)
             except:
-                print 'in excepttttttttttttttttt'
                 toReturn = toReturn
-            print toReturn
         return toReturn
 
 class StoreQtyViewSet(viewsets.ModelViewSet):

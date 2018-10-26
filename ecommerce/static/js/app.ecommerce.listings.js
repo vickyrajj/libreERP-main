@@ -298,7 +298,13 @@ app.controller('ecommerce.form.listing', function($scope, $state, $stateParams, 
       for (key in response.data) {
         $scope.data.form[key] = response.data[key];
       }
-      $scope.data.specifications = JSON.parse(response.data.specifications)
+      if(response.data.specifications){
+
+        $scope.data.specifications = JSON.parse(response.data.specifications)
+      }
+      else{
+        $scope.data.specifications = ''
+      }
       $http({
         method: 'GET',
         url: '/api/ecommerce/genericProduct/' + response.data.parentType + '/'

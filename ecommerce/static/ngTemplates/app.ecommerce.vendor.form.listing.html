@@ -2,33 +2,7 @@
   <div class="row">
     <div  class="col-md-6">
 
-      <!-- <div class="form-group">
-        <label>Title</label>
-        <input class="form-control" type="text" ng-model = "data.form.title" >
-      </div>
 
-      <div class="form-group">
-        <label>Description</label>
-        <textarea ng-model = "data.form.description" class="form-control"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Price Model</label>
-        <select class="form-control" ng-model = "data.form.priceModel">
-          <option value = "quantity">Quantity</option>
-          <option value = "weight">Weight</option>
-          <option value = "time">Time</option>
-          <option value = "custom">Custom</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Category</label>
-        <select class="form-control" ng-model = "data.form.category">
-          <option value = "product">Product</option>
-          <option value = "service">Service</option>
-        </select>
-      </div> -->
       <div class="form-group">
         <label>Product</label>
         <input uib-typeahead="p as p.name for p in productSearch($viewValue)" class="form-control" type="text" ng-model = "data.form.product" placeholder="Search By Product Name">

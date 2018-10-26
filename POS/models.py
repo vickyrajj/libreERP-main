@@ -76,6 +76,7 @@ class Product(models.Model):
     compositions = models.ManyToManyField("self" , related_name="parent" , blank = True)
     compositionQtyMap = models.CharField(max_length = 1000 , null = True, blank = True)
     discount = models.PositiveIntegerField(default = 0)
+    grossWeight = models.CharField(max_length = 50 , null = True)
     # storeQty = models.ManyToManyField(StoreQty , related_name="productStore" , blank = True)
     alias = models.CharField(max_length = 500 , null = True)
     howMuch = models.FloatField(null=True)

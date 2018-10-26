@@ -15,15 +15,8 @@
           <span ng-if="data.prodSku!=data.product.product.serialNo"  style="font-size:15px;padding-left:10px">
             <i class="fa fa-inr"></i>{{data.prodVarPrice.toFixed(2)}}
           </span>
-          <!-- <span style="font-size:15px;" > Price :  <i class="fa fa-inr"></i>{{data.product.product.price}}</span> -->
-          <!-- <span  style="font-size:15px;">
-           <i class="fa fa-inr"></i>{{data.product.product.price}}
-          </span> -->
         </div>
         <hr style="margin:0px;">
-        <!-- <div class="row container-fluid text-center" style="background-color:#2980B9; color:white; margin:0px; padding:10px;">
-          <span style="cursor:pointer" ng-click="rowActionClicked('unfavourite')"> Add to cart</span>
-        </div> -->
         <div class="row container-fluid" style="background-color:#2980B9; color:white; margin:0px; padding:10px;" >
           <div class="col-md-6 col-sm-6 col-xs-6 text-center">
             <i class="fa {{data.typ=='favourite'? 'fa-shopping-cart':'fa-heart'}} fa-2x" style="cursor:pointer;" ng-click="rowActionClicked(data.typ=='cart'? 'favourite':'unfavourite')" ></i>

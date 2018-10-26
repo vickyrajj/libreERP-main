@@ -42,25 +42,18 @@
         <div class="row">
           <div class="col-md-6 col-xs-6 ">
             <div class="row container-fluid">
-              <!-- <uib-rating ng-model="ratings.averageRating.rating__avg" max="5" readonly="true" aria-labelledby="default-rating" style="font-size:20px;color:#e2a900;" class="text-muted"></uib-rating> -->
-              <!-- <span style="background-color:red; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg==none"> 0.0 <i class="fa fa-star" aria-hidden="true"></i></span> -->
+
               <span style="background-color:#388e3c; color:white; padding:5px; border-radius:5px;" ng-if="details.rating.rating__avg!=none&&showRatings"> {{details.rating.rating__avg| number : 1}} <i class="fa fa-star" aria-hidden="true"></i></span>
               <span ng-if="showRatings"> {{details.rating_count}} Ratings & Reviews</span>
 
             </div>
             <div class="row container-fluid" style="padding-top:14px;">
               <i class="fa fa-money fa-1x text-muted"></i> Cash on delivery : Yes
-              <!-- {{data.priceModel=='time' ? 'pickup' : 'delivery'}} : {{data.providerOptions[offeringInView].cod ? 'Yes' : 'No'}} <br> -->
-              <!-- <i class="fa fa-retweet fa-1x text-muted"></i> Free returns : {{data.providerOptions[offeringInView].freeReturns ? 'Yes' : 'No'}} <br> -->
+
             </div>
           </div>
           <div class="col-md-6 col-xs-6">
-            <!-- <span style="position:absolute;bottom:50px;right:15px;">
-              <span style="font-size:30px;"><i class="fa fa-inr"></i> {{data.providerOptions[offeringInView].rate}}</span>
-              <span ng-if="data.priceModel=='time'">/ per Hour</span>
-              <span ng-if="data.priceModel=='quantity'">/ per Piece</span>
-              <span ng-if="data.priceModel=='weight'">/ per Kg</span>
-            </span> -->
+
             <div class="row">
               <span ng-if="details.product.serialNo==selectedProdVar.sku" style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>
                 <span ng-if="details.product.discount>0">{{details.product.discountedPrice.toFixed(2)}} </span>
@@ -80,14 +73,7 @@
           </div>
         </div>
         <div class="row" style="padding:10px;" ng-if="me != null">
-          <!-- <div class="col-md-6" ng-if="showOptions">
-            <div class="row container-fluid text-center" style="background-color:#ec1616; color:white; padding:5px 0px;">
-              <span ng-click="buy(details)" style="cursor:pointer;">
-                <span style="font-size:15px;"><b> Buy Now </b></span>
-              <i class="fa fa-bolt fa-2x"></i>
-              </span>
-            </div>
-          </div> -->
+
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart==0">
             <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;" ng-if="selectedProdVar.inStock>0&&me.pk">
               <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
@@ -97,17 +83,7 @@
             </div>
           </div>
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
-            <!-- <div class="row container-fluid text-center" style="padding-top:15px;">
-              <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="details.added_cart>0&&me.pk" ng-click="decrement(details.pk);$event.stopPropagation()"></i>
-              </div>
-              <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
-                <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{details.added_cart}} </span>
-              </div>
-              <div class="col-md-4 col-sm-4 col-xs-4 text-left">
-                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="increment(details.pk);$event.stopPropagation()"></i>
-              </div>
-            </div> -->
+
             <div class="row container-fluid" style="padding:0px 15px;">
               <div class="col-xs-offset-3 col-xs-1" style="padding:0px;">
                 <button type="button" class="btn btn-default decrementBtn" ng-if="selectedProdVar.inStock>0&&me.pk" ng-click="decrement(details.pk);">
@@ -131,14 +107,7 @@
           </div>
         </div>
         <div class="row" style="padding:10px;" ng-if="me == null">
-          <!-- <div class="col-md-6">
-            <div class="row container-fluid text-center" style="background-color:#ec1616; color:white; padding:5px 0px;">
-              <span ng-click="loginPage()" style="cursor:pointer;">
-                <span style="font-size:15px;"><b> Buy Now </b></span>
-              <i class="fa fa-bolt fa-2x"></i>
-              </span>
-            </div>
-          </div> -->
+
           <div class="col-md-12" ng-if="showOptions&&details.added_cart==0">
             <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;" ng-if="selectedProdVar.inStock>0&&!me.pk">
               <span ng-click="createCookieDetail(details)" style="cursor:pointer;">
@@ -148,17 +117,7 @@
             </div>
           </div>
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
-            <!-- <div class="row container-fluid text-center" style="padding-top:15px;">
-              <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-                <i class="fa fa-minus-circle fa-2x" style="cursor:pointer" ng-if="!me.pk" ng-click="decrementCookie(details);$event.stopPropagation()"></i>
-              </div>
-              <div class="col-md-4 col-sm-4 col-xs-4 text-center" style="bottom: 10px">
-                <span style="font-size:25px; padding:0px 0px 0px 0px;"> {{details.added_cart}} </span>
-              </div>
-              <div class="col-md-4 col-sm-4 col-xs-4 text-left">
-                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="incrementCookie(details);$event.stopPropagation()"></i>
-              </div>
-            </div> -->
+
 
 
             <div class="row container-fluid" style="padding:0px 15px;" ng-if="selectedProdVar.inStock>0&&!me.pk">
@@ -322,9 +281,7 @@
         </div>
         <div class="row" ng-if="reviewsCount!=0">
 
-          <!-- <div class="container-fluid">
-            <h5>Recent reviews <small>{{reviews.length < 4 ? reviews.length : 4}} out of {{reviews.length}}</small> </h5>
-          </div> -->
+
           <div class="container-fluid" ng-if="showRatings">
             <div class="col-md-12 col-xs-12 col-sm-6" ng-repeat="r in reviews">
               <div class="row container-fluid">
@@ -335,13 +292,7 @@
                     <span class="text-muted"> By {{r.user.first_name}} {{r.user.last_name}} On {{r.created | date : 'dd-MMM-yyyy'}}</span>
 
                   </div>
-                  <!-- <div class="row" ng-if="me != null">
-                    {{r.user | getName}} <br> {{r.created | date : 'dd-MMM-yyyy'}} <br>
-                    <span ng-if="r.verified" class="btn btn-xs btn-success">
-                      Verified
-                    </span>
-                    <img style="width: 50px;height:50px;margin: 0 auto;" class="img-circle" ng-src="{{r.user | getDP}}">
-                  </div> -->
+
                 </div>
                 <div class="col-md-9">
                   <div class="row container-fluid">
@@ -377,36 +328,7 @@
             </div>
           </div>
         </div>
-        <!-- <div ng-repeat="r in suggest" style="padding:0px;">
-            <div class="col-md-3 anim-in-out anim-zoom-out">
-              <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.pk,name:r.product.name.split(' ').join('-')})">
-                <div class="row">
-                    <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-                  <img style="width: 90%; height:200px;" class="img" ng-src="{{r.files[0].attachment}}" ng-if="r.files.length>0">
-                  <img style="width: 90%; height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null">
-                </div>
-              </div>
-                <div class="row container-fluid" style="padding-top:5px;">
-                  <h5 ng-if="r.product.name.length>35" style="margin:0px;  height:60px;">{{r.product.name.slice(0,35)}}...</h5>
-                  <h5 ng-if="r.product.name.length<=35" style="margin:0px;  height:60px;">{{r.product.name}}</h5>
-                  <span style="font-size:15px;"> Price : </span>
 
-                  <span  style="font-size:15px; padding-left:10px; ">
-                    <span ng-if="r.product.discount>0" class="text-muted" >
-                      <strike><i class="fa fa-inr"></i>{{r.product.price}}</strike>
-                    </span>
-                    <span ng-if="r.product.discount==0" >
-                    <i class="fa fa-inr"></i>{{r.product.price}}
-                    </span>
-                  </span>
-
-                  <span ng-if="r.product.discount>0"  style="font-size:15px;">
-                  <i class="fa fa-inr"></i>{{r.product.discountedPrice.toFixed(2)}}
-                  </span>
-                </div>
-              </div>
-            </div>
-        </div> -->
       </div>
 
 
@@ -418,38 +340,7 @@
             <product-card list="l" add-cart="addToCart"></product-card>
           </div>
         </div>
-        <!-- <div ng-repeat="r in suggest" style="padding:0px;">
-            <div class="col-xs-12 col-sm-6 anim-in-out anim-zoom-out" style="margin-bottom:15px">
-              <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : r.pk,name:r.product.name.split(' ').join('-')})">
-                <div class="row">
-                    <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;">
-                  <img style="width:70%;height:200px;" class="img" ng-src="{{r.files[0].attachment}}" ng-if="r.files.length>0">
-                  <img style="width:70%;height:200px;" class="img" src="/static/images/ecommerce.jpg" ng-if="r.files==null">
-                </div>
-                </div>
-                <div class="row container-fluid" style="padding:0px;">
-                  <div class=" card bg-white" style="width: 100%;">
-                  <h5 ng-if="r.product.name.length>16" style="margin:0px;height:40px;padding-left:5px">{{r.product.name.slice(0,16)}}...</h5>
-                  <h5 ng-if="r.product.name.length<=16" style="margin:0px;height:40px;padding-left:5px">{{r.product.name}}</h5>
-                  <span style="font-size:15px;padding-left:5px"> Price : </span>
 
-                  <span  style="font-size:15px; padding-left:10px; ">
-                    <span ng-if="r.product.discount>0" class="text-muted" >
-                      <strike><i class="fa fa-inr"></i>{{r.product.price}}</strike>
-                    </span>
-                    <span ng-if="r.product.discount==0" >
-                    <i class="fa fa-inr"></i>{{r.product.price}}
-                    </span>
-                  </span>
-
-                  <span ng-if="r.product.discount>0"  style="font-size:15px;">
-                  <i class="fa fa-inr"></i>{{r.product.product.discountedPrice.toFixed(2)}}
-                  </span>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
       </div>
     </div>
   </div>
@@ -461,41 +352,6 @@
         <product-card list="recentlyViewed.product" add-cart="addToCart"></product-card>
       </div>
     </div>
-    <!-- <product-card list="recentlyViewed"></product-card> -->
-    <!-- <div style="padding:10px;" class="row card bg-white">
-        <div class="col-md-12 anim-in-out anim-zoom-out">
-          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('details' , {id : recentlyViewed.product.pk,name:recentlyViewed.product.product.name.split(' ').join('-')})">
-            <div class="row">
-              <img style="width: 100%; height:150px;" class="img" ng-src="{{recentlyViewed.product.files[0].attachment}}" ng-if="recentlyViewed.product.files.length>0">
-              <img style="width: 100%; height:150px;" class="img" src="/static/images/ecommerce.jpg" ng-if="recentlyViewed.product.files==null">
-            </div>
-            <div class="row container-fluid" style="padding-top:5px; ">
-              <h5 ng-if="recentlyViewed.product.product.name.length>30" style="margin:0px;  height:60px;">{{recentlyViewed.product.product.name.slice(0,30)}}...</h5>
-              <h5 ng-if="recentlyViewed.product.product.name.length<=30" style="margin:0px;  height:60px;">{{recentlyViewed.product.product.name}}</h5>
-              <span style="font-size:15px;"> Price : </span>
-              <span style="font-size:15px; ">
-                <span ng-if="recentlyViewed.product.product.discount>0" class="text-muted" >
-                  <strike><i class="fa fa-inr"></i>{{recentlyViewed.product.product.price}}</strike>
-                </span>
-                <span ng-if="recentlyViewed.product.product.discount==0" >
-                  <i class="fa fa-inr"></i>{{recentlyViewed.product.product.price}}
-                </span>
-              </span>
 
-              <span ng-if="recentlyViewed.product.product.discount>0"  style="font-size:15px;">
-              <i class="fa fa-inr"></i>{{recentlyViewed.product.product.discountedPrice.toFixed(2)}}
-              </span>
-            </div>
-          </div>
-        </div>
-    </div> -->
   </div>
 </div>
-
-<!--
-
-<div class="row" style="position:fixed; bottom:40px; right:50px;z-index:100;">
-  <button ng-click="goToTop()" type="button" class="btn btn-lg btn-default col-md-offset-9" style="border-radius:20px;">
-    <i class="fa fa-level-up"></i> TOP
-  </button>
-</div> -->

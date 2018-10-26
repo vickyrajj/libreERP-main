@@ -823,7 +823,6 @@ class PincodeViewSet(viewsets.ModelViewSet):
 
 
 def manifest(response,item):
-    print '999999999999999999999999999999999999999'
     settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
     print settingsFields.get(name = 'address').value
     order = item.order.get()
@@ -834,8 +833,6 @@ def manifest(response,item):
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=1*cm,leftMargin=0.2*cm,rightMargin=0.2*cm)
     elements = []
-
-    print item.prodSku,'aaaaaaaaaaaaaaaaaaaaaa'
     if item.prodSku != item.product.product.serialNo:
         product = ProductVerient.objects.get(sku=item.prodSku)
         qtyData = product.unitPerpack * item.product.product.howMuch
@@ -867,10 +864,6 @@ def manifest(response,item):
     elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
     elements.append(Paragraph(txt2, styles['Normal']))
-    # elements.append(Indenter(left=150))
-    # elements.append(HRFlowable(hAlign='LEFT',thickness=1, color=black,spaceBefore=30,spaceAfter=5))
-    # elements.append(Indenter(left=-150))
-
     elements.append(Spacer(1, 30))
 
     txt3 = '<para size=10 leftIndent=150 rightIndent=150><b>COURIER NAME : </b>{0}<br/><b>COURIER AWB No. : </b>{1}</para>'.format(item.courierName,item.courierAWBNo)
@@ -981,10 +974,6 @@ class SendDeliveredStatus(APIView):
         o = []
         m=[]
         promoAmount=0
-        # oq = list(OrderQtyMap.objects.filter(pk = request.data['value']).values().annotate(pname=F('product__product__name'),pPrice=F('product__product__price'),pDiscount=F('product__product__discount'),dp=F('product__files__attachment')))
-        # productId = oq[0]['id']
-        # o = list(Order.objects.filter(orderQtyMap = productId).values().annotate(userEmail=F('user__email'),fname=F('user__first_name'),lname=F('user__last_name')))
-        # emailAddr.append(str( o[0]['userEmail']))
         oq=OrderQtyMap.objects.get(pk = request.data['value'])
         print oq.pk
         price = oq.product.product.price - (oq.product.product.discount * oq.product.product.price)/100
@@ -999,18 +988,11 @@ class SendDeliveredStatus(APIView):
         grandTotal=total-(promoAmount * total)/100
         grandTotal=round(grandTotal, 2)
         attachment =  oq.product.files.values_list('attachment', flat=True)
-        # media=oq.product.files
-        # for m in media:
-        #     print m.pk,'aaaaaaaaa'
-        # m=Media.objects.get(pk=o.product.files)
         print '**************************'
         ctx = {
             'heading' : "Invoice Details",
-            # 'recieverName' : name,
             'linkUrl': globalSettings.BRAND_NAME,
             'sendersAddress' : globalSettings.SEO_TITLE,
-            # 'sendersPhone' : '122004',
-            # 'grandTotal':grandTotal,
             'promoAmount':promoAmount,
             'attachment':"https://media/"+attachment[0],
             'grandTotal':grandTotal,
@@ -1024,10 +1006,6 @@ class SendDeliveredStatus(APIView):
         }
         print ctx
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
-        # email_subject = "Order Details:"
-        # msgBody = " Your Order has been placed and details are been attached"
-        # contactData.append(str(orderObj.user.email))
-        print 'aaaaaaaaaaaaaaa'
         msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
         msg.content_subtype = 'html'
         # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
@@ -1343,14 +1321,6 @@ def genInvoice(response, contract, request):
     story.append(expHead)
     story.append(Spacer(2.5, 0.75 * cm))
 
-    #
-    # adrs = contract.deal.company.address
-    #
-    # if contract.deal.company.tin is None:
-    #     tin = 'NA'
-    # else:
-    #     tin = contract.deal.company.tin
-    #
     summryParaSrc3 = """
     <font size='8'><strong>Customer details:</strong></font> <br/>
     """
@@ -1474,8 +1444,6 @@ class OnlineSalesGraphAPIView(APIView):
             order = Order.objects.filter(created__range=(datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
             orderQty = OrderQtyMap.objects.filter(updated__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
             custs = User.objects.filter(date_joined__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
-        print '***********'
-        print order,order.count()
 
         totalSales = order.aggregate(Sum('totalAmount')) if order.count() > 0 else {'totalAmount__sum':0}
         if 'totalAmount__sum' in totalSales and type(totalSales['totalAmount__sum']) == float:
@@ -1531,7 +1499,6 @@ class GenericPincodeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         toReturn = GenericPincode.objects.all()
         if 'pincode' in self.request.GET:
-            print 'lllllllllllllllllllllllllllllllllllllllllllllllllllll'
             toReturn = toReturn.filter(pincode__iexact=self.request.GET['pincode'])
         return toReturn
 
@@ -1544,7 +1511,6 @@ class GenericImageViewSet(viewsets.ModelViewSet):
 
 class BulklistingCreationAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated , isAdmin)
-    # a="sales"
     def post(self, request, format=None):
         wb = load_workbook(filename = BytesIO(request.FILES['xl'].read()))
         ws = wb.worksheets[0]
@@ -1559,7 +1525,8 @@ class BulklistingCreationAPIView(APIView):
             serialId = ws['B' + str(i)].value
             unit = ws['E' + str(i)].value
             howMuch = ws['F' + str(i)].value
-            send = Product(name=name, serialNo=serialNo, price=price,serialId=serialId,unit=unit,howMuch=howMuch,user=request.user)
+            grossWeight = ws['K' + str(i)].value
+            send = Product(name=name, serialNo=serialNo, price=price,serialId=serialId,unit=unit,howMuch=howMuch,user=request.user,grossWeight=grossWeight)
             send.save()
             cat = ws['J' + str(i)].value
             try:

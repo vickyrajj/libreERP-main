@@ -733,6 +733,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       'reorderTrashold': 0,
       'pk': null,
       'unit': '',
+      'grossWeight':'',
       'discount': 0,
       'storeQty': [],
       'howMuch': '',
@@ -879,7 +880,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     fd.append('cost', f.cost);
     fd.append('serialNo', f.serialNo);
     fd.append('description', f.description);
-    // fd.append('inStock', f.inStock);
+    fd.append('grossWeight', f.grossWeight);
     fd.append('logistics', f.logistics);
     fd.append('serialId', f.serialId);
     fd.append('reorderTrashold', f.reorderTrashold);

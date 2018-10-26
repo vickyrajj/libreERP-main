@@ -66,19 +66,6 @@
             <i class="fa fa-pencil fa-2x" style="cursor:pointer; color:#2583ce;" ng-click="$event.stopPropagation(); openProductForm(pi.productPk)"></i> &nbsp;&nbsp;
             <i class="fa fa-info fa-2x" style="cursor:pointer; color:#2583ce;" ng-click="$event.stopPropagation(); openProductInfo(pi.productPk)"></i>
           </div>
-          <!-- <div class="col-md-3 text-center">
-          <h4>{{pi.quantity}}</h4>
-        </div> -->
-          <!-- <div class="col-md-3 text-center"> -->
-          <!-- <h4><label>Product Variant : </label> {{data.productVariant}}</h4> -->
-          <!-- <div class="row" style="margin:10px 0px;">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default" ng-click="editQuantity($index)">Edit</button> -->
-          <!-- <button type="button" class="btn btn-default" ng-click="toggle($index)">Info</button> -->
-          <!-- <button type="button" class="btn btn-default" ng-click="rowActionClicked('editMaster')">Edit Master</button> -->
-          <!-- </div>
-          </div>
-        </div> -->
         </div>
       </div>
       <div class="row container-fluid" ng-if="pi.open">
@@ -127,28 +114,9 @@
             </tr>
           </table>
         </div>
-        <!-- <div class="col-md-offset-2 col-md-3 text-center">
-             <h4>{{pi.product.name}}
-               <span ng-if="pi.productVariant==null"> {{pi.product.howMuch | convertUnit: pi.product.unit}} </span>
-               <span ng-if="pi.productVariant"> {{pi.productVariant.unitPerpack * pi.product.howMuch | convertUnit: pi.product.unit}} </span>
-             </h4>
-         </div>
-         <div class="col-md-3">
-
-         </div>
-         <div class="col-md-3">
-
-         </div>
-         <div class="col-md-3">
-
-         </div> -->
 
       </div>
     </div>
 
-    <!-- <divstyle="padding-right:10px;padding-left:10px;" id="dashboard">
-    <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction">
-    </generic-Table>
-  </div> -->
 
   </div>
