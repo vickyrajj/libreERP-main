@@ -157,34 +157,40 @@ class pageViewSet(viewsets.ModelViewSet):
 
 class ImageFetchApi(APIView):
     permission_classes = (permissions.AllowAny ,)
+    #
+    # def get(self, request , format = None):
+    #     img=''
+    #     images =[]
+    #     for img in glob.glob(os.path.join('static_shared','images' , '*')):
+    #         # n= cv2.imread(img)
+    #         print img
+    #         link = '/static/images/'
+    #         img_string = img.split('static_shared/images/')[1]
+    #         image = link+img_string
+    #         images.append(image)
+    #     return Response(images , status = status.HTTP_200_OK)
 
     def get(self, request , format = None):
+        print self.request.GET,'aaaaaaaaaaaaaaa'
         img=''
         images =[]
-        for img in glob.glob(os.path.join('static_shared','images' , '*')):
-            # n= cv2.imread(img)
-            print img
-            link = '/static/images/'
-            img_string = img.split('static_shared/images/')[1]
-            image = link+img_string
-            images.append(image)
-        return Response(images , status = status.HTTP_200_OK)
-        # 
-        # def get(self, request , format = None):
-        #     print self.request.GET,'aaaaaaaaaaaaaaa'
-        #     if request.GET['value'] == 'static':
-        #         img=''
-        #         images =[]
-        #         for img in glob.glob(os.path.join('static_shared','images' , '*')):
-        #             # n= cv2.imread(img)
-        #             print img
-        #             link = '/static/images/'
-        #             img_string = img.split('static_shared/images/')[1]
-        #             image = link+img_string
-        #             images.append(image)
-        #     else:
-        #         images =[]
-        #     return Response(images , status = status.HTTP_200_OK)
+        if request.GET['value'] == 'static':
+            for img in glob.glob(os.path.join('static_shared','images' , '*')):
+                # n= cv2.imread(img)
+                # print time
+                link = '/static/images/'
+                name = img.split('static_shared/images/')[1]
+                image = link+name
+                images.append(image)
+        else:
+            for media in glob.glob(os.path.join('media_root','ecommerce','pictureUploads' , '*')):
+                # n= cv2.imread(img)
+                link = '/media/ecommerce/pictureUploads/'
+                name = media.split('media_root/ecommerce/pictureUploads/')[1]
+                print name
+                image = link+name
+                images.append(image)
+        return Response(images, status = status.HTTP_200_OK)
     def post(self, request, format=None):
 
         return Response(status = status.HTTP_200_OK)

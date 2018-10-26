@@ -4,22 +4,17 @@ $scope.imagesSearch=''
 
   $scope.$watch('imagesSearch', function(newValue, oldValue) {
     console.log(newValue,'aaaaaaaaaaaaaa');
-    // if(newValue==false){
-    //   console.log("aaaaaaaaaaaaaaaaaaaaaaaggggggggfffffffffffffff");
-    //   var dataToSend = {
-    //     value :'static'
-    //   }
-    // }
-    // else{
-    //   var dataToSend = {
-    //     value :'media'
-    //   }
-    // }
-    // console.log(dataToSend,'adffffffffffffff');
+    if(newValue==false){
+        value ='static'
+        url = '/api/PIM/imageFetch/?value=' +value
+    }
+    else{
+        value ='media'
+        url = '/api/PIM/imageFetch/?value=' +value
+    }
   $http({
     method: 'GET',
-    url: '/api/PIM/imageFetch/',
-    // data : dataToSend
+    url: url,
   }).
   then(function(response) {
     $scope.allImages = response.data

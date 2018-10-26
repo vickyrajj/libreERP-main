@@ -94,7 +94,8 @@ import ast
 from flask import Markup
 from PIM.models import blogPost
 from django.db.models.functions import Concat
-
+from openpyxl import load_workbook
+from io import BytesIO
 # Create your views here.
 
 defaultSettingsData = appSettingsField.objects.filter(app_id=25)
@@ -1540,3 +1541,55 @@ class GenericImageViewSet(viewsets.ModelViewSet):
     serializer_class = genericImageSerializer
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['pincode','state','city']
+
+class BulklistingCreationAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated , isAdmin)
+    # a="sales"
+    def post(self, request, format=None):
+        wb = load_workbook(filename = BytesIO(request.FILES['xl'].read()))
+        ws = wb.worksheets[0]
+        row_count = ws.max_row+1
+        column_count = ws.max_column
+        for i in range(2, row_count):
+            images =[]
+            genericObj=''
+            name = ws['A' + str(i)].value
+            serialNo = ws['B' + str(i)].value
+            price = ws['c' + str(i)].value
+            serialId = ws['B' + str(i)].value
+            unit = ws['E' + str(i)].value
+            howMuch = ws['F' + str(i)].value
+            send = Product(name=name, serialNo=serialNo, price=price,serialId=serialId,unit=unit,howMuch=howMuch,user=request.user)
+            send.save()
+            cat = ws['J' + str(i)].value
+            try:
+                genericObj = genericProduct.objects.get(name__iexact = cat)
+                parentType = genericObj
+            except:
+                genericName = cat
+                visual = 'ecommerce/pictureUploads/' + str(cat) + '_small.jpg'
+                bannerImage = 'ecommerce/GenericProductBanner/' + str(cat) + '_big.jpg'
+                genericSend = genericProduct(name=genericName,visual=visual,bannerImage=bannerImage)
+                genericSend.save()
+                parentType = genericSend
+            imageOne = ws['G' + str(i)].value
+            attachmentOne = 'ecommerce/pictureUploads/' +str(imageOne)
+            imageOneSend = media(user=request.user,attachment = attachmentOne,mediaType='image' )
+            imageOneSend.save()
+            images.append(imageOneSend)
+            imageTwo = ws['H' + str(i)].value
+            attachmentTwo = 'ecommerce/pictureUploads/' +str(imageTwo)
+            imageTwoSend = media(user=request.user,attachment = attachmentTwo,mediaType='image' )
+            imageTwoSend.save()
+            images.append(imageTwoSend)
+            imageOne =howMuch = ws['I' + str(i)].value
+            attachmentThree = 'ecommerce/pictureUploads/' +str(imageOne)
+            imageThreeSend =media(user=request.user,attachment = attachmentThree,mediaType='image' )
+            imageThreeSend.save()
+            images.append(imageThreeSend)
+            listingSend = listing(parentType=parentType, product=send,user=request.user)
+            listingSend.save()
+            for i in images:
+                listingSend.files.add(i)
+            listingSend.save()
+        return Response(status = status.HTTP_200_OK)
