@@ -334,10 +334,4 @@ if DEBUG:
     '''
 
 
-REGISTRATION_EXTRA_FIELD = [{'name':'pincode',
-                            'type' : 'text' , 'icon' : 'fa-map-marker' , 'placeholder' : 'Pincode'},
-                            {'name' : 'designation',
-                            'type' : 'choice',
-                            'option' : ['Manager', 'Admin', 'Director' ],
-                            'icon' : 'fa-id-card-o' , 'placeholder' : 'Please select your role'
-                            }]
+REGISTRATION_EXTRA_FIELD = []
