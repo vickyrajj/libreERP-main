@@ -20,6 +20,30 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   $scope.myUsers = [];
 
 
+  function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+      }
+  }
+  return "";
+}
+
+
   setTimeout(function () {
     $http({
       method: 'GET',
@@ -128,6 +152,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
   $scope.closeChatBox = function(index, myUserIndex) {
     console.log('dfddcominh in closesssssss');
+    console.log('dfdfdfs '+index+' ' + myUserIndex);
+    removeFromCookie($scope.chatsInView[index].uid);
     $scope.chatsInView.splice(index, 1)
     if (myUserIndex != undefined) {
       $scope.myUsers.splice(myUserIndex, 1)
@@ -138,9 +164,35 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     $scope.msgText = $scope.templates[data].msg;
   }
 
+function removeFromCookie(uid){
+  console.log('here in remove from cook');
+  console.log(openedUsers);
+  for (var i = 0; i < openedUsers.length; i++) {
+    if(openedUsers[i].uid==uid){
+      console.log(openedUsers);
+      openedUsers.splice(i, 1);
+      console.log(openedUsers);
+    }
+  }
+  setCookie('openedChats',JSON.stringify(openedUsers),30);
+  // console.log('removed index '+indx);
+}
+
+  var openedUsers=[]
+
+    function addToCookie(uid,indx){
+      openedUsers.push({
+        uid:uid,
+        index:indx
+      })
+        setCookie('openedChats',JSON.stringify(openedUsers),30);
+        console.log('added index '+indx);
+    }
+
   $scope.addToChat = function(indx , uid ) {
 
-
+    console.log(indx);
+    console.log(uid);
     // $scope.status = 'AP';
     // connection.session.publish('service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
     //   acknowledge: true
@@ -148,7 +200,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     // then(function(publication) {
     //   console.log("Published");
     // });
-
+    addToCookie(uid,indx);
 
 
     console.log('comingggg in add to chat');
@@ -180,6 +232,28 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   //     }
   //   }
   // }
+
+
+  $scope.getOpenedChatFromCookie= function(){
+      var openedChats=JSON.parse(getCookie('openedChats'));
+      console.log(JSON.parse(getCookie('openedChats')));
+      for (var i = 0; i < openedChats.length; i++) {
+        for (var j = 0; j < $scope.myUsers.length; j++) {
+          if ($scope.myUsers[j].uid == openedChats[i].uid) {
+            console.log(openedChats[i]);
+            $scope.addToChat(openedChats[i].index,openedChats[i].uid)
+          }
+        }
+    }
+  }
+  setTimeout(function () {
+      $scope.getOpenedChatFromCookie();
+  }, 3000);
+
+    // $scope.addToChat(openedChats[i].index,openedChats[i].uid)
+
+
+
 
   $scope.chatClose = function(idx, chatThreadPk) {
     console.log('coming in chatclose');

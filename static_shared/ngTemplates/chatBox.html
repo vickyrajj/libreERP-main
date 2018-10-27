@@ -46,14 +46,15 @@
     <!-- <button type="button" ng-click="takeSnapshot()" class="btn btn-default">
       snap
     </button> -->
-    <div ng-if="data.video" class="container-fluid" style="height:20vh; padding:0px;">
+    <div ng-if="data.video" class="container-fluid" style="height:20vh; padding:0px;" ng-init="setHeight()">
       <!-- <span style="position:absolute; right:7px; top:3px; background-color:black; padding:3px;"><i class="fa fa-times-circle"></i></span> -->
       <!-- {{data.video}}
       {{data.videoUrl}} -->
       <i style="position:absolute; right:7px; top:118px; color:#fff; cursor:pointer;" ng-click="captureImage()" class="fa fa-camera" aria-hidden="true"></i>
       <iframe id="iframeChat" ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
     </div>
-    <div ng-if="data.audio" class="container-fluid" style="height:5vh; padding:0px;">
+    <div ng-if="data.audio" class="container-fluid" style="height:5vh; padding:0px;" ng-init="setHeight()">
+      {{setHeight()}}
       <iframe id="iframeChat" ng-src="{{data.audioUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
     </div>
 
@@ -63,7 +64,7 @@
         <div class="row container-fluid">
           <div style="float:{{message.sentByAgent ? 'right; background-color:#E4E5E9; ':'left; background-color:#DDF7C8;'}} padding:10px;margin:8px;border-radius:{{message.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
             <p ng-if="message.message.length>0 && message.attachmentType!='youtubeLink'" style="word-wrap: break-word; !important; white-space: pre-wrap;   "> <span ng-if="message.message.includes('www.') || message.message.includes('http')"> <a href="{{message.message}}">{{message.message}}</a> </span> <span ng-if="!message.message.includes('www.') && !message.message.includes('http')">{{message.message }}</span>  </p>
-            <img ng-if="message.attachmentType == 'image'" ng-src="{{message.attachment}}" style="width:250px;">
+            <img ng-if="message.attachmentType == 'image' ||message.attachmentType == 'instructionImage'" ng-src="{{message.attachment}}" style="width:250px;">
             <video ng-if="message.attachmentType == 'video'" width="280" height="240" ng-src="{{message.attachment}}" controls></video>
             <audio ng-if="message.attachmentType == 'audio'" ng-src="{{message.attachment}}" controls></audio>
             <p class="text-center" ng-if="message.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{message.attachment}}" target="_blank"><i class="fa {{message.attachment.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{message.attachment.split('chat/')[1]}} </p>

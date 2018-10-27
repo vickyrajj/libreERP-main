@@ -327,7 +327,7 @@ app.directive('chatBox', function() {
     },
     controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
 
-
+      var webRtcAddress = 'http://192.168.1.124:1337'
 
       setTimeout(function() {
         if (document.getElementById("iframeChat") != null)
@@ -337,22 +337,29 @@ app.directive('chatBox', function() {
         if ($scope.getFrameContent==undefined) {
           $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
         }
-        $scope.getFrameContent.postMessage('captureImage', 'http://192.168.0.10:1337');
+        $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
       }
 
-      if ($scope.data.audio) {
-        $scope.msgDivHeight = 66
-      }else if ($scope.data.video) {
-        $scope.msgDivHeight = 51
-      }else {
-        $scope.msgDivHeight = 71
+      $scope.setHeight = function () {
+        console.log('timesss');
+        if ($scope.data.audio) {
+          $scope.msgDivHeight = 66
+        }else if ($scope.data.video) {
+          $scope.msgDivHeight = 51
+        }else {
+          $scope.msgDivHeight = 71
+        }
       }
+
+      $scope.setHeight()
+
+
 
 
       window.addEventListener("message", receiveMessage, false);
 
       function receiveMessage(event) {
-        if (event.origin == "http://192.168.0.10:1337") {
+        if (event.origin == webRtcAddress) {
           console.log(event.data + ' ******************');
           $scope.takeSnapshot(event.data)
         }
@@ -378,7 +385,6 @@ app.directive('chatBox', function() {
           controller: function($scope, $users, $uibModalInstance, $timeout, $rootScope) {
 
             $scope.imageUrl = imageUrl;
-            console.log($scope.imageUrl);
 
             $scope.bgCanvasImage = function() {
               $scope.canvas.setBackgroundImage($scope.imageUrl, $scope.canvas.renderAll.bind($scope.canvas), {
@@ -405,15 +411,12 @@ app.directive('chatBox', function() {
               $rootScope.rectangles = [];
               $rootScope.circles = [];
               $rootScope.triangles = [];
-              $scope.textData;
               $scope.data = {
                 "objects": []
               };
 
 
-              $scope.isEraser = false;
               $scope.size = 3;
-              $scope.eraserSize = 1;
               $scope.col = '#000000';
               $scope.mode = null;
               // $scope.HeightCount = 0;
@@ -469,49 +472,10 @@ app.directive('chatBox', function() {
                 // $scope.data['objects'].push(options.path);
               });
 
-              $scope.canvas.on('object:moving', function(options) {
-                if (options.target.type == "image") {
-                  for (var i = 0; i < $scope.data.objects.length; i++) {
-                    if ($scope.data.objects[i].timestamp == options.target.timestamp) {
-                      $scope.data.objects[i].top = options.target.top;
-                      $scope.data.objects[i].left = options.target.left;
-                    }
-                  }
-                } else {
-                  console.log("ffffffffffff");
-                }
-              })
-
-              // $scope.canvas.on('selection:cleared', function()
-              //   {
-              //      $scope.canvas.off('object:moving');
-              //    });
-
               $scope.canvas.on('mouse:down', function(options) {
                 $scope.pointer = $scope.canvas.getPointer(options.e);
                 $scope.startx = $scope.pointer.x;
                 $scope.starty = $scope.pointer.y;
-
-                console.log($scope.mode);
-
-                if ($scope.mode == "text") {
-                  $scope.newText = new fabric.IText('', {
-                    fontWeight: 'normal',
-                    fontFamily: 'Times New Roman',
-                    fontSize: 20,
-                    objectCaching: false
-                  });
-                  $scope.canvas.add($scope.newText);
-                  $scope.canvas.centerObject($scope.newText);
-                  $scope.newText.set({
-                    left: $scope.startx,
-                    top: $scope.starty
-                  });
-                  $scope.canvas.setActiveObject($scope.newText);
-                  $scope.newText.enterEditing();
-                  $scope.newText.selectAll();
-                }
-
               });
 
               $scope.canvas.on('mouse:move', function(options) {
@@ -521,53 +485,6 @@ app.directive('chatBox', function() {
               });
 
               $scope.canvas.on('mouse:up', function() {
-
-                if ($scope.mode == "text") {
-                  $scope.canvas.on('text:editing:exited', function(e) {
-                    console.log("text:" + e.target.text);
-
-                    $scope.temp = {
-                      timestamp: new Date().getTime(),
-                      type: $scope.newText.type,
-                      originX: $scope.newText.originX,
-                      originY: $scope.newText.originY,
-                      left: $scope.newText.left,
-                      top: $scope.newText.top,
-                      fill: $scope.newText.fill,
-                      strokeWidth: $scope.newText.strokeWidth,
-                      scaleX: $scope.newText.scaleX,
-                      scaleY: $scope.newText.scaleY,
-                      opacity: $scope.newText.opacity,
-                      visible: $scope.newText.visible,
-                      text: e.target.text,
-                      fontSize: $scope.newText.fontSize,
-                      fontWeight: $scope.newText.fontWeight,
-                      fontFamily: $scope.newText.fontFamily,
-                      fontStyle: $scope.newText.fontStyle,
-                      lineHeight: $scope.newText.lineHeight,
-                      textDecoration: $scope.newText.textDecoration,
-                      textAlign: $scope.newText.textAlign,
-                      lockMovementX: true,
-                      lockMovementY: true,
-                      hasControls: false,
-                      hasBorders: false,
-                      selectable: false,
-                      hoverCursor: 'default'
-                    }
-                    //$scope.canvas.clear();
-                    // $scope.data['objects'].push($scope.newText);
-                    $scope.data['objects'].push($scope.temp);
-                    redraw();
-                    $scope.canvas.off('text:editing:exited');
-                  });
-
-                  //redraw();
-
-                  fabric.Object.prototype.selectable = true;
-                  $scope.canvas.isDrawingMode = false;
-                  $scope.canvas.selection = true;
-                  return false;
-                }
 
                 if ($scope.endy - $scope.starty < 0) {
                   // if drag towards top
@@ -658,8 +575,6 @@ app.directive('chatBox', function() {
 
               }
 
-
-
             }, 1000);
 
 
@@ -693,19 +608,18 @@ app.directive('chatBox', function() {
               var blob = dataURItoBlob($scope.canvas.toDataURL('png'));
               $uibModalInstance.dismiss(blob)
 
-
             }
 
           },
         }).result.then(function() {}, function(data) {
 
           $scope.chatBox.fileToSend = data;
-          $scope.send();
+          $scope.send('instructionImage');
         });
       }
 
 
-      if ($scope.data.email.length > 0) {
+      if ($scope.data.email.length > 0 && $scope.data.email!=undefined) {
         $http({
           method: 'GET',
           url: '/api/support/visitor/?email=' + $scope.data.email,
@@ -758,7 +672,8 @@ app.directive('chatBox', function() {
       }
 
 
-      $scope.send = function() {
+      $scope.send = function(mediaType) {
+
         if ($scope.chatBox.fileToSend.size > 0) {
 
           $scope.attachment;
@@ -769,7 +684,13 @@ app.directive('chatBox', function() {
           fd.append('user', $scope.me.pk);
           fd.append('uid', $scope.data.uid)
           fd.append('sentByAgent', true)
-          fd.append('attachmentType', $scope.chatBox.fileToSend.type.split('/')[0])
+
+          if (mediaType=='instructionImage') {
+            fd.append('attachmentType',mediaType)
+          }else {
+            fd.append('attachmentType', $scope.chatBox.fileToSend.type.split('/')[0])
+          }
+
           $http({
             method: 'POST',
             data: fd,
@@ -800,7 +721,12 @@ app.directive('chatBox', function() {
             });
 
             $scope.chatBox.fileToSend = emptyFile;
-            $scope.scroll()
+
+            if (mediaType=='instructionImage') {
+              $scope.scroll(1500)
+            }else {
+              $scope.scroll()
+            }
 
           })
 
@@ -932,12 +858,17 @@ app.directive('chatBox', function() {
         $('#filePickerChat' + $scope.index).click();
       }
 
-      $scope.scroll = function() {
+      $scope.scroll = function(delay) {
+
+        if (delay==undefined || delay == null) {
+          var delay = 300
+        }
+
         console.log('calling');
         setTimeout(function() {
           var id = document.getElementById("scrollArea" + $scope.data.uid);
           id.scrollTop = id.scrollHeight;
-        }, 200);
+        }, delay);
       }
 
       $scope.knowledgeBase = function(companyPk) {

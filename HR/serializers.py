@@ -124,6 +124,7 @@ class userAdminSerializer(serializers.HyperlinkedModelSerializer):
     def create(self , validated_data):
         if not self.context['request'].user.is_superuser:
             raise PermissionDenied(detail=None)
+        print self.context['request'],'dddddddddddddddd'
         user = User.objects.create(**validated_data)
         user.email = user.username + '@cioc.co.in'
         password =  self.context['request'].data['password']
@@ -132,12 +133,14 @@ class userAdminSerializer(serializers.HyperlinkedModelSerializer):
         return user
     def update (self, instance, validated_data):
         user = self.context['request'].user
-        print user,'*******************'
+        print user,'*******************###'
         if user.is_staff or user.is_superuser:
             u = User.objects.get(username = self.context['request'].data['username'])
             if (u.is_staff and user.is_superuser ) or user.is_superuser: # superuser can change password for everyone , staff can change for everyone but not fellow staffs
                 if 'password' in self.context['request'].data:
                     u.set_password(self.context['request'].data['password'])
+                print validated_data['email']
+                u.email = validated_data['email']
                 u.first_name = validated_data['first_name']
                 u.last_name = validated_data['last_name']
                 u.is_active = validated_data['is_active']

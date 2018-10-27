@@ -421,6 +421,9 @@ function archived(){
   console.log('called');
 }
 
+$scope.browseTab = true;
+$scope.archiveTab = false;
+
   $scope.getArchData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
     var url = '/api/support/reviewHomeCal/?status=archived'
@@ -488,6 +491,7 @@ function archived(){
   }
   $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
   $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+  
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
     then(function(response){
@@ -579,7 +583,8 @@ function archived(){
       cancel: true,
       app: 'AgentInfo',
       data: $scope.reviewData[target],
-      active: true
+      active: true,
+      typ:'browse'
     })
     // for (var i = 0; i < $scope.reviewData.length; i++) {
     //   if ($scope.reviewData[i].pk == parseInt(target)) {
@@ -610,13 +615,24 @@ function archived(){
       cancel: true,
       app: 'AgentInfo',
       data: $scope.archivedData[target],
-      active: true
+      active: true,
+      typ:'archived'
     })}
 
   $scope.tabs = [];
   $scope.searchTabActive = true;
 
   $scope.closeTab = function(index) {
+    console.log($scope.tabs[index].typ);
+    if ($scope.tabs[index].typ=='archived') {
+      $scope.browseTab = false;
+      $scope.archiveTab = true;
+      console.log($scope.archiveTab);
+    }else if ($scope.tabs[index].typ=='browse') {
+      $scope.archiveTab = false;
+      $scope.browseTab = true;
+      console.log($scope.archiveTab);
+    }
     $scope.tabs.splice(index, 1)
   }
 
