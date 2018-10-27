@@ -8,14 +8,15 @@ import json
 from rest_framework.views import APIView
 from django.conf import settings as globalSettings
 import os
+from os import path
 from rest_framework.response import Response
 # import cv2
 import glob
 # from PIL import Image
 # from flask import Flask, request, redirect, url_for
 # from werkzeug.utils import secure_filename
-# import urllib
-# import matplotlib.pyplot as plt
+import urllib
+import matplotlib.pyplot as plt
 
 
 class settingsViewSet(viewsets.ModelViewSet):
@@ -181,29 +182,50 @@ class ImageFetchApi(APIView):
                 images.append(image)
         return Response(images, status = status.HTTP_200_OK)
     def post(self, request, format=None):
-        # # UPLOAD_FOLDER = os.path.join('static_shared','images')
-        # # ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-        # #
-        # # app = Flask(__name__)
-        # # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-        # file = request.data['file']
-        # # print file.name,'aaaaaaaaaaaaa@@@@@@@@@@@@'
-        # # if file.name == '':
-        # #     flash('No selected file')
-        # #     return redirect(request.url)
-        # # else:
-        # # # if file and allowed_file(file.name):
-        # #     filename = secure_filename(file.name)
-        # #     print file,'@@@@@@@@@@@@@@@@@@@@'
-        # #     print os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        # #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # fig = plt.figure()
-        # path = os.path.join('static_shared','images')
-        # filename = os.path.join(path, file)
-        # print filename,'@@@@@@@@@@@@@@@@@@@@@@@@@@'
-        # fig.savefig(filename)
-        # print fig,'aaaaaaaaaaaaaaa'
-        #
+        print 'fffffffffffffffffffffff'
+        if 'rename' in request.POST:
+            if 'pictureUploads' in request.POST['path']:
+                print 'picture uploadsss'
+                path = os.path.join('media_root','ecommerce','pictureUploads')
+            else:
+                print 'staticccc'
+                path = os.path.join('static_shared','images')
+            old_file = os.path.join(path, request.POST['oldName'])
+            new_file = os.path.join(path, request.POST['newName'])
+            os.rename(old_file, new_file)
+        else:
+            # # UPLOAD_FOLDER = os.path.join('static_shared','images')
+            # # ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+            # #
+            # # app = Flask(__name__)
+            # # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+            # print request.POST,'fileeeeeeeeeeeeeeeeeeeeeeeeeee'
+            filew = request.POST['file']
+            # print type(file)
+
+
+            # # print file.name,'aaaaaaaaaaaaa@@@@@@@@@@@@'
+            # # if file.name == '':
+            # #     flash('No selected file')
+            # #     return redirect(request.url)
+            # # else:
+            # # # if file and allowed_file(file.name):
+            # #     filename = secure_filename(file.name)
+            # #     print file,'@@@@@@@@@@@@@@@@@@@@'
+            # #     print os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            # #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+
+
+            # fig = plt.figure()
+            # path = os.path.join('media_root','ecommerce','pictureUploads')
+            # print path,'pathhhhh'
+            # filename = os.path.join(path, filew.name)
+            # print filename
+            # print filew.name,'@@@@@@@@@@@@@@@@@@@@@@@@@@'
+            # fig.savefig(filename)
+            # print fig,'aaaaaaaaaaaaaaa'
         return Response(status = status.HTTP_200_OK)
     def delete(self, request, format=None):
         if request.GET['value'] == 'static':
