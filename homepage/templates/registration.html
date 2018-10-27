@@ -38,21 +38,12 @@
   </a>
   </div>
 
-
   <div class="col-md-5 hidden-xs hidden-sm  text-right"style="margin-top: 20px;">
     <a href="/login" style="cursor:pointer;font-size:17px;color:white;text-decoration:none;color:var(--themeColor)"> Already User? <i class="fa fa-user fa-lg"></i></a>
-
   </div>
-  <div class="col-xs-6 hidden-lg hidden-md  text-right"style="margin-bottom:5px">
+  <div class="col-xs-6 hidden-lg hidden-md  text-right"style="margin-top:15px">
     <a href="/login" style="cursor:pointer;font-size:17px;color:white;text-decoration:none;color:var(--themeColor)"> Already User? <i class="fa fa-user fa-lg"></i></a>
-
   </div>
-  <!-- <div class="col-xs-9 text-right hidden-md hidden-lg" ng-if="!me.pk">
-    <span style="cursor:pointer;font-size:17px" ng-click="loginPage()"> LOGIN <i class="fa fa-lock fa-lg"></i></span>
-
-  </div> -->
-
-
 </div>
 
 
@@ -204,41 +195,49 @@
                       <!-- <div class="col-md-12">
                         <span class="help-text">Password Should Contains Minimum 6 Characters( Atleast 1Capital Letter , 1Small Letter, 1Number )</span>
                       </div> -->
-                    </div>
+
                     {% endverbatim %}
 
-                      <div class="row" style="margin-bottom:15px;">
-                        {% for fields in regextra %}
-                        <div class="col-md-6">
-                              {% if fields.type == 'text' %}
-                              <div class="form-group">
+                      {% for fields in regextra %}
+                      <div class="col-md-6">
+                        <div class="row">
+
+                            {% if fields.type == 'text' %}
                               <div class="col-md-2 col-sm-2 col-xs-2">
                                 <span><i class="fa fa-map-pin" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
                               </div>
                               <div class="col-md-10 col-sm-10 col-xs-10">
-                              <input ng-model="form.pincode" type="text" class="form-control floatInput" required/><br/>
-                            </div>
-                          </div>
-                              {% endif %}
-                              {% if fields.type == 'choice' %}
-                              <div class="form-group">
-                              <div class="col-md-2 col-sm-2 col-xs-2">
-                                <span><i class="fa fa-id-card-o" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                                <div class="form-group">
+                                  <input ng-model="form.pincode" type="text" class="form-control floatInput" placeholder="{{fields.placeholder}}" required/><br/>
+                                </div>
                               </div>
-                              <div class="col-md-10 col-sm-10 col-xs-10" style="padding-top:25px">
-                              <select  class="form-control" ng-model="form.designation">
+                            {% endif %}
+                            {% if fields.type == 'choice' %}
+                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                  <span><i class="fa {{fields.icon}}" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                                </div>
+                                <div class="col-md-10 col-sm-10 col-xs-10" style="padding-top:25px">
+                                <select  class="form-control" ng-model="form.designation">
+                                  <option selected value="{{fields.placeholder}}">{{fields.placeholder}}</option>
                                   {% for des in fields.option %}
-                                <option value={{des}}>{{des}}</option>
-                                {% endfor %}
-                              </select>
-                            </div>
-                          </div>
-                              {% endif %}
-
-                          </div>
-
-                        {% endfor %}
+                                  <option value={{des}}>{{des}}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                            {% endif %}
+                        </div>
                       </div>
+
+                      {% endfor %}
+
+
+
+
+
+                    </div>
+
+
+
 
                       {% verbatim %}
                     <div class="row" style="margin-top:50px;">

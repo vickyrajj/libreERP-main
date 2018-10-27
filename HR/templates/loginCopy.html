@@ -1,7 +1,5 @@
 {% load staticfiles%} {% load staticfiles %} {% load socialaccount %}
 
-
-
 <!DOCTYPE html>
 <html>
 
@@ -38,28 +36,12 @@
 
       <label for="username" class="sr-only">Mobile Number</label>
       <input id="username" name="username" type="text" maxlength="10" class="form-control" placeholder="Mobile Number" required autofocus>
-    <!--   <input id="otp" name="otp" type="text" class="form-control" placeholder="OTP" required autofocus> -->
       <label for="password" class="sr-only">Password</label>
       <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
       <button id="signIn" style="margin-bottom:20px; margin-top:10px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
-   <!--    <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a><br/> -->
       <a style="color:black;" href="registerPage">New User?</a>
 
-      <!-- <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
-        <span style="color:white;">
-            <i class="fa fa-mobile fa-3x" ></i> <br>
-            <span id="otptxt">Send OTP</span>
-          </span>
-      </div> -->
-
-<!--       <a href="/register" class="btn btn-success btn-block" style="margin-top:150px;">Register</a>
-          <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
-            <i class="fa fa-google-plus pull-left"></i>Login with Google
-          </a>
-          <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block">
-            <i class="fa fa-facebook pull-left"></i> Login with Facebook
-          </a> -->
     </form>
 
     <form class="" action="/register" method="post" style="display:none;" id="regFrm">
@@ -68,57 +50,10 @@
     </form>
 
     <div class="col-md-12 col-sm-12 col-xs-12 text-right" style="margin-top:90%">
-    <a href="/admin/">Admin Login</a>
+    <a href="/admin/?next=/ERP/">Admin Login</a>
     </div>
   </div>
- <!--  <div class="col-xs-12 col-sm-12 hidden-lg hidden-md" style="background-image: url('{{backgroundImage}}');background-size: cover;height:40vh;position:absolute;left:0px;margin-top:350px">
-  </div>
- -->
-<!--   <div class="col-xs-12 ol-sm-12  hidden-lg hidden-md" style="position:absolute;right:0px;height:60vh"> -->
-    <!-- <div style="background-image: url('{{icon_logo}}');background-size: cover;height:50%;position:absolute;left:0px;margin-top:250px">
-    </div> -->
-<!--     <a  href="/" style="outline:none;border:none"><img class="text-center" src="{{icon_logo}}" alt="" width="100" height="100" style="display:block;margin-left:auto;margin-right:auto;margin-bottom:-20px;"></a>
-    <form method="post" class="form-signin" action="">{% csrf_token %}
-      <h2 class="form-signin-heading" style="color:black;margin-top:0px;">Login</h2> {% if authStatus.status != 'default' %}
-      <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
-      {% endif %}
 
-      <div id="alerts">
-
-      </div>
-
-
-      <label for="username" class="sr-only">Mobile Number</label>
-      <input id="username" name="username" type="text" class="form-control" placeholder="Mobile Number" required autofocus>
-      <input id="otp" name="otp" type="text" class="form-control" placeholder="OTP" required autofocus>
-      <label for="password" class="sr-only">Password</label>
-      <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
-      <button id="signIn" style="margin-bottom:20px; margin-top:10px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button> -->
-
-      <!-- <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a><br/> -->
-<!--       <a style="color:black;" href="registerPage">New User?</a>
-
-      <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
-        <span style="color:white;">
-            <i class="fa fa-mobile fa-3x" ></i> <br>
-            <span id="otptxt">Send OTP</span>
-          </span>
-      </div> -->
-
-      <!-- <a href="/register" class="btn btn-success btn-block" style="margin-top:150px;">Register</a>
-          <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
-            <i class="fa fa-google-plus pull-left"></i>Login with Google
-          </a>
-          <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block">
-            <i class="fa fa-facebook pull-left"></i> Login with Facebook
-          </a> -->
-<!--     </form>
-
-
-  </div> -->
- <!--  <div class="col-xs-12 col-sm-12 hidden-lg hidden-md" style="background-image: url('{{backgroundImage}}');background-size: cover;height:40vh;position:absolute;left:0px;margin-top:350px">
-  </div> -->
-  <!-- /container -->
   {% if useCDN %}
   <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
