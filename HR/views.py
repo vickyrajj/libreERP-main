@@ -263,7 +263,7 @@ def home(request):
     ,'BRAND_NAME' :  globalSettings.BRAND_NAME, 'serviceName' : globalSettings.SERVICE_NAME , 'defaultRoute' : defaultRoute , 'showCommonApps' : showCommonApps})
 
 class userProfileViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = userProfileSerializer
     queryset = profile.objects.all()
 

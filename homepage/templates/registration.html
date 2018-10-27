@@ -66,13 +66,13 @@
 {% block content %}
 
 <div ng-app="app" ng-controller="registration">
-
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
       <section style="background-color:white">
         <div class="row">
           <div class="col-lg-12 text-center" style="margin-bottom:30px;">
             {% verbatim %}
+
             <h2 class="section-heading" style="color: #a39c9c;margin-bottom:0px">{{ mode != 'sendingOTP' ? 'Registration': 'Please wait, Sending OTP'}}</h2>
             {% endverbatim %}
             <img src="/static/images/bottom-border.png" alt="">
@@ -205,8 +205,42 @@
                         <span class="help-text">Password Should Contains Minimum 6 Characters( Atleast 1Capital Letter , 1Small Letter, 1Number )</span>
                       </div> -->
                     </div>
+                    {% endverbatim %}
 
+                      <div class="row" style="margin-bottom:15px;">
+                        {% for fields in regextra %}
+                        <div class="col-md-6">
+                              {% if fields.type == 'text' %}
+                              <div class="form-group">
+                              <div class="col-md-2 col-sm-2 col-xs-2">
+                                <span><i class="fa fa-map-pin" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                              </div>
+                              <div class="col-md-10 col-sm-10 col-xs-10">
+                              <input ng-model="form.pincode" type="text" class="form-control floatInput" required/><br/>
+                            </div>
+                          </div>
+                              {% endif %}
+                              {% if fields.type == 'choice' %}
+                              <div class="form-group">
+                              <div class="col-md-2 col-sm-2 col-xs-2">
+                                <span><i class="fa fa-id-card-o" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                              </div>
+                              <div class="col-md-10 col-sm-10 col-xs-10" style="padding-top:25px">
+                              <select  class="form-control" ng-model="form.designation">
+                                  {% for des in fields.option %}
+                                <option value={{des}}>{{des}}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                          </div>
+                              {% endif %}
 
+                          </div>
+
+                        {% endfor %}
+                      </div>
+
+                      {% verbatim %}
                     <div class="row" style="margin-top:50px;">
                       <div class="col-md-2 col-sm-2 col-xs-2">
                         <input type="checkbox" class=" pull-right" ng-model="form.agree">

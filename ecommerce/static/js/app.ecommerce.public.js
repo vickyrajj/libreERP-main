@@ -2789,7 +2789,8 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       items: 1,
       loop : true,
       autoplay : true,
-      autoplayTimeout : 3000
+      autoplayTimeout : 3000,
+      dots: false
   };
 
 

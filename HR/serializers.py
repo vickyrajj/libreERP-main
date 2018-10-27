@@ -45,7 +45,7 @@ class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:
         model = profile
-        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'primaryAddress' , 'addresses')
+        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'primaryAddress' , 'addresses','details')
         read_only_fields = ('website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity'  )
 
 class userProfileAdminModeSerializer(serializers.ModelSerializer):
@@ -55,7 +55,7 @@ class userProfileAdminModeSerializer(serializers.ModelSerializer):
         fields = ( 'pk', 'empID', 'dateOfBirth' , 'anivarsary' , 'permanentAddressStreet' , 'permanentAddressCity' , 'permanentAddressPin', 'permanentAddressState' , 'permanentAddressCountry',
         'localAddressStreet' , 'localAddressCity' , 'localAddressPin' , 'localAddressState' , 'localAddressCountry' , 'prefix', 'gender' , 'email', 'email2', 'mobile' , 'emergency' , 'tele' , 'website',
         'sign', 'IDPhoto' , 'TNCandBond' , 'resume' ,  'certificates', 'transcripts' , 'otherDocs' , 'almaMater' , 'pgUniversity' , 'docUniversity' , 'fathersName' , 'mothersName' , 'wifesName' , 'childCSV',
-        'note1' , 'note2' , 'note3' , 'primaryAddress' , 'addresses')
+        'note1' , 'note2' , 'note3' , 'primaryAddress' , 'addresses','details')
 
 
 class payrollSerializer(serializers.ModelSerializer):

@@ -12,7 +12,11 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
   $scope.getOTP = function() {
     $scope.validityChecked = true;
     console.log($scope.form);
-
+    $scope.extraDetails = {
+      pincode:$scope.form.pincode,
+      designation:$scope.form.designation
+    }
+    $scope.details = JSON.stringify($scope.extraDetails)
     if (!$scope.form.agree || $scope.form.firstName == undefined || $scope.form.firstName == null || $scope.form.firstName.length ==0 || $scope.form.lastName == undefined || $scope.form.lastName == null || $scope.form.lastName.length ==0 || $scope.form.email == undefined || $scope.form.email == null || $scope.form.email.length ==0 || $scope.form.mobile == undefined || $scope.form.mobile == null || $scope.form.mobile.length ==0 || $scope.form.password == undefined || $scope.form.password == null || $scope.form.password.length <3 || $scope.form.email.indexOf('@') == -1 ) {
       console.log("form not valid , returning");
 
@@ -26,6 +30,17 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
     $scope.mode = 'sendingOTP';
     $http({method : 'POST' , url : '/api/homepage/registration/' , data : toSend}).
     then(function(response) {
+      // dataTOsend = {
+      //     details : JSON.stringify($scope.extraDetails)
+      // }
+      // $http({
+      //   method: 'PATCH',
+      //   url: '/api/HR/profile/?user=' + response.data.pk + '/',
+      //   data: dataTOsend,
+      // }).
+      // then(function(response) {
+      //   console.log(response.data);
+      // })
 
 
       if (($scope.form.password != null && $scope.form.password.length <3) || $scope.form.password == null ) {

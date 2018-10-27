@@ -110,7 +110,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 print u, u.profile, u.profile.pk, u.profile.mobile ,'ddddddddd'
                 pobj = profile.objects.get(user=u)
                 pobj.mobile = d['mobile']
+                pobj.details = d['details']
                 pobj.save()
+                print pobj,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22'
                 return instance
             else:
                 raise SuspiciousOperation('Expired')
