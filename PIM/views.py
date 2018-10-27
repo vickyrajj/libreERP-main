@@ -10,7 +10,6 @@ from django.conf import settings as globalSettings
 import os
 from os import path
 from rest_framework.response import Response
-# import cv2
 import glob
 # from PIL import Image
 # from flask import Flask, request, redirect, url_for
@@ -201,7 +200,7 @@ class ImageFetchApi(APIView):
             # # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
             # print request.POST,'fileeeeeeeeeeeeeeeeeeeeeeeeeee'
-            filew = request.POST['file']
+            # filew = request.POST['file']
             # print type(file)
 
 
