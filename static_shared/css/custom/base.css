@@ -2,6 +2,33 @@
   border-top:6px solid var(--themeMain) !important;
 }*/
 
+.showOptions{
+	animation: showOptions 0.4s;
+}
+
+
+@keyframes showOptions {
+  0%{
+		opacity: 0
+	}
+	100%{
+		opacity: 1
+	}
+}
+
+.fadeInOpacity{
+	animation: opacityChange 1s;
+}
+
+
+@keyframes opacityChange {
+  0%{
+		opacity: 0
+	}
+	100%{
+		opacity: 1
+	}
+}
 
 
 .categoryDropDown{
