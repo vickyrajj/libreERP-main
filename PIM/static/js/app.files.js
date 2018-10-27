@@ -20,6 +20,11 @@ app.controller("controller.home.files", function($scope, $state, $users, $stateP
 
     })
   })
+$scope.addMedia = function(){
+console.log($scope.file);
+
+}
+
 
 
 $scope.removeMedia = function(indx,mediaName){

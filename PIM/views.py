@@ -175,6 +175,7 @@ class ImageFetchApi(APIView):
                 images.append(image)
         return Response(images, status = status.HTTP_200_OK)
     def post(self, request, format=None):
+        
         return Response(status = status.HTTP_200_OK)
     def delete(self, request, format=None):
         if request.GET['value'] == 'static':
