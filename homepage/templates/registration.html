@@ -208,16 +208,17 @@
                               </div>
                               <div class="col-md-10 col-sm-10 col-xs-10">
                                 <div class="form-group">
-                                  <input ng-model="form.pincode" type="text" class="form-control floatInput" placeholder="{{fields.placeholder}}" required/><br/>
+                                  <input ng-model="form.{{fields.name}}" type="text" class="form-control floatInput" required/><br/>
+                                  <span class="floating-label">{{fields.placeholder}}*</span>
                                 </div>
                               </div>
                             {% endif %}
                             {% if fields.type == 'choice' %}
                                 <div class="col-md-2 col-sm-2 col-xs-2">
-                                  <span><i class="fa {{fields.icon}}" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                                  <span><i class="fa {{fields.icon}}" style="margin-top: 30px;font-size: 22px;color:#147fcc"></i></span>
                                 </div>
                                 <div class="col-md-10 col-sm-10 col-xs-10" style="padding-top:25px">
-                                <select  class="form-control" ng-model="form.designation">
+                                <select  class="form-control" ng-model="form.{{fields.name}}" ng-init="form.{{fields.name}} = '{{fields.placeholder}}'">
                                   <option selected value="{{fields.placeholder}}">{{fields.placeholder}}</option>
                                   {% for des in fields.option %}
                                   <option value={{des}}>{{des}}</option>

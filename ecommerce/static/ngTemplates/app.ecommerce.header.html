@@ -1,18 +1,25 @@
-<div class="row bg-white ecomNav" style="height:10vh;width:100%;padding-top:8px;padding-bottom: 8px;position:fixed;z-index:10;border-bottom:2px solid var(--themeColor)">
+<div class="row bg-white ecomNav" style="height:{{topLevelMenu ? '15':'10'}}vh;width:100%;padding-bottom: 8px;position:fixed;z-index:10;border-bottom:2px solid var(--themeColor)">
 
-  <div class="col-xs-2 text-center hidden-xs hidden-sm" ng-if="!SortByCategory">
+  <div class="row" style="background:var(--themeColor); color:white;" ng-if="topLevelMenu">
+    <div class="col-xs-4 col-sm-2 text-center toplevelmenuOption" style="padding:10px;" ng-repeat="page in toplevelPages" ng-click="$state.go('pages' , {title : page.pageurl} )">
+      {{page.title}}
+    </div>
+  </div>
+
+
+  <div class="col-xs-2 text-center hidden-xs hidden-sm" ng-if="!SortByCategory" >
     <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:55px;cursor:pointer;" alt="">
   </div>
 
-  <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory">
+  <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory" style="padding-top:10px;">
     <div class="col-xs-6 ">
       <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:55px;cursor:pointer;" alt="">
     </div>
 
 
-    <div class="col-xs-6 " style="padding-top:2vh;">
-        <div class="well shopByCatDiv" class="dropdown-toggle" ng-mouseenter="onBtnEnter = true;resetAll()"  ng-mouseleave="onBtnEnter = false">
-          <span class="align-middle" style="color:var(--themeColor)">Shop By Category &nbsp;<i class="fa fa-caret-down"></i></span>
+    <div class="col-xs-6 " style="padding-top:5px;">
+        <div class="well shopByCatDiv" class="dropdown-toggle" style="padding-top:10px;" ng-mouseenter="onBtnEnter = true;resetAll()"  ng-mouseleave="onBtnEnter = false">
+          <span class="align-middle" style="color:var(--themeColor)">Shop By Category <i class="fa fa-caret-down"></i></span>
         </div>
         <div class="categoryDropDown" ng-show="onBtnEnter||onDropdownEnter||onChildEnter">
           <div class="well categoryMenu" ng-mouseenter="onDropdownEnter = true;"  ng-mouseleave="onDropdownEnter = false" style="{{onDropdownEnter||onChildEnter ?'border-right:none;border-radius:5px 0px 0px 5px;':'border-radius:5px;'}}">
@@ -20,8 +27,8 @@
                 <span style="float:left" class="categoryItemName">{{c.name}}</span>
                 <span style="float:right" class="categoryItemArrow"><i class="fa fa-chevron-right"></i></span>
               </p>
-              <div class="leftSubCatDiv" ng-show="onDropdownEnter||onChildEnter">
-                <div class="well" ng-mouseenter="onChildEnter = true"  ng-mouseleave="onChildEnter = false" style="text-align:left;padding-bottom:5px;min-height:60vh;border:1px solid var(--themeColor);border-left:none;position:relative; border-left:1px solid #e0e0e0; border-radius: 0px 5px 5px 0px;">
+              <div class="leftSubCatDiv" ng-show="onDropdownEnter||onChildEnter" style="background:white !important;">
+                <div class="" ng-mouseenter="onChildEnter = true"  ng-mouseleave="onChildEnter = false" style="text-align:left;padding-bottom:5px;min-height:60vh;border:1px solid var(--themeColor);border-left:none;position:relative; border-left:1px solid #e0e0e0; border-radius: 0px 5px 5px 0px;">
                     <p ng-repeat="child in childData.child" class="categoriesSubItems" ng-click="$state.go('categories' , {name : child.name.split(' ').join('_')})" >{{child.name}}</p>
                   <span>
                     <img class="catDropDownImg" ng-src="{{childData.img}}">

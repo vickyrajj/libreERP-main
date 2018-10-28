@@ -2991,6 +2991,19 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       $scope.SortByCategory = response.data[0].flag
     }
   })
+  $http.get('/api/ERP/appSettingsAdminMode/?name=topLevelMenu').
+  then(function(response) {
+    console.log('topLevelMenu',response.data);
+    if (response.data.length>0) {
+      $scope.topLevelMenu = response.data[0].flag
+    }
+  })
+
+  $http.get('/api/ecommerce/pages/?topLevelMenu=1').
+  then(function(response) {
+    $scope.toplevelPages = response.data;
+
+  })
 
   $http.get('/api/ecommerce/categorySortList/').
   then(function(response) {
@@ -3762,7 +3775,7 @@ app.controller('controller.ecommerce.contact.modal', function($scope, $rootScope
 });
 
 
-app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval, $filter) {
+app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval, $filter , $timeout) {
 
   document.title = 'Buy Products Online At Best Price In India | Sterling Select'
   document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
@@ -3786,7 +3799,7 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
   });
 
 
-  setTimeout(function() {
+  $timeout(function() {
     console.log($rootScope.pin);
     if ($rootScope.multiStore) {
       $rootScope.$broadcast('filterForStore', {
@@ -3832,14 +3845,26 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
       })
     }
 
-    $interval(function() {
-      if($scope.maxCategories==true&&$scope.genericProducts.length>5){
-        $scope.tmpCategory=$scope.genericProducts.slice(0,1)
-        $scope.genericProducts.splice(0,1)
-        $scope.genericProducts.push($scope.tmpCategory[0])
-      }
-    }, 3000)
+    // $interval(function() {
+    //   if($scope.maxCategories==true&&$scope.genericProducts.length>5){
+    //     $scope.tmpCategory=$scope.genericProducts.slice(0,1)
+    //     $scope.genericProducts.splice(0,1)
+    //     $scope.genericProducts.push($scope.tmpCategory[0])
+    //   }
+    // }, 3000)
   }, 1000);
+
+
+  $scope.categoryProperties = {
+      // autoHeight:true,
+      // animateIn: 'fadeIn',
+      lazyLoad: true,
+      items: 5,
+      loop : true,
+      autoplay : true,
+      autoplayTimeout : 3000,
+      dots: false
+  };
 
 
   $scope.showMore = function () {
