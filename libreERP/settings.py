@@ -127,27 +127,20 @@ INSTALLED_APPS = (
 	'POS',# POS terminal like tally
     'support',# canvas
 	'productsInventory',# inventory for POS products
-    'payu', # payubiz payment integration
-    # 'employees',# employees details
-    # 'events',# to manage events like test, hackathon or something like that
-    # 'finance',# billing , invoicing , finance etc
-    # 'organization',# organization
-    # 'payroll',# payroll
-    # 'logistic',# logistics
-    # 'performance',# performance
-    # 'recruitment',# recruitment
-    # 'assets',# assets
-    # 'workforceManagement',# canvas
+    'paypal.standard.ipn', # payubiz payment integration
+    #payu
 )
 
 
+#payu payment gateway settings
 PAYU_MERCHANT_KEY = "gtKFFx",
-
 PAYU_MERCHANT_SALT = "eCwWELxi",
-
 # And add the PAYU_MODE to 'TEST' for testing and 'LIVE' for production.
 PAYU_MODE = "TEST"
 
+# paypal payment gateway details
+PAYPAL_RECEIVER_EMAIL = 'online@papered.in'
+PAYPAL_TEST = True
 
 SITE_ID = 1
 

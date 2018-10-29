@@ -1578,3 +1578,29 @@ class BulklistingCreationAPIView(APIView):
                 listingSend.files.add(i)
             listingSend.save()
         return Response(status = status.HTTP_200_OK)
+
+from paypal.standard.forms import PayPalPaymentsForm
+def paypal_return_view(request):
+    return render(request, "payment.return.html")
+
+def paypal_cancel_view(request):
+    return render(request, "payment.cancel.html")
+
+def view_that_asks_for_money(request):
+
+    # What you want the button to do.
+    paypal_dict = {
+        "business": globalSettings.PAYPAL_RECEIVER_EMAIL,
+        "amount": "100.00",
+        "item_name": "name of the item",
+        "invoice": "unique-invoice-id",
+        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+        "return": request.build_absolute_uri(reverse('your-return-view')),
+        "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
+        "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"form": form}
+    return render(request, "payment.html", context)

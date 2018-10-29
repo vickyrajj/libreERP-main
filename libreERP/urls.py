@@ -7,7 +7,7 @@ from homepage.views import index
 # from events.views import eventHome
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
-from ecommerce.views import ecommerceHome
+from ecommerce.views import ecommerceHome , view_that_asks_for_money , paypal_cancel_view , paypal_return_view
 from ERP.views import serviceRegistration
 from ERP.views import PaymentResponse
 
@@ -24,17 +24,16 @@ urlpatterns = [
     url(r'^token', tokenAuthentication , name ='tokenAuthentication'),
     url(r'^logout', logoutView , name ='logout'),
     url(r'^corporate/', index , name ='index'),
-    # url(r'^events/', eventHome, name = 'event'), # public blogs app
-    # url(r'^blogs/', include('blogs.urls')), # public blogs app
     url(r'^api-auth/', include('rest_framework.urls', namespace ='rest_framework')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^robots\.txt', include('robots.urls')),
     url(r'^generateOTP', generateOTP, name="generateOTP"),
     url(r'^documents', documentView , name ='document'),
-    # url(r'^blog/$', blog , name ='blog'),
     url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
-    # url(r'^customer/login/', customerLoginView , name ='customerLogin'),
-    # url(r'^customerhome/', customerHomeView , name ='customerhome'),
+    url(r'^paypal/', include('paypal.standard.ipn.urls')),
+    url(r'view_that_asks_for_money/$' , view_that_asks_for_money , name = "view_that_asks_for_money" ),
+    url(r'paypal_return_view/$' , view_that_asks_for_money , name = "your-return-view" ),
+    url(r'paypal_cancel_view/$' , view_that_asks_for_money , name = "your-cancel-view" ),
 ]
 
 if settings.DEBUG:
