@@ -19,7 +19,7 @@ import requests
 import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
-
+import hashlib
 
 class MakePaytmPayment(APIView):
     renderer_classes = (JSONRenderer,)
@@ -47,6 +47,58 @@ class MakePaytmPayment(APIView):
         param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
 
         return Response(param_dict, status = status.HTTP_200_OK)
+
+from django.http import HttpResponse
+import requests
+class MakeEBSPayment(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        MERCHANT_KEY = globalSettings.PAYTM_MERCHANT_KEY
+        order_id = Checksum.__id_generator__() + str(request.user.pk)
+
+        data_dict = {
+                    'channel':'0',
+                    'account_id':'19591',
+                    'reference_no': order_id,
+                    'amount': '100',
+                    'mode':'LIVE',
+                    'currency': 'INR',
+                    'description':'test ',
+                    'return_url': 'http://airwire.mybroadband.co.in/#/response',
+                    'name': request.user.first_name,
+                    'address':'ABC , kudlu',
+                    'city':'Bengaluru',
+                    'state':'Karnataka',
+                    'country' : 'IND',
+                    'postal_code':'560068',
+                    'phone':'9702438730',
+                    'email':'pkyisky@gmail.com',
+                    'cust_email':'pkyisky@gmail.com'
+                }
+        param_dict = data_dict
+
+        hashVal = 'b47b8d9994e3356cf3c841ce9e025089'
+
+        for key in sorted(param_dict.iterkeys()):
+            print (("{} --> {}").format(key, param_dict[key]))
+            hashVal += '|' + str(param_dict[key])
+
+
+        m = hashlib.md5()
+        m.update(hashVal)
+        param_dict['secure_hash'] = m.hexdigest().upper()
+
+        # res = requests.post('https://secure.ebs.in/pg/ma/payment/request', data = param_dict)
+
+        # print res.headers
+        # print res.text
+
+
+
+        # return HttpResponse(res.text)
+        return render(request, "ebs.payment.html" , {'data' : param_dict} )
+
 
 @csrf_exempt
 def PaymentResponse(request):
