@@ -22,6 +22,7 @@ router.register(r'mobilecontact' , MobileContactViewSet , base_name = 'mobilecon
 router.register(r'bankAccount' , BankAccountViewSet , base_name = 'bankAccount')
 router.register(r'bankStatement' , BankStatementViewSet , base_name = 'bankStatement')
 router.register(r'rawData' , RawDataViewSet , base_name = 'rawData')
+router.register(r'settingTypes' , SettingTypesViewSet , base_name = 'settingTypes')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
@@ -32,4 +33,7 @@ urlpatterns = [
     url(r'userCallHistoryGraph/$' , UserCallHistoryGraphAPI.as_view()),
     url(r'bankStatementUpload/$' , BankStatementUploadAPI.as_view()),
     url(r'fetchGraphData/$' , FetchGraphDataAPI.as_view()),
+    url(r'smsClassifier/$' , SmsClassifierAPI.as_view()),
+    url(r'smsTrainClassifier/$' , SmsTrainClassifierAPI.as_view()),
+    url(r'emailsTrain/$' , EmailsTrainAPI.as_view()),
 ]

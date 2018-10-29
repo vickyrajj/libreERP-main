@@ -16,8 +16,9 @@ from .serializers import *
 from API.permissions import *
 from ERP.models import application, permission , module , CompanyHolidays , service
 from ERP.views import getApps, getModules
-from django.db.models import Q,Count
+from django.db.models import Q,Count ,F
 from django.http import JsonResponse
+from rest_framework.renderers import JSONRenderer
 import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
@@ -31,9 +32,16 @@ from rest_framework import filters
 from openpyxl import load_workbook,Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
 from io import BytesIO
 from django.db.models.functions import Extract , ExtractDay, ExtractMonth, ExtractYear
 from django.db.models import Sum , Avg
+import json
+import os
+from django.db.models import CharField, Value , Func
+import csv
+import pandas as pd
+
 # from ERP.models import application , permission
 
 
@@ -531,19 +539,21 @@ class EmailViewSet(viewsets.ModelViewSet):
     search_fields = ('subject', 'frm')
     def get_queryset(self):
         print self.request.GET
-        userEmail = User.objects.get(pk=int(self.request.GET['user'])).email
-        userEmail = '<'+str(userEmail)+'>'
-        print userEmail
         ret = Email.objects.all().order_by('-dated')
-        if int(self.request.GET['Inbox']) and not int(self.request.GET['Sent']):
-            print 'onlyyy inboxxxxxxxxxx'
-            ret = ret.exclude(frm__endswith=userEmail)
-        if int(self.request.GET['Sent']) and not int(self.request.GET['Inbox']):
-            print 'onlyyyyyyy senttttttttttt'
-            ret = ret.filter(frm__endswith=userEmail)
-        if not int(self.request.GET['Sent']) and not int(self.request.GET['Inbox']):
-            print 'nothingggggggggggg'
-            ret = Email.objects.none()
+        if 'user' in self.request.GET:
+            if 'Inbox' in self.request.GET and 'Sent' in self.request.GET:
+                userEmail = User.objects.get(pk=int(self.request.GET['user'])).email
+                userEmail = '<'+str(userEmail)+'>'
+                print userEmail
+                if int(self.request.GET['Inbox']) and not int(self.request.GET['Sent']):
+                    print 'onlyyy inboxxxxxxxxxx'
+                    ret = ret.exclude(frm__endswith=userEmail)
+                if int(self.request.GET['Sent']) and not int(self.request.GET['Inbox']):
+                    print 'onlyyyyyyy senttttttttttt'
+                    ret = ret.filter(frm__endswith=userEmail)
+                if not int(self.request.GET['Sent']) and not int(self.request.GET['Inbox']):
+                    print 'nothingggggggggggg'
+                    ret = Email.objects.none()
         return ret
 
 class UserCallHistoryGraphAPI(APIView):
@@ -592,11 +602,11 @@ class UserCallHistoryGraphAPI(APIView):
             except:
                 msdNumber.append(i['frmOrTo'])
 
-        try:
-            bankRawYearsList = sorted(list(RawData.objects.filter(bankstatement__bankAct__user=userObj).annotate(year=ExtractYear('dat')).values_list('year',flat=True).distinct()))
-        except:
-            bankRawYearsList = []
-        toReturn = {'incCount':incCount,'incNumber':incNumber,'outCount':outCount,'outNumber':outNumber,'msdCount':msdCount,'msdNumber':msdNumber,'bankRawYearsList':bankRawYearsList}
+        # try:
+        #     bankRawYearsList = sorted(list(RawData.objects.filter(bankstatement__bankAct__user=userObj).annotate(year=ExtractYear('dat')).values_list('year',flat=True).distinct()))
+        # except:
+        #     bankRawYearsList = []
+        toReturn = {'incCount':incCount,'incNumber':incNumber,'outCount':outCount,'outNumber':outNumber,'msdCount':msdCount,'msdNumber':msdNumber}
 
         return JsonResponse(toReturn ,status =200 )
 
@@ -611,18 +621,89 @@ class FetchGraphDataAPI(APIView):
         for i in range(1,13):
             start = datetime.date(int(yer),i,1) + relativedelta(months=-1)
             end = start + relativedelta(months=1,days=-1)
-            print start,end
             deb = rawObj.filter(dat__range=(start,end)).aggregate(total=Sum('debit')).values()
             deb = round(deb[0],2) if deb[0] else 0
             cdt = rawObj.filter(dat__range=(start,end)).aggregate(total=Sum('credit')).values()
             cdt = round(cdt[0],2) if cdt[0] else 0
-            print deb,cdt
             debList.append(deb)
             cdtList.append(cdt)
-        print debList
-        print cdtList
-
         return JsonResponse({'debList':debList,'cdtList':cdtList} ,status =200 )
+
+class SmsClassifierAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print request.GET
+        nullSms = SMS.objects.filter(typ__isnull=True)
+        if nullSms.count()>0:
+            smsData = list(nullSms.values('pk').annotate(category=Value('credit_card', output_field=CharField()),message=F('body')).order_by('pk'))
+            print len(smsData)
+            smsData =  json.dumps(smsData)
+            filName = os.path.join(os.path.dirname(globalSettings.BASE_DIR) , 'classifier' , 'data' , 'small_samples.json')
+            with open(filName, 'w+') as fp:
+                fp.write(smsData)
+            classifierDir = os.path.dirname(globalSettings.BASE_DIR) + '/classifier/'
+            cmdExecute = classifierDir + 'predict.py ' + classifierDir + 'trained_model_{0}/ '.format(globalSettings.SMS_TRAINED_MODEL) + classifierDir + 'data/small_samples.json'
+            print cmdExecute
+            os.system('python3 {0}'.format(cmdExecute))
+            with open(classifierDir + 'data/small_samples_prediction.json','r+') as json_file:
+                jsonData = json.load(json_file)
+                print len(jsonData)
+                # json_file.close()
+            for i in jsonData:
+                try:
+                    print i['pk'],'****************'
+                    smsObj = SMS.objects.get(pk=int(i['pk']))
+                    smsObj.typ = i['new_prediction']
+                    smsObj.save()
+                except:
+                    pass
+        return JsonResponse({} ,status=status.HTTP_200_OK,safe=False)
+
+class SmsTrainClassifierAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print request.GET
+        smaObj = SMS.objects.filter(typ__isnull=False)
+        print smaObj.count()
+        if smaObj.count()>0:
+            # smsData = list(smaObj.values('pk').annotate(category=F('typ'),message=Func(F('body'),Value('\n'), Value(' '),function='replace',)).order_by('pk'))
+            smsData = list(smaObj.values('pk').annotate(category=F('typ'),message=F('body')).order_by('pk'))
+            smsData =  json.dumps(smsData)
+            filName = os.path.join(os.path.dirname(globalSettings.BASE_DIR) , 'classifier' , 'data' , 'sms_consumer_complaints.json')
+            with open(filName, 'w+') as fp:
+                fp.write(smsData)
+            classifierDir = os.path.dirname(globalSettings.BASE_DIR) + '/classifier/'
+            cmdExecute = classifierDir + 'train.py ' + classifierDir + 'data/sms_consumer_complaints.json ' + classifierDir + 'parameters.json'
+            print cmdExecute
+            os.system('python3 {0}'.format(cmdExecute))
+
+
+        return JsonResponse({} ,status=status.HTTP_200_OK,safe=False)
+
+class EmailsTrainAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print request.GET
+        emailObj = Email.objects.exclude(category='na')
+        print emailObj.count()
+        if emailObj.count()>0:
+            emailData = list(emailObj.values('pk','category').annotate(message=F('bodyTxt')).order_by('pk'))
+            print len(emailData)
+            keys = emailData[0].keys()
+            filName = os.path.join(os.path.dirname(globalSettings.BASE_DIR) , 'classifier' , 'data' , 'email_consumer_complaints.csv')
+            with open(filName, 'wb') as output_file:
+                dict_writer = csv.DictWriter(output_file, keys)
+                dict_writer.writeheader()
+                dict_writer.writerows(emailData)
+            df = pd.read_csv(filName)
+            df.to_csv(filName)
+            classifierDir = os.path.dirname(globalSettings.BASE_DIR) + '/classifier/'
+            cmdExecute = classifierDir + 'train.py ' + classifierDir + 'data/email_consumer_complaints.csv ' + classifierDir + 'parameters.json'
+            print cmdExecute
+            os.system('python3 {0}'.format(cmdExecute))
+
+
+        return JsonResponse({} ,status=status.HTTP_200_OK,safe=False)
 
 
 class emailSaveAPI(APIView):
@@ -671,9 +752,19 @@ class BankStatementViewSet(viewsets.ModelViewSet):
 
 class RawDataViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    queryset = RawData.objects.all()
+    # queryset = RawData.objects.all()
     serializer_class = RawDataSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['bankstatement' ]
+    def get_queryset(self):
+        return RawData.objects.all().order_by('dat')
 
+class SettingTypesViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    queryset = SettingTypes.objects.all()
+    serializer_class = SettingTypesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['typ','name' ]
 
 class BankStatementUploadAPI(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
@@ -681,7 +772,7 @@ class BankStatementUploadAPI(APIView):
     def post(self , request , format = None):
         res = []
         excelFile = request.FILES['excelFile']
-        userObj = User.objects.get(pk=int(request.FILES['user']))
+        userObj = User.objects.get(pk=int(request.POST['user']))
         wb = load_workbook(filename = BytesIO(excelFile.read()) ,  read_only=True)
 
         bStatementObj = ''
@@ -704,38 +795,65 @@ class BankStatementUploadAPI(APIView):
 
             elif  wsTitle.lower() == 'raw data':
                 print 'raw Dataaaaaaaaaa',bStatementObj
+                dt = ''
+                desc = ''
+                flc = ''
+                slc = ''
+                dbt = ''
+                cdt = ''
+                bal = ''
+                try:
+                    first_row = list(ws.rows)[0]
+                    for idx,cell in enumerate(first_row):
+                        if str(cell.value).lower() == 'date':
+                            dt = str(get_column_letter(idx+1))
+                        elif str(cell.value).lower() == 'description':
+                            desc = str(get_column_letter(idx+1))
+                        elif str(cell.value).lower() == 'first level category':
+                            flc = str(get_column_letter(idx+1))
+                        elif str(cell.value).lower() == 'second level category':
+                            slc = str(get_column_letter(idx+1))
+                        elif str(cell.value).lower() == 'debit':
+                            dbt = str(get_column_letter(idx+1))
+                        elif str(cell.value).lower() == 'credit':
+                            cdt = str(get_column_letter(idx+1))
+                        elif str(cell.value).lower() == 'balance':
+                            bal = str(get_column_letter(idx+1))
+                    print dt,desc,flc,slc,dbt,cdt,bal
+                except:
+                    pass
                 for i in range(2,ws.max_row+1):
                     data = {}
                     try:
                         data['bankstatement'] = bStatementObj
                         try:
-                            data['dat'] = ws['B'+str(i)].value.date()
+                            data['dat'] = ws[dt+str(i)].value.date()
                         except:
                             print 'dateeeeeeee is not addedddddddddd'
                         try:
-                            data['description'] = str(ws['D'+str(i)].value)
+                            data['description'] = str(ws[desc+str(i)].value)
                         except:
-                            data['description'] = ws['D'+str(i)].value
+                            data['description'] = ws[desc+str(i)].value
                         try:
-                            data['firstLCat'] = str(ws['E'+str(i)].value)
+                            data['firstLCat'] = str(ws[flc+str(i)].value)
                         except:
-                            data['firstLCat'] = ws['E'+str(i)].value
+                            data['firstLCat'] = ws[flc+str(i)].value
                         try:
-                            data['secondLCat'] = str(ws['F'+str(i)].value)
+                            data['secondLCat'] = str(ws[slc+str(i)].value)
                         except:
-                            data['secondLCat'] = ws['F'+str(i)].value
+                            data['secondLCat'] = ws[slc+str(i)].value
                         try:
-                            data['debit'] = float(ws['G'+str(i)].value)
+                            data['debit'] = float(ws[dbt+str(i)].value)
                         except:
-                            data['debit'] = ws['G'+str(i)].value
+                            data['debit'] = ws[dbt+str(i)].value
                         try:
-                            data['credit'] = float(ws['H'+str(i)].value)
+                            data['credit'] = float(ws[cdt+str(i)].value)
                         except:
-                            data['credit'] = ws['H'+str(i)].value
+                            data['credit'] = ws[cdt+str(i)].value
                         try:
-                            data['balance'] = float(ws['I'+str(i)].value)
+                            data['balance'] = float(ws[bal+str(i)].value)
                         except:
-                            data['balance'] = ws['I'+str(i)].value
+                            data['balance'] = ws[bal+str(i)].value
 
                         rawObj = RawData.objects.create(**data)
 

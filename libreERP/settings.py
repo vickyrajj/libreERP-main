@@ -43,6 +43,7 @@ LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
 
 LOGIN_TEMPLATE = 'login.html'
+SMS_TRAINED_MODEL = '1540626861'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/

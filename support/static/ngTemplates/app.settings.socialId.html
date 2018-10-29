@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="container-fluid">
+    <div class="col-md-12" ng-controller="businessManagement.seettings.socialId.form" style="padding-top:15px">
+      <div class="col-md-4 col-md-offset-4 text-center">
+        <div class="form-group">
+          <label>{{msg}} Social ID'S</label>
+          <div class="input-group">
+            <input type="text" class="form-control" ng-model="sEmailForm.name" />
+            <span class="input-group-btn">
+            <button type="button" class="btn {{mode=='new'?'btn-default':'btn-primary'}}" ng-click="saveSEmail()"></i>{{msg}}</button>
+          </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row" style="margin:20px 15px">
+        <generic-Table data="data.tableSEmailData" config-Obj="{{SEmailConfig}}" callback-Fn="tableSEmailAction"></generic-Table>
+      </div>
+    </div>
+  </div>
+</div>

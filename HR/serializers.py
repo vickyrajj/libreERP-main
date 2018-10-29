@@ -7,6 +7,7 @@ from .models import *
 from PIM.serializers import *
 import datetime
 from django.core.exceptions import ObjectDoesNotExist , SuspiciousOperation
+from django.db.models import Sum , Avg
 
 class EmailAttachmentSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
@@ -65,10 +66,18 @@ class userDesignationSerializer(serializers.ModelSerializer):
         #  'unitType' , 'domain' , 'rank' , 'unit' , 'department' ,
 class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
+    totalBankAccounts = serializers.SerializerMethodField()
     class Meta:
         model = profile
-        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'email', 'gmailAge')
-        read_only_fields = ('website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' , )
+        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'email', 'gmailAge','totalBankAccounts')
+        read_only_fields = ('website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,)
+
+    def get_totalBankAccounts(self , obj):
+        try:
+            total = obj.user.userBankAccount.all().count()
+        except:
+            total = 0
+        return total
 
 class userProfileAdminModeSerializer(serializers.ModelSerializer):
     """ Only admin """
@@ -273,10 +282,15 @@ class ProfileOrgChartsSerializer(serializers.ModelSerializer):
 class SMSSerializer(serializers.ModelSerializer):
     class Meta:
         model = SMS
-        fields = ('pk', 'created' , 'frm','to','body','dated','user','spam' )
+        fields = ('pk', 'created' , 'frm','to','body','dated','user','spam','typ' )
         read_only_fields=('user',)
     def create(self , validated_data):
         d = SMS(**validated_data)
+        NegativeWordsList = list(SettingTypes.objects.filter(typ='negativeWord').values_list('name',flat=True).distinct())
+        print NegativeWordsList
+        smsBody = ' '+str(d.body)+' '
+        if any(' '+substring.lower()+' ' in smsBody for substring in NegativeWordsList):
+            d.typ = 'negative'
         try:
             user = User.objects.get(profile__mobile__contains = self.context['request'].data['to'])
             d.user=user
@@ -390,11 +404,79 @@ class BankAccountSerializer(serializers.ModelSerializer):
         fields = ('pk', 'created' , 'user', 'accNumber','bankName', 'typ' ,'ifscCode' )
 
 class BankStatementSerializer(serializers.ModelSerializer):
+    bankAct = BankAccountSerializer(many=False,read_only=True)
+    frmDate = serializers.SerializerMethodField()
+    toDate = serializers.SerializerMethodField()
+    openingBal = serializers.SerializerMethodField()
+    closingBal = serializers.SerializerMethodField()
+    totalDebAmount = serializers.SerializerMethodField()
+    totalCdtAmount = serializers.SerializerMethodField()
+    graphLabels = serializers.SerializerMethodField()
+    graphData = serializers.SerializerMethodField()
     class Meta:
         model = BankStatement
-        fields = ('pk', 'created' , 'attachment','bankAct')
+        fields = ('pk', 'created' , 'attachment','bankAct','frmDate','toDate','openingBal','closingBal','totalDebAmount','totalCdtAmount','graphLabels','graphData')
+
+
+    def get_frmDate(self , obj):
+        try:
+            fd = list()
+            rawObj = obj.BankStatements.all()
+            rawObjList = list(rawObj)
+            if len(rawObjList)>0:
+                self.frmDate = rawObjList[0].dat
+                self.toDate = rawObjList[-1].dat
+                self.openingBal = rawObjList[0].balance
+                self.closingBal = rawObjList[-1].balance
+            else:
+                self.frmDate = datetime.date.today()
+                self.toDate = datetime.date.today()
+                self.openingBal = 0
+                self.closingBal = 0
+            self.totalDebAmount = rawObj.aggregate(total=Sum('debit')).values()
+            self.totalDebAmount = round(self.totalDebAmount[0],2) if self.totalDebAmount[0] else 0
+            self.totalCdtAmount = rawObj.aggregate(total=Sum('credit')).values()
+            self.totalCdtAmount = round(self.totalCdtAmount[0],2) if self.totalCdtAmount[0] else 0
+            rawObjDebit = rawObj.filter(credit__isnull=True)
+            graphDataAll = list(rawObjDebit.values('firstLCat').distinct().annotate(tot=Sum('debit')).values('firstLCat','tot'))
+            self.graphLabels = []
+            self.graphData = []
+            for i in graphDataAll:
+                self.graphLabels.append(i['firstLCat'])
+                self.graphData.append(i['tot'])
+        except:
+            self.frmDate = datetime.date.today()
+            self.toDate = datetime.date.today()
+            self.openingBal = 0
+            self.closingBal = 0
+            self.totalDebAmount = 0
+            self.totalCdtAmount = 0
+            self.graphLabels = []
+            self.graphData = []
+
+        return self.frmDate
+
+    def get_toDate(self , obj):
+        return self.toDate
+    def get_openingBal(self , obj):
+        return self.openingBal
+    def get_closingBal(self , obj):
+        return self.closingBal
+    def get_totalDebAmount(self , obj):
+        return self.totalDebAmount
+    def get_totalCdtAmount(self , obj):
+        return self.totalCdtAmount
+    def get_graphLabels(self , obj):
+        return self.graphLabels
+    def get_graphData(self , obj):
+        return self.graphData
 
 class RawDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = RawData
         fields = ('pk', 'created' , 'bankstatement', 'dat','description','firstLCat','secondLCat','debit','credit','balance')
+
+class SettingTypesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SettingTypes
+        fields = ('pk', 'created' , 'typ', 'name')

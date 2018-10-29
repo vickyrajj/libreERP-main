@@ -184,6 +184,14 @@ app.controller("customer.explore.call", function($scope, $state, $users, $stateP
   }
 })
 
+app.controller("customer.bankStatement.details", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside,$uibModalInstance,rawData,bankData) {
+  $scope.data = rawData
+  $scope.bankData = bankData
+  $scope.cancel = function(e) {
+    $uibModalInstance.dismiss();
+  };
+})
+
 app.controller("customer.explore.location", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside) {
   $scope.sameDate = function(prev , curr) {
     if (typeof curr == 'string') {
@@ -217,7 +225,7 @@ app.controller("customer.explore.location", function($scope, $state, $users, $st
 })
 
 
-app.controller("businessManagement.customers.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside) {
+app.controller("businessManagement.customers.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside,$timeout) {
   $scope.data = $scope.tab.data
   $scope.form={mobile:''}
   $scope.status = false
@@ -338,14 +346,14 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   bankStatementViews = [{
     name: 'list',
     icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/tableDefault.html',
-    // itemTemplate: '/static/ngTemplates/app.customers.emails.items.html',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.customers.bankStatements.items.html',
   }, ];
 
   $scope.bankStatementConfig = {
     views: bankStatementViews,
     url: '/api/HR/bankStatement/',
-    searchField: 'name',
+    searchField: 'bankAct__accNumber',
     getParams : [{key : 'bankAct__user' , value : $scope.data.pk}],
     itemsNumPerView: [16, 32, 48],
     canCreate : true,
@@ -378,7 +386,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
 
   $scope.emailtableAction = function(target, action, mode) {
     console.log(target, action, mode);
-    console.log($scope.dataVal.emailData);
     if (mode == 'multi') {
       if (action == 'fetchNew') {
         console.log('fetch new messagessss');
@@ -397,6 +404,50 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
         }
       }
     }
+  }
+
+  $scope.banktableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    if (action == 'Info') {
+      console.log("bank infooooooo");
+      for (var i = 0; i < $scope.dataVal.bankStatementsData.length; i++) {
+        if ($scope.dataVal.bankStatementsData[i].pk == parseInt(target)) {
+          $scope.openbankStatementInfo($scope.dataVal.bankStatementsData[i]);
+        }
+      }
+    }else if (action == 'bankGraph') {
+      for (var i = 0; i < $scope.dataVal.bankStatementsData.length; i++) {
+        if ($scope.dataVal.bankStatementsData[i].pk == parseInt(target)) {
+          console.log($scope.dataVal.bankStatementsData[i]);
+          $scope.dataVal.bankStatementsData[i].showInfo = !$scope.dataVal.bankStatementsData[i].showInfo
+        }
+      }
+    }
+  }
+
+  $scope.openbankStatementInfo = function(dt) {
+    $http({
+      method: 'GET',
+      url: '/api/HR/rawData/?bankstatement=' + dt.pk
+    }).
+    then(function(response) {
+      console.log(response.data);
+      $aside.open({
+        templateUrl : '/static/ngTemplates/app.customer.bankStatement.info.html',
+        placement: 'right',
+        size: 'xl',
+        resolve: {
+          rawData : function() {
+            return response.data;
+          },
+          bankData : function() {
+            return dt;
+          },
+        },
+        controller : 'customer.bankStatement.details'
+      })
+    })
+
   }
 
   $scope.openEmailInfo = function(dt) {
@@ -521,36 +572,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   $scope.outCount = [];
   $scope.msdNumber = [];
   $scope.msdCount = [];
-  $scope.bankRawYearsList = []
-  $scope.graphIdx = 0
-  $scope.graphYearsLength = 0
-  $http({
-    method: 'GET',
-    url: '/api/HR/userCallHistoryGraph/?user=' + $scope.data.pk
-  }).
-  then(function(response) {
-    console.log(response.data);
-    $scope.incNumber = response.data.incNumber
-    $scope.incCount = response.data.incCount
-    $scope.outNumber = response.data.outNumber
-    $scope.outCount = response.data.outCount
-    $scope.msdNumber = response.data.msdNumber
-    $scope.msdCount = response.data.msdCount
-    $scope.bankRawYearsList = response.data.bankRawYearsList
-    $scope.graphYearsLength = $scope.bankRawYearsList.length
-    if ($scope.bankRawYearsList.length>0) {
-      $scope.graphIdx = $scope.bankRawYearsList.length - 1
-    }
-  })
-
-  $scope.prevGraph = function(){
-    $scope.graphIdx = $scope.graphIdx - 1
-    $scope.fetchGraphDetils($scope.graphIdx)
-  }
-  $scope.nextGraph = function(){
-    $scope.graphIdx = $scope.graphIdx + 1
-    $scope.fetchGraphDetils($scope.graphIdx)
-  }
 
   $scope.fetchGraphDetils = function(idx){
     console.log('fetchingggggg on ',$scope.bankRawYearsList[idx]);
@@ -564,7 +585,57 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     })
   }
 
+  var thisYear = new Date().getFullYear()
+  $scope.bankRawYearsList = [thisYear-2,thisYear-1,thisYear]
+  $scope.graphIdx = 2
+  $scope.graphYearsLength = 3
+  $scope.fetchGraphDetils($scope.graphIdx)
+  $http({
+    method: 'GET',
+    url: '/api/HR/userCallHistoryGraph/?user=' + $scope.data.pk
+  }).
+  then(function(response) {
+    console.log(response.data);
+    $scope.incNumber = response.data.incNumber
+    $scope.incCount = response.data.incCount
+    $scope.outNumber = response.data.outNumber
+    $scope.outCount = response.data.outCount
+    $scope.msdNumber = response.data.msdNumber
+    $scope.msdCount = response.data.msdCount
+  })
 
+  $scope.prevGraph = function(){
+    $scope.graphIdx = $scope.graphIdx - 1
+    $scope.fetchGraphDetils($scope.graphIdx)
+  }
+  $scope.nextGraph = function(){
+    $scope.graphIdx = $scope.graphIdx + 1
+    $scope.fetchGraphDetils($scope.graphIdx)
+  }
+
+
+  // $timeout(function () {
+  //     console.log($scope.dataVal.bankStatementsData);
+  //     for (var i = 0; i < $scope.dataVal.bankStatementsData.length; i++) {
+  //       $scope.getBSData(i)
+  //     }
+  // }, 1500);
+  // $scope.getBSData = function(i){
+  //   console.log(i,$scope.dataVal.bankStatementsData[i].pk);
+  //   $http({
+  //     method: 'GET',
+  //     url: '/api/HR/getBankStatementsData/?pk=' + $scope.dataVal.bankStatementsData[i].pk
+  //   }).
+  //   then((function(i) {
+  //     return function(response) {
+  //       console.log(i,'ressssssssssss',response.data);
+  //       $scope.dataVal.bankStatementsData[i].bankData = response.data
+  //       $scope.dataVal.bankStatementsData[i].graphLabels = response.data.graphLabels
+  //       $scope.dataVal.bankStatementsData[i].graphData = response.data.graphData
+  //
+  //     }
+  //   })(i))
+  // }
 
 
 })

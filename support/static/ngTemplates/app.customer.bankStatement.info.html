@@ -1,0 +1,40 @@
+<div class="modal-header bg-blue">
+  <div class="container-fluid">
+    <div class="row">
+      <i class="fa fa-arrow-circle-o-left pull-left fa-2x" ng-click="cancel()" style="cursor:pointer;"></i>
+      <span class="text-center" ng-if="data.length>0">
+        <h4>{{bankData.frmDate | date : 'dd-MMM-yyyy'}} - {{bankData.toDate | date : 'dd-MMM-yyyy'}}</h4>
+      </span>
+    </div>
+  </div>
+</div>
+<div class="modal-body" style="padding:10px;display:block;box-sizing:border-box;">
+  <div class="container-fluid">
+    <table class="table table-bordered" ng-if="data.length>0">
+      <thead>
+        <tr>
+          <th scope="col">S.no</th>
+          <th scope="col">Date</th>
+          <th scope="col">Description</th>
+          <th scope="col">First Level Category</th>
+          <th scope="col">Second Level Category</th>
+          <th scope="col">Debit</th>
+          <th scope="col">Credit</th>
+          <th scope="col">Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="d in data">
+          <th scope="row">{{$index+1}}</th>
+          <td>{{d.dat | date : 'dd-MMM-yyyy'}}</td>
+          <td>{{d.description}}</td>
+          <td>{{d.firstLCat}}</td>
+          <td>{{d.secondLCat}}</td>
+          <td>{{d.debit}}</td>
+          <td>{{d.credit}}</td>
+          <td>{{d.balance}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

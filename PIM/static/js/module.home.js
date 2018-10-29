@@ -113,11 +113,20 @@ app.config(function($stateProvider) {
       controller: 'admin.manageUsers'
     })
 
+    .state('home.customers', {
+      url: "/customers",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.customers.html',
+          controller: 'businessManagement.customers',
+        }
+      }
+    })
 
     .state('home.settings', {
       url: "/settings",
-      templateUrl: '/static/ngTemplates/app.home.settings.html',
-      controller: 'module.home.settings'
+      templateUrl: '/static/ngTemplates/app.settings.html',
+      controller: 'businessManagement.settings'
     })
 
     // .state('home.settings', {
@@ -146,66 +155,57 @@ app.config(function($stateProvider) {
     //   controller: 'admin.settings.configure'
     // })
 
-    .state('home.support', {
-      url: "/support",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/app.support.html',
-          controller: 'businessManagement.support',
-        }
-      }
-    })
-    .state('home.customers', {
-      url: "/customers",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/app.customers.html',
-          controller: 'businessManagement.customers',
-        }
-      }
-    })
-
-    .state('home.qualityCheck', {
-      url: "/qualityCheck",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/app.qualityCheck.html',
-          controller: 'businessManagement.reviews',
-        }
-      }
-    })
-
-
-    .state('home.reviews', {
-      url: "/reviews",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/app.reviews.html',
-          controller: 'businessManagement.customerReviews',
-        }
-      }
-    })
-
-    .state('home.knowledgeBase', {
-      url: "/knowledgeBase",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/app.knowledgeBase.html',
-          controller: 'businessManagement.customerKnowledgeBase',
-        }
-      }
-    })
-
-
-    .state('home.uiSettings', {
-      url: "/uiSettings",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/app.uiSettings.html',
-          controller: 'businessManagement.customerSettings',
-        }
-      }
-    })
+    // .state('home.support', {
+    //   url: "/support",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.support.html',
+    //       controller: 'businessManagement.support',
+    //     }
+    //   }
+    // })
+    //
+    // .state('home.qualityCheck', {
+    //   url: "/qualityCheck",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.qualityCheck.html',
+    //       controller: 'businessManagement.reviews',
+    //     }
+    //   }
+    // })
+    //
+    //
+    // .state('home.reviews', {
+    //   url: "/reviews",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.reviews.html',
+    //       controller: 'businessManagement.customerReviews',
+    //     }
+    //   }
+    // })
+    //
+    // .state('home.knowledgeBase', {
+    //   url: "/knowledgeBase",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.knowledgeBase.html',
+    //       controller: 'businessManagement.customerKnowledgeBase',
+    //     }
+    //   }
+    // })
+    //
+    //
+    // .state('home.uiSettings', {
+    //   url: "/uiSettings",
+    //   views: {
+    //     "": {
+    //       templateUrl: '/static/ngTemplates/app.uiSettings.html',
+    //       controller: 'businessManagement.customerSettings',
+    //     }
+    //   }
+    // })
 
     // .state('home.organization', {
     //   url: "/organization",
@@ -332,75 +332,75 @@ app.config(function($stateProvider) {
 
 });
 
-app.controller("module.home.settings", function($scope, $state, $http) {
-
-  $scope.data = {
-    tableData: []
-  };
-
-  views = [{
-    name: 'list',
-    icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.settings.prescriptItems.html',
-  }, ];
-
-
-  $scope.config = {
-    views: views,
-    url: '/api/ERP/service/',
-    searchField: 'name',
-    itemsNumPerView: [16, 32, 48],
-  }
-
-  $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableData);
-
-    for (var i = 0; i < $scope.data.tableData.length; i++) {
-      if ($scope.data.tableData[i].pk == parseInt(target)) {
-        if (action == 'info') {
-          var title = 'Prescipts : ';
-          var appType = 'prescriptInfo';
-        }
-        $scope.addTab({
-          title: title + $scope.data.tableData[i].pk,
-          cancel: true,
-          app: appType,
-          data: $scope.data.tableData[i],
-          active: true
-        })
-      }
-    }
-  }
-
-
-  $scope.tabs = [];
-  $scope.searchTabActive = true;
-
-  $scope.closeTab = function(index) {
-    $scope.tabs.splice(index, 1)
-  }
-
-  $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
-    $scope.searchTabActive = false;
-    alreadyOpen = false;
-    for (var i = 0; i < $scope.tabs.length; i++) {
-      if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
-        $scope.tabs[i].active = true;
-        alreadyOpen = true;
-      } else {
-        $scope.tabs[i].active = false;
-      }
-    }
-    if (!alreadyOpen) {
-      $scope.tabs.push(input)
-    }
-  }
-
-
-})
+// app.controller("module.home.settings", function($scope, $state, $http) {
+//
+//   $scope.data = {
+//     tableData: []
+//   };
+//
+//   views = [{
+//     name: 'list',
+//     icon: 'fa-th-large',
+//     template: '/static/ngTemplates/genericTable/genericSearchList.html',
+//     itemTemplate: '/static/ngTemplates/app.settings.prescriptItems.html',
+//   }, ];
+//
+//
+//   $scope.config = {
+//     views: views,
+//     url: '/api/ERP/service/',
+//     searchField: 'name',
+//     itemsNumPerView: [16, 32, 48],
+//   }
+//
+//   $scope.tableAction = function(target, action, mode) {
+//     console.log(target, action, mode);
+//     console.log($scope.data.tableData);
+//
+//     for (var i = 0; i < $scope.data.tableData.length; i++) {
+//       if ($scope.data.tableData[i].pk == parseInt(target)) {
+//         if (action == 'info') {
+//           var title = 'Prescipts : ';
+//           var appType = 'prescriptInfo';
+//         }
+//         $scope.addTab({
+//           title: title + $scope.data.tableData[i].pk,
+//           cancel: true,
+//           app: appType,
+//           data: $scope.data.tableData[i],
+//           active: true
+//         })
+//       }
+//     }
+//   }
+//
+//
+//   $scope.tabs = [];
+//   $scope.searchTabActive = true;
+//
+//   $scope.closeTab = function(index) {
+//     $scope.tabs.splice(index, 1)
+//   }
+//
+//   $scope.addTab = function(input) {
+//     console.log(JSON.stringify(input));
+//     $scope.searchTabActive = false;
+//     alreadyOpen = false;
+//     for (var i = 0; i < $scope.tabs.length; i++) {
+//       if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {
+//         $scope.tabs[i].active = true;
+//         alreadyOpen = true;
+//       } else {
+//         $scope.tabs[i].active = false;
+//       }
+//     }
+//     if (!alreadyOpen) {
+//       $scope.tabs.push(input)
+//     }
+//   }
+//
+//
+// })
 
 
 app.controller("app.settings.roles", function($scope, $state, $http ,Flash , $permissions) {

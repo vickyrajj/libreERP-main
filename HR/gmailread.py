@@ -180,20 +180,9 @@ def fromOrBeforeDate(GMAIL,dt,typ):
 import html2text
 import email
 from dateutil.parser import parse
-from models import profile , Email , EmailAttachment
+from models import profile , Email , EmailAttachment , SettingTypes
 import os
 from django.core.files.base import ContentFile
-
-def GetHTMLMessageBody(service, user_id, msg_id):
-	toReturn = '<p></p>'
-	try:
-		message = service.users().messages().get(userId=user_id, id=msg_id).execute()
-		for part in message['payload'].get('parts',[]):
-			if part['mimeType'] == 'text/html':
-				toReturn = part['body']['data']
-	except errors.HttpError, error:
-	    print 'An error occurred: %s' % error
-	return toReturn
 
 
 def GetMessageBody(service, user_id, msg_id):
@@ -249,6 +238,9 @@ def GetAttachments(service, user_id, msg_id, store_dir,u):
 
 def createMessage(user,service,msgList):
 	store_dir = 'media_root/HR/email/attachment/'
+	bankIdList = list(SettingTypes.objects.filter(typ='bankIds').values_list('name',flat=True).distinct())
+	socialIdList = list(SettingTypes.objects.filter(typ='socialIds').values_list('name',flat=True).distinct())
+	print bankIdList,socialIdList
 	for msg in msgList:
 		try:
 			files = GetAttachments(service,user_id,msg['messageId'],store_dir,user)
@@ -256,6 +248,10 @@ def createMessage(user,service,msgList):
 			htmlBody = GetMessageBody(service,user_id,msg['messageId'])
 			textBody = html2text.html2text(htmlBody)
 			data = {'dated':parser.parse(msg['Date']),'category':'na','frm':msg['Sender'],'body':htmlBody,'bodyTxt':textBody,'user':user,'messageId':msg['messageId'],'subject':msg['Subject']}
+			if any(substring.lower() in msg['Sender'] for substring in bankIdList):
+				data['category'] = 'bank update'
+			if any(substring.lower() in msg['Sender'] for substring in socialIdList):
+			    data['category'] = 'SOCIAL'
 			try:
 				emObj = Email.objects.create(**data)
 				for i in files:

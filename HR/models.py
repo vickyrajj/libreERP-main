@@ -269,6 +269,8 @@ class SMS(models.Model):
     dated = models.DateTimeField(auto_now_add = False)
     user = models.ForeignKey(User , related_name = "smsAuthored" , null=True)
     spam = models.BooleanField(default = False)
+    typ = models.CharField(max_length = 15 , null = True)
+
     class Meta:
         unique_together = ('body', 'frm',)
 
@@ -315,6 +317,8 @@ EMAIL_CATEGORY_CHOICES = (
     ('others' , 'others'),
     ('credit' , 'credit'),
     ('debit' , 'debit'),
+    ('SPAM' , 'SPAM'),
+    ('SOCIAL' , 'SOCIAL'),
 )
 
 class Email(models.Model):
@@ -368,3 +372,8 @@ class RawData(models.Model):
     debit = models.FloatField(default=0, null=True)
     credit = models.FloatField(default=0, null=True)
     balance = models.FloatField(default=0, null=True)
+
+class SettingTypes(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    typ = models.CharField(max_length = 20 , null=True)
+    name = models.CharField(max_length = 100 , null=True)

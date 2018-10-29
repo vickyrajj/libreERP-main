@@ -1,0 +1,18 @@
+<div class="col-md-3"  style="margin-bottom:15px">
+  <div class="well text-center" style="padding:10px;margin-bottom:0px">
+    <strong style="font-size:15px">{{data.name}}</strong>
+  </div>
+  <div class="col-md-6 text-center" style="background-color:#5f76f5;color:white;font-size:16px;cursor:pointer" ng-click="rowActionClicked('edit')">
+    Edit
+  </div>
+  <div class="col-md-6 text-center" style="background-color:#f55f5f;color:white;font-size:16px;cursor:pointer" mwl-confirm
+  title="Confirm"
+  message="Are you sure?"
+  confirm-text="Yes <i class='fa fa-check'></i>"
+  cancel-text="No"
+  on-confirm="rowActionClicked('delete')"
+  confirm-button-type="danger"
+  cancel-button-type="default">
+    Delete
+  </div>
+</div>

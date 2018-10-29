@@ -39,7 +39,7 @@
                   <img src="/static/images/bank-clip-account.png" style="width:100%;">
                 </div>
                 <div class="col-md-8">
-                  <h3>3</h3>
+                  <h3>{{data.profile.totalBankAccounts}}</h3>
                   Bank accounts
                 </div>
               </div>
@@ -51,7 +51,7 @@
                   <img src="/static/images/loan_icon.png" style="width:100%;">
                 </div>
                 <div class="col-md-8">
-                  <h3>4</h3>
+                  <h3>0</h3>
                   Loan account
                 </div>
               </div>
@@ -63,7 +63,7 @@
                   <img src="/static/images/creditCard.png" style="width:100%;">
                 </div>
                 <div class="col-md-8">
-                  <h3>1</h3>
+                  <h3>0</h3>
                   Credit Cards
                 </div>
               </div>
@@ -210,13 +210,13 @@
 
           <uib-tab >
             <uib-tab-heading>
-              Bank Statements <i  class="fa fa-address-book"></i>
+              Bank Statements <i  class="fa fa-file-excel"></i>
             </uib-tab-heading>
-            <generic-Table callback-Fn="tableAction" data="dataVal.bankStatementsData" config-Obj="{{bankStatementConfig}}"></generic-Table>
+            <generic-Table callback-Fn="banktableAction" data="dataVal.bankStatementsData" config-Obj="{{bankStatementConfig}}"></generic-Table>
           </uib-tab>
           <uib-tab >
             <uib-tab-heading>
-              Email <i  class="fa fa-address-book"></i>
+              Email <i  class="fa fa-envelope"></i>
             </uib-tab-heading>
             <generic-Table callback-Fn="emailtableAction" data="dataVal.emailData" config-Obj="{{emailConfig}}"></generic-Table>
           </uib-tab>

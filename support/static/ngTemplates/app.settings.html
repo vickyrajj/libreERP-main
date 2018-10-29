@@ -1,0 +1,35 @@
+<div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
+  <breadcrumb></breadcrumb>
+  <div class="container-fluid">
+    <uib-tabset>
+      <uib-tab active="searchTabActive">
+        <uib-tab-heading>
+          Negative Keywords
+          <i class="fa fa-list-ul"></i>
+        </uib-tab-heading>
+        <div ng-include="'/static/ngTemplates/app.settings.negativeKeywords.html'"></div>
+      </uib-tab>
+      <uib-tab>
+        <uib-tab-heading>
+          Bank ID'S
+          <i class="fa fa-list-ul"></i>
+        </uib-tab-heading>
+        <div ng-include="'/static/ngTemplates/app.settings.bankId.html'"></div>
+      </uib-tab>
+      <uib-tab>
+        <uib-tab-heading>
+          Social ID'S
+          <i class="fa fa-list-ul"></i>
+        </uib-tab-heading>
+        <div ng-include="'/static/ngTemplates/app.settings.socialId.html'"></div>
+      </uib-tab>
+      <uib-tab>
+        <uib-tab-heading>
+          Generalise Messages
+          <i class="fa fa-list-ul"></i>
+        </uib-tab-heading>
+        <div ng-include="'/static/ngTemplates/app.settings.msgGeneralise.html'"></div>
+      </uib-tab>
+    </uib-tabset>
+  </div>
+</div>
