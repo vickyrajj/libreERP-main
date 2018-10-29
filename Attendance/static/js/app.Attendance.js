@@ -20,14 +20,8 @@ app.config(function($stateProvider){
 
   .state('projectManagement.Attendance.Calendar', {
   url: "/Calendar",
-  templateUrl: '/static/ngTemplates/app.Attendance.CalendarMain.html',
+  templateUrl: '/static/ngTemplates/app.Attendance.Calendar.html',
   controller: 'projectManagement.Attendance.Calendar'
-})
-
-  .state('projectManagement.Attendance.dbdata', {
-  url: "/dbdata",
-  templateUrl: '/static/ngTemplates/app.Attendance.dbdata.html',
-  controller: 'projectManagement.Attendance.dbdata'
 })
 
 });

@@ -1,20 +1,62 @@
-<!-- this file shows the events and customs of the calender for the calendarMain file.. -->
+<!-- this file is replacement for generic-calendar directive -->
 <div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
-<div class="row bg-limegreen dayInfoBox" style="max-height:350px;overflow:auto;">
+  <breadcrumb></breadcrumb>
+  <div class="container-fluid">
+    <div class="row" style="margin-left:20px;margin-right:20px;">
+    <div class="container-fluid">
+  <div class="row">
+    <div class="btn-group col-md-3 col-sm-12 col-xs-12">
+        <button class="btn btn-success col-sm-4 col-xs-6" ng-click="gotoPrev()"> previous </button>
 
-        <ul class="nav">
-          <li>
-            <a href="" ng-click="itemSelected($index)" ng-repeat="item in itemsToShow" class="{{itemsToShow.indexOf(itemInView)== $index ? 'highlighted':''}}">
-              <i class="fa fa-bell-o" ng-if="item.type == 'Reminder'"></i>
-              {{item.type=='Meeting'? item.type : item.data.text | limitTo:30}}
-              <span class="pull-right">
-                <i class="fa fa-clock-o"></i> {{item.data.when | date:'hh mm a'}}
-                <span  ng-if="item.type == 'Meeting'">
-                  <i class="fa fa-building-o"></i> {{item.data.venue}}
-                </span>
-              </span>
-            </a>
-          </li>
-        </ul>
+    </div>
+    <div class="headerCalender col-md-3 col-sm-8 col-xs-12">
+      <div class="input-group">
+        <input type="text" class="form-control"  ng-model="userform.user" uib-typeahead="user as user.username for user in userSearch($viewValue)"/>
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="getUserAttendance()">Fetch Attendance</button>
+        </span>
+      </div>
+    </div>
+    <div class="headerCalender col-md-2 col-sm-4 col-xs-12">
+      <p>{{dateDisp | date:'dd MMM yyyy'}} </p>
+    </div>
+    <div class="col-md-4 col-sm-12 col-xs-12">
+      <div class="col-md-7 col-sm-6 col-xs-6">
+        <button class="btn btn-primary col-sm-4 col-xs-6" ng-click="gotoToday()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+      </div>
+      <button class="btn btn-success col-sm-3 col-xs-6" ng-click="gotoNext()"> next</button>
+    </div>
+    <hr></hr>
+  </div>
+  <hr></hr>
+  <div class="row">
+    <div class="weekHeader card text-center"style="padding-top:10px;">
+      <div class="weekDay ">Sunday</div>
+      <div class="weekDay">Monday</div>
+      <div class="weekDay">Tuesday</div>
+      <div class="weekDay">Wednesday</div>
+      <div class="weekDay">Thursday</div>
+      <div class="weekDay">Friday</div>
+      <div class="weekDay">Saturday</div>
+    </div>
+  </div>
+  <div class="week ">
+    <table width="100%" style="height:74vh;">
+      <tr ng-repeat="w in range(0,5)">
+        <td class="day {{(dates[w*7 + d] == (dateDisp|date : 'dd')) && (dateFlags[w*7 + d]=='Cur') ? 'dayActive': ''}}"  ng-repeat="d in range(0,6) track by $index" style="background-color:{{dateFlags[w*7 + d]=='Cur'?getval(dateFlags[w*7 + d],dates[w*7 + d]):''}};">
+          <span style="top:1%;right:2%;position:absolute;" class="dayType{{dateFlags[w*7 + d]}} ">
+            {{dates[w*7 + d]}}
+          </span>
+          <span style="top:40%;right:45%;position:absolute;color:white;font-size:20px">{{dateFlags[w*7 + d]=='Cur'?timeList[dates[w*7 + d]-1]:''}} {{values[dates[w*7 + d]-1]>=0?'Hrs':''}}</span>
+          <!-- <div class="dayItems " style="position:absolute;width:102%;left:-2px;">
+            <div ng-if="itemsGroup[w*7 + d].length != 0 && $index<2" ng-repeat="i in itemsGroup[w*7 + d] track by $index" ng-include="itemTemplates"
+              style="height:23px;position:absolute;z-index:99;bottom:{{-2 + 23*$index}}px;width:99%;padding:2px;background-color:red" class="{{i | rainbow}}">
+            </div>
+          </div> -->
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
 </div>
 </div>

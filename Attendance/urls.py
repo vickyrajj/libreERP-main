@@ -7,4 +7,5 @@ router.register(r'Calendar',calendarViewSet, base_name ='Calendar')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'fetchAttendance/$' , FeatchAttendanceDataApi.as_view()),
 ]
