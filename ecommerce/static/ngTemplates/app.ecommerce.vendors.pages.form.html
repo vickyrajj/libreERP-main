@@ -9,13 +9,23 @@
           <label>Title</label>
           <input type="text" class="form-control" ng-model="form.title" placeholder="Enter Title">
         </div>
-        <div class="form-group">
-          <label>URL</label>
-          <div class="input-group">
-            <input type="text" class="form-control" ng-model="form.pageurl" placeholder="Generate Url" disabled/>
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-success" ng-click="generateUrl()">Generate</button>
-            </span>
+        <div class="col-md-7" style="padding-left:0px">
+          <div class="form-group">
+            <label>URL</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="form.pageurl" placeholder="Generate Url" disabled/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-success" ng-click="generateUrl()">Generate</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5" style="padding-top:15px">
+          <div class="col-md-9 text-right" style="padding-top:10px">
+            <label>Is TopLevel Menu :</label>
+          </div>
+          <div class="col-md-3" style="padding-left:0px">
+            <input type="checkbox" class="form-control" ng-model="form.topLevelMenu"/>
           </div>
         </div>
       </div>

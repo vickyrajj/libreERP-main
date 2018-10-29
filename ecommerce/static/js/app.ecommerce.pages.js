@@ -117,11 +117,12 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
 
   $scope.resetForm = function(){
     if ($scope.mode == 'new') {
-      $scope.form = {title:'',pageurl:'',body:''}
+      $scope.form = {title:'',pageurl:'',body:'',topLevelMenu:false}
     }else {
       $scope.form.title = ''
       $scope.form.pageurl = ''
       $scope.form.body = ''
+      $scope.form.topLevelMenu = false
     }
   }
 
@@ -146,6 +147,7 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
   $scope.save = function() {
     console.log('entered');
     var f = $scope.form;
+    console.log(f);
 
     if (f.title == null || f.title.length==0) {
       Flash.create('warning','Please Mention Title')
@@ -174,7 +176,8 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
     var toSend = {
       title:f.title,
       pageurl:f.pageurl,
-      body:f.body
+      body:f.body,
+      topLevelMenu : f.topLevelMenu
     }
     console.log('dataaaaaaaaaaaaaaaaaaa',toSend);
 

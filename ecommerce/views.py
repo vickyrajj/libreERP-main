@@ -130,7 +130,7 @@ def success_response(request):
 
 def ecommerceHome(request):
     print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
-    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
+    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'brand_title':globalSettings.SEO_TITLE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
         print urlData,'url detailsssssssssss'
@@ -158,32 +158,32 @@ def ecommerceHome(request):
                 print 'please select the product'
         if 'blog' in urlData and len(urlData) > 1 :
             print 'blogggggggggggggggggggg'
-            data['seoDetails']['title'] = 'Sterling Select | Blog'
+            data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Blog'
         if 'categories' in urlData and len(urlData) > 2 :
-            data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | Sterling Select'
+            data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | ' + str(globalSettings.SEO_TITLE)
         if 'checkout' in urlData and len(urlData) > 2 :
-            data['seoDetails']['title'] = 'Sterling Select | Review Order > Select Shipping Address > Place Order'
+            data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Review Order > Select Shipping Address > Place Order'
         if 'account' in urlData and len(urlData) > 2 and urlData[-1]!= '':
             print 'somethinggggggggggg'
             if urlData[-1] == 'cart':
-                data['seoDetails']['title'] = 'Sterling Select | Shopping Cart'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Shopping Cart'
             elif urlData[-1] == 'orders':
-                data['seoDetails']['title'] = 'Sterling Select | My Orders'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | My Orders'
             elif urlData[-1] == 'settings':
-                data['seoDetails']['title'] = 'Sterling Select | My Settings'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | My Settings'
             elif urlData[-1] == 'support':
-                data['seoDetails']['title'] = 'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
             elif urlData[-1] == 'saved':
-                data['seoDetails']['title'] = 'Sterling Select | Saved Products'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Saved Products'
         if len(urlData) > 1 :
             print 'pagessssssssssssss',urlData[1]
             pagesChecking = Pages.objects.filter(pageurl__icontains=str(urlData[1]))
             blogsChecking = blogPost.objects.filter(state__icontains='published',shortUrl__icontains=str(urlData[1]))
             if len(pagesChecking)>0:
-                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' |  ' + str(urlData[1]).replace('-',' ')
             elif len(blogsChecking)>0:
                 blogData = blogsChecking[0]
-                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' |  ' + str(urlData[1]).replace('-',' ')
                 if blogData.description is not None and len(blogData.description)>0 and blogData.description != 'null':
                     data['seoDetails']['description'] = blogData.description
                     print 'Desscription existsssssssssssss'

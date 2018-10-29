@@ -236,10 +236,10 @@ app.config(function($stateProvider) {
 });
 
 app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
-  console.log('bloggggggggggggggggggggggggggggggggggg');
+  console.log('bloggggggggggggggggggggggggggggggggggg',BRAND_TITLE);
   $window.scrollTo(0, 0)
-  document.title = 'Sterling Select |  Blog'
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping Blogs')
+  document.title = BRAND_TITLE + ' |  Blog'
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping Blogs')
 
   $scope.showNext = false
   $scope.showPrev = false
@@ -753,8 +753,8 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
   $window.scrollTo(0, 0)
   console.log('paramsssssssssssss', $state.params.title);
 
-  document.title = 'Sterling Select |  ' + $state.params.title.split('-').join(' ')
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = BRAND_TITLE + ' |  ' + $state.params.title.split('-').join(' ')
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
 
   $scope.title = $state.params.title
 
@@ -801,7 +801,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.me = $users.get('mySelf');
   $scope.showRatings = false
   console.log('paramssssssss', $scope.me, $state.params);
-  document.title = $state.params.name + ' Online At Best Price Only On Sterling Select'
+  document.title = $state.params.name + ' Online At Best Price Only On ' + BRAND_TITLE
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=rating').
   then(function(response) {
     console.log('ratingggggggggggggggggggg', response.data);
@@ -1412,8 +1412,8 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
   $scope.minValue;
   $scope.maxValue
   console.log($state.params);
-  document.title = $state.params.name.split('_').join(' ') + ' | Buy ' + $state.params.name.split('_').join(' ') + ' At Best Price In India | Sterling Select'
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = $state.params.name.split('_').join(' ') + ' | Buy ' + $state.params.name.split('_').join(' ') + ' At Best Price In India | ' + BRAND_TITLE
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
 
 
   $scope.slider = {
@@ -1614,8 +1614,8 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
   }
 
   console.log('in cartttttttttt', $rootScope.inCart);
-  document.title = 'Sterling Select | Shopping Cart'
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = BRAND_TITLE + ' | Shopping Cart'
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
 
   // $timeout(function () {
   //   for (var i = 0; i < $scope.data.tableData.length; i++) {
@@ -1757,8 +1757,8 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
     itemsNumPerView: [8, 16, 32],
   }
   console.log($scope.data.tableData);
-  document.title = 'Sterling Select | Saved Products'
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = BRAND_TITLE + ' | Saved Products'
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
   $scope.tableAction = function(target, action, mode) {
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
@@ -1872,8 +1872,8 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
   }, 1500);
 
 
-  document.title = 'Sterling Select | My Orders'
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = BRAND_TITLE + ' | My Orders'
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
 
   $scope.tableAction = function(target, action, mode) {
     for (var i = 0; i < $scope.data.tableData.length; i++) {
@@ -2045,8 +2045,8 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
 
 app.controller('controller.ecommerce.account.settings', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash) {
   $scope.me = $users.get('mySelf');
-  document.title = 'Sterling Select | My Settings'
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = BRAND_TITLE + ' | My Settings'
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
   $scope.refresh = function() {
     $scope.form = {
       title: '',
@@ -2173,8 +2173,8 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
 
 app.controller('controller.ecommerce.account.support', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash) {
 
-  document.title = 'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = BRAND_TITLE + ' | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
 
   $http({
     method: 'GET',
@@ -2293,8 +2293,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $scope.cartProducts = [];
   $scope.itemProduct = [];
 
-  document.title = 'Sterling Select | Review Order > Select Shipping Address > Place Order'
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = BRAND_TITLE + ' | Review Order > Select Shipping Address > Place Order'
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
   $scope.fetchaddress = function() {
     $http({
       method: 'GET',
@@ -2796,8 +2796,9 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
 
 
-  console.log('logooooooooooooooooooooo',ICON_LOGO);
+  console.log('logooooooooooooooooooooo',ICON_LOGO,BRAND_TITLE);
   $rootScope.ICON_LOGO = ICON_LOGO
+  $rootScope.BRAND_TITLE = BRAND_TITLE
   $scope.me = $users.get('mySelf')
   $rootScope.companyPhone = ''
   $rootScope.companyEmail = ''
@@ -3777,8 +3778,8 @@ app.controller('controller.ecommerce.contact.modal', function($scope, $rootScope
 
 app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval, $filter , $timeout) {
 
-  document.title = 'Buy Products Online At Best Price In India | Sterling Select'
-  document.querySelector('meta[name="description"]').setAttribute("content", 'Sterling Select Online Shopping')
+  document.title = 'Buy Products Online At Best Price In India | ' + BRAND_TITLE
+  document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
 
   $scope.me = $users.get('mySelf');
   console.log('multiiiiiiiiiiiiiiiiiiiii', $rootScope.multiStore, $rootScope.pin);

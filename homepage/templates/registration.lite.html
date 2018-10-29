@@ -97,7 +97,9 @@
                         <input type="checkbox" class="pull-right" ng-model="form.agree">
                       </div>
                       <div class="col-md-10 col-sm-10 col-xs-10">
-                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  Sterling Select.</span>
+                        {% endverbatim %}
+                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  {{brand_title}}.</span>
+                        {% verbatim %}
                       </div>
                     </div>
                     <div ng-if="validityChecked && !form.agree" class="row">
