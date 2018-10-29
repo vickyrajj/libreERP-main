@@ -37,29 +37,12 @@
       <button style="margin-bottom:20px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
       <a style="color:black;" href="/accounts/password/reset/">Forgot password?</a>
-
-      <!-- <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
-        <span style="color:white;">
-            <i class="fa fa-mobile fa-3x" ></i> <br>
-            <span id="otptxt">Send OTP</span>
-          </span>
-      </div> -->
-
-      <!-- <a href="/register" class="btn btn-success btn-block" style="margin-top:150px;">Register</a>
-      <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
-        <i class="fa fa-google-plus pull-left"></i>Login with Google
-      </a>
-      <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block">
-        <i class="fa fa-facebook pull-left"></i> Login with Facebook
-      </a> -->
     </form>
 
     <div class="col-md-12 col-sm-12 col-xs-12 text-right" style="margin-top:60%">
-      <!-- <button class="btn btn-primary">Admin Login</button> -->
-        <a href="/admin/">Admin Login</a>
+        <a href="/admin/?next=/ERP/">Admin Login</a>
     </div>
   </div>
-  <!-- /container -->
   {% if useCDN %}
   <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

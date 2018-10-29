@@ -78,13 +78,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
                     u.is_active = True
                 # u.is_active = True
                 u.save()
-                print u.pk ,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22'
+                print u, u.profile, u.profile.pk, u.profile.mobile ,'ddddddddd'
                 pobj = profile.objects.get(user=u)
-                pobj.details = d['details']
+                try:
+                    pobj.details = d['details']
+                except:
+                    pass
                 pobj.save()
-                print 'ddddddddddddddddd'
                 for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
-                    print a ,'gggggggggggggggggggggg'
                     app = application.objects.get(name = a)
                     p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
                 login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
@@ -114,9 +115,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 print u, u.profile, u.profile.pk, u.profile.mobile ,'ddddddddd'
                 pobj = profile.objects.get(user=u)
                 pobj.mobile = d['mobile']
-                pobj.details = d['details']
+                try:
+                    pobj.details = d['details']
+                except:
+                    pass
                 pobj.save()
-                print pobj,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22'
                 return instance
             else:
                 raise SuspiciousOperation('Expired')

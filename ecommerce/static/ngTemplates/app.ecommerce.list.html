@@ -1,22 +1,30 @@
 <div class="row" style="margin:0px;">
-  <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm" style="padding-right:0px;padding-left:0px;padding-top:0px;padding-bottom:20px" >
+  <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm" style="padding-right:10px;padding-left:10px;padding-top:0px;padding-bottom:20px" >
     <!-- <div style="padding:10px;"> -->
       <!-- <h4 style="padding-left:18px">Categories</h4> -->
-      <div ng-repeat="g in genericProducts| limitTo:5" style="padding:0px;">
-        <div class="col-md-2 anim-in-out anim-zoom-out" style="width: 20%">
-          <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
-            <div class="row">
-              <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;overflow:hidden;">
-                <img style="width: 100%;" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
-                <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none">
+
+
+      <ng-owl-carousel class="owl-theme" owl-items="genericProducts" owl-properties="categoryProperties" owl-ready="ready($api)">
+        <div ng-repeat="g in genericProducts| limitTo:5" style="padding:10px;">
+          <div class="anim-in-out anim-zoom-out" >
+            <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
+              <div class="row">
+                <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;overflow:hidden;">
+                  <img style="width: 100%;" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
+                  <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none">
+                </div>
               </div>
-            </div>
-            <div class="row" style="padding-top:5px;">
-              <h5 class="text-center" style="margin:0px;">{{g.name}}</h5>
+              <div class="row" style="padding-top:5px;">
+                <h5 class="text-center" style="margin:0px;">{{g.name}}</h5>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </ng-owl-carousel>
+
+
+
+
     <!-- </div> -->
   </div>
 

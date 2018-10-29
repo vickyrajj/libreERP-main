@@ -6,24 +6,24 @@
       <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:#808080;position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved==0&&me.pk">
           <i class="fa fa-heart  fa-2x"></i>
         </span>
-      <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved>0&&me.pk">
+      <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved>0 && me.pk">
           <i class="fa fa-heart  fa-2x"></i>
         </span>
-      <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;overflow:hidden;">
+      <div class="card bg-white text-center" style="width: 100%; padding-bottom:0px;overflow:hidden;">
         <img style="width: 100%;" class="img" ng-src="{{list.files[0].attachment}}" ng-if="list.files.length>0">
         <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" ng-if="list.files==null">
       </div>
     </div>
     <div class="row">
       <div class=" card bg-white" style="padding-bottom:0px;">
-        <div class="row container-fluid" style="padding:10px 20px;height:210px">
+        <div class="row container-fluid" style="padding:10px 20px;height:170px">
           <!-- <div >
             <h5 ng-if="l.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name.slice(0,35)}}...</h5>
             <h5 ng-if="l.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name}}</h5>
           </div> -->
           <div>
-            <h5 ng-if="list.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name.slice(0,35)}}</h5>
-            <h5 ng-if="list.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{list.product.name}}</h5>
+            <span ng-if="list.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px;font-size:17px;">{{list.product.name.slice(0,35)}}</span>
+            <span ng-if="list.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px;font-size:17px;">{{list.product.name}}</span>
           </div>
 
           <!-- <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee">

@@ -717,7 +717,7 @@ class PagesViewSet(viewsets.ModelViewSet):
     queryset = Pages.objects.all()
     serializer_class = PagesSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title','pageurl']
+    filter_fields = ['title','pageurl' , 'topLevelMenu']
 
 class offerBannerViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly, )
@@ -1053,6 +1053,11 @@ try:
 except:
     print "ERROR : settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()"
 
+try:
+    ecommerceSetting = application.objects.get(name = 'app.ecommerce').settings.get(name__iexact = 'gstEnabled')
+except:
+    print "ERROR : application.objects.get(name = 'app.ecommerce').settings.get(name__iexact = 'gstEnabled')"
+
 class FullPageImage(Flowable):
     def __init__(self , img):
         Flowable.__init__(self)
@@ -1381,6 +1386,7 @@ def genInvoice(response, contract, request):
 class DownloadInvoiceAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
+        print ecommerceSetting,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2'
         response = HttpResponse(content_type='application/pdf')
         o = Order.objects.get(pk=request.GET['value'])
         print o

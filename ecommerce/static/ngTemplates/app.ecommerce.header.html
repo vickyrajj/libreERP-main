@@ -1,18 +1,25 @@
-<div class="row bg-white ecomNav" style="height:10vh;width:100%;padding-top:8px;padding-bottom: 8px;position:fixed;z-index:10;border-bottom:2px solid var(--themeColor)">
+<div class="row bg-white ecomNav" style="height:{{topLevelMenu ? '15':'10'}}vh;width:100%;padding-bottom: 8px;position:fixed;z-index:10;border-bottom:2px solid var(--themeColor)">
 
-  <div class="col-xs-2 text-center hidden-xs hidden-sm" ng-if="!SortByCategory">
+  <div class="row" style="background:var(--themeColor); color:white;" ng-if="topLevelMenu">
+    <div class="col-xs-4 col-sm-2 text-center toplevelmenuOption" style="padding:10px;" ng-repeat="page in toplevelPages" ng-click="$state.go('pages' , {title : page.pageurl} )">
+      {{page.title}}
+    </div>
+  </div>
+
+
+  <div class="col-xs-2 text-center hidden-xs hidden-sm" ng-if="!SortByCategory" >
     <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:55px;cursor:pointer;" alt="">
   </div>
 
-  <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory">
+  <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory" style="padding-top:10px;">
     <div class="col-xs-6 ">
       <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:55px;cursor:pointer;" alt="">
     </div>
 
 
-    <div class="col-xs-6 " style="padding-top:2vh;">
-        <div class="well shopByCatDiv" class="dropdown-toggle" ng-mouseenter="onBtnEnter = true;resetAll()"  ng-mouseleave="onBtnEnter = false">
-          <span class="align-middle" style="color:var(--themeColor)">Shop By Category &nbsp;<i class="fa fa-caret-down"></i></span>
+    <div class="col-xs-6 " style="padding-top:5px;">
+        <div class="well shopByCatDiv" class="dropdown-toggle" style="padding-top:10px;" ng-mouseenter="onBtnEnter = true;resetAll()"  ng-mouseleave="onBtnEnter = false">
+          <span class="align-middle" style="color:var(--themeColor)">Shop By Category <i class="fa fa-caret-down"></i></span>
         </div>
         <div class="categoryDropDown" ng-show="onBtnEnter||onDropdownEnter||onChildEnter">
           <div class="well categoryMenu" ng-mouseenter="onDropdownEnter = true;"  ng-mouseleave="onDropdownEnter = false" style="{{onDropdownEnter||onChildEnter ?'border-right:none;border-radius:5px 0px 0px 5px;':'border-radius:5px;'}}">
@@ -20,8 +27,8 @@
                 <span style="float:left" class="categoryItemName">{{c.name}}</span>
                 <span style="float:right" class="categoryItemArrow"><i class="fa fa-chevron-right"></i></span>
               </p>
-              <div class="leftSubCatDiv" ng-show="onDropdownEnter||onChildEnter">
-                <div class="well" ng-mouseenter="onChildEnter = true"  ng-mouseleave="onChildEnter = false" style="text-align:left;padding-bottom:5px;min-height:60vh;border:1px solid var(--themeColor);border-left:none;position:relative; border-left:1px solid #e0e0e0; border-radius: 0px 5px 5px 0px;">
+              <div class="leftSubCatDiv" ng-show="onDropdownEnter||onChildEnter" style="background:white !important;">
+                <div class="" ng-mouseenter="onChildEnter = true"  ng-mouseleave="onChildEnter = false" style="text-align:left;padding-bottom:5px;min-height:60vh;border:1px solid var(--themeColor);border-left:none;position:relative; border-left:1px solid #e0e0e0; border-radius: 0px 5px 5px 0px;">
                     <p ng-repeat="child in childData.child" class="categoriesSubItems" ng-click="$state.go('categories' , {name : child.name.split(' ').join('_')})" >{{child.name}}</p>
                   <span>
                     <img class="catDropDownImg" ng-src="{{childData.img}}">
@@ -146,18 +153,9 @@
 </div>
 
 <div ng-if="$state.is('ecommerce')&& !bannerText && bannerImage" style="position:relative;width:100%;padding-top:9.4vh;display:border-box;overflow:hidden;background-size:cover;" class="hidden-xs hidden-sm ">
-
-
-
-
   <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
-
-
-      <img class="owl-lazy" style="width:100%;" data-ng-repeat="b in slide.banners" data-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
-
-
+    <img class="owl-lazy" style="width:100%;" data-ng-repeat="b in slide.banners" data-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
   </ng-owl-carousel>
-
 
   <div class="col-md-12" style="padding-left:0px;position:absolute;top:25vh;z-index:9;">
     <button class="previous round text-center" style="background-color:white;color:#808080;position:absolute;font-size:50px;width:60px;border:0px white; box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px;border-radius:0px 30px 30px 0px;" ng-click="change('previous')">&#8249; </button>
@@ -165,11 +163,7 @@
       ng-click="change('next')">&#8250;
       </button>
   </div>
-
 </div>
-
-
-
 
 <div ng-if="$state.is('ecommerce')&& bannerText && bannerImage" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
   <img class="anim-in-out" data-anim-speed="100" style="height:100%;cursor:pointer;" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
@@ -186,13 +180,8 @@
 </div>
 
 
-<div ng-if="$state.is('ecommerce')&& !bannerText&&bannerImage" style="position:relative;padding-top:65px;margin-bottom:10px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
-
-
-      <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
-          <img class="owl-lazy" style="width:100%" data-ng-repeat="b in slide.banners" data-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
-      </ng-owl-carousel>
-
-</div>
-<div ng-if="!bannerText && !bannerImage" style="position:relative;height:10vh;;width:100%;padding-top:1vh;display:border-box;overflow:hidden;background-size:cover;" >
+<div ng-if="$state.is('ecommerce')&& !bannerText&&bannerImage" style="position:relative;padding-top:65px;margin-bottom:10px;width:100%;display:border-box;overflow:hidden;" class=" hidden-md hidden-lg">
+  <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
+      <img class="owl-lazy" style="width:100%" data-ng-repeat="b in slide.banners" data-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
+  </ng-owl-carousel>
 </div>

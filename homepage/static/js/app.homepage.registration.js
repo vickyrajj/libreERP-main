@@ -5,21 +5,15 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
 
   $scope.validity = {firstName : null , lastName : null, email : null ,mobile : null,password : null , rePassword: null };
 
-  $scope.form = {firstName :null ,lastName : null , email : null ,mobile : null , password : null, rePassword : null , emailOTP : null , mobileOTP: null , token: null , reg : null , agree : false};
+  $scope.form = {firstName :null ,lastName : null , email : null ,mobile : null , password : null, rePassword : null , emailOTP : null , mobileOTP: null , token: null , reg : null , agree : false,details:[]};
   $scope.validityChecked = false;
   $scope.validityChecked2 = false;
 
   $scope.getOTP = function() {
     $scope.validityChecked = true;
     console.log($scope.form);
-    $scope.extraDetails = {
-      pincode:$scope.form.pincode,
-      designation:$scope.form.designation
-    }
-    $scope.details = JSON.stringify($scope.extraDetails)
     if (!$scope.form.agree || $scope.form.firstName == undefined || $scope.form.firstName == null || $scope.form.firstName.length ==0 || $scope.form.lastName == undefined || $scope.form.lastName == null || $scope.form.lastName.length ==0 || $scope.form.email == undefined || $scope.form.email == null || $scope.form.email.length ==0 || $scope.form.mobile == undefined || $scope.form.mobile == null || $scope.form.mobile.length ==0 || $scope.form.password == undefined || $scope.form.password == null || $scope.form.password.length <3 || $scope.form.email.indexOf('@') == -1 ) {
       console.log("form not valid , returning");
-
       return;
     }
 
@@ -58,7 +52,15 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
 
   $scope.verify = function() {
     console.log($scope.form,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-
+    $scope.extraDetails = {
+      pincode:$scope.form.pincode,
+      designation:$scope.form.designation,
+      Company :$scope.form.Company,
+      GST :$scope.form.GST,
+      Address:$scope.form.Address,
+      statecode :$scope.form.statecode
+    }
+    $scope.form.details = JSON.stringify($scope.extraDetails)
     $http({method : 'PATCH' , url : '/api/homepage/registration/' + $scope.form.reg + '/', data : $scope.form }).
     then(function(response) {
       console.log(response);

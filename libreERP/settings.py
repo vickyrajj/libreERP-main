@@ -334,9 +334,16 @@ if DEBUG:
     '''
 
 
-REGISTRATION_EXTRA_FIELD = [{'name':'pincode',
-                            'type' : 'text'},
-                            {'name' : 'designation',
+REGISTRATION_EXTRA_FIELD = [
+                            {'name':'GST', 'type' : 'text' , 'icon' : 'fa-map-marker' , 'placeholder' : 'GSTIN'},
+                            {'name':'Company', 'type' : 'text' , 'icon' : 'fa-building' , 'placeholder' : 'Company Name'},
+                            {'name':'Address', 'type' : 'text' , 'icon' : 'fa-building' , 'placeholder' : 'Company Address'},
+                            {'name':'pincode', 'type' : 'text' , 'icon' : 'fa-map-marker' , 'placeholder' : 'Pincode'},
+                            {'name' : 'designation', 'type' : 'choice', 'option' : ['manager', 'admin', 'director' ], 'icon' : 'fa-id-card-o' , 'placeholder' : 'Please select your role'
+                            },
+                            {'name' : 'statecode',
                             'type' : 'choice',
-                            'option' : ['manager', 'admin', 'director' ]
-                            }]
+                            'option' : ['KA', 'MH', 'AP' , 'AR' , 'AS' , 'BR' , 'CT' , 'GA' , 'GJ' , 'HR' , 'HP' , 'JK' , 'JH' , 'KL' , 'MP' , 'MN' , 'ML' , 'MZ' , 'NL' , 'OR' , 'PB' , 'RJ' , 'SK' , 'TN' , 'TG' , 'TR' , 'UT' , 'UP' , 'WB' , 'AN' , 'CH' , 'DN' , 'DD' , 'DL' , 'LD' , 'PY' , 'TS'] ,
+                            'icon' : 'fa-id-card-o' , 'placeholder' : 'Please select your State code'
+                            },
+                            ]

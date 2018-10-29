@@ -31,10 +31,18 @@
 }
 
 
+
+.toplevelmenuOption:hover{
+	background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;;
+	cursor:pointer;
+}
+
 .categoryDropDown{
 	position:absolute;
-	top:7vh;
+	/*top:7vh;*/
+	margin-top:-20px;
 	min-width:400px;
+	z-index:9;
 }
 
 .categoryMenu {
