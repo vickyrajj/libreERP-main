@@ -898,11 +898,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
         '<span style="color:#fff; font-weight:bolder; font-size:11px;" > We run on Syrow </span>'+
         '</div>'+
         '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:9vh;">'+
-          '<div style="padding:0px; padding-top:10px;" >'+
-             '<textarea id="inputText" rows="2" style="border:none; font-size:17px; resize:none;width:70%; height:40px;outline:none;background-color:#fff;" placeholder="Write a reply..." ></textarea>'+
+          '<div style="padding-top:"10px" >'+
+             '<textarea id="inputText" rows="2" style="border:none; font-size:17px; resize:none;width:70%;padding:10px; height:40px;outline:none;background-color:#fff;" placeholder="Write a reply..." ></textarea>'+
              '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
-             '<span id="paperClip" style="margin-left:3%;border:none; background-color:#fff; font-size:15px; padding:1% 0%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style=" width:22px;padding-top:1%" ></span>'+
-             '<span id="paperPlane" style="width:12%;border:none; background-color:#fff; font-size:15px; cursor:pointer;float:right"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="width:40px; padding-top:1%;"></span>'+
+             '<span id="paperClip" style="background-color:#fff; padding:0% 2%;cursor:pointer;"><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="width:25px" ></span>'+
+             '<span id="paperPlane" style="background-color:#fff;cursor:pointer;float:right;padding:5px"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="width:40px; padding-top:1%;"></span>'+
           '</div>'+
         '</div>'+
         '<button id="startNewChatBtn" type="button" style="background-color:#fff;color:'+windowColor+';cursor:pointer;width:100%;height:9vh;border:0px;"> <span style="font-size:14px;font-weight:bolder;" >Sart New Conversation </span> </button>'+
