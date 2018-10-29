@@ -193,6 +193,7 @@ class ImageFetchApi(APIView):
             new_file = os.path.join(path, request.POST['newName'])
             os.rename(old_file, new_file)
         else:
+            pass
             # # UPLOAD_FOLDER = os.path.join('static_shared','images')
             # # ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
             # #

@@ -78,6 +78,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
                     u.is_active = True
                 # u.is_active = True
                 u.save()
+                print u.pk ,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22'
+                pobj = profile.objects.get(user=u)
+                pobj.details = d['details']
+                pobj.save()
                 print 'ddddddddddddddddd'
                 for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
                     print a ,'gggggggggggggggggggggg'
