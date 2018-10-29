@@ -78,10 +78,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
                     u.is_active = True
                 # u.is_active = True
                 u.save()
-                print u, u.profile, u.profile.pk, u.profile.mobile ,'ddddddddd'
                 pobj = profile.objects.get(user=u)
                 try:
-                    pobj.details = d['details']
+                    pobj.details = d
                 except:
                     pass
                 pobj.save()

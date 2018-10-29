@@ -5,7 +5,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
 
   $scope.validity = {firstName : null , lastName : null, email : null ,mobile : null,password : null , rePassword: null };
 
-  $scope.form = {firstName :null ,lastName : null , email : null ,mobile : null , password : null, rePassword : null , emailOTP : null , mobileOTP: null , token: null , reg : null , agree : false,details:[]};
+  $scope.form = {firstName :null ,lastName : null , email : null ,mobile : null , password : null, rePassword : null , emailOTP : null , mobileOTP: null , token: null , reg : null , agree : false};
   $scope.validityChecked = false;
   $scope.validityChecked2 = false;
 
@@ -52,15 +52,6 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
 
   $scope.verify = function() {
     console.log($scope.form,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-    $scope.extraDetails = {
-      pincode:$scope.form.pincode,
-      designation:$scope.form.designation,
-      Company :$scope.form.Company,
-      GST :$scope.form.GST,
-      Address:$scope.form.Address,
-      statecode :$scope.form.statecode
-    }
-    $scope.form.details = JSON.stringify($scope.extraDetails)
     $http({method : 'PATCH' , url : '/api/homepage/registration/' + $scope.form.reg + '/', data : $scope.form }).
     then(function(response) {
       console.log(response);
