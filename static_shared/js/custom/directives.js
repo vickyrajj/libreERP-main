@@ -644,6 +644,12 @@ app.directive('productCard', function() {
 
       console.log($scope.list.variantsInStoreQty,'variantsInStoreQty');
       console.log($rootScope.multiStore , $rootScope.storepk);
+      $scope.currency ==''
+      $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
+      then(function(response) {
+        $scope.currency = response.data[0].value
+      })
+
 
       if ($rootScope.multiStore) {
         $scope.storePK = $rootScope.storepk
@@ -676,12 +682,12 @@ app.directive('productCard', function() {
       // $scope.list.price = $scope.list.product.discountedPrice
       // console.log($scope.list.added_cart);
 
-      var str = $filter('convertUnit')($scope.list.product.howMuch , $scope.list.product.unit) + ' - Rs '+ $scope.list.product.discountedPrice
+      var str = $filter('convertUnit')($scope.list.product.howMuch , $scope.list.product.unit) + ' -  '+ $scope.list.product.discountedPrice
       $scope.prodVarList = [ {str:str, qty : $scope.list.product.howMuch , amnt: $scope.list.product.discountedPrice , unit: $scope.list.product.unit, sku: $scope.list.product.serialNo} ];
 
       if ($scope.prod_var) {
         for (var i = 0; i < $scope.prod_var.length; i++) {
-          str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.list.product.howMuch , $scope.list.product.unit) + ' - Rs ' +$scope.prod_var[i].discountedPrice
+          str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.list.product.howMuch , $scope.list.product.unit) + ' -  ' +$scope.prod_var[i].discountedPrice
           $scope.prodVarList.push( {pk:$scope.prod_var[i].id, str:str , qty : $scope.prod_var[i].unitPerpack * $scope.list.product.howMuch , amnt: $scope.prod_var[i].price , unit: $scope.list.product.unit , sku:$scope.prod_var[i].sku , disc:$scope.prod_var[i].discountedPrice  } )
         }
       }

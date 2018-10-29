@@ -39,7 +39,6 @@ app.controller("controller.home.files", function($scope, $state, $users, $stateP
     })
 
     $scope.addMedia = function() {
-      console.log($scope.form.file);
       if($scope.imagesSearch == false){
         $scope.form.value = 'static'
         var fd = new FormData();
@@ -55,7 +54,7 @@ app.controller("controller.home.files", function($scope, $state, $users, $stateP
       else{
 
       }
-      console.log(fd, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@' );
+      console.log(fd,'aaaaaaaaaa@@@@@@@@@@@@@@@@@');
       $http({
         method: 'POST',
         url: '/api/PIM/imageFetch/',

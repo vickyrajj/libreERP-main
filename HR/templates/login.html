@@ -23,7 +23,7 @@
   <div class="col-md-8 hidden-sm hidden-xs" style="background-image: url('{{backgroundImage}}');background-size: cover;height:100%;position:absolute;left:0px;">
   </div>
   <div class="col-md-4 col-sm-12 col-xs-12" style="height:100%;position:absolute;right:0px;">
-    <a  href="/" style="outline: none;border:none"><img class="text-center"  src="{{icon_logo}}" alt="" width="200" height="200" Style="display:block;margin-left: auto;margin-right: auto;"></a>
+    <a  href="/" style="outline: none;border:none"><img class="text-center"  src="{{icon_logo}}" alt="" width="200" height="100" Style="display:block;margin-left: auto;margin-right: auto;"></a>
     <form method="post" class="form-signin" action="" style="padding:0px;max-width: 400px;">{% csrf_token %}
       <h2 class="form-signin-heading" style="color:black;margin-top:70px;">Login</h2> {% if authStatus.status != 'default' %}
       <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
@@ -73,12 +73,12 @@
     </div>
   </div>
 
-  <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
+  <!-- <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
     <span style="color:white;">
         <i class="fa fa-mobile fa-3x" ></i> <br>
         <span id="otptxt">Send OTP</span>
       </span>
-  </div>
+  </div> -->
   {% if useCDN %}
   <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

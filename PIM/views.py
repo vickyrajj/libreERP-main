@@ -181,7 +181,7 @@ class ImageFetchApi(APIView):
                 images.append(image)
         return Response(images, status = status.HTTP_200_OK)
     def post(self, request, format=None):
-        print 'fffffffffffffffffffffff'
+        print 'fffffffffffffffffffffff',request.POST
         if 'rename' in request.POST:
             if 'pictureUploads' in request.POST['path']:
                 print 'picture uploadsss'
@@ -194,6 +194,13 @@ class ImageFetchApi(APIView):
             os.rename(old_file, new_file)
         else:
             pass
+            # file =request.POST['file']
+            # filename = file.name
+            # os.path.join('static_shared','images' , file.name)
+
+
+
+
             # # UPLOAD_FOLDER = os.path.join('static_shared','images')
             # # ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
             # #

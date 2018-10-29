@@ -239,14 +239,15 @@
 
 
 
-
                       {% verbatim %}
                     <div class="row" style="margin-top:50px;">
                       <div class="col-md-2 col-sm-2 col-xs-2">
                         <input type="checkbox" class=" pull-right" ng-model="form.agree">
                       </div>
                       <div class="col-md-10 col-sm-10 col-xs-10">
-                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  Sterling Select.</span>
+                        {% endverbatim %}
+                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  {{brand_title}}.</span>
+                        {% verbatim %}
                       </div>
                     </div>
                     <div ng-if="validityChecked && !form.agree" class="row">
@@ -257,6 +258,8 @@
 
 
                   <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
+                    {% endverbatim %}
+                    {% if verifyMobile != False %}
                     <div class="col-md-6">
                       <div class="row">
                         <div class="col-md-2 col-sm-2 col-xs-2">
@@ -271,6 +274,10 @@
                       </div>
                     </div>
                     <div class="col-md-6">
+                    {% else %}
+                    <div class="col-md-offset-2 col-md-8">
+                    {% endif %}
+                    {% verbatim %}
                       <div class="row">
                         <div class="col-md-2 col-sm-2 col-xs-2">
                           <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>

@@ -22,8 +22,8 @@
             <h5 ng-if="l.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px">{{l.product.name}}</h5>
           </div> -->
           <div>
-            <span ng-if="list.product.name.length>35" style="margin:0px;  height:60px;padding-left:10px;font-size:17px;">{{list.product.name.slice(0,35)}}</span>
-            <span ng-if="list.product.name.length<=35" style="margin:0px;  height:60px;padding-left:10px;font-size:17px;">{{list.product.name}}</span>
+            <span ng-if="list.product.name.length>18" style="margin:0px;  height:60px;padding-left:10px;font-size:17px;">{{list.product.name.slice(0,18)}}</span>
+            <span ng-if="list.product.name.length<=18" style="margin:0px;  height:60px;padding-left:10px;font-size:17px;">{{list.product.name}}</span>
           </div>
 
           <!-- <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee">
@@ -41,24 +41,24 @@
           <span ng-if="list.product.serialNo==selectedProdVar.sku">
             <span style="font-size:15px;">
               <span ng-if="list.product.discount>0" class="text-muted" >
-                <strike>   <i class="fa fa-inr"></i>{{list.product.price}}</strike>
+                <strike>   <i class="fa {{currency}}"></i>{{list.product.price}}</strike>
               </span>
           <span ng-if="list.product.discount==0">
-                 <i class="fa fa-inr"></i>{{list.product.price}}
+                 <i class="fa {{currency}}"></i>{{list.product.price}}
               </span>
           </span>
           <span ng-if="list.product.discount>0" style="font-size:15px;">
-              <i class="fa fa-inr"></i>{{list.product.discountedPrice.toFixed(2)}}
+              <i class="fa {{currency}}"></i>{{list.product.discountedPrice.toFixed(2)}}
           </span>
           </span>
           <span ng-if="list.product.serialNo!=selectedProdVar.sku&&selectedProdVar.amnt == selectedProdVar.disc">
-              <i class="fa fa-inr"></i>{{selectedProdVar.amnt}}
+              <i class="fa {{currency}}"></i>{{selectedProdVar.amnt}}
           </span>
           <span ng-if="list.product.serialNo!=selectedProdVar.sku&&selectedProdVar.amnt != selectedProdVar.disc" class="text-muted">
-              <strike> <i class="fa fa-inr"></i>{{selectedProdVar.amnt}} </strike>
+              <strike> <i class="fa {{currency}}"></i>{{selectedProdVar.amnt}} </strike>
           </span>
           <span ng-if="list.product.serialNo!=selectedProdVar.sku&&selectedProdVar.amnt != selectedProdVar.disc">
-              <i class="fa fa-inr"></i>{{selectedProdVar.disc}}
+              <i class="fa {{currency}}"></i>{{selectedProdVar.disc}}
           </span>
           <div>
             <!-- <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&me.pk&&list.in_stock=='true'">

@@ -130,7 +130,7 @@ def success_response(request):
 
 def ecommerceHome(request):
     print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
-    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
+    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'brand_title':globalSettings.SEO_TITLE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
         print urlData,'url detailsssssssssss'
@@ -158,32 +158,32 @@ def ecommerceHome(request):
                 print 'please select the product'
         if 'blog' in urlData and len(urlData) > 1 :
             print 'blogggggggggggggggggggg'
-            data['seoDetails']['title'] = 'Sterling Select | Blog'
+            data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Blog'
         if 'categories' in urlData and len(urlData) > 2 :
-            data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | Sterling Select'
+            data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | ' + str(globalSettings.SEO_TITLE)
         if 'checkout' in urlData and len(urlData) > 2 :
-            data['seoDetails']['title'] = 'Sterling Select | Review Order > Select Shipping Address > Place Order'
+            data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Review Order > Select Shipping Address > Place Order'
         if 'account' in urlData and len(urlData) > 2 and urlData[-1]!= '':
             print 'somethinggggggggggg'
             if urlData[-1] == 'cart':
-                data['seoDetails']['title'] = 'Sterling Select | Shopping Cart'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Shopping Cart'
             elif urlData[-1] == 'orders':
-                data['seoDetails']['title'] = 'Sterling Select | My Orders'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | My Orders'
             elif urlData[-1] == 'settings':
-                data['seoDetails']['title'] = 'Sterling Select | My Settings'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | My Settings'
             elif urlData[-1] == 'support':
-                data['seoDetails']['title'] = 'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
             elif urlData[-1] == 'saved':
-                data['seoDetails']['title'] = 'Sterling Select | Saved Products'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Saved Products'
         if len(urlData) > 1 :
             print 'pagessssssssssssss',urlData[1]
             pagesChecking = Pages.objects.filter(pageurl__icontains=str(urlData[1]))
             blogsChecking = blogPost.objects.filter(state__icontains='published',shortUrl__icontains=str(urlData[1]))
             if len(pagesChecking)>0:
-                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' |  ' + str(urlData[1]).replace('-',' ')
             elif len(blogsChecking)>0:
                 blogData = blogsChecking[0]
-                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' |  ' + str(urlData[1]).replace('-',' ')
                 if blogData.description is not None and len(blogData.description)>0 and blogData.description != 'null':
                     data['seoDetails']['description'] = blogData.description
                     print 'Desscription existsssssssssssss'
@@ -1054,7 +1054,7 @@ except:
     print "ERROR : settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()"
 
 try:
-    ecommerceSetting = application.objects.get(name = 'app.ecommerce').settings.get(name__iexact = 'gstEnabled')
+    ecommerceSetting = application.objects.get(name = 'app.public.ecommerce').settings.all()
 except:
     print "ERROR : application.objects.get(name = 'app.ecommerce').settings.get(name__iexact = 'gstEnabled')"
 
@@ -1236,7 +1236,7 @@ def genInvoice(response, contract, request):
     tableHeaderStyle.textColor = colors.white
     tableHeaderStyle.fontSize = 7
 
-
+# ecommerceSetting.get(name = 'gstEnabled').flag
     # totalQuant = 0
     # totalTax = 0
     totaldiscount = 0
@@ -1316,8 +1316,19 @@ def genInvoice(response, contract, request):
     tableData.append(['','','GRAND TOTAL (INR)',grandTotal])
     t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 1.5*inch , 1.5*inch])
     t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#bdd3f4')) ]))
-
-
+    if ecommerceSetting.get(name = 'gstEnabled').flag == True:
+        gst = """
+        <font size='6'><strong>GST : </strong></font>
+        """
+        try:
+            detailsObj = contract.user.profile.details
+            details = ast.literal_eval(detailsObj)
+            gstVal = details['GST']
+        except:
+            gstVal = ''
+    else:
+        gst = ''
+        gstVal = ''
 
     story = []
 
@@ -1341,9 +1352,10 @@ def genInvoice(response, contract, request):
     %s %s - %s<br/>
     India<br/>
     %s<br/>
+    %s  %s
     </font>
     </para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.mobileNo),styles['Normal'])
+    """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.mobileNo,gst,gstVal),styles['Normal'])
 
 
     summryParaSrc1 = Paragraph("""
@@ -1356,8 +1368,9 @@ def genInvoice(response, contract, request):
     %s %s - %s<br/>
     India<br/>
     %s<br/>
+    %s %s
     </font></para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo),styles['Normal'])
+    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo,gst,gstVal),styles['Normal'])
 
 
     td=[[summryParaSrc,' ',summryParaSrc1]]
@@ -1386,7 +1399,6 @@ def genInvoice(response, contract, request):
 class DownloadInvoiceAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
-        print ecommerceSetting,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2'
         response = HttpResponse(content_type='application/pdf')
         o = Order.objects.get(pk=request.GET['value'])
         print o

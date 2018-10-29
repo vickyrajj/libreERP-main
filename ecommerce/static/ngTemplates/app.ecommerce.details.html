@@ -9,6 +9,7 @@
       </nav>
     </div>
 
+
     <div class="row hidden-md hidden-lg" style="margin:35px 0px 0px 0px">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb" style="margin-left:-30px;margin-right:-30px">
@@ -55,13 +56,13 @@
           <div class="col-md-6 col-xs-6">
 
             <div class="row">
-              <span ng-if="details.product.serialNo==selectedProdVar.sku" style="font-size:30px;padding-left:10px"><i class="fa fa-inr"></i>
+              <span ng-if="details.product.serialNo==selectedProdVar.sku" style="font-size:30px;padding-left:10px"><i class="fa {{currency}}"></i>
                 <span ng-if="details.product.discount>0">{{details.product.discountedPrice.toFixed(2)}} </span>
               <span ng-if="details.product.discount>0" class="text-muted"><strike>{{details.product.price}}</strike> </span>
               <span ng-if="details.product.discount==0">{{details.product.price}} </span>
               </span>
               <span ng-if="details.product.serialNo!=selectedProdVar.sku" style="font-size:30px;padding-left:10px">
-                <span ng-if = "selectedProdVar.amnt == selectedProdVar.disc"><i class="fa fa-inr"></i>{{selectedProdVar.amnt}}</span>
+                <span ng-if = "selectedProdVar.amnt == selectedProdVar.disc"><i class="fa {{currency}}"></i>{{selectedProdVar.amnt}}</span>
               <span ng-if="selectedProdVar.amnt != selectedProdVar.disc" class="text-muted"><strike>{{selectedProdVar.amnt}}</strike> </span>
               <span ng-if="selectedProdVar.amnt != selectedProdVar.disc">{{selectedProdVar.disc}} </span>
               </span>
@@ -138,7 +139,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-12" ng-if="!showOptions||details.in_stock=='false'||selectedProdVar.inStock>0&&!me.pk">
+          <div class="col-md-12" ng-if="!showOptions||details.in_stock=='false'||selectedProdVar.inStock==0&&!me.pk">
             <span style="font-size:25px;color:#ef4a1e">Out Of Stock</span>
           </div>
         </div>

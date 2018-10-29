@@ -81,11 +81,11 @@
 
 
       <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor)"  ng-click="checkout()" ng-if="inCart.length>0 && !$state.is('checkout') && !$state.includes('account')">
-        <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.total.toFixed(2)}} )</h5>
+        <h5 style="color:white;">Checkout ( <i class="fa {{currency}}" ></i> {{data.total.toFixed(2)}} )</h5>
       </div>
 
       <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor)"  ng-click="mainPage()" ng-if="addToCart.length>0&&!me.pk">
-        <h5 style="color:white;">Checkout ( <i class="fa fa-inr" ></i> {{data.totalVal.toFixed(2)}})</h5>
+        <h5 style="color:white;">Checkout ( <i class="fa {{currency}}" ></i> {{data.totalVal.toFixed(2)}})</h5>
       </div>
 
 
@@ -123,7 +123,7 @@
             </div>
 
             <div class="row" style="margin:0px;padding-left:20px;">
-              <i class="fa fa-inr"></i>
+              <i class="fa {{currency}}"></i>
               <span ng-if="p.prodSku==p.product.product.serialNo">{{(p.product.product.discountedPrice * p.qty).toFixed(2) }}</span>
               <span ng-if="p.prodSku!=p.product.product.serialNo">{{(p.prodVarPrice * p.qty).toFixed(2)}}</span>
             </div>
@@ -134,7 +134,7 @@
           </div>
 
           <div class="text-center" style="padding:20px;cursor:pointer;background-color:var(--themeColor);color:white" ng-click="checkout()">
-            Checkout ( <i class="fa fa-inr" ></i> {{data.total.toFixed(2)}} )
+            Checkout ( <i class="fa {{currency}}" ></i> {{data.total.toFixed(2)}} )
           </div>
         </div>
 
@@ -172,7 +172,7 @@
 
 
             <div class="row" style="margin:0px;padding-left:20px;">
-              <i class="fa fa-inr"></i>
+              <i class="fa {{currency}}"></i>
               <span >{{p.price}}</span>
             </div>
 
@@ -184,7 +184,7 @@
           </div>
 
           <div class="text-center" style="padding:20px;cursor:pointer;background-color:var(--themeColor);color:white" ng-click="mainPage()">
-            Checkout ( <i class="fa fa-inr" ></i> {{data.totalVal.toFixed(2)}} )
+            Checkout ( <i class="fa {{currency}}" ></i> {{data.totalVal.toFixed(2)}} )
           </div>
         </div>
 
@@ -230,6 +230,7 @@
       var wampServer = '{{wampServer}}';
       var wampBindName = "{{user.username}}";
       var ICON_LOGO = "{{data.icon_logo}}";
+      var BRAND_TITLE = "{{data.brand_title}}";
     </script>
     <script src="{% static 'js/app.ecommerce.public.js' %}"></script>
     <script src="{% static 'js/custom/wampProcessors.js' %}"></script>
