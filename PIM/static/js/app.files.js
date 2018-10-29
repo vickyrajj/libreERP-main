@@ -54,7 +54,6 @@ app.controller("controller.home.files", function($scope, $state, $users, $stateP
       else{
 
       }
-      console.log(fd,'aaaaaaaaaa@@@@@@@@@@@@@@@@@');
       $http({
         method: 'POST',
         url: '/api/PIM/imageFetch/',

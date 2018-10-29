@@ -969,6 +969,10 @@
           </div>
           <div class="row" style="padding:20px;" >
             <p>
+              <strong>Shipping Charges :</strong>
+              <span>{{shippingCharges.toFixed(2)}}</span>
+            </p>
+            <p>
               <strong>Total amount payable :</strong>
               <span ng-if="msg=='Success'" >{{totalAfterPromo.toFixed(2)}}</span>
             <span ng-if="msg!='Success'">{{totalAfterDiscount.toFixed(2)}}</span>

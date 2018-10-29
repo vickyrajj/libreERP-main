@@ -22,7 +22,7 @@
 <body style="height:100%">
   <div class="col-md-8 hidden-sm hidden-xs" style="background-image: url('{{backgroundImage}}');background-size: cover;height:100%;position:absolute;left:0px;">
   </div>
-  <div class="col-md-4 col-sm-12 col-xs-12" style="height:100%;position:absolute;right:0px;">
+  <div class="col-md-4 col-sm-12 col-xs-12" style="height:100%;position:absolute;right:0px;padding-top:20px">
     <a  href="/" style="outline: none;border:none"><img class="text-center"  src="{{icon_logo}}" alt="" width="200" Style="display:block;margin-left: auto;margin-right: auto;"></a>
     <form method="post" class="form-signin" action="" style="padding:0px">{% csrf_token %}
       <h2 class="form-signin-heading" style="color:black;margin-top:70px;">Login</h2> {% if authStatus.status != 'default' %}
@@ -49,7 +49,7 @@
       <input type="text" name="mobile" value="" id="regMobile">
     </form>
 
-    <div class="col-md-12 col-sm-12 col-xs-12 text-right" style="margin-top:90%">
+    <div class="col-md-12 col-sm-12 col-xs-12 text-right" style="margin-top:70%">
     <a href="/admin/?next=/ERP/">Admin Login</a>
     </div>
   </div>

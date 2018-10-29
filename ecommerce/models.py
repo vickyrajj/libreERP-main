@@ -254,6 +254,7 @@ class Order(models.Model):
     country = models.CharField(max_length = 50 , null = True , blank = True)
     billingCountry = models.CharField(max_length = 50 , null = True , blank = True)
     mobileNo = models.CharField(max_length=15 ,null = True , blank = True)
+    shippingCharges =  models.IntegerField(default = 0)
 
 
 class Promocode(models.Model):

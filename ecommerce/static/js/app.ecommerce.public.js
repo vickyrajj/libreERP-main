@@ -2471,7 +2471,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
   })
 
-
+$scope.shippingCharges = 0
 
   $scope.saveAdd = function() {
     if ($scope.data.address.street.length == 0) {

@@ -521,7 +521,7 @@ class OrderSerializer(serializers.ModelSerializer):
     promoDiscount = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry')
+        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges')
         read_only_fields = ('user',)
     def get_promoDiscount(self, obj):
         pD = Promocode.objects.filter(name = obj.promoCode)
