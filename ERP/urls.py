@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
     url(r'sendSMS/$' , SendSMSApi.as_view()),
     url(r'paytmPayment/$' , MakePaytmPayment.as_view()),
+    url(r'ebsPayment/$' , MakeEBSPayment.as_view()),
 ]

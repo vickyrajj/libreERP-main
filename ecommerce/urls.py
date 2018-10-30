@@ -39,5 +39,6 @@ urlpatterns = [
     url(r'sendFeedBack/$' , SendFeedBackAPI.as_view() ),
     url(r'categorySortList/$' , CategorySortListAPI.as_view() ),
     url(r'bulklistingCreation/$' , BulklistingCreationAPIView.as_view() ),
+    
 
 ]

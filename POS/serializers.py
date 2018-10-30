@@ -26,10 +26,10 @@ from os import environ
 from django.forms.models import model_to_dict
 import os
 import argparse
-from twisted.internet import reactor
-from twisted.internet.defer import inlineCallbacks
-
-from autobahn.twisted.wamp import ApplicationSession, ApplicationRunner
+# from twisted.internet import reactor
+# from twisted.internet.defer import inlineCallbacks
+#
+# from autobahn.twisted.wamp import ApplicationSession, ApplicationRunner
 import requests
 from django.db.models import Sum
 
