@@ -48,6 +48,12 @@ class MakePaytmPayment(APIView):
 
         return Response(param_dict, status = status.HTTP_200_OK)
 
+
+def ebsPaymanetResponse(request):
+    #pass
+    return ""
+
+
 from django.http import HttpResponse
 import requests
 class MakeEBSPayment(APIView):
@@ -62,10 +68,10 @@ class MakeEBSPayment(APIView):
                     'account_id':'19591',
                     'reference_no': order_id,
                     'amount': '100',
-                    'mode':'LIVE',
+                    'mode':'Test',
                     'currency': 'INR',
                     'description':'test ',
-                    'return_url': 'http://airwire.mybroadband.co.in/#/response',
+                    'return_url': 'http://localhost:8000/ebsPaymanetResponse/',
                     'name': request.user.first_name,
                     'address':'ABC , kudlu',
                     'city':'Bengaluru',

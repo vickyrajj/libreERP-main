@@ -1581,14 +1581,25 @@ class BulklistingCreationAPIView(APIView):
 
 from paypal.standard.forms import PayPalPaymentsForm
 def paypal_return_view(request):
+    # set the payment details(amount)
+    # /checkout/cart?action=success
+    # clear the cart
+    # get the last order where type = online_payment and total+paid = 0
     return render(request, "payment.return.html")
 
 def paypal_cancel_view(request):
+    # get the last
+    # /checkout/cart?action=retry
+    print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     return render(request, "payment.cancel.html")
 
 def view_that_asks_for_money(request):
-
     # What you want the button to do.
+    orderid = request.GET['orderid']
+    print orderid,'aaaaaaaaaaaaaaaaaaaaaaa'
+    orderObj = Order.objects.get(pk=orderid)
+    print orderObj.values()
+
     paypal_dict = {
         "business": globalSettings.PAYPAL_RECEIVER_EMAIL,
         "amount": "100.00",
@@ -1596,6 +1607,7 @@ def view_that_asks_for_money(request):
         "invoice": "unique-invoice-id",
         "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
         "return": request.build_absolute_uri(reverse('your-return-view')),
+        # "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
         "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
         "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
     }
