@@ -2635,6 +2635,7 @@ $scope.shippingCharges = 0
   })
 
   $scope.next = function() {
+
     console.log($scope.totalAfterPromo, $scope.totalAfterDiscount, '**************************8');
     if ($rootScope.limitValue) {
       if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
@@ -2740,7 +2741,31 @@ $scope.shippingCharges = 0
   }
 
   $scope.pay = function() {
-    $scope.data.stage = 'onlinePayment'
+    $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
+    $scope.dataToSend.modeOfShopping = 'online'
+    if ($scope.dataToSend.modeOfPayment == 'COD') {
+      $scope.dataToSend.paidAmount = 0
+    } else {
+      $scope.dataToSend.paidAmount = 0
+    }
+
+    $scope.data.stage = 'processing';
+    if ($rootScope.multiStore) {
+      console.log('multiiiiiiiiiiiiii');
+      $scope.dataToSend.storepk = $rootScope.storepk
+    }
+    console.log($scope.dataToSend);
+    $http({
+      method: 'POST',
+      url: '  /api/ecommerce/createOrder/',
+      data: $scope.dataToSend
+    }).
+    then(function(response) {
+      window.location = '/view_that_asks_for_money/?orderid='+response.data.odnumber;
+    })
+
+    // console.log("@@@@@@@@@@@@@@@@@@@@");
+    // $scope.data.stage = 'onlinePayment'
   }
 
   $scope.order = function() {
