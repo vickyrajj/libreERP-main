@@ -138,6 +138,10 @@ PAYU_MERCHANT_SALT = "eCwWELxi",
 # And add the PAYU_MODE to 'TEST' for testing and 'LIVE' for production.
 PAYU_MODE = "TEST"
 
+
+PAYMENT_MODE = 'EBS' # options are EBS , paypal , paytm , PAYU
+
+
 # paypal payment gateway details
 PAYPAL_RECEIVER_EMAIL = 'online@papered.in'
 PAYPAL_TEST = True
