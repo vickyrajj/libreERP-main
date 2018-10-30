@@ -2635,6 +2635,8 @@ $scope.shippingCharges = 0
   })
 
   $scope.next = function() {
+
+
     console.log($scope.totalAfterPromo, $scope.totalAfterDiscount, '**************************8');
     if ($rootScope.limitValue) {
       if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
