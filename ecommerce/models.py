@@ -132,7 +132,7 @@ CART_TYPE_CHOICES = (
 
 class Cart(models.Model):
     product = models.ForeignKey(listing, null = False)
-    user = models.ForeignKey(User, null = False)
+    user = models.ForeignKey(User, null = False , related_name = 'cartItems')
     qty = models.PositiveIntegerField(null = True)
     typ = models.CharField(choices = CART_TYPE_CHOICES, max_length = 10, default = 'cart')
     prodSku = models.CharField(max_length = 50, null = True, blank = True)

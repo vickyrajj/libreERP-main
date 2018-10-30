@@ -209,7 +209,6 @@ class SearchProductAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny , )
     def get(self , request , format = None):
-        print 'aaaaaaaaaaaaaaaaa'
         if 'search' in self.request.GET:
             search = str(self.request.GET['search'])
             l = int(self.request.GET['limit'])
@@ -457,7 +456,7 @@ class CreateOrderAPI(APIView):
                     value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
             grandTotal=round(grandTotal, 2)
-            if orderObj.user.email:
+            if orderObj.user.email and orderObj.paymentMode == 'COD':
                 ctx = {
                     'heading' : "Invoice Details",
                     'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
@@ -1581,37 +1580,99 @@ class BulklistingCreationAPIView(APIView):
 
 from paypal.standard.forms import PayPalPaymentsForm
 def paypal_return_view(request):
-    # set the payment details(amount)
-    # /checkout/cart?action=success
-    # clear the cart
-    # get the last order where type = online_payment and total+paid = 0
-    return render(request, "payment.return.html")
+
+    orderObj = Order.objects.filter(user = request.user).last()
+
+    orderObj.paidAmount = orderObj.totalAmount
+    orderObj.approved = True
+    orderObj.save()
+
+    # send the email here
+    value = []
+    totalPrice = 0
+    promoAmount = 0
+    total=0
+    price = 0
+    grandTotal = 0
+    promoObj = Promocode.objects.all()
+    for p in promoObj:
+        if str(p.name)==str(orderObj.promoCode):
+            promoAmount = p.discount
+    print promoAmount
+    a = '#'
+    docID = str(a) + str(orderObj.pk)
+    for i in orderObj.orderQtyMap.all():
+        if i.prodSku == i.product.product.serialNo:
+            price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+            price=round(price, 2)
+            totalPrice=i.qty*price
+            totalPrice=round(totalPrice, 2)
+            total+=totalPrice
+            total=round(total, 2)
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+        else:
+            prodData = ProductVerient.objects.get(sku = i.prodSku)
+            price = prodData.discountedPrice
+            price=round(price, 2)
+            totalPrice=i.qty*price
+            totalPrice=round(totalPrice, 2)
+            total+=totalPrice
+            total=round(total, 2)
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+    grandTotal=total-(promoAmount * total)/100
+    grandTotal=round(grandTotal, 2)
+
+
+    request.user.cartItems.all().delete()
+
+
+    if orderObj.user.email:
+        ctx = {
+            'heading' : "Invoice Details",
+            'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+            'linkUrl': globalSettings.BRAND_NAME,
+            'sendersAddress' : globalSettings.SEO_TITLE,
+            # 'sendersPhone' : '122004',
+            'grandTotal':grandTotal,
+            'total': total,
+            'value':value,
+            'docID':docID,
+            'data':orderObj,
+            'promoAmount':promoAmount,
+            'linkedinUrl' : lkLink,
+            'fbUrl' : fbLink,
+            'twitterUrl' : twtLink,
+        }
+        print ctx
+        contactData = []
+        email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+        contactData.append(str(orderObj.user.email))
+        msg = EmailMessage("Order Details" , email_body, to= contactData  )
+        msg.content_subtype = 'html'
+        msg.send()
+    return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
+
 
 def paypal_cancel_view(request):
-    # get the last
-    # /checkout/cart?action=retry
-    return render(request, "payment.cancel.html")
+    return redirect("/checkout/cart?action=retry")
 
-def view_that_asks_for_money(request):
+def paypalPaymentInitiate(request):
     # What you want the button to do.
     orderid = request.GET['orderid']
-    print orderid,'aaaaaaaaaaaaaaaaaaaaaaa'
     orderObj = Order.objects.get(pk=orderid)
-    print orderObj.values()
-
     paypal_dict = {
         "business": globalSettings.PAYPAL_RECEIVER_EMAIL,
-        "amount": "100.00",
+        "amount": orderObj.totalAmount,
         "item_name": "name of the item",
-        "invoice": "unique-invoice-id",
+        "invoice": orderObj.pk,
         "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
-        "return": request.build_absolute_uri(reverse('your-return-view')),
+        "return": request.build_absolute_uri(reverse('paypal_return_view')),
         # "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
-        "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
+        "cancel_return": request.build_absolute_uri(reverse('paypal_cancel_view')),
         "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
     }
 
     # Create the instance.
     form = PayPalPaymentsForm(initial=paypal_dict)
     context = {"form": form}
-    return render(request, "payment.html", context)
+    return render(request, "paypal.payment.html", context)

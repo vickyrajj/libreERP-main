@@ -8,7 +8,6 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
   $httpProvider.defaults.withCredentials = true;
   $locationProvider.html5Mode(true);
   // $cookies.set("time" : new Date())
-
 });
 
 app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($rootScope, $state, $stateParams, $users, $http, $timeout) {
@@ -2278,6 +2277,12 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
   })
 
+// if($state.params){
+//   $scope.action ='retry'
+// }
+
+
+
   $scope.currency =''
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
   then(function(response) {
@@ -2333,6 +2338,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
   document.title = BRAND_TITLE + ' | Review Order > Select Shipping Address > Place Order'
   document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
+
+  console.log('paramssssssssssssslinkkkkkkkkkkkkkkkkkkkkk', $state.params);
+
   $scope.fetchaddress = function() {
     $http({
       method: 'GET',
@@ -2735,25 +2743,19 @@ $scope.shippingCharges = 0
       $scope.data.stage = 'review';
     } else if ($scope.data.stage == 'payment') {
       $scope.data.stage = 'shippingDetails';
-    } else if ($scope.data.stage == 'onlinePayment') {
-      $scope.data.stage = 'payment';
     }
   }
 
   $scope.pay = function() {
     $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
     $scope.dataToSend.modeOfShopping = 'online'
-    if ($scope.dataToSend.modeOfPayment == 'COD') {
-      $scope.dataToSend.paidAmount = 0
-    } else {
-      $scope.dataToSend.paidAmount = 0
-    }
-
-    $scope.data.stage = 'processing';
-    if ($rootScope.multiStore) {
-      console.log('multiiiiiiiiiiiiii');
-      $scope.dataToSend.storepk = $rootScope.storepk
-    }
+    $scope.dataToSend.paidAmount = 0
+    $scope.dataToSend.approved = false
+    $scope.data.stage = 'processing'
+    // if ($rootScope.multiStore) {
+    //   console.log('multiiiiiiiiiiiiii');
+    //   $scope.dataToSend.storepk = $rootScope.storepk
+    // }
     console.log($scope.dataToSend);
     $http({
       method: 'POST',
@@ -2761,11 +2763,8 @@ $scope.shippingCharges = 0
       data: $scope.dataToSend
     }).
     then(function(response) {
-      window.location = '/view_that_asks_for_money/?orderid='+response.data.odnumber;
+      window.location = '/makeOnlinePayment/?orderid='+response.data.odnumber;
     })
-
-    // console.log("@@@@@@@@@@@@@@@@@@@@");
-    // $scope.data.stage = 'onlinePayment'
   }
 
   $scope.order = function() {
@@ -2821,6 +2820,42 @@ $scope.shippingCharges = 0
     })
 
   }
+
+      function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        // console.log(decodedCookie,'hhhhhhhhhhhhhhhhhhhhhh');
+        var ca = decodedCookie.split(';');
+        // console.log(ca);
+        for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+         }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+
+        function setCookie(cname, cvalue, exdays) {
+            // console.log('set cookie');
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays*24*60*60*1000));
+            var expires = "expires="+ d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+    $scope.$watch('data.address' , function(newValue , oldValue) {
+        $scope.address = newValue.pk
+         // if (detail != "") {
+         // // console.log('already there');
+         // document.cookie = encodeURIComponent("address") + "=deleted; expires=" + new Date(0).toUTCString()
+         // }
+       setCookie("address", JSON.stringify($scope.address) , 365);
+
+    })
 
 
 })
@@ -4183,6 +4218,22 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
     })
   });
 
+  var url = new URL(window.location.href)
+  var action = url.searchParams.get("action")
+  if(action == 'retry'){
+  console.log("faiiiiiiiiiiillllllllllllllllllllllllllllllllll");
+  $scope.data.stage = 'payment';
+  console.log($scope.data.stage,'aaaaaaaaaaaaa');
+  }
+  else if (action == 'success'){
+
+    $http({method : 'GET' , url : '/api/ecommerce/order/' + url.searchParams.get('orderid') +'/'}).
+    then(function(response) {
+      $scope.data.stage = 'confirmation';
+      $scope.order = {odnumber : response.data.pk , dt  : new Date() , paymentMode : 'Online' }
+    })
+
+  }
 
 
 });

@@ -6,30 +6,21 @@
   </head>
   <body>
 
-
   <form method="post" action="https://secure.ebs.in/pg/ma/payment/request"
 name="frmTransaction" id="frmTransaction">
 
     {%  for key , param in data.items %}
-
       <input type="hidden" name="{{key}}" value="{{param}}" />
-
     {% endfor %}
 
-    <button type="submit" >
-      Submit
-    </button>
   </form>
-
 
   <script type="text/javascript">
 
-    window.location = '/view_that_asks_for_money/?orderid=33'
-
-
+  var form = document.getElementsByTagName("form")[0];
+  form.submit();
 
   </script>
-
 
   </body>
 </html>
