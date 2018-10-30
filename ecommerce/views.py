@@ -1590,7 +1590,6 @@ def paypal_return_view(request):
 def paypal_cancel_view(request):
     # get the last
     # /checkout/cart?action=retry
-    print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     return render(request, "payment.cancel.html")
 
 def view_that_asks_for_money(request):

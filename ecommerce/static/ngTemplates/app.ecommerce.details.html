@@ -58,13 +58,14 @@
             <div class="row">
               <span ng-if="details.product.serialNo==selectedProdVar.sku" style="font-size:30px;padding-left:10px"><i class="fa {{currency}}"></i>
                 <span ng-if="details.product.discount>0">{{details.product.discountedPrice.toFixed(2)}} </span>
+
               <span ng-if="details.product.discount>0" class="text-muted"><strike>{{details.product.price}}</strike> </span>
               <span ng-if="details.product.discount==0">{{details.product.price}} </span>
               </span>
               <span ng-if="details.product.serialNo!=selectedProdVar.sku" style="font-size:30px;padding-left:10px">
                 <span ng-if = "selectedProdVar.amnt == selectedProdVar.disc"><i class="fa {{currency}}"></i>{{selectedProdVar.amnt}}</span>
+              <span ng-if="selectedProdVar.amnt != selectedProdVar.disc"><i class="fa {{currency}}"></i>{{selectedProdVar.disc}} </span>
               <span ng-if="selectedProdVar.amnt != selectedProdVar.disc" class="text-muted"><strike>{{selectedProdVar.amnt}}</strike> </span>
-              <span ng-if="selectedProdVar.amnt != selectedProdVar.disc">{{selectedProdVar.disc}} </span>
               </span>
             </div>
             <div class="row">
@@ -110,7 +111,7 @@
         <div class="row" style="padding:10px;" ng-if="me == null">
 
           <div class="col-md-12" ng-if="showOptions&&details.added_cart==0">
-            <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;" ng-if="selectedProdVar.inStock>0&&!me.pk">
+            <div class="row container-fluid text-center" style="background-color:#5980b9; color:white; padding:5px 0px;" ng-if="selectedProdVar.inStock>0&&!me.pk">
               <span ng-click="createCookieDetail(details)" style="cursor:pointer;">
                   <span style="font-size:15px;"><b> Add To Cart</b></span>
               <i class="fa fa-shopping-cart fa-2x"></i>

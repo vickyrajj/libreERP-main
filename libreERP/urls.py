@@ -33,8 +33,11 @@ urlpatterns = [
     url(r'^paypal/', include('paypal.standard.ipn.urls')),
     url(r'view_that_asks_for_money/$' , view_that_asks_for_money , name = "view_that_asks_for_money" ),
     url(r'paypal_return_view/$' , view_that_asks_for_money , name = "your-return-view" ),
+
     url(r'paypal_cancel_view/$' , paypal_cancel_view , name = "your-cancel-view" ),
+
     # url(r'paypal_cancel_view/$' , view_that_asks_for_money , name = "your-cancel-view" ),
+
     # url(r'ebsPaymanetResponse/$' , ebsPaymanetResponse , name = "ebsPaymanetResponse" ),
 ]
 
