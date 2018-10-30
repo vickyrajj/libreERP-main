@@ -1581,15 +1581,15 @@ class BulklistingCreationAPIView(APIView):
 
 from paypal.standard.forms import PayPalPaymentsForm
 def paypal_return_view(request):
-    set the payment details(amount)
-    /checkout/cart?action=success
-    clear the cart
+    # set the payment details(amount)
+    # /checkout/cart?action=success
+    # clear the cart
     # get the last order where type = online_payment and total+paid = 0
     return render(request, "payment.return.html")
 
 def paypal_cancel_view(request):
     # get the last
-    /checkout/cart?action=retry
+    # /checkout/cart?action=retry
     return render(request, "payment.cancel.html")
 
 def view_that_asks_for_money(request):
