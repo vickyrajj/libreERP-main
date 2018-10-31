@@ -2288,14 +2288,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   then(function(response) {
     $scope.currency = response.data[0].value
   })
-$scope.topLevelMenu = false
-  $http.get('/api/ERP/appSettingsAdminMode/?name=topLevelMenu').
-  then(function(response) {
-    console.log('topLevelMenu',response.data);
-    if (response.data.length>0) {
-      $scope.topLevelMenu = response.data[0].flag
-    }
-  })
+
 
   // if ($scope.dataToSend.modeOfPayment == 'COD') {
   //   if ($scope.totalLimit = true) {
@@ -2318,7 +2311,7 @@ $scope.topLevelMenu = false
   $scope.data = {
     quantity: 1,
     shipping: 'express',
-    stage: 'review',
+    stage: '',
     promoCode: '',
     modeOfPayment: 'Card',
     address: {
@@ -2346,19 +2339,51 @@ $scope.topLevelMenu = false
   var url = new URL(window.location.href)
   var action = url.searchParams.get("action")
   if(action == 'retry'){
-  console.log("faiiiiiiiiiiillllllllllllllllllllllllllllllllll");
   $scope.data.stage = 'payment';
-  console.log($scope.data.stage,'aaaaaaaaaaaaa');
   }
   else if (action == 'success'){
-
     $http({method : 'GET' , url : '/api/ecommerce/order/' + url.searchParams.get('orderid') +'/'}).
     then(function(response) {
       $scope.data.stage = 'confirmation';
       $scope.order = {odnumber : response.data.pk , dt  : new Date() , paymentMode : 'Online' }
     })
-
   }
+  else{
+    $scope.data.stage = 'review'
+  }
+
+
+
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    // console.log(decodedCookie,'hhhhhhhhhhhhhhhhhhhhhh');
+    var ca = decodedCookie.split(';');
+    // console.log(ca);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+     }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+    function setCookie(cname, cvalue, exdays) {
+        // console.log('set cookie');
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+
+    $scope.getAddr = getCookie('address')
+
+
 
   $scope.cartProducts = [];
   $scope.itemProduct = [];
@@ -2366,7 +2391,7 @@ $scope.topLevelMenu = false
   document.title = BRAND_TITLE + ' | Review Order > Select Shipping Address > Place Order'
   document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
 
-  console.log('paramssssssssssssslinkkkkkkkkkkkkkkkkkkkkk', $state.params);
+
 
   $scope.fetchaddress = function() {
     $http({
@@ -2382,7 +2407,12 @@ $scope.topLevelMenu = false
         if ($scope.me.profile.primaryAddress == $scope.savedAddress[i].pk) {
           $scope.pa = $scope.savedAddress[i].pk
           $scope.data.address = $scope.savedAddress[i]
-          console.log($scope.data.address);
+          if($scope.getAddr!=undefined){
+            if($scope.getAddr == $scope.savedAddress[i].pk){
+              // $scope.saved = true
+              $scope.idx = i
+            }
+          }
           if ($scope.data.address.mobileNo == null || $scope.data.address.mobileNo.length == 0) {
             $scope.data.address.mobileNo = $scope.me.profile.mobile
           }
@@ -2393,6 +2423,8 @@ $scope.topLevelMenu = false
   }
   $scope.fetchaddress()
   $scope.saved = false
+
+
 
 
   $scope.ChangeAdd = function(idx, value) {
@@ -2416,6 +2448,9 @@ $scope.topLevelMenu = false
     // $scope.data.address.mobileNo = mob
     // $scope.data.address.landMark = ''
   }
+
+
+
   $scope.change = function() {
     $scope.saved = false
     $scope.data.address = {
@@ -2848,38 +2883,10 @@ $scope.shippingCharges = 0
 
   }
 
-      function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        // console.log(decodedCookie,'hhhhhhhhhhhhhhhhhhhhhh');
-        var ca = decodedCookie.split(';');
-        // console.log(ca);
-        for (var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-         }
-          if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-          }
-        }
-        return "";
-      }
 
-        function setCookie(cname, cvalue, exdays) {
-            // console.log('set cookie');
-            var d = new Date();
-            d.setTime(d.getTime() + (exdays*24*60*60*1000));
-            var expires = "expires="+ d.toUTCString();
-            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
 
     $scope.$watch('data.address' , function(newValue , oldValue) {
         $scope.address = newValue.pk
-         // if (detail != "") {
-         // // console.log('already there');
-         // document.cookie = encodeURIComponent("address") + "=deleted; expires=" + new Date(0).toUTCString()
-         // }
        setCookie("address", JSON.stringify($scope.address) , 365);
 
     })

@@ -192,47 +192,18 @@ class ImageFetchApi(APIView):
             old_file = os.path.join(path, request.POST['oldName'])
             new_file = os.path.join(path, request.POST['newName'])
             os.rename(old_file, new_file)
-        else:
-            pass
-            # file =request.POST['file']
-            # filename = file.name
-            # os.path.join('static_shared','images' , file.name)
-
-
-
-
-            # # UPLOAD_FOLDER = os.path.join('static_shared','images')
-            # # ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-            # #
-            # # app = Flask(__name__)
-            # # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-            # print request.POST,'fileeeeeeeeeeeeeeeeeeeeeeeeeee'
-            # filew = request.POST['file']
-            # print type(file)
-
-
-            # # print file.name,'aaaaaaaaaaaaa@@@@@@@@@@@@'
-            # # if file.name == '':
-            # #     flash('No selected file')
-            # #     return redirect(request.url)
-            # # else:
-            # # # if file and allowed_file(file.name):
-            # #     filename = secure_filename(file.name)
-            # #     print file,'@@@@@@@@@@@@@@@@@@@@'
-            # #     print os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            # #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-
-
-            # fig = plt.figure()
-            # path = os.path.join('media_root','ecommerce','pictureUploads')
-            # print path,'pathhhhh'
-            # filename = os.path.join(path, filew.name)
-            # print filename
-            # print filew.name,'@@@@@@@@@@@@@@@@@@@@@@@@@@'
-            # fig.savefig(filename)
-            # print fig,'aaaaaaaaaaaaaaa'
+        if 'static' in request.POST:
+            file =request.POST['file']
+            filename = file.name
+            filepath = os.path.join('static_shared','images' , file.name)
+            BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            os.path.join(BASE_DIR , filepath)
+        if 'media' in request.POST:
+            file =request.POST['file']
+            filename = file.name
+            filepath = os.path.join('media_root','ecommerce','pictureUploads' , file.name)
+            BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            os.path.join(BASE_DIR , filepath)
         return Response(status = status.HTTP_200_OK)
     def delete(self, request, format=None):
         if request.GET['value'] == 'static':

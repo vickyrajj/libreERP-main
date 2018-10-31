@@ -16,6 +16,7 @@ import requests
 from HR.models import profile
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+import ast
 
 class EnquiryAndContactsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,6 +75,12 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
                     else:
                         u.is_active = True
+                    if d['designation']:
+                        if d['designation'] == 'manager' or 'admin' or 'director':
+                            u.is_staff = True
+                        else:
+                            u.is_staff = False
+
                     # u.is_active = True
                     u.save()
                     print u.profile.pk
@@ -130,7 +137,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
                     else:
                         u.is_active = True
-                    # u.is_active = True
+                    if d['designation']:
+                        if d['designation'] == 'manager' or 'admin' or 'director':
+                            u.is_staff = True
+                        else:
+                            u.is_staff = False
                     u.save()
                     print u.profile.pk
                     pobj = profile.objects.get(pk=u.profile.pk)
@@ -237,7 +248,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 requests.get(url)
         else:
                 url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
-                requests.get(url)            
+                requests.get(url)
         reg.save()
         reg.emailOTP = ''
         reg.mobileOTP = ''

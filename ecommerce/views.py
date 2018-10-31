@@ -1580,9 +1580,7 @@ class BulklistingCreationAPIView(APIView):
 
 from paypal.standard.forms import PayPalPaymentsForm
 def paypal_return_view(request):
-
     orderObj = Order.objects.filter(user = request.user).last()
-
     orderObj.paidAmount = orderObj.totalAmount
     orderObj.approved = True
     orderObj.save()
@@ -1621,11 +1619,7 @@ def paypal_return_view(request):
             value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal, 2)
-
-
     request.user.cartItems.all().delete()
-
-
     if orderObj.user.email:
         ctx = {
             'heading' : "Invoice Details",
