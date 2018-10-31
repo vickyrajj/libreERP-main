@@ -2288,6 +2288,14 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   then(function(response) {
     $scope.currency = response.data[0].value
   })
+$scope.topLevelMenu = false
+  $http.get('/api/ERP/appSettingsAdminMode/?name=topLevelMenu').
+  then(function(response) {
+    console.log('topLevelMenu',response.data);
+    if (response.data.length>0) {
+      $scope.topLevelMenu = response.data[0].flag
+    }
+  })
 
   // if ($scope.dataToSend.modeOfPayment == 'COD') {
   //   if ($scope.totalLimit = true) {
@@ -3049,6 +3057,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   $scope.onDropdownEnter = false
   $scope.onChildEnter = false
   $scope.SortByCategory = false
+  $scope.topLevelMenu = false
   $scope.selectedOne = function(data){
     // console.log('dataaaaaaaaaaaaaaaa',data);
     $scope.childData = data

@@ -1,7 +1,7 @@
 <div class="row bg-white ecomNav" style="height:{{topLevelMenu ? '15':'10'}}vh;width:100%;padding-bottom: 8px;position:fixed;z-index:10;border-bottom:2px solid var(--themeColor)">
 
   <div class="row" style="background:var(--themeColor); color:white;" ng-if="topLevelMenu">
-    <div class="col-xs-4 col-sm-2 text-center toplevelmenuOption" style="padding:10px;" ng-repeat="page in toplevelPages" ng-click="$state.go('pages' , {title : page.pageurl} )">
+    <div class="col-xs-4 col-sm-2 col-md-12 text-center toplevelmenuOption" style="padding:10px;" ng-repeat="page in toplevelPages" ng-click="$state.go('pages' , {title : page.pageurl} )">
       {{page.title}}
     </div>
   </div>
@@ -152,7 +152,7 @@
   </div>
 </div>
 
-<div ng-if="$state.is('ecommerce')&& !bannerText && bannerImage" style="position:relative;width:100%;padding-top:9.4vh;display:border-box;overflow:hidden;background-size:cover;" class="hidden-xs hidden-sm ">
+<div ng-if="$state.is('ecommerce')&& !bannerText && bannerImage" style="position:relative;width:100%;display:border-box;overflow:hidden;background-size:cover;{{topLevelMenu?'margin-top:14vh':'margin-top:9.5vh'}}" class="hidden-xs hidden-sm ">
   <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
     <img class="owl-lazy" style="width:100%;" data-ng-repeat="b in slide.banners" data-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
   </ng-owl-carousel>
