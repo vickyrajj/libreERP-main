@@ -15,6 +15,20 @@
       </div>
       <div class = "col-md-2">
         <div style="padding-right:20px;">
+        <div class="row">
+            <span class="pull-right" style="cursor:pointer;">
+              <!-- <i class="fa fa-trash fa-lg" style="margin-top:0px;margin-bottom:10px"></i> -->
+              <i class="fa fa-trash-o fa-lg" mwl-confirm
+                title="Confirm"
+                message="Are you sure?"
+                confirm-text="Yes <i class='fa fa-check'></i>"
+                cancel-text="No"
+                on-confirm="rowActionClicked('delete')"
+                confirm-button-type="danger"
+                cancel-button-type="default" style="margin-top:0px;margin-bottom:10px">
+              </i>
+            </span>
+          </div>
           <div class="row">
             <span class="pull-right" style="cursor:pointer;" ng-click = "rowActionClicked('edit')">
               <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
@@ -26,7 +40,7 @@
             </span>
           </div>
         </div>
+        </div>
       </div>
     </div>
   </div>
-</div>

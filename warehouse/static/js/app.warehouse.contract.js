@@ -684,6 +684,17 @@ app.controller('businessManagement.warehouse.contract', function($scope, $http, 
           var title = 'Contract Details : ';
           var appType = 'contractExplorer';
         }
+        else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/warehouse/contract/' + $scope.data.tableData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Item Deleted');
+          })
+          $scope.data.tableData.splice(i, 1)
+          return;
+        }
         console.log("sampleee");
         console.log($scope.data.tableData[i]);
         $scope.addTab({

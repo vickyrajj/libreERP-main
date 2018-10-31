@@ -56,6 +56,17 @@ app.controller('businessManagement.warehouse.contact', function($scope, $http, $
           var title = 'Contact Details : ';
           var appType = 'contactExplorer';
         }
+        else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/warehouse/contact/' + $scope.data.tableData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Item Deleted');
+          })
+          $scope.data.tableData.splice(i, 1)
+          return;
+        }
 
         $scope.addTab({
           title: title + $scope.data.tableData[i].name,

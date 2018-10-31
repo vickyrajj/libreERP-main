@@ -8,10 +8,16 @@
       <label><b>Rate : </b> </label> {{data.rate}} <br> <br>
     </div>
     <div class="row container-fluid" style="padding-top:10px;height:40px;">
-      <div class="col-md-10">
+      <div class="col-md-4">
         <span><strong><i class="fa fa-pencil fa-lg" style="cursor:pointer;" ng-click="rowActionClicked('edit')"></i> </strong></span>
       </div>
-      <div class = "col-md-2">
+      <div class="col-md-4 text-center">
+        <span><strong><i class="fa fa-trash-o fa-lg" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('delete')"
+              confirm-button-type="danger" cancel-button-type="default" style="cursor:pointer;">
+            </i>
+          </strong></span>
+      </div>
+      <div class="col-md-4">
         <span><strong><i class="fa fa-info fa-lg pull-right" style="cursor:pointer;" ng-click="rowActionClicked('details')"></i> </strong></span>
       </div>
     </div>
