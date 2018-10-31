@@ -262,35 +262,6 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-function setCookie(cname, cvalue, exdays) {
-  console.log('set cookie');
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  console.log(decodedCookie);
-  var ca = decodedCookie.split(';');
-  console.log(ca);
-  for(var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-          c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
-      }
-  }
-  return "";
-}
-
-
-
 var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
 
 var custID = {{pk}};
@@ -314,12 +285,7 @@ if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
 
-windowColor = "#1f5b82"
 
-var windowColorR = parseInt(windowColor.slice(1,3),16)
-var windowColorG = parseInt(windowColor.slice(3,5),16)
-var windowColorB = parseInt(windowColor.slice(5,7),16)
-var windowColorNew = "rgba("+windowColorR+","+ windowColorG+","+ windowColorB+","+0.6 +")";
 
 
 if (dpSupport=='') {
@@ -327,6 +293,8 @@ if (dpSupport=='') {
 }else {
   dpSupport = '{{serverAddress}}'+'{{dp}}'
 }
+
+
 
 if (chatSupport=='True') {
   chatSupport = true
@@ -361,9 +329,61 @@ var notification = new Audio('{{serverAddress}}/static/audio/notification.ogg');
 var emailRecieved = false
 
 
+
+
+
+
+
+// function getBrowserName() {
+//   var name;
+//   if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ){
+//     name = 'Opera'
+//   }else if (navigator.userAgent.indexOf("Chrome") != -1 ) {
+//     name = 'Chrome'
+//   }else if (navigator.userAgent.indexOf("Safari") != -1) {
+//     name = 'Safari'
+//   }else if (navigator.userAgent.indexOf("Firefox") != -1) {
+//     name = 'Firefox'
+//   }else if ((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
+//     name = 'IE'
+//   }else {
+//     name = 'unknown'
+//   }
+//   return name
+// }
+//
+// broswer = getBrowserName()
+
+
+function setCookie(cname, cvalue, exdays) {
+  console.log('set cookie');
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  console.log(decodedCookie);
+  var ca = decodedCookie.split(';');
+  console.log(ca);
+  for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+      }
+  }
+  return "";
+}
+
+
 var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
-
-
 
 
 function fetchMessages(uid) {
@@ -373,21 +393,70 @@ function fetchMessages(uid) {
       console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
+        // console.log(data);
+        console.log('dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' , data);
+        // if (data.length>0) {
+        //
+        // }
+
+
         for (var i = 0; i < data.length; i++) {
+          // agentPk = data[i].user
           chat.messages.push(data[i])
         }
+        // for (var i = 0; i < data.length; i++) {
+        //
+        //   if (data[i].sentByAgent) {
+        //     var sentByMe = false;
+        //   }else {
+        //     var sentByMe = true;
+        //   }
+        //
+        //   if (data[i].message) {
+        //
+        //     if (data[i].attachmentType) {
+        //       // link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+        //       // var message = {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() }
+        //       chat.messages.push( {msg:"" , link:data[i].message ,  sentByMe:sentByMe , created: new Date() } )
+        //     }else {
+        //       chat.messages.push( { msg: data[i].message , sentByMe: sentByMe , created: data[i].created } )
+        //     }
+        //
+        //
+        //   }else if (data[i].attachment) {
+        //       if (data[i].attachmentType == 'image') {
+        //         chat.messages.push( { msg: '' , img : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }else if (data[i].attachmentType == 'audio') {
+        //           chat.messages.push( { msg: '' , audio : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }else if (data[i].attachmentType == 'video') {
+        //           chat.messages.push( { msg: '' , video : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }else if (data[i].attachmentType == 'application') {
+        //           chat.messages.push( { msg: '' , doc : data[i].attachment  , sentByMe: sentByMe , created: data[i].created } )
+        //       }
+        //   }
+        //   // chat.messages.push({ msg: , sentByMe: , created:  })
+        //
+        //
+        // }
+        // scroll();
       }
   };
+
   xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/?uid=' + uid , true);
   xhttp.send();
 }
 
 function fetchThread(uid) {
+  console.log('fetch thread');
+
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
+      // console.log(this.readyState , this.status,'onready' , this.responseText);
+      // console.log(this);
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
         if (data.length>0) {
+          // fetchThread(uid);
           threadExist = true
           console.log(data,'fffffffffffffffff');
           chatThreadPk = data[0].pk
@@ -397,17 +466,49 @@ function fetchThread(uid) {
         fetchMessages(uid);
       } else if (this.responseText == '{"PARAMS":"createCookie"}') {
         console.log('genertate new uid');
+        // document.cookie = "uid" + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
         uid = new Date().getTime()
+        // console.log('nn',uid ,document.cookie);
         setCookie("uid", uid, 365);
         fetchMessages(uid);
+
+
+
+
+
+        // setTimeout(function () {
+        //   // console.log(session);
+        //
+        //   // alert(connection)
+        //   // alert(connection.session)
+        //
+        //   connection.session.subscribe('service.support.chat.' + uid, supportChat).then(
+        //     function (sub) {
+        //       console.log("subscribed to topic 'service.support.chat'" , uid );
+        //     },
+        //     function (err) {
+        //       console.log("failed to subscribed: " + err);
+        //     }
+        //   );
+        //
+        //
+        //
+        // }, 4000 );
+
+
+
+
+
       }
+
+
   };
+
   xhttp.open('GET', '{{serverAddress}}/api/support/chatThread/?uid=' + uid + '&checkThread', true);
   xhttp.send();
+
 }
-
-
 
 var threadExist
 var threadResponse
@@ -437,6 +538,9 @@ checkCookie();
 
 
 
+// function getLoginDetails(username , phoneNumber , email) {
+//    setcookies - details
+// }
 
 function setVisitorDetails(name , phoneNumber , email) {
   console.log('coming in chatter', name , phoneNumber , email);
@@ -496,292 +600,391 @@ function getVisitorDetails() {
 
 
 
-document.addEventListener("DOMContentLoaded", function(event) {
+function setColors(bubbleColor , windowColor , icnClr) {
+  windowColor = windowColor
+  supportBubbleColor = bubbleColor
+  if (icnClr) {
+    iconColor = icnClr
+  }
+  setTimeout(function () {
+    headerChat.style.backgroundColor = windowColor
+    startConvoBtn.style.color =  windowColor
+    startConvoBtn.style.borderColor =  windowColor
+    headerInit.style.backgroundColor = windowColor
+    startConversation.style.borderColor = windowColor
 
 
+    chatCircle.style.background = bubbleColor
+    callCircle.style.background = bubbleColor
+    audioCircle.style.background = bubbleColor
+    videoCircle.style.background = bubbleColor
+    ticketCircle.style.background = bubbleColor
+    closeSupport.style.background = bubbleColor
+    var syMainIcon = document.getElementById('sy-main-icon')
+    syMainIcon.style.background = bubbleColor
 
-  connection.onopen = function (session) {
-     console.log("session established!");
+    document.getElementById('closeChatSvg').style.fill = iconColor
+    // document.getElementById('sy-main-icon').style.background = bubbleColor
 
-    var supportChat = function(args) {
-      console.log(args);
-      var message;
+     chatCircleText.style.cssText  = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     callCircleText.style.cssText =  'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     audioCircleText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     videoCircleText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     ticketCircleText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
+     Syrow24hSupportText.style.cssText = 'background:'+bubbleColor +'!important; color:'+ iconColor+'!important;'
 
-
-      if (args[0]=='T') {
-        console.log('typingggggggggggggggggggggg');
-        onlineStatus.innerHTML = 'Typing...';
-        // isTyping.style.display = "";
-        setTimeout(function(){
-          // isTyping.style.display = "none";
-        onlineStatus.innerHTML = 'Online';
-        }, 1500);
-        return
-      }
-
-      if (args[0]=="M") {
-        console.log('MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM');
-          // notification.play();
-          message = args[1]
-         // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
-         // chat.messages.push(args[1]);
-         if (!chatOpen) {
-           unreadMsgCount+=1;
-           // unreadMsg.style.display = "";
-           // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
-         }
-
-      agentName.innerHTML = args[2];
-
-      }else if (args[0]=="MF") {
-        console.log('MF');
-        // notification.play();
-        agentName.innerHTML = args[2]
-
-        if (!chatOpen) {
-          unreadMsgCount+=1;
-          // unreadMsg.style.display = "";
-          // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
-        }
-
-
-        var attachment;
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
-            if (this.readyState == 4 && this.status == 200) {
-              console.log(this.responseText);
-              var data = JSON.parse(this.responseText)
-              // attachment = data.attachment
-              // console.log('attachmenttttttttttt' , attachment);
-              message = data
-
-              console.log(data,'ddddddddddd');
-
-              if (data.attachmentType=='instructionImage') {
-                openModal(data.attachment)
-              }
-            }
-        };
-
-        xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/' + args[1].filePk + '/'  , true);
-        xhttp.send();
-
-      }else if (args[0]=='ML') {
-        console.log('ML');
-        agentName.innerHTML = args[2]
-        if (!chatOpen) {
-          unreadMsgCount+=1;
-          // unreadMsg.style.display = "";
-          // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
-        }
-         message = args[1]
-      }else if (args[0]=='AP') {
-        console.log('agent pk recieveddddddddddddddddddddddddddddddddd');
-        agentPk = args[1];
-        isAgentOnline = true;
-        // videoCallAccepted = true
-        // checkVideoCallAccepted()
-        return
-      }else if (args[0]=='O') {
-        console.log('yes online');
-        console.log('O');
-        isAgentOnline = true;
-        onlineStatus.innerHTML = 'Online'
-        // agentName.innerHTML = '<p style="line-height: 1.75;">Syrow Agent</p>'
-        return
-      }else if (args[0]=='A') {
-        console.log('asigned');
-        console.log('A');
-        isAgentOnline = true;
-        agentName.innerHTML = args[1]
-        return
-      }else if (args[0]=='F') {
-        console.log('F');
-        console.log('open feedback');
-        openFeedback(args[1])
-        return
-      }
-
-      console.log('IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
-
-      setTimeout(function(){
-        console.log('inside timeooutttttttttttttt');
-        var div = document.createElement("div");
-        console.log(message,'message');
-        div.innerHTML = messageDiv(message)
-        messageBox.appendChild(div);
-        scroll();
-        chat.messages.push(message);
-        notification.play();
-      }, 1500);
-
-
-
-    }
-
-    uid = getCookie("uid");
-
-
-    function heartbeat() {
-      console.log('caming in heartttttttttttttttttttttttttttttttttttttt here');
-      var isOnline = true
-      return uid
-    }
-
-
-    function createCookieDetail(args) {
-      console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
-      console.log(args[0]);
-        detail = getCookie("uidDetails");
-        if (detail != "") {
-          console.log('already there');
-          document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
-        }
-        if (args[0].email!='') {
-          emailRecieved = true
-        }
-        console.log(emailRecieved);
-        setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
-    }
-
-    session.register('service.support.createDetailCookie.'+uid, createCookieDetail).then(
-      function (res) {
-        console.log("registered to service.support.createDetailCookie'");
-      },
-      function (err) {
-        console.log("failed to registered: ");
-      }
-    );
-
-    session.register('service.support.heartbeat.'+uid, heartbeat).then(
-      function (res) {
-        console.log("registered to service.support.heartbeat'");
-      },
-      function (err) {
-        console.log("failed to registered: " + err);
-      }
-    );
-
-    session.subscribe('service.support.chat.' + uid, supportChat).then(
-      function (sub) {
-        console.log("subscribed to topic 'service.support.chat'" , uid );
-      },
-      function (err) {
-        console.log("failed to subscribed: " + err);
-      }
-    );
-
-
-  };
-
-  connection.open();
-
-
-
-
-function createChatDiv() {
-
-
-  var body = document.getElementsByTagName("BODY")[0];
-  var mainDiv = document.createElement("mainDiv");
-  mainDiv.id="mainDiv"
-  //chatboxhtml
-
-  mainDiv.innerHTML = '<div id="chatBox" class="ChatBoxDiv">'+
-          '<div id="chatBox_header" class="chatBox_header flex_container">'+
-            '<img class="logo_image" src="'+dpSupport+'" alt="">'+
-            '<div class="chatBox_info">'+
-              '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
-              '<span id="onlineStatus" class="chatBox_status">Online</span>'+
-            '</div>'+
-            '<i id="closeIcon" class="fa fa-times closeIcon" aria-hidden="true"></i>'+
-            '<i id="exitBtn" class="fa fa-sign-out" aria-hidden="true"></i>'+
-          '</div>'+
-          '<div id="audioSection" class="audio_section">'+
-          '</div>'+
-          '<div id="chatBox_content" class="chatBox_content">'+
-            '<div id="messageBox" class="content_section">'+
-            '</div>'+
-          '</div>'+
-          '<div id="chatBox_footer" class="chatBox_footer">'+
-              '<div class="chatbox_branding">'+
-                '<p>We run on Syrow</p>'+
-              '</div>'+
-              '<div id="messageComposer" class="flex_container">'+
-                '<textarea id="inputText" placeholder="Write a Reply..." name="name" rows="2"></textarea>'+
-                '<input id="filePicker" type="file" style="display:none;"/>'+
-                '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
-                '<i id="paperPlane" class="fa fa-paper-plane-o" aria-hidden="true"></i>'+
-              '</div>'+
-              '<div id="startNewChatBtn" class="flex_container">'+
-              '</div>'+
-          '</div>'+
-        '</div>'+
-
-
-
-        '<div id="closeSupport" class="close-support" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
-          '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
-           '<path id="closeChatSvg" style="fill:'+iconColor+'" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
-         '</svg>'+
-        '</div>'+
-
-        '<div id="supportCircle">'+
-    			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
-    				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
-    				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
-    				'<div  id="sy-sub-icons">'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
-    						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Callback</span>'+
-    						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle">'+
-    						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Chat</span>'+
-    						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle">'+
-    						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Audio Call</span>'+
-    						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" >'+
-    						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Video Call</span>'+
-    						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle">'+
-    						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Ticket</span>'+
-    						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
-    					'</div>'+
-    				'</div>'+
-    			'</div>'+
-    		'</div>'+
-
-        '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle">'+
-          '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ; right:105px; display:none; transition: .5s" class="sy-text">Chat</span>'+
-          '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
-        '</div>'+
-        // '<div id="syrowBranding" style="height:2vh; background-color:'+ windowColor +'; text-align:center;">'+
-        // '<span style="color:#fff; font-weight:bolder; font-size:11px;" > We run on Syrow </span>'+
-        // '</div>'+
-        // '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:9vh;">'+
-        //   '<div style="padding-top:"10px" >'+
-        //      '<textarea id="inputText" rows="2" style="border:none; font-size:17px; resize:none;width:70%;padding:10px; height:40px;outline:none;background-color:#fff;" placeholder="Write a reply..." ></textarea>'+
-        //      '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
-        //      '<span id="paperClip" style="background-color:#fff; padding:0% 2%;cursor:pointer;"><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="width:25px" ></span>'+
-        //      '<span id="paperPlane" style="background-color:#fff;cursor:pointer;float:right;padding:5px"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="width:40px; padding-top:1%;"></span>'+
-          '</div>'+
-        '</div>'
-
-
-
-  mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
-  body.appendChild(mainDiv);
-
+    syMainIcon.style.color = iconColor
+    chatCircle.style.color = iconColor
+    callCircle.style.color = iconColor
+    audioCircle.style.color = iconColor
+    videoCircle.style.color = iconColor
+    ticketCircle.style.color = iconColor
+    closeSupport.style.color = iconColor
+  }, 1000);
 }
 
-  createChatDiv()
+document.addEventListener("DOMContentLoaded", function(event) {
 
-  //variables
+  // var connection = new autobahn.Connection({url: 'ws://ws.cioc.in:443/ws', realm: 'default'});
+
+
+
+    connection.onopen = function (session) {
+       console.log("session established!");
+
+      var supportChat = function(args) {
+        console.log(args);
+        var message;
+
+
+        if (args[0]=='T') {
+          console.log('typingggggggggggggggggggggg');
+          onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Typing..</p>';
+          // isTyping.style.display = "";
+          setTimeout(function(){
+            // isTyping.style.display = "none";
+          onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
+          }, 1500);
+          return
+        }
+
+        if (args[0]=="M") {
+            // notification.play();
+            message = args[1]
+           // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
+           // chat.messages.push(args[1]);
+           if (!chatOpen) {
+             unreadMsgCount+=1;
+             // unreadMsg.style.display = "";
+             // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
+           }
+
+        agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
+
+        }else if (args[0]=="MF") {
+          // notification.play();
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
+
+          if (!chatOpen) {
+            unreadMsgCount+=1;
+            // unreadMsg.style.display = "";
+            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
+          }
+
+
+          var attachment;
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+              console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+              if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                var data = JSON.parse(this.responseText)
+                // attachment = data.attachment
+                // console.log('attachmenttttttttttt' , attachment);
+                message = data
+
+                console.log(data,'ddddddddddd');
+
+                if (data.attachmentType=='instructionImage') {
+                  openModal(data.attachment)
+                }
+
+
+                // if (args[1].typ=='image') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , img: attachment }
+                // }else if (args[1].typ=='audio') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , audio:attachment }
+                // }else if (args[1].typ=='video') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , video:attachment }
+                // }else if (args[1].typ=='doc') {
+                //    message = {msg:'' ,  sentByMe:false , created: args[1].created , doc:attachment }
+                // }
+
+              }
+          };
+
+          xhttp.open('GET', '{{serverAddress}}/api/support/supportChat/' + args[1].filePk + '/'  , true);
+          xhttp.send();
+
+        }else if (args[0]=='ML') {
+          // notification.play();
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[2]+'</p>'
+
+          if (!chatOpen) {
+            unreadMsgCount+=1;
+            // unreadMsg.style.display = "";
+            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
+          }
+           message = args[1]
+        }else if (args[0]=='AP') {
+          console.log('agent pk recieveddddddddddddddddddddddddddddddddd');
+          agentPk = args[1];
+          isAgentOnline = true;
+          // videoCallAccepted = true
+          // checkVideoCallAccepted()
+          return
+        }else if (args[0]=='O') {
+          console.log('yes online');
+          isAgentOnline = true;
+          onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px;" >Online</p>'
+          // agentName.innerHTML = '<p style="line-height: 1.75;">Syrow Agent</p>'
+          return
+        }else if (args[0]=='A') {
+          console.log('asigned');
+          isAgentOnline = true;
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+args[1]+'</p>'
+          return
+        }else if (args[0]=='F') {
+          console.log('open feedback');
+          openFeedback(args[1])
+          return
+        }
+
+
+        setTimeout(function(){
+          var div = document.createElement("div");
+          console.log(message,'message');
+          div.innerHTML = messageDiv(message)
+          messageBox.appendChild(div);
+
+          scroll();
+
+          chat.messages.push(message);
+          notification.play();
+
+
+        }, 1500);
+
+
+
+      }
+
+      uid = getCookie("uid");
+
+
+      function heartbeat() {
+        console.log('caming in heartttttttttttttttttttttttttttttttttttttt here');
+        var isOnline = true
+        return uid
+      }
+
+
+      function createCookieDetail(args) {
+        console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
+        console.log(args[0]);
+          detail = getCookie("uidDetails");
+          if (detail != "") {
+            console.log('already there');
+            document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
+          }
+          if (args[0].email!='') {
+            emailRecieved = true
+          }
+          console.log(emailRecieved);
+          setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
+      }
+
+      session.register('service.support.createDetailCookie.'+uid, createCookieDetail).then(
+        function (res) {
+          console.log("registered to service.support.createDetailCookie'");
+        },
+        function (err) {
+          console.log("failed to registered: ");
+        }
+      );
+
+      session.register('service.support.heartbeat.'+uid, heartbeat).then(
+        function (res) {
+          console.log("registered to service.support.heartbeat'");
+        },
+        function (err) {
+          console.log("failed to registered: " + err);
+        }
+      );
+
+      session.subscribe('service.support.chat.' + uid, supportChat).then(
+        function (sub) {
+          console.log("subscribed to topic 'service.support.chat'" , uid );
+        },
+        function (err) {
+          console.log("failed to subscribed: " + err);
+        }
+      );
+
+
+    };
+
+    connection.open();
+
+    function createDiv() {
+      var body = document.getElementsByTagName("BODY")[0];
+      var mainDiv = document.createElement("mainDiv");
+      mainDiv.id="mainDiv"
+
+      mainDiv.innerHTML = '<div id="chatBox" style="width:347px; height:75vh; border-radius: 10px; background-color:#fff; position:fixed ; bottom:100px; right:10px; z-index:1500; margin-left:10px; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); overflow:auto; overflow-x:hidden; ">'+
+
+        '<div id="headerChat" style="border-bottom: 1px solid #e0e0e0; border-radius:10px 10px 0px 0px; width:100%; height:10vh; background-color:'+ windowColor +'; color:#fff;">'+
+          '<div style="padding:10px; background-size:cover; " >'+
+            '<div id="backArrow" style="float:left; cursor:pointer; padding:15px; border-radius:5px; " >'+
+              '<img src="{{serverAddress}}/static/images/backArrow.png" alt="Back Arrow" width="15" height="15">'+
+            '</div>'+
+            '<div style="float:left;">'+
+                '<img src="'+dpSupport+'" style="border-radius:50%; width:35px " alt="Samuel">'+
+            '</div>'+
+            '<div style="float:left;padding-left: 15px;" >'+
+              '<div>'+
+                '<span id="agentName" style="font-size:15px; cursor:pointer; "></span>'+
+              '</div>'+
+              '<div>'+
+                '<span id="onlineStatus"></span>'+
+              '</div>'+
+            '</div>'+
+            '<img id="exitBtn" src="{{serverAddress}}/static/images/exit.png" style="color:#fff;font-size:15px;cursor:pointer;float:right;padding:15px;width:50px;" alt="Exit">'+
+            '<div id="closeIcon" style="float:right; cursor:pointer; padding:15px; border-radius:5px; "  >'+
+              '<span> <img src="{{serverAddress}}/static/images/close.png" tooltip="" alt="Close" width="15" height="15"> </span>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+
+
+        '<div id="headerInit" style="border-bottom: 1px solid #e0e0e0; height:30vh; border-radius:10px 10px 0px 0px; width:100%; background-color:'+ windowColor +'; color:#fff; padding:15px; background-size:cover; " >'+
+          '<span id="closeIconInit" style="position:absolute; top:10px; right:10px; cursor:pointer;" > <img src="{{serverAddress}}/static/images/close.png" alt="Close" width="15" height="15"> </span>'+
+          '<div style="padding:15px; padding-left:25px; " >'+
+            '<p style="font-size:25px; line-height: 1.75; margin:0px 0px 10px;" >Hi, We are '+ custName +' 👋 </p>'+
+        '  </div>'+
+        '</div>'+
+
+        '<div id="startConversation" style="margin-right:-15px; margin-left:-15px; padding:30px; padding-top:10px; height:200px; position:absolute; background-color:#fff; border-radius:5px; top:138px; left:55px; width:80%; box-shadow: 0px 5px 40px rgba(0,0,0,0.16); border-top: 2px solid '+ windowColor +'" >'+
+          '<p style="font-size:12px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px;" > Start a conversation </p>'+
+          '<p style="font-size:11px; margin:0px 0px 10px; line-height: 1.75; margin-left:-15px; color:#777; "> The team typically replies in few minutes.</p>'+
+          '<div style="padding-top:5px; text-align:center;" >'+
+            '<img src="{{serverAddress}}/static/images/img_avatar_card.png" style="border-radius:50%; width:65px; height:65px; position:absolute; left:25px;  border:3px solid white; " alt="Agent1">'+
+            '<img src="{{serverAddress}}/static/images/user2-160x160.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:80px; border:3px solid white; " alt="Agent2">'+
+            '<img src="{{serverAddress}}/static/images/user8-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:132px;  border:3px solid white;  " alt="Agent3">'+
+            '<img src="{{serverAddress}}/static/images/user4-128x128.jpg" style="border-radius:50%; width:65px; height:65px; position:absolute; left:186px;  border:3px solid white; " alt="Agent4">'+
+          '</div>'+
+
+          '<div style="margin-right:-15px; margin-left:-15px; color:#fff; position:absolute; top:144px; text-align:center; padding-top:5px; " >'+
+            '<button id="startConvoBtn" type="button" style="padding:13px; border-radius:20px; background-color:#fff ; color:'+ windowColor +'; border:2px solid '+ windowColor +'; text-transform:none;  font-size:11px; cursor:pointer;" >'+
+              'Start Conversation'+
+            '</button>'+
+        '  </div>'+
+        '</div>'+
+
+
+        '<div id="messageBox" style="height:49vh; overflow:auto; overflow-x:hidden; padding:10px;  width:100%;">'+
+        '</div>'+
+        '<div id="syrowBranding" style="height:2vh; background-color:'+ windowColor +'; text-align:center;">'+
+        '<span style="color:#fff; font-weight:bolder; font-size:11px;" > We run on Syrow </span>'+
+        '</div>'+
+        '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:9vh;">'+
+          '<div style="padding:0px; padding-top:10px;" >'+
+             '<textarea id="inputText" rows="2" style="border:none; font-size:17px; resize:none;width:70%; height:40px;outline:none;background-color:#fff;" placeholder="Write a reply..." ></textarea>'+
+             '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
+             '<span id="paperClip" style="margin-left:3%;border:none; background-color:#fff; font-size:15px; padding:1% 0%; cursor:pointer; "><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style=" width:22px;padding-top:1%" ></span>'+
+             '<span id="paperPlane" style="width:12%;border:none; background-color:#fff; font-size:15px; cursor:pointer;float:right"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="width:40px; padding-top:1%;"></span>'+
+          '</div>'+
+        '</div>'+
+        '<button id="startNewChatBtn" type="button" style="background-color:#fff;color:'+windowColor+';cursor:pointer;width:100%;height:9vh;border:0px;"> <span style="font-size:14px;font-weight:bolder;" >Sart New Conversation </span> </button>'+
+      '</div>'+
+      '<div id="closeSupport" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
+        '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
+         '<path id="closeChatSvg" style="fill:'+iconColor+'" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+       '</svg>'+
+      '</div>'+
+
+      '<div id="supportCircle">'+
+  			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
+  				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
+  				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
+  				'<div  id="sy-sub-icons">'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
+  						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Callback</span>'+
+  						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
+  					'</div>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle">'+
+  						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Chat</span>'+
+  						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
+  					'</div>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle">'+
+  						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Audio Call</span>'+
+  						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
+  					'</div>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" >'+
+  						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Video Call</span>'+
+  						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
+  					'</div>'+
+  					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle">'+
+  						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Ticket</span>'+
+  						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
+  					'</div>'+
+  				'</div>'+
+  			'</div>'+
+  		'</div>'+
+
+      '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle">'+
+        '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ; right:105px; display:none; transition: .5s" class="sy-text">Chat</span>'+
+        '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
+      '</div>'+
+      '<div id="myModal" class="modal">'+
+        '<div id="modalContent" class="modal-content">'+
+        '</div>'+
+      '</div>'
+
+
+
+      // '<div id="welcomeMessage"  style="width:270px; height:76px; padding:5px 10px 5px 10px; background-color:#fff; color:#000; position:fixed; bottom:42px;  right:30px; border-radius:5px; cursor:pointer; box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.3)">'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:12px;" >Syrow</p>'+
+      //   '<p style="line-height: 1.75; margin:0px 0px 10px; font-size:10px; word-wrap: break-word;" >Thanks for visiting us. If you need help simply reply to this message.... </p>'+
+      // '</div>'+
+      // '<div id="unreadMsg" style="background-color:#fff; color:#fff; width:3px; height:3px; position:fixed; bottom:42px; right:38px; z-index:9999; " >'+
+      //
+      // '</div>'
+
+
+    mainDiv.style.font ="normal 75% Arial, Helvetica, sans-serif"
+    body.appendChild(mainDiv);
+
+    }
+
+
+
+  createDiv()
+
+  // console.log(document.getElementById('ticketCircle'));
+
+
+  var allTags = document.getElementById('mainDiv').getElementsByTagName("*");
+  for (var i = 0; i < allTags.length; i++) {
+    allTags[i].style.boxSizing = "border-box";
+  }
+
+  document.getElementById('mainDiv').style.color = "#333";
+
+
+  // document.getElementById("emoji").innerHTML = String.fromCodePoint(0x1F604)
+
+
   var device;
   var chatOpen = false;
   // var chatIconSvg = document.getElementById('chatIconSvg');
@@ -796,10 +999,12 @@ function createChatDiv() {
   var paperClip = document.getElementById("paperClip");
   var filePicker = document.getElementById('filePicker');
   var inputText = document.getElementById("inputText");
+  var startConvoBtn = document.getElementById("startConvoBtn");
   var startConversation = document.getElementById("startConversation");
   // var demo = document.getElementById("demo");
   // var exploreSyrow = document.getElementById('exploreSyrow');
   var headerInit = document.getElementById('headerInit');
+  var backArrow = document.getElementById('backArrow');
   var closeIconInit = document.getElementById('closeIconInit');
   var onlineStatus = document.getElementById('onlineStatus');
   var agentName = document.getElementById('agentName');
@@ -813,10 +1018,6 @@ function createChatDiv() {
   var ticketCircle = document.getElementById('ticketCircle');
   var closeSupport = document.getElementById('closeSupport');
   var supportCircle = document.getElementById('supportCircle');
-  var audioSection = document.getElementById('audioSection')
-  var chatBox_header = document.getElementById('chatBox_header')
-  var chatBox_footer = document.getElementById('chatBox_footer')
-  var chatBox_content = document.getElementById('chatBox_content')
   // var isTyping = document.getElementById('isTyping');
 
   var exitBtn = document.getElementById('exitBtn');
@@ -834,8 +1035,6 @@ function createChatDiv() {
       }
   }
 
-  chatBox.style.display = "none";
-
   // inputText.style.display = "none"
 
 
@@ -850,7 +1049,7 @@ function createChatDiv() {
   // exitBtn.style.display ="none"
   // var videoCallAccepted = false;
 
-  var webRtcAddress = 'http://localhost:1111'
+  var webRtcAddress = 'http://192.168.1.124:1337'
 
 
 
@@ -865,7 +1064,6 @@ function createChatDiv() {
      winCol = windowColor.split('#')[1]
      urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
      urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
-     console.log(urlforConference);
     openVideoIframe(urlforConference , urlforConferenceForAgent,'video')
     openChat()
   })
@@ -895,82 +1093,114 @@ function createChatDiv() {
 
 
     if (ptanhi=='video') {
-      console.log('comingggggg');
       videoOpened = true
       var callType = 'VCS'
-      chatBox_header.style.borderRadius = "0px 10px 0px 0px"
-      chatBox_footer.style.borderRadius = "0px 0px 10px 0px"
+      chatBox.style.borderRadius = "0px 10px 10px 0px"
+      headerChat.style.borderRadius = "0px 10px 0px 0px"
     }else if(ptanhi=='audio'){
       audioOpened = true
       var callType = 'AC'
     }
 
-      if (threadExist==undefined) {
-        dataToPublish = [uid, callType, [] , custID]
-        details = getCookie("uidDetails");
-        if (details != "") {
-          console.log(details);
-           dataToPublish.push(JSON.parse(details))
-        } else {
-          dataToPublish.push(false)
-        }
+        if (threadExist==undefined) {
+          dataToPublish = [uid, callType, [] , custID]
+          details = getCookie("uidDetails");
+          if (details != "") {
+            console.log(details);
+             dataToPublish.push(JSON.parse(details))
+          } else {
+            dataToPublish.push(false)
+          }
 
-        var dataToSend = JSON.stringify({uid: uid , company: custID, typ: ptanhi});
-        var xhttp = new XMLHttpRequest();
-         xhttp.onreadystatechange = function() {
-           if (this.readyState == 4 && this.status == 201) {
-             console.log('posted successfully');
-             var data = JSON.parse(this.responseText)
-             threadExist=true
-             chatThreadPk = data.pk
-             dataToPublish.push(chatThreadPk)
-             dataToPublish.push(urlforConferenceForAgent)
-             connection.session.publish('service.support.agent', dataToPublish , {}, {
-               acknowledge: true
-             }).
-             then(function(publication) {
-               console.log("Published");
-             });
-           }
-         };
-         xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-         xhttp.setRequestHeader("Content-type", "application/json");
-         xhttp.send(dataToSend);
-      }else {
-
-        dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
-        if (isAgentOnline) {
-          console.log('ONLINE' , agentPk);
-          connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published service.support.agent."+agentPk);
-          });
+          var dataToSend = JSON.stringify({uid: uid , company: custID, typ: ptanhi});
+          var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 201) {
+               console.log('posted successfully');
+               var data = JSON.parse(this.responseText)
+               threadExist=true
+               chatThreadPk = data.pk
+               dataToPublish.push(chatThreadPk)
+               dataToPublish.push(urlforConferenceForAgent)
+               connection.session.publish('service.support.agent', dataToPublish , {}, {
+                 acknowledge: true
+               }).
+               then(function(publication) {
+                 console.log("Published");
+               });
+             }
+           };
+           xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+           xhttp.setRequestHeader("Content-type", "application/json");
+           xhttp.send(dataToSend);
         }else {
-          console.log('offline send to all');
-          connection.session.publish('service.support.agent', dataToPublish , {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
+
+          dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
+          if (isAgentOnline) {
+            console.log('ONLINE' , agentPk);
+            connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published service.support.agent."+agentPk);
+            });
+          }else {
+            console.log('offline send to all');
+            connection.session.publish('service.support.agent', dataToPublish , {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }
+
         }
 
-      }
+        // var typ = urlforConference.split('&')[1]
 
-      if (ptanhi=='video') {
+        // alert('open Video')
+        // window.open(webRtcAddress +'/'+uid);
         var body = document.getElementsByTagName("BODY")[0]
         var iframeDiv = document.createElement('div')
+
         iframeDiv.id = "iframeDiv";
         iframeDiv.style.position = "fixed";
-        iframeDiv.style.height = "70vh";
-        iframeDiv.style.width = "50%";
-        iframeDiv.style.bottom = "100px";
-        iframeDiv.style.right = "410px";
-        iframeDiv.style.animation = "moveInFront 0.6s"
-      }
 
+        if (ptanhi=='audio') {
+            iframeDiv.style.height = "5vh";
+            iframeDiv.style.width = "346px";
+            iframeDiv.style.bottom = "205px";
+            iframeDiv.style.right = "11px";
+            iframeDiv.style.zIndex = "99999999"
+        }else {
+            iframeDiv.style.height = "70vh";
+            iframeDiv.style.width = "50%";
+            iframeDiv.style.bottom = "100px";
+            iframeDiv.style.right = "357px";
+        }
+
+        // iframeDiv.style.top = "25%";
+        // iframeDiv.style.bottom = "100px";
+        // iframeDiv.style.right = "357px";
+
+        // iframeDiv.style.height = "70vh";
+
+
+
+        // iframeDiv.style.display = "none";
+
+        // var span = document.createElement('span')
+        // span.id = "closeVideo"
+        // span.innerHTML = '<img src="{{serverAddress}}/static/images/close.png" alt="Close" width="10" height="10">';
+        // span.style.position = "absolute";
+        // span.style.right = "7px";
+        // span.style.top = "3px";
+        // span.style.backgroundColor = windowColor;
+        // span.style.padding = "3px";
+        // span.style.cursor = "pointer";
+
+
+        // iframeDiv.appendChild(span)
 
         var iFrame = document.createElement('iframe');
         iFrame.id = "iFrame1"
@@ -979,21 +1209,21 @@ function createChatDiv() {
         iFrame.scrolling = "no";
         iFrame.style.height = "100%";
         iFrame.style.border='none';
-        iFrame.setAttribute('allowFullScreen', '')
-        setTimeout(function () {
-            getFrameContent = document.getElementById("iFrame1").contentWindow;
-        }, 1000);
+        console.log(iFrame);
+      setTimeout(function () {
+          getFrameContent = document.getElementById("iFrame1").contentWindow;
+      }, 1000);
 
-        if (ptanhi=='audio') {
-          audioSection.appendChild(iFrame)
-          audioSection.style.display = "block";
-          chatBox_content.style.marginTop = "40px";
-          console.log(messageBox.style,'messageBoxmessageBoxmessageBoxmessageBox');
-        }else {
-          iframeDiv.appendChild(iFrame)
-          body.appendChild(iframeDiv)
-        }
 
+        // if (typ=='audio') {
+        //     iFrame.style.border = "0px";
+        // }else {
+        //     iFrame.style.border = "3px solid"+windowColor;
+        // }
+
+        // iFrame.style.border = "3px solid"+windowColor;
+        iframeDiv.appendChild(iFrame)
+        body.appendChild(iframeDiv)
 
         // checkVideoCallAccepted()
 
@@ -1034,6 +1264,7 @@ function createChatDiv() {
 
 
   document.getElementById('sy-main-icon').style.display = "none";
+  backArrow.style.display = "none";
   setTimeout(function(){
     document.getElementById('sy-main-icon').style.display = "";
 
@@ -1070,12 +1301,13 @@ function createChatDiv() {
   // function setColors(colors) {
   //   console.log('coming in set colorsssssssssssssssssssssssssssssss');
   //   headerChat.style.backgroundColor = colors.main
+  //   startConvoBtn.style.color =  colors.main
+  //   console.log(startConvoBtn.style.color);
   //   console.log(headerChat.style.backgroundColor);
   //   console.log(colors);
   //   // startConversation.style =  colors.main
   //   // border-top: 2px solid '+ windowColor +'"
   // }
-
 
 
   var mainStr = "";
@@ -1179,456 +1411,285 @@ function createChatDiv() {
 
       }, 1700);
 
+
+
+
+
     }
 
 
-    function setStyle() {
-            //chatboxcss
-            var newStyle = document.createElement('style');
-            newStyle.appendChild(document.createTextNode("\
-            @font-face {\
-              font-family: 'Syrow';\
-              src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4');\
-              src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
-              url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
-              url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
-              url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
-              font-weight: normal;\
-              font-style: normal;\
-            }\
-              .SyrowFont {\
-              /* use !important to prevent issues with browser extensions that change fonts */\
-              font-family: 'Syrow' !important;\
-              speak: none;\
-              font-style: normal;\
-              font-weight: normal;\
-              font-variant: normal;\
-              text-transform: none;\
-              line-height: 1;\
-              /* Better Font Rendering =========== */\
-              -webkit-font-smoothing: antialiased;\
-              -moz-osx-font-smoothing: grayscale;\
-            }\
-              .font-Syrow24hSupport:before {\
-              content: '\\61';\
-            }\
-              .font-SyrowChat:before {\
-              content: '\\62';\
-            }\
-              .font-SyrowAudioCall:before {\
-              content: '\\63';\
-            }\
-              .font-SyrowVideoCall:before {\
-              content: '\\64';\
-            }\
-              .font-SyrowCallBack:before {\
-              content: '\\65';\
-            }\
-              .font-SyrowTicket:before {\
-              content: '\\66';\
-            }\
-              .sy-circle {\
-              z-index: 987654321!important;\
-              position: fixed!important;\
-              bottom: 20px;\
-              right: 40px;\
-              width: 60px!important;\
-              height: 60px!important;\
-              border-radius: 50%!important;\
-            }\
-              .sy-md-1 {\
-              font-size: 40px;\
-            }\
-              .sy-md-2 {\
-              font-size: 34px;\
-            }\
-              .sy-ops {\
-              position: absolute;\
-              top: 0;\
-              bottom: 0;\
-              width: 100%;\
-              display: -webkit-box;\
-              display: -ms-flexbox;\
-              display: flex;\
-              -webkit-box-align: center;\
-              -ms-flex-align: center;\
-              align-items: center;\
-              -webkit-box-pack: center;\
-              -ms-flex-pack: center;\
-              justify-content: center;\
-              -webkit-transition: opacity .08s linear,-webkit-transform .16s linear;\
-              transition: opacity .08s linear,-webkit-transform .16s linear;\
-              transition: transform .16s linear,opacity .08s linear;\
-              transition: transform .16s linear,opacity .08s linear,-webkit-transform .16s linear;\
-            }\
-              .sy-text {\
-              position: fixed;\
-              right: 70px;\
-              margin-top: 15px;\
-              border-radius: 15px;\
-              padding: 4px 8px;\
-              font-family: Verdana, Arial, sans-serif;\
-              font-size: 14px;\
-              display: inline-block;\
-              white-space: nowrap;\
-              max-width: 250px;\
-              overflow: hidden;\
-            }\
-              .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
-              text-decoration: none;\
-            }\
-              #sy-sub-icons .sy-circle, #sy-main-icon > .sy-text {\
-              display: none;\
-            }\
-              #sy-main-icon:hover > .sy-text {\
-              display: inline-block;\
-              right: 110px;\
-            }\
-            "+ mainStr+"\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1) { \
-              display: block;\
-              -webkit-animation: item-1 0.5s forwards; \
-              -ms-animation: item-1 0.5s forwards; \
-              -moz-animation: item-1 0.5s forwards;\
-            }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2) { \
-              display: block;\
-              -webkit-animation: item-2 0.5s forwards; \
-              -ms-animation: item-2 0.5s forwards;\
-              -moz-animation: item-2 0.5s forwards; \
-            }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3) {\
-              display: block;\
-              -webkit-animation: item-3 0.5s forwards; \
-              -ms-animation: item-3 0.5s forwards; \
-              -moz-animation: item-3 0.5s forwards; \
-            }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4) { \
-              display: block;\
-              -webkit-animation: item-4 0.5s forwards; \
-              -ms-animation: item-4 0.5s forwards; \
-              -moz-animation: item-4 0.5s forwards; \
-            }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5) { \
-              display: block;\
-              -webkit-animation: item-5 0.5s forwards; \
-              -ms-animation: item-5 0.5s forwards; \
-              -moz-animation: item-5 0.5s forwards; \
-            }\
-                div.stars {\
-                width: 270px;\
-                display: inline-block;\
-              }\
-              input.star { display: none; }\
-              label.star {\
-                float: right;\
-                padding: 10px;\
-                font-size: 36px;\
-                color: #444;\
-                transition: all .2s;\
-              }\
-              input.star:checked ~ label.star:before {\
-                content: '\\2605';\
-                color: #FD4;\
-                transition: all .25s;\
-              }\
-              input.star-5:checked ~ label.star:before {\
-                color: #FE7;\
-                text-shadow: 0 0 20px #952;\
-              }\
-              input.star-1:checked ~ label.star:before { color: #F62; }\
-              label.star:hover { transform: rotate(-15deg) scale(1.3); }\
-              label.star:before {\
-                content: '\\2605';\
-              }\
-              .messageOpacity{\
-                animation: msgDiv 1s ease;\
-              }\
-              @keyframes msgDiv{\
-                0%{\
-                    opacity:0;\
-                    transform:translateY(10px);\
-                	}\
-                100%{\
-                    opacity:1;\
-                    transform:translateY(0px);\
-                	}\
-                }\
-                .modal {\
-                display: none;\
-                position: fixed;\
-                z-index: 999999999;\
-                padding-top: 100px;\
-                left: 0;\
-                top: 0;\
-                width: 100%;\
-                height: 100%;\
-                overflow: auto;\
-                background-color: rgb(0,0,0);\
-                background-color: rgba(0,0,0,0.4);\
-            }\
-            .modal-content {\
-                background-color: #fefefe;\
-                margin: auto;\
-                padding: 20px;\
-                border: 1px solid #888;\
-                width: 60%;\
-                box-shadow:5px 10px 10px rgb(0,0,0,0.2);\
-                animation:modalBox 1s ease;\
-            }\
-              .close {\
-              color:  rgb(0,0,0);\
-              float: right;\
-              font-size: 28px;\
-              font-weight: bold;\
+  // var xhttp = new XMLHttpRequest();
+  // xhttp.onreadystatechange = function() {
+  //     if (this.readyState == 4 && this.status == 200) {
+  //       var data = JSON.parse(this.responseText)
+  //       console.log(data);
+  //       data = data[0];
+  //       console.log('yaaaaa');
+  //
+  //       // console.log(data.chat);
+  //     }
+  // };
+  //
+  // xhttp.open('GET', '{{serverAddress}}/api/support/customerProfile/?service=' + custID , true);
+  // xhttp.send();
+// https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf
+
+
+function setStyle() {
+
+        var newStyle = document.createElement('style');
+        newStyle.appendChild(document.createTextNode("\
+        @font-face {\
+          font-family: 'Syrow';\
+          src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4');\
+          src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
+          url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
+          url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?a8jyi4') format('woff'),\
+          url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?a8jyi4#Syrow') format('svg');\
+          font-weight: normal;\
+          font-style: normal;\
+        }\
+          .SyrowFont {\
+          /* use !important to prevent issues with browser extensions that change fonts */\
+          font-family: 'Syrow' !important;\
+          speak: none;\
+          font-style: normal;\
+          font-weight: normal;\
+          font-variant: normal;\
+          text-transform: none;\
+          line-height: 1;\
+          /* Better Font Rendering =========== */\
+          -webkit-font-smoothing: antialiased;\
+          -moz-osx-font-smoothing: grayscale;\
+        }\
+          .font-Syrow24hSupport:before {\
+          content: '\\61';\
+        }\
+          .font-SyrowChat:before {\
+          content: '\\62';\
+        }\
+          .font-SyrowAudioCall:before {\
+          content: '\\63';\
+        }\
+          .font-SyrowVideoCall:before {\
+          content: '\\64';\
+        }\
+          .font-SyrowCallBack:before {\
+          content: '\\65';\
+        }\
+          .font-SyrowTicket:before {\
+          content: '\\66';\
+        }\
+          .sy-circle {\
+          z-index: 987654321!important;\
+          position: fixed!important;\
+          bottom: 20px;\
+          right: 40px;\
+          width: 60px!important;\
+          height: 60px!important;\
+          border-radius: 50%!important;\
+        }\
+          .sy-md-1 {\
+          font-size: 40px;\
+        }\
+          .sy-md-2 {\
+          font-size: 34px;\
+        }\
+          .sy-ops {\
+          position: absolute;\
+          top: 0;\
+          bottom: 0;\
+          width: 100%;\
+          display: -webkit-box;\
+          display: -ms-flexbox;\
+          display: flex;\
+          -webkit-box-align: center;\
+          -ms-flex-align: center;\
+          align-items: center;\
+          -webkit-box-pack: center;\
+          -ms-flex-pack: center;\
+          justify-content: center;\
+          -webkit-transition: opacity .08s linear,-webkit-transform .16s linear;\
+          transition: opacity .08s linear,-webkit-transform .16s linear;\
+          transition: transform .16s linear,opacity .08s linear;\
+          transition: transform .16s linear,opacity .08s linear,-webkit-transform .16s linear;\
+        }\
+          .sy-text {\
+          position: fixed;\
+          right: 70px;\
+          margin-top: 15px;\
+          border-radius: 15px;\
+          padding: 4px 8px;\
+          font-family: Verdana, Arial, sans-serif;\
+          font-size: 14px;\
+          display: inline-block;\
+          white-space: nowrap;\
+          max-width: 250px;\
+          overflow: hidden;\
+        }\
+          .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
+          text-decoration: none;\
+        }\
+          #sy-sub-icons .sy-circle, #sy-main-icon > .sy-text {\
+          display: none;\
+        }\
+          #sy-main-icon:hover > .sy-text {\
+          display: inline-block;\
+          right: 110px;\
+        }\
+        "+ mainStr+"\
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1) { \
+          display: block;\
+          -webkit-animation: item-1 0.5s forwards; \
+          -ms-animation: item-1 0.5s forwards; \
+          -moz-animation: item-1 0.5s forwards;\
+        }\
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2) { \
+          display: block;\
+          -webkit-animation: item-2 0.5s forwards; \
+          -ms-animation: item-2 0.5s forwards;\
+          -moz-animation: item-2 0.5s forwards; \
+        }\
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3) {\
+          display: block;\
+          -webkit-animation: item-3 0.5s forwards; \
+          -ms-animation: item-3 0.5s forwards; \
+          -moz-animation: item-3 0.5s forwards; \
+        }\
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4) { \
+          display: block;\
+          -webkit-animation: item-4 0.5s forwards; \
+          -ms-animation: item-4 0.5s forwards; \
+          -moz-animation: item-4 0.5s forwards; \
+        }\
+          #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5) { \
+          display: block;\
+          -webkit-animation: item-5 0.5s forwards; \
+          -ms-animation: item-5 0.5s forwards; \
+          -moz-animation: item-5 0.5s forwards; \
+        }\
+            div.stars {\
+            width: 270px;\
+            display: inline-block;\
           }\
-          @keyframes modalBox{\
-        	0%{\
-              transform:translateY(-200px);\
-          	}\
-            70%{\
-              transform:translateY(20px);\
-          	}\
-            100%{\
-              	transform:translateY(0px);\
-          	}\
+          input.star { display: none; }\
+          label.star {\
+            float: right;\
+            padding: 10px;\
+            font-size: 36px;\
+            color: #444;\
+            transition: all .2s;\
           }\
-            @media only screen and (max-width: 600px) {\
-              .ChatBoxDiv{\
-                padding:0px;\
-                margin:0px;\
-                height: 100vh;\
-                position: fixed;\
-                top:0px;\
-                right: 0px;\
-                min-width: 100%;\
-                z-index:99999\
-              }\
-              .closeIcon{\
-                display:block;\
-              }\
-              .close-support{\
-                display:none;\
-              }\
-            }\
-            @media only screen and (min-width: 600px) {\
-              .ChatBoxDiv{\
-                padding:0px;\
-                margin:0px;\
-                height: 70vh;\
-                position: fixed;\
-                bottom: 100px;\
-                right: 40px;\
-                min-width: 370px;\
-                border-radius:10px;\
-                box-shadow:-5px -5px 10px rgba(0,0,0,0.2);\
-                z-index:99999\
-              }\
-              .closeIcon{\
-                display:none;\
-              }\
-              .close-support{\
-                display:block;\
-              }\
-            }\
-            .flex_container {\
-              display: flex;\
-              flex-wrap: nowrap;\
-            }\
-            .chatBox_content{\
-              padding:0px;\
-              margin:0px;\
-              position: absolute;\
-              top:80px;\
-              width:100%;\
-              bottom: 90px;\
-              background-color: white;\
-              overflow-x:hidden;\
-              overflow-y: auto;\
-            }\
-            .audio_section{\
-              display:none;\
-              height: 40px;\
-              background-color: "+windowColor+";\
-              padding:0px;\
-              margin:0px;\
-              position: absolute;\
-              top:80px;\
-              width:100%;\
-            }\
-            .chatBox_content .content_section{\
-              padding:0px;\
-              margin-top: 0px;\
-            }\
-            .chatBox_header{\
-              padding:0px;\
-              margin:0px;\
-              position: absolute;\
-              width:100%;\
-              min-height: 80px;\
-              background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\
-              color: rgba(255, 255, 255, 0.8);\
-              border-radius: 10px 10px 0 0;\
-            }\
-            .chatBox_header > .logo_image{\
-              max-width: 18%;\
-              border-radius: 50%;\
-              margin: 10px;\
-              padding: 10px;\
-            }\
-            .chatBox_header .chatBox_info{\
-              margin: 20px 10px;;\
-              width: 60%;\
-              padding:0px;\
-            }\
-            .chatBox_header .chatBox_name{\
-              display: block;\
-              font-size: 18px;\
-              padding:0px;\
-              margin:0px;\
-            }\
-            .chatBox_header .chatBox_status{\
-              display: block;\
-              font-size: 12px;\
-              margin:5px;\
-              padding:0px;\
-            }\
-            .chatBox_header >i {\
-              margin: 20px 15px;\
-              padding-top: 10px;\
-              text-align: center;\
-              font-size: 25px;\
-              transition: 0.5s;\
-            }\
-            .chatBox_header >i:hover{\
-              transform: scale(1.5) ;\
-              cursor: pointer;\
-            }\
-            .chatBox_footer{\
-              padding:0px;\
-              margin:0px;\
-              position: absolute;\
-              bottom:0px;\
-              width:100%;\
-              min-height: 90px;\
-              background-color: white;\
-              border-radius:0px 0px 10px 10px;\
-            }\
-            .chatBox_footer  textarea {\
-              width: 77%;\
-              margin: 10px;\
-              font-size: 16px;\
-              resize:none;\
-              overflow: visible;\
-              border: none;\
-              padding:0px;\
-            }\
-            .chatBox_footer  i {\
-              margin: 10px;\
-              width: 30px;\
-              text-align: center;\
-              font-size: 25px;\
-              opacity: 0.6;\
-              transition: 0.5s;\
-              padding:0px;\
-            }\
-            .chatBox_footer  i:hover{\
-              opacity: 1;\
-              cursor: pointer;\
-            }\
-            .chatBox_footer .chatbox_branding{\
-              min-height: 20px;\
-              text-align: center;\
-              font-size: 15px;\
-              background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\
-              width: 100%;\
-              color: white;\
-              padding:0px;\
-              margin:0px;\
-            }\
-            @keyframes moveInLeft{\
-              0%{\
+          input.star:checked ~ label.star:before {\
+            content: '\\2605';\
+            color: #FD4;\
+            transition: all .25s;\
+          }\
+          input.star-5:checked ~ label.star:before {\
+            color: #FE7;\
+            text-shadow: 0 0 20px #952;\
+          }\
+          input.star-1:checked ~ label.star:before { color: #F62; }\
+          label.star:hover { transform: rotate(-15deg) scale(1.3); }\
+          label.star:before {\
+            content: '\\2605';\
+          }\
+          .messageOpacity{\
+            animation: msgDiv 1s ease;\
+          }\
+          @keyframes msgDiv{\
+            0%{\
                 opacity:0;\
-                transform:translateX(80px);\
-              }\
-              80%{\
-                opacity:1;\
-                transform:translateX(-10px);\
-              }\
-              100%{\
-                opacity:1;\
-                transform:translateX(0px);\
-              }\
-            }\
-            @keyframes moveInDown{\
-              0%{\
+                transform:translateY(10px);\
+            	}\
+            100%{\
                 opacity:1;\
                 transform:translateY(0px);\
-              }\
-              100%{\
-                opacity:0;\
-                transform:translateY(10px) scale(0.5);\
-              }\
+            	}\
             }\
-            @keyframes moveInFront{\
-              0%{\
-                opacity:0;\
-                transform:scale(0);\
-              }\
-              80%{\
-                opacity:0.5;\
-              }\
-              100%{\
-                opacity:1;\
-                transform:scale(1);\
-              }\
-            }\
-            "));
+            .modal {\
+            display: none;\
+            position: fixed;\
+            z-index: 999999999;\
+            padding-top: 100px;\
+            left: 0;\
+            top: 0;\
+            width: 100%;\
+            height: 100%;\
+            overflow: auto;\
+            background-color: rgb(0,0,0);\
+            background-color: rgba(0,0,0,0.4);\
+        }\
+        .modal-content {\
+            background-color: #fefefe;\
+            margin: auto;\
+            padding: 20px;\
+            border: 1px solid #888;\
+            width: 60%;\
+            box-shadow:5px 10px 10px rgb(0,0,0,0.2);\
+            animation:modalBox 1s ease;\
+        }\
+          .close {\
+          color:  rgb(0,0,0);\
+          float: right;\
+          font-size: 28px;\
+          font-weight: bold;\
+      }\
+      @keyframes modalBox{\
+    	0%{\
+          transform:translateY(-200px);\
+      	}\
+        70%{\
+          transform:translateY(20px);\
+      	}\
+        100%{\
+          	transform:translateY(0px);\
+      	}\
+      }\
+        "));
 
-            document.head.appendChild(newStyle);
-    }
+        document.head.appendChild(newStyle);
+}
 
-    setTimeout(function () {
-      setStyle()
-    }, 1500);
-
-
-
-
-  function endChat() {
-    chatClosed = true
-
-    if (feedbackFormOpened) {
-      return
-    }
-
-    var xhttp = new XMLHttpRequest();
-     xhttp.onreadystatechange = function() {
-       if (this.readyState == 4 && this.status == 200) {
-         console.log('posted successfully');
-
-          setCookie("chatOpenCookie", false, 365);
-
-
-         var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
-
-         connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
-         });
-
+setTimeout(function () {
+  setStyle()
+}, 1500);
 
 
-       }
-     };
-     xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
-     xhttp.setRequestHeader("Content-type", "application/json");
-     xhttp.send(JSON.stringify({status:"closed"}));
+function endChat() {
+  chatClosed = true
 
-    openFeedback()
+  if (feedbackFormOpened) {
+    return
   }
+
+  var xhttp = new XMLHttpRequest();
+   xhttp.onreadystatechange = function() {
+     if (this.readyState == 4 && this.status == 200) {
+       console.log('posted successfully');
+
+        setCookie("chatOpenCookie", false, 365);
+
+
+       var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
+
+       connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
+         acknowledge: true
+       }).
+       then(function(publication) {
+         console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+       });
+
+
+
+     }
+   };
+   xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
+   xhttp.setRequestHeader("Content-type", "application/json");
+   xhttp.send(JSON.stringify({status:"closed"}));
+
+  openFeedback()
+}
 
   feedbackFormOpened = false
   feedbackFormSubmitted = false
@@ -1647,7 +1708,7 @@ function createChatDiv() {
     var div = document.createElement("div");
     div.id="offlineMessage"
     div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;font-size:12px">'+
+                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                       '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Please provide your feedback below:</p>'+
                       '<form>'+
                         '<div class="stars">'+
@@ -1698,6 +1759,7 @@ function createChatDiv() {
     submitStarForm(id);
   }
 
+
   function thankYouMessage() {
     console.log('coming in thankyou');
     var div = document.createElement("div");
@@ -1710,6 +1772,7 @@ function createChatDiv() {
   messageBox.appendChild(div);
   scroll();
   }
+
 
   function submitStarForm(id) {
 
@@ -1797,17 +1860,61 @@ function createChatDiv() {
   }
 
 
+
+
+
+
+
+  agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >'+nameSupport+'</p>'
+  onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
+
   closeSupport.style.display = "none";
 
+  headerChat.style.display = "none";
+  messageBox.style.display = "none";
+  footer.style.display = "none";
+  // unreadMsg.style.display = "none";
+
+
+
+  startConvoBtn.addEventListener("click", function() {
+    headerChat.style.display = "";
+    messageBox.style.display = "";
+    footer.style.display = "";
+    startConvoBtn.style.display = "none";
+    startConversation.style.display = "none";
+    // demo.style.display ="none";
+    // exploreSyrow.style.display = "none";
+    headerInit.style.display = "none";
+  }, false);
 
   var chatClosed = false
+
+  backArrow.addEventListener("click", function() {
+    console.log(chatClosed,'back arrow clicked');
+    if (chat.messages.length>1 && chatClosed!=true) {
+      endChat()
+      console.log('end chat');
+    }else {
+      headerChat.style.display = "none";
+      messageBox.style.display = "none";
+      footer.style.display = "none";
+      startConvoBtn.style.display = "";
+      startConversation.style.display = "";
+      // demo.style.display = "";
+      // exploreSyrow.style.display ="";
+      headerInit.style.display = "";
+    }
+
+
+  }, false);
 
 
   startNewChatBtn.addEventListener("click" , function () {
     // or you can use variable feedbackFormSubmitted which is true only if feedbackForm is submitted
     messageBox.innerHTML = '';
     // messageBox.innerHTML = '';
-    agentName.innerHTML = nameSupport
+    agentName.innerHTML = '<p style="font-size:15px; line-height: 1.75; margin:0px; box-sizing:border-box; " >'+nameSupport+'</p>'
     // delete uid from cookies and create a new one
     document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
     uid = new Date().getTime()
@@ -1864,31 +1971,23 @@ function createChatDiv() {
     feedbackFormSubmitted = false
 
   })
-
-
   window.addEventListener("message", receiveMessage, false);
 
-  function receiveMessage(event){
+  function receiveMessage(event)
+  {
     if (event.origin== webRtcAddress){
 
       document.getElementById('iframeDiv').style.display="none"
       setTimeout(function () {
-        if (videoOpened) {
-          chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-          chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-          // chatBox.style.borderRadius = "10px 10px 10px 10px"
+        if (videoOpened || audioOpened){
+          chatBox.style.borderRadius = "10px 10px 10px 10px"
+          headerChat.style.borderRadius = "10px 10px 0px 0px"
+          document.getElementById('iframeDiv').style.display="block"
           var iframeDiv = document.getElementById('iframeDiv')
           var iFrame = document.getElementById('iFrame1')
           iFrame.src = '';
           iframeDiv.parentNode.removeChild(iframeDiv);
-          videoOpened = false
-        }else if (audioOpened) {
-          var iFrame = document.getElementById('iFrame1')
-          iFrame.src = '';
-          audioSection.innerHTML = "";
-          audioSection.style.display = "none";
-          chatBox_content.style.marginTop = "0";
-          audioOpened = false;
+
         }
       }, 5000);
     }
@@ -1917,492 +2016,587 @@ function createChatDiv() {
 
 
 
-  function messageDiv(message) {
+  // setTimeout(function(){
+  //   if (!chatOpen) {
+  //     welcomeMessage.style.display ="";
+  //     unreadMsg.style.display = "";
+  //     unreadMsgCount+=1;
+  //     unreadMsg.innerHTML =   '<span style="color:#286EFA; box-sizing:border-box;" >'+unreadMsgCount+'</span>'
+  //   }
+  //
+  // }, 4000);
 
-    console.log('inside messageDiv ',message);
 
-    function timeSince(date) {
-      t = date;
-      var now = new Date();
-      var diff = Math.floor((now - t)/60000)
-      if (diff<60) {
-        return diff+' Mins';
-      }else if (diff>=60 && diff<60*24) {
-        return Math.floor(diff/60)+' Hrs';
-      }else if (diff>=60*24) {
-        return Math.floor(diff/(60*24))+' Days';
+  // welcomeMessage.addEventListener("click", function() {
+  //   chatOpen = !chatOpen
+  //   // chatIconSvg.style.display = "none"
+  //   closeChatSvg.style.display = ""
+  //   chatBox.style.display = "";
+  //   headerChat.style.display = "";
+  //   messageBox.style.display = "";
+  //   footer.style.display = "";
+  //   startConvoBtn.style.display = "none";
+  //   startConversation.style.display = "none";
+  //   demo.style.display = "none";
+  //   exploreSyrow.style.display = "none";
+  //   headerInit.style.display = "none";
+  //   welcomeMessage.style.display="none";
+  //   // unreadMsg.style.display = "none";
+  //   unreadMsgCount = 0;
+  // }, false);
+
+
+
+  // chatCircle.style.backgroundColor = "transparent";
+  // chatCircle.style.border = "none";
+  // chatIconSvg.style.display = "none";
+  // welcomeMessage.style.display = "none";
+
+
+  chatBox.style.display = "none";
+  closeIcon.style.display = "none";
+  // chatCloseSvg.style.display = "none";
+
+
+    function messageDiv(message) {
+
+      function timeSince(date) {
+        t = date;
+        var now = new Date();
+        var diff = Math.floor((now - t)/60000)
+        if (diff<60) {
+          return diff+' Mins';
+        }else if (diff>=60 && diff<60*24) {
+          return Math.floor(diff/60)+' Hrs';
+        }else if (diff>=60*24) {
+          return Math.floor(diff/(60*24))+' Days';
+        }
       }
-    }
 
-    function timeWithDate(date) {
-      var abc  = date
-      // var date = abc.getDate();
-      // var month = abc.getMonth();
-      // var year = abc.getFullYear();
+      function timeWithDate(date) {
+        var abc  = date
+        // var date = abc.getDate();
+        // var month = abc.getMonth();
+        // var year = abc.getFullYear();
 
-      var hours = abc.getHours();
-      var minutes = abc.getMinutes();
-      var ampm = hours >= 12 ? 'pm' : 'am';
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
-      minutes = minutes < 10 ? '0'+minutes : minutes;
-      var strTime = hours + ':' + minutes + ' ' + ampm;
-      console.log(strTime);
-      // var dateString = date + "-" +(month + 1) + "-" + year;
-      // return dateString + ', ' + strTime
-      return strTime
-    }
-
-
-    // message.timeAgo = timeSince(new Date(message.created))
-    message.timeDate = timeWithDate(new Date(message.created))
-
-    if (message.attachment) {
-      if (message.attachmentType=='image') {
-          console.log('image');
-        attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
-      }else if (message.attachmentType=='instructionImage') {
-          console.log('instructionImage');
-        attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
-
-      }else if (message.attachmentType=='audio') {
-          console.log('audio');
-        attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.attachment +'" controls></audio>'
-      }else if (message.attachmentType=='video') {
-          console.log('video');
-        attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.attachment +'" controls></video>'
-      }else if (message.attachmentType=='application') {
-          console.log('application');
-          attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
+        var hours = abc.getHours();
+        var minutes = abc.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        console.log(strTime);
+        // var dateString = date + "-" +(month + 1) + "-" + year;
+        // return dateString + ', ' + strTime
+        return strTime
       }
-      // else if (message.link) {
-      //   console.log('yesssssssss' , message.link);
-      // attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
-      // }
-    }
 
-    if (message.message!=null && message.attachmentType!=null) {
-      console.log('youtube link');
-      attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'"frameborder="0" allowfullscreen></iframe>'
-      var msgDiv =attachedFile
-    }else {
-      if (message.attachment==null) {
-        console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
-        console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
-        var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
-        msgDiv = pTag
+
+      // message.timeAgo = timeSince(new Date(message.created))
+      message.timeDate = timeWithDate(new Date(message.created))
+
+      if (message.attachment) {
+        if (message.attachmentType=='image') {
+            console.log('image');
+          attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
+        }else if (message.attachmentType=='instructionImage') {
+            console.log('instructionImage');
+          attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
+
+        }else if (message.attachmentType=='audio') {
+            console.log('audio');
+          attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.attachment +'" controls></audio>'
+        }else if (message.attachmentType=='video') {
+            console.log('video');
+          attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.attachment +'" controls></video>'
+        }else if (message.attachmentType=='application') {
+            console.log('application');
+            attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
+        }
+        // else if (message.link) {
+        //   console.log('yesssssssss' , message.link);
+        // attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+        // }
+      }
+
+      if (message.message!=null && message.attachmentType!=null) {
+        console.log('youtube link');
+        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'"frameborder="0" allowfullscreen></iframe>'
+        var msgDiv =attachedFile
       }else {
-        msgDiv = attachedFile
+        if (message.attachment==null) {
+          console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
+          console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
+          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
+          msgDiv = pTag
+        }else {
+          msgDiv = attachedFile
+        }
+
+        // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
       }
-      // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
+
+
+
+      // console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
+
+      if (!message.sentByAgent) {
+        var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
+                          msgDiv+
+                        '</div>'+
+                        '<div style="clear: both; float:right; padding-left:15px;">'+ message.timeDate +'</div>'+
+                      '</div>'
+        return msgHtml
+
+      }else {
+        var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                     msgDiv+
+                  '</div> '+
+                  '<div style="clear: both; float:left; padding-left:15px;">'+ message.timeDate +'</div>'+
+                '</div> '
+        return msgHtml
+      }
+
+
+      // if (message.msg=='') {
+      //   if (message.img) {
+      //     attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
+      //   }else if (message.audio) {
+      //     attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
+      //   }else if (message.video) {
+      //     attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
+      //   }else if (message.doc) {
+      //       attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
+      //   }else if (message.link) {
+      //     console.log('yesssssssss' , message.link);
+      //   attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+      //   }
+      // }
+      //
+      // var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
+      //
+      // if (message.sentByMe) {
+      //   var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
+      //                   '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
+      //                     msgDiv+
+      //                   '</div>'+
+      //                 '</div>'
+      //   return msgHtml
+      //
+      // }else {
+      //   var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+      //             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+      //                msgDiv+
+      //             '</div> '+
+      //           '</div> '
+      //   return msgHtml
+      // }
+
+
+
     }
 
 
 
-    // console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
 
-    if (!message.sentByAgent) {
-      var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                      '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;  letter-spacing:2px;">'+
-                        msgDiv+
-                      '</div>'+
-                      '<div style="clear: both; float:right; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
-                    '</div>'
-      return msgHtml
 
-    }else {
-      var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:2px;">'+
-                   msgDiv+
-                '</div> '+
-                '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
-              '</div> '
-      return msgHtml
+
+    function pushMessages() {
+      for (var i = 0; i < chat.messages.length; i++) {
+        var div = document.createElement("div");
+        console.log(chat.messages[i].message);
+        if (chat.messages[i].message=="first") {
+          // div.innerHTML = '<p>hello</p>'
+          // console.log(div,'divvvvvvvvvvv');
+          console.log(firstMessage);
+          firstMessage = firstMessage.replaceAll("&lt;",'<')
+          firstMessage = firstMessage.replaceAll("&gt;",">")
+            div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                    '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                       firstMessage+
+                    '</div> '+
+                  '</div> '
+
+          console.log(firstMessage);
+          console.log('firstttttttt' , typeof firstMessage);
+        }else {
+          div.innerHTML = messageDiv(chat.messages[i])
+        }
+        messageBox.appendChild(div);
+      }
+      scroll();
     }
 
 
-    // if (message.msg=='') {
-    //   if (message.img) {
-    //     attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
-    //   }else if (message.audio) {
-    //     attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
-    //   }else if (message.video) {
-    //     attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
-    //   }else if (message.doc) {
-    //       attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
-    //   }else if (message.link) {
-    //     console.log('yesssssssss' , message.link);
-    //   attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
+
+    setTimeout(function () {
+      pushMessages();
+    }, 2000);
+
+
+    function checkChatOpen(){
+      chatOpenCookie = getCookie("chatOpenCookie");
+      if (chatOpenCookie != "") {
+        console.log(chatOpenCookie , 'ALREadyyyyyyyyyyyyyyyy');
+        if (chatOpenCookie=='true') {
+          chatOpen = true
+          if (serviceCount==1) {
+            singleService.style.display = "none"
+          }
+          console.log('opneddd');
+          supportCircle.style.display = "none";
+          if (device=='xs' || device =='sm') {
+            closeSupport.style.display = "none";
+            document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
+          }else {
+            closeSupport.style.display = "";
+          }
+          unreadMsgCount = 0;
+          chatBox.style.display = "";
+          headerChat.style.display = "";
+          messageBox.style.display = "";
+          footer.style.display = "";
+          startConvoBtn.style.display = "none";
+          startConversation.style.display = "none";
+          headerInit.style.display = "none";
+        }else {
+          chatOpen = false
+          console.log('closed');
+        }
+      }else {
+
+      }
+    }
+
+
+    setTimeout (function() {
+      // if (serviceCount!=1) {
+        checkChatOpen()
+      // }
+    },2000)
+
+
+
+
+
+
+
+    function scroll() {
+      setTimeout(function () {
+        var id = document.getElementById("messageBox");
+        id.scrollTop = id.scrollHeight;
+      }, 200);
+    }
+
+    // function onlineAgent() {
+    //   if (agentPk) {
+    //     setInterval(function () {
+    //       isAgentOnline = false;
+    //       onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
+    //       status = "O";
+    //       connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
+    //         acknowledge: true
+    //       }).
+    //       then(function(publication) {
+    //         console.log("check online status");
+    //       });
+    //     }, 10000);
     //   }
     // }
-    //
-    // var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
-    //
-    // if (message.sentByMe) {
-    //   var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
-    //                   '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
-    //                     msgDiv+
-    //                   '</div>'+
-    //                 '</div>'
-    //   return msgHtml
-    //
-    // }else {
-    //   var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-    //             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-    //                msgDiv+
-    //             '</div> '+
-    //           '</div> '
-    //   return msgHtml
-    // }
 
-
-
-  }
-
-
-
-  function pushMessages() {
-    for (var i = 0; i < chat.messages.length; i++) {
-      var div = document.createElement("div");
-      console.log(chat.messages[i].message);
-      if (chat.messages[i].message=="first") {
-        // div.innerHTML = '<p>hello</p>'
-        // console.log(div,'divvvvvvvvvvv');
-        console.log(firstMessage);
-        firstMessage = firstMessage.replaceAll("&lt;",'<')
-        firstMessage = firstMessage.replaceAll("&gt;",">")
-          div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:2px;font-size:12px">'+
-                     firstMessage+
-                  '</div> '+
-                '</div> '
-
-        console.log(firstMessage);
-        console.log('firstttttttt' , typeof firstMessage);
-      }else {
-        div.innerHTML = messageDiv(chat.messages[i])
-      }
-      messageBox.appendChild(div);
-    }
-    scroll();
-  }
-
-
-  setTimeout(function () {
-    pushMessages();
-  }, 2000);
-
-
-
-  // function checkChatOpen(){
-  //   chatOpenCookie = getCookie("chatOpenCookie");
-  //   if (chatOpenCookie != "") {
-  //     console.log(chatOpenCookie , 'ALREadyyyyyyyyyyyyyyyy');
-  //     if (chatOpenCookie=='true') {
-  //       chatOpen = true
-  //       if (serviceCount==1) {
-  //         singleService.style.display = "none"
-  //       }
-  //       console.log('opneddd');
-  //       supportCircle.style.display = "none";
-  //       if (device=='xs' || device =='sm') {
-  //         closeSupport.style.display = "none";
-  //         document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
-  //       }else {
-  //         closeSupport.style.display = "";
-  //       }
-  //       unreadMsgCount = 0;
-  //       chatBox.style.display = "";
-  //       headerChat.style.display = "";
-  //       messageBox.style.display = "";
-  //       footer.style.display = "";
-  //       startConvoBtn.style.display = "none";
-  //       startConversation.style.display = "none";
-  //       headerInit.style.display = "none";
-  //     }else {
-  //       chatOpen = false
-  //       console.log('closed');
-  //     }
-  //   }else {
-  //
-  //   }
-  // }
-  //
-  //
-  // setTimeout (function() {
-  //     checkChatOpen()
-  // },2000)
-
-
-  function scroll() {
-    console.log('scrollllllll');
-    setTimeout(function () {
-      var id = document.getElementById("messageBox");
-      id.scrollTop = id.scrollHeight;
-    }, 200);
-  }
-
-
-  function onlineAgent() {
-    console.log('in onlineAgent######333333333' , agentPk);
-    if (agentPk) {
-      // setInterval(function () {
-        // status = "O";
-        connection.session.call('service.support.heartbeat.' + agentPk, []).then(
-          function (res) {
-           console.log("Result:", res);
-           isAgentOnline = true;
-           onlineStatus.innerHTML = 'Online';
-         },
-         function (err) {
-          console.log("Error:", err);
-          isAgentOnline = false;
-          onlineStatus.innerHTML = 'Away';
-        }
-       );
-        // connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
-        //   acknowledge: true
-        // }).
-        // then(function(publication) {
-        //   console.log("check online status");
-        // });
-      // }, 30000);
-    }
-  }
-
-
-  setTimeout(function(){
-    onlineAgent();
-  },2000 )
-
-  setInterval(function(){
-    onlineAgent();
-  },15000 )
-
-
-  function spying(inputVal) {
-    countOnchange = 0;
-    console.log('values' , inputVal);
-      connection.session.publish('service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
-        acknowledge: true
-      }).
-      then(function(publication) {
-        console.log("Published" + "service.support.agent."+agentPk);
-      });
-  }
-
-
-  inputText.addEventListener('keydown', function(evt) {
-    // countOnchange++
-    console.log(evt.keyCode);
-    console.log(this.value);
-    if (evt.keyCode==32 || evt.keyCode == 8 || evt.keyCode == 13 ) {
-      spying(this.value)
-    }
-    // if ((countOnchange % 4) == 0) {
-    // }
-  });
-
-
-
-  function sendMessage(inptText) {
-
-
-    // chat.message.push(inptText)
-    // console.log(chat);
-
-    console.log(inptText,'input');
-
-    console.log(uid);
-    console.log(getCookie("uid"));
-    if (uid!=getCookie("uid")) {
-      uid = getCookie("uid");
-    }
-
-
-    console.log(uid);
-    console.log(chat.messages.length);
-
-
-    var youtubeLink = inptText.includes("yout");
-
-
-
-    // if (youtubeLink) {
-    //   status = "ML";
-    //   link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-    //   var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
-    //   var dataToSend = JSON.stringify({uid: uid , message: message.link });
-    // }else {
-    //   status = "M";
-    //   var message = {msg:inptText ,  sentByMe:true , created: new Date() }
-    //   var dataToSend = JSON.stringify({uid: uid , message: message.msg });
-    // }
-
-    if (youtubeLink) {
-      status = "ML";
-      link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-
-
-      var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
+    function onlineAgent() {
+      console.log('in onlineAgent######333333333' , agentPk);
       if (agentPk) {
-        console.log('agent pk is pnline',isAgentOnline);
-        dataToSend.user = agentPk
-        if (!isAgentOnline) {
-          console.log('agetn oflineee');
-          dataToSend.user = null
-        }else {
-          dataToSend.user = agentPk
-        }
-      }
-      var message = dataToSend
-      dataToSend = JSON.stringify(dataToSend)
-    }else {
-      status = "M";
-      // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
-      var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
-      console.log(agentPk);
-      if (agentPk) {
-        console.log('agent pk is pnline',isAgentOnline);
-        dataToSend.user = agentPk
-        if (!isAgentOnline) {
-          console.log('agetn oflineee');
-          dataToSend.user = null
-        }else {
-          dataToSend.user = agentPk
-        }
-      }
-      var message = dataToSend
-      dataToSend = JSON.stringify(dataToSend)
-    }
-
-
-
-
-    var div = document.createElement("div");
-    div.className = "messageOpacity"
-    div.innerHTML = messageDiv(message)
-    messageBox.appendChild(div);
-    scroll();
-
-    chat.messages.push(message);
-    inputText.value ='';
-
-    setTimeout(function() {
-      console.log(isAgentOnline, ' is agent online..........');
-
-      if (!isAgentOnline) {
-        agentName.innerHTML = nameSupport
-        var div = document.createElement("div");
-        div.id="offlineMessage"
-
-        div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                          '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                          '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
-                          '<form>'+
-                            '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
-                             '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
-                             '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-                               'Submit'+
-                             '</button>'+
-                            '</form>'+
-                          '</div> '+
-                        '</div>'
-        scroll();
-
-        // var sendEmail = document.getElementById('sendEmail');
-        // sendEmail();
-        }
-    }, 4000)
-
-
-    console.log(dataToSend,'data to send');
-    var xhttp = new XMLHttpRequest();
-     xhttp.onreadystatechange = function() {
-       if (this.readyState == 4 && this.status == 201) {
-         console.log('posted successfully');
-       }
-     };
-     xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
-     xhttp.setRequestHeader("Content-type", "application/json");
-     xhttp.send(dataToSend);
-
-
-     var dataToPublish = [uid , status , message ];
-
-     // setCookie("uidDetails", {}, 365);
-     // details = getCookie("uidDetails");
-     // console.log('********************8',details);
-     // if (details != "") {
-     //    dataToPublish.push(details)
-     // } else {
-     //   dataToPublish.push(false)
-     // }
-
-     if (threadExist==undefined) {
-      var dataToPublish = [uid , status , message , custID ];
-      details = getCookie("uidDetails");
-      if (details != "") {
-        console.log(details);
-         dataToPublish.push(JSON.parse(details))
-      } else {
-        dataToPublish.push(false)
-      }
-
-      var dataToSend = JSON.stringify({uid: uid , company: custID});
-       var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 201) {
-            console.log('posted successfully');
-            var data = JSON.parse(this.responseText)
-            threadExist=true
-            console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-            chatThreadPk = data.pk
-            dataToPublish.push(chatThreadPk)
-            connection.session.publish('service.support.agent', dataToPublish , {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published");
-            });
+        // setInterval(function () {
+          // status = "O";
+          connection.session.call('service.support.heartbeat.' + agentPk, []).then(
+            function (res) {
+             console.log("Result:", res);
+             isAgentOnline = true;
+             onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Online</p>';
+           },
+           function (err) {
+            console.log("Error:", err);
+            isAgentOnline = false;
+            onlineStatus.innerHTML = '<p style="font-size:10px; line-height: 1.75; margin:0px; box-sizing:border-box;" >Away</p>';
           }
-        };
-        xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-        xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.send(dataToSend);
-     }else {
-       console.log('chat threAD EXIST');
-       if (isAgentOnline) {
-         console.log('ONLINE' , agentPk);
-         connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published service.support.agent."+agentPk);
-         });
+         );
+          // connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
+          //   acknowledge: true
+          // }).
+          // then(function(publication) {
+          //   console.log("check online status");
+          // });
+        // }, 30000);
+      }
+    }
+
+
+    setTimeout(function(){
+      onlineAgent();
+    },2000 )
+
+    setInterval(function(){
+      onlineAgent();
+    },15000 )
+
+
+    function spying(inputVal) {
+      countOnchange = 0;
+      console.log('values' , inputVal);
+      //send
+
+      // if (isAgentOnline) {
+        connection.session.publish('service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published" + "service.support.agent."+agentPk);
+        });
+      // }
+
+
+    }
+
+
+    // var myVar;
+    // var timestamp = 0
+    // var myVar = false
+    //
+    // setInterval(function () {
+    //   timestamp = new Date().getTime()
+    //   if (myVar) {
+    //     spying(inputText.value)
+    //   }
+    // }, 3000);
+    //
+    // setInterval(function () {
+    //   myVar =false
+    // }, 2000);
+    //
+    //
+    // var countOnchange = 0
+
+    // inputText.addEventListener('input', function(evt) {
+    //   console.log('coming');
+    //   myVar = true
+    //
+    // });
+
+    inputText.addEventListener('keydown', function(evt) {
+      // countOnchange++
+      console.log(evt.keyCode);
+      console.log(this.value);
+      if (evt.keyCode==32 || evt.keyCode == 8 || evt.keyCode == 13 ) {
+        spying(this.value)
+      }
+      // if ((countOnchange % 4) == 0) {
+      // }
+    });
+
+    function sendMessage(inptText) {
+
+
+      // chat.message.push(inptText)
+      // console.log(chat);
+
+      console.log(inptText,'input');
+
+      console.log(uid);
+      console.log(getCookie("uid"));
+      if (uid!=getCookie("uid")) {
+        uid = getCookie("uid");
+      }
+
+
+      console.log(uid);
+      console.log(chat.messages.length);
+
+
+      var youtubeLink = inptText.includes("yout");
+
+
+
+      // if (youtubeLink) {
+      //   status = "ML";
+      //   link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+      //   var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
+      //   var dataToSend = JSON.stringify({uid: uid , message: message.link });
+      // }else {
+      //   status = "M";
+      //   var message = {msg:inptText ,  sentByMe:true , created: new Date() }
+      //   var dataToSend = JSON.stringify({uid: uid , message: message.msg });
+      // }
+
+      if (youtubeLink) {
+        status = "ML";
+        link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+
+
+        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
+        if (agentPk) {
+          console.log('agent pk is pnline',isAgentOnline);
+          dataToSend.user = agentPk
+          if (!isAgentOnline) {
+            console.log('agetn oflineee');
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
+          }
+        }
+        var message = dataToSend
+        dataToSend = JSON.stringify(dataToSend)
+      }else {
+        status = "M";
+        // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
+        var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
+        console.log(agentPk);
+        if (agentPk) {
+          console.log('agent pk is pnline',isAgentOnline);
+          dataToSend.user = agentPk
+          if (!isAgentOnline) {
+            console.log('agetn oflineee');
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
+          }
+        }
+        var message = dataToSend
+        dataToSend = JSON.stringify(dataToSend)
+      }
+
+
+
+
+      var div = document.createElement("div");
+      div.className = "messageOpacity"
+      div.innerHTML = messageDiv(message)
+      messageBox.appendChild(div);
+      scroll();
+
+      chat.messages.push(message);
+      inputText.value ='';
+
+      setTimeout(function() {
+        console.log(isAgentOnline, ' is agent online..........');
+
+        if (!isAgentOnline) {
+          agentName.innerHTML = '<p style="line-height: 1.75; margin:0px 0px 10px; margin:0px; box-sizing:border-box;">'+nameSupport+'</p>'
+          var div = document.createElement("div");
+          div.id="offlineMessage"
+
+          div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                            '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                            '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
+                            '<form>'+
+                              '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
+                               '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
+                               '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                                 'Submit'+
+                               '</button>'+
+                              '</form>'+
+                            '</div> '+
+                          '</div>'
+          scroll();
+
+          // var sendEmail = document.getElementById('sendEmail');
+          // sendEmail();
+          }
+      }, 4000)
+
+
+      console.log(dataToSend,'data to send');
+      var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 201) {
+           console.log('posted successfully');
+         }
+       };
+       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(dataToSend);
+
+
+       var dataToPublish = [uid , status , message ];
+
+       // setCookie("uidDetails", {}, 365);
+       // details = getCookie("uidDetails");
+       // console.log('********************8',details);
+       // if (details != "") {
+       //    dataToPublish.push(details)
+       // } else {
+       //   dataToPublish.push(false)
+       // }
+
+       if (threadExist==undefined) {
+        var dataToPublish = [uid , status , message , custID ];
+        details = getCookie("uidDetails");
+        if (details != "") {
+          console.log(details);
+           dataToPublish.push(JSON.parse(details))
+        } else {
+          dataToPublish.push(false)
+        }
+
+        var dataToSend = JSON.stringify({uid: uid , company: custID});
+         var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 201) {
+              console.log('posted successfully');
+              var data = JSON.parse(this.responseText)
+              threadExist=true
+              console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+              chatThreadPk = data.pk
+              dataToPublish.push(chatThreadPk)
+              connection.session.publish('service.support.agent', dataToPublish , {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("Published");
+              });
+            }
+          };
+          xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(dataToSend);
        }else {
-         console.log('offline send to all');
-         connection.session.publish('service.support.agent', dataToPublish , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published");
-         });
+         console.log('chat threAD EXIST');
+         if (isAgentOnline) {
+           console.log('ONLINE' , agentPk);
+           connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+             acknowledge: true
+           }).
+           then(function(publication) {
+             console.log("Published service.support.agent."+agentPk);
+           });
+         }else {
+           console.log('offline send to all');
+           connection.session.publish('service.support.agent', dataToPublish , {}, {
+             acknowledge: true
+           }).
+           then(function(publication) {
+             console.log("Published");
+           });
+         }
+         console.log('chat thread exist');
+
        }
-       console.log('chat thread exist');
-
-     }
 
 
-  }
+    }
 
-  // inputText.addEventListener("keydown", function (e) {
-  //     if (e.keyCode === 13) {
-  //       if (inputText.value.length>0) {
-  //         sendMessage(inputText.value)
-  //       }
-  //     }
-  // }, false);
+
+    // inputText.addEventListener("keydown", function (e) {
+    //     if (e.keyCode === 13) {
+    //       if (inputText.value.length>0) {
+    //         sendMessage(inputText.value)
+    //       }
+    //     }
+    // }, false);
+
 
   paperClip.addEventListener("click", function() {
     filePicker.click();
@@ -2567,6 +2761,7 @@ function createChatDiv() {
     sendFile();
   }
 
+
   chatCircle.addEventListener("click", openChat , false);
 
 
@@ -2577,6 +2772,8 @@ function createChatDiv() {
     chatOpen = !chatOpen
     // console.log(chatOpen);
     setCookie("chatOpenCookie", chatOpen, 365);
+
+    startConvoBtn.click();
 
     if (chatOpen) {
       supportCircle.style.display = "none";
@@ -2604,9 +2801,7 @@ function createChatDiv() {
       unreadMsgCount = 0;
       // chatIconSvg.style.display = "none"
       // closeChatSvg.style.display = ""
-      chatBox.style.animation = ""
-      chatBox.style.display = "block";
-      messageBox.style.animation = "moveInLeft 0.7s"
+      chatBox.style.display = "";
     }else {
       document.getElementsByTagName("BODY")[0].style.overflowY = "";
       // if (unreadMsgCount>0) {
@@ -2624,84 +2819,295 @@ function createChatDiv() {
 
   closeSupport.addEventListener("click", function() {
 
-
-    if (videoOpened) {
-      chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-      chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-      // chatBox.style.borderRadius = "10px 10px 10px 10px"
+    if (videoOpened || audioOpened) {
+      chatBox.style.borderRadius = "10px 10px 10px 10px"
+      headerChat.style.borderRadius = "10px 10px 0px 0px"
       var iframeDiv = document.getElementById('iframeDiv')
       var iFrame = document.getElementById('iFrame1')
       iFrame.src = '';
       iframeDiv.parentNode.removeChild(iframeDiv);
-      videoOpened = false
-    }else if (audioOpened) {
-      var iFrame = document.getElementById('iFrame1')
-      iFrame.src = '';
-      audioSection.innerHTML = "";
-      audioSection.style.display = "none";
-      chatBox_content.style.marginTop = "0";
-      audioOpened = false;
     }
-
+    videoOpened = false
+    audioOpened = false
+    //bottom close svg white color
+    console.log('coming' , chatOpen);
     if (chatOpen) {
       chatOpen = !chatOpen
       setCookie("chatOpenCookie", chatOpen, 365);
+      document.getElementsByTagName("BODY")[0].style.overflowY = "";
       console.log('coming here.');
-      messageBox.style.animation = ""
       // supportCircle.style.display = "";
       if (serviceCount==1) {
         supportCircle.style.display = "none";
         singleService.style.display = "";
+
       }else {
         supportCircle.style.display = "";
       }
       closeSupport.style.display = "none";
-      chatBox.style.animation = "moveInDown 0.4s"
-      setTimeout(function () {
-        chatBox.style.display = "none";
-      }, 400);
+      chatBox.style.display = "none";
     }
-
   }, false);
 
+
   closeIcon.addEventListener("click", function() {
+    if (videoOpened || audioOpened) {
+      chatBox.style.borderRadius = "10px 10px 10px 10px"
+      headerChat.style.borderRadius = "10px 10px 0px 0px"
+      var iframeDiv = document.getElementById('iframeDiv')
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      iframeDiv.parentNode.removeChild(iframeDiv);
+    }
+    videoOpened = false
+    audioOpened = false
     //top close icon display only in smaller screen
     if (chatOpen) {
       chatOpen = !chatOpen
-      setCookie("chatOpenCookie", chatOpen, 365);
-      console.log('coming here.');
-      messageBox.style.animation = ""
-      // supportCircle.style.display = "";
+      // chatIconSvg.style.display = ""
+      // closeChatSvg.style.display = "none"
+      document.getElementsByTagName("BODY")[0].style.overflowY = "";
+      chatBox.style.display = "none";
+      // chatCircle.style.display = ""
+      // supportCircle.style.display = ""
       if (serviceCount==1) {
         supportCircle.style.display = "none";
         singleService.style.display = "";
+
       }else {
         supportCircle.style.display = "";
       }
-      closeSupport.style.display = "none";
-      chatBox.style.animation = "moveInDown 0.4s"
-      setTimeout(function () {
-        chatBox.style.display = "none";
-      }, 400);
+    }
+  } , false);
+
+  closeIconInit.addEventListener("click", function() {
+    if (chatOpen) {
+      chatOpen = !chatOpen
+      // chatIconSvg.style.display = ""
+      // closeChatSvg.style.display = "none"
+      document.getElementsByTagName("BODY")[0].style.overflowY = "";
+      chatBox.style.display = "none";
+      // supportCircle.style.display = ""
+
+      if (serviceCount==1) {
+        supportCircle.style.display = "none";
+        singleService.style.display = "";
+
+      }else {
+        supportCircle.style.display = "";
+      }
     }
   } , false);
 
 
-// document.getElementById('inputText').addEventListener('keyup',function(o){
-//     var my=document.getElementsByClassName('chatBox_content')[0]
-//     if(o.scrollHeight>'177'){
-//       console.log('inside');
-//       o.style.overflow='scroll'
-//     }else{
-//       o.style.height = "1px";
-//       o.style.height = (25+o.scrollHeight)+"px";
-//       console.log(o.style.height);
-//         my.style.bottom="9rem";
-//           my.style.bottom=(2.5+o.scrollHeight/10)+"rem";
-//       console.log(my.style.bottom);
-//     }
-// })
+
+  function xsDevice(x) {
+      if (x.matches) {
+        device = 'xs';
+        console.log('xs');
+        // isTyping.style.display = "none";
+        closeSupport.style.display = "none";
+        chatBox.style.width ="100%";
+        chatBox.style.height ="100%";
+        messageBox.style.height = "71%";
+        headerChat.style.height = "15%";
+        syrowBranding.style.height = "2%";
+        // headerChat.style.minHeight = "60px";
+        footer.style.height = "11%";
+        // footer.style.minHeight = "60px";
+        closeIcon.style.display = "";
+        chatBox.style.right = "0px";
+        chatBox.style.bottom = "0px";
+        closeIconInit.style.display = "";
+        if (audioOpened) {
+          iframeDiv.style.width = "100%";
+          iframeDiv.style.bottom = "14%";
+          iframeDiv.style.right = "0px";
+        }
+          if (chatOpen) {
+            document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
+            // chatCircle.style.display = "none";
+            supportCircle.style.display = "none";
+            singleService.style.display = "none";
+            if (feedbackFormOpened) {
+              footer.style.display = "none";
+              startNewChatBtn.style.display = ""
+            }
+          }else {
+            document.getElementsByTagName("BODY")[0].style.overflowY = "";
+            // chatCircle.style.display = ""
+
+
+            if (serviceCount==1) {
+              supportCircle.style.display = "none";
+              singleService.style.display = "";
+
+            }else {
+              supportCircle.style.display = "";
+            }
+
+          }
+      }
+    }
+
+    function smDevice(x) {
+      if (x.matches) {
+        device = 'sm';
+        console.log('sm');
+        // isTyping.style.display = "none";
+        closeSupport.style.display = "none";
+        chatBox.style.width ="100%";
+        chatBox.style.height ="100%";
+        messageBox.style.height = "71%";
+        headerChat.style.height = "15%";
+        syrowBranding.style.height = "2%";
+        footer.style.height = "11%";
+        closeIcon.style.display = "";
+        chatBox.style.right = "0px";
+        chatBox.style.bottom = "0px";
+        closeIconInit.style.display = "";
+        if (audioOpened) {
+          iframeDiv.style.width = "100%";
+          iframeDiv.style.bottom = "14%";
+          iframeDiv.style.right = "0px";
+        }
+          if (chatOpen) {
+             document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
+            // chatCircle.style.display = "none";
+            supportCircle.style.display = "none";
+            singleService.style.display = "none";
+            if (feedbackFormOpened) {
+              footer.style.display = "none";
+              startNewChatBtn.style.display = ""
+            }
+          }else {
+            document.getElementsByTagName("BODY")[0].style.overflowY = "";
+            // chatCircle.style.display = ""
+            if (serviceCount==1) {
+              supportCircle.style.display = "none";
+              singleService.style.display = "";
+
+            }else {
+              supportCircle.style.display = "";
+            }
+          }
+
+      }
+    }
+
+    function mdDevice(x) {
+      if (x.matches) {
+          device = 'md';
+          console.log('md');
+          document.getElementsByTagName("BODY")[0].style.overflowY = "";
+          chatBox.style.width ="347px";
+          chatBox.style.height ="70vh";
+          messageBox.style.height = "49vh";
+          headerChat.style.height = "10vh";
+          footer.style.height = "9vh";
+          syrowBranding.style.height = "2vh";
+          closeIcon.style.display = "none"
+          chatBox.style.right = "10px";
+          chatBox.style.bottom = "100px";
+          closeIconInit.style.display = "none";
+          if (audioOpened) {
+            iframeDiv.style.width = "346px";
+            iframeDiv.style.bottom = "205px";
+            iframeDiv.style.right = "11px";
+          }
+          if (chatOpen) {
+            // body.style.overflow = "hidden";
+            // chatCircle.style.display = ""
+            closeSupport.style.display = "";
+            supportCircle.style.display = "none";
+            singleService.style.display = "none";
+            if (feedbackFormOpened) {
+              footer.style.display = "none";
+              startNewChatBtn.style.display = ""
+            }
+          }else {
+            closeSupport.style.display = "none";
+            // chatCircle.style.display = ""
+            // supportCircle.style.display = "";
+            // singleService.style.display = "";
+
+            if (serviceCount==1) {
+              supportCircle.style.display = "none";
+              singleService.style.display = "";
+
+            }else {
+              supportCircle.style.display = "";
+            }
+
+          }
+      }
+    }
+
+    function lgDevice(x) {
+      if (x.matches) {
+          console.log('lg');
+          device = 'lg';
+          document.getElementsByTagName("BODY")[0].style.overflowY = "";
+          chatBox.style.width ="347px";
+          chatBox.style.height ="70vh";
+          messageBox.style.height = "49vh";
+          headerChat.style.height = "10vh";
+          footer.style.height = "9vh";
+          syrowBranding.style.height = "2vh";
+          closeIcon.style.display = "none"
+          chatBox.style.right = "10px";
+          chatBox.style.bottom = "100px";
+          closeIconInit.style.display = "none";
+          if (audioOpened) {
+            iframeDiv.style.width = "346px";
+            iframeDiv.style.bottom = "205px";
+            iframeDiv.style.right = "11px";
+          }
+          if (chatOpen) {
+            closeSupport.style.display = "";
+            // chatCircle.style.display = ""
+            supportCircle.style.display = "none";
+            singleService.style.display = "none";
+            if (feedbackFormOpened) {
+              footer.style.display = "none";
+              startNewChatBtn.style.display = ""
+            }
+          }else {
+            closeSupport.style.display = "none";
+            // chatCircle.style.display = ""
+            // supportCircle.style.display = "";
+            // singleService.style.display = "";
+            if (serviceCount==1) {
+              supportCircle.style.display = "none";
+              singleService.style.display = "";
+
+            }else {
+              supportCircle.style.display = "";
+            }
+          }
+      }
+    }
 
 
 
-  });
+
+    var xs = window.matchMedia("(max-width: 767px)")
+    console.log(xs,'xsssssssssssssssssssssss');
+    xsDevice(xs) // Call listener function at run time
+    xs.addListener(xsDevice) // Attach listener function on state changes
+
+    var sm = window.matchMedia("(min-width: 768px) and (max-width: 991px)")
+    smDevice(sm)
+    sm.addListener(smDevice)
+
+    var md = window.matchMedia("(min-width: 992px) and (max-width: 1199px)")
+    mdDevice(md)
+    md.addListener(mdDevice)
+
+    var lg = window.matchMedia("(min-width: 1200px)")
+    lgDevice(lg)
+    lg.addListener(lgDevice)
+
+
+
+});

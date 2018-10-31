@@ -87,7 +87,9 @@ class ReviewCommentSerializer(serializers.ModelSerializer):
 class ChatThreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatThread
-        fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback' , 'company','user','userDevice','userDeviceIp' ,'chatDuration' ,'firstResponseTime','typ')
+        fields = ( 'pk' , 'created' , 'uid', 'status' , 'customerRating' , 'customerFeedback' ,
+        'company','user','userDevice','userDeviceIp' ,'chatDuration' ,'firstResponseTime',
+        'typ','reviewedOn',"reviewedBy",'closedOn','closedBy','resolvedBy','resolvedOn','archivedOn','archivedBy','escalatedL1On','escalatedL1By','escalatedL2On','escalatedL2By')
     def create(self ,  validated_data):
         c = ChatThread(**validated_data)
         c.company = CustomerProfile.objects.get(pk=int(self.context['request'].data['company']))
@@ -106,6 +108,38 @@ class ChatThreadSerializer(serializers.ModelSerializer):
             uidMsg = SupportChat.objects.filter(uid=instance.uid)
             if len(uidMsg)>0:
                 instance.chatDuration = round((uidMsg[uidMsg.count()-1].created - uidMsg[0].created).total_seconds()/60.0 , 2)
+        if 'status' in self.context['request'].data:
+            if self.context['request'].data['status']=='reviewed':
+                print 'reviewed','ggggggggggggggggggggggg'
+                instance.reviewedOn = datetime.datetime.now()
+                instance.reviewedBy = User.objects.get(pk=int(self.context['request'].user.pk))
+                instance.save()
+            if self.context['request'].data['status']=='closed':
+                print 'closed','ggggggggggggggggggggggg'
+                instance.closedOn = datetime.datetime.now()
+                instance.closedBy = User.objects.get(pk=int(self.context['request'].user.pk))
+                instance.save()
+            if self.context['request'].data['status']=='resolved':
+                print 'resolved','ggggggggggggggggggggggg'
+                instance.resolvedOn = datetime.datetime.now()
+                instance.resolvedBy = User.objects.get(pk=int(self.context['request'].user.pk))
+                instance.save()
+            if self.context['request'].data['status']=='archived':
+                print 'archived','ggggggggggggggggggggggg'
+                instance.archivedOn = datetime.datetime.now()
+                instance.archivedBy = User.objects.get(pk=int(self.context['request'].user.pk))
+                instance.save()
+            if self.context['request'].data['status']=='escalatedL1':
+                print 'escalatedL1','ggggggggggggggggggggggg'
+                instance.escalatedL1On = datetime.datetime.now()
+                instance.escalatedL1By = User.objects.get(pk=int(self.context['request'].user.pk))
+                instance.save()
+            if self.context['request'].data['status']=='escalatedL2':
+                print 'escalatedL2','ggggggggggggggggggggggg'
+                instance.escalatedL2On = datetime.datetime.now()
+                instance.escalatedL2By = User.objects.get(pk=int(self.context['request'].user.pk))
+                instance.save()
+
         for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user']:
             try:
                 setattr(instance , key , validated_data[key])

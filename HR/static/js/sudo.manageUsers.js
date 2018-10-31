@@ -693,7 +693,7 @@ if (typeof $scope.tab != 'undefined') {
       username: $scope.newCustomer.username,
       first_name: $scope.newCustomer.first_name,
       last_name: $scope.newCustomer.last_name,
-      password: $scope.newCustomer.password,
+      password: $scope.newCustomer.password
     };
 
 
@@ -714,6 +714,7 @@ if (typeof $scope.tab != 'undefined') {
       // $scope.urlPerm =
       dataToSend.is_staff =  $scope.newCustomer.is_staff
       dataToSend.is_active =  $scope.newCustomer.is_active
+      dataToSend.email =  $scope.newCustomer.email
     }
 
     console.log(dataToSend);
@@ -1235,6 +1236,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       first_name: userData.first_name,
       is_staff: userData.is_staff,
       is_active: userData.is_active,
+      email:userData.email
     }
     if (userData.password != '') {
       dataToSend.password = userData.password

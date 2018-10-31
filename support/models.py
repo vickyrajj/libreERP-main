@@ -89,6 +89,18 @@ class ChatThread(models.Model):
     chatDuration = models.FloatField(null=True, blank=True , default=0)
     firstResponseTime = models.FloatField(null=True, blank=True)
     typ = models.CharField(max_length = 100 , null = True , blank=True)
+    reviewedOn=models.DateTimeField(null = True, blank=True)
+    reviewedBy=models.ForeignKey(User , related_name = 'reviewdUser' , null = True, blank=True)
+    closedOn=models.DateTimeField(null = True, blank=True)
+    closedBy=models.ForeignKey(User , related_name = 'closedUser' , null = True, blank=True)
+    resolvedOn=models.DateTimeField(null = True, blank=True)
+    resolvedBy=models.ForeignKey(User , related_name = 'resolvedUser' , null = True, blank=True)
+    archivedOn=models.DateTimeField(null = True, blank=True)
+    archivedBy=models.ForeignKey(User , related_name = 'archivedUser' , null = True, blank=True)
+    escalatedL1On=models.DateTimeField(null = True, blank=True)
+    escalatedL1By=models.ForeignKey(User , related_name = 'escalatedL1User' , null = True, blank=True)
+    escalatedL2On=models.DateTimeField(null = True, blank=True)
+    escalatedL2By=models.ForeignKey(User , related_name = 'escalatedL2User' , null = True, blank=True)
 
 
 class CompanyProcess(models.Model):

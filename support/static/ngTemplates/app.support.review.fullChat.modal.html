@@ -30,6 +30,38 @@
     </div>
     <hr>
     <div class="col-md-12">
+      <h4 ng-if="chatThreadData.resolvedBy" style="font-weight:501">
+        <span><span style="background-color:'red'">Resolved On</span> : {{chatThreadData.resolvedOn.split('.')[0].split('T')[0]}} at {{chatThreadData.resolvedOn.split('.')[0].split('T')[1]}} </span>
+        <span class="pull-right"> Resloved By : {{chatThreadData.resolvedBy | getName}}</span>
+      </h4>
+      <h4 ng-if="chatThreadData.reviewedBy" style="font-weight:501">
+        <span>Reviewed On : {{chatThreadData.reviewedOn.split('.')[0].split('T')[0]}} at {{chatThreadData.reviewedOn.split('.')[0].split('T')[1]}} </span>
+        <span class="pull-right"> Reviewed By : {{chatThreadData.reviewedBy | getName}}</span>
+      </h4>
+      <h4 ng-if="chatThreadData.archivedBy" style="font-weight:501">
+        <span>Archived On : {{chatThreadData.archivedOn.split('.')[0].split('T')[0]}} at {{chatThreadData.archivedOn.split('.')[0].split('T')[1]}} </span>
+        <span class="pull-right"> Archived By : {{chatThreadData.archivedBy | getName}}</span>
+      </h4>
+      <h4 ng-if="chatThreadData.escalatedL1By" style="font-weight:501">
+        <span>EscalatedL1 On : {{chatThreadData.escalatedL1On.split('.')[0].split('T')[0]}} at {{chatThreadData.escalatedL1On.split('.')[0].split('T')[1]}} </span>
+        <span class="pull-right"> EscalatedL1 By : {{chatThreadData.escalatedL1By | getName}}</span>
+      </h4>
+      <h4 ng-if="chatThreadData.escalatedL2By" style="font-weight:501">
+        <span>EscalatedL2 On : {{chatThreadData.escalatedL2On.split('.')[0].split('T')[0]}} at {{chatThreadData.escalatedL2On.split('.')[0].split('T')[1]}} </span>
+        <span class="pull-right"> EscalatedL2 By : {{chatThreadData.escalatedL2By | getName}}</span>
+      </h4>
+      <h4 ng-if="chatThreadData.closedBy" style="font-weight:501">
+        <span>Closed On : {{chatThreadData.closedOn.split('.')[0].split('T')[0]}} at {{chatThreadData.closedOn.split('.')[0].split('T')[1]}} </span>
+        <span class="pull-right"> Closed By : {{chatThreadData.closedBy | getName}}</span>
+      </h4>
+      <!-- <h5 ng-if="chatThreadData.resolvedBy" style="font-weight:501">Resolved on {{chatThreadData.resolvedOn.split('T')[0]}} by {{chatThreadData.resolvedBy | getName}}</h5>
+      <h5 ng-if="chatThreadData.reviewedBy" style="font-weight:501">Reviewed on {{chatThreadData.reviewedOn.split('T')[0]}} by {{chatThreadData.reviewedBy | getName}}</h5>
+      <h5 ng-if="chatThreadData.archivedBy" style="font-weight:501">Archived on {{chatThreadData.archivedOn.split('T')[0]}} by {{chatThreadData.archivedBy | getName}}</h5>
+      <h5 ng-if="chatThreadData.escalatedL1By" style="font-weight:501">EscalatedL1 on {{chatThreadData.escalatedL1On.split('T')[0]}} by {{chatThreadData.escalatedL1By | getName}}</h5>
+      <h5 ng-if="chatThreadData.escalatedL2By" style="font-weight:501">EscalatedL2 on {{chatThreadData.escalatedL2On.split('T')[0]}} by {{chatThreadData.escalatedL2By | getName}}</h5>
+      <h5 ng-if="chatThreadData.closedBy" style="font-weight:501">Closed on {{chatThreadData.closedOn.split('T')[0]}} by {{chatThreadData.closedBy}}</h5> -->
+    </div>
+    <div class="col-md-12">
       <div class="row" ng-repeat="msg in fullChatData">
         <!-- <h3>{{msg.message}}</h3> -->
         <div class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">

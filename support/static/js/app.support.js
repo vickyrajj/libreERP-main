@@ -165,6 +165,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
 function removeFromCookie(uid){
+  console.log('here in remove from cook');
+  console.log(openedUsers);
   for (var i = 0; i < openedUsers.length; i++) {
     if(openedUsers[i].uid==uid){
       console.log(openedUsers);
@@ -236,12 +238,17 @@ function removeFromCookie(uid){
       var openedChats=JSON.parse(getCookie('openedChats'));
       console.log(JSON.parse(getCookie('openedChats')));
       for (var i = 0; i < openedChats.length; i++) {
-      $scope.addToChat(openedChats[i].index,openedChats[i].uid)
+        for (var j = 0; j < $scope.myUsers.length; j++) {
+          if ($scope.myUsers[j].uid == openedChats[i].uid) {
+            console.log(openedChats[i]);
+            $scope.addToChat(openedChats[i].index,openedChats[i].uid)
+          }
+        }
     }
   }
   setTimeout(function () {
       $scope.getOpenedChatFromCookie();
-  }, 2000);
+  }, 3000);
 
     // $scope.addToChat(openedChats[i].index,openedChats[i].uid)
 

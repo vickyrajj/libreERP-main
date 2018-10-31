@@ -261,9 +261,68 @@ class ReviewFilterCalAPIView(APIView):
                     typ = ChatThread.objects.get(uid=j).typ
                 except:
                     typ = ''
+                try:
+                    reviewedOn = ChatThread.objects.get(uid=j).reviewedOn
+                except:
+                    reviewedOn = ''
+                try:
+                    reviewedBy = ChatThread.objects.get(uid=j).reviewedBy
+                except:
+                    reviewedBy = ''
+                try:
+                    closedOn = ChatThread.objects.get(uid=j).closedOn
+                except:
+                    closedOn = ''
+                try:
+                    closedBy = ChatThread.objects.get(uid=j).closedBy
+                except:
+                    closedBy = ''
+                try:
+                    resolvedOn = ChatThread.objects.get(uid=j).resolvedOn
+                except:
+                    resolvedOn = ''
+                try:
+                    resolvedBy = ChatThread.objects.get(uid=j).resolvedBy
+                except:
+                    resolvedBy = ''
+                try:
+                    archivedOn = ChatThread.objects.get(uid=j).archivedOn
+                except:
+                    archivedOn = ''
+                try:
+                    archivedBy = ChatThread.objects.get(uid=j).archivedBy
+                except:
+                    archivedBy = ''
+                try:
+                    escalatedL1On = ChatThread.objects.get(uid=j).escalatedL1On
+                except:
+                    escalatedL1On = ''
+                try:
+                    escalatedL1By = ChatThread.objects.get(uid=j).escalatedL1By
+                except:
+                    escalatedL1By = ''
+                try:
+                    escalatedL2On = ChatThread.objects.get(uid=j).escalatedL2On
+                except:
+                    escalatedL2On = ''
+                try:
+                    escalatedL2By = ChatThread.objects.get(uid=j).escalatedL2By
+                except:
+                    escalatedL2By = ''
                 # print agentCommentCount
                 # print company
-                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()) , rating=Value(rating, output_field=CharField()), chatDuration=Value(chatDuration, output_field=CharField()) , statusChat=Value(statusChat, output_field=CharField()) , numOfComments=Value(numOfComments, output_field=CharField()), agentCommentCount=Value(agentCommentCount,output_field=CharField()), email=Value(email, output_field=CharField()),file=Concat(Value('/media/'),'attachment'),customerFeedback=Value(customerFeedback,output_field=CharField()),customerRating=Value(customerRating,output_field=CharField()),typ=Value(typ,output_field=CharField())))
+                agUidObj = list(agSobj.filter(uid=j).values().annotate(company=Value(company, output_field=CharField()) , rating=Value(rating, output_field=CharField()),
+                chatDuration=Value(chatDuration, output_field=CharField()) , statusChat=Value(statusChat, output_field=CharField()) ,
+                numOfComments=Value(numOfComments, output_field=CharField()),
+                agentCommentCount=Value(agentCommentCount,output_field=CharField()), email=Value(email, output_field=CharField()),
+                file=Concat(Value('/media/'),'attachment'),customerFeedback=Value(customerFeedback,output_field=CharField()),
+                customerRating=Value(customerRating,output_field=CharField()),typ=Value(typ,output_field=CharField()),
+                escalatedL2By=Value(escalatedL2By, output_field=CharField()),escalatedL2On=Value(escalatedL2On, output_field=CharField()),
+                escalatedL1By=Value(escalatedL1By, output_field=CharField()),escalatedL1On=Value(escalatedL1On, output_field=CharField()),
+                archivedBy=Value(archivedBy, output_field=CharField()),archivedOn=Value(archivedOn, output_field=CharField()),
+                resolvedOn=Value(resolvedOn, output_field=CharField()),resolvedBy=Value(resolvedBy, output_field=CharField()),
+                reviewedBy=Value(resolvedBy, output_field=CharField()),reviewedOn=Value(reviewedOn, output_field=CharField()),
+                closedOn=Value(closedOn, output_field=CharField()),closedBy=Value(closedBy, output_field=CharField())))
                 toSend.append(agUidObj)
                 res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType','sentByAgent').annotate(company=Value(company, output_field=CharField()), rating=Value(rating, output_field=CharField()), numOfComments=Value(numOfComments, output_field=CharField()) , chatDuration=Value(chatDuration, output_field=CharField())  ,email=Value(email, output_field=CharField())))
         # print toSend
