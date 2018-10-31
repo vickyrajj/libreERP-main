@@ -300,10 +300,10 @@ app.controller("controller.POS.productMeta.form", function($scope, $http, Flash)
     }
     if ($scope.configureForm.pk == undefined) {
       var method = 'POST';
-      var url = '/api/clientRelationships/productMeta/'
+      var url = '/api/POS/productMeta/'
     } else {
       var method = 'PATCH';
-      url = '/api/clientRelationships/productMeta/' + $scope.configureForm.pk + '/';
+      url = '/api/POS/productMeta/' + $scope.configureForm.pk + '/';
     }
     var toSend = {
       description: f.description,
@@ -652,7 +652,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   })
 
   $scope.searchTaxCode = function(c) {
-    return $http.get('/api/clientRelationships/productMeta/?description__contains=' + c).
+    return $http.get('/api/POS/productMeta/?description__contains=' + c).
     then(function(response) {
       return response.data;
     })
@@ -1957,7 +1957,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
         $scope.configProductMeta = {
           views: views,
-          url: '/api/clientRelationships/productMeta/',
+          url: '/api/POS/productMeta/',
           searchField: 'description',
           itemsNumPerView: [8, 16, 24],
         }
@@ -1984,7 +1984,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
                 $http({
                   method: 'DELETE',
-                  url: '/api/clientRelationships/productMeta/' + target + '/'
+                  url: '/api/POS/productMeta/' + target + '/'
                 }).
                 then(function(response) {
                   Flash.create('success', 'Deleted');

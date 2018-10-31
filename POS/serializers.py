@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from fabric.api import *
 import os
 from django.conf import settings as globalSettings
-from clientRelationships.models import ProductMeta
-from clientRelationships.serializers import ProductMetaSerializer
+# from clientRelationships.models import ProductMeta
+# from clientRelationships.serializers import ProductMetaSerializer
 from ERP.models import service , appSettingsField
 
 import json
@@ -40,6 +40,12 @@ from datetime import datetime
 date_obj = datetime.now()
 date = date_obj.strftime('%d/%m/%Y')
 time_sec = date_obj.strftime('%H:%M:%S')
+
+
+class ProductMetaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductMeta
+        fields = ('pk'  ,'description' , 'typ' , 'code' , 'taxRate')
 
 
 

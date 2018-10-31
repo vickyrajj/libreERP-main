@@ -5,7 +5,8 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 
-
+router.register(r'contact' , ContactViewSet , base_name = 'contact')
+router.register(r'contactLite' , ContactLiteViewSet , base_name = 'contactLite')
 router.register(r'notebook' , notebookViewSet , base_name ='notebook')
 router.register(r'page' , pageViewSet , base_name ='page')
 router.register(r'blog' , blogViewSet , base_name ='blogpost')

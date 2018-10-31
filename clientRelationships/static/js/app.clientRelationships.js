@@ -1,39 +1,39 @@
 // you need to first configure the states for this app
 
 app.config(function($stateProvider) {
-
-  $stateProvider
-    .state('businessManagement.clientRelationships', {
-      url: "/clientRelationships",
-      views: {
-        "": {
-          templateUrl: '/static/ngTemplates/genericAppBase.html',
-        },
-        "menu@businessManagement.clientRelationships": {
-          templateUrl: '/static/ngTemplates/genericMenu.html',
-          controller: 'controller.generic.menu',
-        },
-        "@businessManagement.clientRelationships": {
-          templateUrl: '/static/ngTemplates/app.clientRelationships.default.html',
-          controller: 'businessManagement.clientRelationships.default',
-        }
-      }
-    })
-    .state('businessManagement.clientRelationships.contacts', {
-      url: "/contacts",
-      templateUrl: '/static/ngTemplates/app.clientRelationships.contacts.html',
-      controller: 'businessManagement.clientRelationships.contacts'
-    })
-    .state('businessManagement.clientRelationships.opportunities', {
-      url: "/opportunities",
-      templateUrl: '/static/ngTemplates/app.clientRelationships.opportunities.html',
-      controller: 'businessManagement.clientRelationships.opportunities'
-    })
-    .state('businessManagement.clientRelationships.relationships', {
-      url: "/relationships",
-      templateUrl: '/static/ngTemplates/app.clientRelationships.relationships.html',
-      controller: 'businessManagement.clientRelationships.relationships'
-    })
+  // 
+  // $stateProvider
+  //   .state('businessManagement.clientRelationships', {
+  //     url: "/clientRelationships",
+  //     views: {
+  //       "": {
+  //         templateUrl: '/static/ngTemplates/genericAppBase.html',
+  //       },
+  //       "menu@businessManagement.clientRelationships": {
+  //         templateUrl: '/static/ngTemplates/genericMenu.html',
+  //         controller: 'controller.generic.menu',
+  //       },
+  //       "@businessManagement.clientRelationships": {
+  //         templateUrl: '/static/ngTemplates/app.clientRelationships.default.html',
+  //         controller: 'businessManagement.clientRelationships.default',
+  //       }
+  //     }
+  //   })
+  //   .state('businessManagement.clientRelationships.contacts', {
+  //     url: "/contacts",
+  //     templateUrl: '/static/ngTemplates/app.clientRelationships.contacts.html',
+  //     controller: 'businessManagement.clientRelationships.contacts'
+  //   })
+  //   .state('businessManagement.clientRelationships.opportunities', {
+  //     url: "/opportunities",
+  //     templateUrl: '/static/ngTemplates/app.clientRelationships.opportunities.html',
+  //     controller: 'businessManagement.clientRelationships.opportunities'
+  //   })
+  //   .state('businessManagement.clientRelationships.relationships', {
+  //     url: "/relationships",
+  //     templateUrl: '/static/ngTemplates/app.clientRelationships.relationships.html',
+  //     controller: 'businessManagement.clientRelationships.relationships'
+  //   })
 
 });
 
@@ -42,7 +42,7 @@ app.config(function($stateProvider) {
 
 app.controller("businessManagement.clientRelationships.default", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  
+
 
 })
 

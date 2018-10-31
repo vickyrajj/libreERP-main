@@ -42,7 +42,16 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
 
-from clientRelationships.models import ProductMeta
+PRODUCT_META_TYPE_CHOICES = (
+    ('HSN' , 'HSN'),
+    ('SAC' , 'SAC')
+)
+
+class ProductMeta(models.Model):
+    description = models.CharField(max_length = 500 , null = False)
+    typ = models.CharField(max_length = 5 , default = 'HSN' , choices = PRODUCT_META_TYPE_CHOICES)
+    code = models.PositiveIntegerField(null=False)
+    taxRate = models.PositiveIntegerField(null = False)
 
 UNIT_CHOICES = (
     ('Ton' , 'Ton'),

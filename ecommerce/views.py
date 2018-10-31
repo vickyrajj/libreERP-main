@@ -1048,14 +1048,14 @@ styleN = styles['Normal']
 styleH = styles['Heading1']
 
 try:
-    settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+    settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
 except:
-    print "ERROR : settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()"
+    print "ERROR : settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()"
 
 try:
     ecommerceSetting = application.objects.get(name = 'app.public.ecommerce').settings.all()
 except:
-    print "ERROR : application.objects.get(name = 'app.ecommerce').settings.get(name__iexact = 'gstEnabled')"
+    print "ERROR : application.objects.get(name = 'app.public.ecommerce').settings.get(name__iexact = 'gstEnabled')"
 
 class FullPageImage(Flowable):
     def __init__(self , img):

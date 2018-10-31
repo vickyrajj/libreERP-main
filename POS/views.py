@@ -37,7 +37,13 @@ import re
 from rest_framework import filters
 from django.db.models import F ,Value,CharField
 
-
+class ProductMetaViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    serializer_class = ProductMetaSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['description', 'code']
+    def get_queryset(self):
+        return ProductMeta.objects.all()
 
 class CustomerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -224,9 +230,9 @@ styleN = styles['Normal']
 styleH = styles['Heading1']
 
 try:
-    settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+    settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
 except:
-    print "ERROR : settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()"
+    print "ERROR : settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()"
 
 class expanseReportHead(Flowable):
 

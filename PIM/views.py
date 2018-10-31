@@ -16,6 +16,7 @@ import glob
 # from werkzeug.utils import secure_filename
 import urllib
 import matplotlib.pyplot as plt
+from ERP.models import service
 
 
 class settingsViewSet(viewsets.ModelViewSet):
@@ -27,6 +28,23 @@ class themeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
     queryset = theme.objects.all()
     serializer_class = themeSerializer
+
+class ContactLiteViewSet(viewsets.ModelViewSet):
+    permission_classes = (isOwner , )
+    serializer_class = ContactLiteSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name', 'company' , 'mobile', 'email']
+    def get_queryset(self):
+        return Contact.objects.all()
+
+class ContactViewSet(viewsets.ModelViewSet):
+    permission_classes = (isOwner , )
+    serializer_class = ContactSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
+    def get_queryset(self):
+        return Contact.objects.all()
+
 
 class calendarViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
