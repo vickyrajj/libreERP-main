@@ -2333,6 +2333,25 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
   };
 
+
+
+  var url = new URL(window.location.href)
+  var action = url.searchParams.get("action")
+  if(action == 'retry'){
+  console.log("faiiiiiiiiiiillllllllllllllllllllllllllllllllll");
+  $scope.data.stage = 'payment';
+  console.log($scope.data.stage,'aaaaaaaaaaaaa');
+  }
+  else if (action == 'success'){
+
+    $http({method : 'GET' , url : '/api/ecommerce/order/' + url.searchParams.get('orderid') +'/'}).
+    then(function(response) {
+      $scope.data.stage = 'confirmation';
+      $scope.order = {odnumber : response.data.pk , dt  : new Date() , paymentMode : 'Online' }
+    })
+
+  }
+
   $scope.cartProducts = [];
   $scope.itemProduct = [];
 
@@ -4218,22 +4237,6 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
     })
   });
 
-  var url = new URL(window.location.href)
-  var action = url.searchParams.get("action")
-  if(action == 'retry'){
-  console.log("faiiiiiiiiiiillllllllllllllllllllllllllllllllll");
-  $scope.data.stage = 'payment';
-  console.log($scope.data.stage,'aaaaaaaaaaaaa');
-  }
-  else if (action == 'success'){
-
-    $http({method : 'GET' , url : '/api/ecommerce/order/' + url.searchParams.get('orderid') +'/'}).
-    then(function(response) {
-      $scope.data.stage = 'confirmation';
-      $scope.order = {odnumber : response.data.pk , dt  : new Date() , paymentMode : 'Online' }
-    })
-
-  }
 
 
 });
