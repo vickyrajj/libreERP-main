@@ -117,7 +117,10 @@ class ChatThreadSerializer(serializers.ModelSerializer):
             if self.context['request'].data['status']=='closed':
                 print 'closed','ggggggggggggggggggggggg'
                 instance.closedOn = datetime.datetime.now()
-                instance.closedBy = User.objects.get(pk=int(self.context['request'].user.pk))
+                if 'closedByUser' in self.context['request'].data:
+                    pass
+                else:
+                    instance.closedBy = User.objects.get(pk=int(self.context['request'].user.pk))
                 instance.save()
             if self.context['request'].data['status']=='resolved':
                 print 'resolved','ggggggggggggggggggggggg'

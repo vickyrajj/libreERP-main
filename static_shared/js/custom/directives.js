@@ -330,12 +330,12 @@ app.directive('chatBox', function() {
       var webRtcAddress = 'http://localhost:1111'
 
       setTimeout(function() {
-        if (document.getElementById("iframeChat") != null)
-          $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
+        if (document.getElementById("iframeChat" + $scope.data.uid) != null)
+          $scope.getFrameContent = document.getElementById("iframeChat"+ $scope.data.uid).contentWindow;
       }, 2000);
       $scope.captureImage = function() {
         if ($scope.getFrameContent==undefined) {
-          $scope.getFrameContent = document.getElementById("iframeChat").contentWindow;
+          $scope.getFrameContent = document.getElementById("iframeChat"+ $scope.data.uid).contentWindow;
         }
         $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
       }
@@ -361,7 +361,11 @@ app.directive('chatBox', function() {
       function receiveMessage(event) {
         if (event.origin == webRtcAddress) {
           console.log(event.data + ' ******************');
-          $scope.takeSnapshot(event.data)
+          var uid = event.data.split('*')[0]
+          var imageData = event.data.split('*')[1]
+          if (uid==$scope.data.uid) {
+            $scope.takeSnapshot(imageData)
+          }
         }
       }
 
@@ -1000,7 +1004,7 @@ app.directive('chatBox', function() {
 
         }, function(data) {
 
-          if (data != 'backdrop click' && data != '') {
+          if (data != 'backdrop click' && data != '' && data != 'escape key press') {
             console.log(data);
             $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
             // $scope.send()
@@ -1335,7 +1339,7 @@ app.directive('chatBox', function() {
         }).result.then(function() {
 
         }, function(data) {
-          if (data != 'backdrop click') {
+          if (data != 'backdrop click' && data != 'escape key press') {
             $scope.data.name = data.name
             $scope.data.email = data.email
             $scope.visitorForm = data

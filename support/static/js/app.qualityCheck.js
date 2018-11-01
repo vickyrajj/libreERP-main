@@ -373,7 +373,7 @@ $scope.snap=function() {
     }, function (status) {
       console.log(status);
       console.log($scope.chatThreadData);
-      if (status != 'backdrop click') {
+      if (status != 'backdrop click' && status != 'escape key press') {
         $scope.chatThreadData.status = status
       }
     });

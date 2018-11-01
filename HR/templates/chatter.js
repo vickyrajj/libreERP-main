@@ -1596,7 +1596,11 @@ function createChatDiv() {
 
 
   function endChat() {
+
+    console.log('inside end chattttttttttt');
     chatClosed = true
+
+    console.log(feedbackFormOpened);
 
     if (feedbackFormOpened) {
       return
@@ -1625,7 +1629,7 @@ function createChatDiv() {
      };
      xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
      xhttp.setRequestHeader("Content-type", "application/json");
-     xhttp.send(JSON.stringify({status:"closed"}));
+     xhttp.send(JSON.stringify({status:"closed",closedByUser:1}));
 
     openFeedback()
   }
@@ -1685,8 +1689,8 @@ function createChatDiv() {
     // paperClip.style.display = "none";
     // paperPlane.style.display = "none";
 
-    footer.style.display = "none";
-    startNewChatBtn.style.display = "";
+    // footer.style.display = "none";
+    // startNewChatBtn.style.display = "";
 
     if (emailRecieved) {
       // ratingForm.email = emailId
