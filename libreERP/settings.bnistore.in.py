@@ -122,7 +122,7 @@ INSTALLED_APPS = (
     'businessManagement', # BM application
     'ecommerce', # ecommerce
     'blogs', # publically accesible blogging site
-	'clientRelationships',# CRM like sales force
+	# 'clientRelationships',# CRM like sales force
 	'POS',# POS terminal like tally
     'support',# canvas
 	'productsInventory',# inventory for POS products
@@ -207,7 +207,7 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR, 'HR', 'templates'),
             os.path.join(BASE_DIR, 'libreERP', 'templates'),
             os.path.join(BASE_DIR, 'ecommerce', 'templates'),
-            os.path.join(BASE_DIR, 'clientRelationships', 'templates'),
+            # os.path.join(BASE_DIR, 'clientRelationships', 'templates'),
             os.path.join(BASE_DIR, 'LMS', 'templates'),
         ],
         'APP_DIRS': True,
