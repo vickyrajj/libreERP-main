@@ -35,6 +35,7 @@ from openpyxl import load_workbook
 from io import BytesIO
 import re
 from rest_framework import filters
+import ast
 from django.db.models import F ,Value,CharField
 
 class ProductMetaViewSet(viewsets.ModelViewSet):
@@ -441,8 +442,12 @@ def genInvoice(response , invoice, request):
 
     for i in json.loads(invoice.products):
         print '***********',i
-        print i['data']['price']
-        print i['data']['productMeta']
+        if i['data']['productVariant']:
+            # print i['data']['productVariant'],'@@@@@@@@@@@@@@@@@@@@@@'
+            price = i['data']['productVariant']['price']
+        else:
+            price = i['data']['product']['price']
+
         pDescSrc = i['data']['name']
 
         totalQuant += i['quantity']
@@ -452,24 +457,24 @@ def genInvoice(response , invoice, request):
         #     print "Continuing"
         #     continue
 
-        i['subTotalTax'] = i['data']['price'] * i['quantity'] * ( i['data']['productMeta']['taxRate']/float(100)) if i['data']['productMeta'] and  i['data']['productMeta']['taxRate'] else 0
+        i['subTotalTax'] = price * i['quantity'] * ( i['data']['product']['productMeta']['taxRate']/float(100)) if i['data']['product']['productMeta'] and  i['data']['product']['productMeta']['taxRate'] else 0
 
-        i['subTotal'] = i['data']['price'] * i['quantity'] + i['subTotalTax']
+        i['subTotal'] = price * i['quantity'] + i['subTotalTax']
 
         totalTax += i['subTotalTax']
         grandTotal += i['subTotal']
-        if  i['data']['productMeta'] and i['data']['productMeta']['code'] and i['data']['productMeta']['taxRate']:
-            taxCode = '%s(%s %%)' %(i['data']['productMeta']['code'] , i['data']['productMeta']['taxRate'])
+        if  i['data']['product']['productMeta'] and i['data']['product']['productMeta']['code'] and i['data']['product']['productMeta']['taxRate']:
+            taxCode = '%s(%s %%)' %(i['data']['product']['productMeta']['code'] , i['data']['product']['productMeta']['taxRate'])
         else:
             taxCode = ''
 
-        pBodyProd = Paragraph('Service' if i['data']['productMeta'] and i['data']['productMeta']['typ'] == 'SAC' else 'Product' , tableBodyStyle)
+        pBodyProd = Paragraph('Service' if i['data']['product']['productMeta'] and i['data']['product']['productMeta']['typ'] == 'SAC' else 'Product' , tableBodyStyle)
         pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
         pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
         if invoice.customer is not None:
-            pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
+            pBodyPrice = Paragraph(str(price) , tableBodyStyle)
         else:
-            pBodyPrice = Paragraph(str(i['data']['price'] + (i['data']['price'] * i['data']['productMeta']['taxRate']/float(100) if i['data']['productMeta'] and  i['data']['productMeta']['taxRate'] else 0)) , tableBodyStyle)
+            pBodyPrice = Paragraph(str(price + (price * i['data']['product']['productMeta']['taxRate']/float(100) if i['data']['product']['productMeta'] and  i['data']['product']['productMeta']['taxRate'] else 0)) , tableBodyStyle)
         pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
         # pBodyTotal = Paragraph(str(i['quantity']*i['data']['price']) , tableBodyStyle)
         pBodysubTotalTax = Paragraph(str(round(i['subTotalTax'],2)) , tableBodyStyle)
@@ -1362,4 +1367,48 @@ class ProductPrintGrns(APIView):
         response['Content-Disposition'] = 'attachment; filename="POsdownload%s%s.pdf"'
         genPurchaseOrder(response,o, request,typ='GRN')
 
-        return response
+        # return response
+
+
+class GetTaxList(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print request.GET
+        value =request.GET
+        frm = value['frm']
+        to = value['to']
+        mode = value['mode']
+        typ = value['typ']
+        toReturn =[]
+        frm = datetime.datetime.strptime(frm,'%Y-%m-%dT%H:%M:%S.%fZ' )
+        to =  datetime.datetime.strptime(to,'%Y-%m-%dT%H:%M:%S.%fZ' )
+        if mode == 'offline':
+            obj =  Invoice.objects.filter(created__range =(datetime.datetime.combine(frm, datetime.time.min),datetime.datetime.combine(to, datetime.time.max)))
+            for i in obj:
+                toReturn.append({'customername':i.customer.name,'tax':i.totalTax,'dated':i.created })
+        else:
+            toReturn =[]
+        if typ == 'data':
+            return Response(toReturn, status = status.HTTP_200_OK)
+        else:
+             return ExcelResponse(toReturn)
+
+
+    # class GetTaxListExcel(APIView):
+    #     renderer_classes = (JSONRenderer,)
+    #     def get(self , request , format = None):
+    #         print request.GET
+    #         value =request.GET
+    #         frm = value['frm']
+    #         to = value['to']
+    #         mode = value['mode']
+    #         toReturn =[]
+    #         frm = datetime.datetime.strptime(frm,'%Y-%m-%dT%H:%M:%S.%fZ' )
+    #         to =  datetime.datetime.strptime(to,'%Y-%m-%dT%H:%M:%S.%fZ' )
+    #         if mode == 'offline':
+    #             obj =  Invoice.objects.filter(created__range =(datetime.datetime.combine(frm, datetime.time.min),datetime.datetime.combine(to, datetime.time.max)))
+    #             for i in obj:
+    #                 toReturn.append({'customername':i.customer.name,'product':i.products,'tax':i.totalTax,'dated':i.created })
+    #         else:
+    #             toReturn =[]
+    #         return ExcelResponse(toReturn)

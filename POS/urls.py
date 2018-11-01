@@ -35,4 +35,7 @@ urlpatterns = [
     url(r'salesGraphAPI/$' , SalesGraphAPIView.as_view() ),
     url(r'externalSalesGraphAPI/$' , ExternalSalesGraphAPIView.as_view() ),
     url(r'productInventoryAPI/$' , ProductInventoryAPIView.as_view() ),
+    url(r'getTaxList/$' , GetTaxList.as_view() ),
+    # url(r'getTaxListExcel/$' , GetTaxListExcel.as_view() ),
+
 ]
