@@ -1,4 +1,4 @@
-app.controller("controller.home.profile", function($scope , $state , $users ,  $stateParams , $http , Flash) {
+app.controller("controller.home.profile", function($scope , $state , $users ,  $stateParams , $http , Flash,$uibModal) {
 
   // $scope.data = $scope.tab.data;
 
@@ -58,6 +58,21 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
     $scope.data = response.data[0];
     console.log($scope.data);
   })
+
+  $scope.openModal = function() {
+  $uibModal.open({
+       templateUrl: '/static/ngTemplates/app.home.profile.modal.html',
+       size: 'lg',
+       controller: function($scope ,  $http, Flash,$uibModalInstance){
+               console.log('vicky')
+
+
+               $scope.cancel = function () {
+                 $uibModalInstance.dismiss('cancel')
+               }
+         },
+       })
+     }
 
 
 });
