@@ -50,9 +50,10 @@ n<div class="modal-body">
         <span>EscalatedL2 On : {{chatThreadData.escalatedL2On.split('.')[0].split('T')[0]}} at {{chatThreadData.escalatedL2On.split('.')[0].split('T')[1]}} </span>
         <span class="pull-right"> EscalatedL2 By : {{chatThreadData.escalatedL2By | getName}}</span>
       </h4>
-      <h4 ng-if="chatThreadData.closedBy" style="font-weight:501">
+      <h4 ng-if="chatThreadData.closedOn" style="font-weight:501">
         <span>Closed On : {{chatThreadData.closedOn.split('.')[0].split('T')[0]}} at {{chatThreadData.closedOn.split('.')[0].split('T')[1]}} </span>
-        <span class="pull-right"> Closed By : {{chatThreadData.closedBy | getName}}</span>
+        <span ng-if="chatThreadData.closedBy" class="pull-right"> Closed By : {{chatThreadData.closedBy | getName}}</span>
+        <span ng-if="!chatThreadData.closedBy" class="pull-right"> Closed By : Visitor</span>
       </h4>
       <!-- <h5 ng-if="chatThreadData.resolvedBy" style="font-weight:501">Resolved on {{chatThreadData.resolvedOn.split('T')[0]}} by {{chatThreadData.resolvedBy | getName}}</h5>
       <h5 ng-if="chatThreadData.reviewedBy" style="font-weight:501">Reviewed on {{chatThreadData.reviewedOn.split('T')[0]}} by {{chatThreadData.reviewedBy | getName}}</h5>

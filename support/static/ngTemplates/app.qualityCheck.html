@@ -98,7 +98,10 @@
                     <h5 style="font-weight:501" ng-if="data[0].email">Visitor's Email :  {{data[0].email}}</h5>
                     <h5 style="font-weight:501" ng-if="data[0].chatDuration!=0">Chat Duration :  {{data[0].chatDuration}} Min</h5>
                     <h5 style="font-weight:501" ng-if="data[0].statusChat">Status :  {{data[0].statusChat}}
-                       <span ng-if="data[0].statusChat!='started'">by {{data[0].user_id | getName}} on {{data[0][data[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{data[0][data[0].statusChat+'On'].split('.')[0].split(' ')[1]}} </span>
+                       <span ng-if="data[0].statusChat!='started'">by
+                         <span ng-if="data[0][data[0].statusChat+'By']&&data[0][data[0].statusChat+'On']">{{data[0][data[0].statusChat+'By']}}</span>
+                         <span ng-if="data[0][data[0].statusChat+'On']&&!data[0][data[0].statusChat+'By']">Visitor</span>
+                        on {{data[0][data[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{data[0][data[0].statusChat+'On'].split('.')[0].split(' ')[1]}} </span>
                      </h5>
                   </div>
                 </div>
