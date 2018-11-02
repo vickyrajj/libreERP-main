@@ -60,3 +60,36 @@ class timelineItem(models.Model):
     category = models.CharField(choices = TIMELINE_ITEM_CATEGORIES , max_length = 50 , default = 'message')
     project = models.ForeignKey(project , null = False)
     text = models.TextField(max_length=2000 , null=True)
+
+
+
+
+#--------------------------projects issues model --====-=-=-=-=-=-=-=-=-
+
+ISSUES_ITEM_PRIORITY = (
+    ('high', 'high'),
+    ('medium', 'medium'),
+    ('low', 'low'),
+)
+ISSUES_ITEM_RESULT = (
+    ('resolved','resolved'),
+    ('partial','partial'),
+    ('parked','parked'),
+)
+ISSUES_ITEM_STATUS = (
+    ('inprogress','inprogress'),
+    ('created','created'),
+    ('resolved','resolved'),
+    ('stuck','stuck'),
+
+)
+
+class issues(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    title = models.CharField(max_length = 50, null = False)
+    project = models.ForeignKey(project, null= False, related_name='projectsIssue')
+    status = models.CharField(choices = ISSUES_ITEM_STATUS , max_length = 50,default='created')
+    responsible = models.ForeignKey(User, null= True, related_name='projectsIssueResponsible')
+    tentresdt = models.DateField(auto_now = False, auto_now_add =False)  #tentative result
+    priority = models.CharField(choices = ISSUES_ITEM_PRIORITY , max_length = 50)
+    result = models.CharField(choices = ISSUES_ITEM_RESULT , max_length = 50,null=True)

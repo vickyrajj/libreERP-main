@@ -127,10 +127,14 @@
         <div class="container-fluid" style="padding-bottom:40px">
           <div class="row">
             <div class="col-md-{{btnTyp == '' || btnTyp.checkIn == null ? '12' : '6'}} text-center" style="padding:10px">
-              <button type="button" class="btn btn-default" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="checkin()" confirm-button-type="danger" cancel-button-type="default"
-                style="position:relative;top:30px;right:-15px;cursor:pointer;" ng-if="Checkinshow && (btnTyp == '' || btnTyp.checkIn == null)">Checkin</button>
-              <span ng-if="btnTyp != '' && btnTyp.checkIn != null ">{{btnTyp.checkIn | date : 'dd MMM yyyy'}}<br>{{btnTyp.checkIn | date : 'hh:mm:a'}}<span>
+                  <button type="button" class="btn btn-default" style="width:90%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="checkin()" confirm-button-type="danger" cancel-button-type="default"
+                    style="position:relative;top:30px;right:-15px;cursor:pointer;" ng-if="Checkinshow && (btnTyp == '' || btnTyp.checkIn == null)">Checkin</button>
+                    <hr>
+                    <button type="button" class="btn btn-default" style="width:90%"ng-click="openAttendance()">  Attendance</button>
+                  <span ng-if="btnTyp != '' && btnTyp.checkIn != null ">{{btnTyp.checkIn | date : 'dd MMM yyyy'}}<br>{{btnTyp.checkIn | date : 'hh:mm:a'}}<span>
+
             </div>
+
             <div class="col-md-6 text-center" style="padding:10px">
               <button type="button" class="btn btn-default" style="width:100%" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="checkout()" confirm-button-type="danger" cancel-button-type="default"
                 style="position:relative;top:30px;right:-15px;cursor:pointer;" ng-if="btnTyp != '' && btnTyp.checkIn != null && btnTyp.checkOut == null">Checkout</button>
