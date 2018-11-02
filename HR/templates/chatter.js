@@ -780,6 +780,10 @@ function createChatDiv() {
           '<div id="modalContent" class="modal-content">'+
           '</div>'+
         '</div>'
+        '<div id="myModal" class="modal">'+
+          '<div id="modalContent" class="modal-content">'+
+          '</div>'+
+        '</div>'
 
 
 

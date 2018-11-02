@@ -307,6 +307,7 @@ class ReviewFilterCalAPIView(APIView):
                     escalatedL2On = ''
                 try:
                     escalatedL2By = ChatThread.objects.get(uid=j).escalatedL2By
+
                 except:
                     escalatedL2By = ''
                 # print agentCommentCount

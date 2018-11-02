@@ -18,7 +18,10 @@
         </div>
       </div>
       <span ng-if="chatThreadData.uid!=none"><h4><strong>Status : </strong>{{chatThreadData.status}}
-        <span ng-if="msgData[0].statusChat!='started'">by {{msgData[0][msgData[0].statusChat+'By']}} on {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[1]}} </span>
+        <span ng-if="msgData[0].statusChat!='started'">by
+          <span ng-if="msgData[0][msgData[0].statusChat+'By']&&msgData[0][msgData[0].statusChat+'On']">{{msgData[0][msgData[0].statusChat+'By']}}</span>
+           <span ng-if="msgData[0][msgData[0].statusChat+'On']&&!msgData[0][msgData[0].statusChat+'By']">Visitor</span>
+            on {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[1]}} </span>
       </h4>
       </span>
 
