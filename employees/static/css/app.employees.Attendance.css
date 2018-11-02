@@ -1,21 +1,21 @@
-.headerCalender > p{
+.Calenderheader > p{
   text-align: center;
   font-size: 18px;
   color: #868383;
 }
- .day{
+ .dayy{
   font-size: 13px;
   box-sizing: border-box;
   border: 1px solid  #f2eded;
   position: relative;
 }
-.day:hover , .dayActive{
-  background-color:#cce6e9;
+/* .dayy:hover , .dayyActive{
+  background-color:#ffffff;
   cursor: pointer;
   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
-}
-.dayTypePrev, .dayTypeNext{
-  color: #868383;
+} */
+.dayyTypePrev, .dayyTypeNext{
+  color: #c8c3c3;
 }
 .week{
   margin-left:2px;
@@ -51,7 +51,7 @@
   font-size: 20px;
 }
 
-.dayItems{
+/* .dayItems{
   position: absolute;
   left: 1%;
   bottom: 1%;
@@ -66,5 +66,20 @@
   text-decoration: none;
   box-sizing: border-box;
   color: #fff;
+
+} */
+/* notify badges on the top showing what each color represents */
+.badge{
+  padding: 1px 9px 2px;
+  font-size: 12.025px;
+  font-weight: bold;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+  margin-left: 290px;
+}
+
+.space{
+margin-left: 0;
 
 }

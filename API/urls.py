@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^performance/', include('performance.urls')),
     url(r'^marketing/', include('marketing.urls')),
     url(r'^support/', include('support.urls')),
-    url(r'^Attendance/', include('Attendance.urls')),
+    url(r'^employees/', include('employees.urls')),
 
 
 

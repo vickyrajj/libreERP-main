@@ -42,3 +42,8 @@ class timelineItemViewSet(viewsets.ModelViewSet):
     queryset = timelineItem.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['project', 'category']
+
+class projectIssueViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = projectIssueSerializer
+    queryset = issues.objects.all()

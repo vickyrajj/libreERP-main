@@ -26,7 +26,7 @@ app.config(function($stateProvider){
 
 });
 
-app.controller('projectManagement.projects.project.explore' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('projectManagement.projects.project.explore' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions , $uibModal){
 
   $scope.openTask = function(index) {
     var t = $scope.project.tasks[index];
@@ -148,7 +148,96 @@ app.controller('projectManagement.projects.project.explore' , function($scope , 
         $scope.explore.mode = mode;
     }
 
+
+    $scope.fetchIssues = function(data) {
+
+      $http({
+        method : 'GET',
+        url : '/api/projects/issue/',
+    }).
+      then(function(response) {
+        // console.log('jndsvjnfdjvnfjdn get data');
+        $scope.issues = response.data;
+      })
+    }
+    $scope.fetchIssues();
+
+    //====================popup  calendar for employees
+
+    $scope.openIssueForm   = function(){
+      console.log('inside open function');
+      $uibModal.open({
+        templateUrl : '/static/ngTemplates/app.projects.issuesform.html',
+        // placement: 'left',
+        size: 'md',
+        backdrop : true,
+        resolve : {
+          project : function() {
+            return $scope.project;
+          }
+        },
+        controller : 'projectManagement.project.issues.form'
+      })
+    }
+
+
+    $scope.setStatus = function(pk,status){
+
+      $http({method : 'PATCH' , url : '/api/projects/issue/'+ pk + '/' , data : {status : status}}).
+      then(function(response) {
+          Flash.create('success' , 'Saved');
+      });
+
+
+    }
+
+
 });
+
+//------------------------------------------------------------------------------------------------
+app.controller('projectManagement.project.issues.form', function($scope, $state, $users, $http, Flash, $timeout,$uibModal, $filter , $permissions , project) {
+
+
+$scope.reset = function() {
+  $scope.form = {title : '' ,project : project.pk , responsible : '' ,tentresdt : '' , priority : 'low'}
+}
+
+$scope.reset();
+
+
+$scope.save = function() {
+  console.log('inside save function');
+    var method = 'POST';
+    var url = '/api/projects/issue/';
+    var dataToSend = $scope.form;
+    dataToSend.responsible = dataToSend.responsible.pk
+    dataToSend.tentresdt=dataToSend.tentresdt.toJSON().split('T')[0]
+    console.log('startsingi');
+    $http({method : method , url : url , data : dataToSend}).
+    then(function(response) {
+        Flash.create('success' , 'Saved');
+        $scope.form = {title : '' ,project : project.pk , responsible : '' ,tentresdt : '' , priority : 'low'}
+        // $scope.form.mode = 'view';
+        // $scope.form.pk = response.data.pk;
+        console.log('inside response');
+        return
+    })
+  }
+
+  $scope.userSearch = function(query) {
+    //search for the user
+    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
+
+
+});
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 app.controller('projectManagement.project.item' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
@@ -267,5 +356,6 @@ app.controller('projectManagement.projects.menu' , function($scope , $http , $as
       return  $state.is(app.name.replace('app' , 'projectManagement'))
     }
   }
+
 
 });

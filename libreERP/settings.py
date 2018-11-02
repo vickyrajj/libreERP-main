@@ -119,7 +119,6 @@ INSTALLED_APPS = (
 	'logistic',# logistics
 	'assets',# assets
 	'marketing',# Marketing Application
-	'Attendance',# perfomance attendance
 )
 
 
