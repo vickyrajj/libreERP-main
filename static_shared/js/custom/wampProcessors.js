@@ -195,6 +195,9 @@ var isfocused=true;
             //chat closed by user
           }else if (args[1] == 'FB') {
             scope.sound.play();
+            if (args[2].usersFeedback.length==0) {
+              args[2].usersFeedback = "NA"
+            }
             scope.myUsers[i].messages.push(args[2])
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value=''

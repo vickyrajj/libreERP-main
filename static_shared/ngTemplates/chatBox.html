@@ -82,8 +82,8 @@
               </div>
             </div>
             <div ng-if="message.usersFeedback">
-              <p>Feedback : {{message.usersFeedback}}</p>
               <p>Rating : {{message.rating}}</p>
+              <p ng-if="message.usersFeedback!='NA'">Feedback : {{message.usersFeedback}}</p>
               <!-- <div class="row">
                 <div class="col-md-6">
                   <p>{{message.usersFeedback}}</p>

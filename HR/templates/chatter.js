@@ -695,8 +695,10 @@ function createChatDiv() {
               '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
-            '<i id="closeIcon" class="fa fa-times closeIcon" aria-hidden="true"></i>'+
-            '<i id="exitBtn" class="fa fa-sign-out" aria-hidden="true"></i>'+
+            '<img class="closeIcon" id="closeIcon" src="{{serverAddress}}/static/images/close.png" tooltip="" alt="close">'+
+            // '<i id="closeIcon" class="fa fa-times closeIcon" aria-hidden="true"></i>'+
+            '<img class="exitBtn" id="exitBtn" src="{{serverAddress}}/static/images/exit.png" alt="exit">'+
+            // '<i id="exitBtn" class="fa fa-sign-out" aria-hidden="true"></i>'+
           '</div>'+
           '<div id="audioSection" class="audio_section">'+
           '</div>'+
@@ -709,12 +711,15 @@ function createChatDiv() {
                 '<p>We run on Syrow</p>'+
               '</div>'+
               '<div id="messageComposer" class="flex_container">'+
-                '<textarea id="inputText" placeholder="Write a Reply..." name="name" rows="2"></textarea>'+
+                '<textarea id="inputText" placeholder="Write a Reply..." name="name" rows="2" style="background-color:#fff;" ></textarea>'+
                 '<input id="filePicker" type="file" style="display:none;"/>'+
-                '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
-                '<i id="paperPlane" class="fa fa-paper-plane-o" aria-hidden="true"></i>'+
+                // '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
+                '<img class="paperClip" id="paperClip" src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip">'+
+                '<img id="paperPlane" src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:30px !important; width:30px !important;">'+
+                // '<i id="paperPlane" class="fa fa-paper-plane-o" aria-hidden="true"></i>'+
               '</div>'+
-              '<div id="startNewChatBtn" class="flex_container">'+
+              '<div class="startNewChatBtn flex_container" id="startNewChatBtn" class="flex_container">'+
+                '<span>Sart New Conversation </span>'+
               '</div>'+
           '</div>'+
         '</div>'+
@@ -723,8 +728,8 @@ function createChatDiv() {
 
         '<div id="closeSupport" class="close-support" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
           '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
-           '<path id="closeChatSvg" style="fill:'+iconColor+'" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
-         '</svg>'+
+             '<path id="closeChatSvg" style="fill:'+iconColor+';" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+           '</svg>'+
         '</div>'+
 
         '<div id="supportCircle">'+
@@ -769,6 +774,10 @@ function createChatDiv() {
         //      '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
         //      '<span id="paperClip" style="background-color:#fff; padding:0% 2%;cursor:pointer;"><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="width:25px" ></span>'+
         //      '<span id="paperPlane" style="background-color:#fff;cursor:pointer;float:right;padding:5px"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="width:40px; padding-top:1%;"></span>'+
+          '</div>'+
+        '</div>'+
+        '<div id="myModal" class="modal">'+
+          '<div id="modalContent" class="modal-content">'+
           '</div>'+
         '</div>'
 
@@ -1023,8 +1032,6 @@ function createChatDiv() {
 
 
   // isTyping.style.display = "none";
-  startNewChatBtn.style.display = "none";
-
 //   setTimeout(function(){
 //   footer.style.display = "none";
 //
@@ -1493,15 +1500,21 @@ function createChatDiv() {
               margin:5px;\
               padding:0px;\
             }\
-            .chatBox_header >i {\
+            .exitBtn, .closeIcon {\
               margin: 20px 15px;\
               padding-top: 10px;\
               text-align: center;\
+              width: 24px;\
+              height:34px;\
               font-size: 25px;\
               transition: 0.5s;\
             }\
-            .chatBox_header >i:hover{\
-              transform: scale(1.5) ;\
+            .exitBtn:hover{\
+              transform: scale(1.2) ;\
+              cursor: pointer;\
+            }\
+            .closeIcon:hover{\
+              transform: scale(1.2) ;\
               cursor: pointer;\
             }\
             .chatBox_footer{\
@@ -1523,16 +1536,16 @@ function createChatDiv() {
               border: none;\
               padding:0px;\
             }\
-            .chatBox_footer  i {\
+            .chatBox_footer img {\
               margin: 10px;\
-              width: 30px;\
+              width: 25px;\
+              height:25px;\
               text-align: center;\
-              font-size: 25px;\
               opacity: 0.6;\
               transition: 0.5s;\
               padding:0px;\
             }\
-            .chatBox_footer  i:hover{\
+            .chatBox_footer  img:hover{\
               opacity: 1;\
               cursor: pointer;\
             }\
@@ -1545,6 +1558,19 @@ function createChatDiv() {
               color: white;\
               padding:0px;\
               margin:0px;\
+            }\
+            .startNewChatBtn{\
+              text-align: center;\
+              padding-top:15px; \
+              background-color:#fff;\
+              color:"+windowColor+";\
+              cursor:pointer;\
+              width:100%;\
+              display:none;\
+            }\
+            .startNewChatBtn > span{\
+              font-size:14px;\
+              font-weight:bolder;\
             }\
             @keyframes moveInLeft{\
               0%{\
@@ -1562,12 +1588,32 @@ function createChatDiv() {
             }\
             @keyframes moveInDown{\
               0%{\
-                opacity:1;\
+                opacity:0;\
                 transform:translateY(0px);\
               }\
               100%{\
-                opacity:0;\
+                opacity:1;\
                 transform:translateY(10px) scale(0.5);\
+              }\
+            }\
+            @keyframes rotateAnti{\
+              0%{\
+                opacity:0;\
+                transform:rotate(45deg);\
+              }\
+              100%{\
+                opacity:1;\
+                transform:rotate(0deg);\
+              }\
+            }\
+            @keyframes rotateClock{\
+              0%{\
+                opacity:0;\
+                transform:rotate(0deg);\
+              }\
+              100%{\
+                opacity:1;\
+                transform:rotate(45deg);\
               }\
             }\
             @keyframes moveInFront{\
@@ -1689,8 +1735,8 @@ function createChatDiv() {
     // paperClip.style.display = "none";
     // paperPlane.style.display = "none";
 
-    // footer.style.display = "none";
-    // startNewChatBtn.style.display = "";
+    messageComposer.style.display = "none";
+    startNewChatBtn.style.display = "block";
 
     if (emailRecieved) {
       // ratingForm.email = emailId
@@ -1825,8 +1871,8 @@ function createChatDiv() {
     // first welcome message should come
     // reset chat.messages  var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
     // call pushMessages() again
-    footer.style.display = ""
-    startNewChatBtn.style.display = "none"
+    messageComposer.style.display = "";
+    startNewChatBtn.style.display = "none";
     // display footer and hide start chat button
 
     agentPk =  null;
@@ -2139,9 +2185,8 @@ function createChatDiv() {
 
 
   function scroll() {
-    console.log('scrollllllll');
     setTimeout(function () {
-      var id = document.getElementById("messageBox");
+      var id = document.getElementById("chatBox_content");
       id.scrollTop = id.scrollHeight;
     }, 200);
   }
@@ -2591,19 +2636,26 @@ function createChatDiv() {
       }
 
       if (feedbackFormOpened) {
-        startNewChatBtn.style.display = "";
-        footer.style.display = "none";
+        startNewChatBtn.style.display = "block";
+        messageComposer.style.display = "none";
       }
 
       console.log('oddddd' , device);
 
-      if (device=='xs' || device =='sm') {
-        closeSupport.style.display = "none";
+      // if (device=='xs' || device =='sm') {
+      //   closeSupport.style.display = "none";
+      //   document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
+      // }else {
+      //   closeSupport.style.display = "";
+      //   document.getElementsByTagName("BODY")[0].style.overflowY = "";
+      // }
+
+      if (device=='sm') {
         document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
       }else {
-        closeSupport.style.display = "";
         document.getElementsByTagName("BODY")[0].style.overflowY = "";
       }
+      closeSupport.style.display = "";
       // unreadMsg.style.display = "none";
       unreadMsgCount = 0;
       // chatIconSvg.style.display = "none"
@@ -2611,6 +2663,8 @@ function createChatDiv() {
       chatBox.style.animation = ""
       chatBox.style.display = "block";
       messageBox.style.animation = "moveInLeft 0.7s"
+      closeSupport.style.animation = "rotateAnti 0.4s"
+      // closeChatSvg.style.animation = "rotateAnti 1s"
     }else {
       document.getElementsByTagName("BODY")[0].style.overflowY = "";
       // if (unreadMsgCount>0) {
@@ -2627,7 +2681,6 @@ function createChatDiv() {
   }
 
   closeSupport.addEventListener("click", function() {
-
 
     if (videoOpened) {
       chatBox_header.style.borderRadius = "10px 10px 0px 0px"
@@ -2659,8 +2712,9 @@ function createChatDiv() {
       }else {
         supportCircle.style.display = "";
       }
-      closeSupport.style.display = "none";
       chatBox.style.animation = "moveInDown 0.4s"
+      closeSupport.style.display = "none";
+      closeSupport.style.animation = "";
       setTimeout(function () {
         chatBox.style.display = "none";
       }, 400);
@@ -2682,11 +2736,15 @@ function createChatDiv() {
       }else {
         supportCircle.style.display = "";
       }
-      closeSupport.style.display = "none";
       chatBox.style.animation = "moveInDown 0.4s"
+      closeSupport.style.display = "none";
+      closeSupport.style.animation = "";
       setTimeout(function () {
         chatBox.style.display = "none";
       }, 400);
+      if (device=='sm') {
+        document.getElementsByTagName("BODY")[0].style.overflowY = "";
+      }
     }
   } , false);
 
@@ -2705,6 +2763,33 @@ function createChatDiv() {
 //       console.log(my.style.bottom);
 //     }
 // })
+
+
+function lgDevice(x) {
+    if (x.matches) {
+    device = 'lg'
+    document.getElementsByTagName("BODY")[0].style.overflowY = "";
+  }
+}
+
+function smDevice(x) {
+  if (x.matches) {
+    device = 'sm'
+    if (chatOpen) {
+       document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
+     }else {
+        document.getElementsByTagName("BODY")[0].style.overflowY = "";
+     }
+   }
+}
+
+var sm = window.matchMedia("(max-width: 600px)")
+smDevice(sm) // Call listener function at run time
+sm.addListener(smDevice) // Attach listener function on state changes
+
+var lg = window.matchMedia("(min-width: 600px)")
+lgDevice(lg)
+lg.addListener(lgDevice)
 
 
 
