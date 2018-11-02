@@ -62,7 +62,7 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
   $scope.openModal = function(payroll) {
   $uibModal.open({
        templateUrl: '/static/ngTemplates/app.home.profile.modal.html',
-       size: 'lg',
+       size: 'md',
        controller: function($scope,$http, Flash,$uibModalInstance,$users){
          $scope.data = payroll;
          console.log($scope.data);
