@@ -237,7 +237,6 @@ class StoreQtySerializer(serializers.ModelSerializer):
 #         fields = ('pk' ,'created', 'store' , 'quantity' ,'product','productVariant','master')
 
 # class ProductVerientLiteInventorySerializer(serializers.ModelSerializer):
-#     # discountedPrice = serializers.SerializerMethodField()
 #     storeProdVar = StoreQtyLiteSerializer(many = True , read_only = True)
 #     class Meta:
 #         model = ProductVerient
