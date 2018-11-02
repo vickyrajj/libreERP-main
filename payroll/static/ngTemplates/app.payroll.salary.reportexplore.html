@@ -29,7 +29,7 @@
         <td style="width:25.5%" >{{a.totalPayable}}</td>
         <td ng-if="data.status=='approved'">
           <div class="btn-group btn-group-sm">
-              <a style="cursor:pointer;" target="_blank" href="/api/payroll/getPayslip?payslip={{a.user}}&report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
+              <a style="cursor:pointer;" target="_blank" href="/api/payroll/getPayslip/?payslip={{a.user}}&report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
             </div>
         </td>
       </tr>

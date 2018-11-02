@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^assets/', include('assets.urls')),
     url(r'^performance/', include('performance.urls')),
     url(r'^marketing/', include('marketing.urls')),
-    url(r'^support/', include('support.urls')),
+    # url(r'^support/', include('support.urls')),
 
 
 

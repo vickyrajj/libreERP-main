@@ -110,7 +110,7 @@ INSTALLED_APPS = (
 	'clientRelationships',# CRM like sales force
 	# 'LMS',# LMS
 	'workforceManagement',# canvas
-    'support',# canvas
+    # 'support',# canvas
 	'employees',# employees details
 	'payroll',# payroll
 	'performance',# performance

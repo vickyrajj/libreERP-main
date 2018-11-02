@@ -59,12 +59,85 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
     console.log($scope.data);
   })
 
-  $scope.openModal = function() {
+  $scope.openModal = function(payroll) {
   $uibModal.open({
        templateUrl: '/static/ngTemplates/app.home.profile.modal.html',
        size: 'lg',
-       controller: function($scope ,  $http, Flash,$uibModalInstance){
-               console.log('vicky')
+       controller: function($scope,$http, Flash,$uibModalInstance,$users){
+         $scope.data = payroll;
+         console.log($scope.data);
+
+         $scope.joiningDate =new Date($scope.data.joiningDate);
+         $scope.joiningDateYear = $scope.joiningDate.getFullYear();
+         $scope.joiningMonth =  $scope.joiningDate.getMonth();
+
+         $scope.currentDate = new Date()
+         $scope.currentYear = new Date().getFullYear()
+         $scope.currentMonth =  new Date().getMonth();
+
+         if($scope.data.lastWorkingDate!=null){
+           $scope.lastWorkingDate =new Date($scope.data.lastWorkingDate);
+           $scope.lastWorkingYear = $scope.lastWorkingDate.getFullYear();
+           $scope.lastWorkingMonth = $scope.lastWorkingDate.getMonth();
+         }
+         else{
+           $scope.lastWorkingDate = $scope.currentDate
+           $scope.lastWorkingYear = $scope.currentYear
+           $scope.lastWorkingMonth = $scope.currentMonth
+         }
+
+
+
+
+         if ($scope.lastWorkingYear<$scope.currentYear) {
+           $scope.currentYear = $scope.lastWorkingYear
+           $scope.currentDate = $scope.lastWorkingDate
+         }
+
+
+
+         $scope.$watch('currentYear', function(newValue, oldValue) {
+
+           console.log($scope.joiningMonth,$scope.lastWorkingMonth);
+           $scope.monthsData =[]
+           $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+           if($scope.joiningDateYear==$scope.lastWorkingYear){;
+             if($scope.joiningMonth==$scope.lastWorkingMonth){
+               $scope.monthsData.push($scope.months[$scope.joiningMonth])
+             }
+             else{
+               $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.lastWorkingMonth-1)
+             }
+           }
+           else if(newValue==$scope.joiningDateYear){
+             $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.months.length)
+           }
+           else if(newValue==$scope.lastWorkingYear){
+             $scope.monthsData =  $scope.months.splice(0,$scope.lastWorkingMonth+1)
+           }
+           else{
+             $scope.monthsData = $scope.months
+           }
+         })
+
+         $scope.next = function() {
+           if($scope.lastWorkingYear == $scope.currentYear ){
+             return ;
+           }
+           else{
+           $scope.currentYear += 1;
+           }
+         }
+
+         $scope.prev = function() {
+           if($scope.joiningDateYear == $scope.currentYear ){
+             return ;
+           }
+           else{
+           $scope.currentYear -= 1;
+           }
+         }
+
 
 
                $scope.cancel = function () {

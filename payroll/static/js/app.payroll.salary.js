@@ -83,11 +83,21 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
   })
 
   $scope.next = function() {
+    if($scope.lastWorkingYear == $scope.currentYear ){
+      return ;
+    }
+    else{
     $scope.currentYear += 1;
+    }
   }
 
   $scope.prev = function() {
+    if($scope.joiningDateYear == $scope.currentYear ){
+      return ;
+    }
+    else{
     $scope.currentYear -= 1;
+    }
   }
 
 })
@@ -144,7 +154,7 @@ app.controller("workforceManagement.salary.payslips.info", function($scope, $sta
 
 
 
-})
+});
 
 
 app.controller("workforceManagement.salary.payroll.report", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {

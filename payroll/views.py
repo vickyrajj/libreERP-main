@@ -158,6 +158,7 @@ def payslip(response ,paySlip,userObj,report, request):
 
 class GetPayslip(APIView):
     def get(self , request , format = None):
+        print '333333333333333333333',request.GET
         payrol = payroll.objects.get(user = request.GET['payslip'])
         user = User.objects.get(id = request.GET['payslip'])
         report = PayrollReport.objects.get(id = request.GET['report'])
