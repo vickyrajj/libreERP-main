@@ -1,19 +1,19 @@
-<div class="row bg-white ecomNav" style="height:{{topLevelMenu ? '15':'10'}}vh;width:100%;padding-bottom: 8px;position:fixed;z-index:10;border-bottom:2px solid var(--themeColor)">
+<div class="row bg-white ecomNav" style="width:100%;position:fixed;z-index:10;border-bottom:2px solid var(--themeColor)">
 
-  <div class="row" style="background:var(--themeColor); color:white;" ng-if="topLevelMenu">
+  <div class="row" style="background:var(--themeColor); color:white" ng-if="topLevelMenu">
     <div class="hidden-xs col-sm-2  text-center toplevelmenuOption" style="padding:10px;" ng-repeat="page in toplevelPages" ng-click="$state.go('pages' , {title : page.pageurl} )">
       {{page.title}}
     </div>
   </div>
 
 
-  <div class="col-xs-2 text-center hidden-xs hidden-sm" ng-if="!SortByCategory" >
-    <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:55px;cursor:pointer;" alt="">
+  <div class="col-xs-2 text-center hidden-xs hidden-sm" ng-if="!SortByCategory" style="padding-top:2px;">
+    <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:45px;cursor:pointer;" alt="">
   </div>
 
   <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory" style="padding-top:10px;">
     <div class="col-xs-6 ">
-      <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:55px;cursor:pointer;" alt="">
+      <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:45px;cursor:pointer;" alt="">
     </div>
 
 
@@ -44,20 +44,20 @@
 
   </div>
 
-  <div class="col-xs-2 hidden-md hidden-lg">
+  <div class="col-xs-2 hidden-md hidden-lg" style="padding:7px;">
     <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:55px;cursor:pointer;" alt="">
   </div>
 
 
-  <div style="padding-top:2vh;" class="hidden-xs hidden-sm">
+  <div style="" class="hidden-xs hidden-sm">
 
     <div class="col-xs-{{SortByCategory?'4':'5'}}" style="padding:0px;padding-left:">
-      <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;border-radius: 7px;color:var(--themeColor);height: 5vh;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}"
+      <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;color:var(--themeColor);height: 5vh;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}"
         typeahead-template-url="/static/ngTemplates/app.ecommerce.search.typehead.html">
     </div>
   </div>
 
-  <div class="col-md-2 text-center dropdown hidden-xs hidden-sm">
+  <div class="col-md-2 text-center dropdown hidden-xs hidden-sm" style="padding-top:10px;">
     <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;font-size:17px;color:var(--themeColor)" ng-if="me.pk"> {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 20px;" alt=""></span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px;">
       <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
@@ -67,7 +67,7 @@
     </ul>
   </div>
 
-  <div class="col-md-1 text-left hidden-xs hidden-sm" ng-if="me.pk" style="padding:0px">
+  <div class="col-md-1 text-left hidden-xs hidden-sm" ng-if="me.pk" style="padding:0px;padding-top:10px;">
     <span>
         <span ng-click="$state.go('account.cart')" style="cursor:pointer;font-size:17px;color:var(--themeColor);margin-right: -4px;" >  Cart <i class="fa fa-shopping-cart fa-lg"></i></span>
     <span style="background-color:var(--themeColor);height: 10%;width: 25px;  border-radius: 50%;color:white;display: table-cell;text-align: center;vertical-align: middle;" ng-if="inCart.length>0" class="text-center">{{inCart.length}}</span>
@@ -79,7 +79,7 @@
   </div>
 
   <div class="col-md-4 text-right hidden-xs hidden-sm" ng-if="!me.pk">
-    <span ng-click="openPinPopup()" style="cursor:pointer;font-size:17px;padding-right:30px;color:var(--themeColor)" ng-if="pin!=0&&pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>
+    <span ng-click="openPinPopup()" style="cursor:pointer;font-size:17px;padding-right:30px;color:var(--themeColor)" ng-if="pin!=0 && pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>
     <span style="cursor:pointer;font-size:17px;padding-right:30px;color:var(--themeColor)" ng-click="loginPage()"> Login <i class="fa fa-user fa-lg"></i></span>
     <span style="cursor:pointer;font-size:17px;color:var(--themeColor)" ng-click="registerPage()"> Register <i class="fa fa-registered fa-lg"></i></span>
 

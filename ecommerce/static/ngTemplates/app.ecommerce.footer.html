@@ -174,10 +174,10 @@
         </a>
 
       </div>
-      <div class="row">
+      <div class="row" ng-if="settings.playstoreLink.indexOf('http')!=-1">
         <span style="color:var(--themeColor)">Download Our App</span>
       </div>
-          <a ng-if="settings.playstoreLink.indexOf('http')!=-1" ng-href="{{settings.playstoreLink}}"><img src="/static/images/googleplay.png" alt="Google Application"   width="30%" style="margin-top: 10px;"></a>
+      <a ng-if="settings.playstoreLink.indexOf('http')!=-1" ng-href="{{settings.playstoreLink}}"><img src="/static/images/googleplay.png" alt="Google Application"   width="30%" style="margin-top: 10px;"></a>
 
     </div>
   </div>
