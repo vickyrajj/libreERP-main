@@ -11,14 +11,14 @@
     <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:45px;cursor:pointer;" alt="">
   </div>
 
-  <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory" style="padding-top:10px;">
-    <div class="col-xs-6 ">
+  <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory" >
+    <div class="col-xs-6 " style="padding-top:3px;">
       <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:45px;cursor:pointer;" alt="">
     </div>
 
 
-    <div class="col-xs-6 " style="padding-top:5px;">
-        <div class="well shopByCatDiv" class="dropdown-toggle" style="padding-top:10px;" ng-mouseenter="onBtnEnter = true;resetAll()"  ng-mouseleave="onBtnEnter = false">
+    <div class="col-xs-6 " >
+        <div class="well shopByCatDiv" class="dropdown-toggle" style="padding-top:10px;margin-bottom:0px;" ng-mouseenter="onBtnEnter = true;resetAll()"  ng-mouseleave="onBtnEnter = false">
           <span class="align-middle" style="color:var(--themeColor)">Shop By Category <i class="fa fa-caret-down"></i></span>
         </div>
         <div class="categoryDropDown" ng-show="onBtnEnter||onDropdownEnter||onChildEnter">
@@ -45,14 +45,14 @@
   </div>
 
   <div class="col-xs-2 hidden-md hidden-lg" style="padding:7px;">
-    <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:55px;cursor:pointer;" alt="">
+    <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:40px;cursor:pointer;" alt="">
   </div>
 
 
   <div style="" class="hidden-xs hidden-sm">
 
     <div class="col-xs-{{SortByCategory?'4':'5'}}" style="padding:0px;padding-left:">
-      <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;color:var(--themeColor);height: 5vh;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}"
+      <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;color:var(--themeColor);height: 6vh;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}"
         typeahead-template-url="/static/ngTemplates/app.ecommerce.search.typehead.html">
     </div>
   </div>
@@ -95,7 +95,7 @@
 
 
   <div class="col-xs-10 text-right hidden-md hidden-lg" ng-if="!me.pk">
-    <span ng-click="openPinPopup()" style="cursor:pointer;font-size:13px;padding-right:10px;color:var(--themeColor)" ng-if="pin!=0&&pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>&nbsp;&nbsp;
+    <span ng-click="openPinPopup()" style="cursor:pointer;font-size:13px;padding-right:10px;color:var(--themeColor)" ng-if="pin!=0 && pin!=''" title="Change Pincode">{{pin}} <i class="fa fa-pencil fa-lg"></i></span>&nbsp;&nbsp;
     <span style="cursor:pointer;font-size:13px;padding-right:10px;color:var(--themeColor)" ng-click="loginPage()">  <i class="fa fa-user fa-lg"></i></span>&nbsp;&nbsp;
     <span style="cursor:pointer;font-size:13px;color:var(--themeColor)" ng-click="registerPage()">  <i class="fa fa-registered fa-lg"></i></span>&nbsp;&nbsp;
     <span ng-click="mainPage()" style="cursor:pointer ;color:var(--themeColor)"> <i class="fa fa-shopping-cart fa-lg"></i>
@@ -180,7 +180,7 @@
 </div>
 
 
-<div ng-if="$state.is('ecommerce')&& !bannerText&&bannerImage" style="position:relative;margin-bottom:10px;width:100%;display:border-box;overflow:hidden;margin-top:11vh;" class=" hidden-md hidden-lg">
+<div ng-if="$state.is('ecommerce')&& !bannerText&&bannerImage" style="position:relative;margin-bottom:10px;width:100%;display:border-box;overflow:hidden;margin-top:9vh;" class=" hidden-md hidden-lg">
   <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
       <img class="owl-lazy" style="width:100%" data-ng-repeat="b in slide.banners" data-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
   </ng-owl-carousel>
