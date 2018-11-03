@@ -152,7 +152,7 @@
   </div>
 </div>
 
-<div ng-if="$state.is('ecommerce')&& !bannerText && bannerImage" style="position:relative;width:100%;display:border-box;overflow:hidden;background-size:cover;{{topLevelMenu?'margin-top:9vh':'margin-top:6vh'}}" class="hidden-xs hidden-sm ">
+<div ng-if="$state.is('ecommerce')&& !bannerText && bannerImage" style="position:relative;width:100%;display:border-box;overflow:hidden;background-size:cover;{{topLevelMenu?'margin-top:9vh':'margin-top:5vh'}}" class="hidden-xs hidden-sm ">
   <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
     <img class="owl-lazy" style="width:100%;" data-ng-repeat="b in slide.banners" data-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
   </ng-owl-carousel>
