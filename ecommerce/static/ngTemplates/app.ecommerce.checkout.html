@@ -592,10 +592,10 @@
             <span style="font-size:20px;">Select Mode of Payment<span >
           </div>
           <div class="row" style="padding:20px;">
-            <div class="form-group" ng-if="!totalLimit && totalLimit != 0">
+            <div class="form-group" ng-if="!totalLimit && totalLimit != '0'">
               <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD"> COD <br>
             </div>
-            <div class="form-group" ng-if="totalLimit && totalLimit != 0">
+            <div class="form-group" ng-if="totalLimit && totalLimit != '0'">
               <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD" disabled> COD (Cannot use this option as your total exceed  <i class="fa {{currency}}"></i>{{limitValue}})<br>
             </div>
             <div class="form-group">
