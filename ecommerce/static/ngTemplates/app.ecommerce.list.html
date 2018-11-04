@@ -30,7 +30,7 @@
 
   <div class="col-xs-12 col-sm-12 hidden-md hidden-lg" style="padding:0px;">
       <!-- <h4>Categories</h4> -->
-      <div ng-repeat="g in genericProducts| limitTo:5" style="padding:0px; ">
+      <div ng-repeat="g in genericProducts| limitTo:6" style="padding:0px; ">
         <div class="col-xs-6 col-sm-6">
           <div class="container-fluid" style="cursor:pointer;padding-right:5px;padding-left:5px" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
             <div class="row">
@@ -39,8 +39,6 @@
                 </div>
                 <div  style="padding-right:0px;padding-left:0px;overflow:hidden;height:200px;background: url('/static/images/ecommerce.jpg') no-repeat center center;background-size: cover;" ng-if="g.visual==null">
                 </div>
-                <!-- <img style="width:100%;height:280px" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
-                <img style="width:100%;height:280px" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none"> -->
               </div>
             </div>
             <div class="row" style="padding-top:5px; padding-bottom:20px;">

@@ -212,10 +212,8 @@
         <a ng-href="{{settings.facebookLink}}" target="_blank" class="fa-stack fa-lg" style="cursor:pointer;background:  #125688;color: white;border-radius: 50%;">
           <i style="font-size:12px;" class="fa fa-facebook fa-stack-1x"></i>
         </a>
-
-
       </div>
-        <div class="row">
+        <div class="row" ng-if="settings.playstoreLink.indexOf('http')!=-1">
           <span style="color:var(--themeColor)">Download Our App</span>
         </div>
         <div class="row">
