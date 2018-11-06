@@ -3,7 +3,7 @@
     <div class="row" class="text-center">
       <span ng-if="list.product.discount>0" style="position:absolute;background-color:var(--themeColor);color:white; border-radius:15px 15px 15px 15px;top:10px;font-size:14px;left:30px;padding-left:15px;padding-right:15px;">{{list.product.discount}}% Off </span>
 
-      <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:#808080;position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved==0&&me.pk">
+      <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:#808080;position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved==0 && me.pk">
           <i class="fa fa-heart  fa-2x"></i>
         </span>
       <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved>0 && me.pk">
@@ -19,7 +19,6 @@
         <div class="row container-fluid" style="padding:10px 20px;height:170px">
 
           <div>
-            <span ng-if="list.product.name.length>18" style="margin:0px;  height:60px;padding-left:10px;font-size:17px;">{{list.product.name.slice(0,18)}}</span>
             <span ng-if="list.product.name.length<=18" style="margin:0px;  height:60px;padding-left:10px;font-size:17px;">{{list.product.name}}</span>
           </div>
 
@@ -63,7 +62,7 @@
                   </div>
                 </div>
                 <div class="col-xs-3" style="padding-left:10px;" ng-click="addToCart();$event.stopPropagation();">
-                  <button type="button" class="btn btn-default" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;">
+                  <button type="button" class="btn btn-default btn-sm" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;">
                   Add <i class="fa fa-shopping-cart"></i>
                 </button>
                 </div>
@@ -80,7 +79,7 @@
                   </div>
                 </div>
                 <div class="col-xs-4" style="padding-left:10px;" ng-click="createCookieDetail();$event.stopPropagation();">
-                  <button type="button" class="btn btn-default" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;">
+                  <button type="button" class="btn btn-default btn-sm" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;">
                   Add <i class="fa fa-shopping-cart"></i>
                 </button>
                 </div>

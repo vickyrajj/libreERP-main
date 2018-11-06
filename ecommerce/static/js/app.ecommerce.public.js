@@ -328,22 +328,6 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
       }
     }
   })
-  // }
-
-  // if($scope.me==null){
-  //   console.log("kkkkkkkkkkhhhhhhhhhh");
-  //   $scope.$watch('match' , function(newValue , oldValue) {
-  //     $scope.match.model.added = false
-  //     for (var i = 0; i < $rootScope.inCart.length; i++) {
-  //       if ($scope.match.model.pk == $rootScope.addToCart[i].product.pk) {
-  //           console.log("kkkkkkkkkkhhhhhhhhhh" );
-  //         $scope.match.model.added = true;
-  //         break;
-  //
-  //       }
-  //     }
-  //   })
-  // }
 
   $scope.searchImage = false
 
@@ -3389,7 +3373,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.ecommerce.FAQ.html',
-      size: 'lg',
+      size: 'md',
       backdrop: false,
       controller: 'controller.ecommerce.FAQ.modal',
     }).result.then(function() {
@@ -3968,6 +3952,7 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
     }
   });
 
+  $scope.inCart = $rootScope.inCart;
 
   $timeout(function() {
     console.log($rootScope.pin);

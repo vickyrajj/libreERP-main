@@ -1,9 +1,5 @@
 <div class="row" style="margin:0px;">
-  <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm" style="padding-right:10px;padding-left:10px;padding-top:0px;padding-bottom:20px" >
-    <!-- <div style="padding:10px;"> -->
-      <!-- <h4 style="padding-left:18px">Categories</h4> -->
-
-
+  <div class="col-md-10 col-md-offset-1 hidden-xs hidden-sm" style="padding-right:10px;padding-left:10px;padding-top:0px;padding-bottom:20px" >
       <ng-owl-carousel class="owl-theme" owl-items="genericProducts" owl-properties="categoryProperties" owl-ready="ready($api)">
         <div ng-repeat="g in genericProducts| limitTo:5" style="padding:10px;">
           <div class="anim-in-out anim-zoom-out" >
@@ -50,10 +46,8 @@
     </div>
 </div>
 
-
-
 <div class="row" style="margin:0px">
-  <div class="col-md-8 col-md-offset-2 hidden-xs hidden-sm">
+  <div class=" col-md-10 col-md-offset-1  hidden-xs hidden-sm">
     <div class="row">
       <div class="col-md-12">
         <div class="row" >
@@ -75,15 +69,15 @@
   </div>
 </div>
 <div class="row" style="margin:0px">
-  <div class="col-md-offset-2 col-md-8 hidden-xs hidden-sm" style="padding-left:20px;padding-right:40px;">
-    <div class="row" ng-if="subSlide.banners.length > 0&&secondBanner">
+  <div class="col-md-offset-1 col-md-10 hidden-xs hidden-sm" style="padding-left:20px;padding-right:40px;">
+    <div class="row" ng-if="subSlide.banners.length > 0 && secondBanner">
       <div style="margin-bottom:10px;;margin-left:10px;padding-left:0px;padding-right:0px;overflow:hidden;padding:0px;" class="col-md-12 text-center  hidden-xs hidden-sm">
         <img class="anim-in-out anim-fade" data-anim-speed="100" style="width:100%;cursor:pointer;" ng-src="{{subSlide.img}}" ng-click="$state.go('pages' , {title : subSlide.title.split(' ').join('-').toLowerCase()})" />
       </div>
     </div>
   </div>
   <div class="col-xs-offset-1 col-sm-offset-1 col-xs-10 col-sm-10 hidden-lg hidden-md" style="padding-right:20px;padding-left:20px">
-    <div class="row" ng-if="subSlideMobile.banners.length > 0&&secondBanner">
+    <div class="row" ng-if="subSlideMobile.banners.length > 0 && secondBanner">
       <div ng-if="$state.is('ecommerce')" style="position:relative;height:45vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;padding-left:0px;padding-right:0px" class="card col-sm-12 col-xs-12 hidden-md hidden-lg">
         <img class="anim-in-out anim-fade" data-anim-speed="100" style="width:100%;cursor:pointer;height:45vh" ng-src="{{subSlideMobile.img}}" ng-click="$state.go('pages' , {title : subSlideMobile.title.split(' ').join('-').toLowerCase()})" />
       </div>
@@ -93,7 +87,7 @@
 </div>
 
 <div class="row" style="margin:0px">
-  <div class="col-md-8 col-md-offset-2 hidden-xs hidden-sm">
+  <div class="col-md-10 col-md-offset-1 hidden-xs hidden-sm">
 
     <div class="row">
       <div class="col-md-12">

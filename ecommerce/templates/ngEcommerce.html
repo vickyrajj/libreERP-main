@@ -31,20 +31,13 @@
     <meta name="twitter:creator" content="{{data.seoDetails.twitter_creator}}" />
     <meta property="article:author" content="{{data.seoDetails.author}}" />
 
-
-
-
-
-    <!-- stock css libraries -->
     {% if useCDN %}
       <link rel="stylesheet" href="https://bootswatch.com/paper/bootstrap.min.css" charset="utf-8">
-      <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" charset="utf-8"> -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" charset="utf-8">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/animatecss/3.5.1/animate.min.css" charset="utf-8">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.0/rzslider.min.css" charset="utf-8">
     {% else %}
       <link rel="stylesheet" href="{% static 'css/bootstrap.paper.min.css' %}" charset="utf-8">
-      <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" charset="utf-8"> -->
       <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" charset="utf-8">
       <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
       <link rel="stylesheet" href="{% static 'css/rzslider.min.css' %}" charset="utf-8">
@@ -59,8 +52,6 @@
     <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/owl.theme.default.css' %}" charset="utf-8">
 
-
-    <!-- custom css -->
     <link rel="stylesheet" href="{% static 'css/custom/base.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/app.ecommerce.css' %}" charset="utf-8">
 
@@ -72,7 +63,6 @@
 
   </head>
   <body style="background-color:white;">
-  <!-- <body style="background-image: url(/static/images/sterlingSelect_banner.jpg);"> -->
     {%  verbatim %}
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
@@ -87,36 +77,27 @@
 
 
 
-      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor)"  ng-click="checkout()" ng-if="inCart.length>0 && !$state.is('checkout') && !$state.includes('account')">
+      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor);z-index:10;"  ng-click="checkout()" ng-if="inCart.length>0 && !$state.is('checkout') && !$state.includes('account')">
         <h5 style="color:white;">Checkout ( <i class="fa {{currency}}" ></i> {{data.total.toFixed(2)}} )</h5>
       </div>
 
-      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor)"  ng-click="mainPage()" ng-if="addToCart.length>0&&!me.pk">
+      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor);z-index:10;"  ng-click="mainPage()" ng-if="addToCart.length>0 && !me.pk">
         <h5 style="color:white;">Checkout ( <i class="fa {{currency}}" ></i> {{data.totalVal.toFixed(2)}})</h5>
       </div>
 
 
       <div ng-if="inCart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
 
-        <div style="position:sticky;top:10px; border-top:solid 2px #eeeeee;">
+        <div style="position:sticky;top:10px;">
 
           <div ng-if="showCartImage">
             <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
-            <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
-
-          </div>
-
-          <div class="row" style="margin:0px;">
-            <div class="container-fluid">
-              <h2>Cart</h2>
-            </div>
           </div>
 
           <div ng-repeat="p in inCart" style="border-bottom:solid 2px #eeeeee; ">
 
             <h5 ng-if="p.prod_howMuch==null" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch | convertUnit:p.product.product.unit }}</h5>
             <h5 ng-if="p.prod_howMuch" style="margin:10px;">{{p.product.product.name}} {{p.prod_howMuch| convertUnit : p.product.product.unit}}</h5>
-            <!-- {{p.prod_var}} -->
             <div class="row" style="margin:0px;">
               <div class="col-sm-4 text-right">
                 <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >0" ng-click="changeQty(p.product.pk , 'decrease');"></i>
@@ -148,19 +129,10 @@
       </div>
 
 
-      <div ng-if="addToCart.length>0&&!me.pk" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
+      <div ng-if="addToCart.length>0 && !me.pk" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
 
         <div class="" style="position:sticky; top:10px;">
-
-          <!-- <img src="/static/images/organic.png" style="width:100%;" alt=""> -->
           <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">
-          <img ng-if="!genericImage.cartImage" src="/static/images/organic.png" style="width:100%;" alt="Cart Image">
-
-          <div class="row" style="margin:0px;">
-            <div class="container-fluid">
-              <h2>Cart</h2>
-            </div>
-          </div>
 
           <div ng-repeat="p in addToCart" style="border-bottom:solid 2px #eeeeee;">
             <h5 style="margin:10px;">{{p.productName}} {{p.prod_howMuch | convertUnit:p.unit}}</h5>
