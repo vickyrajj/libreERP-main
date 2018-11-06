@@ -857,8 +857,10 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     if ($rootScope.multiStore) {
       for (var i = 0; i < $scope.details.product.storeQty.length; i++) {
         if ($scope.details.product.storeQty[i].store.pincode == $rootScope.pin) {
-          if ($scope.details.product.storeQty[i].quantity <= 0) {
-            $scope.showOptions = false
+          if ($scope.details.product.storeQty[i].quantity <= 0 && INVENTORY_ENABLED == 'True') {
+            $scope.showOptions = false;
+          }else{
+            $scope.showOptions = true;
           }
         }
       }
