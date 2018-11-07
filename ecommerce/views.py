@@ -1526,16 +1526,17 @@ class GenericImageViewSet(viewsets.ModelViewSet):
     serializer_class = genericImageSerializer
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['pincode','state','city']
-
+import traceback
 class UpdateCartAPIView(APIView):
-    permission_classes = (permissions.IsAuthenticated , isAdmin)
+    permission_classes = (permissions.IsAuthenticated ,)
     def post(self, request, format=None):
         try:
-            c = Cart.objects.get(product = request.data['product'] , user = request.user)
+            c = Cart.objects.get(product__id = request.data['product'] , user = request.user)
             c.qty  = request.data['qty']
             c.save()
             return Response(status=status.HTTP_200_OK)
         except:
+            traceback.print_exc()
             return Response(status = status.HTTP_404_NOT_FOUND )
 
 
