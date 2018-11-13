@@ -140,9 +140,39 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
 
 
 
-               $scope.cancel = function () {
-                 $uibModalInstance.dismiss('cancel')
-               }
+           $scope.cancel = function () {
+             $uibModalInstance.dismiss('cancel')
+           }
+
+           $scope.attendance = false;
+           $scope.download = false;
+           $scope.view = function(month){
+                $scope.download = false;
+                for(var i=0;i<=$scope.months.length;i++){
+                  if(i==month){
+                    console.log($scope.months.indexOf(month));
+                    return $scope.months.indexOf(month);
+                  }
+                }
+
+
+                // $http({
+                //   method: 'GET',
+                //   url: '/api/HR/leave/?fromDate='+$scope.currentYear  + '&toDate=' +
+                // }).then(function(response) {
+                //   $scope.days = response.data;
+                //   $scope.totaldays = $scope.days.days;
+                //   console.log($scope.totaldays);
+                // })
+                $scope.attendance = true;
+           }
+           $scope.load=function(){
+             $scope.attendance = false;
+
+
+             $scope.download = true;
+
+           }
          },
        })
      }

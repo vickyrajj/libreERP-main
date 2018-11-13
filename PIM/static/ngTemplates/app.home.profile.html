@@ -277,7 +277,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" ng-if="designation.division">
       <div class="row" style="margin-top:20px;">
         <label>Work locations</label> <br> <br>
         <div class="row">
@@ -290,8 +290,11 @@
     </div>
     <div class="col-md-3">
       <div class="row" style="margin-top:20px;">
-        <label>Payroll Details of {{data.pk | getName}}</label> <br> <br>
-        <div class="row">
+        <div class="row text-center">
+          <label>Payroll Details</label>  <button type="button" style="margin-left:30px;" class= "btn btn-default" name="button" ng-click="openModal(payroll)">Payslips</button>
+        </div>
+        <hr>
+        <div class="row" style="padding:20px;">
           <div class="row">
             <div class="col-md-6 text-right">
               <strong>HRA:</strong>
@@ -451,11 +454,6 @@
             <div class="col-md-6">
               {{payroll.noticePeriodRecovery? 'YES':'NO'}}
             </div>
-          <div class="row">
-            <div class="col-md-12 text-right">
-               <button type="button" style="padding-top:4px;margin:10px 50px; 0 0" class= "btn btn-primary" name="button" ng-click="openModal(payroll)">payroll</button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
