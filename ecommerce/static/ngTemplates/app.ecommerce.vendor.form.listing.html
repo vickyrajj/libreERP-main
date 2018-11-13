@@ -3,11 +3,27 @@
     <div  class="col-md-6">
 
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label>Product</label>
         <input uib-typeahead="p as p.name for p in productSearch($viewValue)" class="form-control" type="text" ng-model = "data.form.product" placeholder="Search By Product Name">
-      </div>
+          <span class="input-group-addon" ng-click="refresh()" style="cursor:pointer; background-color:#fff;" >New</span>
+      </div> -->
 
+      <div class="row">
+        <div class="col-md-12" style="padding:0px">
+          <!-- <div class="form-group">
+            <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()" />
+          </div> -->
+          <label>Product</label>
+          <div class="input-group">
+            <input uib-typeahead="p as p.name for p in productSearch($viewValue)" class="form-control" type="text" ng-model = "data.form.product" placeholder="Search By Product Name">
+            <span class="input-group-addon" ng-if=!data.form.product.pk ng-click="openProductmodal()" style="cursor:pointer; background-color:#fff;" >New</span>
+            <span class="input-group-addon" ng-if=data.form.product.pk ng-click="openProductmodal()" style="cursor:pointer; background-color:#fff;" >Edit</span>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-12">
       <div ng-repeat="f in data.genericProduct.fields">
         <div class="form-group">
           <!-- {{f.data}} -->
@@ -35,8 +51,11 @@
         <button ng-if="false" type="button" class="btn btn-default" ng-click="preview()">Preview </button>
         <button type="button" class="btn btn-primary" ng-click="submitListing()">Submit </button>
       </div>
+    </div>
+  </div>
 
     </div>
+  </div>
     <div class="col-md-6">
       <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

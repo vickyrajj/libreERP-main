@@ -630,8 +630,11 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
 
 })
 
-app.controller("controller.POS.productForm.modal", function($scope, product, $http, Flash) {
-  console.log(product, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+app.controller("controller.POS.productForm.modal", function($scope, product,newProduct, $http, Flash,$uibModalInstance) {
+  console.log(product,newProduct, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+  $scope.newProduct = newProduct
+  console.log(typeof $scope.newProduct);
+
 
   $scope.multiStores = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
@@ -716,7 +719,35 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       }
       $scope.categoriesList.push(a)
     }
-  } else {
+  }
+  else if(typeof $scope.newProduct== 'object'){
+      $scope.mode = 'edit';
+      $scope.product = $scope.newProduct
+    }
+  else if(typeof $scope.newProduct== 'string'){
+      $scope.mode = 'new';
+      $scope.product = {
+        'name': $scope.newProduct,
+        'productMeta': '',
+        'price': 0,
+        'displayPicture': emptyFile,
+        'serialNo': '',
+        'description': '',
+        'alias': '',
+        'inStock': 0,
+        'cost': 0,
+        'logistics': 0,
+        'serialId': '',
+        'reorderTrashold': 0,
+        'pk': null,
+        'unit': '',
+        'grossWeight':'',
+        'discount': 0,
+        'storeQty': [],
+        'howMuch': '',
+      }
+    }
+  else {
     $scope.mode = 'new';
     $scope.product = {
       'name': '',
@@ -937,6 +968,14 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       if ($scope.mode == 'new') {
         $scope.product.pk = response.data.pk;
         $scope.mode = 'edit';
+        if($scope.newProduct.length>0){
+          $uibModalInstance.dismiss(response.data)
+        }
+      }
+      else{
+        if(typeof $scope.newProduct == 'object'){
+          $uibModalInstance.dismiss(response.data)
+        }
       }
     })
   }
@@ -1049,7 +1088,7 @@ function getMonday(date) {
 }
 
 
-app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter) {
+app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter,$rootScope) {
 
   // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
   $scope.posShowAll = true
@@ -1919,7 +1958,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           } else {
             return $scope.data.tableData[idx];
           }
-        }
+        },
+        newProduct: function() {
+            return '';
+        },
       },
       controller: 'controller.POS.productForm.modal',
     }).result.then(function() {

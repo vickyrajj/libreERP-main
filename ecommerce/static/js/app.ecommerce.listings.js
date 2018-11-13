@@ -17,13 +17,14 @@ app.directive('ecommerceListingEditor', function() {
   };
 });
 
-app.controller('ecommerce.form.listing', function($scope, $state, $stateParams, $http, Flash, $filter) {
+app.controller('ecommerce.form.listing', function($scope, $state, $stateParams, $http, Flash, $filter,$uibModal) {
+
+
   $scope.data = {
     mode: 'select',
     form: {}
   };
   $scope.config = JSON.parse($scope.configObj);
-  console.log('rrrrrrrrrrrrr', $scope.config);
 
   if (angular.isDefined($scope.config.pk)) {
     $scope.id = $scope.config.pk;
@@ -340,6 +341,26 @@ app.controller('ecommerce.form.listing', function($scope, $state, $stateParams, 
   } else {
     $scope.buildForm()
   }
+
+    $scope.openProductmodal = function() {
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.POS.product.form.html',
+        size: 'xxl',
+        backdrop: true,
+        resolve: {
+          product: function() {
+              return {};
+          },
+          newProduct: function() {
+              return $scope.data.form.product;
+          },
+        },
+        controller: 'controller.POS.productForm.modal',
+      }).result.then(function() {
+      }, function(data) {
+        $scope.data.form.product = data
+      });
+    }
 
 
   $scope.tinymceOptions = {

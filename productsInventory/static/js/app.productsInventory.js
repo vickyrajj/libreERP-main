@@ -378,7 +378,10 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
         resolve: {
           product: function() {
             return response.data;
-          }
+          },
+          newProduct: function() {
+              return '';
+          },
         },
         controller: 'controller.POS.productForm.modal',
       }).result.then(function() {

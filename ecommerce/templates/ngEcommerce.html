@@ -100,13 +100,13 @@
             <h5 ng-if="p.prod_howMuch" style="margin:10px;">{{p.product.product.name}} {{p.prod_howMuch| convertUnit : p.product.product.unit}}</h5>
             <div class="row" style="margin:0px;">
               <div class="col-sm-4 text-right">
-                <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >0" ng-click="changeQty(p.product.pk , 'decrease');"></i>
+                <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >0" ng-click="changeQty($index , 'decrease');"></i>
               </div>
               <div class="col-sm-4 text-center">
                 {{p.qty}}
               </div>
               <div class="col-sm-4 text-left" >
-                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="changeQty(p.product.pk , 'increase');"></i>
+                <i class="fa fa-plus-circle fa-2x" style="cursor:pointer" ng-click="changeQty($index , 'increase');"></i>
               </div>
             </div>
 
