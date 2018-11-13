@@ -132,7 +132,7 @@ class ProductVerient(models.Model):
     updated = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey(Product , related_name='parentProducts')
     sku = models.CharField(max_length=255,null=True)
-    unitPerpack = models.PositiveIntegerField(default = 0)
+    unitPerpack = models.FloatField(default = 0)
     price = models.FloatField(null=True)
     discountedPrice = models.FloatField(default = 0.0)
     serialId = models.CharField(max_length = 50, null=True, blank = True)

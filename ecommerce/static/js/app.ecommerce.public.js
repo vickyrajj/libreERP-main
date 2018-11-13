@@ -585,7 +585,6 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
 
 
   $scope.changeQty = function(value, data) {
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     // for (var i = 0; i < $rootScope.inCart.length; i++) {
       // if ($rootScope.inCart[i].product.pk == value) {
         if ($rootScope.inCart[value].typ == 'cart') {
