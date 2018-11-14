@@ -14,7 +14,7 @@ class TimeSheetItemSerializer(serializers.ModelSerializer):
     project = projectLiteSerializer(many = False ,read_only = True)
     class Meta:
         model = TimeSheetItem
-        fields = ('pk','parent','project','duration','comment','approvalComment')
+        fields = ('pk','parent','project','duration','comment','approvalComment','totaltime')
         read_only_fields=('approvalComment', )
     def create(self , validated_data):
         t = TimeSheetItem(**validated_data)

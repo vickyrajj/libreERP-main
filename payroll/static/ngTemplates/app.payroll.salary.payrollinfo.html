@@ -179,7 +179,8 @@
             <!-- <span class="text-center">{{data.joiningDate}}</span> -->
             <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
               <tr ng-repeat ="n in monthsData">
-                <td><span>{{n}}</span></td>
+                <td><span style="margin-left:2.5em;">{{n}}</span><span class="pull-right"><a style="cursor:pointer;" target="_blank"
+                  href="/api/payroll/getPayMonthlyslip/?userid={{data.user}}&year={{currentYear}}&month={{n}}"><i class="fa fa-download" style="font-size:1.5em;margin:0 0.5em;cursor:pointer; "></i></a></span></td>
               </tr>
 
             </table>

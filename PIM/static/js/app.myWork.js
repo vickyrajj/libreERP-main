@@ -137,22 +137,40 @@ app.controller("controller.home.myWork", function($scope, $state, $users,$aside,
     }).
     then(function(response) {
       $scope.btnTyp = response.data;
+
     })
+
   }
 
   $scope.checkout = function() {
     var d = new Date();
     $scope.checkoutTime = d.getTime() - $scope.checkinTime;
-    console.log('bbbbbbbbbb', $scope.checkoutTime,$scope.timeSheet);
+    $scope.total = $scope.checkinTime -$scope.checkoutTime ;
+    function msToTime(duration) {
+        var milliseconds = parseInt((duration % 1000) / 100);
+        var  seconds = parseInt((duration / 1000) % 60);
+        var  minutes = parseInt((duration / (1000 * 60)) % 60);
+        var  hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+      }
+    $scope.totaltime = msToTime($scope.total);
+    console.log('bbbbbbbbbb', $scope.checkoutTime,$scope.timeSheet,$scope.totaltime,'vvvvvv');
     $http({
       method: 'PATCH',
       url: '/api/performance/timeSheet/'+ $scope.timeSheet.pk + '/',
       data: {
         checkOutTime: 'checkout',
+        totaltime : $scope.totaltime,
       }
     }).
     then(function(response) {
       $scope.btnTyp = response.data;
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaa",$scope.btnTyp);
     })
   }
 
