@@ -147,23 +147,21 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
            $scope.attendance = false;
            $scope.download = false;
            $scope.view = function(month){
+               $scope.monthss = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
                 $scope.download = false;
-                for(var i=0;i<=$scope.months.length;i++){
-                  if(i==month){
-                    console.log($scope.months.indexOf(month));
-                    return $scope.months.indexOf(month);
+                function monthIndex(mon){
+                  for(var i=0;i<=$scope.monthss.length;i++){
+                  if($scope.monthss.includes(mon)){
+                    return $scope.monthss.indexOf(mon)+1;
                   }
                 }
+              }
+              function daysInMonth (month, year) {
+                  return new Date(year, month, 0).getDate();
+              }
+              $scope.indexMonth = monthIndex(month);
+              $scope.days = daysInMonth($scope.indexMonth,$scope.currentYear);
 
-
-                // $http({
-                //   method: 'GET',
-                //   url: '/api/HR/leave/?fromDate='+$scope.currentYear  + '&toDate=' +
-                // }).then(function(response) {
-                //   $scope.days = response.data;
-                //   $scope.totaldays = $scope.days.days;
-                //   console.log($scope.totaldays);
-                // })
                 $scope.attendance = true;
            }
            $scope.load=function(){

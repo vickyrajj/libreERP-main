@@ -13,7 +13,7 @@
           <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
             <tr ng-repeat="month in monthsData">
               <td><span style="margin-left:4.5em;">{{ month }}</span><span class="pull-right"><i class="fa fa-eye" style="font-size:1.5em;margin:0 0.5em;cursor:pointer;color:#337ab7;" ng-model="attendance" ng-click="view(month)"></i><a style="cursor:pointer;" target="_blank"
-                href="/api/payroll/getPayslip/?payslip={{data.user}}&report={{data.pk}}"><i class="fa fa-download" style="font-size:1.5em;margin:0 0.5em;cursor:pointer;"ng-model="download" ng-click="load()"></i></a></span>
+                href="/api/payroll/getPayslip/?payslip={{me.pk}}"><i class="fa fa-download" style="font-size:1.5em;margin:0 0.5em;cursor:pointer;"ng-model="download" ng-click="load()"></i></a></span>
               </td>
             </tr>
           </table>

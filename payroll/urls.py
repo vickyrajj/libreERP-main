@@ -16,4 +16,4 @@ urlpatterns = [
     url(r'pfReport/$' ,PFslipsReport.as_view()  )
 
 
-]
+] 
