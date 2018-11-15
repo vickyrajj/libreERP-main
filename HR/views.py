@@ -241,6 +241,7 @@ class userDesignationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = designation.objects.all()
     serializer_class = userDesignationSerializer
+    filter_fields = ['user'  ]
 
 class userAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin ,)
@@ -445,7 +446,7 @@ class OrgChartAPI(APIView):
         return Response(toReturn )
 
 
-# 
+#
 # ##----------Attendance api---
 # import sys
 # import time

@@ -10,9 +10,51 @@
         <div class="container-fluid" style="position:absolute;top:0px;width:100%;">
           <span class="text-muted" style="font-size:15px;"> <i class="fa fa-user-o" style="width:20px;"></i> Payroll for {{data.user | getName}}</span>
           <!-- <h5 style="margin-left:22px;"></h5> <br> -->
+
           <div class="row" style="margin-top:10px;">
-            <div class="col-md-2">
+            <div class="col-md-12">
               <!-- <i class="fa fa-map-marker fa-3x pull-right" style="color:#8faec2;"></i> -->
+              <h3 class="text-center">Designation Details</h3>
+              <div class="row">
+                <div class="col-md-6 text-right">
+                  <strong>Reporting To:</strong>
+                </div>
+                <div class="col-md-6">
+                  {{desig.reportingTo | getName}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 text-right">
+                  <strong>Division:</strong>
+                </div>
+                <div class="col-md-6">
+                  {{desig.division.name}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 text-right">
+                  <strong>Unit:</strong>
+                </div>
+                <div class="col-md-6">
+                  {{desig.unit.name}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 text-right">
+                  <strong>Department:</strong>
+                </div>
+                <div class="col-md-6">
+                  {{desig.department.name}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 text-right">
+                  <strong>Role:</strong>
+                </div>
+                <div class="col-md-6">
+                  {{desig.role.name}}
+                </div>
+              </div>
             </div>
 
           </div>
@@ -179,12 +221,16 @@
             <!-- <span class="text-center">{{data.joiningDate}}</span> -->
             <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
               <tr ng-repeat ="n in monthsData">
-                <td><span style="margin-left:2.5em;">{{n}}</span><span class="pull-right"><a style="cursor:pointer;" target="_blank"
-                  href="/api/payroll/getPayMonthlyslip/?userid={{data.user}}&year={{currentYear}}&month={{n}}"><i class="fa fa-download" style="font-size:1.5em;margin:0 0.5em;cursor:pointer; "></i></a></span></td>
+                <td>
+                  <div class=" col-md-offset-3 col-md-6"><span >{{n}}</span></div>
+                  <div class="col-md-2">
+                  <span ng-if="monthsForWhichPayslipsExist.indexOf(n) != -1"><a style="cursor:pointer;" target="_blank"
+                  href="/api/payroll/getPayMonthlyslip/?userid={{data.user}}&year={{currentYear}}&month={{n}}"><i  class="fa fa-download" style="font-size:1.5em;margin:0 0.5em;cursor:pointer; "></i></a>
+                </span></div>
+                </td>
               </tr>
 
             </table>
-
           </div>
         </div>
       </div>

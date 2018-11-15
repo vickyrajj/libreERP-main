@@ -67,6 +67,78 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
          $scope.data = payroll;
          console.log($scope.data);
 
+         // $scope.joiningDate =new Date($scope.data.joiningDate);
+         // $scope.joiningDateYear = $scope.joiningDate.getFullYear();
+         // $scope.joiningMonth =  $scope.joiningDate.getMonth();
+         //
+         // $scope.currentDate = new Date()
+         // $scope.currentYear = new Date().getFullYear()
+         // $scope.currentMonth =  new Date().getMonth();
+         //
+         // if($scope.data.lastWorkingDate!=null){
+         //   $scope.lastWorkingDate =new Date($scope.data.lastWorkingDate);
+         //   $scope.lastWorkingYear = $scope.lastWorkingDate.getFullYear();
+         //   $scope.lastWorkingMonth = $scope.lastWorkingDate.getMonth();
+         // }
+         // else{
+         //   $scope.lastWorkingDate = $scope.currentDate
+         //   $scope.lastWorkingYear = $scope.currentYear
+         //   $scope.lastWorkingMonth = $scope.currentMonth
+         // }
+         //
+         //
+         //
+         //
+         // if ($scope.lastWorkingYear<$scope.currentYear) {
+         //   $scope.currentYear = $scope.lastWorkingYear
+         //   $scope.currentDate = $scope.lastWorkingDate
+         // }
+         //
+         //
+         //
+         // $scope.$watch('currentYear', function(newValue, oldValue) {
+         //
+         //   console.log($scope.joiningMonth,$scope.lastWorkingMonth);
+         //   $scope.monthsData =[]
+         //   $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+         //   if($scope.joiningDateYear==$scope.lastWorkingYear){;
+         //     if($scope.joiningMonth==$scope.lastWorkingMonth){
+         //       $scope.monthsData.push($scope.months[$scope.joiningMonth])
+         //     }
+         //     else{
+         //       $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.lastWorkingMonth-1)
+         //     }
+         //   }
+         //   else if(newValue==$scope.joiningDateYear){
+         //     $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.months.length)
+         //   }
+         //   else if(newValue==$scope.lastWorkingYear){
+         //     $scope.monthsData =  $scope.months.splice(0,$scope.lastWorkingMonth+1)
+         //   }
+         //   else{
+         //     $scope.monthsData = $scope.months
+         //   }
+         // })
+         //
+         // $scope.next = function() {
+         //   if($scope.lastWorkingYear == $scope.currentYear ){
+         //     return ;
+         //   }
+         //   else{
+         //   $scope.currentYear += 1;
+         //   }
+         // }
+         //
+         // $scope.prev = function() {
+         //   if($scope.joiningDateYear == $scope.currentYear ){
+         //     return ;
+         //   }
+         //   else{
+         //   $scope.currentYear -= 1;
+         //   }
+         // }
+
+
          $scope.joiningDate =new Date($scope.data.joiningDate);
          $scope.joiningDateYear = $scope.joiningDate.getFullYear();
          $scope.joiningMonth =  $scope.joiningDate.getMonth();
@@ -86,38 +158,56 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
            $scope.lastWorkingMonth = $scope.currentMonth
          }
 
-
-
-
          if ($scope.lastWorkingYear<$scope.currentYear) {
            $scope.currentYear = $scope.lastWorkingYear
            $scope.currentDate = $scope.lastWorkingDate
          }
 
 
+         $scope.monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-         $scope.$watch('currentYear', function(newValue, oldValue) {
-
-           console.log($scope.joiningMonth,$scope.lastWorkingMonth);
-           $scope.monthsData =[]
+         $scope.allData = function(currentYear) {
            $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-           if($scope.joiningDateYear==$scope.lastWorkingYear){;
+           $scope.currentYear = currentYear
+           $scope.monthsData =[]
+           if($scope.joiningDateYear==$scope.lastWorkingYear){
              if($scope.joiningMonth==$scope.lastWorkingMonth){
                $scope.monthsData.push($scope.months[$scope.joiningMonth])
              }
              else{
-               $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.lastWorkingMonth-1)
+               $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.lastWorkingMonth)
              }
            }
-           else if(newValue==$scope.joiningDateYear){
+           else if($scope.currentYear==$scope.joiningDateYear){
              $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.months.length)
            }
-           else if(newValue==$scope.lastWorkingYear){
+           else if($scope.currentYear==$scope.lastWorkingYear){
              $scope.monthsData =  $scope.months.splice(0,$scope.lastWorkingMonth+1)
            }
            else{
              $scope.monthsData = $scope.months
            }
+         }
+         $scope.$watch('currentYear', function(newValue, oldValue) {
+           $scope.allData(newValue)
+
+           $http({
+             method: 'GET',
+             url: '/api/payroll/payslip/?user=' + $scope.data.user + '&year=' + newValue
+           }).
+           then(function(response) {
+             $scope.monthsForWhichPayslipsExist = []
+             $scope.paySlips= response.data;
+
+             for (var i = 0; i < $scope.paySlips.length; i++) {
+               $scope.monthsForWhichPayslipsExist.push($scope.monthsList[$scope.paySlips[i].month -1]);
+             }
+
+           })
+
+
+           console.log($scope.joiningMonth,$scope.lastWorkingMonth);
+
          })
 
          $scope.next = function() {
@@ -126,6 +216,8 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
            }
            else{
            $scope.currentYear += 1;
+           $scope.allData($scope.currentYear)
+           $scope.attendance = false;
            }
          }
 
@@ -135,6 +227,8 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
            }
            else{
            $scope.currentYear -= 1;
+           $scope.allData($scope.currentYear)
+           $scope.attendance = false;
            }
          }
 
@@ -145,10 +239,10 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
            }
 
            $scope.attendance = false;
-           $scope.download = false;
-           $scope.view = function(month){
+
+           $scope.view = function(n){
                $scope.monthss = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-                $scope.download = false;
+
                 function monthIndex(mon){
                   for(var i=0;i<=$scope.monthss.length;i++){
                   if($scope.monthss.includes(mon)){
@@ -159,18 +253,11 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
               function daysInMonth (month, year) {
                   return new Date(year, month, 0).getDate();
               }
-              $scope.indexMonth = monthIndex(month);
+              $scope.indexMonth = monthIndex(n);
               $scope.days = daysInMonth($scope.indexMonth,$scope.currentYear);
-
-                $scope.attendance = true;
+              $scope.attendance = true;
            }
-           $scope.load=function(){
-             $scope.attendance = false;
 
-
-             $scope.download = true;
-
-           }
          },
        })
      }
