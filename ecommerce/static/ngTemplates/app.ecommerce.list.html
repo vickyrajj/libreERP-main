@@ -1,5 +1,5 @@
 <div class="row" style="margin:0px;">
-  <div class="col-md-10 col-md-offset-1 hidden-xs hidden-sm" style="padding-right:10px;padding-left:10px;padding-top:0px;padding-bottom:20px" >
+  <div class="col-md-10 col-md-offset-1 hidden-xs hidden-sm" style="padding-right:10px;padding-left:10px;padding-top:0px;padding-bottom:20px" ng-if="categoryScroll">
       <ng-owl-carousel class="owl-theme" owl-items="genericProducts" owl-properties="categoryProperties" owl-ready="ready($api)">
         <div ng-repeat="g in genericProducts| limitTo:5" style="padding:10px;">
           <div class="anim-in-out anim-zoom-out" >
@@ -17,11 +17,23 @@
           </div>
         </div>
       </ng-owl-carousel>
-
-
-
-
-    <!-- </div> -->
+  </div>
+  <div class="col-md-10 col-md-offset-1 hidden-xs hidden-sm" style="padding-right:10px;padding-left:10px;padding-top:0px;padding-bottom:20px" ng-if="!categoryScroll" >
+        <div class="col-md-3" ng-repeat="g in genericProducts| limitTo:4" style="padding:10px;">
+          <div class="anim-in-out anim-zoom-out" >
+            <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
+              <div class="row">
+                <div class=" card bg-white text-center" style="width: 100%;padding-bottom:0px;overflow:hidden;">
+                  <img style="width: 100%;" class="img" ng-src="{{g.visual}}" ng-if="g.visual.length>0">
+                  <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" ng-if="g.visual==none">
+                </div>
+              </div>
+              <div class="row" style="padding-top:5px;">
+                <h5 class="text-center" style="margin:0px;">{{g.name}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
   </div>
 
   <div class="col-xs-12 col-sm-12 hidden-md hidden-lg" style="padding:0px;">

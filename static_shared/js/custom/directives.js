@@ -1025,6 +1025,7 @@ app.directive('productCard', function() {
                 }
               }).
               then(function(response) {
+
               })
             }
           }

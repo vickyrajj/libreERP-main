@@ -2993,9 +2993,6 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
 
 
-
-
-
   $rootScope.addToCart = []
   $scope.addTCart = getCookie('addToCart')
   if ($scope.addTCart != '') {
@@ -3445,6 +3442,20 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
           $rootScope.inFavourite.push(response.data[i])
         }
       }
+
+      // for (var i = 0; i < $rootScope.inCart.length; i++) {
+      //   console.log($rootScope.inCart[i].product.variantsInStoreQty,'%%%%%%%%%%%%%%%%%%%%');
+      //   for (var j = 0; j <$rootScope.inCart[i].product.variantsInStoreQty.length; j++) {
+      //     if($rootScope.inCart.product_variants!=null){
+      //       if($rootScope.inCart[i].product_variants.pk==$rootScope.inCart[i].product.variantsInStoreQty[j].productVariant){
+      //         console.log($rootscope.inCart[i].product.variantsInStoreQty[j].pk,'%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+      //       }
+      //     }
+      //
+      //   }
+      //
+      // }
+
     })
   }
 
@@ -3946,6 +3957,16 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
 
   $scope.listProdLimit = 24;
   $scope.listProdOffset = 0;
+
+  $scope.categoryScroll = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=categoryScroll').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.categoryScroll = true
+      }
+    }
+  });
 
 
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=secondBanner').

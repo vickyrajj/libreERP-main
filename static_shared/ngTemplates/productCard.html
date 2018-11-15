@@ -9,7 +9,7 @@
       <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved>0 && me.pk">
           <i class="fa fa-heart  fa-2x"></i>
         </span>
-      <div class="card bg-white text-center" style="width: 100%; padding-bottom:0px;overflow:hidden;height:225px;">
+      <div class="card bg-white text-center" style="padding-bottom:0px;overflow:hidden;height:37vh;">
         <img style="width: 100%;" class="img" ng-src="{{list.files[0].attachment}}" ng-if="list.files.length>0">
         <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" ng-if="list.files==null">
       </div>
