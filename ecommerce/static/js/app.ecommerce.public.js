@@ -3193,6 +3193,17 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       }
     }
   })
+
+  $scope.topStaticBanner = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=topStaticBanner').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.topStaticBanner = true
+      }
+    }
+  })
+
   $scope.search = function() {
     if (typeof $scope.searchProduct.product == 'object') {
       if ($scope.searchProduct.product.typ == 'list') {

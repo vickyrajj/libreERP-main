@@ -136,7 +136,14 @@
 </div>
 
   <hr style="margin:0px;border: solid 2px #DCDCDC;">
-<div ng-if="$state.is('ecommerce') && bannerText && bannerImage" style="position:relative;height:70vh;padding-top:9.4vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
+  <div ng-if="topStaticBanner" class="col-md-12 hidden-xs hidden-sm" style="padding:{{topLevelMenu?'9.4vh':'5.4vh'}} 0 0 0;position:relative; width:100%; text-align:center">
+    <img src="/static/images/online_store-banner.jpg" style="width:100%" alt="">
+  </div>
+  <div ng-if="topStaticBanner" class="col-md-12 hidden-lg hidden-md" style="padding:14.6vh 0 0 0;position:relative; width:100%; text-align:center">
+    <img src="/static/images/mobile-logo.jpg" style="width:50%;" alt="">
+  </div>
+<div ng-if="$state.is('ecommerce') && bannerText && bannerImage" style="position:relative;height:70vh;padding-top:9.4vh;margin-bottom:20px;
+width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
   <img style="width:100%;cursor:pointer;height:57vh;background-attachment: fixed;background-position: center;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
 
 
@@ -152,20 +159,23 @@
   </div>
 </div>
 
-<div ng-if="$state.is('ecommerce')&& !bannerText && bannerImage" style="position:relative;width:100%;display:border-box;overflow:hidden;background-size:cover;{{topLevelMenu?'margin-top:9vh':'margin-top:5vh'}}" class="hidden-xs hidden-sm ">
+<div ng-if="$state.is('ecommerce')&& !bannerText && bannerImage" style="position:relative;width:100%;display:border-box;overflow:hidden;
+background-size:cover;{{topLevelMenu?'margin-top:9vh':'margin-top:5vh'}}" class="hidden-xs hidden-sm">
   <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
     <img class="owl-lazy" style="width:100%;" data-ng-repeat="b in slide.banners" data-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
   </ng-owl-carousel>
 
   <div class="col-md-12" style="padding-left:0px;position:absolute;top:25vh;z-index:9;">
-    <button class="previous round text-center" style="background-color:white;color:#808080;position:absolute;font-size:50px;width:60px;border:0px white; box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px;border-radius:0px 30px 30px 0px;" ng-click="change('previous')">&#8249; </button>
+    <button class="previous round text-center" style="background-color:white;color:#808080;position:absolute;font-size:50px;
+    width:60px;border:0px white; box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px;border-radius:0px 30px 30px 0px;" ng-click="change('previous')">&#8249; </button>
     <button class="next round text-center" style="background-color: white ;color: #808080;position:absolute;right: 0;font-size:50px;padding-right:10px;border:0px white;box-shadow: 0px 15px 20px rgba(4, 14, 14, 0.4);height:100px;width:60px;border-radius:30px 0px 0px 30px"
       ng-click="change('next')">&#8250;
       </button>
   </div>
 </div>
 
-<div ng-if="$state.is('ecommerce')&& bannerText && bannerImage" style="position:relative;height:50vh;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
+<div ng-if="$state.is('ecommerce')&& bannerText && bannerImage" style="position:relative;height:50vh;margin-bottom:20px;
+width:100%;display:border-box;overflow:hidden;" class="card hidden-md hidden-lg">
   <img class="anim-in-out" data-anim-speed="100" style="height:100%;cursor:pointer;" ng-if="$index == slideMobile.active" ng-repeat="b in slideMobile.banners" ng-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
   <div class="row" style="background-color:#525252;position:absolute;bottom:0px;width:100%; height:6vh;margin:0px;">
     <ul style="padding:0px;">
@@ -180,7 +190,8 @@
 </div>
 
 
-<div ng-if="$state.is('ecommerce')&& !bannerText&&bannerImage" style="position:relative;margin-bottom:10px;width:100%;display:border-box;overflow:hidden;margin-top:9vh;" class=" hidden-md hidden-lg">
+<div ng-if="$state.is('ecommerce')&& !bannerText&&bannerImage" style="position:relative;margin-bottom:10px;width:100%;
+display:border-box;overflow:hidden;margin-top:{{topStaticBanner?'0vh':'9vh'}} ;" class=" hidden-md hidden-lg">
   <ng-owl-carousel class="owl-theme" owl-items="slide.banners" owl-properties="properties" owl-ready="ready($api)">
       <img class="owl-lazy" style="width:100%" data-ng-repeat="b in slide.banners" data-src="{{b.imagePortrait}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})">
   </ng-owl-carousel>
