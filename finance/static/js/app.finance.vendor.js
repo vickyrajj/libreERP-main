@@ -11,7 +11,6 @@ app.controller('businessManagement.finance.vendor', function($scope, $http, $asi
         itemTemplate: '/static/ngTemplates/app.finance.vendor.item.html',
     }, ];
 
-
     $scope.config = {
         views: views,
         url: '/api/finance/vendorprofile/',
@@ -210,7 +209,6 @@ app.controller("businessManagement.finance.vendor.item", function($scope, $state
 })
 
 
-
 app.controller("businessManagement.finance.vendor.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
 
 
@@ -219,6 +217,12 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
     }
 
     $scope.items = []
+    $scope.resetRow = function() {
+    $scope.items.pop({
+        particular: '',
+        rate: '',
+    });
+  }
 
     $scope.addTableRow = function() {
         $scope.items.push({
@@ -228,21 +232,21 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
         console.log($scope.items);
     }
 
-    $scope.totalRate = function() {
-
-        if ($scope.items == undefined) {
-            return 0;
-        }
-
-        var total = 0;
-        for (var i = 0; i < $scope.items.length; i++) {
-            if ($scope.items[i].rate != undefined) {
-                total += $scope.items[i].rate;
-            }
-        }
-        return total
-        // console.log('aaaaaa', total);
-    }
+    // $scope.totalRate = function() {
+    //
+    //     if ($scope.items == undefined) {
+    //         return 0;
+    //     }
+    //
+    //     var total = 0;
+    //     for (var i = 0; i < $scope.items.length; i++) {
+    //         if ($scope.items[i].rate != undefined) {
+    //             total += $scope.items[i].rate;
+    //         }
+    //     }
+    //     return total
+    //     // console.log('aaaaaa', total);
+    // }
 
     $scope.deleteTable = function(index) {
         if ($scope.items[index].pk != undefined) {
@@ -262,20 +266,6 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
         }
     };
 
-    $scope.deleteData = function(pk, ind) {
-      $http({
-        method: 'DELETE',
-        url: '/api/finance/VendorService/' + $scope.items[ind].pk + '/'
-      }).
-      then((function(ind) {
-        return function(response) {
-          $scope.VendorService.splice(ind, 1);
-          Flash.create('success', 'Deleted');
-        }
-      })(ind))
-
-    }
-
 
 $scope.fetchData = function(index) {
     $http({
@@ -291,76 +281,52 @@ $scope.fetchData = function(index) {
 }
 $scope.fetchData()
 
-    $scope.save = function() {
 
-        for (var i = 0; i < $scope.items.length; i++) {
-            var url = '/api/finance/vendorservice/'
-            var method = 'POST';
-            if ($scope.items[i].pk != undefined) {
-              url += $scope.items[i].pk + '/'
-              method = 'PATCH';
-            }
-            var toSend = {
-                    particular: $scope.items[i].particular,
-                    rate: $scope.items[i].rate,
-                    vendorProfile: $scope.vendorData.pk,
-                }
-                // console.log(toSend);
+$scope.deleteData = function(pk, index) {
+  console.log('---------------delelelele------------');
+  console.log($scope.vendorServiceData);
+  $scope.vendorServiceData.splice(index, 1);
+  $http({
+    method: 'DELETE',
+    url: '/api/finance/vendorservice/' + pk + '/'
+  }).
+  then((function(index) {
+    return function(response) {
 
-            $http({
-                method: method,
-                url: url,
-                data: toSend
-            }).
-            then((function(i) {
-                return function(response) {
-                    $scope.items[i].pk = response.data.pk;
-                    Flash.create('success', 'Saved');
-                    $scope.fetchData()
-                }
-            })(i))
-
-        }
-
+      Flash.create('success', 'Deleted');
     }
+  })(index))
 
-//   $scope.save = function() {
-//   console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-//
-//
-//   for (var i = 0; i < $scope.items.length; i++) {
-//           if ($scope.configureForm.pk == undefined) {
-//             var method = 'POST';
-//             var url = '/api/finance/vendorservice/'
-//           } else {
-//             var method = 'PATCH';
-//             url += $scope.items[i].pk + '/';
-//           }
-//     }
-//   var toSend = {
-//     particular: $scope.items[i].particular,
-//     rate: $scope.items[i].rate,
-//     vendorProfile: $scope.vendorData.pk,
-//
-//   }
-//
-//   $http({
-//     method: method,
-//     url: url,
-//     data: toSend
-//   }).
-//   then(function(response) {
-//     if ($scope.configureForm.pk == undefined) {
-//       Flash.create('success', 'Saved');
-//       $scope.resetForm();
-//     } else {
-//       Flash.create('success', 'Updated');
-//       $scope.configureForm = response.data
-//     }
-//   })
-//
-// }
+}
+$scope.save = function() {
 
-
+    for (var i = 0; i < $scope.items.length; i++) {
+        var url = '/api/finance/vendorservice/'
+        var method = 'POST';
+        if ($scope.items[i].pk != undefined) {
+          url += $scope.items[i].pk + '/'
+          method = 'PATCH';
+        }
+        var toSend = {
+                particular: $scope.items[i].particular,
+                rate: $scope.items[i].rate,
+                vendorProfile: $scope.vendorData.pk,
+            }
+            // console.log(toSend);
+        $http({
+            method: method,
+            url: url,
+            data: toSend
+        }).
+        then((function(i) {
+            return function(response) {
+                $scope.items[i].pk = response.data.pk;
+                Flash.create('success', 'Saved');
+                $scope.fetchData()
+                $scope.resetRow()
+            }
+        })(i))
+    }
+}
 
 })
