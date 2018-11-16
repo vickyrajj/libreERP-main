@@ -2940,7 +2940,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       items: 1,
       loop : true,
       autoplay : true,
-      autoplayTimeout : 3000,
+      autoplayTimeout : 4000,
       dots: false
   };
 
@@ -3166,6 +3166,19 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     console.log('categories Listtttttttttt',response.data);
     $scope.categoriesList = response.data
   })
+
+  $rootScope.genericImage = {}
+  $http({
+    method: 'GET',
+    url: '/api/ecommerce/genericImage/'
+  }).
+  then(function(response) {
+    console.log(response.data);
+    if (response.data.length > 0) {
+      $rootScope.genericImage = response.data[0]
+    }
+  })
+
 
   $scope.genericProductSearch = function(query) {
     if ($rootScope.multiStore) {

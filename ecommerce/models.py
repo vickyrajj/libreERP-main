@@ -313,3 +313,5 @@ class GenericImage(models.Model):
     paymentPortrait = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     searchBgImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     blogPageImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    topBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    topMobileBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)

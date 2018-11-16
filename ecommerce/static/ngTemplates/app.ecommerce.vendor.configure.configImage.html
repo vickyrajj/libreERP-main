@@ -26,6 +26,14 @@
           <label>Blog Background Image (In Blog  Page)</label>
           <input type="file" file-model="form.blogPageImage">
         </div>
+        <div class="form-group" ng-if="topStaticBanner">
+          <label>Top Image (Static Banner)</label>
+          <input type="file" file-model="form.topBanner">
+        </div>
+        <div class="form-group" ng-if="topStaticBanner">
+          <label>Top Image  (Static Banner For Mobile)</label>
+          <input type="file" file-model="form.topMobileBanner">
+        </div>
         <button type="button" class="btn btn-primary" ng-click="addImage()">
           Save
         </button>
