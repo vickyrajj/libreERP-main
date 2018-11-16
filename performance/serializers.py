@@ -9,9 +9,14 @@ import os
 from projects.serializers import projectLiteSerializer
 from datetime import datetime
 
+class TimeSheetLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeSheet
+        fields = ('pk','created','user','date','approved')
 
 class TimeSheetItemSerializer(serializers.ModelSerializer):
     project = projectLiteSerializer(many = False ,read_only = True)
+    parent = TimeSheetLiteSerializer(many = False ,read_only = True)
     class Meta:
         model = TimeSheetItem
         fields = ('pk','parent','project','duration','comment','approvalComment')

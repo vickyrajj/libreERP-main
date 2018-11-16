@@ -62,6 +62,11 @@ RESULT_CHOICES = (
 def getClientRelationshipContract(instance , filename ):
     return 'clientRelationships/contracts/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
+BILLING_TYPE_CHOICES = (
+    ('fixed' , 'fixed'),
+    ('monthly' , 'monthly'),
+    ('hourly' , 'hourly')
+)
 
 class Deal(models.Model):
     user = models.ForeignKey(User , related_name = 'dealsCreated' , null = False) # the user created it
@@ -83,6 +88,8 @@ class Deal(models.Model):
     rate = models.PositiveIntegerField(null=True , default=0)
     duePenalty = models.PositiveIntegerField(null=True , default=0)
     duePeriod = models.PositiveIntegerField(null = False , default=7) #  7 days by default
+    billingType = models.CharField(choices = BILLING_TYPE_CHOICES, null = True, max_length = 7 )
+
 
 def getClientRelationshipActivity(instance , filename ):
     return 'clientRelationships/activity/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)

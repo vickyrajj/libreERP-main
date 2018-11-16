@@ -45,4 +45,4 @@ class TimeSheetItemViewSet(viewsets.ModelViewSet):
     serializer_class = TimeSheetItemSerializer
     queryset = TimeSheetItem.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['parent' ]
+    filter_fields = ['parent' , 'project' ]

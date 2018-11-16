@@ -117,3 +117,33 @@ class ExpenseSheetSerializer(serializers.ModelSerializer):
                 instance.submitted = True
         instance.save()
         return instance
+
+from ERP.serializers import serviceLiteSerializer
+
+class VendorProfileSerializer(serializers.ModelSerializer):
+    service = serviceLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = VendorProfile
+        fields = ('pk', 'service' , 'contactPerson', 'created' , 'email' , 'mobile' , 'paymentTerm' ,  'contentDocs' )
+    def create(self , validated_data):
+        v = VendorProfile(**validated_data)
+        if 'service' in self.context['request'].data:
+            serviceObj = service.objects.get(pk=int(self.context['request'].data['service']))
+            serviceObj.vendor = True
+            serviceObj.save()
+            v.service = serviceObj
+        v.save()
+        return v
+
+
+class VendorServiceSerializer(serializers.ModelSerializer):
+    vendorProfile = VendorProfileSerializer(many = False , read_only = True)
+    class Meta:
+        model = VendorService
+        fields = ('pk', 'vendorProfile' , 'particular', 'rate' )
+    def create(self , validated_data):
+        i = VendorService(**validated_data)
+        if 'vendorProfile' in self.context['request'].data:
+            i.vendorProfile = VendorProfile.objects.get(pk=int(self.context['request'].data['vendorProfile']))
+        i.save()
+        return i

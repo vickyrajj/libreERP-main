@@ -147,6 +147,8 @@ app.controller("businessManagement.clientRelationships.relationships.quote.notif
 });
 
 
+
+
 app.controller("businessManagement.clientRelationships.relationships.manage", function($scope, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
 
 
@@ -357,6 +359,7 @@ app.controller("businessManagement.clientRelationships.relationships.manage", fu
   }
 
 
+
   $scope.fetchDeal = function() {
     $http({method : 'GET' , url : '/api/clientRelationships/deal/' + $scope.tab.data.pk + '/'}).
     then(function(response) {
@@ -375,7 +378,91 @@ app.controller("businessManagement.clientRelationships.relationships.manage", fu
   $scope.minInfo = false;
   $scope.fetchDeal();
 
+
+
+  //===============================================
+  $scope.update = function() {
+      $uibModal.open({
+        templateUrl : '/static/ngTemplates/app.clientRelationships.update.form.html',
+        // placement: 'left',
+        size: 'md',
+        backdrop : true,
+        resolve : {
+          deal : function() {
+            return $scope.deal;
+          }
+
+        },
+        controller : 'businessManagement.clientRelationships.update.form'
+      }).result.then(function (d) {
+        $scope.fetchDeal();
+      }, function (d) {
+        $scope.fetchDeal();
+      });
+    }
+
+  //============================================
+
+
+
 });
+
+
+
+//==============================================================
+app.controller('businessManagement.clientRelationships.update.form', function($scope, $state, $users, $http, Flash, $timeout,$uibModal, $filter , $permissions , deal ) {
+
+  // $scope.reset = function() {
+  //   $scope.form = {user : '' ,value : '' ,billingType : '' ,requirements : '' ,rate : '' ,closeDate : '' }
+  // }
+  $scope.currency = ['inr' , 'usd']
+  //
+  $scope.setCurrency = function(cur) {
+    $scope.form.currency = cur;
+  }
+
+  $scope.form = {user : deal.user ,currency : deal.currency, value : deal.value ,billingType : deal.billingType ,requirements : deal.requirements ,rate : deal.rate ,closeDate : deal.closeDate ,tin : deal.company.tin}
+
+  $scope.userSearch = function(query) {
+    //search for the user
+    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
+
+  $scope.save = function() {
+    var dataToSend = {
+      user : $scope.form.user.pk,
+      currency : $scope.form.currency,
+      value : $scope.form.value ,
+      billingType : $scope.form.billingType,
+      requirements :$scope.form.requirements,
+      rate : $scope.form.rate ,
+      closeDate : $scope.form.closeDate ,
+      tin : $scope.form.tin
+    };
+    tin = $scope.form.tin;
+    $http({method : 'PATCH' , url : '/api/clientRelationships/deal/' + deal.pk +  '/',data: dataToSend}).
+    then(function(response) {
+      // console.log(deal.company.pk,'fhbvdhfvsdhfvsdhfv---------------------',tin);
+      //
+
+    });
+    $http({method : 'PATCH' , url : '/api/ERP/service/' + deal.company.pk +'/',data : {tin : tin}}).
+    then(function(response) {
+      Flash.create('success' , 'Saved');
+      return
+    });
+  }
+
+
+
+});
+//===========================================================================================
+
+
 
 app.controller("businessManagement.clientRelationships.relationships.item", function($uibModal, $scope, $state, $users, $stateParams, $http, Flash) {
 

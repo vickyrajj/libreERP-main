@@ -39,3 +39,16 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         u = self.request.user
         return Invoice.objects.all()
+
+class VendorProfileViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = VendorProfileSerializer
+    queryset = VendorProfile.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['name']
+class VendorServiceViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = VendorServiceSerializer
+    queryset = VendorService.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['vendorProfile']

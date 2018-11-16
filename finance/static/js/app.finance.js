@@ -39,6 +39,11 @@ app.config(function($stateProvider){
     templateUrl: '/static/ngTemplates/app.finance.inflow.html',
     controller: 'businessManagement.finance.inflow'
   })
+  .state('businessManagement.finance.vendor', {
+    url: "/vendor",
+    templateUrl: '/static/ngTemplates/app.finance.vendor.html',
+    controller: 'businessManagement.finance.vendor'
+  })
 });
 
 

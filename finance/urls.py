@@ -11,6 +11,8 @@ router.register(r'transaction' , TransactionViewSet , base_name ='transaction')
 router.register(r'expenseSheet' , ExpenseSheetViewSet , base_name ='expenseSheet')
 router.register(r'invoices' , InvoiceViewSet , base_name ='invoices')
 router.register(r'inflow' , InflowViewSet , base_name ='inflow')
+router.register(r'vendorprofile' , VendorProfileViewSet , base_name ='vendorprofile')
+router.register(r'vendorservice' , VendorServiceViewSet , base_name ='vendorservice')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

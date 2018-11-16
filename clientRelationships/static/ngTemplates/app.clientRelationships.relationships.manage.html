@@ -122,18 +122,23 @@
           <div class="col-md-5">
             <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">VALUATION </span><br>
             <span style="font-size:17px;"> <i class="fa fa-{{deal.currency | lowercase}} fa-lg text-muted"></i> {{deal.value}}</span>
-            <button type="button" class="btn btn-default btn-sm" ng-click="editQuote()">
+            <div class="btn-group">
+            <button type=button class="btn btn-default btn-sm" ng-click="editQuote()">
               <i class="fa fa-plus"></i> Quote
             </button>
+            <button type="button" class="btn btn-default btn-sm" ng-click="update()">Update</button>
+            </div>
           </div>
           <div class="col-md-3">
             <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">CLOSING DATE </span><br>
             <span style="font-size:17px;"> <i ng-if="minInfo" class="fa fa-calendar fa-lg text-muted" style="margin-right:20px;"></i> {{deal.closeDate | date:'dd-MMM-yyyy'}}</span>
           </div>
+
           <div class="col-md-4">
             <span ng-if="!minInfo" class="text-muted" style="font-size:13px;">OWNER </span><br>
-            <img ng-src="{{deal.user | getDP}}" class="img img-rounded" style="{{ !minInfo? 'height:40px;width:40px':'height:30px;width:30px'}};"> <span style="font-size:17px;">{{deal.user | getName}}</span>
-          </div>
+            <img ng-src="{{deal.user.pk | getDP}}" class="img img-rounded" style="{{ !minInfo? 'height:40px;width:40px':'height:30px;width:30px'}};"> <span style="font-size:17px;">{{deal.user | getName}}</span>
+
+        </div>
         </div>
       </div>
     </div>

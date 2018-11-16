@@ -4,6 +4,7 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
 from .models import *
+from performance.models import *
 # Create your views here.
 
 
@@ -43,7 +44,7 @@ class timelineItemViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['project', 'category']
 
-class projectIssueViewSet(viewsets.ModelViewSet):
+class IssueViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = projectIssueSerializer
-    queryset = issues.objects.all()
+    serializer_class = IssueSerializer
+    queryset = Issues.objects.all()

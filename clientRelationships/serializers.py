@@ -12,6 +12,11 @@ import os
 from django.conf import settings as globalSettings
 
 
+class userMinLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' )
+
 class ContactLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
@@ -53,9 +58,10 @@ class DealLiteSerializer(serializers.ModelSerializer):
 class DealSerializer(serializers.ModelSerializer):
     company = serviceLiteSerializer(many = False , read_only = True)
     contacts = ContactLiteSerializer(many = True , read_only = True)
+    user = userMinLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Deal
-        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'contracts' , 'doc', 'duePeriod' , 'duePenalty')
+        fields = ('pk' , 'user' , 'created' , 'updated' , 'company','value', 'currency', 'state', 'contacts' , 'internalUsers' , 'requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'contracts' , 'doc', 'duePeriod' , 'duePenalty','rate','billingType')
         read_only_fields = ('user','contracts', 'internalUsers',)
     def create(self , validated_data):
         d = Deal(**validated_data)
@@ -72,12 +78,16 @@ class DealSerializer(serializers.ModelSerializer):
         return d
 
     def update(self ,instance, validated_data):
-        for key in ['value', 'currency', 'state','requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'value']:
+        for key in ['user','value', 'currency', 'state','requirements' , 'probability' , 'closeDate' , 'active', 'name', 'result', 'value','rate','billingType']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 print "Error while saving " , key
                 pass
+
+        if 'user' in self.context['request'].data:
+            instance.user = User.objects.get(pk = self.context['request'].data['user'])
+
         if 'company' in self.context['request'].data:
             instance.company_id = int(self.context['request'].data['company'])
         instance.save()
