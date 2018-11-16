@@ -27,10 +27,8 @@ def makeOnlinePayment(request):
         return redirect("/api/ERP/ebsPayment/?orderid=" + request.GET['orderid'])
     elif globalSettings.PAYMENT_MODE == 'paypal':
         return redirect("/paypalPaymentInitiate/?orderid=" + request.GET['orderid'])
-
-def ebsPaymanetResponse(request):
-    #pass
-    return ""
+    elif globalSettings.PAYMENT_MODE == 'PAYU':
+        return redirect("/payuPaymentInitiate/?orderid=" + request.GET['orderid'])
 
 
 from django.http import HttpResponse

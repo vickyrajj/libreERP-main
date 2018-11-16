@@ -137,13 +137,13 @@ INSTALLED_APPS = (
 
 
 #payu payment gateway settings
-PAYU_MERCHANT_KEY = "gtKFFx",
-PAYU_MERCHANT_SALT = "eCwWELxi",
+PAYU_MERCHANT_KEY = "gtKFFx"
+PAYU_MERCHANT_SALT = "eCwWELxi"
 # And add the PAYU_MODE to 'TEST' for testing and 'LIVE' for production.
 PAYU_MODE = "TEST"
 
 
-PAYMENT_MODE = 'paypal' # options are EBS , paypal , paytm , PAYU
+PAYMENT_MODE = 'PAYU' # options are EBS , paypal , paytm , PAYU
 
 
 # paypal payment gateway details

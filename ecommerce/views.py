@@ -114,19 +114,6 @@ if defaultSettingsData.count()>0:
 from payu.gateway import get_hash , payu_url
 from uuid import uuid4
 
-def makePayment():
-    data = {
-        'txnid':uuid4().hex, 'amount':10.00, 'productinfo': 'Sample Product',
-        'firstname': 'test', 'email': 'test@example.com', 'udf1': 'Userdefined field',
-    }
-    hash_value = get_hash(data)
-
-
-def success_response(request):
-    hash_value = check_hash(request.POST)
-    if check_hash(request.POST):
-        return HttpResponse("Transaction has been Successful.")
-
 
 def ecommerceHome(request):
     print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
@@ -1685,3 +1672,53 @@ def paypalPaymentInitiate(request):
     form = PayPalPaymentsForm(initial=paypal_dict)
     context = {"form": form}
     return render(request, "paypal.payment.html", context)
+
+import uuid
+def payuPaymentInitiate(request):
+    # What you want the button to do.
+    orderid = request.GET['orderid']
+    orderObj = Order.objects.get(pk=orderid)
+
+
+
+    hashSequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10";
+
+    hash_string = '';
+    hashVarsSeq = hashSequence.split('|');
+    trxnID = str(uuid.uuid4())
+    posted = {"key"  : globalSettings.PAYU_MERCHANT_KEY ,
+        "txnid" : trxnID ,
+        "amount" : "200",
+        "productinfo" : "Rice",
+        "firstname" : orderObj.user.first_name,
+        "email" : orderObj.user.email}
+
+    for hvs in hashVarsSeq:
+        try:
+            hash_string += posted[hvs];
+        except:
+            hash_string += ''
+
+        hash_string += '|'
+
+    hash_string += globalSettings.PAYU_MERCHANT_SALT
+    print hash_string
+    hashh = hashlib.sha512(hash_string).hexdigest()
+    print "hashh : " , hashh
+    formData =  {
+        "action" : payu_url(),
+        "key": globalSettings.PAYU_MERCHANT_KEY,
+        "txnid": trxnID,
+        "amount" : "200",
+        "productinfo" : "Rice",
+        "firstname" : orderObj.user.first_name,
+        "email" : orderObj.user.email,
+        "phone" : '9702438730',
+        "surl" :  'https://localhost:8000/api/v1/makePayment/',
+        "furl" : 'https://localhost:8000/api/v1/makePayment/',
+        "hash" : hashh
+    }
+
+    print formData
+
+    return render(request , 'payu.payment.html' , formData)
