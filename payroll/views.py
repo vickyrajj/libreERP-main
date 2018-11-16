@@ -66,7 +66,7 @@ class payslipViewSet(viewsets.ModelViewSet):
     queryset = Payslip.objects.all()
     serializer_class = payslipSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['month','year','status']
+    filter_fields = ['month','year' , 'user']
 
 class payrollReportViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
@@ -171,6 +171,108 @@ class GetPayslip(APIView):
         response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
         payslip(response , payrol , user ,report, request)
         return response
+
+months = ["","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+def convertmonth(mon):
+    for i in months:
+        if mon in months:
+            return months.index(mon)
+
+
+def paysMonthlyslip(response ,paySlip,userObj,month,year, request):
+    # print '999999999999999999999999999999999999999',paySlip.hra,userObj.first_name+' '+userObj.last_name
+    # casualleaves = 0
+    # sickleaves = 0
+    # earnedleaves = 0
+    # if leaves!="null":
+    #     for i in leaves:
+    #         if i.status == "approved":
+    #             if i.category == 'ML':
+    #                 sickleaves +=days
+            # casualleaves=reportTableData
+
+    settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+    now = datetime.datetime.now()
+    monthint = convertmonth(month)
+    print monthint,'@@@@@@@@@@@@@@@@@@@@@@@@'
+    monthdays=calendar.monthrange(int(year), int(monthint))[1]
+    print monthdays,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    currencyType='INR'
+    s=CurrencyCodes().get_symbol(currencyType) # currencysymbol
+    if currencyType == 'INR':
+        s='Rs.'
+    absent=0
+    daysPresent=monthdays
+    paidHolidays=0
+    accountNumber=paySlip.accountNumber
+
+    (empCode,name,location,department,grade,designation,pfNo,escisNo,pan,sbs)=(str(paySlip.joiningDate.year)+str(userObj.pk) ,userObj.first_name+' '+userObj.last_name,'Bangalore',userObj.designation.department.dept_name,'E.1',userObj.designation.role.name,userObj.payroll.pfAccNo,userObj.payroll.esic,userObj.payroll.pan,userObj.payroll.basic)
+    (days,ml,al,cl,adHocLeaves,balanceSL,balanceCL,balanceCO)=(daysPresent,userObj.payroll.ml,userObj.payroll.al,0,userObj.payroll.adHocLeaves,0,0,0)
+
+    taxded =( (userObj.payroll.basic + userObj.payroll.special + userObj.payroll.amount)*userObj.payroll.taxSlab)/100
+    # (basicSalary,hra,cn,cr,mr,oe)=(sbs,50000,40000,0,40000,0)
+    (basic,hra,special,lta,adHoc,amount,pf)=(userObj.payroll.basic,userObj.payroll.hra,userObj.payroll.special,userObj.payroll.lta,userObj.payroll.adHoc,userObj.payroll.amount,userObj.payroll.pfAmnt)
+    (spf,pdf,iol,od)=(userObj.payroll.pfAmnt,taxded,0,0)
+    totalEarnings,deductions=(0,0)
+    # for i in (basicSalary,hra,cn,cr,oe):
+    for i in (basic,hra,special,lta,adHoc,amount,pf):
+        totalEarnings+=i
+    for i in (spf,pdf,iol,od):
+        deductions+=i
+    netpay=totalEarnings-deductions
+
+    styles = getSampleStyleSheet()
+    styledict={'center':ParagraphStyle(name='center', parent=styles['Normal'], alignment=TA_CENTER, fontSize=10)}
+    doc = SimpleDocTemplate(response,pagesize=A3, topMargin=1*cm,)
+    doc.request = request
+    # container for the 'Flowable' objects
+    elements = []
+
+    if userObj.profile.empType == "full time":
+        emptax = "Professional Tax Deduction"
+    else:
+        emptax = "Tax Deduction"
+
+    a=[Paragraph("<para fontSize=25 alignment='Left' textColor=#6375d4><strong>CIOC</strong></para>",styles['Normal']),
+       Paragraph(str(settingsFields.get(name = 'companyName').value )+'<br/><br/>',styledict['center']),
+       Paragraph(str(settingsFields.get(name = 'companyAddress').value)+'<br/>',styledict['center']),
+        Paragraph('<strong>www.cioc.co.in </strong><br/>' ,styledict['center']),
+
+       Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(month,year),styles['Normal'])
+       ]
+    p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To "+str(userObj.payroll.accountNumber)+' '+str(userObj.payroll.bankName),styles['Normal'])
+
+    data=[[a,'','',''],['','','',''],['Emp Code : %s'%(empCode),'Name : %s'%(name),'',''],['Location : %s'%(location),'Department :%s'%(department),'Grade : %s'%(grade),'Designation : %s'%(designation)],
+          ['PF No : %s'%(pfNo),'ESIC No : %s'%(escisNo),'PAN : %s'%(pan),'Standard Basic Salary : %s %d'%(s,sbs)],['Days Paid : %d'%(days),'Days Present : %d'%(daysPresent),'Paid Holidays : %d'%(paidHolidays),'Lwp/Absent : %d'%(absent)],
+          ['Sick Leaves : %d'%(ml),'Annual Leaves : %d'%(al),'Compensatory Leaves : %d'%(cl),'AdHoc Leaves : %d'%(adHocLeaves)],['Balance SL : %d'%(balanceSL),'Balance CL : %d'%(balanceCL),'Balance CO : %d'%(balanceCO),''],['Earnings','Amount','Deductions','Amount'],
+          ['Basic Salary' ,s+' '+str(basic),'Saturatory Provident Fund',s+' '+str(spf)],['HRA',s+' '+str(hra),str(emptax),s+' '+str(pdf)],['Conveyance',s+' '+str(special),'Interest On Loan',s+' '+str(iol)],['Conveyance Reimbursement',s+' '+str(lta),'Other Deduction ',s+' '+str(od)],['Medical Reimbursement',s+' '+str(adHoc),'',''],['Employee Contribution towards PF',s+' '+str(pf),'',''],['Other Earnings',s+' '+str(amount),'',''],
+          ['Total Earnings ',s+' '+str(totalEarnings),'Total Deduction',s+' '+str(deductions)],['','','','Net Pay : %s %d'%(s,netpay)],[p1,'','',''],]
+
+    lines=[('LINEBELOW',(0,1),(-1,1),0.5,black),('LINEBELOW',(0,4),(-1,4),0.5,black),('LINEBELOW',(0,7),(-1,7),0.5,black),('LINEBELOW',(0,8),(-1,8),0.5,black),
+           ('LINEBELOW',(0,15),(-1,15),0.5,black),('LINEBELOW',(0,16),(-1,16),0.5,black),('LINEBELOW',(0,17),(-1,17),0.5,black),('LINEBEFORE',(2,8),(2,17),0.5,black)]
+    spans=[('SPAN',(0,0),(-1,1)),('SPAN',(1,2),(-1,2)),('SPAN',(0,-1),(-1,-1))]
+    aligns=[('ALIGN',(1,8),(1,16),'RIGHT'),('ALIGN',(-1,8),(-1,17),'RIGHT')]
+    rheights=19*[0.3*inch]
+    rheights[1]=0.7*inch
+    t1=Table(data,rowHeights=rheights)
+    t1.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.75, black),]+lines+spans+aligns))
+    elements.append(t1)
+    doc.build(elements)
+
+
+class GetPayMonthlyslip(APIView):
+    def get(self , request , format = None):
+        print '333333333333333333333', request.GET['userid']
+        user = User.objects.get(id = request.GET['userid'])
+        payrol = payroll.objects.get(user = request.GET['userid'])
+        month = request.GET['month']
+        year = request.GET['year']
+        # report = PayrollReport.objects.get(id = request.GET['report'])
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
+        paysMonthlyslip(response , payrol , user ,month,year, request)
+        return response
+
 
 #code for excelSheet
 class PayslipsReport(APIView):

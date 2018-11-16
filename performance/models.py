@@ -26,6 +26,7 @@ class TimeSheet(models.Model):
     status = models.CharField(choices = STATUS_CHOICES , max_length = 10 ,default='created', null = True)
     checkIn = models.DateTimeField(null = True)
     checkOut = models.DateTimeField(null = True)
+    totaltime = models.CharField(null = True,max_length = 20)
 
     class Meta:
         unique_together = ('user', 'date',)

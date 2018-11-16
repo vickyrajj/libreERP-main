@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
 from PIM.serializers import *
+from organization.serializers import *
 import datetime
 from django.core.exceptions import ObjectDoesNotExist , SuspiciousOperation
 
@@ -28,22 +29,28 @@ class rankSerializer(serializers.ModelSerializer):
         fields = ( 'title' , 'category' )
 
 class userDesignationSerializer(serializers.ModelSerializer):
+    division = DivisionLiteSerializer(many = False , read_only = True)
+    unit = UnitsLiteSerializer(many = False , read_only = True)
+    department = DepartmentsSerializer(many = False , read_only = True)
+    role = RoleSerializer(many = False , read_only = True)
     class Meta:
         model = designation
         fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover' ,'division' ,'unit' ,'department' ,'role')
-
         read_only_fields=('user',)
         def create(self , validated_data):
-
             d = designation()
             d.user=User.objects.get(pk=self.context['request'].user)
             d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])
             d.primaryApprover=User.objects.get(pk=self.context['request'].data['primaryApprover'])
             d.secondaryApprover=User.objects.get(pk=self.context['request'].data['secondaryApprover'])
+            d.division=Division.objects.get(pk=self.context['request'].data['division'])
+            d.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
+            d.department=Department.objects.get(pk=self.context['request'].data['department'])
+            if 'reportingTo' in self.context['request'].data:
+                for i in self.context['request'].data['reportingTo']:
+                    instance.reportingTo.add(User.objects.get(pk = i))
             d.save()
             return d
-
-        #  'unitType' , 'domain' , 'rank' , 'unit' , 'department' ,
 class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:

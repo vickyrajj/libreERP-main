@@ -48,38 +48,56 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
     $scope.lastWorkingMonth = $scope.currentMonth
   }
 
-
-
-
   if ($scope.lastWorkingYear<$scope.currentYear) {
     $scope.currentYear = $scope.lastWorkingYear
     $scope.currentDate = $scope.lastWorkingDate
   }
 
 
+  $scope.monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-  $scope.$watch('currentYear', function(newValue, oldValue) {
-
-    console.log($scope.joiningMonth,$scope.lastWorkingMonth);
-    $scope.monthsData =[]
+  $scope.allData = function(currentYear) {
     $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    if($scope.joiningDateYear==$scope.lastWorkingYear){;
+    $scope.currentYear = currentYear
+    $scope.monthsData =[]
+    if($scope.joiningDateYear==$scope.lastWorkingYear){
       if($scope.joiningMonth==$scope.lastWorkingMonth){
         $scope.monthsData.push($scope.months[$scope.joiningMonth])
       }
       else{
-        $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.lastWorkingMonth-1)
+        $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.lastWorkingMonth)
       }
     }
-    else if(newValue==$scope.joiningDateYear){
+    else if($scope.currentYear==$scope.joiningDateYear){
       $scope.monthsData = $scope.months.splice($scope.joiningMonth,$scope.months.length)
     }
-    else if(newValue==$scope.lastWorkingYear){
+    else if($scope.currentYear==$scope.lastWorkingYear){
       $scope.monthsData =  $scope.months.splice(0,$scope.lastWorkingMonth+1)
     }
     else{
       $scope.monthsData = $scope.months
     }
+  }
+  $scope.$watch('currentYear', function(newValue, oldValue) {
+    $scope.allData(newValue)
+
+    $http({
+      method: 'GET',
+      url: '/api/payroll/payslip/?user=' + $scope.data.user + '&year=' + newValue
+    }).
+    then(function(response) {
+      $scope.monthsForWhichPayslipsExist = []
+      $scope.paySlips= response.data;
+
+      for (var i = 0; i < $scope.paySlips.length; i++) {
+        $scope.monthsForWhichPayslipsExist.push($scope.monthsList[$scope.paySlips[i].month -1]);
+      }
+
+    })
+
+
+    console.log($scope.joiningMonth,$scope.lastWorkingMonth);
+
   })
 
   $scope.next = function() {
@@ -88,6 +106,7 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
     }
     else{
     $scope.currentYear += 1;
+    $scope.allData($scope.currentYear)
     }
   }
 
@@ -97,10 +116,30 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
     }
     else{
     $scope.currentYear -= 1;
+    $scope.allData($scope.currentYear)
     }
   }
+  $http({
+    method: 'GET',
+    url: '/api/HR/designation/?user=' + $scope.data.user + '/'
+  }).
+  then(function(response) {
+    $scope.designation = response.data;
+    for (var i = 0; i < $scope.designation.length; i++) {
+        if($scope.designation[i].user == $scope.data.user){
+          $scope.desig = $scope.designation[i];
+          console.log($scope.desig);
 
-})
+      }
+    }
+
+
+  })
+
+
+
+
+});
 
 app.controller("workforceManagement.salary.payslips.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 

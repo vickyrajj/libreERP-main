@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'payslipsReport/$' , PayslipsReport.as_view() ),
     url(r'getReimbursement/$' ,GetReimbursement.as_view()  ),
     url(r'tdsReport/$' ,TDSslipsReport.as_view()  ),
-    url(r'pfReport/$' ,PFslipsReport.as_view()  )
-
+    url(r'pfReport/$' ,PFslipsReport.as_view()  ),
+    url(r'getPayMonthlyslip/$' ,GetPayMonthlyslip.as_view()  )
 
 ]
