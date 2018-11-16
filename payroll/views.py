@@ -66,14 +66,14 @@ class payslipViewSet(viewsets.ModelViewSet):
     queryset = Payslip.objects.all()
     serializer_class = payslipSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['month','year' , 'user']
+    filter_fields = ['month','year','user']
 
 class payrollReportViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = PayrollReport.objects.all()
     serializer_class = payrollReportSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['month','year','status']
+    filter_fields = ['month','year','status','user']
 
 
 #code for pdf

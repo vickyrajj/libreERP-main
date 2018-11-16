@@ -14,7 +14,7 @@ class TimeSheetItemSerializer(serializers.ModelSerializer):
     project = projectLiteSerializer(many = False ,read_only = True)
     class Meta:
         model = TimeSheetItem
-        fields = ('pk','parent','project','duration','comment','approvalComment','totaltime')
+        fields = ('pk','parent','project','duration','comment','approvalComment')
         read_only_fields=('approvalComment', )
     def create(self , validated_data):
         t = TimeSheetItem(**validated_data)
@@ -28,7 +28,7 @@ class TimeSheetSerializer(serializers.ModelSerializer):
     items = TimeSheetItemSerializer(many = True , read_only = True)
     class Meta:
         model = TimeSheet
-        fields = ('pk','created','user','date','approved','approvedBy' , 'items','status' , 'checkIn' , 'checkOut')
+        fields = ('pk','created','user','date','approved','approvedBy' , 'items','status' , 'checkIn' , 'checkOut','totaltime')
         read_only_fields=('user', )
     def create(self , validated_data):
         t = TimeSheet(**validated_data)
@@ -46,6 +46,10 @@ class TimeSheetSerializer(serializers.ModelSerializer):
             return instance
         if 'checkOutTime' in self.context['request'].data:
             instance.checkOut = datetime.now()
+            # instance.checkIn = None
+            instance.save()
+        if 'totaltime' in self.context['request'].data:
+            instance.totaltime = self.context['request'].data['totaltime']
             # instance.checkIn = None
             instance.save()
             return instance

@@ -241,7 +241,7 @@ class userDesignationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = designation.objects.all()
     serializer_class = userDesignationSerializer
-    filter_fields = ['user'  ]
+    filter_fields = ['user']
 
 class userAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin ,)

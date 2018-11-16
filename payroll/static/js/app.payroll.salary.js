@@ -28,6 +28,7 @@ app.controller("controller.warehouse.payroll.openReportInfo", function($scope, $
 app.controller("workforceManagement.salary.payroll.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.data = $scope.tab.data;
+  console.log($scope.data,'xxxxxxxxx');
 
   $scope.joiningDate =new Date($scope.data.joiningDate);
   $scope.joiningDateYear = $scope.joiningDate.getFullYear();
@@ -119,11 +120,13 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
     $scope.allData($scope.currentYear)
     }
   }
+
   $http({
     method: 'GET',
-    url: '/api/HR/designation/?user=' + $scope.data.user + '/'
+    url: '/api/HR/designation/?user=' + $scope.data.user
   }).
   then(function(response) {
+    console.log(response.data,'@@@@@@@@@@@@@@@@@@@');
     $scope.designation = response.data;
     for (var i = 0; i < $scope.designation.length; i++) {
         if($scope.designation[i].user == $scope.data.user){
@@ -135,8 +138,36 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
 
 
   })
+$scope.totalamount=0.0;
+  $http({
+    method: 'GET',
+    url: '/api/payroll/payslip/?user='+$scope.data.user,
+  }).
+  then(function(response) {
+    for (var i = 0; i < response.data.length; i++) {
+        $scope.totalamount += response.data[i].totalPayable;
+    }
 
+})
+$scope.medicalLeave = 0;
+$scope.annualLeave = 0;
+$http({
+  method: 'GET',
+  url: '/api/HR/leave/?user='+$scope.data.user,
+}).
+then(function(response) {
 
+  for (var i = 0; i < response.data.length; i++) {
+      console.log(response.data[i],'kkkkkkkkkk');
+      if ((response.data[i].category == "ML") && (response.data[i].status == "approved")) {
+        $scope.medicalLeave += response.data[i].leavesCount;
+      }
+      if(response.data[i].category == "AL" && response.data[i].status == "approved"){
+        $scope.annualLeave += response.data[i].leavesCount;
+      }
+  }
+
+})
 
 
 });

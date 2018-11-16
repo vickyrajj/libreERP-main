@@ -145,8 +145,9 @@ app.controller("controller.home.myWork", function($scope, $state, $users,$aside,
   $scope.checkout = function() {
     var d = new Date();
     $scope.checkoutTime = d.getTime() - $scope.checkinTime;
-    console.log($scope.checkinTime ,$scope.checkoutTime,'aaaaaaaaaaaa');
-    $scope.total = $scope.checkinTime -$scope.checkoutTime ;
+    console.log($scope.checkoutTime ,$scope.checkinTime);
+
+
     function msToTime(duration) {
         var milliseconds = parseInt((duration % 1000) / 100);
         var  seconds = parseInt((duration / 1000) % 60);
@@ -157,10 +158,10 @@ app.controller("controller.home.myWork", function($scope, $state, $users,$aside,
         minutes = (minutes < 10) ? "0" + minutes : minutes;
         seconds = (seconds < 10) ? "0" + seconds : seconds;
 
-        return hours + ":" + minutes ;
+        return hours + ":" + minutes + ":" + seconds + ":"+ milliseconds ;
       }
-    $scope.totaltime = msToTime($scope.total);
-    console.log($scope.totaltime,'cccccccccccccc');
+    $scope.totaltime = msToTime($scope.checkoutTime);
+    console.log(typeof $scope.totaltime,'cccccccccccccc');
     console.log('bbbbbbbbbb', $scope.checkoutTime,$scope.timeSheet,$scope.totaltime,'vvvvvv');
     $http({
       method: 'PATCH',
