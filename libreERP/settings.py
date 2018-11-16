@@ -97,7 +97,7 @@ SEO_PUBLISHER = 'https://plus.google.com/b/105723801328437605094/'
 ECOMMERCE_THEME = '#631516' ##631516
 INVENTORY_ENABLED = True
 
-LITE_REGISTRATION = False
+LITE_REGISTRATION = True
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
