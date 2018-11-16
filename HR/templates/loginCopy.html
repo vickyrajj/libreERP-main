@@ -41,7 +41,14 @@
       <button id="signIn" style="margin-bottom:20px; margin-top:10px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
       <a style="color:black;" href="registerPage">New User?</a>
-
+      <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top:10px">
+      <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
+        <i class="fa fa-google-plus pull-left"></i>Login with Google
+      </a>
+      <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block">
+        <i class="fa fa-facebook pull-left"></i> Login with Facebook
+      </a>
+    </div>
     </form>
 
     <form class="" action="/register" method="post" style="display:none;" id="regFrm">

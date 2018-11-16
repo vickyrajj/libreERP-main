@@ -109,7 +109,7 @@ class Pages(models.Model):
     updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=100 ,null = False)
     pageurl = models.CharField(max_length=100 ,null = False)
-    body = models.CharField(max_length=10000 ,null = False)
+    body = models.CharField(max_length=50000 ,null = False)
     topLevelMenu = models.BooleanField(default = False)
 
 class offerBanner(models.Model):
