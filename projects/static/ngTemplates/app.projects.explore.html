@@ -1,25 +1,35 @@
 <div style="position:relative; height:83.5vh;top:0px;right:0px;padding:0px;" ng-controller="projectManagement.projects.project.explore">
+
   <div class="col-md-4" style="padding:0px;overflow:auto;height:100%;position:absolute;border-right:solid 2px #eee;">
     <div class="col-md-10" style="padding-top:25px;overflow:auto;height:100%;position:absolute;">
       <div class="card" ng-repeat="u in project.team" style="margin-bottom:20px;">
-        <div class="container-fluid" style="padding-top:15px;">
-          <div class="col-md-5">
-            <div class="row">
-              <img ng-src="{{u | getDP}}" width="60" height="60" />
+          <div class="container-fluid" style="padding-top:15px;">
+            <div class="col-md-5">
+              <div class="row">
+                <img ng-src="{{u | getDP}}" width="60" height="60" />
+              </div>
+              <div class="row">
+                {{u | getName}}
+              </div>
             </div>
-            <div class="row">
-              {{u | getName}}
-            </div>
+            <!-- <div class="col-md-7">
+                          <div class="row">
+                              <strong>5</strong> Commits <br>
+                              <strong>2</strong> Documents <br>
+                          </div>
+                      </div> -->
           </div>
-          <!-- <div class="col-md-7">
-                        <div class="row">
-                            <strong>5</strong> Commits <br>
-                            <strong>2</strong> Documents <br>
-                        </div>
-                    </div> -->
         </div>
-      </div>
+        <div>
+          <h3>{{project.title}}</h3>
+          <label>Description :</label> <span>{{project.description}}</span> <br>
+          <label>Date :</label> <span>{{project.dueDate | date: long}}</span>
+        </div>
     </div>
+
+
+
+
     <div class="col-md-2 col-md-offset-10" style="padding:0px;background: -moz-linear-gradient(bottom,rgba(255,0,0,0),rgba(212, 212, 212, 1));min-height:400px;">
       <ul class="nav nav-sidebar" style="width:100%;">
         <li class="{{explore.mode == 'git' ? 'active':''}} text-center" ng-click="changeExploreMode('git')"><a href=""><i class="octicon octicon-repo-push mega-octicon"></i></a></li>
@@ -27,6 +37,7 @@
         <li class="{{explore.mode == 'timeline' ? 'active':''}} text-center" ng-click="changeExploreMode('timeline')"><a href=""><i class="fa fa-commenting fa-2x"></i></a></li>
         <li class="{{explore.mode == 'files' ? 'active':''}} text-center" ng-click="changeExploreMode('files')"><a href=""><i class="fa fa-files-o fa-2x"></i></a></li>
         <li class="{{explore.mode == 'issues' ? 'active':''}} text-center" ng-click="changeExploreMode('issues')"><a href=""><i class="mega-octicon octicon-list-unordered"></i></a></li>
+        <li class="{{explore.mode == 'billing' ? 'active':''}} text-center" ng-click="changeExploreMode('billing')"><a href=""><i class="fa fa-usd fa-2x"></i></a></li>
       </ul>
     </div>
   </div>
@@ -58,33 +69,89 @@
       <hr>
 
       <div>
-          <div class="row hoverList" ng-repeat="q in issues" style="padding-top:10px;padding-bottom:10px;">
-            <div class="col-md-1">
-              <label class="label" style="color:#252525">{{q.priority}}</label>
-            </div>
-            <div class="col-md-5">
-              {{q.title}}
-            </div>
-            <div class="col-md-2">
-              {{q.created | date:"d-M-yyyy"}}
-            </div>
-            <div class="col-md-2" >
-              <label class="label" style="color:#252525">{{q.result}}</label>
-            </div>
-            <div class="col-md-2" >
-              <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                {{q.status}}  <span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                  <li ng-if="q.status == 'created' " ng-click="setStatus(q.pk , 'inprogress');q.status = 'inprogress'"> <a>In Progress</a> </li>
-                  <li ng-if="q.status == 'created' || q.status == 'inprogress'" ng-click="setStatus(q.pk, 'resolved');q.status = 'resolved'"><a>Resolved</a></li>
-                  <li ng-if="q.status == 'created' || q.status == 'inprogress'  || q.status == 'resolved'" ng-click="setStatus(q.pk ,'stuck');q.status = 'stuck'"><a>Stuck</a></li>
-                </ul>
-              </div>
+        <div class="row hoverList" ng-repeat="q in issues" style="padding-top:10px;padding-bottom:10px;">
+          <div class="col-md-1">
+            <label class="text text-success"  ng-if="q.priority=='low'">{{q.priority}}</label>
+            <label class="text text-warning"  ng-if="q.priority=='medium'">{{q.priority}}</label>
+            <label class="text text-danger"  ng-if="q.priority=='high'">{{q.priority}}</label>
+          </div>
+          <div class="col-md-5">
+            {{q.title}}
+          </div>
+          <div class="col-md-2">
+            {{q.created | date:"d-M-yyyy"}}
+          </div>
+          <div class="col-md-2">
+              <span   ng-if="q.result" >
+                <i class="fa fa-check  fa-stack-1x fa-inverse" ng-if="q.result=='resolved'" style="color:green"></i>
+                <i class="fa fa-exclamation  fa-stack-1x fa-inverse" ng-if="q.result=='partial'" style="color:orange"></i>
+                <i class="fa fa-times  fa-stack-1x fa-inverse" ng-if="q.result=='parked'" style="color:red"></i>
+            </span>
+          </div>
+          <div class="col-md-2" >
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+              {{q.status}}  <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li ng-if="q.status == 'created' " ng-click="setStatus(q.pk , 'inprogress');q.status = 'inprogress'"> <a>In Progress</a> </li>
+                <li ng-if="q.status == 'created' || q.status == 'inprogress'" ng-click="setStatus(q.pk, 'resolved');q.status = 'resolved'"><a>Resolved</a></li>
+                <li ng-if="q.status == 'created' || q.status == 'inprogress'  || q.status == 'resolved'" ng-click="setStatus(q.pk ,'stuck');q.status = 'stuck'"><a>Stuck</a></li>
+              </ul>
             </div>
           </div>
         </div>
+      </div>
     </div>
+
+    <div class="col-md-12" ng-if="explore.mode == 'billing'">
+      <h3 class="text-muted">Billing</h3>
+
+      <div class="row">
+
+        <div class="col-md-3">
+          User
+        </div>
+        <div class="col-md-2">
+          Date
+        </div>
+        <div class="col-md-6">
+          Description
+        </div>
+        <div class="col-md-1">
+          Hours
+        </div>
+
+      </div>
+      <hr>
+      <div>
+        <div class="row" ng-repeat="t in timesheetItems" style="padding-top:10px;padding-bottom:10px;">
+          <div class="col-md-3">
+            <div class="col-md-1">
+              <input type="checkbox">
+            </div>
+            <div class="col-md-2">
+              <img ng-src="{{t.parent.user | getDP}}" class="img-circle" width="25" />
+            </div>
+            <div class="col-md-8 ">
+              <div>{{t.parent.user | getName}}</div>
+            </div>
+          </div>
+          <div class="col-md-2" >
+            {{t.parent.date|date:long}}
+          </div>
+          <div class="col-md-6" >
+          {{t.comment}}
+          </div>
+          <div class="col-md-1">
+          {{t.duration}}
+          </div>
+        </div>
+        <div class="col-md-1 pull-right" style="border-top:solid 2px #eeeeee;">{{totalTime}} Hrs. </div>
+      </div>
+
+    </div>
+
+
 
     <div class="col-md-12" ng-if="explore.mode == 'git'">
       <h3 class="text-muted">Commits</h3>
@@ -93,25 +160,27 @@
           <h4><span class="octicon octicon-repo"></span> {{r.name}}</h4>
         </div>
         <div ng-repeat="n in r.commitNotifications" class="row" style="padding-top:10px;">
-          <div class="col-md-2" style="padding-right:40px;">
-            <div class="row">
-              <img ng-src="{{n.user | getDP}}" class="img-circle pull-right" width="50" />
-            </div>
-            <div class="row">
-              <span class="pull-right">{{n.user | getName}}</span>
+          <div class="row" style="padding:10px;border-bottom:#eee solid 2px;">
+            <div class="col-md-2" style="padding-right:40px;">
             </div>
           </div>
-          <div class="col-md-10 commitNotification" ng-click="exploreNotification($parent.$index , $index)">
-            <span class="text-muted"> {{n.time |  date : 'hh:mm:a , dd MMM'}}</span><br><strong>[{{n.repo.name}} / {{n.branch}}] :</strong> 1 new commit <br>
-            <code>{{n.sha.substring(n.sha.length-10 , n.sha.length)}}</code> : {{n.message}}
+          <div class="row">
+            <img ng-src="{{n.user | getDP}}" class="img-circle pull-right" width="50" />
+          </div>
+          <div class="row">
+            <span class="pull-right">{{n.user | getName}}</span>
           </div>
         </div>
-        <nav ng-if="r.commitNotifications.length< r.commitCount">
-          <ul class="pager">
-            <li ng-click="loadMore($index)"><a href="">More</a></li>
-          </ul>
-        </nav>
+        <div class="col-md-10 commitNotification" ng-click="exploreNotification($parent.$index , $index)">
+          <span class="text-muted"> {{n.time |  date : 'hh:mm:a , dd MMM'}}</span><br><strong>[{{n.repo.name}} / {{n.branch}}] :</strong> 1 new commit <br>
+          <code>{{n.sha.substring(n.sha.length-10 , n.sha.length)}}</code> : {{n.message}}
+        </div>
       </div>
+      <nav ng-if="r.commitNotifications.length< r.commitCount">
+        <ul class="pager">
+          <li ng-click="loadMore($index)"><a href="">More</a></li>
+        </ul>
+      </nav>
     </div>
 
     <div class="col-md-12" ng-if="explore.mode == 'tasks'">

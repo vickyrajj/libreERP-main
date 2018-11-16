@@ -438,7 +438,7 @@ class ContactViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner, )
     serializer_class = ContactSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+    filter_fields = ['name','company']
 
     def get_queryset(self):
         return Contact.objects.all()

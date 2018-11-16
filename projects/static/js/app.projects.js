@@ -85,6 +85,8 @@ app.controller('projectManagement.projects.project.explore' , function($scope , 
           $scope.project.messages = response.data;
         })
         $scope.mode = 'view';
+
+        $scope.fetchTimesheetItems();
     });
 
     $scope.createTask = function() {
@@ -149,6 +151,27 @@ app.controller('projectManagement.projects.project.explore' , function($scope , 
     }
 
 
+
+    $scope.fetchTimesheetItems = function(data) {
+      $http({
+        method : 'GET',
+        url : '/api/performance/timeSheetItem/?project=' +$scope.project.pk,
+    }).
+      then(function(response) {
+        // console.log('jndsvjnfdjvnfjdn get data');
+        $scope.timesheetItems = response.data;
+        var total =0;
+        for (var i = 0; i < $scope.timesheetItems.length; i++) {
+          total += $scope.timesheetItems[i].duration;
+        }
+
+        $scope.totalTime = total;
+
+      })
+    }
+
+
+
     $scope.fetchIssues = function(data) {
 
       $http({
@@ -162,7 +185,8 @@ app.controller('projectManagement.projects.project.explore' , function($scope , 
     }
     $scope.fetchIssues();
 
-    //====================popup  calendar for employees
+
+    //=====================================================
 
     $scope.openIssueForm   = function(){
       console.log('inside open function');
@@ -181,16 +205,54 @@ app.controller('projectManagement.projects.project.explore' , function($scope , 
     }
 
 
+  $scope.opencomments = function(){
+    console.log('inside coomments');
+  }
+
     $scope.setStatus = function(pk,status){
+
 
       $http({method : 'PATCH' , url : '/api/projects/issue/'+ pk + '/' , data : {status : status}}).
       then(function(response) {
           Flash.create('success' , 'Saved');
       });
 
+      if (status == 'resolved') {
+        $uibModal.open({
+          templateUrl : '/static/ngTemplates/app.project.issue.result.html',
+          // placement: 'left',
+          size: 'md',
+          backdrop : false,
+          resolve : {
+            issue : function() {
+              return pk;
+            }
+          },
+          controller : function($scope , issue , $uibModalInstance) {
+            $scope.form = {resultComments : '' , result: 'resolved'};
+            $scope.issue= issue;
+            $scope.save = function() {
+              $http({method : 'PATCH' , url : '/api/projects/issue/'+ $scope.issue + '/' , data : $scope.form }).
+              then(function(response) {
+                  Flash.create('success' , 'Saved');
+                  $uibModalInstance.close()
+              });
+            }
+
+          }
+
+        }).result.then(function (d) {
+          $scope.fetchIssues()
+        }, function (d) {
+          $scope.fetchIssues()
+        });
+
+
+      }
+
+
 
     }
-
 
 });
 

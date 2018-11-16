@@ -16,12 +16,12 @@ class addressSerializer(serializers.ModelSerializer):
         fields = ('pk' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country')
 
 class serviceSerializer(serializers.ModelSerializer):
-    # user = userSearchSerializer(many = False , read_only = True)
+    user = userSearchSerializer(many = False , read_only = True)
     address = addressSerializer(many = False, read_only = True)
     contactPerson = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson')
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','vendor')
 
     def assignValues(self , instance , validated_data):
         if 'cin' in validated_data:
@@ -47,10 +47,15 @@ class serviceSerializer(serializers.ModelSerializer):
         instance.save()
 
     def create(self , validated_data):
-        s = service(name = validated_data['name'] , user =validated_data['user'])
+        print validated_data
+        s = service(name = validated_data['name'] )
+        s.user = self.context['request'].user
         self.assignValues(s, validated_data)
         return s
     def update(self , instance , validated_data):
+        instance.name = self.context['request'].data['name']
+        # instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
+        instance.save()
         self.assignValues(instance , validated_data)
         return instance
 

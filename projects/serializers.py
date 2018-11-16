@@ -76,14 +76,14 @@ class timelineItemSerializer(serializers.ModelSerializer):
         raise PermissionDenied({'NOT_ALLOWED'})
 
 
-class projectIssueSerializer(serializers.ModelSerializer):
+class IssueSerializer(serializers.ModelSerializer):
     class Meta:
-        model = issues
+        model = Issues
         fields = ( 'pk', 'created','title', 'project', 'responsible', 'tentresdt', 'priority','status', 'result')
         read_only_fields = ('responsible','project', )
     def create(self , validated_data):
         q = issues(**validated_data)
-        print self.context['request'].data['responsible'], 'jbjusdbvjsdbjvbds'
+        # print self.context['request'].data['responsible'], 'jbjusdbvjsdbjvbds'
         q.responsible = User.objects.get(pk=int(self.context['request'].data['responsible']))
         q.project = project.objects.get(pk=int(self.context['request'].data['project']))
         q.save()

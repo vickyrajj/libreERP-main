@@ -21,6 +21,7 @@ from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
 import calendar
 from HR.models import payroll
+from rest_framework import filters
 
 class LocationTrackerAPI(APIView):
     renderer_classes = (JSONRenderer,)
@@ -155,10 +156,11 @@ class addressViewSet(viewsets.ModelViewSet):
 class serviceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = serviceSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter]
+    filter_fields = ['name','vendor']
+    search_fields = ('name','web')
     def get_queryset(self):
-        u = self.request.user
+        # u = self.request.user
         return service.objects.all()
 
 class registerDeviceApi(APIView):

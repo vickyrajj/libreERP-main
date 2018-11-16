@@ -12,6 +12,9 @@ def getInvoicesPath(instance , filename ):
 def getInflowAttachmentsPath(instance , filename ):
     return 'finance/inflows/%s_%s_%s' % (str(time()).replace('.', '_'),instance.user.username, filename)
 
+def getcontentDocsPath(instance , filename ):
+    return 'finance/vendor/%s_%s_%s' % (str(time()).replace('.', '_'), instance.contactPerson, filename)
+
 class Account(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     number = models.PositiveIntegerField()
@@ -114,3 +117,18 @@ class Invoice(models.Model):
     approved = models.BooleanField(default = False) # it is possible to have a sheet with some of the invoices rejected and if the sheet is approved the amount to be paid will be the sum of claims in the approved invoices only
     def __unicode__(self):
         return '<service : %s > , <amount : %s > , <sheet : %s > , < user : %s >' %(self.service , self.amount , self.sheet , self.user.username)
+
+
+class VendorProfile(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    contactPerson = models.CharField(max_length = 100 , null = False)
+    mobile = models.CharField(max_length = 12 , null = True)
+    email = models.EmailField(null = True)
+    paymentTerm = models.PositiveIntegerField(null=True , default=0)
+    contentDocs =  models.FileField(upload_to = getcontentDocsPath ,  null = True , blank = True)
+    service = models.ForeignKey(service , related_name='vendorprofiles' , null = False)
+
+class VendorService(models.Model):
+    vendorProfile = models.ForeignKey(VendorProfile , null = True , related_name='vendorservices')
+    particular= models.CharField(max_length = 100 , null = False, unique = True)
+    rate = models.PositiveIntegerField(null=True , default=0)

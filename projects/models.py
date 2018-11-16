@@ -84,7 +84,7 @@ ISSUES_ITEM_STATUS = (
 
 )
 
-class issues(models.Model):
+class Issues(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     title = models.CharField(max_length = 50, null = False)
     project = models.ForeignKey(project, null= False, related_name='projectsIssue')
@@ -93,3 +93,4 @@ class issues(models.Model):
     tentresdt = models.DateField(auto_now = False, auto_now_add =False)  #tentative result
     priority = models.CharField(choices = ISSUES_ITEM_PRIORITY , max_length = 50)
     result = models.CharField(choices = ISSUES_ITEM_RESULT , max_length = 50,null=True)
+    resultComments = models.CharField(max_length=500 , null = True)
