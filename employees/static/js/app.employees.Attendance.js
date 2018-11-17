@@ -1,4 +1,4 @@
-app.controller('workforceManagement.employees.Attendance', function($scope, $state, $users, $stateParams, $http, Flash, $timeout) {
+app.controller('workforceManagement.employees.Attendance', function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $uibModal) {
   $scope.me = $users.get('mySelf'); //hit api and get user who is logged in
   $scope.userform = {
     user: $scope.me
@@ -125,5 +125,50 @@ app.controller('workforceManagement.employees.Attendance', function($scope, $sta
       }
     }
   }
+
+
+  $scope.openUploadForm = function() {
+
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.employess.Attendance.uploadform.html',
+      size: 'md',
+      backdrop: true,
+
+      controller: function($scope, ) {
+
+        $scope.uploadForm = {
+          datFile: emptyFile,
+        }
+        $scope.upload = function() {
+          if ($scope.uploadForm.datFile == emptyFile) {
+            Flash.create('warning', 'No file selected')
+            return
+          }
+          console.log($scope.uploadForm.datFile);
+          var fd = new FormData()
+          fd.append('file', $scope.uploadForm.datFile);
+          console.log(fd);
+          $http({
+            method: 'POST',
+            url: '/api/employees/loadAttendanceData/',
+            data: fd,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
+          }).
+          then(function(response) {
+          })
+
+        }
+
+      },
+    })
+
+  }
+
+
+
 
 });

@@ -43,6 +43,7 @@ import calendar
 from dateutil.relativedelta import *
 from django.db.models import Q
 from HR.models import Leave
+import numpy as np
 
 
 class FeatchAttendanceDataApi(APIView):
@@ -63,9 +64,6 @@ class FeatchAttendanceDataApi(APIView):
 
             try:
                 timeObj = TimeSheet.objects.get(Q(checkIn__icontains=dt) | Q(checkOut__icontains=dt),user=userObj)
-
-
-
 
 
                 if timeObj.checkIn and timeObj.checkOut:
@@ -106,7 +104,8 @@ class FeatchAttendanceDataApi(APIView):
                     toReturn['valList'].append(-1)
                     toReturn['timeList'].append(str(' '))
 
-
+#---------------------fetch data from machine ---------------------
+        #
         # zk = zklib.ZKLib("192.168.0.201", 4370)
         # ret = zk.connect()
         # attendance = zk.getAttendance()
@@ -128,10 +127,56 @@ class FeatchAttendanceDataApi(APIView):
         #         timesheet.checkOut= a[2]
         #
         #     timesheet.save()
+        # #         # get the TimeSheet object for the date a[2]
+        # #         # already exists else create
 
-            # get the TimeSheet object for the date a[2]
-            # already exists else create
         print toReturn
         return Response(toReturn,status=status.HTTP_200_OK)
+
+# -------------------------------------------------------------------------
+# fetch data from file
+from io import BytesIO
+class AttendanceDataCreationApi(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, format=None):
+        print '----------loading data came to views---------------------'
+
+        for row in request.FILES['file'].read().split('\n'):
+
+            if len(row)<5:
+                continue
+                
+            d = ' '.join(row.split())
+            prts = d.split(' ')
+            print "pk : " , prts[0]
+            print "dt : " , prts[1] + ' ' + prts[2]
+            # 2018-11-16 13:40:15
+            datetime_object = datetime.strptime( prts[1] + ' ' + prts[2]  , '%Y-%m-%d %H:%M:%S')
+            print datetime_object
+
+
+
+            u = User.objects.get(pk = prts[0])
+
+
+            ts = TimeSheet.objects.filter(user = u , date = datetime_object.date())
+
+            if ts.count()==0:
+                timesheet= TimeSheet(user = u , date = datetime_object.date())
+                timesheet.save()
+            else:
+                timesheet= ts[0]
+
+            if timesheet.checkIn is None or int(datetime_object.strftime("%s"))*1000 < int(timesheet.checkIn.strftime("%s"))*1000 :
+                timesheet.checkIn = datetime_object
+            if timesheet.checkOut is None or int(datetime_object.strftime("%s"))*1000   > int(timesheet.checkOut.strftime("%s"))*1000:
+                timesheet.checkOut= datetime_object
+
+            timesheet.save()
+
+        return Response( status = status.HTTP_200_OK)
+
 
 ##------------------------------- leave  approval -------------

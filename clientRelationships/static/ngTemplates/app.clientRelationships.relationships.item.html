@@ -60,44 +60,44 @@
         <div class="col-md-3" ng-repeat="d in data.deals"  style="padding:15px;" ng-click="$emit('exploreRelation' , d);">
           <div class="container-fluid relationDealCard" >
             <div class="row">
-              <div class="text-right col-md-3">
+              <div class="text-right col-md-5">
                 <strong>Name : </strong>
               </div>
-              <div class="text-left col-md-9">
+              <div class="text-left col-md-7">
                 <span>{{d.name}}</span>
               </div>
             </div>
             <div class="row">
-              <div class="text-right col-md-3">
+              <div class="text-right col-md-5">
                 <strong>ID : </strong>
               </div>
-              <div class="text-left col-md-9">
+              <div class="text-left col-md-7">
                 <span>{{d.pk}}</span>
               </div>
             </div>
             <div class="row">
-              <div class="text-right col-md-3">
+              <div class="text-right col-md-5">
                 <strong>Owner : </strong>
               </div>
-              <div class="text-left col-md-9">
+              <div class="text-left col-md-7">
                 <img ng-src="{{d.user | getDP}}" class="img img-rounded" style="width:30px;height:30px;"> <span>{{d.user | getName}}</span>
               </div>
             </div>
             <br>
             <div class="row">
-              <div class="text-right col-md-3">
+              <div class="text-right col-md-5">
                 <strong>Contact : </strong>
               </div>
-              <div class="text-left col-md-9">
+              <div class="text-left col-md-7">
                 <img ng-src="{{d.contacts[0] | getCRMDP}}" class="img img-rounded" style="width:30px;height:30px;"> <span>{{d.contacts[0].name}}</span>
               </div>
             </div>
             <br>
             <div class="row">
-              <div class="text-right col-md-3">
+              <div class="text-right col-md-5">
                 <strong>Value : </strong>
               </div>
-              <div class="text-left col-md-9">
+              <div class="text-left col-md-7">
                 <i class="fa fa-{{d.currency | lowercase}}" style="margin-right:20px;"></i>{{d.value}}
               </div>
             </div>

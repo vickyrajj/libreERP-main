@@ -232,22 +232,6 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
         console.log($scope.items);
     }
 
-    // $scope.totalRate = function() {
-    //
-    //     if ($scope.items == undefined) {
-    //         return 0;
-    //     }
-    //
-    //     var total = 0;
-    //     for (var i = 0; i < $scope.items.length; i++) {
-    //         if ($scope.items[i].rate != undefined) {
-    //             total += $scope.items[i].rate;
-    //         }
-    //     }
-    //     return total
-    //     // console.log('aaaaaa', total);
-    // }
-
     $scope.deleteTable = function(index) {
         if ($scope.items[index].pk != undefined) {
             $http({
