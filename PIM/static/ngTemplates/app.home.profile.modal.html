@@ -30,6 +30,7 @@
         </div>
         <div class="col-md-6 col-lg-6">
           <div class="text-center" ng-if="attendance">
+            <h3 class="text-center">Attendance Details</h3>
           <div class="row" >
             <div class="col-md-6 text-right">
               <strong>Total Days:</strong>
@@ -48,14 +49,14 @@
             <div class="col-md-6 text-right">
               <strong>Absent Days:</strong>
             </div>
-            <div class="col-md-3 text-left">{{3}}
+            <div class="col-md-3 text-left">{{days - (presentDays+leaveDays)}}
             </div>
           </div>
           <div class="row">
             <div class="col-md-6 text-right">
               <strong>Leave Days:</strong>
             </div>
-            <div class="col-md-3 text-left">{{4}}
+            <div class="col-md-3 text-left">{{leaveDays}}
             </div>
           </div>
         </div>

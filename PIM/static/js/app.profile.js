@@ -254,45 +254,60 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
               function daysInMonth (month, year) {
                   return new Date(year, month, 0).getDate();
               }
+              $scope.presentDays=0;
+              $scope.hrs =0;
+              $scope.mins =0;
               $scope.indexMonth = monthIndex(n);
               $scope.days = daysInMonth($scope.indexMonth,$scope.currentYear);
               console.log($scope.currentYear,$scope.indexMonth,'mmmmmmmmmmmm');
-              function timeSummation() {
-                var t1 = document.getElementById('time1').value.split(':');
-                var t2 = document.getElementById('time2').value.split(':');
-                var mins = Number(t1[1])+Number(t2[1]);
-                var hrs = Math.floor(parseInt(mins / 60));
-                hrs = Number(t1[0])+Number(t2[0])+hrs;
-                mins = mins % 60;
-                return hrs+':'+mins;
-              }
+
+
               $http({
                 method: 'GET',
-                url: '/api/performance/timeSheet/?user='+ $scope.data.user + '&date=' + $scope.currentYear+'-'+$scope.indexMonth +'/'
+                url: '/api/performance/timeSheet/?user='+ $scope.data.user
               }).
               then(function(response) {
-                console.log(response.data,'vvvvvvvvv');
+
                 for (var i = 0; i < response.data.length; i++) {
-                  if(response.data[i].totaltime == null){
-                    $scope.presentDays = 'No Information';
-                    console.log(response.data[i].totaltime,'fffffffffff');
+                       $scope.split = response.data[i].date.split("-");
+                       if( $scope.split[0] == $scope.currentYear){
+                         if($scope.split[1] == $scope.indexMonth){
+                           if(response.data[i].totaltime == null || typeof response.data[i].totaltime === "undefined"){
+
+                           }
+                           else{
+                             $scope.timedata = response.data[i].totaltime.split(':');
+                             $scope.mins = Number($scope.timedata[1]);
+                              $scope.hrs = Number($scope.timedata[0]);
+                              $scope.time =$scope.hrs + '.' + $scope.mins
+                             if($scope.time >= 8.30)
+                             {
+                               $scope.presentDays++
+                             }
+                             $scope.attendance = true;
+                             }
+
+                         }
+                     }
                   }
-                  else{
-                    $scope.timedata = response.data[i].totaltime.split(':');
-                    $scope.mins = Number($scope.timedata[1]);
-                    $scope.hrs = Math.floor(parseInt($scope.mins / 60));
-                    $scope.hrs = Number($scope.timedata[0])+$scope.hrs;
-                    $scope.mins = $scope.mins % 60;
-                    $scope.timecalci = $scope.hrs+':'+ $scope.mins;
-                    $scope.presentDays = ($scope.hrs/8)+ ($scope.mins/(3600*60));
-                    console.log($scope.presentDays,'fffffffffff');
+                 $scope.attendance = true;
+              })
+              $scope.leaveDays=0;
+              $http({
+                method: 'GET',
+                url: '/api/HR/leave/?user='+$scope.data.user + '&status=approved&fromDate__year='+ $scope.currentYear + '&fromDate__month='+ $scope.indexMonth,
+              }).
+              then(function(response) {
+                console.log(response.data);
+                for (var i = 0; i < response.data.length; i++) {
 
-
-                      }
+                  if (response.data[i].leavesCount != null && response.data[i].leavesCount != undefined) {
+                    $scope.leaveDays +=  response.data[i].leavesCount;
+                  }
                 }
 
+
               })
-              $scope.attendance = true;
            }
 
          },
