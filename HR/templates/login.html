@@ -25,6 +25,19 @@
   <div class="col-md-4 col-sm-12 col-xs-12" style="height:100%;position:absolute;right:0px;padding-top:20px">
     <a href="/" style="outline: none;border:none"><img class="text-center" src="{{icon_logo}}" alt="" width="200" Style="display:block;margin-left: auto;margin-right: auto;"></a>
     <form method="post" class="form-signin" action="" style="padding:0px;max-width: 400px;">{% csrf_token %}
+
+      <div class="row">
+      <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top:40px;text-align:center">
+      <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}" style="border-radius:50%;width:30%;margin-left:100px" >
+        <i class="fa fa-google-plus fa-2x"></i>
+      </a>
+    </div>
+      <div class="col-md-6 col-sm-6 col-xs-6 text-center" style="margin-top:40px">
+      <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block" style="border-radius:50%;width:30%">
+        <i class="fa fa-facebook fa-2x"></i>
+      </a>
+    </div>
+  </div>
       <h2 class="form-signin-heading" style="color:black;margin-top:70px;">Login</h2> {% if authStatus.status != 'default' %}
       <div class="alert alert-{{authStatus.status}}">{{authStatus.message}}</div>
       {% endif %}
@@ -39,7 +52,10 @@
         </div>
         <div class="col-md-10 col-sm-10 col-xs-10">
           <label for="username" class="sr-only">Mobile Number</label>
+          <div class ="form-group" style="display:flex">
           <input id="username" name="username" type="text" maxlength="10" class="form-control" placeholder="Mobile Number" required autofocus>
+          <button id="requestOTP" style="float:right"> Send OTP</button>
+        </div>
         </div>
         <!--   <input id="otp" name="otp" type="text" class="form-control" placeholder="OTP" required autofocus> -->
         <div class="col-md-10 col-md-offset-2 col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2">
@@ -53,22 +69,22 @@
       <div class="col-md-10 col-xs-10 col-sm-10 col-md-offset-2 col-xs-offset-2 col-sm-offset-2 ">
         <a style="color:black;" href="registerPage">New User?</a>
       </div>
-      <div class="col-md-12 col-sm-12 col-xs-12">
+      <!-- <div class="col-md-12 col-sm-12 col-xs-12">
         <div id="requestOTP" style="width:100px;height:100px;background-color:#0a9199;border-radius:50px; padding-top:10px;margin:auto;margin-top:50px;cursor:pointer;" class="text-center">
           <span style="color:white;">
             <i class="fa fa-mobile fa-3x"></i> <br>
             <span id="otptxt">Send OTP</span>
           </span>
         </div>
-      </div>
-      <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top:10px">
+      </div> -->
+      <!-- <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top:10px">
       <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
         <i class="fa fa-google-plus pull-left"></i>Login with Google
       </a>
       <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block">
         <i class="fa fa-facebook pull-left"></i> Login with Facebook
       </a>
-    </div>
+    </div> -->
     </form>
 
     <form class="" action="/register" method="post" style="display:none;" id="regFrm">

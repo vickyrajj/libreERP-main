@@ -31,7 +31,6 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
 
   $scope.verify = function() {
     console.log($scope.form,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-
     $http({method : 'PATCH' , url : '/api/homepage/registration/' + $scope.form.reg + '/', data : $scope.form }).
     then(function(response) {
       console.log(response);
@@ -49,5 +48,21 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
     $scope.form.mobile = mobile
     $scope.form.agree = true
     $scope.getOTP()
+  }
+  $scope.skip=function(){
+      window.location.href = "/";
+  }
+  $scope.saveData=function(){
+    console.log( $scope.form.reg);
+    $scope.form.details='details'
+    $http({method : 'POST' , url : '/api/homepage/updateInfo/', data : $scope.form }).
+    then(function(response) {
+      console.log(response);
+      window.location.href = "/";
+    }, function(err) {
+      console.log(err);
+      if (err.status == 400) {
+      }
+    })
   }
 });

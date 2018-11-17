@@ -116,8 +116,10 @@ from uuid import uuid4
 
 
 def ecommerceHome(request):
+
+
     print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
-    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'brand_title':globalSettings.SEO_TITLE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER} , 'color' : globalSettings.ECOMMERCE_THEME , "inventory" : globalSettings.INVENTORY_ENABLED }
+    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'brand_title':globalSettings.SEO_TITLE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER} , 'color' : globalSettings.ECOMMERCE_THEME , "inventory" : globalSettings.INVENTORY_ENABLED , "settings" : application.objects.get(name = 'app.public.ecommerce' ).settings.all() }
 
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
@@ -861,7 +863,7 @@ def manifest(response,item):
     txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'address').value)
     elements.append(Paragraph(txt4, styles['Normal']))
     elements.append(Spacer(1, 3))
-    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat/tinNo').value,settingsFields.get(name = 'cstNo').value)
+    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat_tinNo').value,settingsFields.get(name = 'cstNo').value)
     elements.append(Paragraph(txt5, styles['Normal']))
     elements.append(Spacer(1, 10))
     invNo = str(now.year)+str(now.month)+str(now.day)+str(order.pk)
@@ -1717,8 +1719,8 @@ def payuPaymentInitiate(request):
         "firstname" : orderObj.user.first_name,
         "email" : orderObj.user.email,
         "phone" : '9702438730',
-        "surl" :  globalSettings.SITE_ADDRESS +'/api/v1/makePayment/',
-        "furl" : globalSettings.SITE_ADDRESS +'/api/v1/makePayment/',
+        "surl" :  globalSettings.SITE_ADDRESS +'/payUPaymentResponse/',
+        "furl" : globalSettings.SITE_ADDRESS +'/payUPaymentResponse/',
         "hash" : hashh
     }
 
@@ -1726,6 +1728,9 @@ def payuPaymentInitiate(request):
 
     return render(request , 'payu.payment.html' , formData)
 
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+
+@csrf_exempt
 def payUPaymentResponse(request):
 
     if request.method == 'POST' and request.POST['status'] == 'success':

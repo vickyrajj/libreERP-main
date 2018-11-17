@@ -212,6 +212,18 @@
       var ICON_LOGO = "{{data.icon_logo}}";
       var BRAND_TITLE = "{{data.brand_title}}";
       var INVENTORY_ENABLED = "{{data.inventory}}";
+
+      {% if  user.is_superuser %}
+      var MODE = "admin";
+      {% endif %}
+      {% if not user.is_superuser %}
+      var MODE = "user";
+      {% endif %}
+      {% for s in data.settings %}
+        {% if s.fieldType == 'value' %}var settings_{{s.name}} = "{{s.value}}";{% endif %}
+        {% if s.fieldType == 'flag' and s.flag %}var settings_{{s.name}} = true;{% endif %}
+        {% if s.fieldType == 'flag' and not s.flag %}var settings_{{s.name}} = false;{% endif %}
+      {% endfor %}
     </script>
     <script src="{% static 'js/app.ecommerce.public.js' %}"></script>
     <script src="{% static 'js/custom/wampProcessors.js' %}"></script>
