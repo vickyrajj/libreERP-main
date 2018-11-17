@@ -1685,11 +1685,11 @@ def payuPaymentInitiate(request):
 
     hash_string = '';
     hashVarsSeq = hashSequence.split('|');
-    trxnID = str(uuid.uuid4())
+    trxnID = str(uuid.uuid4()).split('-')[0]
     posted = {"key"  : globalSettings.PAYU_MERCHANT_KEY ,
         "txnid" : trxnID ,
-        "amount" : "200",
-        "productinfo" : "Rice",
+        "amount" : str(orderObj.totalAmount),
+        "productinfo" : "Sterling select products",
         "firstname" : orderObj.user.first_name,
         "email" : orderObj.user.email}
 
@@ -1712,7 +1712,7 @@ def payuPaymentInitiate(request):
         "action" : payu_url(),
         "key": globalSettings.PAYU_MERCHANT_KEY,
         "txnid": trxnID,
-        "amount" : orderObj.totalAmount,
+        "amount" : str(orderObj.totalAmount),
         "productinfo" : "Sterling select products",
         "firstname" : orderObj.user.first_name,
         "email" : orderObj.user.email,

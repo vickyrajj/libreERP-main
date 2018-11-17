@@ -137,8 +137,8 @@ INSTALLED_APPS = (
 
 
 #payu payment gateway settings
-PAYU_MERCHANT_KEY = "ixoz0UIv"
-PAYU_MERCHANT_SALT = "AcyA7BxWWr"
+PAYU_MERCHANT_KEY = "gtKFFx"
+PAYU_MERCHANT_SALT = "eCwWELxi"
 # And add the PAYU_MODE to 'TEST' for testing and 'LIVE' for production.
 PAYU_MODE = "TEST"
 
