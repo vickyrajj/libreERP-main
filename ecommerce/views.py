@@ -1701,6 +1701,9 @@ def payuPaymentInitiate(request):
 
         hash_string += '|'
 
+    orderObj.paymentRefId = trxnID
+    orderObj.save()
+
     hash_string += globalSettings.PAYU_MERCHANT_SALT
     print hash_string
     hashh = hashlib.sha512(hash_string).hexdigest()
@@ -1709,16 +1712,87 @@ def payuPaymentInitiate(request):
         "action" : payu_url(),
         "key": globalSettings.PAYU_MERCHANT_KEY,
         "txnid": trxnID,
-        "amount" : "200",
-        "productinfo" : "Rice",
+        "amount" : orderObj.totalAmount,
+        "productinfo" : "Sterling select products",
         "firstname" : orderObj.user.first_name,
         "email" : orderObj.user.email,
         "phone" : '9702438730',
-        "surl" :  'https://localhost:8000/api/v1/makePayment/',
-        "furl" : 'https://localhost:8000/api/v1/makePayment/',
+        "surl" :  globalSettings.SITE_ADDRESS +'/api/v1/makePayment/',
+        "furl" : globalSettings.SITE_ADDRESS +'/api/v1/makePayment/',
         "hash" : hashh
     }
 
     print formData
 
     return render(request , 'payu.payment.html' , formData)
+
+def payUPaymentResponse(request):
+
+    if request.method == 'POST' and request.POST['status'] == 'success':
+        orderObj = Order.objects.get(paymentRefId = request.POST['txnid'] )
+        orderObj.approved = True
+        orderObj.paymentStatus = True
+        orderObj.paidAmount = request.POST['amount']
+        orderObj.save()
+        value = []
+        totalPrice = 0
+        promoAmount = 0
+        total=0
+        price = 0
+        grandTotal = 0
+        promoObj = Promocode.objects.all()
+        for p in promoObj:
+            if str(p.name)==str(orderObj.promoCode):
+                promoAmount = p.discount
+        print promoAmount
+        a = '#'
+        docID = str(a) + str(orderObj.pk)
+        for i in orderObj.orderQtyMap.all():
+            if i.prodSku == i.product.product.serialNo:
+                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                price=round(price, 2)
+                totalPrice=i.qty*price
+                totalPrice=round(totalPrice, 2)
+                total+=totalPrice
+                total=round(total, 2)
+                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+            else:
+                prodData = ProductVerient.objects.get(sku = i.prodSku)
+                price = prodData.discountedPrice
+                price=round(price, 2)
+                totalPrice=i.qty*price
+                totalPrice=round(totalPrice, 2)
+                total+=totalPrice
+                total=round(total, 2)
+                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+        grandTotal=total-(promoAmount * total)/100
+        grandTotal=round(grandTotal, 2)
+        request.user.cartItems.all().delete()
+        if orderObj.user.email:
+            ctx = {
+                'heading' : "Invoice Details",
+                'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+                'linkUrl': globalSettings.BRAND_NAME,
+                'sendersAddress' : globalSettings.SEO_TITLE,
+                # 'sendersPhone' : '122004',
+                'grandTotal':grandTotal,
+                'total': total,
+                'value':value,
+                'docID':docID,
+                'data':orderObj,
+                'promoAmount':promoAmount,
+                'linkedinUrl' : lkLink,
+                'fbUrl' : fbLink,
+                'twitterUrl' : twtLink,
+            }
+            print ctx
+            contactData = []
+            email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+            contactData.append(str(orderObj.user.email))
+            msg = EmailMessage("Order Details" , email_body, to= contactData  )
+            msg.content_subtype = 'html'
+            msg.send()
+        return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
+
+    else:
+        return redirect("/checkout/cart?action=retry")

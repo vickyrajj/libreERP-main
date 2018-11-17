@@ -7,7 +7,7 @@ from homepage.views import index
 # from events.views import eventHome
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
-from ecommerce.views import ecommerceHome , paypalPaymentInitiate , paypal_cancel_view , paypal_return_view , payuPaymentInitiate
+from ecommerce.views import ecommerceHome , paypalPaymentInitiate , paypal_cancel_view , paypal_return_view , payuPaymentInitiate , payUPaymentResponse
 from ERP.views import serviceRegistration , makeOnlinePayment
 
 app_name="libreERP"
@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'paypal_cancel_view/$' , paypal_cancel_view , name = "paypal_cancel_view" ),
     url(r'makeOnlinePayment/$' , makeOnlinePayment , name = "makeOnlinePayment" ),
     url(r'payuPaymentInitiate/$' , payuPaymentInitiate , name = "paypalPaymentInitiate" ),
+    url(r'payUPaymentResponse/$' , payUPaymentResponse , name = "paypalPaymentInitiate" ),
 ]
 
 if settings.DEBUG:
