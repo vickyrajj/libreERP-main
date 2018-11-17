@@ -404,7 +404,7 @@ app.controller("businessManagement.productsInventory.inventoryForm", function($s
   }
 
   $scope.productSearch = function(query) {
-    return $http.get('/api/POS/product/?name__icontains=' + query + '&limit=10').
+    return $http.get('/api/POS/product/?value__search=' + query + '&limit=10').
     then(function(response) {
       console.log(response.data);
       return response.data.results;

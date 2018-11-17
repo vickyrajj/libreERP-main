@@ -2940,7 +2940,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       items: 1,
       loop : true,
       autoplay : true,
-      autoplayTimeout : 4000,
+      autoplayTimeout : 5000,
       dots: false
   };
 
