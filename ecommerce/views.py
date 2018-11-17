@@ -1717,8 +1717,8 @@ def payuPaymentInitiate(request):
         "firstname" : orderObj.user.first_name,
         "email" : orderObj.user.email,
         "phone" : '9702438730',
-        "surl" :  globalSettings.SITE_ADDRESS +'/api/v1/makePayment/',
-        "furl" : globalSettings.SITE_ADDRESS +'/api/v1/makePayment/',
+        "surl" :  globalSettings.SITE_ADDRESS +'/payUPaymentResponse/',
+        "furl" : globalSettings.SITE_ADDRESS +'/payUPaymentResponse/',
         "hash" : hashh
     }
 
