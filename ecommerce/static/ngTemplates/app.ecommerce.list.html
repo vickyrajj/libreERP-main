@@ -19,7 +19,7 @@
       </ng-owl-carousel>
   </div>
   <div class="col-md-10 col-md-offset-1 hidden-xs hidden-sm" style="padding-right:10px;padding-left:10px;padding-top:0px;padding-bottom:20px" ng-if="!categoryScroll" >
-        <div class="col-md-3" ng-repeat="g in genericProducts| limitTo:4" style="padding:10px;">
+        <div class="col-md-ank" ng-repeat="g in genericProducts| limitTo:5" style="padding:10px;">
           <div class="anim-in-out anim-zoom-out" >
             <div class="container-fluid" style="cursor:pointer;" ng-click="$state.go('categories' , {name : g.name.split(' ').join('_')})">
               <div class="row">

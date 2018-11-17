@@ -124,6 +124,11 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         product=[]
         unit=0
+        if 'value__search' in self.request.GET:
+            productList = list(listing.objects.filter(product__name__icontains = self.request.GET['value__search']).values_list('product',flat=True))
+            return Product.objects.filter(pk__in=productList)
+        else:
+            return Product.objects.all()
         if 'search' in self.request.GET:
             if 'storepk' in self.request.GET:
                 # storeQtylist = list(StoreQty.objects.filter(store = int(self.request.GET['storepk'])).values_list('pk',flat=True))
@@ -138,7 +143,6 @@ class ProductViewSet(viewsets.ModelViewSet):
             return product | product1 | product3
         else:
             return Product.objects.all()
-
 
     # filter_backends = (filters.SearchFilter,)
 

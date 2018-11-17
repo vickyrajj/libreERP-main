@@ -110,7 +110,7 @@ app.controller("businessManagement.productsInventory.purchaseOrder.explore", fun
   $scope.productSearch = function(query) {
     console.log("called");
     return $http.get('/api/POS/product/?name__contains=' + query).
-    then(function(response) {
+    then(function(response) {z
       return response.data;
     })
   }
