@@ -36,7 +36,6 @@ urlpatterns = [
     url(r'sendDeliveredStatus/$' , SendDeliveredStatus.as_view()),
     url(r'onlineSalesGraphAPI/$' , OnlineSalesGraphAPIView.as_view() ),
     url(r'sendFeedBack/$' , SendFeedBackAPI.as_view() ),
-    url(r'sendFeedBack/$' , SendFeedBackAPI.as_view() ),
     url(r'categorySortList/$' , CategorySortListAPI.as_view() ),
     url(r'bulklistingCreation/$' , BulklistingCreationAPIView.as_view() ),
     url(r'updateCart/$' , UpdateCartAPIView.as_view() ),
