@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='pages',
             name='body',
-            field=models.CharField(max_length=100000),
+            field=models.TextField(max_length=100000),
         ),
     ]

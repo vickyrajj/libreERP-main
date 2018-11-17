@@ -1,21 +1,11 @@
 <html>
 
-<head onload="submitPayuForm()">
-  <script type="text/javascript">
-    var hash = "{{ hashh }}";
+<head >
 
-    function submitPayuForm() {
-      if (hash == '') {
-        return;
-      }
-      var payuForm = document.forms.payuForm;
-      payuForm.submit();
-    }
-  </script>
 </head>
 
 <body>
-  <h2>PayU Form</h2>
+  <h2>Please wait...</h2>
   <br/>
   <form action={{ action }} method="post" name="payuForm">
     <input type="hidden" name="key" value="{{ key }}" />
@@ -28,10 +18,17 @@
     <input type="hidden" name="productinfo" value="{{ productinfo|default:'' }}">
     <input type="hidden" name="surl" value="{{ surl }}" size="64" />
     <input type="hidden" name="furl" value="{{ furl }}" size="64" />
-    <input type="submit" value="Submit" />
-    </tr>
-    </table>
+    <input type="submit" style="display:none;" value="Submit" />
   </form>
+
+  <script type="text/javascript">
+
+    var payuForm = document.forms.payuForm;
+    payuForm.submit();
+
+  </script>
+
+
 </body>
 
 </html>
