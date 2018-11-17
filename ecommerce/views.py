@@ -1728,6 +1728,9 @@ def payuPaymentInitiate(request):
 
     return render(request , 'payu.payment.html' , formData)
 
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+
+@csrf_exempt
 def payUPaymentResponse(request):
 
     if request.method == 'POST' and request.POST['status'] == 'success':
