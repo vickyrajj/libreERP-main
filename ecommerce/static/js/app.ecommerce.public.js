@@ -2279,20 +2279,20 @@ app.controller('controller.ecommerce.account', function($scope, $rootScope, $sta
 
 
 app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $filter) {
-  $rootScope.totalLimit = false
+  // $rootScope.totalLimit = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=orderLimit').
   then(function(response) {
     if (response.data[0] != null) {
       console.log(response.data[0].value, 'aaaaaaaaaaaaaaaaaa');
       $rootScope.limitValue = parseInt(response.data[0].value)
       console.log(response.data[0].value, 'aaaaaaaaaaaaaaaaaa');
-      if (response.data[0].value > 0) {
-        if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
-          $rootScope.totalLimit = true
-        } else {
-          $rootScope.totalLimit = false
-        }
-      }
+      // if (response.data[0].value > 0) {
+      //   if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
+      //     $rootScope.totalLimit = true
+      //   } else {
+      //     $rootScope.totalLimit = false
+      //   }
+      // }
     }
   })
 
@@ -2722,15 +2722,15 @@ $scope.shippingCharges = 0
       $scope.dataToSend.billingAddress = ''
     }
   })
-
+$scope.totalLimit = false
   $scope.next = function() {
 
     console.log($scope.totalAfterPromo, $scope.totalAfterDiscount, '**************************8');
     if ($rootScope.limitValue) {
       if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
-        $rootScope.totalLimit = true
+        $scope.totalLimit = true
       } else {
-        $rootScope.totalLimit = false
+        $scope.totalLimit = false
       }
     }
     window.scrollTo(0, 0);
@@ -2746,10 +2746,11 @@ $scope.shippingCharges = 0
               $scope.cartProducts.splice(j, 1)
             }
           }
-          if ($scope.cartItems[i].product.in_stock == 'false') {
-            Flash.create('danger', 'Please Select Valid Products')
-            return
-          } else {
+          // if ($scope.cartItems[i].product.in_stock == 'false') {
+          //   Flash.create('danger', 'Please Select Valid Products')
+          //   return
+          // }
+          // else {
             if ($scope.cartItems[i].qty <= 0 || $scope.cartItems[i].qty == undefined) {
               Flash.create('danger', 'Please Select Valid quantity')
               return
@@ -2767,7 +2768,7 @@ $scope.shippingCharges = 0
               })
             }
           }
-        }
+        // }
         $scope.dataToSend.products = $scope.cartProducts
       } else {
         console.log('direct buyyyyyyyyyyyyyyyyyyyyy');

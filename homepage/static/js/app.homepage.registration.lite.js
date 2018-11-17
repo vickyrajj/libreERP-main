@@ -10,6 +10,7 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
 
   $scope.validityChecked = false;
   $scope.validityChecked2 = false;
+    $scope.details = false
     $scope.getOTP = function() {
       if( !$scope.form.agree || $scope.form.mobile == null || $scope.form.mobile == undefined || $scope.form.mobile.length ==0 ){
           $scope.validityChecked = true;
@@ -30,10 +31,12 @@ app.controller('registrationLite' , function($scope , $state , $http , $timeout 
 
   $scope.verify = function() {
     console.log($scope.form,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+
     $http({method : 'PATCH' , url : '/api/homepage/registration/' + $scope.form.reg + '/', data : $scope.form }).
     then(function(response) {
       console.log(response);
-      window.location.href = "/";
+      // window.location.href = "/";
+      $scope.details = true
     }, function(err) {
       console.log(err);
       if (err.status == 400) {
