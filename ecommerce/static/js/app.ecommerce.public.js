@@ -784,11 +784,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.me = $users.get('mySelf');
   $scope.showRatings = false
 
-  $scope.currency =''
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
-  then(function(response) {
-    $scope.currency = response.data[0].value
-  })
+  $scope.currency = settings_currencySymbol;
   console.log('paramssssssss', $scope.me, $state.params);
   document.title = $state.params.name + ' Online At Best Price Only On ' + BRAND_TITLE
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=rating').
@@ -1759,11 +1755,7 @@ app.controller('ecommerce.account.cart.item', function($scope, $rootScope, $stat
   // for the dashboard of the account tab
 
 
-    $scope.currency =''
-    $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
-    then(function(response) {
-      $scope.currency = response.data[0].value
-    })
+    $scope.currency = settings_currencySymbol;
 });
 
 app.controller('controller.ecommerce.account.saved', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $filter) {
@@ -1840,11 +1832,7 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
 });
 
 app.controller('controller.ecommerce.account.saved.item', function($scope, $rootScope, $http, $state) {
-  $scope.currency =''
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
-  then(function(response) {
-    $scope.currency = response.data[0].value
-  })
+  $scope.currency = settings_currencySymbol;
 
 })
 
@@ -1875,11 +1863,7 @@ app.controller('controller.ecommerce.account.orders.item', function($scope, $roo
   })
 }
 
-$scope.currency =''
-$http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
-then(function(response) {
-  $scope.currency = response.data[0].value
-})
+$scope.currency = settings_currencySymbol;
 
 })
 
@@ -2302,11 +2286,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 
 
-  $scope.currency =''
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
-  then(function(response) {
-    $scope.currency = response.data[0].value
-  })
+  $scope.currency = settings_currencySymbol;
 
 
   // if ($scope.dataToSend.modeOfPayment == 'COD') {
@@ -2946,7 +2926,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
 
 
-
+  $scope.MODE = MODE;
   console.log('logooooooooooooooooooooo',ICON_LOGO,BRAND_TITLE);
   $rootScope.ICON_LOGO = ICON_LOGO
   $rootScope.BRAND_TITLE = BRAND_TITLE
@@ -2964,10 +2944,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     $rootScope.companyEmail = response.data[0].value
   })
 
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
-  then(function(response) {
-    $rootScope.currency = response.data[0].value
-  })
+  $scope.currency = settings_currencySymbol;
 
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=isCartImage').
   then(function(response) {
@@ -3136,6 +3113,11 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   $scope.logoutPage = function() {
     window.location = '/logout';
   }
+
+  $scope.goToAdmin = function() {
+    window.location = '/ERP/';
+  }
+
   $scope.registerPage = function() {
     window.location = '/register';
   }

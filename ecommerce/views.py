@@ -116,8 +116,10 @@ from uuid import uuid4
 
 
 def ecommerceHome(request):
+
+
     print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
-    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'brand_title':globalSettings.SEO_TITLE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER} , 'color' : globalSettings.ECOMMERCE_THEME , "inventory" : globalSettings.INVENTORY_ENABLED }
+    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'brand_title':globalSettings.SEO_TITLE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER} , 'color' : globalSettings.ECOMMERCE_THEME , "inventory" : globalSettings.INVENTORY_ENABLED , "settings" : application.objects.get(name = 'app.public.ecommerce' ).settings.all() }
 
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')

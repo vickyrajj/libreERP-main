@@ -645,11 +645,7 @@ app.directive('productCard', function() {
       console.log($scope.list.variantsInStoreQty,'variantsInStoreQty');
       console.log($rootScope.multiStore , $rootScope.storepk);
       $scope.currency ==''
-      $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
-      then(function(response) {
-        $scope.currency = response.data[0].value
-      })
-
+      $scope.currency = settings_currencySymbol;
 
       if ($rootScope.multiStore) {
         $scope.storePK = $rootScope.storepk

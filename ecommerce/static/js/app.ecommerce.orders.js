@@ -150,11 +150,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
   $scope.expanded = false;
   // $scope.sts = 'aaa'
   $scope.currency =''
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
-  then(function(response) {
-    $scope.currency = response.data[0].value
-  })
-
+  $scope.currency = settings_currencySymbol;
 
   $scope.orderItemCancel = function(idx) {
     console.log(idx, $scope.order.orderQtyMap[idx]);
@@ -416,11 +412,7 @@ app.controller('businessManagement.ecommerce.orders', function($scope, $http, $a
 });
 
 app.controller('businessManagement.ecommerce.orders.item', function($scope, $http, $aside, $state, Flash, $users, $filter) {
-  $scope.currency =''
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
-  then(function(response) {
-    $scope.currency = response.data[0].value
-  })
+  $scope.currency = settings_currencySymbol;
 
 
 })
