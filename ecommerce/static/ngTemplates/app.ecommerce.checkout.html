@@ -163,13 +163,13 @@
                     </div>
                   </div>
 
-                  <div class="col-md-1" style="padding-top: 50px;" ng-if="c.product.in_stock=='true'">
+                  <div class="col-md-1" style="padding-top: 50px;">
                     <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 60px;" min="1">
                   </div>
-                  <div class="col-md-1" style="padding-top: 50px;" ng-if="c.product.in_stock=='false'">
+                  <!-- <div class="col-md-1" style="padding-top: 50px;" ng-if="c.product.in_stock=='false'">
                     <span style="color:#ef4a1e">Out Of Stock</span>
                     <button class="btn btn-primary" ng-click="addWishList($index,c.pk)">Add to Wishlist <i class="fa fa-heart"></i></button>
-                  </div>
+                  </div> -->
                   <div class="col-md-2" style="padding-top: 50px;padding-left:50px;">
                     <p ng-if="c.prodSku==c.product.product.serialNo"> <i class="fa {{currency}}"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
                     <p ng-if="c.prodSku!=c.product.product.serialNo"> <i class="fa {{currency}}"></i> {{(c.prodVarPrice * c.qty).toFixed(2) }} </p>
@@ -244,16 +244,16 @@
                   </div>
 
                   <div class="row" style="padding-top:20px;">
-                    <div class="col-xs-2" ng-if="c.product.in_stock=='true'">
+                    <div class="col-xs-2">
                       <span>Qty :</span>
                     </div>
-                    <div class="col-xs-3" ng-if="c.product.in_stock=='true'">
+                    <div class="col-xs-3" >
                       <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 40px;" min="1">
                     </div>
-                    <div class="col-xs-5"  ng-if="c.product.in_stock=='false'">
+                    <!-- <div class="col-xs-5"  ng-if="c.product.in_stock=='false'">
                       <span style="color:#ef4a1e">Out Of Stock</span>
                       <button class="btn btn-primary" ng-click="addWishList($index,c.pk)">Add to Wishlist <i class="fa fa-heart"></i></button>
-                    </div>
+                    </div> -->
                     <div class="col-xs-3">
                       <span>Total :</span>
                     </div>
@@ -592,10 +592,10 @@
             <span style="font-size:20px;">Select Mode of Payment<span >
           </div>
           <div class="row" style="padding:20px;">
-            <div class="form-group" ng-if="!totalLimit && totalLimit != '0'">
+            <div class="form-group" ng-if="!totalLimit && limitValue != '0'">
               <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD"> COD <br>
             </div>
-            <div class="form-group" ng-if="totalLimit && totalLimit != '0'">
+            <div class="form-group" ng-if="totalLimit || limitValue == '0'">
               <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD" disabled> COD (Cannot use this option as your total exceed  <i class="fa {{currency}}"></i>{{limitValue}})<br>
             </div>
             <div class="form-group">

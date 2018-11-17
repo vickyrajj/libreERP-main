@@ -22,6 +22,8 @@ import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
 from PIM.models import blogPost
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 
 
 def index(request):
@@ -122,3 +124,19 @@ class EnquiryAndContactsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = EnquiryAndContactsSerializer
     queryset = EnquiryAndContacts.objects.all()
+from django.contrib.auth import authenticate , login
+class UpdateInfoAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        print request.data,'%%%%%%%%%%%%%%%%'
+        d = request.data
+        u = request.user
+        print u,'@@@@222'
+        u.first_name = d['name']
+        u.email = d['email']
+        u.set_password(d['password'])
+        u.backend = 'django.contrib.auth.backends.ModelBackend'
+        u.save()
+        login(request , u)
+        return Response( status = status.HTTP_200_OK)
