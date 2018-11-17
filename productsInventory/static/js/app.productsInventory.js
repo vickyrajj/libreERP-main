@@ -106,9 +106,9 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
   $scope.fetchProdInventory = function(offset) {
     console.log(offset, $scope.currentStore.pk);
     if ($rootScope.multiStores) {
-      url = '/api/POS/productInventoryAPI/?store=' + $scope.currentStore.pk + '&limit=4&offset=' + offset + '&search=' + $scope.searchText
+      url = '/api/POS/productInventoryAPI/?store=' + $scope.currentStore.pk + '&limit=6&offset=' + offset + '&search=' + $scope.searchText
     } else {
-      url = '/api/POS/productInventoryAPI/?master=true&limit=4&offset=' + offset + '&search=' + $scope.searchText
+      url = '/api/POS/productInventoryAPI/?master=true&limit=6&offset=' + offset + '&search=' + $scope.searchText
     }
 
     $http({
