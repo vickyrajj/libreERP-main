@@ -1091,10 +1091,20 @@ function getMonday(date) {
 app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter,$rootScope) {
 
   // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
-  $scope.posShowAll = true
-  if (settings_posScanner) {
-    $scope.posShowAll = false
-  }
+  // $scope.posShowAll = true
+  // if (settings_posScanner) {
+  //   $scope.posShowAll = false
+  // }
+
+ $scope.posShowAll = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=posScanner').
+  then(function(response) {
+    if(response.data[0]!=null){
+      if (response.data[0].flag) {
+         $scope.posShowAll = true
+      }
+    }
+  })
 
   $scope.today = new Date();
   $scope.firstDay = new Date($scope.today.getFullYear(), $scope.today.getMonth(), 2);
