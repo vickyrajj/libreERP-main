@@ -906,7 +906,6 @@ app.directive('productCard', function() {
           }).
           then(function(response) {
             for (var i = 0; i < response.data.length; i++) {
-              console.log(response.data[i].prodSku, $scope.selectedProdVar.sku,'@@@@@@@@@@@@@@@@@@');
               if (response.data[i].prodSku == $scope.selectedProdVar.sku) {
                 if (response.data[i].typ == 'cart') {
                   Flash.create('warning', 'This Product is already in cart');
