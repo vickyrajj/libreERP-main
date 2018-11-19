@@ -84,28 +84,28 @@
               </span>
             </div>
           </div>
-          <div class="col-md-12 " ng-if="showOptions&&details.added_cart>0">
-
+          <div class="col-md-12 " ng-if="showOptions">
             <div class="row container-fluid" style="padding:0px 15px;">
               <div class="col-xs-offset-3 col-xs-1" style="padding:0px;">
-                <button type="button" class="btn btn-default decrementBtn" ng-if="selectedProdVar.inStock>0&&me.pk" ng-click="decrement(details.pk);">
+                <button type="button" class="btn btn-default decrementBtn" ng-if="details.added_cart>0&&me.pk" ng-click="decrement(details.pk);">
                   <i class="fa fa-minus" style="font-size:14px;"></i>
                 </button>
               </div>
-              <div class="col-xs-4" style="padding:0px;" ng-if="selectedProdVar.inStock>0&&me.pk">
+              <div class="col-xs-4" style="padding:0px;" ng-if="details.added_cart>0&&me.pk">
                 <button type="button" name="button" class="inCartBtn btn btn-sm btn-default" ng-click="$event.stopPropagation()">
                   {{details.added_cart}} in Cart
                 </button>
               </div>
-              <div class="col-xs-1" style="padding:0px;" ng-if="selectedProdVar.inStock>0&&me.pk">
+              <div class="col-xs-1" style="padding:0px;" ng-if="details.added_cart>0&&me.pk">
                 <button type="button" class="btn btn-default incrementBtn" ng-click="increment(details.pk);">
                   <i class="fa fa-plus" style="font-size:14px;"></i>
                 </button>
               </div>
             </div>
           </div>
-          <div class="col-md-12" ng-if="!showOptions||details.in_stock=='false'||selectedProdVar.inStock==0||!selectedProdVar.inStock">
-            <span style="font-size:25px;color:#ef4a1e">Out Of Stock</span>
+          <div class="col-md-12" ng-if="!showOptions||selectedProdVar.inStock==0||!selectedProdVar.inStock">
+            <span  ng-if ="details.added_cart==0" style="font-size:25px;color:#ef4a1e">Out Of Stock</span>
+            <span ng-if ="details.added_cart>0" style="font-size:25px;color:#ef4a1e"></span>
           </div>
         </div>
         <div class="row" style="padding:10px;" ng-if="me == null">
@@ -140,8 +140,9 @@
               </div>
             </div>
           </div>
-          <div class="col-md-12" ng-if="!showOptions||details.in_stock=='false'||selectedProdVar.inStock==0&&!me.pk">
-            <span style="font-size:25px;color:#ef4a1e">Out Of Stock</span>
+          <div class="col-md-12" ng-if="!showOptions||selectedProdVar.inStock==0&&!me.pk">
+            <span ng-if ="details.added_cart==0" style="font-size:25px;color:#ef4a1e">Out Of Stock</span>
+            <span ng-if ="details.added_cart>0" style="font-size:25px;color:#ef4a1e"></span>
           </div>
         </div>
 

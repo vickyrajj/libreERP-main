@@ -971,6 +971,19 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
         if($scope.newProduct.length>0){
           $uibModalInstance.dismiss(response.data)
         }
+        if (response.data.serialNo ==="") {
+          $http({
+            method: 'POST',
+            url: '/api/POS/addProductSKU/',
+            data:{
+              value:response.data.pk
+            }
+          }).
+          then(function(response) {
+              $scope.product.serialNo = response.data
+          })
+
+        }
       }
       else{
         if(typeof $scope.newProduct == 'object'){
@@ -1095,6 +1108,16 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
   // if (settings_posScanner) {
   //   $scope.posShowAll = false
   // }
+
+// console.log(settings_posScanner,'@@@@@@@@@@@@@@@@@@@@@@@@');
+
+  $http({
+    method: 'POST',
+    url: '/api/POS/addProductSKU/',
+  }).
+  then(function(response) {
+
+  })
 
  $scope.posShowAll = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=posScanner').

@@ -1416,3 +1416,18 @@ class GetTaxList(APIView):
     #         else:
     #             toReturn =[]
     #         return ExcelResponse(toReturn)
+
+class AddProductSKU(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        if 'value' in request.data:
+            p = Product.objects.get(pk = request.data['value'])
+            p.serialNo = "PRO"+str(p.pk)
+            p.save()
+        else:
+            productLIst = Product.objects.all()
+            for p in productLIst:
+                if p.serialNo=='':
+                    p.serialNo="PRO"+str(i.pk)
+                    p.save()
+        return Response(p.serialNo,status = status.HTTP_200_OK)

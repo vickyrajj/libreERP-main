@@ -333,14 +333,15 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
   $scope.searchImage = false
 
 
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=searchImage').
-  then(function(response) {
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.searchImage = true
-      }
-    }
-  });
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=searchImage').
+  // then(function(response) {
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.searchImage = true
+  //     }
+  //   }
+  // });
+  $scope.searchImage = settings_searchImage
 
 
   $scope.addToCart = function(model) {
@@ -787,27 +788,29 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.currency = settings_currencySymbol;
   console.log('paramssssssss', $scope.me, $state.params);
   document.title = $state.params.name + ' Online At Best Price Only On ' + BRAND_TITLE
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=rating').
-  then(function(response) {
-    console.log('ratingggggggggggggggggggg', response.data);
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.showRatings = true
-      }
-    }
-  })
-  $scope.showDescription = false
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=description').
-  then(function(response) {
-    console.log('ratingggggggggggggggggggg', response.data);
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.showDescription = true
-      }
-    }
-    console.log($scope.showDescription);
-  })
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=rating').
+  // then(function(response) {
+  //   console.log('ratingggggggggggggggggggg', response.data);
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.showRatings = true
+  //     }
+  //   }
+  // })
+  $scope.showRatings = settings_rating
 
+  $scope.showDescription = false
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=description').
+  // then(function(response) {
+  //   console.log('ratingggggggggggggggggggg', response.data);
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.showDescription = true
+  //     }
+  //   }
+  //   console.log($scope.showDescription);
+  // })
+  $scope.showDescription = settings_description
   $scope.next = ''
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime'
   console.log($scope.data);
@@ -817,6 +820,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.offset = 0
   $scope.reviews = []
   $scope.showOptions = true
+  console.log($scope.showOptions,'aaaaaaaaaaaaaaaaaaaaa');
   // $scope.prodVariant = ''
   $scope.getRatings = function(offset) {
     $http({
@@ -834,7 +838,6 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }).
   then(function(response) {
     $scope.details = response.data
-
     // for (var i = 0; i < $scope.details.product_variants.length; i++) {
     //   if ($scope.details.product_variants[i].sku == $state.params.sku) {
     //     $scope.prodVariant = $scope.details.product_variants[i]
@@ -866,9 +869,9 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
         $scope.details.product.inStock = 1000;
       }
 
-      if ($scope.details.product.inStock <= 0) {
-        $scope.showOptions = false
-      }
+      // if ($scope.details.product.inStock <= 0) {
+      //   $scope.showOptions = false
+      // }
     }
     console.log(response.data);
     console.log(response.data.product.description);
@@ -1321,9 +1324,11 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
         if ($scope.me) {
           for (var i = 0; i < $rootScope.inCart.length; i++) {
+            console.log(newValue.sku,$rootScope.inCart[i].prodSku,'aaaaaaaaammmmmmmmmmkkkkkkkkkkkkk');
             if (newValue.sku == $rootScope.inCart[i].prodSku) {
               console.log($rootScope.inCart[i].qty, 'if');
               $scope.details.added_cart = $rootScope.inCart[i].qty
+              console.log($scope.details.added_cart ,'adddddddddddddddvccccccccccccc');
               return
             } else {
               $scope.details.added_cart = 0
@@ -1406,27 +1411,23 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
   $timeout(function() {
     $scope.getProdVar()
-  }, 1200);
-
-
-
-
-
+  }, 5000);
 
 });
 
 
 app.controller('controller.ecommerce.categories', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
   $scope.showFilter = false
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=filter').
-  then(function(response) {
-    console.log('ratingggggggggggggggggggg', response.data);
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.showFilter = true
-      }
-    }
-  })
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=filter').
+  // then(function(response) {
+  //   console.log('ratingggggggggggggggggggg', response.data);
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.showFilter = true
+  //     }
+  //   }
+  // })
+  $scope.showFilter=settings_filter
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
   $window.scrollTo(0, 0)
   $scope.minValue;
@@ -1532,7 +1533,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
       }
     })
     $scope.breadcrumbList = $scope.breadcrumbList.slice().reverse();
-  }, 1500);
+  }, 3000);
 
 
 
@@ -2264,21 +2265,23 @@ app.controller('controller.ecommerce.account', function($scope, $rootScope, $sta
 
 app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $filter) {
   // $rootScope.totalLimit = false
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=orderLimit').
-  then(function(response) {
-    if (response.data[0] != null) {
-      console.log(response.data[0].value, 'aaaaaaaaaaaaaaaaaa');
-      $rootScope.limitValue = parseInt(response.data[0].value)
-      console.log(response.data[0].value, 'aaaaaaaaaaaaaaaaaa');
-      // if (response.data[0].value > 0) {
-      //   if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
-      //     $rootScope.totalLimit = true
-      //   } else {
-      //     $rootScope.totalLimit = false
-      //   }
-      // }
-    }
-  })
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=orderLimit').
+  // then(function(response) {
+  //   if (response.data[0] != null) {
+  //     console.log(response.data[0].value, 'aaaaaaaaaaaaaaaaaa');
+  //     $rootScope.limitValue = parseInt(response.data[0].value)
+  //     console.log(response.data[0].value, 'aaaaaaaaaaaaaaaaaa');
+  //     // if (response.data[0].value > 0) {
+  //     //   if ($scope.totalAfterPromo > $rootScope.limitValue || $scope.totalAfterDiscount > $rootScope.limitValue) {
+  //     //     $rootScope.totalLimit = true
+  //     //   } else {
+  //     //     $rootScope.totalLimit = false
+  //     //   }
+  //     // }
+  //   }
+  // })
+
+    $rootScope.limitValue = settings_orderLimit
 
 // if($state.params){
 //   $scope.action ='retry'
@@ -2946,27 +2949,29 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   })
 
   $scope.currency = settings_currencySymbol;
+$scope.showCartImage = false
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=isCartImage').
+  // then(function(response) {
+  //   console.log('ratingggggggggggggggggggg', response.data);
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.showCartImage = true
+  //     }
+  //   }
+  // })
 
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=isCartImage').
-  then(function(response) {
-    console.log('ratingggggggggggggggggggg', response.data);
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.showCartImage = true
-      }
-    }
-  })
+  $scope.showCartImage = settings_isCartImage
   $scope.maxCategories = false
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=maxCategories').
-  then(function(response) {
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.maxCategories = true
-      }
-    }
-  })
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=maxCategories').
+  // then(function(response) {
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.maxCategories = true
+  //     }
+  //   }
+  // })
 
-
+  $scope.maxCategories = settings_maxCategories
 
 
 
@@ -3072,21 +3077,26 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   $scope.bannerImage = false
 
 
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerImage').
-  then(function(response) {
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.bannerImage = true
-      }
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerImage').
+  // then(function(response) {
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.bannerImage = true
+  //     }
+  //     if ($scope.bannerImage) {
+  //       $scope.paddingTop = '9.5vh';
+  //     }else {
+  //       $scope.paddingTop = '0px;';
+  //     }
+  //   }
+  // });
+
+  $scope.bannerImage = settings_bannerImage
       if ($scope.bannerImage) {
         $scope.paddingTop = '9.5vh';
       }else {
         $scope.paddingTop = '0px;';
       }
-    }
-  });
-
-
 
 
   // $scope.closedropDowns = function(event){
@@ -3123,20 +3133,24 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     window.location = '/register';
   }
 
-  $http.get('/api/ERP/appSettingsAdminMode/?name=SortByCategory').
-  then(function(response) {
-    console.log('SortByCategory',response.data);
-    if (response.data.length>0) {
-      $scope.SortByCategory = response.data[0].flag
-    }
-  })
-  $http.get('/api/ERP/appSettingsAdminMode/?name=topLevelMenu').
-  then(function(response) {
-    console.log('topLevelMenu',response.data);
-    if (response.data.length>0) {
-      $scope.topLevelMenu = response.data[0].flag
-    }
-  })
+  // $http.get('/api/ERP/appSettingsAdminMode/?name=SortByCategory').
+  // then(function(response) {
+  //   console.log('SortByCategory',response.data);
+  //   if (response.data.length>0) {
+  //     $scope.SortByCategory = response.data[0].flag
+  //   }
+  // })
+   $scope.SortByCategory = settings_SortByCategory
+
+  // $http.get('/api/ERP/appSettingsAdminMode/?name=topLevelMenu').
+  // then(function(response) {
+  //   console.log('topLevelMenu',response.data);
+  //   if (response.data.length>0) {
+  //     $scope.topLevelMenu = response.data[0].flag
+  //   }
+  // })
+
+ $scope.topLevelMenu = settings_topLevelMenu
 
   $http.get('/api/ecommerce/pages/?topLevelMenu=1').
   then(function(response) {
@@ -3149,6 +3163,19 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     console.log('categories Listtttttttttt',response.data);
     $scope.categoriesList = response.data
   })
+
+  $scope.topIcon = false
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=topIcon').
+  // then(function(response) {
+  //   console.log('ratingggggggggggggggggggg', response.data);
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.topIcon = true
+  //     }
+  //   }
+  // })
+
+ $scope.topIcon = settings_topIcon
 
   $rootScope.genericImage = {}
   $http({
@@ -3181,24 +3208,27 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   };
 
   $scope.bannerText = false
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerText').
-  then(function(response) {
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.bannerText = true
-      }
-    }
-  })
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=bannerText').
+  // then(function(response) {
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.bannerText = true
+  //     }
+  //   }
+  // })
+  $scope.bannerText = settings_bannerText
 
   $scope.topStaticBanner = false
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=topStaticBanner').
-  then(function(response) {
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.topStaticBanner = true
-      }
-    }
-  })
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=topStaticBanner').
+  // then(function(response) {
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.topStaticBanner = true
+  //     }
+  //   }
+  // })
+  $scope.topStaticBanner = settings_topStaticBanner
+
 
   $scope.search = function() {
     if (typeof $scope.searchProduct.product == 'object') {
@@ -3966,24 +3996,29 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
   $scope.listProdOffset = 0;
 
   $scope.categoryScroll = false
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=categoryScroll').
-  then(function(response) {
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.categoryScroll = true
-      }
-    }
-  });
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=categoryScroll').
+  // then(function(response) {
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.categoryScroll = true
+  //     }
+  //   }
+  // });
+
+$scope.categoryScroll = settings_categoryScroll
 
 
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=secondBanner').
-  then(function(response) {
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.secondBanner = true
-      }
-    }
-  });
+
+
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=secondBanner').
+  // then(function(response) {
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.secondBanner = true
+  //     }
+  //   }
+  // });
+  $scope.secondBanner = settings_secondBanner
 
   $scope.inCart = $rootScope.inCart;
 

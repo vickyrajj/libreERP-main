@@ -1,14 +1,15 @@
 <div style="cursor:pointer;">
   <div class="productCardHover" ng-click="openDetails(list.pk,list.product.name.split(' ').join('-'))" style="margin-bottom:15px;margin-left:15px;margin-right:15px">
     <div class="row" class="text-center">
-      <span ng-if="list.product.discount>0" style="position:absolute;background-color:var(--themeColor);color:white; border-radius:15px 15px 15px 15px;top:10px;font-size:14px;left:30px;padding-left:15px;padding-right:15px;">{{list.product.discount}}% Off </span>
+      <span ng-if="list.product.discount>0" style="position:absolute;background-color:var(--themeColor);color:white; border-radius:15px 15px 15px 15px;top:10px;font-size:14px;left:30px;padding-left:15px;padding-right:15px;">{{list.product.discount}}%
+        Off </span>
 
       <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:#808080;position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved==0 && me.pk">
-          <i class="fa fa-heart  fa-2x"></i>
-        </span>
+        <i class="fa fa-heart  fa-2x"></i>
+      </span>
       <span ng-click="wishlist();$event.stopPropagation();" style="cursor:pointer;color:rgb(228, 114, 114);position:absolute;padding-right:0px;padding-left:66%; border-radius:15px 15px 15px 15px;margin-top:20px;font-size:14px" ng-if="list.added_saved>0 && me.pk">
-          <i class="fa fa-heart  fa-2x"></i>
-        </span>
+        <i class="fa fa-heart  fa-2x"></i>
+      </span>
       <div class="card bg-white text-center" style="padding-bottom:0px;overflow:hidden;height:37vh;">
         <img style="width: 100%;" class="img" ng-src="{{list.files[0].attachment}}" ng-if="list.files.length>0">
         <img style="width: 100%;" class="img" src="/static/images/ecommerce.jpg" ng-if="list.files==null">
@@ -19,8 +20,7 @@
         <div class="row container-fluid" style="padding:20px;height:170px;padding-top:0px;">
 
           <div style="height:60px">
-            <span style="margin:0px;font-size: 1.5rem;
-color: #666;">{{list.product.name}}</span>
+            <span style="margin:0px;font-size: 1.5rem;color: #666;">{{list.product.name}}</span>
           </div>
 
           <div style="height:40px;padding-left: 10px;padding-right: 10px;">
@@ -33,25 +33,25 @@ color: #666;">{{list.product.name}}</span>
           <span style="font-size:15px;padding-left:10px"> Price :</span>
           <span ng-if="list.product.serialNo==selectedProdVar.sku">
             <span style="font-size:15px;">
-              <span ng-if="list.product.discount>0" class="text-muted" >
-                <strike>   <i class="fa {{currency}}"></i>{{list.product.price}}</strike>
+              <span ng-if="list.product.discount>0" class="text-muted">
+                <strike> <i class="fa {{currency}}"></i>{{list.product.price}}</strike>
               </span>
-          <span ng-if="list.product.discount==0">
-                 <i class="fa {{currency}}"></i>{{list.product.price}}
+              <span ng-if="list.product.discount==0">
+                <i class="fa {{currency}}"></i>{{list.product.price}}
               </span>
-          </span>
-          <span ng-if="list.product.discount>0" style="font-size:15px;">
+            </span>
+            <span ng-if="list.product.discount>0" style="font-size:15px;">
               <i class="fa {{currency}}"></i>{{list.product.discountedPrice.toFixed(2)}}
-          </span>
+            </span>
           </span>
           <span ng-if="list.product.serialNo!=selectedProdVar.sku && selectedProdVar.amnt == selectedProdVar.disc">
-              <i class="fa {{currency}}"></i>{{selectedProdVar.amnt}}
+            <i class="fa {{currency}}"></i>{{selectedProdVar.amnt}}
           </span>
           <span ng-if="list.product.serialNo!=selectedProdVar.sku && selectedProdVar.amnt != selectedProdVar.disc" class="text-muted">
-              <strike> <i class="fa {{currency}}"></i>{{selectedProdVar.amnt}} </strike>
+            <strike> <i class="fa {{currency}}"></i>{{selectedProdVar.amnt}} </strike>
           </span>
           <span ng-if="list.product.serialNo!=selectedProdVar.sku && selectedProdVar.amnt != selectedProdVar.disc">
-              <i class="fa {{currency}}"></i>{{selectedProdVar.disc}}
+            <i class="fa {{currency}}"></i>{{selectedProdVar.disc}}
           </span>
           <div>
             <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&me.pk&&selectedProdVar.inStock>0">
@@ -64,8 +64,8 @@ color: #666;">{{list.product.name}}</span>
                 </div>
                 <div class="col-xs-3" style="padding-left:10px;" ng-click="addToCart();$event.stopPropagation();">
                   <button type="button" class="btn btn-default btn-sm" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;">
-                  Add <i class="fa fa-shopping-cart"></i>
-                </button>
+                    Add <i class="fa fa-shopping-cart"></i>
+                  </button>
                 </div>
               </div>
             </div>
@@ -81,8 +81,8 @@ color: #666;">{{list.product.name}}</span>
                 </div>
                 <div class="col-xs-4" style="padding-left:10px;" ng-click="createCookieDetail();$event.stopPropagation();">
                   <button type="button" class="btn btn-default btn-sm" style="height:28px; background-color:#fce681; color:#000; border-radius:5px;">
-                  Add <i class="fa fa-shopping-cart"></i>
-                </button>
+                    Add <i class="fa fa-shopping-cart"></i>
+                  </button>
                 </div>
               </div>
 
