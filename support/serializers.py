@@ -40,7 +40,7 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
 class SupportChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupportChat
-        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent','responseTime' )
+        fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent','responseTime','logs' )
     def create(self ,  validated_data):
         s = SupportChat(**validated_data)
         lstMsg= SupportChat.objects.latest('created')
@@ -143,7 +143,7 @@ class ChatThreadSerializer(serializers.ModelSerializer):
                 instance.escalatedL2By = User.objects.get(pk=int(self.context['request'].user.pk))
                 instance.save()
 
-        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user']:
+        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user','typ']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

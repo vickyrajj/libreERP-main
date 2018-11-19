@@ -47,6 +47,7 @@ class SupportChat(models.Model):
     attachmentType =  models.CharField(max_length = 50, null = True)
     sentByAgent = models.BooleanField(default = False)
     responseTime = models.FloatField(null=True, blank=True)
+    logs = models.CharField(max_length = 500 , null = True ,blank = True)
 
 class Visitor(models.Model):
     created = models.DateTimeField(auto_now_add = True)

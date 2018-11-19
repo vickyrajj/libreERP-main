@@ -382,6 +382,8 @@ function fetchMessages(uid) {
   xhttp.send();
 }
 
+
+
 function fetchThread(uid) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -879,7 +881,7 @@ function createChatDiv() {
      urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
      urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
      console.log(urlforConference);
-    openVideoIframe(urlforConference , urlforConferenceForAgent,'video')
+    openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
     openChat()
   })
 
@@ -888,7 +890,7 @@ function createChatDiv() {
 
      urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
      urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
-    openVideoIframe(urlforConference , urlforConferenceForAgent , 'audio')
+    openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
     openChat()
   })
 
@@ -896,9 +898,7 @@ function createChatDiv() {
   var audioOpened = false
   var getFrameContent;
 
-  var openVideoIframe =   function(urlforConference , urlforConferenceForAgent, ptanhi){
-
-
+  var openVideoAudioIframe =   function(urlforConference , urlforConferenceForAgent, streamTyp){
 
 
     if (videoOpened || audioOpened) {
@@ -906,17 +906,46 @@ function createChatDiv() {
     }
 
 
+    var dataToSend = {uid: uid , sentByAgent:false , created: new Date() };
 
-    if (ptanhi=='video') {
+    if (streamTyp=='video') {
       console.log('comingggggg');
       videoOpened = true
       var callType = 'VCS'
       chatBox_header.style.borderRadius = "0px 10px 0px 0px"
       chatBox_footer.style.borderRadius = "0px 0px 10px 0px"
-    }else if(ptanhi=='audio'){
+      dataToSend.logs = 'video call started'
+    }else if(streamTyp=='audio'){
       audioOpened = true
       var callType = 'AC'
+      dataToSend.logs = 'audio call started'
     }
+
+
+    console.log(agentPk);
+    if (agentPk) {
+      console.log('agent pk is pnline',isAgentOnline);
+      dataToSend.user = agentPk
+      if (!isAgentOnline) {
+        console.log('agetn oflineee');
+        dataToSend.user = null
+      }else {
+        dataToSend.user = agentPk
+      }
+    }
+    // var message = dataToSend
+    dataToSend = JSON.stringify(dataToSend)
+
+
+    var xhttp = new XMLHttpRequest();
+     xhttp.onreadystatechange = function() {
+       if (this.readyState == 4 && this.status == 201) {
+         console.log('posted successfully');
+       }
+     };
+     xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+     xhttp.setRequestHeader("Content-type", "application/json");
+     xhttp.send(dataToSend);
 
       if (threadExist==undefined) {
         dataToPublish = [uid, callType, [] , custID]
@@ -928,7 +957,7 @@ function createChatDiv() {
           dataToPublish.push(false)
         }
 
-        var dataToSend = JSON.stringify({uid: uid , company: custID, typ: ptanhi});
+        var dataToSend = JSON.stringify({uid: uid , company: custID, typ: streamTyp});
         var xhttp = new XMLHttpRequest();
          xhttp.onreadystatechange = function() {
            if (this.readyState == 4 && this.status == 201) {
@@ -951,6 +980,19 @@ function createChatDiv() {
          xhttp.send(dataToSend);
       }else {
 
+
+        var xhttp = new XMLHttpRequest();
+         xhttp.onreadystatechange = function() {
+           if (this.readyState == 4 && this.status == 200) {
+             console.log('chat thread typ changed');
+           }
+         };
+         xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
+         xhttp.setRequestHeader("Content-type", "application/json");
+         xhttp.send(JSON.stringify({typ:streamTyp}));
+
+
+
         dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
         if (isAgentOnline) {
           console.log('ONLINE' , agentPk);
@@ -972,7 +1014,7 @@ function createChatDiv() {
 
       }
 
-      if (ptanhi=='video') {
+      if (streamTyp=='video') {
         var body = document.getElementsByTagName("BODY")[0]
         var iframeDiv = document.createElement('div')
         iframeDiv.id = "iframeDiv";
@@ -993,11 +1035,12 @@ function createChatDiv() {
         iFrame.style.height = "100%";
         iFrame.style.border='none';
         iFrame.setAttribute('allowFullScreen', '')
+        iFrame.setAttribute('allow','geolocation; microphone; camera')
         setTimeout(function () {
             getFrameContent = document.getElementById("iFrame1").contentWindow;
         }, 1000);
 
-        if (ptanhi=='audio') {
+        if (streamTyp=='audio') {
           audioSection.appendChild(iFrame)
           audioSection.style.display = "block";
           chatBox_content.style.marginTop = "40px";
@@ -1408,7 +1451,7 @@ function createChatDiv() {
               .ChatBoxDiv{\
                 padding:0px;\
                 margin:0px;\
-                height: 100vh;\
+                height: 100%;\
                 position: fixed;\
                 top:0px;\
                 right: 0px;\
@@ -1482,7 +1525,8 @@ function createChatDiv() {
               border-radius: 10px 10px 0 0;\
             }\
             .chatBox_header > .logo_image{\
-              max-width: 18%;\
+              width: 70px;\
+              height:70px;\
               border-radius: 50%;\
               margin: 10px;\
               padding: 10px;\
@@ -2035,44 +2079,58 @@ function createChatDiv() {
       // }
     }
 
-    if (message.message!=null && message.attachmentType!=null) {
-      console.log('youtube link');
-      attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'"frameborder="0" allowfullscreen></iframe>'
-      var msgDiv =attachedFile
-    }else {
-      if (message.attachment==null) {
-        console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
-        console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
-        var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
-        msgDiv = pTag
+    if (message.logs==null) {
+      if (message.message!=null && message.attachmentType!=null) {
+        console.log('youtube link');
+        attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;" src="'+message.message+'"frameborder="0" allowfullscreen></iframe>'
+        var msgDiv =attachedFile
       }else {
-        msgDiv = attachedFile
+        if (message.attachment==null) {
+          console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
+          console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
+          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
+          msgDiv = pTag
+        }else {
+          msgDiv = attachedFile
+        }
+        // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
       }
-      // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
+    }else {
+      msgDiv = '<p>'+ message.logs + ' at ' +message.timeDate+'</p>'
     }
-
 
 
     // console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
 
-    if (!message.sentByAgent) {
-      var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                      '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;  letter-spacing:2px;">'+
-                        msgDiv+
-                      '</div>'+
-                      '<div style="clear: both; float:right; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
-                    '</div>'
-      return msgHtml
+    if (message.logs==null) {
+      if (!message.sentByAgent) {
+        var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;  letter-spacing:2px;">'+
+                          msgDiv+
+                        '</div>'+
+                        '<div style="clear: both; float:right; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
+                      '</div>'
+        return msgHtml
 
+      }else {
+        var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:2px;">'+
+                     msgDiv+
+                  '</div> '+
+                  '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
+                '</div> '
+        return msgHtml
+      }
     }else {
       var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:2px;">'+
+                '<div style="clear: both; text-align:center; box-sizing:border-box; letter-spacing:2px;">'+
                    msgDiv+
                 '</div> '+
-                '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
               '</div> '
       return msgHtml
     }
+
+
 
 
     // if (message.msg=='') {
@@ -2259,6 +2317,10 @@ function createChatDiv() {
 
 
   function sendMessage(inptText) {
+
+    if (inptText.length<=0) {
+      return;
+    }
 
 
     // chat.message.push(inptText)

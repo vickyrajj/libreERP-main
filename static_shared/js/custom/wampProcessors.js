@@ -442,7 +442,7 @@ var isfocused=true;
       }
       session.register('service.support.heartbeat.'+scope.me.pk, heartbeat).then(
         function (res) {
-          console.log("registered'");
+          console.log("registered to service.support.heartbeat");
         },
         function (err) {
           console.log("failed to registered: ");

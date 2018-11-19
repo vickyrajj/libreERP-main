@@ -151,8 +151,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
   $scope.closeChatBox = function(index, myUserIndex) {
-    console.log('dfddcominh in closesssssss');
-    console.log('dfdfdfs '+index+' ' + myUserIndex);
     removeFromCookie($scope.chatsInView[index].uid);
     $scope.chatsInView.splice(index, 1)
     if (myUserIndex != undefined) {
@@ -165,8 +163,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
 function removeFromCookie(uid){
-  console.log('here in remove from cook');
-  console.log(openedUsers);
   for (var i = 0; i < openedUsers.length; i++) {
     if(openedUsers[i].uid==uid){
       console.log(openedUsers);
@@ -175,19 +171,18 @@ function removeFromCookie(uid){
     }
   }
   setCookie('openedChats',JSON.stringify(openedUsers),30);
-  // console.log('removed index '+indx);
 }
 
   var openedUsers=[]
 
-    function addToCookie(uid,indx){
-      openedUsers.push({
-        uid:uid,
-        index:indx
-      })
-        setCookie('openedChats',JSON.stringify(openedUsers),30);
-        console.log('added index '+indx);
-    }
+  function addToCookie(uid,indx){
+    openedUsers.push({
+      uid:uid,
+      index:indx
+    })
+      setCookie('openedChats',JSON.stringify(openedUsers),30);
+      console.log('added index '+indx);
+  }
 
   $scope.addToChat = function(indx , uid ) {
 
@@ -202,8 +197,6 @@ function removeFromCookie(uid){
     // });
     addToCookie(uid,indx);
 
-
-    console.log('comingggg in add to chat');
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
         console.log('already in chat');
@@ -235,8 +228,9 @@ function removeFromCookie(uid){
 
 
   $scope.getOpenedChatFromCookie= function(){
+
       var openedChats=JSON.parse(getCookie('openedChats'));
-      console.log(JSON.parse(getCookie('openedChats')));
+      console.log(openedChats);
       for (var i = 0; i < openedChats.length; i++) {
         for (var j = 0; j < $scope.myUsers.length; j++) {
           if ($scope.myUsers[j].uid == openedChats[i].uid) {
@@ -248,7 +242,7 @@ function removeFromCookie(uid){
   }
   setTimeout(function () {
       $scope.getOpenedChatFromCookie();
-  }, 3000);
+  }, 3200);
 
     // $scope.addToChat(openedChats[i].index,openedChats[i].uid)
 

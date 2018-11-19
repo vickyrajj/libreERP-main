@@ -141,10 +141,15 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
 
 
 
-app.controller("app.customerReviews.explore", function($scope, $http, $permissions) {
+app.controller("app.customerReviews.explore", function($scope, $http, $permissions, $timeout) {
   console.log($scope.tab.data);
   $scope.data = $scope.tab.data
-  $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+
+  $scope.commentPerm = false;
+
+  $timeout(function () {
+    $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+  }, 500);
 
   $scope.reviewForm = {message:''}
 

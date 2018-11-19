@@ -1122,7 +1122,7 @@ app.directive('chatBox', function() {
               }
             })(i), (function(i) {
               return function(err) {
-                // console.log(err, 'offline agents');
+                console.log(err, 'offline agents');
                 $scope.offlineAgents.push($scope.allAgents[i])
               }
             })(i))

@@ -17,7 +17,12 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
 
   $scope.me = $users.get('mySelf')
 
-  $scope.customerCreatePerm = $permissions.myPerms('module.customer.create')
+  $scope.customerCreatePerm = false;
+
+  $timeout(function () {
+    $scope.customerCreatePerm = $permissions.myPerms('module.customer.create')
+  }, 300);
+
 
   $scope.data = {
     tableData: []

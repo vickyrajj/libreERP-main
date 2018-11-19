@@ -403,11 +403,13 @@ app.controller("module.home.settings", function($scope, $state, $http) {
 })
 
 
-app.controller("app.settings.roles", function($scope, $state, $http ,Flash , $permissions) {
+app.controller("app.settings.roles", function($scope, $state, $http ,Flash , $permissions, $timeout) {
 
+  $scope.rolesPerm = false;
 
-  $scope.rolesPerm =  $permissions.myPerms('module.roles.createDelete')
-  console.log($scope.rolesPerm);
+  $timeout(function () {
+    $scope.rolesPerm =  $permissions.myPerms('module.roles.createDelete')
+  }, 500);
 
   $scope.roles = []
 
@@ -508,13 +510,18 @@ app.controller("app.settings.roles", function($scope, $state, $http ,Flash , $pe
 
 
 
-app.controller("app.settings.prescript.explore", function($scope, $state, $http ,Flash,$permissions) {
+app.controller("app.settings.prescript.explore", function($scope, $state, $http ,Flash,$permissions, $timeout) {
   $scope.compDetails = $scope.tab.data
 
   $scope.prescripts = []
 
+  $scope.prescriptPerm = false;
 
-  $scope.prescriptPerm =  $permissions.myPerms('module.prescript.createDelete')
+  $timeout(function () {
+    $scope.prescriptPerm =  $permissions.myPerms('module.prescript.createDelete')
+  }, 500);
+
+
 
   console.log('dddddddddd',$scope.prescriptPerm);
 
@@ -642,10 +649,7 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
     borderColor: "white"
   }];
 
-
-  $timeout(function() {
-    $scope.isCustomer = $permissions.myPerms('app.customer.access')
-
+  $scope.fetchGraphData = function () {
     if ($scope.isCustomer) {
       $http({
         method: 'GET',
@@ -719,6 +723,15 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
 
       });
     }
+  }
+
+  $scope.isCustomer = false;
+
+
+  $timeout(function() {
+    $scope.isCustomer = $permissions.myPerms('app.customer.access')
+    $scope.fetchGraphData();
+
   },500)
 
 

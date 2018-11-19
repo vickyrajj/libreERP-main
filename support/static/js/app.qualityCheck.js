@@ -10,10 +10,14 @@ app.config(function($stateProvider) {
     }
   })
 });
-app.controller("businessManagement.reviews.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval , $permissions) {
+app.controller("businessManagement.reviews.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
 
+  $scope.commentPerm = false;
 
-  $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+  $timeout(function () {
+    $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
+  }, 500);
+
 
   // console.log($scope.commentPerm);
   $scope.me = $users.get('mySelf');
