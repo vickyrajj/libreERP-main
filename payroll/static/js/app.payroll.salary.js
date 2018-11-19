@@ -168,6 +168,8 @@ then(function(response) {
   }
 
 })
+$scope.attendance = false;
+
 
 $scope.view = function(n){
     $scope.monthss = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]

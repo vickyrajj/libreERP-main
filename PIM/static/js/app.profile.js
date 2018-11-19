@@ -260,14 +260,16 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
               $scope.indexMonth = monthIndex(n);
               $scope.days = daysInMonth($scope.indexMonth,$scope.currentYear);
               console.log($scope.currentYear,$scope.indexMonth,'mmmmmmmmmmmm');
-
+              function interval(count){
+                return   count ;
+                 };
 
               $http({
                 method: 'GET',
                 url: '/api/performance/timeSheet/?user='+ $scope.data.user
               }).
               then(function(response) {
-
+                $scope.presentDays=0;
                 for (var i = 0; i < response.data.length; i++) {
                        $scope.split = response.data[i].date.split("-");
                        if( $scope.split[0] == $scope.currentYear){
@@ -276,14 +278,20 @@ app.controller("controller.home.profile", function($scope , $state , $users ,  $
 
                            }
                            else{
+
                              $scope.timedata = response.data[i].totaltime.split(':');
+
                              $scope.mins = Number($scope.timedata[1]);
-                              $scope.hrs = Number($scope.timedata[0]);
-                              $scope.time =$scope.hrs + '.' + $scope.mins
-                             if($scope.time >= 8.30)
-                             {
-                               $scope.presentDays++
-                             }
+                             $scope.hrs = Number($scope.timedata[0]);
+                             $scope.time =Number($scope.hrs + '.' + $scope.mins);
+                             console.log( $scope.time,'nnnnnnnnnn');
+                             $scope.countDays = Math.floor($scope.time/8.5);
+                             console.log( typeof $scope.countDays ,'oooooooo');
+                            $scope.presentDays += interval($scope.countDays);
+                             // if($scope.time >= 8.30)
+                             // {
+                             //   $scope.presentDays++
+                             // }
                              $scope.attendance = true;
                              }
 
