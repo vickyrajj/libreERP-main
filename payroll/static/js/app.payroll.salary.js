@@ -169,6 +169,75 @@ then(function(response) {
 
 })
 
+$scope.view = function(n){
+    $scope.monthss = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+     function monthIndex(mon){
+       for(var i=0;i<=$scope.monthss.length;i++){
+       if($scope.monthss.includes(mon)){
+         return $scope.monthss.indexOf(mon)+1;
+       }
+     }
+   }
+   function daysInMonth (month, year) {
+       return new Date(year, month, 0).getDate();
+   }
+   $scope.presentDays=0;
+   $scope.hrs =0;
+   $scope.mins =0;
+   $scope.indexMonth = monthIndex(n);
+   $scope.days = daysInMonth($scope.indexMonth,$scope.currentYear);
+   console.log($scope.currentYear,$scope.indexMonth,'mmmmmmmmmmmm');
+
+
+   $http({
+     method: 'GET',
+     url: '/api/performance/timeSheet/?user='+ $scope.data.user
+   }).
+   then(function(response) {
+
+     for (var i = 0; i < response.data.length; i++) {
+            $scope.split = response.data[i].date.split("-");
+            if( $scope.split[0] == $scope.currentYear){
+              if($scope.split[1] == $scope.indexMonth){
+                if(response.data[i].totaltime == null || typeof response.data[i].totaltime === "undefined"){
+
+                }
+                else{
+                  $scope.timedata = response.data[i].totaltime.split(':');
+                  $scope.mins = Number($scope.timedata[1]);
+                   $scope.hrs = Number($scope.timedata[0]);
+                   $scope.time =$scope.hrs + '.' + $scope.mins
+                  if($scope.time >= 8.30)
+                  {
+                    $scope.presentDays++
+                  }
+                  $scope.attendance = true;
+                  }
+
+              }
+          }
+       }
+      $scope.attendance = true;
+   })
+   $scope.leaveDays=0;
+   $http({
+     method: 'GET',
+     url: '/api/HR/leave/?user='+$scope.data.user + '&status=approved&fromDate__year='+ $scope.currentYear + '&fromDate__month='+ $scope.indexMonth,
+   }).
+   then(function(response) {
+     console.log(response.data);
+     for (var i = 0; i < response.data.length; i++) {
+
+       if (response.data[i].leavesCount != null && response.data[i].leavesCount != undefined) {
+         $scope.leaveDays +=  response.data[i].leavesCount;
+       }
+     }
+
+
+   })
+}
+
 
 });
 
