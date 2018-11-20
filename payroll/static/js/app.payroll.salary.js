@@ -108,6 +108,7 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
     else{
     $scope.currentYear += 1;
     $scope.allData($scope.currentYear)
+    $scope.attendance = false;
     }
   }
 
@@ -118,6 +119,7 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
     else{
     $scope.currentYear -= 1;
     $scope.allData($scope.currentYear)
+    $scope.attendance = false;
     }
   }
 
@@ -173,7 +175,7 @@ $scope.attendance = false;
 
 $scope.view = function(n){
     $scope.monthss = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-
+    $scope.currentMonth = n;
      function monthIndex(mon){
        for(var i=0;i<=$scope.monthss.length;i++){
        if($scope.monthss.includes(mon)){
@@ -190,7 +192,9 @@ $scope.view = function(n){
    $scope.indexMonth = monthIndex(n);
    $scope.days = daysInMonth($scope.indexMonth,$scope.currentYear);
    console.log($scope.currentYear,$scope.indexMonth,'mmmmmmmmmmmm');
-
+   function interval(count){
+     return   count ;
+      };
 
    $http({
      method: 'GET',
@@ -202,18 +206,26 @@ $scope.view = function(n){
             $scope.split = response.data[i].date.split("-");
             if( $scope.split[0] == $scope.currentYear){
               if($scope.split[1] == $scope.indexMonth){
-                if(response.data[i].totaltime == null || typeof response.data[i].totaltime === "undefined"){
+                if(response.data[i].totaltime == null || typeof response.data[i].totaltime === "undefined"  ){
 
                 }
                 else{
+
                   $scope.timedata = response.data[i].totaltime.split(':');
+
                   $scope.mins = Number($scope.timedata[1]);
-                   $scope.hrs = Number($scope.timedata[0]);
-                   $scope.time =$scope.hrs + '.' + $scope.mins
-                  if($scope.time >= 8.30)
-                  {
-                    $scope.presentDays++
-                  }
+                  $scope.hrs = Number($scope.timedata[0]);
+                  $scope.time =parseFloat($scope.hrs + '.' + $scope.mins);
+                  console.log( $scope.time,'nnnnnnnnnn');
+                  $scope.countDays =Math.floor($scope.time/8.5);
+                  $scope.remainingHour = $scope.time%8.5;
+                  $scope.remainingHours = $scope.remainingHour/8.5;
+                  console.log( $scope.remainingHours ,'oooooooo');
+                 $scope.presentDays += Math.floor(interval($scope.countDays)+$scope.remainingHours);
+                  // if($scope.time >= 8.30)
+                  // {
+                  //   $scope.presentDays++
+                  // }
                   $scope.attendance = true;
                   }
 
