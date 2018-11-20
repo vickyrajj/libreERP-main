@@ -1329,7 +1329,6 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
               console.log($rootScope.inCart[i].qty, 'if');
               $scope.details.added_cart = $rootScope.inCart[i].qty
               console.log($scope.details.added_cart ,'adddddddddddddddvccccccccccccc');
-              return
             } else {
               $scope.details.added_cart = 0
             }
@@ -1339,7 +1338,6 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
             if (newValue.sku == $rootScope.addToCart[i].prodSku) {
               console.log($rootScope.addToCart[i].qty, 'if');
               $scope.details.added_cart = $rootScope.addToCart[i].qty
-              return
             } else {
               $scope.details.added_cart = 0
             }
@@ -1349,12 +1347,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
 
 
+        console.log('parent',$scope.details.product.serialNo,newValue.sku);
         if ($scope.details.product.serialNo == newValue.sku) {
-          console.log('parent',$scope.details,$scope.details.variantsInStoreQty);
 
           // $scope.list.price = $scope.list.product.discountedPrice
           for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
-            console.log('lllllllllllll');
+            console.log('lllllllllllll',$scope.details.variantsInStoreQty[i].productVariant);
             if ($scope.details.variantsInStoreQty[i].productVariant==null && $scope.details.variantsInStoreQty[i].store==$scope.storePK) {
 
               if (INVENTORY_ENABLED == 'True') {
