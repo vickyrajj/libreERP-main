@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule', 'ngMeta' , 'angular-owl-carousel-2']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule', 'ngMeta', 'angular-owl-carousel-2']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider) {
 
@@ -36,7 +36,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
 
 
     function getCookie(cname) {
-      console.log(cname,'##################################');
+      console.log(cname, '##################################');
       var name = cname + "=";
       var decodedCookie = decodeURIComponent(document.cookie);
       console.log(decodedCookie, 'hhhhhhhhhhhhhhhhhhhhhh');
@@ -236,7 +236,7 @@ app.config(function($stateProvider) {
 });
 
 app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
-  console.log('bloggggggggggggggggggggggggggggggggggg',BRAND_TITLE);
+  console.log('bloggggggggggggggggggggggggggggggggggg', BRAND_TITLE);
   $window.scrollTo(0, 0)
   document.title = BRAND_TITLE + ' |  Blog'
   document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping Blogs')
@@ -388,10 +388,40 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
   $scope.incrementCart = function(modal) {
     console.log(modal, 'aaaaaaaaaaaaaaaaaaaaaaa');
     $scope.match.model.added++
-      for (var i = 0; i < $rootScope.inCart.length; i++) {
-        if ($rootScope.inCart[i].product.pk == modal.pk) {
-          if ($rootScope.inCart[i].typ == 'cart') {
-            $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
+    for (var i = 0; i < $rootScope.inCart.length; i++) {
+      if ($rootScope.inCart[i].product.pk == modal.pk) {
+        if ($rootScope.inCart[i].typ == 'cart') {
+          $rootScope.inCart[i].qty = $rootScope.inCart[i].qty + 1;
+          $http({
+            method: 'PATCH',
+            url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+            data: {
+              qty: $rootScope.inCart[i].qty
+            }
+          }).
+          then(function(response) {})
+        }
+      }
+    }
+  }
+  $scope.decrementCart = function(modal) {
+    $scope.match.model.added--
+    for (var i = 0; i < $rootScope.inCart.length; i++) {
+      if ($rootScope.inCart[i].product.pk == modal.pk) {
+        if ($rootScope.inCart[i].typ == 'cart') {
+          if ($scope.match.model.added == 0) {
+            $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
+            $http({
+              method: 'DELETE',
+              url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+            }).
+            then(function(response) {
+              Flash.create('success', 'Removed From Cart');
+
+            })
+            $rootScope.inCart.splice(i, 1)
+          } else if ($scope.match.model.added != 0) {
+            $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
             $http({
               method: 'PATCH',
               url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
@@ -400,41 +430,11 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
               }
             }).
             then(function(response) {})
+
           }
         }
       }
-  }
-  $scope.decrementCart = function(modal) {
-    $scope.match.model.added--
-      for (var i = 0; i < $rootScope.inCart.length; i++) {
-        if ($rootScope.inCart[i].product.pk == modal.pk) {
-          if ($rootScope.inCart[i].typ == 'cart') {
-            if ($scope.match.model.added == 0) {
-              $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
-              $http({
-                method: 'DELETE',
-                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-              }).
-              then(function(response) {
-                Flash.create('success', 'Removed From Cart');
-
-              })
-              $rootScope.inCart.splice(i, 1)
-            } else if ($scope.match.model.added != 0) {
-              $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
-              $http({
-                method: 'PATCH',
-                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-                data: {
-                  qty: $rootScope.inCart[i].qty
-                }
-              }).
-              then(function(response) {})
-
-            }
-          }
-        }
-      }
+    }
   }
 
   function getCookie(cname) {
@@ -472,21 +472,45 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
       console.log(response.data, 'aaaaaaaaaaaaaaa');
       console.log(model.serialNo);
       console.log(response.data.product.howMuch);
-      if (response.data.product.howMuch==null) {
+      if (response.data.product.howMuch == null) {
         return
       }
       for (var i = 0; i < response.data.product_variants.length; i++) {
-        if(response.data.product_variants[i].sku == model.serialNo){
+        if (response.data.product_variants[i].sku == model.serialNo) {
           console.log('hereeeee');
-            $scope.item = {'productName':response.data.product.name,'qty':1 , 'prodSku': response.data.product_variants[i].sku , 'prod_howMuch':response.data.product_variants[i].unitPerpack * response.data.product.howMuch , 'price':response.data.product_variants[i].discountedPrice ,'unit':response.data.product.unit , 'prodPk': response.data.pk}
-            break;
-        }else {
-          $scope.item = {'productName':response.data.product.name,'qty':1 , 'prodSku': response.data.product.serialNo , 'prod_howMuch':response.data.product.howMuch , 'price':response.data.product.discountedPrice ,'unit':response.data.product.unit , 'prodPk': response.data.pk}
+          $scope.item = {
+            'productName': response.data.product.name,
+            'qty': 1,
+            'prodSku': response.data.product_variants[i].sku,
+            'prod_howMuch': response.data.product_variants[i].unitPerpack * response.data.product.howMuch,
+            'price': response.data.product_variants[i].discountedPrice,
+            'unit': response.data.product.unit,
+            'prodPk': response.data.pk
+          }
+          break;
+        } else {
+          $scope.item = {
+            'productName': response.data.product.name,
+            'qty': 1,
+            'prodSku': response.data.product.serialNo,
+            'prod_howMuch': response.data.product.howMuch,
+            'price': response.data.product.discountedPrice,
+            'unit': response.data.product.unit,
+            'prodPk': response.data.pk
+          }
         }
       }
 
-      if (response.data.product_variants.length==0) {
-        $scope.item = {'productName':response.data.product.name,'qty':1 , 'prodSku': response.data.product.serialNo , 'prod_howMuch':response.data.product.howMuch , 'price':response.data.product.discountedPrice ,'unit':response.data.product.unit , 'prodPk': response.data.pk}
+      if (response.data.product_variants.length == 0) {
+        $scope.item = {
+          'productName': response.data.product.name,
+          'qty': 1,
+          'prodSku': response.data.product.serialNo,
+          'prod_howMuch': response.data.product.howMuch,
+          'price': response.data.product.discountedPrice,
+          'unit': response.data.product.unit,
+          'prodPk': response.data.pk
+        }
       }
 
       // $scope.item = {'productName':response.data.product.name,'qty':1 , 'prodSku': $scope.match.model.serialNo , 'prod_howMuch':$scope.match.model.howMuch , 'price':$scope.selectedProdVar.amnt ,'unit':$scope.match.model.unit , 'prodPk': $scope.list.pk}
@@ -510,33 +534,33 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
   }
   $scope.incrementCookie = function(details) {
     $scope.match.model.added++
-      for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        console.log(details.pk, 'aaaaaaaaaaaaa');
-        if ($rootScope.addToCart[i].prodSku == details.serialNo) {
-          $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty + 1
-          setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
-        }
+    for (var i = 0; i < $rootScope.addToCart.length; i++) {
+      console.log(details.pk, 'aaaaaaaaaaaaa');
+      if ($rootScope.addToCart[i].prodSku == details.serialNo) {
+        $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty + 1
+        setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
       }
+    }
   }
 
   $scope.decrementCookie = function(details) {
     $scope.match.model.added--
-      for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        if ($rootScope.addToCart[i].prodSku == details.serialNo) {
-          // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
-          // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
-          if ($scope.match.model.added == 0) {
-            setCookie("addToCart", "", -1, '/');
-            $rootScope.addToCart.splice(i, 1);
-            setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
-            return
-          } else {
-            $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty - 1
-            setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
-            return
-          }
+    for (var i = 0; i < $rootScope.addToCart.length; i++) {
+      if ($rootScope.addToCart[i].prodSku == details.serialNo) {
+        // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
+        // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+        if ($scope.match.model.added == 0) {
+          setCookie("addToCart", "", -1, '/');
+          $rootScope.addToCart.splice(i, 1);
+          setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
+          return
+        } else {
+          $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty - 1
+          setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
+          return
         }
       }
+    }
   }
 })
 
@@ -587,40 +611,40 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
 
   $scope.changeQty = function(value, data) {
     // for (var i = 0; i < $rootScope.inCart.length; i++) {
-      // if ($rootScope.inCart[i].product.pk == value) {
-        if ($rootScope.inCart[value].typ == 'cart') {
-          if (data == 'increase') {
-            $rootScope.inCart[value].qty = $rootScope.inCart[value].qty + 1;
+    // if ($rootScope.inCart[i].product.pk == value) {
+    if ($rootScope.inCart[value].typ == 'cart') {
+      if (data == 'increase') {
+        $rootScope.inCart[value].qty = $rootScope.inCart[value].qty + 1;
+      }
+      if (data == 'decrease') {
+        $rootScope.inCart[value].qty = $rootScope.inCart[value].qty - 1;
+      }
+      if ($rootScope.inCart[value].qty > 0) {
+        $http({
+          method: 'PATCH',
+          url: '/api/ecommerce/cart/' + $rootScope.inCart[value].pk + '/',
+          data: {
+            qty: $rootScope.inCart[value].qty
           }
-          if (data == 'decrease') {
-            $rootScope.inCart[value].qty = $rootScope.inCart[value].qty - 1;
-          }
-          if ($rootScope.inCart[value].qty > 0) {
-            $http({
-              method: 'PATCH',
-              url: '/api/ecommerce/cart/' + $rootScope.inCart[value].pk + '/',
-              data: {
-                qty: $rootScope.inCart[value].qty
-              }
-            }).
-            then(function(response) {
+        }).
+        then(function(response) {
 
-            })
-          } else if ($rootScope.inCart[value].qty == 0) {
-            $http({
-              method: 'DELETE',
-              url: '/api/ecommerce/cart/' + $rootScope.inCart[value].pk + '/',
-            }).
-            then(function(response) {
-              Flash.create('success', 'Removed From Cart');
+        })
+      } else if ($rootScope.inCart[value].qty == 0) {
+        $http({
+          method: 'DELETE',
+          url: '/api/ecommerce/cart/' + $rootScope.inCart[value].pk + '/',
+        }).
+        then(function(response) {
+          Flash.create('success', 'Removed From Cart');
 
-            })
-            $rootScope.inCart.splice(value, 1)
-            return
-          }
+        })
+        $rootScope.inCart.splice(value, 1)
+        return
+      }
 
-        }
-      // }
+    }
+    // }
 
     // }
   }
@@ -656,18 +680,17 @@ app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $ti
     console.log(indx, value)
     if (value == "increase") {
       $rootScope.addToCart[indx].qty++
-        setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
+      setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
       return
     }
     if (value == "decrease") {
       $rootScope.addToCart[indx].qty--
-        if ($rootScope.addToCart[indx].qty == 0) {
-          setCookie("addToCart", "", -1, '/');
-          $rootScope.addToCart.splice(indx, 1);
-          setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
-          return
-        }
-      else {
+      if ($rootScope.addToCart[indx].qty == 0) {
+        setCookie("addToCart", "", -1, '/');
+        $rootScope.addToCart.splice(indx, 1);
+        setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
+        return
+      } else {
         setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
         return
       }
@@ -820,7 +843,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.offset = 0
   $scope.reviews = []
   $scope.showOptions = true
-  console.log($scope.showOptions,'aaaaaaaaaaaaaaaaaaaaa');
+  console.log($scope.showOptions, 'aaaaaaaaaaaaaaaaaaaaa');
   // $scope.prodVariant = ''
   $scope.getRatings = function(offset) {
     $http({
@@ -858,7 +881,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
         if ($scope.details.product.storeQty[i].store.pincode == $rootScope.pin) {
           if ($scope.details.product.storeQty[i].quantity <= 0 && INVENTORY_ENABLED == 'True') {
             $scope.showOptions = false;
-          }else{
+          } else {
             $scope.showOptions = true;
           }
         }
@@ -1018,36 +1041,36 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }
   $scope.decrement = function(inputPk) {
     $scope.details.added_cart--
-      for (var i = 0; i < $rootScope.inCart.length; i++) {
-        if ($rootScope.inCart[i].prodSku == $scope.selectedProdVar.sku) {
-          if ($rootScope.inCart[i].typ == 'cart') {
-            if ($scope.details.added_cart == 0) {
-              $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
-              $http({
-                method: 'DELETE',
-                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-              }).
-              then(function(response) {
-                Flash.create('success', 'Removed From Cart');
+    for (var i = 0; i < $rootScope.inCart.length; i++) {
+      if ($rootScope.inCart[i].prodSku == $scope.selectedProdVar.sku) {
+        if ($rootScope.inCart[i].typ == 'cart') {
+          if ($scope.details.added_cart == 0) {
+            $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
+            $http({
+              method: 'DELETE',
+              url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+            }).
+            then(function(response) {
+              Flash.create('success', 'Removed From Cart');
 
-              })
-              $rootScope.inCart.splice(i, 1)
-              $scope.details.added_saved = 0
-            } else if ($scope.details.added_cart != 0) {
-              $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
-              $http({
-                method: 'PATCH',
-                url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
-                data: {
-                  qty: $rootScope.inCart[i].qty
-                }
-              }).
-              then(function(response) {})
+            })
+            $rootScope.inCart.splice(i, 1)
+            $scope.details.added_saved = 0
+          } else if ($scope.details.added_cart != 0) {
+            $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
+            $http({
+              method: 'PATCH',
+              url: '/api/ecommerce/cart/' + $rootScope.inCart[i].pk + '/',
+              data: {
+                qty: $rootScope.inCart[i].qty
+              }
+            }).
+            then(function(response) {})
 
-            }
           }
         }
       }
+    }
   }
 
 
@@ -1153,34 +1176,34 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
   $scope.incrementCookie = function(details) {
     $scope.details.added_cart++
-      for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        console.log(details.pk, 'aaaaaaaaaaaaa');
-        if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
-          $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty + 1
-          setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
-        }
+    for (var i = 0; i < $rootScope.addToCart.length; i++) {
+      console.log(details.pk, 'aaaaaaaaaaaaa');
+      if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
+        $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty + 1
+        setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
       }
+    }
   }
 
   $scope.decrementCookie = function(details) {
     console.log("aaaaaaaaaaaaaaaaaaa");
     $scope.details.added_cart--
-      for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
-          // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
-          // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
-          if ($scope.details.added_cart == 0) {
-            setCookie("addToCart", "", -1, '/');
-            $rootScope.addToCart.splice(i, 1);
-            setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
-            return
-          } else {
-            $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty - 1
-            setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
-            return
-          }
+    for (var i = 0; i < $rootScope.addToCart.length; i++) {
+      if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
+        // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
+        // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
+        if ($scope.details.added_cart == 0) {
+          setCookie("addToCart", "", -1, '/');
+          $rootScope.addToCart.splice(i, 1);
+          setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
+          return
+        } else {
+          $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty - 1
+          setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
+          return
         }
       }
+    }
   }
 
 
@@ -1246,12 +1269,20 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     }
 
     $scope.details.added_cart++
-      $scope.item = {'productName':$scope.details.product.name,'qty':1 , 'prodSku': $scope.selectedProdVar.sku , 'prod_howMuch':$scope.selectedProdVar.qty , 'price':$scope.selectedProdVar.amnt ,'unit':$scope.selectedProdVar.unit , 'prodPk': $scope.details.pk}
+    $scope.item = {
+      'productName': $scope.details.product.name,
+      'qty': 1,
+      'prodSku': $scope.selectedProdVar.sku,
+      'prod_howMuch': $scope.selectedProdVar.qty,
+      'price': $scope.selectedProdVar.amnt,
+      'unit': $scope.selectedProdVar.unit,
+      'prodPk': $scope.details.pk
+    }
 
-      // $scope.item = {
-      //   'product': product,
-      //   'qty': 1
-      // }
+    // $scope.item = {
+    //   'product': product,
+    //   'qty': 1
+    // }
     detail = getCookie("addToCart");
     $rootScope.addToCart = []
     if (detail != "") {
@@ -1268,7 +1299,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
   $scope.getProdVar = function() {
 
-    console.log($scope.details,'#############');
+    console.log($scope.details, '#############');
 
     $scope.prod_var = $scope.details.product_variants;
     $scope.prodVarList = []
@@ -1286,7 +1317,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       for (var i = 0; i < $scope.prod_var.length; i++) {
         str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
         $scope.prodVarList.push({
-          pk:$scope.prod_var[i].id,
+          pk: $scope.prod_var[i].id,
           str: str,
           qty: $scope.prod_var[i].unitPerpack * $scope.details.product.howMuch,
           amnt: $scope.prod_var[i].price,
@@ -1324,16 +1355,16 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
         if ($scope.me) {
           for (var i = 0; i < $rootScope.inCart.length; i++) {
-            console.log(newValue.sku,$rootScope.inCart[i].prodSku,'aaaaaaaaammmmmmmmmmkkkkkkkkkkkkk');
+            console.log(newValue.sku, $rootScope.inCart[i].prodSku, 'aaaaaaaaammmmmmmmmmkkkkkkkkkkkkk');
             if (newValue.sku == $rootScope.inCart[i].prodSku) {
               console.log($rootScope.inCart[i].qty, 'if');
               $scope.details.added_cart = $rootScope.inCart[i].qty
-              console.log($scope.details.added_cart ,'adddddddddddddddvccccccccccccc');
+              console.log($scope.details.added_cart, 'adddddddddddddddvccccccccccccc');
             } else {
               $scope.details.added_cart = 0
             }
           }
-        }else {
+        } else {
           for (var i = 0; i < $rootScope.addToCart.length; i++) {
             if (newValue.sku == $rootScope.addToCart[i].prodSku) {
               console.log($rootScope.addToCart[i].qty, 'if');
@@ -1347,27 +1378,27 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
 
 
-        console.log('parent',$scope.details.product.serialNo,newValue.sku);
+        console.log('parent', $scope.details.product.serialNo, newValue.sku);
         if ($scope.details.product.serialNo == newValue.sku) {
 
           // $scope.list.price = $scope.list.product.discountedPrice
           for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
-            console.log('lllllllllllll',$scope.details.variantsInStoreQty[i].productVariant);
-            if ($scope.details.variantsInStoreQty[i].productVariant==null && $scope.details.variantsInStoreQty[i].store==$scope.storePK) {
+            console.log('lllllllllllll', $scope.details.variantsInStoreQty[i].productVariant);
+            if ($scope.details.variantsInStoreQty[i].productVariant == null && $scope.details.variantsInStoreQty[i].store == $scope.storePK) {
 
               if (INVENTORY_ENABLED == 'True') {
                 $scope.selectedProdVar.inStock = $scope.details.variantsInStoreQty[i].quantity;
-                console.log(  $scope.selectedProdVar.inStock ,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2');
+                console.log($scope.selectedProdVar.inStock, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2');
                 console.log('yes');
-              }else{
+              } else {
                 $scope.selectedProdVar.inStock = 1000;
               }
               break;
 
-            }else {
+            } else {
               if (INVENTORY_ENABLED == 'True') {
                 $scope.selectedProdVar.inStock = 0
-              }else{
+              } else {
                 $scope.selectedProdVar.inStock = 1000;
               }
             }
@@ -1377,22 +1408,22 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
           console.log('child');
 
           for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
-            console.log($scope.details.variantsInStoreQty[i].productVariant , $scope.selectedProdVar);
-            if ($scope.details.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk &&$scope.details.variantsInStoreQty[i].store==$scope.storePK) {
+            console.log($scope.details.variantsInStoreQty[i].productVariant, $scope.selectedProdVar);
+            if ($scope.details.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk && $scope.details.variantsInStoreQty[i].store == $scope.storePK) {
 
               if (INVENTORY_ENABLED == 'True') {
                 $scope.selectedProdVar.inStock = $scope.details.variantsInStoreQty[i].quantity
-              }else{
+              } else {
                 $scope.selectedProdVar.inStock = 1000;
               }
 
               console.log('yes');
               break;
-            }else {
+            } else {
 
               if (INVENTORY_ENABLED == 'True') {
                 $scope.selectedProdVar.inStock = 0;
-              }else{
+              } else {
                 $scope.selectedProdVar.inStock = 1000;
               }
             }
@@ -1400,7 +1431,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
           $scope.details.price = newValue.amnt
         }
-        console.log($scope.selectedProdVar.inStock,'ffffffffff');
+        console.log($scope.selectedProdVar.inStock, 'ffffffffff');
       }
     })
 
@@ -1425,7 +1456,7 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
   //     }
   //   }
   // })
-  $scope.showFilter=settings_filter
+  $scope.showFilter = settings_filter
   $scope.data = $scope.$parent.data; // contains the pickUpTime , location and dropInTime
   $window.scrollTo(0, 0)
   $scope.minValue;
@@ -1698,7 +1729,9 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
               typ: 'favourite'
             }
           }).
-          then(function(response) {$rootScope.inFavourite.push(response.data)})
+          then(function(response) {
+            $rootScope.inFavourite.push(response.data)
+          })
           $scope.data.tableData[i].typ = 'favourite';
           $scope.data.tableData.splice(i, 1)
           $rootScope.inCart.splice(i, 1)
@@ -1754,7 +1787,7 @@ app.controller('ecommerce.account.cart.item', function($scope, $rootScope, $stat
   // for the dashboard of the account tab
 
 
-    $scope.currency = settings_currencySymbol;
+  $scope.currency = settings_currencySymbol;
 });
 
 app.controller('controller.ecommerce.account.saved', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $filter) {
@@ -1802,8 +1835,8 @@ app.controller('controller.ecommerce.account.saved', function($scope, $rootScope
             }
           }).
           then(function(response) {
-              console.log(response.data,'kkkkkkkkkkkkkkkkkk');
-              $rootScope.inCart.push(response.data)
+            console.log(response.data, 'kkkkkkkkkkkkkkkkkk');
+            $rootScope.inCart.push(response.data)
           })
           $scope.data.tableData.splice(i, 1)
           $rootScope.inFavourite.splice(i, 1)
@@ -1837,8 +1870,8 @@ app.controller('controller.ecommerce.account.saved.item', function($scope, $root
 
 
 
-app.controller('controller.ecommerce.account.orders.item', function($scope, $rootScope, $http, $state,$uibModal) {
-  $scope.showDetails = function(val){
+app.controller('controller.ecommerce.account.orders.item', function($scope, $rootScope, $http, $state, $uibModal) {
+  $scope.showDetails = function(val) {
     $scope.trackItem = val
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.ecommerce.orders.trackModal.html',
@@ -1851,7 +1884,7 @@ app.controller('controller.ecommerce.account.orders.item', function($scope, $roo
       },
       controller: function($scope, items, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance) {
 
-        console.log(items,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+        console.log(items, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 
         $scope.trackItems = items
 
@@ -1859,10 +1892,10 @@ app.controller('controller.ecommerce.account.orders.item', function($scope, $roo
 
       }
 
-  })
-}
+    })
+  }
 
-$scope.currency = settings_currencySymbol;
+  $scope.currency = settings_currencySymbol;
 
 })
 
@@ -2279,11 +2312,11 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   //   }
   // })
 
-    $rootScope.limitValue = settings_orderLimit
+  $rootScope.limitValue = settings_orderLimit
 
-// if($state.params){
-//   $scope.action ='retry'
-// }
+  // if($state.params){
+  //   $scope.action ='retry'
+  // }
 
 
 
@@ -2338,17 +2371,22 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
   var url = new URL(window.location.href)
   var action = url.searchParams.get("action")
-  if(action == 'retry'){
-  $scope.data.stage = 'payment';
-  }
-  else if (action == 'success'){
-    $http({method : 'GET' , url : '/api/ecommerce/order/' + url.searchParams.get('orderid') +'/'}).
+  if (action == 'retry') {
+    $scope.data.stage = 'payment';
+  } else if (action == 'success') {
+    $http({
+      method: 'GET',
+      url: '/api/ecommerce/order/' + url.searchParams.get('orderid') + '/'
+    }).
     then(function(response) {
       $scope.data.stage = 'confirmation';
-      $scope.order = {odnumber : response.data.pk , dt  : new Date() , paymentMode : 'Online' }
+      $scope.order = {
+        odnumber: response.data.pk,
+        dt: new Date(),
+        paymentMode: 'Online'
+      }
     })
-  }
-  else{
+  } else {
     $scope.data.stage = 'review'
   }
 
@@ -2364,7 +2402,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       var c = ca[i];
       while (c.charAt(0) == ' ') {
         c = c.substring(1);
-     }
+      }
       if (c.indexOf(name) == 0) {
         return c.substring(name.length, c.length);
       }
@@ -2372,16 +2410,16 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     return "";
   }
 
-    function setCookie(cname, cvalue, exdays) {
-        // console.log('set cookie');
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays*24*60*60*1000));
-        var expires = "expires="+ d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
+  function setCookie(cname, cvalue, exdays) {
+    // console.log('set cookie');
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
 
 
-    $scope.getAddr = getCookie('address')
+  $scope.getAddr = getCookie('address')
 
 
 
@@ -2407,8 +2445,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         if ($scope.me.profile.primaryAddress == $scope.savedAddress[i].pk) {
           $scope.pa = $scope.savedAddress[i].pk
           $scope.data.address = $scope.savedAddress[i]
-          if($scope.getAddr!=undefined){
-            if($scope.getAddr == $scope.savedAddress[i].pk){
+          if ($scope.getAddr != undefined) {
+            if ($scope.getAddr == $scope.savedAddress[i].pk) {
               // $scope.saved = true
               $scope.idx = i
             }
@@ -2541,7 +2579,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
   })
 
-$scope.shippingCharges = 0
+  $scope.shippingCharges = 0
 
   $scope.saveAdd = function() {
     if ($scope.data.address.street.length == 0) {
@@ -2557,7 +2595,7 @@ $scope.shippingCharges = 0
           return $scope.data.address;
         }
       },
-      controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add ) {
+      controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add) {
         $scope.adrForm = add;
         if ($scope.adrForm.title == undefined) {
           $scope.adrForm.title = ''
@@ -2628,7 +2666,7 @@ $scope.shippingCharges = 0
     }
   }
 
-
+  $scope.stock = []
 
   if ($state.params.pk == 'cart') {
     $http({
@@ -2637,9 +2675,7 @@ $scope.shippingCharges = 0
     }).
     then(function(response) {
       $scope.cartItems = response.data;
-      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-
+      $scope.product_var = undefined
       for (var i = 0; i < $scope.cartItems.length; i++) {
         var prod_variants = $scope.cartItems[i].product.product_variants
         for (var j = 0; j < prod_variants.length; j++) {
@@ -2647,6 +2683,22 @@ $scope.shippingCharges = 0
             $scope.cartItems[i].prod_var = prod_variants[j]
           }
         }
+        if ($rootScope.pin != undefined) {
+          $scope.store = $rootScope.pin.pk
+        }
+
+        if (response.data[i].prod_var != undefined) {
+          $scope.product_var = $scope.cartItems[i].prod_var.id
+        }
+
+        $http({
+          method: 'GET',
+          url: '/api/ecommerce/getinStock/?product_id=' + $scope.cartItems[i].product.product.pk + '&product_var=' + $scope.product_var + '&store=' + $scope.store,
+        }).
+        then(function(response) {
+          $scope.stock.push(response.data)
+        })
+
       }
       $scope.calcTotal();
     })
@@ -2662,6 +2714,16 @@ $scope.shippingCharges = 0
       $scope.calcTotal();
     })
   }
+  $scope.getinStock = function() {
+    console.log($scope.stock, 'cccccccccaaaaaaaaaaarrrrrrrrrrrrrrtttttttttttttt');
+    for (var i = 0; i < $scope.cartItems.length; i++) {
+      $scope.cartItems[i].stock = $scope.stock[i]
+    }
+  }
+  $timeout(function() {
+    $scope.getinStock()
+  }, 5000);
+
 
   $scope.changeQty = function() {
     $scope.calcTotal();
@@ -2691,19 +2753,21 @@ $scope.shippingCharges = 0
 
 
 
-  $scope.dataToSend = {sameAsShipping:true}
+  $scope.dataToSend = {
+    sameAsShipping: true
+  }
 
-  $scope.$watch('dataToSend.sameAsShipping' , function(newValue , oldValue) {
+  $scope.$watch('dataToSend.sameAsShipping', function(newValue, oldValue) {
     console.log(newValue);
     if (newValue == false) {
       $scope.showFields = true;
 
-    }else {
+    } else {
       $scope.showFields = false;
       $scope.dataToSend.billingAddress = ''
     }
   })
-$scope.totalLimit = false
+  $scope.totalLimit = false
   $scope.next = function() {
 
     console.log($scope.totalAfterPromo, $scope.totalAfterDiscount, '**************************8');
@@ -2732,23 +2796,23 @@ $scope.totalLimit = false
           //   return
           // }
           // else {
-            if ($scope.cartItems[i].qty <= 0 || $scope.cartItems[i].qty == undefined) {
-              Flash.create('danger', 'Please Select Valid quantity')
-              return
-            } else {
-              // var prodSku
-              // if ($scope.cartItems[i].prodSku==$scope.cartItems[i].product.product.serialNo) {
-              //   prodSku = $scope.cartItems[i].product.product.serialNo
-              // }else {
-              //     prodSku = $scope.cartItems[i].prodSku
-              // }
-              $scope.cartProducts.push({
-                pk: $scope.cartItems[i].product.pk,
-                qty: $scope.cartItems[i].qty,
-                prodSku: $scope.cartItems[i].prodSku
-              })
-            }
+          if ($scope.cartItems[i].qty <= 0 || $scope.cartItems[i].qty == undefined) {
+            Flash.create('danger', 'Please Select Valid quantity')
+            return
+          } else {
+            // var prodSku
+            // if ($scope.cartItems[i].prodSku==$scope.cartItems[i].product.product.serialNo) {
+            //   prodSku = $scope.cartItems[i].product.product.serialNo
+            // }else {
+            //     prodSku = $scope.cartItems[i].prodSku
+            // }
+            $scope.cartProducts.push({
+              pk: $scope.cartItems[i].product.pk,
+              qty: $scope.cartItems[i].qty,
+              prodSku: $scope.cartItems[i].prodSku
+            })
           }
+        }
         // }
         $scope.dataToSend.products = $scope.cartProducts
       } else {
@@ -2786,15 +2850,13 @@ $scope.totalLimit = false
       } else {
         $scope.dataToSend.mobile = $scope.me.profile.mobile
         $scope.dataToSend.address = $scope.data.address
-        if($scope.data.billingAddress.state==''&&$scope.dataToSend.sameAsShipping == false){
+        if ($scope.data.billingAddress.state == '' && $scope.dataToSend.sameAsShipping == false) {
           Flash.create('warning', 'Please Add Billing Address')
           return
-        }
-        else if($scope.dataToSend.sameAsShipping == true){
+        } else if ($scope.dataToSend.sameAsShipping == true) {
           $scope.dataToSend.billingAddress = $scope.data.address
-        }
-        else{
-            $scope.dataToSend.billingAddress = $scope.data.billingAddress
+        } else {
+          $scope.dataToSend.billingAddress = $scope.data.billingAddress
         }
       }
       $scope.data.stage = 'payment';
@@ -2826,7 +2888,7 @@ $scope.totalLimit = false
       data: $scope.dataToSend
     }).
     then(function(response) {
-      window.location = '/makeOnlinePayment/?orderid='+response.data.odnumber;
+      window.location = '/makeOnlinePayment/?orderid=' + response.data.odnumber;
     })
   }
 
@@ -2886,11 +2948,11 @@ $scope.totalLimit = false
 
 
 
-    $scope.$watch('data.address' , function(newValue , oldValue) {
-        $scope.address = newValue.pk
-       setCookie("address", JSON.stringify($scope.address) , 365);
+  $scope.$watch('data.address', function(newValue, oldValue) {
+    $scope.address = newValue.pk
+    setCookie("address", JSON.stringify($scope.address), 365);
 
-    })
+  })
 
 
 })
@@ -2899,7 +2961,7 @@ $scope.totalLimit = false
 app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash) {
 
 
-  $scope.$watch('slide.active' , function(newValue , oldValue) {
+  $scope.$watch('slide.active', function(newValue, oldValue) {
     if (newValue == undefined) {
       return;
     }
@@ -2913,29 +2975,32 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   })
 
 
+
+
+
   var owlAPi;
 
   $scope.properties = {
-      // autoHeight:true,
-      // animateIn: 'fadeIn',
-      lazyLoad: true,
-      items: 1,
-      loop : true,
-      autoplay : true,
-      autoplayTimeout : 5000,
-      dots: false
+    // autoHeight:true,
+    // animateIn: 'fadeIn',
+    lazyLoad: true,
+    items: 1,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 5000,
+    dots: false
   };
 
 
 
   $scope.MODE = MODE;
-  console.log('logooooooooooooooooooooo',ICON_LOGO,BRAND_TITLE);
+  console.log('logooooooooooooooooooooo', ICON_LOGO, BRAND_TITLE);
   $rootScope.ICON_LOGO = ICON_LOGO
   $rootScope.BRAND_TITLE = BRAND_TITLE
   $scope.me = $users.get('mySelf')
   $rootScope.companyPhone = ''
   $rootScope.companyEmail = ''
-  $rootScope.currency =''
+  $rootScope.currency = ''
   $scope.showCartImage = false;
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=phone').
   then(function(response) {
@@ -2947,7 +3012,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   })
 
   $scope.currency = settings_currencySymbol;
-$scope.showCartImage = false
+  $scope.showCartImage = false
   // $http.get('/api/ERP/appSettings/?app=25&name__iexact=isCartImage').
   // then(function(response) {
   //   console.log('ratingggggggggggggggggggg', response.data);
@@ -3009,7 +3074,7 @@ $scope.showCartImage = false
   console.log('firstttttttttttttttttttttttttttttttttttttttttttttt');
   $rootScope.multiStore = false
   $rootScope.pin = 0
-  $rootScope.storepk = 0
+  // $rootScope.storepk = 0
   $scope.openPinPopup = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.ecommerce.pincodeEnquiry.form.html',
@@ -3062,11 +3127,11 @@ $scope.showCartImage = false
   $scope.onChildEnter = false
   $scope.SortByCategory = false
   $scope.topLevelMenu = false
-  $scope.selectedOne = function(data){
+  $scope.selectedOne = function(data) {
     // console.log('dataaaaaaaaaaaaaaaa',data);
     $scope.childData = data
   }
-  $scope.resetAll = function(){
+  $scope.resetAll = function() {
     // console.log('resettinggggggggg');
     $scope.childData = {}
   }
@@ -3090,11 +3155,11 @@ $scope.showCartImage = false
   // });
 
   $scope.bannerImage = settings_bannerImage
-      if ($scope.bannerImage) {
-        $scope.paddingTop = '9.5vh';
-      }else {
-        $scope.paddingTop = '0px;';
-      }
+  if ($scope.bannerImage) {
+    $scope.paddingTop = '9.5vh';
+  } else {
+    $scope.paddingTop = '0px;';
+  }
 
 
   // $scope.closedropDowns = function(event){
@@ -3138,7 +3203,7 @@ $scope.showCartImage = false
   //     $scope.SortByCategory = response.data[0].flag
   //   }
   // })
-   $scope.SortByCategory = settings_SortByCategory
+  $scope.SortByCategory = settings_SortByCategory
 
   // $http.get('/api/ERP/appSettingsAdminMode/?name=topLevelMenu').
   // then(function(response) {
@@ -3148,7 +3213,7 @@ $scope.showCartImage = false
   //   }
   // })
 
- $scope.topLevelMenu = settings_topLevelMenu
+  $scope.topLevelMenu = settings_topLevelMenu
 
   $http.get('/api/ecommerce/pages/?topLevelMenu=1').
   then(function(response) {
@@ -3158,7 +3223,7 @@ $scope.showCartImage = false
 
   $http.get('/api/ecommerce/categorySortList/').
   then(function(response) {
-    console.log('categories Listtttttttttt',response.data);
+    console.log('categories Listtttttttttt', response.data);
     $scope.categoriesList = response.data
   })
 
@@ -3173,7 +3238,7 @@ $scope.showCartImage = false
   //   }
   // })
 
- $scope.topIcon = settings_topIcon
+  $scope.topIcon = settings_topIcon
 
   $rootScope.genericImage = {}
   $http({
@@ -3214,6 +3279,9 @@ $scope.showCartImage = false
   //     }
   //   }
   // })
+
+
+
   $scope.bannerText = settings_bannerText
 
   $scope.topStaticBanner = false
@@ -3439,7 +3507,7 @@ $scope.showCartImage = false
   // }
 
 
-
+  $rootScope.inCart = []
   $scope.settings = {};
   $http({
     method: 'GET',
@@ -3454,6 +3522,8 @@ $scope.showCartImage = false
 
   $scope.data.pickUpTime = null;
   $scope.data.dropInTime = null;
+  $scope.prodData = []
+  $scope.stock = []
   if ($scope.me != null) {
     $http({
       method: 'GET',
@@ -3461,7 +3531,9 @@ $scope.showCartImage = false
     }).
     then(function(response) {
       for (var i = 0; i < response.data.length; i++) {
+
         if (response.data[i].typ == 'cart') {
+            $scope.product_var = undefined
 
           var prod_variants = response.data[i].product.product_variants
 
@@ -3470,7 +3542,19 @@ $scope.showCartImage = false
               response.data[i].prod_var = prod_variants[j]
             }
           }
-
+          if ($rootScope.pin != undefined) {
+            $scope.store = $rootScope.pin.pk
+          }
+          if (response.data[i].prod_var != undefined) {
+            $scope.product_var = response.data[i].prod_var.id
+          }
+          $http({
+            method: 'GET',
+            url: '/api/ecommerce/getinStock/?product_id=' + response.data[i].product.product.pk + '&product_var=' + $scope.product_var + '&store=' + $scope.store,
+          }).
+          then(function(response) {
+            $scope.stock.push(response.data)
+          })
           $rootScope.inCart.push(response.data[i])
         }
         if (response.data[i].typ == 'favourite') {
@@ -3492,6 +3576,21 @@ $scope.showCartImage = false
       // }
 
     })
+
+    $scope.getinStock = function() {
+      console.log($scope.stock, 'stocccccckkkdata');
+      for (var i = 0; i < $rootScope.inCart.length; i++) {
+        // for (var j = 0; j < $scope.stock.length; j++) {
+        //   console.log($scope.stock[j],'aaaaaaaaaaaaaaaaaassssssssssss');
+        $rootScope.inCart[i].stock = $scope.stock[i]
+
+        // $rootScope.inCart[i].stock=$scope.stock[i]
+        console.log($rootScope.inCart[i], 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+      }
+    }
+    $timeout(function() {
+      $scope.getinStock()
+    }, 5000);
   }
 
   if ($scope.me != null) {
@@ -3508,8 +3607,6 @@ $scope.showCartImage = false
 
 
   if ($scope.me) {
-    console.log($rootScope.addToCart , 'gggggggggggggggggggggg');
-    console.log($rootScope.inCart);
     if ($rootScope.addToCart.length > 0) {
       if ($rootScope.inCart.length > 0) {
         console.log("comeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
@@ -3546,23 +3643,23 @@ $scope.showCartImage = false
           }
 
           for (var j = 0; j < $rootScope.inFavourite.length; j++) {
-              if ($rootScope.addToCart[i].prodSku == $rootScope.inFavourite[j].prodSku) {
-                if ($rootScope.inFavourite[j].typ == 'favourite') {
-                  $http({
-                    method: 'PATCH',
-                    url: '/api/ecommerce/cart/' + $rootScope.inFavourite[j].pk + '/',
-                    data: {
-                      typ: 'cart',
-                      qty: $rootScope.addToCart[i].qty
-                    }
-                  }).
-                  then(function(response) {
-                    $rootScope.inCart.push(response.data)
-                    $rootScope.inFavourite.splice(i, 1)
-                  })
+            if ($rootScope.addToCart[i].prodSku == $rootScope.inFavourite[j].prodSku) {
+              if ($rootScope.inFavourite[j].typ == 'favourite') {
+                $http({
+                  method: 'PATCH',
+                  url: '/api/ecommerce/cart/' + $rootScope.inFavourite[j].pk + '/',
+                  data: {
+                    typ: 'cart',
+                    qty: $rootScope.addToCart[i].qty
+                  }
+                }).
+                then(function(response) {
+                  $rootScope.inCart.push(response.data)
+                  $rootScope.inFavourite.splice(i, 1)
+                })
 
-                }
               }
+            }
           }
           $http({
             method: 'POST',
@@ -3670,6 +3767,11 @@ $scope.showCartImage = false
     //   $scope.$$childTail.fetchListings()
     // }
   }
+
+
+
+
+
 
 });
 app.controller('controller.ecommerce.pincodeEnquiry.modal', function($scope, $rootScope, $state, $http, $users, $interval, $uibModal, $uibModalInstance, Flash) {
@@ -3980,7 +4082,7 @@ app.controller('controller.ecommerce.contact.modal', function($scope, $rootScope
 });
 
 
-app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval, $filter , $timeout) {
+app.controller('controller.ecommerce.list', function($scope, $rootScope, $state, $http, Flash, $users, $interval, $filter, $timeout) {
 
   document.title = 'Buy Products Online At Best Price In India | ' + BRAND_TITLE
   document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
@@ -4003,7 +4105,7 @@ app.controller('controller.ecommerce.list', function($scope, $rootScope, $state,
   //   }
   // });
 
-$scope.categoryScroll = settings_categoryScroll
+  $scope.categoryScroll = settings_categoryScroll
 
 
 
@@ -4032,7 +4134,7 @@ $scope.categoryScroll = settings_categoryScroll
     } else {
       $http({
         method: 'GET',
-        url: '/api/ecommerce/listingLite/?limit='+$scope.listProdLimit
+        url: '/api/ecommerce/listingLite/?limit=' + $scope.listProdLimit
       }).
       then(function(response) {
         $scope.listingProductsData1 = response.data.results.slice(0, 12);
@@ -4077,18 +4179,18 @@ $scope.categoryScroll = settings_categoryScroll
 
 
   $scope.categoryProperties = {
-      // autoHeight:true,
-      // animateIn: 'fadeIn',
-      lazyLoad: true,
-      items: 5,
-      loop : true,
-      autoplay : true,
-      autoplayTimeout : 3000,
-      dots: false
+    // autoHeight:true,
+    // animateIn: 'fadeIn',
+    lazyLoad: true,
+    items: 5,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 3000,
+    dots: false
   };
 
 
-  $scope.showMore = function () {
+  $scope.showMore = function() {
     $scope.listProdLimit = 12
     $scope.listProdOffset = $scope.listProdOffset + 24;
     if ($rootScope.multiStore) {
@@ -4101,7 +4203,7 @@ $scope.categoryScroll = settings_categoryScroll
     } else {
       $http({
         method: 'GET',
-        url: '/api/ecommerce/listingLite/?limit='+$scope.listProdLimit+'&offset='+$scope.listProdOffset
+        url: '/api/ecommerce/listingLite/?limit=' + $scope.listProdLimit + '&offset=' + $scope.listProdOffset
       }).
       then(function(response) {
         console.log(response.data.results);
@@ -4110,9 +4212,9 @@ $scope.categoryScroll = settings_categoryScroll
         console.log($scope.listingProductsData2);
 
         // $scope.listingProductsData2 = response.data.results.slice(0, 12);
-    });
+      });
+    }
   }
-}
 
   $scope.recentlyViewed = [];
   // $scope.recentViewsArr = [];
@@ -4322,9 +4424,9 @@ $scope.categoryScroll = settings_categoryScroll
 
 
       $interval(function() {
-        if($scope.maxCategories==true&&$scope.genericProducts.length>5){
-          $scope.tmpCategory=$scope.genericProducts.slice(0,1)
-          $scope.genericProducts.splice(0,1)
+        if ($scope.maxCategories == true && $scope.genericProducts.length > 5) {
+          $scope.tmpCategory = $scope.genericProducts.slice(0, 1)
+          $scope.genericProducts.splice(0, 1)
           $scope.genericProducts.push($scope.tmpCategory[0])
         }
       }, 3000)
