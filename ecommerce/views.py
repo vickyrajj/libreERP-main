@@ -1814,9 +1814,11 @@ class GetInStockAPIView(APIView):
             store = int(request.GET['store'])
         if  request.GET['product_var']!='undefined':
             product_var = int(request.GET['product_var'])
-        storeData = StoreQty.objects.filter(store=store,product = request.GET['product_id'],productVariant=product_var)
+        storeData = StoreQty.objects.get(store=store,product = request.GET['product_id'],productVariant=product_var)
         if storeData:
-            stock = storeData[0].quantity
+            stock = storeData.quantity
         else:
             stock=0
-        return Response(stock,status = status.HTTP_200_OK)
+        print stock , 'sttccccccccccccccccckkkkkkkkkkk'
+        stockData = { 'stock':stock,'product':request.GET['product_id'],'product_var':request.GET['product_var'],'store':request.GET['store']}
+        return Response(stockData,status = status.HTTP_200_OK)

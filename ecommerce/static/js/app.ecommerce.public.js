@@ -2675,9 +2675,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }).
     then(function(response) {
       $scope.cartItems = response.data;
-      $scope.product_var = undefined
       for (var i = 0; i < $scope.cartItems.length; i++) {
         var prod_variants = $scope.cartItems[i].product.product_variants
+        $scope.product_var = undefined
         for (var j = 0; j < prod_variants.length; j++) {
           if (prod_variants[j].sku == $scope.cartItems[i].prodSku) {
             $scope.cartItems[i].prod_var = prod_variants[j]
@@ -2687,7 +2687,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           $scope.store = $rootScope.pin.pk
         }
 
-        if (response.data[i].prod_var != undefined) {
+        if (response.data[i].prod_var !== undefined) {
+          console.log($scope.cartItems[i].prod_var.id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
           $scope.product_var = $scope.cartItems[i].prod_var.id
         }
 
@@ -2717,7 +2718,32 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $scope.getinStock = function() {
     console.log($scope.stock, 'cccccccccaaaaaaaaaaarrrrrrrrrrrrrrtttttttttttttt');
     for (var i = 0; i < $scope.cartItems.length; i++) {
-      $scope.cartItems[i].stock = $scope.stock[i]
+      for (var j = 0; j < $scope.stock.length; j++) {
+        console.log($scope.stock[j], 'stocproo');
+        if ($rootScope.pin.pk == undefined) {
+          $scope.code = "undefined"
+        } else {
+          $scope.code = $rootScope.pin.pk
+        }
+        if ($rootScope.inCart[i].prod_var == undefined) {
+          $scope.prod_var = 'undefined'
+        } else {
+          $scope.prod_var = $scope.cartItems[i].prod_var.id
+        }
+        console.log($scope.stockpro, 'stocproo');
+        if ($scope.stock[j].store == $scope.code) {
+          console.log($scope.stock[j].product, $scope.cartItems[i].product.product.pk, $scope.stock[j].product_var, $scope.prod_var);
+          if ($scope.stock[j].product == $scope.cartItems[i].product.product.pk) {
+            console.log("aaaaaaaaaaaaaaaaaa");
+            if($scope.stock[j].product_var == $scope.prod_var){
+              console.log($scope.stock[j].stock);
+              $scope.cartItems[i].stock = $scope.stock[j].stock
+              console.log($scope.cartItems[i].stock, 'ssssttttoooccckkkkk');
+            }
+          }
+        }
+      }
+
     }
   }
   $timeout(function() {
@@ -2791,12 +2817,11 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
               $scope.cartProducts.splice(j, 1)
             }
           }
-          // if ($scope.cartItems[i].product.in_stock == 'false') {
-          //   Flash.create('danger', 'Please Select Valid Products')
-          //   return
-          // }
-          // else {
-          if ($scope.cartItems[i].qty <= 0 || $scope.cartItems[i].qty == undefined) {
+          if ($scope.cartItems[i].stock < 0 || !$scope.cartItems[i].stock) {
+            Flash.create('danger', 'Please Select Valid Products')
+            return
+          }
+          else if ($scope.cartItems[i].qty <= 0 || $scope.cartItems[i].qty == undefined) {
             Flash.create('danger', 'Please Select Valid quantity')
             return
           } else {
@@ -3533,7 +3558,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
       for (var i = 0; i < response.data.length; i++) {
 
         if (response.data[i].typ == 'cart') {
-            $scope.product_var = undefined
+          $scope.product_var = undefined
 
           var prod_variants = response.data[i].product.product_variants
 
@@ -3553,6 +3578,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
             url: '/api/ecommerce/getinStock/?product_id=' + response.data[i].product.product.pk + '&product_var=' + $scope.product_var + '&store=' + $scope.store,
           }).
           then(function(response) {
+            console.log(response, 'sttttttckkkkkkkkk');
             $scope.stock.push(response.data)
           })
           $rootScope.inCart.push(response.data[i])
@@ -3578,14 +3604,30 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     })
 
     $scope.getinStock = function() {
-      console.log($scope.stock, 'stocccccckkkdata');
+      console.log($scope.stock, 'cccccccccaaaaaaaaaaarrrrrrrrrrrrrrtttttttttttttt');
       for (var i = 0; i < $rootScope.inCart.length; i++) {
-        // for (var j = 0; j < $scope.stock.length; j++) {
-        //   console.log($scope.stock[j],'aaaaaaaaaaaaaaaaaassssssssssss');
-        $rootScope.inCart[i].stock = $scope.stock[i]
-
-        // $rootScope.inCart[i].stock=$scope.stock[i]
-        console.log($rootScope.inCart[i], 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+        for (var j = 0; j < $scope.stock.length; j++) {
+          if ($rootScope.pin.pk == undefined) {
+            $scope.code = "undefined"
+          } else {
+            $scope.code = $rootScope.pin.pk
+          }
+          if ($rootScope.inCart[i].prod_var == undefined) {
+            $scope.prod_var = "undefined"
+          } else {
+            $scope.prod_var = $rootScope.inCart[i].prod_var.id
+          }
+          if ($scope.stock[j].store == $scope.code) {
+            console.log($scope.stock[j].product, $rootScope.inCart[i].product.product.pk, $scope.stock[j].product_var, $scope.prod_var);
+            if ($scope.stock[j].product == $rootScope.inCart[i].product.product.pk) {
+              console.log("sssssssssssssssss");
+              if($scope.stock[j].product_var == $scope.prod_var){
+                $rootScope.inCart[i].stock = $scope.stock[j].stock
+                console.log($rootScope.inCart[i].stock,'kllllll');
+              }
+            }
+          }
+        }
       }
     }
     $timeout(function() {

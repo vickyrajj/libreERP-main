@@ -98,7 +98,7 @@
           <div ng-repeat="p in inCart" style="border-bottom:solid 2px #eeeeee; ">
             <h5 ng-if="p.prod_howMuch==null" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch | convertUnit:p.product.product.unit }}</h5>
             <h5 ng-if="p.prod_howMuch" style="margin:10px;">{{p.product.product.name}} {{p.prod_howMuch| convertUnit : p.product.product.unit}}</h5>
-            <div class="row" style="margin:0px;" ng-if="p.stock>0||!p.stock">
+            <div class="row" style="margin:0px;" ng-if="p.stock>0">
               <div class="col-sm-4 text-right">
                 <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >0" ng-click="changeQty($index , 'decrease');"></i>
               </div>
@@ -115,8 +115,7 @@
               <span ng-if="p.prodSku==p.product.product.serialNo">{{(p.product.product.discountedPrice * p.qty).toFixed(2) }}</span>
               <span ng-if="p.prodSku!=p.product.product.serialNo">{{(p.prodVarPrice * p.qty).toFixed(2)}}</span>
             </div>
-
-            <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.stock<=0">
+            <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.stock<=0||!p.stock">
               <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
             </div>
           </div>
