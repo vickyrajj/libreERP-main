@@ -52,3 +52,9 @@ class VendorServiceViewSet(viewsets.ModelViewSet):
     queryset = VendorService.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['vendorProfile']
+class VendorInvoiceViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = VendorInvoiceSerializer
+    queryset = VendorInvoice.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['vendorProfile']

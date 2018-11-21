@@ -13,6 +13,7 @@ router.register(r'invoices' , InvoiceViewSet , base_name ='invoices')
 router.register(r'inflow' , InflowViewSet , base_name ='inflow')
 router.register(r'vendorprofile' , VendorProfileViewSet , base_name ='vendorprofile')
 router.register(r'vendorservice' , VendorServiceViewSet , base_name ='vendorservice')
+router.register(r'vendorinvoice' , VendorInvoiceViewSet , base_name ='vendorinvoice')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

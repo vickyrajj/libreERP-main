@@ -135,7 +135,6 @@ class VendorProfileSerializer(serializers.ModelSerializer):
         v.save()
         return v
 
-
 class VendorServiceSerializer(serializers.ModelSerializer):
     vendorProfile = VendorProfileSerializer(many = False , read_only = True)
     class Meta:
@@ -147,3 +146,27 @@ class VendorServiceSerializer(serializers.ModelSerializer):
             i.vendorProfile = VendorProfile.objects.get(pk=int(self.context['request'].data['vendorProfile']))
         i.save()
         return i
+
+class VendorInvoiceSerializer(serializers.ModelSerializer):
+    vendorProfile = VendorProfileSerializer(many = False , read_only = True)
+    class Meta:
+        model = VendorInvoice
+        fields = ('pk', 'vendorProfile' , 'approver', 'invoice' , 'disbursedOn', 'amount', 'approvedOn', 'dueDate', 'dated','approved','disbursed')
+    def create(self , validated_data):
+        d = VendorInvoice(**validated_data)
+        if 'vendorProfile' in self.context['request'].data:
+            d.vendorProfile = VendorProfile.objects.get(pk=int(self.context['request'].data['vendorProfile']))
+        d.save()
+        return d
+    def update(self , instance , validated_data):
+        reqData = self.context['request'].data
+        if 'approved' in self.context['request'].data:
+            print reqData
+            instance.approvedOn = datetime.now()
+            instance.approved = reqData['approved']
+        if 'disbursed' in self.context['request'].data:
+            print 'iiiiiiiiiiiiiiiiiiii-----------'
+            instance.disbursedOn = datetime.now()
+            instance.disbursed = reqData['disbursed']
+        instance.save()
+        return instance

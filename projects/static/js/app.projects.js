@@ -179,7 +179,6 @@ app.controller('projectManagement.projects.project.explore' , function($scope , 
         url : '/api/projects/issue/',
     }).
       then(function(response) {
-        // console.log('jndsvjnfdjvnfjdn get data');
         $scope.issues = response.data;
       })
     }

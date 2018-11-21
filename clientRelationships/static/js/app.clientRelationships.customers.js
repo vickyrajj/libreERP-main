@@ -195,7 +195,6 @@ app.controller("businessManagement.clientRelationships.customer.form", function(
       then(function(response) {
         var dataToSend = {
           name : $scope.form.name,
-          // user : $scope.form.user.pk,
           mobile : $scope.form.mobile ,
           about : $scope.form.about,
           address : response.data.pk,
@@ -204,7 +203,6 @@ app.controller("businessManagement.clientRelationships.customer.form", function(
           tin : $scope.form.tin,
           logo : $scope.form.logo,
           web : $scope.form.web,
-          // vendor : $scope.form.vendor
         };
         $http({
           method: method,

@@ -199,6 +199,17 @@ app.controller('businessManagement.finance.expenses.form', function($scope, $htt
     })
   };
 
+  $scope.expenseCodes = []
+
+  $scope.$watch('invoiceForm.service' , function(newValue  , oldValue) {
+    if (newValue.pk != undefined) {
+      $http({method : 'GET' , url : '/api/finance/vendorservice/?vendorProfile__service=' + newValue.pk }).
+      then(function(response) {
+        $scope.expenseCodes = response.data;
+      })
+    }
+  })
+
   $scope.resetForm = function() {
     $scope.mode = 'new';
     $scope.form = {

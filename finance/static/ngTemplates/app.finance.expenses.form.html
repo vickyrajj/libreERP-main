@@ -44,6 +44,7 @@
     </div>
     <div class="col-md-5" ng-if="invoiceOptions">
       <h3>Add a Invoice</h3>
+
       <div class="form-group" style="padding-top: 19px;">
         <label>Service</label>
         <input type="text" class="form-control" ng-model="invoiceForm.service" uib-typeahead="p as p.name for p in serviceSearch($viewValue)" placeholder="Search For Service">
@@ -55,7 +56,9 @@
       </div>
       <div class="form-group col-md-6" style="padding-left:0px">
         <label>Expense Code</label>
-        <input type="tel" class="form-control" ng-model="invoiceForm.code">
+        <select class="form-control" ng-model="invoiceForm.code">
+          <option value="{{c.particular + ' : '+ c.rate}}" ng-repeat="c in expenseCodes">{{c.particular}}</option>
+        </select>
       </div>
       <div class="form-group col-md-6" style="padding-right:0px">
         <label>Amount</label>

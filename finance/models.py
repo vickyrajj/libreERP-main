@@ -15,6 +15,9 @@ def getInflowAttachmentsPath(instance , filename ):
 def getcontentDocsPath(instance , filename ):
     return 'finance/vendor/%s_%s_%s' % (str(time()).replace('.', '_'), instance.contactPerson, filename)
 
+def getInvoiceUploadPath(instance,filename):
+    return "finance/vendor/%s_%s__%s"% (str(time()).replace('.','_'),instance.approver, filename)
+
 class Account(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     number = models.PositiveIntegerField()
@@ -132,3 +135,16 @@ class VendorService(models.Model):
     vendorProfile = models.ForeignKey(VendorProfile , null = True , related_name='vendorservices')
     particular= models.CharField(max_length = 100 , null = False, unique = True)
     rate = models.PositiveIntegerField(null=True , default=0)
+
+class VendorInvoice(models.Model):
+    vendorProfile = models.ForeignKey(VendorProfile , null = True , related_name='vendorInvoices')
+    approver = models.ForeignKey(User , related_name='invoiceApprovedBy' , null = True)
+    invoice =  models.FileField(upload_to = getInvoiceUploadPath ,  null = True)
+    settled = models.BooleanField(default = False)
+    disbursedOn = models.DateTimeField(null = True)
+    approvedOn = models.DateTimeField(null = True)
+    dueDate = models.DateField(null = False)
+    dated = models.DateField(null = False)
+    amount= models.FloatField(null=True , default=0)
+    approved = models.NullBooleanField(null = True)
+    disbursed = models.NullBooleanField(null = True)

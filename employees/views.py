@@ -147,7 +147,7 @@ class AttendanceDataCreationApi(APIView):
 
             if len(row)<5:
                 continue
-                
+
             d = ' '.join(row.split())
             prts = d.split(' ')
             print "pk : " , prts[0]
