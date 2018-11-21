@@ -286,7 +286,6 @@ app.controller("businessManagement.finance.vendor.form", function($scope, $state
       $scope.fetchData();
     }, function(f) {
       // console.log('777777777777777777777777', f);
-      $scope.fetchData();
       if (typeof f == 'object') {
         $scope.form.service = f
       }
