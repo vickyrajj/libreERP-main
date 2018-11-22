@@ -97,61 +97,124 @@
   {% endif %}
 
   <script type="text/javascript">
-    $(document).ready(function() {
-      // $('#password').hide();
-      // $('#signIn').hide();
+    function setCookie(cname, cvalue, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
 
-      $('#requestOTP').click(function(e) {
-
-        $('#alerts').empty();
-        var id = $('#username').val()
-        if (id.length == 0) {
-          $('#alerts').append('<div class="alert alert-warning">Please enter your Mobile number or Email or Username</div>')
-        } else {
-          console.log(id, 'kkkkkkkkkkkkkkkkkkkkkkkkk')
-          var csrf = $.cookie("csrftoken")
-          console.log(csrf,'tokkkkkkkeeeeeeeeennnnnn');
-          $.ajax({
-            url: '/generateOTP',
-            data: {
-              id: id,
-              csrfmiddlewaretoken: csrf
-            },
-            beforeSend: function(request) {
-              request.setRequestHeader("X-CSRFToken", csrf);
-            },
-            type: 'POST',
-            success: function(data, status, jqXHR) {
-              console.log(status);
-              if (jqXHR.status == 200) {
-                $('#alerts').append('<div class="alert alert-success">OTP Has been sent</div>')
-                $('#password').attr("placeholder", "OTP");
-                $('#password').attr("name", "otp");
-                $('#password').attr("type", "text");
-
-              } else if (jqXHR.status == 400) {
-                $('#alerts').append('<div class="alert alert-danger">No account</div>')
-
-              } else {
-                $('#alerts').append('<div class="alert alert-danger">Error while sending OTP</div>');
-
-              }
-
-              $('#otptxt').empty();
-              $('#otptxt').append("Resend OTP");
-            },
-            error: function(e) {
-              console.log($('#regMobile')[0].name, $('#username').val());
-              $('#alerts').append('<div class="alert alert-danger">You Have No Account , We Are Creating New Account For You</div>')
-              $('#regMobile')[0].value = $('#username').val();
-              $('#regFrm').submit();
-
-            }
-          });
-
+    function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+          }
+      }
+      return "";
+    }
+      document.getElementById('requestOTP').addEventListener('click',function(){
+        var id = document.getElementById('username').value;
+        if(id.length == 0){
+          document.getElementById('alerts').innerHTML='<div class="alert alert-warning">Please enter your Mobile number or Email or Username</div>'
         }
-      });
-    });
+        else{
+          var csrf = getCookie("csrftoken")
+          var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                document.getElementById('alerts').innerHTML='<div class="alert alert-success">OTP Has been sent</div>'
+                document.getElementById('password').setAttribute("placeholder", "OTP");
+                document.getElementById('password').setAttribute("name", "otp");
+                document.getElementById('password').setAttribute("type", "text");
+              }
+              else if(this.status == 400){
+                  document.getElementById('alerts').innerHTML='<div class="alert alert-danger">No account</div>'
+              }
+              else if(this.status == 500){
+                document.getElementById('alerts').innerHTML='<div class="alert alert-danger">Error while sending OTP</div>';
+              }
+              else if(this.status == 404){
+                document.getElementById('alerts').innerHTML='<div class="alert alert-danger">You Have No Account , We Are Creating New Account For You</div>';
+                document.getElementById('alerts').value = document.getElementById('username').value
+                document.getElementById('regFrm').submit();
+              }
+              document.getElementById('requestOTP').innerHTML="";
+              document.getElementById('requestOTP').innerText="Resend OTP";
+            };
+            var formData = "id="+id+"&csrfmiddlewaretoken="+csrf+
+            xhttp.open("POST", "/generateOTP");
+            console.log(formData);
+
+            xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+            xhttp.setRequestHeader("Content-length", formData.length);
+            xhttp.send(formData);
+        }
+    })
+
+
+
+    // $(document).ready(function() {
+    //   // $('#password').hide();
+    //   // $('#signIn').hide();
+    //
+    //   $('#requestOTP').click(function(e) {
+    //
+    //     $('#alerts').empty();
+    //     var id = $('#username').val()
+    //     if (id.length == 0) {
+    //       $('#alerts').append('<div class="alert alert-warning">Please enter your Mobile number or Email or Username</div>')
+    //     } else {
+    //       console.log(id, 'kkkkkkkkkkkkkkkkkkkkkkkkk')
+    //       var csrf = $.cookie("csrftoken")
+    //       console.log(csrf,'tokkkkkkkeeeeeeeeennnnnn');
+    //       $.ajax({
+    //         url: '/generateOTP',
+    //         data: {
+    //           id: id,
+    //           csrfmiddlewaretoken: csrf
+    //         },
+    //         beforeSend: function(request) {
+    //           request.setRequestHeader("X-CSRFToken", csrf);
+    //         },
+    //         type: 'POST',
+    //         success: function(data, status, jqXHR) {
+    //           console.log(status);
+    //           if (jqXHR.status == 200) {
+    //             $('#alerts').append('<div class="alert alert-success">OTP Has been sent</div>')
+    //             $('#password').attr("placeholder", "OTP");
+    //             $('#password').attr("name", "otp");
+    //             $('#password').attr("type", "text");
+    //
+    //           } else if (jqXHR.status == 400) {
+    //             $('#alerts').append('<div class="alert alert-danger">No account</div>')
+    //
+    //           } else {
+    //             $('#alerts').append('<div class="alert alert-danger">Error while sending OTP</div>');
+    //
+    //           }
+    //
+    //           $('#otptxt').empty();
+    //           $('#otptxt').append("Resend OTP");
+    //         },
+    //         error: function(e) {
+    //           console.log($('#regMobile')[0].name, $('#username').val());
+    //           $('#alerts').append('<div class="alert alert-danger">You Have No Account , We Are Creating New Account For You</div>')
+    //           $('#regMobile')[0].value = $('#username').val();
+    //           $('#regFrm').submit();
+    //
+    //         }
+    //       });
+    //
+    //     }
+    //   });
+    // });
   </script>
 </body>
 

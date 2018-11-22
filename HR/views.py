@@ -91,9 +91,9 @@ def tokenAuthentication(request):
 
 @csrf_exempt
 def generateOTP(request):
-    print request.POST
-    print request.POST['id'],'kkkkkkkkllllllllllllkkkkkkkkkkk'
-
+    print request.POST ,'*****************'
+    print request.POST["id"],'kkkkkkkkllllllllllllkkkkkkkkkkk'
+    
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
     print 'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
