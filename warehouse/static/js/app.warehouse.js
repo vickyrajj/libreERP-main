@@ -32,7 +32,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
   $scope.serchField = ''
   $scope.$watch('serchField', function(newValue, oldValue) {
     console.log(newValue);
-    var url = '/api/warehouse/contract/'
+    var url = '/api/warehouse/contract/?activeStatus=true'
     // if (newValue.length == 0) {
     //   var url = '/api/warehouse/dashboardInvoices/'
     // } else {
@@ -168,10 +168,13 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
               $scope.total += $scope.amount
             }
           }
-
+          $scope.frmDateChange = new Date($scope.frmDate.getFullYear(),$scope.frmDate.getMonth(),$scope.frmDate.getDate() + 1)
+          $scope.toDateChange = new Date($scope.toDate.getFullYear(),$scope.toDate.getMonth(),$scope.toDate.getDate() + 1)
+          var dayDif = (($scope.toDateChange - $scope.frmDateChange)  / 1000 / 60 / 60 / 24)+1;
+          console.log($scope.frmDateChange , $scope.toDateChange, dayDif);
           $scope.price = $scope.contract.rate
           $scope.sqrt = $scope.contract.areas.areaLength * $scope.contract.quantity
-          $scope.cost = $scope.contract.rate * $scope.sqrt * 30
+          $scope.cost = $scope.contract.rate * $scope.sqrt * dayDif
           if ($scope.contract.company.gst.slice(0, 2) == '29') {
             $scope.gst = 9
             $scope.cgst = 9
@@ -186,14 +189,12 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           $scope.tot = $scope.cost + $scope.total
           $scope.tax = ($scope.tot * $scope.taxtot) / 100
           $scope.grandtot = $scope.tot + $scope.tax
-          console.log($scope.grandtot,'aaaaaaaaaaaaaaaaaaaaaa');
           $scope.grandtot = Math.round($scope.grandtot)
-          console.log($scope.grandtot,'aaaaaaaaaaaaaaaaaaaaaa');
           var dataToSend = {
             contract: $scope.contract.pk,
             data: JSON.stringify($scope.dataDetails),
-            fromDate: $scope.frmDate.toJSON().split('T')[0],
-            toDate: $scope.toDate.toJSON().split('T')[0],
+            fromDate: $scope.frmDateChange.toJSON().split('T')[0],
+            toDate: $scope.toDateChange.toJSON().split('T')[0],
             value: $scope.tot,
             grandTotal: $scope.grandtot
 
@@ -223,10 +224,12 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
   $scope.createInvoice = function(id, from, to) {
     for (var i = 0; i < $scope.invoiceData.length; i++) {
       if ($scope.invoiceData[i].pk == id) {
-
+        $scope.frmDateChange = new Date($scope.frmDate.getFullYear(),$scope.frmDate.getMonth(),$scope.frmDate.getDate() + 1)
+        $scope.toDateChange = new Date($scope.toDate.getFullYear(),$scope.toDate.getMonth(),$scope.toDate.getDate() + 1)
+        var dayDif = (($scope.toDateChange - $scope.frmDateChange)  / 1000 / 60 / 60 / 24)+1;
         $scope.price = $scope.invoiceData[i].rate
         $scope.sqrt = $scope.invoiceData[i].areas.areaLength * $scope.invoiceData[i].quantity
-        $scope.cost = $scope.invoiceData[i].rate * $scope.sqrt * 30
+        $scope.cost = $scope.invoiceData[i].rate * $scope.sqrt * dayDif
         if ($scope.invoiceData[i].company.gst.slice(0, 2) == '29') {
           $scope.gst = 9
           $scope.cgst = 9
@@ -247,8 +250,8 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
     }
     var dataToSend = {
       contract: id,
-      fromDate: $scope.frmDate.toJSON().split('T')[0],
-      toDate: $scope.toDate.toJSON().split('T')[0],
+      fromDate: $scope.frmDateChange.toJSON().split('T')[0],
+      toDate: $scope.toDateChange.toJSON().split('T')[0],
       value: $scope.cost,
       grandTotal: $scope.grandtot
 
@@ -421,12 +424,12 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
 
   $http({
     method: 'GET',
-    url: '/api/warehouse/contract'
+    url: '/api/warehouse/contract?activeStatus=true'
   }).
   then(function(response) {
     $scope.invoiceData = response.data
   }, function(err) {
-    Flash.create('error', 'Error occured')
+    Flash.create('error', 'Error occ-ured')
   })
   var date = new Date();
   $scope.frmDate = new Date(date.getFullYear(), date.getMonth(), 1),

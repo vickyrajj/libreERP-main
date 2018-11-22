@@ -82,6 +82,7 @@ class Contract(models.Model):
     otherDocs = models.FileField(upload_to=getWareHouseDocUploadPath, null = True)
     occupancy_screenshort = models.CharField(max_length = 100000 , null = True)
     dueDate = models.DateField(null = True)
+    activeStatus = models.BooleanField(default = True)
 
 CONTRACT_STATE_CHOICES = (
     ('quoted' , 'quoted'),

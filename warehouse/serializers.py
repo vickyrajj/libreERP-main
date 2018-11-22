@@ -71,7 +71,7 @@ class ContractSerializer(serializers.ModelSerializer):
     areas=SpaceSerializer(many=False,read_only=True)
     class Meta:
         model = Contract
-        fields = ('pk' ,'contacts', 'company' , 'billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' ,'areas' ,'occupancy_screenshort')
+        fields = ('pk' ,'contacts', 'company' , 'billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' ,'areas' ,'occupancy_screenshort','activeStatus')
         read_only_fields = ('user' ,'company','contacts','areas' )
     def create(self , validated_data):
         if validated_data['billingFrequency'] == len(str(validated_data['billingDates']).split(',')):
@@ -84,20 +84,20 @@ class ContractSerializer(serializers.ModelSerializer):
         else:
             raise ValidationError(detail=None)
     def update(self ,instance, validated_data):
-        if validated_data['billingFrequency'] == len(str(validated_data['billingDates']).split(',')):
-            for key in ['billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' ,'occupancy_screenshort']:
-                try:
-                    setattr(instance , key , validated_data[key])
-                except:
-                    pass
-            if 'company' in self.context['request'].data:
-                instance.company = Service.objects.get(pk=self.context['request'].data['company'])
-            if 'areas' in self.context['request'].data:
-                instance.areas = Space.objects.get(pk=self.context['request'].data['areas'])
-            instance.save()
-            return instance
-        else:
-            raise ValidationError(detail=None)
+        # if validated_data['billingFrequency'] == len(str(validated_data['billingDates']).split(',')):
+        for key in ['billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' ,'occupancy_screenshort','activeStatus']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'company' in self.context['request'].data:
+            instance.company = Service.objects.get(pk=self.context['request'].data['company'])
+        if 'areas' in self.context['request'].data:
+            instance.areas = Space.objects.get(pk=self.context['request'].data['areas'])
+        instance.save()
+        return instance
+        # else:
+        #     raise ValidationError(detail=None)
 
 
 class InvoiceSerializer(serializers.ModelSerializer):

@@ -136,11 +136,18 @@
         </div>
       </div>
       <div class="col-md-1" style="padding-top:85px; padding-left:15px;">
+
         <!--Just for testing purpose  -->
                 <!-- <a href="/api/warehouse/downloadPdf/"><i class="fa fa-2x fa-download">PDF</i> </a> -->
         <button type="button" class="btn btn-default btn-md pull-right" ng-click="addCommodity()"><i class="fa fa-plus"></i> Commodity</button>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-5" text-left>
+    <span  style="margin-top:10px;margin-right:20px;">Inactive </span>
+    <switch ng-model="contract.activeStatus" class="green"></switch><span  style="margin-top:10px;margin-right:20px;">Active </span>
+  </div>
+  </div>
 
     <!-- <div class="row" style="margin-top:10px;">
       <div class="text-right col-md-2">

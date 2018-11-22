@@ -57,7 +57,7 @@ class ContractViewSet(viewsets.ModelViewSet):
     serializer_class = ContractSerializer
     queryset = Contract.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['company']
+    filter_fields = ['company','activeStatus']
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated , )
@@ -585,25 +585,245 @@ def genInvoice(response , contract,invoiceobj, request):
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
 
+def genAllInvoice(response,contract,details,request):
+        print "kkkkkkkkkkkkkkkkkkkkkkkkkk"
+        cm = 2.54
+        elements = []
+        s = getSampleStyleSheet()
+        s = s["BodyText"]
+        s.wordWrap = 'CJK'
+        MARGIN_SIZE = 8 * mm
+        PAGE_SIZE = A4
+        print type(details.fromDate), type(details.toDate)
+        totaldays =  (details.toDate - details.fromDate).days + 1
+        print totaldays,'aaaaaaaaaaaaaaaaaa'
+        # if(totaldays==30){
+        #     totaldays = 30
+        # }
+        # else{
+        #     totaldays = totaldays
+        # }
+
+        # c = canvas.Canvas("hello.pdf")
+        # c.drawString(9*cm, 19*cm, "Hello World!")
+
+        doc = SimpleDocTemplate(response, pagesize = PAGE_SIZE,
+        leftMargin = MARGIN_SIZE, rightMargin = MARGIN_SIZE,
+        topMargin = 4*MARGIN_SIZE, bottomMargin = 3*MARGIN_SIZE)
+        x = datetime.datetime.now()
+        date = x.strftime("%x")
+        # days = abs((details.toDate-details.toDate).days)
+        now = datetime.datetime.now()
+        idDate =  details.toDate.strftime("%y")
+        month =  details.toDate.month
+        year =  details.toDate.year
+
+        # doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
+        # rowhead = [['TAX INVOICE\n']]
+        # tablehead = Table(rowhead, colWidths=(191*mm))
+        stylehead = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+                           ])
+        # tablehead.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),15),
+        #                 ]))
+        compStyle = styleN.clone('footerCompanyName')
+        compStyle.textColor = colors.black;
+
+        cmpName = Paragraph(settingsFields.get(name = 'companyName').value , compStyle)
+
+        cmpAddr = Paragraph(settingsFields.get(name = 'companyAddress').value , compStyle)
+
+        cmpBankDetails = Paragraph(settingsFields.get(name = 'bankDetails').value , compStyle)
+
+        cmpTin = Paragraph('<strong>CIN No : </strong>' +settingsFields.get(name = 'cin').value  , compStyle)
+
+        cmpPan = Paragraph('<strong>PAN No : </strong>' +settingsFields.get(name = 'pan').value  , compStyle)
+
+        cmpGst = Paragraph('<strong>GSTIN : </strong>' +settingsFields.get(name = 'gst').value  , compStyle)
+
+        billTo = Paragraph('<strong>BILL TO : <br/> </strong>'  + str(contract.company.name) + '<br/> ' + str(contract.company.street) + '<br/> ' + str(contract.company.city) + '<br/> ' + str(contract.company.state) + '-' + str(contract.company.pincode) + '<br/> ' + str(contract.company.country) +'<br/> Tel : ' + str(contract.company.telephone)+'<br/> GSTIN : ' + str(contract.company.gst)  , compStyle)
+
+        descdata = Paragraph('Warehouse Charges for the period/month - ' +str(month) + ' - ' +str(year)   , compStyle)
+
+        price =  Paragraph(str(contract.rate), compStyle)
+        sqrt = int(contract.areas.areaLength)*int(contract.quantity)
+        area = Paragraph(str(sqrt), compStyle)
+        cost = int(contract.rate)*sqrt*int(totaldays)
+
+        numbers = random.sample(range(10), 2)
+        invId = (''.join(map(str, numbers)))
+        bamount = 0
+        from reportlab.platypus.flowables import Image as GNAA
+        story = []
+        logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'logo4.png')
+        im = GNAA(logo, width=150, height=100)
+        story.append(im)
+
+        taxi = Paragraph('<font size="18"> TAX INVOICE </font>' , compStyle)
+        # contract.areas.areaLength
+        row0 = [[cmpName,'',taxi], [cmpAddr,'',story]]
+        table0 = Table(row0, colWidths=(73*mm,17*mm,100*mm))
+        style0 = TableStyle([
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+                           ('FONTSIZE',(0,0),(0,0),15),
+                           ('SPAN',(-1,-1),(-1,-1)),
+                           ])
+        row1 = [[billTo ,'Number : ALWH18/'+str(month)+str(invId)+str(idDate)+ ' \nDate : ' +str(details.toDate).split(' ')[0]+ '\nFor : Storage & Handling ' +str(month) + ' - ' +str(year)  ]]
+        table1 = Table(row1, colWidths=(95.5*mm, 95.5*mm))
+        style1 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+                           ])
+        row2 = [['DESCRIPTION','SAC Code','SPACE/Sft', 'RATE','UNIT' , 'AMOUNT']]
+        table2 = Table(row2, colWidths=(90*mm, 20*mm,20*mm, 20*mm,20*mm, 20*mm))
+        style2 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ])
+        row3 = [[descdata,'996729',area, price,'1' , '',cost]]
+        if details!='null':
+            for i in details.data:
+                dscdata = i['productMeta']['description']
+                dsc = Paragraph(str(dscdata), compStyle)
+                code = i['productMeta']['code']
+                rate = i['rate']
+                qty =  i['qty']
+                amount = i['amount']
+                row3 += [[dsc,code,'', rate,qty , '',amount]]
+                bamount += amount
+        total = bamount + cost
+        if(str(contract.company.gst[0:2])=='29'):
+            gst = 9
+            cgst = 9
+            igst = 0
+            gsttotal = (int(total) * int(gst))/100
+            cgsttotal = (int(total) * int(cgst))/100
+            igsttotal = 0
+
+        else:
+            gst = 0
+            cgst = 0
+            igst = 18
+            gsttotal = 0
+            cgsttotal = 0
+            igsttotal = (int(total) * int(igst))/100
+        totaltax = gsttotal + cgsttotal + igsttotal
+        gtotal = total + totaltax
+        gtotalText = num2words(int(gtotal))
+
+        table3 = Table(row3, colWidths=(90*mm, 20*mm,20*mm, 20*mm,10*mm,10*mm, 20*mm))
+        style3 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                           ])
+        row4 = [[cmpBankDetails,'Basic Amount', total],['','SGST    @    '+str(gst)+'%',str(gsttotal)],['','CGST    @    '+str(cgst)+'%',str(cgsttotal)],['','IGST     @    '+str(igst)+'%',str(igsttotal)],['','Income Tax Amount',str(totaltax)],[cmpPan,'Total',str(gtotal)]]
+        table4 = Table(row4, colWidths=(110*mm, 60*mm,20*mm))
+        style4 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,0),'LEFT'),
+                           ('INNERGRID', (-1,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (-1,0), (-1,-1), 0.25, colors.black),
+                           ('SPAN',(0,0),(0,-2)),
+                           ])
+        row5 = [[cmpTin,'Rupees : ' +str(gtotalText)],[cmpGst]]
+        table5 = Table(row5, colWidths=(70*mm, 120*mm))
+        style5 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (-1,0), (-1,-1), 0.25, colors.black),
+                           ('BOX', (-1,0), (-1,-1), 0.25, colors.black),
+                           ('INNERGRID', (-1,-1), (-1,-1), 0.25, colors.white),
+                           ('BOX', (-1,-1), (-1,-1), 0.25, colors.white),
+                           ('LINEABOVE', (-1,-1), (-1,-1), 0.25, colors.black),
+                           ])
+        payment = Paragraph('Make all payments to " '+settingsFields.get(name = 'companyName').value + ' " by T/T/NEFT to our <strong>Bank A/C as above.</strong>' , compStyle)
+        row6 = [[payment],['Total invoice amount due in 10 Days. Overdue accounts subject to a service charge of 3% per month.\n']]
+        table6 = Table(row6, colWidths=(190*mm))
+        style6 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'RIGHT'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'LEFT'),
+                           ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+                           ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+
+                           ])
+        row7 = [['This is a computer generated invoices and does not require a signature'],['THANK YOU FOR YOUR BUSINESS!']]
+        table7 = Table(row7, colWidths=(190*mm))
+        style7 = TableStyle([
+                           ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                           ('VALIGN',(0,0),(0,-1),'MIDDLE'),
+                           ('ALIGN',(0,-1),(-1,-1),'CENTER'),
+                           ('ALIGN',(0,0),(0,0),'CENTER'),
+                           ('INNERGRID', (-1,-1), (-1,-1), 0.25, colors.white),
+                           ('BOX', (-1,-1), (-1,-1), 0.25, colors.white),
+                           ('LINEABOVE', (0,0), (0,0), 0.25, colors.black),
+                           ])
+        table7.setStyle(TableStyle([('FONTSIZE',(0,0),(0,0),6),
+                                    ('FONTSIZE',(-1,-1),(-1,-1),12),
+                        ]))
+
+
+        # tablehead.setStyle(stylehead)
+        table0.setStyle(style0)
+        table1.setStyle(style1)
+        table2.setStyle(style2)
+        table3.setStyle(style3)
+        table4.setStyle(style4)
+        table5.setStyle(style5)
+        table6.setStyle(style6)
+        table7.setStyle(style7)
+        # elements.append(tablehead)
+        elements.append(table0)
+        elements.append(table1)
+        elements.append(table2)
+        elements.append(table3)
+        elements.append(table4)
+        elements.append(table5)
+        elements.append(table6)
+        elements.append(table7)
+        doc.build(elements)
+
+
 
 class DownloadInvoice(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        print 'cccccccccccccccccccccccccc'
-        if 'contract' not in request.GET:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        if 'saveOnly' in request.GET:
-            return Response(status=status.HTTP_200_OK)
-
-        response = HttpResponse(content_type='application/pdf')
-        print request.GET['contract']
-
         o = Contract.objects.get(id = request.GET['contract'])
         invoiceobj=Invoice.objects.get(contract=request.GET['contract'],pk=request.GET['inoicePk'])
-        print o
+        print invoiceobj.fromDate,'hhhhhhhhhhhhhhh'
+        if (invoiceobj.fromDate ==None and invoiceobj.toDate ==None):
+            if 'contract' not in request.GET:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            if 'saveOnly' in request.GET:
+                return Response(status=status.HTTP_200_OK)
+
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
+            genInvoice(response , o ,invoiceobj, request)
+        else:
+            print 'iinnnnnnnnnnnnaaaaaaaaaaaaaaaaaaaa', invoiceobj.fromDate , invoiceobj.toDate
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
+            genAllInvoice(response , o ,invoiceobj, request)
         # o = Invoice.objects.get(contract = request.GET['contract'])
-        response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
-        genInvoice(response , o ,invoiceobj, request)
 
 
         return response
@@ -1175,6 +1395,16 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         s.wordWrap = 'CJK'
         MARGIN_SIZE = 8 * mm
         PAGE_SIZE = A4
+        fromd =  frmDate.date()
+        tod = toDate.date()
+        totaldays =  (tod - fromd).days + 1
+        print totaldays,'aaaaaaaaaaaaaaaaaa'
+        # if(totaldays==30){
+        #     totaldays = 30
+        # }
+        # else{
+        #     totaldays = totaldays
+        # }
 
         # c = canvas.Canvas("hello.pdf")
         # c.drawString(9*cm, 19*cm, "Hello World!")
@@ -1222,7 +1452,7 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         price =  Paragraph(str(contract.rate), compStyle)
         sqrt = int(contract.areas.areaLength)*int(contract.quantity)
         area = Paragraph(str(sqrt), compStyle)
-        cost = int(contract.rate)*sqrt*30
+        cost = int(contract.rate)*sqrt*int(totaldays)
 
         numbers = random.sample(range(10), 2)
         invId = (''.join(map(str, numbers)))
@@ -1370,18 +1600,6 @@ def genMonthlyInvoice(response,contract,frmDate,toDate,month,year,details,reques
         elements.append(table6)
         elements.append(table7)
         doc.build(elements)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class DownloadMonthlyInvoice(APIView):

@@ -178,6 +178,20 @@ app.controller("businessManagement.warehouse.contract.notification", function($s
 app.controller("businessManagement.warehouse.contract.explore", function($scope, $filter, $state, $users, $stateParams, $http, Flash, $sce, $aside, $timeout, $uibModal) {
   $scope.comodities = []
   $scope.comodityData = []
+
+  $scope.$watch('contract.activeStatus', function(newValue, oldValue) {
+    console.log('aaaaaaaaaaaaaaaaaaaa');
+    $http({
+      method: 'PATCH',
+      url: '/api/warehouse/contract/' + $scope.contract.pk + '/',
+      data: {
+        activeStatus: newValue
+      }
+    }).
+    then(function(response) {
+
+    })
+  })
   $scope.addCommodity = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.warehouse.commodity.html',
@@ -281,6 +295,9 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           }
 
         }
+
+
+
         $scope.checkOut = function(value, qty, idx) {
 
           console.log(value);
@@ -683,8 +700,7 @@ app.controller('businessManagement.warehouse.contract', function($scope, $http, 
         } else if (action == 'details') {
           var title = 'Contract Details : ';
           var appType = 'contractExplorer';
-        }
-        else if (action == 'delete') {
+        } else if (action == 'delete') {
           $http({
             method: 'DELETE',
             url: '/api/warehouse/contract/' + $scope.data.tableData[i].pk + '/'
