@@ -39,23 +39,23 @@
           <th>Rate</th>
           <th></th>
           <tr ng-repeat="v in vendorServiceData">
-            <td width="20%">{{$index + 1}}</td>
-            <td width="40%">{{v.particular}}</td>
-            <td width="30%">{{v.rate}}</td>
-            <td width="20%"><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
+            <td>{{$index + 1}}</td>
+            <td>{{v.particular}}</td>
+            <td>{{v.rate}}</td>
+            <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
           </tr>
           <tr ng-repeat="item in items">
-            <td>{{$index + 1 + vendorServiceData.length}}</td>
-            <td><input  ng-model="item.particular" type="text" class="form-control-pos"></td>
-            <td>
+            <td width="20%">{{$index + 1 + vendorServiceData.length}}</td>
+            <td width="40%"><input  ng-model="item.particular" type="text" class="form-control-pos"></td>
+            <td width="30%">
               <input type="number"  step=1 class="form-control-pos" ng-model="item.rate">
             </td>
-            <td>
+            <td width="20%">
               <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable($index)"> <i class="fa fa-trash"></i> </button>
             </td>
           </tr>
           <tr>
-            <td><button style="background-color:white;border:none;" ng-click="addTableRow()"><i class="fa fa-plus" style="cursor:pointer"></i></button></td>
+            <td width="20%"><button style="background-color:white;border:none;" ng-click="addTableRow()"><i class="fa fa-plus" style="cursor:pointer"></i></button></td>
           </tr>
         </tr>
       </tbody>

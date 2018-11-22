@@ -139,7 +139,6 @@ app.controller('businessManagement.finance.vendor', function($scope, $http, $asi
   });
 
 
-
 })
 
 
@@ -466,7 +465,6 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
           }
           // $scope.items[i].pk = response.data.pk;
           // $scope.resetRow()
-          // $scope.fetchData()
         }
       })(i))
     }
