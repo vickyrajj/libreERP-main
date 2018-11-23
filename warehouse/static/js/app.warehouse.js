@@ -195,16 +195,16 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
 
 
           // $scope.dataDetails.push("amount":)
-          var dataToSend = {
-            contract: $scope.contract.pk,
-            data: JSON.stringify($scope.dataDetails),
-            fromDate: $scope.frmDateChange.toJSON().split('T')[0],
-            toDate: $scope.toDateChange.toJSON().split('T')[0],
-            value: $scope.tot,
-            grandTotal: $scope.grandtot,
-            totalTax :  Math.round($scope.tax)
-          }
           if($scope.invoice){
+            var dataToSend = {
+              contract: $scope.contract.pk,
+              data: JSON.stringify($scope.dataDetails),
+              fromDate: $scope.frmDateChange.toJSON().split('T')[0],
+              toDate: $scope.toDateChange.toJSON().split('T')[0],
+              value: $scope.tot,
+              grandTotal: $scope.grandtot,
+              totalTax :  Math.round($scope.tax)
+            }
             $http({
               method: 'PATCH',
               url: '/api/warehouse/invoice/' + $scope.invoice +'/',
@@ -231,6 +231,15 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
               "qty" : 1
             }
             $scope.dataDetails.push(extraData)
+            var dataToSend = {
+              contract: $scope.contract.pk,
+              data: JSON.stringify($scope.dataDetails),
+              fromDate: $scope.frmDateChange.toJSON().split('T')[0],
+              toDate: $scope.toDateChange.toJSON().split('T')[0],
+              value: $scope.tot,
+              grandTotal: $scope.grandtot,
+              totalTax :  Math.round($scope.tax)
+            }
             $http({
               method: 'POST',
               url: '/api/warehouse/invoice/',

@@ -310,7 +310,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
 
 
         $scope.checkOut = function(value, qty, idx) {
-
           console.log(value);
           for (var i = 0; i < $scope.comodities.length; i++) {
             if ($scope.comodities[i].pk == value) {
