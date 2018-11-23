@@ -21,30 +21,30 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
 
   function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
 
   function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i <ca.length; i++) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
       var c = ca[i];
       while (c.charAt(0) == ' ') {
-          c = c.substring(1);
+        c = c.substring(1);
       }
       if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
+        return c.substring(name.length, c.length);
       }
+    }
+    return "";
   }
-  return "";
-}
 
 
-  setTimeout(function () {
+  setTimeout(function() {
     $http({
       method: 'GET',
       url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
@@ -64,9 +64,12 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           boxOpen: false,
           companyPk: response.data[i].companyPk,
           servicePk: response.data[i].servicePk,
-          spying:{value :'' , isTyping : false},
-          video:false,
-          videoUrl:''
+          spying: {
+            value: '',
+            isTyping: false
+          },
+          video: false,
+          videoUrl: ''
         })
 
         connection.session.publish('service.support.agent', [response.data[i].uid, 'R'], {}, {
@@ -92,52 +95,56 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           messages: [],
           isOnline: true,
           companyPk: response.data[i].companyPk,
-          email:'',
-          boxOpen:false,
+          email: '',
+          boxOpen: false,
           chatThreadPk: response.data[i].chatThreadPk,
-          spying:{value :'' , isTyping : false},
-          video:false,
-          videoUrl:''
+          spying: {
+            value: '',
+            isTyping: false
+          },
+          video: false,
+          videoUrl: ''
         })
       }
     });
   }, 1000);
 
-  $scope.onNotification=function(uid,msg,i='a'){
+  $scope.onNotification = function(uid, msg, i = 'a') {
 
 
-    if(msg.length>20){
-      msg= msg.substring(0,20)+'....';
+    if (msg.length > 20) {
+      msg = msg.substring(0, 20) + '....';
     }
     webNotification.showNotification(uid, {
 
-            body:msg,
-            icon: 'my-icon.ico',
-            onClick: function onNotificationClicked() {
-                console.log('Notification clicked');
-                if(i=='a'){
+      body: msg,
+      icon: 'my-icon.ico',
+      onClick: function onNotificationClicked() {
+        console.log('Notification clicked');
+        if (i == 'a') {
 
-                } else{
-                  $scope.addToChat(i,uid)
-                }
+        } else {
+          $scope.addToChat(i, uid)
+        }
 
-            },
-            autoClose: 20000 //auto close the notification after 4 seconds (you can manually close it via hide function)
-        }, function onShow(error, hide) {
-            if (error) {
-                window.alert('Unable to show notification: ' + error.message);
-            } else {
-                console.log('Notification Shown.');
+      },
+      autoClose: 20000 //auto close the notification after 4 seconds (you can manually close it via hide function)
+    }, function onShow(error, hide) {
+      if (error) {
+        window.alert('Unable to show notification: ' + error.message);
+      } else {
+        console.log('Notification Shown.');
 
-                setTimeout(function hideNotification() {
-                    console.log('Hiding notification....');
-                    hide(); //manually close the notification (you can skip this if you use the autoClose option)
-                }, 20000);
-            }
-        });
-    }
+        setTimeout(function hideNotification() {
+          console.log('Hiding notification....');
+          hide(); //manually close the notification (you can skip this if you use the autoClose option)
+        }, 20000);
+      }
+    });
+  }
 
   $scope.chatsInView = [];
+  $scope.webRtcAddress = webRtcAddress
   $scope.data = {
     activeTab: 0,
   }
@@ -162,29 +169,29 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     $scope.msgText = $scope.templates[data].msg;
   }
 
-function removeFromCookie(uid){
-  for (var i = 0; i < openedUsers.length; i++) {
-    if(openedUsers[i].uid==uid){
-      console.log(openedUsers);
-      openedUsers.splice(i, 1);
-      console.log(openedUsers);
+  function removeFromCookie(uid) {
+    for (var i = 0; i < openedUsers.length; i++) {
+      if (openedUsers[i].uid == uid) {
+        console.log(openedUsers);
+        openedUsers.splice(i, 1);
+        console.log(openedUsers);
+      }
     }
+    setCookie('openedChats', JSON.stringify(openedUsers), 30);
   }
-  setCookie('openedChats',JSON.stringify(openedUsers),30);
-}
 
-  var openedUsers=[]
+  var openedUsers = []
 
-  function addToCookie(uid,indx){
+  function addToCookie(uid, indx) {
     openedUsers.push({
-      uid:uid,
-      index:indx
+      uid: uid,
+      index: indx
     })
-      setCookie('openedChats',JSON.stringify(openedUsers),30);
-      console.log('added index '+indx);
+    setCookie('openedChats', JSON.stringify(openedUsers), 30);
+    console.log('added index ' + indx);
   }
 
-  $scope.addToChat = function(indx , uid ) {
+  $scope.addToChat = function(indx, uid) {
 
     console.log(indx);
     console.log(uid);
@@ -195,7 +202,7 @@ function removeFromCookie(uid){
     // then(function(publication) {
     //   console.log("Published");
     // });
-    addToCookie(uid,indx);
+    addToCookie(uid, indx);
 
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
@@ -227,24 +234,29 @@ function removeFromCookie(uid){
   // }
 
 
-  $scope.getOpenedChatFromCookie= function(){
+  $scope.getOpenedChatFromCookie = function() {
 
-      var openedChats=JSON.parse(getCookie('openedChats'));
-      console.log(openedChats);
-      for (var i = 0; i < openedChats.length; i++) {
-        for (var j = 0; j < $scope.myUsers.length; j++) {
-          if ($scope.myUsers[j].uid == openedChats[i].uid) {
-            console.log(openedChats[i]);
-            $scope.addToChat(openedChats[i].index,openedChats[i].uid)
-          }
+    var openedChats = getCookie('openedChats')
+    if (openedChats.length == 0) {
+      return
+    }
+
+    openedChats = JSON.parse(openedChats);
+    console.log(openedChats);
+    for (var i = 0; i < openedChats.length; i++) {
+      for (var j = 0; j < $scope.myUsers.length; j++) {
+        if ($scope.myUsers[j].uid == openedChats[i].uid) {
+          console.log(openedChats[i]);
+          $scope.addToChat(openedChats[i].index, openedChats[i].uid)
         }
+      }
     }
   }
-  setTimeout(function () {
-      $scope.getOpenedChatFromCookie();
+  setTimeout(function() {
+    $scope.getOpenedChatFromCookie();
   }, 3200);
 
-    // $scope.addToChat(openedChats[i].index,openedChats[i].uid)
+  // $scope.addToChat(openedChats[i].index,openedChats[i].uid)
 
 
 
@@ -343,7 +355,7 @@ function removeFromCookie(uid){
       acknowledge: true
     }).
     then(function(publication) {
-      console.log("Published AP" , uid);
+      console.log("Published AP", uid);
     });
 
 

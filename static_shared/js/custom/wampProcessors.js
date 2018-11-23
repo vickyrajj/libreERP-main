@@ -3,6 +3,7 @@ var connection = new autobahn.Connection({
   realm: 'default'
 });
 
+var webRtcAddress = webRtcAddress
 
 // "onopen" handler will fire when WAMP session has been established ..
 connection.onopen = function(session) {
@@ -189,12 +190,14 @@ var isfocused=true;
             scope.myUsers[i].spying.value = ''
           }else if (args[1] == 'CL') {
             scope.sound.play();
+            args[2].created = new Date();
             scope.myUsers[i].messages.push(args[2])
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value=''
             //chat closed by user
           }else if (args[1] == 'FB') {
             scope.sound.play();
+            args[2].created = new Date();
             if (args[2].usersFeedback.length==0) {
               args[2].usersFeedback = "NA"
             }
@@ -434,6 +437,27 @@ var isfocused=true;
           console.log(args[2]);
           alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
           scope.myUsers.push(args[2]);
+
+          connection.session.publish('service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published AP", args[2].uid);
+          });
+
+          var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+               console.log('chat thread pk changed');
+             }
+           };
+           xhttp.open('PATCH', '/api/support/chatThread/'+ args[2].chatThreadPk + '/', true);
+           xhttp.setRequestHeader("Content-type", "application/json");
+           xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+           xhttp.send(JSON.stringify({user:scope.me.pk}));
+
+
+
           return
         }else {
           console.log('onlieeeeeeeeeeeeeeeeeeeeeeeee');

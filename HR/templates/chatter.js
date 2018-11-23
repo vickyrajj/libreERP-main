@@ -293,6 +293,9 @@ function getCookie(cname) {
 
 var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
 
+var webRtcAddress = '{{webrtcAddress}}';
+
+
 var custID = {{pk}};
 console.log('customer id....', custID);
 // var borderColor = '#ACA626';
@@ -853,6 +856,18 @@ function createChatDiv() {
 
   // inputText.style.display = "none"
 
+  // var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+  // var eventer = window[eventMethod];
+  // var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+  //
+  // // Listen to message from child window
+  // eventer(messageEvent,function(e) {
+  //     var key = e.message ? "message" : "data";
+  //     var data = e[key];
+  //     alert('cameeee')
+  //     //run function//
+  // },false);
+
 
   var chatCircleText =   document.getElementById('chatCircleText')
   var callCircleText =   document.getElementById('callCircleText')
@@ -865,7 +880,6 @@ function createChatDiv() {
   // exitBtn.style.display ="none"
   // var videoCallAccepted = false;
 
-  var webRtcAddress = 'http://localhost:1111'
 
 
 
@@ -1967,7 +1981,17 @@ function createChatDiv() {
   window.addEventListener("message", receiveMessage, false);
 
   function receiveMessage(event){
-    if (event.origin== webRtcAddress){
+    if (event.data=='loadMyOrders') {
+      // console.log(''event);
+      // alert('instakk ext')
+      console.log('opennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+
+      var url = 'https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk'
+       window.open(url);
+      // window.location = 'https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk'
+
+    }
+    if (event.data== 'userleft'){
 
       document.getElementById('iframeDiv').style.display="none"
       setTimeout(function () {
