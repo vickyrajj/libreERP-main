@@ -190,27 +190,61 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           $scope.tax = ($scope.tot * $scope.taxtot) / 100
           $scope.grandtot = $scope.tot + $scope.tax
           $scope.grandtot = Math.round($scope.grandtot)
+          console.log($scope.dataDetails,$scope.contract.quantity,'aaaaaaaaaaaaaaaaaa');
+          var currentMonth = $scope.frmDateChange.getMonth()+1
+
+
+          // $scope.dataDetails.push("amount":)
           var dataToSend = {
             contract: $scope.contract.pk,
             data: JSON.stringify($scope.dataDetails),
             fromDate: $scope.frmDateChange.toJSON().split('T')[0],
             toDate: $scope.toDateChange.toJSON().split('T')[0],
             value: $scope.tot,
-            grandTotal: $scope.grandtot
+            grandTotal: $scope.grandtot,
+            totalTax :  Math.round($scope.tax)
+          }
+          if($scope.invoice){
+            $http({
+              method: 'PATCH',
+              url: '/api/warehouse/invoice/' + $scope.invoice +'/',
+              data: dataToSend
+            }).
+            then(function(response) {
+              Flash.create('success', 'Saved');
+              $scope.invoice = response.data.pk
+            }, function(err) {
+              Flash.create('danger', 'Error');
+            })
+          }
+          else{
+            var extraData ={
+              "amount":$scope.cost,
+              "productMeta":{
+                  "description": "Warehouse Charges for the period/month -" + currentMonth+ ' - ' + $scope.frmDate.getFullYear(),
+                  "typ": "SAC",
+                  "code": 996729,
+                  "taxRate": 18
+              },
+              "rate" : $scope.contract.rate,
+              "space" : $scope.contract.quantity,
+              "qty" : 1
+            }
+            $scope.dataDetails.push(extraData)
+            $http({
+              method: 'POST',
+              url: '/api/warehouse/invoice/',
+              data: dataToSend
+            }).
+            then(function(response) {
+              Flash.create('success', 'Saved');
+              $scope.invoice = response.data.pk
 
+            }, function(err) {
+              Flash.create('danger', 'Error');
+            })
           }
 
-
-          $http({
-            method: 'POST',
-            url: '/api/warehouse/invoice/',
-            data: dataToSend
-          }).
-          then(function(response) {
-            Flash.create('success', 'Saved');
-          }, function(err) {
-            Flash.create('danger', 'Error');
-          })
         }
       },
     }).result.then(function() {
@@ -243,31 +277,49 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         }
         $scope.tax = ($scope.cost * $scope.taxtot) / 100
         $scope.grandtot = $scope.cost + $scope.tax
-        console.log($scope.grandtot,'aaaaaaaaaaaaaaaaaaaaaa');
+
         $scope.grandtot = Math.round($scope.grandtot)
-        console.log($scope.grandtot,'aaaaaaaaaaaaaaaaaaaaaa');
+        $scope.detailData =[]
+        var currentMonth = $scope.frmDateChange.getMonth()+1
+        var extraData ={
+          "amount":$scope.cost,
+          "productMeta":{
+              "description": "Warehouse Charges for the period/month -" + currentMonth + ' - ' + $scope.frmDateChange.getFullYear(),
+              "typ": "SAC",
+              "code": 996729,
+              "taxRate": 18
+          },
+          "rate" : $scope.invoiceData[i].rate,
+          "space" : $scope.invoiceData[i].quantity,
+          "qty" : 1
+        }
+        $scope.detailData.push(extraData)
+        var dataToSend = {
+          contract: id,
+          fromDate: $scope.frmDateChange.toJSON().split('T')[0],
+          toDate: $scope.toDateChange.toJSON().split('T')[0],
+          value: $scope.cost,
+          grandTotal: $scope.grandtot,
+          totalTax :  Math.round($scope.tax),
+          data : JSON.stringify($scope.detailData)
+        }
+
+
+        $http({
+          method: 'POST',
+          url: '/api/warehouse/invoice/',
+          data: dataToSend
+        }).
+        then(function(response) {
+          Flash.create('success', 'Saved');
+          console.log(response.data);
+          $scope.invoice = response.data.pk
+          $scope.indx  =  response.data.contract.pk
+        }, function(err) {
+          Flash.create('danger', 'Error');
+        })
       }
     }
-    var dataToSend = {
-      contract: id,
-      fromDate: $scope.frmDateChange.toJSON().split('T')[0],
-      toDate: $scope.toDateChange.toJSON().split('T')[0],
-      value: $scope.cost,
-      grandTotal: $scope.grandtot
-
-    }
-
-
-    $http({
-      method: 'POST',
-      url: '/api/warehouse/invoice/',
-      data: dataToSend
-    }).
-    then(function(response) {
-      Flash.create('success', 'Saved');
-    }, function(err) {
-      Flash.create('danger', 'Error');
-    })
 
   }
 

@@ -21,20 +21,20 @@
       <div class="col-md-1">
         <strong>Price</strong>
       </div>
-      <div class="col-md-1">
+      <!-- <div class="col-md-1">
         <strong>Tax Rate</strong>
-      </div>
+      </div> -->
       <div class="col-md-1">
         <strong>HSN/SAC code</strong>
       </div>
       <div class="col-md-1">
         <strong>Quantity</strong>
       </div>
-      <div class="col-md-1">
+      <!-- <div class="col-md-1">
         <strong>Total tax</strong>
-      </div>
+      </div> -->
       <div class="col-md-1">
-        <strong>Sub Total</strong>
+        <strong>Total</strong>
       </div>
     </div>
   </div>
@@ -45,14 +45,14 @@
     <table class="table table-striped">
       <tbody>
         <tr ng-repeat="d in data">
-          <td style="width:26.3%">{{d.desc}}</td>
-          <td style="width:8.33%">{{d.type}}</td>
-          <td style="width:8.33%">{{d.rate}}</td>
-          <td style="width:8.33%">{{d.tax}}</td>
-          <td style="width:8.33%">{{d.taxCode}}</td>
-          <td style="width:8.33%">{{d.quantity}}</td>
-          <td style="width:10%">{{d.totalTax}}</td>
-          <td style="width:10%">{{d.subtotal}}</td>
+          <td style="width:26.3%">{{d.productMeta.description}}</td>
+          <td style="width:8.33%">{{d.productMeta.typ}}</td>
+          <td style="width:8.33%">{{d.amount}}</td>
+          <!-- <td style="width:8.33%">{{d.tax}}</td> -->
+          <td style="width:8.33%">{{d.productMeta.code}}</td>
+          <td style="width:8.33%">{{d.qty}}</td>
+          <!-- <td style="width:10%">{{d.totalTax}}</td> -->
+          <td style="width:10%">{{d.amount}}</td>
           <td>
             <div class="btn-group btn-group-sm">
               <button type="button" class="btn btn-danger" ng-click="remove($index)">

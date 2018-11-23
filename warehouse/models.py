@@ -107,6 +107,7 @@ class Invoice(models.Model):
     fromDate = models.DateField(null = True)
     toDate = models.DateField(null = True)
     grandTotal = models.PositiveIntegerField(default=0)
+    totalTax = models.PositiveIntegerField(default=0)
 
 class Checkin(models.Model):
     created = models.DateTimeField(auto_now_add = True)

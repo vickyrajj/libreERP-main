@@ -70,18 +70,21 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
     var total = 0;
     var totalTax = 0;
     var grandTotal = 0;
-    for (var i = 0; i < $scope.data.length; i++) {
-      $scope.data[i].total = parseInt($scope.data[i].quantity) * parseInt($scope.data[i].rate);
-      $scope.data[i].totalTax = $scope.data[i].total * parseInt($scope.data[i].tax) / 100;
-      $scope.data[i].subtotal = $scope.data[i].totalTax + $scope.data[i].total;
-      total += $scope.data[i].total;
-      totalTax += $scope.data[i].totalTax;
-      grandTotal += $scope.data[i].subtotal;
-    }
+    // for (var i = 0; i < $scope.data.length; i++) {
+    //   $scope.data[i].total = parseInt($scope.data[i].quantity) * parseInt($scope.data[i].rate);
+    //   $scope.data[i].totalTax = $scope.data[i].total * parseInt($scope.data[i].tax) / 100;
+    //   $scope.data[i].subtotal = $scope.data[i].totalTax + $scope.data[i].total;
+    //   total += $scope.data[i].total;
+    //   totalTax += $scope.data[i].totalTax;
+    //   grandTotal += $scope.data[i].subtotal;
+    // }
 
-    $scope.totalTax = totalTax;
-    $scope.total = total;
-    $scope.grandTotal = grandTotal;
+    // $scope.totalTax = totalTax;
+    // $scope.total = total;
+    // $scope.grandTotal = grandTotal;
+    $scope.totalTax = $scope.quote.totalTax;
+    $scope.total =  $scope.quote.value;
+    $scope.grandTotal =  $scope.quote.grandTotal;
     $scope.quote.calculated = {
       value: total,
       tax: totalTax,
@@ -96,13 +99,21 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
       Flash.create('warning', 'The tax rate is unrealistic');
       return;
     }
+    // $scope.data.push({
+    //   type: $scope.form.type,
+    //   tax: $scope.form.productMeta.taxRate,
+    //   desc: $scope.form.desc,
+    //   rate: $scope.form.rate,
+    //   quantity: $scope.form.quantity,
+    //   product: $scope.form.productMeta.code
+    // })
     $scope.data.push({
       type: $scope.form.type,
-      tax: $scope.form.productMeta.taxRate,
+      // tax: $scope.form.productMeta.taxRate,
       desc: $scope.form.desc,
-      rate: $scope.form.rate,
-      quantity: $scope.form.quantity,
-      taxCode: $scope.form.productMeta.code
+      amount: $scope.form.rate,
+      qty: $scope.form.quantity,
+      productMeta: $scope.form.productMeta
     })
     $scope.resetForm();
   }
@@ -446,9 +457,6 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
 
         }
       })(indx, status));
-
-
-
     } else if (status == 'dueElapsed') {
 
       var sacCode = 998311;
@@ -563,10 +571,10 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       for (var i = 0; i < response.data.length; i++) {
         if (response.data[i].contract.pk == $scope.contract.pk) {
           response.data[i].data = JSON.parse(response.data[i].data);
+          console.log(response.data[i].data );
           $scope.contract.invoice.push(response.data[i]);
         }
       }
-      console.log(88888888888888888888, $scope.contract.invoice);
     })
   }
   $scope.fetchInvoice();
@@ -623,6 +631,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       if ($scope.quoteInEditor.data.length == 0) {
         return;
       }
+      console.log($scope.quoteInEditor.data);
       var dataToSend = {
         contract: $scope.contract.pk,
         data: JSON.stringify($scope.quoteInEditor.data),

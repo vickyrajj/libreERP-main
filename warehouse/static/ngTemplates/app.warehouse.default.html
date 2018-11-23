@@ -112,7 +112,7 @@
                 </ul>
               </div>
             </td> -->
-            <td><a class="btn btn-primary" href="/api/warehouse/downloadMonthlyInvoice/?valPK={{i.pk}}&from={{frmDate.toJSON()}}&to={{toDate.toJSON()}}" > <i class = "fa fa-download"></i> </a> </td>
+            <td><a class="btn btn-primary" ng-if="invoice && i.pk == indx" href="/api/warehouse/downloadMonthlyInvoice/?contract={{i.pk}}&inoicePk={{invoice}}" > <i class = "fa fa-download"></i> </a> </td>
             <td><button class="btn btn-default" ng-click="createInvoice(i.pk,frmDate,toDate)"> Save </button> </td>
             <td><a class="btn btn-default" ng-click="extraData(i.pk,frmDate,toDate)"> <i class = "fa fa-plus"></i> </a> </td>
           </tr>

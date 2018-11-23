@@ -42,7 +42,7 @@
         <button type="button" class="btn btn-default" ng-click="add()">Add</button>
       </div>
       <div class="col-md-1" style="padding-top:20px">
-        <a class="btn btn-primary" href="/api/warehouse/downloadMonthlyInvoice/?valPK={{contractPk}}&from={{frmDate}}&to={{toDate}}&dataDetails={{dataDetails}}"> <i class="fa fa-download"></i> </a>
+        <a class="btn btn-primary" ng-if="invoice" href="/api/warehouse/downloadMonthlyInvoice/?contract={{contractPk}}&inoicePk={{invoice}}"> <i class="fa fa-download"></i> </a>
 
 
       </div>
