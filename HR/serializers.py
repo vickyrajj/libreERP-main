@@ -45,10 +45,22 @@ class userDesignationSerializer(serializers.ModelSerializer):
             d.secondaryApprover=User.objects.get(pk=self.context['request'].data['secondaryApprover'])
             d.division=Division.objects.get(pk=self.context['request'].data['division'])
             d.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
-            d.department=Department.objects.get(pk=self.context['request'].data['department'])
+            d.department=Departments.objects.get(pk=self.context['request'].data['department'])
             d.role=Role.objects.get(pk=self.context['request'].data['role'])
             d.save()
             return d
+    def update(self , instance , validated_data):
+        for key in ['pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover' ,'division' ,'unit' ,'department' ,'role']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.division=Division.objects.get(pk=self.context['request'].data['division'])
+        instance.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
+        instance.department=Departments.objects.get(pk=self.context['request'].data['department'])
+        instance.role=Role.objects.get(pk=self.context['request'].data['role'])
+        instance.save()
+        return instance
 class userProfileSerializer(serializers.ModelSerializer):
     """ allow all the user """
     class Meta:
