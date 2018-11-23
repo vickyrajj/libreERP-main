@@ -1,0 +1,48 @@
+<div class="container-fluid">
+  <!-- <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table> -->
+  <div class="row" style="padding-top:25px">
+
+    <div class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData">
+      <!-- {{data[0].numOfComments}} {{data[0].statusChat}} -->
+      <div class="container-fluid card" style="padding-bottom:0px" ng-click="tableAction($index)">
+        <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:170px; opacity:0.8;letter-spacing:0.6px">
+          <div class="col-md-12">
+            <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}
+               <span ng-if="data[0].rating == 5" class="pull-right">
+                 <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
+                 <i class="fa fa-star fa-lg" style="color:#086b0a" aria-hidden="true"></i>
+                </span>
+               <span ng-if="data[0].rating == 4" class="pull-right">
+                  <i class="fa fa fa-smile-o fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
+                 <i class="fa fa-star fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
+                </span>
+               <span ng-if="data[0].rating == 3" class="pull-right">
+                  <i class="fa fa-meh-o fa-lg" style="color:#dff20c" aria-hidden="true"></i>
+                  <i class="fa fa-star fa-lg" style="color:#dff20c" aria-hidden="true"></i>
+                 </span>
+               <span ng-if="data[0].rating == 2||data[0].rating == 1" class="pull-right">
+                  <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
+                  <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
+              </span>
+            </h5>
+            <h5 style="font-weight:501">UID : {{data[0].uid}}
+              <span class="pull-right" style="color:#286090 ;font-size:15px">{{data[0].numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
+            </h5>
+            
+            <h5 style="font-weight:501">Client : {{data[0].company}}</h5>
+            <h5 style="font-weight:501" ng-if="data[0].email" >Visitor's Email :  {{data[0].email}}</h5>
+            <h5 style="font-weight:501" ng-if="data[0].chatDuration!=0">Chat Duration :  {{data[0].chatDuration}} Min</h5>
+            <h5 style="font-weight:501" ng-if="data[0].statusChat" >Status :  {{data[0].statusChat}} </h5>
+          </div>
+        </div>
+        <div class="row container-fluid" style="padding-top:10px;height:50px;background-color:#286090; opacity:1">
+          <div class="col-md-12" style="color:#fff">
+            <h5>Date: {{data[0].created | date : 'dd-MMM-yyyy'}}
+              <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg" ng-click="tableAction($index)"></i></span>
+            </h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

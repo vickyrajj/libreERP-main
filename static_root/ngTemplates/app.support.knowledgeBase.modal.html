@@ -1,0 +1,77 @@
+<div class="modal-body">
+  <div class="container-fluid">
+    <section>
+      <div class="row text-center" style="margin:10px 50px">
+        <input type="text" class="form-control" ng-model="form.title" placeholder="Search by title.." ng-change="filterData(form.title)">
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-8">
+          <span ng-repeat="d in docData track by $index">
+            <div class="panel-group" id="accordion" ng-if="d.text!=none" style="cursor:pointer;">
+              <div class="panel panel-default" >
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#{{d.pk}}" >
+                  <h4 class="panel-title"  >
+                    <span>{{d.title}}</span>
+                  </h4>
+                </div>
+                <div id="{{d.pk}}" class="panel-collapse collapse">
+                  <span ng-bind-html="d.text"></span>
+                </div>
+              </div>
+            </div>
+          </span>
+        </div>
+        <div class="col-md-4">
+          <span ng-repeat="d in docData track by $index">
+            <div class="col-md-8">
+              <div class="panel-group" id="accordion" ng-if="d.docs!=none" >
+                <div class="panel panel-default"   href="{{d.docs}}" >
+                  <div class="panel-heading"  >
+                    <h4 class="panel-title">
+                      <span  style="text-decoration:none">{{d.title}}</span>
+                      <span class="pull-right" style="margin-top:-7px"><button type="button" class="btn btn-sm btn-primary" ng-click="sendDocument(d.docs)" >Send</button></span>
+                    </h4>
+                  </div>
+                  <a href="{{d.docs}}" target = "_blank"  style="text-decoration: none;" >
+                  <div class="panel-collapse">
+                    <div class="panel-body">
+                      <div class="row">
+                        <div class="col-md-8" style="padding-top:15px;">
+                          <span>{{d.docs.split('documentations/')[1]}}</span>
+                        </div>
+                        <div class="col-md-4">
+                          <i class="fa fa-4x {{d.docs.split('documentations/')[1] | fileTypeIcon}}"></i>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </a>
+                </div>
+              </div>
+            </div>
+
+          </span>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="container-fluid text-center">
+    <button type="button" class="btn btn-success text-center" ng-click="closeModal()">
+      Close
+    </button>
+  </div>
+
+  <!-- <ul class="tools">
+    <li ng-click="sendSelectedContent()">Send</li>
+  </ul> -->
+
+
+  <ul class='custom-menu'>
+    <li ng-click="sendSelectedContent()">Send</li>
+    <!-- <li>Copy</li> -->
+  </ul>
+
+
+</div>

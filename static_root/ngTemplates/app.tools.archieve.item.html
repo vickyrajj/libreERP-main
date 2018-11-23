@@ -1,0 +1,27 @@
+<div class="col-md-6" style="padding-bottom:10px;padding-left:10px;padding-right:10px;">
+  <div class="container-fluid card" style="padding:30px;padding-top:0px;">
+    <div class="row">
+      <div class="col-md-12">
+        <h4>{{data.title}}</h34>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              {{data.description}}
+              <hr>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            {{data.dated}}
+          </div>
+            <div class="col-md-6">
+    <div class="row" style="position:relative;">
+        <i class="fa fa-info-circle fa-2x text-primary pull-right" style="position:absolute;right:20px;bottom:-10px;cursor:pointer;"ng-click="rowActionClicked('archieveBrowser')"></i>
+    </div>
+    <div class="row" style="position:relative;">
+        <i class="fa fa-trash fa-2x text-danger pull-right" style="position:absolute;right:60px;bottom:-10px;cursor:pointer;"ng-click="delete(data.pk);$event.stopPropagation();"></i>
+    </div>
+  </div>
+  </div>
+</div>

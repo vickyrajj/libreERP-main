@@ -1,0 +1,62 @@
+<div class=" bg-white " style="min-height:94vh;overflowY:">
+  <breadcrumb></breadcrumb>
+  <div class="">
+    <div class="col-md-5" style="text-align: center;">
+      <img src="/static/images/colorPatteren.png" alt="" style="width:70%;">
+    </div>
+    <div class="col-md-7" style="border-left:2px solid #F5F5F5">
+      <div class="row" style="padding-bottom:15px;">
+        <div class="col-md-4" style="font-size:15px;">
+          <span><span style="margin-right:5px">1</span> <i class="fa fa-desktop"></i> &nbsp;<span>Window Colour</span> &nbsp;</span>
+        </div>
+        <div class="col-md-8">
+            <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.windowColor">
+        </div>
+      </div>
+      <div class="row" style="padding-bottom:15px;">
+        <div class="col-md-4" style="font-size:15px;">
+          <span ><span style="margin-right:5px">2</span><i class="fa fa-gg-circle"></i> &nbsp;<span>SupportBubble Colour</span> &nbsp;</span>
+        </div>
+        <div class="col-md-8">
+            <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.supportBubbleColor">
+        </div>
+      </div>
+      <div class="row" style="padding-bottom:15px;">
+        <div class="col-md-4" style="font-size:15px;">
+          <span ><span style="margin-right:5px">3</span><i class="fa fa-info-circle"></i> &nbsp;<span>Icon Colour</span> &nbsp;</span>
+        </div>
+        <div class="col-md-8">
+            <input style="position:static; left:0px; opacity:1;" type="color" ng-model="cpForm.iconColor">
+        </div>
+      </div>
+      <div class="row" style="padding-bottom:15px;">
+        <div class="col-md-4" style="font-size:15px;">
+          <span ><span style="margin-right:5px">4</span><i class="fa  fa-picture-o"></i> &nbsp;<span>Picture</span></span>
+        </div>
+        <div class="col-md-8">
+            <input type="file" file-model="cpForm.dp">
+        </div>
+      </div>
+      <div class="row" style="padding-bottom:15px;">
+        <div class="col-md-4" style="font-size:15px;">
+          <span ><span style="margin-right:5px">5</span><i class="fa fa-user"></i> &nbsp;<span>Name</span></span>
+        </div>
+        <div class="col-md-8">
+          <input class="form-control" type="text" ng-model="cpForm.name">
+        </div>
+      </div>
+      <div class="row" style="padding-bottom:15px;">
+        <div class="col-md-4" style="font-size:15px;">
+          <span ><span style="margin-right:5px">6</span><i class="fa fa-commenting-o"></i> &nbsp;<span>First Message</span></span>
+        </div>
+        <div class="col-md-8">
+          <textarea ui-tinymce="tinymceOptions" ng-model="cpForm.firstMessage"></textarea>
+        </div>
+      </div>
+      <div class="row justify-content-center" style="">
+        <button type="button" class="btn btn-primary " ng-click="saveCustomerProfile()">Save</button>
+      </div>
+
+  </div>
+  </div>
+</div>

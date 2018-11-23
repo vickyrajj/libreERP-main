@@ -1,0 +1,193 @@
+<div class="card-body">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="btn btn-block" ng-click="addDoc(-1)" style="font-size:18px ; {{docForm!=none&&docForm.title.length==0? 'background-color:#009efb; color:white':'background-color: #e9e9e9 !important;'   }}">
+          Add Document &nbsp;<i class="fa fa-plus fa-lg"></i>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row" style="padding-top:15px">
+      <div class="col-md-3">
+        <div class="row" style="border-right:solid 2px #eeeeee;min-height:54vh;position:relative;" ng-if="custDocs.length>0||docForm!=none">
+          <div class="row container-fluid card" ng-repeat="doc in custDocs" ng-click="addDoc($index)" style="cursor:pointer;margin:10px; height:82px; {{docForm.pk==doc.pk?'background-color:#009efb; color:white':'background-color: #e9e9e9 !important;'}}">
+            <div class="text-left" style="font-size:20px;padding:10px;margin-top:-10px;margin-left:-20px;"><b>{{doc.title}}</b></div>
+            <ul style="list-style:none;position:absolute;bottom:-15px;left:0px;font-size:14px" class="list-inline">
+              <li>Last modified:<b> {{doc.updated  | date:'dd-MMM-yyyy'}}</b></li>
+              <li ng-if="doc.process.text">Process:<b> {{doc.process.text}}c</b></li>
+              <li>Versions:<b> {{doc.version_count}}</b></li>
+            </ul>
+          </div>
+          <!-- <div class="">
+            lastmodified time process versions
+          </div> -->
+          <!-- <div ng-repeat="doc in custDocs">
+            <p>{{doc.title}}</p>
+          </div> -->
+        </div>
+      </div>
+      <div class="col-md-9" style="padding-left:35px" ng-if="docForm!=none">
+        <div class="row text-center">
+          <h4>{{docForm.pk!=none?'Edit':'Create'}} Document <span ng-if="docForm.pk!=none">- {{docForm.title}}</span></h4>
+        </div>
+        <!-- <div class="row">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text " class="form-control" ng-model="docForm.title">
+          </div>
+          <div class="form-group" ng-if="docForm.text!=null">
+            <label>Content</label>
+            <textarea ui-tinymce="tinymceOptions" ng-model="docForm.text"></textarea>
+          </div>
+          <div class="form-group" ng-if="docForm.docs!=null">
+            <label>Document</label>
+            <input type="file" file-model="docForm.docs">
+          </div>
+        </div> -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text " class="form-control" ng-model="docForm.title">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-9">
+            <div class="form-group" ng-if="docForm.text!=null">
+              <label>Content</label>
+              <textarea ui-tinymce="tinymceOptions" ng-model="docForm.text"></textarea>
+            </div>
+          </div>
+          <div class="col-md-3" ng-if="docForm.text!=null">
+            <uib-tabset>
+              <uib-tab>
+                <uib-tab-heading>
+                  Article
+                </uib-tab-heading>
+                <div style="padding-top:20px;">
+                  <div class="row">
+                    <label>Process:</label>
+                    <input type="text" class="form-control" ng-model="docForm.process" uib-typeahead="process as process.text for process in processSearch($viewValue)" />
+                  </div>
+                  <div class="row">
+                    <label>Article Owner</label>
+                    <input type="text" class="form-control" ng-model="docForm.articleOwner" uib-typeahead="user as user.username for user in userSearch($viewValue)" />
+                  </div>
+                  <!-- <p style="color:red;margin:15px 0px">Article owner</p>userSearch -->
+                  <!-- <select class="form-control" id="" style="margin:5px 0px">
+                      <option>Syrow</option>
+                      <option>erp</option>
+                      <option>random</option>
+                    </select> -->
+                  <!-- <p style="color:red;margin:20px 0px;">Display permission</p>
+                        <ul class="list-inline versions"  style="font-size:15px" ng-init="type='agents'">
+                          <li  style="padding:0px"><button style="padding:8px;border-radius:10px" class="{{type=='agents' ? 'active' : ''}}" ng-click="type='agents'">Agents</button></li>
+                          <li style="padding:0px"><button style="padding:8px; border-radius:10px" class="{{type=='reg' ? 'active' : ''}}" ng-click="type='reg'">Reg. users</button></li>
+                          <li style="padding:0px"><button style="padding:8px;border-radius:10px" class="{{type=='all' ? 'active' : ''}}" ng-click="type='all'">All users</button></li>
+                        </ul> -->
+
+                </div>
+              </uib-tab>
+              <uib-tab>
+                <uib-tab-heading>
+                  TOC
+                </uib-tab-heading>
+                <div class="toc">
+                  <ol style="margin:20px 0px;">
+                    <li style="color:  #5257d2;font-size:20px;" ng-repeat="x in h1_array" ng-if="$index!=0">{{x.title}}
+                      <ol>
+                        <li style="margin:10px 0px;color:black;font-size:15px" ng-repeat="y in x.childeren" ng-if="$index!=0">{{y.title}}</li>
+                      </ol>
+                    </li>
+                  </ol>
+                </div>
+
+              </uib-tab>
+              <uib-tab>
+                <uib-tab-heading>
+                  Versions
+                </uib-tab-heading>
+
+
+                <div class="list-group" style="padding-top:15px;">
+
+                  <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalWindow" data-whatever="@mdo">Open modal for @mdo</button> -->
+
+                  <span ng-repeat="version in versions" class="list-group-item {{version.active?'active':''}}" ng-mouseover="version.active = true" ng-mouseleave="version.active = false" data-toggle="modal" data-target="#modalWindow" data-whatever="@mdo" ng-click="openVersion($index)"
+                    style="cursor:pointer">{{version.title}}</span>
+
+                </div>
+
+
+                <div class="modal fade" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="text-center">{{version.title}}</h4>
+                      </div>
+                      <div class="modal-body" >
+                        <div class="row" style="padding:20px;">
+                          <div ng-bind-html="version.text">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+<!--
+                <div class="modal fade" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="text-center">{{version.title}}</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div ng-bind-html="version.text">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+
+
+                <!-- <div class="versions" style="margin:30px 0px;">
+                    <div ng-repeat='version in versions'>
+                        <button style="width:100%;padding:7px;border-radius:10px;backgroundColor: #efeff0;margin:2px" ng-class="{active : activeVersion === version}" ng-click="openVersion(version)"> {{ version.title }}</button>
+                    </div>
+                  </div> -->
+
+              </uib-tab>
+            </uib-tabset>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group" ng-if="docForm.docs!=null">
+              <label>Document</label>
+              <input type="file" file-model="docForm.docs">
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding:20px">
+          <div class="col-md-2 col-md-offset-5">
+            <div class="btn btn-success" style="font-size:18px" ng-click="saveDoc()">
+              Save Document
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

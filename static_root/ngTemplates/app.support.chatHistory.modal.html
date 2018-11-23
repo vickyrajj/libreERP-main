@@ -1,0 +1,53 @@
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search by text.." ng-model="searchForm.value"  />
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="searchText()"><i class="fa fa-search"></i></button>
+        </span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <span class="pull-right" style="font-size:22px">{{email}}</span>
+      </div>
+    </div>
+    <hr>
+    <div class="row" id="all_text" style="padding:15px 20px">
+      <div class="row" ng-repeat="chat in chatData">
+        <div class="row container-fluid search">
+          <!-- <p>abcd</p>
+          <p cl>aaa</p> -->
+          <div class="col-md-8" style="border-right:2px solid #eeeeee">
+            <span style="font-size:22px">{{chat.chatList[0].uid}}</span>
+            <div class="row" ng-repeat="msg in chat.chatList track by $index">
+              <div class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+              <p id="p{{$index}}" ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" >{{msg.message}}</p>
+               <img ng-if="msg.attachmentType == 'image'" ng-src="{{msg.file}}" style="width:250px;">
+               <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.file}}" controls></video>
+               <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.file}}" controls></audio>
+               <p class="text-center" ng-if="msg.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{msg.file}}" target = "_blank" ><i class="fa {{msg.file.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.file.split('chat/')[1]}}  </p>
+               <div ng-if="msg.attachmentType == 'youtubeLink'" >
+                 <iframe width="100%" height="215" ng-src="{{msg.message | trusted}}" frameborder="0" allowfullscreen></iframe>
+               </div>
+              </div>
+              <div class="row container-fluid" style="{{msg.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};"  >
+                <span ng-if="msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" >{{msg.user_id | getName}} , {{msg.created | date : 'hh:mm:a' }}</span>
+                <span ng-if="!msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" >{{msg.created | date : 'hh:mm:a' }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <span class="text-center" style="font-size:20px">Agents Involved This Chat</span>
+            <ul>
+              <li ng-repeat="agent in chat.agentList">{{agent | getName}}</li>
+            </ul>
+          </div>
+        </div>
+        <hr>
+
+      </div>
+    </div>
+  </div>
+</div>

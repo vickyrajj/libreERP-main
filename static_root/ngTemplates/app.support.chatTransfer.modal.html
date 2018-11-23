@@ -1,0 +1,28 @@
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Select User And Transfer..." ng-model="agentForm.name" disabled />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="transferChat()">Transfer <i class="fa fa-share"></i></button>
+        </span>
+      </div>
+    </div>
+    <hr>
+    <div class="row" style="padding:10px 20px">
+      <div class="row">
+        <div class="col-md-2 well text-center" ng-repeat="on in onlineAgents" style="background-color:#{{agentPk==on?'e3c95a':'74cf8c'}}; margin-bottom:15px;cursor:pointer; padding:10px;" ng-click="selectedAgent(on);">
+          <img class="img img-circle" ng-src="{{on | getDP}}" style="width:20px;">
+          <span style="color:white">{{on | getName}}</span>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-2 well text-center" ng-repeat="off in offlineAgents" style="background-color:#{{agentPk==off?'e3c95a':'c86161'}}; margin-bottom:15px; padding:10px;">
+        <img class="img img-circle" ng-src="{{off | getDP}}" style="width:20px;">
+        <span style="color:white">{{off | getName}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
