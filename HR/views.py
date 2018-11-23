@@ -241,7 +241,7 @@ class userDesignationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = designation.objects.all()
     serializer_class = userDesignationSerializer
-    filter_fields = ['user'  ]
+    filter_fields = ['user']
 
 class userAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin ,)
@@ -305,7 +305,7 @@ class leaveViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = leaveSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['user']
+    filter_fields = ['user' , 'status','fromDate']
     def get_queryset(self):
         if self.request.user.is_superuser:
             return Leave.objects.all()

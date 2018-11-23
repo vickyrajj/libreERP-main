@@ -46,9 +46,7 @@ class userDesignationSerializer(serializers.ModelSerializer):
             d.division=Division.objects.get(pk=self.context['request'].data['division'])
             d.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
             d.department=Department.objects.get(pk=self.context['request'].data['department'])
-            if 'reportingTo' in self.context['request'].data:
-                for i in self.context['request'].data['reportingTo']:
-                    instance.reportingTo.add(User.objects.get(pk = i))
+            d.role=Role.objects.get(pk=self.context['request'].data['role'])
             d.save()
             return d
 class userProfileSerializer(serializers.ModelSerializer):

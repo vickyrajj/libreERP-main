@@ -28,6 +28,7 @@ app.controller("controller.warehouse.payroll.openReportInfo", function($scope, $
 app.controller("workforceManagement.salary.payroll.info", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.data = $scope.tab.data;
+  console.log($scope.data,'xxxxxxxxx');
 
   $scope.joiningDate =new Date($scope.data.joiningDate);
   $scope.joiningDateYear = $scope.joiningDate.getFullYear();
@@ -107,6 +108,7 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
     else{
     $scope.currentYear += 1;
     $scope.allData($scope.currentYear)
+    $scope.attendance = false;
     }
   }
 
@@ -117,13 +119,16 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
     else{
     $scope.currentYear -= 1;
     $scope.allData($scope.currentYear)
+    $scope.attendance = false;
     }
   }
+
   $http({
     method: 'GET',
-    url: '/api/HR/designation/?user=' + $scope.data.user + '/'
+    url: '/api/HR/designation/?user=' + $scope.data.user
   }).
   then(function(response) {
+    console.log(response.data,'@@@@@@@@@@@@@@@@@@@');
     $scope.designation = response.data;
     for (var i = 0; i < $scope.designation.length; i++) {
         if($scope.designation[i].user == $scope.data.user){
@@ -135,8 +140,117 @@ app.controller("workforceManagement.salary.payroll.info", function($scope, $stat
 
 
   })
+$scope.totalamount=0.0;
+  $http({
+    method: 'GET',
+    url: '/api/payroll/payslip/?user='+$scope.data.user,
+  }).
+  then(function(response) {
+    for (var i = 0; i < response.data.length; i++) {
+        $scope.totalamount += response.data[i].totalPayable;
+    }
+
+})
+$scope.medicalLeave = 0;
+$scope.annualLeave = 0;
+$http({
+  method: 'GET',
+  url: '/api/HR/leave/?user='+$scope.data.user,
+}).
+then(function(response) {
+
+  for (var i = 0; i < response.data.length; i++) {
+      console.log(response.data[i],'kkkkkkkkkk');
+      if ((response.data[i].category == "ML") && (response.data[i].status == "approved")) {
+        $scope.medicalLeave += response.data[i].leavesCount;
+      }
+      if(response.data[i].category == "AL" && response.data[i].status == "approved"){
+        $scope.annualLeave += response.data[i].leavesCount;
+      }
+  }
+
+})
+$scope.attendance = false;
 
 
+$scope.view = function(n){
+    $scope.monthss = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    $scope.currentMonth = n;
+     function monthIndex(mon){
+       for(var i=0;i<=$scope.monthss.length;i++){
+       if($scope.monthss.includes(mon)){
+         return $scope.monthss.indexOf(mon)+1;
+       }
+     }
+   }
+   function daysInMonth (month, year) {
+       return new Date(year, month, 0).getDate();
+   }
+   $scope.presentDays=0;
+   $scope.hrs =0;
+   $scope.mins =0;
+   $scope.indexMonth = monthIndex(n);
+   $scope.days = daysInMonth($scope.indexMonth,$scope.currentYear);
+   console.log($scope.currentYear,$scope.indexMonth,'mmmmmmmmmmmm');
+   function interval(count){
+     return   count ;
+      };
+
+   $http({
+     method: 'GET',
+     url: '/api/performance/timeSheet/?user='+ $scope.data.user
+   }).
+   then(function(response) {
+
+     for (var i = 0; i < response.data.length; i++) {
+            $scope.split = response.data[i].date.split("-");
+            if( $scope.split[0] == $scope.currentYear){
+              if($scope.split[1] == $scope.indexMonth){
+                if(response.data[i].totaltime == null || typeof response.data[i].totaltime === "undefined"  ){
+
+                }
+                else{
+
+                  $scope.timedata = response.data[i].totaltime.split(':');
+
+                  $scope.mins = Number($scope.timedata[1]);
+                  $scope.hrs = Number($scope.timedata[0]);
+                  $scope.time =parseFloat($scope.hrs + '.' + $scope.mins);
+                  console.log( $scope.time,'nnnnnnnnnn');
+                  $scope.countDays =Math.floor($scope.time/8.5);
+                  $scope.remainingHour = $scope.time%8.5;
+                  $scope.remainingHours = $scope.remainingHour/8.5;
+                  console.log( $scope.remainingHours ,'oooooooo');
+                 $scope.presentDays += Math.floor(interval($scope.countDays)+$scope.remainingHours);
+                  // if($scope.time >= 8.30)
+                  // {
+                  //   $scope.presentDays++
+                  // }
+                  $scope.attendance = true;
+                  }
+
+              }
+          }
+       }
+      $scope.attendance = true;
+   })
+   $scope.leaveDays=0;
+   $http({
+     method: 'GET',
+     url: '/api/HR/leave/?user='+$scope.data.user + '&status=approved&fromDate__year='+ $scope.currentYear + '&fromDate__month='+ $scope.indexMonth,
+   }).
+   then(function(response) {
+     console.log(response.data);
+     for (var i = 0; i < response.data.length; i++) {
+
+       if (response.data[i].leavesCount != null && response.data[i].leavesCount != undefined) {
+         $scope.leaveDays +=  response.data[i].leavesCount;
+       }
+     }
+
+
+   })
+}
 
 
 });

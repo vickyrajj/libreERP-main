@@ -36,7 +36,7 @@ class TimeSheetViewSet(viewsets.ModelViewSet):
     serializer_class = TimeSheetSerializer
     queryset = TimeSheet.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['date','status' ,'user']
+    filter_fields = ['date','status' ,'user' , 'checkIn']
     # def get_queryset(self):
     #     return TimeSheet.objects.filter(Q(status='submitted') | Q(status='approved'))
 
@@ -45,4 +45,4 @@ class TimeSheetItemViewSet(viewsets.ModelViewSet):
     serializer_class = TimeSheetItemSerializer
     queryset = TimeSheetItem.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['parent' , 'project' ]
+    filter_fields = ['parent' ]

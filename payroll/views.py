@@ -66,14 +66,14 @@ class payslipViewSet(viewsets.ModelViewSet):
     queryset = Payslip.objects.all()
     serializer_class = payslipSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['month','year' , 'user']
+    filter_fields = ['month','year','user']
 
 class payrollReportViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = PayrollReport.objects.all()
     serializer_class = payrollReportSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['month','year','status']
+    filter_fields = ['month','year','status','user']
 
 
 #code for pdf
@@ -136,7 +136,7 @@ def payslip(response ,paySlip,userObj,report, request):
 
        Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(months[report.month],report.year),styles['Normal'])
        ]
-    p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To "+str(userObj.payroll.accountNumber)+' '+str(userObj.payroll.bankName),styles['Normal'])
+    p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To "+str(userObj.payroll.accountNumber)+' '+str(userObj.payroll.bankName)+ "</para>",styles['Normal'])
 
     data=[[a,'','',''],['','','',''],['Emp Code : %s'%(empCode),'Name : %s'%(name),'',''],['Location : %s'%(location),'Department :%s'%(department),'Grade : %s'%(grade),'Designation : %s'%(designation)],
           ['PF No : %s'%(pfNo),'ESIC No : %s'%(escisNo),'PAN : %s'%(pan),'Standard Basic Salary : %s %d'%(s,sbs)],['Days Paid : %d'%(days),'Days Present : %d'%(daysPresent),'Paid Holidays : %d'%(paidHolidays),'Lwp/Absent : %d'%(absent)],
@@ -240,7 +240,7 @@ def paysMonthlyslip(response ,paySlip,userObj,month,year, request):
 
        Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(month,year),styles['Normal'])
        ]
-    p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To "+str(userObj.payroll.accountNumber)+' '+str(userObj.payroll.bankName),styles['Normal'])
+    p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To "+str(userObj.payroll.accountNumber)+' '+str(userObj.payroll.bankName) + "</para>",styles['Normal'])
 
     data=[[a,'','',''],['','','',''],['Emp Code : %s'%(empCode),'Name : %s'%(name),'',''],['Location : %s'%(location),'Department :%s'%(department),'Grade : %s'%(grade),'Designation : %s'%(designation)],
           ['PF No : %s'%(pfNo),'ESIC No : %s'%(escisNo),'PAN : %s'%(pan),'Standard Basic Salary : %s %d'%(s,sbs)],['Days Paid : %d'%(days),'Days Present : %d'%(daysPresent),'Paid Holidays : %d'%(paidHolidays),'Lwp/Absent : %d'%(absent)],
