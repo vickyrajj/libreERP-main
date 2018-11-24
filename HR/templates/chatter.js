@@ -707,6 +707,8 @@ function createChatDiv() {
           '</div>'+
           '<div id="audioSection" class="audio_section">'+
           '</div>'+
+          '<div id="videoSection" class="video_section">'+
+          '</div>'+
           '<div id="chatBox_content" class="chatBox_content">'+
             '<div id="messageBox" class="content_section">'+
             '</div>'+
@@ -832,6 +834,7 @@ function createChatDiv() {
   var closeSupport = document.getElementById('closeSupport');
   var supportCircle = document.getElementById('supportCircle');
   var audioSection = document.getElementById('audioSection')
+  var videoSection = document.getElementById('videoSection')
   var chatBox_header = document.getElementById('chatBox_header')
   var chatBox_footer = document.getElementById('chatBox_footer')
   var chatBox_content = document.getElementById('chatBox_content')
@@ -895,13 +898,16 @@ function createChatDiv() {
      urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
      urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
      console.log(urlforConference);
+     if (device=='sm') {
+       urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
+       urlforConference = urlforConference + '&userMob=true'
+     }
     openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
     openChat()
   })
 
   audioCircle.addEventListener('click',function () {
      winCol = windowColor.split('#')[1]
-
      urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
      urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
     openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
@@ -923,7 +929,6 @@ function createChatDiv() {
     var dataToSend = {uid: uid , sentByAgent:false , created: new Date() };
 
     if (streamTyp=='video') {
-      console.log('comingggggg');
       videoOpened = true
       var callType = 'VCS'
       chatBox_header.style.borderRadius = "0px 10px 0px 0px"
@@ -1060,8 +1065,15 @@ function createChatDiv() {
           chatBox_content.style.marginTop = "40px";
           console.log(messageBox.style,'messageBoxmessageBoxmessageBoxmessageBox');
         }else {
-          iframeDiv.appendChild(iFrame)
-          body.appendChild(iframeDiv)
+
+          if (device=='sm') {
+            videoSection.style.display = "block";
+            videoSection.appendChild(iFrame)
+            chatBox_content.style.marginTop = "200px"
+          }else if (device=='lg') {
+            iframeDiv.appendChild(iFrame)
+            body.appendChild(iframeDiv)
+          }
         }
 
 
@@ -1517,6 +1529,16 @@ function createChatDiv() {
             .audio_section{\
               display:none;\
               height: 40px;\
+              background-color: "+windowColor+";\
+              padding:0px;\
+              margin:0px;\
+              position: absolute;\
+              top:80px;\
+              width:100%;\
+            }\
+            .video_section{\
+              display:none;\
+              height: 201px;\
               background-color: "+windowColor+";\
               padding:0px;\
               margin:0px;\
@@ -1996,13 +2018,20 @@ function createChatDiv() {
       document.getElementById('iframeDiv').style.display="none"
       setTimeout(function () {
         if (videoOpened) {
-          chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-          chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-          // chatBox.style.borderRadius = "10px 10px 10px 10px"
-          var iframeDiv = document.getElementById('iframeDiv')
+
+          if (device=='sm') {
+            videoSection.innerHTML = "";
+            videoSection.style.display = "none";
+            chatBox_content.style.marginTop = "0";
+          }else {
+            chatBox_header.style.borderRadius = "10px 10px 0px 0px"
+            chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
+            // chatBox.style.borderRadius = "10px 10px 10px 10px"
+            var iframeDiv = document.getElementById('iframeDiv')
+            iframeDiv.parentNode.removeChild(iframeDiv);
+          }
           var iFrame = document.getElementById('iFrame1')
           iFrame.src = '';
-          iframeDiv.parentNode.removeChild(iframeDiv);
           videoOpened = false
         }else if (audioOpened) {
           var iFrame = document.getElementById('iFrame1')
@@ -2773,13 +2802,21 @@ function createChatDiv() {
   closeSupport.addEventListener("click", function() {
 
     if (videoOpened) {
-      chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-      chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-      // chatBox.style.borderRadius = "10px 10px 10px 10px"
-      var iframeDiv = document.getElementById('iframeDiv')
+
+      if (device=='sm') {
+        videoSection.innerHTML = "";
+        videoSection.style.display = "none";
+        chatBox_content.style.marginTop = "0";
+      }else {
+        chatBox_header.style.borderRadius = "10px 10px 0px 0px"
+        chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
+        // chatBox.style.borderRadius = "10px 10px 10px 10px"
+        var iframeDiv = document.getElementById('iframeDiv')
+        iframeDiv.parentNode.removeChild(iframeDiv);
+      }
+
       var iFrame = document.getElementById('iFrame1')
       iFrame.src = '';
-      iframeDiv.parentNode.removeChild(iframeDiv);
       videoOpened = false
     }else if (audioOpened) {
       var iFrame = document.getElementById('iFrame1')
