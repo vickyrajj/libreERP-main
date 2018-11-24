@@ -65,6 +65,15 @@ app.controller('ecommerce.form.listing', function($scope, $state, $stateParams, 
       return response.data.results;
     })
   }
+
+  $scope.genericProductSearch = function(query) {
+    return $http.get('/api/ecommerce/genericProduct/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+
+
   $scope.buildForm = function() {
     $scope.data.mode = 'create'
     console.log('caaaaaaaa', $scope.data);

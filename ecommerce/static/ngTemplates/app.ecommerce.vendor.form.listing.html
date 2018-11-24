@@ -2,7 +2,6 @@
   <div class="row">
     <div  class="col-md-6">
 
-
       <!-- <div class="form-group">
         <label>Product</label>
         <input uib-typeahead="p as p.name for p in productSearch($viewValue)" class="form-control" type="text" ng-model = "data.form.product" placeholder="Search By Product Name">
@@ -11,9 +10,12 @@
 
       <div class="row">
         <div class="col-md-12" style="padding:0px">
-          <!-- <div class="form-group">
-            <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()" />
-          </div> -->
+
+          <label  ng-if=data.form.product.pk>Category</label>
+          <div  ng-if=data.form.product.pk>
+            <input uib-typeahead="c as c.name for c in genericProductSearch($viewValue)" class="form-control" type="text" ng-model = "data.genericProduct" placeholder="Search By Category Name">
+          </div>
+
           <label>Product</label>
           <div class="input-group">
             <input uib-typeahead="p as p.name for p in productSearch($viewValue)" class="form-control" type="text" ng-model = "data.form.product" placeholder="Search By Product Name">
