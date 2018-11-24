@@ -67,7 +67,7 @@
             <img ng-if="message.attachmentType == 'image' ||message.attachmentType == 'instructionImage'" ng-src="{{message.attachment}}" style="width:250px;">
             <video ng-if="message.attachmentType == 'video'" width="280" height="240" ng-src="{{message.attachment}}" controls></video>
             <audio ng-if="message.attachmentType == 'audio'" ng-src="{{message.attachment}}" controls></audio>
-            <p ng-if="message.logs.length>0">{{message.logs}} at {{message.created | getTime}}</p>
+            <!-- <p ng-if="message.logs.length>0">{{message.logs}} at {{message.created | getTime}}</p> -->
             <p class="text-center" ng-if="message.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{message.attachment}}" target="_blank"><i class="fa {{message.attachment.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{message.attachment.split('chat/')[1]}} </p>
             <div ng-if="message.attachmentType == 'youtubeLink'">
               <iframe width="100%" height="215" ng-src="{{message.message | trusted}}" frameborder="0" allowfullscreen allow="geolocation; microphone; camera" ></iframe>
@@ -103,6 +103,7 @@
         <div ng-if="!message.logs" class="row container-fluid" style="{{message.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
           <span ng-if="!message.sentByAgent" style="float:left;  font-size:11px; " class="text-muted">{{message.created | getTime}}</span>
           <span ng-if="message.sentByAgent" style="float:right;  font-size:11px; " class="text-muted">{{message.user | getName}}, {{message.created | getTime}}</span>
+          <!-- {{message.created}} -->
         </div>
 
       </div>

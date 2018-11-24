@@ -59,7 +59,6 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     visitor:null
   };
 
-  console.log($scope.msgData[0].typ);
   $scope.typ=$scope.msgData[0].typ
   if($scope.msgData[0].typ=='audio'){
     $scope.audio_chat={
@@ -73,11 +72,10 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
       agent:'/static/videos/agent'+$scope.msgData[0].uid+'.webm',
       visitor:'/static/videos/local'+$scope.msgData[0].uid+'.webm'
     }
-
     $scope.screen_video='/static/videos/screen'+$scope.msgData[0].uid+'.webm'
   }
-console.log($scope.video_chat.agent);
-var stream_agent,stream_visitor,canvas_agent,canvas_visitor,ctx_agent,ctx_visitor;
+
+var stream_agent,stream_visitor,canvas_agent,canvas_visitor,ctx_agent,ctx_visitor,unique_agent_video_id,unique_visitor_video_id;
 
 
 setTimeout(function () {
@@ -85,9 +83,10 @@ setTimeout(function () {
   if($scope.video_chat||$scope.audio_chat){
 
     if ($scope.video_chat.agent) {
-
-        stream_agent  = document.getElementById("vid_agent");
-        stream_visitor  = document.getElementById("vid_visitor");
+        unique_agent_video_id="vid_agent"+$scope.chatThreadData.uid;
+        unique_visitor_video_id="vid_visitor"+$scope.chatThreadData.uid;
+        stream_agent  = document.getElementById(unique_agent_video_id);
+        stream_visitor  = document.getElementById(unique_visitor_video_id);
         canvas_agent = document.getElementById('canvas_agent');
         canvas_visitor = document.getElementById('canvas_visitor');
         ctx_agent = canvas_agent.getContext('2d');
@@ -102,23 +101,11 @@ setTimeout(function () {
     else if($scope.audio_chat.agent){
         stream_agent  = document.getElementById("aud_agent");
         stream_visitor  = document.getElementById("aud_visitor");
-          console.log(stream_agent);
-
     }
   }
-
 }, 900);
-
-
-
   setTimeout(function () {
-
   if(stream_agent.readyState>0&&stream_agent.readyState>0){
-
-    console.log(stream_agent);
-
-
-        console.log(stream_agent.duration);
           $scope.slider = {
               value: 0,
               options: {
@@ -128,7 +115,6 @@ setTimeout(function () {
                   rightToLeft: false
               }
           };
-
           $scope.vol_slider = {
             value: 10,
             options: {
@@ -146,18 +132,12 @@ setTimeout(function () {
              }
            }
          };
-
-          var clear_int;
-
-          function kuchb(){
-
-            clear_int=setInterval(function () {
+          var StopSliderOnPause;
+          function handleSliderForVideo(){
+            StopSliderOnPause=setInterval(function () {
               $scope.slider.options.ceil=stream_agent.duration;
-              console.log($scope.slider.value);
-              console.log(stream_agent.duration);
-
               if($scope.slider.value+1>=stream_agent.duration){
-                clearInterval(clear_int);
+                clearInterval(StopSliderOnPause);
                 $scope.play_pause=false;
                 $scope.slider.value=0;
                 stream_agent.pause();
@@ -167,49 +147,36 @@ setTimeout(function () {
                 $scope.slider.value=stream_agent.currentTime;
               }
             },500);
-
           }
-
           $scope.$watch('vol_slider.value', function(newValue, oldValue) {
             stream_agent.volume=newValue/10;
             stream_visitor.volume=newValue/10;
           });
           $scope.$watch('slider.value', function(newValue, oldValue) {
-            console.log(newValue+'  '+oldValue);
             if(newValue-oldValue>1||oldValue-newValue>1){
               stream_agent.currentTime=newValue
               stream_visitor.currentTime=newValue
             }
-
           });
-
-
           $scope.play_video=function(){
             $scope.play_pause=true;
             stream_agent.play();
             stream_visitor.play();
-            kuchb();
+            handleSliderForVideo();
           }
-
           $scope.pause_video=function(){
             $scope.play_pause=false;
             stream_agent.pause();
             stream_visitor.pause();
-            clearInterval(clear_int)
+            clearInterval(StopSliderOnPause)
           }
-
   }
 }, 1500);
-
-  // $scope.screenshots =[];
 $scope.snap=function() {
     ctx_agent.fillRect(0, 0, w, h);
-    ctx_agent.drawImage(vid_agent, 0, 0, w, h);
+    ctx_agent.drawImage(stream_agent, 0, 0, w, h);
     ctx_visitor.fillRect(0, 0, w, h);
-    ctx_visitor.drawImage(vid_visitor, 0, 0, w, h);
-
-
-
+    ctx_visitor.drawImage(stream_visitor, 0, 0, w, h);
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.qualityCheck.capture.modal.html',
       size: 'md',
@@ -224,7 +191,7 @@ $scope.snap=function() {
         $scope.uidd=data;
         $scope.imgsrc_agent =canvas_agent.toDataURL();
         $scope.imgsrc_visitor =canvas_visitor.toDataURL();
-        $scope.timeOfCapture=vid_agent.currentTime;
+        $scope.timeOfCapture=stream_agent.currentTime;
 
         function dataURItoBlob(dataURI) {
           var byteString = atob(dataURI.split(',')[1]);
@@ -255,7 +222,6 @@ $scope.snap=function() {
             fd.append('agent_capture', $scope.blob_of_agent_image);
             fd.append('chatedDate', $scope.timeOfGeneration.split('T')[0]);
             console.log("Sending..");
-            // var toSend={message:$scope.reviewForm.message,uid:$scope.uidd,timestamp:$scope.timeOfCapture,visitor_capture:$scope.imgsrc_visitor,agent_capture:$scope.imgsrc_agent}
             SendingPostRequest(fd);
             $uibModalInstance.dismiss()
           }
@@ -287,15 +253,12 @@ $scope.snap=function() {
       Flash.create('danger', err.data.detail);
     });
   }
-
-
   $scope.postComment = function(){
     console.log($scope.msgData[0].created);
     if ($scope.reviewForm.message.length == 0) {
       Flash.create('warning','Please Write Some Comment')
       return
     }
-
     var fd1 = new FormData();
     fd1.append('message', $scope.reviewForm.message);
     fd1.append('uid', $scope.msgData[0].uid);
@@ -303,8 +266,6 @@ $scope.snap=function() {
     console.log(fd1);
     SendingPostRequest(fd1);
   }
-
-
   $scope.showChart = function(){
     console.log('modalllllllllllllllll');
     $uibModal.open({
@@ -383,15 +344,6 @@ $scope.snap=function() {
     });
 
   }
-
-  // $interval(function() {
-  //
-  //   $scope.sound = ngAudio.load("static/audio/notification.mp3");
-  //   $scope.sound.play();
-  //   console.log('sdfsdf', $scope.sound);
-  // }, 3000)
-
-
   $scope.calculateTime = function (user , agent) {
 
     if (user!=undefined) {
@@ -408,11 +360,7 @@ $scope.snap=function() {
     }else {
       return
     }
-
   }
-
-
-
 })
 app.controller("businessManagement.reviews", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
 
