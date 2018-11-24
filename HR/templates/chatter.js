@@ -1957,6 +1957,10 @@ function createChatDiv() {
     // call pushMessages() again
     messageComposer.style.display = "";
     startNewChatBtn.style.display = "none";
+    audioSection.style.display = "none";
+    videoSection.style.display = "none";
+    chatBox_content.style.marginTop = "0"
+
     // display footer and hide start chat button
 
     agentPk =  null;
@@ -2149,7 +2153,7 @@ function createChatDiv() {
         // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
       }
     }else {
-      msgDiv = '<p>'+ message.logs + ' at ' +message.timeDate+'</p>'
+      // msgDiv = '<p>'+ message.logs + ' at ' +message.timeDate+'</p>'
     }
 
 
@@ -2175,12 +2179,12 @@ function createChatDiv() {
         return msgHtml
       }
     }else {
-      var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                '<div style="clear: both; text-align:center; box-sizing:border-box; letter-spacing:2px;">'+
-                   msgDiv+
-                '</div> '+
-              '</div> '
-      return msgHtml
+      // var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+      //           '<div style="clear: both; text-align:center; box-sizing:border-box; letter-spacing:2px;">'+
+      //              msgDiv+
+      //           '</div> '+
+      //         '</div> '
+      return ''
     }
 
 
@@ -2807,16 +2811,20 @@ function createChatDiv() {
         videoSection.innerHTML = "";
         videoSection.style.display = "none";
         chatBox_content.style.marginTop = "0";
+        var iFrame = document.getElementById('iFrame1')
+        iFrame.src = '';
       }else {
         chatBox_header.style.borderRadius = "10px 10px 0px 0px"
         chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
         // chatBox.style.borderRadius = "10px 10px 10px 10px"
+        var iFrame = document.getElementById('iFrame1')
+        iFrame.src = '';
         var iframeDiv = document.getElementById('iframeDiv')
         iframeDiv.parentNode.removeChild(iframeDiv);
       }
 
-      var iFrame = document.getElementById('iFrame1')
-      iFrame.src = '';
+      console.log(document.getElementById('iFrame1'));
+
       videoOpened = false
     }else if (audioOpened) {
       var iFrame = document.getElementById('iFrame1')
