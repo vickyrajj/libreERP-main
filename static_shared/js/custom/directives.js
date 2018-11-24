@@ -323,11 +323,9 @@ app.directive('chatBox', function() {
     scope: {
       data: '=',
       index: '=',
-      closeChat: '=',
+      closeChat: '='
     },
     controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
-
-      var webRtcAddress = 'http://localhost:1111'
 
       setTimeout(function() {
         if (document.getElementById("iframeChat" + $scope.data.uid) != null)
