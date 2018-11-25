@@ -921,7 +921,9 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       data: dataToSend
     }).
     then(function(response) {
+
       Flash.create('success', response.status + ' : ' + response.statusText);
+      $scope.$broadcast('forceRefetch',)
       $scope.newUser = {
         username: '',
         firstName: '',
