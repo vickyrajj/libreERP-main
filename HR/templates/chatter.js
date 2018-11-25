@@ -1677,7 +1677,7 @@ function createChatDiv() {
               }\
               100%{\
                 opacity:1;\
-                transform:translateY(10px) scale(0.5);\
+                transform:translateY(10px) scale(0.1);\
               }\
             }\
             @keyframes rotateAnti{\
