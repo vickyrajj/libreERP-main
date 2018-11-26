@@ -640,6 +640,7 @@ if (typeof $scope.tab != 'undefined') {
     first_name: '',
     last_name: '',
     password: '',
+    email:'',
     access: 'full_access'
   };
 
@@ -673,6 +674,7 @@ if (typeof $scope.tab != 'undefined') {
 
 
   $scope.createCustomer = function() {
+    $scope.$broadcast('forceRefetch',)
 
 
     //
@@ -693,7 +695,8 @@ if (typeof $scope.tab != 'undefined') {
       username: $scope.newCustomer.username,
       first_name: $scope.newCustomer.first_name,
       last_name: $scope.newCustomer.last_name,
-      password: $scope.newCustomer.password
+      password: $scope.newCustomer.password,
+      email:$scope.newCustomer.email
     };
 
 
@@ -724,6 +727,7 @@ if (typeof $scope.tab != 'undefined') {
       url: $scope.urlCust,
       data: dataToSend
     }).then(function(response) {
+
       $http({
         method: 'POST',
         url: '/api/ERP/permission/',
@@ -733,11 +737,13 @@ if (typeof $scope.tab != 'undefined') {
         }
       }).then(function(resp) {
         console.log(resp.data);
+
       })
 
       Flash.create('success', response.status + ' : ' + response.statusText);
       $scope.$broadcast('forceRefetch',)
       console.log(response.data);
+
 
       if ($scope.mode == 'new') {
         $scope.newCustomer = {
