@@ -47,18 +47,18 @@
         <tr ng-repeat="d in data">
           <td style="width:26.3%">{{d.productMeta.description}}</td>
           <td style="width:8.33%">{{d.productMeta.typ}}</td>
-          <td style="width:8.33%">{{d.amount}}</td>
+          <td style="width:8.33%">{{d.rate}}</td>
           <!-- <td style="width:8.33%">{{d.tax}}</td> -->
           <td style="width:8.33%">{{d.productMeta.code}}</td>
           <td style="width:8.33%">{{d.qty}}</td>
           <!-- <td style="width:10%">{{d.totalTax}}</td> -->
           <td style="width:10%">{{d.amount}}</td>
           <td>
-            <div class="btn-group btn-group-sm">
+            <div class="btn-group btn-group-sm" ng-if="!d.space">
               <button type="button" class="btn btn-danger" ng-click="remove($index)">
                 <i class="fa fa-trash-o"></i>
               </button>
-              <button type="button" ng-click="edit($index)" class="btn btn-default">
+              <button type="button" ng-click="edit($index)" class="btn btn-default" ng-if="!d.space">
                 <i class="fa fa-pencil"></i>
               </button>
             </div>
@@ -109,6 +109,12 @@
             <ul class="dropdown-menu" role="menu">
               <li ng-repeat="r in types" ng-click="setType(r)"><a href="">{{r | humanize}}</a></li>
             </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Amount</label>
+            <input type="number" class="form-control" ng-model="form.amount">
           </div>
         </div>
       </div>

@@ -9,9 +9,10 @@ app.config(function($stateProvider) {
 
 var crmRelationTypes = ['onetime', 'request', 'day', 'hour', 'monthly', 'yearly', 'user']
 
-app.controller("businessManagement.warehouse.contract.quote", function($scope, $state, $users, $stateParams, $http, Flash, $uibModalInstance, quoteData, ) {
+app.controller("businessManagement.warehouse.contract.quote", function($scope, $state, $users, $stateParams, $http, Flash, $uibModalInstance, quoteData,contract ) {
   $scope.quote = quoteData;
   $scope.firstQuote = false;
+  $scope.contract = contract
   $scope.types = crmRelationTypes;
   $scope.total = $scope.quote.value;
   $scope.data = $scope.quote.data;
@@ -50,9 +51,10 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
   }
   $scope.edit = function(idx) {
     var d = $scope.data[idx];
+    console.log(d,'aaaaaaaaaaaaaaaaa');
     $scope.form = {
       type: d.type,
-      quantity: d.quantity,
+      quantity: d.qty,
       tax: d.tax,
       rate: d.rate,
       desc: d.desc
@@ -67,31 +69,54 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
     $scope.data.splice(idx, 1);
   }
   $scope.calculateTotal = function() {
+    console.log("aaaaaaaaaaaaaaaacalculateeeee");
     var total = 0;
     var totalTax = 0;
     var grandTotal = 0;
-    // for (var i = 0; i < $scope.data.length; i++) {
-    //   $scope.data[i].total = parseInt($scope.data[i].quantity) * parseInt($scope.data[i].rate);
-    //   $scope.data[i].totalTax = $scope.data[i].total * parseInt($scope.data[i].tax) / 100;
-    //   $scope.data[i].subtotal = $scope.data[i].totalTax + $scope.data[i].total;
-    //   total += $scope.data[i].total;
-    //   totalTax += $scope.data[i].totalTax;
-    //   grandTotal += $scope.data[i].subtotal;
-    // }
+    for (var i = 0; i < $scope.data.length; i++) {
+      // $scope.data[i].total = parseInt($scope.data[i].quantity) * parseInt($scope.data[i].rate);
+      // $scope.data[i].totalTax = $scope.data[i].total * parseInt($scope.data[i].tax) / 100;
+      // $scope.data[i].subtotal = $scope.data[i].totalTax + $scope.data[i].total;
+      total += $scope.data[i].amount;
+      // totalTax += $scope.data[i].totalTax;
+      // grandTotal += $scope.data[i].subtotal;
+    }
 
     // $scope.totalTax = totalTax;
     // $scope.total = total;
     // $scope.grandTotal = grandTotal;
-    $scope.totalTax = $scope.quote.totalTax;
-    $scope.total =  $scope.quote.value;
-    $scope.grandTotal =  $scope.quote.grandTotal;
-    $scope.quote.calculated = {
-      value: total,
-      tax: totalTax,
-      grand: grandTotal
+
+    if ($scope.contract.company.gst.slice(0, 2) == '29') {
+      $scope.gst = 9
+      $scope.cgst = 9
+      $scope.igst = 0
+      $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
+    } else {
+      $scope.gst = 0
+      $scope.cgst = 0
+      $scope.igst = 18
+      $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
     }
 
+
+    $scope.totalTax =Math.round((total * $scope.taxtot) / 100);
+    $scope.total =  Math.round(total);
+    $scope.grandTotal =  Math.round($scope.totalTax + total);
+    $scope.quote.calculated = {
+      value: $scope.total,
+      tax:   $scope.totalTax,
+      grand: $scope.grandTotal
+    }
+
+
   }
+  $scope.$watch('form.quantity', function(newValue, oldValue) {
+    if (newValue > 0) {
+      $scope.form.amount = newValue * $scope.form.rate;
+    } else {
+      $scope.form.amount = 0;
+    }
+  })
 
   $scope.add = function() {
     console.log('entered');
@@ -107,14 +132,25 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
     //   quantity: $scope.form.quantity,
     //   product: $scope.form.productMeta.code
     // })
+    // console.log(  $scope.data,'llllllllllllllllllllll');
+  // $scope.data.push({
+  //     data: JSON.stringify($scope.dataDetails),
+  //     fromDate: $scope.frmDateChange.toJSON().split('T')[0],
+  //     toDate: $scope.toDateChange.toJSON().split('T')[0],
+  //     value: $scope.tot,
+  //     grandTotal: $scope.grandtot,
+  //     totalTax :  Math.round($scope.tax)
+  //  })
+  console.log( $scope.form.amount);
     $scope.data.push({
       type: $scope.form.type,
       // tax: $scope.form.productMeta.taxRate,
       desc: $scope.form.desc,
-      amount: $scope.form.rate,
+      rate: $scope.form.rate,
       qty: $scope.form.quantity,
-      productMeta: $scope.form.productMeta
-    })
+      productMeta: $scope.form.productMeta,
+      amount: $scope.form.amount,
+      })
     $scope.resetForm();
   }
   $scope.resetForm();
@@ -610,6 +646,9 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
         quoteData: function() {
           return $scope.quoteInEditor;
         },
+        contract: function() {
+          return $scope.contract;
+        },
       },
       controller: 'businessManagement.warehouse.contract.quote'
     }).result.then(function() {
@@ -630,12 +669,15 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       if ($scope.quoteInEditor.data.length == 0) {
         return;
       }
-      console.log($scope.quoteInEditor.data);
+
+      console.log($scope.quoteInEditor.calculated,'fddddddddddddddddddd');
       var dataToSend = {
         contract: $scope.contract.pk,
         data: JSON.stringify($scope.quoteInEditor.data),
         value: $scope.quoteInEditor.calculated.value,
-        status: $scope.quoteInEditor.status
+        status: $scope.quoteInEditor.status,
+        grandTotal:$scope.quoteInEditor.calculated.grand,
+        totalTax : $scope.quoteInEditor.calculated.tax
       };
       console.log($scope.quoteInEditor);
       console.log(dataToSend);

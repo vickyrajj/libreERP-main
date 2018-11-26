@@ -41,6 +41,17 @@ app.controller('businessManagement.warehouse.space', function($scope, $http, $as
           var title = 'Space Details : ';
           var appType = 'spaceExplorer';
         }
+        else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/warehouse/space/' + $scope.data.tableData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Item Deleted');
+          })
+          $scope.data.tableData.splice(i, 1)
+          return;
+       }
 
         $scope.addTab({
           title: title + $scope.data.tableData[i].code,

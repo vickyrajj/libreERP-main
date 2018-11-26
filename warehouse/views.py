@@ -595,8 +595,8 @@ def genAllInvoice(response,contract,details,request):
         MARGIN_SIZE = 8 * mm
         PAGE_SIZE = A4
         print type(details.fromDate), type(details.toDate)
-        totaldays =  (details.toDate - details.fromDate).days + 1
-        print totaldays,'aaaaaaaaaaaaaaaaaa'
+        # totaldays =  (details.toDate - details.fromDate).days + 1
+        # print totaldays,'aaaaaaaaaaaaaaaaaa'
         # if(totaldays==30){
         #     totaldays = 30
         # }
@@ -614,10 +614,20 @@ def genAllInvoice(response,contract,details,request):
         date = x.strftime("%x")
         # days = abs((details.toDate-details.toDate).days)
         now = datetime.datetime.now()
-        idDate =  details.toDate.strftime("%y")
-        month =  details.fromDate.month
-        year =  details.fromDate.year
+        if details.toDate:
+            idDate =  details.toDate.strftime("%y")
+            dated =  details.toDate
+        else:
+            idDate =  details.created.strftime("%y")
+            dated =  details.created
+            print dated,'aaaaaaaaaaaa'
+        if details.fromDate:
+            month =  details.fromDate.month
+            year =  details.fromDate.year
 
+        else:
+            month =  ""
+            year = ""
         # doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
         # rowhead = [['TAX INVOICE\n']]
         # tablehead = Table(rowhead, colWidths=(191*mm))
@@ -649,10 +659,10 @@ def genAllInvoice(response,contract,details,request):
 
         # descdata = Paragraph('Warehouse Charges for the period/month - ' +str(month) + ' - ' +str(year)   , compStyle)
 
-        price =  Paragraph(str(contract.rate), compStyle)
-        sqrt = int(contract.areas.areaLength)*int(contract.quantity)
-        area = Paragraph(str(sqrt), compStyle)
-        cost = int(contract.rate)*sqrt*int(totaldays)
+        # price =  Paragraph(str(contract.rate), compStyle)
+        # sqrt = int(contract.areas.areaLength)*int(contract.quantity)
+        # area = Paragraph(str(sqrt), compStyle)
+        # cost = int(contract.rate)*sqrt*int(totaldays)
 
         numbers = random.sample(range(10), 2)
         invId = details.pk
@@ -675,7 +685,7 @@ def genAllInvoice(response,contract,details,request):
                            ('FONTSIZE',(0,0),(0,0),15),
                            ('SPAN',(-1,-1),(-1,-1)),
                            ])
-        row1 = [[billTo ,'Number : ALWH18/'+str(month)+str(invId)+str(idDate)+ ' \nDate : ' +str(details.toDate).split(' ')[0]+ '\nFor : Storage & Handling ' +str(month) + ' - ' +str(year)  ]]
+        row1 = [[billTo ,'Number : ALWH18/'+str(month)+str(invId)+str(idDate)+ ' \nDate : ' +str(dated).split(' ')[0]+ '\nFor : Storage & Handling ' +str(month) + ' - ' +str(year)  ]]
         table1 = Table(row1, colWidths=(95.5*mm, 95.5*mm))
         style1 = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'RIGHT'),
@@ -818,21 +828,19 @@ class DownloadInvoice(APIView):
 
         o = Contract.objects.get(id = request.GET['contract'])
         invoiceobj=Invoice.objects.get(contract=request.GET['contract'],pk=request.GET['inoicePk'])
-        print invoiceobj.fromDate,'hhhhhhhhhhhhhhh'
-        if (invoiceobj.fromDate ==None and invoiceobj.toDate ==None):
-            if 'contract' not in request.GET:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            if 'saveOnly' in request.GET:
-                return Response(status=status.HTTP_200_OK)
-
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
-            genInvoice(response , o ,invoiceobj, request)
-        else:
-            print 'iinnnnnnnnnnnnaaaaaaaaaaaaaaaaaaaa', invoiceobj.fromDate , invoiceobj.toDate
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
-            genAllInvoice(response , o ,invoiceobj, request)
+        # if (invoiceobj.fromDate ==None and invoiceobj.toDate ==None):
+        #     if 'contract' not in request.GET:
+        #         return Response(status=status.HTTP_400_BAD_REQUEST)
+        #     if 'saveOnly' in request.GET:
+        #         return Response(status=status.HTTP_200_OK)
+        #
+        #     response = HttpResponse(content_type='application/pdf')
+        #     response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
+        #     genInvoice(response , o ,invoiceobj, request)
+        # else:
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="invoicedownload%s%s.pdf"' %( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year , o.pk)
+        genAllInvoice(response , o ,invoiceobj, request)
         # o = Invoice.objects.get(contract = request.GET['contract'])
 
 

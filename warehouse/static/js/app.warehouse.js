@@ -312,8 +312,6 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           totalTax :  Math.round($scope.tax),
           data : JSON.stringify($scope.detailData)
         }
-
-
         $http({
           method: 'POST',
           url: '/api/warehouse/invoice/',
