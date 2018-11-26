@@ -728,7 +728,7 @@ class StreamRecordings(APIView):
     def post(self , request , format = None):
         print request.data,'dddddddddddddddd'
         filename = request.data['fileName']
-        filepath=os.path.join('static_shared','videos',filename)
+        filepath=os.path.join(globalSettings.BASE_DIR,'media_root','videos',filename)
         with open(filepath, 'wb+') as destination:
             for chunk in request.FILES['file'].chunks():
                 destination.write(chunk)

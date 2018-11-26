@@ -61,7 +61,7 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
           var appType = 'document';
         }
         $scope.addTab({
-          title: title + $scope.data.tableData[i].pk,
+          title: title + $scope.data.tableData[i].name,
           cancel: true,
           app: appType,
           data: $scope.data.tableData[i],

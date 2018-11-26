@@ -910,7 +910,8 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       username: $scope.newUser.username,
       first_name: $scope.newUser.firstName,
       last_name: $scope.newUser.lastName,
-      password: $scope.newUser.password
+      password: $scope.newUser.password,
+      email:$scope.newUser.email_id
     };
 
     console.log(dataToSend);
@@ -929,6 +930,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
         firstName: '',
         lastName: '',
         password: '',
+        email: '',
       };
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);
