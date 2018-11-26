@@ -736,6 +736,7 @@ if (typeof $scope.tab != 'undefined') {
       })
 
       Flash.create('success', response.status + ' : ' + response.statusText);
+      $scope.$broadcast('forceRefetch',)
       console.log(response.data);
 
       if ($scope.mode == 'new') {
