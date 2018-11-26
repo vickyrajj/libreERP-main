@@ -38,21 +38,12 @@
   </a>
   </div>
 
-
   <div class="col-md-5 hidden-xs hidden-sm  text-right"style="margin-top: 20px;">
     <a href="/login" style="cursor:pointer;font-size:17px;color:white;text-decoration:none;color:var(--themeColor)"> Already User? <i class="fa fa-user fa-lg"></i></a>
-
   </div>
-  <div class="col-xs-6 hidden-lg hidden-md  text-right"style="margin-bottom:5px">
+  <div class="col-xs-6 hidden-lg hidden-md  text-right"style="margin-top:15px">
     <a href="/login" style="cursor:pointer;font-size:17px;color:white;text-decoration:none;color:var(--themeColor)"> Already User? <i class="fa fa-user fa-lg"></i></a>
-
   </div>
-  <!-- <div class="col-xs-9 text-right hidden-md hidden-lg" ng-if="!me.pk">
-    <span style="cursor:pointer;font-size:17px" ng-click="loginPage()"> LOGIN <i class="fa fa-lock fa-lg"></i></span>
-
-  </div> -->
-
-
 </div>
 
 
@@ -66,13 +57,13 @@
 {% block content %}
 
 <div ng-app="app" ng-controller="registration">
-
   <div class="body">
     <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
       <section style="background-color:white">
         <div class="row">
           <div class="col-lg-12 text-center" style="margin-bottom:30px;">
             {% verbatim %}
+
             <h2 class="section-heading" style="color: #a39c9c;margin-bottom:0px">{{ mode != 'sendingOTP' ? 'Registration': 'Please wait, Sending OTP'}}</h2>
             {% endverbatim %}
             <img src="/static/images/bottom-border.png" alt="">
@@ -204,15 +195,59 @@
                       <!-- <div class="col-md-12">
                         <span class="help-text">Password Should Contains Minimum 6 Characters( Atleast 1Capital Letter , 1Small Letter, 1Number )</span>
                       </div> -->
+
+                    {% endverbatim %}
+
+                      {% for fields in regextra %}
+                      <div class="col-md-6">
+                        <div class="row">
+
+                            {% if fields.type == 'text' %}
+                              <div class="col-md-2 col-sm-2 col-xs-2">
+                                <span><i class="fa fa-map-pin" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                              </div>
+                              <div class="col-md-10 col-sm-10 col-xs-10">
+                                <div class="form-group">
+                                  <input ng-model="form.{{fields.name}}" type="text" class="form-control floatInput" required/><br/>
+                                  <span class="floating-label">{{fields.placeholder}}*</span>
+                                </div>
+                              </div>
+                            {% endif %}
+                            {% if fields.type == 'choice' %}
+                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                  <span><i class="fa {{fields.icon}}" style="margin-top: 30px;font-size: 22px;color:#147fcc"></i></span>
+                                </div>
+                                <div class="col-md-10 col-sm-10 col-xs-10" style="padding-top:25px">
+                                <select  class="form-control" ng-model="form.{{fields.name}}" ng-init="form.{{fields.name}} = '{{fields.placeholder}}'">
+                                  <option selected value="{{fields.placeholder}}">{{fields.placeholder}}</option>
+                                  {% for des in fields.option %}
+                                  <option value={{des}}>{{des}}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                            {% endif %}
+                        </div>
+                      </div>
+
+                      {% endfor %}
+
+
+
+
+
                     </div>
 
 
+
+                      {% verbatim %}
                     <div class="row" style="margin-top:50px;">
                       <div class="col-md-2 col-sm-2 col-xs-2">
-                        <input type="checkbox" class="form-control pull-right" ng-model="form.agree">
+                        <input type="checkbox" class=" pull-right" ng-model="form.agree">
                       </div>
                       <div class="col-md-10 col-sm-10 col-xs-10">
-                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  Sterling Select.</span>
+                        {% endverbatim %}
+                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  {{brand_title}}.</span>
+                        {% verbatim %}
                       </div>
                     </div>
                     <div ng-if="validityChecked && !form.agree" class="row">
@@ -223,6 +258,8 @@
 
 
                   <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
+                    {% endverbatim %}
+                    {% if verifyMobile != False %}
                     <div class="col-md-6">
                       <div class="row">
                         <div class="col-md-2 col-sm-2 col-xs-2">
@@ -237,6 +274,10 @@
                       </div>
                     </div>
                     <div class="col-md-6">
+                    {% else %}
+                    <div class="col-md-offset-2 col-md-8">
+                    {% endif %}
+                    {% verbatim %}
                       <div class="row">
                         <div class="col-md-2 col-sm-2 col-xs-2">
                           <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>

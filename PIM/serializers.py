@@ -5,9 +5,10 @@ from rest_framework.exceptions import *
 from .models import *
 from social.serializers import commentLikeSerializer
 from social.models import commentLike
-from clientRelationships.serializers import ContactLiteSerializer
+# from clientRelationships.serializers import ContactLiteSerializer
 from ecommerce.models import listing , media , Cart
 from POS.models import Product,Store,StoreQty
+from ERP.serializers import serviceLiteSerializer , serviceSerializer , addressSerializer
 
 class themeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,6 +25,37 @@ class notificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = notification
         fields = ('pk' , 'message' ,'shortInfo','domain','onHold', 'link' , 'originator' , 'created' ,'updated' , 'read' , 'user')
+
+class ContactLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = ('pk' , 'user' ,'name', 'company', 'email', 'mobile' , 'designation', 'dp', 'male')
+        read_only_fields = ( 'user' ,'name', 'company', 'email', 'mobile' , 'designation', 'dp', 'male')
+
+
+class ContactSerializer(serializers.ModelSerializer):
+    company = serviceSerializer(many = False , read_only = True)
+    class Meta:
+        model = Contact
+        fields = ('pk' , 'user' ,'name', 'created' , 'updated' , 'company', 'email' , 'emailSecondary', 'mobile' , 'mobileSecondary' , 'designation' , 'notes' , 'linkedin', 'facebook', 'dp', 'male')
+        read_only_fields = ('user', )
+    def create(self , validated_data):
+        c = Contact(**validated_data)
+        c.user = self.context['request'].user
+        if 'company' in self.context['request'].data:
+            c.company_id = int(self.context['request'].data['company'])
+        c.save()
+        return c
+    def update(self ,instance, validated_data):
+        for key in ['name', 'email' , 'emailSecondary', 'mobile' , 'mobileSecondary' , 'designation' , 'notes' , 'linkedin', 'facebook', 'dp', 'male']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'company' in self.context['request'].data:
+            instance.company_id = int(self.context['request'].data['company'])
+        instance.save()
+        return instance
 
 class calendarSerializer(serializers.ModelSerializer):
     clients = ContactLiteSerializer(many = True , read_only = True)

@@ -1,0 +1,66 @@
+<div class="container-fluid"  ng-controller="businessManagement.productsInventory.taxreport">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>From</label>
+        <div class="input-group">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.frm" is-open="status.frm" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="status.frm = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>To</label>
+        <div class="input-group">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.to" is-open="status.to" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="status.to = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>Type</label>
+        <select class="form-control" ng-model="form.mode">
+          <option value = "online">Online</option>
+          <option value = "offline">Offline</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-3" style="padding-top:25px">
+        <div class="btn-group">
+        <button type="button" class="btn btn-primary" name="button" ng-click="downloadExcel()"> <i class="fa fa-download" ></i> </button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <table class="table table-striped" style="margin-top:20px;">
+      <tr>
+      <th class="text-center">
+        Name
+      </th>
+      <th class="text-center">
+        Tax
+      </th>
+      <th class="text-center">
+      Dated
+      </th>
+    </tr>
+      <tr ng-repeat="f in details">
+        <td class="text-center">
+          {{f.customername}}
+        </td>
+        <td class="text-center">
+            {{f.tax}}
+        </td>
+        <td class="text-center">
+            {{f.dated}}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

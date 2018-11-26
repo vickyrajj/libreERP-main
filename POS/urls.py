@@ -17,6 +17,7 @@ router.register(r'inventoryLog' , InventoryLogViewSet , base_name = 'inventoryLo
 router.register(r'externalOrdersQtyMap' , ExternalOrdersQtyMapViewSet , base_name = 'externalOrdersQtyMap')
 router.register(r'store' , StoreViewSet , base_name = 'store')
 router.register(r'storeQty' , StoreQtyViewSet , base_name = 'storeQty')
+router.register(r'productMeta' , ProductMetaViewSet , base_name = 'productMeta')
 # router.register(r'productInventory' , ProductInventoryViewSet , base_name = 'productInventory')
 
 
@@ -34,4 +35,9 @@ urlpatterns = [
     url(r'salesGraphAPI/$' , SalesGraphAPIView.as_view() ),
     url(r'externalSalesGraphAPI/$' , ExternalSalesGraphAPIView.as_view() ),
     url(r'productInventoryAPI/$' , ProductInventoryAPIView.as_view() ),
+    url(r'getTaxList/$' , GetTaxList.as_view() ),
+    url(r'addProductSKU/$' , AddProductSKU.as_view() ),
+
+    # url(r'getTaxListExcel/$' , GetTaxListExcel.as_view() ),
+
 ]

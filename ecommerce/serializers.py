@@ -313,7 +313,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class PagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pages
-        fields = ( 'pk', 'created' , 'updated' ,'title' , 'pageurl' , 'body')
+        fields = ( 'pk', 'created' , 'updated' ,'title' , 'pageurl' , 'body' ,'topLevelMenu')
 
 class offerBannerSerializer(serializers.ModelSerializer):
     page = PagesSerializer(many = False , read_only = True)
@@ -521,7 +521,7 @@ class OrderSerializer(serializers.ModelSerializer):
     promoDiscount = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry')
+        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges')
         read_only_fields = ('user',)
     def get_promoDiscount(self, obj):
         pD = Promocode.objects.filter(name = obj.promoCode)
@@ -591,4 +591,4 @@ class genericPincodeSerializer(serializers.ModelSerializer):
 class genericImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenericImage
-        fields = ( 'pk', 'backgroundImage' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage')
+        fields = ( 'pk', 'backgroundImage' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage','topBanner','topMobileBanner')

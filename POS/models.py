@@ -42,7 +42,16 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
 
-from clientRelationships.models import ProductMeta
+PRODUCT_META_TYPE_CHOICES = (
+    ('HSN' , 'HSN'),
+    ('SAC' , 'SAC')
+)
+
+class ProductMeta(models.Model):
+    description = models.CharField(max_length = 500 , null = False)
+    typ = models.CharField(max_length = 5 , default = 'HSN' , choices = PRODUCT_META_TYPE_CHOICES)
+    code = models.PositiveIntegerField(null=False)
+    taxRate = models.PositiveIntegerField(null = False)
 
 UNIT_CHOICES = (
     ('Ton' , 'Ton'),
@@ -76,6 +85,7 @@ class Product(models.Model):
     compositions = models.ManyToManyField("self" , related_name="parent" , blank = True)
     compositionQtyMap = models.CharField(max_length = 1000 , null = True, blank = True)
     discount = models.PositiveIntegerField(default = 0)
+    grossWeight = models.CharField(max_length = 50 , null = True)
     # storeQty = models.ManyToManyField(StoreQty , related_name="productStore" , blank = True)
     alias = models.CharField(max_length = 500 , null = True)
     howMuch = models.FloatField(null=True)
@@ -122,7 +132,7 @@ class ProductVerient(models.Model):
     updated = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey(Product , related_name='parentProducts')
     sku = models.CharField(max_length=255,null=True)
-    unitPerpack = models.PositiveIntegerField(default = 0)
+    unitPerpack = models.FloatField(default = 0)
     price = models.FloatField(null=True)
     discountedPrice = models.FloatField(default = 0.0)
     serialId = models.CharField(max_length = 50, null=True, blank = True)

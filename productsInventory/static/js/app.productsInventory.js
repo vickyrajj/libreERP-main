@@ -106,9 +106,9 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
   $scope.fetchProdInventory = function(offset) {
     console.log(offset, $scope.currentStore.pk);
     if ($rootScope.multiStores) {
-      url = '/api/POS/productInventoryAPI/?store=' + $scope.currentStore.pk + '&limit=4&offset=' + offset + '&search=' + $scope.searchText
+      url = '/api/POS/productInventoryAPI/?store=' + $scope.currentStore.pk + '&limit=6&offset=' + offset + '&search=' + $scope.searchText
     } else {
-      url = '/api/POS/productInventoryAPI/?master=true&limit=4&offset=' + offset + '&search=' + $scope.searchText
+      url = '/api/POS/productInventoryAPI/?master=true&limit=6&offset=' + offset + '&search=' + $scope.searchText
     }
 
     $http({
@@ -378,7 +378,10 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
         resolve: {
           product: function() {
             return response.data;
-          }
+          },
+          newProduct: function() {
+              return '';
+          },
         },
         controller: 'controller.POS.productForm.modal',
       }).result.then(function() {
@@ -401,7 +404,7 @@ app.controller("businessManagement.productsInventory.inventoryForm", function($s
   }
 
   $scope.productSearch = function(query) {
-    return $http.get('/api/POS/product/?name__icontains=' + query + '&limit=10').
+    return $http.get('/api/POS/product/?value__search=' + query + '&limit=10').
     then(function(response) {
       console.log(response.data);
       return response.data.results;

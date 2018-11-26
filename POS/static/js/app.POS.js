@@ -300,10 +300,10 @@ app.controller("controller.POS.productMeta.form", function($scope, $http, Flash)
     }
     if ($scope.configureForm.pk == undefined) {
       var method = 'POST';
-      var url = '/api/clientRelationships/productMeta/'
+      var url = '/api/POS/productMeta/'
     } else {
       var method = 'PATCH';
-      url = '/api/clientRelationships/productMeta/' + $scope.configureForm.pk + '/';
+      url = '/api/POS/productMeta/' + $scope.configureForm.pk + '/';
     }
     var toSend = {
       description: f.description,
@@ -630,8 +630,11 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
 
 })
 
-app.controller("controller.POS.productForm.modal", function($scope, product, $http, Flash) {
-  console.log(product, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+app.controller("controller.POS.productForm.modal", function($scope, product,newProduct, $http, Flash,$uibModalInstance) {
+  console.log(product,newProduct, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+  $scope.newProduct = newProduct
+  console.log(typeof $scope.newProduct);
+
 
   $scope.multiStores = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
@@ -652,7 +655,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   })
 
   $scope.searchTaxCode = function(c) {
-    return $http.get('/api/clientRelationships/productMeta/?description__contains=' + c).
+    return $http.get('/api/POS/productMeta/?description__contains=' + c).
     then(function(response) {
       return response.data;
     })
@@ -716,7 +719,35 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       }
       $scope.categoriesList.push(a)
     }
-  } else {
+  }
+  else if(typeof $scope.newProduct== 'object'){
+      $scope.mode = 'edit';
+      $scope.product = $scope.newProduct
+    }
+  else if(typeof $scope.newProduct== 'string'){
+      $scope.mode = 'new';
+      $scope.product = {
+        'name': $scope.newProduct,
+        'productMeta': '',
+        'price': 0,
+        'displayPicture': emptyFile,
+        'serialNo': '',
+        'description': '',
+        'alias': '',
+        'inStock': 0,
+        'cost': 0,
+        'logistics': 0,
+        'serialId': '',
+        'reorderTrashold': 0,
+        'pk': null,
+        'unit': '',
+        'grossWeight':'',
+        'discount': 0,
+        'storeQty': [],
+        'howMuch': '',
+      }
+    }
+  else {
     $scope.mode = 'new';
     $scope.product = {
       'name': '',
@@ -733,6 +764,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       'reorderTrashold': 0,
       'pk': null,
       'unit': '',
+      'grossWeight':'',
       'discount': 0,
       'storeQty': [],
       'howMuch': '',
@@ -879,7 +911,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     fd.append('cost', f.cost);
     fd.append('serialNo', f.serialNo);
     fd.append('description', f.description);
-    // fd.append('inStock', f.inStock);
+    fd.append('grossWeight', f.grossWeight);
     fd.append('logistics', f.logistics);
     fd.append('serialId', f.serialId);
     fd.append('reorderTrashold', f.reorderTrashold);
@@ -936,6 +968,27 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       if ($scope.mode == 'new') {
         $scope.product.pk = response.data.pk;
         $scope.mode = 'edit';
+        if($scope.newProduct.length>0){
+          $uibModalInstance.dismiss(response.data)
+        }
+        if (response.data.serialNo ==="") {
+          $http({
+            method: 'POST',
+            url: '/api/POS/addProductSKU/',
+            data:{
+              value:response.data.pk
+            }
+          }).
+          then(function(response) {
+              $scope.product.serialNo = response.data
+          })
+
+        }
+      }
+      else{
+        if(typeof $scope.newProduct == 'object'){
+          $uibModalInstance.dismiss(response.data)
+        }
       }
     })
   }
@@ -1048,19 +1101,32 @@ function getMonday(date) {
 }
 
 
-app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter) {
+app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter,$rootScope) {
 
   // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
-  $scope.posShowAll = true
+  // $scope.posShowAll = true
+  // if (settings_posScanner) {
+  //   $scope.posShowAll = false
+  // }
+
+// console.log(settings_posScanner,'@@@@@@@@@@@@@@@@@@@@@@@@');
+
+  $http({
+    method: 'POST',
+    url: '/api/POS/addProductSKU/',
+  }).
+  then(function(response) {
+
+  })
+
+ $scope.posShowAll = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=posScanner').
   then(function(response) {
-    console.log('Scennerrrrrrrrrrrrrrr', response.data);
-    if (response.data[0] != null) {
+    if(response.data[0]!=null){
       if (response.data[0].flag) {
-        $scope.posShowAll = false
+         $scope.posShowAll = true
       }
     }
-    console.log($scope.posScanner);
   })
 
   $scope.today = new Date();
@@ -1918,7 +1984,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           } else {
             return $scope.data.tableData[idx];
           }
-        }
+        },
+        newProduct: function() {
+            return '';
+        },
       },
       controller: 'controller.POS.productForm.modal',
     }).result.then(function() {
@@ -1956,7 +2025,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
         $scope.configProductMeta = {
           views: views,
-          url: '/api/clientRelationships/productMeta/',
+          url: '/api/POS/productMeta/',
           searchField: 'description',
           itemsNumPerView: [8, 16, 24],
         }
@@ -1983,7 +2052,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
                 $http({
                   method: 'DELETE',
-                  url: '/api/clientRelationships/productMeta/' + target + '/'
+                  url: '/api/POS/productMeta/' + target + '/'
                 }).
                 then(function(response) {
                   Flash.create('success', 'Deleted');

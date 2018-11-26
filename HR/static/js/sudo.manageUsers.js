@@ -1,5 +1,6 @@
 
 app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
+
   $scope.generateMailPasskey = function() {
     console.log($scope);
     console.log($scope.data);
@@ -7,6 +8,30 @@ app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
     then(function(response) {
       $scope.data.mailAccount = response.data;
     });
+  }
+
+  $scope.addActive=function(){
+    $scope.data.is_active = true
+
+    var dataToSend = {
+      is_active : $scope.data.is_active,
+      username : $scope.data.username,
+      last_name : $scope.data.last_name,
+      first_name : $scope.data.first_name,
+      is_staff : $scope.data.is_staff,
+    }
+
+   $http({method : 'PATCH' , url : '/api/HR/usersAdminMode/' + $scope.data.pk + '/', data : dataToSend}).
+   then(function(response) {
+     var toSend = {email : response.data.email,
+                  name : response.data.first_name};
+     $http({method : 'POST' , url : '/api/HR/sendActivatedStatus/' , data : toSend}).
+     then(function(response) {
+       console.log(response.data);
+     })
+   });
+
+
   }
 });
 
@@ -74,7 +99,7 @@ app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
   })
 
   $scope.save = function() {
-    // make patch request
+    // make  request
     var f = $scope.form;
     dataToSend = {
       user : f.pk,
@@ -675,11 +700,14 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
     }
     $http({method : 'PATCH' , url : userData.url.replace('users' , 'usersAdminMode') , data : dataToSend }).
     then(function(response){
+      console.log(response.data,'gggggfffffffff');
        Flash.create('success', response.status + ' : ' + response.statusText);
     }, function(response){
        Flash.create('danger', response.status + ' : ' + response.statusText);
     });
   }
+
+
 
 
    $scope.editDesignation = function(index){

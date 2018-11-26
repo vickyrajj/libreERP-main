@@ -109,7 +109,8 @@ class Pages(models.Model):
     updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=100 ,null = False)
     pageurl = models.CharField(max_length=100 ,null = False)
-    body = models.CharField(max_length=10000 ,null = False)
+    body = models.CharField(max_length=50000 ,null = False)
+    topLevelMenu = models.BooleanField(default = False)
 
 class offerBanner(models.Model):
     user = models.ForeignKey(User, null = False)
@@ -131,7 +132,7 @@ CART_TYPE_CHOICES = (
 
 class Cart(models.Model):
     product = models.ForeignKey(listing, null = False)
-    user = models.ForeignKey(User, null = False)
+    user = models.ForeignKey(User, null = False , related_name = 'cartItems')
     qty = models.PositiveIntegerField(null = True)
     typ = models.CharField(choices = CART_TYPE_CHOICES, max_length = 10, default = 'cart')
     prodSku = models.CharField(max_length = 50, null = True, blank = True)
@@ -253,6 +254,7 @@ class Order(models.Model):
     country = models.CharField(max_length = 50 , null = True , blank = True)
     billingCountry = models.CharField(max_length = 50 , null = True , blank = True)
     mobileNo = models.CharField(max_length=15 ,null = True , blank = True)
+    shippingCharges =  models.IntegerField(default = 0)
 
 
 class Promocode(models.Model):
@@ -311,3 +313,5 @@ class GenericImage(models.Model):
     paymentPortrait = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     searchBgImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     blogPageImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    topBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    topMobileBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)

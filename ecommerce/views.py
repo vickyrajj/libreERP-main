@@ -94,7 +94,8 @@ import ast
 from flask import Markup
 from PIM.models import blogPost
 from django.db.models.functions import Concat
-
+from openpyxl import load_workbook
+from io import BytesIO
 # Create your views here.
 
 defaultSettingsData = appSettingsField.objects.filter(app_id=25)
@@ -113,23 +114,13 @@ if defaultSettingsData.count()>0:
 from payu.gateway import get_hash , payu_url
 from uuid import uuid4
 
-def makePayment():
-    data = {
-        'txnid':uuid4().hex, 'amount':10.00, 'productinfo': 'Sample Product',
-        'firstname': 'test', 'email': 'test@example.com', 'udf1': 'Userdefined field',
-    }
-    hash_value = get_hash(data)
-
-
-def success_response(request):
-    hash_value = check_hash(request.POST)
-    if check_hash(request.POST):
-        return HttpResponse("Transaction has been Successful.")
-
 
 def ecommerceHome(request):
+
+
     print 'home viewwwwwwwwwwwwwwwwwwwwwwww'
-    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
+    data = {'wampServer' : globalSettings.WAMP_SERVER,'icon_logo':globalSettings.ICON_LOGO, 'useCDN' : globalSettings.USE_CDN,'brand_title':globalSettings.SEO_TITLE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER} , 'color' : globalSettings.ECOMMERCE_THEME , "inventory" : globalSettings.INVENTORY_ENABLED , "settings" : application.objects.get(name = 'app.public.ecommerce' ).settings.all() }
+
     if '/' in request.get_full_path():
         urlData = request.get_full_path().split('/')
         print urlData,'url detailsssssssssss'
@@ -157,32 +148,32 @@ def ecommerceHome(request):
                 print 'please select the product'
         if 'blog' in urlData and len(urlData) > 1 :
             print 'blogggggggggggggggggggg'
-            data['seoDetails']['title'] = 'Sterling Select | Blog'
+            data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Blog'
         if 'categories' in urlData and len(urlData) > 2 :
-            data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | Sterling Select'
+            data['seoDetails']['title'] = str(urlData[-1]) + '| Buy ' + str(urlData[-1]) + ' At Best Price In India | ' + str(globalSettings.SEO_TITLE)
         if 'checkout' in urlData and len(urlData) > 2 :
-            data['seoDetails']['title'] = 'Sterling Select | Review Order > Select Shipping Address > Place Order'
+            data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Review Order > Select Shipping Address > Place Order'
         if 'account' in urlData and len(urlData) > 2 and urlData[-1]!= '':
             print 'somethinggggggggggg'
             if urlData[-1] == 'cart':
-                data['seoDetails']['title'] = 'Sterling Select | Shopping Cart'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Shopping Cart'
             elif urlData[-1] == 'orders':
-                data['seoDetails']['title'] = 'Sterling Select | My Orders'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | My Orders'
             elif urlData[-1] == 'settings':
-                data['seoDetails']['title'] = 'Sterling Select | My Settings'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | My Settings'
             elif urlData[-1] == 'support':
-                data['seoDetails']['title'] = 'Sterling Select | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | HelpCenter -  FAQ About Contextual Advertising , Online Advertising , Online Ads'
             elif urlData[-1] == 'saved':
-                data['seoDetails']['title'] = 'Sterling Select | Saved Products'
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' | Saved Products'
         if len(urlData) > 1 :
             print 'pagessssssssssssss',urlData[1]
             pagesChecking = Pages.objects.filter(pageurl__icontains=str(urlData[1]))
             blogsChecking = blogPost.objects.filter(state__icontains='published',shortUrl__icontains=str(urlData[1]))
             if len(pagesChecking)>0:
-                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' |  ' + str(urlData[1]).replace('-',' ')
             elif len(blogsChecking)>0:
                 blogData = blogsChecking[0]
-                data['seoDetails']['title'] = 'Sterling Select |  ' + str(urlData[1]).replace('-',' ')
+                data['seoDetails']['title'] = str(globalSettings.SEO_TITLE) + ' |  ' + str(urlData[1]).replace('-',' ')
                 if blogData.description is not None and len(blogData.description)>0 and blogData.description != 'null':
                     data['seoDetails']['description'] = blogData.description
                     print 'Desscription existsssssssssssss'
@@ -208,7 +199,6 @@ class SearchProductAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny , )
     def get(self , request , format = None):
-        print 'aaaaaaaaaaaaaaaaa'
         if 'search' in self.request.GET:
             search = str(self.request.GET['search'])
             l = int(self.request.GET['limit'])
@@ -456,7 +446,7 @@ class CreateOrderAPI(APIView):
                     value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
             grandTotal=round(grandTotal, 2)
-            if orderObj.user.email:
+            if orderObj.user.email and orderObj.paymentMode == 'COD':
                 ctx = {
                     'heading' : "Invoice Details",
                     'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
@@ -716,7 +706,7 @@ class PagesViewSet(viewsets.ModelViewSet):
     queryset = Pages.objects.all()
     serializer_class = PagesSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title','pageurl']
+    filter_fields = ['title','pageurl' , 'topLevelMenu']
 
 class offerBannerViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdminOrReadOnly, )
@@ -822,7 +812,6 @@ class PincodeViewSet(viewsets.ModelViewSet):
 
 
 def manifest(response,item):
-    print '999999999999999999999999999999999999999'
     settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
     print settingsFields.get(name = 'address').value
     order = item.order.get()
@@ -833,8 +822,6 @@ def manifest(response,item):
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=1*cm,leftMargin=0.2*cm,rightMargin=0.2*cm)
     elements = []
-
-    print item.prodSku,'aaaaaaaaaaaaaaaaaaaaaa'
     if item.prodSku != item.product.product.serialNo:
         product = ProductVerient.objects.get(sku=item.prodSku)
         qtyData = product.unitPerpack * item.product.product.howMuch
@@ -866,10 +853,6 @@ def manifest(response,item):
     elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
     elements.append(Paragraph(txt2, styles['Normal']))
-    # elements.append(Indenter(left=150))
-    # elements.append(HRFlowable(hAlign='LEFT',thickness=1, color=black,spaceBefore=30,spaceAfter=5))
-    # elements.append(Indenter(left=-150))
-
     elements.append(Spacer(1, 30))
 
     txt3 = '<para size=10 leftIndent=150 rightIndent=150><b>COURIER NAME : </b>{0}<br/><b>COURIER AWB No. : </b>{1}</para>'.format(item.courierName,item.courierAWBNo)
@@ -880,7 +863,7 @@ def manifest(response,item):
     txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'address').value)
     elements.append(Paragraph(txt4, styles['Normal']))
     elements.append(Spacer(1, 3))
-    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat/tinNo').value,settingsFields.get(name = 'cstNo').value)
+    txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat_tinNo').value,settingsFields.get(name = 'cstNo').value)
     elements.append(Paragraph(txt5, styles['Normal']))
     elements.append(Spacer(1, 10))
     invNo = str(now.year)+str(now.month)+str(now.day)+str(order.pk)
@@ -980,10 +963,6 @@ class SendDeliveredStatus(APIView):
         o = []
         m=[]
         promoAmount=0
-        # oq = list(OrderQtyMap.objects.filter(pk = request.data['value']).values().annotate(pname=F('product__product__name'),pPrice=F('product__product__price'),pDiscount=F('product__product__discount'),dp=F('product__files__attachment')))
-        # productId = oq[0]['id']
-        # o = list(Order.objects.filter(orderQtyMap = productId).values().annotate(userEmail=F('user__email'),fname=F('user__first_name'),lname=F('user__last_name')))
-        # emailAddr.append(str( o[0]['userEmail']))
         oq=OrderQtyMap.objects.get(pk = request.data['value'])
         print oq.pk
         price = oq.product.product.price - (oq.product.product.discount * oq.product.product.price)/100
@@ -998,18 +977,11 @@ class SendDeliveredStatus(APIView):
         grandTotal=total-(promoAmount * total)/100
         grandTotal=round(grandTotal, 2)
         attachment =  oq.product.files.values_list('attachment', flat=True)
-        # media=oq.product.files
-        # for m in media:
-        #     print m.pk,'aaaaaaaaa'
-        # m=Media.objects.get(pk=o.product.files)
         print '**************************'
         ctx = {
             'heading' : "Invoice Details",
-            # 'recieverName' : name,
             'linkUrl': globalSettings.BRAND_NAME,
             'sendersAddress' : globalSettings.SEO_TITLE,
-            # 'sendersPhone' : '122004',
-            # 'grandTotal':grandTotal,
             'promoAmount':promoAmount,
             'attachment':"https://media/"+attachment[0],
             'grandTotal':grandTotal,
@@ -1023,10 +995,6 @@ class SendDeliveredStatus(APIView):
         }
         print ctx
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
-        # email_subject = "Order Details:"
-        # msgBody = " Your Order has been placed and details are been attached"
-        # contactData.append(str(orderObj.user.email))
-        print 'aaaaaaaaaaaaaaa'
         msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
         msg.content_subtype = 'html'
         # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
@@ -1070,9 +1038,14 @@ styleN = styles['Normal']
 styleH = styles['Heading1']
 
 try:
-    settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+    settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
 except:
-    print "ERROR : settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()"
+    print "ERROR : settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()"
+
+try:
+    ecommerceSetting = application.objects.get(name = 'app.public.ecommerce').settings.all()
+except:
+    print "ERROR : application.objects.get(name = 'app.public.ecommerce').settings.get(name__iexact = 'gstEnabled')"
 
 class FullPageImage(Flowable):
     def __init__(self , img):
@@ -1252,7 +1225,7 @@ def genInvoice(response, contract, request):
     tableHeaderStyle.textColor = colors.white
     tableHeaderStyle.fontSize = 7
 
-
+# ecommerceSetting.get(name = 'gstEnabled').flag
     # totalQuant = 0
     # totalTax = 0
     totaldiscount = 0
@@ -1332,8 +1305,19 @@ def genInvoice(response, contract, request):
     tableData.append(['','','GRAND TOTAL (INR)',grandTotal])
     t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 1.5*inch , 1.5*inch])
     t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#bdd3f4')) ]))
-
-
+    if ecommerceSetting.get(name = 'gstEnabled').flag == True:
+        gst = """
+        <font size='6'><strong>GST : </strong></font>
+        """
+        try:
+            detailsObj = contract.user.profile.details
+            details = ast.literal_eval(detailsObj)
+            gstVal = details['GST']
+        except:
+            gstVal = ''
+    else:
+        gst = ''
+        gstVal = ''
 
     story = []
 
@@ -1342,14 +1326,6 @@ def genInvoice(response, contract, request):
     story.append(expHead)
     story.append(Spacer(2.5, 0.75 * cm))
 
-    #
-    # adrs = contract.deal.company.address
-    #
-    # if contract.deal.company.tin is None:
-    #     tin = 'NA'
-    # else:
-    #     tin = contract.deal.company.tin
-    #
     summryParaSrc3 = """
     <font size='8'><strong>Customer details:</strong></font> <br/>
     """
@@ -1365,9 +1341,10 @@ def genInvoice(response, contract, request):
     %s %s - %s<br/>
     India<br/>
     %s<br/>
+    %s  %s
     </font>
     </para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo),styles['Normal'])
+    """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.mobileNo,gst,gstVal),styles['Normal'])
 
 
     summryParaSrc1 = Paragraph("""
@@ -1380,8 +1357,9 @@ def genInvoice(response, contract, request):
     %s %s - %s<br/>
     India<br/>
     %s<br/>
+    %s %s
     </font></para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo),styles['Normal'])
+    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo,gst,gstVal),styles['Normal'])
 
 
     td=[[summryParaSrc,' ',summryParaSrc1]]
@@ -1473,8 +1451,6 @@ class OnlineSalesGraphAPIView(APIView):
             order = Order.objects.filter(created__range=(datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
             orderQty = OrderQtyMap.objects.filter(updated__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
             custs = User.objects.filter(date_joined__range = (datetime.datetime.combine(frm, datetime.time.min), datetime.datetime.combine(to, datetime.time.max)))
-        print '***********'
-        print order,order.count()
 
         totalSales = order.aggregate(Sum('totalAmount')) if order.count() > 0 else {'totalAmount__sum':0}
         if 'totalAmount__sum' in totalSales and type(totalSales['totalAmount__sum']) == float:
@@ -1530,7 +1506,6 @@ class GenericPincodeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         toReturn = GenericPincode.objects.all()
         if 'pincode' in self.request.GET:
-            print 'lllllllllllllllllllllllllllllllllllllllllllllllllllll'
             toReturn = toReturn.filter(pincode__iexact=self.request.GET['pincode'])
         return toReturn
 
@@ -1540,3 +1515,310 @@ class GenericImageViewSet(viewsets.ModelViewSet):
     serializer_class = genericImageSerializer
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['pincode','state','city']
+import traceback
+class UpdateCartAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self, request, format=None):
+        try:
+            c = Cart.objects.get(product__id = request.data['product'] , user = request.user)
+            c.qty  = request.data['qty']
+            c.save()
+            return Response(status=status.HTTP_200_OK)
+        except:
+            traceback.print_exc()
+            return Response(status = status.HTTP_404_NOT_FOUND )
+
+
+
+class BulklistingCreationAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated , isAdmin)
+    def post(self, request, format=None):
+        wb = load_workbook(filename = BytesIO(request.FILES['xl'].read()))
+        ws = wb.worksheets[0]
+        row_count = ws.max_row+1
+        column_count = ws.max_column
+        for i in range(2, row_count):
+            images =[]
+            genericObj=''
+            name = ws['A' + str(i)].value
+            serialNo = ws['B' + str(i)].value
+            price = ws['c' + str(i)].value
+            serialId = ws['B' + str(i)].value
+            unit = ws['E' + str(i)].value
+            howMuch = ws['F' + str(i)].value
+            grossWeight = ws['K' + str(i)].value
+            send = Product(name=name, serialNo=serialNo, price=price,serialId=serialId,unit=unit,howMuch=howMuch,user=request.user,grossWeight=grossWeight)
+            send.save()
+            cat = ws['J' + str(i)].value
+            try:
+                genericObj = genericProduct.objects.get(name__iexact = cat)
+                parentType = genericObj
+            except:
+                genericName = cat
+                visual = 'ecommerce/pictureUploads/' + str(cat) + '_small.jpg'
+                bannerImage = 'ecommerce/GenericProductBanner/' + str(cat) + '_big.jpg'
+                genericSend = genericProduct(name=genericName,visual=visual,bannerImage=bannerImage)
+                genericSend.save()
+                parentType = genericSend
+            imageOne = ws['G' + str(i)].value
+            attachmentOne = 'ecommerce/pictureUploads/' +str(imageOne)
+            imageOneSend = media(user=request.user,attachment = attachmentOne,mediaType='image' )
+            imageOneSend.save()
+            images.append(imageOneSend)
+            imageTwo = ws['H' + str(i)].value
+            attachmentTwo = 'ecommerce/pictureUploads/' +str(imageTwo)
+            imageTwoSend = media(user=request.user,attachment = attachmentTwo,mediaType='image' )
+            imageTwoSend.save()
+            images.append(imageTwoSend)
+            imageOne =howMuch = ws['I' + str(i)].value
+            attachmentThree = 'ecommerce/pictureUploads/' +str(imageOne)
+            imageThreeSend =media(user=request.user,attachment = attachmentThree,mediaType='image' )
+            imageThreeSend.save()
+            images.append(imageThreeSend)
+            listingSend = listing(parentType=parentType, product=send,user=request.user)
+            listingSend.save()
+            for i in images:
+                listingSend.files.add(i)
+            listingSend.save()
+        return Response(status = status.HTTP_200_OK)
+
+from paypal.standard.forms import PayPalPaymentsForm
+def paypal_return_view(request):
+    orderObj = Order.objects.filter(user = request.user).last()
+    orderObj.paidAmount = orderObj.totalAmount
+    orderObj.approved = True
+    orderObj.save()
+
+    # send the email here
+    value = []
+    totalPrice = 0
+    promoAmount = 0
+    total=0
+    price = 0
+    grandTotal = 0
+    promoObj = Promocode.objects.all()
+    for p in promoObj:
+        if str(p.name)==str(orderObj.promoCode):
+            promoAmount = p.discount
+    print promoAmount
+    a = '#'
+    docID = str(a) + str(orderObj.pk)
+    for i in orderObj.orderQtyMap.all():
+        if i.prodSku == i.product.product.serialNo:
+            price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+            price=round(price, 2)
+            totalPrice=i.qty*price
+            totalPrice=round(totalPrice, 2)
+            total+=totalPrice
+            total=round(total, 2)
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+        else:
+            prodData = ProductVerient.objects.get(sku = i.prodSku)
+            price = prodData.discountedPrice
+            price=round(price, 2)
+            totalPrice=i.qty*price
+            totalPrice=round(totalPrice, 2)
+            total+=totalPrice
+            total=round(total, 2)
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+    grandTotal=total-(promoAmount * total)/100
+    grandTotal=round(grandTotal, 2)
+    request.user.cartItems.all().delete()
+    if orderObj.user.email:
+        ctx = {
+            'heading' : "Invoice Details",
+            'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+            'linkUrl': globalSettings.BRAND_NAME,
+            'sendersAddress' : globalSettings.SEO_TITLE,
+            # 'sendersPhone' : '122004',
+            'grandTotal':grandTotal,
+            'total': total,
+            'value':value,
+            'docID':docID,
+            'data':orderObj,
+            'promoAmount':promoAmount,
+            'linkedinUrl' : lkLink,
+            'fbUrl' : fbLink,
+            'twitterUrl' : twtLink,
+        }
+        print ctx
+        contactData = []
+        email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+        contactData.append(str(orderObj.user.email))
+        msg = EmailMessage("Order Details" , email_body, to= contactData  )
+        msg.content_subtype = 'html'
+        msg.send()
+    return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
+
+
+def paypal_cancel_view(request):
+    return redirect("/checkout/cart?action=retry")
+
+def paypalPaymentInitiate(request):
+    # What you want the button to do.
+    orderid = request.GET['orderid']
+    orderObj = Order.objects.get(pk=orderid)
+    paypal_dict = {
+        "business": globalSettings.PAYPAL_RECEIVER_EMAIL,
+        "amount": orderObj.totalAmount,
+        "item_name": "name of the item",
+        "invoice": orderObj.pk,
+        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+        "return": request.build_absolute_uri(reverse('paypal_return_view')),
+        # "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
+        "cancel_return": request.build_absolute_uri(reverse('paypal_cancel_view')),
+        "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"form": form}
+    return render(request, "paypal.payment.html", context)
+
+import uuid
+def payuPaymentInitiate(request):
+    # What you want the button to do.
+    orderid = request.GET['orderid']
+    orderObj = Order.objects.get(pk=orderid)
+
+
+
+    hashSequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10";
+
+    hash_string = '';
+    hashVarsSeq = hashSequence.split('|');
+    trxnID = str(uuid.uuid4()).split('-')[0]
+    posted = {"key"  : globalSettings.PAYU_MERCHANT_KEY ,
+        "txnid" : trxnID ,
+        "amount" : str(orderObj.totalAmount),
+        "productinfo" : "Sterling select products",
+        "firstname" : orderObj.user.first_name,
+        "email" : orderObj.user.email}
+
+    for hvs in hashVarsSeq:
+        try:
+            hash_string += posted[hvs];
+        except:
+            hash_string += ''
+
+        hash_string += '|'
+
+    orderObj.paymentRefId = trxnID
+    orderObj.save()
+
+    hash_string += globalSettings.PAYU_MERCHANT_SALT
+    print hash_string
+    hashh = hashlib.sha512(hash_string).hexdigest()
+    print "hashh : " , hashh
+    formData =  {
+        "action" : payu_url(),
+        "key": globalSettings.PAYU_MERCHANT_KEY,
+        "txnid": trxnID,
+        "amount" : str(orderObj.totalAmount),
+        "productinfo" : "Sterling select products",
+        "firstname" : orderObj.user.first_name,
+        "email" : orderObj.user.email,
+        "phone" : '9702438730',
+        "surl" :  globalSettings.SITE_ADDRESS +'/payUPaymentResponse/',
+        "furl" : globalSettings.SITE_ADDRESS +'/payUPaymentResponse/',
+        "hash" : hashh
+    }
+
+    print formData
+
+    return render(request , 'payu.payment.html' , formData)
+
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+
+@csrf_exempt
+def payUPaymentResponse(request):
+
+    if request.method == 'POST' and request.POST['status'] == 'success':
+        orderObj = Order.objects.get(paymentRefId = request.POST['txnid'] )
+        orderObj.approved = True
+        orderObj.paymentStatus = True
+        orderObj.paidAmount = request.POST['amount']
+        orderObj.save()
+        value = []
+        totalPrice = 0
+        promoAmount = 0
+        total=0
+        price = 0
+        grandTotal = 0
+        promoObj = Promocode.objects.all()
+        for p in promoObj:
+            if str(p.name)==str(orderObj.promoCode):
+                promoAmount = p.discount
+        print promoAmount
+        a = '#'
+        docID = str(a) + str(orderObj.pk)
+        for i in orderObj.orderQtyMap.all():
+            if i.prodSku == i.product.product.serialNo:
+                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                price=round(price, 2)
+                totalPrice=i.qty*price
+                totalPrice=round(totalPrice, 2)
+                total+=totalPrice
+                total=round(total, 2)
+                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+            else:
+                prodData = ProductVerient.objects.get(sku = i.prodSku)
+                price = prodData.discountedPrice
+                price=round(price, 2)
+                totalPrice=i.qty*price
+                totalPrice=round(totalPrice, 2)
+                total+=totalPrice
+                total=round(total, 2)
+                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+        grandTotal=total-(promoAmount * total)/100
+        grandTotal=round(grandTotal, 2)
+        request.user.cartItems.all().delete()
+        if orderObj.user.email:
+            ctx = {
+                'heading' : "Invoice Details",
+                'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+                'linkUrl': globalSettings.BRAND_NAME,
+                'sendersAddress' : globalSettings.SEO_TITLE,
+                # 'sendersPhone' : '122004',
+                'grandTotal':grandTotal,
+                'total': total,
+                'value':value,
+                'docID':docID,
+                'data':orderObj,
+                'promoAmount':promoAmount,
+                'linkedinUrl' : lkLink,
+                'fbUrl' : fbLink,
+                'twitterUrl' : twtLink,
+            }
+            print ctx
+            contactData = []
+            email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+            contactData.append(str(orderObj.user.email))
+            msg = EmailMessage("Order Details" , email_body, to= contactData  )
+            msg.content_subtype = 'html'
+            msg.send()
+        return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
+
+    else:
+        return redirect("/checkout/cart?action=retry")
+
+
+class GetInStockAPIView(APIView):
+    # permission_classes = (permissions.IsAuthenticated , isAdmin)
+    def get(self, request, format=None):
+        print request.GET['store'] ,  request.GET['product_var'],request.GET['product_id'],'eeeeeeeeeeeee'
+        store = None
+        product_var = None
+        stock=0
+        if request.GET['store']!='undefined':
+            store = int(request.GET['store'])
+        if  request.GET['product_var']!='undefined':
+            product_var = int(request.GET['product_var'])
+        storeData = StoreQty.objects.get(store=store,product = request.GET['product_id'],productVariant=product_var)
+        if storeData:
+            stock = storeData.quantity
+        else:
+            stock=0
+        print stock , 'sttccccccccccccccccckkkkkkkkkkk'
+        stockData = { 'stock':stock,'product':request.GET['product_id'],'product_var':request.GET['product_var'],'store':request.GET['store']}
+        return Response(stockData,status = status.HTTP_200_OK)

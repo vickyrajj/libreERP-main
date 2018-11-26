@@ -149,6 +149,9 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
   $scope.order = $scope.tab.data.order
   $scope.expanded = false;
   // $scope.sts = 'aaa'
+  $scope.currency =''
+  $scope.currency = settings_currencySymbol;
+
   $scope.orderItemCancel = function(idx) {
     console.log(idx, $scope.order.orderQtyMap[idx]);
     $http({
@@ -407,3 +410,9 @@ app.controller('businessManagement.ecommerce.orders', function($scope, $http, $a
 
 
 });
+
+app.controller('businessManagement.ecommerce.orders.item', function($scope, $http, $aside, $state, Flash, $users, $filter) {
+  $scope.currency = settings_currencySymbol;
+
+
+})

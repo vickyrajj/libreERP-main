@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from fabric.api import *
 import os
 from django.conf import settings as globalSettings
-from clientRelationships.models import ProductMeta
-from clientRelationships.serializers import ProductMetaSerializer
+# from clientRelationships.models import ProductMeta
+# from clientRelationships.serializers import ProductMetaSerializer
 from ERP.models import service , appSettingsField
 
 import json
@@ -26,10 +26,10 @@ from os import environ
 from django.forms.models import model_to_dict
 import os
 import argparse
-from twisted.internet import reactor
-from twisted.internet.defer import inlineCallbacks
-
-from autobahn.twisted.wamp import ApplicationSession, ApplicationRunner
+# from twisted.internet import reactor
+# from twisted.internet.defer import inlineCallbacks
+#
+# from autobahn.twisted.wamp import ApplicationSession, ApplicationRunner
 import requests
 from django.db.models import Sum
 
@@ -40,6 +40,12 @@ from datetime import datetime
 date_obj = datetime.now()
 date = date_obj.strftime('%d/%m/%Y')
 time_sec = date_obj.strftime('%H:%M:%S')
+
+
+class ProductMetaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductMeta
+        fields = ('pk'  ,'description' , 'typ' , 'code' , 'taxRate')
 
 
 
@@ -60,7 +66,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 class ProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name',  'price', 'displayPicture','serialNo', 'cost','haveComposition' , 'inStock','discount','alias','howMuch')
+        fields = ('pk' , 'user' ,'name',  'price', 'displayPicture','serialNo', 'cost','haveComposition' , 'inStock','discount','alias','howMuch','grossWeight')
 
 class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
@@ -71,7 +77,7 @@ class ProductSerializer(serializers.ModelSerializer):
     # StoreStock = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','alias','howMuch','productOption')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','alias','howMuch','productOption','grossWeight')
 
         read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
@@ -118,7 +124,7 @@ class ProductSerializer(serializers.ModelSerializer):
             il = InventoryLog(before = instance.inStock , after = validated_data['inStock'],product = instance,typ = 'user' , user = self.context['request'].user)
             il.save()
 
-        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap','unit','alias','howMuch']:
+        for key in ['name', 'price', 'displayPicture', 'serialNo', 'description','discount' ,'inStock','cost','logistics','serialId','reorderTrashold', 'haveComposition' , 'compositionQtyMap','unit','alias','howMuch','grossWeight']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

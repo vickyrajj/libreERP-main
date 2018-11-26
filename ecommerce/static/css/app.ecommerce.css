@@ -5,7 +5,10 @@
 	color:white;
 }
 
-:root { --themeColor: red;}
+h5{
+  font-size: 16px !important;
+}
+
 
 
 .glassyButton{
