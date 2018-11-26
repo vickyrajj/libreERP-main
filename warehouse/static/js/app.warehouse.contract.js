@@ -228,17 +228,68 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
 
   $scope.$watch('contract.activeStatus', function(newValue, oldValue) {
     console.log('aaaaaaaaaaaaaaaaaaaa');
+    if(newValue==false){
+      console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+      var dataToSend = {
+          activeStatus: newValue,
+          occupancy : [],
+          quantity : 0
+      }
+    }
+    else{
+      var dataToSend = {
+          activeStatus: newValue,
+      }
+    }
     $http({
       method: 'PATCH',
       url: '/api/warehouse/contract/' + $scope.contract.pk + '/',
-      data: {
-        activeStatus: newValue
-      }
+      data : dataToSend
+      // data: {
+      //   activeStatus: newValue
+      // }
     }).
     then(function(response) {
+      if(response.data.activeStatus == false){
+        $http({
+          method: 'GET',
+          url: '/api/warehouse/commodity/?contract=' + response.data.pk,
+        }).
+        then(function(response1) {
+          for (var i = 0; i < response1.data.length; i++) {
+            $http({
+              method: 'PATCH',
+              url: '/api/warehouse/commodity/' +response1.data[i].pk +'/',
+              data: {
+                qty:0
+              }
+            }).
+            then(function(response2) {
+              $http({
+                method: 'GET',
+                url: '/api/warehouse/commodityQty/?commodity=' + response2.data.pk,
+              }).
+              then(function(response3) {
+                for (var i = 0; i < response3.data.length; i++) {
+                $http({
+                  method: 'PATCH',
+                  url: '/api/warehouse/commodityQty/' +response3.data[i].pk +'/',
+                  data: {
+                    balance:0,
+                    checkout:0
+                  }
+                }).
+                then(function(response) {
+                  })
+                }
+              })
 
-    })
+            })
+          }
+        })
+      }
   })
+    })
   $scope.addCommodity = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.warehouse.commodity.html',
@@ -1187,6 +1238,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       console.log($scope.dataURL.length);
       $scope.contract.occupancy_screenshort = $scope.dataURL;
     }
+    $scope.contract.activeStatus = true
     var f = $scope.contract;
     console.log($scope.selectingAreas);
     if (f.company.length == 0) {
@@ -1214,12 +1266,12 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
 
     var url = '/api/warehouse/contract/';
     if ($scope.mode == 'new') {
+
       var method = 'POST';
     } else {
       var method = 'PATCH';
       url += $scope.tab.data.pk + '/'; // $scope.tab.data.service.pk +'/';
     }
-
     var tosend = new FormData();
     if (f.contractPaper != emptyFile && f.contractPaper != null) {
       tosend.append('contractPaper', f.contractPaper)
@@ -1239,6 +1291,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
     tosend.append('unitType', f.unitType);
     tosend.append('dueDays', f.dueDays);
     tosend.append('areas', f.areas.pk);
+    tosend.append('activeStatus', f.activeStatus);
     tosend.append('occupancy', JSON.stringify($scope.selectingAreas));
     tosend.append('occupancy_screenshort', f.occupancy_screenshort);
     console.log(tosend);
