@@ -42,6 +42,8 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.telephone = validated_data['telephone']
         if 'logo' in validated_data:
             instance.logo = validated_data['logo']
+        if 'name' in validated_data:
+            instance.name = validated_data['name']
         if 'about' in validated_data:
             instance.about = validated_data['about']
         if 'doc' in validated_data:
