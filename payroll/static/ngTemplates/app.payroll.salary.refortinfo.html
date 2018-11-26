@@ -6,52 +6,58 @@
         <div class="container-fluid" style="position:absolute;top:0px;width:100%;">
           <span class="text-muted" style="font-size:15px;"> <i class="fa fa-user-o" style="width:20px;"></i> Payroll for {{months[data.month]}}</span>
           <div class="row" style="margin-top:10px;"> -->
-            <div class="col-md-12">
-              <span style="font-size:25px"><strong>{{months[data.month]}} - {{data.year}}</strong></span><br>
-              <span style="font-size:20px"><strong>Total : </strong>{{data.total}}<span ng-if="!data.total" class="text-danger">NA</span></span><br>
-              <span style="font-size:20px"><strong>TDS : </strong>{{data.totalTDS}} <span ng-if="!data.totalTDS" class="text-danger">NA</span></span><br>
-              <!-- <span style="font-size:20px"><strong>Bank Transaction : </strong> <span  class="text-danger">NA</span></span><br> -->
-              <!-- <span style="font-size:20px"><strong>TDS Report : </strong><span  class="text-danger">NA</span></span><br>
+      <div class="col-md-12">
+        <span style="font-size:25px"><strong>{{months[data.month]}} - {{data.year}}</strong></span><br>
+        <span style="font-size:20px"><strong>Total : </strong>{{data.total}}<span ng-if="!data.total" class="text-danger">NA</span></span><br>
+        <span style="font-size:20px"><strong>TDS : </strong>{{data.totalTDS}} <span ng-if="!data.totalTDS" class="text-danger">NA</span></span><br>
+        <!-- <span style="font-size:20px"><strong>Bank Transaction : </strong> <span  class="text-danger">NA</span></span><br> -->
+        <!-- <span style="font-size:20px"><strong>TDS Report : </strong><span  class="text-danger">NA</span></span><br>
               <span style="font-size:20px"><strong>PF Report  : </strong> <span  class="text-danger">NA</span></span><br> -->
-              <br>
-            </div>
-          </div>
-          <div class="col-md-2" ng-if="data.status=='submitted'">
-            <span style="font-size:15px">Date of Processing</span>
-            <div class="input-group">
-              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.dateOfProcessing" is-open="status.opened" />
-              <span class="input-group-btn" >
+        <br>
+      </div>
+    </div>
+    <div class="col-md-2" ng-if="data.status=='submitted'">
+      <span style="font-size:15px">Date of Processing</span>
+      <div class="input-group">
+        <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="data.dateOfProcessing" is-open="status.opened" />
+        <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
-            </div>
-          </div>
-          <div class="col-md-2 " style="margin-top: 21px;"  ng-if="data.status == 'submitted'">
-            <switch ng-model="pay.status" class="green pull-right"></switch><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approval :</span>
-          </div>
-          <div class="col-md-2 text-right" style="margin-top: 21px;"  ng-if="data.status == 'submitted'">
-            <button class="btn btn-primary" ng-click="updateReport()">Save</button>
-          </div>
-            <div class="col-md-3 text-left" style="margin-top: 21px;"  ng-if="data.status=='approved'">
-          <div class="text-center">
-            <strong>Bank Transaction</strong></br/>
-            <a style="cursor:pointer;" target="_blank" href="/api/payroll/payslipsReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
-          </div>
-          </div>
-            <div class="col-md-3 text-left" style="margin-top: 21px;"  ng-if="data.status=='approved'">
-          <div class="text-center">
-            <strong>TDS Report</strong></br/>
-            <a style="cursor:pointer;" target="_blank" href="/api/payroll/tdsReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
-          </div>
-        </div>
-          <div class="col-md-3 text-left" style="margin-top: 21px;"  ng-if="data.status=='approved'">
-          <div class="text-center">
-            <strong>PF Report</strong></br/>
-            <a style="cursor:pointer;" target="_blank" href="/api/payroll/pfReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
-          </div>
-        </div>
       </div>
+    </div>
+    <div class="col-md-2 " style="margin-top: 21px;" ng-if="data.status == 'submitted'">
+      <switch ng-model="pay.status" class="green pull-right"></switch><span class="pull-right" style="margin-top:10px;margin-right:20px;">Approval :</span>
+    </div>
+    <div class="col-md-2 text-right" style="margin-top: 21px;" ng-if="data.status == 'submitted'">
+      <button class="btn btn-primary" ng-click="updateReport()">Save</button>
+    </div>
+    <div class="col-md-2 text-right" style="margin-top: 21px;" ng-if="data.status == 'submitted'">
+      <button class="btn btn-success" ng-click="sendMail()">Send Mail</button>
+    </div>
+    <div class="col-md-3 text-left" style="margin-top: 21px;" ng-if="data.status=='approved'">
+      <div class="text-center">
+        <strong>Bank Transaction</strong>
+        </br/>
+        <a style="cursor:pointer;" target="_blank" href="/api/payroll/payslipsReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
+      </div>
+    </div>
+    <div class="col-md-3 text-left" style="margin-top: 21px;" ng-if="data.status=='approved'">
+      <div class="text-center">
+        <strong>TDS Report</strong>
+        </br/>
+        <a style="cursor:pointer;" target="_blank" href="/api/payroll/tdsReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
+      </div>
+    </div>
+    <div class="col-md-3 text-left" style="margin-top: 21px;" ng-if="data.status=='approved'">
+      <div class="text-center">
+        <strong>PF Report</strong>
+        </br/>
+        <a style="cursor:pointer;" target="_blank" href="/api/payroll/pfReport?report={{data.pk}}"><i class="fa fa-download fa-3x text-right" ></i></a>
+      </div>
+    </div>
+  </div>
 
-      <!-- </div>
+  <!-- </div>
     </div>
   </div> -->
   <div class="col-md-12">

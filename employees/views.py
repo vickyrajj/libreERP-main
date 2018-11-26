@@ -141,7 +141,7 @@ class AttendanceDataCreationApi(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, format=None):
-        print '----------loading data came to views---------------------'
+        # print '----------loading data came to views---------------------'
 
         for row in request.FILES['file'].read().split('\n'):
 
