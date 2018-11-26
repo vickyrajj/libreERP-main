@@ -170,6 +170,7 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
   }
 
   $scope.$on('forceRefetch' , function(evt , input) {
+    console.log('re-fetching');
     $scope.fetchData();
   });
 

@@ -65,7 +65,7 @@
     <div class="col-md-12">
       <div class="row" ng-repeat="msg in fullChatData">
         <!-- <h3>{{msg.message}}</h3> -->
-        <div class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+        <div ng-if="!msg.logs" class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
         <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" ><h4>{{msg.message}}</h4></p>
          <img ng-if="msg.attachmentType == 'image'" ng-src="{{msg.attachment}}" style="width:250px;">
          <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.attachment}}" controls></video>
@@ -78,7 +78,7 @@
         <!-- <div class="row container-fluid" style="{{msg.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};" >
           <span style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" >{{msg.created | timeAgo}}</span>
         </div> -->
-        <div class="row container-fluid" style="{{msg.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};"  >
+        <div ng-if="!msg.logs" class="row container-fluid" style="{{msg.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};"  >
           <span ng-if="msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" ng-init="cal = calculateTime(fullChatData[$index-1].created , msg.created)" >{{msg.created | date : 'hh:mm:a' }} , {{cal}}</span>
           <span ng-if="!msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" >{{msg.created | date : 'hh:mm:a' }}</span>
 

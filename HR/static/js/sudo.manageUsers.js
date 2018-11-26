@@ -673,6 +673,7 @@ if (typeof $scope.tab != 'undefined') {
 
 
   $scope.createCustomer = function() {
+    $scope.$broadcast('forceRefetch',)
 
 
     //
@@ -724,6 +725,7 @@ if (typeof $scope.tab != 'undefined') {
       url: $scope.urlCust,
       data: dataToSend
     }).then(function(response) {
+
       $http({
         method: 'POST',
         url: '/api/ERP/permission/',
@@ -733,10 +735,12 @@ if (typeof $scope.tab != 'undefined') {
         }
       }).then(function(resp) {
         console.log(resp.data);
+
       })
 
       Flash.create('success', response.status + ' : ' + response.statusText);
       console.log(response.data);
+
 
       if ($scope.mode == 'new') {
         $scope.newCustomer = {
