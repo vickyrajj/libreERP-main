@@ -640,6 +640,7 @@ if (typeof $scope.tab != 'undefined') {
     first_name: '',
     last_name: '',
     password: '',
+    email:'',
     access: 'full_access'
   };
 
@@ -694,7 +695,8 @@ if (typeof $scope.tab != 'undefined') {
       username: $scope.newCustomer.username,
       first_name: $scope.newCustomer.first_name,
       last_name: $scope.newCustomer.last_name,
-      password: $scope.newCustomer.password
+      password: $scope.newCustomer.password,
+      email:$scope.newCustomer.email
     };
 
 
@@ -914,7 +916,8 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       username: $scope.newUser.username,
       first_name: $scope.newUser.firstName,
       last_name: $scope.newUser.lastName,
-      password: $scope.newUser.password
+      password: $scope.newUser.password,
+      email:$scope.newUser.email_id
     };
 
     console.log(dataToSend);
@@ -933,6 +936,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
         firstName: '',
         lastName: '',
         password: '',
+        email: '',
       };
     }, function(response) {
       Flash.create('danger', response.status + ' : ' + response.statusText);

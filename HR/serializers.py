@@ -126,7 +126,10 @@ class userAdminSerializer(serializers.HyperlinkedModelSerializer):
             raise PermissionDenied(detail=None)
         print self.context['request'],'dddddddddddddddd'
         user = User.objects.create(**validated_data)
-        user.email = user.username + '@cioc.co.in'
+        if 'email' in self.context['request'].data:
+            user.email = self.context['request'].data['email']
+        else:
+            user.email = user.username + '@syrow.in'
         password =  self.context['request'].data['password']
         user.set_password(password)
         user.save()
