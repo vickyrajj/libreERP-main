@@ -218,6 +218,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
             })
           }
           else{
+            console.log($scope.contract.quantity,$scope.contract.areas.areaLength,'quuuuuuuuuuaaan');
             var extraData ={
               "amount":$scope.cost,
               "productMeta":{
@@ -227,7 +228,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
                   "taxRate": 18
               },
               "rate" : $scope.contract.rate,
-              "space" : $scope.contract.quantity,
+              "space" : $scope.contract.quantity * $scope.contract.areas.areaLength,
               "qty" : 1
             }
             $scope.dataDetails.push(extraData)
@@ -290,6 +291,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         $scope.grandtot = Math.round($scope.grandtot)
         $scope.detailData =[]
         var currentMonth = $scope.frmDateChange.getMonth()+1
+        console.log($scope.invoiceData[i].quantity, $scope.invoiceData[i].areas.areaLength,'YYYYYYYYYYYYYYYYYYYYYy');
         var extraData ={
           "amount":$scope.cost,
           "productMeta":{
@@ -299,7 +301,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
               "taxRate": 18
           },
           "rate" : $scope.invoiceData[i].rate,
-          "space" : $scope.invoiceData[i].quantity,
+          "space" : $scope.invoiceData[i].quantity * $scope.invoiceData[i].areas.areaLength,
           "qty" : 1
         }
         $scope.detailData.push(extraData)
