@@ -1588,7 +1588,7 @@ function createChatDiv() {
               margin: 20px 15px;\
               padding-top: 10px;\
               text-align: center;\
-              width: 24px;\
+              width: 30px;\
               height:34px;\
               font-size: 25px;\
               transition: 0.5s;\
