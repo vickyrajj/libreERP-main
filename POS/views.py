@@ -46,6 +46,13 @@ class ProductMetaViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return ProductMeta.objects.all()
 
+class ManufactureManifestViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ManufactureManifestSerializer
+    queryset = ManufactureManifest.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['product']
+
 class CustomerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = CustomerSerializer

@@ -107,6 +107,13 @@ MONTH_CHOICES = (
     ('oct-dec' , 'oct-dec')
 )
 
+class ManufactureManifest(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User , related_name = 'manufactureManifest' , null = True)
+    product = models.ForeignKey(Product , related_name='manifestProduct')
+    quantity = models.FloatField(null= True)
+
 
 class Invoice(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -148,7 +155,7 @@ class Store(models.Model):
 class StoreQty(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     store = models.ForeignKey(Store , related_name="POSStoreDetail", blank=True, null=True)
-    quantity = models.PositiveIntegerField(default = 0)
+    quantity = models.FloatField(default = 0)
     product = models.ForeignKey(Product , related_name="storeProduct")
     productVariant = models.ForeignKey(ProductVerient , related_name="storeProdVar", blank=True, null=True)
     master = models.BooleanField(default = False)

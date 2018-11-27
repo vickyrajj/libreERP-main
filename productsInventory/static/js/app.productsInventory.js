@@ -171,7 +171,9 @@ app.controller("businessManagement.productsInventory.default", function($scope, 
       data: {
         quantity: quantity
       }
-    }).then(function(response) {})
+    }).then(function(response) {
+      Flash.create('success', 'Saved')
+    })
   }
 
 

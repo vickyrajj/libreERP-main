@@ -343,11 +343,16 @@ app.controller("businessManagement.productsInventory.manufacture.explore", funct
   then(function(response) {
     $scope.data.skuData = response.data;
   })
+  var tempOb;
   for (var i = 0; i < $scope.data.compositions .length; i++) {
-    $scope.data.categoriesList.push({
+    tempOb = {
       category : $scope.data.compositions[i],
       qty : $scope.data.compositionQtyMap[i].qty
-    })
+    }
+    if ($scope.data.compositionQtyMap[i].unit) {
+      tempOb.unit = $scope.data.compositionQtyMap[i].unit
+    }
+    $scope.data.categoriesList.push(tempOb)
   }
   $scope.$watch('data.totalQuantity', function(newValue, oldValue) {
     if (newValue < 1 ) {
@@ -386,6 +391,22 @@ app.controller("businessManagement.productsInventory.manufacture.explore", funct
       console.log($scope.data.categoriesList);
 
     });
+  }
+
+  $scope.createManifest = function () {
+
+    console.log($scope.data);
+
+    dataToSend = {user: $scope.me.pk, product: $scope.data.pk, quantity:$scope.data.totalQuantity}
+
+    $http({
+      method: 'POST',
+      url: '/api/POS/manufactureManifest/',
+      data: dataToSend
+    }).then(function (response) {
+      console.log('response');
+    })
+
   }
 
   $scope.save = function() {
@@ -455,7 +476,8 @@ app.controller("businessManagement.productsInventory.manufacture.explore", funct
 app.controller("businessManagement.productsInventory.manufacture", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
 
   $scope.data = {
-    tableData: []
+    tableData: [],
+    inProcessData: []
   };
 
   views = [{
@@ -517,6 +539,61 @@ app.controller("businessManagement.productsInventory.manufacture", function($sco
     if (!alreadyOpen) {
       $scope.tabs.push(input)
     }
+  }
+
+
+
+  //following code is related to in-process
+
+  inProcessviews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.productsInventory.inProcessManifest.items.html',
+  }];
+
+
+  $scope.inProcessConfig = {
+    views: inProcessviews,
+    url: '/api/POS/manufactureManifest/',
+    searchField: 'name',
+    itemsNumPerView: [16, 32, 48]
+  }
+
+
+  $scope.inProcessTableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.inProcessData);
+
+    for (var i = 0; i < $scope.data.inProcessData.length; i++) {
+      if ($scope.data.inProcessData[i].pk == parseInt(target)) {
+          if (action=='openModal') {
+            $scope.openInProcessModal($scope.data.inProcessData[i]);
+          }
+      }
+    }
+  }
+
+
+  $scope.openInProcessModal = function(data) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.productsInventory.manufacture.inProcessModal.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return data
+        }
+      },
+      controller: function($scope , data ,$uibModalInstance) {
+        $scope.data = data
+        console.log($scope.data);
+      },
+    }).result.then(function() {
+
+    }, function() {
+
+    });
   }
 
 });
