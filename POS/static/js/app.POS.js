@@ -363,6 +363,8 @@ app.controller("controller.POS.productinfo.form", function($scope, product, $htt
         category: $scope.product.compositions[i],
         qty: 1
       }
+
+
       if ($scope.compositionQtyMap[i] != undefined) {
         a.qty = $scope.compositionQtyMap[i].qty
       }
@@ -682,7 +684,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
   $scope.categoriesPk = []
   $scope.categoryForm = {
     category: '',
-    qty: 1
+    qty: 1,
+    unit: product.unit
   }
   // $scope.storeData = []
   // $scope.checkStore = []
@@ -695,7 +698,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
     //   $scope.storeData.push($scope.product.storeQty[i].pk)
     //   $scope.checkStore.push($scope.product.storeQty[i].store.pk)
     // }
-    if ($scope.product.compositionQtyMap == null) {
+    if ($scope.product.compositionQtyMap == null || $scope.product.compositionQtyMap.length == 0 || $scope.product.compositionQtyMap.length == '') {
       $scope.compositionQtyMap = []
     } else {
       $scope.compositionQtyMap = JSON.parse($scope.product.compositionQtyMap)
@@ -708,6 +711,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
     then(function(response) {
       $scope.productData = response.data;
     })
+
     for (var i = 0; i < $scope.product.compositions.length; i++) {
       $scope.categoriesPk.push($scope.product.compositions[i].pk)
       var a = {
@@ -717,8 +721,12 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
       if ($scope.compositionQtyMap[i] != undefined) {
         a.qty = $scope.compositionQtyMap[i].qty
       }
+      if ($scope.compositionQtyMap[i]!= undefined && $scope.compositionQtyMap[i].unit != undefined) {
+        a.unit = $scope.compositionQtyMap[i].unit
+      }
       $scope.categoriesList.push(a)
     }
+
   }
   else if(typeof $scope.newProduct== 'object'){
       $scope.mode = 'edit';
@@ -811,6 +819,12 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
   // }
 
   $scope.addCategories = function() {
+    if ($scope.product.unit == null) {
+      Flash.create('warning','Please select Unit type')
+      return;
+    }else {
+      $scope.categoryForm.unit = $scope.product.unit
+    }
     if (typeof $scope.categoryForm.category != 'object') {
       Flash.create('warning', 'Category Should Be Suggested One');
       return;
@@ -821,28 +835,39 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
     }
     $scope.categoriesList.push($scope.categoryForm)
     $scope.categoriesPk.push($scope.categoryForm.category.pk)
+
     $scope.compositionQtyMap.push({
       'categoryPk': $scope.categoryForm.category.pk,
-      'qty': $scope.categoryForm.qty
+      'qty': $scope.categoryForm.qty,
+      'unit': $scope.product.unit
     })
+
     $scope.categoryForm = {
       category: '',
-      qty: 1
+      qty: 1,
+      unit: $scope.product.unit
     }
   }
   $scope.editCategories = function(idx) {
     $scope.categoryForm = {
       category: $scope.categoriesList[idx].category,
-      qty: $scope.categoriesList[idx].qty
+      qty: $scope.categoriesList[idx].qty,
+      unit: $scope.product.unit
     }
     $scope.categoriesList.splice(idx, 1)
     $scope.categoriesPk.splice(idx, 1)
     $scope.compositionQtyMap.splice(idx, 1)
   }
   $scope.removeCategories = function(idx) {
+    console.log($scope.categoriesList);
+
+
     $scope.categoriesList.splice(idx, 1)
     $scope.categoriesPk.splice(idx, 1)
     $scope.compositionQtyMap.splice(idx, 1)
+
+    console.log($scope.categoriesList);
+
   }
 
 
@@ -851,6 +876,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
   });
 
   $scope.save = function() {
+    console.log($scope.categoriesList);
+    console.log($scope.compositionQtyMap);
     // console.log($scope.storeData.length, 'lllllllllllllllllllllllll');
     console.log('entered', $scope.product.discount, 'aaaa');
     // console.log($scope.product.productMeta);
@@ -940,6 +967,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
       console.log(JSON.stringify($scope.compositionQtyMap));
     } else {
       fd.append('haveComposition', false);
+      fd.append('compositions', []);
+      fd.append('compositionQtyMap', '');
     }
     // fd.append('storeQty', $scope.storeData)
     // if($scope.storeData.length>0){

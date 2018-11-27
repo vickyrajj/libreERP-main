@@ -11,7 +11,7 @@
     <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:40px;cursor:pointer;" alt="" ng-if="topIcon">
   </div>
 
-  <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory" >
+  <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory">
     <div class="col-xs-6 " style="padding-top:3px;" ng-if="topIcon">
       <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:40px;cursor:pointer;" alt="" >
     </div>
@@ -50,7 +50,6 @@
 
 
   <div style="" class="hidden-xs hidden-sm">
-
     <div class="col-xs-{{SortByCategory?'4':'5'}}" style="padding:0px;padding-left:">
       <input type="text" style="width:100%;color: #000;text-indent: 10px;outline: none;color:var(--themeColor);height: 6vh;" ng-model="searchProduct.product" uib-typeahead="p as p.name for p in genericProductSearch($viewValue)" placeholder="{{settings.searchField}}"
         typeahead-template-url="/static/ngTemplates/app.ecommerce.search.typehead.html">

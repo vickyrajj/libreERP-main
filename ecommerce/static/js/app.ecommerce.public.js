@@ -3049,6 +3049,8 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   // })
 
   $scope.showCartImage = settings_isCartImage
+  $scope.isCartView = false
+  $scope.isCartView = settings_isCart
   $scope.maxCategories = false
   // $http.get('/api/ERP/appSettings/?app=25&name__iexact=maxCategories').
   // then(function(response) {
@@ -3604,7 +3606,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     })
 
     $scope.getinStock = function() {
-      console.log($scope.stock, 'cccccccccaaaaaaaaaaarrrrrrrrrrrrrrtttttttttttttt');
+      console.log("kkkkkkkkkkdddddddddddddddddddddd");
       for (var i = 0; i < $rootScope.inCart.length; i++) {
         for (var j = 0; j < $scope.stock.length; j++) {
           if ($rootScope.pin.pk == undefined) {
@@ -3618,12 +3620,9 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
             $scope.prod_var = $rootScope.inCart[i].prod_var.id
           }
           if ($scope.stock[j].store == $scope.code) {
-            console.log($scope.stock[j].product, $rootScope.inCart[i].product.product.pk, $scope.stock[j].product_var, $scope.prod_var);
             if ($scope.stock[j].product == $rootScope.inCart[i].product.product.pk) {
-              console.log("sssssssssssssssss");
               if($scope.stock[j].product_var == $scope.prod_var){
                 $rootScope.inCart[i].stock = $scope.stock[j].stock
-                console.log($rootScope.inCart[i].stock,'kllllll');
               }
             }
           }

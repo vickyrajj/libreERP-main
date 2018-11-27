@@ -18,6 +18,8 @@ router.register(r'externalOrdersQtyMap' , ExternalOrdersQtyMapViewSet , base_nam
 router.register(r'store' , StoreViewSet , base_name = 'store')
 router.register(r'storeQty' , StoreQtyViewSet , base_name = 'storeQty')
 router.register(r'productMeta' , ProductMetaViewSet , base_name = 'productMeta')
+router.register(r'manufactureManifest' , ManufactureManifestViewSet , base_name = 'manufactureManifest')
+
 # router.register(r'productInventory' , ProductInventoryViewSet , base_name = 'productInventory')
 
 

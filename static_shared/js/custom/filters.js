@@ -77,8 +77,24 @@ app.filter('convertUnit', function() {
       }else {
         toReturn = qty + ' ml'
       }
+    }else if (unit=='Kilogram' || unit=='kg' || unit=='Kg') {
+      if (qty<1) {
+        toReturn = qty*1000 + ' gm'
+      }else {
+        toReturn = qty + ' Kilogram'
+      }
+    }else if (unit=='Litre' || unit=='Lt' || unit=='lt') {
+      if (qty<1) {
+        toReturn = qty*1000 + ' ml'
+      }else {
+        toReturn = qty + ' Litre'
+      }
+    }else if (unit=='Quantity') {
+      toReturn = qty + ' Qty'
+    }else if (unit=='' || unit == null) {
+      toReturn = qty
     }else {
-      toReturn = qty + unit
+      toReturn = qty + ' ' + unit
     }
     return toReturn
   }

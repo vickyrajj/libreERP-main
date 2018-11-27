@@ -61,12 +61,11 @@ class CustomerSerializer(serializers.ModelSerializer):
         return c
 
 
-
-
 class ProductLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('pk' , 'user' ,'name',  'price', 'displayPicture','serialNo', 'cost','haveComposition' , 'inStock','discount','alias','howMuch','grossWeight')
+
 
 class ProductSerializer(serializers.ModelSerializer):
     productMeta=ProductMetaSerializer(many=False,read_only=True)
@@ -135,16 +134,18 @@ class ProductSerializer(serializers.ModelSerializer):
 
         if 'compositions' in self.context['request'].data:
             instance.compositions.clear()
-            print self.context['request'].data['compositions'],type(self.context['request'].data['compositions'])
-            for c in self.context['request'].data['compositions'].split(','):
-                instance.compositions.add(Product.objects.get(pk = int(c)))
-        # if 'storeQty' in self.context['request'].data:
-        #     print self.context['request'].data['storeQty'],'ssssssssssssssssssss',len(self.context['request'].data['storeQty'])
-        #     if len(self.context['request'].data['storeQty']) > 0:
-        #         instance.storeQty.clear()
-        #         for c in self.context['request'].data['storeQty'].split(','):
-        #             print type(c), c
-        #             instance.storeQty.add(StoreQty.objects.get(pk = int(c)))
+            if len(self.context['request'].data['compositions'])!=0:
+
+                print self.context['request'].data['compositions'],type(self.context['request'].data['compositions'])
+                for c in self.context['request'].data['compositions'].split(','):
+                    instance.compositions.add(Product.objects.get(pk = int(c)))
+                # if 'storeQty' in self.context['request'].data:
+                #     print self.context['request'].data['storeQty'],'ssssssssssssssssssss',len(self.context['request'].data['storeQty'])
+                #     if len(self.context['request'].data['storeQty']) > 0:
+                #         instance.storeQty.clear()
+                #         for c in self.context['request'].data['storeQty'].split(','):
+                #             print type(c), c
+                #             instance.storeQty.add(StoreQty.objects.get(pk = int(c)))
 
 
         instance.save()
@@ -171,6 +172,20 @@ class ProductSerializer(serializers.ModelSerializer):
     #     except:
     #         toSend = None
     #     return toSend
+
+
+class ManufactureManifestSerializer(serializers.ModelSerializer):
+    product = ProductLiteSerializer(many=False,read_only=True)
+    class Meta:
+        model = ManufactureManifest
+        fields = ('pk','created','updated','user','product','quantity')
+    def create(self , validated_data):
+        m = ManufactureManifest(**validated_data)
+        print 'fffffffffffffffffffffffffffffff',self.context['request'].data['product']
+        m.product = Product.objects.get(pk=int(self.context['request'].data['product']))
+        m.save()
+        return m
+
 
 class ProductVerientSerializer(serializers.ModelSerializer):
     # discountedPrice = serializers.SerializerMethodField()

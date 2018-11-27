@@ -69,25 +69,26 @@
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
     <div ng-include="headerUrl"></div>
     <div class="row" style="margin:0px;{{!$state.includes('ecommerce') ?  'padding-top:'+ paddingTop  :'padding-top:10px'}};" ng-controller="ecommerce.body" >
-      <div class="col-md-{{ inCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;transition:0.5s" ng-if="me.pk">
+
+      <div class="col-md-{{ inCart.length > 0 && !$state.is('checkout') && !$state.includes('account') && isCartView ?  '10':'12'}}" style="padding:0px;transition:0.5s" ng-if="me.pk">
         <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
       </div>
-      <div class="col-md-{{ addToCart.length > 0 && !$state.is('checkout') && !$state.includes('account') ?  '10':'12'}}" style="padding:0px;transition:0.5s" ng-if="!me.pk">
+      <div class="col-md-{{ addToCart.length > 0 && !$state.is('checkout') && !$state.includes('account') && isCartView ?  '10':'12'}}" style="padding:0px;transition:0.5s" ng-if="!me.pk">
         <div ui-view class="anim-in-out anim-fade" data-anim-speed="600" style="min-height:95vh;"></div>
       </div>
 
 
 
-      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor);z-index:10;"  ng-click="checkout()" ng-if="inCart.length>0 && !$state.is('checkout') && !$state.includes('account')">
+      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor);z-index:10;"  ng-click="checkout()" ng-if="inCart.length>0 && !$state.is('checkout') && !$state.includes('account') && isCartView">
         <h5 style="color:white;">Checkout ( <i class="fa {{currency}}" ></i> {{data.total.toFixed(2)}} )</h5>
       </div>
 
-      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor);z-index:10;"  ng-click="mainPage()" ng-if="addToCart.length>0 && !me.pk">
+      <div class="hidden-lg hidden-md text-center" style="position:fixed;bottom:0px;width:100%;cursor:pointer;background-color:var(--themeColor);z-index:10;"  ng-click="mainPage()" ng-if="addToCart.length>0 && !me.pk && isCartView">
         <h5 style="color:white;">Checkout ( <i class="fa {{currency}}" ></i> {{data.totalVal.toFixed(2)}})</h5>
       </div>
 
 
-      <div ng-if="inCart.length >0 && !$state.is('checkout') && !$state.includes('account')" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
+      <div ng-if="inCart.length >0 && !$state.is('checkout') && !$state.includes('account') && isCartView" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
 
         <div style="position:sticky;top:10px;">
 
@@ -98,7 +99,8 @@
           <div ng-repeat="p in inCart" style="border-bottom:solid 2px #eeeeee; ">
             <h5 ng-if="p.prod_howMuch==null" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch | convertUnit:p.product.product.unit }}</h5>
             <h5 ng-if="p.prod_howMuch" style="margin:10px;">{{p.product.product.name}} {{p.prod_howMuch| convertUnit : p.product.product.unit}}</h5>
-            <div class="row" style="margin:0px;" ng-if="p.stock>0">
+
+            <div class="row" style="margin:0px;">
               <div class="col-sm-4 text-right">
                 <i class="fa fa-minus-circle fa-2x ng-scope" style="cursor:pointer" ng-if="p.qty >0" ng-click="changeQty($index , 'decrease');"></i>
               </div>
@@ -115,9 +117,9 @@
               <span ng-if="p.prodSku==p.product.product.serialNo">{{(p.product.product.discountedPrice * p.qty).toFixed(2) }}</span>
               <span ng-if="p.prodSku!=p.product.product.serialNo">{{(p.prodVarPrice * p.qty).toFixed(2)}}</span>
             </div>
-            <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.stock<=0||!p.stock">
+            <!-- <div class="row" style="margin:0px;padding-left:20px;" ng-if="p.stock<=0||!p.stock">
               <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
-            </div>
+            </div> -->
           </div>
 
           <div class="text-center" style="padding:20px;cursor:pointer;background-color:var(--themeColor);color:white" ng-click="checkout()">
@@ -128,7 +130,7 @@
       </div>
 
 
-      <div ng-if="addToCart.length>0 && !me.pk" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
+      <div ng-if="addToCart.length>0 && !me.pk && isCartView" class="col-md-2 hidden-sm hidden-xs" style="border-left:solid 2px #eeeeee;min-height:100vh;padding:0px; ">
 
         <div class="" style="position:sticky; top:10px;">
           <img ng-if="genericImage.cartImage" src={{genericImage.cartImage}} style="width:100%;" alt="Cart Image">

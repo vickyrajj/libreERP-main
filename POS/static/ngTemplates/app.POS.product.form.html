@@ -281,12 +281,20 @@
           <button type="button" class="btn btn-primary" ng-click="addCategories()">Add <i class="fa fa-plus"></i></button>
         </div>
       </div>
-      <div class="row" style="margin-top: 30px;padding:5px 20px">
+      <div class="row">
+        <div class="col-md-7">
+          <span class="text-muted">Preview :{{categoryForm.qty | convertUnit: product.unit}}</span>
+        </div>
+        <div class=" col-md-3">
+         <span class="text-muted">( in {{product.unit}} )</span>
+        </div>
+      </div>
+      <div class="row" style="padding:5px 20px">
         <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top:15px;" ng-repeat="c in categoriesList">
           <div class="row" style="padding:15px">
             <div class="col-md-11">
               <span><strong>Name : </strong> {{c.category.name}}</span><br /><br />
-              <span><strong>Quantity : </strong> {{c.qty}}</span>
+              <span><strong>Quantity : </strong>  {{c.qty | convertUnit: c.unit}}</span>
             </div>
             <div class="col-md-1">
               <i class="fa fa-pencil fa-lg" ng-click="editCategories($index)" style="cursor:pointer"></i>
