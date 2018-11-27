@@ -26,7 +26,7 @@ DEFAULT_APPS_ON_REGISTER = ['app.ecommerce' , 'app.ecommerce.orders' , 'app.ecom
 ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user will be redirected to this url
 
 SITE_ADDRESS = 'http://127.0.0.1:8080' # the url prefix of the site
-WEBRTC_ADDRESS = 'https://socket.syrow.com'
+WEBRTC_ADDRESS = 'http://localhost:1111'
 
 ROOT_APP = 'index' # the default app
 ECOMMERCE_APP = {
@@ -60,7 +60,7 @@ DEBUG = True
 
 
 
-ALLOWED_HOSTS = ['192.168.1.112', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.1.115' ,'192.168.1.121','192.168.1.124']
+ALLOWED_HOSTS = ['192.168.1.112', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.1.117' ,'192.168.1.121','192.168.1.124']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin

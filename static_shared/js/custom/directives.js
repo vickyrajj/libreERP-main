@@ -326,6 +326,7 @@ app.directive('chatBox', function() {
       closeChat: '='
     },
     controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
+      $scope.IsVisitorOn=true;
 
       setTimeout(function() {
         if (document.getElementById("iframeChat" + $scope.data.uid) != null)
@@ -336,6 +337,25 @@ app.directive('chatBox', function() {
           $scope.getFrameContent = document.getElementById("iframeChat"+ $scope.data.uid).contentWindow;
         }
         $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
+      }
+      $scope.hideVisitorScreen = function() {
+        $scope.IsVisitorOn=!$scope.IsVisitorOn;
+        if($scope.IsVisitorOn){
+          connection.session.publish('service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
+        }
+      else{
+        connection.session.publish('service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published");
+        });
+      }
       }
 
       $scope.setHeight = function () {

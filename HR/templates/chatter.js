@@ -511,7 +511,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var supportChat = function(args) {
       console.log(args);
       var message;
-
+      if(args[0]=='hideVisitorScreen'){
+        document.getElementById('iframeDiv').style.display = "none";
+        chatBox.style.display = "none";
+        return
+      }
+      else if(args[0]=='ShowVisitorScreen'){
+        document.getElementById('iframeDiv').style.display = "block";
+        chatBox.style.display = "block";
+        return
+      }
 
       if (args[0]=='T') {
         console.log('typingggggggggggggggggggggg');
@@ -2016,6 +2025,12 @@ function createChatDiv() {
        window.open(url);
       // window.location = 'https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk'
 
+    }
+    if (event.data=='hideTheMainFrame') {
+      console.log('opennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+      document.getElementById('iframeDiv').style.display = "none";
+    }else if(event.data=='showTheMainFrame'){
+      document.getElementById('iframeDiv').style.display = "block";
     }
     if (event.data== 'userleft'){
 
