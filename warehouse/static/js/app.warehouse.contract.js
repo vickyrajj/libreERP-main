@@ -270,16 +270,17 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
                 url: '/api/warehouse/commodityQty/?commodity=' + response2.data.pk,
               }).
               then(function(response3) {
-                for (var i = 0; i < response3.data.length; i++) {
-                $http({
-                  method: 'PATCH',
-                  url: '/api/warehouse/commodityQty/' +response3.data[i].pk +'/',
-                  data: {
-                    balance:0,
-                    checkout:0
-                  }
-                }).
-                then(function(response) {
+                if(response3.data[response3.data.length-1].balance>0){
+                  $http({
+                    method: 'POST',
+                    url: '/api/warehouse/commodityQty/',
+                    data: {
+                      commodity: response3.data[response3.data.length-1].commodity.pk,
+                      checkOut: response3.data[response3.data.length-1].balance,
+                      balance: 0
+                    }
+                  }).
+                  then(function(response4) {
                   })
                 }
               })
@@ -302,6 +303,8 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       },
       controller: function($scope, contract, $uibModalInstance) {
         $scope.contract = contract;
+        $scope.comodities = []
+        $scope.comodityData = []
         $http({
           method: 'GET',
           url: '/api/warehouse/commodity/?contract=' + $scope.contract.pk
