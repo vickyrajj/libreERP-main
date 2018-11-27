@@ -23,6 +23,8 @@ from excel_response import ExcelResponse
 # import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
+import os
+from os import path
 import datetime
 from datetime import timedelta
 from Crypto.Cipher import DES
@@ -720,6 +722,17 @@ class CannedResponsesViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['text','service']
 
+class StreamRecordings(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes=(permissions.AllowAny,)
+    def post(self , request , format = None):
+        print request.data,'dddddddddddddddd'
+        filename = request.data['fileName']
+        filepath=os.path.join('static_shared','videos',filename)
+        with open(filepath, 'wb+') as destination:
+            for chunk in request.FILES['file'].chunks():
+                destination.write(chunk)
+        return Response({}, status = status.HTTP_200_OK)
 
 
 class EmailChat(APIView):
