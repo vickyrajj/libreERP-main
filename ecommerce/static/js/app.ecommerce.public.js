@@ -1304,7 +1304,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     $scope.prod_var = $scope.details.product_variants;
     $scope.prodVarList = []
     $scope.details.product.unit = $filter('getUnit')($scope.details.product.unit);
-    var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
+    if($scope.details.product.unit!='Size'){
+      var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
+    }
+    else{
+        var str = $filter('convertSize')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
+    }
     $scope.prodVarList = [{
       str: str,
       qty: $scope.details.product.howMuch,
@@ -1315,7 +1320,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
     if ($scope.prod_var) {
       for (var i = 0; i < $scope.prod_var.length; i++) {
-        str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
+          if($scope.details.product.unit!='Size'){
+            str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
+          }
+          else {
+            str = $filter('convertSize')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
+          }
         $scope.prodVarList.push({
           pk: $scope.prod_var[i].id,
           str: str,
@@ -1345,9 +1355,16 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
 
     $scope.$watch('selectedProdVar', function(newValue, oldValue) {
-
-      if ($scope.selectedProdVar.qty != null) {
-        $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
+      if($scope.selectedProdVar.unit !='Size' ){
+        if ($scope.selectedProdVar.qty != null) {
+          $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
+        }
+      }
+      else{
+        console.log("heeeeeeeerrrrrrreeeeeeeeee");
+        if ($scope.selectedProdVar.qty != null) {
+          $scope.quantity = $filter('convertSize')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
+        }
       }
       console.log($scope.quantity, 'rrrr');
 

@@ -110,6 +110,9 @@
               <option value="Litre">Litre</option>
               <option value="Millilitre">Millilitre</option>
               <option value="Quantity">Quantity</option>
+              <option value="Size">Size</option>
+              <option value="Size and Color">Size and Color</option>
+
             </select>
           </div>
         </div>
@@ -192,9 +195,14 @@
             </div>
           </div>
           <div class="col-md-3">
-            <div class="input-group">
               <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack" placeholder="No. of items per pack">
-              <div class="input-group-btn">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="input-group">
+                <input ng-if="product.unit=='Size and Color'" type="text" class="form-control" ng-model="productVerientForm.prodDesc" placeholder="Colors of your Product">
+                <div class="input-group-btn">
                 <button type="button" class="btn btn-primary" ng-click="saveUnits()">Add</button>
               </div>
             </div>

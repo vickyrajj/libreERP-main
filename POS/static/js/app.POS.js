@@ -1068,7 +1068,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
     'sku': '',
     'unitPerpack': 2,
     'price': '',
-    'serialId': ''
+    'serialId': '',
+    'prodDesc' :''
   }
 
   $scope.productData = [];
@@ -1097,6 +1098,10 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
       unitPerpack: f.unitPerpack,
       price: f.price,
       serialId: f.serialId
+    }
+
+    if (f.prodDesc!='' || f.prodDesc != null ) {
+      toSend.prodDesc = f.prodDesc
     }
 
     $http({

@@ -100,6 +100,36 @@ app.filter('convertUnit', function() {
   }
 })
 
+app.filter('convertSize', function() {
+  return function (qty, unit) {
+    // console.log('in filter cponvert' ,qty, unit );
+    if (unit=='Size') {
+      if (qty==1) {
+        toReturn = 'XS'
+      }
+      else if (qty==2) {
+        toReturn = 'S'
+      }
+      else if (qty==3) {
+        toReturn = 'M'
+      }
+      else if (qty==4) {
+        toReturn = 'L'
+      }
+      else if (qty==5) {
+        toReturn = 'XL'
+      }
+      else if (qty==5) {
+        toReturn = 'XXL'
+      }
+      else if (qty==5) {
+        toReturn = 'XXXL'
+      }
+    }
+    return toReturn
+  }
+})
+
 
 app.filter('fileTypeIcon' , function(){
   return function(input){
