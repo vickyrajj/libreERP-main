@@ -345,7 +345,7 @@ class CartSerializer(serializers.ModelSerializer):
     prod_howMuch = serializers.SerializerMethodField()
     class Meta:
         model = Cart
-        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice','prod_howMuch')
+        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice','prod_howMuch','desc')
     def create(self , validated_data):
     	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 

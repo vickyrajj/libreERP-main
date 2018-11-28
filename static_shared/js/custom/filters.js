@@ -103,7 +103,7 @@ app.filter('convertUnit', function() {
 app.filter('convertSize', function() {
   return function (qty, unit) {
     // console.log('in filter cponvert' ,qty, unit );
-    if (unit=='Size') {
+    if (unit=='Size' || unit == 'Size and Color') {
       if (qty==1) {
         toReturn = 'XS'
       }

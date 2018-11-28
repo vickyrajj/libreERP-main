@@ -137,6 +137,7 @@ class Cart(models.Model):
     typ = models.CharField(choices = CART_TYPE_CHOICES, max_length = 10, default = 'cart')
     prodSku = models.CharField(max_length = 50, null = True, blank = True)
     prodVarPrice = models.PositiveIntegerField(null = True , blank = True)
+    desc = models.CharField(max_length = 50, null = True, blank = True)
 
 User.cart = property(lambda u : Cart.objects.get_or_create(user = u)[0])
 

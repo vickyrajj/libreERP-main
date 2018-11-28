@@ -28,7 +28,7 @@
       <div class="row">
         <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top:40px;text-align:center">
           <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}" style="border-radius:25px;" >
-            <i class="fa fa-google-plus fa-2x"></i> Google
+            <i class="fa fa-google fa-2x"></i> Google
           </a>
         </div>
         <div class="col-md-6 col-sm-6 col-xs-6 text-center" style="margin-top:40px">
@@ -55,10 +55,10 @@
           <div class="col-md-2 col-sm-2 col-xs-2 text-right" style="padding-top:10px">
             <span>+91</span>
           </div>
-          <div class="col-md-8 col-sm-8 col-xs-8">
+          <div class="col-md-10 col-sm-10 col-xs-10">
             <label for="username" class="sr-only">Mobile Number</label>
-            <div class ="input-group" style="display:flex">
-              <input id="username" name="username" type="text" maxlength="10" class="form-control" placeholder="Mobile Number / Username" required autofocus>
+            <div class ="input-group">
+              <input id="username" name="username" type="text" maxlength="10" class="form-control" placeholder="10-digit mobile number / Username" required autofocus>
               <span class="input-group-btn">
                 <button id="requestOTP" class="btn btn-default" type="button">Get OTP</button>
               </span>
