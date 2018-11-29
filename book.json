@@ -1,0 +1,433 @@
+[{
+  "pk": 1,
+  "title": "Concept Of Physics",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "description": "Concepts of Physics is a calculus-based physics textbook by H. C. Verma. The book was first published in 1992. It is published as a two-volume set, with each volume roughly covering the physics syllabus of class XI and class XII respectively. The book is extensively popular amongst students preparing for competitive exams, especially the Joint Entrance Examination. The first volume covers mechanics, waves and optics, while the second volume covers thermodynamics, electromagnetism, modern physics and Theory of relativity.",
+  "dp": "https://24tutors.com/media/lms/DP/1524385877_4_25608737.jpg",
+  "author": "H C Verma",
+  "ISSN": "978-81-7709-187-8",
+  "volume": "1",
+  "version": "2018",
+  "license": "Prohibited",
+  "sections": [{
+    "pk": 26,
+    "title": "Introduction to Physics",
+    "book": 1,
+    "sequence": 0,
+    "shortUrl": "introduction-to-physics-hc-verma"
+  }, {
+    "pk": 27,
+    "title": "Physics and Mathematics",
+    "book": 1,
+    "sequence": 1,
+    "shortUrl": "hc-verma-physics"
+  }, {
+    "pk": 28,
+    "title": "Rest and Motion Kinematics",
+    "book": 1,
+    "sequence": 2,
+    "shortUrl": "hc-verma-kinematics"
+  }, {
+    "pk": 29,
+    "title": "The Forces",
+    "book": 1,
+    "sequence": 3,
+    "shortUrl": "hc-verma-forces"
+  }, {
+    "pk": 30,
+    "title": "Newton's Laws of Motion",
+    "book": 1,
+    "sequence": 4,
+    "shortUrl": "hc-verma-nlm"
+  }, {
+    "pk": 31,
+    "title": "Friction",
+    "book": 1,
+    "sequence": 5,
+    "shortUrl": "hc-verma-friction"
+  }, {
+    "pk": 32,
+    "title": "Circular Motion",
+    "book": 1,
+    "sequence": 6,
+    "shortUrl": "hc-verma-circular-motion"
+  }, {
+    "pk": 33,
+    "title": "Work and Energy",
+    "book": 1,
+    "sequence": 7,
+    "shortUrl": "hc-verma-work-energy"
+  }, {
+    "pk": 34,
+    "title": "Centre of Mass, Linear Momentum, Collision",
+    "book": 1,
+    "sequence": 8,
+    "shortUrl": "hc-verma-center-of-mass"
+  }, {
+    "pk": 35,
+    "title": "Rotational Mechanics",
+    "book": 1,
+    "sequence": 9,
+    "shortUrl": "hc-verma-rotational-mechanics"
+  }, {
+    "pk": 36,
+    "title": "Gravitation",
+    "book": 1,
+    "sequence": 10,
+    "shortUrl": "hc-verma-gravitation"
+  }, {
+    "pk": 37,
+    "title": "Simple Harmonics Motion",
+    "book": 1,
+    "sequence": 11,
+    "shortUrl": "hc-verma-shm"
+  }, {
+    "pk": 38,
+    "title": "Fluid Mechanics",
+    "book": 1,
+    "sequence": 12,
+    "shortUrl": "hc-verma-fluid-mechanics"
+  }, {
+    "pk": 39,
+    "title": "Some Mechanical Properties of Matter",
+    "book": 1,
+    "sequence": 13,
+    "shortUrl": "hc-verma-mechanical-properties"
+  }, {
+    "pk": 40,
+    "title": "Wave Motion and Waves on a String",
+    "book": 1,
+    "sequence": 14,
+    "shortUrl": "hc-verma-wave-motion"
+  }, {
+    "pk": 41,
+    "title": "Sound Waves",
+    "book": 1,
+    "sequence": 15,
+    "shortUrl": "hc-verma-sound-waves"
+  }, {
+    "pk": 42,
+    "title": "Light Waves",
+    "book": 1,
+    "sequence": 16,
+    "shortUrl": "hc-verma-light-waves"
+  }, {
+    "pk": 43,
+    "title": "Geometrical Optics",
+    "book": 1,
+    "sequence": 17,
+    "shortUrl": "hc-verma-geometrical-optics"
+  }, {
+    "pk": 44,
+    "title": "Optical Instruments",
+    "book": 1,
+    "sequence": 18,
+    "shortUrl": "hc-verma-optical-instuments"
+  }, {
+    "pk": 45,
+    "title": "Dispersion and Spectra",
+    "book": 1,
+    "sequence": 19,
+    "shortUrl": "hc-verma-dispersion"
+  }, {
+    "pk": 46,
+    "title": "Speed of Light",
+    "book": 1,
+    "sequence": 20,
+    "shortUrl": "hc-verma-speed-of-light"
+  }, {
+    "pk": 47,
+    "title": "Photometry",
+    "book": 1,
+    "sequence": 21,
+    "shortUrl": "hc-verma-photometry"
+  }]
+}, {
+  "pk": 2,
+  "title": "Concept Of Physics",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "description": "Concepts of Physics is a calculus-based physics textbook by H. C. Verma. The book was first published in 1992. It is published as a two-volume set, with each volume roughly covering the physics syllabus of class XI and class XII respectively. The book is extensively popular amongst students preparing for competitive exams, especially the Joint Entrance Examination. The first volume covers mechanics, waves and optics, while the second volume covers thermodynamics, electromagnetism, modern physics and Theory of relativity.",
+  "dp": "https://24tutors.com/media/lms/DP/1524386744_65_9788177092325.jpeg",
+  "author": "H C Verma",
+  "ISSN": "978-81-7709-187-8",
+  "volume": "2",
+  "version": "2018",
+  "license": "Prohibited",
+  "sections": [{
+    "pk": 1,
+    "title": "Heat and Temperature",
+    "book": 2,
+    "sequence": 0,
+    "shortUrl": "hc-verma-heat-and-temperature"
+  }, {
+    "pk": 2,
+    "title": "Kinetic Theory of Gases",
+    "book": 2,
+    "sequence": 1,
+    "shortUrl": "hc-verma-kinetic-theory-of-gases"
+  }, {
+    "pk": 3,
+    "title": "Calorimetry",
+    "book": 2,
+    "sequence": 2,
+    "shortUrl": "hc-verma-calorimetry"
+  }, {
+    "pk": 4,
+    "title": "Laws of Thermodynamics",
+    "book": 2,
+    "sequence": 3,
+    "shortUrl": "hc-verma-laws-of-thermodynamics"
+  }, {
+    "pk": 5,
+    "title": "Specific Heat Capacities of Gases",
+    "book": 2,
+    "sequence": 4,
+    "shortUrl": "hc-verma-specific-heat-capacities-of-gases"
+  }, {
+    "pk": 6,
+    "title": "Heat Transfer",
+    "book": 2,
+    "sequence": 5,
+    "shortUrl": "hc-verma-heat-transfer"
+  }, {
+    "pk": 7,
+    "title": "Electric Field and Potential",
+    "book": 2,
+    "sequence": 6,
+    "shortUrl": "hc-verma-electric-field-and-potential"
+  }, {
+    "pk": 8,
+    "title": "Gauss's Law",
+    "book": 2,
+    "sequence": 7,
+    "shortUrl": "hc-verma-gauss-law"
+  }, {
+    "pk": 9,
+    "title": "Capacitors",
+    "book": 2,
+    "sequence": 8,
+    "shortUrl": "hc-verma-capacitors"
+  }, {
+    "pk": 10,
+    "title": "Electric Current in Conductors",
+    "book": 2,
+    "sequence": 9,
+    "shortUrl": "hc-verma-electric-current-in-conductors"
+  }, {
+    "pk": 11,
+    "title": "Thermal and Chemical Effects of Current",
+    "book": 2,
+    "sequence": 10,
+    "shortUrl": "hc-verma-thermal-and-checmical-effects"
+  }, {
+    "pk": 12,
+    "title": "Magnetic Field",
+    "book": 2,
+    "sequence": 11,
+    "shortUrl": "hc-verma-magnetic-field"
+  }, {
+    "pk": 13,
+    "title": "Magnetic Field due to a Current",
+    "book": 2,
+    "sequence": 12,
+    "shortUrl": "hc-verma-magnetic-field-due-to-current"
+  }, {
+    "pk": 14,
+    "title": "Permanent Magnets",
+    "book": 2,
+    "sequence": 13,
+    "shortUrl": "hc-verma-permanent-magnets"
+  }, {
+    "pk": 15,
+    "title": "Magnetic Properties of Matter",
+    "book": 2,
+    "sequence": 14,
+    "shortUrl": "hc-verma-magnetic-properties"
+  }, {
+    "pk": 16,
+    "title": "Electromagnetic Induction",
+    "book": 2,
+    "sequence": 15,
+    "shortUrl": "hc-verma-electromagnetic-induction"
+  }, {
+    "pk": 17,
+    "title": "Alternating Current",
+    "book": 2,
+    "sequence": 16,
+    "shortUrl": "hc-verma-alternative-current"
+  }, {
+    "pk": 18,
+    "title": "Electromagnetic Waves",
+    "book": 2,
+    "sequence": 17,
+    "shortUrl": "hc-verma-electromagnetic-waves"
+  }, {
+    "pk": 19,
+    "title": "Electric Current through Gases",
+    "book": 2,
+    "sequence": 18,
+    "shortUrl": "hc-verma-electric-current-through-gasses"
+  }, {
+    "pk": 20,
+    "title": "Photoelectric Effect and Wave-Particle Duality",
+    "book": 2,
+    "sequence": 19,
+    "shortUrl": "hc-verma-photoelectric-effects"
+  }, {
+    "pk": 21,
+    "title": "Bohr's Model and Physics of Atom",
+    "book": 2,
+    "sequence": 20,
+    "shortUrl": "hc-verma-bohrs-model"
+  }, {
+    "pk": 22,
+    "title": "X-rays",
+    "book": 2,
+    "sequence": 21,
+    "shortUrl": "hc-verma-xray"
+  }, {
+    "pk": 23,
+    "title": "Semiconductors and Semiconductor Devices",
+    "book": 2,
+    "sequence": 22,
+    "shortUrl": "hc-verma-semiconductors"
+  }, {
+    "pk": 24,
+    "title": "The Nucleus",
+    "book": 2,
+    "sequence": 23,
+    "shortUrl": "hc-verma-nucleus"
+  }, {
+    "pk": 25,
+    "title": "The Special Theory of Relativity",
+    "book": 2,
+    "sequence": 24,
+    "shortUrl": "hc-verma-relativity"
+  }]
+}, {
+  "pk": 3,
+  "title": "Class 10 NCERT",
+  "subject": {
+    "pk": 1,
+    "created": "2018-03-30T07:02:12.366945Z",
+    "title": "Mathematics",
+    "level": 11,
+    "description": "Maths",
+    "dp": null,
+    "topic_count": 2
+  },
+  "description": "Class 10 NCERT Maths",
+  "dp": "https://24tutors.com/media/lms/DP/1536679519_44_10-maths.jpg",
+  "author": "NCERT",
+  "ISSN": "111111",
+  "volume": "1",
+  "version": "1",
+  "license": "NCERT",
+  "sections": [{
+    "pk": 48,
+    "title": "Real Numbers",
+    "book": 3,
+    "sequence": 0,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-1-real-numbers"
+  }, {
+    "pk": 49,
+    "title": "Polynomials",
+    "book": 3,
+    "sequence": 1,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-2-polynomials"
+  }, {
+    "pk": 50,
+    "title": "Pair of Linear Equations in Two Variables",
+    "book": 3,
+    "sequence": 2,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-3-pair-of-linear-equations-in-two-variables"
+  }, {
+    "pk": 51,
+    "title": "Quadratic Equations",
+    "book": 3,
+    "sequence": 3,
+    "shortUrl": "cert-solutions-class-10-maths-chapter-4-quadratic-equations"
+  }, {
+    "pk": 52,
+    "title": "Arithmetic Progressions",
+    "book": 3,
+    "sequence": 4,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-5-arithmetic-progressions"
+  }, {
+    "pk": 53,
+    "title": "Triangles",
+    "book": 3,
+    "sequence": 5,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-6-triangles"
+  }, {
+    "pk": 54,
+    "title": "Coordinate Geometry",
+    "book": 3,
+    "sequence": 6,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-7-coordinate-geometry"
+  }, {
+    "pk": 55,
+    "title": "Introduction to Trigonometry",
+    "book": 3,
+    "sequence": 7,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-8-introduction-to-trigonometry"
+  }, {
+    "pk": 56,
+    "title": "Some Applications of Trigonometry",
+    "book": 3,
+    "sequence": 8,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-9-some-applications-of-trigonometry"
+  }, {
+    "pk": 57,
+    "title": "Circles",
+    "book": 3,
+    "sequence": 9,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-10-circles"
+  }, {
+    "pk": 58,
+    "title": "Constructions",
+    "book": 3,
+    "sequence": 10,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-11-constructions"
+  }, {
+    "pk": 59,
+    "title": "Areas Related to Circles",
+    "book": 3,
+    "sequence": 11,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-12-areas-related-to-circles"
+  }, {
+    "pk": 60,
+    "title": "Surface Areas and Volumes",
+    "book": 3,
+    "sequence": 12,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-13-surface-areas-and-volumes"
+  }, {
+    "pk": 61,
+    "title": "Statistics",
+    "book": 3,
+    "sequence": 13,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-14-statistics"
+  }, {
+    "pk": 62,
+    "title": "Probability",
+    "book": 3,
+    "sequence": 14,
+    "shortUrl": "ncert-solutions-class-10-maths-chapter-15-probability"
+  }]
+}]

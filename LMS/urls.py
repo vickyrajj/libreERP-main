@@ -27,4 +27,5 @@ router.register(r'section' , SectionViewSet , base_name ='section')
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'generateQuesPaper/$' , DownloadQuesPaper.as_view() ),
+    url(r'questionsAutoCreate/$' , QuestionsAutoCreate.as_view() ),
 ]

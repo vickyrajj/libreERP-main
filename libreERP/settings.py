@@ -116,15 +116,15 @@ INSTALLED_APPS = (
 	'tutor',# canvas
 	'workforceManagement',# canvas
     'support',# canvas
-	'warehouse',# warehouse application
 	'employees',# employees details
-	'payroll',# payroll
 	'performance',# performance
 	'recruitment',# recruitment
 	'organization',# organization
 	'logistic',# logistics
 	'assets',# assets
-	'productsInventory',# inventory for POS products
+    # 'payroll',# payroll
+	# 'productsInventory',# inventory for POS products
+    # 'warehouse',# warehouse application
 )
 
 

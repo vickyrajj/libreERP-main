@@ -22,48 +22,48 @@ class notificationSerializer(serializers.ModelSerializer):
         model = notification
         fields = ('pk' , 'message' ,'shortInfo','domain','onHold', 'link' , 'originator' , 'created' ,'updated' , 'read' , 'user')
 
-class calendarSerializer(serializers.ModelSerializer):
-    clients = ContactLiteSerializer(many = True , read_only = True)
-    class Meta:
-        model = calendar
-        fields = ('pk' , 'eventType' , 'followers' ,'originator', 'duration' , 'created', 'updated', 'user' , 'text' , 'notification' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'clients', 'data')
-        read_only_fields = ('followers', 'user' , 'clients')
-    def create(self , validated_data):
-        cal = calendar(**validated_data)
-        cal.user = self.context['request'].user
-        cal.save()
-        if 'followers' in  self.context['request'].data:
-            tagged = self.context['request'].data['followers']
-            if not isinstance(tagged , list):
-                for tag in tagged.split(','):
-                    cal.followers.add( User.objects.get(pk = tag))
-            else:
-                for tag in tagged:
-                    cal.followers.add( User.objects.get(pk = tag))
-
-        if 'clients' in  self.context['request'].data:
-            clients = self.context['request'].data['clients']
-            for c in clients:
-                cal.clients.add( Contact.objects.get(pk = c))
-        cal.save()
-        return cal
-    def update(self, instance, validated_data): # like the comment
-        for key in ['eventType', 'duration' , 'text' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'data']:
-            try:
-                setattr(instance , key , validated_data[key])
-            except:
-                pass
-        instance.followers.clear()
-        if 'followers' in  self.context['request'].data:
-            tagged = self.context['request'].data['followers']
-            if not isinstance(tagged , list):
-                for tag in tagged.split(','):
-                    instance.followers.add( User.objects.get(pk = tag))
-            else:
-                for tag in tagged:
-                    instance.followers.add( User.objects.get(pk = tag))
-        instance.save()
-        return instance
+# class calendarSerializer(serializers.ModelSerializer):
+#     clients = ContactLiteSerializer(many = True , read_only = True)
+#     class Meta:
+#         model = calendar
+#         fields = ('pk' , 'eventType' , 'followers' ,'originator', 'duration' , 'created', 'updated', 'user' , 'text' , 'notification' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'clients', 'data')
+#         read_only_fields = ('followers', 'user' , 'clients')
+#     def create(self , validated_data):
+#         cal = calendar(**validated_data)
+#         cal.user = self.context['request'].user
+#         cal.save()
+#         if 'followers' in  self.context['request'].data:
+#             tagged = self.context['request'].data['followers']
+#             if not isinstance(tagged , list):
+#                 for tag in tagged.split(','):
+#                     cal.followers.add( User.objects.get(pk = tag))
+#             else:
+#                 for tag in tagged:
+#                     cal.followers.add( User.objects.get(pk = tag))
+#
+#         if 'clients' in  self.context['request'].data:
+#             clients = self.context['request'].data['clients']
+#             for c in clients:
+#                 cal.clients.add( Contact.objects.get(pk = c))
+#         cal.save()
+#         return cal
+#     def update(self, instance, validated_data): # like the comment
+#         for key in ['eventType', 'duration' , 'text' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'data']:
+#             try:
+#                 setattr(instance , key , validated_data[key])
+#             except:
+#                 pass
+#         instance.followers.clear()
+#         if 'followers' in  self.context['request'].data:
+#             tagged = self.context['request'].data['followers']
+#             if not isinstance(tagged , list):
+#                 for tag in tagged.split(','):
+#                     instance.followers.add( User.objects.get(pk = tag))
+#             else:
+#                 for tag in tagged:
+#                     instance.followers.add( User.objects.get(pk = tag))
+#         instance.save()
+#         return instance
 
 class chatMessageSerializer(serializers.ModelSerializer):
     class Meta:

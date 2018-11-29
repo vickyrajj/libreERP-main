@@ -36,24 +36,24 @@ class themeViewSet(viewsets.ModelViewSet):
     queryset = theme.objects.all()
     serializer_class = themeSerializer
 
-class calendarViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = calendarSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['text' , 'originator' , 'data']
-    def get_queryset(self):
-        qs1 = calendar.objects.filter(user =  self.request.user).order_by('when')
-        qs2 = self.request.user.calendarItemsFollowing.all().order_by('when')
-
-        toReturn = qs1 | qs2
-        toReturn = toReturn.distinct()
-
-        if 'clients__in' in self.request.GET:
-            clients = json.loads(self.request.GET['clients__in'])
-            # print type(clients) , type(clients[0])
-            toReturn = toReturn.filter(clients__in = clients)
-
-        return toReturn
+# class calendarViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated, )
+#     serializer_class = calendarSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['text' , 'originator' , 'data']
+#     def get_queryset(self):
+#         qs1 = calendar.objects.filter(user =  self.request.user).order_by('when')
+#         qs2 = self.request.user.calendarItemsFollowing.all().order_by('when')
+#
+#         toReturn = qs1 | qs2
+#         toReturn = toReturn.distinct()
+#
+#         if 'clients__in' in self.request.GET:
+#             clients = json.loads(self.request.GET['clients__in'])
+#             # print type(clients) , type(clients[0])
+#             toReturn = toReturn.filter(clients__in = clients)
+#
+#         return toReturn
 
 class notificationViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner, )

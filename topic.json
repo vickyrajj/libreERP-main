@@ -1,0 +1,323 @@
+[{
+  "pk": 1,
+  "created": "2018-03-30T07:02:30.525943Z",
+  "subject": {
+    "pk": 1,
+    "created": "2018-03-30T07:02:12.366945Z",
+    "title": "Mathematics",
+    "level": 11,
+    "description": "Maths",
+    "dp": null,
+    "topic_count": 2
+  },
+  "title": "Calculus",
+  "description": "Calculus"
+}, {
+  "pk": 2,
+  "created": "2018-03-30T07:03:27.553946Z",
+  "subject": {
+    "pk": 1,
+    "created": "2018-03-30T07:02:12.366945Z",
+    "title": "Mathematics",
+    "level": 11,
+    "description": "Maths",
+    "dp": null,
+    "topic_count": 2
+  },
+  "title": "Geometry",
+  "description": "Geometry"
+}, {
+  "pk": 3,
+  "created": "2018-04-22T08:14:02.637111Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Others",
+  "description": "General topics in physics"
+}, {
+  "pk": 4,
+  "created": "2018-04-22T08:16:08.827787Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Kinematics",
+  "description": "Kinematics"
+}, {
+  "pk": 5,
+  "created": "2018-04-22T08:16:28.435322Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Forces",
+  "description": "Forces"
+}, {
+  "pk": 6,
+  "created": "2018-04-22T08:16:48.705979Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Newton's Laws of Motion",
+  "description": "Newton's Laws of Motion"
+}, {
+  "pk": 7,
+  "created": "2018-04-22T08:17:03.777047Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Friction",
+  "description": "Friction"
+}, {
+  "pk": 8,
+  "created": "2018-04-22T08:17:16.987594Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Circular Motion",
+  "description": "Circular Motion"
+}, {
+  "pk": 9,
+  "created": "2018-04-22T08:17:42.081776Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Work and Energy",
+  "description": "Work and Energy"
+}, {
+  "pk": 10,
+  "created": "2018-04-22T08:19:12.184884Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Mass, Momentum and Collision",
+  "description": "Centre of Mass, Linear Momentum, Collision"
+}, {
+  "pk": 11,
+  "created": "2018-04-22T08:19:39.213448Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Rotational Mechanics",
+  "description": "Rotational Mechanics"
+}, {
+  "pk": 12,
+  "created": "2018-04-22T08:20:52.077558Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Gravitation",
+  "description": "Gravitation"
+}, {
+  "pk": 13,
+  "created": "2018-04-22T08:21:09.967156Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Simple Harmonic Motion",
+  "description": "Simple Harmonic Motion"
+}, {
+  "pk": 14,
+  "created": "2018-04-22T08:21:30.569178Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Fluid Mechanics",
+  "description": "Fluid Mechanics"
+}, {
+  "pk": 15,
+  "created": "2018-04-22T08:21:58.123796Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Properties of Matter",
+  "description": "Properties of Matter"
+}, {
+  "pk": 16,
+  "created": "2018-04-22T08:22:20.607367Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Wave Motion",
+  "description": "Wave Motion"
+}, {
+  "pk": 17,
+  "created": "2018-04-22T08:22:41.995534Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Sound Waves",
+  "description": "Sound Waves"
+}, {
+  "pk": 18,
+  "created": "2018-04-22T08:22:54.243775Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Light Waves",
+  "description": "Light Waves"
+}, {
+  "pk": 19,
+  "created": "2018-04-22T08:23:06.445705Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Geometrical Optics",
+  "description": "Geometrical Optics"
+}, {
+  "pk": 20,
+  "created": "2018-04-22T08:23:21.848513Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Optical Instruments",
+  "description": "Optical Instruments"
+}, {
+  "pk": 21,
+  "created": "2018-04-22T08:23:36.995590Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Dispersion and Spectra",
+  "description": "Dispersion and Spectra"
+}, {
+  "pk": 22,
+  "created": "2018-04-22T08:23:50.084630Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Speed of Light",
+  "description": "Speed of Light"
+}, {
+  "pk": 23,
+  "created": "2018-04-22T08:24:10.160694Z",
+  "subject": {
+    "pk": 2,
+    "created": "2018-04-22T08:13:15.373555Z",
+    "title": "Physics",
+    "level": 11,
+    "description": "Physics",
+    "dp": null,
+    "topic_count": 21
+  },
+  "title": "Photometry",
+  "description": "Photometry"
+}]
