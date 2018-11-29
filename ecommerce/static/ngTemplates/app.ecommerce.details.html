@@ -25,7 +25,7 @@
       <div class="col-md-5 col-xs-9" style="padding:0px;overflow:hidden;">
         <img style="width: 100%;" class="img" ng-src="{{details.files[pictureInView].attachment}}">
       </div>
-      <div class="col-md-6 col-xs-12" style="height:100%;right:0px;">
+      <div class="col-md-6 col-xs-12" style="height:100%;right:0px;" ng-if="dataFetched">
         <div class="row container-fluid">
           <div class="{{prodVarList.length>1? 'col-md-6':'col-md-12'}}">
             <p style="padding-bottom:0px;">

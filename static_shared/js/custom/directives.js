@@ -863,6 +863,46 @@ app.directive('productCard', function() {
             $scope.quantity = $scope.selectedProdVar.str
 
 
+            if (newValue.sku!=undefined) {
+
+
+              if ($scope.me) {
+                // console.log('if');
+                for (var i = 0; i < $rootScope.inCart.length; i++) {
+                    if(newValue.sku==$rootScope.inCart[i].prodSku){
+                      // console.log($rootScope.inCart[i].qty , 'if');
+                      $scope.list.added_cart = $rootScope.inCart[i].qty
+                      break;
+                    }
+                    else{
+                        $scope.list.added_cart = 0
+                    }
+                }
+                for (var i = 0; i < $rootScope.inFavourite.length; i++) {
+                if($rootScope.inFavourite[i]!=undefined){
+                  if(newValue.sku==$rootScope.inFavourite[i].prodSku){
+                    $scope.list.added_saved = 1
+                    break;
+                  }
+                  else{
+                      $scope.list.added_saved = 0
+                  }
+                }
+                }
+              }else {
+                // console.log('else');
+                for (var i = 0; i < $rootScope.addToCart.length; i++) {
+                    if(newValue.sku==$rootScope.addToCart[i].prodSku){
+                      $scope.list.added_cart = $rootScope.addToCart[i].qty
+                      break;
+                    }
+                    else{
+                      $scope.list.added_cart = 0
+                    }
+                }
+              }
+
+
             for (var i = 0; i < $scope.list.variantsInStoreQty.length; i++) {
               if ($scope.list.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk && $scope.list.variantsInStoreQty[i].store == $scope.storePK) {
 
@@ -880,6 +920,12 @@ app.directive('productCard', function() {
                 }
               }
             }
+
+
+          }
+
+
+
 
           });
 
