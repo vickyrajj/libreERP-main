@@ -38,6 +38,14 @@
               </select>
             </span>
           </div>
+
+          <div class="col-md-offset-6 col-md-6">
+            <span ng-show="prodColors.length>0">
+              <select class="form-control" style="border:1px solid #eee" ng-options="c for c in prodColors" ng-model="selectedColor">
+              </select>
+            </span>
+          </div>
+
           <hr style="margin-top:0px;margin-bottom:5px;">
         </div>
         <div class="row">

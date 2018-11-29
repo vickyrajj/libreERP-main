@@ -60,6 +60,8 @@ UNIT_CHOICES = (
     ('Litre' , 'Litre'),
     ('Millilitre' , 'Millilitre'),
     ('Quantity' , 'Quantity'),
+    ('Size' , 'Size'),
+    ('Size and Color' , 'Size and Color'),
 )
 
 
@@ -151,6 +153,7 @@ class ProductVerient(models.Model):
     price = models.FloatField(null=True)
     discountedPrice = models.FloatField(default = 0.0)
     serialId = models.CharField(max_length = 50, null=True, blank = True)
+    prodDesc =  models.CharField(max_length = 500, null=True, blank = True)
 
 class Store(models.Model):
     created = models.DateTimeField(auto_now_add = True)

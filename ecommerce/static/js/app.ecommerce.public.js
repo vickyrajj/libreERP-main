@@ -363,7 +363,7 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
       qty: 1,
       typ: 'cart',
       user: $users.get('mySelf').pk,
-      prodSku: model.serialNo
+      prodSku: model.serialNo,
     }
     console.log(dataToSend);
     $http({
@@ -977,6 +977,9 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     //       }
     //     }
     //   }
+
+    console.log($scope.selectedProdVar, $scope.selectedColor ,'ssssssssssssssssssssssss');
+
     dataToSend = {
       product: inputPk,
       user: getPK($scope.me.url),
@@ -1304,7 +1307,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     $scope.prod_var = $scope.details.product_variants;
     $scope.prodVarList = []
     $scope.details.product.unit = $filter('getUnit')($scope.details.product.unit);
-    var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
+    // if($scope.details.product.unit!='Size'){
+      var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
+    // }
+    // else{
+    //     var str = $filter('convertSize')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
+    // }
     $scope.prodVarList = [{
       str: str,
       qty: $scope.details.product.howMuch,
@@ -1315,7 +1323,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
     if ($scope.prod_var) {
       for (var i = 0; i < $scope.prod_var.length; i++) {
-        str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
+          // if($scope.details.product.unit!='Size'){
+            str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
+          // }
+          // else {
+            // str = $filter('convertSize')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
+          // }
         $scope.prodVarList.push({
           pk: $scope.prod_var[i].id,
           str: str,
@@ -1345,10 +1358,17 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
 
     $scope.$watch('selectedProdVar', function(newValue, oldValue) {
-
-      if ($scope.selectedProdVar.qty != null) {
-        $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
-      }
+      // if($scope.selectedProdVar.unit !='Size' ){
+        if ($scope.selectedProdVar.qty != null) {
+          $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
+        }
+      // }
+      // else{
+      //   console.log("heeeeeeeerrrrrrreeeeeeeeee");
+      //   if ($scope.selectedProdVar.qty != null) {
+      //     $scope.quantity = $filter('convertSize')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
+      //   }
+      // }
       console.log($scope.quantity, 'rrrr');
 
       if (newValue.sku != undefined) {
@@ -1437,17 +1457,82 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
   }
 
+  $scope.selectedColor;
+  $scope.getProdVarSize = function () {
+
+    $scope.prod_var = $scope.details.product_variants;
+    console.log($scope.prod_var);
+    $scope.prodVarList = []
+    $scope.details.product.unit = $scope.details.product.unit
+    $scope.prodColors = [];
+
+    console.log($scope.prod_var);
+
+    if ($scope.prod_var) {
+      for (var i = 0; i < $scope.prod_var.length; i++) {
+        str = $filter('convertSize')($scope.prod_var[i].unitPerpack , $scope.details.product.unit)
+
+      var toPush = {
+          pk: $scope.prod_var[i].id,
+          str: str,
+          qty: $scope.prod_var[i].unitPerpack * $scope.details.product.howMuch,
+          amnt: $scope.prod_var[i].price,
+          unit: $scope.details.product.unit,
+          sku: $scope.prod_var[i].sku,
+          disc: $scope.prod_var[i].discountedPrice
+        }
+
+        if ($scope.prod_var[i].prodDesc) {
+          toPush.prodDesc = $scope.prod_var[i].prodDesc
+        }
+
+        $scope.prodVarList.push(toPush)
+
+      // console.log('color',$scope.prod_var.prodDesc);
+
+
+      }
+    }
+    $scope.selectedProdVar = $scope.prodVarList[0];
+
+      $scope.$watch('selectedProdVar', function(newValue, oldValue) {
+
+
+
+        $scope.prodColors = newValue.prodDesc.split(',')
+        $scope.selectedColor = $scope.prodColors[0]
+        $scope.quantity = $scope.selectedProdVar.str
+
+
+        for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
+          if ($scope.details.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk && $scope.details.variantsInStoreQty[i].store == $scope.storePK) {
+
+            if (INVENTORY_ENABLED == 'True') {
+              $scope.selectedProdVar.inStock = $scope.details.variantsInStoreQty[i].quantity
+            } else {
+              $scope.selectedProdVar.inStock = 1000;
+            }
+            break;
+          } else {
+            if (INVENTORY_ENABLED == 'True') {
+              $scope.selectedProdVar.inStock = 0;
+            } else {
+              $scope.selectedProdVar.inStock = 1000;
+            }
+          }
+        }
+
+      });
+  }
+
 
   $timeout(function() {
-
-    if ($scope.details.product.unit) {
-
+    if ($scope.details.product.unit == 'Size and Color' || $scope.details.product.unit == 'Size') {
+      $scope.getProdVarSize()
+    }else {
+      $scope.getProdVar()
     }
-
-    alert($scope.details.product.unit);
-
-    $scope.getProdVar()
-  }, 5000);
+  }, 3000);
 
 });
 
@@ -3056,6 +3141,8 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   // })
 
   $scope.showCartImage = settings_isCartImage
+  $scope.isCartView = false
+  $scope.isCartView = settings_isCart
   $scope.maxCategories = false
   // $http.get('/api/ERP/appSettings/?app=25&name__iexact=maxCategories').
   // then(function(response) {
@@ -3611,7 +3698,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
     })
 
     $scope.getinStock = function() {
-      console.log($scope.stock, 'cccccccccaaaaaaaaaaarrrrrrrrrrrrrrtttttttttttttt');
+      console.log("kkkkkkkkkkdddddddddddddddddddddd");
       for (var i = 0; i < $rootScope.inCart.length; i++) {
         for (var j = 0; j < $scope.stock.length; j++) {
           if ($rootScope.pin.pk == undefined) {
@@ -3625,12 +3712,9 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
             $scope.prod_var = $rootScope.inCart[i].prod_var.id
           }
           if ($scope.stock[j].store == $scope.code) {
-            console.log($scope.stock[j].product, $rootScope.inCart[i].product.product.pk, $scope.stock[j].product_var, $scope.prod_var);
             if ($scope.stock[j].product == $rootScope.inCart[i].product.product.pk) {
-              console.log("sssssssssssssssss");
               if($scope.stock[j].product_var == $scope.prod_var){
                 $rootScope.inCart[i].stock = $scope.stock[j].stock
-                console.log($rootScope.inCart[i].stock,'kllllll');
               }
             }
           }

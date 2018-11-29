@@ -93,7 +93,7 @@ def tokenAuthentication(request):
 def generateOTP(request):
     print request.POST ,'*****************'
     print request.POST["id"],'kkkkkkkkllllllllllllkkkkkkkkkkk'
-    
+
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
     print 'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu'

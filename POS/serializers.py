@@ -190,7 +190,7 @@ class ProductVerientSerializer(serializers.ModelSerializer):
     # discountedPrice = serializers.SerializerMethodField()
     class Meta:
         model = ProductVerient
-        fields = ('pk','created','updated','sku','unitPerpack','price','parent','discountedPrice','serialId')
+        fields = ('pk','created','updated','sku','unitPerpack','price','parent','discountedPrice','serialId','prodDesc')
     def create(self , validated_data):
         v = ProductVerient(**validated_data)
         v.parent = Product.objects.get(pk=int(self.context['request'].data['parent']))

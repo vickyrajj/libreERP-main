@@ -1570,8 +1570,8 @@ class BulklistingCreationAPIView(APIView):
             imageTwoSend = media(user=request.user,attachment = attachmentTwo,mediaType='image' )
             imageTwoSend.save()
             images.append(imageTwoSend)
-            imageOne =howMuch = ws['I' + str(i)].value
-            attachmentThree = 'ecommerce/pictureUploads/' +str(imageOne)
+            imageThree = ws['I' + str(i)].value
+            attachmentThree = 'ecommerce/pictureUploads/' +str(imageThree)
             imageThreeSend =media(user=request.user,attachment = attachmentThree,mediaType='image' )
             imageThreeSend.save()
             images.append(imageThreeSend)
