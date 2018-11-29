@@ -984,9 +984,11 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       product: inputPk,
       user: getPK($scope.me.url),
       qty: 1,
-      typ: 'cart'
+      typ: 'cart',
     }
-
+    if($scope.selectedColor){
+      dataToSend.desc =  $scope.selectedColor
+    }
 
     if ($scope.prodVariant == '') {
       dataToSend.prodSku = $scope.details.product.serialNo
@@ -1282,6 +1284,13 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       'price': $scope.selectedProdVar.amnt,
       'unit': $scope.selectedProdVar.unit,
       'prodPk': $scope.details.pk
+    }
+
+    if($scope.selectedColor){
+      $scope.item.desc =  $scope.selectedColor
+    }
+    else{
+      $scope.item.desc = ""
     }
 
     // $scope.item = {
@@ -3833,7 +3842,8 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
               qty: $rootScope.addToCart[i].qty,
               product: $rootScope.addToCart[i].prodPk,
               user: getPK($scope.me.url),
-              prodSku: $rootScope.addToCart[i].prodSku
+              prodSku: $rootScope.addToCart[i].prodSku,
+              desc : $rootScope.addToCart[i].desc
             }
           }).
           then(function(response) {

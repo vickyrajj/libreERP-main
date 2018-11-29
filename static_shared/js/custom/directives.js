@@ -858,7 +858,9 @@ app.directive('productCard', function() {
         $scope.selectedProdVar = $scope.prodVarList[0];
 
           $scope.$watch('selectedProdVar', function(newValue, oldValue) {
-            $scope.prodColors = newValue.prodDesc.split(',')
+            if(newValue.prodDesc!=undefined){
+              $scope.prodColors = newValue.prodDesc.split(',')
+            }
             $scope.selectedColor = $scope.prodColors[0]
             $scope.quantity = $scope.selectedProdVar.str
 
@@ -996,6 +998,9 @@ app.directive('productCard', function() {
         }
           $scope.list.added_cart = $scope.qtyToAddInit.qty
           $scope.item = {'productName':$scope.list.product.name,'qty':$scope.qtyToAddInit.qty , 'prodSku': $scope.selectedProdVar.sku , 'prod_howMuch':$scope.selectedProdVar.qty , 'price':$scope.selectedProdVar.amnt ,'unit':$scope.selectedProdVar.unit , 'prodPk': $scope.list.pk}
+          if($scope.selectedColor){
+            $scope.item.desc =  $scope.selectedColor
+          }
           detail = getCookie("addToCart");
          $rootScope.addToCart=[]
           if (detail != "") {
@@ -1062,7 +1067,10 @@ app.directive('productCard', function() {
                 user: getPK($scope.me.url),
                 qty: $scope.qtyToAddInit.qty,
                 typ: 'cart',
-                prodSku: $scope.selectedProdVar.sku
+                prodSku: $scope.selectedProdVar.sku,
+              }
+              if($scope.selectedColor){
+                dataToSend.desc =  $scope.selectedColor
               }
               $http({
                 method: 'POST',
@@ -1079,6 +1087,7 @@ app.directive('productCard', function() {
                 //   }
                 // }
                 $rootScope.inCart.push(response.data);
+                console.log(response.data);
               })
           })
       }
