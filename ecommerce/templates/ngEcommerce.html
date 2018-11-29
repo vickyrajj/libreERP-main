@@ -97,13 +97,13 @@
           </div>
 
           <div ng-repeat="p in inCart" style="border-bottom:solid 2px #eeeeee; ">
-            <h5 ng-if="p.prod_howMuch==null&&p.product.product.unit==''" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch | convertUnit:p.product.product.unit }}</h5>
-            <h5 ng-if="p.prod_howMuch" style="margin:10px;">{{p.product.product.name}} {{p.prod_howMuch| convertUnit : p.product.product.unit}}</h5>
-
-            {{p.prod_howMuch}}
-
-
-
+            <h5 ng-if="p.prod_howMuch==null" style="margin:10px;">{{p.product.product.name}} {{p.product.product.howMuch | convertUnit:p.product.product.unit }}</h5>
+            <div ng-if="p.prod_howMuch.length>0||p.prod_howMuch">
+            <h5 ng-if="p.product.product.unit!='Size and Color'" style="margin:10px;">{{p.product.product.name}} {{p.prod_howMuch| convertUnit : p.product.product.unit}}
+            </h5>
+            <h5 ng-if="p.product.product.unit=='Size and Color'" style="margin:10px;">{{p.product.product.name}} - {{p.prod_howMuch| convertSize : p.product.product.unit}} - {{p.desc}}
+            </h5>
+          </div>
 
             <div class="row" style="margin:0px;">
               <div class="col-sm-4 text-right">

@@ -978,7 +978,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     //     }
     //   }
 
-    console.log($scope.selectedProdVar, $scope.selectedColor ,'ssssssssssssssssssssssss');
+    console.log($scope.selectedProdVar, $scope.selectedColor ,'1010');
 
     dataToSend = {
       product: inputPk,
@@ -989,9 +989,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     if($scope.selectedColor){
       dataToSend.desc =  $scope.selectedColor
     }
-    else{
-      dataToSend.desc = ""
-    }
+
     if ($scope.prodVariant == '') {
       dataToSend.prodSku = $scope.details.product.serialNo
     } else {
@@ -1511,10 +1509,32 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       $scope.$watch('selectedProdVar', function(newValue, oldValue) {
 
 
-
         $scope.prodColors = newValue.prodDesc.split(',')
         $scope.selectedColor = $scope.prodColors[0]
         $scope.quantity = $scope.selectedProdVar.str
+
+
+        if (newValue.sku != undefined) {
+
+
+        if ($scope.me) {
+          for (var i = 0; i < $rootScope.inCart.length; i++) {
+            if (newValue.sku == $rootScope.inCart[i].prodSku) {
+              $scope.details.added_cart = $rootScope.inCart[i].qty
+            } else {
+              $scope.details.added_cart = 0
+            }
+          }
+        } else {
+          for (var i = 0; i < $rootScope.addToCart.length; i++) {
+            if (newValue.sku == $rootScope.addToCart[i].prodSku) {
+              $scope.details.added_cart = $rootScope.addToCart[i].qty
+            } else {
+              $scope.details.added_cart = 0
+            }
+          }
+        }
+
 
 
         for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
@@ -1535,11 +1555,18 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
           }
         }
 
+      }
+
       });
+
+
   }
+
+  $scope.dataFetched = false;
 
 
   $timeout(function() {
+    $scope.dataFetched = true;
     if ($scope.details.product.unit == 'Size and Color' || $scope.details.product.unit == 'Size') {
       $scope.getProdVarSize()
     }else {
