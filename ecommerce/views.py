@@ -330,7 +330,7 @@ class CreateOrderAPI(APIView):
             print pObj , '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
             # print totalAmount , 'totalAmounttotalAmounttotalAmounttotalAmount'
             # print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b)),'prodSku':i['prodSku']})
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b)),'prodSku':i['prodSku'],'desc':i['desc']})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:
@@ -434,7 +434,39 @@ class CreateOrderAPI(APIView):
                     totalPrice=round(totalPrice, 2)
                     total+=totalPrice
                     total=round(total, 2)
-                    value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+                    qtyData =  i.product.product.howMuch
+                    if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
+                        if qtyData >1000:
+                            qtyValue = str(qtyData/1000) + ' Kg'
+                        else:
+                            qtyValue = str(qtyData) + ' gm'
+                    elif str(i.product.product.unit)=='Millilitre' or str(i.product.product.unit)=='ml':
+                        if qtyData>1000:
+                            qtyValue = str(qtyData/1000) + ' lt'
+                        else:
+                            qtyValue = str(qtyData) + ' ml'
+                    elif str(i.product.product.unit)=='Size and Color' or str(i.product.product.unit)=='Size':
+                        if int(qtyData)==1:
+                            qtyValue = 'XS'
+                        elif int(qtyData)==2:
+                            qtyValue = 'S'
+                        elif int(qtyData)==2:
+                            qtyValue = 'M'
+                        elif int(qtyData)==4:
+                            qtyValue = 'L'
+                        elif int(qtyData)==5:
+                            qtyValue = 'XL'
+                        elif int(qtyData)==6:
+                            qtyValue = 'XL'
+                    else:
+                      qtyValue = qtyData
+
+                    if i.desc:
+                         desc = i.desc
+                    else:
+                        desc =""
+                    productName = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' + str(desc)
+                    value.append({ "productName" : productName,"qty" : i.qty , "amount" : totalPrice,"price":price})
                 else:
                     prodData = ProductVerient.objects.get(sku = i.prodSku)
                     price = prodData.discountedPrice
@@ -443,7 +475,39 @@ class CreateOrderAPI(APIView):
                     totalPrice=round(totalPrice, 2)
                     total+=totalPrice
                     total=round(total, 2)
-                    value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+                    qtyData = prodData.unitPerpack * i.product.product.howMuch
+                    if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
+                        if qtyData >1000:
+                            qtyValue = str(qtyData/1000) + ' Kg'
+                        else:
+                            qtyValue = str(qtyData) + ' gm'
+                    elif str(i.product.product.unit)=='Millilitre' or str(i.product.product.unit)=='ml':
+                        if qtyData>1000:
+                            qtyValue = str(qtyData/1000) + ' lt'
+                        else:
+                            qtyValue = str(qtyData) + ' ml'
+                    elif str(i.product.product.unit)=='Size and Color' or str(i.product.product.unit)=='Size':
+                        if int(qtyData)==1:
+                            qtyValue = 'XS'
+                        elif int(qtyData)==2:
+                            qtyValue = 'S'
+                        elif int(qtyData)==2:
+                            qtyValue = 'M'
+                        elif int(qtyData)==4:
+                            qtyValue = 'L'
+                        elif int(qtyData)==5:
+                            qtyValue = 'XL'
+                        elif int(qtyData)==6:
+                            qtyValue = 'XL'
+                    else:
+                      qtyValue = qtyData
+
+                    if i.desc:
+                         desc = i.desc
+                    else:
+                        desc =""
+                    productName = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' + str(desc)
+                    value.append({ "productName" : productName,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
             grandTotal=round(grandTotal, 2)
             if orderObj.user.email and orderObj.paymentMode == 'COD':
@@ -838,10 +902,28 @@ def manifest(response,item):
             qtyValue = str(qtyData/1000) + ' lt'
         else:
             qtyValue = str(qtyData) + ' ml'
+    elif str(item.product.product.unit)=='Size and Color' or str(item.product.product.unit)=='Size':
+        if int(qtyData)==1:
+            qtyValue = 'XS'
+        elif int(qtyData)==2:
+            qtyValue = 'S'
+        elif int(qtyData)==2:
+            qtyValue = 'M'
+        elif int(qtyData)==4:
+            qtyValue = 'L'
+        elif int(qtyData)==5:
+            qtyValue = 'XL'
+        elif int(qtyData)==6:
+            qtyValue = 'XL'
     else:
       qtyValue = qtyData
 
-    name = str(item.product.product.name)+ ' ' + str(qtyValue)
+    if item.desc:
+         desc = item.desc
+    else:
+        desc =""
+
+    name = str(item.product.product.name)+ ' ' + str(qtyValue)+ ' ' +str(desc)
 
 
     elements.append(HRFlowable(width="100%", thickness=1, color=black,spaceAfter=10))
@@ -1249,6 +1331,7 @@ def genInvoice(response, contract, request):
         promoCode="None"
     tableData=[['Product','Quantity','Price','Total Price']]
     for i in contract.orderQtyMap.all():
+        print i.desc,'ssssssssssssss'
         if str(i.status)!='cancelled':
             if i.prodSku == i.product.product.serialNo:
                 print i.product.product.name, i.product.product.discount, i.product.product.price
@@ -1258,6 +1341,10 @@ def genInvoice(response, contract, request):
                 totalprice=round(totalprice, 2)
                 total+=totalprice
                 total=round(total, 2)
+                if i.desc:
+                    desc =i.desc
+                else:
+                    desc=""
                 qtyData = i.product.product.howMuch
                 if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
                     if qtyData >1000:
@@ -1269,10 +1356,22 @@ def genInvoice(response, contract, request):
                         qtyValue = str(qtyData/1000) + ' lt'
                     else:
                         qtyValue = str(qtyData) + ' ml'
+                elif str(i.product.product.unit)=='Size and Color' or str(i.product.product.unit)=='Size':
+                    if int(qtyData)==1:
+                        qtyValue = 'XS'
+                    elif int(qtyData)==2:
+                        qtyValue = 'S'
+                    elif int(qtyData)==2:
+                        qtyValue = 'M'
+                    elif int(qtyData)==4:
+                        qtyValue = 'L'
+                    elif int(qtyData)==5:
+                        qtyValue = 'XL'
+                    elif int(qtyData)==6:
+                        qtyValue = 'XL'
                 else:
                   qtyValue = qtyData
-
-                name = str(i.product.product.name) + ' '  + str(qtyValue)
+                name = str(i.product.product.name) + ' '  + str(qtyValue) + ' ' +str(desc)
                 tableData.append([name,i.qty,price,totalprice])
             else:
                 prodData = ProductVerient.objects.get(sku = i.prodSku)
@@ -1282,6 +1381,10 @@ def genInvoice(response, contract, request):
                 totalprice=round(totalprice, 2)
                 total+=totalprice
                 total=round(total, 2)
+                if i.desc:
+                    desc =i.desc
+                else:
+                    desc=""
                 qtyData = i.product.product.howMuch * prodData.unitPerpack
                 if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
                     if qtyData >1000:
@@ -1293,9 +1396,24 @@ def genInvoice(response, contract, request):
                         qtyValue = str(qtyData/1000) + ' lt'
                     else:
                         qtyValue = str(qtyData) + ' ml'
+                elif str(i.product.product.unit)=='Size and Color' or str(i.product.product.unit)=='Size':
+                    if int(qtyData)==1:
+                        qtyValue = 'XS'
+                    elif int(qtyData)==2:
+                        qtyValue = 'S'
+                    elif int(qtyData)==2:
+                        qtyValue = 'M'
+                    elif int(qtyData)==4:
+                        qtyValue = 'L'
+                    elif int(qtyData)==5:
+                        qtyValue = 'XL'
+                    elif int(qtyData)==6:
+                        qtyValue = 'XL'
                 else:
                   qtyValue = qtyData
-                name = str(i.product.product.name) + ' ' + str(qtyValue)
+
+
+                name = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' +str(desc)
                 tableData.append([name,i.qty,price,totalprice])
 
     grandTotal=total-(promoAmount * total)/100
@@ -1542,8 +1660,8 @@ class BulklistingCreationAPIView(APIView):
             genericObj=''
             name = ws['A' + str(i)].value
             serialNo = ws['B' + str(i)].value
-            price = ws['c' + str(i)].value
-            serialId = ws['B' + str(i)].value
+            price = ws['C' + str(i)].value
+            serialId = ws['D' + str(i)].value
             unit = ws['E' + str(i)].value
             howMuch = ws['F' + str(i)].value
             grossWeight = ws['K' + str(i)].value

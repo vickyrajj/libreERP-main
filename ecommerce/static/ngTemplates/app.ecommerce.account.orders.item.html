@@ -98,7 +98,12 @@
           </div>
           <div class="col-md-4 col-sm-4 hidden-xs">
             <span ng-if="i.prodVar==undefined"> {{i.productName.slice(0,25)}} {{i.product.product.howMuch}}{{i.product.product.unit | getUnit}}</span>
-            <span ng-if="i.prodVar"> {{i.productName.slice(0,25)}} {{i.prodVar[0].unitPerpack * i.product.product.howMuch| convertUnit:i.product.product.unit}} </span>
+            <span ng-if="i.prodVar">
+              <span ng-if="i.product.product.unit!='Size and Color'&&i.product.product.unit!='Size'"> {{i.productName.slice(0,25)}} {{i.prodVar[0].unitPerpack * i.product.product.howMuch| convertUnit:i.product.product.unit}}
+              </span>
+              <span ng-if="i.product.product.unit=='Size and Color'||i.product.product.unit=='Size'"> {{i.productName.slice(0,25)}} {{i.prodVar[0].unitPerpack | convertSize:i.product.product.unit}} {{i.desc}}
+              </span>
+               </span>
           </div>
           <div class="col-md-1 col-sm-1 hidden-xs">
             {{i.qty}}

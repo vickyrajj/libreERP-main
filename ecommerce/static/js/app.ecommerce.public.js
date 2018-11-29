@@ -2862,15 +2862,17 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         } else {
           $scope.prod_var = $scope.cartItems[i].prod_var.id
         }
-        console.log($scope.stockpro, 'stocproo');
+        if (INVENTORY_ENABLED == 'False') {
+          $scope.cartItems[i].stock = 1000;
+        }
+        else{
         if ($scope.stock[j].store == $scope.code) {
-          console.log($scope.stock[j].product, $scope.cartItems[i].product.product.pk, $scope.stock[j].product_var, $scope.prod_var);
           if ($scope.stock[j].product == $scope.cartItems[i].product.product.pk) {
-            console.log("aaaaaaaaaaaaaaaaaa");
             if($scope.stock[j].product_var == $scope.prod_var){
-              console.log($scope.stock[j].stock);
-              $scope.cartItems[i].stock = $scope.stock[j].stock
-              console.log($scope.cartItems[i].stock, 'ssssttttoooccckkkkk');
+                console.log("aaaaaaaaaaafaaaalssssss");
+                console.log("aaaaaaaaaaaaaadffffffffffffffff");
+                $scope.cartItems[i].stock = $scope.stock[j].stock
+              }
             }
           }
         }
@@ -2966,10 +2968,12 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
             $scope.cartProducts.push({
               pk: $scope.cartItems[i].product.pk,
               qty: $scope.cartItems[i].qty,
-              prodSku: $scope.cartItems[i].prodSku
+              prodSku: $scope.cartItems[i].prodSku,
+              desc: $scope.cartItems[i].desc
             })
           }
         }
+
         // }
         $scope.dataToSend.products = $scope.cartProducts
       } else {
