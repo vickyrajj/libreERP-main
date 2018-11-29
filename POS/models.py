@@ -107,13 +107,21 @@ MONTH_CHOICES = (
     ('oct-dec' , 'oct-dec')
 )
 
+
+PROGRESS_STATUS = (
+    ('Created','Created'),
+    ('Started','Started'),
+    ('Completed','Completed')
+)
+
 class ManufactureManifest(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User , related_name = 'manufactureManifest' , null = True)
-    product = models.ForeignKey(Product , related_name='manifestProduct')
+    product = models.ForeignKey(Product , related_name='inProgress')
     quantity = models.FloatField(null= True)
-
+    status = models.CharField(choices = PROGRESS_STATUS, default='Created', max_length = 10 , null = True)
+    specialInstruction = models.CharField(max_length = 500, null = True, blank = True)
 
 class Invoice(models.Model):
     created = models.DateTimeField(auto_now_add = True)

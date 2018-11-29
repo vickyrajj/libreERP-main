@@ -1439,6 +1439,13 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
 
   $timeout(function() {
+
+    if ($scope.details.product.unit) {
+
+    }
+
+    alert($scope.details.product.unit);
+
     $scope.getProdVar()
   }, 5000);
 

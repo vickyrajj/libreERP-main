@@ -178,10 +178,9 @@ class ManufactureManifestSerializer(serializers.ModelSerializer):
     product = ProductLiteSerializer(many=False,read_only=True)
     class Meta:
         model = ManufactureManifest
-        fields = ('pk','created','updated','user','product','quantity')
+        fields = ('pk','created','updated','user','product','quantity','status','specialInstruction')
     def create(self , validated_data):
         m = ManufactureManifest(**validated_data)
-        print 'fffffffffffffffffffffffffffffff',self.context['request'].data['product']
         m.product = Product.objects.get(pk=int(self.context['request'].data['product']))
         m.save()
         return m
