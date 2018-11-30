@@ -168,9 +168,11 @@
                   <div class="col-md-1" style="padding-top: 50px;" ng-if="c.stock>0">
                     <input type="number" ng-change="changeQty(c)" ng-model="c.qty" name="" value="" style="width: 60px;" min="1" >
                   </div>
-                  <div class="col-md-1" style="padding-top: 50px;" ng-if="c.stock<=0||!c.stock">
+                  <div class="col-md-1" style="padding-top: 50px;" ng-if="c.stock<=0">
                     <span style="color:#ef4a1e">Out Of Stock</span>
                     <button class="btn btn-primary" ng-click="addWishList($index,c.pk)">Add to Wishlist <i class="fa fa-heart"></i></button>
+                  </div>
+                  <div class="col-md-1" style="padding-top: 50px;" ng-if="!c.stock">
                   </div>
                   <div class="col-md-2" style="padding-top: 50px;padding-left:50px;">
                     <p ng-if="c.prodSku==c.product.product.serialNo"> <i class="fa {{currency}}"></i> {{(c.product.product.discountedPrice * c.qty).toFixed(2) }} </p>
@@ -598,12 +600,14 @@
             <span style="font-size:20px;">Select Mode of Payment<span >
           </div>
           <div class="row" style="padding:20px;">
+            <div ng-if="isCod">
             <div class="form-group" ng-if="!totalLimit && limitValue != '0'">
               <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD"> COD <br>
             </div>
             <div class="form-group" ng-if="totalLimit || limitValue == '0'">
               <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="COD" disabled> COD (Cannot use this option as your total exceed  <i class="fa {{currency}}"></i>{{limitValue}})<br>
             </div>
+          </div>
             <div class="form-group">
               <input type="radio" name="modeOfPayment" ng-model="data.modeOfPayment" value="Card"> Credit Card/ Debit Card / Net Banking / UPI
             </div>

@@ -1121,8 +1121,9 @@ app.directive('productCard', function() {
             user: getPK($scope.me.url),
             // qty: 1,
             typ: 'favourite',
-              prodSku: $scope.selectedProdVar.sku
+            prodSku: $scope.selectedProdVar.sku
           }
+          console.log($scope.selectedProdVar,'dddddddddddd');
           $http({
             method: 'POST',
             url: '/api/ecommerce/cart/',

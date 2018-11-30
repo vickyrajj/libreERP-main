@@ -90,10 +90,20 @@
               </td>
               <td>
                 <span ng-if="f.productVariant__sku==null">
+                  <span ng-if="f.product__unit!='Size and Color'&&f.product__unit!='Size'">
                   {{f.product__howMuch | convertUnit: f.product__unit }}
                 </span>
+                <span ng-if="f.product__unit=='Size and Color'||f.product__unit=='Size'">
+                    {{f.product__howMuch | convertSize: f.product__unit}}
+                </span>
+                </span>
                 <span ng-if="f.productVariant__sku!=null">
+                  <span ng-if="f.product__unit!='Size and Color'&&f.product__unit!='Size'">
                   {{f.product__howMuch * f.productVariant__unitPerpack | convertUnit: f.product__unit}}
+                </span>
+                  <span ng-if="f.product__unit=='Size and Color'||f.product__unit=='Size'">
+                      {{f.productVariant__unitPerpack | convertSize: f.product__unit}}
+                  </span>
                 </span>
               </td>
               <td>
