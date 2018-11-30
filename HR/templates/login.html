@@ -29,7 +29,7 @@
         <div class="col-md-6 col-sm-6 col-xs-12 text-center" style="margin-top:40px;">
           <a title="Google" class="btn btn-default" href="{% provider_login_url "google" method="oauth2" %}" style="background:#4285F4;color:white;padding:0px;border:2px solid #4285F4" >
             <!-- <i class="fa fa-google fa-2x"></i> Google -->
-            <img src="/static/images/g-logo.png" style="height:5vh"/> &nbsp;&nbsp; Sign in with Google &nbsp;&nbsp;
+            <img src="/static/images/google.png" style="height:5vh"/> &nbsp;&nbsp; Sign in with Google &nbsp;&nbsp;
           </a>
         </div>
         <div class="col-md-6 col-sm-6 col-xs-12 text-center" style="margin-top:40px">
@@ -42,7 +42,7 @@
     </div>
       <hr>
       <div class="row text-center">
-        <span style="color:black;font-size:18px;">Login</span>
+        <span style="color:black;font-size:25px;">Login</span>
       </div>
 
       {% if authStatus.status != 'default' %}
@@ -55,27 +55,29 @@
 
       <form class="" action="" method="post">
         <div class="row" style="margin:0px;margin-top:50px;">
-          <div class="col-md-2 col-sm-2 col-xs-2 text-right" style="padding-top:10px">
+          <!-- <div class="col-md-2 col-sm-2 col-xs-2 text-right" style="padding-top:10px">
             <span>+91</span>
-          </div>
-          <div class="col-md-10 col-sm-10 col-xs-10">
+          </div> -->
+          <div class=" col-md-12 col-sm-12 col-xs-12">
             <label for="username" class="sr-only">Mobile Number</label>
             <div class ="input-group">
+              <span class="input-group-addon"> +91</span>
               <input id="username" name="username" type="text" maxlength="10" class="form-control" placeholder="10-digit mobile number / Username" required autofocus>
-              <span class="input-group-btn">
-                <button id="requestOTP" class="btn btn-default" type="button">Get OTP</button>
+              <span class="input-group-addon"  id="requestOTP">
+                Get OTP
+                <!-- <button id="requestOTP" class="btn btn-default" type="button">Get OTP</button> -->
               </span>
             </div>
           </div>
         </div>
-        <div class="col-md-10 col-md-offset-2 col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2">
+        <div class="col-md-12  col-xs-12  col-sm-12 ">
           <label for="password" class="sr-only">Password</label>
-          <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
+          <input id="password" name="password" type="password" class="form-control" placeholder="Password" required style="margin-top:10px">
           <button id="signIn" style="margin-bottom:20px; margin-top:10px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         </div>
       </form>
 
-      <div class="col-md-10 col-xs-10 col-sm-10 col-md-offset-2 col-xs-offset-2 col-sm-offset-2 ">
+      <div class="col-md-12 col-xs-12 col-sm-12 ">
         <a style="color:black;" href="registerPage">New User?</a>
       </div>
 
@@ -85,7 +87,7 @@
       <input type="text" name="mobile" value="" id="regMobile">
     </form>
 
-    <div class="col-md-12 col-sm-12 col-xs-12 text-right" style='bottom:0;right:0;position:fixed'>
+    <div class="col-md-12 hidden-sm hidden-xs text-right" style='bottom:0;right:0;position:fixed'>
       <a href="/login/?next=/ERP/">Admin Login</a>
     </div>
   </div>
