@@ -642,8 +642,7 @@ app.directive('productCard', function() {
       $scope.me = $users.get('mySelf');
 
 
-      console.log($scope.list.variantsInStoreQty,'variantsInStoreQty');
-      console.log($rootScope.multiStore , $rootScope.storepk);
+
       $scope.currency ==''
       $scope.currency = settings_currencySymbol;
 
@@ -704,33 +703,25 @@ app.directive('productCard', function() {
           $scope.selectedProdVar=$scope.prodVarList[0];
         }
 
-        console.log("inventory : " , INVENTORY_ENABLED);
-
-
         $scope.$watch('selectedProdVar', function(newValue, oldValue) {
-          // if (oldValue.str != newValue.str) {
-          //   console.log('watch');
-          //   $scope.list.product.price = newValue.amnt
-          // }
-          // console.log($rootScope.inCart);
-          // console.log($rootScope.addToCart);
+
+          console.log('inside watch');
+
 
           if (INVENTORY_ENABLED == 'False') {
             $scope.selectedProdVar.inStock = 1000;
           }
 
-
-
           if ($scope.selectedProdVar.qty!=null) {
             $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
           }
+
           if (newValue.sku!=undefined) {
 
             if ($scope.me) {
               // console.log('if');
               for (var i = 0; i < $rootScope.inCart.length; i++) {
                   if(newValue.sku==$rootScope.inCart[i].prodSku){
-                    // console.log($rootScope.inCart[i].qty , 'if');
                     $scope.list.added_cart = $rootScope.inCart[i].qty
                     break;
                   }
@@ -750,7 +741,6 @@ app.directive('productCard', function() {
               }
               }
             }else {
-              // console.log('else');
               for (var i = 0; i < $rootScope.addToCart.length; i++) {
                   if(newValue.sku==$rootScope.addToCart[i].prodSku){
                     $scope.list.added_cart = $rootScope.addToCart[i].qty
@@ -764,7 +754,7 @@ app.directive('productCard', function() {
 
 
             if ($scope.list.product.serialNo == newValue.sku ){
-              console.log('parent',newValue.sku );
+              // console.log('parent',newValue.sku );
 
               for (var i = 0; i < $scope.list.variantsInStoreQty.length; i++) {
                 if ($scope.list.variantsInStoreQty[i].productVariant==null && $scope.list.variantsInStoreQty[i].store==$scope.storePK) {
@@ -775,7 +765,7 @@ app.directive('productCard', function() {
                     $scope.selectedProdVar.inStock = 1000;
                   }
 
-                  console.log('yes');
+                  // console.log('yes');
                   break;
                 }else {
                   if (INVENTORY_ENABLED == 'True') {
@@ -937,10 +927,8 @@ app.directive('productCard', function() {
 
 
       if ($scope.list.product.unit == 'Size and Color' || $scope.list.product.unit == 'Size') {
-        console.log('size and xolor');
         $scope.getProdVarSize()
       }else {
-        console.log('normal');
         $scope.getProdVar()
       }
 

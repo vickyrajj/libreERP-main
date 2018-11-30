@@ -223,7 +223,8 @@
                 <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br />
                 <span><strong>Serial Id : </strong>{{data.serialId}}</span><br />
                 <span><strong>Units / Pack:</strong>{{data.unitPerpack}}</span><br />
-                <span><strong>Price : </strong>{{data.price}}</span>
+                <span><strong>Price : </strong>{{data.price}}</span> <br />
+                <span ng-if="data.description">{{data.description}}</span> <br />
                 <!-- <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a> -->
                 <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default"
                   class="btn-danger btn-sm  pull-right" style="padding-bottom: 9px;"> <i class="fa fa-trash fa-lg"></i> </button>

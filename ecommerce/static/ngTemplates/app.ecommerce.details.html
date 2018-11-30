@@ -34,7 +34,7 @@
           </div>
           <div class="col-md-6">
             <span ng-show="prodVarList.length>1">
-              <select class="form-control" style="border:1px solid #eee" ng-options="pv.str for pv in prodVarList" ng-model="selectedProdVar">
+              <select class="form-control" style="border:1px solid #eee" ng-options="pv.str for pv in prodVarList" ng-model="selectedProdVar.toWatch">
               </select>
             </span>
           </div>
@@ -64,16 +64,16 @@
           <div class="col-md-6 col-xs-6">
 
             <div class="row">
-              <span ng-if="details.product.serialNo==selectedProdVar.sku" style="font-size:30px;padding-left:10px"><i class="fa {{currency}}"></i>
+              <span ng-if="details.product.serialNo==selectedProdVar.toWatch.sku" style="font-size:30px;padding-left:10px"><i class="fa {{currency}}"></i>
                 <span ng-if="details.product.discount>0">{{details.product.discountedPrice.toFixed(2)}} </span>
 
               <span ng-if="details.product.discount>0" class="text-muted"><strike>{{details.product.price}}</strike> </span>
               <span ng-if="details.product.discount==0">{{details.product.price}} </span>
               </span>
-              <span ng-if="details.product.serialNo!=selectedProdVar.sku" style="font-size:30px;padding-left:10px">
-                <span ng-if = "selectedProdVar.amnt == selectedProdVar.disc"><i class="fa {{currency}}"></i>{{selectedProdVar.amnt}}</span>
-              <span ng-if="selectedProdVar.amnt != selectedProdVar.disc"><i class="fa {{currency}}"></i>{{selectedProdVar.disc}} </span>
-              <span ng-if="selectedProdVar.amnt != selectedProdVar.disc" class="text-muted"><strike>{{selectedProdVar.amnt}}</strike> </span>
+              <span ng-if="details.product.serialNo!=selectedProdVar.toWatch.sku" style="font-size:30px;padding-left:10px">
+                <span ng-if = "selectedProdVar.toWatch.amnt == selectedProdVar.disc"><i class="fa {{currency}}"></i>{{selectedProdVar.toWatch.amnt}}</span>
+              <span ng-if="selectedProdVar.toWatch.amnt != selectedProdVar.toWatch.disc"><i class="fa {{currency}}"></i>{{selectedProdVar.toWatch.disc}} </span>
+              <span ng-if="selectedProdVar.toWatch.amnt != selectedProdVar.toWatch.disc" class="text-muted"><strike>{{selectedProdVar.toWatch.amnt}}</strike> </span>
               </span>
             </div>
             <div class="row">
@@ -83,9 +83,9 @@
           </div>
         </div>
         <div class="row" style="padding:10px;" ng-if="me != null">
-          <div ng-if="selectedProdVar.inStock>0">
+          <div ng-if="selectedProdVar.toWatch.inStock>0">
           <div class="col-md-12 " ng-if="showOptions&&details.added_cart<=0">
-            <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;" ng-if="selectedProdVar.inStock>0&&me.pk">
+            <div class="row container-fluid text-center" style="background-color:#2980b9; color:white; padding:5px 0px;" ng-if="selectedProdVar.toWatch.inStock>0&&me.pk">
               <span ng-click="addToCart(details.pk)" style="cursor:pointer;">
                   <span style="font-size:15px;"><b> Add To Cart </b></span>
               <i class="fa fa-shopping-cart fa-2x"></i>
@@ -112,12 +112,12 @@
             </div>
           </div>
         </div>
-        <div class="col-md-12" ng-if="!showOptions||selectedProdVar.inStock<=0||!selectedProdVar.inStock">
+        <div class="col-md-12" ng-if="!showOptions||selectedProdVar.toWatch.inStock<=0||!selectedProdVar.toWatch.inStock">
           <span style="font-size:25px;color:#ef4a1e">Out Of Stock</span>
         </div>
         </div>
         <div class="row" style="padding:10px;" ng-if="me == null">
-          <div ng-if="selectedProdVar.inStock>0">
+          <div ng-if="selectedProdVar.toWatch.inStock>0">
           <div class="col-md-12" ng-if="showOptions&&details.added_cart<=0">
             <div class="row container-fluid text-center" style="background-color:#5980b9; color:white; padding:5px 0px;" >
               <span ng-click="createCookieDetail(details)" style="cursor:pointer;">
@@ -146,7 +146,7 @@
             </div>
           </div>
         </div>
-          <div class="col-md-12" ng-if="!showOptions||selectedProdVar.inStock<=0">
+          <div class="col-md-12" ng-if="!showOptions||selectedProdVar.toWatch.inStock<=0">
             <span style="font-size:25px;color:#ef4a1e">Out Of Stock</span>
           </div>
         </div>

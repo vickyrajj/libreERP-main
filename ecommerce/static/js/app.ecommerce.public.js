@@ -978,7 +978,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     //     }
     //   }
 
-    console.log($scope.selectedProdVar, $scope.selectedColor ,'1010');
+    console.log($scope.selectedProdVar.toWatch, $scope.selectedColor ,'1010');
 
     dataToSend = {
       product: inputPk,
@@ -993,7 +993,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     if ($scope.prodVariant == '') {
       dataToSend.prodSku = $scope.details.product.serialNo
     } else {
-      dataToSend.prodSku = $scope.selectedProdVar.sku
+      dataToSend.prodSku = $scope.selectedProdVar.toWatch.sku
     }
 
     $http({
@@ -1022,10 +1022,10 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.increment = function(inputPk) {
 
     for (var i = 0; i < $rootScope.inCart.length; i++) {
-      if ($rootScope.inCart[i].prodSku == $scope.selectedProdVar.sku) {
+      if ($rootScope.inCart[i].prodSku == $scope.selectedProdVar.toWatch.sku) {
         if ($rootScope.inCart[i].typ == 'cart') {
           console.log($rootScope.inCart[i]);
-          // if ($rootScope.inCart[i].prodSku!=$scope.selectedProdVar.sku) {
+          // if ($rootScope.inCart[i].prodSku!=$scope.selectedProdVar.toWatch.sku) {
           //   Flash.create('warning' , 'You cant buy product and combo together')
           //   return
           // }
@@ -1049,7 +1049,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.decrement = function(inputPk) {
     $scope.details.added_cart--
     for (var i = 0; i < $rootScope.inCart.length; i++) {
-      if ($rootScope.inCart[i].prodSku == $scope.selectedProdVar.sku) {
+      if ($rootScope.inCart[i].prodSku == $scope.selectedProdVar.toWatch.sku) {
         if ($rootScope.inCart[i].typ == 'cart') {
           if ($scope.details.added_cart == 0) {
             $rootScope.inCart[i].qty = $rootScope.inCart[i].qty - 1;
@@ -1185,7 +1185,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     $scope.details.added_cart++
     for (var i = 0; i < $rootScope.addToCart.length; i++) {
       console.log(details.pk, 'aaaaaaaaaaaaa');
-      if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
+      if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.toWatch.sku) {
         $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty + 1
         setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
       }
@@ -1196,7 +1196,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     console.log("aaaaaaaaaaaaaaaaaaa");
     $scope.details.added_cart--
     for (var i = 0; i < $rootScope.addToCart.length; i++) {
-      if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
+      if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.toWatch.sku) {
         // $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty-1
         // setCookie("addToCart", JSON.stringify($rootScope.addToCart) , 365);
         if ($scope.details.added_cart == 0) {
@@ -1268,7 +1268,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     console.log(product, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     if ($rootScope.addToCart != undefined) {
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.sku) {
+        if ($rootScope.addToCart[i].prodSku == $scope.selectedProdVar.toWatch.sku) {
           Flash.create("warning", "Product Already in Cart")
           return
         }
@@ -1279,10 +1279,10 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     $scope.item = {
       'productName': $scope.details.product.name,
       'qty': 1,
-      'prodSku': $scope.selectedProdVar.sku,
-      'prod_howMuch': $scope.selectedProdVar.qty,
-      'price': $scope.selectedProdVar.amnt,
-      'unit': $scope.selectedProdVar.unit,
+      'prodSku': $scope.selectedProdVar.toWatch.sku,
+      'prod_howMuch': $scope.selectedProdVar.toWatch.qty,
+      'price': $scope.selectedProdVar.toWatch.amnt,
+      'unit': $scope.selectedProdVar.toWatch.unit,
       'prodPk': $scope.details.pk
     }
 
@@ -1309,21 +1309,13 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   }
 
 
-
+  $scope.selectedProdVar = {}
 
   $scope.getProdVar = function() {
-
-    console.log($scope.details, '#############');
-
     $scope.prod_var = $scope.details.product_variants;
     $scope.prodVarList = []
     $scope.details.product.unit = $filter('getUnit')($scope.details.product.unit);
-    // if($scope.details.product.unit!='Size'){
-      var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
-    // }
-    // else{
-    //     var str = $filter('convertSize')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
-    // }
+    var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
     $scope.prodVarList = [{
       str: str,
       qty: $scope.details.product.howMuch,
@@ -1334,12 +1326,8 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
     if ($scope.prod_var) {
       for (var i = 0; i < $scope.prod_var.length; i++) {
-          // if($scope.details.product.unit!='Size'){
-            str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
-          // }
-          // else {
-            // str = $filter('convertSize')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
-          // }
+        str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
+
         $scope.prodVarList.push({
           pk: $scope.prod_var[i].id,
           str: str,
@@ -1352,85 +1340,66 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
       }
     }
 
-    console.log($state.params.sku);
     for (var i = 0; i < $scope.prodVarList.length; i++) {
-      console.log($scope.prodVarList);
       if ($scope.prodVarList[i].sku == $state.params.sku) {
-        console.log($state.params.sku);
-        $scope.selectedProdVar = $scope.prodVarList[i];
-
+        $scope.selectedProdVar.toWatch = $scope.prodVarList[i];
       } else {
-        $scope.selectedProdVar = $scope.prodVarList[0];
-      }
-      if (INVENTORY_ENABLED == 'False') {
-        $scope.selectedProdVar.inStock = 1000;
+        $scope.selectedProdVar.toWatch = $scope.prodVarList[0];
       }
     }
 
 
-    $scope.$watch('selectedProdVar', function(newValue, oldValue) {
-      // if($scope.selectedProdVar.unit !='Size' ){
-        if ($scope.selectedProdVar.qty != null) {
-          $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
-        }
-      // }
-      // else{
-      //   console.log("heeeeeeeerrrrrrreeeeeeeeee");
-      //   if ($scope.selectedProdVar.qty != null) {
-      //     $scope.quantity = $filter('convertSize')($scope.selectedProdVar.qty, $scope.selectedProdVar.unit);
-      //   }
-      // }
-      console.log($scope.quantity, 'rrrr');
+    $scope.$watch('selectedProdVar.toWatch', function(newValue, oldValue) {
 
-      if (newValue.sku != undefined) {
+      if (INVENTORY_ENABLED == 'False') {
+        $scope.selectedProdVar.toWatch.inStock = 1000;
+      }
 
-        if ($scope.me) {
-          for (var i = 0; i < $rootScope.inCart.length; i++) {
-            console.log(newValue.sku, $rootScope.inCart[i].prodSku, 'aaaaaaaaammmmmmmmmmkkkkkkkkkkkkk');
-            if (newValue.sku == $rootScope.inCart[i].prodSku) {
-              console.log($rootScope.inCart[i].qty, 'if');
-              $scope.details.added_cart = $rootScope.inCart[i].qty
-              console.log($scope.details.added_cart, 'adddddddddddddddvccccccccccccc');
-            } else {
-              $scope.details.added_cart = 0
+      if ($scope.selectedProdVar.toWatch.qty != null) {
+        $scope.quantity = $filter('convertUnit')($scope.selectedProdVar.toWatch.qty, $scope.selectedProdVar.toWatch.unit);
+      }
+
+        if (newValue.sku != undefined) {
+          if ($scope.me) {
+            for (var i = 0; i < $rootScope.inCart.length; i++) {
+              if (newValue.sku == $rootScope.inCart[i].prodSku) {
+                $scope.details.added_cart = $rootScope.inCart[i].qty
+                break;
+              } else {
+                $scope.details.added_cart = 0
+              }
+            }
+          } else {
+            for (var i = 0; i < $rootScope.addToCart.length; i++) {
+              if (newValue.sku == $rootScope.addToCart[i].prodSku) {
+                $scope.details.added_cart = $rootScope.addToCart[i].qty
+                break;
+              } else {
+                $scope.details.added_cart = 0
+              }
             }
           }
-        } else {
-          for (var i = 0; i < $rootScope.addToCart.length; i++) {
-            if (newValue.sku == $rootScope.addToCart[i].prodSku) {
-              console.log($rootScope.addToCart[i].qty, 'if');
-              $scope.details.added_cart = $rootScope.addToCart[i].qty
-            } else {
-              $scope.details.added_cart = 0
-            }
-          }
-        }
 
 
-
-
-        console.log('parent', $scope.details.product.serialNo, newValue.sku);
         if ($scope.details.product.serialNo == newValue.sku) {
 
           // $scope.list.price = $scope.list.product.discountedPrice
           for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
-            console.log('lllllllllllll', $scope.details.variantsInStoreQty[i].productVariant);
             if ($scope.details.variantsInStoreQty[i].productVariant == null && $scope.details.variantsInStoreQty[i].store == $scope.storePK) {
 
               if (INVENTORY_ENABLED == 'True') {
-                $scope.selectedProdVar.inStock = $scope.details.variantsInStoreQty[i].quantity;
-                console.log($scope.selectedProdVar.inStock, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2');
-                console.log('yes');
+                $scope.selectedProdVar.toWatch.inStock = $scope.details.variantsInStoreQty[i].quantity;
+                console.log($scope.details.variantsInStoreQty[i].quantity);
               } else {
-                $scope.selectedProdVar.inStock = 1000;
+                $scope.selectedProdVar.toWatch.inStock = 1000;
               }
               break;
 
             } else {
               if (INVENTORY_ENABLED == 'True') {
-                $scope.selectedProdVar.inStock = 0
+                $scope.selectedProdVar.toWatch.inStock = 0
               } else {
-                $scope.selectedProdVar.inStock = 1000;
+                $scope.selectedProdVar.toWatch.inStock = 1000;
               }
             }
           }
@@ -1439,13 +1408,13 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
           console.log('child');
 
           for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
-            console.log($scope.details.variantsInStoreQty[i].productVariant, $scope.selectedProdVar);
-            if ($scope.details.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk && $scope.details.variantsInStoreQty[i].store == $scope.storePK) {
+            console.log($scope.details.variantsInStoreQty[i].productVariant, $scope.selectedProdVar.toWatch);
+            if ($scope.details.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.toWatch.pk && $scope.details.variantsInStoreQty[i].store == $scope.storePK) {
 
               if (INVENTORY_ENABLED == 'True') {
-                $scope.selectedProdVar.inStock = $scope.details.variantsInStoreQty[i].quantity
+                $scope.selectedProdVar.toWatch.inStock = $scope.details.variantsInStoreQty[i].quantity
               } else {
-                $scope.selectedProdVar.inStock = 1000;
+                $scope.selectedProdVar.toWatch.inStock = 1000;
               }
 
               console.log('yes');
@@ -1453,18 +1422,18 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
             } else {
 
               if (INVENTORY_ENABLED == 'True') {
-                $scope.selectedProdVar.inStock = 0;
+                $scope.selectedProdVar.toWatch.inStock = 0;
               } else {
-                $scope.selectedProdVar.inStock = 1000;
+                $scope.selectedProdVar.toWatch.inStock = 1000;
               }
             }
           }
 
           $scope.details.price = newValue.amnt
         }
-        console.log($scope.selectedProdVar.inStock, 'ffffffffff');
+        console.log($scope.selectedProdVar.toWatch.inStock, 'ffffffffff');
       }
-    })
+    }, true);
 
   }
 
@@ -1504,14 +1473,17 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
       }
     }
-    $scope.selectedProdVar = $scope.prodVarList[0];
+    $scope.selectedProdVar.toWatch = $scope.prodVarList[0];
 
-      $scope.$watch('selectedProdVar', function(newValue, oldValue) {
+      $scope.$watch('selectedProdVar.toWatch', function(newValue, oldValue) {
+
+
+        console.log('inside watch');
 
 
         $scope.prodColors = newValue.prodDesc.split(',')
         $scope.selectedColor = $scope.prodColors[0]
-        $scope.quantity = $scope.selectedProdVar.str
+        $scope.quantity = $scope.selectedProdVar.toWatch.str
 
 
         if (newValue.sku != undefined) {
@@ -1538,19 +1510,19 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
 
         for (var i = 0; i < $scope.details.variantsInStoreQty.length; i++) {
-          if ($scope.details.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.pk && $scope.details.variantsInStoreQty[i].store == $scope.storePK) {
+          if ($scope.details.variantsInStoreQty[i].productVariant == $scope.selectedProdVar.toWatch.pk && $scope.details.variantsInStoreQty[i].store == $scope.storePK) {
 
             if (INVENTORY_ENABLED == 'True') {
-              $scope.selectedProdVar.inStock = $scope.details.variantsInStoreQty[i].quantity
+              $scope.selectedProdVar.toWatch.inStock = $scope.details.variantsInStoreQty[i].quantity
             } else {
-              $scope.selectedProdVar.inStock = 1000;
+              $scope.selectedProdVar.toWatch.inStock = 1000;
             }
             break;
           } else {
             if (INVENTORY_ENABLED == 'True') {
-              $scope.selectedProdVar.inStock = 0;
+              $scope.selectedProdVar.toWatch.inStock = 0;
             } else {
-              $scope.selectedProdVar.inStock = 1000;
+              $scope.selectedProdVar.toWatch.inStock = 1000;
             }
           }
         }
@@ -1572,7 +1544,7 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     }else {
       $scope.getProdVar()
     }
-  }, 3000);
+  }, 5000);
 
 });
 
@@ -3213,9 +3185,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
-    console.log(decodedCookie);
     var ca = decodedCookie.split(';');
-    console.log(ca);
     for (var i = 0; i < ca.length; i++) {
       var c = ca[i];
       while (c.charAt(0) == ' ') {
