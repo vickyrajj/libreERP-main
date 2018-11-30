@@ -1,12 +1,12 @@
 app.config(function($stateProvider){
-  $stateProvider.state('projectManagement.LMS.evaluation', {
+  $stateProvider.state('home.LMS.evaluation', {
     url: "/evaluation",
     templateUrl: '/static/ngTemplates/app.LMS.evaluation.html',
-    controller: 'projectManagement.LMS.evaluation'
+    controller: 'home.LMS.evaluation'
   });
 });
 
-app.controller('projectManagement.LMS.evaluation', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
 
   $scope.data = {
     tableData: []
@@ -87,12 +87,12 @@ app.controller('projectManagement.LMS.evaluation', function($scope, $http, $asid
 
 });
 
-app.controller("projectManagement.LMS.evaluation.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.evaluation.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
   $scope.paper = $scope.tab.data.paper;
 });
 
 
-app.controller("projectManagement.LMS.evaluation.form", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.evaluation.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $scope.resetForm=function(){
     $scope.selectedquestions=[]
@@ -225,7 +225,7 @@ app.controller("projectManagement.LMS.evaluation.form", function($scope, $state,
 
 
 
-// app.controller('projectManagement.LMS.evaluation', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+// app.controller('home.LMS.evaluation', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
 //   // settings main page controller
 //
 //   $scope.data = {
@@ -236,7 +236,7 @@ app.controller("projectManagement.LMS.evaluation.form", function($scope, $state,
 //     name: 'list',
 //     icon: 'fa-th-large',
 //     template: '/static/ngTemplates/genericTable/genericSearchList.html',
-//     itemTemplate: '/static/ngTemplates/projectManagement.LMS.evaluation.item.html',
+//     itemTemplate: '/static/ngTemplates/home.LMS.evaluation.item.html',
 //   }, ];
 //
 //   var options = {

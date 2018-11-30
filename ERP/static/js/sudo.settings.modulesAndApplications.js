@@ -1,5 +1,5 @@
 
-app.controller('admin.settings.modulesAndApps' , function($scope , $http , $aside , $state , Flash , $users , $filter){
+app.controller('home.settings.modulesAndApps' , function($scope , $http , $aside , $state , Flash , $users , $filter){
 
   $scope.url = '/api/ERP/applicationAdminMode/';
 
@@ -80,7 +80,7 @@ app.controller('admin.settings.modulesAndApps' , function($scope , $http , $asid
 
 });
 
-app.controller('sudo.admin.settings.modulesAndApplications.editor' , function($scope , $http , $aside , $state , Flash , $users , $filter){
+app.controller('sudo.home.settings.modulesAndApplications.editor' , function($scope , $http , $aside , $state , Flash , $users , $filter){
 
   $scope.ownersSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query)
@@ -116,7 +116,7 @@ app.controller('sudo.admin.settings.modulesAndApplications.editor' , function($s
 })
 
 // controller for the inline form in the modal window of the application edit form
-app.controller('sudo.admin.settings.modulesAndApplications.appSettings' , function($scope , $http , $aside , $state , Flash , $users , $filter){
+app.controller('sudo.home.settings.modulesAndApplications.appSettings' , function($scope , $http , $aside , $state , Flash , $users , $filter){
   $scope.editor = {index : -1};
 
   $scope.new = function(){

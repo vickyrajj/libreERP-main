@@ -17,7 +17,7 @@ class userSearchSerializer(serializers.ModelSerializer):
     profile = userProfileLiteSerializer(many=False , read_only=True)
     class Meta:
         model = User
-        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' , 'social' , 'designation' )
+        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile'  , 'designation' )
 
 
 class rankSerializer(serializers.ModelSerializer):
@@ -82,8 +82,8 @@ class userSerializer(serializers.ModelSerializer):
     payroll = payrollLiteSerializer(many = False , read_only = True)
     class Meta:
         model = User
-        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' , 'designation' ,'profile'  ,'settings' , 'password' , 'social', 'payroll')
-        read_only_fields = ('designation' , 'profile' , 'settings' ,'social', 'payroll' )
+        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' , 'designation' ,'profile'  ,'settings' , 'password' , 'payroll')
+        read_only_fields = ('designation' , 'profile' , 'settings' , 'payroll' )
         extra_kwargs = {'password': {'write_only': True} }
     def create(self , validated_data):
         raise PermissionDenied(detail=None)

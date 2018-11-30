@@ -3,19 +3,19 @@
 app.config(function($stateProvider){
 
   $stateProvider
-  .state('projectManagement.LMS', {
+  .state('home.LMS', {
     url: "/LMS",
     views: {
        "": {
           templateUrl: '/static/ngTemplates/genericAppBase.html',
        },
-       "menu@projectManagement.LMS": {
+       "menu@home.LMS": {
           templateUrl: '/static/ngTemplates/genericMenu.html',
           controller : 'controller.generic.menu',
         },
-        "@projectManagement.LMS": {
+        "@home.LMS": {
           templateUrl: '/static/ngTemplates/app.LMS.default.html',
-          // controller : 'projectManagement.LMS.default',
+          // controller : 'home.LMS.default',
         }
     }
   })

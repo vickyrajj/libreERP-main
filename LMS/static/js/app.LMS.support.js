@@ -1,12 +1,12 @@
 app.config(function($stateProvider){
-  $stateProvider.state('projectManagement.LMS.support', {
+  $stateProvider.state('home.LMS.support', {
     url: "/support",
     templateUrl: '/static/ngTemplates/app.LMS.support.html',
-    controller: 'projectManagement.LMS.support'
+    controller: 'home.LMS.support'
   });
 });
 
-app.controller("projectManagement.LMS.support", function($scope, $state, $users, $stateParams, $http, Flash , $timeout, $interval) {
+app.controller("home.LMS.support", function($scope, $state, $users, $stateParams, $http, Flash , $timeout, $interval) {
 
      $scope.names = [
        {name : 'visitor1',messages : [{msg : "hi",sentByMe:false}],email:"visitor1@gmail.com",address:"Siliguri,west bengal",location:"78.108.48.149",time:"4.20 pm",chattime:"17.02",isOnline:true},

@@ -1,12 +1,12 @@
 app.config(function($stateProvider){
-  $stateProvider.state('projectManagement.LMS.courses', {
+  $stateProvider.state('home.LMS.courses', {
     url: "/courses",
     templateUrl: '/static/ngTemplates/app.LMS.courses.html',
-    controller: 'projectManagement.LMS.courses'
+    controller: 'home.LMS.courses'
   });
 });
 
-app.controller("projectManagement.LMS.courses", function($scope, $state, $users, $stateParams, $http, Flash , $timeout) {
+app.controller("home.LMS.courses", function($scope, $state, $users, $stateParams, $http, Flash , $timeout) {
 
 
   $scope.data = {
@@ -101,7 +101,7 @@ app.controller("projectManagement.LMS.courses", function($scope, $state, $users,
 
 });
 
-app.controller("projectManagement.LMS.courses.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.courses.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $scope.course = $scope.tab.data.course;
 
@@ -203,7 +203,7 @@ app.controller("projectManagement.LMS.courses.explore", function($scope, $state,
 
 });
 
-app.controller("projectManagement.LMS.courses.form", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $scope.topicSearch = function(query) {
     return $http.get( '/api/LMS/topic' +'?title__contains=' + query).

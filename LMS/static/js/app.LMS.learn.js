@@ -1,12 +1,12 @@
 app.config(function($stateProvider) {
-  $stateProvider.state('projectManagement.LMS.learn', {
+  $stateProvider.state('home.LMS.learn', {
     url: "/learn",
     templateUrl: '/static/ngTemplates/app.LMS.learn.html',
-    controller: 'projectManagement.LMS.learn'
+    controller: 'home.LMS.learn'
   });
 });
 
-app.controller("projectManagement.LMS.course.explore", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $uibModal , $sce,$rootScope) {
+app.controller("home.LMS.course.explore", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $uibModal , $sce,$rootScope) {
   $scope.course = $scope.tab.data.course;
 
   $scope.openVideo = function(id) {
@@ -43,7 +43,7 @@ app.controller("projectManagement.LMS.course.explore", function($scope, $state, 
         }
       },
 
-      controller: "projectManagement.learn.video.new" ,
+      controller: "home.learn.video.new" ,
     }).result.then(function() {
 
     }, function() {
@@ -69,7 +69,7 @@ app.controller("projectManagement.LMS.course.explore", function($scope, $state, 
         }
       },
 
-      controller: "projectManagement.learn.videos.new" ,
+      controller: "home.learn.videos.new" ,
     }).result.then(function() {
 
     }, function() {
@@ -81,7 +81,7 @@ app.controller("projectManagement.LMS.course.explore", function($scope, $state, 
 });
 
 
-app.controller("projectManagement.LMS.videos.explore", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $uibModal , $sce) {
+app.controller("home.LMS.videos.explore", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $uibModal , $sce) {
   console.log();
   $scope.video = $scope.tab.data.video;
 
@@ -101,7 +101,7 @@ app.controller("projectManagement.LMS.videos.explore", function($scope, $state, 
         }
       },
 
-      controller: "projectManagement.learn.video.new" ,
+      controller: "home.learn.video.new" ,
     }).result.then(function() {
 
     }, function() {
@@ -204,7 +204,7 @@ app.controller("projectManagement.LMS.videos.explore", function($scope, $state, 
 //
 });
 
-app.controller("projectManagement.learn.video.new" , function($scope, $uibModalInstance , video , channelID,$http,Flash) {
+app.controller("home.learn.video.new" , function($scope, $uibModalInstance , video , channelID,$http,Flash) {
 
   console.log(channelID);
 
@@ -268,7 +268,7 @@ app.controller("projectManagement.learn.video.new" , function($scope, $uibModalI
     };
 });
 
-app.controller("projectManagement.LMS.learn", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $uibModal , $sce, $rootScope) {
+app.controller("home.LMS.learn", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $uibModal , $sce, $rootScope) {
 
   $scope.data = {
     tableData: [],
@@ -429,7 +429,7 @@ app.controller("projectManagement.LMS.learn", function($scope, $state, $users, $
         return {};
         }
       },
-      controller: "projectManagement.learn.videos.new",
+      controller: "home.learn.videos.new",
     }).result.then(function() {
       // console.log($scope.videoForm);
 
@@ -456,7 +456,7 @@ app.controller("projectManagement.LMS.learn", function($scope, $state, $users, $
         }
       },
 
-      controller: "projectManagement.learn.video.new" ,
+      controller: "home.learn.video.new" ,
     }).result.then(function() {
 
     }, function() {
@@ -467,7 +467,7 @@ app.controller("projectManagement.LMS.learn", function($scope, $state, $users, $
 });
 
 
-app.controller("projectManagement.learn.videos.new", function($scope, $uibModalInstance , course ,$http,Flash) {
+app.controller("home.learn.videos.new", function($scope, $uibModalInstance , course ,$http,Flash) {
 
     $scope.tinymceOptions = {
       selector: 'textarea',

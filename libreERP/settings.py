@@ -95,33 +95,33 @@ INSTALLED_APPS = (
     'robots',
     'API', # uncategorised REST points
     'ERP', # permissions, overall management of the platform
-    'HR', # people aspect of the platform
-    'PIM', # personal information manager
-    'social', # social networking client
     'homepage', # landing page
-    'mail', # mail application
-    'businessManagement', # BM application
-    'ecommerce', # ecommerce
-    'projectManagement',
-    'gitweb', # github.com local server with file browsing and diff viewer
-    'taskBoard',
-    'projects',
-    'virtualWorkforce',
-	'finance',# billing , invoicing , finance etc
-	'tools',# general purpose tools like OCR, AI or big data related stuffs
-	'events',# to manage events like test, hackathon or something like that
-	'clientRelationships',# CRM like sales force
-	'LMS',# LMS
-	'POS',# POS terminal like tally
+    'HR', # people aspect of the platform
+    'LMS',# LMS
+    'PIM', # personal information manager
 	'tutor',# canvas
-	'workforceManagement',# canvas
-    'support',# canvas
-	'employees',# employees details
-	'performance',# performance
-	'recruitment',# recruitment
-	'organization',# organization
-	'logistic',# logistics
-	'assets',# assets
+    # 'projectManagement',
+    # 'mail', # mail application
+    # 'social', # social networking client
+	# 'logistic',# logistics
+    # 'organization',# organization
+    # 'performance',# performance
+    # 'gitweb', # github.com local server with file browsing and diff viewer
+    # 'projects',
+    # 'workforceManagement',# canvas
+    # 'taskBoard',
+    # 'recruitment',# recruitment
+    # 'employees',# employees details
+    # 'businessManagement', # BM application
+    # 'support',# canvas
+    # 'tools',# general purpose tools like OCR, AI or big data related stuffs
+    # 'finance',# billing , invoicing , finance etc
+    # 'events',# to manage events like test, hackathon or something like that
+    # 'virtualWorkforce',
+	# 'assets',# assets
+    # 'clientRelationships',# CRM like sales force
+    # 'ecommerce', # ecommerce
+    # 'POS',# POS terminal like tally
     # 'payroll',# payroll
 	# 'productsInventory',# inventory for POS products
     # 'warehouse',# warehouse application

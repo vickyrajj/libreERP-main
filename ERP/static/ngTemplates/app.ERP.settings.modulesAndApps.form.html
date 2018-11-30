@@ -3,7 +3,7 @@
   <h3 class="modal-title" ng-if="mode == 'new'">Create a new app/module</h3>
 </div>
 
-<div ng-controller="sudo.admin.settings.modulesAndApplications.editor">
+<div ng-controller="sudo.home.settings.modulesAndApplications.editor">
   <div class="modal-body" ng-if="mode == 'edit'" >
     <div class="container-fluid">
       <strong>Parent module : </strong> {{data.module.name}}
@@ -44,7 +44,7 @@
               <li><code>configure.[module].[state].[app]</code> is used for the settings for the app/module. Owners can assign / revoke the users access to this app. The owners can also access this app to configure the behaviour of the application as experienced by the users. </li>
               <li><code>sudo.[module].[state].[app]</code> is used for the super user access to the master settings of the app/module. The owner can assign owners of the <code>configure.[module].[state].[app]</code> object.</li> The owners can not transfer/assign ownership to any user.
             </ul>
-            The last two permissions will enable the <strong>[module]</strong> tab on the user's poral. <code>sudo.admin.settings.modulesAndApplications</code> is the superuser only app and can only assign other <code>sudo.[module].[state].[app]</code> applications to users as owners.
+            The last two permissions will enable the <strong>[module]</strong> tab on the user's poral. <code>sudo.home.settings.modulesAndApplications</code> is the superuser only app and can only assign other <code>sudo.[module].[state].[app]</code> applications to users as owners.
             <br>
             This field is unique in the column.
           </p>

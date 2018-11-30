@@ -1,12 +1,12 @@
 app.config(function($stateProvider) {
-  $stateProvider.state('projectManagement.LMS.configure', {
+  $stateProvider.state('home.LMS.configure', {
     url: "/configure",
     templateUrl: '/static/ngTemplates/app.LMS.configure.html',
-    controller: 'projectManagement.LMS.configure'
+    controller: 'home.LMS.configure'
   });
 });
 
-app.controller("projectManagement.LMS.configure", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.configure", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $scope.data = {
     tableData: [],
@@ -171,7 +171,7 @@ app.controller("projectManagement.LMS.configure", function($scope, $state, $user
 
 });
 
-app.controller("projectManagement.LMS.configure.form", function($scope, $state, $users, $stateParams, $filter, $uibModal, $http, Flash) {
+app.controller("home.LMS.configure.form", function($scope, $state, $users, $stateParams, $filter, $uibModal, $http, Flash) {
   $scope.mode = 'topic';
   $scope.hideBook = 'no'
   $scope.secArr = false

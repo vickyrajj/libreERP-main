@@ -1,17 +1,17 @@
 app.config(function($stateProvider){
-  $stateProvider.state('projectManagement.LMS.knowledgeBank', {
+  $stateProvider.state('home.LMS.knowledgeBank', {
     url: "/knowledgeBank",
     templateUrl: '/static/ngTemplates/app.LMS.knowledgeBank.html',
-    controller: 'projectManagement.LMS.knowledgeBank'
+    controller: 'home.LMS.knowledgeBank'
   });
 });
 
-// app.controller("projectManagement.LMS.knowledgeBank.book.explore", function($scope,$timeout,$filter, $state, $users, $stateParams, $http, Flash) {
+// app.controller("home.LMS.knowledgeBank.book.explore", function($scope,$timeout,$filter, $state, $users, $stateParams, $http, Flash) {
 //   $scope.bookData = $scope.bookDetails
 //   console.log('ccccccccccccc'.$scope.bookData);
 // })
 
-app.controller("projectManagement.LMS.knowledgeBank.book.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.knowledgeBank.book.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
   $scope.bookData = $scope.bookDetails
   $scope.showQues = function(idx){
     $scope.sectionQuestion = $scope.bookData.sections[idx].questions
@@ -62,7 +62,7 @@ app.controller("projectManagement.LMS.knowledgeBank.book.explore", function($sco
 })
 
 
-app.controller("projectManagement.LMS.knowledgeBank", function($scope,$timeout,$filter, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.knowledgeBank", function($scope,$timeout,$filter, $state, $users, $stateParams, $http, Flash) {
 
   $scope.data = {
     tableData: [],
@@ -205,7 +205,7 @@ app.controller("projectManagement.LMS.knowledgeBank", function($scope,$timeout,$
 
 });
 
-app.controller("projectManagement.LMS.knowledgeBank.form", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.knowledgeBank.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   console.log($scope.tab);
 

@@ -34,11 +34,60 @@ app.config(function($stateProvider ){
     templateUrl: '/static/ngTemplates/app.home.calendar.html',
     controller: 'controller.home.calendar'
   })
-  .state('home.notes', {
-    url: "/notes",
-    templateUrl: '/static/ngTemplates/app.home.notes.html',
-    controller: 'controller.home.notes'
+  // .state('home.LMS', {
+  //   url: "/LMS",
+  //   views: {
+  //      "": {
+  //         templateUrl: '/static/ngTemplates/genericAppBase.html',
+  //      },
+  //      "menu@home.LMS": {
+  //         templateUrl: '/static/ngTemplates/genericMenu.html',
+  //         controller : 'controller.generic.menu',
+  //       },
+  //       "@home.LMS": {
+  //         templateUrl: '/static/ngTemplates/app.LMS.default.html',
+  //         // controller : 'home.LMS.default',
+  //       }
+  //   }
+  // })
+  .state('home.manageUsers', {
+    url: "/home",
+    templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
+    controller: 'home.manageUsers'
   })
+
+  .state('home.settings', {
+    url: "/settings",
+    templateUrl: '/static/ngTemplates/app.ERP.settings.default.html',
+    controller: 'home.settings'
+  })
+
+  // .state('home.settings', {
+  //   url: "/settings",
+  //   views: {
+  //      "": {
+  //         templateUrl: '/static/ngTemplates/app.ERP.settings.html',
+  //      },
+  //      "menu@home.settings": {
+  //         templateUrl: '/static/ngTemplates/app.ERP.settings.menu.html',
+  //         controller : 'home.settings.menu'
+  //       },
+  //       "@home.settings": {
+  //         templateUrl: '/static/ngTemplates/app.ERP.settings.default.html',
+  //       }
+  //   }
+  // })
+  //
+  // .state('home.settings.modulesAndApplications', {
+  //   url: "/modulesAndApplications",
+  //   templateUrl: '/static/ngTemplates/app.ERP.settings.modulesAndApps.html',
+  //   controller: 'home.settings.modulesAndApps'
+  // })
+  // .state('home.settings.configure', {
+  //   url: "/configure?app&canConfigure",
+  //   templateUrl: '/static/ngTemplates/app.ERP.settings.configure.html',
+  //   controller: 'home.settings.configure'
+  // })
 
 });
 
@@ -64,6 +113,7 @@ app.controller('controller.home.menu' , function($scope ,$state, $http, $permiss
   $scope.apps = [];
 
   $scope.buildMenu = function(apps){
+    console.log(apps);
     for (var i = 0; i < apps.length; i++) {
       a = apps[i];
       if (a.module != 1) {
@@ -92,6 +142,8 @@ app.controller('controller.home.menu' , function($scope ,$state, $http, $permiss
       $scope.buildMenu(response);
     });
   };
+
+
 
 
 

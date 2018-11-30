@@ -1,4 +1,4 @@
-app.controller('admin.settings.configure.blog' , function($scope , $stateParams , $http , $aside , $state , Flash , $users , $filter){
+app.controller('home.settings.configure.blog' , function($scope , $stateParams , $http , $aside , $state , Flash , $users , $filter){
   console.log('hey');
 
   $scope.editor = {title : '' , pk : null}
@@ -48,7 +48,7 @@ app.controller('admin.settings.configure.blog' , function($scope , $stateParams 
   }
 
 });
-app.controller('admin.settings.configure' , function($scope , $stateParams , $http , $aside , $state , Flash , $users , $filter){
+app.controller('home.settings.configure' , function($scope , $stateParams , $http , $aside , $state , Flash , $users , $filter){
 
   // settings for dashboard controller
   if (typeof $stateParams.canConfigure == 'undefined') {
@@ -88,16 +88,16 @@ app.controller('admin.settings.configure' , function($scope , $stateParams , $ht
 });
 
 
-app.controller('admin.settings.menu' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('home.settings.menu' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
   // settings main page controller
 
   var getState = function(input){
     parts = input.name.split('.');
     // console.log(parts);
     if (parts[0] == 'configure') {
-      return  'admin.settings.configure ({canConfigure :' + input.canConfigure + ', app :"' + parts[2] + '"})'; ;
+      return  'home.settings.configure ({canConfigure :' + input.canConfigure + ', app :"' + parts[2] + '"})'; ;
     } else {
-      return input.name.replace('sudo' , 'admin')
+      return input.name.replace('sudo' , 'home')
     }
   }
 
@@ -130,8 +130,14 @@ app.controller('admin.settings.menu' , function($scope , $http , $aside , $state
     if (angular.isDefined($state.params.app)) {
       return $state.params.app == app.name.split('.')[2]
     } else {
-      return  $state.is(app.name.replace('sudo' , 'admin'))
+      return  $state.is(app.name.replace('sudo' , 'home'))
     }
   }
+
+});
+
+
+app.controller('home.settings' , function($scope , $http , $aside , $state , Flash , $users , $filter){
+
 
 });

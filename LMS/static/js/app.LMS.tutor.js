@@ -1,5 +1,5 @@
 app.config(function($stateProvider){
-  $stateProvider.state('projectManagement.tutor', {
+  $stateProvider.state('home.tutor', {
     url: "/tutor",
     templateUrl: '/static/ngTemplates/app.tutor.html',
     controller: 'projectMan    <!-- </div> -->agement.tutor'
@@ -7,7 +7,7 @@ app.config(function($stateProvider){
 });
 
 
-app.controller("projectManagement.tutor", function($scope, $state, $users, $stateParams, $http, Flash , $timeout) {
+app.controller("home.tutor", function($scope, $state, $users, $stateParams, $http, Flash , $timeout) {
 
   $scope.me = $users.get('mySelf');
   $scope.editor = {pencil : false , eraser:false , eraserSize: 1, rect : false , dragging : false , rectStartX : undefined, rectStartY : undefined,rectEndX : undefined, rectEndY : undefined , eraserStartX : undefined, eraserStartY : undefined , eraserEndX : undefined, eraserEndY : undefined , color:'#000000'}
