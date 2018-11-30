@@ -26,17 +26,20 @@
     <a style="outline: none;border:none"><img class="text-center" src="{{icon_logo}}" alt="" width="200" Style="display:block;margin-left: auto;margin-right: auto;"></a>
 
       <div class="row">
-        <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top:40px;text-align:center">
-          <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}" style="border-radius:25px;" >
-            <i class="fa fa-google fa-2x"></i> Google
+        <div class="col-md-6 col-sm-6 col-xs-12 text-center" style="margin-top:40px;">
+          <a title="Google" class="btn btn-default" href="{% provider_login_url "google" method="oauth2" %}" style="background:#4285F4;color:white;padding:0px;border:2px solid #4285F4" >
+            <!-- <i class="fa fa-google fa-2x"></i> Google -->
+            <img src="/static/images/g-logo.png" style="height:5vh"/> &nbsp;&nbsp; Sign in with Google &nbsp;&nbsp;
           </a>
         </div>
-        <div class="col-md-6 col-sm-6 col-xs-6 text-center" style="margin-top:40px">
-          <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary btn-block" style="border-radius:25px;">
-            <i class="fa fa-facebook fa-2x"></i> Facebook
+        <div class="col-md-6 col-sm-6 col-xs-12 text-center" style="margin-top:40px">
+          <a href="{% provider_login_url "facebook" method="oauth2" %}" class="btn btn-primary" style="background:#ffffff;color:#3b5998;padding:0px;">
+            <!-- <i class="fa fa-facebook fa-2x"></i> Facebook -->
+            <img src="/static/images/facebook.jpg" style="height:5vh"/> &nbsp;&nbsp; Sign in with Facebook &nbsp;
           </a>
-        </div>
+
       </div>
+    </div>
       <hr>
       <div class="row text-center">
         <span style="color:black;font-size:18px;">Login</span>
