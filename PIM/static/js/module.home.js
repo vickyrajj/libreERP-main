@@ -51,7 +51,7 @@ app.config(function($stateProvider ){
   //   }
   // })
   .state('home.manageUsers', {
-    url: "/home",
+    url: "/manageUsers",
     templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
     controller: 'home.manageUsers'
   })
