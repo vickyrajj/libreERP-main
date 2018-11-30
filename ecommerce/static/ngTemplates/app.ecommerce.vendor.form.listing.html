@@ -22,7 +22,6 @@
             <span class="input-group-addon" ng-if=!data.form.product.pk ng-click="openProductmodal()" style="cursor:pointer; background-color:#fff;" >New</span>
             <span class="input-group-addon" ng-if=data.form.product.pk ng-click="openProductmodal()" style="cursor:pointer; background-color:#fff;" >Edit</span>
           </div>
-
         </div>
         <div class="row">
           <div class="col-md-12">
@@ -48,6 +47,11 @@
           <p class="help-block">{{f.helpText}}.</p>
         </div>
 
+
+      </div>
+      <div style="margin-top:5px;margin-bottom:10px">
+        <label >Product Index</label>
+        <input class="form-control" type="number" ng-model="data.form.productIndex">
       </div>
       <div class="btn-group">
         <button ng-if="false" type="button" class="btn btn-default" ng-click="preview()">Preview </button>

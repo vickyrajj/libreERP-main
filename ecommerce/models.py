@@ -86,6 +86,9 @@ class listing(models.Model):
     parentType = models.ForeignKey(genericProduct , related_name='products' , null = True)
     source = models.TextField(max_length = 40000 , null = True ,blank=True)# ths may contain the html source for the description giving the admin a way to full featured webpage description
     dfs = models.ManyToManyField(DataField , blank = True)
+    productIndex = models.PositiveIntegerField(null = True,blank = True)
+    # class Meta:
+    #     ordering = [('productIndex'),]
     def __repr__(self):
         return  "Listing : " + self.product.name + self.specifications
 

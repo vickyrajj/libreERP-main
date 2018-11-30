@@ -147,7 +147,7 @@ class listingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = listing
-        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock','variantsInStoreQty','product_variants')
+        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock','variantsInStoreQty','product_variants','productIndex')
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
@@ -178,21 +178,20 @@ class listingSerializer(serializers.ModelSerializer):
         instance.source = self.context['request'].data['source']
         instance.product = Product.objects.get(pk = self.context['request'].data['product'])
         instance.save()
-
+        if 'productIndex' in self.context['request'].data:
+            instance.productIndex = self.context['request'].data['productIndex']
+            instance.save()
         if 'specifications' in self.context['request'].data:
             instance.specifications = self.context['request'].data['specifications']
             instance.save()
-
             for d in instance.dfs.all():
                 DataField.objects.get(pk = d.pk).delete()
-
             instance.dfs.clear()
             print json.loads(instance.specifications)
             for s in json.loads(instance.specifications):
                 dF = DataField(name = s['name'], value = s['value'] , typ = s['fieldType'] )
                 dF.save()
                 instance.dfs.add(dF)
-
         if 'files' in self.context['request'].data:
             instance.files.clear()
             for m in self.context['request'].data['files']:
@@ -200,7 +199,6 @@ class listingSerializer(serializers.ModelSerializer):
                 # mObj = media.objects.get(pk = m)
                 # mObj.id =
                 instance.files.add(media.objects.get(pk = m))
-
         instance.save()
         return instance
 
@@ -256,7 +254,7 @@ class listingLiteSerializer(serializers.ModelSerializer):
     product_variants = serializers.SerializerMethodField()
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock','product_variants','variantsInStoreQty')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock','product_variants','variantsInStoreQty','productIndex')
     def get_rating(self , obj):
         return obj.ratings.all().aggregate(Avg('rating'))
 

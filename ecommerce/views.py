@@ -11,7 +11,7 @@ from django.core.mail import send_mail , EmailMessage
 from django.core import serializers
 from django.http import HttpResponse ,StreamingHttpResponse
 from django.utils import timezone
-from django.db.models import Min , Sum , Avg , Q
+from django.db.models import Min , Sum , Avg , Q , F
 import mimetypes
 import hashlib, datetime, random
 from datetime import timedelta , date
@@ -749,7 +749,7 @@ class listingLiteViewSet(viewsets.ModelViewSet):
             elif self.request.GET['mode'] == 'suggest':
                 return listing.objects.all()[:5]
         # else:
-        return listing.objects.all()
+        return listing.objects.all().order_by(F('productIndex').asc(nulls_last=True))
         #     if self.request.GET['parentValue'] == 'vendor':
         #         s = service.objects.get(user = u)
         #         items = offering.objects.filter( service = s).values_list('item' , flat = True)
@@ -1693,7 +1693,11 @@ class BulklistingCreationAPIView(APIView):
             imageThreeSend =media(user=request.user,attachment = attachmentThree,mediaType='image' )
             imageThreeSend.save()
             images.append(imageThreeSend)
-            listingSend = listing(parentType=parentType, product=send,user=request.user)
+            try:
+                productIndex = ws['L' + str(i)].value
+                listingSend = listing(parentType=parentType, product=send,user=request.user,productIndex=productIndex)
+            except:
+                listingSend = listing(parentType=parentType, product=send,user=request.user)
             listingSend.save()
             for i in images:
                 listingSend.files.add(i)

@@ -116,6 +116,7 @@ app.controller('ecommerce.form.listing', function($scope, $state, $stateParams, 
       url: '',
       source: '',
       product: '',
+      productIndex : ''
     }
   }
 
@@ -208,6 +209,10 @@ app.controller('ecommerce.form.listing', function($scope, $state, $stateParams, 
     // }
     dataToSend.product = form['product'].pk;
     dataToSend.source = form['source'];
+    if(form['productIndex']){
+      dataToSend.productIndex = form['productIndex']
+    }
+
     console.log('hhhhhhhhhhh', dataToSend);
     specs = [];
     for (var i = 0; i < $scope.data.genericProduct.fields.length; i++) {
