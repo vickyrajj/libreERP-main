@@ -4,28 +4,42 @@
     <h3 ng-if="mode == 'new'">Create a New Page</h3>
     <h3 ng-if="mode == 'edit'">Edit Page</h3>
     <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Title</label>
-          <input type="text" class="form-control" ng-model="form.title" placeholder="Enter Title">
-        </div>
-        <div class="col-md-7" style="padding-left:0px">
-          <div class="form-group">
-            <label>URL</label>
-            <div class="input-group">
-              <input type="text" class="form-control" ng-model="form.pageurl" placeholder="Generate Url" disabled/>
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-success" ng-click="generateUrl()">Generate</button>
-              </span>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" class="form-control" ng-model="form.title" placeholder="Enter Title">
             </div>
           </div>
         </div>
-        <div class="col-md-5" style="padding-top:15px">
-          <div class="col-md-9 text-right" style="padding-top:10px">
-            <label>Is TopLevel Menu :</label>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>URL</label>
+              <div class="input-group">
+                <input type="text" class="form-control" ng-model="form.pageurl" placeholder="Generate Url" disabled/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-success" ng-click="generateUrl()">Generate</button>
+                </span>
+              </div>
+            </div>
           </div>
-          <div class="col-md-3" style="padding-left:0px">
-            <input type="checkbox" class="form-control" ng-model="form.topLevelMenu"/>
+          <div class="col-md-2">
+            <div class="col-md-9">
+              <strong>Is TopLevel Menu :</strong>
+            </div>
+            <div class="col-md-3">
+              <input type="checkbox" class="form-control" ng-model="form.topLevelMenu"/>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="col-md-9">
+              <strong>In Bottom Menu :</strong>
+            </div>
+            <div class="col-md-3">
+              <input type="checkbox" class="form-control" ng-model="form.bottomMenu"/>
+            </div>
           </div>
         </div>
       </div>

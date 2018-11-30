@@ -39,7 +39,7 @@ ECOMMERCE_APP = {
 
 LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpeg'
 LOGIN_PAGE_LOGO = '/static/images/company_icon.svg'
-ICON_LOGO = '/static/images/sterlin_select.png'
+ICON_LOGO = '/static/images/bni_logo.png'
 
 SHOW_COMMON_APPS = False
 
@@ -99,6 +99,8 @@ INVENTORY_ENABLED = True
 
 LITE_REGISTRATION = True
 AUTH_PASSWORD = 'titan@1'
+
+
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 

@@ -43,6 +43,16 @@ app.filter('getCRMDP', function() {
   }
 })
 
+app.filter('startFrom', function() {
+    return function(input, start) {
+        if(input) {
+            start = +start; //parse to int
+            return input.slice(start);
+        }
+        return [];
+    }
+});
+
 app.filter('getUnit', function() {
   return function (input) {
     if (input=='Kilogram') {

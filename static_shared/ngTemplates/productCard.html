@@ -25,12 +25,11 @@
 
           <div style="height:40px;padding-left: 10px;padding-right: 10px; display:flex;" >
             <span ng-show="prodVarList.length>1" style="flex:50%">
-              <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee" ng-options="pv.str for pv in prodVarList" ng-model="selectedProdVar">
+              <select class="form-control" ng-click="$event.stopPropagation();" style="border:1px solid #eee" ng-options="pv.str for pv in prodVarList" ng-model="selectedProdVar.toWatch">
               </select>
             </span>
-
-            <span ng-show="prodColors.length>0" style="flex:50%">
-              <select class="form-control" style="border:1px solid #eee" ng-click="$event.stopPropagation();" ng-options="c for c in prodColors" ng-model="selectedColor">
+            <span ng-show="prodVarListColors.length>0" style="flex:50%">
+              <select class="form-control" style="border:1px solid #eee" ng-click="$event.stopPropagation();" ng-options="c.prodDesc for c in prodVarListColors" ng-model="selectedColor.toWatch">
               </select>
             </span>
 
@@ -38,7 +37,8 @@
           </div>
 
           <span style="font-size:15px;padding-left:10px"> Price :</span>
-          <span ng-if="list.product.serialNo==selectedProdVar.sku">
+          <!-- {{selectedObj}} -->
+          <span ng-if="list.product.serialNo==selectedObj.sku">
             <span style="font-size:15px;">
               <span ng-if="list.product.discount>0" class="text-muted">
                 <strike> <i class="fa {{currency}}"></i>{{list.product.price}}</strike>
@@ -51,17 +51,17 @@
               <i class="fa {{currency}}"></i>{{list.product.discountedPrice.toFixed(2)}}
             </span>
           </span>
-          <span ng-if="list.product.serialNo!=selectedProdVar.sku && selectedProdVar.amnt == selectedProdVar.disc">
-            <i class="fa {{currency}}"></i>{{selectedProdVar.amnt}}
+          <span ng-if="list.product.serialNo!=selectedObj.sku && selectedObj.amnt == selectedObj.disc">
+            <i class="fa {{currency}}"></i>{{selectedObj.amnt}}
           </span>
-          <span ng-if="list.product.serialNo!=selectedProdVar.sku && selectedProdVar.amnt != selectedProdVar.disc" class="text-muted">
-            <strike> <i class="fa {{currency}}"></i>{{selectedProdVar.amnt}} </strike>
+          <span ng-if="list.product.serialNo!=selectedObj.sku && selectedObj.amnt != selectedObj.disc" class="text-muted">
+            <strike> <i class="fa {{currency}}"></i>{{selectedObj.amnt}} </strike>
           </span>
-          <span ng-if="list.product.serialNo!=selectedProdVar.sku && selectedProdVar.amnt != selectedProdVar.disc">
-            <i class="fa {{currency}}"></i>{{selectedProdVar.disc}}
+          <span ng-if="list.product.serialNo!=selectedObj.sku && selectedObj.amnt != selectedObj.disc">
+            <i class="fa {{currency}}"></i>{{selectedObj.disc}}
           </span>
           <div>
-            <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&me.pk&&selectedProdVar.inStock>0">
+            <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0&&me.pk&&selectedObj.inStock>0">
               <div class="row">
                 <div class="col-xs-7" style="padding-right:0px;">
                   <div class="input-group qtyInputGrp" ng-click="$event.stopPropagation();">
@@ -76,7 +76,7 @@
                 </div>
               </div>
             </div>
-            <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0 && !me.pk && selectedProdVar.inStock>0">
+            <div style=" padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart==0 && !me.pk && selectedObj.inStock>0">
 
               <div class="row">
 
@@ -95,7 +95,7 @@
 
             </div>
 
-            <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0 && me.pk && selectedProdVar.inStock>0">
+            <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0 && me.pk && selectedObj.inStock>0">
 
               <div class="row" style="padding:0px 15px;">
                 <div class="col-xs-2" style="padding:0px;">
@@ -115,10 +115,10 @@
                 </div>
               </div>
             </div>
-            <div style=" padding:10px 10px 10px 10px;margin:0px;" ng-if="selectedProdVar.inStock==0||!selectedProdVar.inStock">
+            <div style=" padding:10px 10px 10px 10px;margin:0px;" ng-if="selectedObj.inStock==0||!selectedObj.inStock">
               <span style="font-size:18px;color:#ef4a1e">Out Of Stock</span>
             </div>
-            <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0 && !me.pk && selectedProdVar.inStock>0">
+            <div style="color:#808080; padding:10px 10px 10px 10px;margin:0px;height:60px" ng-if="list.added_cart>0 && !me.pk && selectedObj.inStock>0">
 
               <div class="row" style="padding:0px 15px;">
                 <div class="col-xs-2" style="padding:0px;">

@@ -114,6 +114,7 @@ class Pages(models.Model):
     pageurl = models.CharField(max_length=100 ,null = False)
     body = models.CharField(max_length=50000 ,null = False)
     topLevelMenu = models.BooleanField(default = False)
+    bottomMenu = models.BooleanField(default = False)
 
 class offerBanner(models.Model):
     user = models.ForeignKey(User, null = False)

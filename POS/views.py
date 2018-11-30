@@ -1435,6 +1435,6 @@ class AddProductSKU(APIView):
             productLIst = Product.objects.all()
             for p in productLIst:
                 if p.serialNo=='':
-                    p.serialNo="PRO"+str(i.pk)
+                    p.serialNo="PRO"+str(p.pk)
                     p.save()
         return Response(p.serialNo,status = status.HTTP_200_OK)

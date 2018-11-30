@@ -311,7 +311,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class PagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pages
-        fields = ( 'pk', 'created' , 'updated' ,'title' , 'pageurl' , 'body' ,'topLevelMenu')
+        fields = ( 'pk', 'created' , 'updated' ,'title' , 'pageurl' , 'body' ,'topLevelMenu','bottomMenu')
 
 class offerBannerSerializer(serializers.ModelSerializer):
     page = PagesSerializer(many = False , read_only = True)

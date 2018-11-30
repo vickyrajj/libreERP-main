@@ -1077,6 +1077,14 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
     console.log('aaaaaaaaaaaaa');
     var f = $scope.productVerientForm;
 
+
+    if ($scope.product.unit =='Size' || $scope.product.unit =='Size and Color' ) {
+        if (isNaN(parseInt(f.unitPerpack))) {
+          Flash.create('warning','Format of Size os not correct')
+          return ;
+        }
+    }
+
     if (f.price == null || f.price.length == 0) {
       Flash.create('warning', 'Please enter secondary SKU price')
       return
@@ -1100,27 +1108,57 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
       serialId: f.serialId
     }
 
-    if (f.prodDesc!='' || f.prodDesc != null ) {
-      toSend.prodDesc = f.prodDesc
+    if (f.prodDesc!='' && f.prodDesc != null ) {
+      // toSend.prodDesc = f.prodDesc
+      prodDescArr  = f.prodDesc.split(',')
+      var constSku = toSend.sku
+      for (var i = 0; i < prodDescArr .length; i++) {
+        var toSend2 = {...toSend}
+        toSend2.prodDesc = prodDescArr[i]
+        toSend2.sku = constSku +'&'+ prodDescArr[i]
+
+        console.log(toSend2);
+
+        $http({
+          method: 'POST',
+          url: '/api/POS/productVerient/',
+          data: toSend2
+        }).
+        then(function(response) {
+          $scope.productData.push(response.data);
+          $scope.productVerientForm = {
+            'sku': '',
+            'unitPerpack': 2,
+            'serialId': '',
+            'prodDesc':''
+          }
+          Flash.create('success', 'Saved');
+        }, function(err) {
+          console.log(err);
+          Flash.create('danger', err.statusText)
+        })
+      }
+
+    }else {
+      $http({
+        method: 'POST',
+        url: '/api/POS/productVerient/',
+        data: toSend
+      }).
+      then(function(response) {
+        $scope.productData.push(response.data);
+        $scope.productVerientForm = {
+          'sku': '',
+          'unitPerpack': 2,
+          'serialId': ''
+        }
+        Flash.create('success', 'Saved');
+      }, function(err) {
+        console.log(err);
+        Flash.create('danger', err.statusText)
+      })
     }
 
-    $http({
-      method: 'POST',
-      url: '/api/POS/productVerient/',
-      data: toSend
-    }).
-    then(function(response) {
-      $scope.productData.push(response.data);
-      $scope.productVerientForm = {
-        'sku': '',
-        'unitPerpack': 2,
-        'serialId': ''
-      }
-      Flash.create('success', 'Saved');
-    }, function(err) {
-      console.log(err);
-      Flash.create('danger', err.statusText)
-    })
   }
 
 

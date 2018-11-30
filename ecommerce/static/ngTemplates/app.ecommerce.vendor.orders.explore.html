@@ -78,7 +78,7 @@
               <h3 ng-if="pData.prodVar==undefined"> {{pData.productName}} {{pData.product.product.howMuch | convertUnit:pData.product.product.unit}}</h3>
               <h3 ng-if="pData.prodVar"> {{pData.productName}}
                 <span ng-if="pData.product.product.unit!='Size and Color'&&pData.product.product.unit!='Size'"> {{pData.prodVar[0].unitPerpack * pData.product.product.howMuch | convertUnit: pData.product.product.unit}} </span>
-                <span ng-if="pData.product.product.unit=='Size and Color'||pData.product.product.unit=='Size'"> {{pData.product.product.howMuch | convertSize: pData.product.product.unit}} {{pData.desc}} </span>
+                <span ng-if="pData.product.product.unit=='Size and Color'||pData.product.product.unit=='Size'"> {{pData.prodVar[0].unitPerpack | convertSize: pData.product.product.unit}} {{pData.desc}} </span>
                  </h3>
             </div>
             <div class="row">
