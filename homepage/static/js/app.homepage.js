@@ -1,5 +1,4 @@
-console.log("loaded");
-var app = angular.module('app',  ['ui.router', 'ui.bootstrap']);
+var app = angular.module('app',  ['ui.router', 'ui.bootstrap','angular-owl-carousel-2']);
 
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide ,  $locationProvider) {
@@ -53,6 +52,17 @@ app.config(function($stateProvider) {
 });
 
 app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+  $scope.properties = {
+    // autoHeight:true,
+    // animateIn: 'fadeIn',
+    lazyLoad: true,
+    items: 6,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 3000,
+    dots: false
+  };
+
 
   $scope.articles = [
     {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
@@ -61,6 +71,15 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
     {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
     {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
   ]
+
+
+  $scope.friends = [
+   {name:'John', age:25,dp:'/static/images/airbus-logo.png'},
+   {name:'Mary', age:40,dp:'/static/images/amad.png'},
+   {name:'Peter', age:85,dp:'/static/images/autodesk-logo.png'},
+   {name:'Peter', age:85,dp:'/static/images/benchmark.png'},
+   {name:'Peter', age:85,dp:'/static/images/direct-line-group-logo.png'},
+];
 
 
 

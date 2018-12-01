@@ -1,4 +1,21 @@
-<div class="row" style="margin:0px;margin-top:8vh">
+
+<div class="row" style="margin:8vh">
+  <div class="col-md-8 col-md-offset-2" >
+    <div class="col-md-12" >
+        <ng-owl-carousel class="owl-theme" owl-items="friends" owl-properties="properties" owl-ready="ready($api)">
+          <div ng-repeat="a in friends" style="padding:10px;">
+            <div class="anim-in-out anim-zoom-out" >
+              <div style="padding:20px;">
+                <img class="img" ng-src="{{a.dp}}" />
+              </div>
+            </div>
+          </div>
+        </ng-owl-carousel>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="margin:0px;">
 
   <div class="col-md-8 col-md-offset-2 shaddowed noPadding">
     <div class="col-md-6 noPadding" style="height:60vh;">
@@ -12,7 +29,7 @@
           <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-success" name="">Read Article</button>
       </div>
     </div>
-    <div class="col-md-6" style="height:60vh;padding:20px;">
+    <div class="col-md-6" style="height:60vh;padding:15px;">
       <div class="row" ng-repeat="i in articles" style="{{$odd ? 'background:#f6f6ff;':''}}">
         <div class="col-md-12">
           <div class="col-md-2 images">
