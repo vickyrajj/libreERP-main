@@ -428,7 +428,12 @@ app.controller("businessManagement.productsInventory.inventoryForm", function($s
           str: 'Select Product Variant'
         }
         for (var i = 0; i < response.data.length; i++) {
-          str = $filter('convertUnit')(response.data[i].unitPerpack * newValue.howMuch, newValue.unit) + ' - Rs ' + response.data[i].discountedPrice + ' (' + response.data[i].sku + ')'
+          if(newValue.unit==='Size and Color' || 'Size'){
+            str = $filter('convertSize')(response.data[i].unitPerpack, newValue.unit) + ' - Rs ' + response.data[i].discountedPrice + ' (' + response.data[i].sku + ')'
+          }
+          else{
+              str = $filter('convertUnit')(response.data[i].unitPerpack * newValue.howMuch, newValue.unit) + ' - Rs ' + response.data[i].discountedPrice + ' (' + response.data[i].sku + ')'
+          }
           $scope.prodVarList.push({
             str: str,
             pk: response.data[i].pk

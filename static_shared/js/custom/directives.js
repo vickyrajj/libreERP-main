@@ -864,6 +864,18 @@ app.directive('productCard', function() {
                   $scope.list.added_cart = 0
                 }
               }
+
+              for (var i = 0; i < $rootScope.inFavourite.length; i++) {
+                if ($rootScope.inFavourite[i] != undefined) {
+                  if ($scope.selectedObj.sku == $rootScope.inFavourite[i].prodSku) {
+                    $scope.list.added_saved = 1
+                    break;
+                  } else {
+                    $scope.list.added_saved = 0
+                  }
+                }
+              }
+
             } else {
               for (var i = 0; i < $rootScope.addToCart.length; i++) {
                 if ($scope.selectedObj.sku == $rootScope.addToCart[i].prodSku) {
@@ -1067,6 +1079,25 @@ app.directive('productCard', function() {
                 })
                 return
               }
+
+              if (response.data[i].typ == 'cart') {
+                $scope.list.added_saved = 0
+                $http({
+                  method: 'PATCH',
+                  url: '/api/ecommerce/cart/' + response.data[i].pk + '/',
+                  data:{typ: 'favourite'}
+                }).
+                then(function(response) {
+                  Flash.create('success', 'Added in Wishlist');
+                  $scope.list.added_cart = 0;
+                  $scope.list.added_saved++;
+                  $rootScope.inCart.splice(i, 1)
+                  $rootScope.inFavourite.push(response.data)
+                })
+                return
+              }
+
+
             }
           }
           $scope.list.added_saved++
@@ -1077,13 +1108,18 @@ app.directive('productCard', function() {
               typ: 'favourite',
               prodSku: $scope.selectedObj.sku
             }
+
+            if ($scope.selectedObj.prodDesc) {
+              dataToSend.desc = $scope.selectedObj.prodDesc
+            }
+
+
           $http({
             method: 'POST',
             url: '/api/ecommerce/cart/',
             data: dataToSend
           }).
           then(function(response) {
-
             $rootScope.inFavourite.push(response.data)
             Flash.create('success', 'Product added in Wishlist');
             return

@@ -7,7 +7,12 @@
       <div class=" card bg-white" style="padding-bottom:0px;">
         <div class="row container-fluid" style="padding:10px 20px; height:110px; " >
           <!-- <h5 style="margin:0px" >{{data.product.product.name}}</h5> -->
-          <h5 style="margin:0px;  height:50px;">{{data.product.product.name}} <span ng-if="data.prod_howMuch!=null">{{data.prod_howMuch | convertUnit: data.product.product.unit}}</span> </h5>
+          <h5 style="margin:0px;  height:50px;">{{data.product.product.name}}
+            <span ng-if="data.prod_howMuch!=null">
+              <span ng-if="data.product.product.unit!='Size and Color'&&data.product.product.unit!='Size'">{{data.prod_howMuch | convertUnit: data.product.product.unit}}</span>
+              <span ng-if="data.product.product.unit=='Size and Color'||data.product.product.unit=='Size'">{{data.prod_howMuch | convertSize: data.product.product.unit}}
+              {{data.desc}} </span>
+              </span> </h5>
           <span style="font-size:15px;" > Price : </span>
           <span ng-if="data.prodSku==data.product.product.serialNo"  style="font-size:15px;padding-left:10px">
             <i class="fa {{currency}}"></i>{{data.product.product.discountedPrice.toFixed(2)}}

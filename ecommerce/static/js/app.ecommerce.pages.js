@@ -117,12 +117,13 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
 
   $scope.resetForm = function(){
     if ($scope.mode == 'new') {
-      $scope.form = {title:'',pageurl:'',body:'',topLevelMenu:false}
+      $scope.form = {title:'',pageurl:'',body:'',topLevelMenu:false,bottomMenu:false}
     }else {
       $scope.form.title = ''
       $scope.form.pageurl = ''
       $scope.form.body = ''
       $scope.form.topLevelMenu = false
+      $scope.form.bottomMenu = false
     }
   }
 
@@ -177,7 +178,8 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
       title:f.title,
       pageurl:f.pageurl,
       body:f.body,
-      topLevelMenu : f.topLevelMenu
+      topLevelMenu : f.topLevelMenu,
+      bottomMenu: f.bottomMenu
     }
     console.log('dataaaaaaaaaaaaaaaaaaa',toSend);
 
