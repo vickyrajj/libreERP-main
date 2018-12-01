@@ -1,3 +1,15 @@
 <div class="row" style="margin:8vh">
-  <h1>home paege</h1>
+  <div class="row" style="margin:0px;">
+    <div class="col-md-12" >
+        <ng-owl-carousel class="owl-theme" owl-items="friends" owl-properties="properties" owl-ready="ready($api)">
+          <div ng-repeat="a in friends" style="padding:10px;">
+            <div class="anim-in-out anim-zoom-out" >
+              <div style="padding-right:20px;padding-left:20px;">
+              <img class="img" ng-src="{{a.dp}}" style="height:3vh"/>
+            </div>
+            </div>
+          </div>
+        </ng-owl-carousel>
+    </div>
+    <div>
 </div>

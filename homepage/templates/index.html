@@ -2,14 +2,17 @@
 <title>CIOC</title>
 <base href="/">
 {% endblock %} {% block specific_css %}
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/rzslider.min.css' %}" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" charset="utf-8">
 <link href="{% static 'css/homepage.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %} {% include "header.html" %} {% endblock %}
+{% endblock %} {% block header %} {% include "header.html" %} {% endblock %}
 <!-- Header -->
 
 {% block content %}
 
-<style media="screen">
-  @media only screen and (max-width: 800px) {
+<!-- <style media="screen">
+  @media only screen and (max-width: 800px) { ``
     .intro-text{
       padding-top:70vh !important;position:absolute;right:10px !important;
     }
@@ -20,7 +23,7 @@
 
   }
 
-</style>
+</style> -->
 
 
 <div ng-app="app" ng-controller="main" style="min-height:100vh;">
@@ -48,10 +51,13 @@
 
 <script src="{% static 'js/particles.js' %}"></script>
 <script src="{% static 'js/app.js' %}"></script> -->
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.3.4/tinymce.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.2/angular.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.17/angular-ui-router.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.4.9/angular-sanitize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.0/rzslider.min.js"></script>
 
 <!-- <script src="{% static 'js/jquery.easing.min.js' %}"></script> -->
 <!-- <script src="{% static 'js/classie.js' %}"></script> -->
@@ -67,5 +73,7 @@
 <script src="{% static 'js/angular-flash.js' %}"></script>
 <script src="{% static 'js/particles.js' %}"></script>
 <script src="{% static 'js/app.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/angular-owl-carousel-2.js' %}"></script>
 
 {% endblock %}
