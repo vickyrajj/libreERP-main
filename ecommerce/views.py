@@ -218,8 +218,11 @@ class SearchProductAPI(APIView):
                 listingList = list(listingobjs.values_list('parentType',flat=True))
                 genericList = genericProduct.objects.filter(pk__in=listingList)
                 genericProd = list(genericList.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
+
                 listProd = list(listingobjs.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name'), dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'),unit =F('product__unit') , dpId = F('files__imageIndex'), typ= Value('list',output_field=CharField())))
             else:
+                # print globalSettings.INVENTORY_ENABLED
+
                 genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
                 listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name' ) , dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'), dpId = F('files__imageIndex') , unit = F('product__unit'), typ= Value('list',output_field=CharField())))
             newlist = []
@@ -231,7 +234,15 @@ class SearchProductAPI(APIView):
                         prodVar = ProductVerient.objects.filter(parent = i['product__id'])
                         if len(prodVar)>0:
                             for a in prodVar:
-                                prodVar = {'name':i['name'] , 'dp':i['dp'] , 'inStock':i['inStock'], 'serialNo':a.sku ,'howMuch':i['howMuch']* a.unitPerpack , 'unit':i['unit'] ,'typ':i['typ'] ,'pk':i['pk'] }
+                                prodVar = {'name':i['name'] , 'dp':i['dp'], 'serialNo':a.sku,'prodDesc':a.prodDesc ,'unitPerpack':a.unitPerpack ,'howMuch':i['howMuch']* a.unitPerpack , 'unit':i['unit'] ,'typ':i['typ'] ,'pk':i['pk'] }
+                                if globalSettings.INVENTORY_ENABLED:
+                                    prodVar['inStock'] = 1000
+                                else:
+                                    storeQtyList = StoreQty.objects.filter(product__id = i['product__id'] ,productVariant__id = a.pk)
+                                    if len(storeQtyList)>0:
+                                        prodVar['inStock'] = storeQtyList[0].quantity
+                                    else:
+                                        prodVar['inStock'] = i['inStock']
                                 newlist.append(prodVar)
                         newListPks.append(i['pk'])
             tosend = genericProd + newlist
