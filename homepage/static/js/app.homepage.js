@@ -54,6 +54,15 @@ app.config(function($stateProvider) {
 
 app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal) {}
 
+  $scope.articles = [
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+  ]
+
+
 
 
 )
