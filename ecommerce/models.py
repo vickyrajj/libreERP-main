@@ -225,6 +225,7 @@ class OrderQtyMap(models.Model):
     courierAWBNo =  models.CharField(max_length=50 ,null = True , blank = True)
     notes =  models.CharField(max_length=500 ,null = True , blank = True)
     prodSku = models.CharField(max_length = 50, null = True, blank = True)
+    desc = models.CharField(max_length = 50, null = True, blank = True)
 
 
 class Order(models.Model):

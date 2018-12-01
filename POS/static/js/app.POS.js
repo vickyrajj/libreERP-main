@@ -1077,6 +1077,14 @@ app.controller("controller.POS.productForm.modal", function($scope, product,newP
     console.log('aaaaaaaaaaaaa');
     var f = $scope.productVerientForm;
 
+
+    if ($scope.product.unit =='Size' || $scope.product.unit =='Size and Color' ) {
+        if (isNaN(parseInt(f.unitPerpack))) {
+          Flash.create('warning','Format of Size os not correct')
+          return ;
+        }
+    }
+
     if (f.price == null || f.price.length == 0) {
       Flash.create('warning', 'Please enter secondary SKU price')
       return
