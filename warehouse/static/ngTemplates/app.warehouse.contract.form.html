@@ -4,10 +4,16 @@
     <h3 ng-if="mode=='edit'">Update Contract </h3>
     <div class="col-md-10">
       <div class="row">
-        <div class="col-md-12" >
+        <div class="col-md-6" >
           <div class="form-group">
             <label>Company</label>
             <input type="text" class="form-control" ng-model="contract.company" uib-typeahead="service as service.name for service in serviceSearch($viewValue)">
+          </div>
+        </div>
+        <div class="col-md-6" >
+          <div class="form-group">
+            <label>Space Given (Sqft)</label>
+            <input type="text" class="form-control" ng-model="contract.spaceGiven">
           </div>
         </div>
         <div class="col-md-6">
@@ -68,8 +74,9 @@
           </div>
         </div>
         <div class="row" ng-if="contract.areas.pk != none" style="margin-left:20px">
-          <h4><strong>Available Area : </strong> {{totalBoxes * contract.areas.areaLength}} Sqft</h4>
-          <h4><strong>Area Per Box : </strong> {{contract.areas.areaLength}} Sqft</h4>
+          <!-- <h4><strong>Available Area : </strong> {{totalBoxes * contract.areas.areaLength}} Sqft</h4>
+          <h4><strong>Area Per Box : </strong> {{contract.areas.areaLength}} Sqft</h4> -->
+          <h4><strong>Available Area : </strong> {{remainingSpace}} Sqft</h4>
         </div>
       </div>
       <div class="row" style="margin-top: 27px;" ng-if="spaceData">
@@ -103,7 +110,8 @@
             <div style="border:1px solid {{data.color}} ; height:30px;width:40px ;background-color:{{data.color}}"></div>
           </div>
           <div class="col-md-9">
-            <b>{{data.company}} ( {{data.seletedBoxes * contract.areas.areaLength}} Sqft )</b><hr>
+            <!-- <b>{{data.company}} ( {{data.seletedBoxes * contract.areas.areaLength}} Sqft )</b><hr> -->
+            <b>{{data.company}} ( {{data.space}} Sqft )</b><hr>
           </div>
         </div>
       </div>

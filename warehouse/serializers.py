@@ -52,12 +52,12 @@ class ContractLiteSerializer(serializers.ModelSerializer):
     company =ServiceLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Contract
-        fields = ('pk' ,'occupancy' , 'company')
+        fields = ('pk' ,'occupancy' , 'company','spaceGiven')
 class SpaceSerializer(serializers.ModelSerializer):
     contractSpace = ContractLiteSerializer(many = True , read_only = True)
     class Meta:
         model = Space
-        fields = ('pk' ,'name' , 'areas' , 'code' , 'contractSpace' , 'areaLength')
+        fields = ('pk' ,'name' , 'areas' , 'code' , 'contractSpace' , 'areaLength','totalArea')
         read_only_fields = ('user' ,)
     def create(self , validated_data):
         s=Space(**validated_data)
@@ -71,7 +71,7 @@ class ContractSerializer(serializers.ModelSerializer):
     areas=SpaceSerializer(many=False,read_only=True)
     class Meta:
         model = Contract
-        fields = ('pk' ,'contacts', 'company' , 'billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' ,'areas' ,'occupancy_screenshort','activeStatus')
+        fields = ('pk' ,'contacts', 'company' , 'billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' ,'areas' ,'occupancy_screenshort','activeStatus','spaceGiven')
         read_only_fields = ('user' ,'company','contacts','areas' )
     def create(self , validated_data):
         if validated_data['billingFrequency'] == len(str(validated_data['billingDates']).split(',')):
@@ -85,7 +85,7 @@ class ContractSerializer(serializers.ModelSerializer):
             raise ValidationError(detail=None)
     def update(self ,instance, validated_data):
         # if validated_data['billingFrequency'] == len(str(validated_data['billingDates']).split(',')):
-        for key in ['billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' ,'occupancy_screenshort','activeStatus']:
+        for key in ['billingFrequency' , 'billingDates' , 'rate','quantity' ,'unitType' ,'dueDays' ,'occupancy' ,'contractPaper' ,'otherDocs' ,'occupancy_screenshort','activeStatus','spaceGiven']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

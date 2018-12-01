@@ -230,6 +230,7 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
         console.log('infoooooooo');
         console.log($scope.arrays[i]);
         console.log($scope.arrays[i].array.occupancy);
+
         $scope.arrays[i].array = $scope.form.contractSpace[i];
         if (typeof $scope.arrays[i].array.occupancy == 'string'){
           $scope.arrays[i].array.occupancy=JSON.parse($scope.arrays[i].array.occupancy)
@@ -237,7 +238,9 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
       }
       for (var i = 0; i < $scope.arrays.length; i++) {
         $scope.contractColour = $scope.getRandomColor();
-        $scope.companiesArea.push({color: $scope.contractColour,company:$scope.arrays[i].array.company.name,seletedBoxes:$scope.arrays[i].array.occupancy.length})
+        if($scope.arrays[i].array.spaceGiven>0){
+          $scope.companiesArea.push({color: $scope.contractColour,company:$scope.arrays[i].array.company.name,seletedBoxes:$scope.arrays[i].array.occupancy.length,space:$scope.arrays[i].array.spaceGiven})
+        }
         $scope.totalBoxes = $scope.totalBoxes - $scope.arrays[i].array.occupancy.length
         for (var j = 0; j < $scope.arrays[i].array.occupancy.length; j++) {
           var gx=$scope.arrays[i].array.occupancy[j].row
@@ -311,6 +314,12 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
     }
     }
 
+    console.log($scope.companiesArea,$scope.form.totalArea);
+    $scope.remainingSpace = $scope.form.totalArea
+    for (var i = 0; i < $scope.companiesArea.length; i++) {
+    $scope.remainingSpace -=$scope.companiesArea[i].space
+    }
+
   }
   // $scope.form={'name':'sai','areas':'','code':''};
   $scope.resetForm = function() {
@@ -364,6 +373,10 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
       Flash.create('warning', 'Code can not be empty!');
       return
     }
+    if ($scope.form.totalArea  == undefined || $scope.form.totalArea.length == 0) {
+      Flash.create('warning', 'Area cannot be empty');
+      return
+    }
     var url = '/api/warehouse/space/';
     var method = 'POST';
     if ($scope.mode == 'edit') {
@@ -374,7 +387,6 @@ app.controller("businessManagement.warehouse.space.form", function($scope, $http
     var tosend = $scope.form;
     tosend.areas = JSON.stringify($scope.arr)
     console.log(JSON.parse(tosend.areas,'88888888888888888888'));
-
     console.log(tosend);
     $http({method: method,url: url,data: tosend}).
     then(function(response){

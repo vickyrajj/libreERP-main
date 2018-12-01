@@ -53,12 +53,21 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
       backdrop: true,
       resolve: {
       },
-      controller: function($scope, $uibModalInstance) {
+      controller: function($scope, $uibModalInstance,Flash) {
 
         $scope.selectDate = new Date()
+        $scope.deleteInvoice = function(invoiceId,idx){
+          $http({
+            method: 'DELETE',
+            url: '/api/warehouse/invoice/'+ invoiceId
+          }).
+          then(function(response) {
+              Flash.create('success','Invoice Deleted')
+              $scope.invoice.splice(idx,1)
+          });
+        }
 
         $scope.$watch('selectDate', function(newValue, oldValue) {
-
         $http({
           method: 'GET',
           url: '/api/warehouse/invoice/?createdval='+ newValue.toJSON()
@@ -92,6 +101,9 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
 
         $scope.dataDetails = []
         $scope.contractPk = contract
+
+
+
 
         $http({
           method: 'GET',
@@ -157,7 +169,6 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         // }
 
 
-
         $scope.createInvoice = function() {
           console.log();
           $scope.total = 0
@@ -174,7 +185,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           console.log($scope.frmDateChange , $scope.toDateChange, dayDif);
           $scope.price = $scope.contract.rate
           $scope.sqrt = $scope.contract.areas.areaLength * $scope.contract.quantity
-          $scope.cost = $scope.contract.rate * $scope.sqrt * dayDif
+          $scope.cost = $scope.contract.rate * $scope.contract.spaceGiven  * dayDif
           if ($scope.contract.company.gst.slice(0, 2) == '29') {
             $scope.gst = 9
             $scope.cgst = 9
@@ -228,7 +239,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
                   "taxRate": 18
               },
               "rate" : $scope.contract.rate,
-              "space" : $scope.contract.quantity * $scope.contract.areas.areaLength,
+              "space" : $scope.contract.spaceGiven,
               "qty" : 1
             }
             $scope.dataDetails.push(extraData)
@@ -273,7 +284,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         var dayDif = (($scope.toDateChange - $scope.frmDateChange)  / 1000 / 60 / 60 / 24)+1;
         $scope.price = $scope.invoiceData[i].rate
         $scope.sqrt = $scope.invoiceData[i].areas.areaLength * $scope.invoiceData[i].quantity
-        $scope.cost = $scope.invoiceData[i].rate * $scope.sqrt * dayDif
+        $scope.cost = $scope.invoiceData[i].rate * $scope.invoiceData[i].spaceGiven * dayDif
         if ($scope.invoiceData[i].company.gst.slice(0, 2) == '29') {
           $scope.gst = 9
           $scope.cgst = 9
@@ -301,7 +312,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
               "taxRate": 18
           },
           "rate" : $scope.invoiceData[i].rate,
-          "space" : $scope.invoiceData[i].quantity * $scope.invoiceData[i].areas.areaLength,
+          "space" : $scope.invoiceData[i].spaceGiven,
           "qty" : 1
         }
         $scope.detailData.push(extraData)

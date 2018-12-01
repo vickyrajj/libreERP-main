@@ -22,6 +22,7 @@
         <th class="text-center">To</th>
         <th class="text-center"> Total</th>
         <th class="text-center"> Download</th>
+        <th class="text-center"> Delete</th>
       </tr>
       <tbody ng-repeat="s in invoice">
         <tr>
@@ -30,6 +31,14 @@
           <td>{{s.toDate}}</td>
           <td>{{s.grandTotal}}</td>
           <td class="text-center"><a ng-if="c.status != 'cancelled'" href="/api/warehouse/downloadInvoice/?contract={{s.contract.pk}}&inoicePk={{s.pk}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i></a></td>
+          <td class="text-center"><a ng-if="c.status != 'cancelled'" class="btn btn-default" mwl-confirm
+            title="Confirm"
+            message="Are you sure?"
+            confirm-text="Yes <i class='fa fa-check'></i>"
+            cancel-text="No"
+            on-confirm="deleteInvoice(s.pk,$index)"
+            confirm-button-type="danger"
+            cancel-button-type="default"><i class="fa fa-trash"></i></a></td>
         </tr>
       </tbody>
     </table>

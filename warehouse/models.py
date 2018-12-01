@@ -63,6 +63,7 @@ class Space(models.Model):
     areas = models.CharField(max_length = 50000 , null = False)
     code = models.CharField(max_length = 100 , null = False)
     areaLength = models.PositiveIntegerField(null = True,default=1)
+    totalArea =models.CharField(max_length = 100 , null = True)
 
 
 class Contract(models.Model):
@@ -83,6 +84,8 @@ class Contract(models.Model):
     occupancy_screenshort = models.CharField(max_length = 100000 , null = True)
     dueDate = models.DateField(null = True)
     activeStatus = models.BooleanField(default = True)
+    spaceGiven =  models.CharField(max_length = 30, null=True)
+
 
 CONTRACT_STATE_CHOICES = (
     ('quoted' , 'quoted'),

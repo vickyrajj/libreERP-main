@@ -9,7 +9,7 @@ app.config(function($stateProvider) {
 
 var crmRelationTypes = ['onetime', 'request', 'day', 'hour', 'monthly', 'yearly', 'user']
 
-app.controller("businessManagement.warehouse.contract.quote", function($scope, $state, $users, $stateParams, $http, Flash, $uibModalInstance, quoteData,contract ) {
+app.controller("businessManagement.warehouse.contract.quote", function($scope, $state, $users, $stateParams, $http, Flash, $uibModalInstance, quoteData, contract) {
   $scope.quote = quoteData;
   $scope.firstQuote = false;
   $scope.contract = contract
@@ -51,7 +51,7 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
   }
   $scope.edit = function(idx) {
     var d = $scope.data[idx];
-    console.log(d,'aaaaaaaaaaaaaaaaa');
+    console.log(d, 'aaaaaaaaaaaaaaaaa');
     $scope.form = {
       type: d.type,
       quantity: d.qty,
@@ -99,12 +99,12 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
     }
 
 
-    $scope.totalTax =Math.round((total * $scope.taxtot) / 100);
-    $scope.total =  Math.round(total);
-    $scope.grandTotal =  Math.round($scope.totalTax + total);
+    $scope.totalTax = Math.round((total * $scope.taxtot) / 100);
+    $scope.total = Math.round(total);
+    $scope.grandTotal = Math.round($scope.totalTax + total);
     $scope.quote.calculated = {
       value: $scope.total,
-      tax:   $scope.totalTax,
+      tax: $scope.totalTax,
       grand: $scope.grandTotal
     }
 
@@ -133,15 +133,15 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
     //   product: $scope.form.productMeta.code
     // })
     // console.log(  $scope.data,'llllllllllllllllllllll');
-  // $scope.data.push({
-  //     data: JSON.stringify($scope.dataDetails),
-  //     fromDate: $scope.frmDateChange.toJSON().split('T')[0],
-  //     toDate: $scope.toDateChange.toJSON().split('T')[0],
-  //     value: $scope.tot,
-  //     grandTotal: $scope.grandtot,
-  //     totalTax :  Math.round($scope.tax)
-  //  })
-  console.log( $scope.form.amount);
+    // $scope.data.push({
+    //     data: JSON.stringify($scope.dataDetails),
+    //     fromDate: $scope.frmDateChange.toJSON().split('T')[0],
+    //     toDate: $scope.toDateChange.toJSON().split('T')[0],
+    //     value: $scope.tot,
+    //     grandTotal: $scope.grandtot,
+    //     totalTax :  Math.round($scope.tax)
+    //  })
+    console.log($scope.form.amount);
     $scope.data.push({
       type: $scope.form.type,
       // tax: $scope.form.productMeta.taxRate,
@@ -150,7 +150,7 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
       qty: $scope.form.quantity,
       productMeta: $scope.form.productMeta,
       amount: $scope.form.amount,
-      })
+    })
     $scope.resetForm();
   }
   $scope.resetForm();
@@ -228,29 +228,29 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
 
   $scope.$watch('contract.activeStatus', function(newValue, oldValue) {
     console.log('aaaaaaaaaaaaaaaaaaaa');
-    if(newValue==false){
+    if (newValue == false) {
       console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhh");
       var dataToSend = {
-          activeStatus: newValue,
-          occupancy : [],
-          quantity : 0
+        activeStatus: newValue,
+        occupancy: [],
+        quantity: 0,
+        spaceGiven :0
       }
-    }
-    else{
+    } else {
       var dataToSend = {
-          activeStatus: newValue,
+        activeStatus: newValue,
       }
     }
     $http({
       method: 'PATCH',
       url: '/api/warehouse/contract/' + $scope.contract.pk + '/',
-      data : dataToSend
+      data: dataToSend
       // data: {
       //   activeStatus: newValue
       // }
     }).
     then(function(response) {
-      if(response.data.activeStatus == false){
+      if (response.data.activeStatus == false) {
         $http({
           method: 'GET',
           url: '/api/warehouse/commodity/?contract=' + response.data.pk,
@@ -259,9 +259,9 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           for (var i = 0; i < response1.data.length; i++) {
             $http({
               method: 'PATCH',
-              url: '/api/warehouse/commodity/' +response1.data[i].pk +'/',
+              url: '/api/warehouse/commodity/' + response1.data[i].pk + '/',
               data: {
-                qty:0
+                qty: 0
               }
             }).
             then(function(response2) {
@@ -270,18 +270,17 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
                 url: '/api/warehouse/commodityQty/?commodity=' + response2.data.pk,
               }).
               then(function(response3) {
-                if(response3.data[response3.data.length-1].balance>0){
+                if (response3.data[response3.data.length - 1].balance > 0) {
                   $http({
                     method: 'POST',
                     url: '/api/warehouse/commodityQty/',
                     data: {
-                      commodity: response3.data[response3.data.length-1].commodity.pk,
-                      checkOut: response3.data[response3.data.length-1].balance,
+                      commodity: response3.data[response3.data.length - 1].commodity.pk,
+                      checkOut: response3.data[response3.data.length - 1].balance,
                       balance: 0
                     }
                   }).
-                  then(function(response4) {
-                  })
+                  then(function(response4) {})
                 }
               })
 
@@ -289,8 +288,20 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
           }
         })
       }
-  })
     })
+  })
+
+  $scope.deleteInvoiceData = function(invoiceId, idx) {
+    console.log(invoiceId, idx, 'aaaaaaaaaaaaaa');
+    $http({
+      method: 'DELETE',
+      url: '/api/warehouse/invoice/' + invoiceId
+    }).
+    then(function(response) {
+      Flash.create('success', 'Invoice Deleted')
+      $scope.contract.invoice.splice(idx, 1)
+    });
+  }
   $scope.addCommodity = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.warehouse.commodity.html',
@@ -660,7 +671,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       for (var i = 0; i < response.data.length; i++) {
         if (response.data[i].contract.pk == $scope.contract.pk) {
           response.data[i].data = JSON.parse(response.data[i].data);
-          console.log(response.data[i].data );
+          console.log(response.data[i].data);
           $scope.contract.invoice.push(response.data[i]);
         }
       }
@@ -724,14 +735,14 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
         return;
       }
 
-      console.log($scope.quoteInEditor.calculated,'fddddddddddddddddddd');
+      console.log($scope.quoteInEditor.calculated, 'fddddddddddddddddddd');
       var dataToSend = {
         contract: $scope.contract.pk,
         data: JSON.stringify($scope.quoteInEditor.data),
         value: $scope.quoteInEditor.calculated.value,
         status: $scope.quoteInEditor.status,
-        grandTotal:$scope.quoteInEditor.calculated.grand,
-        totalTax : $scope.quoteInEditor.calculated.tax
+        grandTotal: $scope.quoteInEditor.calculated.grand,
+        totalTax: $scope.quoteInEditor.calculated.tax
       };
       console.log($scope.quoteInEditor);
       console.log(dataToSend);
@@ -939,6 +950,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       c.fillStyle = s;
       c.fillRect(gx * boxSize, gy * boxSize, boxSize, boxSize);
     }
+    $scope.remainingSpace = 0
     if ($scope.spaceData) {
       console.log('entered');
       $scope.arr = JSON.parse($scope.contract.areas.areas);
@@ -951,13 +963,15 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       }
       if ($scope.contract.occupancy.length > 0) {
         $scope.selectingAreas = $scope.contract.occupancy
+        $scope.selectingSpace = $scope.contract.spaceGiven
+
         if (typeof $scope.selectingAreas == 'string') {
           $scope.selectingAreas = JSON.parse($scope.selectingAreas)
         }
       }
       for (var i = 0; i < $scope.contract.areas.contractSpace.length; i++) {
-        console.log('infoooooooo');
         $scope.arrays[i].array = $scope.contract.areas.contractSpace[i];
+        console.log('infoooooooo', $scope.arrays[i].array);
         if (typeof $scope.arrays[i].array.occupancy == 'string') {
           $scope.arrays[i].array.occupancy = JSON.parse($scope.arrays[i].array.occupancy)
         }
@@ -974,12 +988,17 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
         }
       }
       for (var i = 0; i < $scope.arrays.length; i++) {
+        console.log("sppppppaccccccccccccccccceeeee");
         $scope.selectedContractColour = $scope.getRandomColor();
-        $scope.selectedCompaniesArea.push({
-          color: $scope.selectedContractColour,
-          company: $scope.arrays[i].array.company.name,
-          seletedBoxes: $scope.arrays[i].array.occupancy.length
-        })
+        if($scope.arrays[i].array.spaceGiven>0){
+          $scope.selectedCompaniesArea.push({
+            color: $scope.selectedContractColour,
+            company: $scope.arrays[i].array.company.name,
+            seletedBoxes: $scope.arrays[i].array.occupancy.length,
+            space: $scope.arrays[i].array.spaceGiven
+          })
+        }
+        console.log($scope.totalBoxes, 'sppppppaccccccccccccccccceeeee');
         $scope.totalBoxes = $scope.totalBoxes - $scope.arrays[i].array.occupancy.length
         for (var j = 0; j < $scope.arrays[i].array.occupancy.length; j++) {
           var gx = $scope.arrays[i].array.occupancy[j].row
@@ -1005,12 +1024,16 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       //
       // }
       if ($scope.selectingAreas.length > 0) {
+        console.log("sppppppaccccccccccccccccceeeee", $scope.selectingAreas, $scope.selectingSpace);
         $scope.selectedContractColour = $scope.selectingColour;
-        $scope.selectedCompaniesArea.push({
-          color: $scope.selectedContractColour,
-          company: $scope.contract.company.name,
-          seletedBoxes: $scope.selectingAreas.length
-        })
+        if($scope.selectingSpace>0){
+          $scope.selectedCompaniesArea.push({
+            color: $scope.selectedContractColour,
+            company: $scope.contract.company.name,
+            seletedBoxes: $scope.selectingAreas.length,
+            space: $scope.selectingSpace
+          })
+        }
         $scope.totalBoxes = $scope.totalBoxes - $scope.selectingAreas.length
         for (var i = 0; i < $scope.selectingAreas.length; i++) {
           var gx = $scope.selectingAreas[i].row
@@ -1030,8 +1053,11 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
       //     $scope.array = [];
       //   }
       // }
-      console.log($scope.arrays, 'remaining');
-      console.log($scope.selectingAreas, 'selecting arraysssssssssssssss');
+
+      $scope.remainingSpace = $scope.contract.areas.totalArea
+      for (var i = 0; i < $scope.selectedCompaniesArea.length; i++) {
+        $scope.remainingSpace -= $scope.selectedCompaniesArea[i].space
+      }
     }
     // for (var i = 0; i < $scope.arr.length; i++) {
     //   var gx=$scope.arr[i].row
@@ -1282,10 +1308,17 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
     if (f.otherDocs != emptyFile && f.otherDocs != null) {
       tosend.append('otherDocs', f.otherDocs)
     }
+    if ( f.spaceGiven != undefined || f.spaceGiven != null || f.spaceGiven > 0) {
+      tosend.append('spaceGiven', f.spaceGiven)
+    } else {
+      Flash.create('warning', 'Add Space Given ');
+      return
+    }
     if (f.billingFrequency != f.billingDates.split(',').length) {
       Flash.create('warning', 'BillingDates count Should Be Equal To BillingFrequency ');
       return;
     }
+
     tosend.append('company', f.company.pk);
     tosend.append('billingFrequency', f.billingFrequency);
     tosend.append('billingDates', f.billingDates);
@@ -1297,6 +1330,8 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
     tosend.append('activeStatus', f.activeStatus);
     tosend.append('occupancy', JSON.stringify($scope.selectingAreas));
     tosend.append('occupancy_screenshort', f.occupancy_screenshort);
+    tosend.append('spaceGiven', f.spaceGiven);
+
     console.log(tosend);
 
     $http({
@@ -1701,7 +1736,7 @@ app.controller("businessManagement.warehouse.contract.form", function($scope, $h
 //     return color;
 //   }
 //
-//   $scope.initializeCanvas = function() {
+//   $scope. = function() {
 //
 //
 //
