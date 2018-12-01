@@ -57,9 +57,8 @@
               <span ng-if="showRatings"> {{details.rating_count}} Ratings & Reviews</span>
 
             </div>
-            <div class="row container-fluid" style="padding-top:14px;">
+            <div class="row container-fluid" ng-if="isCod" style="padding-top:14px;">
               <i class="fa fa-money fa-1x text-muted"></i> Cash on delivery : Yes
-
             </div>
           </div>
           <div class="col-md-6 col-xs-6">

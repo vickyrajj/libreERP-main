@@ -817,6 +817,8 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   //   }
   // })
   $scope.showRatings = settings_rating
+  $scope.isCod = false
+  $scope.isCod = settings_isCOD
 
   $scope.showDescription = false
   // $http.get('/api/ERP/appSettings/?app=25&name__iexact=description').
