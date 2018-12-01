@@ -72,3 +72,11 @@
   font-weight: 501;
   margin-left: 20px;
 }
+
+.noPadding{
+  padding:0px;
+}
+
+.shaddowed{
+  box-shadow: 0px 2px 8px rgba(26, 24, 20, 0.2);
+}

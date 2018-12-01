@@ -2,70 +2,33 @@
 <title>CIOC</title>
 <base href="/">
 {% endblock %} {% block specific_css %}
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/rzslider.min.css' %}" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" charset="utf-8">
 <link href="{% static 'css/homepage.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %} {% include "header.html" %} {% endblock %}
+{% endblock %} {% block header %} {% include "header.html" %} {% endblock %}
 <!-- Header -->
 
 {% block content %}
 
-<style media="screen">
-  @media only screen and (max-width: 800px) {
-    .intro-text{
-      padding-top:70vh !important;position:absolute;right:10px !important;
-    }
-
-    #particles-js{
-      background-image: url('/static/images/back_xs.svg');
-    }
-
-  }
-
-</style>
-
-
-<div ng-app="app" ng-controller="main" style="min-height:100vh;">
-
-
+<div style="min-height:100vh;">
   <div ui-view></div>
-
-
 </div>
 
 
 {% include "footer.html" %}
 
 {% endblock %} {% block specific_js %}
-<!-- <script src="{% static 'js/jquery.easing.min.js' %}"></script>
-<script src="{% static 'js/classie.js' %}"></script>
-<script src="{% static 'js/chatter.js' %}"></script>
 
-
-<script src="{% static 'js/agency.js' %}"></script>
 <script src="{% static 'js/angular.min.js' %}"></script>
-<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
-<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
-<script src="{% static 'js/app.homepage.js' %}"></script>
-
-<script src="{% static 'js/particles.js' %}"></script>
-<script src="{% static 'js/app.js' %}"></script> -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.3.4/tinymce.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.17/angular-ui-router.js"></script>
-
-<!-- <script src="{% static 'js/jquery.easing.min.js' %}"></script> -->
-<!-- <script src="{% static 'js/classie.js' %}"></script> -->
 <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
 <script src="{% static 'js/angular-bootstrap-confirm.min.js' %}"></script>
-<!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
 <script src="{% static 'js/tinymce.min.js' %}"></script>
-<!-- <script src="{% static 'js/agency.js' %}"></script> -->
-<script src="{% static 'js/angular.min.js' %}"></script>
 <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
 <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
-<script src="{% static 'js/app.homepage.js' %}"></script>
 <script src="{% static 'js/angular-flash.js' %}"></script>
-<script src="{% static 'js/particles.js' %}"></script>
-<script src="{% static 'js/app.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/angular-owl-carousel-2.js' %}"></script>
+<script src="{% static 'js/app.homepage.js' %}"></script>
 
 {% endblock %}
