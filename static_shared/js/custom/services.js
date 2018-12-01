@@ -44,17 +44,37 @@ app.factory('$permissions', function($http){
     // console.log(modules);
   })
 
-  $http({method : 'GET' , url : '/api/ERP/application/'}).
-  then(function(response){
-    apps = response.data;
-  })
+  // var applications = setInterval(getApplications, 200);
+  getApplications()
+
+
+
+  // $http({method : 'GET' , url : '/api/ERP/application/'}).
+  // then(function(response){
+  //   apps = response.data;
+  // })
+  function getApplications(){
+    // if(apps.length>0){
+    //   clearInterval(applications);
+    // }
+    console.log('getting applicatons');
+    $http({method : 'GET' , url : '/api/ERP/application/'}).
+    then(function(response){
+      apps = response.data;
+    })
+  }
+
+
+  setTimeout(function () {
+    console.log(appps)
+  }, 1000);;
 
   myPk = myProfile().pk
 
   $http({method : 'GET' , url : '/api/ERP/permission/?user='+myPk}).
   then(function(response){
     myPerms = response.data;
-    console.log(myPerms);
+    // console.log(myPerms);
   })
 
 

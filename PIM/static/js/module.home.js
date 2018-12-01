@@ -155,11 +155,11 @@ app.config(function($stateProvider) {
         }
       }
     })
-    .state('home.clients', {
-      url: "/clients",
+    .state('home.company', {
+      url: "/company",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.clients.html',
+          templateUrl: '/static/ngTemplates/app.company.html',
           controller: 'businessManagement.customers',
         }
       }
@@ -171,6 +171,15 @@ app.config(function($stateProvider) {
         "": {
           templateUrl: '/static/ngTemplates/app.qualityCheck.html',
           controller: 'businessManagement.reviews',
+        }
+      }
+    })
+    .state('home.sessionHistory', {
+      url: "/sessionHistory",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.sessionHistory.html',
+          controller: 'businessManagement.sessionHistory',
         }
       }
     })

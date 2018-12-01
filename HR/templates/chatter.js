@@ -317,7 +317,7 @@ if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
 
-windowColor = "#1f5b82"
+// windowColor = "#1f5b82"
 
 var windowColorR = parseInt(windowColor.slice(1,3),16)
 var windowColorG = parseInt(windowColor.slice(3,5),16)
@@ -500,7 +500,29 @@ function getVisitorDetails() {
 }
 
 
-
+function setIframeRotated(){
+  iframeDiv.style.position = "fixed";
+  iframeDiv.style.height = "70vh";
+  iframeDiv.style.width = "70vh";
+  iframeDiv.style.bottom = "100px";
+  iframeDiv.style.right = "408px";
+  iframeDiv.style.transition = "all .2s"
+  iframeDiv.style.animation = "moveInFront 0.6s"
+  iframeDiv.style.transform = "rotate(90deg)";
+  document.getElementById('iFrame1').style.height='50px'
+  iframeDiv.style.boxShadow='';
+  iframeDiv.style.borderRadius='10px';
+}
+function setIframeToNormal(){
+  iframeDiv.style.position = "fixed";
+  iframeDiv.style.height = "70vh";
+  iframeDiv.style.width = "50%";
+  iframeDiv.style.bottom = "100px";
+  iframeDiv.style.right = "410px";
+  iframeDiv.style.transform = "rotate(0deg)";
+  document.getElementById('iFrame1').style.height='100%'
+  iframeDiv.style.boxShadow='-5px -10px 10px rgb(0,0,0,0.2)';
+}
 document.addEventListener("DOMContentLoaded", function(event) {
 
 
@@ -519,6 +541,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
       else if(args[0]=='ShowVisitorScreen'){
         document.getElementById('iframeDiv').style.display = "block";
         chatBox.style.display = "block";
+        return
+      }else if(args[0]=='ToggleVisitorVideo'){
+          setIframeRotated()
+        return
+      }else if(args[0]=='ShowVisitorVideo'){
+        setIframeToNormal()
         return
       }
 
@@ -847,6 +875,19 @@ function createChatDiv() {
   var chatBox_header = document.getElementById('chatBox_header')
   var chatBox_footer = document.getElementById('chatBox_footer')
   var chatBox_content = document.getElementById('chatBox_content')
+
+
+  var xhttp1 = new XMLHttpRequest();
+   xhttp1.onreadystatechange = function() {
+     if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText)
+        console.log(data);
+     }
+   };
+    xhttp1.open('GET', '{{serverAddress}}/api/support/customerProfile/' + custID + '/' , true);
+   // xhttp1.open('GET', '{{serverAddress}}/api/support/supportChat/', true);
+   xhttp1.send();
+
   // var isTyping = document.getElementById('isTyping');
 
   var exitBtn = document.getElementById('exitBtn');
@@ -865,6 +906,20 @@ function createChatDiv() {
   }
 
   chatBox.style.display = "none";
+
+  inputText.addEventListener('keydown',function(e){
+    if (e.keyCode == 13 && !e.shiftKey)
+        {
+            // prevent default behavior
+            e.preventDefault();
+            console.log('both');
+            sendMessage(inputText.value);
+        }
+        if (e.keyCode == 13&&e.shiftKey)
+        {
+          console.log('here');
+        }
+  })
 
   // inputText.style.display = "none"
 
@@ -1052,6 +1107,7 @@ function createChatDiv() {
         iframeDiv.style.bottom = "100px";
         iframeDiv.style.right = "410px";
         iframeDiv.style.animation = "moveInFront 0.6s"
+        iframeDiv.style.boxShadow='-5px -5px 10px rgb(0,0,0,0.2)';
       }
 
 
@@ -1165,69 +1221,101 @@ function createChatDiv() {
   //   // border-top: 2px solid '+ windowColor +'"
   // }
 
-
+  // xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/' + custID + '/' , true);
+  // xhttp.send();
 
   var mainStr = "";
-  var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:false} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
+  var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:true} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
 
+  var xhttp2 = new XMLHttpRequest();
+  xhttp2.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText)
+        console.log(data);
 
-  for (var i = 0; i < supportOptions.length; i++) {
-    if (supportOptions[i].name=='callCircle') {
-      supportOptions[i].value = callBackSupport;
+        console.log('yaaaaa');
+
+        for (var i = 0; i < supportOptions.length; i++) {
+          if (supportOptions[i].name=='callCircle') {
+            supportOptions[i].value = data.call;
+          }
+          if (supportOptions[i].name=='chatCircle') {
+            supportOptions[i].value = data.chat;
+          }
+          if (supportOptions[i].name=='audioCircle') {
+            supportOptions[i].value = data.videoAndAudio;
+          }
+          if (supportOptions[i].name=='videoCircle') {
+            supportOptions[i].value = data.videoAndAudio;
+          }
+          if (supportOptions[i].name=='ticketCircle') {
+            supportOptions[i].value = data.ticket;
+          }
+        }
+      }
     }
-    if (supportOptions[i].name=='chatCircle') {
-      supportOptions[i].value = chatSupport;
-    }
-    if (supportOptions[i].name=='audioCircle') {
-      supportOptions[i].value = videoAndAudioSupport;
-    }
-    if (supportOptions[i].name=='videoCircle') {
-      supportOptions[i].value = videoAndAudioSupport;
-    }
-    if (supportOptions[i].name=='ticketCircle') {
-      supportOptions[i].value = ticketSupport;
-    }
-  }
+    xhttp2.open('GET', '{{serverAddress}}/api/support/customerProfile/' + custID + '/' , true);
+   // xhttp1.open('GET', '{{serverAddress}}/api/support/supportChat/', true);
+   xhttp2.send();
+  // for (var i = 0; i < supportOptions.length; i++) {
+  //   if (supportOptions[i].name=='callCircle') {
+  //     supportOptions[i].value = callBackSupport;
+  //   }
+  //   if (supportOptions[i].name=='chatCircle') {
+  //     supportOptions[i].value = chatSupport;
+  //   }
+  //   if (supportOptions[i].name=='audioCircle') {
+  //     supportOptions[i].value = videoAndAudioSupport;
+  //   }
+  //   if (supportOptions[i].name=='videoCircle') {
+  //     supportOptions[i].value = videoAndAudioSupport;
+  //   }
+  //   if (supportOptions[i].name=='ticketCircle') {
+  //     supportOptions[i].value = ticketSupport;
+  //   }
+  // }
 
   // console.log(supportOptions,'so');
     serviceCount = 0
-    for (var i = 0 , rD = 0 , mB = 0 , mR=0 ; i < supportOptions.length; i++) {
+    setTimeout(function () {
+      for (var i = 0 , rD = 0 , mB = 0 , mR=0 ; i < supportOptions.length; i++) {
 
-      if (supportOptions[i].value) {
-        serviceCount ++;
-        var activeService = supportOptions[i].name
-        rD+=2;
-        mB+=60;
-        mR+=1;
-        var itemName = 'item-'+(i+1);
+        if (supportOptions[i].value) {
+          serviceCount ++;
+          var activeService = supportOptions[i].name
+          rD+=2;
+          mB+=60;
+          mR+=1;
+          var itemName = 'item-'+(i+1);
 
-        supportString = "\
-          @-moz-keyframes "+ itemName +" { 100% { \
-          margin-bottom: "+mB+"px; \
-          margin-right: -"+mR+"px; \
-          opacity: 1; \
-          -webkit-transform: rotate("+rD+"deg); \
-        } }\
-        @-webkit-keyframes "+ itemName +" { 100% { \
-          margin-bottom: "+mB+"px; \
-          margin-right: -"+mR+"px; \
-          opacity: 1; \
-          -webkit-transform: rotate("+rD+"deg); \
-        } }\
-        @-ms-keyframes item-1 { 100% { \
-          margin-bottom: "+mB+"px; \
-          margin-right: -"+mR+"px; \
-          opacity: 1; \
-          -ms-transform: rotate("+rD+"deg); \
-        } }\
-        "
-        mainStr = mainStr.concat(supportString);
-      }else {
-          document.getElementById(supportOptions[i].name).style.display = "none";
+          supportString = "\
+            @-moz-keyframes "+ itemName +" { 100% { \
+            margin-bottom: "+mB+"px; \
+            margin-right: -"+mR+"px; \
+            opacity: 1; \
+            -webkit-transform: rotate("+rD+"deg); \
+          } }\
+          @-webkit-keyframes "+ itemName +" { 100% { \
+            margin-bottom: "+mB+"px; \
+            margin-right: -"+mR+"px; \
+            opacity: 1; \
+            -webkit-transform: rotate("+rD+"deg); \
+          } }\
+          @-ms-keyframes item-1 { 100% { \
+            margin-bottom: "+mB+"px; \
+            margin-right: -"+mR+"px; \
+            opacity: 1; \
+            -ms-transform: rotate("+rD+"deg); \
+          } }\
+          "
+          mainStr = mainStr.concat(supportString);
+        }else {
+            document.getElementById(supportOptions[i].name).style.display = "none";
+        }
+
       }
 
-    }
-
+    }, 1000);
     if (serviceCount==1) {
       // alert('display only one service')
       // display none of main
@@ -1492,6 +1580,7 @@ function createChatDiv() {
                 right: 0px;\
                 min-width: 100%;\
                 z-index:99999\
+                box-shadow: 0px 0px 25px 5px rgba(0,0,0,0.2);\
               }\
               .closeIcon{\
                 display:block;\
@@ -1510,7 +1599,7 @@ function createChatDiv() {
                 right: 40px;\
                 min-width: 370px;\
                 border-radius:10px;\
-                box-shadow:-5px -5px 10px rgba(0,0,0,0.2);\
+                box-shadow: 0px 0px 25px 5px rgba(0,0,0,0.2);\
                 z-index:99999\
               }\
               .closeIcon{\
@@ -1643,14 +1732,15 @@ function createChatDiv() {
               cursor: pointer;\
             }\
             .chatBox_footer .chatbox_branding{\
-              min-height: 20px;\
+              min-height: 13px;\
               text-align: center;\
-              font-size: 15px;\
+              font-size: 10px;\
               background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\
               width: 100%;\
-              color: white;\
+              color: #dddddd;;\
               padding:0px;\
               margin:0px;\
+              text-shadow: -1px 1px 4px #fff;\
             }\
             .startNewChatBtn{\
               text-align: center;\
@@ -2017,17 +2107,34 @@ function createChatDiv() {
 
   function receiveMessage(event){
     if (event.data=='loadMyOrders') {
-      // console.log(''event);
-      // alert('instakk ext')
-      console.log('opennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
-
       var url = 'https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk'
        window.open(url);
-      // window.location = 'https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk'
 
     }
+    if(event.data=='AgentcalledToHideVideo'){
+      console.log('in chatter');
+
+      getFrameContent.postMessage('callFromAgentplease','*')
+    }
+    if (event.data=='calledToHideVideo') {
+      setIframeRotated()
+      connection.session.publish('service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+      });
+    }
+    if (event.data=='calledToShowVideo') {
+      setIframeToNormal()
+      connection.session.publish('service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
+        acknowledge: true
+      }).
+      then(function(publication) {
+        console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+      });
+    }
     if (event.data=='hideTheMainFrame') {
-      console.log('opennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
       document.getElementById('iframeDiv').style.display = "none";
     }else if(event.data=='showTheMainFrame'){
       document.getElementById('iframeDiv').style.display = "block";
@@ -2089,7 +2196,7 @@ function createChatDiv() {
 
   function messageDiv(message) {
 
-    console.log('inside messageDiv ',message);
+    // console.log('inside messageDiv ',message);
 
     function timeSince(date) {
       t = date;
@@ -2117,7 +2224,7 @@ function createChatDiv() {
       hours = hours ? hours : 12; // the hour '0' should be '12'
       minutes = minutes < 10 ? '0'+minutes : minutes;
       var strTime = hours + ':' + minutes + ' ' + ampm;
-      console.log(strTime);
+      // console.log(strTime);
       // var dateString = date + "-" +(month + 1) + "-" + year;
       // return dateString + ', ' + strTime
       return strTime
@@ -2248,7 +2355,7 @@ function createChatDiv() {
   function pushMessages() {
     for (var i = 0; i < chat.messages.length; i++) {
       var div = document.createElement("div");
-      console.log(chat.messages[i].message);
+      // console.log(chat.messages[i].message);
       if (chat.messages[i].message=="first") {
         // div.innerHTML = '<p>hello</p>'
         // console.log(div,'divvvvvvvvvvv');

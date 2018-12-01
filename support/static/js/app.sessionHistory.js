@@ -1,16 +1,16 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.qualityCheck', {
-    url: "/qualityCheck",
+  $stateProvider.state('businessManagement.sessionHistory', {
+    url: "/sessionHistory",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.qualityCheck.html',
-        controller: 'businessManagement.reviews',
+        templateUrl: '/static/ngTemplates/app.sessionHistory.html',
+        controller: 'businessManagement.sessionHistory',
       }
     }
   })
 });
-app.controller("businessManagement.reviews.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
+app.controller("businessManagement.sessionHistory.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
 
   $scope.commentPerm = false;
 
@@ -361,7 +361,7 @@ $scope.snap=function() {
     }
   }
 })
-app.controller("businessManagement.reviews", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
+app.controller("businessManagement.sessionHistory", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
 
   $scope.data = {
     tableData: []
@@ -413,6 +413,7 @@ $scope.archiveTab = false;
   $scope.getData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
     var url = '/api/support/reviewHomeCal/?'
+    url += '&getMyReviews=1'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
       // $scope.filterParams.push({key : 'date' , value :date.toJSON().split('T')[0]})
@@ -509,6 +510,23 @@ $scope.archiveTab = false;
   $scope.download = function(){
     $scope.filterData(true)
   }
+
+
+  // views = [{
+  //   name: 'list',
+  //   icon: 'fa-th-large',
+  //   template: '/static/ngTemplates/genericTable/genericSearchList.html',
+  //   itemTemplate: '/static/ngTemplates/app.qualityCheck.items.html',
+  // }, ];
+  //
+  //
+  // $scope.config = {
+  //   views: views,
+  //   url: '/api/support/reviewHomeCal/',
+  //   searchField: 'name',
+  //   itemsNumPerView: [16, 32, 48],
+  //   getParams:$scope.filterParams
+  // }
 
 
   $scope.tableAction = function(target) {

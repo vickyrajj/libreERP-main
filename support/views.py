@@ -189,7 +189,8 @@ class ReviewFilterCalAPIView(APIView):
             # print userCustProfile
             # print userCompanyUidList
             sobj = SupportChat.objects.filter(uid__in=userCompanyUidList)
-
+        if 'getMyReviews' in self.request.GET:
+            sobj = sobj.filter(user = self.request.user)
         if 'date' in self.request.GET:
             date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
             sobj = sobj.filter(created__startswith = date)
@@ -366,7 +367,7 @@ class GetChatterScriptAPI(APIView):
 
         while '/' in encrypted:
             encrypted = encrypt(pk, "cioc")
-
+        print  decrypt(encrypted, "cioc")
         return Response({'data':encrypted  }, status = status.HTTP_200_OK)
 
 class GetChatHistory(APIView):
@@ -445,10 +446,20 @@ class ChatThreadViewSet(viewsets.ModelViewSet):
     serializer_class = ChatThreadSerializer
     queryset = ChatThread.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['uid','status','user']
+    filter_fields = ['uid','status','user','company']
     def get_queryset(self):
         if 'uid' in self.request.GET and 'checkThread' in self.request.GET:
             threadObj = ChatThread.objects.filter(uid = self.request.GET['uid'])
+            if threadObj.count()>0:
+                print 'sssssssssssssssssssss',threadObj[0].status
+                if threadObj[0].status != 'started':
+                    print 'nottttttttttttttt',threadObj[0].status
+                    raise ValidationError(detail={'PARAMS' : 'createCookie'})
+            print 'tttttttttttttttt',threadObj
+            return threadObj
+        return ChatThread.objects.all()
+        if 'companyHandelrs' in self.request.GET and 'checkThread' in self.request.GET:
+            threadObj = ChatThread.objects.filter(company = self.request.GET['companyHandelrs'])
             if threadObj.count()>0:
                 print 'sssssssssssssssssssss',threadObj[0].status
                 if threadObj[0].status != 'started':
@@ -711,9 +722,12 @@ class DocumentVersionViewSet(viewsets.ModelViewSet):
 class CompanyProcessViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = CompanyProcessSerializer
-    queryset = CompanyProcess.objects.all()
+    # queryset = CompanyProcess.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['service','text']
+    def get_queryset(self):
+        print '@@@@@@@@@@@@@@@@@@@@@@@'
+        return CompanyProcess.objects.all()
 
 class CannedResponsesViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
@@ -769,6 +783,30 @@ class EmailChat(APIView):
         print ctx
         email_body = get_template('app.support.email.html').render(ctx)
         msg = EmailMessage("Chat Conversation" , email_body, to= emailAddr)
+        msg.content_subtype = 'html'
+        msg.send()
+        return Response({}, status = status.HTTP_200_OK)
+
+
+class EmailScript(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        emailAddr=[]
+        print request.data['email'],'email'
+        emailAddr.append(request.data['email'])
+        sObj = request.data['script']
+        companyName=request.data['companyName']
+
+
+        ctx = {
+            'heading' : "Syrow Script",
+            'script' : sObj,
+            'companyName':companyName
+
+        }
+        print ctx
+        email_body = get_template('app.scriptEmail.html').render(ctx)
+        msg = EmailMessage("Syrow chat support installation guide" , email_body, to= emailAddr)
         msg.content_subtype = 'html'
         msg.send()
         return Response({}, status = status.HTTP_200_OK)

@@ -327,6 +327,37 @@ app.directive('chatBox', function() {
     },
     controller: function($scope, $users, $uibModal, $http, ngAudio, Flash, $sce, webNotification) {
       $scope.IsVisitorOn=true;
+      $scope.isVisitorVideoShowing=true;
+
+
+      // var myyyy= document.getElementById('mytextArea111')
+      //
+      //   myyyy.addEventListener('keydown',function(e){
+      //     if (e.keyCode == 13 && !e.shiftKey)
+      //     {
+      //         // prevent default behavior
+      //         e.preventDefault();
+      //     }
+      //     if (e.keyCode == 13)
+      //     {
+      //       console.log(here);
+      //     }
+      //   })
+
+      $scope.textAreaBehavior = function(e){
+        if (e.keyCode == 13 && !e.shiftKey)
+            {
+                // prevent default behavior
+                e.preventDefault();
+                console.log('both');
+                $scope.send();
+            }
+            if (e.keyCode == 13&&e.shiftKey)
+            {
+              console.log('here');
+            }
+      }
+
 
       setTimeout(function() {
         if (document.getElementById("iframeChat" + $scope.data.uid) != null)
@@ -338,6 +369,31 @@ app.directive('chatBox', function() {
         }
         $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
       }
+      $scope.toggleVisitorScreen=function(){
+        $scope.isVisitorVideoShowing=!$scope.isVisitorVideoShowing;
+        if(!$scope.isVisitorVideoShowing){
+          // document.getElementById("iframeChat" + $scope.data.uid).style.height="14%";
+          $scope.msgDivHeight = 51
+          connection.session.publish('service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
+        }
+      else{
+        // document.getElementById("iframeChat" + $scope.data.uid).style.height="100%"
+        $scope.msgDivHeight = 52
+        // document.getElementById("iframeChat" + $scope.data.uid).style.transition=".5s"
+        connection.session.publish('service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published");
+        });
+      }
+      }
+      // window.addEventListener("message", receiveMessage, false);
       $scope.hideVisitorScreen = function() {
         $scope.IsVisitorOn=!$scope.IsVisitorOn;
         if($scope.IsVisitorOn){
@@ -371,13 +427,13 @@ app.directive('chatBox', function() {
 
       $scope.setHeight()
 
-
-
-
       window.addEventListener("message", receiveMessage, false);
 
       function receiveMessage(event) {
-        if (event.origin == webRtcAddress) {
+        if(event.data=='callFromAgentplease'){
+          alert('aaaaaaaaaaa gyaaaaaaaaaaa');
+        }
+        if (event.origin == webRtcAddress&&event.data=='userleft') {
           console.log(event.data + ' ******************');
           var uid = event.data.split('*')[0]
           var imageData = event.data.split('*')[1]
@@ -692,7 +748,6 @@ app.directive('chatBox', function() {
       $scope.removeFile = function() {
         $scope.chatBox.fileToSend = emptyFile;
       }
-
 
       $scope.send = function(mediaType) {
 

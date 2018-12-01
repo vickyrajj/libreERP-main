@@ -261,7 +261,7 @@ class applicationViewSet(viewsets.ModelViewSet):
             if 'user' in self.request.GET:
                 return getApps(User.objects.get(username = self.request.GET['user']))
             print 'super Userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
-            return application.objects.filter(inMenu = True).exclude(Q(name = 'app.reviews') | Q(name='app.uiSettings') | Q(name='app.knowledgeBase'))
+            return application.objects.filter(inMenu = True).exclude(Q(name = 'app.reviews') | Q(name='app.uiSettings') | Q(name='app.knowledgeBase') | Q(name='app.sessionHistory'))
 
 class applicationAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin,)

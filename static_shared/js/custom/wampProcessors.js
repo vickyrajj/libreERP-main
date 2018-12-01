@@ -220,6 +220,10 @@ var isfocused=true;
             scope.myUsers[i].audio = true
             scope.myUsers[i].audioUrl = args[4]
             //this is for audio call
+          }else if(args[1]=='calledToHideVideo'){
+            scope.myUsers[i].isVideoShowing = false
+          }else if(args[1]=='calledToShowVideo'){
+            scope.myUsers[i].isVideoShowing = true
           }
           console.log('scroll');
           setTimeout(function() {
@@ -310,7 +314,8 @@ var isfocused=true;
         chatThreadPk: args[5],
         spying:{value :'' , isTyping : false},
         video:false,
-        videoUrl:''
+        videoUrl:'',
+        isVideoShowing:true
       }
 
       // function createVisitor(email, phoneNumber , name) {

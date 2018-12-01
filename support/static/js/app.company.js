@@ -1,10 +1,10 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.clients', {
+  $stateProvider.state('businessManagement.company', {
     url: "/clients",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.clients.html',
+        templateUrl: '/static/ngTemplates/app.company.html',
         controller: 'businessManagement.customers',
       }
     }
@@ -102,7 +102,7 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
 
 });
 
-app.controller("businessManagement.customers.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+app.controller("businessManagement.customers.explore", function($scope, $state,$filter, $users, $stateParams, $http, Flash, $uibModal) {
   $scope.compDetails = $scope.tab.data
   $scope.custDetails = {}
   $http({
@@ -113,6 +113,17 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     $scope.custDetails = response.data[0]
     console.log($scope.custDetails, 'dddddddddddd');
   });
+  $scope.custDetails = {}
+  // $http({
+  //   method: 'GET',
+  //   url: '/api/HR/users/',
+  // }).
+  // then(function(response) {
+  //   $scope.myUsers = response.data[0]
+  //   console.log($scope.myUsers, 'dddddddddddd');
+  // });
+console.log($scope.brandLogo);
+$scope.myAdvisors=[]
 
   $scope.openChartPopoup = function(pk) {
     $uibModal.open({
@@ -122,9 +133,12 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
       resolve: {
         cPk: function() {
           return $scope.custDetails.pk;
-        }
+        },
+        compDetail:$scope.compDetails,
+        // logo:$scope.brandLogo
       },
-      controller: function($scope, $users, $timeout, $uibModalInstance, cPk) {
+      controller: function($scope, $users, $timeout, $uibModalInstance, cPk,compDetail) {
+
         $scope.cpk;
         $http({
           method: 'GET',
@@ -136,9 +150,30 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
           console.log($scope.cpk);
         });
 
+  console.log(compDetail);
+
+        $scope.sendEmail=function(){
+          if ($scope.emailAddress) {
+
+            $http({
+              method: 'POST',
+              url: '/api/support/emailScript/',
+              data: {
+                email: $scope.emailAddress,
+                script: $scope.src,
+                companyName:compDetail.name,
+                // logo:$scope.brandLogo
+
+              }
+            }).then(function(response) {
+              console.log('send email');
+            });
+
+          }
+        }
         $timeout(function() {
           console.log(window.location.host, 'hosttttttt');
-          $scope.src = '<script src="' + "http://" + window.location.host + "/script/chatter-" + $scope.cpk + ".js" + '"></script>'
+          $scope.src = '<script src="' + "https://" + window.location.host + "/script/chatter-" + $scope.cpk + ".js" + '"></script>'
         }, 600);
 
       },
@@ -160,6 +195,19 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     });
   }
 
+  $scope.fetchUsers=function(){
+      var url = '/api/support/chatThread/?'
+      url += '&companyHandelrs=' + $scope.compDetails.pk
+      $http({
+        method: 'GET',
+        url: url,
+      }).
+      then(function(response) {
+        console.log(response.data);
+
+      });
+  }
+  $scope.fetchUsers();
   $scope.fetchProcess()
 
 

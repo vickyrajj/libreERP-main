@@ -43,6 +43,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     return "";
   }
 
+  
+
 
   setTimeout(function() {
     $http({
@@ -69,7 +71,9 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
             isTyping: false
           },
           video: false,
-          videoUrl: ''
+          videoUrl: '',
+          isVideoShowing:true
+
         })
 
         connection.session.publish('service.support.agent', [response.data[i].uid, 'R'], {}, {
