@@ -88,6 +88,9 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   //
   //   });
   // }
+  console.log('here');
+  $scope.show=[false,false,false,false]
+  $scope.keepshow=false;
 
 });
 
