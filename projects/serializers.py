@@ -77,12 +77,13 @@ class timelineItemSerializer(serializers.ModelSerializer):
 
 
 class IssueSerializer(serializers.ModelSerializer):
+    project = projectLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Issues
-        fields = ( 'pk', 'created','title', 'project', 'responsible', 'tentresdt', 'priority','status', 'result')
+        fields = ( 'pk', 'created','title', 'project', 'responsible', 'tentresdt', 'priority','status', 'result','resultComments','description','file')
         read_only_fields = ('responsible','project', )
     def create(self , validated_data):
-        q = issues(**validated_data)
+        q = Issues(**validated_data)
         # print self.context['request'].data['responsible'], 'jbjusdbvjsdbjvbds'
         q.responsible = User.objects.get(pk=int(self.context['request'].data['responsible']))
         q.project = project.objects.get(pk=int(self.context['request'].data['project']))

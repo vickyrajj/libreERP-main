@@ -1,231 +1,99 @@
 console.log("loaded");
-var app = angular.module('app', ['ui.router', 'ui.bootstrap']);
+var app = angular.module('app',  ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule', 'ngMeta']);
 
 
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide ,  $locationProvider) {
 
-  // $urlRouterProvider.otherwise('/home');
+  $urlRouterProvider.otherwise('/');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
-
+  $locationProvider.html5Mode(true);
 
 
 
 });
 
-// app.run([ '$rootScope', '$state', '$stateParams', function ($rootScope,   $state,   $stateParams) {
-//     $rootScope.$state = $state;
-//     $rootScope.$stateParams = $stateParams;
-//     $rootScope.$on("$stateChangeError", console.log.bind(console));
-//   }
-// ]);
+app.run([ '$rootScope', '$state', '$stateParams', function ($rootScope,   $state,   $stateParams) {
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
+    $rootScope.$on("$stateChangeError", console.log.bind(console));
+  }
+]);
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 
 
+app.config(function($stateProvider) {
 
-app.directive('typedEffect', typedEffect);
+  $stateProvider
+    .state('home', {
+      url: "/",
+      templateUrl: '/static/ngTemplates/app.homepage.index.html',
+      controller: 'controller.index'
+    })
 
-typedEffect.$inject = ['$interval', '$timeout'];
+  $stateProvider
+    .state('blog', {
+      url: "/blog",
+      templateUrl: '/static/ngTemplates/app.homepage.blogs.html',
+      // controller: 'controller.blogs'
+    })
 
-function typedEffect($interval, $timeout) {
-  var directive = {
-    restrict: 'A',
-    scope: {
-      text: '<',
-      callback: '&'
-    },
-    link: link
-  };
+  $stateProvider
+    .state('pages', {
+      url: "/:title",
+      templateUrl: '/static/ngTemplates/app.homepage.page.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
 
-  return directive;
 
-  function link(scope, element, attrs) {
-    var i = 0,
-      interval,
-      text = scope.text || '',
-      delay = parseInt(attrs.delay) || 0,
-      speed = parseInt(attrs.speed) || 100,
-      cursor = attrs.cursor || '|',
-      blink = attrs.blink ? attrs.blink === 'true' : true;
 
-    cursor = angular.element('<span>' + cursor + '</span>');
 
-    $timeout(typeText, delay);
+});
 
-    function typeText() {
-      typeChar();
-      interval = $interval(typeChar, speed);
+app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal) {}
 
-      function typeChar() {
-        if (i <= text.length) {
-          element.html(text.substring(0, i)).append(cursor);
-          i++;
-        } else {
-          $interval.cancel(interval);
 
-          if (blink) {
-            cursor.addClass('blink');
-          } else {
-            cursor.remove();
-          }
 
-          if (attrs.callback) {
-            scope.callback();
-          }
-        }
-      }
-    }
-  }
-}
+)
 
 
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal) {
 
-  $scope.crmBannerID = 1;
-
-  $scope.mainBannerImages = ['/static/images/banner-img2.jpg']
-  $scope.bannerID = 0;
-
-  $scope.typings = ["Online tutoring", "24x7 online help", "Learn from school", "Learn from college", "Learn from home", "Learn from anywhere ...."]
-
-  $scope.typeIndex = 0;
-
-  $scope.activeTab = 0;
-
-  $scope.changeTab = function(index) {
-    $scope.activeTab = index;
-  }
 
 
-  $interval(function() {
+  // $scope.jobs = []
 
-    $scope.typeIndex += 1;
-    if ($scope.typeIndex == $scope.typings.length) {
-      $scope.typeIndex = 0;
-    }
+  // $http.get('/api/recruitment/jobsList/?status=Active').
+  // then(function(response) {
+  //   console.log(response.data, 'aaaaaa');
+  //   $scope.jobs = response.data;
+  // })
 
-  }, 5000)
-
-  $interval(function() {
-    $scope.bannerID += 1;
-    if ($scope.bannerID == $scope.mainBannerImages.length) {
-      $scope.bannerID = 0;
-    }
-  }, 2000)
-
-  $interval(function() {
-    $scope.crmBannerID += 1;
-    if ($scope.crmBannerID == 12) {
-      $scope.crmBannerID = 1;
-    }
-  }, 1000)
-
-  $scope.jobs = []
-
-  $http.get('/api/recruitment/jobsList/?status=Active').
-  then(function(response) {
-    console.log(response.data, 'aaaaaa');
-    $scope.jobs = response.data;
-  })
-
-  $scope.apply = function(idx) {
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.careers.modal.apply.html',
-      size: 'lg',
-      backdrop: false,
-      resolve: {
-        data: function() {
-          return $scope.jobs[idx];
-        }
-      },
-      controller: "careers.modal.apply",
-    }).result.then(function() {
-
-    }, function() {
-
-    });
-  }
-
-});
-app.controller('homepage.chat', function($scope, $state, $http, $timeout, $interval, $uibModal) {
-  $scope.name = "Pradeep";
-
-  $scope.minimized = true;
-
-  $scope.started = false;
-
-  $scope.data = {
-    minimized: true,
-    started: false,
-    msgText: '',
-    name: '',
-    email: ''
-  }
-
-
-  $scope.messages = [{
-    msg: "hii",
-    sentByMe: false
-  }]
-  $scope.msgText = '';
-  $scope.send = function() {
-    $scope.messages.push({
-      msg: $scope.data.msgText,
-      sentByMe: true
-    })
-    $scope.data.msgText = '';
-  }
-  var validUsers = [{
-    'name': 'Pradeep',
-    'email': 'abc@gmail.com'
-  }, ];
-  $scope.authentication = function() {
-    if ($scope.data.name.length == 0 || $scope.data.email.length == 0) {
-      return;
-    }
-    $scope.data.started = true;
-    $scope.data.minimized = false;
-  }
-
-
+  // $scope.apply = function(idx) {
+  //   $uibModal.open({
+  //     templateUrl: '/static/ngTemplates/app.careers.modal.apply.html',
+  //     size: 'lg',
+  //     backdrop: false,
+  //     resolve: {
+  //       data: function() {
+  //         return $scope.jobs[idx];
+  //       }
+  //     },
+  //     controller: "careers.modal.apply",
+  //   }).result.then(function() {
+  //
+  //   }, function() {
+  //
+  //   });
+  // }
 
 });
 
-app.controller('homepage.career', function($scope, $state, $http, $timeout, $interval) {
 
-  $scope.elements = [{
-      role: 'FrontEnd Developer',
-      functionalarea: 'Web Application Development',
-      experience: '0-1 years',
-      roledetails: 'view details',
-      notes: 'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'
-    },
-    {
-      role: 'Backend Developer',
-      functionalarea: 'Web Application Development',
-      experience: '0-1 years',
-      roledetails: 'view details',
-      notes: 'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'
-    },
-    {
-      role: 'Android Developer',
-      functionalarea: 'Web Application Development',
-      experience: '0-1 years',
-      roledetails: 'view details',
-      notes: 'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'
-    },
-    {
-      role: 'Software Developer Intern',
-      functionalarea: 'Web Application Development',
-      experience: '0-1 years',
-      roledetails: 'view details',
-      notes: 'The truth is that our finest moments are most likely to occur when we are feeling deeply uncomfortable, unhappy, or unfulfilled. For it is only in such moments, propelled by our discomfort, that we are likely to step out of our ruts and start searching for different ways or truer answers.'
-    }
-  ];
 
-});
+
 app.directive('fileModel', ['$parse', function($parse) {
   return {
     restrict: 'A',

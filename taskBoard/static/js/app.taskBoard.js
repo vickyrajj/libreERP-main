@@ -334,7 +334,7 @@ app.controller('projectManagement.taskBoard.default' , function($scope , $http ,
     url: '/api/taskBoard/task/',
     searchField: 'title',
     // getParams : [{key : 'to' , value : $scope.me.pk},],
-    multiselectOptions : [{icon : 'fa fa-plus' , text : 'Add' },{icon : 'fa fa-plus' , text : 'Delete' }],
+    multiselectOptions : [{icon : 'fa fa-plus' , text : 'Add' }],
     itemsNumPerView : [5,10,20],
     filters : [
       {icon : '' , key : 'orderBy' , btnClass:'default' , orderable : true, options : [
@@ -354,30 +354,8 @@ app.controller('projectManagement.taskBoard.default' , function($scope , $http ,
   $scope.tableAction = function(target , action , mode){
     console.log(target);
     if (mode == 'multi') {
-      // $scope.createTask();
+      $scope.createTask();
 
-
-      if (action == 'Delete') {
-
-        $uibModal.open({
-          templateUrl: '/static/ngTemplates/test.html',
-          size: 'lg',
-          backdrop: true,
-          controller: function($scope) {
-
-          },
-
-        }).result.then(function() {
-          console.log('here...');
-        }, function() {
-
-        });
-
-
-
-
-
-      }
 
     }else{
 
@@ -414,5 +392,84 @@ app.controller('projectManagement.taskBoard.default' , function($scope , $http ,
       $scope.tabs.push(input)
     }
   }
+
+
+    $http({
+      method: 'GET',
+      url: '/api/projects/issue/?responsible=' + $scope.me.pk ,
+    }).
+    then(function(response) {
+      $scope.task = response.data;
+    })
+
+    $scope.details = function (id) {
+      console.log('detailsssssss function');
+      console.log($scope.me.username,$scope.me.pk,'---------');
+        $aside.open({
+          templateUrl: '/static/ngTemplates/app.projects.issueDetails.html',
+          placement: 'left',
+          size: 'md',
+          backdrop: true,
+          controller: function($scope){
+              console.log(id,'------this issue');
+              $http({
+                method: 'GET',
+                url: '/api/projects/issue/' + id ,
+              }).
+              then(function(response) {
+                $scope.details = response.data;
+              });
+
+            }
+        })
+      }
+
+      $scope.setStatus = function(pk, status) {
+        console.log('sett statusssssssss');
+        $http({
+          method: 'PATCH',
+          url: '/api/projects/issue/' + pk + '/',
+          data: {
+            status: status
+          }
+        }).
+        then(function(response) {
+          Flash.create('success', 'Saved');
+        });
+
+        if (status == 'resolved') {
+          $uibModal.open({
+            templateUrl: '/static/ngTemplates/app.project.issue.result.html',
+            // placement: 'left',
+            size: 'md',
+            backdrop: false,
+            resolve: {
+              issue: function() {
+                return pk;
+              }
+            },
+            controller: function($scope, issue, $uibModalInstance) {
+              $scope.form = {
+                resultComments: '',
+                result: 'resolved'
+              };
+              $scope.issue = issue;
+              $scope.save = function() {
+                $http({
+                  method: 'PATCH',
+                  url: '/api/projects/issue/' + $scope.issue + '/',
+                  data: $scope.form
+                }).
+                then(function(response) {
+                  Flash.create('success', 'Saved');
+                  $uibModalInstance.close()
+                });
+              }
+            }
+          }).result.then(function(d) {
+          }, function(d) {
+          });
+        }
+      }
 
 });

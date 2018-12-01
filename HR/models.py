@@ -173,8 +173,8 @@ class designation(models.Model):
     # unitType = models.CharField(choices = UNIT_TYPE_CHOICE , default = 'Not selected..' , max_length = 30)
     # domain = models.CharField(max_length = 15 , choices = DOMAIN_CHOICES , default = 'Not selected..')
     # unit = models.CharField(max_length = 30 , null = True) # this should be unique for a given facilty
-    # department = models.CharField(max_length = 30 , null = True)
     # rank = models.ForeignKey( rank , null = True )
+    department = models.CharField(max_length = 30 , null = True)
     division = models.ForeignKey( Division , null = True )
     unit = models.ForeignKey( Unit , null = True )
     department = models.ForeignKey( Departments , null = True )

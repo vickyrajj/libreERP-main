@@ -21,24 +21,11 @@
             cancel-button-type="default" data-placement="bottom"><i class="fa fa-refresh"></i> Reset</span>
           </div>
           <div class="col-md-3" style="margin-top:-8px">
-            <select class="form-control" ng-model="selectedMonth">
-              <option value="1">January</option>
-              <option value="2">February</option>
-              <option value="3">March</option>
-              <option value="4">April</option>
-              <option value="5">May</option>
-              <option value="6">June</option>
-              <option value="7">July</option>
-              <option value="8">August</option>
-              <option value="9">September</option>
-              <option value="10">Octobar</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
+            <select class="form-control" ng-model="selectedYear" ng-options="p for p in years">
             </select>
           </div>
           <div class="col-md-3" style="margin-top:-8px">
-            <select class="form-control" ng-model="selectedYear" ng-options="p for p in years">
-            </select>
+            <select class="form-control" ng-model="selectedMonth"ng-options="x for x in listMonth"></select>
           </div>
 
           <div class="col-md-2 pull-right">
@@ -58,7 +45,7 @@
   <div class="row" style="height:93vh;overflow:auto;margin:0px;">
     <div class="col-md-12" style="padding:0px;">
       <div class="container-fluid" style="padding:0px;">
-
+<!-- <p>{{filteredmonths}}yyyyyy</p> -->
         <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;">
           <tr style="background-color: #eeeeee;height: 96px;">
             <th>Sl No.</th>

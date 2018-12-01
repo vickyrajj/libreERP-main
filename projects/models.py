@@ -14,6 +14,9 @@ from time import time
 def getProjectsUploadsPath(instance , filename ):
     return 'projects/doc/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
+def getcontentFilePath(instance , filename ):
+    return 'projects/issue/%s_%s__%s' % (str(time()).replace('.', '_'), instance.title, filename)
+
 MEDIA_TYPE_CHOICES = (
     ('onlineVideo' , 'onlineVideo'),
     ('video' , 'video'),
@@ -93,4 +96,6 @@ class Issues(models.Model):
     tentresdt = models.DateField(auto_now = False, auto_now_add =False)  #tentative result
     priority = models.CharField(choices = ISSUES_ITEM_PRIORITY , max_length = 50)
     result = models.CharField(choices = ISSUES_ITEM_RESULT , max_length = 50,null=True)
-    resultComments = models.CharField(max_length=500 , null = True)
+    resultComments = models.CharField(max_length=500 , null = True, blank=False)
+    description = models.CharField(max_length=500 , null = True)
+    file = models.FileField(upload_to = getcontentFilePath ,  null = True , blank = True)

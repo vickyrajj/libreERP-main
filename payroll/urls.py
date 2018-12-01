@@ -7,6 +7,7 @@ router = routers.DefaultRouter()
 router.register(r'payslip' , payslipViewSet , base_name = 'payslip')
 router.register(r'report' , payrollReportViewSet , base_name = 'report')
 
+
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'getPayslip/$' , GetPayslip.as_view() ),
@@ -14,6 +15,7 @@ urlpatterns = [
     url(r'getReimbursement/$' ,GetReimbursement.as_view()  ),
     url(r'tdsReport/$' ,TDSslipsReport.as_view()  ),
     url(r'pfReport/$' ,PFslipsReport.as_view()  ),
-    url(r'getPayMonthlyslip/$' ,GetPayMonthlyslip.as_view()  )
-
+    url(r'getPayMonthlyslip/$' ,GetPayMonthlyslip.as_view()  ),
+    url(r'getMonth/$' ,GetAllMonths.as_view()  ),
+    url(r'sendPayslips/$' ,SendPayslipEmailAPIView.as_view() )
 ]

@@ -1,5 +1,5 @@
 <div style="position:relative; height:83.5vh;top:0px;right:0px;padding:0px;" ng-controller="projectManagement.taskBoard.createTask">
-    <div class="col-md-4" style="padding:0px;height:100%;position:absolute;overflow:auto;">
+    <div class="col-md-5" style="padding:0px;height:100%;position:absolute;overflow:auto;">
       <h3 style="word-wrap:break-word;margin-left:20px;" class="text-muted" ng-if="form.title.length==0">Untitled..</h3>
       <h3 style="word-wrap:break-word;margin-left:20px;" ng-if="form.title.length!=0">{{form.title | humanize}}</h3>
       <div class="form-group">
@@ -69,7 +69,7 @@
           </div>
       </div>
   </div>
-  <div class="col-md-8" style="position:absolute; height:100%;top:0px;right:0px;padding:0px;">
+  <div class="col-md-7" style="position:absolute; height:100%;top:0px;right:0px;padding:0px;">
       <div style="overflow:hidden;height:20%;position:absolute;width:100%;border-left:solid 3px #eee;" ng-if="form.mode=='view'">
           <div class="container-fluid">
               {{form.description | humanize}} <br>

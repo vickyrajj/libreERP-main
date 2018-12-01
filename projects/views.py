@@ -48,3 +48,5 @@ class IssueViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = IssueSerializer
     queryset = Issues.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['project','responsible']

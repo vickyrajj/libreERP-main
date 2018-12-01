@@ -3,32 +3,29 @@
   <div class="col-md-4" style="padding:0px;overflow:auto;height:100%;position:absolute;border-right:solid 2px #eee;">
     <div class="col-md-10" style="padding-top:25px;overflow:auto;height:100%;position:absolute;">
       <div class="card" ng-repeat="u in project.team" style="margin-bottom:20px;">
-          <div class="container-fluid" style="padding-top:15px;">
-            <div class="col-md-5">
-              <div class="row">
-                <img ng-src="{{u | getDP}}" width="60" height="60" />
-              </div>
-              <div class="row">
-                {{u | getName}}
-              </div>
+        <div class="container-fluid" style="padding-top:15px;">
+          <div class="col-md-5">
+            <div class="row">
+              <img ng-src="{{u | getDP}}" width="60" height="60" />
             </div>
-            <!-- <div class="col-md-7">
+            <div class="row">
+              {{u | getName}}
+            </div>
+          </div>
+          <!-- <div class="col-md-7">
                           <div class="row">
                               <strong>5</strong> Commits <br>
                               <strong>2</strong> Documents <br>
                           </div>
                       </div> -->
-          </div>
         </div>
-        <div>
-          <h3>{{project.title}}</h3>
-          <label>Description :</label> <span>{{project.description}}</span> <br>
-          <label>Date :</label> <span>{{project.dueDate | date: long}}</span>
-        </div>
+      </div>
+      <div>
+        <h3>{{project.title}}</h3>
+        <label>Description :</label> <span>{{project.description}}</span> <br>
+        <label>Date :</label> <span>{{project.dueDate | date: long}}</span>
+      </div>
     </div>
-
-
-
 
     <div class="col-md-2 col-md-offset-10" style="padding:0px;background: -moz-linear-gradient(bottom,rgba(255,0,0,0),rgba(212, 212, 212, 1));min-height:400px;">
       <ul class="nav nav-sidebar" style="width:100%;">
@@ -47,14 +44,14 @@
     <div class="col-md-12" ng-if="explore.mode == 'issues'">
       <h3 class="text-muted">Issues</h3>
       <div class="col-md-12 ">
-            <button class="btn btn-default" type="button" style="margin-top:-5%;right:-2%;position:absolute;" ng-click="openIssueForm()"> <i class="fa fa-plus">  New</i></button>
+        <button class="btn btn-default" type="button" style="margin-top:-5%;right:-2%;position:absolute;" ng-click="openIssueForm()"> <i class="fa fa-plus"> New</i></button>
       </div>
       <div class="row">
         <div class="col-md-1">
           Priority
         </div>
         <div class="col-md-5">
-          Summary
+          Title
         </div>
         <div class="col-md-2">
           Created
@@ -68,40 +65,48 @@
       </div>
       <hr>
 
-      <div>
-        <div class="row hoverList" ng-repeat="q in issues" style="padding-top:10px;padding-bottom:10px;">
-          <div class="col-md-1">
-            <label class="text text-success"  ng-if="q.priority=='low'">{{q.priority}}</label>
-            <label class="text text-warning"  ng-if="q.priority=='medium'">{{q.priority}}</label>
-            <label class="text text-danger"  ng-if="q.priority=='high'">{{q.priority}}</label>
+      <div class="row hoverList" ng-repeat="q in issues" style="padding-top:10px;padding-bottom:10px;">
+        <div class="col-md-1">
+          <label class="text text-success" ng-if="q.priority=='low'">{{q.priority}}</label>
+          <label class="text text-warning" ng-if="q.priority=='medium'">{{q.priority}}</label>
+          <label class="text text-danger" ng-if="q.priority=='high'">{{q.priority}}</label>
+        </div>
+        <div class="col-md-5">
+          {{q.title}}
+        </div>
+        <div class="col-md-2">
+          {{q.created | date:"d-M-yyyy"}}
+        </div>
+        <div class="col-md-1">
+          <span ng-if="q.result">
+            <i class="fa fa-check  fa-stack-1x fa-inverse" ng-if="q.result=='resolved'" style="color:green"></i>
+            <i class="fa fa-exclamation  fa-stack-1x fa-inverse" ng-if="q.result=='partial'" style="color:orange"></i>
+            <i class="fa fa-times  fa-stack-1x fa-inverse" ng-if="q.result=='parked'" style="color:red"></i>
+          </span>
+        </div>
+        <div class="col-md-2 text-right">
+          <div ng-if="q.status == 'resolved'">
+            {{q.status}}
           </div>
-          <div class="col-md-5">
-            {{q.title}}
+          <div class="dropdown" ng-if="q.status != 'resolved'">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+              {{q.status}} <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li ng-if="q.status == 'created' " ng-click="setStatus(q.pk , 'inprogress');q.status = 'inprogress'"> <a>In Progress</a> </li>
+              <li ng-if="q.status == 'created' || q.status == 'inprogress'|| q.status == 'stuck'" ng-click="setStatus(q.pk, 'resolved');q.status = 'resolved'"><a>Resolve</a></li>
+              <li ng-if="q.status != 'stuck' && q.status != 'resolved' " ng-click="setStatus(q.pk ,'stuck');q.status = 'stuck'"><a>Stuck</a></li>
+            </ul>
           </div>
-          <div class="col-md-2">
-            {{q.created | date:"d-M-yyyy"}}
-          </div>
-          <div class="col-md-2">
-              <span   ng-if="q.result" >
-                <i class="fa fa-check  fa-stack-1x fa-inverse" ng-if="q.result=='resolved'" style="color:green"></i>
-                <i class="fa fa-exclamation  fa-stack-1x fa-inverse" ng-if="q.result=='partial'" style="color:orange"></i>
-                <i class="fa fa-times  fa-stack-1x fa-inverse" ng-if="q.result=='parked'" style="color:red"></i>
-            </span>
-          </div>
-          <div class="col-md-2" >
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-              {{q.status}}  <span class="caret"></span></button>
-              <ul class="dropdown-menu">
-                <li ng-if="q.status == 'created' " ng-click="setStatus(q.pk , 'inprogress');q.status = 'inprogress'"> <a>In Progress</a> </li>
-                <li ng-if="q.status == 'created' || q.status == 'inprogress'" ng-click="setStatus(q.pk, 'resolved');q.status = 'resolved'"><a>Resolved</a></li>
-                <li ng-if="q.status == 'created' || q.status == 'inprogress'  || q.status == 'resolved'" ng-click="setStatus(q.pk ,'stuck');q.status = 'stuck'"><a>Stuck</a></li>
-              </ul>
-            </div>
-          </div>
+        </div>
+        <div class="col-md-1">
+          <button type="button" class="btn btn-default" ng-click="showDetails(q.pk)">
+            <i class="fa fa-info"></i>
+          </button>
         </div>
       </div>
     </div>
+
+
 
     <div class="col-md-12" ng-if="explore.mode == 'billing'">
       <h3 class="text-muted">Billing</h3>
@@ -120,7 +125,6 @@
         <div class="col-md-1">
           Hours
         </div>
-
       </div>
       <hr>
       <div>
@@ -136,21 +140,19 @@
               <div>{{t.parent.user | getName}}</div>
             </div>
           </div>
-          <div class="col-md-2" >
+          <div class="col-md-2">
             {{t.parent.date|date:long}}
           </div>
-          <div class="col-md-6" >
-          {{t.comment}}
+          <div class="col-md-6">
+            {{t.comment}}
           </div>
           <div class="col-md-1">
-          {{t.duration}}
+            {{t.duration}}
           </div>
         </div>
         <div class="col-md-1 pull-right" style="border-top:solid 2px #eeeeee;">{{totalTime}} Hrs. </div>
       </div>
-
     </div>
-
 
 
     <div class="col-md-12" ng-if="explore.mode == 'git'">

@@ -52,11 +52,14 @@ from reportlab.lib.units import inch, cm
 import calendar
 # import datetime
 from forex_python.converter import CurrencyCodes
-from HR.models import payroll,Leave
+from HR.models import payroll,Leave,profile
 from django.contrib.auth.models import User
 from finance.models import ExpenseSheet
 from rest_framework.response import Response
 from excel_response import ExcelResponse
+from django.core.mail import send_mail, EmailMessage
+from django.core.mail import send_mass_mail
+from email.mime.application import MIMEApplication
 
 
 
@@ -93,6 +96,8 @@ def payslip(response ,paySlip,userObj,report, request):
     now = datetime.datetime.now()
     monthdays=calendar.monthrange(report.year, report.month)[1]
     print monthdays,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    print report.status ,'aaaaaaaaaaaaaaaaaa'
+
     currencyType='INR'
     s=CurrencyCodes().get_symbol(currencyType) # currencysymbol
     if currencyType == 'INR':
@@ -179,7 +184,7 @@ def convertmonth(mon):
             return months.index(mon)
 
 
-def paysMonthlyslip(response ,paySlip,userObj,month,year, request):
+def paysMonthlyslip(response ,paySlip,userObj,month,year,payrollReport, request):
     # print '999999999999999999999999999999999999999',paySlip.hra,userObj.first_name+' '+userObj.last_name
     # casualleaves = 0
     # sickleaves = 0
@@ -190,7 +195,7 @@ def paysMonthlyslip(response ,paySlip,userObj,month,year, request):
     #             if i.category == 'ML':
     #                 sickleaves +=days
             # casualleaves=reportTableData
-
+    # print payrollReport.status,'---------------'
     settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
     now = datetime.datetime.now()
     monthint = convertmonth(month)
@@ -232,14 +237,20 @@ def paysMonthlyslip(response ,paySlip,userObj,month,year, request):
         emptax = "Professional Tax Deduction"
     else:
         emptax = "Tax Deduction"
-
+    print payrollReport,'---------------------'
     a=[Paragraph("<para fontSize=25 alignment='Left' textColor=#6375d4><strong>CIOC</strong></para>",styles['Normal']),
        Paragraph(str(settingsFields.get(name = 'companyName').value )+'<br/><br/>',styledict['center']),
        Paragraph(str(settingsFields.get(name = 'companyAddress').value)+'<br/>',styledict['center']),
-        Paragraph('<strong>www.cioc.co.in </strong><br/>' ,styledict['center']),
-
-       Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(month,year),styles['Normal'])
+       Paragraph('<strong>www.cioc.co.in </strong><br/>' ,styledict['center']),
        ]
+    if payrollReport:
+        if payrollReport.status == "approved":
+            a.append(Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(month,year),styles['Normal']))
+        else:
+            a.append(Paragraph("<para fontSize=8 alignment='center'><strong>provisional Employee PaySlip For Month Of {0} {1} </strong></para>".format(month,year),styles['Normal']))
+    else:
+            a.append(Paragraph("<para fontSize=8 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(month,year),styles['Normal']))
+
     p1=Paragraph("<para fontSize=8><strong>Bank Details : </strong>Salary Has Been Credited To "+str(userObj.payroll.accountNumber)+' '+str(userObj.payroll.bankName) + "</para>",styles['Normal'])
 
     data=[[a,'','',''],['','','',''],['Emp Code : %s'%(empCode),'Name : %s'%(name),'',''],['Location : %s'%(location),'Department :%s'%(department),'Grade : %s'%(grade),'Designation : %s'%(designation)],
@@ -262,15 +273,15 @@ def paysMonthlyslip(response ,paySlip,userObj,month,year, request):
 
 class GetPayMonthlyslip(APIView):
     def get(self , request , format = None):
-        print '333333333333333333333', request.GET['userid']
+        # print '333333333333333333333', request.GET['monthint],request.GET['year']
         user = User.objects.get(id = request.GET['userid'])
         payrol = payroll.objects.get(user = request.GET['userid'])
         month = request.GET['month']
         year = request.GET['year']
-        # report = PayrollReport.objects.get(id = request.GET['report'])
+        report = []
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
-        paysMonthlyslip(response , payrol , user ,month,year, request)
+        response['Content-Disposition'] = 'attachment;filename="payslip.pdf"'
+        paysMonthlyslip(response , payrol , user ,month,year,report, request)
         return response
 
 
@@ -313,3 +324,68 @@ class GetReimbursement(APIView):
                     amt += j.amount
         tosend = {'amount':amt}
         return JsonResponse(tosend,status = status.HTTP_200_OK)
+
+# ---------------------------------------------------------------
+class GetAllMonths(APIView):
+    def get(self , request , format = None):
+        print 'aaaaaaaaaaaa',request.GET
+        reportData = PayrollReport.objects.filter(year=int(request.GET['year']))
+        print reportData
+        toReturn = []
+        for o in reportData:
+            toReturn.append(o.month)
+        print toReturn,'aaaaaaaaaaa'
+        returnData =[]
+        month_lst = [1,2,3,4,5,6,7,8,9,10,11,12]
+        for value in month_lst:
+            if value not in toReturn:
+                returnData.append(value)
+        # x = set(toReturn) & set(month_lst)
+        # print returnData
+
+        return Response(returnData,status = status.HTTP_200_OK)
+
+
+class SendPayslipEmailAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self, request, format=None):
+        print request.GET['month'],'GETTTTT'
+        mn = request.GET['month']
+        pr = PayrollReport.objects.get(pk = request.GET['report'])
+        yr = pr.year
+        for payslip in pr.payslips.all():
+            print "sending email to " , payslip.user.username
+            user = User.objects.get(id = payslip.user.pk)
+            payrol = payroll.objects.get(user = payslip.user)
+            month = mn
+            year = yr
+            response = './static_shared/document/payslip.pdf'
+            contactData =[]
+            p = profile.objects.get(user = payslip.user.pk )
+            contactData.append(p.email)
+            # print p.email,'seeeennnnnnnndddddd to this'
+
+            email_subject =str('Payslip')
+            msgBody='Please find the attachment'
+            ctx = {
+                'message': msgBody,
+                'linkUrl': 'cioc.co.in',
+                'linkText' : 'View Online',
+                'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+                'sendersPhone' : '841101',
+                'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
+                'fbUrl' : 'facebook.com',
+                'twitterUrl' : 'twitter.com',
+            }
+            email_body = get_template('app.clientRelationships.email.html').render(ctx)
+            msg = EmailMessage(email_subject, msgBody,  to= contactData)
+
+            paysMonthlyslip(response  , payrol , user ,month,year,pr, request)
+            fp = open('./static_shared/document/payslip.pdf', 'rb')
+            att = MIMEApplication(fp.read(), _subtype="pdf")
+            fp.close()
+            att.add_header('Content-Disposition', 'attachment',
+                           filename=fp.name.split('/')[-1])
+            msg.attach(att)
+            msg.send()
+        return Response({},status = status.HTTP_200_OK)
