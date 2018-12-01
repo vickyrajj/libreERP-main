@@ -65,6 +65,15 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
   };
 
 
+  $scope.articles = [
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+    {date : new Date() , title : 'das' , 'description' : "" , link : '/' , image : '/static/images/some.jpg'},
+  ]
+
+
 
   $scope.friends = [
     {name:'John', age:25,dp:'/static/images/airbus-logo.png'},
