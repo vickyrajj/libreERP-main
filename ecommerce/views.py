@@ -760,7 +760,7 @@ class listingLiteViewSet(viewsets.ModelViewSet):
             elif self.request.GET['mode'] == 'suggest':
                 return listing.objects.all()[:5]
         # else:
-        return listing.objects.all().order_by(F('productIndex').asc(nulls_last=True))
+        return listing.objects.all().order_by(F('productIndex').asc())
         #     if self.request.GET['parentValue'] == 'vendor':
         #         s = service.objects.get(user = u)
         #         items = offering.objects.filter( service = s).values_list('item' , flat = True)
