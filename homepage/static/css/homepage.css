@@ -1,0 +1,25 @@
+.lang {
+  text-decoration: none;
+}
+.footer h4 {
+  color: #928ec9;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.footer a {
+	color: #ccc;
+	font-size: 12px;
+}
+.footer a:hover {
+  color: #ffc107;
+  text-decoration: none;
+}
+
+.terms > li {
+  border-right: 1px solid #fff;
+  color: #ccc;
+  font-size: 12px;
+	padding-right: 15px;
+}

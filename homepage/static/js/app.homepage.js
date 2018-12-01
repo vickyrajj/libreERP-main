@@ -1,5 +1,5 @@
 console.log("loaded");
-var app = angular.module('app',  ['ui.router', 'ui.bootstrap', 'flash', 'ngSanitize', 'ngAnimate', 'anim-in-out', 'mwl.confirm', 'ui.bootstrap.datetimepicker', 'rzModule', 'ngMeta']);
+var app = angular.module('app',  ['ui.router', 'ui.bootstrap']);
 
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide ,  $locationProvider) {
