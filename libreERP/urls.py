@@ -7,7 +7,7 @@ from HR.views import loginView , logoutView , home , registerView , tokenAuthent
 
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration,index,crmHome,customerLoginView , customerHomeView
 
-from ERP.views import serviceRegistration
+from ERP.views import serviceRegistration , renderedStatic
 
 app_name="libreERP"
 
@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'^contacts', contacts , name ='contacts'),
     url(r'^customer/login', customerLoginView , name ='customerLogin'),
     url(r'^customerhome', customerHomeView , name ='customerhome'),
+    url(r'^ngTemplates/(?P<filename>[\w|\W]+)', renderedStatic , name ='renderedStatic'),
 ]
 
 if settings.DEBUG:

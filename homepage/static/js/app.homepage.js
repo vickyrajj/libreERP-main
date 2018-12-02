@@ -28,7 +28,7 @@ app.config(function($stateProvider) {
   $stateProvider
     .state('home', {
       url: "/",
-      templateUrl: '/static/ngTemplates/app.homepage.index.html',
+      templateUrl: '/ngTemplates/app.homepage.index.html',
       controller: 'controller.index'
     })
 
@@ -87,6 +87,45 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
 
 
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+
+
+  $scope.langOptions = [
+    {flag : '/static/images/flags/USA-1.svg' , code : 'en' , lang : 'EN'},
+    {flag : '/static/images/flags/Japan.svg' , code : 'jp' , lang : 'JP'},
+    {flag : '/static/images/flags/Germany.svg' , code : 'de' , lang : 'DE'},
+    {flag : '/static/images/flags/France.svg' , code : 'fr' , lang : 'FR'},
+    {flag : '/static/images/flags/flag-Spain.svg' , code : 'es' , lang : 'ES'},
+  ]
+
+  $scope.data = {currentLang : $scope.langOptions[0]}
+
+  $scope.changeLan = function(lang) {
+    $scope.data.currentLang = lang;
+    Cookies.set('lang', lang.code);
+    location.reload(); 
+  }
+
+  if (Cookies.get('lang') != undefined) {
+    for (var i = 0; i < $scope.langOptions.length; i++) {
+      if ( $scope.langOptions[i].code == Cookies.get('lang') ) {
+        $scope.data.currentLang = $scope.langOptions[i];
+        break;
+      }
+    }
+  }
+
+  console.log($scope.langOptions);
+  $scope.schedule = function(idx) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.schedule.modal.html',
+      size: 'lg',
+      backdrop: true,
+      controller: function( $scope ) {
+
+      },
+    })
+  }
+
 
 
 

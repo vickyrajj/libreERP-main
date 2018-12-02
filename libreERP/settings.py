@@ -171,9 +171,14 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'API.middleware.simple_middleware',
+    'django.middleware.locale.LocaleMiddleware'
 )
 
 ROOT_URLCONF = 'libreERP.urls'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR , 'homepage', 'locale'), )
+
 
 TEMPLATES = [
     {

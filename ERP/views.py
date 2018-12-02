@@ -22,6 +22,26 @@ from dateutil.relativedelta import relativedelta
 import calendar
 from HR.models import payroll
 from rest_framework import filters
+from django.utils import translation
+
+def renderedStatic(request , filename):
+
+    if request.COOKIES.get('lang') == None:
+        language = translation.get_language_from_request(request)
+    else:
+        language = request.COOKIES.get('lang')
+
+    translation.activate(language )
+    request.LANGUAGE_CODE = translation.get_language()
+    print request.LANGUAGE_CODE
+    return render(request , filename)
+
+
+
+
+
+
+
 
 class LocationTrackerAPI(APIView):
     renderer_classes = (JSONRenderer,)

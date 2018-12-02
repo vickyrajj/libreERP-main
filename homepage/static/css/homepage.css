@@ -49,6 +49,7 @@
   padding: 10px;
   text-decoration: none;
   border-left: 4px solid #fff;
+  cursor: pointer;
 
 }
 .container_box > li >a{
@@ -78,5 +79,25 @@
 }
 
 .shaddowed{
-  box-shadow: 0px 2px 8px rgba(26, 24, 20, 0.2);
+  box-shadow: 0px 1px 4px rgba(26, 24, 20, 0.2);
+}
+
+.btn-primary{
+  background:white;
+  color:#080738;
+  border:solid 1px #0773ab;
+}
+
+.btn-primary:hover{
+  background:#0773ab;
+  color: #fff;
+  border:solid 1px #0773ab;
+}
+
+.btn-warning{
+  background-color: #ff6900;
+  border:solid 1px #ff6900;
+}
+.btn-warning:hover{
+  background-color: #ff6900;
 }
