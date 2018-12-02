@@ -33,8 +33,7 @@ def renderedStatic(request , filename):
 
     translation.activate(language )
     request.LANGUAGE_CODE = translation.get_language()
-    print request.LANGUAGE_CODE
-    return render(request , filename)
+    return render(request , filename , {"lang" : request.LANGUAGE_CODE})
 
 
 
