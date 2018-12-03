@@ -625,8 +625,7 @@ class listingViewSet(viewsets.ModelViewSet):
                 print data['parent'] , type(data['parent'])
                 prnt = genericProduct.objects.get(id = data['parent'])
                 print prnt
-                toReturn = listing.objects.filter(parentType = prnt)
-
+                toReturn = listing.objects.filter(parentType = prnt).order_by(F('productIndex').asc())
                 multiproductLst = []
                 if 'multipleStore' in self.request.GET:
                     print 'miltiiiiiiiiiiiiiiiiiiiiii',self.request.GET['pin']
@@ -760,7 +759,8 @@ class listingLiteViewSet(viewsets.ModelViewSet):
             elif self.request.GET['mode'] == 'suggest':
                 return listing.objects.all()[:5]
         # else:
-        return listing.objects.all().order_by(F('productIndex').asc())
+        return listing.objects.all()
+        # return listing.objects.all().order_by(F('productIndex').asc())
         #     if self.request.GET['parentValue'] == 'vendor':
         #         s = service.objects.get(user = u)
         #         items = offering.objects.filter( service = s).values_list('item' , flat = True)
