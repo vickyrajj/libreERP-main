@@ -137,7 +137,7 @@ $scope.myAdvisors=[]
         compDetail:$scope.compDetails,
         // logo:$scope.brandLogo
       },
-      controller: function($scope, $users, $timeout, $uibModalInstance, cPk,compDetail) {
+      controller: function($scope, $users, $timeout, $uibModalInstance, cPk,compDetail,Flash) {
 
         $scope.cpk;
         $http({
@@ -167,6 +167,8 @@ $scope.myAdvisors=[]
               }
             }).then(function(response) {
               console.log('send email');
+              Flash.create('success', 'Mail Sent')
+              $scope.emailAddress=''
             });
 
           }

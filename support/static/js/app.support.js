@@ -43,7 +43,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     return "";
   }
 
-  
+
 
 
   setTimeout(function() {
@@ -111,6 +111,21 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         })
       }
     });
+
+
+    function heartbeat() {
+      return $scope.me.pk
+    }
+
+    connection.session.register('service.support.heartbeat.'+$scope.me.pk, heartbeat).then(
+      function (res) {
+        console.log("registered to service.support.heartbeat iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+      },
+      function (err) {
+        console.log("failed to registered: ");
+      });
+
+
   }, 1000);
 
   $scope.onNotification = function(uid, msg, i = 'a') {

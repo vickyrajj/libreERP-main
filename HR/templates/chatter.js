@@ -324,6 +324,11 @@ var windowColorG = parseInt(windowColor.slice(3,5),16)
 var windowColorB = parseInt(windowColor.slice(5,7),16)
 var windowColorNew = "rgba("+windowColorR+","+ windowColorG+","+ windowColorB+","+0.6 +")";
 
+var metaTag=document.createElement('meta');
+  metaTag.name="viewport";
+  metaTag.content="initail-scale=1";
+  document.getElementsByTagName('head')[0].appendChild(metaTag);
+
 
 if (dpSupport=='') {
   dpSupport = '{{serverAddress}}/static/images/img_avatar_card.png'
@@ -737,9 +742,13 @@ function createChatDiv() {
               '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
+            '<img class="exitBtn" id="audioBtn" src="{{serverAddress}}/static/images/speaker1.png" alt="exit">'+
+            '<img class="exitBtn" id="videoBtn" src="{{serverAddress}}/static/images/videe1.png" alt="exit">'+
             '<img class="closeIcon" id="closeIcon" src="{{serverAddress}}/static/images/close.png" tooltip="" alt="close">'+
             // '<i id="closeIcon" class="fa fa-times closeIcon" aria-hidden="true"></i>'+
+
             '<img class="exitBtn" id="exitBtn" src="{{serverAddress}}/static/images/exit.png" alt="exit">'+
+
             // '<i id="exitBtn" class="fa fa-sign-out" aria-hidden="true"></i>'+
           '</div>'+
           '<div id="audioSection" class="audio_section">'+
@@ -955,26 +964,44 @@ function createChatDiv() {
     modal.style.display = "block";
   }
 
-
+function activeVideoCall(){
+  winCol = windowColor.split('#')[1]
+  urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
+  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
+  console.log(urlforConference);
+  if (device=='sm') {
+    urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
+    urlforConference = urlforConference + '&userMob=true'
+  }
+ openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
+}
+function activeAudioCall(){
+  winCol = windowColor.split('#')[1]
+  urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
+  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
+  openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
+}
 
   videoCircle.addEventListener('click',function () {
-     winCol = windowColor.split('#')[1]
-     urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
-     urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
-     console.log(urlforConference);
-     if (device=='sm') {
-       urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
-       urlforConference = urlforConference + '&userMob=true'
-     }
-    openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
+    //  winCol = windowColor.split('#')[1]
+    //  urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
+    //  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
+    //  console.log(urlforConference);
+    //  if (device=='sm') {
+    //    urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
+    //    urlforConference = urlforConference + '&userMob=true'
+    //  }
+    // openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
+    activeVideoCall()
     openChat()
   })
 
   audioCircle.addEventListener('click',function () {
-     winCol = windowColor.split('#')[1]
-     urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
-     urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
-    openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
+    //  winCol = windowColor.split('#')[1]
+    //  urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
+    //  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
+    // openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
+    activeAudioCall();
     openChat()
   })
 
@@ -1227,53 +1254,53 @@ function createChatDiv() {
   var mainStr = "";
   var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:true} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
 
-  var xhttp2 = new XMLHttpRequest();
-  xhttp2.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        var data = JSON.parse(this.responseText)
-        console.log(data);
-
-        console.log('yaaaaa');
-
-        for (var i = 0; i < supportOptions.length; i++) {
-          if (supportOptions[i].name=='callCircle') {
-            supportOptions[i].value = data.call;
-          }
-          if (supportOptions[i].name=='chatCircle') {
-            supportOptions[i].value = data.chat;
-          }
-          if (supportOptions[i].name=='audioCircle') {
-            supportOptions[i].value = data.videoAndAudio;
-          }
-          if (supportOptions[i].name=='videoCircle') {
-            supportOptions[i].value = data.videoAndAudio;
-          }
-          if (supportOptions[i].name=='ticketCircle') {
-            supportOptions[i].value = data.ticket;
-          }
-        }
-      }
+  // var xhttp2 = new XMLHttpRequest();
+  // xhttp2.onreadystatechange = function() {
+  //     if (this.readyState == 4 && this.status == 200) {
+  //       var data = JSON.parse(this.responseText)
+  //       console.log(data);
+  //
+  //       console.log('yaaaaa');
+  //
+  //       for (var i = 0; i < supportOptions.length; i++) {
+  //         if (supportOptions[i].name=='callCircle') {
+  //           supportOptions[i].value = data.call;
+  //         }
+  //         if (supportOptions[i].name=='chatCircle') {
+  //           supportOptions[i].value = data.chat;
+  //         }
+  //         if (supportOptions[i].name=='audioCircle') {
+  //           supportOptions[i].value = data.videoAndAudio;
+  //         }
+  //         if (supportOptions[i].name=='videoCircle') {
+  //           supportOptions[i].value = data.videoAndAudio;
+  //         }
+  //         if (supportOptions[i].name=='ticketCircle') {
+  //           supportOptions[i].value = data.ticket;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   xhttp2.open('GET', '{{serverAddress}}/api/support/customerProfile/' + custID + '/' , true);
+  //  // xhttp1.open('GET', '{{serverAddress}}/api/support/supportChat/', true);
+  //  xhttp2.send();
+  for (var i = 0; i < supportOptions.length; i++) {
+    if (supportOptions[i].name=='callCircle') {
+      supportOptions[i].value = callBackSupport;
     }
-    xhttp2.open('GET', '{{serverAddress}}/api/support/customerProfile/' + custID + '/' , true);
-   // xhttp1.open('GET', '{{serverAddress}}/api/support/supportChat/', true);
-   xhttp2.send();
-  // for (var i = 0; i < supportOptions.length; i++) {
-  //   if (supportOptions[i].name=='callCircle') {
-  //     supportOptions[i].value = callBackSupport;
-  //   }
-  //   if (supportOptions[i].name=='chatCircle') {
-  //     supportOptions[i].value = chatSupport;
-  //   }
-  //   if (supportOptions[i].name=='audioCircle') {
-  //     supportOptions[i].value = videoAndAudioSupport;
-  //   }
-  //   if (supportOptions[i].name=='videoCircle') {
-  //     supportOptions[i].value = videoAndAudioSupport;
-  //   }
-  //   if (supportOptions[i].name=='ticketCircle') {
-  //     supportOptions[i].value = ticketSupport;
-  //   }
-  // }
+    if (supportOptions[i].name=='chatCircle') {
+      supportOptions[i].value = chatSupport;
+    }
+    if (supportOptions[i].name=='audioCircle') {
+      supportOptions[i].value = videoAndAudioSupport;
+    }
+    if (supportOptions[i].name=='videoCircle') {
+      supportOptions[i].value = videoAndAudioSupport;
+    }
+    if (supportOptions[i].name=='ticketCircle') {
+      supportOptions[i].value = ticketSupport;
+    }
+  }
 
   // console.log(supportOptions,'so');
     serviceCount = 0
@@ -1524,11 +1551,9 @@ function createChatDiv() {
               @keyframes msgDiv{\
                 0%{\
                     opacity:0;\
-                    transform:translateY(10px);\
                 	}\
                 100%{\
                     opacity:1;\
-                    transform:translateY(0px);\
                 	}\
                 }\
                 .modal {\
@@ -1672,13 +1697,13 @@ function createChatDiv() {
             }\
             .chatBox_header .chatBox_name{\
               display: block;\
-              font-size: 18px;\
+              font-size: 15px;\
               padding:0px;\
               margin:0px;\
             }\
             .chatBox_header .chatBox_status{\
               display: block;\
-              font-size: 12px;\
+              font-size: 10px;\
               margin:5px;\
               padding:0px;\
             }\
@@ -1758,11 +1783,9 @@ function createChatDiv() {
             @keyframes moveInLeft{\
               0%{\
                 opacity:0;\
-                transform:translateX(80px);\
               }\
               80%{\
                 opacity:1;\
-                transform:translateX(-10px);\
               }\
               100%{\
                 opacity:1;\
@@ -1771,12 +1794,12 @@ function createChatDiv() {
             }\
             @keyframes moveInDown{\
               0%{\
-                opacity:0;\
+                opacity:1;\
                 transform:translateY(0px);\
               }\
               100%{\
-                opacity:1;\
-                transform:translateY(10px) scale(0.3);\
+                opacity:0;\
+                transform:translateY(10px) scale(0.0);\
               }\
             }\
             @keyframes rotateAnti{\
@@ -2170,6 +2193,18 @@ function createChatDiv() {
       }, 5000);
     }
   }
+var videoBtn=document.getElementById('videoBtn')
+  videoBtn.addEventListener("click",function(){
+    activeVideoCall()
+  })
+var audioBtn=document.getElementById('audioBtn')
+  audioBtn.addEventListener("click",function(){
+    activeAudioCall()
+  })
+function hideAudioAndVidoeBtn(){
+  videoBtn.style.display='none'
+  audioBtn.style.display='none'
+}
 
 
   exitBtn.addEventListener("click", function() {
@@ -2184,7 +2219,8 @@ function createChatDiv() {
       closeSupport.click()
       return
     }
-    endChat()
+    endChat();
+    hideAudioAndVidoeBtn()
   }, false);
 
   paperPlane.addEventListener("click", function() {
@@ -2284,7 +2320,7 @@ function createChatDiv() {
     if (message.logs==null) {
       if (!message.sentByAgent) {
         var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;  letter-spacing:2px;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;  letter-spacing:1.5px;">'+
                           msgDiv+
                         '</div>'+
                         '<div style="clear: both; float:right; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
@@ -2293,7 +2329,7 @@ function createChatDiv() {
 
       }else {
         var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:2px;">'+
+                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:1.5px;">'+
                      msgDiv+
                   '</div> '+
                   '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
@@ -2350,6 +2386,33 @@ function createChatDiv() {
 
   }
 
+  let currentUrl=window.location.href;
+setTimeout(function () {
+  connection.session.publish('service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
+    acknowledge: true
+  }).
+  then(function(publication) {
+    console.log("Published" + "service.support.agent."+agentPk);
+  });
+}, 4000);
+
+setInterval(function () {
+  if(currentUrl!==window.location.href){
+    console.log('changed url $$$$$$$$$$$$$$$$$$$$$$$$$$$4');
+
+    currentUrl=window.location.href;
+    connection.session.publish('service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
+      acknowledge: true
+    }).
+    then(function(publication) {
+      console.log("Published" + "service.support.agent."+agentPk);
+    });
+
+  }
+}, 5000);
+
+
+
 
 
   function pushMessages() {
@@ -2363,7 +2426,7 @@ function createChatDiv() {
         firstMessage = firstMessage.replaceAll("&lt;",'<')
         firstMessage = firstMessage.replaceAll("&gt;",">")
           div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:2px;font-size:12px">'+
+                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:1.5px;font-size:12px">'+
                      firstMessage+
                   '</div> '+
                 '</div> '
@@ -2467,7 +2530,7 @@ function createChatDiv() {
 
   setInterval(function(){
     onlineAgent();
-  },15000 )
+  },10000 )
 
 
   function spying(inputVal) {
@@ -2907,7 +2970,7 @@ function createChatDiv() {
       // closeChatSvg.style.display = ""
       chatBox.style.animation = ""
       chatBox.style.display = "block";
-      messageBox.style.animation = "moveInLeft 0.7s"
+      messageBox.style.animation = "moveInLeft 3s ease-out"
       closeSupport.style.animation = "rotateAnti 0.4s"
       // closeChatSvg.style.animation = "rotateAnti 1s"
     }else {
@@ -2969,7 +3032,7 @@ function createChatDiv() {
       }else {
         supportCircle.style.display = "";
       }
-      chatBox.style.animation = "moveInDown 0.4s"
+      chatBox.style.animation = "moveInDown 0.4s ease-out"
       closeSupport.style.display = "none";
       closeSupport.style.animation = "";
       setTimeout(function () {
@@ -2993,7 +3056,7 @@ function createChatDiv() {
       }else {
         supportCircle.style.display = "";
       }
-      chatBox.style.animation = "moveInDown 0.4s"
+      chatBox.style.animation = "moveInDown 0.4s ease-out"
       closeSupport.style.display = "none";
       closeSupport.style.animation = "";
       setTimeout(function () {
