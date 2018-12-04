@@ -2,6 +2,7 @@ from django.conf.urls import include, url
 
 urlpatterns = [
     url(r'^HR/', include('HR.urls')),
+    url(r'^homepage/', include('homepage.urls')),
     url(r'^ERP/', include('ERP.urls')),
     url(r'^social/', include('social.urls')),
     url(r'^mail/', include('mail.urls')),
@@ -20,4 +21,5 @@ urlpatterns = [
     url(r'^performance/', include('performance.urls')),
     url(r'^marketing/', include('marketing.urls')),
     url(r'^employees/', include('employees.urls')),
+
 ]

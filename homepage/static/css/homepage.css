@@ -1,3 +1,24 @@
+.scheduleDatePic td {
+  padding:8px;
+
+}
+.scheduleDatePic td button{
+  background-color: #131C3C;
+ color:#fff;
+ border: 1px solid #131C3C
+}
+.scheduleDatePic tH button{
+  background-color: #131C3C;
+ color:#fff;
+ border: 1px solid #131C3C
+}
+
+/* :hover {
+    color: #333;
+    background-color: #333;
+    border-color: #333;
+} */
+
 .lang {
   text-decoration: none;
 }

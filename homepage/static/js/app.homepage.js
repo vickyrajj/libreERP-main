@@ -1,4 +1,4 @@
-var app = angular.module('app',  ['ui.router', 'ui.bootstrap','angular-owl-carousel-2']);
+var app = angular.module('app',  ['ui.router', 'ui.bootstrap','angular-owl-carousel-2','ui.bootstrap.datetimepicker','flash']);
 
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide ,  $locationProvider) {
@@ -114,13 +114,75 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     }
   }
 
-  console.log($scope.langOptions);
+
   $scope.schedule = function(idx) {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.homepage.schedule.modal.html',
       size: 'lg',
       backdrop: true,
-      controller: function( $scope ) {
+      controller: function( $scope,Flash ) {
+      $scope.calendar = true
+        $scope.thankYou = false
+      $scope.refresh = function(){
+        $scope.form = {
+          dated : new Date(),
+          slot : '8 - 9',
+          emailId : '',
+          name:''
+        }
+      }
+      $scope.refresh()
+          $scope.timeSlot = [
+          {'time' : '8 - 9'},
+          {'time' : '9 - 10'},
+          {'time' : '10 - 11'},
+          {'time' : '11 - 12'},
+          {'time' : '13 - 14'},
+          {'time' : '14 - 15'},
+          {'time' : '15 - 16'},
+          {'time' : '16 - 17'},
+          ]
+
+        $scope.scheduleMeeting = function(){
+          // if($scope.form.dated == null || $scope.form.dated == undefined){
+          //   Flash.create("warning","PLease Select Date")
+          //   return;
+          // }
+          // if($scope.form.emailId == '' || $scope.form.emailId == undefined){
+          //   console.log("dddffffffffffff");
+          //   Flash.create('danger', 'Please fill Email Id')
+          //   return;
+          // }
+
+          var dataToSend = {
+            dated : $scope.form.dated.toJSON().split('T')[0],
+            slot : $scope.form.slot,
+            emailId : $scope.form.emailId,
+            name : $scope.form.name,
+          }
+          $http({
+            method: 'POST',
+            url: '/api/homepage/schedule/',
+            data: dataToSend
+          }).
+          then(function(response) {
+            Flash.create('success', 'Saved');
+            $scope.calendar = false
+            $scope.thankYou = true
+            $http({
+              method: 'POST',
+              url: '/api/homepage/inviteMail/',
+              data: {
+                value : response.data.pk
+              }
+            }).
+            then(function(response) {
+              $scope.refresh()
+            });
+          });
+
+        }
+
 
       },
     })
