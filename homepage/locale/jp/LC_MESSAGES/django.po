@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-02 21:08+0530\n"
+"POT-Creation-Date: 2018-12-03 10:21+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/app.homepage.index.html:8
+#: templates/app.homepage.index.html:7
 msgid "WelcomeHeading"
 msgstr "インテリジェントオートメーション"
+
+#: templates/header.html:15
+msgid "whatisrpa"
+msgstr "RPAとは"

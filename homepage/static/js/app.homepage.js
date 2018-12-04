@@ -69,7 +69,7 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
     {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
     {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
     {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
-    {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
+    // {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
   ]
 
 
@@ -102,7 +102,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   $scope.changeLan = function(lang) {
     $scope.data.currentLang = lang;
     Cookies.set('lang', lang.code);
-    location.reload(); 
+    location.reload();
   }
 
   if (Cookies.get('lang') != undefined) {
