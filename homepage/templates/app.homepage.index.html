@@ -1,7 +1,7 @@
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
 
-<div class="row" style=" background:url('/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg') no-repeat right bottom;height:65vh;margin:0px;">
+<div class="row" style=" background:url('/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg') no-repeat right bottom;height:60vh;margin:0px;background-size: auto 100%;">
   <img src="/static/images/image10.png" style="width:100%;height:100%" alt="">
   <div style="position:absolute;top:200px;left:100px;width:30vw;">
     <h3 style="color:white;">{% trans 'WelcomeHeading' %} </h3>
@@ -9,44 +9,192 @@
 </div>
 
 {% verbatim %}
-<div class="row" style="margin:0px;">
-  <div class="col-md-8 col-md-offset-2" >
-    <div class="col-md-12" >
-        <ng-owl-carousel class="owl-theme" owl-items="friends" owl-properties="properties" owl-ready="ready($api)">
-          <div ng-repeat="a in friends" style="padding:10px;">
-            <div class="anim-in-out anim-zoom-out" >
-              <div style="padding:20px;">
-                <img class="img" ng-src="{{a.dp}}" />
+<div class="marketing col-md-12 ">
+  <div class="col-md-5 text-center" style="margin-top:10%;margin-bottom:10%">
+    <div class="content">
+      <h3>True digital innovation starts with your employees and teams</h3>
+      <p>They’re the people most passionate about your brand, campaigns and products.
+        Enable their every idea for a true culture of innovation. Capture,
+        govern and manage digital innovation across the enterprise. Dramatically improve the ROI of
+        campaigns, landing pages, checkouts and overall conversion.</p>
+      <a href="/products/program-management/" class="btn btn-primary btn-rounded">Learn More</a>
+    </div>
+  </div>
+  <div class="col-sm-1" style="width:76px;">
+    <span class="point-text" style="margin-left:50px;">Ideate</span>
+    <div class="scroll-point point-1" style="margin-top:-22px;"></div>
+    <div class="row noPadding stroke" style="border-right: 2px solid #65647c;height:200px;"></div>
+    <div class="row noPadding curve" style="margin-left: -7px;">
+      <img src="/static/images/Stroke.svg" alt="">
+    </div>
+    <div class="row noPadding stroke" style="border-right: 2px solid #65647c;height:200px;"></div>
+    <div class="scroll-point point-2" style="margin-top:22px;"></div>
+    <span class="point-text" style="margin-left:50px;margin-top:50px;">Experiment</span>
+  </div>
+
+
+  <div class="col-md-6" style="min-height:100px;">
+    <div class="col-md-12">
+      <ul class="roles list-unstyled">
+        <li>
+          <div class="col-md-12" style="margin-top:40px;">
+            <div class="col-md-2" style="margin-top:25px;">
+              <span class="point-green"></span>
+              <img class="img-circle pull-right" width="90px" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/4lIxw6tMc8m80iAUsUEEWy/6d931e81bcb1fdd47a5bf6c87d10e34a/role-mkt-1.jpg" alt="">
+            </div>
+            <div class="col-md-8">
+              <div class="media-body">
+                <h5 class="text-uppercase">PRODUCT MANAGER</h5>
+                <blockquote>
+                  <h6>How can we lower mobile cart abandonment?</h6>
+                  <p>What if we try push notification reminders?</p>
+                </blockquote>
               </div>
             </div>
           </div>
-        </ng-owl-carousel>
+        </li>
+        <li>
+          <div class="col-md-12" style="margin-left:90px;margin-top:60px;">
+            <div class="col-md-2" style="margin-top:25px;">
+              <img class="img-circle pull-right" width="90px" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/1IrhRRmzKsoY6oU8co8SYW/2b3272d0fa15c464a33f5ff2fc5535fb/role-mkt-2.jpg" alt="">
+            </div>
+            <div class="col-md-8">
+              <div class="media-body">
+                <h5 class="text-uppercase">Customer Success Manager</h5>
+                <blockquote>
+                  <h6>How do we drive larger basket size on Black Friday?</h6>
+                  <p>Let's show promotions for related deals and products</p>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="col-md-12" style="margin-top:60px;">
+            <div class="col-md-2" style="margin-top:25px;">
+              <img class="img-circle pull-right" width="90px" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/qU5pQ44MxwuGKG84USqui/d5cd6e616c5fab97ba243b046046abb6/role-mkt-3.jpg" alt="">
+            </div>
+            <div class="col-md-8">
+              <div class="media-body">
+                <h5 class="text-uppercase">VP of Marketing</h5>
+                <blockquote>
+                  <h6>How can I increase new customer sign-ups?</h6>
+                  <p>How about we show viewers some personalized messaging and content?</p>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-5 text-center">
+  <div class="row">
+    <ul class="list-inline">
+      <li>
+        <div class="stat-circleo row" style="color:#080738;">
+          <div class="text-center" style="height:100%;padding-top:40px;">
+            <figure style="font-size: 70px; margin: 15px;">
+              $21M
+            </figure>
+            <span>Incremental Revenue Impact</span><br>
+            <a href="#">Learn how HP did it</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="stat-circles row" style="color:#ffff;margin-top:45%;margin-left:-17%;">
+          <div class="text-center" style="height:100%;width:100%;padding-top:85px;">
+            <figure style="font-size:60px;">+300%</figure>
+            <span> <b>Click-through uplift</b> </span><br>
+            <a href="#" style="font-size:13px;font-weight: 500;color:#ffff;">Read the Missguided case study</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="stat-circlet row" style="color:#080738;margin-top:70%">
+          <div class="text-center" style="height:100%; padding-top:30px;">
+            <figure style="font-size: 70px;margin-top:30px;">-80%</figure>
+            <span>Decrease in return rate</span><br>
+            <a href="#">Read the Brooks case study</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="col-sm-1" style="width:76px;margin-top:-80px;">
+  <div class="row noPadding" style="margin-left: -1px;">
+    <img src="https://images.ctfassets.net/zw48pl1isxmc/32U70oRSM8MWEWcEEyg6uS/2fd45782ccbbdd906e2f07d73ff8618e/curvy-2.svg" width:"100%"alt="">
+  </div>
+  <div class="scroll-point point-3" style="margin-left:29px;margin-top:22px;"></div>
+  <span class="point-text" style="margin-left:70px;">Repeat</span>
+</div>
+
+<div class="col-md-6" style="margin-top:30px;">
+  <div class="col-md-12">
+    <div class="text-center" style="margin-left:150px;">
+      <div class="content">
+        <h3>Let the data determine your baseline, your winning ideas and the losers</h3>
+        <p>Know the future impact of new offers, copy, CTA’s, performance improvements and more.
+          Armed with the accuracy of Stats Engine, never again guess at which offers will work and which won’t.
+          Just try them all. Accelerate campaign throughput while massively improving marketing ROI. </p>
+        <a href="/products/program-management/" class="btn btn-primary btn-rounded">Learn More</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row" style="margin:0px;">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-12">
+      <ng-owl-carousel class="owl-theme" owl-items="friends" owl-properties="properties" owl-ready="ready($api)">
+        <div ng-repeat="a in friends" style="padding:10px;">
+          <div class="anim-in-out anim-zoom-out">
+            <div style="padding:20px;">
+              <img class="img" ng-src="{{a.dp}}" />
+            </div>
+          </div>
+        </div>
+      </ng-owl-carousel>
     </div>
   </div>
 </div>
 
 <div class="row" style="margin:0px;margin-bottom:20px;">
 
-  <div class="col-md-8 col-md-offset-2 shaddowed noPadding">
-    <div class="col-md-6 noPadding" style="min-height:550px;">
-      <img src="/static/images/register.jpg" style="width:100%;">
+  <div class="col-md-8 col-md-offset-2 shaddowed noPadding" style="min-height:550px;border-radius:10px;">
+    <div class="col-md-6 noPadding">
+      <div class="noPadding blogimg">
+        <p style="font-size:24px;font-weight:500;color:#fff;">27 November 2018</p><br><br>
+        <span style="font-size:34px;font-weight:700;color:#fff">RPA Adoption: Top-down or Bottom-up?</span>
+      </div>
       <div style="padding:20px;">
-        <p>It has been a fascinating journey so far to watch
-           the adoption of RPA technology among client organizations.
-            We have observed several different paths to adoption while everyone
-             is still wondering if there is one template for the best
+        <p style="color:#002855;font-size: 15px;line-height: 1.7;">It has been a fascinating journey so far to watch
+          the adoption of RPA technology among client organizations.
+          We have observed several different paths to adoption while everyone
+          is still wondering if there is one template for the best
           approach.</p>
-          <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-success" name="">Read Article</button>
+        <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-success" name="">Read Article</button>
       </div>
     </div>
     <div class="col-md-6" style="min-height:550px;padding:15px;background-color:rgba(245,248,250,.5);">
       <div class="row" ng-repeat="i in articles" style="{{$odd ? 'background:#fff;':''}}">
         <div class="col-sm-2">
-          <img src="/static/images/bars.png" style="width:100%;">
+          <div class="cardimg text-center">
+            <span><br></span>
+            <span class="cardtext" style="font-size:30px;color:#fff;"> <strong>21</strong> </span>
+            <p class="cardtext" style="font-size:14px;color:#fff;line-height:3pt;">Nov</p>
+          </div>
         </div>
         <div class="col-sm-10">
-          <h4>RPA technology among client organizations cool text here. Great yeaa..</h4>
-          <p>Read More...</p>
+          <h4> <strong style="color:#080738">RPA technology among client organizations cool text here. Great yeaa..</strong> </h4>
+          <p class="text-primary">
+            <strong>Read More...</strong>
+          </p>
         </div>
       </div>
       <br>

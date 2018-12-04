@@ -22,12 +22,18 @@ import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
 from PIM.models import blogPost
+from django.utils import translation
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
-
-
 def index(request):
+    if request.COOKIES.get('lang') == None:
+        language = translation.get_language_from_request(request)
+    else:
+        language = request.COOKIES.get('lang')
+
+    translation.activate(language )
+    request.LANGUAGE_CODE = translation.get_language()
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
 
 def crmHome(request):

@@ -1,4 +1,4 @@
-{% verbatim %}
+{% load i18n %}
 
 <nav class="navbar navbar-default navbar-fixed-top" style="box-shadow: rgba(8, 19, 31, 0.5) 0px 3px 10px 0px;background-color:white;">
   <div class="container">
@@ -12,7 +12,7 @@
         <li class="header_element">
           <a href="/" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true"> RPA</a>
           <ul ng-mouseleave="keepshow[0]=false" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box">
-            <li><a href="#">What is RPA</a></li>
+            <li><a href="#">{% trans 'whatisrpa' %}</a></li>
             <li><a href="#">RPA in 2018</a></li>
             <li><a href="#">RPA Resources</a></li>
           </ul>
@@ -45,14 +45,14 @@
           </ul>
         </li>
         <li class="header_element">
-          <a href="/" > Blogs</a>
+          <a href="/blog" > Blogs</a>
         </li>
         <li style="margin-left:30px;">
           <button type="button" class="btn btn-warning" style="background-color:#ff6900;margin-top:10px;" ng-click="schedule()">
             Schedule a Demo
           </button>
         </li>
-
+{% verbatim %}
         <li style="margin-left:20px;width:70px;">
           <div class="dropdown" style="margin-top:10px;">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <img ng-src="{{data.currentLang.flag}}" style="height:15px;" alt=""> {{data.currentLang.lang}}
