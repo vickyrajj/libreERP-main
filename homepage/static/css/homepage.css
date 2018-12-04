@@ -200,7 +200,7 @@ blockquote>p {
 }
 
 .text-uppercase {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
   font-weight: Bold;
   font-size: 14px;
   text-transform: uppercase !important;
@@ -242,7 +242,6 @@ blockquote>p {
   display: inline-block;
   width: 330px;
   height: 330px;
-  /* background-color: #fff; */
   border-radius: 100%;
   border: 18px solid #7500ff;
   position: absolute;
@@ -282,3 +281,11 @@ figure {
   left: 30px;
   top: 50%;
 }
+
+@media screen and (min-width: 30px) and (max-width:400px) {
+  #stroke { display: none; }   /* hide it elsewhere */
+}
+
+/* @media screen and  (min-width: 30px) and (max-width: 1024px) {
+    #container { display: flex; flex-flow: column-reverse; }
+} */
