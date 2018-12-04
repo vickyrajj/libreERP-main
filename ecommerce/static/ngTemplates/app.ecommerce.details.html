@@ -64,20 +64,20 @@
           <div class="col-md-6 col-xs-6">
 
             <div class="row">
-              <span ng-if="details.product.serialNo==selectedObj.sku" style="font-size:30px;padding-left:10px"><i class="fa {{currency}}"></i>
+              <span ng-if="details.product.serialNo==selectedObj.sku&&showPrice" style="font-size:30px;padding-left:10px"><i class="fa {{currency}}"></i>
                 <span ng-if="details.product.discount>0">{{details.product.discountedPrice.toFixed(2)}} </span>
 
               <span ng-if="details.product.discount>0" class="text-muted"><strike>{{details.product.price}}</strike> </span>
               <span ng-if="details.product.discount==0">{{details.product.price}} </span>
               </span>
-              <span ng-if="details.product.serialNo!=selectedObj.sku" style="font-size:30px;padding-left:10px">
-                <span ng-if = "selectedObj.amnt == selectedObj.disc"><i class="fa {{currency}}"></i>{{selectedObj.amnt}}</span>
-              <span ng-if="selectedObj.amnt != selectedObj.disc"><i class="fa {{currency}}"></i>{{selectedObj.disc}} </span>
-              <span ng-if="selectedObj.amnt != selectedObj.disc" class="text-muted"><strike>{{selectedObj.amnt}}</strike> </span>
+              <span ng-if="details.product.serialNo!=selectedObj.sku&&showPrice" style="font-size:30px;padding-left:10px">
+                <span ng-if = "selectedObj.amnt == selectedObj.disc&&showPrice"><i class="fa {{currency}}"></i>{{selectedObj.amnt}}</span>
+              <span ng-if="selectedObj.amnt != selectedObj.disc&&showPrice"><i class="fa {{currency}}"></i>{{selectedObj.disc}} </span>
+              <span ng-if="selectedObj.amnt != selectedObj.disc&&showPrice" class="text-muted"><strike>{{selectedObj.amnt}}</strike> </span>
               </span>
             </div>
             <div class="row">
-              <span style="padding-left:10px;" ng-if="details.product.discount>0" class="text-muted" style="font-size:20px;">{{details.product.discount}} % Off</span>
+              <span style="padding-left:10px;" ng-if="details.product.discount>0&&showPrice" class="text-muted" style="font-size:20px;">{{details.product.discount}} % Off</span>
             </div>
 
           </div>
@@ -146,7 +146,7 @@
             </div>
           </div>
         </div>
-          <div class="col-md-12" ng-if="!showOptions||selectedObj.inStock<=0">
+          <div class="col-md-12" ng-if="!showOptions||selectedObj.inStock<=0||!selectedObj.inStock">
             <span style="font-size:25px;color:#ef4a1e">Out Of Stock</span>
           </div>
         </div>

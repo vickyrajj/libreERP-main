@@ -803,6 +803,15 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
   $scope.me = $users.get('mySelf');
   $scope.showRatings = false
+  $scope.priceDisplay = false
+  $scope.priceDisplay = settings_isPrice;
+  $scope.showPrice = false
+  if(!$scope.me&&!$scope.priceDisplay){
+    $scope.showPrice = false
+  }
+  else{
+    $scope.showPrice = true
+  }
 
   $scope.currency = settings_currencySymbol;
   console.log('paramssssssss', $scope.me, $state.params);
@@ -1322,7 +1331,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     $scope.prod_var = $scope.details.product_variants;
     $scope.prodVarList = []
     $scope.details.product.unit = $filter('getUnit')($scope.details.product.unit);
-    var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
+    if(!$scope.showPrice){
+      var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit)
+    }
+    else{
+      var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
+    }
     $scope.prodVarList = [{
       str: str,
       qty: $scope.details.product.howMuch,
@@ -1333,7 +1347,12 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
     if ($scope.prod_var) {
       for (var i = 0; i < $scope.prod_var.length; i++) {
-        str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
+        if(!$scope.showPrice){
+          str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit)
+        }
+        else{
+          str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
+        }
 
         $scope.prodVarList.push({
           pk: $scope.prod_var[i].id,

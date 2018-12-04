@@ -639,7 +639,18 @@ app.directive('productCard', function() {
     controller: function($scope, $state, $http, Flash, $rootScope, $users, $filter) {
 
       // console.log($scope.list,'aaaaa');
+
+
       $scope.me = $users.get('mySelf');
+      $scope.priceDisplay = false
+      $scope.priceDisplay = settings_isPrice;
+      $scope.showPrice = false
+      if(!$scope.me&&!$scope.priceDisplay){
+        $scope.showPrice = false
+      }
+      else{
+        $scope.showPrice = true
+      }
 
 
 
@@ -670,7 +681,14 @@ app.directive('productCard', function() {
 
         $scope.list.product.unit = $filter('getUnit')($scope.list.product.unit);
 
+
+        if(!$scope.showPrice){
+        var str = $filter('convertUnit')($scope.list.product.howMuch, $scope.list.product.unit)
+        }
+        else{
         var str = $filter('convertUnit')($scope.list.product.howMuch, $scope.list.product.unit) + ' -  ' + $scope.list.product.discountedPrice
+        }
+
         $scope.prodVarList = [{
           str: str,
           qty: $scope.list.product.howMuch,
@@ -681,7 +699,12 @@ app.directive('productCard', function() {
 
         if ($scope.prod_var) {
           for (var i = 0; i < $scope.prod_var.length; i++) {
-            str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.list.product.howMuch, $scope.list.product.unit) + ' -  ' + $scope.prod_var[i].discountedPrice
+            if(!$scope.showPrice){
+              str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.list.product.howMuch, $scope.list.product.unit)
+            }
+            else{
+              str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.list.product.howMuch, $scope.list.product.unit) + ' -  ' + $scope.prod_var[i].discountedPrice
+            }
             $scope.prodVarList.push({
               pk: $scope.prod_var[i].id,
               str: str,

@@ -36,28 +36,28 @@
 
           </div>
 
-          <span style="font-size:15px;padding-left:10px"> Price :</span>
+          <span style="font-size:15px;padding-left:10px"  ng-if="showPrice"> Price : </span>
           <!-- {{selectedObj}} -->
           <span ng-if="list.product.serialNo==selectedObj.sku">
             <span style="font-size:15px;">
-              <span ng-if="list.product.discount>0" class="text-muted">
+              <span ng-if="list.product.discount>0&&showPrice" class="text-muted">
                 <strike> <i class="fa {{currency}}"></i>{{list.product.price}}</strike>
               </span>
-              <span ng-if="list.product.discount==0">
+              <span ng-if="list.product.discount==0&&showPrice">
                 <i class="fa {{currency}}"></i>{{list.product.price}}
               </span>
             </span>
-            <span ng-if="list.product.discount>0" style="font-size:15px;">
+            <span ng-if="list.product.discount>0&&showPrice" style="font-size:15px;">
               <i class="fa {{currency}}"></i>{{list.product.discountedPrice.toFixed(2)}}
             </span>
           </span>
-          <span ng-if="list.product.serialNo!=selectedObj.sku && selectedObj.amnt == selectedObj.disc">
+          <span ng-if="list.product.serialNo!=selectedObj.sku && selectedObj.amnt == selectedObj.disc && showPrice">
             <i class="fa {{currency}}"></i>{{selectedObj.amnt}}
           </span>
-          <span ng-if="list.product.serialNo!=selectedObj.sku && selectedObj.amnt != selectedObj.disc" class="text-muted">
+          <span ng-if="list.product.serialNo!=selectedObj.sku && selectedObj.amnt != selectedObj.disc && showPrice" class="text-muted">
             <strike> <i class="fa {{currency}}"></i>{{selectedObj.amnt}} </strike>
           </span>
-          <span ng-if="list.product.serialNo!=selectedObj.sku && selectedObj.amnt != selectedObj.disc">
+          <span ng-if="list.product.serialNo!=selectedObj.sku && selectedObj.amnt != selectedObj.disc && showPrice">
             <i class="fa {{currency}}"></i>{{selectedObj.disc}}
           </span>
           <div>
