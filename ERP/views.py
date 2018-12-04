@@ -24,6 +24,7 @@ from HR.models import payroll
 from rest_framework import filters
 from django.utils import translation
 
+
 def renderedStatic(request , filename):
 
     if request.COOKIES.get('lang') == None:
