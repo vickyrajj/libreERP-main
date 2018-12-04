@@ -1,16 +1,17 @@
 .scheduleDatePic td {
-  padding:8px;
+  padding: 8px;
+}
 
-}
-.scheduleDatePic td button{
+.scheduleDatePic td button {
   background-color: #131C3C;
- color:#fff;
- border: 1px solid #131C3C
+  color: #fff;
+  border: 1px solid #131C3C
 }
-.scheduleDatePic tH button{
+
+.scheduleDatePic tH button {
   background-color: #131C3C;
- color:#fff;
- border: 1px solid #131C3C
+  color: #fff;
+  border: 1px solid #131C3C
 }
 
 /* :hover {
@@ -18,7 +19,6 @@
     background-color: #333;
     border-color: #333;
 } */
-
 .lang {
   text-decoration: none;
 }
@@ -303,8 +303,34 @@ figure {
   top: 50%;
 }
 
+.above-footer {
+  background: url('/static/images/footer-bg.jpg')center center;
+  color: white;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+.gobtn {
+  width: 100%;
+  max-width: 400px;
+  background: #ff6900;
+
+}
+.gobtn:hover{
+  background: #ff6900;
+  color: #fff;
+  border: solid 1px #ff6900;
+  transform: scale(1.075) translateZ(0);
+  transition: transform .2s cubic-bezier(.25, 1.6, .6, 1.4)
+}
+
+
 @media screen and (min-width: 30px) and (max-width:400px) {
-  #stroke { display: none; }   /* hide it elsewhere */
+  #stroke {
+    display: none;
+  }
+
+  /* hide it elsewhere */
 }
 
 /* @media screen and  (min-width: 30px) and (max-width: 1024px) {
