@@ -39,10 +39,18 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
         } else if (action == 'details') {
           var title = 'Project Details :';
           var appType = 'projectDetails';
-        } else if (action == 'invoiceDetails') {
-          var title = 'View  :';
-          var appType = 'project';
-        }
+        } else if (action == 'delete') {
+          console.log("aaaaaaaaa");
+            $http({
+              method: 'DELETE',
+              url: '/api/support/projects/' + $scope.data.tableData[i].pk + '/'
+            }).
+            then(function(response) {
+              Flash.create('success', 'Item Deleted');
+            })
+            $scope.data.tableData.splice(i, 1)
+            return;
+          }
 
         $scope.addTab({
           title: title + $scope.data.tableData[i].title,
