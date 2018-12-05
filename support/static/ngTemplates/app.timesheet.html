@@ -63,7 +63,7 @@
                   <div class="col-md-12">
                     <!-- {{data[0]}} <br> -->
                     <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}
-                       <span ng-if="data[0].rating == 5" class="pull-right">
+                       <!-- <span ng-if="data[0].rating == 5" class="pull-right">
                          <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
                          <i class="fa fa-star fa-lg" style="color:#086b0a" aria-hidden="true"></i>
                         </span>
@@ -78,26 +78,26 @@
                        <span ng-if="data[0].rating == 2||data[0].rating == 1" class="pull-right">
                           <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
                           <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
-                      </span>
+                      </span> -->
                     </h5>
 
-                    <h5 style="font-weight:501">UID : {{data[0].uid}}
+                    <!-- <h5 style="font-weight:501">UID : {{data[0].uid}}
                       <span class="pull-right" style="color:#286090 ;font-size:15px">{{data[0].numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
-                    </h5>
-                    <h5 style="font-weight:501">Client : {{data[0].company}}</h5>
-                    <h5 style="font-weight:501" ng-if="data[0].email">Visitor's Email :  {{data[0].email}}</h5>
+                    </h5> -->
+                    <!-- <h5 style="font-weight:501">Client : {{data[0].company}}</h5> -->
+                    <!-- <h5 style="font-weight:501" ng-if="data[0].email">Visitor's Email :  {{data[0].email}}</h5>
                     <h5 style="font-weight:501" ng-if="data[0].chatDuration!=0">Chat Duration :  {{data[0].chatDuration}} Min</h5>
                     <h5 style="font-weight:501" ng-if="data[0].statusChat">Status :  {{data[0].statusChat}}
                        <span ng-if="data[0].statusChat!='started'">by
                          <span ng-if="data[0][data[0].statusChat+'By']&&data[0][data[0].statusChat+'On']">{{data[0][data[0].statusChat+'By']}}</span>
                          <span ng-if="data[0][data[0].statusChat+'On']&&!data[0][data[0].statusChat+'By']">Visitor</span>
                         on {{data[0][data[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{data[0][data[0].statusChat+'On'].split('.')[0].split(' ')[1]}} </span>
-                     </h5>
+                     </h5> -->
                   </div>
                 </div>
                 <div class="row container-fluid" style="padding-top:10px;height:50px;background-color:#286090; opacity:1">
                   <div class="col-md-12" style="color:#fff">
-                    <h5>Date: {{data[0].created | date : 'dd-MMM-yyyy'}}
+                    <h5>Date: {{data[0].start | date : 'dd-MMM-yyyy'}}
                       <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg" ng-click="tableAction($index)"></i></span>
                     </h5>
                   </div>
