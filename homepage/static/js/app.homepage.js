@@ -1,4 +1,4 @@
-var app = angular.module('app',  ['ui.router', 'ui.bootstrap','angular-owl-carousel-2']);
+var app = angular.module('app',  ['ui.router', 'ui.bootstrap','angular-owl-carousel-2','ngSanitize']);
 
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide ,  $locationProvider) {
@@ -39,6 +39,14 @@ app.config(function($stateProvider) {
       controller: 'controller.blogs'
     })
 
+
+  $stateProvider
+    .state('blogDetails', {
+      url: "/:pk",
+      templateUrl: '/static/ngTemplates/app.homepage.blogDetails.html',
+      controller: 'controller.blogDetails'
+    })
+
   $stateProvider
     .state('pages', {
       url: "/:title",
@@ -49,9 +57,27 @@ app.config(function($stateProvider) {
 
 
 
+
+});
+
+app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal , $stateParams) {
+
+  console.log($stateParams);
+
+  $scope.blogPk = $stateParams.pk
+
+  $http.get('/api/PIM/blog/'+$scope.blogPk).
+  then(function (response) {
+    $scope.blogDetail = response.data
+    console.log($scope.blogDetail);
+  })
+
+
 });
 
 app.controller('controller.blogs', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+
+
 
 
   $scope.offset = 0;
@@ -61,6 +87,8 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
     $http.get('/api/PIM/blog?limit=14&offset='+$scope.offset).
     then(function(response) {
       $scope.blogs = response.data.results;
+
+      console.log($scope.blogs);
 
       $scope.firstSection = $scope.blogs.slice(0,4)
       $scope.second_sec1 = $scope.blogs.slice(4,7)
@@ -80,6 +108,10 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
 
   $scope.fetchRecentPosts()
   $scope.fetchBlogs()
+
+  $scope.openBlog = function (pk) {
+    $state.go('blogDetails', {pk : pk})
+  }
 
 
   $scope.sendUpdates = function () {
@@ -121,7 +153,7 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
     {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
     {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
     {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
-    {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
+    // {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
   ]
 
 
