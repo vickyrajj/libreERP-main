@@ -33,10 +33,10 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
-    .state('blog', {
-      url: "/blog",
+    .state('blogs', {
+      url: "/blogs",
       templateUrl: '/static/ngTemplates/app.homepage.blogs.html',
-      // controller: 'controller.blogs'
+      controller: 'controller.blogs'
     })
 
   $stateProvider
@@ -48,6 +48,58 @@ app.config(function($stateProvider) {
 
 
 
+
+});
+
+app.controller('controller.blogs', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+
+
+  $scope.offset = 0;
+  $scope.emailAddress = '';
+
+  $scope.fetchBlogs = function () {
+    $http.get('/api/PIM/blog?limit=14&offset='+$scope.offset).
+    then(function(response) {
+      $scope.blogs = response.data.results;
+
+      $scope.firstSection = $scope.blogs.slice(0,4)
+      $scope.second_sec1 = $scope.blogs.slice(4,7)
+      $scope.second_sec2 = $scope.blogs.slice(7,10)
+      $scope.thirdSection = $scope.blogs.slice(10,14)
+
+    })
+  }
+
+
+  $scope.fetchRecentPosts = function () {
+    $http.get('/api/PIM/blog?limit=5').
+    then(function(response) {
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
+  $scope.fetchBlogs()
+
+
+  $scope.sendUpdates = function () {
+    console.log($scope.emailAddress);
+  }
+
+
+
+
+  $scope.nextBtn = function () {
+    $scope.offset = $scope.offset + 14
+    $scope.fetchBlogs()
+  }
+
+  $scope.prevBtn = function () {
+    if ($scope.offset>=14) {
+      $scope.offset = $scope.offset - 14
+      $scope.fetchBlogs()
+    }
+  }
 
 });
 
@@ -102,7 +154,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   $scope.changeLan = function(lang) {
     $scope.data.currentLang = lang;
     Cookies.set('lang', lang.code);
-    location.reload(); 
+    location.reload();
   }
 
   if (Cookies.get('lang') != undefined) {

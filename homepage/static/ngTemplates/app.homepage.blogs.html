@@ -1,1 +1,109 @@
-<h1>blogs</h1>
+<div style="margin-top:80px;" style="width:100%;">
+  <h2 class="blogHeading">Blogs</h2>
+
+  <div ng-if="firstSection.length>0" class="blog_container">
+    <div class="flex_50Perc">
+      <img ng-src="{{firstSection[0].ogimage}}" alt="">
+      <p class="blog_text">{{firstSection[0].title}}</p>
+    </div>
+    <div class="sec1Right">
+      <div class="sec1RightBox1">
+        <img ng-src="{{firstSection[1].ogimage}}" alt="">
+        <p class="blog_text">{{firstSection[1].title}}</p>
+      </div>
+      <div class="sec1RightBox2" ng-repeat="blog in firstSection | limitTo: (2 - firstSection.length)">
+        <img ng-src="{{blog.ogimage}}" alt="">
+        <p class="blog_text">{{blog.title}}</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="blog_container" >
+    <div class="sec2Left">
+      <div class="flex_33Perc" ng-repeat="blog in second_sec1">
+        <img ng-src="{{blog.ogimage}}" alt="">
+        <p class="blog_text">{{blog.title}}</p>
+      </div>
+      <div class="flex_33Perc" ng-repeat="blog in second_sec2">
+        <img ng-src="{{blog.ogimage}}" alt="">
+        <p class="blog_text">{{blog.title}}</p>
+      </div>
+    </div>
+
+    <div class="sec2Right">
+
+      <div class="socialIcons">
+        <div>
+          <i class="fa fa-linkedin" aria-hidden="true"></i>
+        </div>
+        <div>
+          <i class="fa fa-facebook" aria-hidden="true"></i>
+        </div>
+        <div>
+          <i class="fa fa-twitter" aria-hidden="true"></i>
+        </div>
+        <div>
+          <i class="fa fa-youtube" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="bottomLine" style="padding:0 15px;">
+        <div class="textHeading">
+          <h4>Get Regular Blog Updates</h4>
+        </div>
+        <div class="inputEmail">
+          <input type="text" name="" value="" ng-model="emailAddress" placeholder="email address">
+        </div>
+        <div class="sendUpdates" ng-click=sendUpdates()>
+          Send Updates!
+        </div>
+      </div>
+
+      <div style="padding:0 15px;">
+        <div class="textHeading">
+          <h4>Most Recent Posts</h4>
+        </div>
+        <div style="padding:0 30px;">
+          <div style="border-bottom:1px solid #e0e0e0;" ng-repeat="p in recentPosts" >
+            <h4 style="font-size:14px; font-weight:bold; cursor:pointer;"> <span>{{$index + 1}}. </span> <span> {{p.title}} </span>  </h4>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <div ng-if="thirdSection.length>0" class="blog_container">
+    <div class="sec1Right">
+      <div class="sec1RightBox1">
+        <img ng-src="{{thirdSection[0].ogimage}}" alt="">
+        <p class="blog_text">{{thirdSection[0].title}}</p>
+      </div>
+      <div class="sec1RightBox2" ng-repeat="blog in thirdSection | limitTo: (2 - thirdSection.length)">
+        <img ng-src="{{blog.ogimage}}" alt="">
+        <p class="blog_text">{{blog.title}}</p>
+      </div>
+    </div>
+
+    <div class="flex_50Perc">
+      <img ng-src="{{thirdSection[1].ogimage}}" alt="">
+      <p class="blog_text">{{thirdSection[1].title}}</p>
+    </div>
+  </div>
+
+  <div class="buttons">
+
+    <div class="prevNextBtn" ng-click="prevBtn()">
+      Previous
+    </div>
+
+    <div class="prevNextBtn" ng-click="nextBtn()">
+      Next
+    </div>
+
+  </div>
+
+
+  <!-- {{blogs}} -->
+</div>

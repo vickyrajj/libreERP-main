@@ -59,6 +59,9 @@ class chatMessage(models.Model):
 def getCalendarAttachment(instance , filename ):
     return 'calendar/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, instance.originator.username, filename)
 
+def getOGImageAttachment(instance , filename ):
+    return 'blogs/%s_%s' % (str(time()).replace('.', '_'), filename)
+
 from clientRelationships.models import Contact
 class calendar(models.Model):
     TYPE_CHOICE = (
@@ -127,6 +130,8 @@ class blogPost(models.Model):
         ('tutorial' , 'tutorial'),
         ('whitepaper' , 'whitepaper'),
         ('product' , 'product'),
+        ('book' , 'book'),
+        ('question' , 'question'),
     )
     public = models.BooleanField(default = False)
     title = models.CharField(max_length = 500 , null=True)
@@ -139,6 +144,14 @@ class blogPost(models.Model):
     source = models.TextField(max_length = 40000 , null = True)
     tags = models.ManyToManyField(blogCategory , related_name = 'articles' , blank = True)
     contentType = models.CharField(max_length = 15 , choices = CONTENT_TYPE_CHOICE , default = 'article')
+    contentFK = models.PositiveIntegerField(null = True) # in case of book or question this will store the ID for the same
+    shortUrl = models.CharField(max_length =100 , null = True, unique = True)
+    ogimageUrl = models.CharField(max_length =1000 , null = True)
+    ogimage = models.ImageField( upload_to= getOGImageAttachment , null = True)
+    description = models.CharField(max_length =1000 , null = True)
+    tagsCSV = models.CharField(max_length =1000 , null = True) # comma seperated value
+    section = models.CharField(max_length =100 , null = True)
+    author = models.CharField(max_length =100 , null = True)
 
 class blogLike(models.Model):
     parent = models.ForeignKey(blogPost , related_name = 'likes')
