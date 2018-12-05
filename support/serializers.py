@@ -55,8 +55,8 @@ class ProjectsSerializer(serializers.ModelSerializer):
         return p
 
     def update (self, instance, validated_data):
-        instance.responsible.clear()
         if 'responsible' in self.context['request'].data:
+            instance.responsible.clear()
             for i in self.context['request'].data['responsible']:
                 instance.responsible.add(User.objects.get(pk = i))
         if 'service' in self.context['request'].data:
