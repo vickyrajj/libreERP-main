@@ -36,6 +36,7 @@ from django.db.models.functions import Concat
 from ERP.models import service
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+from django.utils import timezone
 import re
 regex = re.compile('^HTTP_')
 
@@ -48,6 +49,7 @@ from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum, Count, Avg
+from .models import *
 
 # Create your views here.
 
@@ -736,6 +738,65 @@ class CannedResponsesViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['text','service']
 
+
+class HeartbeatApi(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def get(self , request , format = None):
+        # print request.GET ,'%^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        if 'timesheet' in request.GET:
+            print request.GET['pk'],"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+            u = User.objects.get(pk = request.GET['pk'])
+            today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+            today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+            print today_min,"8****",today_max
+            obj=Heartbeat.objects.filter(start__range=(today_min, today_max),user=u)
+            print obj ,"objjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+
+            for i in obj:
+                print i.end,'fdffffffffff',i.start
+
+            if len(obj)==1:
+                print 'ifff1'
+                if obj[0].end is None:
+                    print 'ifff2'
+                    obj[0].end=timezone.now()
+                    obj[0].save()
+                else:
+
+                    print 'elseeee1 and current time is',  timezone.now() , 'and end time is',obj[0].end
+                    c = timezone.now() - obj[0].end
+                    cInMin =  c.total_seconds()/60
+                    print cInMin, "&&&&&&&&&&&&&&&&&&&&&"
+                    if cInMin>10:
+                        Heartbeat.objects.create(start=timezone.now(),user=u)
+                    else:
+                        obj[0].end=timezone.now()
+                        obj[0].save()
+            elif len(obj)>1:
+                print 'elseeee3'
+                if obj[len(obj)-1].end is None:
+                    print 'noneeee'
+                    obj[len(obj)-1].end=timezone.now()
+                    obj[len(obj)-1].save()
+                else:
+                    print 'elseeee4'
+                    c = timezone.now() - obj[0].end
+                    cInMin =  c.total_seconds()/60
+                    if cInMin>30:
+                        print 'ifffffffffffff444444'
+                        Heartbeat.objects.create(start=timezone.now(),user=u)
+                    else:
+                        print 'eeeeeeeeeeeeelseeee5'
+                        obj[len(obj)-1].end=timezone.now()
+                        obj[len(obj)-1].save()
+            else:
+                Heartbeat.objects.create(start=timezone.now(),user=u)
+        else:
+            print '##################3'
+        return Response({}, status = status.HTTP_200_OK)
+
+
+
 class StreamRecordings(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes=(permissions.AllowAny,)
@@ -786,6 +847,8 @@ class EmailChat(APIView):
         msg.content_subtype = 'html'
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
+
+
 
 
 class EmailScript(APIView):

@@ -21,11 +21,13 @@ from django.http import JsonResponse
 import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
+import datetime
 from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
 import calendar
 from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
+from support.models import *
 # from ERP.models import application , permission
 
 
@@ -108,6 +110,7 @@ import json
 
 @csrf_exempt
 def loginView(request):
+    print 'in loginnnnnnnnnnnn'
     if globalSettings.LOGIN_URL != 'login':
         return redirect(reverse(globalSettings.LOGIN_URL))
     authStatus = {'status' : 'default' , 'message' : '' }
@@ -118,7 +121,10 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
-        print request.POST
+        print request.POST,'***************in post'
+        print request.user,'&&&&&&&&&&&&&&&&&&&&&&&&&&&&7'
+
+
     	usernameOrEmail = request.POST['username']
         otpMode = False
         if 'otp' in request.POST:
@@ -127,6 +133,7 @@ def loginView(request):
             otpMode = True
         else:
             password = request.POST['password']
+
         if '@' in usernameOrEmail and '.' in usernameOrEmail:
             u = User.objects.get(email = usernameOrEmail)
             username = u.username
@@ -134,6 +141,7 @@ def loginView(request):
             username = usernameOrEmail
             try:
                 u = User.objects.get(username = username)
+                # Heartbeat.objects.create(start=timezone.now(),user=u)
             except:
                 statusCode = 404
         if not otpMode:

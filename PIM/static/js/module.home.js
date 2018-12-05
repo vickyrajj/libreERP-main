@@ -174,6 +174,16 @@ app.config(function($stateProvider) {
         }
       }
     })
+
+    .state('home.timesheet', {
+      url: "/timesheet",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.timesheet.html',
+          controller: 'businessManagement.timesheet',
+        }
+      }
+    })
     .state('home.sessionHistory', {
       url: "/sessionHistory",
       views: {
