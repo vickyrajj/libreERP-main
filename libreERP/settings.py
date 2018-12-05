@@ -96,29 +96,29 @@ INSTALLED_APPS = (
     'ERP', # permissions, overall management of the platform
     'HR', # people aspect of the platform
     'PIM', # personal information manager
-    'social', # social networking client
     'homepage', # landing page
-    'mail', # mail application
-    'businessManagement', # BM application
-    'projectManagement',
-    'gitweb', # github.com local server with file browsing and diff viewer
-    'taskBoard',
-    'projects',
-    'virtualWorkforce',
-	'finance',# billing , invoicing , finance etc
-	'tools',# general purpose tools like OCR, AI or big data related stuffs
-	'clientRelationships',# CRM like sales force
-	# 'LMS',# LMS
-	'workforceManagement',# canvas
-    # 'support',# canvas
-	'employees',# employees details
-	'payroll',# payroll
-	'performance',# performance
-	'recruitment',# recruitment
-	'organization',# organization
-	'logistic',# logistics
-	'assets',# assets
-	'marketing',# Marketing Application
+    'tools',# general purpose tools like OCR, AI or big data related stuffs
+    # 'social', # social networking client
+    # 'mail', # mail application
+    # 'businessManagement', # BM application
+    # 'projectManagement',
+    # 'gitweb', # github.com local server with file browsing and diff viewer
+    # 'taskBoard',
+    # 'projects',
+    # 'virtualWorkforce',
+	# 'finance',# billing , invoicing , finance etc
+	# 'clientRelationships',# CRM like sales force
+	# # 'LMS',# LMS
+	# 'workforceManagement',# canvas
+    # # 'support',# canvas
+	# 'employees',# employees details
+	# 'payroll',# payroll
+	# 'performance',# performance
+	# 'recruitment',# recruitment
+	# 'organization',# organization
+	# 'logistic',# logistics
+	# 'assets',# assets
+	# 'marketing',# Marketing Application
 )
 
 

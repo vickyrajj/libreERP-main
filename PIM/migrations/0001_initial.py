@@ -14,7 +14,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('clientRelationships', '0001_initial'),
     ]
 
     operations = [
@@ -64,31 +63,6 @@ class Migration(migrations.Migration):
                 ('contentType', models.CharField(choices=[(b'article', b'article'), (b'tutorial', b'tutorial'), (b'whitepaper', b'whitepaper'), (b'product', b'product')], default=b'article', max_length=15)),
                 ('tags', models.ManyToManyField(blank=True, related_name='articles', to='PIM.blogCategory')),
                 ('users', models.ManyToManyField(related_name='articles', to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='calendar',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('visibility', models.CharField(choices=[(b'personal', b'personal'), (b'public', b'public'), (b'management', b'management'), (b'friends', b'friends')], default=b'personal', max_length=20)),
-                ('eventType', models.CharField(choices=[(b'Meeting', b'Meeting'), (b'Reminder', b'Reminder'), (b'ToDo', b'ToDo'), (b'EVENT', b'EVENT'), (b'Deadline', b'Deadline'), (b'Other', b'Other')], default=b'Other', max_length=11)),
-                ('originator', models.CharField(max_length=20, null=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('updated', models.DateTimeField(auto_now=True)),
-                ('text', models.CharField(max_length=200, null=True)),
-                ('when', models.DateTimeField(null=True)),
-                ('duration', models.IntegerField(null=True)),
-                ('read', models.BooleanField(default=False)),
-                ('deleted', models.BooleanField(default=False)),
-                ('completed', models.BooleanField(default=False)),
-                ('canceled', models.BooleanField(default=False)),
-                ('level', models.CharField(choices=[(b'Normal', b'Normal'), (b'Critical', b'Critical'), (b'Optional', b'Optional'), (b'Mandatory', b'Mandatory')], default=b'Normal', max_length=10)),
-                ('venue', models.CharField(max_length=50, null=True)),
-                ('attachment', models.FileField(null=True, upload_to=PIM.models.getCalendarAttachment)),
-                ('myNotes', models.CharField(blank=True, max_length=100)),
-                ('data', models.CharField(max_length=200, null=True)),
-                ('clients', models.ManyToManyField(blank=True, related_name='calendarEntries', to='clientRelationships.Contact')),
-                ('followers', models.ManyToManyField(blank=True, related_name='calendarItemsFollowing', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -157,16 +131,6 @@ class Migration(migrations.Migration):
                 ('backgroundImg', models.ImageField(null=True, upload_to=PIM.models.getThemeImageUploadPath)),
                 ('parent', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='theme', to='PIM.settings')),
             ],
-        ),
-        migrations.AddField(
-            model_name='calendar',
-            name='notification',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='PIM.notification'),
-        ),
-        migrations.AddField(
-            model_name='calendar',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='bloglike',

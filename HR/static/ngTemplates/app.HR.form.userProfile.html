@@ -14,20 +14,14 @@
       </h3>
     </div>
     <div class="col-md-6">
-      <ul class="pager">
+      <!-- <ul class="pager">
         <li class="previous" ng-click="prev()"><a href="">&larr; Previous</a></li>
         <li class="next" ng-click="next()"><a href="">Next &rarr;</a></li>
-      </ul>
+      </ul> -->
       <div ng-show="page==1">
         <div class="form-group">
           <label for="empID">Employee ID</label>
           <input type="number" class="form-control" ng-model="data.empID" id="empID" placeholder="Employee ID">
-        </div>
-        <div class="form-group">
-          <label for="empID">Employement Type</label>
-          <select type="number" class="form-control" ng-model="data.empType" id="empID" placeholder="Employee ID">
-            <option value="full time">Full Time</option>
-            <option value="part time">Part Time</option>
         </div>
         <div class="form-group">
           <label style="margin-right:20px;">Prefix</label>
@@ -52,7 +46,22 @@
             </div>
           </div>
         </div>
-        <div class="form-group">
+        <div class="row">
+          <div class="col-md-1">
+            <i class="fa {{data.displayPicture | fileTypeIcon}} fa-3x"></i>
+          </div>
+          <div class="col-md-5">
+            <a ng-href="{{data.displayPicture}}" target="_blank">{{data.displayPicture.split('/')[data.displayPicture.split('/').length-1] }}</a>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Display Picture:</label>
+              <input type="file" name="displayPicture" file-model="files.displayPicture">
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="form-group">
           <label style="margin-right:20px;">Married ?</label>
           <label class="radio-inline"><input type="radio" name="married{{pk}}" ng-model="data.married" ng-value="false">Single</label>
           <label class="radio-inline"><input type="radio" name="married{{pk}}" ng-model="data.married" ng-value="true">Married</label>
@@ -80,30 +89,30 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="container-fluid" style="padding:0px">
+        </div> -->
+        <!-- <div class="container-fluid" style="padding:0px">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label>Local Address Street</label>
+                <label>localAddressStreet</label>
                 <input type="text" class="form-control" ng-model="data.localAddressStreet" placeholder="localAddressStreet">
               </div>
               <div class="form-group">
-                <label>Local Address City</label>
+                <label>localAddressCity</label>
                 <input type="text" class="form-control" ng-model="data.localAddressCity" placeholder="localAddressCity">
               </div>
               <div class="form-group">
-                <label>Local Address Pin</label>
+                <label>localAddressPin</label>
                 <input type="number" class="form-control" ng-model="data.localAddressPin" placeholder="localAddressPin">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label>Local Address State</label>
+                <label>localAddressState</label>
                 <input type="text" class="form-control" ng-model="data.localAddressState" placeholder="localAddressState">
               </div>
               <div class="form-group">
-                <label>Local Address Country</label>
+                <label>localAddressCountry</label>
                 <input type="text" class="form-control" ng-model="data.localAddressCountry" placeholder="localAddressCountry">
               </div>
             </div>
@@ -114,31 +123,31 @@
           <div class="row" ng-if="!data.sameAsLocal">
             <div class="col-md-6">
               <div class="form-group">
-                <label>Permanent Address Street</label>
+                <label>permanentAddressStreet</label>
                 <input type="text" class="form-control" ng-model="data.permanentAddressStreet" placeholder="permanentAddressStreet">
               </div>
               <div class="form-group">
-                <label>Permanent Address City</label>
+                <label>permanentAddressCity</label>
                 <input type="text" class="form-control" ng-model="data.permanentAddressCity" placeholder="permanentAddressCity">
               </div>
               <div class="form-group">
-                <label>Permanent Address Pin</label>
+                <label>permanentAddressPin</label>
                 <input type="number" class="form-control" ng-model="data.permanentAddressPin" placeholder="permanentAddressPin">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label>Permanent Address State</label>
+                <label>permanentAddressState</label>
                 <input type="text" class="form-control" ng-model="data.permanentAddressState" placeholder="permanentAddressState">
               </div>
               <div class="form-group">
-                <label>Permanent Address Country</label>
+                <label>permanentAddressCountry</label>
                 <input type="text" class="form-control" ng-model="data.permanentAddressCountry" placeholder="permanentAddressCountry">
               </div>
             </div>
           </div>
-        </div>
-        <div class="form-group">
+        </div> -->
+        <!-- <div class="form-group">
           <label>Blood Group</label>
           <select class="form-control" ng-model="data.bloodGroup">
             <option>A+</option>
@@ -180,9 +189,9 @@
               <input type="text" class="form-control" ng-model="data.emergencyNumber" placeholder="Emergency contact number">
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
-      <div ng-show="page==2">
+      <!-- <div ng-show="page==2">
         <div class="form-group">
           <label>Doctorate University</label>
           <input type="text" class="form-control" ng-model="data.docUniversity" placeholder="">
@@ -218,8 +227,8 @@
           <label>Note3</label>
           <textarea type="text" rows="4" class="form-control" ng-model="data.note3" placeholder="note3"> </textarea>
         </div>
-      </div>
-      <div ng-show="page==3">
+      </div> -->
+      <!-- <div ng-show="page==3">
 
         <div class="row">
           <div class="col-md-1">
@@ -427,11 +436,14 @@
             </div>
           </div>
         </div>
-      </div>
+
+
+
+      </div> -->
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-6 col-md-offset-4">
       <button ng-click="save()" type="button" class="btn btn-primary">
         Save
       </button>

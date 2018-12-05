@@ -9,29 +9,9 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('organization', '0002_auto_20180501_1037'),
         ('HR', '0009_leave_created'),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='designation',
-            name='department',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='organization.Departments'),
-        ),
-        migrations.AddField(
-            model_name='designation',
-            name='division',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='organization.Division'),
-        ),
-        migrations.AddField(
-            model_name='designation',
-            name='role',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='organization.Role'),
-        ),
-        migrations.AddField(
-            model_name='designation',
-            name='unit',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='organization.Unit'),
-        ),
+
     ]

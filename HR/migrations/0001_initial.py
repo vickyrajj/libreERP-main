@@ -29,16 +29,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='designation',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('primaryApprover', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='approving', to=settings.AUTH_USER_MODEL)),
-                ('reportingTo', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='managing', to=settings.AUTH_USER_MODEL)),
-                ('secondaryApprover', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='alsoApproving', to=settings.AUTH_USER_MODEL)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Document',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

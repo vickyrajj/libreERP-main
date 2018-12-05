@@ -14,42 +14,60 @@ app.config(function($stateProvider ){
       }
     }
   })
-  .state('home.mail', {
-    url: "/mail",
-    templateUrl: '/static/ngTemplates/app.mail.html',
-    controller: 'controller.mail'
+  .state('home.dashboardPage', {
+    url: "",
+    views: {
+      "": {
+        templateUrl: '/static/ngTemplates/home.html',
+        controller:'controller.home.main'
+      },
+      "@home": {
+        templateUrl: '/static/ngTemplates/app.home.dashboard.html',
+        controller : 'controller.home'
+      }
+    }
   })
-  .state('home.social', {
-    url: "/social/:id",
-    templateUrl: '/static/ngTemplates/app.social.html',
-    controller: 'controller.social'
+  .state('home.manageUsers', {
+    url: "/manageUsers",
+    templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
+    controller: 'home.manageUsers'
   })
-  .state('home.blog', {
-    url: "/blog/:id?action",
-    templateUrl: '/static/ngTemplates/app.home.blog.html',
-    controller: 'controller.home.blog'
+  .state('home.settings', {
+    url: "/settings",
+    templateUrl: '/static/ngTemplates/app.ERP.settings.default.html',
+    controller: 'home.settings'
   })
-  .state('home.calendar', {
-    url: "/calendar",
-    templateUrl: '/static/ngTemplates/app.home.calendar.html',
-    controller: 'controller.home.calendar'
-  })
-  .state('home.notes', {
-    url: "/notes",
-    templateUrl: '/static/ngTemplates/app.home.notes.html',
-    controller: 'controller.home.notes'
-  })
-  .state('home.profile', {
-    url: "/profile",
-    templateUrl: '/static/ngTemplates/app.home.profile.html',
-    controller: 'controller.home.profile'
-  })
-  .state('home.myWork', {
-    url: "/myWork",
-    templateUrl: '/static/ngTemplates/app.home.myWork.html',
-    controller: 'controller.home.myWork'
-  })
-  
+  // .state('home.calendar', {
+  //   url: "/calendar",
+  //   templateUrl: '/static/ngTemplates/app.home.calendar.html',
+  //   controller: 'controller.home.calendar'
+  // })
+  // .state('home.mail', {
+  //   url: "/mail",
+  //   templateUrl: '/static/ngTemplates/app.mail.html',
+  //   controller: 'controller.mail'
+  // })
+  // .state('home.social', {
+  //   url: "/social/:id",
+  //   templateUrl: '/static/ngTemplates/app.social.html',
+  //   controller: 'controller.social'
+  // })
+  // .state('home.notes', {
+  //   url: "/notes",
+  //   templateUrl: '/static/ngTemplates/app.home.notes.html',
+  //   controller: 'controller.home.notes'
+  // })
+  // .state('home.profile', {
+  //   url: "/profile",
+  //   templateUrl: '/static/ngTemplates/app.home.profile.html',
+  //   controller: 'controller.home.profile'
+  // })
+  // .state('home.myWork', {
+  //   url: "/myWork",
+  //   templateUrl: '/static/ngTemplates/app.home.myWork.html',
+  //   controller: 'controller.home.myWork'
+  // })
+
 
 });
 

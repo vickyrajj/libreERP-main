@@ -21,7 +21,7 @@ from django.http import JsonResponse
 import random, string
 from django.utils import timezone
 from rest_framework.views import APIView
-from PIM.models import blogPost
+# from PIM.models import blogPost
 from django.utils import translation
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response

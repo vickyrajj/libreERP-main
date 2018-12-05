@@ -19,7 +19,7 @@ router.register(r'companyHoliday' , CompanyHolidayViewSet , base_name = 'company
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'registerDevice/$' , registerDeviceApi.as_view()),
+    # url(r'registerDevice/$' , registerDeviceApi.as_view()),
     url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
     url(r'sendSMS/$' , SendSMSApi.as_view()),
     url(r'locationTracker/$' , LocationTrackerAPI.as_view()),

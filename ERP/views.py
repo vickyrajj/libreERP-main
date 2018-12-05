@@ -15,33 +15,12 @@ from django.db.models import Q
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
-from gitweb.views import generateGitoliteConf
+# from gitweb.views import generateGitoliteConf
 import requests
 from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
 import calendar
 from HR.models import payroll
-from rest_framework import filters
-from django.utils import translation
-
-
-def renderedStatic(request , filename):
-
-    if request.COOKIES.get('lang') == None:
-        language = translation.get_language_from_request(request)
-    else:
-        language = request.COOKIES.get('lang')
-
-    translation.activate(language )
-    request.LANGUAGE_CODE = translation.get_language()
-    return render(request , filename , {"lang" : request.LANGUAGE_CODE})
-
-
-
-
-
-
-
 
 class LocationTrackerAPI(APIView):
     renderer_classes = (JSONRenderer,)
@@ -65,6 +44,62 @@ class SendSMSApi(APIView):
 
 def serviceRegistration(request): # the landing page for the vendors registration page
     return render(request , 'app.ecommerce.register.partner.html')
+
+
+import mysql.connector
+import time
+import string
+import random
+
+def socialRegistration(request):
+    print "cool .........."
+
+
+    # INSERT INTO `i2i_users` (`usr_id`, `usr_email`, `usr_password`, `usr_default_password`, `usr_mobile`, `usr_dial_code`, `usr_nationality`, `usr_gender`, `usr_fname`, `usr_mname`, `usr_lname`, `usr_profile_img`, `usr_dob`, `usr_pan`, `usr_cibil_score`, `usr_marital_status`, `usr_spouse_fname`, `usr_spouse_mname`, `usr_spouse_lname`, `usr_father_fname`, `usr_father_mname`, `usr_father_lname`, `usr_prmanent_addrs1`, `usr_prmanent_addrs2`, `usr_prmanent_pincode`, `usr_prmanent_city`, `usr_prmanent_state`, `usr_curnt_addrs_same_as_prmanent`, `usr_curnt_addrs1`, `usr_curnt_addrs2`, `usr_curnt_living_since`, `usr_curnt_pincode`, `usr_curnt_city`, `usr_curnt_state`, `usr_landline_ext`, `usr_curnt_home_phone`, `usr_office_ext`, `usr_curnt_home_office`, `usr_curnt_home_office_ext`, `usr_email_varify_code`, `usr_is_verified`, `usr_verified_date`, `usr_last_activity`, `usr_non_mondatefld`, `usr_status`, `usr_comm_status`, `usr_block_status`, `usr_follow_up_date`, `usr_follow_up_time`, `usr_is_active_borrower`, `usr_is_active_invester`, `usr_is_new`, `usr_created_date`, `usr_borrower_created_date`, `usr_category_type`, `usr_firm_name`, `usr_cp_referral_id`, `usr_cp_last_activity`, `is_reloan`, `reloan_applied_time`, `parent_id`, `usr_referral`, `borrower_default_group_id`, `investor_default_group_id`, `earning_commission_id`, `cibil_status`, `cibil_report_output`, `nodal_email`, `user_beneficiary_na1`, `user_beneficiary_na2`, `beneficiary_date`, `added_date`, `usr_otp_status`, `usr_otp_code`, `user_email_counter`, `usr_otp_verfication_time`, `usr_mob_otp`, `usr_email_otp`, `usr_aadhar`, `token`, `kyc_pan_status`, `kyc_aadhar_status`) VALUES (NULL, 'agfss@scca.bs', '', '6b1cb1b51f237d0f4b00636df8681006', '', '91', 'Indian', '', 'Test', '', 'User', '', '0', '', '', 'S', '', '', '', '', '', '', '', '', '0', '', '', '', '', '', '', '0', '', '', '0', '', '0', '', '0', '', '1', '0', '2018-04-23 10:39:22', '0', '1', '0', '0', '0', '', '1', '0', 'Y', '1524468793', '2018-04-23 07:32:22', '0', '', '0', '', '0', '0', '0', NULL, '1', '1', '0', '0', '', '0', '0', '0', '0000-00-00', '0000-00-00', '0', '0', '0', '2018-04-23 16:09:22', '945996', '767510', '946787875784', 'DObaikah2yI9nKZRNQiGEOuJw', '0', '0');
+
+
+
+    mydb = mysql.connector.connect(
+      host= globalSettings.EXTERNAL_DATABASE_IP,
+      user=globalSettings.EXTERNAL_DATABASE_USER,
+      passwd=globalSettings.EXTERNAL_DATABASE_PASSWORD,
+      database=globalSettings.EXTERNAL_DATABASE_NAME
+    )
+
+    mycursor = mydb.cursor()
+
+    mycursor.execute("SELECT * FROM i2i_users WHERE usr_email='" + request.user.email + "'" )
+
+    row = mycursor.fetchone()
+
+    # if row is not None:
+
+
+    sql = "INSERT INTO `i2i_users` (`usr_email`, `usr_password`, `usr_default_password`, `usr_mobile`, `usr_dial_code`, `usr_nationality`, `usr_gender`, `usr_fname`, `usr_mname`, `usr_lname`, `usr_profile_img`, `usr_dob`, `usr_pan`, `usr_cibil_score`, `usr_marital_status`, `usr_spouse_fname`, `usr_spouse_mname`, `usr_spouse_lname`, `usr_father_fname`, `usr_father_mname`, `usr_father_lname`, `usr_prmanent_addrs1`, `usr_prmanent_addrs2`, `usr_prmanent_pincode`, `usr_prmanent_city`, `usr_prmanent_state`, `usr_curnt_addrs_same_as_prmanent`, `usr_curnt_addrs1`, `usr_curnt_addrs2`, `usr_curnt_living_since`, `usr_curnt_pincode`, `usr_curnt_city`, `usr_curnt_state`, `usr_landline_ext`, `usr_curnt_home_phone`, `usr_office_ext`, `usr_curnt_home_office`, `usr_curnt_home_office_ext`, `usr_email_varify_code`, `usr_is_verified`, `usr_verified_date`, `usr_last_activity`, `usr_non_mondatefld`, `usr_status`, `usr_comm_status`, `usr_block_status`, `usr_follow_up_date`, `usr_follow_up_time`, `usr_is_active_borrower`, `usr_is_active_invester`, `usr_is_new`, `usr_created_date`, `usr_borrower_created_date`, `usr_category_type`, `usr_firm_name`, `usr_cp_referral_id`, `usr_cp_last_activity`, `is_reloan`, `reloan_applied_time`, `parent_id`, `usr_referral`, `borrower_default_group_id`, `investor_default_group_id`, `earning_commission_id`, `cibil_status`, `cibil_report_output`, `nodal_email`, `user_beneficiary_na1`, `user_beneficiary_na2`, `beneficiary_date`, `added_date`, `usr_otp_status`, `usr_otp_code`, `user_email_counter`, `usr_otp_verfication_time`, `usr_mob_otp`, `usr_email_otp`, `usr_aadhar`, `token`, `kyc_pan_status`, `kyc_aadhar_status`) VALUES (%s, %s, %s , %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
+
+    millis = int(round(time.time() * 1000))
+    print millis
+
+    length = 20
+    chars = string.ascii_letters
+    rnd = random.SystemRandom()
+    token = ''.join(rnd.choice(chars) for i in range(length))
+
+
+    vals = (request.user.email, '', '6b1cb1b51f237d0f4b00636df8681006', '', '91', 'Indian', '', request.user.first_name , '', request.user.last_name , '', '0', '', '', 'S', '', '', '', '', '', '', '', '', '0', '', '', '', '', '', '', '0', '', '', '0', '', '0', '', '0', '', '1', '0', '2018-04-23 10:39:22', '0', '1', '0', '0', '0', '', '1', '0', 'Y', str(millis), '2018-04-23 07:32:22', '0', '', '0', '', '0', '0', '0', '1', '1', '0', '0', '', '0', '0', '0', '0000-00-00', '0000-00-00', '0', '0', '0', '2018-04-23 16:09:22', '', '', '', token, '0', '0')
+
+
+    mycursor.execute(sql , vals)
+
+    mydb.commit()
+
+    print(mycursor.rowcount, "record inserted.")
+
+
+    print request.user
+
+    return redirect( globalSettings.CORS_URL +"/online-personal-loan/sign-up?t=" + token)
 
 class serviceRegistrationApi(APIView):
     permission_classes = (permissions.AllowAny ,)
@@ -170,47 +205,49 @@ class addressViewSet(viewsets.ModelViewSet):
     serializer_class = addressSerializer
     def get_queryset(self):
         u = self.request.user
-        has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.orders'])
+        print u
+        if u.is_authenticated:
+            has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.orders'])
         return address.objects.all()
 
 class serviceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = serviceSerializer
-    filter_backends = [DjangoFilterBackend,filters.SearchFilter]
-    filter_fields = ['name','vendor']
-    search_fields = ('name','web')
-    def get_queryset(self):
-        # u = self.request.user
-        return service.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name','user',]
+    queryset = service.objects.all()
+    # def get_queryset(self):
+    #     # u = self.request.user
+    #     return service.objects.all()
 
-class registerDeviceApi(APIView):
-    renderer_classes = (JSONRenderer,)
-    permission_classes = (permissions.AllowAny ,)
-    def post(self , request , format = None):
-        if 'username' in request.data and 'password' in request.data and 'sshKey' in request.data:
-            sshKey = request.data['sshKey']
-            deviceName =sshKey.split()[2]
-            mode = request.data['mode']
-            print sshKey
-            user = authenticate(username =  request.data['username'] , password = request.data['password'])
-            if user is not None:
-                if user.is_active:
-                    d , n = device.objects.get_or_create(name = deviceName , sshKey = sshKey)
-                    gp , n = profile.objects.get_or_create(user = user)
-                    if mode == 'logout':
-                        print "deleted"
-                        gp.devices.remove(d)
-                        d.delete()
-                        generateGitoliteConf()
-                        return Response(status=status.HTTP_200_OK)
-                    gp.devices.add(d)
-                    gp.save()
-                    generateGitoliteConf()
-            else:
-                raise NotAuthenticated(detail=None)
-            return Response(status=status.HTTP_200_OK)
-        else:
-            raise ValidationError(detail={'PARAMS' : 'No data provided'} )
+# class registerDeviceApi(APIView):
+#     renderer_classes = (JSONRenderer,)
+#     permission_classes = (permissions.AllowAny ,)
+#     def post(self , request , format = None):
+#         if 'username' in request.data and 'password' in request.data and 'sshKey' in request.data:
+#             sshKey = request.data['sshKey']
+#             deviceName =sshKey.split()[2]
+#             mode = request.data['mode']
+#             print sshKey
+#             user = authenticate(username =  request.data['username'] , password = request.data['password'])
+#             if user is not None:
+#                 if user.is_active:
+#                     d , n = device.objects.get_or_create(name = deviceName , sshKey = sshKey)
+#                     gp , n = profile.objects.get_or_create(user = user)
+#                     if mode == 'logout':
+#                         print "deleted"
+#                         gp.devices.remove(d)
+#                         d.delete()
+#                         generateGitoliteConf()
+#                         return Response(status=status.HTTP_200_OK)
+#                     gp.devices.add(d)
+#                     gp.save()
+#                     generateGitoliteConf()
+#             else:
+#                 raise NotAuthenticated(detail=None)
+#             return Response(status=status.HTTP_200_OK)
+#         else:
+#             raise ValidationError(detail={'PARAMS' : 'No data provided'} )
 
 class deviceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
@@ -226,6 +263,9 @@ class profileViewSet(viewsets.ModelViewSet):
 
 class AccountAdapter(DefaultAccountAdapter):
     def get_login_redirect_url(self, request):
+        print "will redirect to a specific page ------------------------------------------------"
+        print request.user.email
+
         return globalSettings.ON_REGISTRATION_SUCCESS_REDIRECT
 
 def getModules(user , includeAll=False):
@@ -279,7 +319,8 @@ class applicationViewSet(viewsets.ModelViewSet):
         else:
             if 'user' in self.request.GET:
                 return getApps(User.objects.get(username = self.request.GET['user']))
-            return application.objects.filter(inMenu = True)
+            print 'super Userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
+            return application.objects.filter(inMenu = True).exclude(Q(name = 'app.reviews') | Q(name='app.uiSettings') | Q(name='app.knowledgeBase'))
 
 class applicationAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin,)
@@ -317,6 +358,13 @@ class permissionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = permission.objects.all()
     serializer_class = permissionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user' , 'app']
+    def get_queryset(self):
+        if 'user' in self.request.GET:
+            return permission.objects.filter(user = self.request.GET['user'])
+        else:
+            return permission.objects.all()
 
 class CompanyHolidayViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)

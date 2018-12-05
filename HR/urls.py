@@ -10,7 +10,7 @@ router.register(r'usersAdminMode' , userAdminViewSet , base_name = 'userAdminMod
 router.register(r'userSearch' , UserSearchViewSet , base_name = 'userSearch')
 router.register(r'profile' , userProfileViewSet , base_name ='profile')
 router.register(r'profileAdminMode' , userProfileAdminModeViewSet , base_name ='profileAdminMode')
-router.register(r'designation' , userDesignationViewSet , base_name = 'designation')
+# router.register(r'designation' , userDesignationViewSet , base_name = 'designation')
 router.register(r'rank' , rankViewSet , base_name = 'rank')
 router.register(r'payroll' , payrollViewSet , base_name = 'payroll')
 router.register(r'leave' , leaveViewSet , base_name = 'leave')
@@ -18,7 +18,7 @@ router.register(r'leave' , leaveViewSet , base_name = 'leave')
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'leavesCal/$' , LeavesCalAPI.as_view()),
-    url(r'profileOrgCharts/$' , OrgChartAPI.as_view()),
+    # url(r'profileOrgCharts/$' , OrgChartAPI.as_view()),
     # url(r'featchAttendance/$' , FeatchAttendanceDataApi.as_view()),?
 
 ]

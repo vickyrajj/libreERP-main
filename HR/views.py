@@ -237,11 +237,11 @@ class userProfileAdminModeViewSet(viewsets.ModelViewSet):
     serializer_class = userProfileAdminModeSerializer
     queryset = profile.objects.all()
 
-class userDesignationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = designation.objects.all()
-    serializer_class = userDesignationSerializer
-    filter_fields = ['user']
+# class userDesignationViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     queryset = designation.objects.all()
+#     serializer_class = userDesignationSerializer
+#     filter_fields = ['user']
 
 class userAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin ,)
@@ -408,39 +408,39 @@ def findChild(d, pk = None):
 
 
 
-class OrgChartAPI(APIView):
-    def get(self , request , format = None):
-        d = User.objects.get(pk = request.GET['user']).designation
-        print d.role,d.reportingTo
-        if d.reportingTo is not None:
-            d = d.reportingTo.designation
-        try:
-            dp = d.user.profile.displayPicture.url
-            if dp == None:
-                dp = '/static/images/userIcon.png'
-
-        except:
-            dp = '/static/images/userIcon.png'
-
-        if d.role:
-            role = d.role.name
-        else:
-            role = ''
-
-
-        if str(d.user.pk) == request.GET['user']:
-            clsName = 'middle-level'
-        else:
-            clsName = 'product-dept'
-
-
-        toReturn = {
-            "id" : d.user.pk,
-            "name" : d.user.first_name + ' ' +  d.user.last_name,
-            "dp" : dp,
-            "children" : findChild(d , pk = request.GET['user']),
-            "role" : role,
-            "className" :  clsName
-        }
-
-        return Response(toReturn )
+# class OrgChartAPI(APIView):
+#     def get(self , request , format = None):
+#         d = User.objects.get(pk = request.GET['user']).designation
+#         print d.role,d.reportingTo
+#         if d.reportingTo is not None:
+#             d = d.reportingTo.designation
+#         try:
+#             dp = d.user.profile.displayPicture.url
+#             if dp == None:
+#                 dp = '/static/images/userIcon.png'
+#
+#         except:
+#             dp = '/static/images/userIcon.png'
+#
+#         if d.role:
+#             role = d.role.name
+#         else:
+#             role = ''
+#
+#
+#         if str(d.user.pk) == request.GET['user']:
+#             clsName = 'middle-level'
+#         else:
+#             clsName = 'product-dept'
+#
+#
+#         toReturn = {
+#             "id" : d.user.pk,
+#             "name" : d.user.first_name + ' ' +  d.user.last_name,
+#             "dp" : dp,
+#             "children" : findChild(d , pk = request.GET['user']),
+#             "role" : role,
+#             "className" :  clsName
+#         }
+#
+#         return Response(toReturn )

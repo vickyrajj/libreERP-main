@@ -122,17 +122,16 @@ class service(models.Model): # contains other companies datails
     created = models.DateTimeField(auto_now_add = True)
     name = models.CharField(max_length = 100 , null = False, unique = True)
     user = models.ForeignKey(User , related_name = 'servicesCreated' , null = False) # the responsible person for this service
-    address = models.ForeignKey(address , null = True ,blank=True)
-    mobile = models.CharField(max_length = 20 , null = True,blank=True)
-    telephone = models.CharField(max_length = 20 , null = True,blank=True)
-    about = models.TextField(max_length = 2000 , null = True,blank=True)
-    cin = models.CharField(max_length = 100 , null = True,blank=True) # company identification number
-    tin = models.CharField(max_length = 100 , null = True,blank=True) # tax identification number
-    logo = models.CharField(max_length = 200 , null = True,blank=True) # image/svg link to the logo
-    web = models.TextField(max_length = 100 , null = True,blank=True) # image/svg link to the logo
-    doc  = models.ForeignKey(media , related_name = 'services' , null = True,blank=True)
-    contactPerson = models.ForeignKey(User , related_name = 'servicesContactPerson' , null = True,blank=True)
-    vendor = models.BooleanField(default = False)
+    address = models.ForeignKey(address , null = True )
+    mobile = models.CharField(max_length = 20 , null = True)
+    telephone = models.CharField(max_length = 20 , null = True)
+    about = models.TextField(max_length = 2000 , null = True)
+    cin = models.CharField(max_length = 100 , null = True) # company identification number
+    tin = models.CharField(max_length = 100 , null = True) # tax identification number
+    logo = models.CharField(max_length = 200 , null = True) # image/svg link to the logo
+    web = models.TextField(max_length = 100 , null = True) # image/svg link to the logo
+    doc  = models.ForeignKey(media , related_name = 'services' , null = True)
+    contactPerson = models.ManyToManyField(User , related_name = 'servicesContactPerson' , blank = True)
 
 
     def __unicode__(self):

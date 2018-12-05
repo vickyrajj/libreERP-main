@@ -55,56 +55,56 @@ class chatMessage(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User)
     read = models.BooleanField(default = False)
-
+    
 def getCalendarAttachment(instance , filename ):
     return 'calendar/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, instance.originator.username, filename)
 
-from clientRelationships.models import Contact
-class calendar(models.Model):
-    TYPE_CHOICE = (
-        ('Meeting' , 'Meeting'),
-        ('Reminder' , 'Reminder'),
-        ('ToDo' , 'ToDo'),
-        ('EVENT' , 'EVENT'),
-        ('Deadline' , 'Deadline'),
-        ('Other' , 'Other'),
-    )
-
-    LEVEL_CHOICE = (
-        ('Normal' , 'Normal'),
-        ('Critical' , 'Critical'),
-        ('Optional' , 'Optional'),
-        ('Mandatory' , 'Mandatory'),
-    )
-
-    VISIBILITY_CHOICES = (
-        ('personal' , 'personal'), # if only I can see
-        ('public' , 'public'), # everyone can see
-        ('management' , 'management'), # only access level higher to me can see
-        ('friends' , 'friends'), # only fiends in the public can see
-    )
-
-    visibility = models.CharField(choices = VISIBILITY_CHOICES , default = 'personal' , max_length = 20)
-    eventType = models.CharField(choices = TYPE_CHOICE , default = 'Other' , max_length = 11)
-    originator = models.CharField(null = True , max_length = 20)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User)
-    text = models.CharField(max_length = 200 , null = True)
-    notification = models.ForeignKey(notification , null = True)
-    when = models.DateTimeField(null = True)
-    duration = models.IntegerField(null = True)
-    read = models.BooleanField(default = False)
-    deleted = models.BooleanField(default = False)
-    completed = models.BooleanField(default = False)
-    canceled = models.BooleanField(default = False)
-    level = models.CharField(choices = LEVEL_CHOICE , default = 'Normal' , max_length = 10)
-    venue = models.CharField(max_length = 50 , null = True)
-    attachment = models.FileField(upload_to = getCalendarAttachment , null = True)
-    myNotes = models.CharField(max_length = 100 , blank = True)
-    followers = models.ManyToManyField(User , related_name = 'calendarItemsFollowing' , blank = True)
-    clients = models.ManyToManyField(Contact , related_name='calendarEntries', blank = True)
-    data = models.CharField(max_length = 200 , null = True)
+# from clientRelationships.models import Contact
+# class calendar(models.Model):
+#     TYPE_CHOICE = (
+#         ('Meeting' , 'Meeting'),
+#         ('Reminder' , 'Reminder'),
+#         ('ToDo' , 'ToDo'),
+#         ('EVENT' , 'EVENT'),
+#         ('Deadline' , 'Deadline'),
+#         ('Other' , 'Other'),
+#     )
+#
+#     LEVEL_CHOICE = (
+#         ('Normal' , 'Normal'),
+#         ('Critical' , 'Critical'),
+#         ('Optional' , 'Optional'),
+#         ('Mandatory' , 'Mandatory'),
+#     )
+#
+#     VISIBILITY_CHOICES = (
+#         ('personal' , 'personal'), # if only I can see
+#         ('public' , 'public'), # everyone can see
+#         ('management' , 'management'), # only access level higher to me can see
+#         ('friends' , 'friends'), # only fiends in the public can see
+#     )
+#
+#     visibility = models.CharField(choices = VISIBILITY_CHOICES , default = 'personal' , max_length = 20)
+#     eventType = models.CharField(choices = TYPE_CHOICE , default = 'Other' , max_length = 11)
+#     originator = models.CharField(null = True , max_length = 20)
+#     created = models.DateTimeField(auto_now_add=True)
+#     updated = models.DateTimeField(auto_now=True)
+#     user = models.ForeignKey(User)
+#     text = models.CharField(max_length = 200 , null = True)
+#     notification = models.ForeignKey(notification , null = True)
+#     when = models.DateTimeField(null = True)
+#     duration = models.IntegerField(null = True)
+#     read = models.BooleanField(default = False)
+#     deleted = models.BooleanField(default = False)
+#     completed = models.BooleanField(default = False)
+#     canceled = models.BooleanField(default = False)
+#     level = models.CharField(choices = LEVEL_CHOICE , default = 'Normal' , max_length = 10)
+#     venue = models.CharField(max_length = 50 , null = True)
+#     attachment = models.FileField(upload_to = getCalendarAttachment , null = True)
+#     myNotes = models.CharField(max_length = 100 , blank = True)
+#     followers = models.ManyToManyField(User , related_name = 'calendarItemsFollowing' , blank = True)
+#     clients = models.ManyToManyField(Contact , related_name='calendarEntries', blank = True)
+#     data = models.CharField(max_length = 200 , null = True)
 
 class blogCategory(models.Model):
     title = models.CharField(max_length = 50 , null = False , unique=True)
