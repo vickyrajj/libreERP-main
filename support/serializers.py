@@ -66,6 +66,9 @@ class ProjectsSerializer(serializers.ModelSerializer):
         if 'title' in self.context['request'].data:
             instance.title = self.context['request'].data['title']
         instance.save()
+        if 'status' in validated_data:
+            instance.status = validated_data['status']
+        instance.save()
         return instance
 
 class BoMSerializer(serializers.ModelSerializer):

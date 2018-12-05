@@ -27,11 +27,21 @@
           <div ng-if="tab.app == 'projectEditor'">
             <div ng-include="'/static/ngTemplates/app.projects.form.html'"></div>
           </div>
-          <div ng-if="tab.app == ''">
-            <div ng-include="''"></div>
+          <div ng-if="tab.app == 'bomDetails'">
+            <div ng-include="'/static/ngTemplates/app.projects.approval.view.html'"></div>
           </div>
           <div ng-if="tab.app == 'projectDetails'">
             <div ng-include="'/static/ngTemplates/app.projects.service.view.html'"></div>
+          </div>
+        </uib-tab>
+        <uib-tab >
+          <uib-tab-heading>
+            Pending
+            <i class="fa fa-list-ul"></i>
+          </uib-tab-heading>
+          <div class="container-fluid" >
+            <generic-Table data="data1.tableData" config-Obj="{{config1}}" callback-Fn="tableAction1"></generic-Table>
+
           </div>
         </uib-tab>
       </uib-tabset>

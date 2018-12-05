@@ -19,10 +19,33 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     deletable: true,
     itemsNumPerView: [12, 20, 28],
     getParams: [{
-      key: 'pk',
-      value: true
+      key: 'status',
+      value: 'created'
     }]
   }
+  $scope.data1 = {
+          tableData: []
+    };
+
+    views1 = [{
+      name: 'list',
+      icon: 'fa-th-large',
+      template: '/static/ngTemplates/genericTable/genericSearchList.html',
+      itemTemplate: '/static/ngTemplates/app.projects.approval.html',
+    }, ];
+
+    $scope.config1 = {
+      views: views1,
+      url: '/api/support/projects/',
+      // filterSearch: true,
+      searchField: 'title',
+      deletable: true,
+      itemsNumPerView: [8, 12, 20],
+      getParams: [{
+      key: 'status',
+      value: 'sent_for_approval'
+      }]
+    }
 
 
 
@@ -66,6 +89,30 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     }
 
   }
+  $scope.tableAction1 = function(target, action, mode) {
+          console.log(target, action, mode,'fffffffff');
+
+
+              for (var i = 0; i < $scope.data1.tableData.length; i++) {
+              if ($scope.data1.tableData[i].pk == parseInt(target)) {
+              if (action == 'bom') {
+               var title = 'Project :';
+               var appType = 'bomDetails';
+              }
+              }
+
+              $scope.addTab({
+               title: title + $scope.data1.tableData[i].title,
+               cancel: true,
+               app: appType,
+               data: {
+                 pk: target,
+                 index: i
+               },
+               active: true
+              })
+          }
+    }
   $scope.tabs = [];
   $scope.searchTabActive = true;
 
@@ -596,11 +643,69 @@ $scope.save = function() {
   }
 
 }
+    var sendStatus = {
+      status:'sent_for_approval',
+    }
+    $scope.send = function() {
+      $http({
+        method: 'PATCH',
+        url: '/api/support/projects/'+ $scope.form.pk + '/',
+        data: sendStatus,
+      }).
+      then(function(response) {
+        Flash.create('success', 'Saved');
+        console.log(response.data,'aaaaaa');
+      })
+    }
 
 
 
 
 
+
+
+})
+app.controller("businessManagement.projects.approval", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+
+})
+app.controller("businessManagement.projects.approval.view", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+
+  if ($scope.tab == undefined) {
+    $scope.resetForm();
+  } else {
+    $scope.form = $scope.data1.tableData[$scope.tab.data.index]
+  }
+  $scope.me = $users.get('mySelf');
+  $http.get('/api/HR/userSearch/').
+  then(function(response) {
+    $scope.persons =  response.data;
+    console.log($scope.form.responsible,'bbbbbbbbbbbb');
+    function filterByPk(item) {
+      if ($scope.form.responsible.includes(item.pk)) {
+        console.log(item.last_name, 'vvvvvvvvv');
+        return $scope.name = item.first_name+ item.last_name
+      }
+    }
+    $scope.persons.filter(filterByPk);
+  })
+  $scope.projects =[]
+   $scope.fetchData = function(index) {
+     $http({
+       method: 'GET',
+       url: '/api/support/bom/?project=' + $scope.form.pk
+
+     }).
+     then(function(response) {
+       $scope.projects = response.data
+       for (var i = 0; i < $scope.projects; i++) {
+
+       }
+
+     })
+   }
+   $scope.fetchData()
 
 
 })
