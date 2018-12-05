@@ -422,14 +422,10 @@ $scope.archiveTab = false;
       url += '&user=' + user.pk
       // $scope.filterParams.push({key : 'user' , value :user.pk})
     }
-    if (typeof client == 'object') {
-      url += '&client=' + client.pk
-      // $scope.filterParams.push({key : 'client' , value :client.pk})
-    }
-    if (email.length > 0 && email.indexOf('@') > 0) {
-      url += '&email=' + email
-      // $scope.filterParams.push({key : 'email' , value :email})
-    }
+    // if (typeof client == 'object') {
+    //   url += '&client=' + client.pk
+    //   // $scope.filterParams.push({key : 'client' , value :client.pk})
+    // }
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
