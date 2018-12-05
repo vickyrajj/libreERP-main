@@ -326,7 +326,14 @@ if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
 var color1 = tinycolor(windowColor);
-console.log(color1.isLight(),'9999999999999999999999999999999999');
+var fontAndIconColor
+if(!color1.isLight()){
+  fontAndIconColor='#f8f8ff'
+}
+else{
+  fontAndIconColor='#080800'
+}
+
 
 // windowColor = "#1f5b82"
 
@@ -339,6 +346,11 @@ var metaTag=document.createElement('meta');
   metaTag.name="viewport";
   metaTag.content="initail-scale=1";
   document.getElementsByTagName('head')[0].appendChild(metaTag);
+// var FontLink = document.createElement('link');
+//     FontLink.rel = 'stylesheet';
+//     FontLink.href = 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
+//     document.head.appendChild(FontLink);
+// var FontLink=document.createElement('Link')
 
 
 if (dpSupport=='') {
@@ -753,14 +765,10 @@ function createChatDiv() {
               '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
-            '<img class="exitBtn" id="audioBtn" src="{{serverAddress}}/static/images/speaker1.png" alt="exit">'+
-            '<img class="exitBtn" id="videoBtn" src="{{serverAddress}}/static/images/videe1.png" alt="exit">'+
-            '<img class="closeIcon" id="closeIcon" src="{{serverAddress}}/static/images/close.png" tooltip="" alt="close">'+
-            '<i id="exitBtn" class="fa1 fa-stack1"></i>'+
-            // '<i id="closeIcon" class="fa fa-times closeIcon" aria-hidden="true"></i>'+
-
-            // '<img class="exitBtn" id="exitBtn" src="{{serverAddress}}/static/images/exit.png" alt="exit">'+
-
+            '<i class="exitBtn fa fa-headphones" id="audioBtn"></i>'+
+            '<i class="exitBtn fa fa-video-camera" id="videoBtn"></i>'+
+            '<i class="closeIcon fa fa-times" id="closeIcon"></i>'+
+            '<i class="exitBtn fa fa-sign-out" id="exitBtn"></i>'+
             // '<i id="exitBtn" class="fa fa-sign-out" aria-hidden="true"></i>'+
           '</div>'+
           '<div id="audioSection" class="audio_section">'+
@@ -1404,13 +1412,11 @@ function activeAudioCall(){
             newStyle.appendChild(document.createTextNode("\
             @font-face {\
                 font-family: 'FontAwesome';\
-                src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.eot');\
-                src: url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.eot?v=4.7.0');\
                 src: url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),\
-                 url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), \
-                 url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.woff?v=4.7.0') format('woff'),\
-                  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),\
-                   url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');\
+                     url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), \
+                     url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.woff?v=4.7.0') format('woff'),\
+                     url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),\
+                     url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');\
                 font-weight: normal;\
                 font-style: normal;\
               }\
@@ -1722,6 +1728,10 @@ function activeAudioCall(){
               color: rgba(255, 255, 255, 0.8);\
               border-radius: 10px 10px 0 0;\
             }\
+            .chatBox_header i{\
+               font-size:25px;\
+               color:"+fontAndIconColor+"\
+            }\
             .chatBox_header > .logo_image{\
               width: 70px;\
               height:70px;\
@@ -1733,6 +1743,7 @@ function activeAudioCall(){
               margin: 20px 10px;;\
               width: 60%;\
               padding:0px;\
+              color:"+fontAndIconColor+"\
             }\
             .chatBox_header .chatBox_name{\
               display: block;\
@@ -1801,7 +1812,7 @@ function activeAudioCall(){
               font-size: 10px;\
               background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\
               width: 100%;\
-              color: #dddddd;;\
+              color: "+fontAndIconColor+";;\
               padding:0px;\
               margin:0px;\
               text-shadow: -1px 1px 4px #fff;\
@@ -2359,7 +2370,7 @@ function hideAudioAndVidoeBtn(){
     if (message.logs==null) {
       if (!message.sentByAgent) {
         var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;  letter-spacing:1.5px;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;  letter-spacing:1.5px;">'+
                           msgDiv+
                         '</div>'+
                         '<div style="clear: both; float:right; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
@@ -2368,7 +2379,7 @@ function hideAudioAndVidoeBtn(){
 
       }else {
         var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:1.5px;">'+
+                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box; letter-spacing:1.5px;">'+
                      msgDiv+
                   '</div> '+
                   '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+

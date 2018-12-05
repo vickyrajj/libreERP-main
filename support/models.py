@@ -57,11 +57,12 @@ class Visitor(models.Model):
     phoneNumber = models.CharField(max_length = 20, null = True , blank = True)
     notes = models.CharField(max_length = 1000, null = True , blank = True)
 
-    
+
 class Heartbeat(models.Model):
     start = models.DateTimeField(null = True, blank=True)
     end = models.DateTimeField(null = True, blank=True)
     user = models.ForeignKey(User , related_name = 'currentUser' , null = True)
+    created = models.DateField(auto_now_add = True)
 
 
 class ReviewComment(models.Model):

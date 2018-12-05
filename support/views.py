@@ -742,7 +742,6 @@ class CannedResponsesViewSet(viewsets.ModelViewSet):
 class HeartbeatApi(APIView):
     permission_classes = (permissions.AllowAny,)
     def get(self , request , format = None):
-        # print request.GET ,'%^^^^^^^^^^^^^^^^^^^^^^^^^^'
         if 'timesheet' in request.GET:
             print request.GET['pk'],"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             u = User.objects.get(pk = request.GET['pk'])
@@ -750,20 +749,20 @@ class HeartbeatApi(APIView):
             today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
             print today_min,"8****",today_max
             obj=Heartbeat.objects.filter(start__range=(today_min, today_max),user=u)
-            print obj ,"objjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
+            print obj ,"heartbeat objjjjjjjjjj"
 
             for i in obj:
                 print i.end,'fdffffffffff',i.start
 
             if len(obj)==1:
-                print 'ifff1'
+                print 'one heartbeat'
                 if obj[0].end is None:
                     print 'ifff2'
                     obj[0].end=timezone.now()
                     obj[0].save()
                 else:
 
-                    print 'elseeee1 and current time is',  timezone.now() , 'and end time is',obj[0].end
+                    print 'current time is',  timezone.now() , 'and end time is',obj[0].end
                     c = timezone.now() - obj[0].end
                     cInMin =  c.total_seconds()/60
                     print cInMin, "&&&&&&&&&&&&&&&&&&&&&"
@@ -773,30 +772,62 @@ class HeartbeatApi(APIView):
                         obj[0].end=timezone.now()
                         obj[0].save()
             elif len(obj)>1:
-                print 'elseeee3'
+                print 'multiple hearbeat'
                 if obj[len(obj)-1].end is None:
-                    print 'noneeee'
+                    print 'heartbeat has only start'
                     obj[len(obj)-1].end=timezone.now()
                     obj[len(obj)-1].save()
                 else:
-                    print 'elseeee4'
+                    print 'heartbeat has end'
                     c = timezone.now() - obj[0].end
                     cInMin =  c.total_seconds()/60
                     if cInMin>30:
-                        print 'ifffffffffffff444444'
+                        print 'time exceeds 30 mints creating new heartbeat'
                         Heartbeat.objects.create(start=timezone.now(),user=u)
                     else:
-                        print 'eeeeeeeeeeeeelseeee5'
+                        print 'updating end for the heartbeat'
                         obj[len(obj)-1].end=timezone.now()
                         obj[len(obj)-1].save()
             else:
                 Heartbeat.objects.create(start=timezone.now(),user=u)
-        else:
-            print '##################3'
-        return Response({}, status = status.HTTP_200_OK)
+            return Response({}, status = status.HTTP_200_OK)
+        elif 'getDetailData' in request.GET:
+            u = User.objects.get(pk = request.GET['pk'])
+            toSend=[]
+            heartbtObj = Heartbeat.objects.all()
+            print heartbtObj,'dddddddddd'
 
-
-
+            if 'date' in request.GET:
+                date = datetime.datetime.strptime(request.GET['date'], '%Y-%m-%d').date()
+                o = heartbtObj.filter(created__startswith = date,user=u)
+                th=list(o.values())
+                toSend.append(th);
+                return Response(toSend, status=status.HTTP_200_OK)
+            else:
+                dates = list(heartbtObj.filter(user=u).values_list('created',flat=True).distinct())
+                for j in dates:
+                    o=heartbtObj.filter(created__startswith = j,user=u)
+                    th=list(o.values())
+                    toSend.append(th);
+                print toSend,"tosendddddddddddddddddddddddd"
+                return Response(toSend, status=status.HTTP_200_OK)
+        elif 'getTimeSheetData' in request.GET:
+            newDetails=[]
+            heartbtObj = Heartbeat.objects.all()
+            if 'user' in request.GET:
+                print 'in user'
+                u = User.objects.get(pk = request.GET['user'])
+                heartbtObj = heartbtObj.filter(user = u)
+                return Response(list(heartbtObj.values()), status=status.HTTP_200_OK)
+            else:
+                uidL = list(heartbtObj.values_list('user',flat=True).distinct())
+                for j in uidL:
+                    u = User.objects.get(pk = j)
+                    o=heartbtObj.filter(user=u)
+                    th=list(o.values())
+                    newDetails.append(th);
+                print newDetails,"tosendddddddddddddddddddddddd"
+                return Response(newDetails, status=status.HTTP_200_OK)
 class StreamRecordings(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes=(permissions.AllowAny,)
