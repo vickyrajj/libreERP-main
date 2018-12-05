@@ -1,0 +1,90 @@
+from django.contrib.auth.models import User , Group
+from django.contrib.auth import authenticate
+from rest_framework import serializers
+from rest_framework.exceptions import *
+from .models import *
+from HR.serializers import userSearchSerializer
+from ERP.models import service
+from ERP.serializers import serviceSerializer
+from ERP.serializers import serviceLiteSerializer
+from rest_framework.response import Response
+from fabric.api import *
+import os
+from django.conf import settings as globalSettings
+import datetime
+from django.contrib.auth.hashers import make_password,check_password
+from django.core.exceptions import SuspiciousOperation
+
+
+
+
+class ProductsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Products
+        fields = ('pk', 'created', 'part_no','description_1','description_2','parent','weight','price','customs_no','sheet')
+
+
+
+class ProductSheetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductSheet
+        fields = ('pk','created','sheet','file_name')
+
+
+class ProjectsSerializer(serializers.ModelSerializer):
+    # responsible = userSearchSerializer(many = True , read_only = True)
+    service = serviceLiteSerializer(many = False , read_only = True)
+
+    class Meta:
+        model = Projects
+        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status')
+
+    def create(self , validated_data):
+        p = Projects()
+        if 'service' in self.context['request'].data:
+            p.service = service.objects.get(pk=int(self.context['request'].data['service']))
+        if 'title' in self.context['request'].data:
+            p.title = self.context['request'].data['title']
+        if 'date' in self.context['request'].data:
+            p.date = self.context['request'].data['date']
+        p.save()
+        if 'responsible' in self.context['request'].data:
+            for i in self.context['request'].data['responsible']:
+                p.responsible.add(User.objects.get(pk = i))
+            p.save()
+        return p
+
+    def update (self, instance, validated_data):
+        instance.responsible.clear()
+        if 'responsible' in self.context['request'].data:
+            for i in self.context['request'].data['responsible']:
+                instance.responsible.add(User.objects.get(pk = i))
+        if 'service' in self.context['request'].data:
+            instance.service = service.objects.get(pk=int(self.context['request'].data['service']))
+        if 'date' in self.context['request'].data:
+            instance.date = self.context['request'].data['date']
+        if 'title' in self.context['request'].data:
+            instance.title = self.context['request'].data['title']
+        instance.save()
+        return instance
+
+class BoMSerializer(serializers.ModelSerializer):
+    products = ProductsSerializer(many = False , read_only = True)
+    project =  ProjectsSerializer(many = True  , read_only =True)
+    class Meta:
+        model = BoM
+        fields = ('pk','created','user' , 'products','project','quantity1','quantity2','price')
+
+    def create(self, validated_data):
+
+        b = BoM(**validated_data)
+        if 'products' in self.context['request'].data:
+            b.products = Products.objects.get(pk=int(self.context['request'].data['products']))
+            print b.products,'bbbbbbbbb'
+        b.save()
+        if 'project' in self.context['request'].data:
+            for i in self.context['request'].data['project']:
+                print i,'mmmmmmmmmmmmmmm'
+                b.project.add(Projects.objects.get(pk = i))
+        b.save()
+        return b

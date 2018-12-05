@@ -13,7 +13,7 @@ app.directive('genericTable' , function(){
   };
 });
 
-app.controller('genericTable' , function($scope , $http, $templateCache, $timeout , $users , Flash , $uibModal) {
+app.controller('genericTable' , function($scope , $http, $templateCache, $timeout , $users , Flash , $uibModal , $timeout) {
 
   $scope.config = JSON.parse($scope.configObj);
 
@@ -32,9 +32,14 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
   $scope.itemsNumPerView = angular.isDefined($scope.config.itemsNumPerView) ? $scope.config.itemsNumPerView:[5, 10, 20];
   $scope.itemsPerView = $scope.itemsNumPerView[0];
   $scope.deletable = angular.isDefined($scope.config.deletable) ? $scope.config.deletable:false;
+  $scope.filterSearch = angular.isDefined($scope.config.filterSearch) ? $scope.config.filterSearch:false;
   $scope.editorTemplate = angular.isDefined($scope.config.editorTemplate) ? $scope.config.editorTemplate:'';
 
   $scope.haveOptions = angular.isDefined($scope.config.options) ? true:false;
+  $scope.multiSelect = angular.isDefined($scope.config.multiSelect) ? true:false;
+
+  $scope.selectable = $scope.multiSelect;
+
   $scope.canCreate = angular.isDefined($scope.config.canCreate) ? $scope.config.canCreate:false;
   $scope.url = $scope.config.url;
   $scope.searchField = angular.isDefined($scope.config.searchField) ? $scope.config.searchField:'';
@@ -61,6 +66,18 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
     }
   });
 
+  $timeout(function() {
+    var searchInpt = $('#genericTableSearch');
+
+    // console.log(searchInpt);
+    bbx1 = searchInpt.next()[0].getBoundingClientRect();
+    bbx2 = searchInpt.prev()[0].getBoundingClientRect();
+
+    searchInpt.width(bbx2.x - bbx1.x - bbx1.width - 100)
+
+
+  },1500)
+
   $scope.$on('forceInsetdata', function(event, input) {
     // console.log($scope.data);
     $scope.data.push(input);
@@ -77,7 +94,10 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
          return $scope.callbackFn; // pass data directly from the template to the callbackFn
        }
       },
-      controller: function($scope , submitFormFn ){
+      controller: function($scope , submitFormFn , $uibModalInstance ){
+
+
+
         $scope.submitForm = submitFormFn;
         $scope.mode = 'new';
         $scope.data = {};
@@ -169,7 +189,7 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
   });
 
   $scope.fetchData = function(){
-    console.log("came");
+    // console.log("came");
     var fetch = {method : '' , url : ''};
     // getting the data from the server based on the state of the filter params
     if (typeof $scope.getStr == 'undefined' && $scope.searchField!='') {
@@ -179,7 +199,14 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
     if (typeof $scope.searchField == 'undefined' || $scope.searchField =='') {
       fetch.url = $scope.url +'?&limit='+ $scope.itemsPerView + '&offset='+ ($scope.pageNo-1)*$scope.itemsPerView;
     } else {
-      fetch.url = $scope.url +'?&'+ $scope.searchField +'__contains=' + $scope.getStr + '&limit='+ $scope.itemsPerView + '&offset='+ ($scope.pageNo-1)*$scope.itemsPerView;
+
+      if (!$scope.filterSearch) {
+        var searchUrl = $scope.searchField + '__contains=';
+      }else {
+        var searchUrl = 'search=';
+      }
+
+      fetch.url = $scope.url +'?&'+ searchUrl + $scope.getStr + '&limit='+ $scope.itemsPerView + '&offset='+ ($scope.pageNo-1)*$scope.itemsPerView;
     }
     if (typeof $scope.getParams != 'undefined') {
       for (var i = 0; i < $scope.getParams.length; i++) {
@@ -223,10 +250,10 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
           $scope.tableHeading.push(key);
           $scope.sortFlag.push(0);  // by default no sort is applied , 1 for accending and -1 for descending
         }
-        if ($scope.isSelectable) {
-          $scope.tableHeading.unshift('Select');
-          $scope.sortFlag.unshift(-2); // no sort can be applied on this column
-        }
+        // if ($scope.isSelectable ) {
+        //   $scope.tableHeading.unshift('Select');
+        //   $scope.sortFlag.unshift(-2); // no sort can be applied on this column
+        // }
 
         if ($scope.haveOptions || $scope.editable || $scope.deletable) {
           $scope.tableHeading.push('Options')
@@ -391,10 +418,16 @@ app.directive('tableItem', function () {
 });
 
 app.controller('genericTableItem' , function($scope , $uibModal){
+
   // console.log($scope);
   $scope.config = JSON.parse($scope.configObj);
+  console.log();
   $scope.options = $scope.config.options;
-  $scope.selectable = angular.isDefined($scope.config.multiselectOptions) ? true:false;
+  if ($scope.config.checkbox != undefined) {
+    $scope.selectable = $scope.config.checkbox
+  }else {
+    $scope.selectable = angular.isDefined($scope.config.multiselectOptions) ? true:false;
+  }
   $scope.deletable = angular.isDefined($scope.config.deletable) ? $scope.config.deletable:false;
   $scope.editorTemplate = angular.isDefined($scope.config.editorTemplate) ? $scope.config.editorTemplate:'';
   $scope.fields = angular.isDefined($scope.config.fields) ? $scope.config.fields: false;
@@ -456,12 +489,16 @@ app.controller('genericTableItem' , function($scope , $uibModal){
          return $scope.config;
        },
       },
-      controller: function($scope , submitFormFn , data , config){
+      controller: function($scope , submitFormFn , data , config , $uibModalInstance){
         $scope.submitForm = submitFormFn;
         $scope.data = data;
         $scope.data.formData = [];
         $scope.mode = 'edit';
         $scope.config = config;
+
+        $scope.$on('closeEditModalWindow', function(event, input) {
+          $uibModalInstance.dismiss();
+        });
       },
     });
   }

@@ -1,0 +1,18 @@
+<div class="shaddowed card bg-white" style="min-height:93vh;">
+  <breadcrumb></breadcrumb>
+  <div class="container-fluid">
+    <uib-tabset>
+
+      <uib-tab active="searchTabActive">
+        <uib-tab-heading>
+          Browse
+          <i class="fa fa-list-ul"></i>
+        </uib-tab-heading>
+        <div class="container-fluid">
+          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+        </div>
+      </uib-tab>
+
+    </uib-tabset>
+  </div>
+</div>

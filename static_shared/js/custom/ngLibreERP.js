@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngAside', 'ngDraggable', 'flash', 'chart.js', 'ngTagsInput', 'ui.tinymce', 'hljs', 'mwl.confirm', 'ngAudio', 'uiSwitch', 'rzModule']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngAside', 'ngDraggable', 'flash', 'chart.js', 'ngTagsInput', 'ui.tinymce', 'hljs', 'mwl.confirm', 'ngAudio', 'uiSwitch', 'rzModule','ngMap' ]);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, hljsServiceProvider) {
   hljsServiceProvider.setOptions({
@@ -6,6 +6,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
     tabReplace: '    '
   });
 
+  // $urlRouterProvider.otherwise('/businessManagement');
   $urlRouterProvider.otherwise('/home');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -22,16 +23,92 @@ app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootS
 
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
-app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio) {
+app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio ,$sce) {
   $scope.me = $users.get('mySelf');
   $scope.headerUrl = '/static/ngTemplates/header.html',
     $scope.sideMenu = '/static/ngTemplates/sideMenu.html',
     $scope.themeObj = {
-      main: '#005173',
+      main: '#1E88E5',
       highlight: '#04414f'
     };
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
+
+  function setCookie(cname,cvalue,exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires=" + d.toGMTString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+          }
+      }
+      return "";
+  }
+
+
+
+
+  $scope.mobileView=false;
+
+  setInterval(function(){
+
+    if($(window).width() < 600) {
+      document.getElementById('mainUI').addEventListener('click', function() {
+          if($(window).width() < 600) {
+          $scope.sideMenuVisibility=false
+        }
+
+      })
+
+        $scope.mobileView=true;
+        if(!$scope.sideMenuVisibility)
+          {
+            document.getElementById('navbarTop').style.margin='0%';
+            document.getElementById('mainUIParent').style.width='100%';
+            document.getElementById('sideMenu').style.display='none'
+          }
+    }else{
+        $scope.mobileView=false;
+    }
+  },10)
+
+
+$scope.onHover=false;
+  $scope.sideMenuVisibility = true;
+  // retrive it back
+  var sideMenuVisibility=getCookie("sideMenuVisibility");
+  console.log(getCookie("sideMenuVisibility"))
+  if (sideMenuVisibility == "false") {
+      $scope.sideMenuVisibility=false;
+     } else {
+     $scope.sideMenuVisibility=true;
+  }
+
+  $scope.toggleSideMenu = function() {
+    $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
+    console.log($scope.sideMenuVisibility);
+    if ($scope.sideMenuVisibility === false) {
+        sideMenuVisibility='false';
+       } else {
+       sideMenuVisibility='true';
+    }
+    // save it in cookies
+    setCookie('sideMenuVisibility',sideMenuVisibility,30);
+    console.log(getCookie('sideMenuVisibility'))
+  }
+
   $permissions.module().
   success(function(response) {
     // console.log(response);
@@ -120,7 +197,15 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
   $scope.$watch('terminal.command.username', function(newValue, oldValue) {
     console.log(newValue);
     if (typeof newValue != 'undefined') {
-      $scope.terminal.showCommandOptions = true;
+      // $scope.terminal.showCommandOptions = true;
+      $scope.addIMWindow($scope.terminal.command.pk);
+      $scope.terminal.command.username = '';
+      $scope.terminal = {
+        command: '',
+        show: false,
+        showCommandOptions: false
+      };
+
     }
   });
 
@@ -536,10 +621,10 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
   $scope.user = $users.get('mySelf');
 
   $scope.fixedApps = [
-    {icon : 'home' , state : 'home'},
-    {icon : 'envelope-o' , state : 'home.mail'},
-    {icon : 'calendar' , state : 'home.calendar'},
-    {icon : 'sticky-note-o' , state : 'home.notes'},
+    // {icon : 'home' , state : 'home'},
+    // {icon : 'envelope-o' , state : 'home.mail'},
+    // {icon : 'calendar' , state : 'home.calendar'},
+    // {icon : 'sticky-note-o' , state : 'home.notes'},
   ]
 
   var parts = $state.current.name.split('.');
@@ -596,7 +681,7 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
     for (var i = 0; i < $scope.modules.length; i++) {
       if ($scope.modules[i].name == $scope.moduleName) {
         for (var j = 0; j < $scope.rawApps.length; j++) {
-          if ($scope.rawApps[j].module == $scope.modules[i].pk ) {
+          if (true ) {
             var a = $scope.rawApps[j];
             var parts = a.name.split('.');
             if (parts.length>2 || $scope.inExcludedApps(a)) {

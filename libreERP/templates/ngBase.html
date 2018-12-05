@@ -34,10 +34,61 @@
     <link rel="stylesheet" href="{% static 'css/custom/navbarControls.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/custom/calendar.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/app.HR.css' %}" charset="utf-8">
+    <link rel="stylesheet" href="{% static 'css/jquery.orgchart.min.css' %}" charset="utf-8">
 
     {% for a in appsWithCss %}
       <link rel="stylesheet" href="{% static '' %}css/{{a.name}}.css" charset="utf-8">
     {% endfor %}
+
+
+    <style type="text/css">
+      .orgchart { background: #fff; }
+      .orgchart td.left, .orgchart td.right, .orgchart td.top { border-color: #aaa; }
+      .orgchart td>.down { background-color: #aaa; }
+      .orgchart .middle-level .title { background-color: var(--themeMain); }
+      .orgchart .middle-level .content { border-color: var(--themeMain); }
+      .orgchart .product-dept .title { background-color: #009933; }
+      .orgchart .product-dept .content { border-color: #009933; }
+      .orgchart .rd-dept .title { background-color: #993366; }
+      .orgchart .rd-dept .content { border-color: #993366; }
+      .orgchart .pipeline1 .title { background-color: #996633; }
+      .orgchart .pipeline1 .content { border-color: #996633; }
+      .orgchart .frontend1 .title { background-color: #cc0066; }
+      .orgchart .frontend1 .content { border-color: #cc0066; }
+      .orgchart .second-menu-icon {
+        transition: opacity .5s;
+        opacity: 0;
+        bottom: -15px;
+        z-index: 2;
+        font-size: 20px;
+        padding: 4px;
+        position: absolute;
+        margin: auto;
+        cursor: pointer;
+        right: 0px;
+
+      }
+      .orgchart .second-menu-icon:hover { color: #449d44; }
+      .orgchart .node:hover .second-menu-icon { opacity: 1;}
+      .orgchart .node .second-menu {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: -45px;
+        border-radius: 35px;
+        box-shadow: 0 0 10px 1px #999;
+        background-color: #fff;
+        z-index: 9999;
+      }
+      .orgchart .node .second-menu .avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 30px;
+        float: left;
+        margin: 5px;
+      }
+    </style>
+
 
     <style media="screen" ng-bind-html="theme"></style>
   </head>
@@ -45,23 +96,82 @@
 
     <div flash-message="4000" style="position:fixed;top:70px;right:10px;z-index:9999;min-width:300px;"></div>
 
-    <div style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:13%;min-height:100vh;position:fixed;" ng-include="sideMenu">
+    {% verbatim %}
+    <div id="sideMenu" style="background:linear-gradient(100deg, #e9dddd 0%, #fff 51%, #fff 75%);width:{{sideMenuVisibility ? '13':'5'}}%;{{mobileView ? 'width:181px': ';'}};min-height:100vh;position:fixed;border-right:solid 2px  var(--themeMain);z-index:100;" class="sideMenuView" ng-include="sideMenu">
     </div>
 
-    <div class="col-md-1" style="width:87%;margin-left:13%;">
+
+    <div class="col-md-1 mainUIViewParent" id="mainUIParent" style="{{sideMenuVisibility ? 'width:87%': 'width:95%;'}};{{mobileView ? 'width:70%': ';'}}; padding:0px;right:0px;position:absolute;">
+    {% endverbatim %}
       <div ng-include="headerUrl"></div>
-      <div style="margin:0.5vh;margin-top:6.5vh;" ui-view ng-if="modules.length>0"></div>
+      <div id="mainUI" style="" class="mainUIView" ui-view ng-if="modules.length>0">
+        <style>
+
+          .mainUIViewParent{
+            width:100% !important;
+            margin-left: 0px !important;
+          }
+          .sideMenuView{
+            display: none;
+          }
+
+          .mainUIView{
+            margin: 0px !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+
+            color: rgb(23, 109, 158);
+            text-transform: uppercase;
+            font-family: -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Oxygen-Sans,
+                Ubuntu,
+                Cantarell,
+                Helvetica,
+                sans-serif;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+          }
+          body {
+            margin: 0;
+            padding: 0;
+          }
+
+          @keyframes dots {
+            50% {
+              transform: translateY(-.4rem);
+            }
+            100% {
+              transform: translateY(0);
+            }
+          }
+
+          .d {
+            animation: dots 1.5s ease-out infinite;
+          }
+          .d-2 {
+            animation-delay: .5s;
+          }
+          .d-3 {
+            animation-delay: 1s;
+          }
+          </style>
+
+          <img src="/static/images/spinner.gif" alt="">
+          Loading<span class="d">.</span><span class="d d-2">.</span><span class="d d-3">.</span>
+
+      </div>
     </div>
 
 
     <!-- contains very common ng templates used in the directives -->
     <!-- Stock JS libraries -->
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
-      });
-    </script>
+    <!-- <script src='//maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBE7461fCAOyu3Xd9_6Y9At6RHJEkw2QLc&libraries=placeses,visualization,drawing,geometry,places'></script> -->
 
     {% if useCDN %}
       <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
@@ -81,14 +191,15 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-audio/1.7.2/angular.audio.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.0/rzslider.min.js"></script>
     {% else %}
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script> -->
       <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
       <script src="{% static 'js/jquery.cookie-1.4.1.min.js' %}"></script>
       <script src="{% static 'js/bootstrap.min.js' %}"></script>
       <script src="{% static 'js/angular.min.js' %}"></script>
       <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
       <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
-      <script src="{% static 'js/Chart.min.js' %}"></script>
+      <!-- <script src="{% static 'js/Chart.min.js' %}"></script> -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
       <script src="{% static 'js/angular-chart.min.js' %}"></script>
       <script src="{% static 'js/fabric.min.js' %}"></script>
       <script src="{% static 'js/tinymce.min.js' %}"></script>
@@ -96,6 +207,7 @@
       <script src="{% static 'js/angular-highlightjs.min.js' %}"></script>
       <script src="{% static 'js/angular.audio.min.js' %}"></script>
       <script src="{% static 'js/rzslider.min.js' %}"></script>
+
       <!-- <script src="{% static 'js/MathJax.js' %}"></script> -->
     {% endif %}
 
@@ -109,6 +221,9 @@
     <script src="{% static 'js/angular-aside.min.js' %}"></script>
     <script src="{% static 'js/markdown.min.js' %}"></script>
     <script src="{% static 'js/angular-ui-switch.min.js' %}"></script>
+    <script src="{% static 'js/jquery.orgchart.min.js' %}"></script>
+    <script src="https://rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.js"></script>
+    <!-- <script src="{% static 'js/angular-cookies.js' %}"></script> -->
     <!-- Custom JS files -->
     <script type="text/javascript">
       var wampServer = '{{wampServer}}';
@@ -124,6 +239,8 @@
     <script src="{% static 'js/custom/directives.native.js' %}"></script>
     <script src="{% static 'js/custom/filters.js' %}"></script>
     <script src="{% static 'js/custom/services.js' %}"></script>
+    <script src="{% static 'js/chart.funnel.bundled.min.js' %}"></script>
+    <script src="{% static 'js/gauge.min.js' %}"></script>
 
     {% for a in appsWithJs %}
       <script src="{% static '' %}js/{{a.name}}.js"></script>
@@ -131,7 +248,6 @@
     {% for m in modules %}
       <script src="{% static '' %}js/module.{{m.name}}.js"></script>
     {% endfor %}
-
 
 
   </body>

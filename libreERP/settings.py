@@ -25,7 +25,7 @@ DEFAULT_APPS_ON_REGISTER = ['app.ecommerce' , 'app.ecommerce.orders' , 'app.ecom
 
 ON_REGISTRATION_SUCCESS_REDIRECT = '/ERP' # when signup using google the user will be redirected to this url
 
-SITE_ADDRESS = 'http://127.0.0.1:8000' # the url prefix of the site
+SITE_ADDRESS = 'http://127.0.0.1:8080' # the url prefix of the site
 
 ROOT_APP = 'index' # the default app
 ECOMMERCE_APP = {
@@ -36,11 +36,14 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/foodLogin.png'
+LOGIN_PAGE_IMAGE = '/static/images/i2iBack.jpg'
 
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
+
+LOGIN_TEMPLATE = 'login.html'
+SMS_TRAINED_MODEL = '1540626861'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -55,20 +58,23 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cioc.co.in', 'localhost', '127.0.0.1','192.168.1.123']
+
+
+ALLOWED_HOSTS = ['192.168.1.106', '192.168.1.115 ', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.1.115' ,'192.168.1.121','192.168.1.124','192.168.1.123']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
 
-LOGOUT_REDIRECT = 'index' # similarly the url to which the user will be directed one logged out
+LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed one logged out
 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = 'India'
+BRAND_NAME = 'CIOC'
 
 BRAND_LOGO = '/static/images/cioc_icon.svg'
+BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -92,24 +98,32 @@ INSTALLED_APPS = (
     'API', # uncategorised REST points
     'ERP', # permissions, overall management of the platform
     'HR', # people aspect of the platform
-    'PIM', # personal information manager
-    'social', # social networking client
-    'homepage', # landing page
-    'mail', # mail application
     'businessManagement', # BM application
-    'ecommerce', # ecommerce
-    'projectManagement',
-    'gitweb', # github.com local server with file browsing and diff viewer
-    'taskBoard',
-    'projects',
-    'blogs', # publically accesible blogging site
-    'virtualWorkforce',
-	'finance',# billing , invoicing , finance etc
-	'tools',# general purpose tools like OCR, AI or big data related stuffs
-	'events',# to manage events like test, hackathon or something like that
-	'clientRelationships',# CRM like sales force
-	'LMS',# LMS
+    'support',# canvas
+    'PIM', # personal information manager
+    # 'homepage', # landing page
+    # 'organization',# organization
+    # 'mail', # mail application
+    # 'employees',# employees details
+    # 'clientRelationships',# CRM like sales force
+    # 'gitweb', # github.com local server with file browsing and diff viewer
+    # 'social', # social networking client
+    # 'tools',# general purpose tools like OCR, AI or big data related stuffs
+    # 'projects',
+    # 'performance',# performance
+    # 'taskBoard',
+    # 'logistic',# logistics
+    # 'projectManagement',
+    # 'virtualWorkforce',
+	# 'finance',# billing , invoicing , finance etc
+	# 'LMS',# LMS
+	# 'workforceManagement',# canvas
+	# 'payroll',# payroll
+	# 'recruitment',# recruitment
+	# 'assets',# assets
+	# 'marketing',# Marketing Application
 )
+
 
 SITE_ID = 1
 
@@ -117,8 +131,8 @@ ACCOUNT_ADAPTER = 'ERP.views.AccountAdapter'
 
 SOCIALACCOUNT_PROVIDERS = \
         {'google':
-            { 'SCOPE': ['profile', 'email'],
-            'AUTH_PARAMS': { 'access_type': 'online' } },
+            { 'SCOPE': ['profile', 'email','https://www.googleapis.com/auth/gmail.readonly'],
+            'AUTH_PARAMS': { 'access_type': 'offline' } },
         'facebook':
             {'METHOD': 'oauth2',
             'SCOPE': ['email', 'public_profile', 'user_friends'],
@@ -171,6 +185,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'libreERP', 'templates'),
             os.path.join(BASE_DIR, 'ecommerce', 'templates'),
             os.path.join(BASE_DIR, 'clientRelationships', 'templates'),
+            os.path.join(BASE_DIR, 'LMS', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -200,17 +215,24 @@ AUTHENTICATION_BACKENDS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db2.sqlite3'),
     }
 }
+
+EXTERNAL_DATABASE_IP = '127.0.0.1'
+EXTERNAL_DATABASE_PORT = '3306'
+EXTERNAL_DATABASE_PASSWORD = 'cioc'
+EXTERNAL_DATABASE_USER = 'root'
+EXTERNAL_DATABASE_NAME = 'i2i'
+
 
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'django',
-#         'USER': 'root',
-#         'PASSWORD': 'password',
-#         'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
+#         'NAME': 'cioc_main',
+#         'USER': 'cioc_main',
+#         'PASSWORD': '8@8sxS$O}CaP',
+#         'HOST': '97.74.232.81',   # Or an IP Address that your DB is hosted on
 #         'PORT': '3306',
 #     }
 # }
@@ -230,22 +252,22 @@ USE_L10N = True
 
 USE_TZ = True
 
-EMAIL_HOST_SUFFIX = 'cioc.co.in'
+EMAIL_HOST_SUFFIX = 'cioc.in'
 
-EMAIL_HOST = 'smtp.office365.com'
-EMAIL_HOST_USER = 'pradeep@cioc.co.in'
-EMAIL_HOST_PASSWORD = 'janhvi@1'
+EMAIL_HOST = 'email.cioc.in'
+EMAIL_HOST_USER = 'testmail@cioc.in'
+EMAIL_HOST_PASSWORD = 'Titan@1234'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DEFAULT_FROM_EMAIL = 'ciocpky@gmail.com'
+DEFAULT_FROM_EMAIL = 'testmail@cioc.in'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_HEADERS = (
     'x-requested-with',
@@ -255,6 +277,8 @@ CORS_ALLOW_HEADERS = (
     'authorization',
     'X-CSRFToken'
 )
+
+CORS_URL= 'http://localhost:8081'
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -275,4 +299,4 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = 'cioc.co.in'
+WAMP_SERVER = '192.168.1.106'

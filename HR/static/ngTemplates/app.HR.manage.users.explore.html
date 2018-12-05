@@ -1,0 +1,23 @@
+<div class="container-fluid" style="padding:20px;" ng-controller="sudo.manageUsers.explore">
+  <div class="col-md-4" style="border-right:solid 2px #eeeeee;min-height:70vh;">
+    <div class="row">
+      <div class="container-fluid text-center">
+        <img ng-src="{{data.userPK | getDP}}" class="img img-circle" style="height:100px;width:100px;margin-bottom:20px;"> <br>
+
+        <span class="text-muted" style="font-size:18px;">{{data.userPK | getName }}</span> <br><br>
+        <!-- {{profile.designation.rank.title}}<br> -->
+      </div>
+    </div>
+
+    <!-- {{data}} -->
+
+  </div>
+  <div class="col-md-8">
+    <div class="container-fluid">
+      <div class="row">
+        <h2 style="">Details of {{data.userPK | getName }}</h2><br>
+      </div>
+    </div>
+  </div>
+
+</div>

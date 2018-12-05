@@ -16,24 +16,24 @@ class themeViewSet(viewsets.ModelViewSet):
     queryset = theme.objects.all()
     serializer_class = themeSerializer
 
-class calendarViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = calendarSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['text' , 'originator' , 'data']
-    def get_queryset(self):
-        qs1 = calendar.objects.filter(user =  self.request.user).order_by('when')
-        qs2 = self.request.user.calendarItemsFollowing.all().order_by('when')
-
-        toReturn = qs1 | qs2
-        toReturn = toReturn.distinct()
-
-        if 'clients__in' in self.request.GET:
-            clients = json.loads(self.request.GET['clients__in'])
-            # print type(clients) , type(clients[0])
-            toReturn = toReturn.filter(clients__in = clients)
-
-        return toReturn
+# class calendarViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated, )
+#     serializer_class = calendarSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['text' , 'originator' , 'data' , 'user', 'eventType']
+#     def get_queryset(self):
+#         qs1 = calendar.objects.filter(user =  self.request.user).order_by('when')
+#         qs2 = self.request.user.calendarItemsFollowing.all().order_by('when')
+#
+#         toReturn = qs1 | qs2
+#         toReturn = toReturn.distinct()
+#
+#         if 'clients__in' in self.request.GET:
+#             clients = json.loads(self.request.GET['clients__in'])
+#             # print type(clients) , type(clients[0])
+#             toReturn = toReturn.filter(clients__in = clients)
+#
+#         return toReturn
 
 class notificationViewSet(viewsets.ModelViewSet):
     permission_classes = (isOwner, )
@@ -82,65 +82,65 @@ class chatMessageBetweenViewSet(viewsets.ModelViewSet):
             msg.read = True
             msg.save()
         return qs.order_by('created')[:150]
-
-class blogViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = blogSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title' , 'state']
-    def get_queryset(self):
-        if 'state' not in self.request.GET and 'tags' not in self.request.GET and 'user' not in self.request.GET:
-            return blogPost.objects.filter( users__in=[self.request.user,])
-        if 'state' in self.request.GET:
-            st = self.request.GET['state']
-            if st != 'published':
-                qs = blogPost.objects.filter( users__in=[self.request.user,])
-            else:
-                qs = blogPost.objects.filter(state= 'published')
-        else:
-            qs = blogPost.objects.filter(state='published')
-
-        if 'tags' in self.request.GET:
-            tags = []
-            for t in self.request.GET['tags'].split(','):
-                tags.append(blogCategory.objects.get(pk = int(t)))
-            qs = qs.filter(tags__in=tags )
-
-        if 'user' in self.request.GET: # filter for a perticular user
-            qs = qs.filter(users__in=[User.objects.get(username=self.request.GET['user']),])
-
-        return qs
-
-class blogCategoryViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = blogCategorySerializer
-    queryset = blogCategory.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title']
-
-
-class blogCommentsViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = blogCommentsSerializer
-    queryset = blogComment.objects.all()
-class blogLikesViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = blogLikeSerializer
-    queryset = blogLike.objects.all()
-class blogCommentLikesViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = blogCommentLikeSerializer
-    queryset = blogCommentLike.objects.all()
-
-
-class notebookViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, isOwner,)
-    serializer_class = notebookSerializer
-    def get_queryset(self):
-        return notebook.objects.filter(user = self.request.user ).order_by('-created')
-
-class pageViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, isOwner,)
-    serializer_class = pageSerializer
-    def get_queryset(self):
-        return page.objects.filter(user = self.request.user ).order_by('-created')
+#
+# class blogViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#     serializer_class = blogSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['title' , 'state']
+#     def get_queryset(self):
+#         if 'state' not in self.request.GET and 'tags' not in self.request.GET and 'user' not in self.request.GET:
+#             return blogPost.objects.filter( users__in=[self.request.user,])
+#         if 'state' in self.request.GET:
+#             st = self.request.GET['state']
+#             if st != 'published':
+#                 qs = blogPost.objects.filter( users__in=[self.request.user,])
+#             else:
+#                 qs = blogPost.objects.filter(state= 'published')
+#         else:
+#             qs = blogPost.objects.filter(state='published')
+#
+#         if 'tags' in self.request.GET:
+#             tags = []
+#             for t in self.request.GET['tags'].split(','):
+#                 tags.append(blogCategory.objects.get(pk = int(t)))
+#             qs = qs.filter(tags__in=tags )
+#
+#         if 'user' in self.request.GET: # filter for a perticular user
+#             qs = qs.filter(users__in=[User.objects.get(username=self.request.GET['user']),])
+#
+#         return qs
+#
+# class blogCategoryViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#     serializer_class = blogCategorySerializer
+#     queryset = blogCategory.objects.all()
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['title']
+#
+#
+# class blogCommentsViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#     serializer_class = blogCommentsSerializer
+#     queryset = blogComment.objects.all()
+# class blogLikesViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#     serializer_class = blogLikeSerializer
+#     queryset = blogLike.objects.all()
+# class blogCommentLikesViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#     serializer_class = blogCommentLikeSerializer
+#     queryset = blogCommentLike.objects.all()
+#
+#
+# class notebookViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly, isOwner,)
+#     serializer_class = notebookSerializer
+#     def get_queryset(self):
+#         return notebook.objects.filter(user = self.request.user ).order_by('-created')
+#
+# class pageViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly, isOwner,)
+#     serializer_class = pageSerializer
+#     def get_queryset(self):
+#         return page.objects.filter(user = self.request.user ).order_by('-created')

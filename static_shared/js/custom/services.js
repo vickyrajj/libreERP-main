@@ -49,6 +49,14 @@ app.factory('$permissions', function($http){
     apps = response.data;
   })
 
+  myPk = myProfile().pk
+
+  $http({method : 'GET' , url : '/api/ERP/permission/?user='+myPk}).
+  then(function(response){
+    myPerms = response.data;
+  })
+
+
   return {
     module : function(input){
       // if input is a string the function returns true or false based on the user's permission to use this module
@@ -78,7 +86,15 @@ app.factory('$permissions', function($http){
     action : function(){
       // similar to above
 
-
+    }, myPerms : function(input) {
+      // console.log(input);
+      if (typeof input != 'undefined') {
+        for (var i = 0; i < myPerms.length; i++) {
+          if (myPerms[i].app.name == input) {
+            return true
+          }
+        }
+      }
     }
 
   }
@@ -87,9 +103,11 @@ app.factory('$permissions', function($http){
 
 
 function myProfile(){
+  console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
   var httpRequest = new XMLHttpRequest()
   httpRequest.open('GET', "/api/HR/users/?mode=mySelf&format=json" , false);
   httpRequest.send(null);
+  console.log(httpRequest.status ,'hhhhhhhhh');
   if (httpRequest.status == 200) { // successfully
     var temp = JSON.parse(httpRequest.responseText);
     me = temp[0];
@@ -98,8 +116,10 @@ function myProfile(){
     }else {
       me.url = me.url.split('?')[0]
     }
-    return me;
+    console.log('meeeeeeeeeeeeeeeeeeeeeeeee',me);
+    return me
   } else if (httpRequest.status == 403) {
+    console.log("5000000000000000000000000000");
     return null;
   }
 }

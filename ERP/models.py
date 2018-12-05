@@ -25,6 +25,8 @@ class module(models.Model):
     icon = models.CharField(max_length = 20 , null = True )
     haveCss = models.BooleanField(default = True)
     haveJs = models.BooleanField(default = True)
+    def __unicode__(self):
+        return self.name
 
 class application(models.Model):
     # each application in a module will have an instance of this model
@@ -74,7 +76,7 @@ class ApiUsage(models.Model): # to store the monthly api usage for the api
     month = models.PositiveIntegerField(default=0) # assuming 0 for the month of January 2017 and 1 for february and so on
 
 class permission(models.Model):
-    app = models.ForeignKey(application , null=False)
+    app = models.ForeignKey(application , null=False , related_name="permissions")
     user = models.ForeignKey(User , related_name = "accessibleApps" , null=False)
     givenBy = models.ForeignKey(User , related_name = "approvedAccess" , null=False)
     created = models.DateTimeField(auto_now_add = True)
@@ -129,6 +131,20 @@ class service(models.Model): # contains other companies datails
     logo = models.CharField(max_length = 200 , null = True) # image/svg link to the logo
     web = models.TextField(max_length = 100 , null = True) # image/svg link to the logo
     doc  = models.ForeignKey(media , related_name = 'services' , null = True)
+    contactPerson = models.ManyToManyField(User , related_name = 'servicesContactPerson' , blank = True)
+
 
     def __unicode__(self):
         return '< name :%s>,<user :%s>,<address :%s>' %(self.name ,self.user.username, self.address)
+
+HOLIDAY_TYPE_CHOICES = (
+    ('national' , 'national'),
+    ('state' , 'state'),
+    ('restricted' , 'restricted'),
+)
+
+class CompanyHolidays(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    date = models.DateField(null=True)
+    typ = models.CharField(choices = HOLIDAY_TYPE_CHOICES , max_length = 20 , default = 'national')
+    name = models.CharField(max_length = 50 , null = True)

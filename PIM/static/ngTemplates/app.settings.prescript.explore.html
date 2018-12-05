@@ -1,0 +1,36 @@
+<div ng-controller="app.settings.prescript.explore">
+  <div class="row" style="padding:15px;">
+    <div ng-if="prescriptPerm" class="col-md-8 col-md-offset-2">
+      <form>
+        <div class="form-group">
+          <label ng-if="prescriptForm.pk">Edit Prescipt:</label>
+          <label ng-if="!prescriptForm.pk">Create New Prescipt:</label>
+        </div>
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="prescriptForm.text" placeholder="Type your prescript here..">
+          <span class="input-group-addon" style="cursor:pointer" ng-click="savePrescript()"> <span>{{prescriptForm.pk ? 'Save':'Add'}}</span> </span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row " style="padding-top:25px;">
+    <div class="col-md-8 col-md-offset-2">
+      <div ng-repeat="p in prescripts" style="margin-bottom:15px;">
+        <div class="card" style="background-color:#5555c2; color:white; padding:15px; border-radius:10px;" ng-mouseover="p.display=true" ng-mouseleave="p.display=false">
+          <div class="row">
+            <div class="col-md-10">
+              <span>{{p.text}}</span>
+            </div>
+            <div class="col-md-1">
+              <span ng-if="p.display && prescriptPerm" class="pull-right" style="cursor:pointer;" ng-click="deletePrescript(p.pk , $index)"  > <i class="fa fa-trash fa-lg" title="Delete"></i> </span>
+            </div>
+            <div class="col-md-1">
+              <span ng-if="p.display && prescriptPerm" class="pull-right" style="cursor:pointer;" ng-click="editPrescript(p)"  > <i class="fa fa-edit fa-lg" title="Edit"></i> </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

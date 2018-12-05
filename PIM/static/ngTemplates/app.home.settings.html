@@ -1,0 +1,37 @@
+<div class="shaddowed card bg-white" style="min-height:93vh;position:relative;">
+  <breadcrumb></breadcrumb>
+  <div class="container-fluid" style="padding:15px;">
+    <uib-tabset>
+      <uib-tab active="searchTabActive">
+        <uib-tab-heading>
+          Prescripts
+          <!-- <i class="fa fa-plus"></i> -->
+        </uib-tab-heading>
+        <div class="container-fluid">
+          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+        </div>
+      </uib-tab>
+      <uib-tab>
+        <uib-tab-heading>
+          Roles
+          <!-- <i class="fa fa-plus"></i> -->
+        </uib-tab-heading>
+        <div class="container-fluid">
+          <div ng-include="'/static/ngTemplates/app.settings.roles.html'"></div>
+        </div>
+      </uib-tab>
+      <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+        <uib-tab-heading>
+          {{tab.title}}
+          <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+        </uib-tab-heading>
+        <div ng-if="tab.app == 'prescriptInfo'">
+          <div ng-include="'/static/ngTemplates/app.settings.prescript.explore.html'"></div>
+        </div>
+        <div ng-if="tab.app == 'rolesInfo'">
+          <div ng-include="'/static/ngTemplates/app.settings.prescript.explore.html'"></div>
+        </div>
+      </uib-tab>
+    </uib-tabset>
+  </div>
+</div>
