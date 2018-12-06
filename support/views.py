@@ -317,3 +317,10 @@ class GetPurchaseAPIView(APIView):
         response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
         purchaseOrder(response , project , purchaselist , request)
         return response
+
+class InventoryViewSet(viewsets.ModelViewSet):
+    permissions_classes  = (permissions.AllowAny , )
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['products','project']

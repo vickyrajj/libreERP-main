@@ -91,3 +91,15 @@ class BoMSerializer(serializers.ModelSerializer):
                 b.project.add(Projects.objects.get(pk = i))
         b.save()
         return b
+
+class InventorySerializer(serializers.ModelSerializer):
+    product = ProductsSerializer(many = False , read_only = True)
+    class Meta:
+        model = Inventory
+        fields = ('pk','created','product','qty','rate')
+    def create(self, validated_data):
+        b = Inventory(**validated_data)
+        if 'product' in self.context['request'].data:
+            b.products = Products.objects.get(pk=int(self.context['request'].data['product']))
+        b.save()
+        return b
