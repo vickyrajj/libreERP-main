@@ -69,6 +69,15 @@ class ProjectsSerializer(serializers.ModelSerializer):
         if 'status' in validated_data:
             instance.status = validated_data['status']
         instance.save()
+        if 'approved2' in validated_data:
+            instance.approved2 = validated_data['approved2']
+        instance.save()
+        if 'approved2_date' in validated_data:
+            instance.approved2_date = validated_data['approved2_date']
+        instance.save()
+        if 'approved2_user' in validated_data:
+            instance.approved2_user = validated_data['approved2_user']
+        instance.save()
         return instance
 
 class BoMSerializer(serializers.ModelSerializer):
@@ -91,3 +100,13 @@ class BoMSerializer(serializers.ModelSerializer):
                 b.project.add(Projects.objects.get(pk = i))
         b.save()
         return b
+
+    def update (self, instance, validated_data):
+
+        if 'price' in validated_data:
+            instance.price = validated_data['price']
+        instance.save()
+        if 'quantity2' in validated_data:
+            instance.quantity2 = validated_data['quantity2']
+        instance.save()
+        return instance

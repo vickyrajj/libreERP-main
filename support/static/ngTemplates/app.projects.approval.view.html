@@ -55,10 +55,10 @@
                   <td>{{$index + 1}}</td>
                   <td>{{v.products.description_1}}</td>
                   <td>{{v.products.part_no}}</td>
-                  <td><input type="number"  step=1 class="form-control-pos" ng-model="v.quantity1"></td>
-                  <td ng-bind ="v.products.price">{{v.products.price}}</td>
-                  <td><input type="number"  step=1 class="form-control-pos" ng-model="v.quantity2"></td>
-                  <td >{{v.products.price*v.quantity1}}</td>
+                  <td>{{v.quantity1}}</td>
+                  <td ng-model="price"><input  class="form-control-pos" ng-model="v.price"></td>
+                  <td ng-model="quanty"><input type="number"  step=1 class="form-control-pos" ng-model="v.quantity2"></td>
+                  <td >{{v.price*v.quantity2}}</td>
                   <!-- <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td> -->
                 </tr>
                 <tr>
@@ -68,16 +68,22 @@
                   <td></td>
                   <td></td>
                   <td>Total</td>
-                  <td ><b>{{}}</b</td>
+                  <td ng-model="total"><b>{{total}}</b</td>
                   </tr>
 
 
             </tbody>
-          </table>
+            </table>
+            <div class="row">
+              <div class="col-md-12">
+                <button type="button" class="btn btn-success pull-right"  ng-click="send()"  style="margin:35px;" >Approve</button>
+              </div>
+            </div>
+
 
           </div>
 
 
-      
+
 
 </div>

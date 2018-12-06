@@ -24,28 +24,52 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     }]
   }
   $scope.data1 = {
-          tableData: []
-    };
+    tableData: []
+  };
+  console.log(  $scope.data1.tableData,'tttttttttt');
 
-    views1 = [{
-      name: 'list',
-      icon: 'fa-th-large',
-      template: '/static/ngTemplates/genericTable/genericSearchList.html',
-      itemTemplate: '/static/ngTemplates/app.projects.approval.html',
-    }, ];
+  views1 = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.projects.approval.html',
+  }, ];
 
-    $scope.config1 = {
-      views: views1,
-      url: '/api/support/projects/',
-      // filterSearch: true,
-      searchField: 'title',
-      deletable: true,
-      itemsNumPerView: [8, 12, 20],
-      getParams: [{
+  $scope.config1 = {
+    views: views1,
+    url: '/api/support/projects/',
+    // filterSearch: true,
+    searchField: 'title',
+    deletable: true,
+    itemsNumPerView: [8, 12, 20],
+    getParams: [{
       key: 'status',
       value: 'sent_for_approval'
-      }]
-    }
+    }]
+  }
+  $scope.data2 = {
+    tableData: []
+  };
+
+  views2 = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.projects.approval.success.html',
+  }, ];
+
+  $scope.config2 = {
+    views: views2,
+    url: '/api/support/projects/',
+    // filterSearch: true,
+    searchField: 'title',
+    deletable: true,
+    itemsNumPerView: [8, 12, 20],
+    getParams: [{
+      key: 'status',
+      value: 'approved'
+    }]
+  }
 
 
 
@@ -64,16 +88,16 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
           var appType = 'projectDetails';
         } else if (action == 'delete') {
           console.log("aaaaaaaaa");
-            $http({
-              method: 'DELETE',
-              url: '/api/support/projects/' + $scope.data.tableData[i].pk + '/'
-            }).
-            then(function(response) {
-              Flash.create('success', 'Item Deleted');
-            })
-            $scope.data.tableData.splice(i, 1)
-            return;
-          }
+          $http({
+            method: 'DELETE',
+            url: '/api/support/projects/' + $scope.data.tableData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Item Deleted');
+          })
+          $scope.data.tableData.splice(i, 1)
+          return;
+        }
 
         $scope.addTab({
           title: title + $scope.data.tableData[i].title,
@@ -90,29 +114,53 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
   }
   $scope.tableAction1 = function(target, action, mode) {
-          console.log(target, action, mode,'fffffffff');
+    console.log(target, action, mode, 'ggggggggggggggggggggggggggggg');
 
 
-              for (var i = 0; i < $scope.data1.tableData.length; i++) {
-              if ($scope.data1.tableData[i].pk == parseInt(target)) {
-              if (action == 'bom') {
-               var title = 'Project :';
-               var appType = 'bomDetails';
-              }
-              }
+    for (var i = 0; i < $scope.data1.tableData.length; i++) {
+      if ($scope.data1.tableData[i].pk == parseInt(target)) {
+        if (action == 'bom') {
+          var title = 'Pending :';
+          var appType = 'bomDetails';
+        }
 
-              $scope.addTab({
-               title: title + $scope.data1.tableData[i].title,
-               cancel: true,
-               app: appType,
-               data: {
-                 pk: target,
-                 index: i
-               },
-               active: true
-              })
-          }
+      $scope.addTab({
+        title: title + $scope.data1.tableData[i].title,
+        cancel: true,
+        app: appType,
+        data: {
+          pk: target,
+          index: i
+        },
+        active: true
+      })
     }
+    }
+  }
+  $scope.tableAction2 = function(target, action, mode) {
+    console.log(target, action, mode, 'ggggggggggggggggggggggggggggg');
+
+
+    for (var i = 0; i < $scope.data2.tableData.length; i++) {
+      if ($scope.data2.tableData[i].pk == parseInt(target)) {
+        if (action == 'success') {
+          var title = 'Approved:';
+          var appType = 'bomApproved';
+        }
+
+      $scope.addTab({
+        title: title + $scope.data2.tableData[i].title,
+        cancel: true,
+        app: appType,
+        data: {
+          pk: target,
+          index: i
+        },
+        active: true
+      })
+    }
+    }
+  }
   $scope.tabs = [];
   $scope.searchTabActive = true;
 
@@ -326,7 +374,7 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
       return
     }
 
-    if(typeof $scope.form.date == 'object'){
+    if (typeof $scope.form.date == 'object') {
       $scope.form.date = $scope.form.date.toJSON().split('T')[0]
     }
 
@@ -501,84 +549,84 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   // }
   $scope.$watch('projects', function(newValue, oldValue) {
     for (var i = 0; i < newValue.length; i++) {
-      if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 ){
-      var dataSend = {
-        quantity1: newValue[i].quantity1,
-        price: newValue[i].price,
+      if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1) {
+        var dataSend = {
+          quantity1: newValue[i].quantity1,
+          price: newValue[i].price,
+        }
+        $http({
+          method: 'PATCH',
+          url: '/api/support/bom/' + newValue[i].pk + '/',
+          data: dataSend
+        }).
+        then(function(response) {})
       }
-      $http({
-        method: 'PATCH',
-        url: '/api/support/bom/' + newValue[i].pk + '/',
-        data: dataSend
-      }).
-      then(function(response) {})
     }
-  }
   }, true)
 
 
   $scope.$watch('data', function(newValue, oldValue) {
-      if (typeof newValue[0].part_no == 'object') {
-        $scope.data[$scope.data.length - 1] = newValue[0].part_no
-        $scope.data[$scope.data.length - 1].quantity1 = 1
-        $scope.projectlist = []
-        $scope.projectlist.push($scope.form.pk)
-        var dataSend = {
-          user: $scope.me.pk,
-          products: $scope.data[$scope.data.length - 1].pk,
-          project: $scope.projectlist,
-          quantity1: 1,
-          price: $scope.data[$scope.data.length - 1].price,
-        }
-        $http({
-          method: 'POST',
-          url: '/api/support/bom/',
-          data: dataSend
-        }).
-        then(function(response) {
-          $scope.data[$scope.data.length - 1].listPk = response.data.pk
-        })
-        return
-      } else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
-        $scope.data[$scope.data.length - 1] = $scope.data[$scope.data.length - 1].part_no
-        $scope.data[$scope.data.length - 1].quantity1 = 1
-        $scope.projectlist = []
-        $scope.projectlist.push($scope.form.pk)
-        var dataSend = {
-          user: $scope.me.pk,
-          products: $scope.data[$scope.data.length - 1].pk,
-          project: $scope.projectlist,
-          quantity1: 1,
-          price: $scope.data[$scope.data.length - 1].price,
-        }
-        $http({
-          method: 'POST',
-          url: '/api/support/bom/',
-          data: dataSend
-        }).
-        then(function(response) {
-          $scope.data[$scope.data.length - 1].listPk = response.data.pk
-        })
-        return
-      } else {
-        for (var i = 0; i < newValue.length; i++) {
-          if (newValue[i].listPk) {
-            if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 ){
-              var dataSend = {
-                quantity1: newValue[i].quantity1,
-                price: newValue[i].price,
-              }
-              $http({
-                method: 'PATCH',
-                url: '/api/support/bom/' + newValue[i].listPk + '/',
-                data: dataSend
-              }).
-              then(function(response) {})
-            }
-          }
-
-        }
+    if (typeof newValue[0].part_no == 'object') {
+      $scope.data[$scope.data.length - 1] = newValue[0].part_no
+      $scope.data[$scope.data.length - 1].quantity1 = 1
+      $scope.projectlist = []
+      $scope.projectlist.push($scope.form.pk)
+      var dataSend = {
+        user: $scope.me.pk,
+        products: $scope.data[$scope.data.length - 1].pk,
+        project: $scope.projectlist,
+        quantity1: 1,
+        price: $scope.data[$scope.data.length - 1].price,
       }
+      $http({
+        method: 'POST',
+        url: '/api/support/bom/',
+        data: dataSend
+      }).
+      then(function(response) {
+        $scope.data[$scope.data.length - 1].listPk = response.data.pk
+      })
+      return
+    } else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
+      $scope.data[$scope.data.length - 1] = $scope.data[$scope.data.length - 1].part_no
+      $scope.data[$scope.data.length - 1].quantity1 = 1
+      $scope.projectlist = []
+      $scope.projectlist.push($scope.form.pk)
+      var dataSend = {
+        user: $scope.me.pk,
+        products: $scope.data[$scope.data.length - 1].pk,
+        project: $scope.projectlist,
+        quantity1: 1,
+        price: $scope.data[$scope.data.length - 1].price,
+      }
+      $http({
+        method: 'POST',
+        url: '/api/support/bom/',
+        data: dataSend
+      }).
+      then(function(response) {
+        $scope.data[$scope.data.length - 1].listPk = response.data.pk
+      })
+      return
+    } else {
+      for (var i = 0; i < newValue.length; i++) {
+        if (newValue[i].listPk) {
+          if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1) {
+            var dataSend = {
+              quantity1: newValue[i].quantity1,
+              price: newValue[i].price,
+            }
+            $http({
+              method: 'PATCH',
+              url: '/api/support/bom/' + newValue[i].listPk + '/',
+              data: dataSend
+            }).
+            then(function(response) {})
+          }
+        }
+
+      }
+    }
 
 
   }, true)
@@ -587,76 +635,76 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
 
 
-$scope.deleteData = function(pk, index) {
-  // console.log('---------------delelelele------------');
-  // console.log($scope.vendorServiceData);
-  $scope.projects.splice(index, 1);
-  $http({
-    method: 'DELETE',
-    url: '/api/support/bom/' + pk + '/'
-  }).
-  then((function(index) {
-    return function(response) {
-
-      Flash.create('success', 'Deleted');
-    }
-  })(index))
-
-}
-$scope.save = function() {
-  console.log($scope.data);
-  for (var i = 0; i < $scope.data.length; i++) {
-    if ($scope.data[i].user.length == 0) {
-      Flash.create('warning', 'Please Remove Empty Rows');
-      return
-    }
-  }
-  for (var i = 0; i < $scope.data.length; i++) {
-    var url = '/api/support/bom/'
-    var method = 'POST';
-    if ($scope.data[i].pk != undefined) {
-      url += $scope.data[i].pk + '/'
-      method = 'PATCH';
-    }
-    var toSend = {
-      user: $scope.data[i].user,
-      products: $scope.data[i].products,
-      project: $scope.form.pk,
-    }
-    // console.log(toSend);
+  $scope.deleteData = function(pk, index) {
+    // console.log('---------------delelelele------------');
+    // console.log($scope.vendorServiceData);
+    $scope.projects.splice(index, 1);
     $http({
-      method: method,
-      url: url,
-      data: toSend
+      method: 'DELETE',
+      url: '/api/support/bom/' + pk + '/'
     }).
-    then((function(i) {
+    then((function(index) {
       return function(response) {
-        $scope.bomData.push(response.data)
-        if (i == $scope.data.length - 1) {
-          Flash.create('success', 'Saved');
-          $scope.data = []
-        }
-        // $scope.items[i].pk = response.data.pk;
-        // $scope.resetRow()
-      }
-    })(i))
-  }
 
-}
-    var sendStatus = {
-      status:'sent_for_approval',
+        Flash.create('success', 'Deleted');
+      }
+    })(index))
+
+  }
+  $scope.save = function() {
+    console.log($scope.data);
+    for (var i = 0; i < $scope.data.length; i++) {
+      if ($scope.data[i].user.length == 0) {
+        Flash.create('warning', 'Please Remove Empty Rows');
+        return
+      }
     }
-    $scope.send = function() {
+    for (var i = 0; i < $scope.data.length; i++) {
+      var url = '/api/support/bom/'
+      var method = 'POST';
+      if ($scope.data[i].pk != undefined) {
+        url += $scope.data[i].pk + '/'
+        method = 'PATCH';
+      }
+      var toSend = {
+        user: $scope.data[i].user,
+        products: $scope.data[i].products,
+        project: $scope.form.pk,
+      }
+      // console.log(toSend);
       $http({
-        method: 'PATCH',
-        url: '/api/support/projects/'+ $scope.form.pk + '/',
-        data: sendStatus,
+        method: method,
+        url: url,
+        data: toSend
       }).
-      then(function(response) {
-        Flash.create('success', 'Saved');
-        console.log(response.data,'aaaaaa');
-      })
+      then((function(i) {
+        return function(response) {
+          $scope.bomData.push(response.data)
+          if (i == $scope.data.length - 1) {
+            Flash.create('success', 'Saved');
+            $scope.data = []
+          }
+          // $scope.items[i].pk = response.data.pk;
+          // $scope.resetRow()
+        }
+      })(i))
     }
+
+  }
+  var sendStatus = {
+    status: 'sent_for_approval',
+  }
+  $scope.send = function() {
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: sendStatus,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      console.log(response.data, 'aaaaaa');
+    })
+  }
 
 
 
@@ -666,6 +714,10 @@ $scope.save = function() {
 
 })
 app.controller("businessManagement.projects.approval", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+
+})
+app.controller("businessManagement.projects.approval.success", function($scope, $state, $users, $stateParams, $http, Flash) {
 
 
 })
@@ -680,32 +732,133 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
   $scope.me = $users.get('mySelf');
   $http.get('/api/HR/userSearch/').
   then(function(response) {
-    $scope.persons =  response.data;
-    console.log($scope.form.responsible,'bbbbbbbbbbbb');
+    $scope.persons = response.data;
+    console.log($scope.form.responsible, 'bbbbbbbbbbbb');
+
     function filterByPk(item) {
       if ($scope.form.responsible.includes(item.pk)) {
         console.log(item.last_name, 'vvvvvvvvv');
-        return $scope.name = item.first_name+ item.last_name
+        return $scope.name = item.first_name + item.last_name
       }
     }
     $scope.persons.filter(filterByPk);
   })
-  $scope.projects =[]
-   $scope.fetchData = function(index) {
-     $http({
-       method: 'GET',
-       url: '/api/support/bom/?project=' + $scope.form.pk
+  $scope.projects = []
+  $scope.fetchData = function(index) {
+    $http({
+      method: 'GET',
+      url: '/api/support/bom/?project=' + $scope.form.pk
 
-     }).
-     then(function(response) {
-       $scope.projects = response.data
-       for (var i = 0; i < $scope.projects; i++) {
+    }).
+    then(function(response) {
+      $scope.projects = response.data
+      for (var i = 0; i < $scope.projects; i++) {
 
-       }
+      }
 
-     })
-   }
-   $scope.fetchData()
+    })
+  }
+  $scope.fetchData()
 
+  $scope.$watch('projects', function(newValue, oldValue) {
+    if (typeof newValue == 'object') {
+      $scope.total = 0
+      for (var i = 0; i < $scope.projects.length; i++) {
+          if(isNaN($scope.projects[i].quantity2 * $scope.projects[i].price)==false)
+          $scope.total += $scope.projects[i].quantity2 * $scope.projects[i].price
+          $scope.quanty = $scope.projects[i].quantity2
+          $scope.price = $scope.projects[i].price
+          console.log($scope.quanty,'eeeee');
+      }
+    }
+  }, true)
+  $scope.send = function() {
+    var date =new Date().toJSON().split('T')[0]
+    var sendStatus = {
+      status: 'approved',
+      approved2:true,
+      approved2_user:$scope.me.pk,
+      approved2_date:date
+    }
+    var sendtoBom = {
+      quantity2 : $scope.quanty,
+      price : $scope.price,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: sendStatus,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Approved');
+      console.log(response.data, 'aaaaaa');
+    })
+    $http({
+      method: 'PATCH',
+      url: 'api/support/bom/?project=' + $scope.form.pk ,
+      data: sendtoBom,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Approved');
+      console.log(response.data, 'aaaaaa');
+    })
+  }
+
+
+
+
+
+
+})
+app.controller("businessManagement.projects.success.view", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+  if ($scope.tab == undefined) {
+    $scope.resetForm();
+  } else {
+    $scope.form = $scope.data2.tableData[$scope.tab.data.index]
+  }
+  $http.get('/api/HR/userSearch/').
+  then(function(response) {
+    $scope.persons = response.data;
+    console.log($scope.form.responsible, 'bbbbbbbbbbbb');
+
+    function filterByPk(item) {
+      if ($scope.form.responsible.includes(item.pk)) {
+        console.log(item.last_name, 'vvvvvvvvv');
+        return $scope.name = item.first_name + item.last_name
+      }
+    }
+    $scope.persons.filter(filterByPk);
+  })
+  $scope.fetchData = function(index) {
+    $http({
+      method: 'GET',
+      url: '/api/support/bom/?project=' + $scope.form.pk
+
+    }).
+    then(function(response) {
+      $scope.projects = response.data
+      for (var i = 0; i < $scope.projects; i++) {
+
+      }
+
+    })
+  }
+  $scope.fetchData()
+
+  $scope.$watch('projects', function(newValue, oldValue) {
+    if (typeof newValue == 'object') {
+      $scope.total = 0
+      for (var i = 0; i < $scope.projects.length; i++) {
+
+        for (var products in $scope.projects[i]) {
+          if(isNaN($scope.projects[i].quantity2 * $scope.projects[i][products].price)==false)
+          $scope.total += $scope.projects[i].quantity2 * $scope.projects[i][products].price
+
+        }
+
+      }
+    }
+  }, true)
 
 })

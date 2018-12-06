@@ -49,8 +49,8 @@ class Projects(models.Model):
     approved2 = models.BooleanField(default = False)
     approved1_user = models.ForeignKey(User , related_name='approveduser1' , null = True)
     approved2_user = models.ForeignKey(User , related_name='approveduser2' , null = True)
-    approved1_date = models.DateTimeField(null = True)
-    approved2_date = models.DateTimeField(null = True)
+    approved1_date = models.DateField(null = True)
+    approved2_date = models.DateField(null = True)
     status = models.CharField(choices = PURCHASE_STATUS , max_length = 10 , default = 'created')
 
 class BoM(models.Model):

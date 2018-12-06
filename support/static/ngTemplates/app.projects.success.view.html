@@ -1,0 +1,79 @@
+<div class="container-fluid" style="padding:20px;" ng-controller="businessManagement.projects.success.view">
+      <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:80vh;">
+        <div class="row">
+
+
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <label><h4> Project Title :  </h4> </label>
+          </div>
+          <div class="col-md-7">
+            <h4>{{form.title}}</h4> <br>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <label><h4> Service Name :  </h4> </label> <br>
+          </div>
+          <div class="col-md-7">
+            <h4>{{form.service.name}}</h4> <br>
+          </div>
+        </div>
+        <div class="row" >
+          <div class="col-md-5 text-right">
+            <label><h4> Tentative Closing Date :  </h4> </label> <br>
+          </div>
+          <div class="col-md-7">
+            <h4>{{form.date}}</h4> <br>
+          </div>
+        </div>
+        <div class="row" >
+          <div class="col-md-5 text-right">
+            <label><h4> Responsible Person :  </h4> </label> <br>
+          </div>
+          <div class="col-md-7">
+            <h4>{{name}}</h4> <br>
+          </div>
+        </div>
+        </div>
+
+      </div>
+      <div class="col-md-9">
+        <table class="invoiceTable" style=" width: 100%;">
+        <tbody>
+          <tr style="background-color: #eeeeee;height: 96px;">
+            <th>Si.No</th>
+            <th>Product</th>
+            <th>Part No</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+           </tr>
+            <tr ng-repeat="v in projects track by $index">
+              <td>{{$index + 1}}</td>
+              <td>{{v.products.description_1}}</td>
+              <td>{{v.products.part_no}}</td>
+              <td>{{v.quantity2}}</td>
+              <td >{{v.products.price}}</td>
+              <td >{{v.products.price*v.quantity2}}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Total</td>
+              <td ng-model="total"><b>{{total}}</b</td>
+              </tr>
+
+
+        </tbody>
+        </table>
+
+
+      </div>
+
+
+
+
+</div>
