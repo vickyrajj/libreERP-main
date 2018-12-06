@@ -48,6 +48,7 @@
                 <th>Products</th>
                 <th>Price</th>
                 <th>Quantity</th>
+                <th>Customer Price</th>
                 <th></th>
                </tr>
                 <tr ng-repeat="v in projects track by $index">
@@ -56,6 +57,7 @@
                   <td>{{v.products.description_1}}</td>
                   <td> <input  class="form-control-pos text-center" ng-model="v.price"></td>
                   <td><input type="text"  class="form-control-pos text-center" ng-model="v.quantity1"></td>
+                  <td><input type="text"  class="form-control-pos text-center" ng-model="v.customer_price"></td>
                   <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
                 </tr>
                 <tr ng-repeat="item in data track by $index">
@@ -71,6 +73,9 @@
                   <td>
                     <input type="text"  class="form-control-pos text-center" ng-model="item.quantity1">
                   </td>
+                  <td>
+                     <input type="text"  class="form-control-pos text-center" ng-model="item.customer_price">
+                    </td>
                   <td>
                     <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable(item.part_no,$index)"> <i class="fa fa-trash"></i> </button>
                   </td>

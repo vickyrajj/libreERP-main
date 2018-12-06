@@ -54,8 +54,8 @@
               <td>{{v.products.description_1}}</td>
               <td>{{v.products.part_no}}</td>
               <td>{{v.quantity2}}</td>
-              <td >{{v.products.price}}</td>
-              <td >{{v.products.price*v.quantity2}}</td>
+              <td >{{v.price}}</td>
+              <td >{{v.price*v.quantity2}}</td>
             </tr>
             <tr>
               <td></td>
@@ -69,6 +69,14 @@
 
         </tbody>
         </table>
+        <div class="row">
+
+          <div class="col-md-12">
+
+              <a  class="btn btn-primary pull-right" style="cursor:pointer;margin:55px;" target="_blank" href="/api/support/slip/?project={{form.pk}}">Download</a>
+
+          </div>
+        </div>
 
 
       </div>

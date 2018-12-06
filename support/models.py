@@ -44,6 +44,9 @@ class Projects(models.Model):
     title = models.CharField(max_length = 20 , null = True , blank =True)
     service = models.ForeignKey(service , related_name = 'service' ,null = False)
     date = models.DateField(null = True)
+    machinemodel = models.CharField(max_length = 20 , null = True , blank =True)
+    comm_nr = models.CharField(max_length = 20 , null = True , blank =True)
+    customer_ref = models.CharField(max_length = 20 , null = True , blank =True)
     responsible = models.ManyToManyField(User , related_name = 'managingService' , blank = True)
     approved1 = models.BooleanField(default = False)
     approved2 = models.BooleanField(default = False)
@@ -61,6 +64,7 @@ class BoM(models.Model):
     quantity1 = models.PositiveIntegerField(null=True , default=0)
     quantity2 = models.PositiveIntegerField(null=True , default=0)
     price = models.FloatField(null = True)
+    customer_price = models.PositiveIntegerField(null=True , default=0)
 
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)

@@ -17,7 +17,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     // filterSearch: true,
     searchField: 'title',
     deletable: true,
-    itemsNumPerView: [12, 20, 28],
+    itemsNumPerView: [12, 21, 30],
     getParams: [{
       key: 'status',
       value: 'created'
@@ -38,21 +38,13 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
 
 
-  // views1 = [{
-  //   name: 'list',
-  //   icon: 'fa-th-large',
-  //   template: '/static/ngTemplates/genericTable/genericSearchList.html',
-  //   itemTemplate: '/static/ngTemplates/app.projects.approval.html',
-  // }, ];
-
-
   $scope.config1 = {
     views: views1,
     url: '/api/support/projects/',
     // filterSearch: true,
     searchField: 'title',
     deletable: true,
-    itemsNumPerView: [8, 12, 20],
+    itemsNumPerView: [9, 15, 21],
     getParams: [{
       key: 'status',
       value: 'sent_for_approval'
@@ -76,7 +68,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     // filterSearch: true,
     searchField: 'title',
     deletable: true,
-    itemsNumPerView: [8, 12, 20],
+    itemsNumPerView: [9, 15, 21],
     getParams: [{
       key: 'status',
       value: 'approved'
@@ -198,20 +190,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
       $scope.tabs.push(input)
     }
   }
-  // $scope.$on('editCustomer', function(event, input) {
-  //   console.log("recieved");
-  //   console.log(input);
-  //   $scope.addTab({
-  //     "title": "Edit :" + input.projects,
-  //     "cancel": true,
-  //     "app": "projectEditor",
-  //     "data": {
-  //       "pk": input.projects.pk,
-  //       title: input.title
-  //     },
-  //     "active": true
-  //   })
-  // });
+
 
 
 
@@ -228,6 +207,9 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
       responsible: [],
       date: '',
       service: '',
+      machinemodel:'',
+      comm_nr:'',
+      customer_ref:'',
     }
   }
 
@@ -401,12 +383,15 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
     console.log($scope.date, 'dddddddddddd');
     var method = 'POST'
     var Url = '/api/support/projects/'
-
+    console.log($scope.form.machinemodel,'mmm');
     var dataToSend = {
       service: $scope.form.service.pk,
       title: $scope.form.title,
       responsible: $scope.form.responsible,
       date: $scope.form.date,
+      machinemodel:$scope.form.machinemodel,
+      comm_nr:$scope.form.comm_nr,
+      customer_ref:$scope.form.customer_ref
 
     };
 
@@ -470,7 +455,8 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       part_no: '',
       description_1: '',
       price: '',
-      quantity1: 1
+      quantity1: 1,
+      customer_price:0,
     });
   }
 
@@ -563,10 +549,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   // }
   $scope.$watch('projects', function(newValue, oldValue) {
     for (var i = 0; i < newValue.length; i++) {
-      if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1) {
+      if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].customer_price != oldValue[i].customer_price) {
         var dataSend = {
           quantity1: newValue[i].quantity1,
           price: newValue[i].price,
+          customer_price:newValue[i].customer_price,
         }
         $http({
           method: 'PATCH',
@@ -591,6 +578,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         project: $scope.projectlist,
         quantity1: 1,
         price: $scope.data[$scope.data.length - 1].price,
+        customer_price:$scope.data[$scope.data.length - 1].customer_price
       }
       $http({
         method: 'POST',
@@ -612,6 +600,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         project: $scope.projectlist,
         quantity1: 1,
         price: $scope.data[$scope.data.length - 1].price,
+        customer_price:$scope.data[$scope.data.length - 1].customer_price
       }
       $http({
         method: 'POST',
@@ -625,10 +614,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     } else {
       for (var i = 0; i < newValue.length; i++) {
         if (newValue[i].listPk) {
-          if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1) {
+          if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 ||  newValue[i].customer_price != oldValue[i].customer_price) {
             var dataSend = {
               quantity1: newValue[i].quantity1,
               price: newValue[i].price,
+              customer_price:newValue[i].customer_price,
             }
             $http({
               method: 'PATCH',
@@ -870,12 +860,8 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
       $scope.total = 0
       for (var i = 0; i < $scope.projects.length; i++) {
 
-
-        for (var products in $scope.projects[i]) {
-          if(isNaN($scope.projects[i].quantity2 * $scope.projects[i][products].price)==false)
-          $scope.total += $scope.projects[i].quantity2 * $scope.projects[i][products].price
-
-        }
+        if(isNaN($scope.projects[i].quantity2 * $scope.projects[i].price)==false)
+        $scope.total += $scope.projects[i].quantity2 * $scope.projects[i].price
 
       }
     }

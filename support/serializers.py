@@ -37,7 +37,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Projects
-        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status')
+        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status')
 
     def create(self , validated_data):
         p = Projects()
@@ -45,6 +45,12 @@ class ProjectsSerializer(serializers.ModelSerializer):
             p.service = service.objects.get(pk=int(self.context['request'].data['service']))
         if 'title' in self.context['request'].data:
             p.title = self.context['request'].data['title']
+        if 'machinemodel' in self.context['request'].data:
+            p.machinemodel = self.context['request'].data['machinemodel']
+        if 'comm_nr' in self.context['request'].data:
+            p.comm_nr = self.context['request'].data['comm_nr']
+        if 'customer_ref' in self.context['request'].data:
+            p.customer_ref = self.context['request'].data['customer_ref']
         if 'date' in self.context['request'].data:
             p.date = self.context['request'].data['date']
         p.save()
@@ -78,6 +84,15 @@ class ProjectsSerializer(serializers.ModelSerializer):
         if 'approved2_user' in validated_data:
             instance.approved2_user = validated_data['approved2_user']
         instance.save()
+        if 'machinemodel' in validated_data:
+            instance.machinemodel = validated_data['machinemodel']
+        instance.save()
+        if 'comm_nr' in validated_data:
+            instance.comm_nr = validated_data['comm_nr']
+        instance.save()
+        if 'customer_ref' in validated_data:
+            instance.customer_ref = validated_data['customer_ref']
+        instance.save()
         return instance
 
 class BoMSerializer(serializers.ModelSerializer):
@@ -85,7 +100,7 @@ class BoMSerializer(serializers.ModelSerializer):
     project =  ProjectsSerializer(many = True  , read_only =True)
     class Meta:
         model = BoM
-        fields = ('pk','created','user' , 'products','project','quantity1','quantity2','price')
+        fields = ('pk','created','user' , 'products','project','quantity1','quantity2','price','customer_price')
 
     def create(self, validated_data):
 

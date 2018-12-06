@@ -189,29 +189,29 @@ def purchaseOrder(response , project , purchaselist , request):
     elements.append(p5)
     elements.append(p6)
     elements.append(Spacer(1,10))
-
+    print purchaselist,'qqqqqqqqqqqqqqqqq'
     p7_01 =Paragraph("<para fontSize=8>Purchase order ref</para>",styles['Normal'])
-    p7_02 =Paragraph("<para fontSize=8>{0}</para>".format('122345'),styles['Normal'])
+    p7_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.pk),styles['Normal'])
     p7_03 =Paragraph("<para fontSize=8>Your Quotation ref</para>",styles['Normal'])
     p7_04 =Paragraph("<para fontSize=8>{0}</para>".format('EX/2018/10136'),styles['Normal'])
 
     p8_01 =Paragraph("<para fontSize=8>Purchase order date</para>",styles['Normal'])
-    p8_02 =Paragraph("<para fontSize=8>{0}</para>".format('01.09.2018'),styles['Normal'])
+    p8_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.date),styles['Normal'])
     p8_03 =Paragraph("<para fontSize=8>Your Quotation Date</para>",styles['Normal'])
     p8_04 =Paragraph("<para fontSize=8>{0}</para>".format('01.08.2018'),styles['Normal'])
 
     p9_01 =Paragraph("<para fontSize=8>Machine Model</para>",styles['Normal'])
-    p9_02 =Paragraph("<para fontSize=8>{0}</para>".format('BSTA 50HL'),styles['Normal'])
+    p9_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.machinemodel),styles['Normal'])
     p9_03 =Paragraph("<para fontSize=8>Our GST No.</para>",styles['Normal'])
     p9_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
 
     p10_01 =Paragraph("<para fontSize=8>Comm Nr</para>",styles['Normal'])
-    p10_02 =Paragraph("<para fontSize=8>{0}</para>".format('11111'),styles['Normal'])
+    p10_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.comm_nr),styles['Normal'])
     p10_03 =Paragraph("<para fontSize=8></para>",styles['Normal'])
     p10_04 =Paragraph("<para fontSize=8></para>",styles['Normal'])
 
     p11_01 =Paragraph("<para fontSize=8>Customer ref</para>",styles['Normal'])
-    p11_02 =Paragraph("<para fontSize=8>{0}</para>".format('BIND'),styles['Normal'])
+    p11_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.customer_ref),styles['Normal'])
     p11_03 =Paragraph("<para fontSize=8></para>",styles['Normal'])
     p11_04 =Paragraph("<para fontSize=8></para>",styles['Normal'])
 
@@ -314,7 +314,7 @@ class GetPurchaseAPIView(APIView):
         project = Projects.objects.get(pk = request.GET['project'])
         purchaselist = BoM.objects.filter(project = request.GET['project'])
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
+        response['Content-Disposition'] = 'attachment;filename="PurchaseOrderdownload.pdf"'
         purchaseOrder(response , project , purchaselist , request)
         return response
 
