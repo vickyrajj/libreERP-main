@@ -8,6 +8,7 @@ router.register(r'products' , ProductsViewSet , base_name = 'products')
 router.register(r'productsheet' , ProductSheetViewSet , base_name = 'productsheet')
 router.register(r'projects' , ProjectsViewSet , base_name = 'projects')
 router.register(r'bom' , BoMViewSet , base_name = 'bom')
+router.register(r'inventory' , InventoryViewSet , base_name = 'inventory')
 
 
 
@@ -15,4 +16,6 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'ProductsUpload/$' , ProductsUploadAPIView.as_view() ),
     url(r'slip/$' , GetPurchaseAPIView.as_view() ),
+    url(r'inventoryData/$' , ProductInventoryAPIView.as_view() ),
+
 ]

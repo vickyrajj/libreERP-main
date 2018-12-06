@@ -96,17 +96,37 @@ class BoMSerializer(serializers.ModelSerializer):
         b.save()
         if 'project' in self.context['request'].data:
             for i in self.context['request'].data['project']:
-                print i,'mmmmmmmmmmmmmmm'
                 b.project.add(Projects.objects.get(pk = i))
         b.save()
         return b
+        def update (self, instance, validated_data):
+            for key in ['pk','created','user' , 'products','project','quantity1','quantity2','price']:
+                try:
+                    setattr(instance , key , validated_data[key])
+                except:
+                    pass
+            instance.save()
+            return instance
 
-    def update (self, instance, validated_data):
+# <<<<<<< HEAD
+#     def update (self, instance, validated_data):
+#
+#         if 'price' in validated_data:
+#             instance.price = validated_data['price']
+#         instance.save()
+#         if 'quantity2' in validated_data:
+#             instance.quantity2 = validated_data['quantity2']
+#         instance.save()
+#         return instance
 
-        if 'price' in validated_data:
-            instance.price = validated_data['price']
-        instance.save()
-        if 'quantity2' in validated_data:
-            instance.quantity2 = validated_data['quantity2']
-        instance.save()
-        return instance
+class InventorySerializer(serializers.ModelSerializer):
+    product = ProductsSerializer(many = False , read_only = True)
+    class Meta:
+        model = Inventory
+        fields = ('pk','created','product','qty','rate')
+    def create(self, validated_data):
+        b = Inventory(**validated_data)
+        if 'product' in self.context['request'].data:
+            b.product = Products.objects.get(pk=int(self.context['request'].data['product']))
+        b.save()
+        return b

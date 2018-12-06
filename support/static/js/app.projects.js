@@ -26,6 +26,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
   $scope.data1 = {
     tableData: []
   };
+
   console.log(  $scope.data1.tableData,'tttttttttt');
 
   views1 = [{
@@ -34,6 +35,16 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     template: '/static/ngTemplates/genericTable/genericSearchList.html',
     itemTemplate: '/static/ngTemplates/app.projects.approval.html',
   }, ];
+
+
+
+  // views1 = [{
+  //   name: 'list',
+  //   icon: 'fa-th-large',
+  //   template: '/static/ngTemplates/genericTable/genericSearchList.html',
+  //   itemTemplate: '/static/ngTemplates/app.projects.approval.html',
+  // }, ];
+
 
   $scope.config1 = {
     views: views1,
@@ -47,6 +58,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
       value: 'sent_for_approval'
     }]
   }
+
   $scope.data2 = {
     tableData: []
   };
@@ -70,6 +82,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
       value: 'approved'
     }]
   }
+
 
 
 
@@ -114,7 +127,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
   }
   $scope.tableAction1 = function(target, action, mode) {
-    console.log(target, action, mode, 'ggggggggggggggggggggggggggggg');
 
 
     for (var i = 0; i < $scope.data1.tableData.length; i++) {
@@ -134,6 +146,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
         },
         active: true
       })
+
     }
     }
   }
@@ -159,6 +172,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
         active: true
       })
     }
+
     }
   }
   $scope.tabs = [];
@@ -224,7 +238,7 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
       return response.data;
     })
   };
-  // --------------------------------------------------------------------
+
 
   $scope.showCreateCompanyBtn = false;
   $scope.companyExist = false;
@@ -764,11 +778,26 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
     if (typeof newValue == 'object') {
       $scope.total = 0
       for (var i = 0; i < $scope.projects.length; i++) {
+          console.log($scope.projects[i].pk);
           if(isNaN($scope.projects[i].quantity2 * $scope.projects[i].price)==false)
           $scope.total += $scope.projects[i].quantity2 * $scope.projects[i].price
           $scope.quanty = $scope.projects[i].quantity2
           $scope.price = $scope.projects[i].price
-          console.log($scope.quanty,'eeeee');
+
+            var sendtoBom = {
+              quantity2 : $scope.quanty,
+              price : $scope.price,
+            }
+            $http({
+              method: 'PATCH',
+              url: 'api/support/bom/' + $scope.projects[i].pk + '/',
+              data: sendtoBom,
+            }).
+            then(function(response) {
+
+              console.log(response.data, 'aaaaaa');
+            })
+
       }
     }
   }, true)
@@ -780,10 +809,7 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
       approved2_user:$scope.me.pk,
       approved2_date:date
     }
-    var sendtoBom = {
-      quantity2 : $scope.quanty,
-      price : $scope.price,
-    }
+
     $http({
       method: 'PATCH',
       url: '/api/support/projects/' + $scope.form.pk + '/',
@@ -793,15 +819,7 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
       Flash.create('success', 'Approved');
       console.log(response.data, 'aaaaaa');
     })
-    $http({
-      method: 'PATCH',
-      url: 'api/support/bom/?project=' + $scope.form.pk ,
-      data: sendtoBom,
-    }).
-    then(function(response) {
-      Flash.create('success', 'Approved');
-      console.log(response.data, 'aaaaaa');
-    })
+
   }
 
 
@@ -846,10 +864,12 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
   }
   $scope.fetchData()
 
+
   $scope.$watch('projects', function(newValue, oldValue) {
     if (typeof newValue == 'object') {
       $scope.total = 0
       for (var i = 0; i < $scope.projects.length; i++) {
+
 
         for (var products in $scope.projects[i]) {
           if(isNaN($scope.projects[i].quantity2 * $scope.projects[i][products].price)==false)

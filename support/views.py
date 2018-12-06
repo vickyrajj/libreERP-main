@@ -317,3 +317,33 @@ class GetPurchaseAPIView(APIView):
         response['Content-Disposition'] = 'attachment;filename="payslipdownload.pdf"'
         purchaseOrder(response , project , purchaselist , request)
         return response
+
+class InventoryViewSet(viewsets.ModelViewSet):
+    permissions_classes  = (permissions.AllowAny , )
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['products','project']
+
+class ProductInventoryAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        offset = int(request.GET['offset'])
+        limit = offset + int(request.GET['limit'])
+        print offset,limit
+        toReturn = []
+        if request.GET['search']!='undefined':
+            productlist = Inventory.objects.filter(product__part_no__icontains=request.GET['search'])
+        else:
+            productlist = Inventory.objects.all()
+        productsList = list(productlist.values('product').distinct().values('product__pk','product__description_1','product__part_no','product__description_2','product__weight','product__price'))
+        for i in productsList:
+            totalprice = 0
+            totalqty = 0
+            data = list(productlist.filter(product=i['product__pk']).values())
+            # print  len(data) - 1 ,'aaaaaaaaaaaaa'
+            for k in data:
+                totalprice += k['rate']
+                totalqty += k['qty']
+            toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty})
+        return Response(toReturn[offset : limit],status=status.HTTP_200_OK)

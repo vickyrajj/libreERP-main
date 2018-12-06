@@ -61,3 +61,9 @@ class BoM(models.Model):
     quantity1 = models.PositiveIntegerField(null=True , default=0)
     quantity2 = models.PositiveIntegerField(null=True , default=0)
     price = models.FloatField(null = True)
+
+class Inventory(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey( Products , null = True)
+    qty = models.PositiveIntegerField(null=True , default=0)
+    rate = models.FloatField(null = True)
