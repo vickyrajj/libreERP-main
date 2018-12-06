@@ -65,6 +65,7 @@ class VisitorSerializer(serializers.ModelSerializer):
         model = Visitor
         fields = ( 'pk' , 'created' , 'uid', 'email','name','phoneNumber','notes')
 
+
 class ReviewCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewComment

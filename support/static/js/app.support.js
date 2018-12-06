@@ -44,6 +44,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
 
+
+
   setTimeout(function() {
     $http({
       method: 'GET',
@@ -69,7 +71,9 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
             isTyping: false
           },
           video: false,
-          videoUrl: ''
+          videoUrl: '',
+          isVideoShowing:true
+
         })
 
         connection.session.publish('service.support.agent', [response.data[i].uid, 'R'], {}, {
@@ -107,6 +111,21 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         })
       }
     });
+
+
+    function heartbeat() {
+      return $scope.me.pk
+    }
+
+    connection.session.register('service.support.heartbeat.'+$scope.me.pk, heartbeat).then(
+      function (res) {
+        console.log("registered to service.support.heartbeat iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+      },
+      function (err) {
+        console.log("failed to registered: ");
+      });
+
+
   }, 1000);
 
   $scope.onNotification = function(uid, msg, i = 'a') {

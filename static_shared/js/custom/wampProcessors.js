@@ -220,6 +220,13 @@ var isfocused=true;
             scope.myUsers[i].audio = true
             scope.myUsers[i].audioUrl = args[4]
             //this is for audio call
+          }else if(args[1]=='calledToHideVideo'){
+            scope.myUsers[i].isVideoShowing = false
+          }else if(args[1]=='calledToShowVideo'){
+            scope.myUsers[i].isVideoShowing = true
+          }else if(args[1]=='UC'){
+            scope.myUsers[i].currentUrl = args[2]
+            // alert(args[2]);
           }
           console.log('scroll');
           setTimeout(function() {
@@ -310,7 +317,8 @@ var isfocused=true;
         chatThreadPk: args[5],
         spying:{value :'' , isTyping : false},
         video:false,
-        videoUrl:''
+        videoUrl:'',
+        isVideoShowing:true
       }
 
       // function createVisitor(email, phoneNumber , name) {
@@ -464,9 +472,10 @@ var isfocused=true;
           return true
         }
       }
+      console.log(scope.me.pk+'heeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
       session.register('service.support.heartbeat.'+scope.me.pk, heartbeat).then(
         function (res) {
-          console.log("registered to service.support.heartbeat");
+          console.log("registered to service.support.heartbeat iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
         },
         function (err) {
           console.log("failed to registered: ");
@@ -487,7 +496,7 @@ var isfocused=true;
   setInterval(function() {
     console.log('comin in interval');
     checkOnline();
-  }, 15000)
+  }, 10000)
 
   function heartbeat() {
     console.log('coming in heartttt');
@@ -509,7 +518,7 @@ var isfocused=true;
   );
 
 setTimeout(function () {
-  var scope = angular.element(document.getElementById('chatTab')).scope();
+  var scope = angular.element(document.getElementById('main')).scope();
   session.subscribe('service.support.agent.'+scope.me.pk, supportChatResponse).then(
     function(sub) {
       console.log("subscribed to topic 'supportChatResponse'");

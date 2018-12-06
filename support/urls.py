@@ -29,5 +29,7 @@ urlpatterns = [
     url(r'gethomeCal/$' , GethomeCal.as_view()),
     url(r'emailChat/$' , EmailChat.as_view()),
     url(r'streamRecordings/$' , StreamRecordings.as_view()),
+    url(r'emailScript/$' , EmailScript.as_view()),
+    url(r'heartbeat/$' , HeartbeatApi.as_view()),
 
 ]
