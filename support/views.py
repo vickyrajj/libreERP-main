@@ -795,12 +795,14 @@ class HeartbeatApi(APIView):
         elif 'getTimeSheetData' in request.GET:
             print 'in getTimeSheetDataaaaaaaaaaaa'
             heartbtObj = Heartbeat.objects.all()
-            if 'agent' in request.GET:
-                u = User.objects.get(pk = request.GET['agent'])
+            if 'user' in request.GET:
+                print 'in user'
+                u = User.objects.get(pk = request.GET['user'])
                 heartbtObj = heartbtObj.filter(user = u)
             if 'date' in request.GET:
                 date = datetime.datetime.strptime(request.GET['date'], '%Y-%m-%d').date()
                 heartbtObj = heartbtObj.filter(start__startswith = date)
+            heartbtObj = list(heartbtObj.values())
             return Response(heartbtObj, status=status.HTTP_200_OK)
 
 

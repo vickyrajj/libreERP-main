@@ -369,7 +369,7 @@ app.controller("businessManagement.timesheet", function($scope, $state, $users, 
 
   $scope.form = {date:new Date(),user:'',email:'',client:''}
   $scope.reviewData = []
-  $scope.archivedData=[]
+  // $scope.archivedData=[]
 
 function archived(){
   console.log('called');
@@ -378,42 +378,42 @@ function archived(){
 $scope.browseTab = true;
 $scope.archiveTab = false;
 
-  $scope.getArchData = function(date,user,email,client,download){
-    console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?status=archived'
-    if (date!=null&&typeof date == 'object') {
-      url += '&date=' + date.toJSON().split('T')[0]
-    }
-    if (typeof user == 'object') {
-      url += '&user=' + user.pk
-    }
-    if (typeof client == 'object') {
-      url += '&client=' + client.pk
-    }
-    if (email.length > 0 && email.indexOf('@') > 0) {
-      url += '&email=' + email
-    }
-    if (download) {
-      $window.open(url+'&download','_blank');
-    }else {
-      $http({
-        method: 'GET',
-        url: url,
-      }).
-      then(function(response) {
-        // $scope.custDetails = response.data[0]
-        console.log(response.data,'dddddddddddd',typeof response.data);
-        $scope.archivedData =response.data
-      });
-    }
-  }
+  // $scope.getArchData = function(date,user,email,client,download){
+  //   console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
+  //   var url = '/api/support/reviewHomeCal/?status=archived'
+  //   if (date!=null&&typeof date == 'object') {
+  //     url += '&date=' + date.toJSON().split('T')[0]
+  //   }
+  //   if (typeof user == 'object') {
+  //     url += '&user=' + user.pk
+  //   }
+  //   if (typeof client == 'object') {
+  //     url += '&client=' + client.pk
+  //   }
+  //   if (email.length > 0 && email.indexOf('@') > 0) {
+  //     url += '&email=' + email
+  //   }
+  //   if (download) {
+  //     $window.open(url+'&download','_blank');
+  //   }else {
+  //     $http({
+  //       method: 'GET',
+  //       url: url,
+  //     }).
+  //     then(function(response) {
+  //       // $scope.custDetails = response.data[0]
+  //       console.log(response.data,'dddddddddddd',typeof response.data);
+  //       $scope.archivedData =response.data
+  //     });
+  //   }
+  // }
 // innerHTML=$scope.reviewData.statusChat+'By'
   // $scope.filterParams=[];
 
   $scope.getData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?'
-    url += '&getMyReviews=1'
+    var url = '/api/support/heartbeat/?'
+    url += 'getTimeSheetData'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
       // $scope.filterParams.push({key : 'date' , value :date.toJSON().split('T')[0]})
@@ -425,10 +425,6 @@ $scope.archiveTab = false;
     if (typeof client == 'object') {
       url += '&client=' + client.pk
       // $scope.filterParams.push({key : 'client' , value :client.pk})
-    }
-    if (email.length > 0 && email.indexOf('@') > 0) {
-      url += '&email=' + email
-      // $scope.filterParams.push({key : 'email' , value :email})
     }
     if (download) {
       $window.open(url+'&download','_blank');
@@ -444,8 +440,8 @@ $scope.archiveTab = false;
       });
     }
   }
-  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
-  $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+  $scope.getData($scope.form.date,$scope.form.user)
+  // $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
 
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
@@ -504,7 +500,7 @@ $scope.archiveTab = false;
     }
     console.log(date);
     $scope.getData(date,user,$scope.form.email,client,download)
-    $scope.getArchData(date,user,$scope.form.email,client,download)
+    // $scope.getArchData(date,user,$scope.form.email,client,download)
   }
 
   $scope.download = function(){
