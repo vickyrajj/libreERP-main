@@ -3,15 +3,22 @@
 <nav class="navbar navbar-default navbar-fixed-top" style="box-shadow: rgba(8, 19, 31, 0.5) 0px 3px 10px 0px;background-color:white;">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
+      {% verbatim %}
     <div class="navbar-header ">
       <a class="navbar-brand" href="/" style="color:rgb(0, 133, 202);padding:0px;font-size:40px;padding-top:15px;">Epsilon<span style="color:black;">AI</span>  </a>
+      <div class="navbar-toggle toggleBtn" data-toggle="collapse" data-target="#myNavbar" ng-click="toggleNavbar = !toggleNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </div>
     </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar">
 
-      <ul class="nav navbar-nav header_nav pull-right">
+      <ul class="nav navbar-nav header_nav {{device.smallDevice?'pull-left':'pull-right'}}">
+        {% endverbatim %}
         <li class="header_element">
           <a href="/" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true"> RPA</a>
-          <ul ng-mouseleave="keepshow[0]=false" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box">
+          <ul ng-mouseleave="keepshow[0]=false" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box" >
             <li><a href="#">{% trans 'whatisrpa' %}</a></li>
             <li><a href="#">RPA in 2018</a></li>
             <li><a href="#">RPA Resources</a></li>
@@ -44,16 +51,16 @@
           <li><a href="#">Contact US</a></li>
           </ul>
         </li>
-        <li class="header_element">
-          <a href="/blog" > Blogs</a>
+        <li class="header_element" ng-click="toggleNavbar = false">
+          <a href="/blogs" > Blogs</a>
         </li>
-        <li style="margin-left:30px;">
+          {% verbatim %}
+        <li style="margin-left:30px; {{device.smallDevice ? 'display:inline-block;': ''}}">
           <button type="button" class="btn btn-warning" style="background-color:#ff6900;margin-top:10px;" ng-click="schedule()">
             Schedule a Demo
           </button>
         </li>
-{% verbatim %}
-        <li style="margin-left:20px;width:70px;">
+        <li style="margin-left:20px;width:70px; {{device.smallDevice ? 'display:inline-block;': ''}}">
           <div class="dropdown" style="margin-top:10px;">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <img ng-src="{{data.currentLang.flag}}" style="height:15px;" alt=""> {{data.currentLang.lang}}
               <span class="caret"></span>
@@ -66,6 +73,5 @@
       </ul>
     </div>
   </div>
+  {% endverbatim %}
 </nav>
-
-{% endverbatim %}

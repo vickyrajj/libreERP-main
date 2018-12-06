@@ -32,19 +32,107 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
-    .state('blog', {
-      url: "/blog",
+    .state('blogs', {
+      url: "/blogs",
       templateUrl: '/static/ngTemplates/app.homepage.blogs.html',
-      // controller: 'controller.blogs'
+      controller: 'controller.blogs'
+    })
+
+
+  $stateProvider
+    .state('blogDetails', {
+      url: "/blogs/:pk",
+      templateUrl: '/static/ngTemplates/app.homepage.blogDetails.html',
+      controller: 'controller.blogDetails'
     })
 
   $stateProvider
     .state('pages', {
-      url: "/:title",
+      url: "/pages/:title",
       templateUrl: '/static/ngTemplates/app.homepage.page.html',
       // controller: 'controller.ecommerce.PagesDetails'
     })
 
+
+
+
+
+});
+
+app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams) {
+
+  console.log($stateParams);
+
+  $scope.blogPk = $stateParams.pk
+
+  $http.get('/api/PIM/blog/' + $scope.blogPk).
+  then(function(response) {
+    $scope.blogDetail = response.data
+    console.log($scope.blogDetail);
+  })
+
+
+});
+
+app.controller('controller.blogs', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+
+
+
+
+  $scope.offset = 0;
+  $scope.emailAddress = '';
+
+  $scope.fetchBlogs = function() {
+    $http.get('/api/PIM/blog?limit=14&offset=' + $scope.offset).
+    then(function(response) {
+      $scope.blogs = response.data.results;
+
+      console.log($scope.blogs);
+
+      $scope.firstSection = $scope.blogs.slice(0, 4)
+      $scope.second_sec1 = $scope.blogs.slice(4, 7)
+      $scope.second_sec2 = $scope.blogs.slice(7, 10)
+      $scope.thirdSection = $scope.blogs.slice(10, 14)
+
+    })
+  }
+
+
+  $scope.fetchRecentPosts = function() {
+    $http.get('/api/PIM/blog?limit=5').
+    then(function(response) {
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
+  $scope.fetchBlogs()
+
+  $scope.openBlog = function(pk) {
+    $state.go('blogDetails', {
+      pk: pk
+    })
+  }
+
+
+  $scope.sendUpdates = function() {
+    console.log($scope.emailAddress);
+  }
+
+
+
+
+  $scope.nextBtn = function() {
+    $scope.offset = $scope.offset + 14
+    $scope.fetchBlogs()
+  }
+
+  $scope.prevBtn = function() {
+    if ($scope.offset >= 14) {
+      $scope.offset = $scope.offset - 14
+      $scope.fetchBlogs()
+    }
+  }
 
 });
 
@@ -127,6 +215,82 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
 
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal) {
 
+
+  $scope.device = {
+    smallDevice: false
+  }
+
+
+   $scope.elementInViewport = function(el) {
+    var top = el.offsetTop;
+    var left = el.offsetLeft;
+    var width = el.offsetWidth;
+    var height = el.offsetHeight;
+
+    while (el.offsetParent) {
+      el = el.offsetParent;
+      top += el.offsetTop;
+      left += el.offsetLeft;
+    }
+
+    return (
+      top >= window.pageYOffset &&
+      left >= window.pageXOffset &&
+      (top + height) <= (window.pageYOffset + window.innerHeight) &&
+      (left + width) <= (window.pageXOffset + window.innerWidth)
+    );
+  }
+
+  setTimeout(function () {
+    $scope.one = document.getElementById('one')
+    $scope.two = document.getElementById('two')
+    $scope.three = document.getElementById('three')
+    $scope.circles = document.getElementById('circles')
+
+    window.addEventListener("scroll", function () {
+      if ($scope.elementInViewport($scope.one)) {
+        $scope.one.classList.add('toMoveUp')
+      }
+
+      if ($scope.elementInViewport($scope.two)) {
+        $scope.two.classList.add('toMoveUp')
+      }
+
+      if ($scope.elementInViewport($scope.three)) {
+        $scope.three.classList.add('toMoveUp')
+      }
+
+    });
+  }, 500);
+
+
+
+
+
+  $scope.smDevice = function(x) {
+    if (x.matches) {
+      console.log('trueeeeeeee');
+      $scope.device.smallDevice = true;
+    }
+  }
+
+  $scope.lgDevice = function(x) {
+    if (x.matches) {
+      console.log('false');
+      $scope.device.smallDevice = false;
+    }
+  }
+
+  $scope.sm = window.matchMedia("(max-width: 768px)")
+  $scope.smDevice($scope.sm)
+  $scope.sm.addListener($scope.smDevice)
+
+  $scope.lg = window.matchMedia("(min-width: 768px)")
+  $scope.lgDevice($scope.lg)
+  $scope.lg.addListener($scope.lgDevice)
+
+
+  $scope.toggleNavbar = false;
 
   $scope.langOptions = [{
       flag: '/static/images/flags/USA-1.svg',

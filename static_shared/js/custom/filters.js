@@ -211,6 +211,16 @@ app.filter('decorateCount' , function(){
     }
   }
 })
+app.filter('getDate' , function(){
+  return function(input){
+    if (input == 0 || typeof input == 'undefined'){
+      return "";
+    }
+    else {
+      return input.split('T')[0];
+    }
+  }
+})
 
 app.filter('getDP' , function($users){
   return function(input){
