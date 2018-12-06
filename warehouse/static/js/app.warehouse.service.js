@@ -73,6 +73,17 @@ console.log($scope.data.tableData,'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
           if (action == 'editService') {
             $rootScope.$broadcast('editPromocode', {data:$scope.data.tableData[i]});
           }
+          else if (action == 'delete') {
+            $http({
+              method: 'DELETE',
+              url: '/api/clientRelationships/productMeta/' + $scope.data.tableData[i].pk + '/'
+            }).
+            then(function(response) {
+              Flash.create('success', 'Item Deleted');
+            })
+            $scope.data.tableData.splice(i, 1)
+            return;
+          }
         }
       }
   }
