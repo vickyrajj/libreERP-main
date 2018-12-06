@@ -1,4 +1,52 @@
 app.controller("businessManagement.inventory", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
+$scope.offset = 0
+$scope.fetchProdInventory = function(offset) {
+  $http({
+    method: 'GET',
+    url: '/api/support/inventoryData/?limit=4&offset='+offset+'&search='+$scope.searchText
+  }).
+  then(function(response) {
+    $scope.products = response.data
+  })
+}
+$scope.fetchProdInventory($scope.offset)
+
+$scope.enterFun = function() {
+  $scope.fetchProdInventory($scope.offset)
+}
+
+$scope.refresh = function () {
+  $scope.fetchProdInventory($scope.offset)
+}
+
+$scope.next = function() {
+  $scope.offset = $scope.offset + 4
+  $scope.fetchProdInventory($scope.offset)
+  if ($scope.products.length==0) {
+    $scope.offset = $scope.offset - 4
+    $scope.fetchProdInventory($scope.offset)
+  }
+}
+
+$scope.prev = function() {
+  if ($scope.offset == 0) {
+    return
+  }
+  $scope.offset = $scope.offset - 4
+  console.log('calling from prev');
+  $scope.fetchProdInventory($scope.offset)
+}
+
+
+
+  $scope.toggle = function(pk, indx) {
+  // $scope.prodInventories[indx].open = !$scope.prodInventories[indx].open
+  for (var i = 0; i < $scope.products.length; i++) {
+    if ($scope.products[i].productPk == pk) {
+      $scope.products[i].open = !$scope.products[i].open
+    }
+  }
+}
 
   $scope.new = function(){
     console.log("aaaaaaaaaaaa");
@@ -38,7 +86,9 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
         }
     },
-  })
+  }).result.then(function() {}, function() {
+      $scope.fetchProdInventory($scope.offset)
+    });
 }
 
 })

@@ -16,4 +16,6 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'ProductsUpload/$' , ProductsUploadAPIView.as_view() ),
     url(r'slip/$' , GetPurchaseAPIView.as_view() ),
+    url(r'inventoryData/$' , ProductInventoryAPIView.as_view() ),
+
 ]

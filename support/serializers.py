@@ -55,8 +55,8 @@ class ProjectsSerializer(serializers.ModelSerializer):
         return p
 
     def update (self, instance, validated_data):
-        instance.responsible.clear()
         if 'responsible' in self.context['request'].data:
+            instance.responsible.clear()
             for i in self.context['request'].data['responsible']:
                 instance.responsible.add(User.objects.get(pk = i))
         if 'service' in self.context['request'].data:
@@ -87,7 +87,6 @@ class BoMSerializer(serializers.ModelSerializer):
         b.save()
         if 'project' in self.context['request'].data:
             for i in self.context['request'].data['project']:
-                print i,'mmmmmmmmmmmmmmm'
                 b.project.add(Projects.objects.get(pk = i))
         b.save()
         return b
@@ -100,6 +99,6 @@ class InventorySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         b = Inventory(**validated_data)
         if 'product' in self.context['request'].data:
-            b.products = Products.objects.get(pk=int(self.context['request'].data['product']))
+            b.product = Products.objects.get(pk=int(self.context['request'].data['product']))
         b.save()
         return b
