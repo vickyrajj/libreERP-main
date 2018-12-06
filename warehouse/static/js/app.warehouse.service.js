@@ -38,8 +38,8 @@ app.config(function($stateProvider){
 // });
 
 
-app.controller('businessManagement.warehouse.service', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
-  $scope.name="sai"
+app.controller('businessManagement.warehouse.service', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions,$rootScope,Flash) {
+
   $scope.data = {tableData : []};
 
   views = [{name : 'list' , icon : 'fa-th-large' ,
@@ -48,33 +48,33 @@ app.controller('businessManagement.warehouse.service', function($scope, $http, $
     },
   ];
 
-  var options = {
-    main : {icon : 'fa-pencil', text: 'edit'} ,
-    };
+  $scope.$on('editPromocode', function(event, input) {
+    console.log("recieved");
+    console.log(input.data);
+    $scope.msg = 'Update'
+    $scope.form = input.data
+    $scope.mode = 'edit'
+
+  });
 
   $scope.config = {
     views : views,
-    url : '/api/warehouse/service/',
+    url : '/api/clientRelationships/productMeta/',
     searchField: 'number',
     deletable : true,
     itemsNumPerView : [12,24,48],
-    canCreate : true,
-    editorTemplate :'/static/ngTemplates/app.warehouse.service.form.html',
   }
 
+console.log($scope.data.tableData,'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 
   $scope.tableAction = function(target , action , mode){
-    console.log(target , action , mode);
-    console.log($scope.data.tableData);
-
-    if (action == 'accountBrowser') {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)){
-          $scope.addTab({title : 'Account details : ' + $scope.data.tableData[i].number , cancel : true , app : 'accountBrowser' , data : {pk : target, index : i} , active : true})
+          if (action == 'editService') {
+            $rootScope.$broadcast('editPromocode', {data:$scope.data.tableData[i]});
+          }
         }
       }
-    }
-
   }
 
 
@@ -102,6 +102,52 @@ app.controller('businessManagement.warehouse.service', function($scope, $http, $
     }
   }
 
-
+$scope.reset=function(){
+  $scope.form = {
+    description:'',
+    typ:'',
+    code:'',
+    taxRate:0
+  }
+}
+$scope.reset()
+$scope.mode ='new'
+$scope.newService = function(){
+  $scope.form = {}
+  $scope.mode ='new'
+}
+$scope.saveService = function(){
+  console.log($scope.form.description,$scope.form.typ,$scope.form.code,$scope.form.taxRate,'aaaaaaaaaaaa');
+  if($scope.form.description==''){
+    Flash.create('warning','Add name')
+    return;
+  }
+  if($scope.form.typ==''){
+    Flash.create('warning','Select Type')
+    return;
+  }
+  if($scope.form.code==''){
+    Flash.create('warning','Add Code')
+    return;
+  }
+  // if($scope.form.taxRate)
+  var dataToSend = {
+    description: $scope.form.description,
+    typ:$scope.form.typ,
+    code:$scope.form.code,
+    taxRate:$scope.form.taxRate,
+    // user: $scope.me.pk
+  }
+  $http({
+    method: 'POST',
+    url: '/api/clientRelationships/productMeta/',
+    data: dataToSend
+  }).
+  then(function(response) {
+    $scope.form = {}
+    $scope.reset()
+    Flash.create('success', 'Created');
+  })
+}
 
 });

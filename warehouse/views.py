@@ -685,7 +685,7 @@ def genAllInvoice(response,contract,details,request):
                            ('FONTSIZE',(0,0),(0,0),15),
                            ('SPAN',(-1,-1),(-1,-1)),
                            ])
-        row1 = [[billTo ,'Number : ALWH18/'+str(month)+str(invId)+str(idDate)+ ' \nDate : ' +str(dated).split(' ')[0]+ '\nFor : Storage & Handling ' +str(month) + ' - ' +str(year)  ]]
+        row1 = [[billTo ,'Number : ALWH18/'+str(invId)+ ' \nDate : ' +str(dated).split(' ')[0]+ '\nFor : Storage & Handling ' +str(month) + ' - ' +str(year)  ]]
         table1 = Table(row1, colWidths=(95.5*mm, 95.5*mm))
         style1 = TableStyle([
                            ('ALIGN',(1,1),(-3,-3),'RIGHT'),

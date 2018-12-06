@@ -1,0 +1,17 @@
+<div class="col-md-4" ng-click="rowActionClicked('editService')" style="cursor:pointer;margin-bottom:15px;">
+  <div class="container-fluid card card-cascade" style="height:15vh">
+      <!-- <div class="text-center">
+        <h4 ng-if="data.length<=10"><strong>{{data.name}}</strong></h4>
+        <h4 ng-if="data.length>10"><strong>{{data.name.slice(0,10)}}</strong></h4>
+      </div> -->
+      <div class="row" style="font-size:15px;padding:15px">
+        <strong>Name : </strong>.<span  ng-if="data.description.length<=50"> {{data.description}} </span>
+        <span  ng-if="data.description.length>50"> {{data.description.slice(0,50)}} </span>  <br>
+        <strong>Type : </strong> {{data.typ}}<br>
+        <strong>Code : </strong> {{data.code}}<br>
+      </div>
+      <div class="row text-right" style="font-size:15px;padding-right:15px">
+        <i class="fa fa-trash fa-lg" style="cursor:pointer" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('delete')" confirm-button-type="default" cancel-button-type="default" ng-click="$event.stopPropagation()"></i>
+      </div>
+  </div>
+</div>
