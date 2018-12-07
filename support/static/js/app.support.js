@@ -72,8 +72,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           },
           video: false,
           videoUrl: '',
-          isVideoShowing:true
-
+          isVideoShowing:true,
+          alreadyDone:false
         })
 
         connection.session.publish('service.support.agent', [response.data[i].uid, 'R'], {}, {

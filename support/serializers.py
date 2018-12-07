@@ -21,7 +21,7 @@ regex = re.compile('^HTTP_')
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
-        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'videoAndAudio' , 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage','iconColor')
+        fields = ( 'pk' , 'created' , 'service', 'chat' , 'call' , 'email', 'video' ,'audio', 'vr' , 'windowColor' , 'callBack' , 'ticket','dp' ,'name' , 'supportBubbleColor','userApiKey','firstMessage','iconColor')
     def create(self ,  validated_data):
         c = CustomerProfile(**validated_data)
         c.service = service.objects.get(pk=self.context['request'].data['service'])

@@ -48,12 +48,19 @@
                     </h5>
                   </div>
                 </div>
-                <div ng-if="ActiveRows[$index]" class="myyyy">
-                  <div ng-repeat="val in data" style="padding:10px">
-                    <span><b>Start</b>: {{val.start|getTime}}</span>
-                     <span style="margin:0px 10%"><b>End</b>: {{val.end|getTime}}</span>
-                     <span style="margin:0px 10%"><b>Duration</b>: {{val.duration/60 | toSet}} mins</span>
-                  </div>
+                <div ng-if="ActiveRows[$index]">
+                  <table style="width:100%;">
+                     <tr>
+                       <th style="padding:5px">Start</th>
+                       <th>End</th>
+                       <th>Duration</th>
+                     </tr>
+                     <tr ng-repeat="val in data" style="margin:10px">
+                       <td style="padding:5px">{{val.start|getTime}}</td>
+                       <td>{{val.end|getTime}}</td>
+                       <td> {{val.duration/60 | toSet}} mins</td>
+                     </tr>
+                    </table>
                 </div>
               </div>
             </div>

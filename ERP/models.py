@@ -132,6 +132,7 @@ class service(models.Model): # contains other companies datails
     web = models.TextField(max_length = 100 , null = True) # image/svg link to the logo
     doc  = models.ForeignKey(media , related_name = 'services' , null = True)
     contactPerson = models.ManyToManyField(User , related_name = 'servicesContactPerson' , blank = True)
+    advisors = models.ManyToManyField(User , related_name = 'servicesAdvisors' , blank = True)
 
 
     def __unicode__(self):

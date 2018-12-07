@@ -544,7 +544,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     chat: false,
     call: false,
     email: false,
-    videoAndAudio: false,
+    video: false,
+    audio:false,
     vr: false,
     windowColor: '#000000',
     callBack: false,
@@ -574,9 +575,14 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     $scope.mode = 'edit';
     $scope.form = $scope.tab.data;
     $scope.form.cpName = ''
+    $scope.form.adName = ''
     $scope.form.contactPersonPks = []
+    $scope.form.advisorsPks = []
     for (var i = 0; i < $scope.form.contactPerson.length; i++) {
       $scope.form.contactPersonPks.push($scope.form.contactPerson[i].pk)
+    }
+    for (var i = 0; i < $scope.form.advisors.length; i++) {
+      $scope.form.advisorsPks.push($scope.form.advisors[i].pk)
     }
     if ($scope.form.address == null) {
       $scope.form.address = {
@@ -596,7 +602,10 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       about: '',
       contactPerson: [],
       contactPersonPks: [],
+      advisors:[],
+      advisorsPks:[],
       cpName:'',
+      adName:'',
       mobile: '',
       address: {
         street: null,
@@ -639,9 +648,34 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
 
   }
 
+  $scope.advisorSearch = function(query) {
+    console.log('here');
+    return $http.get('/api/HR/users/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+
+  $scope.addAdvisor = function(person){
+    if ($scope.form.advisorsPks.indexOf(person.pk)> -1) {
+      Flash.create('warning' , 'This Person Has Already Added')
+      return;
+    }
+    console.log(person);
+    $scope.form.advisors.push(person)
+    $scope.form.advisorsPks.push(person.pk)
+    $scope.form.adName = ''
+
+  }
+
   $scope.removePerson = function(idx){
     $scope.form.contactPerson.splice(idx,1)
     $scope.form.contactPersonPks.splice(idx,1)
+
+  }
+  $scope.removeAdvisors = function(idx){
+    $scope.form.advisors.splice(idx,1)
+    $scope.form.advisorsPks.splice(idx,1)
 
   }
 
@@ -682,7 +716,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     $scope.toSend = {
       name: f.name,
       user: $scope.me.pk,
-      contactPerson : $scope.form.contactPersonPks
+      contactPerson : $scope.form.contactPersonPks,
+      advisors:$scope.form.advisorsPks
     }
     if (f.telephone != null && f.telephone.length > 0) {
       $scope.toSend.telephone = f.telephone
@@ -830,7 +865,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     fd.append('email', cpF.email);
     fd.append('callBack', cpF.callBack);
     fd.append('chat', cpF.chat);
-    fd.append('videoAndAudio', cpF.videoAndAudio);
+    fd.append('audio', cpF.audio);
+    fd.append('video', cpF.video);
     fd.append('ticket', cpF.ticket);
     fd.append('vr', cpF.vr);
     fd.append('service', cpF.service);

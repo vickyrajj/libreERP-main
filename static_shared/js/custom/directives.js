@@ -211,6 +211,8 @@ app.directive('usersField', function() {
             return;
           }
         }
+
+
         $scope.data.push($scope.d.user.pk);
         $scope.d.user = undefined;
       }
@@ -370,28 +372,30 @@ app.directive('chatBox', function() {
         $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
       }
       $scope.toggleVisitorScreen=function(){
-        $scope.isVisitorVideoShowing=!$scope.isVisitorVideoShowing;
-        if(!$scope.isVisitorVideoShowing){
-          // document.getElementById("iframeChat" + $scope.data.uid).style.height="14%";
-          $scope.msgDivHeight = 51
-          connection.session.publish('service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
+        if(!$scope.alreadyDone){
+          $scope.isVisitorVideoShowing=!$scope.isVisitorVideoShowing;
+          if(!$scope.isVisitorVideoShowing){
+            // document.getElementById("iframeChat" + $scope.data.uid).style.height="14%";
+            $scope.msgDivHeight = 51
+            connection.session.publish('service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }
+        else{
+          // document.getElementById("iframeChat" + $scope.data.uid).style.height="100%"
+          $scope.msgDivHeight = 52
+          // document.getElementById("iframeChat" + $scope.data.uid).style.transition=".5s"
+          connection.session.publish('service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
             console.log("Published");
           });
         }
-      else{
-        // document.getElementById("iframeChat" + $scope.data.uid).style.height="100%"
-        $scope.msgDivHeight = 52
-        // document.getElementById("iframeChat" + $scope.data.uid).style.transition=".5s"
-        connection.session.publish('service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("Published");
-        });
-      }
+        }
       }
       // window.addEventListener("message", receiveMessage, false);
       $scope.hideVisitorScreen = function() {

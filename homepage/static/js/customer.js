@@ -220,7 +220,8 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     fd.append('callBack', $scope.cpForm.callBack);
     fd.append('chat', $scope.cpForm.chat);
     fd.append('name', $scope.cpForm.name);
-    fd.append('videoAndAudio', $scope.cpForm.videoAndAudio);
+    fd.append('video', $scope.cpForm.video);
+    fd.append('audio', $scope.cpForm.audio);
     fd.append('ticket', $scope.cpForm.ticket);
     fd.append('vr', $scope.cpForm.vr);
     fd.append('service', $scope.cpForm.service);

@@ -406,7 +406,7 @@ def getChatterScript(request , fileName):
     print globalSettings.SITE_ADDRESS
     print request.get_host()
     print request.META.get('REMOTE_ADDR')
-    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor ,'iconColor':obj.iconColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "videoAndAudio":obj.videoAndAudio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS , "wampServer" : globalSettings.WAMP_SERVER ,"webrtcAddress": globalSettings.WEBRTC_ADDRESS}
+    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor ,'iconColor':obj.iconColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "video":obj.video ,"audio":obj.audio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS , "wampServer" : globalSettings.WAMP_SERVER ,"webrtcAddress": globalSettings.WEBRTC_ADDRESS}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url
     if obj.name:
@@ -778,7 +778,8 @@ class HeartbeatApi(APIView):
                     difference=obj[len(obj)-1].end-obj[len(obj)-1].start
                     obj[len(obj)-1].duration = difference.total_seconds()
                     day_difference=obj[len(obj)-1].end-obj[0].start
-                    obj[len(obj)-1].day_duration = day_difference.total_seconds()
+                    obj[0].day_duration = day_difference.total_seconds()
+                    obj[0].save()
                     obj[len(obj)-1].save()
                 else:
                     print 'heartbeat has end'
@@ -792,8 +793,9 @@ class HeartbeatApi(APIView):
                         obj[len(obj)-1].end=timezone.now()
                         difference=obj[len(obj)-1].end-obj[len(obj)-1].start
                         day_difference=obj[len(obj)-1].end-obj[0].start
-                        obj[len(obj)-1].day_duration = day_difference.total_seconds()
+                        obj[0].day_duration = day_difference.total_seconds()
                         obj[len(obj)-1].duration = difference.total_seconds()
+                        obj[0].save()
                         obj[len(obj)-1].save()
             else:
                 Heartbeat.objects.create(start=timezone.now(),user=u)

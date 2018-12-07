@@ -222,8 +222,10 @@ var isfocused=true;
             //this is for audio call
           }else if(args[1]=='calledToHideVideo'){
             scope.myUsers[i].isVideoShowing = false
+            scope.myUsers[i].alreadyDone=true
           }else if(args[1]=='calledToShowVideo'){
             scope.myUsers[i].isVideoShowing = true
+            scope.myUsers[i].alreadyDone=false
           }else if(args[1]=='UC'){
             scope.myUsers[i].currentUrl = args[2]
             // alert(args[2]);
@@ -318,7 +320,8 @@ var isfocused=true;
         spying:{value :'' , isTyping : false},
         video:false,
         videoUrl:'',
-        isVideoShowing:true
+        isVideoShowing:true,
+        alreadyDone:false
       }
 
       // function createVisitor(email, phoneNumber , name) {

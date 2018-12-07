@@ -313,7 +313,8 @@ var windowColor = '{{windowColor}}'
 var custName = '{{custName}}'
 var chatSupport = '{{chat}}'
 var callBackSupport = '{{callBack}}'
-var videoAndAudioSupport = '{{videoAndAudio}}'
+var videoSupport = '{{video}}'
+var audioSupport = '{{audio}}'
 var ticketSupport = '{{ticket}}'
 var nameSupport = '{{name}}'
 var dpSupport = '{{dp}}'
@@ -371,16 +372,21 @@ if (callBackSupport=='True') {
   callBackSupport = false
 }
 
-if (videoAndAudioSupport=='True') {
-  videoAndAudioSupport = true
+if (videoSupport=='True') {
+  videoSupport = true
 }else {
-  videoAndAudioSupport = false
+  videoSupport = false
 }
 
 if (ticketSupport=='True') {
   ticketSupport = true
 }else {
   ticketSupport = false
+}
+if (audioSupport=='True') {
+  audioSupport = true
+}else {
+  audioSupport = false
 }
 
 
@@ -573,10 +579,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return
       }else if(args[0]=='ToggleVisitorVideo'){
           setIframeRotated()
-          getFrameContent.postMessage('hereisNew','*')
+          getFrameContent.postMessage('AgentClickedToHide','*')
         return
       }else if(args[0]=='ShowVisitorVideo'){
         setIframeToNormal()
+        getFrameContent.postMessage('AgentClickedToshow','*')
         return
       }
 
@@ -786,7 +793,7 @@ function createChatDiv() {
                 '<p>We run on Syrow</p>'+
               '</div>'+
               '<div id="messageComposer" class="flex_container">'+
-                '<textarea id="inputText" placeholder="Write a Reply..." name="name" rows="2" style="background-color:#fff;" ></textarea>'+
+                '<textarea id="inputText" placeholder="Write a Reply..." name="name" rows="2" style="background-color:#fff;outline:none" ></textarea>'+
                 '<input id="filePicker" type="file" style="display:none;"/>'+
                 // '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
                 '<img class="paperClip" id="paperClip" src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip">'+
@@ -1277,36 +1284,6 @@ function activeAudioCall(){
   var mainStr = "";
   var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:true} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
 
-  // var xhttp2 = new XMLHttpRequest();
-  // xhttp2.onreadystatechange = function() {
-  //     if (this.readyState == 4 && this.status == 200) {
-  //       var data = JSON.parse(this.responseText)
-  //       console.log(data);
-  //
-  //       console.log('yaaaaa');
-  //
-  //       for (var i = 0; i < supportOptions.length; i++) {
-  //         if (supportOptions[i].name=='callCircle') {
-  //           supportOptions[i].value = data.call;
-  //         }
-  //         if (supportOptions[i].name=='chatCircle') {
-  //           supportOptions[i].value = data.chat;
-  //         }
-  //         if (supportOptions[i].name=='audioCircle') {
-  //           supportOptions[i].value = data.videoAndAudio;
-  //         }
-  //         if (supportOptions[i].name=='videoCircle') {
-  //           supportOptions[i].value = data.videoAndAudio;
-  //         }
-  //         if (supportOptions[i].name=='ticketCircle') {
-  //           supportOptions[i].value = data.ticket;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   xhttp2.open('GET', '{{serverAddress}}/api/support/customerProfile/' + custID + '/' , true);
-  //  // xhttp1.open('GET', '{{serverAddress}}/api/support/supportChat/', true);
-  //  xhttp2.send();
   for (var i = 0; i < supportOptions.length; i++) {
     if (supportOptions[i].name=='callCircle') {
       supportOptions[i].value = callBackSupport;
@@ -1317,14 +1294,16 @@ function activeAudioCall(){
     if (supportOptions[i].name=='audioCircle') {
 
       console.log('************************');
-      if(videoAndAudioSupport){
-        audioContains=true;
+      if(videoSupport){
           videoContains=true;
       }
-      supportOptions[i].value = videoAndAudioSupport;
+      supportOptions[i].value = audioSupport;
     }
     if (supportOptions[i].name=='videoCircle') {
-      supportOptions[i].value = videoAndAudioSupport;
+      supportOptions[i].value = videoSupport;
+      if(audioSupport){
+          audioContains=true;
+      }
 
 
     }
@@ -1333,13 +1312,13 @@ function activeAudioCall(){
     }
   }
 
-  // console.log(supportOptions,'so');
+  console.log(supportOptions,'so');
     serviceCount = 0
     setTimeout(function () {
       for (var i = 0 , rD = 0 , mB = 0 , mR=0 ; i < supportOptions.length; i++) {
 
         if (supportOptions[i].value) {
-          serviceCount ++;
+          serviceCount++;
           var activeService = supportOptions[i].name
           rD+=2;
           mB+=60;
@@ -1372,49 +1351,50 @@ function activeAudioCall(){
         }
 
       }
+      if (serviceCount==1) {
 
+        // alert('display only one service')
+        // display none of main
+        setTimeout(function () {
+            singleService.style.display = ""
+            supportCircle.style.display = "none"
+
+            var singleServiceText = document.getElementById('singleServiceText')
+            var singleServiceFont = document.getElementById('singleServiceFont')
+
+            // singleService = document.getElementById('singleService')
+
+            singleService.addEventListener("mouseover" , function () {
+              singleServiceText.style.display = ""
+            })
+
+            singleService.addEventListener("mouseleave" , function () {
+              singleServiceText.style.display = "none"
+            })
+
+            if (activeService == 'callCircle') {
+              singleServiceText.innerHTML = "Callback"
+              singleServiceFont.className = "SyrowFont font-SyrowCallBack sy-md-2 sy-ops"
+            }else if (activeService == 'chatCircle') {
+              singleServiceText.innerHTML = "Chat"
+              singleServiceFont.className = "SyrowFont font-SyrowChat sy-md-2 sy-ops"
+              singleService.addEventListener("click" , openChat , false)
+            }else if (activeService == 'audioCircle') {
+              singleServiceText.innerHTML = "Audio Call"
+              singleServiceFont.className = "SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"
+            }else if (activeService == 'videoCircle') {
+              singleServiceText.innerHTML = "Video Call"
+              singleServiceFont.className = "SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"
+            }else if (activeService == 'ticketCircle') {
+              singleServiceText.innerHTML = "Ticket"
+              singleServiceFont.className = "SyrowFont font-SyrowTicket sy-md-1 sy-ops"
+            }
+
+        }, 110);
+
+      }
     }, 1000);
-    if (serviceCount==1) {
-      // alert('display only one service')
-      // display none of main
-      setTimeout(function () {
-          singleService.style.display = ""
-          supportCircle.style.display = "none"
 
-          var singleServiceText = document.getElementById('singleServiceText')
-          var singleServiceFont = document.getElementById('singleServiceFont')
-
-          // singleService = document.getElementById('singleService')
-
-          singleService.addEventListener("mouseover" , function () {
-            singleServiceText.style.display = ""
-          })
-
-          singleService.addEventListener("mouseleave" , function () {
-            singleServiceText.style.display = "none"
-          })
-
-          if (activeService == 'callCircle') {
-            singleServiceText.innerHTML = "Callback"
-            singleServiceFont.className = "SyrowFont font-SyrowCallBack sy-md-2 sy-ops"
-          }else if (activeService == 'chatCircle') {
-            singleServiceText.innerHTML = "Chat"
-            singleServiceFont.className = "SyrowFont font-SyrowChat sy-md-2 sy-ops"
-            singleService.addEventListener("click" , openChat , false)
-          }else if (activeService == 'audioCircle') {
-            singleServiceText.innerHTML = "Audio Call"
-            singleServiceFont.className = "SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"
-          }else if (activeService == 'videoCircle') {
-            singleServiceText.innerHTML = "Video Call"
-            singleServiceFont.className = "SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"
-          }else if (activeService == 'ticketCircle') {
-            singleServiceText.innerHTML = "Ticket"
-            singleServiceFont.className = "SyrowFont font-SyrowTicket sy-md-1 sy-ops"
-          }
-
-      }, 1700);
-
-    }
 
 
     function setStyle() {
@@ -1982,7 +1962,7 @@ function activeAudioCall(){
                           '</form>'+
                         '</div>'+
                         '<input type="text" id="emailId" placeholder="Emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
-                         '<textarea id="feedbackText" style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
+                         '<textarea id="feedbackText" style="width:100%;outline:none; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
                          '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
                          '</button>'+
@@ -2394,7 +2374,7 @@ function hideAudioAndVidoeBtn(){
     if (message.logs==null) {
       if (!message.sentByAgent) {
         var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
-                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;  letter-spacing:1.5px;">'+
+                        '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
                         '<div style="clear: both; float:right; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
@@ -2403,7 +2383,7 @@ function hideAudioAndVidoeBtn(){
 
       }else {
         var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box; letter-spacing:1.5px;">'+
+                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
                   '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
@@ -2503,7 +2483,7 @@ setInterval(function () {
         firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
         firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
           div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div id="herere" style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:1.5px;font-size:12px">'+
+                  '<div id="herere" style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:12px">'+
                      firstMessage+
                   '</div> '+
                 '</div> '
@@ -2735,7 +2715,7 @@ console.log(firstMessage);
                           '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
                           '<form>'+
                             '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
-                             '<textarea style="width:100%; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
+                             '<textarea style="width:100%; outline:none;resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
                              '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                                'Submit'+
                              '</button>'+

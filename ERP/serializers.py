@@ -26,9 +26,11 @@ class serviceSerializer(serializers.ModelSerializer):
     noOfactiveServices = serializers.SerializerMethodField()
     address = addressSerializer(many = False, read_only = True)
     contactPerson = userSearchSerializer(many = True , read_only = True)
+    advisors = userSearchSerializer(many = True , read_only = True)
+
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms','noOfPrescript','noOfProcess','noOfactiveServices')
+        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','perms','noOfPrescript','noOfProcess','noOfactiveServices','advisors')
 
     def assignValues(self , instance , validated_data):
         print validated_data,self.context['request'].data
@@ -56,6 +58,10 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.contactPerson.clear()
             for person in self.context['request'].data['contactPerson']:
                     instance.contactPerson.add(User.objects.get(pk = int(person)))
+        if 'advisors' in self.context['request'].data:
+            instance.contactPerson.clear()
+            for person in self.context['request'].data['advisors']:
+                    instance.advisors.add(User.objects.get(pk = int(person)))
         instance.save()
 
     def create(self , validated_data):
