@@ -504,7 +504,5 @@ class ProductInventoryAPIView(APIView):
                 totalSum+=totalVal
             toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty,'totalVal':totalSum})
             total+=totalSum
-
-
         returnData ={'data' :toReturn[offset : limit],'total':total }
         return Response(returnData,status=status.HTTP_200_OK)

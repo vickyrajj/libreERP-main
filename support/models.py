@@ -34,6 +34,7 @@ class Products(models.Model):
     parent = models.ForeignKey('self', related_name='parentProduct', null=True)
     sheet = models.ForeignKey(ProductSheet, related_name='productsSheet', null=True)
     customs_no = models.CharField(max_length=15, null=True)
+    bar_code = models.CharField(max_length=50, null=True)
 
 class Test(models.Model):
     created = models.DateTimeField(auto_now_add = True)
