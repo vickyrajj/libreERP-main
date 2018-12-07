@@ -96,7 +96,7 @@
 
 .sec2Right {
   flex: 25%;
-  height: 50vh;
+  height: 100vh;
   background-color: #eaeef5;
 }
 
@@ -152,6 +152,7 @@
 .circles {
   list-style-type: none;
   position: relative;
+  right: 40px;
 }
 
 .circles li:nth-child(1) {
@@ -215,6 +216,12 @@
   /* .flex_50Perc, .sec1Right, .sec1RightBox1,.sec2Left,.sec2Right, .sec1RightBox2, .flex_33Perc, .flex_67Perc , .flex_100Perc, .flex_25Perc{
     height: 25vh;
   } */
+
+  .selectLang{
+    position: absolute !important;
+    box-shadow: 1px 1px 8px 0 rgba(8, 19, 31, .25) !important;
+    top: -130px !important;
+  }
   .content_box {
     flex: 70%;
     margin-top: 600px
@@ -256,6 +263,7 @@
   }
   .dp {
     width: 60px !important;
+    padding: 5px !important;
   }
   .point-green {
     position: absolute !important;
@@ -279,6 +287,10 @@
   }
   .blog_section {
     margin: 10px 30px !important;
+  }
+
+  .personInfo {
+    padding-left: 0px !important;
   }
   .personInfo li {
     padding: 0px !important;

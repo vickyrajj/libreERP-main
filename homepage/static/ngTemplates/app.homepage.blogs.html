@@ -29,6 +29,25 @@
         <img class="blog_image" ng-src="{{blog.ogimage}}" alt="">
         <p class="blog_text">{{blog.title}}</p>
       </div>
+
+      <div class="sec1Right">
+        <div class="sec1RightBox1" ng-click="openBlog(thirdSection[0].pk)">
+          <img class="blog_image" ng-src="{{thirdSection[0].ogimage}}" alt="">
+          <p class="blog_text">{{thirdSection[0].title}}</p>
+        </div>
+        <div class="sec1RightBox2" ng-repeat="blog in thirdSection | limitTo: (2 - thirdSection.length)" ng-click="openBlog(blog.pk)">
+          <img class="blog_image" ng-src="{{blog.ogimage}}" alt="">
+          <p class="blog_text">{{blog.title}}</p>
+        </div>
+      </div>
+
+      <div class="flex_50Perc" ng-click="openBlog(thirdSection[1].pk)" >
+        <img class="blog_image" ng-src="{{thirdSection[1].ogimage}}" alt="">
+        <p class="blog_text">{{thirdSection[1].title}}</p>
+      </div>
+
+
+
     </div>
 
     <div class="sec2Right">
@@ -74,7 +93,7 @@
     </div>
   </div>
 
-  <div ng-if="thirdSection.length>0" class="blog_container">
+  <!-- <div ng-if="thirdSection.length>0" class="blog_container">
     <div class="sec1Right">
       <div class="sec1RightBox1" ng-click="openBlog(thirdSection[0].pk)">
         <img class="blog_image" ng-src="{{thirdSection[0].ogimage}}" alt="">
@@ -90,7 +109,7 @@
       <img class="blog_image" ng-src="{{thirdSection[1].ogimage}}" alt="">
       <p class="blog_text">{{thirdSection[1].title}}</p>
     </div>
-  </div>
+  </div> -->
 
   <div class="prevNextBtn">
 

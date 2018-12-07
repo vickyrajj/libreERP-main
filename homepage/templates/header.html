@@ -62,11 +62,11 @@
         </li>
         <li style="margin-left:20px;width:70px; {{device.smallDevice ? 'display:inline-block;': ''}}">
           <div class="dropdown" style="margin-top:10px;">
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <img ng-src="{{data.currentLang.flag}}" style="height:15px;" alt=""> {{data.currentLang.lang}}
+            <button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown"> <img ng-src="{{data.currentLang.flag}}" style="height:15px;" alt=""> {{data.currentLang.lang}}
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="" ng-repeat="l in langOptions" ng-click="changeLan(l)" ng-if="data.currentLang != l"><img ng-src="{{l.flag}}" style="height:15px;" alt="">  {{l.lang}}</a></li>
+              <li class="selectLang"><a href="" ng-repeat="l in langOptions" ng-click="changeLan(l)" ng-if="data.currentLang != l"><img ng-src="{{l.flag}}" style="height:15px;" alt="">  {{l.lang}}</a></li>
             </ul>
           </div>
         </li>
