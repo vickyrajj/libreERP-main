@@ -6,7 +6,9 @@ $scope.fetchProdInventory = function(offset) {
     url: '/api/support/inventoryData/?limit=4&offset='+offset+'&search='+$scope.searchText
   }).
   then(function(response) {
-    $scope.products = response.data
+    console.log(response.data,'aaaaaaaaaaa');
+    $scope.products = response.data.data
+    $scope.total =  response.data.total
   })
 }
 $scope.fetchProdInventory($scope.offset)
