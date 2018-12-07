@@ -53,6 +53,26 @@ app.config(function($stateProvider) {
       // controller: 'controller.ecommerce.PagesDetails'
     })
 
+  $stateProvider
+    .state('industry', {
+      url: "/industry",
+      templateUrl: '/static/ngTemplates/app.homepage.industry.html',
+      // controller: 'controller.blogDetails'
+    })
+
+  $stateProvider
+    .state('bpo', {
+      url: "/bpo",
+      templateUrl: '/static/ngTemplates/app.homepage.bpo.html',
+      // controller: 'controller.blogDetails'
+    })
+
+  $stateProvider
+    .state('about', {
+      url: "/about",
+      templateUrl: '/static/ngTemplates/app.homepage.about.html',
+      // controller: 'controller.blogDetails'
+    })
 
 
 
@@ -221,7 +241,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   }
 
 
-   $scope.elementInViewport = function(el) {
+  $scope.elementInViewport = function(el) {
     var top = el.offsetTop;
     var left = el.offsetLeft;
     var width = el.offsetWidth;
@@ -241,13 +261,13 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     );
   }
 
-  setTimeout(function () {
+  setTimeout(function() {
     $scope.one = document.getElementById('one')
     $scope.two = document.getElementById('two')
     $scope.three = document.getElementById('three')
     $scope.circles = document.getElementById('circles')
 
-    window.addEventListener("scroll", function () {
+    window.addEventListener("scroll", function() {
       if ($scope.elementInViewport($scope.one)) {
         $scope.one.classList.add('toMoveUp')
       }
