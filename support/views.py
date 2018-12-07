@@ -483,6 +483,7 @@ class ProductInventoryAPIView(APIView):
         offset = int(request.GET['offset'])
         limit = offset + int(request.GET['limit'])
         print offset,limit
+        total = 0
         toReturn = []
         if request.GET['search']!='undefined':
             productlist = Inventory.objects.filter(product__part_no__icontains=request.GET['search'])
@@ -492,10 +493,16 @@ class ProductInventoryAPIView(APIView):
         for i in productsList:
             totalprice = 0
             totalqty = 0
+            totalVal =0
+            totalSum = 0
             data = list(productlist.filter(product=i['product__pk']).values())
             # print  len(data) - 1 ,'aaaaaaaaaaaaa'
             for k in data:
+                totalVal = k['rate'] * k['qty']
                 totalprice += k['rate']
                 totalqty += k['qty']
-            toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty})
-        return Response(toReturn[offset : limit],status=status.HTTP_200_OK)
+                totalSum+=totalVal
+            toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty,'totalVal':totalSum})
+            total+=totalSum
+        returnData ={'data' :toReturn[offset : limit],'total':total }
+        return Response(returnData,status=status.HTTP_200_OK)

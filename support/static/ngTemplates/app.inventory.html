@@ -40,20 +40,29 @@
       </div>
     </div>
   </div> -->
-  <div class="row" style="margin-top:20px">
+  <div class="row" style="margin-top:20px;">
+    <div class="col-md-10 col-md-offset-1  text-right" style="padding-right:20px;">
+    <h2>  Total : {{total}} </h2>
+    </div>
     <div class="col-md-10 col-md-offset-1">
       <div class="container-fluid" style="margin-top:15px;" ng-repeat="p in products">
         <div class="card" style="padding:10px;">
           <div class="row container-fluid" ng-click="toggle(p.productPk,$index)" style="cursor:pointer;height:5vh;padding:10px">
-            <div class="col-md-11 text-left">
+            <div class="col-md-12 text-left">
+              <div class="col-md-2">
+                <span style="font-size:12px"><strong> Part No : </strong>{{p.productPartno}} </span>
+              </div>
               <div class="col-md-4">
-                <span style="font-size:14px"><strong> Part No : </strong>{{p.productPartno}} </span>
+                <span style="font-size:12px"><strong> Description : </strong>{{p.productDesc}} </span>
               </div>
-              <div class="col-md-5">
-                <span style="font-size:14px"><strong> Description : </strong>{{p.productDesc}} </span>
+              <div class="col-md-2">
+                <span style="font-size:12px"><strong> Quantity : </strong>{{p.totalqty}} </span>
               </div>
-              <div class="col-md-3">
-                <span style="font-size:14px"><strong> Quantity : </strong>{{p.totalqty}} </span>
+              <div class="col-md-2">
+                <span style="font-size:12px"><strong> Price : </strong>{{p.totalprice}} </span>
+              </div>
+              <div class="col-md-2">
+                <span style="font-size:12px"><strong> Total : </strong>{{p.totalVal}} </span>
               </div>
             </div>
           </div>
