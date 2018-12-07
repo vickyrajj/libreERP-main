@@ -7,6 +7,13 @@
   </div>
 </div>
 
+<!-- <div style="background-color:#0f4b8d; height:60vh; width:100%;">
+  <img style="clip-path:polygon(100% 60vh, 50% 60vh, 40% 50px, 100% 50px); width:100%;height:100%" src="/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg" alt="">
+  <div style="position:absolute;top:200px;left:100px;width:30vw;">
+    <h3 style="color:white;">{% trans 'WelcomeHeading' %} </h3>
+  </div>
+</div> -->
+
 {% verbatim %}
 
 
@@ -37,7 +44,7 @@
     </div>
   </div>
   <ul class="personInfo" style="order:3;">
-    <li>
+    <li id="one">
       <div style="flex:20%">
         <div style="margin-top:25px;">
           <img class="img-circle dp" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/4lIxw6tMc8m80iAUsUEEWy/6d931e81bcb1fdd47a5bf6c87d10e34a/role-mkt-1.jpg" alt="">
@@ -53,7 +60,7 @@
         </div>
       </div>
     </li>
-    <li>
+    <li id="two">
       <div style="flex:20%">
         <div style="margin-top:25px;">
           <img class="img-circle dp" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/1IrhRRmzKsoY6oU8co8SYW/2b3272d0fa15c464a33f5ff2fc5535fb/role-mkt-2.jpg" alt="">
@@ -69,7 +76,7 @@
         </div>
       </div>
     </li>
-    <li>
+    <li id="three">
       <div style="flex:20%">
         <div style="margin-top:25px;">
           <img class="img-circle dp" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/qU5pQ44MxwuGKG84USqui/d5cd6e616c5fab97ba243b046046abb6/role-mkt-3.jpg" alt="">
@@ -90,18 +97,30 @@
 
 
 <div class="flex_section" style="min-height:800px">
-  <div style="flex:45%; order:1;" >
-    <!-- <ul style="list-style-type: none; position:relative; background-color:green;">
-      <li style="background-color:#fff; border:50px solid blue; border-radius:50%; width:300px; height:300px; position:absolute; right:0px; top:0px">
-
+  <div class="circleDiv">
+    <ul class="circles" id="circles">
+      <li>
+        <div class="text-center" style="padding-top:38px;">
+          <figure style="font-size: 50px; color:#080738">$21M</figure>
+          <span style="letter-spacing:4px;">Incremental Revenue Impact</span><br>
+          <a style="font-size:13px;" href="#">Learn how HP did it</a>
+        </div>
       </li>
-      <li style="background-color:blue; border-radius:50%; width:200px; height:200px; position:absolute; right:200px; top:200px">
-
+      <li>
+        <div class="text-center" style="padding-top:38px;color:#fff">
+          <figure style="font-size: 30px;">+300%</figure>
+          <span>Click-through uplift</span><br>
+          <a style="font-size:13px; color:#fff" href="#">Read the Missguided case study</a>
+        </div>
       </li>
-      <li style="background-color:#fff; border:10px solid blue; border-radius:50%; width:250px; height:250px; position:absolute; right:70px; top:350px ">
-
+      <li>
+        <div class="text-center" style="padding-top:38px;color:#080738">
+          <figure style="font-size: 50px;">-80%</figure>
+          <span>Decrease in return rate</span><br>
+          <a style="font-size:13px; color:blue" href="#">Read the Brooks case study</a>
+        </div>
       </li>
-    </ul> -->
+    </ul>
   </div>
   <div class="lineSvg" style="flex:10%; order:2;position:relative;">
     <div style="position:absolute; top:0px; height:20px; left:6px;">
@@ -116,7 +135,7 @@
       <span class="point-text">Repeat</span>
     </div>
   </div>
-  <div style="flex:45%; margin-top: 100px; order:3;">
+  <div class="content_box" style="">
     <div class="content">
       <h3>Let the data determine your baseline, your winning ideas and the losers</h3>
       <p>Know the future impact of new offers, copy, CTA’s, performance improvements and more. Armed with the accuracy of Stats Engine, never again guess at which offers will work and which won’t. Just try them all.Accelerate campaign throughput while massively
@@ -146,7 +165,7 @@
       <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name=""><b>Read Article</b> </button>
     </div>
   </div>
-  <div class="col-md-6 col-sm-12" style="background-color:rgba(245,248,250,.5);margin-top:10px;">
+  <div class="col-md-6  col-sm-12" style="background-color:rgba(245,248,250,.5);margin-top:10px;">
     <div class="row" ng-repeat="i in articles" style="margin-bottom:20px;{{$odd ? 'background:#fff;':''}};">
       <div class="col-xs-2 articleImg">
         <div class="text-center" style="">
@@ -154,7 +173,7 @@
           <span style="font-size:0.875em;color:#fff;">Nov</span>
         </div>
       </div>
-      <div class="col-xs-10">
+      <div class="col-xs-9">
         <div id="articleHead">
           <span style="font-size:1.2em;font-weight:700;color:#09075c"> RPA technology among client organizations cool text here. Great yeaa...</span><br>
           <span class="text-primary"><strong>Read More...</strong></span>
@@ -163,49 +182,14 @@
     </div>
     <button type="button" class="btn btn-primary">See More Articles</button>
   </div>
-  <!-- <div class="col-md-8 shaddowed noPadding" style="min-height:550px;border-radius:10px;">
-    <div class="col-md-6 noPadding">
-      <div class="blogimg">
-        <div id="date">
-          <span style="font-size:24px;font-weight:500;color:#fff;">27 November 2018</span><br><br>
-          <span style="font-size:34px;font-weight:700;color:#fff">RPA Adoption: Top-down or Bottom-up?</span>
-        </div>
-      </div>
-      <div style="padding:20px;">
-        <p style="color:#002855;font-size: 15px;line-height: 1.7;">It has been a fascinating journey so far to watch
-          the adoption of RPA technology among client organizations.
-          We have observed several different paths to adoption while everyone
-          is still wondering if there is one template for the best
-          approach.</p>
-        <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name=""><b>Read Article</b> </button>
-      </div>
-    </div>
-    <div class="col-md-6" style="background-color:rgba(245,248,250,.5);margin-top:10px;">
-      <div class="row" ng-repeat="i in articles" style="margin-bottom:20px;{{$odd ? 'background:#fff;':''}};">
-        <div class="col-md-2 articleImg">
-          <div class="text-center" style="">
-            <span style="font-size:1.875em;color:#fff;"> <strong>21</strong></span><br>
-            <span style="font-size:0.875em;color:#fff;">Nov</span>
-          </div>
-        </div>
-        <div class="col-md-10">
-          <div id="articleHead">
-            <span style="font-size:1.2em;font-weight:700;color:#09075c"> RPA technology among client organizations cool text here. Great yeaa...</span><br>
-            <span class="text-primary"><strong>Read More...</strong></span>
-          </div>
-        </div>
-      </div>
-      <button type="button" class="btn btn-primary">See More Articles</button>
-    </div>
-  </div> -->
 </div>
 
 
-  <div class="row" style="background-color:#fff;margin:0px;">
-    <div class="col-md-8 col-md-offset-2">
+  <div class="blog_section" style="background-color:#fff;">
+    <div class="col-md-12">
       <div class="row">
         <div class="col-md-4">
-          <div style="  min-height: 380px;padding: 30px;border: 0px solid blue;margin: 20px;">
+          <div style=" min-height: 320px;padding: 30px;border: 0px solid blue;">
             <h3 style="font-size:36px;color:#002855;font-weight:600;"> <br> <span>Why you’ll love the EpsilonAI Enterprise RPA Platform</span></h3>
           </div>
         </div>
@@ -277,7 +261,10 @@
   </div>
 
 <div class="row" style="margin:0px;padding:20px;background: url('/static/images/footer-bg-v1.png');color:white;">
-  <div class="col-md-5 text-right">
+  <div class="col-md-5 hidden-xs hidden-sm text-right">
+    <h4>Get Regular Blog Updates</h4>
+  </div>
+  <div class="col-xs-12 hidden-md hidden-lg text-center">
     <h4>Get Regular Blog Updates</h4>
   </div>
   <div class="col-md-3">
@@ -290,161 +277,15 @@
   </div>
 </div>
 
-
-
 <div class="row" style="margin:0px;background: url('/static/images/footer-bg.jpg');background-repeat: no-repeat;background-size: cover;">
   <div class="col-md-8 col-md-offset-2 text-center" style="color:#fff;padding:130px 0px;">
     <h1> <strong>Ready to take the lead?</strong></h1> <br>
     <h4>Choose open, extensible, secure automations</h4> <br>
-    <button type="button" class="btn btn-lg text-center big-xl" style="margin-top:10px;">
+    <button type="button" class="btn btn-warning btn-lg text-center big-xl" style="margin-top:10px;">
       <strong>Get Started with Go!</strong>
     </button>
   </div>
 </div>
-
-
-<!-- <div class="row marketing">
-  <div class="col-md-5 col-sm-12">
-    <div class="content">
-      <h3>True digital innovation starts with your employees and teams</h3>
-      <p>They’re the people most passionate about your brand, campaigns and products. Enable their every idea for a true culture of innovation. Capture, govern and manage digital innovation across the enterprise. Dramatically improve the ROI of campaigns,
-        landing pages, checkouts and overall conversion.</p>
-      <div style="padding-top:15px;">
-        <a href="/products/program-management/" class="btn btn-primary btn-rounded">Learn More</a>
-      </div>
-
-    </div>
-  </div>
-  <div class="col-md-1 hidden-xs hidden-sm" style="width:76px;">
-    <span class="point-text" style="margin-left:26px;">Ideate</span>
-    <div class="scroll-point" style="margin-top:-22px;"></div>
-    <div class="row noPadding stroke" style="border-right: 2px solid #65647c;height:200px;"></div>
-    <div class="row noPadding curve" style="margin-left: -7px;">
-      <img src="/static/images/Stroke.svg" alt="">
-    </div>
-    <div class="row noPadding stroke" style="border-right: 2px solid #65647c;height:200px;"></div>
-    <span class="point-text" style="margin-left:26px;">Experiment</span>
-    <div class="scroll-point" style="margin-top:-22px;"></div>
-  </div>
-  <div class="col-md-6 col-sm-12">
-    <ul class="roles list-unstyled">
-      <li>
-        <div class="col-xs-12">
-          <div class="col-xs-4" style="position:relative;padding-top:40px;">
-            <img class="img-circle dp" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/4lIxw6tMc8m80iAUsUEEWy/6d931e81bcb1fdd47a5bf6c87d10e34a/role-mkt-1.jpg" alt="">
-            <span class="point-green"></span>
-          </div>
-          <div class="col-md-8 col-sm-12">
-            <div class="media-body">
-              <h5 class="text-uppercase">PRODUCT MANAGER</h5>
-              <blockquote>
-                <h6>How can we lower mobile cart abandonment?</h6>
-                <p>What if we try push notification reminders?</p>
-              </blockquote>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="col-xs-12">
-          <div class="col-xs-4" style="position:relative;padding-top:40px;">
-            <img class="img-circle dp" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/1IrhRRmzKsoY6oU8co8SYW/2b3272d0fa15c464a33f5ff2fc5535fb/role-mkt-2.jpg" alt="">
-          </div>
-          <div class="col-md-8 col-sm-12">
-            <div class="media-body">
-              <h5 class="text-uppercase">DEVELOPER</h5>
-              <blockquote>
-                <h6>How can we lower mobile cart abandonment?</h6>
-                <p>What if we try push notification reminders?</p>
-              </blockquote>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="col-xs-12">
-          <div class="col-xs-4" style="position:relative;padding-top:40px;">
-            <img class="img-circle dp" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/qU5pQ44MxwuGKG84USqui/d5cd6e616c5fab97ba243b046046abb6/role-mkt-3.jpg" alt="">
-          </div>
-          <div class="col-md-8 col-sm-12">
-            <div class="media-body">
-              <h5 class="text-uppercase">TEAM LEADER</h5>
-              <blockquote>
-                <h6>How can we lower mobile cart abandonment?</h6>
-                <p>What if we try push notification reminders?</p>
-              </blockquote>
-            </div>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-</div> -->
-
-
-<!--
-<div class="row data">
-  <div class="col-md-5 col-sm-12">
-    <div class="row" style="position:relative">
-      <div class="stat-circleo " style="color:#080738;">
-        <div class="text-center">
-          <figure style="font-size: 70px;">$21M</figure>
-          <span>Incremental Revenue Impact</span><br>
-          <a href="#">Learn how HP did it</a>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="stat-circles" style="color:#ffff;">
-        <div class="text-center" style="height:100%;width:100%;padding-top:85px;">
-          <figure style="font-size:60px;">+300%</figure>
-          <span> <b>Click-through uplift</b> </span><br>
-          <a href="#" style="font-size:13px;font-weight: 500;color:#ffff;">Read the Missguided case study</a>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="stat-circlet" style="color:#080738;">
-        <div class="text-center" style="height:100%; padding-top:30px;">
-          <figure style="font-size: 70px;margin-top:30px;">-80%</figure>
-          <span>Decrease in return rate</span><br>
-          <a href="#">Read the Brooks case study</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-2 hidden-xs hidden-sm">
-    <span class="scroll-point"></span>
-    <span class="point-text" style="">Impliment</span>
-    <div class="row noPadding curve" style="margin-left: -7px;">
-      <svg width="152px" height="930px" viewBox="0 0 109 930" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:relative;left:-25px">
-        <g id="Components" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-          <g id="Home-/-Version-02" transform="translate(-802.000000, -4372.000000)" stroke="#65657C" stroke-width="2">
-            <g id="Timeline-/-Step-03" transform="translate(20.000000, 4212.000000)">
-              <g id="Timeline" transform="translate(669.000000, 0.000000)">
-                  <path d="M130.610782,160 C130.610782,239.597799 148.405782,318.432758 183.000782,392.095224 C214.720782,459.63666 196.784782,537.179586 137.519782,588.724917 C78.0337821,640.463791 76.6787821,724.106823 134.466782,777.287683 C168.146782,808.283406 178.347782,853.413905 160.676782,893.231549 C140.803782,938.009833 130.610782,985.607575 130.610782,1033.61943 L130.610782,1089.44141" id="Line"/>
-              </g>
-            </g>
-          </g>
-        </g>
-      </svg>
-    </div>
-    <span class="scroll-point"></span>
-    <span class="point-text" style="">Repeat</span>
-  </div>
-  <div class="col-md-5 col-sm-12" style="padding-left:20px; margin-top:250px;">
-    <div class="content">
-      <h3>Let the data determine your baseline, your winning ideas and the losers</h3>
-      <p>Know the future impact of new offers, copy, CTA’s, performance improvements and more. Armed with the accuracy of Stats Engine, never again guess at which offers will work and which won’t. Just try them all.Accelerate campaign throughput while massively
-        improving marketing ROI. </p>
-      <div style="padding-top:15px;">
-        <a href="/products/program-management/" class="btn btn-primary btn-rounded">Learn More</a>
-      </div>
-
-    </div>
-  </div>
-</div> -->
-
 
 
 {% endverbatim %}

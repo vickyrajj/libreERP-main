@@ -14,7 +14,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar">
 
-      <ul class="nav navbar-nav header_nav {{smallDevice?'pull-left':'pull-right'}}">
+      <ul class="nav navbar-nav header_nav {{device.smallDevice?'pull-left':'pull-right'}}">
         {% endverbatim %}
         <li class="header_element">
           <a href="/" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true"> RPA</a>
@@ -55,12 +55,12 @@
           <a href="/blogs" > Blogs</a>
         </li>
           {% verbatim %}
-        <li style="margin-left:30px; {{smallDevice ? 'display:inline-block;': ''}}">
+        <li style="margin-left:30px; {{device.smallDevice ? 'display:inline-block;': ''}}">
           <button type="button" class="btn btn-warning" style="background-color:#ff6900;margin-top:10px;" ng-click="schedule()">
             Schedule a Demo
           </button>
         </li>
-        <li style="margin-left:20px;width:70px; {{smallDevice ? 'display:inline-block;': ''}}">
+        <li style="margin-left:20px;width:70px; {{device.smallDevice ? 'display:inline-block;': ''}}">
           <div class="dropdown" style="margin-top:10px;">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> <img ng-src="{{data.currentLang.flag}}" style="height:15px;" alt=""> {{data.currentLang.lang}}
               <span class="caret"></span>

@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from rest_framework import viewsets , permissions , serializers
 from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
+from .serializers import *
 from API.permissions import *
 from ERP.models import application, permission , module ,service
 from ERP.views import getApps, getModules
@@ -22,6 +23,8 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from PIM.models import blogPost
 from django.utils import translation
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 
 def index(request):
     if request.COOKIES.get('lang') == None:
@@ -147,3 +150,71 @@ def contacts(request):
 
 def registration(request):
     return render(request,"registration.html" , {"home" : False , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+
+
+class scheduleViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = Schedule.objects.all()
+    serializer_class = sheduleSerializer
+    # filter_fields = ['name','vendor']
+    # search_fields = ('name','web')
+
+from ics import Calendar, Event
+from datetime import date
+from email.MIMEBase import MIMEBase
+from datetime import datetime
+import time
+import datetime
+from dateutil import parser
+class InvitationMailApi(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny , )
+    def post(self, request, format=None):
+        emailid=[]
+        cc = ['ankita.k@cioc.in']
+        print  request.data,'aaaaaaaaaa'
+        schedule =  Schedule.objects.get(pk = request.data['value'])
+        time = schedule.slot.split(' - ')
+        strttime = int(time[0])
+        endtime = int(time[1])
+        newDate =  datetime.datetime.strptime(str(schedule.dated), '%Y-%m-%d').strftime('%Y%m%d %H:%M:%S')
+        yourDate = parser.parse(newDate)
+
+        begindate = yourDate.replace(hour=strttime, minute=00)
+        enddate = yourDate.replace(hour=endtime, minute=00)
+        emailid.append(schedule.emailId)
+        email_subject ="Meeting as per your request"
+        c = Calendar()
+        e = Event()
+        e.name = "Meeting"
+        e.begin = begindate
+        e.end = enddate
+        e.organizer = 'ankita.k@cioc.in'
+        c.events.add(e)
+        c.attendee =  schedule.emailId
+        with open('my.ics', 'w') as f:
+             f.writelines(c)
+        ctx = {
+            # 'message': msgBody,
+            'dated': schedule.dated,
+            'slot' :  schedule.slot,
+            'linkUrl': 'cioc.co.in',
+            'linkText' : 'View Online',
+            'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+            'sendersPhone' : '841101',
+            'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
+            'fbUrl' : 'facebook.com',
+            'twitterUrl' : 'twitter.com',
+        }
+
+        icspart = MIMEBase('text', 'calendar', **{'method' : 'REQUEST', 'name' : 'my.ics'})
+        icspart.set_payload( open("my.ics","rb").read() )
+        icspart.add_header('Content-Transfer-Encoding', '8bit')
+        icspart.add_header('Content-class', 'urn:content-classes:calendarmessage')
+        email_body = get_template('app.homepage.inviteemail.html').render(ctx)
+        msg = EmailMessage(email_subject, email_body,  to= emailid, cc= cc )
+        msg.attach(icspart)
+        msg.content_subtype = 'html'
+        msg.send()
+
+        return Response({}, status = status.HTTP_200_OK)

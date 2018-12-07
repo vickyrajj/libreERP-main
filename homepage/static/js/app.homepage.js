@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ngSanitize']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash']);
 
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider) {
@@ -41,14 +41,14 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('blogDetails', {
-      url: "/:pk",
+      url: "/blogs/:pk",
       templateUrl: '/static/ngTemplates/app.homepage.blogDetails.html',
       controller: 'controller.blogDetails'
     })
 
   $stateProvider
     .state('pages', {
-      url: "/:title",
+      url: "/pages/:title",
       templateUrl: '/static/ngTemplates/app.homepage.page.html',
       // controller: 'controller.ecommerce.PagesDetails'
     })
@@ -216,15 +216,68 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal) {
 
 
-  $scope.smDevice  = function(x) {
+  $scope.device = {
+    smallDevice: false
+  }
+
+
+   $scope.elementInViewport = function(el) {
+    var top = el.offsetTop;
+    var left = el.offsetLeft;
+    var width = el.offsetWidth;
+    var height = el.offsetHeight;
+
+    while (el.offsetParent) {
+      el = el.offsetParent;
+      top += el.offsetTop;
+      left += el.offsetLeft;
+    }
+
+    return (
+      top >= window.pageYOffset &&
+      left >= window.pageXOffset &&
+      (top + height) <= (window.pageYOffset + window.innerHeight) &&
+      (left + width) <= (window.pageXOffset + window.innerWidth)
+    );
+  }
+
+  setTimeout(function () {
+    $scope.one = document.getElementById('one')
+    $scope.two = document.getElementById('two')
+    $scope.three = document.getElementById('three')
+    $scope.circles = document.getElementById('circles')
+
+    window.addEventListener("scroll", function () {
+      if ($scope.elementInViewport($scope.one)) {
+        $scope.one.classList.add('toMoveUp')
+      }
+
+      if ($scope.elementInViewport($scope.two)) {
+        $scope.two.classList.add('toMoveUp')
+      }
+
+      if ($scope.elementInViewport($scope.three)) {
+        $scope.three.classList.add('toMoveUp')
+      }
+
+    });
+  }, 500);
+
+
+
+
+
+  $scope.smDevice = function(x) {
     if (x.matches) {
-      $scope.smallDevice = true;
+      console.log('trueeeeeeee');
+      $scope.device.smallDevice = true;
     }
   }
 
-$scope.lgDevice  = function(x) {
+  $scope.lgDevice = function(x) {
     if (x.matches) {
-      $scope.smallDevice = false;
+      console.log('false');
+      $scope.device.smallDevice = false;
     }
   }
 
@@ -233,7 +286,7 @@ $scope.lgDevice  = function(x) {
   $scope.sm.addListener($scope.smDevice)
 
   $scope.lg = window.matchMedia("(min-width: 768px)")
-  $scope.lgDevice($scope.lg )
+  $scope.lgDevice($scope.lg)
   $scope.lg.addListener($scope.lgDevice)
 
 
@@ -285,13 +338,90 @@ $scope.lgDevice  = function(x) {
     }
   }
 
-  console.log($scope.langOptions);
+
   $scope.schedule = function(idx) {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.homepage.schedule.modal.html',
       size: 'lg',
       backdrop: true,
-      controller: function($scope) {
+      controller: function($scope, Flash) {
+        $scope.calendar = true
+        $scope.thankYou = false
+        $scope.refresh = function() {
+          $scope.form = {
+            dated: new Date(),
+            slot: '8 - 9',
+            emailId: '',
+            name: ''
+          }
+        }
+        $scope.refresh()
+        $scope.timeSlot = [{
+            'time': '8 - 9'
+          },
+          {
+            'time': '9 - 10'
+          },
+          {
+            'time': '10 - 11'
+          },
+          {
+            'time': '11 - 12'
+          },
+          {
+            'time': '13 - 14'
+          },
+          {
+            'time': '14 - 15'
+          },
+          {
+            'time': '15 - 16'
+          },
+          {
+            'time': '16 - 17'
+          },
+        ]
+
+        $scope.scheduleMeeting = function() {
+          // if($scope.form.dated == null || $scope.form.dated == undefined){
+          //   Flash.create("warning","PLease Select Date")
+          //   return;
+          // }
+          // if($scope.form.emailId == '' || $scope.form.emailId == undefined){
+          //   console.log("dddffffffffffff");
+          //   Flash.create('danger', 'Please fill Email Id')
+          //   return;
+          // }
+
+          var dataToSend = {
+            dated: $scope.form.dated.toJSON().split('T')[0],
+            slot: $scope.form.slot,
+            emailId: $scope.form.emailId,
+            name: $scope.form.name,
+          }
+          $http({
+            method: 'POST',
+            url: '/api/homepage/schedule/',
+            data: dataToSend
+          }).
+          then(function(response) {
+            Flash.create('success', 'Saved');
+            $scope.calendar = false
+            $scope.thankYou = true
+            $http({
+              method: 'POST',
+              url: '/api/homepage/inviteMail/',
+              data: {
+                value: response.data.pk
+              }
+            }).
+            then(function(response) {
+              $scope.refresh()
+            });
+          });
+
+        }
+
 
       },
     })
