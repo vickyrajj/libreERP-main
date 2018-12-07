@@ -29,7 +29,7 @@
       <div class="col-md-1">
         <div class="form-group">
           <label>Qty</label>
-          <input type="number" ng-model="form.qty" class="form-control">
+          <input type="text" ng-model="form.qty" class="form-control">
         </div>
       </div>
       <div class="col-md-2">
@@ -62,7 +62,8 @@
           <tr ng-repeat="d in dataDetails">
             <td style="width:26.3%">{{d.productMeta.description}}</td>
             <td style="width:8.33%">{{d.rate}}</td>
-            <td style="width:8.33%">{{d.qty}}</td>
+            <td style="width:8.33%" ng-if="d.productMeta.code===996729">{{d.space}}</td>
+            <td style="width:8.33%" ng-if="d.productMeta.code!=996729">{{d.qty}}</td>
             <td style="width:8.33%">{{d.amount}}</td>
           </tr>
         </tbody>

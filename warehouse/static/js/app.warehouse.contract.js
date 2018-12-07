@@ -33,8 +33,17 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
       return response.data;
     })
   }
+
+  // $scope.frmDateChange = new Date($scope.frmDate.getFullYear(),$scope.frmDate.getMonth(),$scope.frmDate.getDate() + 1)
+  // $scope.toDateChange = new Date($scope.toDate.getFullYear(),$scope.toDate.getMonth(),$scope.toDate.getDate() + 1)
+
   $scope.$watch('form.productMeta', function(newValue, oldValue) {
     if (typeof newValue == 'object') {
+      if(newValue.code == 996729){
+          $scope.cost = $scope.contract.rate * $scope.contract.spaceGiven
+          $scope.form.rate = $scope.contract.rate
+          $scope.form.quantity = $scope.contract.spaceGiven
+      }
       $scope.showTaxCodeDetails = true;
     } else {
       $scope.showTaxCodeDetails = false;
@@ -52,13 +61,27 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
   $scope.edit = function(idx) {
     var d = $scope.data[idx];
     console.log(d, 'aaaaaaaaaaaaaaaaa');
-    $scope.form = {
-      type: d.type,
-      quantity: d.qty,
-      tax: d.tax,
-      rate: d.rate,
-      desc: d.desc
-    };
+    if($scope.form.productMeta.code=='996729'){
+      $scope.form = {
+        type: d.type,
+        quantity: d.space,
+        productMeta:d.productMeta,
+        tax: d.tax,
+        rate: d.rate,
+        desc: d.desc,
+        amount:d.amount
+      };
+    }
+    else{
+      $scope.form = {
+        type: d.type,
+        quantity: d.qty,
+        productMeta:d.productMeta,
+        tax: d.tax,
+        rate: d.rate,
+        desc: d.desc
+      };
+    }
     $http({
       method: 'GET',
       url: '/api/clientRelationships/productMeta/?code=' + d.taxCode
@@ -124,6 +147,38 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
       Flash.create('warning', 'The tax rate is unrealistic');
       return;
     }
+
+    var date = new Date();
+    $scope.frmDate = new Date(date.getFullYear(), date.getMonth(), 1),
+    $scope.toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+
+    if($scope.form.productMeta.code ==  996729 ){
+      $scope.frmDateChange = new Date($scope.frmDate.getFullYear(),$scope.frmDate.getMonth(),$scope.frmDate.getDate() + 1)
+      var currentMonth = $scope.frmDateChange.getMonth()+1
+      $scope.data.push({
+        "amount":$scope.form.amount,
+        "productMeta":{
+          "description": $scope.form.productMeta.description + ' for the period/month - ' + currentMonth+ ' - ' + $scope.frmDate.getFullYear(),
+          "typ": $scope.form.productMeta.typ,
+          "code": $scope.form.productMeta.code,
+          "taxRate":  $scope.form.productMeta.taxRate
+        },
+        "rate" : $scope.form.rate,
+        "space" : $scope.form.quantity,
+        "qty" : 1,
+        "desc":$scope.form.desc})
+    }
+    else{
+      $scope.data.push({
+        type: $scope.form.type,
+        // tax: $scope.form.productMeta.taxRate,
+        desc: $scope.form.desc,
+        rate: $scope.form.rate,
+        qty: $scope.form.quantity,
+        productMeta: $scope.form.productMeta,
+        amount: $scope.form.amount,
+      })
+    }
     // $scope.data.push({
     //   type: $scope.form.type,
     //   tax: $scope.form.productMeta.taxRate,
@@ -142,15 +197,7 @@ app.controller("businessManagement.warehouse.contract.quote", function($scope, $
     //     totalTax :  Math.round($scope.tax)
     //  })
     console.log($scope.form.amount);
-    $scope.data.push({
-      type: $scope.form.type,
-      // tax: $scope.form.productMeta.taxRate,
-      desc: $scope.form.desc,
-      rate: $scope.form.rate,
-      qty: $scope.form.quantity,
-      productMeta: $scope.form.productMeta,
-      amount: $scope.form.amount,
-    })
+
     $scope.resetForm();
   }
   $scope.resetForm();
@@ -722,13 +769,36 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       console.log('submitting');
       console.log($scope.contract.pk);
       console.log($scope.contract);
+      var date = new Date();
+      $scope.frmDate = new Date(date.getFullYear(), date.getMonth(), 1);
+      $scope.toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      $scope.frmDateChange = new Date($scope.frmDate.getFullYear(),$scope.frmDate.getMonth(),$scope.frmDate.getDate() + 1)
+      $scope.toDateChange = new Date($scope.toDate.getFullYear(),$scope.toDate.getMonth(),$scope.toDate.getDate() + 1)
       var method;
       var url = '/api/warehouse/invoice/'
       if ($scope.quoteInEditor.pk == null) {
         method = 'POST'
+        var dataToSend = {
+          contract: $scope.contract.pk,
+          data: JSON.stringify($scope.quoteInEditor.data),
+          value: $scope.quoteInEditor.calculated.value,
+          status: $scope.quoteInEditor.status,
+          grandTotal: $scope.quoteInEditor.calculated.grand,
+          totalTax: $scope.quoteInEditor.calculated.tax,
+          fromDate : $scope.frmDateChange.toJSON().split('T')[0],
+          toDate : $scope.toDateChange.toJSON().split('T')[0],
+        };
       } else {
         method = 'PATCH'
         url += $scope.quoteInEditor.pk + '/'
+        var dataToSend = {
+          contract: $scope.contract.pk,
+          data: JSON.stringify($scope.quoteInEditor.data),
+          value: $scope.quoteInEditor.calculated.value,
+          status: $scope.quoteInEditor.status,
+          grandTotal: $scope.quoteInEditor.calculated.grand,
+          totalTax: $scope.quoteInEditor.calculated.tax,
+        };
       }
 
       if ($scope.quoteInEditor.data.length == 0) {
@@ -736,14 +806,7 @@ app.controller("businessManagement.warehouse.contract.explore", function($scope,
       }
 
       console.log($scope.quoteInEditor.calculated, 'fddddddddddddddddddd');
-      var dataToSend = {
-        contract: $scope.contract.pk,
-        data: JSON.stringify($scope.quoteInEditor.data),
-        value: $scope.quoteInEditor.calculated.value,
-        status: $scope.quoteInEditor.status,
-        grandTotal: $scope.quoteInEditor.calculated.grand,
-        totalTax: $scope.quoteInEditor.calculated.tax
-      };
+
       console.log($scope.quoteInEditor);
       console.log(dataToSend);
       console.log(url);

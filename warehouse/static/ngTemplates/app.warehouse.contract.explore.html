@@ -237,7 +237,7 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Value</th>
+                  <th>Total</th>
                   <th>Items</th>
                   <th>Created</th>
                   <th>Updated</th>
@@ -248,7 +248,7 @@
               <tbody>
                 <tr ng-repeat="c in contract.invoice">
                   <td>{{c.pk}}</td>
-                  <td><i class="fa fa-{{contract.currency | lowercase}}" style="margin-right:20px;"></i>{{c.value}}</td>
+                  <td><i class="fa fa-{{contract.currency | lowercase}}" style="margin-right:20px;"></i>{{c.grandTotal}}</td>
                   <td>{{c.data.length}}</td>
                   <td>{{c.created | timeAgo}}</td>
                   <td>{{c.updated | timeAgo}}</td>

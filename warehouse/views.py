@@ -583,7 +583,43 @@ def genInvoice(response , contract,invoiceobj, request):
 
 
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
-
+    #
+    # def num999(n):
+    #     c = n % 10 # singles digit
+    #     b = ((n % 100) - c) / 10 # tens digit
+    #     a = ((n % 1000) - (b * 10) - c) / 100 # hundreds digit
+    #     t = ""
+    #     h = ""
+    #     if a != 0 and b == 0 and c == 0:
+    #         t = ones[a] + "hundred "
+    #     elif a != 0:
+    #         t = ones[a] + "hundred and "
+    #     if b <= 1:
+    #         h = ones[n%100]
+    #     elif b > 1:
+    #         h = twenties[b] + ones[c]
+    #     st = t + h
+    #     return st
+    #
+    # def num2word(num):
+    # 	if num == 0: return 'zero'
+    #         i = 3
+    #         n = str(num)
+    #         word = ""
+    #         k = 0
+    #         while(i == 3):
+    #             nw = n[-i:]
+    #             n = n[:-i]
+    #             if int(nw) == 0:
+    #                 word = num999(int(nw)) + thousands[int(nw)] + word
+    #             else:
+    #                 word = num999(int(nw)) + thousands[k] + word
+    #             if n == '':
+    #                 i = i+1
+    #             k += 1
+    #             return word[:-1]
+    #
+from num2words import num2words
 
 def genAllInvoice(response,contract,details,request):
         print "kkkkkkkkkkkkkkkkkkkkkkkkkk"
@@ -614,20 +650,38 @@ def genAllInvoice(response,contract,details,request):
         date = x.strftime("%x")
         # days = abs((details.toDate-details.toDate).days)
         now = datetime.datetime.now()
-        if details.toDate:
-            idDate =  details.toDate.strftime("%y")
-            dated =  details.toDate
-        else:
-            idDate =  details.created.strftime("%y")
-            dated =  details.created
-            print dated,'aaaaaaaaaaaa'
-        if details.fromDate:
-            month =  details.fromDate.month
-            year =  details.fromDate.year
+        # if details.toDate:
+        #     idDate =  details.toDate.strftime("%y")
+        #     dated =  details.toDate
+        # else:
+        #     idDate =  details.created.strftime("%y")
+        #     dated =  details.created
+        #     print dated,'aaaaaaaaaaaa'
+        #
+        #
+        # if details.fromDate:
+        #     month =  details.fromDate.month
+        #     year =  details.fromDate.year
+        #
+        # else:
+        #     month =  ""
+        #     year = ""
 
-        else:
-            month =  ""
-            year = ""
+        detailData = details.data
+        if details.data!=None:
+            detailsData = json.loads(detailData)
+            for i in detailsData:
+                print i,'aaaaaaaaa'
+                print i['productMeta']['code']
+                if i['productMeta']['code']==996729:
+                    month =  details.fromDate.month
+                    year =  details.fromDate.year
+                    dated =  details.toDate
+                    break
+                else:
+                    month =  ""
+                    year = ""
+                    dated =  details.created
         # doc = SimpleDocTemplate(response, rightMargin=10 *cm, leftMargin=6.5 * cm, topMargin=10 * cm, bottomMargin=0)
         # rowhead = [['TAX INVOICE\n']]
         # tablehead = Table(rowhead, colWidths=(191*mm))
@@ -741,7 +795,8 @@ def genAllInvoice(response,contract,details,request):
         totaltax = details.totalTax
         print totaltax
         gtotal = details.grandTotal
-        gtotalText = num2words(int(gtotal))
+        # gtotalText = num2words(int(gtotal))
+        gtotalText = num2words(int(gtotal), to='cardinal', lang='en_IN')
 
         table3 = Table(row3, colWidths=(90*mm, 20*mm,20*mm, 20*mm,10*mm,10*mm, 20*mm))
         style3 = TableStyle([
@@ -1368,40 +1423,6 @@ twenties = ["","","twenty ","thirty ","forty ", "fifty ","sixty ","seventy ","ei
 thousands = ["","thousand ","million ", "billion ", "trillion ", "quadrillion ", "quintillion ", "sextillion ", "septillion ","octillion ", "nonillion ", "decillion ", "undecillion ", "duodecillion ", "tredecillion ", "quattuordecillion ", "quindecillion", "sexdecillion ", "septendecillion ", "octodecillion ", "novemdecillion ", "vigintillion "]
 
 
-def num999(n):
-    c = n % 10 # singles digit
-    b = ((n % 100) - c) / 10 # tens digit
-    a = ((n % 1000) - (b * 10) - c) / 100 # hundreds digit
-    t = ""
-    h = ""
-    if a != 0 and b == 0 and c == 0:
-        t = ones[a] + "hundred "
-    elif a != 0:
-        t = ones[a] + "hundred and "
-    if b <= 1:
-        h = ones[n%100]
-    elif b > 1:
-        h = twenties[b] + ones[c]
-    st = t + h
-    return st
-
-def num2word(num):
-	if num == 0: return 'zero'
-        i = 3
-        n = str(num)
-        word = ""
-        k = 0
-        while(i == 3):
-            nw = n[-i:]
-            n = n[:-i]
-            if int(nw) == 0:
-                word = num999(int(nw)) + thousands[int(nw)] + word
-            else:
-                word = num999(int(nw)) + thousands[k] + word
-            if n == '':
-                i = i+1
-            k += 1
-            return word[:-1]
 
 
 

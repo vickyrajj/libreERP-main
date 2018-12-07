@@ -50,15 +50,16 @@
           <td style="width:8.33%">{{d.rate}}</td>
           <!-- <td style="width:8.33%">{{d.tax}}</td> -->
           <td style="width:8.33%">{{d.productMeta.code}}</td>
-          <td style="width:8.33%">{{d.qty}}</td>
+          <td style="width:8.33%" ng-if="d.productMeta.code==996729">{{d.space}}</td>
+          <td style="width:8.33%" ng-if="d.productMeta.code!=996729">{{d.qty}}</td>
           <!-- <td style="width:10%">{{d.totalTax}}</td> -->
           <td style="width:10%">{{d.amount}}</td>
           <td>
-            <div class="btn-group btn-group-sm" ng-if="!d.space">
+            <div class="btn-group btn-group-sm">
               <button type="button" class="btn btn-danger" ng-click="remove($index)">
                 <i class="fa fa-trash-o"></i>
               </button>
-              <button type="button" ng-click="edit($index)" class="btn btn-default" ng-if="!d.space">
+              <button type="button" ng-click="edit($index)" class="btn btn-default">
                 <i class="fa fa-pencil"></i>
               </button>
             </div>
@@ -97,7 +98,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>Quantity</label>
-            <input type="number" step="0.5" class="form-control" ng-model="form.quantity">
+            <input type="text" step="0.5" class="form-control" ng-model="form.quantity">
           </div>
         </div>
         <!-- <div class="col-md-3">

@@ -134,6 +134,25 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         $scope.$watch('form.productMeta', function(newValue, oldValue) {
           if (typeof newValue == 'object') {
             $scope.showTaxCodeDetails = true;
+            console.log(newValue.code,'aaaaaaaaaaaaa');
+            if(newValue.code == 996729){
+                $scope.cost = $scope.contract.rate * $scope.contract.spaceGiven
+                $scope.form.rate = $scope.contract.rate
+                $scope.form.qty = $scope.contract.spaceGiven
+
+                // var extraData ={
+                //   "amount":$scope.cost,
+                //   "productMeta":{
+                //       "description": "Warehouse Charges for the period/month -" + currentMonth+ ' - ' + $scope.frmDate.getFullYear(),
+                //       "typ": "SAC",
+                //       "code": 996729,
+                //       "taxRate": 18
+                //   },
+                //   "rate" : $scope.contract.rate,
+                //   "space" : $scope.contract.spaceGiven,
+                //   "qty" : 1
+                // }
+            }
           } else {
             $scope.showTaxCodeDetails = false;
           }
@@ -148,7 +167,27 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
 
 
         $scope.add = function() {
-          $scope.dataDetails.push($scope.form)
+          if($scope.form.productMeta.code ==  996729 ){
+            $scope.frmDateChange = new Date($scope.frmDate.getFullYear(),$scope.frmDate.getMonth(),$scope.frmDate.getDate() + 1)
+            var currentMonth = $scope.frmDateChange.getMonth()+1
+            $scope.dataDetails.push({
+              "amount":$scope.form.amount,
+              "productMeta":{
+                "description": $scope.form.productMeta.description + ' for the period/month - ' + currentMonth+ ' - ' + $scope.frmDate.getFullYear(),
+                "typ": $scope.form.productMeta.typ,
+                "code": $scope.form.productMeta.code,
+                "taxRate":  $scope.form.productMeta.taxRate
+              },
+              "rate" : $scope.form.rate,
+              "space" : $scope.form.qty,
+              "qty" : 1})
+
+          }
+          else{
+
+            $scope.dataDetails.push($scope.form)
+          }
+
           $scope.form = {}
         }
 
@@ -185,7 +224,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           console.log($scope.frmDateChange , $scope.toDateChange, dayDif);
           $scope.price = $scope.contract.rate
           $scope.sqrt = $scope.contract.areas.areaLength * $scope.contract.quantity
-          $scope.cost = $scope.contract.rate * $scope.contract.spaceGiven  * dayDif
+          $scope.cost = $scope.contract.rate * $scope.contract.spaceGiven
           if ($scope.contract.company.gst.slice(0, 2) == '29') {
             $scope.gst = 9
             $scope.cgst = 9
@@ -197,9 +236,9 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
             $scope.igst = 18
             $scope.taxtot = $scope.gst + $scope.cgst + $scope.igst
           }
-          $scope.tot = $scope.cost + $scope.total
-          $scope.tax = ($scope.tot * $scope.taxtot) / 100
-          $scope.grandtot = $scope.tot + $scope.tax
+          // $scope.tot = $scope.cost + $scope.total
+          $scope.tax = ($scope.total * $scope.taxtot) / 100
+          $scope.grandtot = $scope.total + $scope.tax
           $scope.grandtot = Math.round($scope.grandtot)
           console.log($scope.dataDetails,$scope.contract.quantity,'aaaaaaaaaaaaaaaaaa');
           var currentMonth = $scope.frmDateChange.getMonth()+1
@@ -230,25 +269,25 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
           }
           else{
             console.log($scope.contract.quantity,$scope.contract.areas.areaLength,'quuuuuuuuuuaaan');
-            var extraData ={
-              "amount":$scope.cost,
-              "productMeta":{
-                  "description": "Warehouse Charges for the period/month -" + currentMonth+ ' - ' + $scope.frmDate.getFullYear(),
-                  "typ": "SAC",
-                  "code": 996729,
-                  "taxRate": 18
-              },
-              "rate" : $scope.contract.rate,
-              "space" : $scope.contract.spaceGiven,
-              "qty" : 1
-            }
-            $scope.dataDetails.push(extraData)
+            // var extraData ={
+            //   "amount":$scope.cost,
+            //   "productMeta":{
+            //       "description": "Warehouse Charges for the period/month -" + currentMonth+ ' - ' + $scope.frmDate.getFullYear(),
+            //       "typ": "SAC",
+            //       "code": 996729,
+            //       "taxRate": 18
+            //   },
+            //   "rate" : $scope.contract.rate,
+            //   "space" : $scope.contract.spaceGiven,
+            //   "qty" : 1
+            // }
+            // $scope.dataDetails.push(extraData)
             var dataToSend = {
               contract: $scope.contract.pk,
               data: JSON.stringify($scope.dataDetails),
               fromDate: $scope.frmDateChange.toJSON().split('T')[0],
               toDate: $scope.toDateChange.toJSON().split('T')[0],
-              value: $scope.tot,
+              value: $scope.total,
               grandTotal: $scope.grandtot,
               totalTax :  Math.round($scope.tax)
             }
@@ -276,6 +315,14 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
     });
   }
 
+  $http({
+    method: 'GET',
+    url: '/api/clientRelationships/productMeta/?code=996729'
+  }).
+  then(function(response) {
+    $scope.productCode = response.data[0]
+  });
+
   $scope.createInvoice = function(id, from, to) {
     for (var i = 0; i < $scope.invoiceData.length; i++) {
       if ($scope.invoiceData[i].pk == id) {
@@ -284,7 +331,7 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         var dayDif = (($scope.toDateChange - $scope.frmDateChange)  / 1000 / 60 / 60 / 24)+1;
         $scope.price = $scope.invoiceData[i].rate
         $scope.sqrt = $scope.invoiceData[i].areas.areaLength * $scope.invoiceData[i].quantity
-        $scope.cost = $scope.invoiceData[i].rate * $scope.invoiceData[i].spaceGiven * dayDif
+        $scope.cost = $scope.invoiceData[i].rate * $scope.invoiceData[i].spaceGiven
         if ($scope.invoiceData[i].company.gst.slice(0, 2) == '29') {
           $scope.gst = 9
           $scope.cgst = 9
@@ -302,14 +349,13 @@ app.controller('businessManagement.warehouse.default', function($scope, $http, $
         $scope.grandtot = Math.round($scope.grandtot)
         $scope.detailData =[]
         var currentMonth = $scope.frmDateChange.getMonth()+1
-        console.log($scope.invoiceData[i].quantity, $scope.invoiceData[i].areas.areaLength,'YYYYYYYYYYYYYYYYYYYYYy');
         var extraData ={
           "amount":$scope.cost,
           "productMeta":{
-              "description": "Warehouse Charges for the period/month -" + currentMonth + ' - ' + $scope.frmDateChange.getFullYear(),
-              "typ": "SAC",
-              "code": 996729,
-              "taxRate": 18
+              "description": $scope.productCode.description+ " for the period/month -" + currentMonth + ' - ' + $scope.frmDateChange.getFullYear(),
+              "typ": $scope.productCode.typ,
+              "code": $scope.productCode.code,
+              "taxRate": $scope.productCode.taxRate
           },
           "rate" : $scope.invoiceData[i].rate,
           "space" : $scope.invoiceData[i].spaceGiven,
