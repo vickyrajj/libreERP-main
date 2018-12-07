@@ -31,8 +31,8 @@
           <div class="col-md-5 text-right">
             <label><h4> Responsible Person :  </h4> </label> <br>
           </div>
-          <div class="col-md-7">
-            <h4>{{name}}</h4> <br>
+          <div class="col-md-7" >
+            <h4 ng-repeat = "item in name"><span>{{item}}</span></h4> <br>
           </div>
         </div>
         </div>
@@ -48,17 +48,17 @@
                 <th>Part No</th>
                 <th>Item Quantity</th>
                 <th>Price</th>
-                <th>Quantity recevied</th>
+                <!-- <th>Quantity recevied</th> -->
                 <th>Total</th>
                </tr>
                 <tr ng-repeat="v in projects track by $index">
                   <td>{{$index + 1}}</td>
                   <td>{{v.products.description_1}}</td>
                   <td>{{v.products.part_no}}</td>
-                  <td>{{v.quantity1}}</td>
+                  <td ng-model="quanty"><input type="number"  step=1 class="form-control-pos" ng-model="v.quantity1">
                   <td ng-model="price"><input  class="form-control-pos" ng-model="v.price"></td>
-                  <td ng-model="quanty"><input type="number"  step=1 class="form-control-pos" ng-model="v.quantity2"></td>
-                  <td >{{v.price*v.quantity2}}</td>
+                  <!-- <td ng-model="quanty"><input type="number"  step=1 class="form-control-pos" ng-model="v.quantity2"></td> -->
+                  <td >{{v.price*v.quantity1}}</td>
                   <!-- <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td> -->
                 </tr>
                 <tr>
@@ -66,7 +66,7 @@
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td></td>
+                  <!-- <td></td> -->
                   <td>Total</td>
                   <td ng-model="total"><b>{{total}}</b</td>
                   </tr>

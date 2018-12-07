@@ -37,7 +37,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Projects
-        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status')
+        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision')
 
     def create(self , validated_data):
         p = Projects()
@@ -53,6 +53,8 @@ class ProjectsSerializer(serializers.ModelSerializer):
             p.customer_ref = self.context['request'].data['customer_ref']
         if 'date' in self.context['request'].data:
             p.date = self.context['request'].data['date']
+        if 'revision' in self.context['request'].data:
+            p.revision = self.context['request'].data['revision']
         p.save()
         if 'responsible' in self.context['request'].data:
             for i in self.context['request'].data['responsible']:
@@ -69,29 +71,11 @@ class ProjectsSerializer(serializers.ModelSerializer):
             instance.service = service.objects.get(pk=int(self.context['request'].data['service']))
         if 'date' in self.context['request'].data:
             instance.date = self.context['request'].data['date']
-        if 'title' in self.context['request'].data:
-            instance.title = self.context['request'].data['title']
-        instance.save()
-        if 'status' in validated_data:
-            instance.status = validated_data['status']
-        instance.save()
-        if 'approved2' in validated_data:
-            instance.approved2 = validated_data['approved2']
-        instance.save()
-        if 'approved2_date' in validated_data:
-            instance.approved2_date = validated_data['approved2_date']
-        instance.save()
-        if 'approved2_user' in validated_data:
-            instance.approved2_user = validated_data['approved2_user']
-        instance.save()
-        if 'machinemodel' in validated_data:
-            instance.machinemodel = validated_data['machinemodel']
-        instance.save()
-        if 'comm_nr' in validated_data:
-            instance.comm_nr = validated_data['comm_nr']
-        instance.save()
-        if 'customer_ref' in validated_data:
-            instance.customer_ref = validated_data['customer_ref']
+        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','customer_ref','machinemodel','approved1','approved1_user','approved1_date','revision']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
         instance.save()
         return instance
 

@@ -31,8 +31,16 @@
           <div class="col-md-5 text-right">
             <label><h4> Responsible Person :  </h4> </label> <br>
           </div>
-          <div class="col-md-7">
-            <h4>{{name}}</h4> <br>
+          <div class="col-md-7" >
+            <h4 ng-repeat = "item in name"><span>{{item}}</span></h4> <br>
+          </div>
+          </div>
+        <div class="row">
+          <div class="col-md-5 text-right">
+            <label><h4> Revision :  </h4> </label>
+          </div>
+          <div class="col-md-6 ">
+            <input type="text"  class="form-control text-center" ng-model="form.revision" ng-change="revision()" placeholder="Revision"> <br>
           </div>
         </div>
         </div>
@@ -87,12 +95,17 @@
             </tbody>
           </table>
           <div class="row">
-            <div class="col-md-11">
+            <div class="col-md-10">
               <button type="button" class="btn btn-success pull-right" ng-click="send()"  style="margin-right:55px;" >Send For Approval</button>
             </div>
             <div class="col-md-1">
               <!-- <button type="button" class="btn btn-success pull-right"  style="margin-right:55px;"> -->
-                <a  class="btn btn-primary pull-right" style="cursor:pointer;margin-right:55px;" target="_blank" href="/api/support/slip/?project={{form.pk}}">Download</a>
+                <a  class="btn btn-primary pull-right" style="cursor:pointer;margin-right:10px;" target="_blank" href="/api/support/slip/?project={{form.pk}}">Download PO</a>
+              <!-- </button> -->
+            </div>
+            <div class="col-md-1">
+              <!-- <button type="button" class="btn btn-success pull-right"  style="margin-right:55px;"> -->
+                <a  class="btn btn-primary pull-right" style="cursor:pointer;margin-right:10px;" target="_blank" href="/api/support/quotation/?project={{form.pk}}">Quotation</a>
               <!-- </button> -->
             </div>
           </div>

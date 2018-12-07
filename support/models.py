@@ -55,6 +55,7 @@ class Projects(models.Model):
     approved1_date = models.DateField(null = True)
     approved2_date = models.DateField(null = True)
     status = models.CharField(choices = PURCHASE_STATUS , max_length = 10 , default = 'created')
+    revision =  models.CharField( max_length = 20 ,null = True , blank = True)
 
 class BoM(models.Model):
     created = models.DateTimeField(auto_now_add=True)

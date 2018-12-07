@@ -15,13 +15,14 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     views: views,
     url: '/api/support/projects/',
     // filterSearch: true,
-    searchField: 'title',
+    // searchField: 'title',
     deletable: true,
     itemsNumPerView: [12, 21, 30],
     getParams: [{
       key: 'status',
       value: 'created'
-    }]
+    }],
+    searchField: 'title',
   }
   $scope.data1 = {
     tableData: []
@@ -42,13 +43,14 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     views: views1,
     url: '/api/support/projects/',
     // filterSearch: true,
-    searchField: 'title',
+    // searchField: 'title',
     deletable: true,
     itemsNumPerView: [9, 15, 21],
     getParams: [{
       key: 'status',
       value: 'sent_for_approval'
-    }]
+    }],
+    searchField: 'title',
   }
 
   $scope.data2 = {
@@ -66,13 +68,14 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     views: views2,
     url: '/api/support/projects/',
     // filterSearch: true,
-    searchField: 'title',
+    // searchField: 'title',
     deletable: true,
     itemsNumPerView: [9, 15, 21],
     getParams: [{
       key: 'status',
       value: 'approved'
-    }]
+    }],
+    searchField: 'title',
   }
 
 
@@ -438,11 +441,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   $http.get('/api/HR/userSearch/').
   then(function(response) {
     $scope.persons = response.data;
-
+    $scope.name =[]
     function filterByPk(item) {
       if ($scope.form.responsible.includes(item.pk)) {
-        console.log(item.last_name, 'vvvvvvvvv');
-        return $scope.name = item.first_name + item.last_name
+        console.log(item.first_name + item.last_name, 'vvvvvvvvv');
+         $scope.name.push(item.first_name + item.last_name)
       }
     }
     $scope.persons.filter(filterByPk);
@@ -695,10 +698,29 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }
 
   }
-  var sendStatus = {
-    status: 'sent_for_approval',
-  }
+  $scope.revision = function(){
+    var send = {
+      revision:$scope.form.revision,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      console.log(response.data, 'aaaaaa');
+    })
+}
+
   $scope.send = function() {
+    var date =new Date().toJSON().split('T')[0]
+    var sendStatus = {
+      status: 'sent_for_approval',
+      approved1:true,
+      approved1_user:$scope.me.pk,
+      approved1_date:date
+    }
     $http({
       method: 'PATCH',
       url: '/api/support/projects/' + $scope.form.pk + '/',
@@ -738,11 +760,11 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
   then(function(response) {
     $scope.persons = response.data;
     console.log($scope.form.responsible, 'bbbbbbbbbbbb');
-
+    $scope.name =[]
     function filterByPk(item) {
       if ($scope.form.responsible.includes(item.pk)) {
-        console.log(item.last_name, 'vvvvvvvvv');
-        return $scope.name = item.first_name + item.last_name
+        console.log(item.first_name + item.last_name, 'vvvvvvvvv');
+         $scope.name.push(item.first_name + item.last_name)
       }
     }
     $scope.persons.filter(filterByPk);
@@ -769,13 +791,13 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
       $scope.total = 0
       for (var i = 0; i < $scope.projects.length; i++) {
           console.log($scope.projects[i].pk);
-          if(isNaN($scope.projects[i].quantity2 * $scope.projects[i].price)==false)
-          $scope.total += $scope.projects[i].quantity2 * $scope.projects[i].price
-          $scope.quanty = $scope.projects[i].quantity2
+          if(isNaN($scope.projects[i].quantity1 * $scope.projects[i].price)==false)
+          $scope.total += $scope.projects[i].quantity1 * $scope.projects[i].price
+          $scope.quanty = $scope.projects[i].quantity1
           $scope.price = $scope.projects[i].price
 
             var sendtoBom = {
-              quantity2 : $scope.quanty,
+              quantity1 : $scope.quanty,
               price : $scope.price,
             }
             $http({
@@ -829,11 +851,11 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
   then(function(response) {
     $scope.persons = response.data;
     console.log($scope.form.responsible, 'bbbbbbbbbbbb');
-
+    $scope.name =[]
     function filterByPk(item) {
       if ($scope.form.responsible.includes(item.pk)) {
-        console.log(item.last_name, 'vvvvvvvvv');
-        return $scope.name = item.first_name + item.last_name
+        console.log(item.first_name + item.last_name, 'vvvvvvvvv');
+         $scope.name.push(item.first_name + item.last_name)
       }
     }
     $scope.persons.filter(filterByPk);
@@ -859,9 +881,10 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     if (typeof newValue == 'object') {
       $scope.total = 0
       for (var i = 0; i < $scope.projects.length; i++) {
-
+        
         if(isNaN($scope.projects[i].quantity2 * $scope.projects[i].price)==false)
-        $scope.total += $scope.projects[i].quantity2 * $scope.projects[i].price
+
+        $scope.total += $scope.projects[i].quantity2* $scope.projects[i].price
 
       }
     }

@@ -19,24 +19,6 @@
             <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
           </div>
         </uib-tab>
-        <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
-          <uib-tab-heading>
-            {{tab.title}}
-            <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
-          </uib-tab-heading>
-          <div ng-if="tab.app == 'projectEditor'">
-            <div ng-include="'/static/ngTemplates/app.projects.form.html'"></div>
-          </div>
-          <div ng-if="tab.app == 'projectDetails'">
-            <div ng-include="'/static/ngTemplates/app.projects.service.view.html'"></div>
-          </div>
-          <div ng-if="tab.app == 'bomDetails'">
-            <div ng-include="'/static/ngTemplates/app.projects.approval.view.html'"></div>
-          </div>
-          <div ng-if="tab.app == 'bomApproved'">
-            <div ng-include="'/static/ngTemplates/app.projects.success.view.html'"></div>
-          </div>
-        </uib-tab>
         <uib-tab >
           <uib-tab-heading>
             Pending
@@ -55,6 +37,25 @@
             <generic-Table data="data2.tableData" config-Obj="{{config2}}" callback-Fn="tableAction2"></generic-Table>
           </div>
         </uib-tab>
+        <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+          <uib-tab-heading>
+            {{tab.title}}
+            <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+          </uib-tab-heading>
+          <div ng-if="tab.app == 'projectEditor'">
+            <div ng-include="'/static/ngTemplates/app.projects.form.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'projectDetails'">
+            <div ng-include="'/static/ngTemplates/app.projects.service.view.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'bomDetails'">
+            <div ng-include="'/static/ngTemplates/app.projects.approval.view.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'bomApproved'">
+            <div ng-include="'/static/ngTemplates/app.projects.success.view.html'"></div>
+          </div>
+        </uib-tab>
+
       </uib-tabset>
     </div>
   </div>
