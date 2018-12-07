@@ -881,13 +881,64 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     if (typeof newValue == 'object') {
       $scope.total = 0
       for (var i = 0; i < $scope.projects.length; i++) {
-        
+
         if(isNaN($scope.projects[i].quantity2 * $scope.projects[i].price)==false)
 
         $scope.total += $scope.projects[i].quantity2* $scope.projects[i].price
 
+
+
+
+        var sendtoBom = {
+          quantity2 : $scope.projects[i].quantity2,
+          price : $scope.price,
+        }
+        $http({
+          method: 'PATCH',
+          url: 'api/support/bom/' + $scope.projects[i].pk + '/',
+          data: sendtoBom,
+        }).
+        then(function(response) {
+
+          console.log(response.data, 'aaaaaa');
+        })
+
+
       }
     }
   }, true)
+
+
+
+  $scope.send = function(){
+
+    for (var i = 0; i < $scope.projects.length; i++) {
+      $scope.qty = $scope.projects[i].quantity2;
+      $scope.rate = $scope.projects[i].price;
+
+
+
+      $scope. pkforProduct = $scope.projects[i].products.pk
+
+      
+      $scope.inventory = {
+        product:$scope. pkforProduct,
+        qty:$scope.qty ,
+        rate:$scope.rate,
+      }
+        $http({
+          method: 'POST',
+          url: '/api/support/inventory/',
+          data: $scope.inventory ,
+        }).
+        then(function(response) {
+          Flash.create('success', 'Saved');
+          console.log(response.data, 'aaaaaa');
+        })
+    }
+    }
+
+
+
 
 })
