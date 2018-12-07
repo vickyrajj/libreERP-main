@@ -269,6 +269,19 @@ ul.tools li {
     box-sizing: border-box;
 }
 
+.myyyy{
+  animation: dropDownBalram 2s;
+}
+
+
+@keyframes dropDownBalram {
+  0%{
+    opacity: 6;
+  }
+  100%{
+    opacity: 1;
+  }
+}
 
 .timeline li > .timeline-item > .time {
     color: #999;

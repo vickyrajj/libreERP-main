@@ -433,7 +433,7 @@ app.directive('chatBox', function() {
         if(event.data=='callFromAgentplease'){
           alert('aaaaaaaaaaa gyaaaaaaaaaaa');
         }
-        if (event.origin == webRtcAddress&&event.data=='userleft') {
+        if (event.origin == webRtcAddress&&event.data.indexOf("*")) {
           console.log(event.data + ' ******************');
           var uid = event.data.split('*')[0]
           var imageData = event.data.split('*')[1]

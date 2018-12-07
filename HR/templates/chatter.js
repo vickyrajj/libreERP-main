@@ -401,7 +401,7 @@ function fetchMessages(uid) {
   console.log('user exist....' , uid);
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
-      console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+      // console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
         for (var i = 0; i < data.length; i++) {
@@ -540,6 +540,7 @@ function setIframeRotated(){
   document.getElementById('iFrame1').style.height='50px'
   iframeDiv.style.boxShadow='';
   iframeDiv.style.borderRadius='10px';
+
 }
 function setIframeToNormal(){
   iframeDiv.style.position = "fixed";
@@ -572,6 +573,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return
       }else if(args[0]=='ToggleVisitorVideo'){
           setIframeRotated()
+          getFrameContent.postMessage('hereisNew','*')
         return
       }else if(args[0]=='ShowVisitorVideo'){
         setIframeToNormal()
@@ -765,8 +767,8 @@ function createChatDiv() {
               '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
-            '<i class="exitBtn fa fa-headphones" id="audioBtn"></i>'+
-            '<i class="exitBtn fa fa-video-camera" id="videoBtn"></i>'+
+            '<i class="exitBtn fa fa-headphones" style="display:none" id="audioBtn"></i>'+
+            '<i class="exitBtn fa fa-video-camera" style="display:none" id="videoBtn"></i>'+
             '<i class="closeIcon fa fa-times" id="closeIcon"></i>'+
             '<i class="exitBtn fa fa-sign-out" id="exitBtn"></i>'+
             // '<i id="exitBtn" class="fa fa-sign-out" aria-hidden="true"></i>'+
@@ -870,6 +872,7 @@ function createChatDiv() {
   //variables
   var device;
   var chatOpen = false;
+  var audioContains=false,videoContains=false;
   // var chatIconSvg = document.getElementById('chatIconSvg');
   // var chatCloseSvg = document.getElementById('closeChatSvg');
   var chatBox = document.getElementById('chatBox');
@@ -1312,10 +1315,18 @@ function activeAudioCall(){
       supportOptions[i].value = chatSupport;
     }
     if (supportOptions[i].name=='audioCircle') {
+
+      console.log('************************');
+      if(videoAndAudioSupport){
+        audioContains=true;
+          videoContains=true;
+      }
       supportOptions[i].value = videoAndAudioSupport;
     }
     if (supportOptions[i].name=='videoCircle') {
       supportOptions[i].value = videoAndAudioSupport;
+
+
     }
     if (supportOptions[i].name=='ticketCircle') {
       supportOptions[i].value = ticketSupport;
@@ -1767,7 +1778,7 @@ function activeAudioCall(){
               transition: 0.5s;\
             }\
             .exitBtn:hover{\
-              transform: scale(1.2) ;\
+              transform: scale(.9) ;\
               cursor: pointer;\
             }\
             .closeIcon:hover{\
@@ -2244,10 +2255,23 @@ function activeAudioCall(){
     }
   }
 var videoBtn=document.getElementById('videoBtn')
+  setTimeout(function () {
+    if(videoContains){
+      videoBtn.style.display='block'
+    }
+  }, 1000);
   videoBtn.addEventListener("click",function(){
     activeVideoCall()
   })
 var audioBtn=document.getElementById('audioBtn')
+  setTimeout(function () {
+    console.log('insdieddddddddddddd');
+    console.log(audioContains);
+    if(audioContains){
+      console.log('comgggggggggggggggggg');
+      audioBtn.style.display='block'
+    }
+  }, 1000);
   audioBtn.addEventListener("click",function(){
     activeAudioCall()
   })
@@ -2468,6 +2492,7 @@ setInterval(function () {
   function pushMessages() {
     for (var i = 0; i < chat.messages.length; i++) {
       var div = document.createElement("div");
+      div.setAttribute("id", "herere")
       // console.log(chat.messages[i].message);
       if (chat.messages[i].message=="first") {
         // div.innerHTML = '<p>hello</p>'
@@ -2475,13 +2500,15 @@ setInterval(function () {
         console.log(firstMessage);
         firstMessage = firstMessage.replaceAll("&lt;",'<')
         firstMessage = firstMessage.replaceAll("&gt;",">")
+        firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
+        firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
           div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:1.5px;font-size:12px">'+
+                  '<div id="herere" style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box; letter-spacing:1.5px;font-size:12px">'+
                      firstMessage+
                   '</div> '+
                 '</div> '
-
-        console.log(firstMessage);
+console.log(firstMessage);
+        console.log(div);
         console.log('firstttttttt' , typeof firstMessage);
       }else {
         div.innerHTML = messageDiv(chat.messages[i])

@@ -263,8 +263,10 @@ app.filter('noHTML', function () {
 
 app.filter('getTime',function(){
    return function(date) {
+     if(date==null||date==undefined){
+       return date
+     }
     var abc  = new Date(date)
-
     var hours = abc.getHours();
     var minutes = abc.getMinutes();
     var ampm = hours >= 12 ? 'pm' : 'am';
@@ -276,6 +278,18 @@ app.filter('getTime',function(){
     // var dateString = date + "-" +(month + 1) + "-" + year;
     // return dateString + ', ' + strTime
     return strTime
+  }
+})
+app.filter('toSet',function(){
+   return function(date) {
+     if(date==null||date==undefined){
+       return date
+     }
+
+    // console.log(strTime);
+    // var dateString = date + "-" +(month + 1) + "-" + year;
+    // return dateString + ', ' + strTime
+    return date.toFixed(2);
   }
 })
 

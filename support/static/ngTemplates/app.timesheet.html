@@ -12,7 +12,7 @@
 
 
         <div class="container-fluid" style="padding-top:25px">
-          <!-- <div class="col-sm-3">
+          <div class="col-sm-3">
             <div class="form-group">
               <label> Select Date </label>
               <div class="input-group">
@@ -22,63 +22,37 @@
                 </span>
               </div>
             </div>
-          </div> -->
-          <div class="col-sm-4">
-            <div class="form-group">
-              <label> Agent Name </label>
-              <input type="text" class="form-control" placeholder="Search and select" uib-typeahead="user as user.username for user in userSearch($viewValue)" ng-model="form.user">
-            </div>
           </div>
-          <!-- <div class="col-sm-5">
-            <div class="form-group">
-              <label> Client Name </label>
-              <input type="text" class="form-control" placeholder="Search and select" uib-typeahead="service as service.name for service in serviceSearch($viewValue)" ng-model="form.client">
-            </div>
-          </div> -->
-          <!-- <div class="col-sm-2">
-            <div class="form-group">
-              <label> Visitor Email </label>
-              <input type="email" class="form-control" placeholder="User E-mail..." ng-model="form.email">
-            </div>
-          </div> -->
-
           <div class="col-sm-2">
             <div class="btn-group" style="padding-top:25px;">
               <button type="button" class="btn btn-primary" ng-click="filterData()">
                 <strong>Filter</strong>
               </button>
-              <!-- <button type="button" class="btn btn-default" ng-click="download()" ng-if="reviewData.length>0">
-                Download <i class="fa fa-download"></i>
-              </button> -->
             </div>
           </div>
         </div>
 
-
         <div class="container-fluid">
-          <!-- <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table> -->
           <div class="row" style="padding-top:25px">
-
-            <div class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData">
-              <!-- {{data[0].numOfComments}} {{data[0].statusChat}} -->
+            <div class="col-md-12" style=";margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData" ng-click="showData($index)">
               <div class="container-fluid card" style="padding-bottom:0px">
-                <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:170px; opacity:0.9;letter-spacing:0.6px; {{data[0].user_id==null ? 'background-color: #fc000033':''}}; {{data[0].statusChat=='closed'?'background-color: #16e61133':'' }}">
+                <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:40px; opacity:0.9;letter-spacing:0.6px;{{ActiveRows[$index] ? 'background-color: #bfbfbf':''}}">
                   <div class="col-md-12">
-                    <!-- {{data[0]}} <br> -->
-                    <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}
-
+                    <h5 style="font-weight:501;">Agent Name: {{data[0].user_id | getName}}
+                       <span style="margin:0px 2%"> Start: {{data[0].start | getTime}} </span>
+                       <span style="margin:0px 2%"> End: {{data[data.length-1].end | getTime}} </span>
+                       <span style="margin:0px 2%"> Day Duration: {{data[0].day_duration/60 | toSet}} mins</span>
+                      <span class="pull-right" style="">
+                        <i style="" class="fa fa-{{ActiveRows[$index]?'chevron-up':'chevron-down' }} fa-lg"  aria-hidden="true"></i>
+                      </span>
                     </h5>
-                    <h5>Total Hearbeats:</h5>
-                    <h5>Start:{{data[0].start|getTime}}</h5>
-                    <h5>End: {{data[0].end|getTime}}</h5>
-
                   </div>
                 </div>
-                <div class="row container-fluid" style="padding-top:10px;height:50px;background-color:#286090; opacity:1">
-                  <div class="col-md-12" style="color:#fff">
-                    <h5>Date: {{data[0].created}}
-                      <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg" ng-click="tableAction($index)"></i></span>
-                    </h5>
+                <div ng-if="ActiveRows[$index]" class="myyyy">
+                  <div ng-repeat="val in data" style="padding:10px">
+                    <span><b>Start</b>: {{val.start|getTime}}</span>
+                     <span style="margin:0px 10%"><b>End</b>: {{val.end|getTime}}</span>
+                     <span style="margin:0px 10%"><b>Duration</b>: {{val.duration/60 | toSet}} mins</span>
                   </div>
                 </div>
               </div>
@@ -98,7 +72,6 @@
           <div ng-include="'/static/ngTemplates/app.timesheet.explore.html'"></div>
         </div>
       </uib-tab>
-
     </uib-tabset>
   </div>
 </div>

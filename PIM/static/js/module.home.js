@@ -695,15 +695,12 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
           url: '/api/support/gethomeCal/?perticularUser=' + id,
         }).
         then(function(response) {
-          console.log(response.data, 'dddddddddddd', typeof response.data);
+          console.log(response.data,'ffffffffff');
           $scope.totalChats = response.data.totalChats
           $scope.missedChats = response.data.missedChats
           $scope.agentChatCount = response.data.agentChatCount
           $scope.barData = response.data.graphData
-
           $scope.barlabels = response.data.graphLabels
-          console.log($scope.barData);
-          console.log($scope.barlabels);
           $scope.avgChatDuration = response.data.avgChatDuration
           $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
           $scope.avgRatingAll = response.data.avgRatingAll
@@ -724,13 +721,12 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
       }).
       then(function(response) {
         console.log('adminnnnnnnnnnnnnnn');
+        console.log(response.data);
         $scope.totalChats = response.data.totalChats
         $scope.missedChats = response.data.missedChats
         $scope.agentChatCount = response.data.agentChatCount
         $scope.barData = response.data.graphData
         $scope.barlabels = response.data.graphLabels
-        console.log($scope.barData);
-        console.log($scope.barlabels);
         $scope.avgChatDuration = response.data.avgChatDuration
         $scope.agentLeaderBoard = response.data.agentLeaderBoard
         $scope.avgRatingAll = response.data.avgRatingAll
@@ -739,6 +735,8 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
         $scope.changeInChat = response.data.changeInData.changeInChat
         $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
         $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
+        $scope.chaneInAvgResponseTime=response.data.changeInData.changeInRespTimeAvg
+        $scope.chaneInAvgFTResponseTime=response.data.changeInData.changeInFrtAvg
 
       });
     }

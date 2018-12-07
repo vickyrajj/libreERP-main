@@ -596,6 +596,7 @@ class GethomeCal(APIView):
                 avgChatDuration = a['chatDuration__avg'] if a['chatDuration__avg'] else 0
                 alastToLastWeek = ChatThread.objects.filter(~Q(chatDuration=0) , created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) ,company = int(self.request.GET['perticularUser'])).aggregate(Avg('chatDuration'))
                 avgChatDurationLtweek = alastToLastWeek['chatDuration__avg'] if alastToLastWeek['chatDuration__avg'] else 0
+                # avgRatingAllLastWeek = alastToLastWeek['chatDuration__avg'] if alastToLastWeek['chatDuration__avg'] else 0
                 frt = chatThreadObj.filter(firstResponseTime__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('firstResponseTime'))
                 firstResTimeAvgAll =  frt['firstResponseTime__avg'] if frt['firstResponseTime__avg'] else 0
                 frtLastToLastWeek = ChatThread.objects.filter(firstResponseTime__isnull=False, created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('firstResponseTime'))
@@ -632,6 +633,7 @@ class GethomeCal(APIView):
         changeInFrtAvg = {'percentage':0 , 'increase' : False}
         changeInRespTimeAvg = {'percentage':0 , 'increase' : False}
         changeInMissedChat = {'percentage':0 , 'increase' : False}
+        # changeInAverageRating = {'percentage':0 , 'increase' : False}
         if lastToLastWeekChatCount<totalChats:
             changeInChat['percentage'] = (float(totalChats - lastToLastWeekChatCount)/totalChats)*100
             changeInChat['increase'] = True
@@ -743,50 +745,55 @@ class HeartbeatApi(APIView):
     permission_classes = (permissions.AllowAny,)
     def get(self , request , format = None):
         if 'timesheet' in request.GET:
-            print request.GET['pk'],"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             u = User.objects.get(pk = request.GET['pk'])
             today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
             today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-            print today_min,"8****",today_max
             obj=Heartbeat.objects.filter(start__range=(today_min, today_max),user=u)
             print obj ,"heartbeat objjjjjjjjjj"
-
-            for i in obj:
-                print i.end,'fdffffffffff',i.start
-
             if len(obj)==1:
-                print 'one heartbeat'
                 if obj[0].end is None:
-                    print 'ifff2'
                     obj[0].end=timezone.now()
+                    difference=obj[0].end-obj[0].start
+                    obj[0].duration = difference.total_seconds()
+                    day_difference=difference
+                    obj[0].day_duration = day_difference.total_seconds()
                     obj[0].save()
                 else:
-
-                    print 'current time is',  timezone.now() , 'and end time is',obj[0].end
                     c = timezone.now() - obj[0].end
                     cInMin =  c.total_seconds()/60
-                    print cInMin, "&&&&&&&&&&&&&&&&&&&&&"
-                    if cInMin>10:
+                    if cInMin>15:
                         Heartbeat.objects.create(start=timezone.now(),user=u)
                     else:
                         obj[0].end=timezone.now()
+                        difference=obj[0].end-obj[0].start
+                        obj[0].duration = difference.total_seconds()
+                        day_difference=difference
+                        obj[0].day_duration = day_difference.total_seconds()
                         obj[0].save()
             elif len(obj)>1:
                 print 'multiple hearbeat'
                 if obj[len(obj)-1].end is None:
                     print 'heartbeat has only start'
                     obj[len(obj)-1].end=timezone.now()
+                    difference=obj[len(obj)-1].end-obj[len(obj)-1].start
+                    obj[len(obj)-1].duration = difference.total_seconds()
+                    day_difference=obj[len(obj)-1].end-obj[0].start
+                    obj[len(obj)-1].day_duration = day_difference.total_seconds()
                     obj[len(obj)-1].save()
                 else:
                     print 'heartbeat has end'
-                    c = timezone.now() - obj[0].end
+                    c = timezone.now() - obj[len(obj)-1].end
                     cInMin =  c.total_seconds()/60
-                    if cInMin>30:
+                    if cInMin>15:
                         print 'time exceeds 30 mints creating new heartbeat'
                         Heartbeat.objects.create(start=timezone.now(),user=u)
                     else:
                         print 'updating end for the heartbeat'
                         obj[len(obj)-1].end=timezone.now()
+                        difference=obj[len(obj)-1].end-obj[len(obj)-1].start
+                        day_difference=obj[len(obj)-1].end-obj[0].start
+                        obj[len(obj)-1].day_duration = day_difference.total_seconds()
+                        obj[len(obj)-1].duration = difference.total_seconds()
                         obj[len(obj)-1].save()
             else:
                 Heartbeat.objects.create(start=timezone.now(),user=u)
@@ -795,8 +802,6 @@ class HeartbeatApi(APIView):
             u = User.objects.get(pk = request.GET['pk'])
             toSend=[]
             heartbtObj = Heartbeat.objects.all()
-            print heartbtObj,'dddddddddd'
-
             if 'date' in request.GET:
                 date = datetime.datetime.strptime(request.GET['date'], '%Y-%m-%d').date()
                 o = heartbtObj.filter(created__startswith = date,user=u)
@@ -809,25 +814,17 @@ class HeartbeatApi(APIView):
                     o=heartbtObj.filter(created__startswith = j,user=u)
                     th=list(o.values())
                     toSend.append(th);
-                print toSend,"tosendddddddddddddddddddddddd"
                 return Response(toSend, status=status.HTTP_200_OK)
         elif 'getTimeSheetData' in request.GET:
             newDetails=[]
-            heartbtObj = Heartbeat.objects.all()
-            if 'user' in request.GET:
-                print 'in user'
-                u = User.objects.get(pk = request.GET['user'])
-                heartbtObj = heartbtObj.filter(user = u)
-                return Response(list(heartbtObj.values()), status=status.HTTP_200_OK)
-            else:
-                uidL = list(heartbtObj.values_list('user',flat=True).distinct())
-                for j in uidL:
-                    u = User.objects.get(pk = j)
-                    o=heartbtObj.filter(user=u)
-                    th=list(o.values())
-                    newDetails.append(th);
-                print newDetails,"tosendddddddddddddddddddddddd"
-                return Response(newDetails, status=status.HTTP_200_OK)
+            heartbtObj = Heartbeat.objects.filter(created__startswith=request.GET['date'])
+            uidL = list(heartbtObj.values_list('user',flat=True).distinct())
+            for j in uidL:
+                u = User.objects.get(pk = j)
+                o = heartbtObj.filter(user=u)
+                th=list(o.values())
+                newDetails.append(th);
+            return Response(newDetails, status=status.HTTP_200_OK)
 class StreamRecordings(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes=(permissions.AllowAny,)

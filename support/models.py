@@ -61,6 +61,8 @@ class Visitor(models.Model):
 class Heartbeat(models.Model):
     start = models.DateTimeField(null = True, blank=True)
     end = models.DateTimeField(null = True, blank=True)
+    duration = models.FloatField(null=True, blank=True , default=0)
+    day_duration = models.FloatField(null=True, blank=True , default=0)
     user = models.ForeignKey(User , related_name = 'currentUser' , null = True)
     created = models.DateField(auto_now_add = True)
 
