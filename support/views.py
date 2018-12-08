@@ -195,12 +195,12 @@ def purchaseOrder(response , project , purchaselist , request):
     p7_01 =Paragraph("<para fontSize=8>Purchase order ref</para>",styles['Normal'])
     p7_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.pk),styles['Normal'])
     p7_03 =Paragraph("<para fontSize=8>Your Quotation ref</para>",styles['Normal'])
-    p7_04 =Paragraph("<para fontSize=8>{0}</para>".format('EX/2018/10136'),styles['Normal'])
+    p7_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
 
     p8_01 =Paragraph("<para fontSize=8>Purchase order date</para>",styles['Normal'])
     p8_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.date),styles['Normal'])
     p8_03 =Paragraph("<para fontSize=8>Your Quotation Date</para>",styles['Normal'])
-    p8_04 =Paragraph("<para fontSize=8>{0}</para>".format('01.08.2018'),styles['Normal'])
+    p8_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
 
     p9_01 =Paragraph("<para fontSize=8>Machine Model</para>",styles['Normal'])
     p9_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.machinemodel),styles['Normal'])
@@ -349,12 +349,12 @@ def quotation(response , project , purchaselist , request):
     p7_01 =Paragraph("<para fontSize=8>Quotation</para>",styles['Normal'])
     p7_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.pk),styles['Normal'])
     p7_03 =Paragraph("<para fontSize=8>Your Enquiry Ref</para>",styles['Normal'])
-    p7_04 =Paragraph("<para fontSize=8>{0}</para>".format('EX/2018/10136'),styles['Normal'])
+    p7_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
 
     p8_01 =Paragraph("<para fontSize=8>Quotation date</para>",styles['Normal'])
     p8_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.date),styles['Normal'])
     p8_03 =Paragraph("<para fontSize=8>Your Enquiry Date</para>",styles['Normal'])
-    p8_04 =Paragraph("<para fontSize=8>{0}</para>".format('01.08.2018'),styles['Normal'])
+    p8_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
 
     p9_11 =Paragraph("<para fontSize=8>Revision</para>",styles['Normal'])
     p9_12 =Paragraph("<para fontSize=8>{0}</para>".format(project.revision),styles['Normal'])
@@ -451,6 +451,71 @@ def quotation(response , project , purchaselist , request):
 
     doc.build(elements)
 
+def grn(response , project , purchaselist , request):
+
+    styles = getSampleStyleSheet()
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc.request = request
+    elements = []
+
+    p1 = Paragraph("<para alignment='center'fontSize=15  ><b> Goods Received Note </b></para>",styles['Normal'])
+    elements.append(p1)
+
+    p2 = Paragraph("<para fontSize=10 ><b> MOLEX India Pvt Ltd., </b></para>",styles['Normal'])
+    p3 = Paragraph("<para fontSize=8  >Sadaramangala Industrial Area</para>",styles['Normal'])
+    p4 =  Paragraph("<para fontSize=8 >CH-9320</para>",styles['Normal'])
+    p5 = Paragraph("<para fontSize=8 >Whitefield</para>",styles['Normal'])
+    p6 = Paragraph("<para fontSize=8 >Bangalore</para>",styles['Normal'])
+
+    elements.append(Spacer(1, 10))
+    elements.append(p2)
+    elements.append(p3)
+    elements.append(p4)
+    elements.append(p5)
+    elements.append(p6)
+    elements.append(Spacer(1,10))
+
+    p7_01 =Paragraph("<para fontSize=8>Name</para>",styles['Normal'])
+    p7_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.title),styles['Normal'])
+    p7_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+    p7_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+
+    p8_01 =Paragraph("<para fontSize=8>Date</para>",styles['Normal'])
+    p8_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.approved2_date),styles['Normal'])
+    p8_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+    p8_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+
+    data1=[[p7_01,p7_02,p7_03,p7_04],[p8_01,p8_02,p8_03,p8_04]]
+    t1=Table(data1,4*[2.1*inch],2*[0.2*inch])
+    # t1.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+
+    elements.append(t1)
+    elements.append(Spacer(1,10))
+    p9_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
+    p9_02 =Paragraph("<para fontSize=8>Part Number</para>",styles['Normal'])
+    p9_03 =Paragraph("<para fontSize=8>Quantity</para>",styles['Normal'])
+    data2=[[p9_01,p9_02,p9_03]]
+    t2=Table(data2,3*[2.8*inch],1*[0.2*inch])
+    t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    data3 = []
+    id=0
+    for i in purchaselist:
+        id+=1
+        part_no = i.products.part_no
+        quanty = i.quantity2
+        p10_01 =Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
+        p10_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
+        p10_03 =Paragraph("<para fontSize=8>{0}</para>".format(quanty),styles['Normal'])
+        data3.append([p10_01,p10_02,p10_03])
+
+    t3=Table(data3,3*[2.8*inch],id*[0.2*inch])
+    t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t2)
+    elements.append(t3)
+
+    doc.build(elements)
+
+
 
 class GetPurchaseAPIView(APIView):
     def get(self , request , format = None):
@@ -459,6 +524,15 @@ class GetPurchaseAPIView(APIView):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="PurchaseOrderdownload.pdf"'
         purchaseOrder(response , project , purchaselist , request)
+        return response
+
+class GrnAPIView(APIView):
+    def get(self , request , format = None):
+        project = Projects.objects.get(pk = request.GET['project'])
+        purchaselist = BoM.objects.filter(project = request.GET['project'])
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment;filename="Grndownload.pdf"'
+        grn(response , project , purchaselist , request)
         return response
 
 class QuotationAPIView(APIView):
@@ -498,6 +572,8 @@ class ProductInventoryAPIView(APIView):
             data = list(productlist.filter(product=i['product__pk']).values())
             # print  len(data) - 1 ,'aaaaaaaaaaaaa'
             for k in data:
+                print k['rate'] ,k['qty']
+                print type(k['rate']) ,type(k['qty'])
                 totalVal = k['rate'] * k['qty']
                 totalprice += k['rate']
                 totalqty += k['qty']
