@@ -18,6 +18,9 @@ urlpatterns = [
     url(r'slip/$' , GetPurchaseAPIView.as_view() ),
     url(r'quotation/$' , QuotationAPIView.as_view() ),
     url(r'inventoryData/$' , ProductInventoryAPIView.as_view() ),
+    url(r'order/$' , OrderAPIView.as_view() ),
+
     url(r'grn/$' , GrnAPIView.as_view() ),
+
 
 ]

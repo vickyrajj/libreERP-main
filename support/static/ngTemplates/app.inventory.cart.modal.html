@@ -1,0 +1,28 @@
+<div class="modal-header">
+
+</div>
+<div class="modal-body">
+  <div class = "row">
+  <table class="invoiceTable" style=" width: 100%;">
+    <tbody>
+      <tr style="background-color: #eeeeee;height: 96px;">
+        <th>Si.No</th>
+        <th>Product</th>
+        <th>Part No</th>
+        <th>Quantity</th>
+      </tr>
+      <tr ng-repeat="v in productsOrdered track by $index">
+        <td>{{$index + 1}}</td>
+        <td>{{v.description_1}}</td>
+        <td>{{v.part_no}}</td>
+        <td><input type="number" step=1 class="form-control-pos" ng-model="v.prodQty"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class = "row">
+<div class="col-md-12">
+  <button type="button" class="btn btn-success pull-right" ng-click="save()" style="margin:35px;">Save</button>
+</div>
+</div>
+</div>

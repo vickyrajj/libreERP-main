@@ -6,9 +6,9 @@ $scope.fetchProdInventory = function(offset) {
     url: '/api/support/inventoryData/?limit=4&offset='+offset+'&search='+$scope.searchText
   }).
   then(function(response) {
-    console.log(response.data,'aaaaaaaaaaa');
     $scope.products = response.data.data
     $scope.total =  response.data.total
+    if()
   })
 }
 $scope.fetchProdInventory($scope.offset)
@@ -39,8 +39,26 @@ $scope.prev = function() {
   $scope.fetchProdInventory($scope.offset)
 }
 
+$scope.reset = function(){
+  $rootScope.cart = []
+}
+$scope.reset()
+$scope.addToCart=function(product){
+  console.log(product,'aaaaaaaaaaaaaa');
+  $rootScope.cart.push(product)
+  console.log($rootScope.cart.length);
+}
 
-
+// $scope.getList = function(){
+//   if($rootScope.cart.length>0){
+//     for (var i = 0; i < $rootScope.cart.length; i++) {
+//       return $http.get('/api/support/products/?part_no__contains=' + query).
+//       then(function(response) {
+//         return response.data;
+//       }
+//     }
+//   }
+// }
   $scope.toggle = function(pk, indx) {
   // $scope.prodInventories[indx].open = !$scope.prodInventories[indx].open
   for (var i = 0; i < $scope.products.length; i++) {
@@ -51,7 +69,6 @@ $scope.prev = function() {
 }
 
   $scope.new = function(){
-    console.log("aaaaaaaaaaaa");
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.inventory.modal.html',
       size: 'lg',
@@ -91,6 +108,56 @@ $scope.prev = function() {
   }).result.then(function() {}, function() {
       $scope.fetchProdInventory($scope.offset)
     });
+}
+
+$scope.getList = function(){
+  console.log($rootScope.cart);
+  $uibModal.open({
+    templateUrl: '/static/ngTemplates/app.inventory.cart.modal.html',
+    size: 'lg',
+    resolve:{
+      cartData: function() {
+        return $rootScope.cart;
+      }
+    },
+    controller: function($scope , $uibModalInstance,cartData){
+      // $scope.productSearch = function(query) {
+      //   return $http.get('/api/support/products/?part_no__contains=' + query).
+      //   then(function(response) {
+      //     return response.data;
+      //   })
+      // };
+      console.log(cartData,'aaaaaaaaaaa');
+      $scope.cartData = cartData
+      $scope.productsOrdered = []
+      for (var i = 0; i < $scope.cartData.length; i++) {
+        $http({
+          method: 'GET',
+          url: '/api/support/products/' + $scope.cartData[i]
+        }).
+          then(function(response) {
+            $scope.productsOrdered.push(response.data);
+          })
+      }
+
+
+
+      $scope.save = function(){
+        console.log( $scope.productsOrdered);
+        var dataToSend = $scope.productsOrdered
+        $http({
+          method: 'POST',
+          url: '/api/support/order/',
+          data : dataToSend
+        }).
+        then(function(response) {
+          console.log(response.data,'kkkkkkkkk');
+        })
+      }
+  },
+}).result.then(function() {}, function() {
+    $scope.fetchProdInventory($scope.offset)
+  });
 }
 
 })
