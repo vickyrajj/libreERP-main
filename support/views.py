@@ -477,6 +477,13 @@ class InventoryViewSet(viewsets.ModelViewSet):
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['products','project']
 
+class InvoiceViewSet(viewsets.ModelViewSet):
+    permissions_classes  = (permissions.AllowAny , )
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['products','project']
+
 class ProductInventoryAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
@@ -506,3 +513,42 @@ class ProductInventoryAPIView(APIView):
             total+=totalSum
         returnData ={'data' :toReturn[offset : limit],'total':total }
         return Response(returnData,status=status.HTTP_200_OK)
+
+class OrderAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        prodList = request.data
+        for i in prodList:
+            prodListQty = i['prodQty']
+            invlist = Inventory.objects.filter(product=i['pk'])
+            print prodListQty,'kkkkkkkkkkkkkkkkk'
+            for p in invlist:
+                price = 0
+                if p.rate>=price:
+                    price = p.rate
+                else:
+                    price=price
+                if p.qty>0:
+                    print prodListQty,'aaaaaaaaaaaaaaaaa'
+                    if prodListQty!=0:
+                        if prodListQty>=p.qty:
+                            prodListQty = prodListQty - p.qty
+                            p.qty = 0
+                            p.save()
+                        elif prodListQty<p.qty:
+                            # prodListQty = prodListQty - p.qty
+                            p.qty = p.qty - prodListQty
+                            prodListQty = 0
+                            p.save()
+                    if prodListQty==0:
+                        print 'jjhhhhhhhhhhhhhhhhhhhhhhh'
+                        data = {
+                        'qty': i['prodQty'],
+                        'product' :Products.objects.get(pk=i['pk']),
+                        'price' : price
+                        }
+                        orderObj = Invoice.objects.create(**data)
+                        orderObj.save()
+                        # print orderObj
+                        # order = list(orderObj).values()
+        return Response(orderObj,status=status.HTTP_200_OK)

@@ -129,3 +129,15 @@ class InventorySerializer(serializers.ModelSerializer):
             b.product = Products.objects.get(pk=int(self.context['request'].data['product']))
         b.save()
         return b
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    product = ProductsSerializer(many = False , read_only = True)
+    class Meta:
+        model = Inventory
+        fields = ('pk','created','product','qty','price')
+    def create(self, validated_data):
+        b = Inventory(**validated_data)
+        if 'product' in self.context['request'].data:
+            b.product = Products.objects.get(pk=int(self.context['request'].data['product']))
+        b.save()
+        return b
