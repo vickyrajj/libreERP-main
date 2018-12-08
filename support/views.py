@@ -594,6 +594,7 @@ class OrderAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
         prodList = request.data
+        orderlist =[]
         for i in prodList:
             prodListQty = i['prodQty']
             invlist = Inventory.objects.filter(product=i['pk'])
@@ -625,6 +626,5 @@ class OrderAPIView(APIView):
                         }
                         orderObj = Invoice.objects.create(**data)
                         orderObj.save()
-                        # print orderObj
-                        # order = list(orderObj).values()
-        return Response(orderObj,status=status.HTTP_200_OK)
+                        orderlist.append(orderObj.pk)
+        return Response(orderlist,status=status.HTTP_200_OK)
