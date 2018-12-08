@@ -8,6 +8,7 @@ $scope.fetchProdInventory = function(offset) {
   then(function(response) {
     $scope.products = response.data.data
     $scope.total =  response.data.total
+    if()
   })
 }
 $scope.fetchProdInventory($scope.offset)

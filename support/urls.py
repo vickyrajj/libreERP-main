@@ -20,4 +20,7 @@ urlpatterns = [
     url(r'inventoryData/$' , ProductInventoryAPIView.as_view() ),
     url(r'order/$' , OrderAPIView.as_view() ),
 
+    url(r'grn/$' , GrnAPIView.as_view() ),
+
+
 ]

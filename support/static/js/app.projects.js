@@ -476,6 +476,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
 
   $scope.deleteTable = function(val, index) {
+
     if ($scope.data[index].pk != undefined) {
       for (var i = 0; i < $scope.productpk.length; i++) {
         for (var products in $scope.productpk[i]) {
@@ -517,8 +518,8 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       // }
     })
   }
+  $scope.productpk = []
   $scope.fetchData()
-  // $scope.productpk = []
   // ng-blur="append($index, item.part_no)"
 
   // $scope.append = function(indx, data){
@@ -563,7 +564,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
           url: '/api/support/bom/' + newValue[i].pk + '/',
           data: dataSend
         }).
-        then(function(response) {})
+        then(function(response) {
+
+        })
       }
     }
   }, true)
@@ -590,6 +593,8 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }).
       then(function(response) {
         $scope.data[$scope.data.length - 1].listPk = response.data.pk
+        $scope.productpk.push(response.data);
+        console.log($scope.productpk ,'ooooooo');
       })
       return
     } else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
@@ -612,6 +617,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }).
       then(function(response) {
         $scope.data[$scope.data.length - 1].listPk = response.data.pk
+        $scope.productpk.push(response.data);
       })
       return
     } else {
@@ -708,8 +714,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       data: send,
     }).
     then(function(response) {
-      Flash.create('success', 'Saved');
-      console.log(response.data, 'aaaaaa');
     })
 }
 
@@ -914,13 +918,13 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
 
     for (var i = 0; i < $scope.projects.length; i++) {
       $scope.qty = $scope.projects[i].quantity2;
-      $scope.rate = $scope.projects[i].price;
+      $scope.rate =$scope.projects[i].price.toFixed(2)
 
 
 
       $scope. pkforProduct = $scope.projects[i].products.pk
 
-      
+
       $scope.inventory = {
         product:$scope. pkforProduct,
         qty:$scope.qty ,
