@@ -711,7 +711,7 @@ figure {
 .Desc {
   font-size: 16px;
   font-weight: 500;
-  color: #002855;
+  color: `#002855`;
   line-height: 1.6;
 }
 
