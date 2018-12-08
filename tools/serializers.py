@@ -50,9 +50,9 @@ class ApiAccountSerializer(serializers.ModelSerializer):
         aa = ApiAccount(**validated_data)
         aa.user = self.context['request'].user
         try:
-            aa.apiKey = make_password(datetime.datetime.now()).split('sha256$')[1]
+            aa.apiKey = str(make_password(datetime.datetime.now()).split('sha256$')[1]).replace('+','')
         except:
-            aa.apiKey = make_password(datetime.datetime.now())
+            aa.apiKey = str(make_password(datetime.datetime.now())).replace('+','')
         aa.save()
         return aa
     def update(self , instance , validated_data):

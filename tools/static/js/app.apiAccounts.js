@@ -2,11 +2,11 @@ app.config(function($stateProvider) {
   $stateProvider.state('home.apiAccounts', {
     url: "/apiAccounts",
     templateUrl: '/static/ngTemplates/app.tools.apiAccounts.html',
-    controller: 'businessManagement.tools.apiAccounts'
+    controller: 'home.apiAccounts'
   });
 });
 
-app.controller('businessManagement.tools.apiAccounts' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('home.apiAccounts' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
   // settings main page controller
 
   $scope.data = {tableData : []};
@@ -66,7 +66,7 @@ app.controller('businessManagement.tools.apiAccounts' , function($scope , $http 
 
 })
 
-app.controller('businessManagement.tools.apiAccounts.create' , function($scope , $http, $aside, $uibModal , Flash){
+app.controller('home.apiAccounts.create' , function($scope , $http, $aside, $uibModal , Flash){
 
   $scope.form = {email : '' , accountType: 'trial', remaining : 0, active : true};
 
@@ -93,7 +93,7 @@ app.controller('businessManagement.tools.apiAccounts.create' , function($scope ,
 });
 
 
-app.controller('businessManagement.tools.apiAccounts.explore' , function($scope , $http, $aside, $uibModal , Flash){
+app.controller('home.apiAccounts.explore' , function($scope , $http, $aside, $uibModal , Flash){
 
   $scope.account = $scope.data.tableData[$scope.tab.data.index];
   $scope.data = {tableData : []};

@@ -6,7 +6,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
     tabReplace: '    '
   });
 
-  $urlRouterProvider.otherwise('/businessManagement');
+  $urlRouterProvider.otherwise('/home');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;

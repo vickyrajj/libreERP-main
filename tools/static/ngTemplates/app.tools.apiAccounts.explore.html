@@ -1,4 +1,4 @@
-<div class="container-fluid" style="padding-top:20px;" ng-controller="businessManagement.tools.apiAccounts.explore">
+<div class="container-fluid" style="padding-top:20px;" ng-controller="home.apiAccounts.explore">
 
   <span class="text-muted" >Api Key : </span>{{account.apiKey}}
 
@@ -17,7 +17,7 @@
         <td>{{account.pk}}</td>
         <td>{{account.email}}</td>
         <td><switch ng-model="account.active" class="green"></switch></td>
-        <td>{{account.created | date:'dd-mm-yy'}}</td>
+        <td>{{account.created | date:'dd-mm-yyyy'}}</td>
         <td>{{account.remaining}} <button type="button" class="btn btn-sm btn-primary pull-right" name="button" ng-click="addUsage()">Add</button></td>
       </tr>
     </tbody>

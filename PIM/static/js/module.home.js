@@ -14,7 +14,7 @@ app.config(function($stateProvider ){
       }
     }
   })
-  .state('home.dashboardPage', {
+  .state('home.home', {
     url: "",
     views: {
       "": {
@@ -37,36 +37,7 @@ app.config(function($stateProvider ){
     templateUrl: '/static/ngTemplates/app.ERP.settings.default.html',
     controller: 'home.settings'
   })
-  // .state('home.calendar', {
-  //   url: "/calendar",
-  //   templateUrl: '/static/ngTemplates/app.home.calendar.html',
-  //   controller: 'controller.home.calendar'
-  // })
-  // .state('home.mail', {
-  //   url: "/mail",
-  //   templateUrl: '/static/ngTemplates/app.mail.html',
-  //   controller: 'controller.mail'
-  // })
-  // .state('home.social', {
-  //   url: "/social/:id",
-  //   templateUrl: '/static/ngTemplates/app.social.html',
-  //   controller: 'controller.social'
-  // })
-  // .state('home.notes', {
-  //   url: "/notes",
-  //   templateUrl: '/static/ngTemplates/app.home.notes.html',
-  //   controller: 'controller.home.notes'
-  // })
-  // .state('home.profile', {
-  //   url: "/profile",
-  //   templateUrl: '/static/ngTemplates/app.home.profile.html',
-  //   controller: 'controller.home.profile'
-  // })
-  // .state('home.myWork', {
-  //   url: "/myWork",
-  //   templateUrl: '/static/ngTemplates/app.home.myWork.html',
-  //   controller: 'controller.home.myWork'
-  // })
+
 
 
 });

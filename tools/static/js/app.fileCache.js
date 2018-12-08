@@ -2,11 +2,11 @@ app.config(function($stateProvider) {
   $stateProvider.state('home.fileCache', {
     url: "/fileCache",
     templateUrl: '/static/ngTemplates/app.tools.fileCache.html',
-    controller: 'businessManagement.tools.fileCache'
+    controller: 'home.fileCache'
   });
 });
 
-app.controller('businessManagement.tools.fileCache' , function($scope , $http , $uibModal , $state, Flash , $users , $filter , $permissions){
+app.controller('home.fileCache' , function($scope , $http , $uibModal , $state, Flash , $users , $filter , $permissions){
 
   $scope.data = {tableData : []};
 
@@ -85,7 +85,7 @@ app.controller('businessManagement.tools.fileCache' , function($scope , $http , 
 });
 
 
-app.controller('businessManagement.tools.fileCache.item' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('home.fileCache.item' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
 
   $scope.$watch('data', function(newValue , oldValue) {
 
@@ -101,7 +101,7 @@ app.controller('businessManagement.tools.fileCache.item' , function($scope , $ht
 
 
 
-app.controller('businessManagement.tools.fileCache.new' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
+app.controller('home.fileCache.new' , function($scope , $http , $aside , $state, Flash , $users , $filter , $permissions){
 
 
   $scope.form = {apiKey : '', attachment: emptyFile};
