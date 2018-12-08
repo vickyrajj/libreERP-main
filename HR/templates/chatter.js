@@ -774,10 +774,25 @@ function createChatDiv() {
               '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
-            '<i class="exitBtn fa fa-headphones" style="display:none" id="audioBtn"></i>'+
-            '<i class="exitBtn fa fa-video-camera" style="display:none" id="videoBtn"></i>'+
-            '<i class="closeIcon fa fa-times" id="closeIcon"></i>'+
-            '<i class="exitBtn fa fa-sign-out" id="exitBtn"></i>'+
+            '<svg viewBox="0 0 24 24" class="exitBtn" >'+
+              '<path id="audioBtn" style="fill:'+fontAndIconColor+';display:none;" d="M20 22.621l-3.521-6.795c-.008.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.083-1.026-3.493-6.817-2.106 1.039c-7.202 3.755 4.233 25.982 11.6 22.615.121-.055 2.102-1.029 2.11-1.033z"/>'+
+            '</svg>'+
+            '<svg viewBox="0 0 24 24" class="exitBtn">'+
+              '<path style="fill:'+fontAndIconColor+';display:none" id="videoBtn" d="M13.5 8c.276 0 .5.224.5.5v7c0 .276-.224.5-.5.5h-11c-.276 0-.5-.224-.5-.5v-7c0-.276.224-.5.5-.5h11zm2.5 0c0-1.104-.896-2-2-2h-12c-1.104 0-2 .896-2 2v8c0 1.104.896 2 2 2h12c1.104 0 2-.896 2-2v-8zm6 1.854v4.293l-2-1.408v-1.478l2-1.407zm2-3.854l-6 4.223v3.554l6 4.223v-12z"/>'+
+            '</svg>'+
+            '<svg viewBox="0 0 24 24" class="closeIcon">'+
+              '<path style="fill:'+fontAndIconColor+'" id="closeIcon" class="closeIcon" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>'+
+            '</svg>'+
+            '<svg viewBox="0 0 24 24" class="exitBtn">'+
+              '<path style="fill:'+fontAndIconColor+';" id="exitBtn" class="exitBtn" d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>'+
+            '</svg>'+
+            // '<svg  viewBox="0 0 24 24" class="exitBtn">'+
+            //   '<path d="M0 2v20h14v-2h-12v-16h12v-2h-14zm18 7.408l2.963 2.592-2.963 2.592v-1.592h-8v-2h8v-1.592zm-2-4.408v4h-8v6h8v4l8-7-8-7z"/>'+
+            // '</svg>'+
+            // '<i class="exitBtn fa fa-headphones" style="display:none" id="audioBtn"></i>'+
+            // '<i class="exitBtn fa fa-video-camera" style="display:none" id="videoBtn"></i>'+
+            // '<i class="closeIcon fa fa-times" id="closeIcon"></i>'+
+            // '<i class="exitBtn fa fa-sign-out" id="exitBtn"></i>'+
             // '<i id="exitBtn" class="fa fa-sign-out" aria-hidden="true"></i>'+
           '</div>'+
           '<div id="audioSection" class="audio_section">'+
@@ -793,11 +808,16 @@ function createChatDiv() {
                 '<p>We run on Syrow</p>'+
               '</div>'+
               '<div id="messageComposer" class="flex_container">'+
-                '<textarea id="inputText" placeholder="Write a Reply..." name="name" rows="2" style="background-color:#fff;outline:none" ></textarea>'+
+                '<textarea id="inputText" placeholder="Write a Reply.." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
                 '<input id="filePicker" type="file" style="display:none;"/>'+
                 // '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
-                '<img class="paperClip" id="paperClip" src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip">'+
-                '<img id="paperPlane" src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:30px !important; width:30px !important;">'+
+                // '<img class="paperClip" id="paperClip" src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip">'+
+                '<svg class="paperClip" viewBox="0 0 24 24">'+
+                  '<path style="fill:'+windowColor+'" id="paperClip" d="M21.586 10.461l-10.05 10.075c-1.95 1.949-5.122 1.949-7.071 0s-1.95-5.122 0-7.072l10.628-10.585c1.17-1.17 3.073-1.17 4.243 0 1.169 1.17 1.17 3.072 0 4.242l-8.507 8.464c-.39.39-1.024.39-1.414 0s-.39-1.024 0-1.414l7.093-7.05-1.415-1.414-7.093 7.049c-1.172 1.172-1.171 3.073 0 4.244s3.071 1.171 4.242 0l8.507-8.464c.977-.977 1.464-2.256 1.464-3.536 0-2.769-2.246-4.999-5-4.999-1.28 0-2.559.488-3.536 1.465l-10.627 10.583c-1.366 1.368-2.05 3.159-2.05 4.951 0 3.863 3.13 7 7 7 1.792 0 3.583-.684 4.95-2.05l10.05-10.075-1.414-1.414z"/>'+
+                '</svg>'+
+                '<svg class="paperClip" viewBox="0 0 24 24">'+
+                  '<path style="fill:'+windowColor+'" id="paperPlane" d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z"/></svg>'+
+                // '<img id="paperPlane" src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:30px !important; width:30px !important;">'+
                 // '<i id="paperPlane" class="fa fa-paper-plane-o" aria-hidden="true"></i>'+
               '</div>'+
               '<div class="startNewChatBtn flex_container" id="startNewChatBtn" class="flex_container">'+
@@ -1646,6 +1666,9 @@ function activeAudioCall(){
               .closeIcon{\
                 display:block;\
               }\
+              .closeIcon_box{\
+                display:block;\
+              }\
               .close-support{\
                 display:none;\
               }\
@@ -1664,6 +1687,9 @@ function activeAudioCall(){
                 z-index:99999\
               }\
               .closeIcon{\
+                display:none;\
+              }\
+              .closeIcon_box{\
                 display:none;\
               }\
               .close-support{\
@@ -1749,12 +1775,18 @@ function activeAudioCall(){
               padding:0px;\
             }\
             .exitBtn, .closeIcon {\
-              margin: 20px 15px;\
+              margin: 15px 10px;\
               padding-top: 10px;\
+              text-align: center;\
+              width: 50px;\
+              height:34px;\
+              transition: 0.5s;\
+            }\
+            .paperClip{\
+              margin: 10px 10px;\
               text-align: center;\
               width: 30px;\
               height:34px;\
-              font-size: 25px;\
               transition: 0.5s;\
             }\
             .exitBtn:hover{\
@@ -1762,7 +1794,7 @@ function activeAudioCall(){
               cursor: pointer;\
             }\
             .closeIcon:hover{\
-              transform: scale(1.2) ;\
+              transform: scale(0.9) ;\
               cursor: pointer;\
             }\
             .chatBox_footer{\

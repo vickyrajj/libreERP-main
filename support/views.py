@@ -24,6 +24,7 @@ from excel_response import ExcelResponse
 from django.views.decorators.csrf import csrf_exempt
 import urllib
 import os
+from lxml import etree
 from os import path
 import datetime
 from datetime import timedelta
@@ -837,6 +838,37 @@ class StreamRecordings(APIView):
         with open(filepath, 'wb+') as destination:
             for chunk in request.FILES['file'].chunks():
                 destination.write(chunk)
+        return Response({}, status = status.HTTP_200_OK)
+
+import pysvg.parser
+
+class SVGColor(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes=(permissions.AllowAny,)
+    def get(self , request , format = None):
+        print request.GET,'dddddddddddddddd'
+        filename = request.GET['fileName']
+        print filename
+        filepath=os.path.join(globalSettings.BASE_DIR,'media_root',filename)
+        print filepath,'**************************************'
+        # filename = "aus4.svg"
+        tree = etree.parse(open(filepath, 'r'))
+        print tree,"#################################"
+        for element in tree.iter():
+            print element.tag.split("}")[1],"elemnrtttttttttttttttttttttttttttttttt"
+        # for element in tree.iter():
+        #     if element.tag.split("}")[1] == "path":
+        #         if element.get("id") == "Lingiari":
+        #             yes_votes = element.get("data-yes")
+        #             print(yes_votes)
+        #             yes_votes.set(yes_votes, str(int(yes_votes) + 1))
+        #             print(yes_votes)
+
+        #
+        # with open(filepath, 'rwb') as destination:
+        # #     for chunk in request.FILES['file'].chunks():
+        # #         destination.write(chunk)
+        # # print destination,'*********************************8888'
         return Response({}, status = status.HTTP_200_OK)
 
 

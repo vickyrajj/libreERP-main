@@ -50,6 +50,8 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
 
+
+
   function getCookie(cname) {
       var name = cname + "=";
       var decodedCookie = decodeURIComponent(document.cookie);
@@ -67,18 +69,26 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
   }
 
 
+// setTimeout(function () {
+//   $http({
+//     method: 'GET',
+//     url: '/api/support/heartbeat/?pk=' + $scope.me.pk +'&timesheet=true'
+//   }).
+//   then(function(response) {
+//     console.log('here');
+//   }, function(response) {});
+//
+// }, 10000);
+
 setTimeout(function () {
   $http({
     method: 'GET',
-    url: '/api/support/heartbeat/?pk=' + $scope.me.pk +'&timesheet=true'
+    url: '/api/support/svgColor/?fileName=example.svg'
   }).
   then(function(response) {
-    console.log('here');
+    console.log(response);
   }, function(response) {});
-
-}, 10000);
-
-
+}, 5000);
 
 $scope.mobileView=false;
 

@@ -31,5 +31,6 @@ urlpatterns = [
     url(r'streamRecordings/$' , StreamRecordings.as_view()),
     url(r'emailScript/$' , EmailScript.as_view()),
     url(r'heartbeat/$' , HeartbeatApi.as_view()),
+    url(r'svgColor/$' , SVGColor.as_view()),
 
 ]
