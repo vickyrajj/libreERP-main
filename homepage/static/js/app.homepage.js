@@ -48,7 +48,7 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('pages', {
-      url: "/pages/:title",
+      url: "/:title",
       templateUrl: '/static/ngTemplates/app.homepage.page.html',
       // controller: 'controller.ecommerce.PagesDetails'
     })
@@ -65,7 +65,7 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
 
   $scope.blogPk = $stateParams.pk
 
-  $http.get('/api/PIM/blog/' + $scope.blogPk).
+  $http.get('/api/PIM/blog//' + $scope.blogPk).
   then(function(response) {
     $scope.blogDetail = response.data
     console.log($scope.blogDetail);
@@ -83,7 +83,7 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
   $scope.emailAddress = '';
 
   $scope.fetchBlogs = function() {
-    $http.get('/api/PIM/blog?limit=14&offset=' + $scope.offset).
+    $http.get('/api/PIM/blog/?limit=14&offset=' + $scope.offset).
     then(function(response) {
       $scope.blogs = response.data.results;
 
@@ -99,7 +99,7 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
 
 
   $scope.fetchRecentPosts = function() {
-    $http.get('/api/PIM/blog?limit=5').
+    $http.get('/api/PIM/blog/?limit=5').
     then(function(response) {
       $scope.recentPosts = response.data.results
     });

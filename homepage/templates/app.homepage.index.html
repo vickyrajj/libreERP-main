@@ -8,7 +8,7 @@
 </div>
 
 <div class="hidden-md hidden-lg">
-  <div class="row " style=" background:url('/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg') no-repeat right bottom;height:60vh;margin:0px;background-size: auto 100%;">
+  <div class="row " style=" background:url('/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg') no-repeat right bottom;height:20vh;margin:0px;background-size: auto 100%;margin-top:40px;">
   </div>
   <div class="row" style="margin:0px; background-color:#0f4b8d;">
     <h3 style="color:white; text-align:center; padding:15px 0px">{% trans 'WelcomeHeading' %} </h3>
@@ -105,25 +105,25 @@
 </div>
 
 
-<div class="flex_section" style="min-height:800px">
+<div class="flex_section" style="min-height:800px;">
   <div class="circleDiv">
     <ul class="circles" id="circles">
       <li>
-        <div class="text-center" style="padding-top:38px;">
+        <div class="text-center" style="position:absolute; top:50%;transform:translateY(-50%); padding-left:20px;">
           <figure style="font-size: 50px; color:#080738">$21M</figure>
           <span style="letter-spacing:4px;">Incremental Revenue Impact</span><br>
           <a style="font-size:13px;" href="#">Learn how HP did it</a>
         </div>
       </li>
       <li>
-        <div class="text-center" style="padding-top:38px;color:#fff">
+        <div class="text-center" style="color:#fff;;position:absolute; top:50%;transform:translateY(-50%); padding-left:50px;">
           <figure style="font-size: 30px;">+300%</figure>
           <span>Click-through uplift</span><br>
           <a style="font-size:13px; color:#fff" href="#">Read the Missguided case study</a>
         </div>
       </li>
       <li>
-        <div class="text-center" style="padding-top:38px;color:#080738">
+        <div class="text-center" style="color:#080738;;position:absolute; top:50%;transform:translateY(-50%); padding-left:75px;">
           <figure style="font-size: 50px;">-80%</figure>
           <span>Decrease in return rate</span><br>
           <a style="font-size:13px; color:blue" href="#">Read the Brooks case study</a>
@@ -137,9 +137,9 @@
       <span class="point-text">Impliment</span>
     </div>
     <div style="position:absolute; top:16px; left:-13px;">
-      <img src="https://images.ctfassets.net/zw48pl1isxmc/32U70oRSM8MWEWcEEyg6uS/2fd45782ccbbdd906e2f07d73ff8618e/curvy-2.svg" height="700px" width: "100%" alt="">
+      <img src="https://images.ctfassets.net/zw48pl1isxmc/32U70oRSM8MWEWcEEyg6uS/2fd45782ccbbdd906e2f07d73ff8618e/curvy-2.svg" height="800px" width: "100%" alt="">
     </div>
-    <div style="position:absolute; top:700px; height:20px; left:6px;">
+    <div style="position:absolute; top:800px; height:20px; left:6px;">
       <div class="scroll-point"></div>
       <span class="point-text">Repeat</span>
     </div>
@@ -157,8 +157,8 @@
 </div>
 
 
-<div class="blog_section">
-  <div class="col-md-6 col-sm-12">
+<div class="blog_section shaddowed" style="min-height:600px; border-radius:10px;">
+  <div class="col-md-6 col-sm-12" style="padding-left:0px;">
     <div class="blogimg">
       <div id="date">
         <span style="font-size:24px;font-weight:500;color:#fff;">27 November 2018</span><br><br>
@@ -172,7 +172,7 @@
     </div>
   </div>
   <div class="col-md-6  col-sm-12" style="background-color:rgba(245,248,250,.5);margin-top:10px;">
-    <div class="row" ng-repeat="i in articles" style="margin-bottom:20px;{{$odd ? 'background:#fff;':''}};">
+    <div class="row" ng-repeat="i in articles" style="margin-bottom:20px; padding-left:10px;{{$odd ? 'background:#fff;':''}};">
       <div class="col-xs-2 articleImg">
         <div class="text-center" style="">
           <span style="font-size:1.875em;color:#fff;"> <strong>21</strong></span><br>
@@ -186,7 +186,7 @@
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-primary">See More Articles</button>
+    <button type="button" class="btn btn-primary" style="margin-bottom:15px;">See More Articles</button>
   </div>
 </div>
 
@@ -287,9 +287,10 @@
   <div class="col-md-8 col-md-offset-2 text-center" style="color:#fff;padding:130px 0px;">
     <h1> <strong>Ready to take the lead?</strong></h1> <br>
     <h4>Choose open, extensible, secure automations</h4> <br>
-    <button type="button" class="btn btn-warning btn-lg text-center big-xl" style="margin-top:10px;">
+    <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name=""><b>Get Started with Go!</b> </button>
+    <!-- <button type="button" class="btn btn-warning btn-lg text-center big-xl" style="margin-top:10px;">
       <strong>Get Started with Go!</strong>
-    </button>
+    </button> -->
 
 
 

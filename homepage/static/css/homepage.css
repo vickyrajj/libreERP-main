@@ -152,15 +152,15 @@
 .circles {
   list-style-type: none;
   position: relative;
-  right: 40px;
+  right: -10px;
 }
 
 .circles li:nth-child(1) {
   background-color: #fff;
   border: 30px solid #080738;
   border-radius: 50%;
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
   position: absolute;
   right: 0px;
   top: 0px;
@@ -170,11 +170,11 @@
 .circles li:nth-child(2) {
   background-color: #36d4ff;
   border-radius: 50%;
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   position: absolute;
   right: 200px;
-  top: 200px;
+  top: 300px;
   z-index: 2;
 }
 
@@ -182,11 +182,11 @@
   background-color: #fff;
   border: 10px solid #7500ff;
   border-radius: 50%;
-  width: 250px;
-  height: 250px;
+  width: 350px;
+  height: 350px;
   position: absolute;
   right: 70px;
-  top: 350px;
+  top: 480px;
   z-index: 1;
 }
 
@@ -204,6 +204,17 @@
   }
   100% {
     transform: translateY(0px);
+  }
+}
+
+
+@media only screen and (min-width:1500px) {
+  .flex_section {
+    margin: 100px 200px 100px 200px !important;
+  }
+
+  .blog_section {
+    margin: 100px 200px 100px 200px !important;
   }
 }
 
@@ -230,10 +241,43 @@
   .circleDiv{
     flex: 70%;
   }
+
+
+  .circles li:nth-child(1) {
+    border: 20px solid #080738;
+    width: 300px;
+    height: 300px;
+  }
+
+  .circles li:nth-child(1) div {
+    padding-left:15px !important;
+  }
+
+  .circles li:nth-child(2) div {
+    padding-left:20px !important;
+  }
+
+  .circles li:nth-child(3) div {
+    padding-left:35px !important;
+  }
+
   .circles li:nth-child(2) {
-    right: -25px;
+    width: 200px;
+    height: 200px;
+    top: 225px;
+    right: -20px;
     z-index: 4;
   }
+
+  .circles li:nth-child(3) {
+    width: 250px;
+    height: 250px;
+    right: 100px;
+    top: 320px;
+    z-index: 1;
+  }
+
+
   .blog_container, .sec2Left {
     flex-direction: column;
   }
@@ -660,7 +704,7 @@ figure {
 .Title {
   color: #002855;
   font-size: 28px;
-  width: calc(100% - 88px);
+  width: 100%;
   font-weight: 600;
 }
 
@@ -760,11 +804,12 @@ figure {
   display: flex;
   /* flex-direction: row-reverse ; */
   flex-wrap: wrap;
-  margin: 100px 20px 100px 100px;
+  margin: 100px 120px 100px 120px;
 }
 
 .blog_section {
-  margin: 100px 100px;
+  margin: 100px 120px 100px 120px;
+}
 
 @media (min-width:600px) and (max-width:1024px){
   .detailRight {

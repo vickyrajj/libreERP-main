@@ -8,6 +8,7 @@ from HR.views import loginView , logoutView , home , registerView , tokenAuthent
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration,index,crmHome,customerLoginView , customerHomeView
 
 from ERP.views import serviceRegistration , renderedStatic
+# from django.conf.urls.defaults import *
 
 app_name="libreERP"
 
@@ -45,4 +46,5 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns +=static(settings.STATIC_URL , document_root = settings.STATIC_ROOT)
     urlpatterns +=static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)
-urlpatterns.append(url(r'^', index , name ='someHome'))
+
+urlpatterns.append(url(r'^.*$', index , name='index'))
