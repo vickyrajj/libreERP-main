@@ -371,7 +371,6 @@
   height: 50px;
   padding-top: 5px;
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .socialIcons div {
@@ -381,6 +380,23 @@
   color: #452d54;
   margin: 0 15px;
 }
+
+.scheduleDatePic td {
+  padding: 8px;
+}
+
+.scheduleDatePic td button {
+  background-color: #131C3C;
+  color: #fff;
+  border: 1px solid #131C3C
+}
+
+.scheduleDatePic tH button {
+  background-color: #131C3C;
+  color: #fff;
+  border: 1px solid #131C3C
+}
+
 
 .textHeading>h4 {
   width: 100%;
