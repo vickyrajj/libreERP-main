@@ -544,6 +544,15 @@ class QuotationAPIView(APIView):
         quotation(response , project , purchaselist , request)
         return response
 
+# class InvoiceAPIView(APIView):
+#     def get(self , request , format = None):
+#         project = Projects.objects.get(pk = request.GET['project'])
+#         purchaselist = BoM.objects.filter(project = request.GET['project'])
+#         response = HttpResponse(content_type='application/pdf')
+#         response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+#         invoice(response , project , purchaselist , request)
+#         return response
+
 class InventoryViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )
     queryset = Inventory.objects.all()
@@ -627,4 +636,4 @@ class OrderAPIView(APIView):
                         orderObj.save()
                         # print orderObj
                         # order = list(orderObj).values()
-        return Response(orderObj,status=status.HTTP_200_OK)
+        return Response({'orderpk':orderObj.pk},status=status.HTTP_200_OK)
