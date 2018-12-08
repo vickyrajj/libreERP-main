@@ -152,12 +152,16 @@ $scope.getList = function(){
         }).
         then(function(response) {
           console.log(response.data,'kkkkkkkkk');
+          $scope.values = response.data
         })
       }
+      // $uibModalInstance.dismiss($scope.values)
   },
-}).result.then(function() {}, function() {
+}).result.then(function() {}, function(values) {
     $scope.fetchProdInventory($scope.offset)
+    // $scope.valueList = values
   });
 }
+// console.log($scope.valueList,'aaaaaaaaaaaahhhhhhhhhhhhhhhhhhhaaaaaaaaaa');
 
 })
