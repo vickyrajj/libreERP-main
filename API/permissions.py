@@ -1,7 +1,6 @@
 from rest_framework import permissions
 from ERP.models import application , permission as erp_permission
 from django.core.exceptions import PermissionDenied
-from tools.models import ApiAccount
 from django.shortcuts import render, redirect, get_object_or_404
 
 class isAdmin(permissions.BasePermission):

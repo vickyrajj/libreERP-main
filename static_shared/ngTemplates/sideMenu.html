@@ -21,7 +21,7 @@
   <div ng-if="!sideMenuVisibility" class="row" style="{{mobileView ? ';':'width:30%;'}};padding:15px;">
     <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;margin-left:20px;">
   </div>
-  <div class="row" style="margin:0px;">
+  <!-- <div class="row" style="margin:0px;">
     <div class="container-fluid" style="{{sideMenuVisibility ? 'border-bottom:solid 2px #eeeeee;':''}};padding:0px;">
       <div class="col-md-{{sideMenuVisibility? '3':'6'}} basicAppLink text-center" ng-repeat="a in fixedApps" ng-class="{active: $state.is(a.state)}" ng-click="$state.go(a.state)">
         <span>
@@ -29,7 +29,7 @@
         </span>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="row">
     <div class="container-fluid">

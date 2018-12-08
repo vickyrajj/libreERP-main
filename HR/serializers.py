@@ -5,7 +5,6 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
 from PIM.serializers import *
-from organization.serializers import *
 import datetime
 from django.core.exceptions import ObjectDoesNotExist , SuspiciousOperation
 
@@ -20,7 +19,7 @@ class userSearchSerializer(serializers.ModelSerializer):
     profile = userProfileLiteSerializer(many=False , read_only=True)
     class Meta:
         model = User
-        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' , 'social' , 'designation' )
+        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile')
 
 
 class rankSerializer(serializers.ModelSerializer):
@@ -29,13 +28,9 @@ class rankSerializer(serializers.ModelSerializer):
         fields = ( 'title' , 'category' )
 
 class userDesignationSerializer(serializers.ModelSerializer):
-    division = DivisionLiteSerializer(many = False , read_only = True)
-    unit = UnitsLiteSerializer(many = False , read_only = True)
-    department = DepartmentsSerializer(many = False , read_only = True)
-    role = RoleSerializer(many = False , read_only = True)
     class Meta:
         model = designation
-        fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover' ,'division' ,'unit' ,'department' ,'role')
+        fields = ('pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover')
         read_only_fields=('user',)
         def create(self , validated_data):
             d = designation()
@@ -43,22 +38,14 @@ class userDesignationSerializer(serializers.ModelSerializer):
             d.reportingTo=User.objects.get(pk=self.context['request'].data['reportingTo'])
             d.primaryApprover=User.objects.get(pk=self.context['request'].data['primaryApprover'])
             d.secondaryApprover=User.objects.get(pk=self.context['request'].data['secondaryApprover'])
-            d.division=Division.objects.get(pk=self.context['request'].data['division'])
-            d.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
-            d.department=Departments.objects.get(pk=self.context['request'].data['department'])
-            d.role=Role.objects.get(pk=self.context['request'].data['role'])
             d.save()
             return d
     def update(self , instance , validated_data):
-        for key in ['pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover' ,'division' ,'unit' ,'department' ,'role']:
+        for key in ['pk' , 'user', 'reportingTo' , 'primaryApprover' , 'secondaryApprover']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
                 pass
-        instance.division=Division.objects.get(pk=self.context['request'].data['division'])
-        instance.unit=Unit.objects.get(pk=self.context['request'].data['unit'])
-        instance.department=Departments.objects.get(pk=self.context['request'].data['department'])
-        instance.role=Role.objects.get(pk=self.context['request'].data['role'])
         instance.save()
         return instance
 class userProfileSerializer(serializers.ModelSerializer):
@@ -116,11 +103,10 @@ class payrollLiteSerializer(serializers.ModelSerializer):
 
 class userSerializer(serializers.ModelSerializer):
     profile = userProfileSerializer(many=False , read_only=True)
-    payroll = payrollLiteSerializer(many = False , read_only = True)
     class Meta:
         model = User
-        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name' , 'designation' ,'profile'  ,'settings' , 'password' , 'social', 'payroll')
-        read_only_fields = ('designation' , 'profile' , 'settings' ,'social', 'payroll' )
+        fields = ('pk' , 'username' , 'email' , 'first_name' , 'last_name'  ,'profile'  ,'settings' , 'password' )
+        read_only_fields = ('profile' , 'settings' )
         extra_kwargs = {'password': {'write_only': True} }
     def create(self , validated_data):
         raise PermissionDenied(detail=None)

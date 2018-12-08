@@ -67,6 +67,21 @@ app.config(function($stateProvider) {
       // controller: 'controller.about'
     })
 
+
+  $stateProvider
+    .state('career', {
+      url: "/career",
+      templateUrl: '/static/ngTemplates/app.homepage.career.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+
+  $stateProvider
+    .state('pricing', {
+      url: "/pricing",
+      templateUrl: '/static/ngTemplates/app.homepage.pricing.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+
   $stateProvider
     .state('pages', {
       url: "/:title",

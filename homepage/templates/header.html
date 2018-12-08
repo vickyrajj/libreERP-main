@@ -47,13 +47,17 @@
             <ul ng-mouseleave="keepshow[3]=false" ng-mouseover="keepshow[3]=true" ng-show="show[3]||keepshow[3]" class="container_box">
           <li><a href="/about">About US</a></li>
           <li><a href="#">Investors</a></li>
-          <li><a href="#">Careers</a></li>
+          <li><a href="/career">Careers</a></li>
           <li><a href="#">Contact US</a></li>
           </ul>
         </li>
         <li class="header_element" ng-click="toggleNavbar = false">
+          <a href="/pricing" > Pricing</a>
+        </li>
+        <li class="header_element" ng-click="toggleNavbar = false">
           <a href="/blogs" > Blogs</a>
         </li>
+
           {% verbatim %}
         <li style="margin-left:30px; {{device.smallDevice ? 'display:inline-block;': ''}}">
           <button type="button" class="btn btn-warning" style="background-color:#ff6900;margin-top:10px;" ng-click="schedule()">

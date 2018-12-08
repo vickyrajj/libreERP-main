@@ -3,16 +3,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
-from social.serializers import commentLikeSerializer
-from social.models import commentLike
-from clientRelationships.models import Contact
 
-
-class ContactLiteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Contact
-        fields = ('pk' , 'user' ,'name', 'company', 'email', 'mobile' , 'designation', 'dp', 'male')
-        read_only_fields = ( 'user' ,'name', 'company', 'email', 'mobile' , 'designation', 'dp', 'male')
 
 
 class themeSerializer(serializers.ModelSerializer):
@@ -32,11 +23,10 @@ class notificationSerializer(serializers.ModelSerializer):
         fields = ('pk' , 'message' ,'shortInfo','domain','onHold', 'link' , 'originator' , 'created' ,'updated' , 'read' , 'user')
 
 class calendarSerializer(serializers.ModelSerializer):
-    clients = ContactLiteSerializer(many = True , read_only = True)
     class Meta:
         model = calendar
-        fields = ('pk' , 'eventType' , 'followers' ,'originator', 'duration' , 'created', 'updated', 'user' , 'text' , 'notification' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'clients', 'data')
-        read_only_fields = ('followers', 'user' , 'clients')
+        fields = ('pk' , 'eventType' , 'followers' ,'originator', 'duration' , 'created', 'updated', 'user' , 'text' , 'notification' ,'when' , 'read' , 'deleted' , 'completed' , 'canceled' , 'level' , 'venue' , 'attachment' , 'myNotes', 'data')
+        read_only_fields = ('followers', 'user' )
     def create(self , validated_data):
         cal = calendar(**validated_data)
         cal.user = self.context['request'].user
@@ -49,11 +39,6 @@ class calendarSerializer(serializers.ModelSerializer):
             else:
                 for tag in tagged:
                     cal.followers.add( User.objects.get(pk = tag))
-
-        if 'clients' in  self.context['request'].data:
-            clients = self.context['request'].data['clients']
-            for c in clients:
-                cal.clients.add( Contact.objects.get(pk = c))
         cal.save()
         return cal
     def update(self, instance, validated_data): # like the comment

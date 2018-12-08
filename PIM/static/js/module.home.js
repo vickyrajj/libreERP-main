@@ -14,6 +14,13 @@ app.config(function($stateProvider ){
       }
     }
   })
+
+  .state('home.manageUsers', {
+    url: "/manageUsers",
+    templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
+    controller: 'admin.manageUsers'
+  })
+
   .state('home.mail', {
     url: "/mail",
     templateUrl: '/static/ngTemplates/app.mail.html',
@@ -49,7 +56,7 @@ app.config(function($stateProvider ){
     templateUrl: '/static/ngTemplates/app.home.myWork.html',
     controller: 'controller.home.myWork'
   })
-  
+
 
 });
 

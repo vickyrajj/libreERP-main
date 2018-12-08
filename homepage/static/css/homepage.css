@@ -228,6 +228,15 @@
     height: 25vh;
   } */
 
+  .blogUpdates{
+    border-left:0 !important;
+    border-top: 1px solid #aaa;
+  }
+
+  .blogContent{
+    margin:80px 10px 0px 10px !important;
+  }
+
   .selectLang{
     position: absolute !important;
     box-shadow: 1px 1px 8px 0 rgba(8, 19, 31, .25) !important;
@@ -825,6 +834,16 @@ figure {
 
 .blog_section {
   margin: 100px 120px 100px 120px;
+}
+
+.blogContent{
+  margin:80px 100px 0px 100px;
+}
+
+.blogUpdates{
+  margin-top:30px;
+  border-left:1px solid #aaa;
+  min-height:450px;
 }
 
 @media (min-width:600px) and (max-width:1024px){

@@ -15,7 +15,6 @@ from django.db.models import Q
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
-from gitweb.views import generateGitoliteConf
 import requests
 from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
@@ -201,11 +200,9 @@ class registerDeviceApi(APIView):
                         print "deleted"
                         gp.devices.remove(d)
                         d.delete()
-                        generateGitoliteConf()
                         return Response(status=status.HTTP_200_OK)
                     gp.devices.add(d)
                     gp.save()
-                    generateGitoliteConf()
             else:
                 raise NotAuthenticated(detail=None)
             return Response(status=status.HTTP_200_OK)
