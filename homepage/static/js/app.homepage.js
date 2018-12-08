@@ -224,6 +224,13 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
       link: '/',
       image: '/static/images/some.jpg'
     },
+    {
+      date: new Date(),
+      title: 'das',
+      description: "",
+      link: '/',
+      image: '/static/images/some.jpg'
+    },
     // {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
   ]
 
