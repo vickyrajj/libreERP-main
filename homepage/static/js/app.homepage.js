@@ -288,32 +288,6 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     );
   }
 
-  setTimeout(function() {
-    $scope.one = document.getElementById('one')
-    $scope.two = document.getElementById('two')
-    $scope.three = document.getElementById('three')
-    $scope.circles = document.getElementById('circles')
-
-    window.addEventListener("scroll", function() {
-      if ($scope.elementInViewport($scope.one)) {
-        $scope.one.classList.add('toMoveUp')
-      }
-
-      if ($scope.elementInViewport($scope.two)) {
-        $scope.two.classList.add('toMoveUp')
-      }
-
-      if ($scope.elementInViewport($scope.three)) {
-        $scope.three.classList.add('toMoveUp')
-      }
-
-    });
-  }, 500);
-
-
-
-
-
   $scope.smDevice = function(x) {
     if (x.matches) {
       console.log('trueeeeeeee');
