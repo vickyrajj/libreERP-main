@@ -1,13 +1,14 @@
 <div class="shaddowed card bg-white" style="min-height:93vh;">
   <breadcrumb></breadcrumb>
-  <div class="row">
-  <div class="col-md-1">
-    <switch ng-model="modeToggle" class="neutral pull-right"></switch>
-  </div>
-  </div>
+
+
+
 
   <div class="row">
-    <div class="col-md-8 col-md-offset-2 text-right" ng-if="!modeToggle">
+    <div class="col-md-3" style="padding-top:2em">
+      <strong style="margin:0 13px 0 25px;">Inventory</strong><switch ng-model="modeToggle" class="neutral"></switch><strong style="margin-left:13px;">Material Issue</strong>
+    </div>
+    <div class="col-md-8  text-right" ng-if="!modeToggle" style="padding-top:2em">
       <div class="container-fluid">
         <div class="input-group">
           <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()" style="height:40px" />
@@ -112,10 +113,10 @@
                     <span>{{f.qty}}</span>
                   </td>
                   <td class="text-center">
-                    <span>{{f.rate}}</span>
+                    <span>{{(f.rate).toFixed(2)}}</span>
                   </td>
                   <td class="text-center">
-                    <span>{{f.rate * f.qty }}</span>
+                    <span>{{(f.rate * f.qty).toFixed(2) }}</span>
                   </td>
                 </tr>
               </table>
@@ -149,15 +150,18 @@
           <div class="row container-fluid" ng-click="toggle(p.productPk,$index)"  style="cursor:pointer;height:5vh;padding:10px">
             <div class="col-md-12 text-left">
 
-              <div class="col-md-4" >
-                <span style="font-size:12px"><strong> Title : </strong>{{m.project.title}} </span>
+              <div class="col-md-3" >
+                <span style="font-size:12px"><strong> Project Title : </strong>{{m.project.title}} </span>
               </div>
-              <div class="col-md-4">
-                <span style="font-size:12px"><strong> Enginner: </strong> {{m.user.first_name}}</span>
+              <div class="col-md-3">
+                <span style="font-size:12px"><strong> Engineer : </strong> {{m.user.first_name}}</span>
               </div>
-              <div class="col-md-offset-2 col-md-2 " >
+              <!-- <div class="col-md-3">
+                <span style="font-size:12px"><strong> No of Items : </strong> {{}}</span>
+              </div> -->
+              <div class="col-md-offset-1 col-md-2 " >
                   <!-- <span><a  class="btn btn-primary " style="cursor:pointer;" target="_blank" href="">Material Issue<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span> -->
-                  <span><a class="btn btn-primary"  style="cursor:pointer;" target="_blank" href="/api/support/materialIssue/?value={{m.pk}}">Inoice <i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+                  <span><a class="btn btn-primary"  style="cursor:pointer;" target="_blank" href="/api/support/materialIssue/?value={{m.pk}}">Invoice <i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
                 </div>
               </div>
             </div>
