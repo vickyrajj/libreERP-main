@@ -793,17 +793,17 @@ function createChatDiv() {
             // '<svg  viewBox="0 0 24 24" class="exitBtn">'+
             //   '<path d="M0 2v20h14v-2h-12v-16h12v-2h-14zm18 7.408l2.963 2.592-2.963 2.592v-1.592h-8v-2h8v-1.592zm-2-4.408v4h-8v6h8v4l8-7-8-7z"/>'+
             // '</svg>'+
-            '<i class="exitBtn SyrowFont font-SyrowAudioCall" style="display:none" id="audioBtn"></i>'+
+            '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
             '<i class="exitBtn SyrowFont font-SyrowVideoCall" style="display:none" id="videoBtn"></i>'+
-            // '<i class="closeIcon SyrowFont font-SyrowPhone-off" id="closeIcon"></i>'+
-            // '<i class="exitBtn SyrowFont SyrowBunny" id="exitBtn"></i>'+
+            '<i class="closeIcon SyrowFont font-SyrowX" id="closeIcon"></i>'+
+            '<i class="exitBtn SyrowFont font-SyrowLog-out" id="exitBtn"></i>'+
             // '<i id="exitBtn" class="SyrowFont font-SyrowBunny" aria-hidden="true"></i>'+
-            '<svg viewBox="0 0 24 24" class="closeIcon">'+
-              '<path style="fill:'+fontAndIconColor+'" id="closeIcon" class="closeIcon" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>'+
-            '</svg>'+
-            '<svg viewBox="0 0 24 24" class="exitBtn">'+
-              '<path style="fill:'+fontAndIconColor+';" id="exitBtn" class="exitBtn" d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>'+
-            '</svg>'+
+            // '<svg viewBox="0 0 24 24" class="closeIcon">'+
+            //   '<path style="fill:'+fontAndIconColor+'" id="closeIcon" class="closeIcon" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>'+
+            // '</svg>'+
+            // '<svg viewBox="0 0 24 24" class="exitBtn">'+
+            //   '<path style="fill:'+fontAndIconColor+';" id="exitBtn" class="exitBtn" d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>'+
+            // '</svg>'+
           '</div>'+
           '<div id="audioSection" class="audio_section">'+
           '</div>'+
@@ -815,21 +815,25 @@ function createChatDiv() {
           '</div>'+
           '<div id="chatBox_footer" class="chatBox_footer">'+
               '<div class="chatbox_branding">'+
-                '<a style="color:'+fontAndIconColor+' ;text-decoration:none" href="">We run on Syrow</a>'+
+                '<a style="color:'+fontAndIconColor+' ;text-decoration:none" href="https://www.syrow.com/" target="_blank">We run on Syrow</a>'+
               '</div>'+
               '<div id="messageComposer" class="flex_container">'+
                 '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
                 '<input id="filePicker" type="file" style="display:none;"/>'+
                 // '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
                 // '<img class="paperClip" id="paperClip" src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip">'+
-                '<svg class="paperClip" viewBox="0 0 24 24">'+
-                  '<path style="fill:'+fontAndIconColor+'" id="paperClip" d="M21.586 10.461l-10.05 10.075c-1.95 1.949-5.122 1.949-7.071 0s-1.95-5.122 0-7.072l10.628-10.585c1.17-1.17 3.073-1.17 4.243 0 1.169 1.17 1.17 3.072 0 4.242l-8.507 8.464c-.39.39-1.024.39-1.414 0s-.39-1.024 0-1.414l7.093-7.05-1.415-1.414-7.093 7.049c-1.172 1.172-1.171 3.073 0 4.244s3.071 1.171 4.242 0l8.507-8.464c.977-.977 1.464-2.256 1.464-3.536 0-2.769-2.246-4.999-5-4.999-1.28 0-2.559.488-3.536 1.465l-10.627 10.583c-1.366 1.368-2.05 3.159-2.05 4.951 0 3.863 3.13 7 7 7 1.792 0 3.583-.684 4.95-2.05l10.05-10.075-1.414-1.414z"/>'+
-                '</svg>'+
-                '<svg class="paperClip" viewBox="0 0 24 24">'+
-                  '<path style="fill:'+fontAndIconColor+'" id="paperPlane" d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z"/></svg>'+
-                // '<img id="paperPlane" src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:30px !important; width:30px !important;">'+
-                // '<i id="paperPlane" class="fa fa-paper-plane-o" aria-hidden="true"></i>'+
+              //   '<svg class="paperClip" viewBox="0 0 24 24">'+
+              //     '<path style="fill:'+fontAndIconColor+'" id="paperClip" d="M21.586 10.461l-10.05 10.075c-1.95 1.949-5.122 1.949-7.071 0s-1.95-5.122 0-7.072l10.628-10.585c1.17-1.17 3.073-1.17 4.243 0 1.169 1.17 1.17 3.072 0 4.242l-8.507 8.464c-.39.39-1.024.39-1.414 0s-.39-1.024 0-1.414l7.093-7.05-1.415-1.414-7.093 7.049c-1.172 1.172-1.171 3.073 0 4.244s3.071 1.171 4.242 0l8.507-8.464c.977-.977 1.464-2.256 1.464-3.536 0-2.769-2.246-4.999-5-4.999-1.28 0-2.559.488-3.536 1.465l-10.627 10.583c-1.366 1.368-2.05 3.159-2.05 4.951 0 3.863 3.13 7 7 7 1.792 0 3.583-.684 4.95-2.05l10.05-10.075-1.414-1.414z"/>'+
+              //   '</svg>'+
+              //   '<svg class="paperClip" viewBox="0 0 24 24">'+
+              //     '<path style="fill:'+fontAndIconColor+'" id="paperPlane" d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z"/></svg>'+
+              //   // '<img id="paperPlane" src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:30px !important; width:30px !important;">'+
+              //   // '<i id="paperPlane" class="fa fa-paper-plane-o" aria-hidden="true"></i>'+
+              '<i id="paperClip" class="paperClip SyrowFont font-SyrowPaperclip" aria-hidden="true"></i>'+
+              '<i id="paperPlane" class="paperClip SyrowFont font-SyrowNavigation" aria-hidden="true"></i>'+
               '</div>'+
+
+
               '<div class="startNewChatBtn flex_container" id="startNewChatBtn" class="flex_container">'+
                 '<span>Sart New Conversation </span>'+
               '</div>'+
@@ -1441,6 +1445,16 @@ function activeAudioCall(){
               font-weight: normal;\
               font-style: normal;\
             }\
+            @font-face {\
+              font-family: 'Syrow';\
+              src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?7na8rs');\
+              src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?7na8rs#iefix') format('embedded-opentype'),\
+                url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?7na8rs') format('truetype'),\
+                url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.woff?7na8rs') format('woff'),\
+                url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.svg?7na8rs#Syrow') format('svg');\
+              font-weight: normal;\
+              font-style: normal;\
+            }\
               .SyrowFont {\
               /* use !important to prevent issues with browser extensions that change fonts */\
               font-family: 'Syrow';\
@@ -1457,6 +1471,21 @@ function activeAudioCall(){
               .font-Syrow24hSupport:before {\
               content: '\\61';\
             }\
+            .font-SyrowX:before {\
+               content: '\\e97e';\
+             }\
+             .font-SyrowLog-out:before {\
+                content: '\\e92b';\
+              }\
+             .font-SyrowPhone-call:before {\
+                content: '\\e93d';\
+              }\
+             .font-SyrowNavigation:before {\
+                content: '\\e93a';\
+              }\
+             .font-SyrowPaperclip:before {\
+                content: '\\e93b';\
+              }\
               .font-SyrowChat:before {\
               content: '\\62';\
             }\
@@ -1469,11 +1498,17 @@ function activeAudioCall(){
               .font-SyrowCallBack:before {\
               content: '\\65';\
             }\
+            .font-SyrowPhone1:before {\
+                content: '\\e93c';\
+              }\
+              .font-SyrowPhone-call:before {\
+                content: '\\e93d';\
+              }\
               .font-SyrowTicket:before {\
               content: '\\66';\
             }\
-              .font-SyrowBunny:before {\
-              content: '\\e502';\
+            .font-SyrowBar-chart-2:before {\
+              content: '\\e902';\
             }\
               .sy-circle {\
               z-index: 987654321!important;\
@@ -1814,7 +1849,7 @@ function activeAudioCall(){
             .chatBox_header .chatBox_status{\
               display: block;\
               font-size: 10px;\
-              margin:5px;\
+              margin-top:5px;\
               padding:0px;\
             }\
             .exitBtn, .closeIcon {\
@@ -1827,14 +1862,12 @@ function activeAudioCall(){
               box-sizing:border-box;\
             }\
             .paperClip{\
-              margin: 10px 10px;\
-              text-align: center;\
-              width: 20px;\
-              height:25px;\
-              transition: 0.5s;\
+              font-size:25px;\
+              margin:10px;\
+              color:"+fontAndIconColor+"\
             }\
             .exitBtn:hover{\
-              transform: scale(.9) ;\
+              transform: scale(1.2) ;\
               cursor: pointer;\
             }\
             .closeIcon:hover{\
@@ -2019,8 +2052,8 @@ function activeAudioCall(){
     var div = document.createElement("div");
     div.id="offlineMessage"
     div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;font-size:12px">'+
-                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Please provide your feedback below:</p>'+
+                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;font-size:14px">'+
+                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Please provide your feedback below:</p>'+
                       '<form>'+
                         '<div class="stars">'+
                           '<form id="stars">'+
@@ -2076,7 +2109,7 @@ function activeAudioCall(){
     div.id="thankYou"
     div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                     '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                    '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Thank You !</p>'+
+                    '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Thank You !</p>'+
                     '</div> '+
                     '</div>'
   messageBox.appendChild(div);
@@ -2311,59 +2344,77 @@ function activeAudioCall(){
   }
 
 function togglingActive(element,value){
-  value=!value
   if(value){
     element.classList.add('changeColor')
   }else{
+    if(getFrameContent!=undefined){
+      getFrameContent.postMessage('userleft',webRtcAddress );
+    }
     element.classList.remove('changeColor')
   }
 }
 var videoBtn=document.getElementById('videoBtn')
+var audioBtn=document.getElementById('audioBtn')
 var isVideoClicked=false;
 var isAudioClicked=false;
 
-  setTimeout(function () {
-    if(videoContains){
-      videoBtn.style.display='block'
-    }
-  }, 1000);
-  videoBtn.addEventListener("click",function(){
-    togglingActive(videoBtn,isVideoClicked)
-    activeVideoCall()
-  })
-var audioBtn=document.getElementById('audioBtn')
-  setTimeout(function () {
-    console.log('insdieddddddddddddd');
-    console.log(audioContains);
-    if(audioContains){
-      console.log('comgggggggggggggggggg');
-      audioBtn.style.display='block'
-    }
-  }, 1000);
-  audioBtn.addEventListener("click",function(){
-    togglingActive(audioBtn,isAudioClicked)
-    activeAudioCall()
-  })
+setTimeout(function () {
+  if(videoContains){
+    videoBtn.style.display='block'
+  }
+  if(audioContains){
+    console.log('comgggggggggggggggggg');
+    audioBtn.style.display='block'
+  }
+}, 1000);
+videoBtn.addEventListener("click",function(){
+  if(isAudioClicked){
+    alert('Audio call is Active')
+    return
+  }
+  isVideoClicked=!isVideoClicked
+  togglingActive(videoBtn,isVideoClicked)
+  activeVideoCall()
+})
+
+audioBtn.addEventListener("click",function(){
+  if(isVideoClicked){
+    alert('Video call is Active')
+    return
+  }
+  isAudioClicked=!isAudioClicked
+  togglingActive(audioBtn,isAudioClicked)
+  activeAudioCall()
+})
 function hideAudioAndVidoeBtn(){
   videoBtn.style.display='none'
   audioBtn.style.display='none'
 }
 
+var isConfirmedToEnd=false;
 
   exitBtn.addEventListener("click", function() {
 
-      if(getFrameContent!=undefined){
-        getFrameContent.postMessage('userleft',webRtcAddress );
+    if(isConfirmedToEnd){
+      if (feedbackFormOpened) {
+        closeSupport.click()
+        return
       }
-    if (threadExist==undefined) {
-      return
+    }else{
+      if (confirm("Are you sure you want to end this chat ?")) {
+        isConfirmedToEnd=true
+          if(getFrameContent!=undefined){
+            getFrameContent.postMessage('userleft',webRtcAddress );
+          }
+            if (threadExist==undefined) {
+              return
+            }
+            endChat();
+            hideAudioAndVidoeBtn()
+      } else {
+        return
+      }
     }
-    if (feedbackFormOpened) {
-      closeSupport.click()
-      return
-    }
-    endChat();
-    hideAudioAndVidoeBtn()
   }, false);
 
   paperPlane.addEventListener("click", function() {
@@ -2446,7 +2497,7 @@ function hideAudioAndVidoeBtn(){
         if (message.attachment==null) {
           console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
           console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
-          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
+          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
           msgDiv = pTag
         }else {
           msgDiv = attachedFile
@@ -2572,7 +2623,7 @@ setInterval(function () {
         firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
         firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
           div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div id="herere" style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:12px">'+
+                  '<div id="herere" style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:14px">'+
                      firstMessage+
                   '</div> '+
                 '</div> '
@@ -2801,7 +2852,7 @@ console.log(firstMessage);
 
         div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                           '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                          '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:12px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
+                          '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
                           '<form>'+
                             '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
                              '<textarea style="width:100%; outline:none;resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
@@ -3078,7 +3129,7 @@ setTimeout(function () {
   if(!chathasOpenedOnce){
     chatSuggestionBar.style.display="block"
   }
-}, 5000);
+}, 10000);
 
 var chatSuggestionBar= document.getElementById('chatSuggestionBar')
 chatSuggestionBar.style.display="none"
