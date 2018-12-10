@@ -548,6 +548,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     audio:false,
     vr: false,
     windowColor: '#000000',
+    fontColor: '#ffffff',
     callBack: false,
     ticket: false,
     dp: emptyFile,
@@ -665,6 +666,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     $scope.form.advisors.push(person)
     $scope.form.advisorsPks.push(person.pk)
     $scope.form.adName = ''
+    console.log($scope.form.advisorsPks);
 
   }
 
@@ -833,6 +835,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     if (cpF.iconColor == '') {
       delete cpF.iconColor
     }
+    if (cpF.fontColor == '') {
+      delete cpF.fontColor
+    }
     if (cpF.firstMessage == null || cpF.firstMessage == '') {
       delete cpF.firstMessage
       console.log('thereee', cpF.firstMessage);
@@ -882,6 +887,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     }
     if (cpF.iconColor != '') {
       fd.append('iconColor', cpF.iconColor);
+    }
+    if (cpF.fontColor != '') {
+      fd.append('fontColor', cpF.fontColor);
     }
 
     // if (cpF.firstMessage != '') {

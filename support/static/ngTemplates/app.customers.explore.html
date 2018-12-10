@@ -107,6 +107,15 @@
         </div>
         <br>
       </div>
+      <div class="row" ng-if="custDetails.fontColor.length>0" style="padding-left:10px">
+        <div class="col-md-6">
+          <h4><i class="fa fa-font"></i> &nbsp; Font Colour</h4>
+        </div>
+        <div class="col-md-3" style="border:1px solid #eee; background-color:{{custDetails.fontColor}};margin-top:10px">
+          <h3> </h3>
+        </div>
+        <br>
+      </div>
 
       <div class="row" style="padding-left:25px">
         <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i>&nbsp;&nbsp;&nbsp;&nbsp;</h4><br>

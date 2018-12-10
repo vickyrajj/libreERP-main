@@ -43,6 +43,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     return "";
   }
 
+  $scope.myCompanies=[];
 
 
 
@@ -111,6 +112,17 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         })
       }
     });
+
+    setTimeout(function () {
+      $http({
+        method: 'GET',
+        url: '/api/support/getMyUser/?getNewComp='+$scope.me.pk,
+      }).then(function(response) {
+        console.log(response.data , 'Got unhamdled');
+        $scope.myCompanies=response.data
+
+      });
+    }, 3000);
 
 
     function heartbeat() {

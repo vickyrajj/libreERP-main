@@ -59,7 +59,7 @@ class serviceSerializer(serializers.ModelSerializer):
             for person in self.context['request'].data['contactPerson']:
                     instance.contactPerson.add(User.objects.get(pk = int(person)))
         if 'advisors' in self.context['request'].data:
-            instance.contactPerson.clear()
+            instance.advisors.clear()
             for person in self.context['request'].data['advisors']:
                     instance.advisors.add(User.objects.get(pk = int(person)))
         instance.save()

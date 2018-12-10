@@ -230,6 +230,10 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
       fd.append('windowColor', $scope.cpForm.windowColor);
     }
     if ($scope.cpForm.supportBubbleColor != '') {
+    if ($scope.cpForm.fontColor != '') {
+      fd.append('fontColor', $scope.cpForm.fontColor);
+    }
+    if ($scope.cpForm.supportBubbleColor != '') {
       fd.append('supportBubbleColor', $scope.cpForm.supportBubbleColor);
     }
     if ($scope.cpForm.iconColor != '') {

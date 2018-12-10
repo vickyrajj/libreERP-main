@@ -69,16 +69,16 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
   }
 
 
-// setTimeout(function () {
-//   $http({
-//     method: 'GET',
-//     url: '/api/support/heartbeat/?pk=' + $scope.me.pk +'&timesheet=true'
-//   }).
-//   then(function(response) {
-//     console.log('here');
-//   }, function(response) {});
-//
-// }, 10000);
+setTimeout(function () {
+  $http({
+    method: 'GET',
+    url: '/api/support/heartbeat/?pk=' + $scope.me.pk +'&timesheet=true'
+  }).
+  then(function(response) {
+    console.log('here');
+  }, function(response) {});
+
+}, 5000);
 
 setTimeout(function () {
   $http({

@@ -321,19 +321,22 @@ var dpSupport = '{{dp}}'
 var supportBubbleColor = '{{supportBubbleColor}}'
 var firstMessage = `{{firstMessage}}`;
 var iconColor = '{{iconColor}}'
+var fontAndIconColor='{{fontColor}}'
+
+// console.log(fontColor + 'jfhdjfjkdjfksdjfkjskdfjk');
 
 
 if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
 var color1 = tinycolor(windowColor);
-var fontAndIconColor
-if(!color1.isLight()){
-  fontAndIconColor='#f8f8ff'
-}
-else{
-  fontAndIconColor='#080800'
-}
+// var fontAndIconColor
+// if(!color1.isLight()){
+//   fontAndIconColor='#f8f8ff'
+// }
+// else{
+//   fontAndIconColor='#080800'
+// }
 
 
 // windowColor = "#1f5b82"
@@ -813,10 +816,10 @@ function createChatDiv() {
                 // '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
                 // '<img class="paperClip" id="paperClip" src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip">'+
                 '<svg class="paperClip" viewBox="0 0 24 24">'+
-                  '<path style="fill:'+windowColor+'" id="paperClip" d="M21.586 10.461l-10.05 10.075c-1.95 1.949-5.122 1.949-7.071 0s-1.95-5.122 0-7.072l10.628-10.585c1.17-1.17 3.073-1.17 4.243 0 1.169 1.17 1.17 3.072 0 4.242l-8.507 8.464c-.39.39-1.024.39-1.414 0s-.39-1.024 0-1.414l7.093-7.05-1.415-1.414-7.093 7.049c-1.172 1.172-1.171 3.073 0 4.244s3.071 1.171 4.242 0l8.507-8.464c.977-.977 1.464-2.256 1.464-3.536 0-2.769-2.246-4.999-5-4.999-1.28 0-2.559.488-3.536 1.465l-10.627 10.583c-1.366 1.368-2.05 3.159-2.05 4.951 0 3.863 3.13 7 7 7 1.792 0 3.583-.684 4.95-2.05l10.05-10.075-1.414-1.414z"/>'+
+                  '<path style="fill:'+fontAndIconColor+'" id="paperClip" d="M21.586 10.461l-10.05 10.075c-1.95 1.949-5.122 1.949-7.071 0s-1.95-5.122 0-7.072l10.628-10.585c1.17-1.17 3.073-1.17 4.243 0 1.169 1.17 1.17 3.072 0 4.242l-8.507 8.464c-.39.39-1.024.39-1.414 0s-.39-1.024 0-1.414l7.093-7.05-1.415-1.414-7.093 7.049c-1.172 1.172-1.171 3.073 0 4.244s3.071 1.171 4.242 0l8.507-8.464c.977-.977 1.464-2.256 1.464-3.536 0-2.769-2.246-4.999-5-4.999-1.28 0-2.559.488-3.536 1.465l-10.627 10.583c-1.366 1.368-2.05 3.159-2.05 4.951 0 3.863 3.13 7 7 7 1.792 0 3.583-.684 4.95-2.05l10.05-10.075-1.414-1.414z"/>'+
                 '</svg>'+
                 '<svg class="paperClip" viewBox="0 0 24 24">'+
-                  '<path style="fill:'+windowColor+'" id="paperPlane" d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z"/></svg>'+
+                  '<path style="fill:'+fontAndIconColor+'" id="paperPlane" d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z"/></svg>'+
                 // '<img id="paperPlane" src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:30px !important; width:30px !important;">'+
                 // '<i id="paperPlane" class="fa fa-paper-plane-o" aria-hidden="true"></i>'+
               '</div>'+
@@ -837,6 +840,7 @@ function createChatDiv() {
         '<div id="supportCircle">'+
     			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
     				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
+    				'<span id="chatSuggestionBar" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">We are here to help you</span>'+
     				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
     				'<div  id="sy-sub-icons">'+
     					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
@@ -1534,6 +1538,19 @@ function activeAudioCall(){
               max-width: 250px;\
               overflow: hidden;\
             }\
+              .sy-text-Suggested {\
+              position: fixed;\
+              right: 100px;\
+              margin-top: 15px;\
+              border-radius: 15px;\
+              padding: 4px 8px;\
+              font-family: Verdana, Arial, sans-serif;\
+              font-size: 18px;\
+              white-space: nowrap;\
+              max-width: 250px;\
+              overflow: hidden;\
+              animation:chatSuggestionBar 1s\
+            }\
               .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
               text-decoration: none;\
             }\
@@ -1543,6 +1560,9 @@ function activeAudioCall(){
               #sy-main-icon:hover > .sy-text {\
               display: inline-block;\
               right: 110px;\
+            }\
+              #sy-main-icon:hover > .sy-text-Suggested {\
+              display: none !important;\
             }\
             "+ mainStr+"\
               #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1) { \
@@ -1647,6 +1667,17 @@ function activeAudioCall(){
             70%{\
               transform:translateY(20px);\
           	}\
+            100%{\
+              	transform:translateY(0px);\
+          	}\
+          }\
+          @keyframes chatSuggestionBar{\
+        	0%{\
+              transform:translateY(100px);\
+          	}\
+            50%{\
+              transform:translateY(-10px);\
+            }\
             100%{\
               	transform:translateY(0px);\
           	}\
@@ -3015,8 +3046,20 @@ console.log(firstMessage);
 
   chatCircle.addEventListener("click", openChat , false);
 
+var chathasOpenedOnce=false;
+
+setTimeout(function () {
+  if(!chathasOpenedOnce){
+    chatSuggestionBar.style.display="block"
+  }
+}, 5000);
+
+var chatSuggestionBar= document.getElementById('chatSuggestionBar')
+chatSuggestionBar.style.display="none"
 
   function openChat() {
+    chathasOpenedOnce=true;
+    chatSuggestionBar.style.display="none"
     // welcomeMessage.style.display ="none";
     // console.log(chatOpen);
     // console.log('click');

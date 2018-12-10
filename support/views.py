@@ -125,8 +125,15 @@ class GetMyUser(APIView):
                 toSend.append(dic)
             print toSend , 'FFFFFFFFFFFFFFFF'
             return Response(toSend, status=status.HTTP_200_OK)
-
-
+        if 'getNewComp' in request.GET:
+            userpk=request.GET['getNewComp']
+            myServices = service.objects.filter(advisors = userpk)
+            companies = [];
+            for i in myServices:
+                company = CustomerProfile.objects.filter(service = i)
+                companies.append(company[0].pk)
+            print companies,'*************************8'
+            return Response(companies, status=status.HTTP_200_OK)
 def createExcel(data):
     wb = Workbook()
 
@@ -407,7 +414,7 @@ def getChatterScript(request , fileName):
     print globalSettings.SITE_ADDRESS
     print request.get_host()
     print request.META.get('REMOTE_ADDR')
-    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor ,'iconColor':obj.iconColor, "windowColor" : obj.windowColor , "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "video":obj.video ,"audio":obj.audio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS , "wampServer" : globalSettings.WAMP_SERVER ,"webrtcAddress": globalSettings.WEBRTC_ADDRESS}
+    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor ,'iconColor':obj.iconColor, "windowColor" : obj.windowColor ,"fontColor":obj.fontColor, "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "video":obj.video ,"audio":obj.audio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS , "wampServer" : globalSettings.WAMP_SERVER ,"webrtcAddress": globalSettings.WEBRTC_ADDRESS}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url
     if obj.name:

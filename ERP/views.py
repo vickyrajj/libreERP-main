@@ -158,7 +158,7 @@ class serviceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = serviceSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name','user','contactPerson']
+    filter_fields = ['name','user','contactPerson','advisors']
     queryset = service.objects.all()
     # def get_queryset(self):
     #     u = self.request.user

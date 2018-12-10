@@ -77,6 +77,7 @@ connection.onopen = function(session) {
   };
 
 var isfocused=true;
+var hasAccesss=true;
 
   supportChatResponse = function(args) {
     window.onblur = function (){
@@ -91,6 +92,18 @@ var isfocused=true;
     // console.log(args);
     // scope.notii();
     console.log(args);
+    console.log(args[3]);
+    console.log(scope.myCompanies);
+
+    if (args[3]) {
+      console.log(scope.myCompanies.indexOf(args[3]));
+      if(scope.myCompanies.indexOf(args[3])<0){
+      hasAccesss=false
+      }
+    }
+    if(!hasAccesss){
+      return
+    }
 
     function userExist() {
       for (var i = 0; i < scope.newUsers.length; i++) {
