@@ -1864,7 +1864,7 @@ function activeAudioCall(){
             .paperClip{\
               font-size:25px;\
               margin:10px;\
-              color:"+fontAndIconColor+"\
+              color:"+windowColor+"\
             }\
             .exitBtn:hover{\
               transform: scale(1.2) ;\
