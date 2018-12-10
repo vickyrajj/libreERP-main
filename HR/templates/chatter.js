@@ -777,26 +777,33 @@ function createChatDiv() {
               '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
-            '<svg viewBox="0 0 24 24" class="exitBtn" >'+
-              '<path id="audioBtn" style="fill:'+fontAndIconColor+';display:none;" d="M20 22.621l-3.521-6.795c-.008.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.083-1.026-3.493-6.817-2.106 1.039c-7.202 3.755 4.233 25.982 11.6 22.615.121-.055 2.102-1.029 2.11-1.033z"/>'+
-            '</svg>'+
-            '<svg viewBox="0 0 24 24" class="exitBtn">'+
-              '<path style="fill:'+fontAndIconColor+';display:none" id="videoBtn" d="M13.5 8c.276 0 .5.224.5.5v7c0 .276-.224.5-.5.5h-11c-.276 0-.5-.224-.5-.5v-7c0-.276.224-.5.5-.5h11zm2.5 0c0-1.104-.896-2-2-2h-12c-1.104 0-2 .896-2 2v8c0 1.104.896 2 2 2h12c1.104 0 2-.896 2-2v-8zm6 1.854v4.293l-2-1.408v-1.478l2-1.407zm2-3.854l-6 4.223v3.554l6 4.223v-12z"/>'+
-            '</svg>'+
+            // '<svg viewBox="0 0 24 24" class="exitBtn" >'+
+            //   '<path id="audioBtn" style="fill:'+fontAndIconColor+';display:none;" d="M20 22.621l-3.521-6.795c-.008.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.083-1.026-3.493-6.817-2.106 1.039c-7.202 3.755 4.233 25.982 11.6 22.615.121-.055 2.102-1.029 2.11-1.033z"/>'+
+            // '</svg>'+
+            // '<svg viewBox="0 0 24 24" class="exitBtn">'+
+            //   '<path style="fill:'+fontAndIconColor+';display:none" id="videoBtn" d="M13.5 8c.276 0 .5.224.5.5v7c0 .276-.224.5-.5.5h-11c-.276 0-.5-.224-.5-.5v-7c0-.276.224-.5.5-.5h11zm2.5 0c0-1.104-.896-2-2-2h-12c-1.104 0-2 .896-2 2v8c0 1.104.896 2 2 2h12c1.104 0 2-.896 2-2v-8zm6 1.854v4.293l-2-1.408v-1.478l2-1.407zm2-3.854l-6 4.223v3.554l6 4.223v-12z"/>'+
+            // '</svg>'+
+            // '<svg viewBox="0 0 24 24" class="closeIcon">'+
+            //   '<path style="fill:'+fontAndIconColor+'" id="closeIcon" class="closeIcon" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>'+
+            // '</svg>'+
+            // '<svg viewBox="0 0 24 24" class="exitBtn">'+
+            //   '<path style="fill:'+fontAndIconColor+';" id="exitBtn" class="exitBtn" d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>'+
+            // '</svg>'+
+            // '<i id="exitBtn" class="SyrowFont font-SyrowPhone-off"></i>'+
+            // '<svg  viewBox="0 0 24 24" class="exitBtn">'+
+            //   '<path d="M0 2v20h14v-2h-12v-16h12v-2h-14zm18 7.408l2.963 2.592-2.963 2.592v-1.592h-8v-2h8v-1.592zm-2-4.408v4h-8v6h8v4l8-7-8-7z"/>'+
+            // '</svg>'+
+            '<i class="exitBtn SyrowFont font-SyrowAudioCall" style="display:none" id="audioBtn"></i>'+
+            '<i class="exitBtn SyrowFont font-SyrowVideoCall" style="display:none" id="videoBtn"></i>'+
+            // '<i class="closeIcon SyrowFont font-SyrowPhone-off" id="closeIcon"></i>'+
+            // '<i class="exitBtn SyrowFont SyrowBunny" id="exitBtn"></i>'+
+            // '<i id="exitBtn" class="SyrowFont font-SyrowBunny" aria-hidden="true"></i>'+
             '<svg viewBox="0 0 24 24" class="closeIcon">'+
               '<path style="fill:'+fontAndIconColor+'" id="closeIcon" class="closeIcon" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>'+
             '</svg>'+
             '<svg viewBox="0 0 24 24" class="exitBtn">'+
               '<path style="fill:'+fontAndIconColor+';" id="exitBtn" class="exitBtn" d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>'+
             '</svg>'+
-            // '<svg  viewBox="0 0 24 24" class="exitBtn">'+
-            //   '<path d="M0 2v20h14v-2h-12v-16h12v-2h-14zm18 7.408l2.963 2.592-2.963 2.592v-1.592h-8v-2h8v-1.592zm-2-4.408v4h-8v6h8v4l8-7-8-7z"/>'+
-            // '</svg>'+
-            // '<i class="exitBtn fa fa-headphones" style="display:none" id="audioBtn"></i>'+
-            // '<i class="exitBtn fa fa-video-camera" style="display:none" id="videoBtn"></i>'+
-            // '<i class="closeIcon fa fa-times" id="closeIcon"></i>'+
-            // '<i class="exitBtn fa fa-sign-out" id="exitBtn"></i>'+
-            // '<i id="exitBtn" class="fa fa-sign-out" aria-hidden="true"></i>'+
           '</div>'+
           '<div id="audioSection" class="audio_section">'+
           '</div>'+
@@ -808,10 +815,10 @@ function createChatDiv() {
           '</div>'+
           '<div id="chatBox_footer" class="chatBox_footer">'+
               '<div class="chatbox_branding">'+
-                '<p>We run on Syrow</p>'+
+                '<a style="color:'+fontAndIconColor+' ;text-decoration:none" href="">We run on Syrow</a>'+
               '</div>'+
               '<div id="messageComposer" class="flex_container">'+
-                '<textarea id="inputText" placeholder="Write a Reply.." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
+                '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
                 '<input id="filePicker" type="file" style="display:none;"/>'+
                 // '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
                 // '<img class="paperClip" id="paperClip" src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip">'+
@@ -1426,16 +1433,6 @@ function activeAudioCall(){
             var newStyle = document.createElement('style');
             newStyle.appendChild(document.createTextNode("\
             @font-face {\
-                font-family: 'FontAwesome';\
-                src: url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),\
-                     url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), \
-                     url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.woff?v=4.7.0') format('woff'),\
-                     url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),\
-                     url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/fontawesome/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');\
-                font-weight: normal;\
-                font-style: normal;\
-              }\
-            @font-face {\
               font-family: 'Syrow';\
               src:  url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.eot?a8jyi4#iefix') format('embedded-opentype'),\
               url('https://raw.githubusercontent.com/pkyad/libreERP-main/syrow/static_shared/fonts/syrow/Syrow.ttf?a8jyi4') format('truetype'),\
@@ -1474,6 +1471,9 @@ function activeAudioCall(){
             }\
               .font-SyrowTicket:before {\
               content: '\\66';\
+            }\
+              .font-SyrowBunny:before {\
+              content: '\\e502';\
             }\
               .sy-circle {\
               z-index: 987654321!important;\
@@ -1524,6 +1524,9 @@ function activeAudioCall(){
               transition: opacity .08s linear,-webkit-transform .16s linear;\
               transition: transform .16s linear,opacity .08s linear;\
               transition: transform .16s linear,opacity .08s linear,-webkit-transform .16s linear;\
+            }\
+            .changeColor{\
+              animation:coloringg 2s infinite\
             }\
               .sy-text {\
               position: fixed;\
@@ -1671,6 +1674,14 @@ function activeAudioCall(){
               	transform:translateY(0px);\
           	}\
           }\
+          @keyframes coloringg{\
+        	0%{\
+              color:red;\
+          	}\
+            100%{\
+              	color:green;\
+          	}\
+          }\
           @keyframes chatSuggestionBar{\
         	0%{\
               transform:translateY(100px);\
@@ -1737,7 +1748,7 @@ function activeAudioCall(){
               position: absolute;\
               top:80px;\
               width:100%;\
-              bottom: 90px;\
+              bottom: 80px;\
               background-color: white;\
               overflow-x:hidden;\
               overflow-y: auto;\
@@ -1816,8 +1827,8 @@ function activeAudioCall(){
             .paperClip{\
               margin: 10px 10px;\
               text-align: center;\
-              width: 30px;\
-              height:34px;\
+              width: 20px;\
+              height:25px;\
               transition: 0.5s;\
             }\
             .exitBtn:hover{\
@@ -1834,7 +1845,7 @@ function activeAudioCall(){
               position: absolute;\
               bottom:0px;\
               width:100%;\
-              min-height: 90px;\
+              min-height: 80px;\
               background-color: white;\
               border-radius:0px 0px 10px 10px;\
             }\
@@ -1869,7 +1880,6 @@ function activeAudioCall(){
               color: "+fontAndIconColor+";;\
               padding:0px;\
               margin:0px;\
-              text-shadow: -1px 1px 4px #fff;\
             }\
             .startNewChatBtn{\
               text-align: center;\
@@ -2210,7 +2220,7 @@ function activeAudioCall(){
 
     setTimeout(function () {
       inputText.disabled = false;
-      inputText.placeholder = "Write a reply...";
+      inputText.placeholder = "Message...";
       paperClip.style.display = "";
       paperPlane.style.display = "";
     }, 2000);
@@ -2297,13 +2307,26 @@ function activeAudioCall(){
       }, 5000);
     }
   }
+
+function togglingActive(element,value){
+  value=!value
+  if(value){
+    element.classList.add('changeColor')
+  }else{
+    element.classList.remove('changeColor')
+  }
+}
 var videoBtn=document.getElementById('videoBtn')
+var isVideoClicked=false;
+var isAudioClicked=false;
+
   setTimeout(function () {
     if(videoContains){
       videoBtn.style.display='block'
     }
   }, 1000);
   videoBtn.addEventListener("click",function(){
+    togglingActive(videoBtn,isVideoClicked)
     activeVideoCall()
   })
 var audioBtn=document.getElementById('audioBtn')
@@ -2316,6 +2339,7 @@ var audioBtn=document.getElementById('audioBtn')
     }
   }, 1000);
   audioBtn.addEventListener("click",function(){
+    togglingActive(audioBtn,isAudioClicked)
     activeAudioCall()
   })
 function hideAudioAndVidoeBtn(){
