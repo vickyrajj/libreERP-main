@@ -49,6 +49,8 @@ $scope.addToCart=function(product){
   console.log($rootScope.cart.length);
 }
 
+
+
 // $scope.getList = function(){
 //   if($rootScope.cart.length>0){
 //     for (var i = 0; i < $rootScope.cart.length; i++) {
@@ -121,12 +123,19 @@ $scope.getList = function(){
       }
     },
     controller: function($scope , $uibModalInstance,cartData){
-      // $scope.productSearch = function(query) {
-      //   return $http.get('/api/support/products/?part_no__contains=' + query).
-      //   then(function(response) {
-      //     return response.data;
-      //   })
-      // };
+      $scope.projectSearch = function(query) {
+        return $http.get('/api/support/projects/?title__contains=' + query).
+        then(function(response) {
+          return response.data;
+        })
+      };
+
+      $scope.userSearch = function(query) {
+        return $http.get('/api/HR/userSearch/?first_name__contains=' + query).
+        then(function(response) {
+          return response.data;
+        })
+      };
       console.log(cartData,'aaaaaaaaaaa');
       $scope.cartData = cartData
       $scope.productsOrdered = []
@@ -142,9 +151,23 @@ $scope.getList = function(){
 
 
 
+      $scope.form = {}
       $scope.save = function(){
+        console.log($scope.form.responsible,'kkkkkkkkkkkkkkkkk');
+        if($scope.form.responsible==undefined){
+            Flash.create('warning', 'Select Responsible person');
+            return
+        }
+        if($scope.form.project==undefined){
+            Flash.create('warning', 'Select Project');
+            return
+        }
         console.log( $scope.productsOrdered);
-        var dataToSend = $scope.productsOrdered
+        var dataToSend = {
+          products : $scope.productsOrdered,
+          user : $scope.form.responsible.pk,
+          project : $scope.form.project.pk,
+        }
         $http({
           method: 'POST',
           url: '/api/support/order/',

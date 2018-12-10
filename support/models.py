@@ -42,7 +42,7 @@ class Test(models.Model):
 
 class Projects(models.Model):
     created = models.DateTimeField(auto_now_add  = True )
-    title = models.CharField(max_length = 20 , null = True , blank =True)
+    title = models.CharField(max_length = 20)
     service = models.ForeignKey(service , related_name = 'service' ,null = False)
     date = models.DateField(null = True)
     machinemodel = models.CharField(max_length = 20 , null = True , blank =True)
@@ -79,3 +79,9 @@ class Invoice(models.Model):
     product = models.ForeignKey( Products , null = True)
     qty = models.PositiveIntegerField(null=True , default=0)
     price = models.FloatField(null = True)
+
+class InvoiceMain(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    invoice = models.ManyToManyField(Invoice, related_name='invoiceqty')
+    user =  models.ForeignKey(User , related_name='invoiceuser')
+    project = models.ForeignKey(Projects , related_name='invoiceproject')
