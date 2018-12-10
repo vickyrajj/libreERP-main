@@ -618,7 +618,6 @@ class OrderAPIView(APIView):
                             prodListQty = 0
                             p.save()
                     if prodListQty==0:
-                        print 'jjhhhhhhhhhhhhhhhhhhhhhhh'
                         data = {
                         'qty': i['prodQty'],
                         'product' :Products.objects.get(pk=i['pk']),
@@ -627,4 +626,5 @@ class OrderAPIView(APIView):
                         orderObj = Invoice.objects.create(**data)
                         orderObj.save()
                         orderlist.append(orderObj.pk)
+
         return Response(orderlist,status=status.HTTP_200_OK)

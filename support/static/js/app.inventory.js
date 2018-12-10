@@ -49,6 +49,8 @@ $scope.addToCart=function(product){
   console.log($rootScope.cart.length);
 }
 
+
+
 // $scope.getList = function(){
 //   if($rootScope.cart.length>0){
 //     for (var i = 0; i < $rootScope.cart.length; i++) {

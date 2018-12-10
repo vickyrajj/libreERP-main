@@ -79,3 +79,8 @@ class Invoice(models.Model):
     product = models.ForeignKey( Products , null = True)
     qty = models.PositiveIntegerField(null=True , default=0)
     price = models.FloatField(null = True)
+
+# class InvoiceMain(models.Model):
+#     created = models.DateTimeField(auto_now_add=True)
+#     invoice = models.ManyToManyField(Invoice)
+#     user =  models.ForeignKey(User , related_name='invoiceuser' , null = True)
