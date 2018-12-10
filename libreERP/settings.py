@@ -57,7 +57,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.151', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.0.15','192.168.1.123']
+ALLOWED_HOSTS = ['192.168.1.151', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.0.15','192.168.1.123','192.168.0.109']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -159,6 +159,19 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username'
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = False
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = (
+    'x-requested-with',
+    'content-type',
+    'accept',
+    'origin',
+    'authorization',
+    'X-CSRFToken'
+)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -263,18 +276,6 @@ DEFAULT_FROM_EMAIL = 'testmail@cioc.in'
 
 STATIC_URL = '/static/'
 
-CORS_ORIGIN_ALLOW_ALL = False
-
-CORS_ALLOW_HEADERS = (
-    'x-requested-with',
-    'content-type',
-    'accept',
-    'origin',
-    'authorization',
-    'X-CSRFToken'
-)
-
-CORS_ALLOW_CREDENTIALS = True
 
 STATIC_ROOT = (
     os.path.join(BASE_DIR , 'static_root')

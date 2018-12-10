@@ -69,3 +69,22 @@ class CampaignLogs(models.Model):
     followupDate = models.DateTimeField(null = True , blank = True)
     data = models.CharField(max_length = 1000 , null = True , blank = True)
     typ = models.CharField(choices = LOG_TYP , max_length = 20 , null=True)
+
+class Schedule(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    dated =  models.DateField( null= False )
+    slot = models.CharField(max_length = 15 , null= False)
+    name  = models.CharField(max_length = 50 , null= False)
+    emailId = models.EmailField(null= False)
+
+class Leads(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    name  = models.CharField(max_length = 50 , null= False)
+    emailId = models.EmailField(null= False)
+    requirements = models.CharField(max_length = 500 , null= True)
+    jobLevel  = models.CharField(max_length = 50 , null= True)
+    company  = models.CharField(max_length = 50 , null= True)
+    companyCategory  = models.CharField(max_length = 50 , null= True)
+    companyExpertise  = models.CharField(max_length = 50 , null= True)
+    country  = models.CharField(max_length = 50 , null= True)
+    mobileNumber  = models.CharField(max_length = 20 , null= True)

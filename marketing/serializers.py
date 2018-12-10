@@ -156,11 +156,21 @@ class CampaignLogsSerializer(serializers.ModelSerializer):
         c.save()
         return c
 
-class LeadsSerializer(serializers.ModelSerializer):
-    logs = serializers.SerializerMethodField()
-    class Meta:
-        model = Contacts
-        fields = ('pk' , 'created' , 'referenceId' , 'name', 'email', 'mobile' , 'source' , 'pinCode' , 'notes' , 'tags' , 'logs')
+# class LeadsSerializer(serializers.ModelSerializer):
+#     logs = serializers.SerializerMethodField()
+#     class Meta:
+#         model = Contacts
+#         fields = ('pk' , 'created' , 'referenceId' , 'name', 'email', 'mobile' , 'source' , 'pinCode' , 'notes' , 'tags' , 'logs')
 
     def get_logs(self,obj):
         return CampaignLogs.objects.filter(contact = obj.pk).values('pk' , 'created' , 'user' , 'contact', 'campaign', 'data' , 'typ' , 'followupDate')
+
+class SheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schedule
+        fields = ('pk','created','dated','slot','name','emailId')
+
+class LeadsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Leads
+        fields = ('pk','created','name','emailId','requirements','jobLevel','company','companyCategory','companyExpertise','country','mobileNumber')
