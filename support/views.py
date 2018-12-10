@@ -561,7 +561,7 @@ def materialIssue(response , value , request):
     elements.append(Spacer(1,15))
     cuss_no = invdata.project.comm_nr
     customer = invdata.user.first_name
-    dated = invdata.created
+    dated = invdata.created.date()
     p1_01 =Paragraph("<para fontSize=10>Comm nr</para>",styles['Normal'])
     p1_02 =Paragraph(str(cuss_no),styles['Normal'])
 
