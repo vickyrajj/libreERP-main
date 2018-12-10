@@ -587,15 +587,20 @@ def materialIssued(response , value , request):
     p4_05 =Paragraph("<para fontSize=6 align=center><b>Stock value consumed for the comm nr<br/>(AD = ACxZ)</b></para>",styles['Normal'])
     data2= [[p4_01,p4_02,p4_03,p4_04,p4_05]]
 
-    print list(invdata.materialIssue.values()),'aaaaaaaaaaaa'
+    grandtotal = 0
     for i in list(invdata.materialIssue.values()):
-        # print i.product.part_no ,'aaaaaaaaaaaaa'
-        # partno = i['product']
+
         product = Products.objects.get(pk = i['product_id'])
         partno = product.part_no
         description = product.description_1
         qty = i['qty']
-
+        price = i['price']
+        pdata = str(price)
+        total = qty*price
+        tdata = str(total)
+        grandtotal+=total
+        print str(total),'aaaaaaaaaaaaa'
+        grandtotal = str(grandtotal)
         # p5_01 =Paragraph(partno,styles['Normal'])
         # p5_02 =Paragraph(str(description),styles['Normal'])
         # p5_03 =Paragraph(str(qty),styles['Normal'])
@@ -605,15 +610,15 @@ def materialIssued(response , value , request):
         p6_01 =Paragraph(partno,styles['Normal'])
         p6_02 =Paragraph(description,styles['Normal'])
         p6_03 =Paragraph(str(qty),styles['Normal'])
-        p6_04 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-        p6_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+        p6_04 =Paragraph(pdata,styles['Normal'])
+        p6_05 =Paragraph(tdata,styles['Normal'])
         data2+=[[p6_01,p6_02,p6_03,p6_04,p6_05]]
 
     p7_01 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
     p7_02 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
     p7_03 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
     p7_04 =Paragraph("<para fontSize=8 >Total</para>",styles['Normal'])
-    p7_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+    p7_05 =Paragraph(grandtotal,styles['Normal'])
     data2+=[[p7_01,p7_02,p7_03,p7_04,p7_05]]
 
     rheight=0.4*inch #[1.1*inch,1.1*inch]

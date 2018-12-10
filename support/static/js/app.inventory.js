@@ -65,6 +65,16 @@ if(newValue==true){
 }
 });
 
+$scope.delete = function(pk,index){
+  $http({method : 'DELETE' , url : '/api/support/material/' + pk + '/' }).
+  then( function(response){
+    Flash.create('success','Deleted' );
+    console.log(index,'jjjjj');
+    $scope.materialIssue.splice(index,1)
+  })
+}
+
+
 // modeToggle
 
 
@@ -124,6 +134,8 @@ if(newValue==true){
           });
 
         }
+
+
     },
   }).result.then(function() {}, function() {
       $scope.fetchProdInventory($scope.offset)
@@ -166,6 +178,17 @@ $scope.getList = function(){
             $scope.productsOrdered.push(response.data);
           })
       }
+
+      $scope.delete = function(index){
+        $scope.productsOrdered.splice(index,1);
+      }
+      // $scope.delete = function(pk,index){
+      //   $http({method : 'DELETE' , url : '/api/support/products/' + pk + '/' }).
+      //   then( function(response){
+      //     Flash.create('success','Deleted' );
+      //     console.log(index,'jjjjj');
+      //     $scope.productsOrdered.splice(index,1)
+      //   })
 
 
 

@@ -21,12 +21,16 @@
           <th>Product</th>
           <th>Part No</th>
           <th>Quantity</th>
+          <th></th>
         </tr>
         <tr ng-repeat="v in productsOrdered track by $index">
           <td>{{$index + 1}}</td>
           <td>{{v.description_1}}</td>
           <td>{{v.part_no}}</td>
           <td><input type="number" step=1 class="form-control-pos" ng-model="v.prodQty"></td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="delete($index)"> <i class="fa fa-trash"></i> </button>
+          </td>
         </tr>
       </tbody>
     </table>
