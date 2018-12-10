@@ -846,7 +846,7 @@ class StreamRecordings(APIView):
                 destination.write(chunk)
         return Response({}, status = status.HTTP_200_OK)
 
-import pysvg.parser
+
 
 # class SVGColor(APIView):
 #     renderer_classes = (JSONRenderer,)
