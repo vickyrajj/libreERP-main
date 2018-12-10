@@ -847,7 +847,6 @@ class StreamRecordings(APIView):
         return Response({}, status = status.HTTP_200_OK)
 
 
-
 # class SVGColor(APIView):
 #     renderer_classes = (JSONRenderer,)
 #     permission_classes=(permissions.AllowAny,)
