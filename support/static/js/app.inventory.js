@@ -54,7 +54,7 @@ console.log(newValue,'kkkkkkkkkkkkkkkkkk');
 if(newValue==true){
   $http({
     method: 'GET',
-    url: '/api/support/invoice/'
+    url: '/api/support/material/'
   }).
   then(function(response) {
     console.log(response.data,'aaaaaaaaaaaaaa');

@@ -9,8 +9,8 @@ router.register(r'productsheet' , ProductSheetViewSet , base_name = 'productshee
 router.register(r'projects' , ProjectsViewSet , base_name = 'projects')
 router.register(r'bom' , BoMViewSet , base_name = 'bom')
 router.register(r'inventory' , InventoryViewSet , base_name = 'inventory')
-router.register(r'order' , InvoiceViewSet , base_name = 'inventory')
-router.register(r'invoice' , invoiceMainViewSet , base_name = 'inventory')
+router.register(r'materialqty' , MaterialIssueViewSet , base_name = 'materialIssue')
+router.register(r'material' , MaterialIssueMainViewSet , base_name = 'materialIssuemain')
 
 
 
@@ -21,7 +21,7 @@ urlpatterns = [
     url(r'quotation/$' , QuotationAPIView.as_view() ),
     url(r'inventoryData/$' , ProductInventoryAPIView.as_view() ),
     url(r'order/$' , OrderAPIView.as_view() ),
-    url(r'materialIssue/$' , MaterialIssueAPIView.as_view() ),
+    url(r'materialIssued/$' , MaterialIssuedNoteAPIView.as_view() ),
     url(r'grn/$' , GrnAPIView.as_view() ),
 
 

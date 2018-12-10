@@ -545,9 +545,9 @@ class QuotationAPIView(APIView):
         return response
 from reportlab.platypus.flowables import HRFlowable
 
-def materialIssue(response , value , request):
+def materialIssued(response , value , request):
     print value,'aaaaaaaaaaaaaaaa'
-    invdata = InvoiceMain.objects.get(pk = request.GET['value'])
+    invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
 
 
     styles = getSampleStyleSheet()
@@ -589,8 +589,8 @@ def materialIssue(response , value , request):
     p4_05 =Paragraph("<para fontSize=6 align=center><b>Stock value consumed for the comm nr<br/>(AD = ACxZ)</b></para>",styles['Normal'])
     data2= [[p4_01,p4_02,p4_03,p4_04,p4_05]]
 
-    print list(invdata.invoice.values()),'aaaaaaaaaaaa'
-    for i in list(invdata.invoice.values()):
+    print list(invdata.materialIssue.values()),'aaaaaaaaaaaa'
+    for i in list(invdata.materialIssue.values()):
         # print i.product.part_no ,'aaaaaaaaaaaaa'
         # partno = i['product']
         print i['product_id'],'dddddddddddddddddd'
@@ -809,28 +809,28 @@ class InventoryViewSet(viewsets.ModelViewSet):
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['products','project']
 
-class InvoiceViewSet(viewsets.ModelViewSet):
+class MaterialIssueViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )
-    queryset = Invoice.objects.all()
-    serializer_class = InvoiceSerializer
+    queryset = MaterialIssue.objects.all()
+    serializer_class = MaterialIssueSerializer
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['products','project']
 
-class invoiceMainViewSet(viewsets.ModelViewSet):
+class MaterialIssueMainViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )
-    queryset = InvoiceMain.objects.all()
-    serializer_class = InvoiceMainSerializer
+    queryset = MaterialIssueMain.objects.all()
+    serializer_class = MaterialIssueMainSerializer
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['products','project']
 
-class MaterialIssueAPIView(APIView):
+class MaterialIssuedNoteAPIView(APIView):
     def get(self , request , format = None):
         value = request.GET['value']
         # project = Projects.objects.get(pk = request.GET['project'])
         # purchaselist = BoM.objects.filter(project = request.GET['project'])
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
-        materialIssue(response , value , request)
+        materialIssued(response , value , request)
         return response
 
 class ProductInventoryAPIView(APIView):
@@ -868,16 +868,17 @@ import json
 class OrderAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
+        print request.data,'aaaaaaaaaaaaaaaaaaaa'
         user =  User.objects.get(pk=request.data["user"])
         project = Projects.objects.get(pk=request.data["project"])
         prodList = request.data["products"]
-
-
         orderlist =[]
         for i in prodList:
             prodListQty = i['prodQty']
+            print prodListQty,'aaaaaaaaaaaaaaaaccccccccccc'
             invlist = Inventory.objects.filter(product=i['pk'])
             print prodListQty,'kkkkkkkkkkkkkkkkk'
+            list = []
             for p in invlist:
                 price = 0
                 if p.rate>=price:
@@ -885,14 +886,17 @@ class OrderAPIView(APIView):
                 else:
                     price=price
                 if p.qty>0:
+                    # stockList = []
                     print prodListQty,'aaaaaaaaaaaaaaaaa'
                     if prodListQty!=0:
                         if prodListQty>=p.qty:
+                            # stockList.append({'part_no':p.product.part_no,'qty': p.qty})
                             prodListQty = prodListQty - p.qty
                             p.qty = 0
                             p.save()
                         elif prodListQty<p.qty:
                             # prodListQty = prodListQty - p.qty
+                            # stockList.append({'part_no':p.product.part_no,'qty': prodListQty})
                             p.qty = p.qty - prodListQty
                             prodListQty = 0
                             p.save()
@@ -900,9 +904,9 @@ class OrderAPIView(APIView):
                         data = {
                         'qty': i['prodQty'],
                         'product' :Products.objects.get(pk=i['pk']),
-                        'price' : price
+                        'price' : price,
                         }
-                        orderObj = Invoice.objects.create(**data)
+                        orderObj = MaterialIssue.objects.create(**data)
                         orderObj.save()
                         print orderObj,'kkkkkkkkkkkkkkkk'
                         orderlist.append(orderObj.pk)
@@ -910,12 +914,12 @@ class OrderAPIView(APIView):
                 "user" : user,
                 "project" : project,
             }
-            invoiceObj = InvoiceMain.objects.create(**dataVal)
-            invoiceObj.save()
+            materialIssueObj = MaterialIssueMain.objects.create(**dataVal)
+            materialIssueObj.save()
             for i in orderlist:
                 print i
-                inv = Invoice.objects.get(pk=i)
-                invoiceObj.invoice.add(inv)
-                invoiceObj.save()
+                inv = MaterialIssue.objects.get(pk=i)
+                materialIssueObj.materialIssue.add(inv)
+                materialIssueObj.save()
 
-        return Response(invoiceObj.pk,status=status.HTTP_200_OK)
+        return Response(materialIssueObj.pk,status=status.HTTP_200_OK)
