@@ -43,6 +43,19 @@
 <div class="" style="min-height:93vh;position:relative;">
 
   <breadcrumb></breadcrumb>
+
+  <div class="container-fluid">
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <canvas id="line" class="chart chart-line" chart-data="stat"
+              chart-labels="labels" chart-legend="true" chart-series="series">
+            </canvas>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+  </div>
     <div class="container-fluid">
       <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-aqua">
@@ -112,6 +125,7 @@
             chart-click="onClick" >
           </canvas>
         </div>
+
 
         <div class="col-md-6">
           <canvas id="doughnut" class="chart chart-doughnut"

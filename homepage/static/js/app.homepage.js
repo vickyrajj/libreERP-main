@@ -83,6 +83,13 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
+    .state('conatact_us', {
+      url: "/conatact_us",
+      templateUrl: '/static/ngTemplates/app.homepage.contact_us.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+
+  $stateProvider
     .state('pages', {
       url: "/:title",
       templateUrl: '/static/ngTemplates/app.homepage.page.html',
@@ -198,26 +205,26 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
             firstName: '',
             lastName: '',
             emailId: '',
-            mobileNumber:'',
-            requirements:'',
+            mobileNumber: '',
+            requirements: '',
             jobLevel: '',
-            comapny:'',
-            companyCategory:'',
-            companyExpertise:'',
-            country:''
+            comapny: '',
+            companyCategory: '',
+            companyExpertise: '',
+            country: ''
           }
 
-          $scope.companyCategory = ['Automative','Banking', 'Biotechnology','Construction','Chemicals','Consulting','Education','Electroncics','Entertainment','Finance','Food & Bevarage','Government','Healthcare','IT','Insurance','Machinery','Manufacturing','Pharmaceuticals','Retail','Public Sector','Telecommunications','Transport','Other']
-          $scope.jobLevel = ['Individual Contributor','Manager','Director','Vice President','Executive','Other'];
-          $scope.companyExpertise = ['Administrative','Analyst/Consultancy/Advisor','Account & Financing','Product','HR','Marketing','IT/Developer/Engineer','Legal','Purchasing','Sales','Other']
-          $scope.country = ['India','Other']
+          $scope.companyCategory = ['Automative', 'Banking', 'Biotechnology', 'Construction', 'Chemicals', 'Consulting', 'Education', 'Electroncics', 'Entertainment', 'Finance', 'Food & Bevarage', 'Government', 'Healthcare', 'IT', 'Insurance', 'Machinery', 'Manufacturing', 'Pharmaceuticals', 'Retail', 'Public Sector', 'Telecommunications', 'Transport', 'Other']
+          $scope.jobLevel = ['Individual Contributor', 'Manager', 'Director', 'Vice President', 'Executive', 'Other'];
+          $scope.companyExpertise = ['Administrative', 'Analyst/Consultancy/Advisor', 'Account & Financing', 'Product', 'HR', 'Marketing', 'IT/Developer/Engineer', 'Legal', 'Purchasing', 'Sales', 'Other']
+          $scope.country = ['India', 'Other']
 
 
         }
         $scope.refresh()
 
         $scope.connect = function() {
-          if ($scope.form.firstName=='' || $scope.form.emailId=='' || $scope.form.comapny=='' || $scope.form.companyCategory=='' || $scope.form.companyExpertise=='' || $scope.form.country=='') {
+          if ($scope.form.firstName == '' || $scope.form.emailId == '' || $scope.form.comapny == '' || $scope.form.companyCategory == '' || $scope.form.companyExpertise == '' || $scope.form.country == '') {
             return;
           }
           var toSend = {
@@ -374,6 +381,48 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
     },
   ];
 
+
+  $scope.brands = [{
+      name: 'apache',
+      age: 0,
+      dp: '/static/images/apache.png'
+    },
+    {
+      name: 'blender',
+      age: 1,
+      dp: '/static/images/blender.png'
+    },
+    {
+      name: 'dis',
+      age: 2,
+      dp: '/static/images/dis.png'
+    },
+    {
+      name: 'dropbox',
+      age: 3,
+      dp: '/static/images/dropbox.jpg'
+    },
+    {
+      name: 'ima',
+      age: 4,
+      dp: '/static/images/ima.png'
+    },
+    {
+      name: 'noname',
+      age: 5,
+      dp: '/static/images/noname.png'
+    },
+    {
+      name: 'skill',
+      age: 6,
+      dp: '/static/images/skill.png'
+    },
+    {
+      name: 'zendesk',
+      age: 7,
+      dp: '/static/images/zendesk.png'
+    },
+  ];
 
 
 })
