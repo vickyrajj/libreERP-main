@@ -133,23 +133,32 @@ class InventorySerializer(serializers.ModelSerializer):
 class InvoiceSerializer(serializers.ModelSerializer):
     product = ProductsSerializer(many = False , read_only = True)
     class Meta:
-        model = Inventory
+        model = Invoice
         fields = ('pk','created','product','qty','price')
     def create(self, validated_data):
-        b = Inventory(**validated_data)
+        b = Invoice(**validated_data)
         if 'product' in self.context['request'].data:
             b.product = Products.objects.get(pk=int(self.context['request'].data['product']))
         b.save()
         return b
 
-class InvoiceSerializer(serializers.ModelSerializer):
+class InvoiceMainSerializer(serializers.ModelSerializer):
+    invoice = InvoiceSerializer(many = True , read_only = True)
     product = ProductsSerializer(many = False , read_only = True)
+    user = userSearchSerializer(many = False , read_only = True)
     class Meta:
-        model = Inventory
-        fields = ('pk','created','product','qty','price')
-    def create(self, validated_data):
-        b = Inventory(**validated_data)
-        if 'product' in self.context['request'].data:
-            b.product = Products.objects.get(pk=int(self.context['request'].data['product']))
-        b.save()
-        return b
+        model = InvoiceMain
+        fields = ('pk','created','project','invoice','user')
+    # def create(self, validated_data):
+    #     b = InvoiceMain(**validated_data)
+    #     if 'invoice' in self.context['request'].data:
+    #         for i in self.context['request'].data['invoice']:
+    #             b.invoice.add(Invoice.objects.get(pk = i))
+    #         b.save()
+    #     if 'project' in self.context['request'].data:
+    #         b.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
+    #
+    #     if 'user' in self.context['request'].data:
+    #         b.user = User.objects.get(pk=int(self.context['request'].data['user']))
+    #     b.save()
+    #     return b
