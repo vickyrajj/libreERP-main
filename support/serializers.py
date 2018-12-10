@@ -144,7 +144,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 class InvoiceMainSerializer(serializers.ModelSerializer):
     invoice = InvoiceSerializer(many = True , read_only = True)
-    product = ProductsSerializer(many = False , read_only = True)
+    project = ProjectsSerializer(many = False , read_only = True)
     user = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = InvoiceMain

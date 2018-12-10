@@ -128,7 +128,7 @@
 
   </div>
   <div class="row" style="margin:5px 20px 0 20px;" ng-if="modeToggle">
-    <div class="col-md-8 col-md-offset-2 text-right">
+    <!-- <div class="col-md-8 col-md-offset-2 text-right">
       <div class="container-fluid">
         <div class="input-group">
           <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Project" ng-enter="enterFun()" style="height:40px" />
@@ -139,24 +139,26 @@
         </div>
       </div>
 
-    </div>
+    </div> -->
 
 
   <div class="row" style="margin-top:20px;" >
     <div class="col-md-12">
-      <div class="container-fluid" style="margin-top:15px;" ng-repeat="project in projectList">
+      <div class="container-fluid" style="margin-top:15px;" ng-repeat="m in materialIssue">
         <div class="card" style="padding:10px;">
           <div class="row container-fluid" ng-click="toggle(p.productPk,$index)"  style="cursor:pointer;height:5vh;padding:10px">
             <div class="col-md-12 text-left">
 
               <div class="col-md-4" >
-                <span style="font-size:12px"><strong> Title : </strong>{{project.title}} </span>
+                <span style="font-size:12px"><strong> Title : </strong>{{m.project.title}} </span>
               </div>
               <div class="col-md-4">
-                <span style="font-size:12px"><strong> Responsible Person : </strong><span ng-repeat = "item in name"><span>{{item}}</span></span> <br> </span>
+                <span style="font-size:12px"><strong> Enginner: </strong> {{m.user.first_name}}</span>
               </div>
               <div class="col-md-offset-2 col-md-2 " >
-                  <span><a  class="btn btn-primary " style="cursor:pointer;" target="_blank" href="">Material Issue<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
+                  <!-- <span><a  class="btn btn-primary " style="cursor:pointer;" target="_blank" href="">Material Issue<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span> -->
+                  <span><a class="btn btn-primary"  style="cursor:pointer;" target="_blank" href="/api/support/materialIssue/?value={{m.pk}}">Inoice <i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+                </div>
               </div>
             </div>
           </div>

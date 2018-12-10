@@ -2,34 +2,7 @@
 
 </div>
 <div class="modal-body">
-<<<<<<< HEAD
-  <div class = "row">
-  <table class="invoiceTable" style=" width: 100%;">
-    <tbody>
-      <tr style="background-color: #eeeeee;height: 96px;">
-        <th>Si.No</th>
-        <th>Product</th>
-        <th>Part No</th>
-        <th>Quantity</th>
-      </tr>
-      <tr ng-repeat="v in productsOrdered track by $index">
-        <td>{{$index + 1}}</td>
-        <td>{{v.description_1}}</td>
-        <td>{{v.part_no}}</td>
-        <td><input type="number" step=1 class="form-control-pos" ng-model="v.prodQty"></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<div class = "row">
-<div class="col-md-10">
-  <button type="button" class="btn btn-success pull-right" ng-click="save()" style="margin:35px;">Save</button>
-</div>
-<div class="col-md-2" style="padding-top:33px">
-  <span><a  class="btn btn-primary" ng-if="values.length>0" style="cursor:pointer;" target="_blank" href="/api/support/invoice/?project={{values}}">Invoice <i  class="fa fa-download" style="font-size:1;margin-left:1em" ></i></a></span>
-</div>
-</div>
-=======
+
   <div class="row" style="padding-bottom:15px">
     <div class="col-md-3">
       Project
@@ -66,5 +39,5 @@
       <span><a class="btn btn-primary" ng-if="values" style="cursor:pointer;" target="_blank" href="/api/support/materialIssue/?value={{values}}">Inoice <i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
     </div>
   </div>
->>>>>>> d2288aa8b9ca9e96d499c11874367890adaac715
+
 </div>

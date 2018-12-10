@@ -815,19 +815,21 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['products','project']
 
+class invoiceMainViewSet(viewsets.ModelViewSet):
+    permissions_classes  = (permissions.AllowAny , )
+    queryset = InvoiceMain.objects.all()
+    serializer_class = InvoiceMainSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['products','project']
+
 class MaterialIssueAPIView(APIView):
     def get(self , request , format = None):
         value = request.GET['value']
         # project = Projects.objects.get(pk = request.GET['project'])
         # purchaselist = BoM.objects.filter(project = request.GET['project'])
         response = HttpResponse(content_type='application/pdf')
-<<<<<<< HEAD
-        response['Content-Disposition'] = 'attachment;filename="Invoicedownload.pdf"'
-        invoice(response , projects , request)
-=======
         response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
         materialIssue(response , value , request)
->>>>>>> d2288aa8b9ca9e96d499c11874367890adaac715
         return response
 
 class ProductInventoryAPIView(APIView):

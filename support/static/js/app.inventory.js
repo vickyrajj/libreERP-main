@@ -49,6 +49,24 @@ $scope.addToCart=function(product){
   console.log($rootScope.cart.length);
 }
 
+$scope.$watch('modeToggle' , function(newValue , oldValue){
+console.log(newValue,'kkkkkkkkkkkkkkkkkk');
+if(newValue==true){
+  $http({
+    method: 'GET',
+    url: '/api/support/invoice/'
+  }).
+  then(function(response) {
+    console.log(response.data,'aaaaaaaaaaaaaa');
+    $scope.materialIssue = response.data
+
+  })
+
+}
+});
+
+// modeToggle
+
 
 
 // $scope.getList = function(){

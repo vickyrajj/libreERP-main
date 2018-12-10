@@ -9,6 +9,8 @@ router.register(r'productsheet' , ProductSheetViewSet , base_name = 'productshee
 router.register(r'projects' , ProjectsViewSet , base_name = 'projects')
 router.register(r'bom' , BoMViewSet , base_name = 'bom')
 router.register(r'inventory' , InventoryViewSet , base_name = 'inventory')
+router.register(r'order' , InvoiceViewSet , base_name = 'inventory')
+router.register(r'invoice' , invoiceMainViewSet , base_name = 'inventory')
 
 
 
