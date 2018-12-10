@@ -348,8 +348,33 @@ var windowColorNew = "rgba("+windowColorR+","+ windowColorG+","+ windowColorB+",
 
 var metaTag=document.createElement('meta');
   metaTag.name="viewport";
-  metaTag.content="initail-scale=1";
+  metaTag.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
   document.getElementsByTagName('head')[0].appendChild(metaTag);
+
+  // Store the meta element
+// var viewport_meta = document.getElementById('viewport-meta');
+
+// Define our viewport meta values
+var viewports = {
+		default: metaTag.getAttribute('content'),
+		landscape: 'width=990'
+	};
+
+// Change the viewport value based on screen.width
+var viewport_set = function() {
+		if ( screen.width > 768 )
+			metaTag.setAttribute( 'content', viewports.landscape );
+		else
+			metaTag.setAttribute( 'content', viewports.default );
+	}
+
+// Set the correct viewport value on page load
+viewport_set();
+
+// Set the correct viewport after device orientation change or resize
+window.onresize = function() {
+	viewport_set();
+}
 // var FontLink = document.createElement('link');
 //     FontLink.rel = 'stylesheet';
 //     FontLink.href = 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
