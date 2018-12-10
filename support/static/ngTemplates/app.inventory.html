@@ -127,10 +127,10 @@ ng-if="p.totalqty>0"  style="font-size:12px">Added to Cart </button> -->
                     <span>{{f.qty}}</span>
                   </td>
                   <td class="text-center">
-                    <span>{{f.rate}}</span>
+                    <span>{{f.rate.toFixed(2)}}</span>
                   </td>
                   <td class="text-center">
-                    <span>{{f.rate * f.qty }}</span>
+                    <span>{{(f.rate * f.qty).toFixed(2) }}</span>
                   </td>
                 </tr>
               </table>
@@ -171,7 +171,7 @@ fa-plus"></i></span>
       <div class="col-md-10 col-md-offset-1">
         <div class="container-fluid" style="margin-top:15px;" ng-repeat="m in materialIssue">
           <div class="card" style="padding:10px;">
-            <div class="row container-fluid" ng-click="toggle(p.productPk,$index)" style="cursor:pointer;height:5vh;padding:10px">
+            <div class="row container-fluid" ng-click="toggleMaterial(m.pk,$index)" style="cursor:pointer;height:5vh;padding:10px">
               <div class="col-md-12 text-left">
 
                 <div class="col-md-4">
@@ -193,6 +193,59 @@ style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span> -->
                   <button type="button" class="btn btn-danger btn-sm" ng-click="delete(m.pk,$index)"> <i class="fa fa-trash"></i> </button>
                   </div>
               </div>
+            </div>
+            <div class="row container-fluid" ng-if="m.open">
+              <div class="container-fluid">
+                <hr>
+              </div>
+              <div class="col-md-4">
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-size:14px"><strong> Comm nr:
+                      </strong></span><br /><br />
+                    <span style="font-size:14px"><strong> Customer:
+                      </strong></span><br /><br />
+                    <span style="font-size:14px"><strong> Date of issue:
+                      </strong></span><br />
+                  </div>
+                  <div class="col-md-8">
+                    <span style="font-size:14px">{{m.project.comm_nr}}</span><br /><br />
+                    <span style="font-size:14px">{{m.user.first_name}}</span><br /><br />
+                    <span style="font-size:14px">{{m.created | date : "dd.MM.y"}} </span><br />
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <table class="table table-striped" style="margin-top:20px;">
+                  <th class="text-center">
+                    Part No
+                  </th>
+                  <th class="text-center">
+                    Quantity
+                  </th>
+                  <th class="text-center">
+                    Price
+                  </th>
+                  <th class="text-center">
+                    Total
+                  </th>
+                  <tr ng-repeat="f in m.materialIssue" >
+                    <td class="text-center">
+                      <span>{{f.product.part_no}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{f.qty}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{f.price.toFixed(2)}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span>{{(f.price * f.qty).toFixed(2) }}</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
             </div>
           </div>
         </div>
