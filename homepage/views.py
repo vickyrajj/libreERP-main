@@ -34,7 +34,7 @@ def index(request):
 
     translation.activate(language )
     request.LANGUAGE_CODE = translation.get_language()
-    return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+    return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,"erpUrl": globalSettings.ERP_URL_PREFIX})
 
 def crmHome(request):
     return render(request, 'crm.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})

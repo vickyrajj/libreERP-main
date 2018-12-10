@@ -31,7 +31,7 @@
 <div class="row" style="margin:0px;padding:130px 20px 130px 30px;background-color:#f7f7f7;color:#262e45;">
   <div class="col-md-10 col-md-offset-1 text-center">
     <div class="col-md-6 col-sm-12"style="">
-      <img src="/static/images/love-it.jpg" alt="" width="600px" height="400px">
+      <img src="/static/images/love-it.jpg" style="width:100%;">
     </div>
     <div class="col-md-6 col-sm-12"style="text-align:left;font-size:16px;font-family:sans-serif;padding:90px 20px 20px 20px;">
       <h3 style="font-weight:600;">Why you'll love it here</h3>
@@ -72,17 +72,17 @@
 </div>
 <div class="row" style="margin:0px;background-color:#f7f7f7;padding:30px;">
   <div class="col-md-12 text-center">
-    <h1>Don’t just take our word for it</h1>
-    <span class="col-md-6 col-md-offset-3 text-center" style="padding:50px;font-size:18px;">
-      For five years in a row, the San Francisco Business Times ranked us as one of the top "Best Places to Work" in the SF Bay Area.
-      We’ve also been selected by Wealthfront as one of its top career-launching technology companies.</span>
-  </div>
-  <div class="col-md-6 col-md-offset-4" style="display:inline-block;">
-    <span>
-      <img src="/static/images/bptw.png" alt="" width="230px" height="166px">
-    </span>
-    <span style="padding:50px;">
-      <img src="/static/images/glass.png" alt="" width="270px" height="70px">
+    <h1>Job Openings</h1>
+    <span class="col-md-3" style="padding:50px;font-size:18px;"ng-repeat="job in jobs">
+      <div class="card shaddowed"style="padding:30px;background-color:#fff;border-radius:5px;text-align:left;">
+        <strong>  Type: </strong> <span>{{job.jobtype}}</span><br>
+        <strong>Department :</strong>  <span>{{job.department.dept_name}}</span><br>
+        <strong>Role :</strong>  <span>{{job.role.name}}</span><br>
+        <strong>Location :</strong>  <span>bangalore</span><br>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary"ng-click="apply()">Apply</button>
+        </div>
+      </div>
     </span>
   </div>
 </div>

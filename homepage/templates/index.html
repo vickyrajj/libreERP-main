@@ -19,6 +19,10 @@
 
 {% endblock %} {% block specific_js %}
 
+<script>
+  var erpUrl = '{{erpUrl}}'
+</script>
+
 <script src="{% static 'js/js.cookie.min.js' %}"></script>
 <script src="{% static 'js/angular.min.js' %}"></script>
 <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
@@ -27,6 +31,7 @@
 <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
 <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
 <script src="{% static 'js/angular-flash.js' %}"></script>
+<script src="{% static 'js/angular-aside.min.js' %}"></script>
 <script src="{% static 'js/owl.carousel.min.js' %}"></script>
 <script src="{% static 'js/angular-owl-carousel-2.js' %}"></script>
 <script src="{% static 'js/app.homepage.js' %}"></script>

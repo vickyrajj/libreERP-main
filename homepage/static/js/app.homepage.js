@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside']);
 
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider) {
@@ -79,7 +79,7 @@ app.config(function($stateProvider) {
     .state('pricing', {
       url: "/pricing",
       templateUrl: '/static/ngTemplates/app.homepage.pricing.html',
-      // controller: 'controller.ecommerce.PagesDetails'
+      controller: 'controller.pricing'
     })
 
   $stateProvider
@@ -121,9 +121,8 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
 
 });
 
+
 app.controller('controller.blogs', function($scope, $state, $http, $timeout, $interval, $uibModal) {
-
-
 
 
   $scope.offset = 0;
@@ -179,6 +178,119 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
       $scope.offset = $scope.offset - 14
       $scope.fetchBlogs()
     }
+  }
+
+});
+
+
+app.controller('controller.pricing', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $aside) {
+
+  $scope.contactSales = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.contactSale.modal.html',
+      size: 'lg',
+      backdrop: true,
+      controller: function($scope, Flash, $uibModalInstance) {
+        $scope.thankYou = false;
+
+        $scope.refresh = function() {
+          $scope.form = {
+            firstName: '',
+            lastName: '',
+            emailId: '',
+            mobileNumber:'',
+            requirements:'',
+            jobLevel: '',
+            comapny:'',
+            companyCategory:'',
+            companyExpertise:'',
+            country:''
+          }
+
+          $scope.companyCategory = ['Automative','Banking', 'Biotechnology','Construction','Chemicals','Consulting','Education','Electroncics','Entertainment','Finance','Food & Bevarage','Government','Healthcare','IT','Insurance','Machinery','Manufacturing','Pharmaceuticals','Retail','Public Sector','Telecommunications','Transport','Other']
+          $scope.jobLevel = ['Individual Contributor','Manager','Director','Vice President','Executive','Other'];
+          $scope.companyExpertise = ['Administrative','Analyst/Consultancy/Advisor','Account & Financing','Product','HR','Marketing','IT/Developer/Engineer','Legal','Purchasing','Sales','Other']
+          $scope.country = ['India','Other']
+
+
+        }
+        $scope.refresh()
+
+        $scope.connect = function() {
+          if ($scope.form.firstName=='' || $scope.form.emailId=='' || $scope.form.comapny=='' || $scope.form.companyCategory=='' || $scope.form.companyExpertise=='' || $scope.form.country=='') {
+            return;
+          }
+          var toSend = {
+            name: $scope.form.firstName + $scope.form.lastName,
+            emailId: $scope.form.emailId,
+            requirments: $scope.form.requirments,
+            role: $scope.form.role
+          }
+          $http({
+            method: 'POST',
+            url: erpUrl + '/api/marketing/leads/',
+            data: toSend
+          }).then(function(data) {
+            console.log(response.data);
+            $scope.refresh();
+            $scope.thankYou = true;
+          })
+        }
+
+        $scope.closeModal = function() {
+          $uibModalInstance.dismiss();
+        }
+      },
+    })
+  }
+
+  $scope.generateApiKey = function() {
+    // $aside.open({
+    //   templateUrl : '/static/ngTemplates/app.homepage.generateApiKey.modal.html',
+    //   placement: 'right',
+    //   size: 'md',
+    //   backdrop : true,
+    //   controller: function($scope,Flash) {
+    //
+    //
+    //   }
+    // })
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.generateApiKey.modal.html',
+      size: 'md',
+      backdrop: true,
+      controller: function($scope, Flash, $uibModalInstance) {
+        $scope.thankYou = false;
+        $scope.refresh = function() {
+          $scope.form = {
+            email: ''
+          }
+        }
+
+        $scope.refresh()
+
+        $scope.sendOtp = function() {
+          if ($scope.form.email == '') {
+            return;
+          }
+          $scope.thankYou = true;
+          // $http({
+          //   method:'POST',
+          //   url:'',
+          //   data:{}
+          // }).then(function (data) {
+          //   console.log(response.data);
+          // })
+        }
+
+        $scope.closeModal = function() {
+          $uibModalInstance.dismiss();
+        }
+      },
+    })
+
+
   }
 
 });
@@ -268,7 +380,6 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
 
 
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal) {
-
 
   $scope.device = {
     smallDevice: false
@@ -410,6 +521,9 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
           },
         ]
 
+
+
+
         $scope.scheduleMeeting = function() {
           // if($scope.form.dated == null || $scope.form.dated == undefined){
           //   Flash.create("warning","PLease Select Date")
@@ -429,7 +543,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
           }
           $http({
             method: 'POST',
-            url: '/api/homepage/schedule/',
+            url: erpUrl + '/api/marketing/schedule/',
             data: dataToSend
           }).
           then(function(response) {
@@ -438,7 +552,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
             $scope.thankYou = true
             $http({
               method: 'POST',
-              url: '/api/homepage/inviteMail/',
+              url: erpUrl + '/api/marketing/inviteMail/',
               data: {
                 value: response.data.pk
               }
