@@ -722,7 +722,7 @@ class InvoiceAPIView(APIView):
         # project = Projects.objects.get(pk = request.GET['project'])
         # purchaselist = BoM.objects.filter(project = request.GET['project'])
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+        response['Content-Disposition'] = 'attachment;filename="Invoicedownload.pdf"'
         invoice(response , projects , request)
         return response
 

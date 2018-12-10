@@ -164,4 +164,8 @@ $scope.getList = function(){
 }
 // console.log($scope.valueList,'aaaaaaaaaaaahhhhhhhhhhhhhhhhhhhaaaaaaaaaa');
 
+
+
+
+
 })

@@ -1,7 +1,13 @@
 <div class="shaddowed card bg-white" style="min-height:93vh;">
   <breadcrumb></breadcrumb>
   <div class="row">
-    <div class="col-md-8 col-md-offset-2 text-right">
+  <div class="col-md-1">
+    <switch ng-model="modeToggle" class="neutral pull-right"></switch>
+  </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2 text-right" ng-if="!modeToggle">
       <div class="container-fluid">
         <div class="input-group">
           <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()" style="height:40px" />
@@ -41,7 +47,7 @@
     </div>
   </div> -->
 
-  <div class="row" style="margin-top:20px;">
+  <div class="row" style="margin-top:20px;" ng-if="!modeToggle">
     <div class="col-md-10 col-md-offset-1  text-right" style="padding-right:20px;">
     <h2>  Total : {{total.toFixed(2)}} </h2>
     </div>
@@ -120,4 +126,42 @@
       </div>
     </div>
 
+  </div>
+  <div class="row" style="margin:5px 20px 0 20px;" ng-if="modeToggle">
+    <div class="col-md-8 col-md-offset-2 text-right">
+      <div class="container-fluid">
+        <div class="input-group">
+          <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Project" ng-enter="enterFun()" style="height:40px" />
+          <span class="input-group-addon" ng-click="refresh()" style="cursor:pointer; background-color:#fff;"><i class="fa fa-refresh"></i></span>
+          <span class="input-group-addon" ng-click="prev()" style="cursor:{{offset!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i class="fa fa-arrow-left"></i>Prev</span>
+          <span class="input-group-addon" ng-click="next()" style="cursor:pointer; background-color:#fff;">Next <i class="fa fa-arrow-right"></i></span>
+          <span class="input-group-addon" ng-click="new()" style="cursor:pointer; background-color:#fff;">New <i class="fa fa-plus"></i></span>
+        </div>
+      </div>
+
+    </div>
+
+
+  <div class="row" style="margin-top:20px;" >
+    <div class="col-md-12">
+      <div class="container-fluid" style="margin-top:15px;" ng-repeat="project in projectList">
+        <div class="card" style="padding:10px;">
+          <div class="row container-fluid" ng-click="toggle(p.productPk,$index)"  style="cursor:pointer;height:5vh;padding:10px">
+            <div class="col-md-12 text-left">
+
+              <div class="col-md-4" >
+                <span style="font-size:12px"><strong> Title : </strong>{{project.title}} </span>
+              </div>
+              <div class="col-md-4">
+                <span style="font-size:12px"><strong> Responsible Person : </strong><span ng-repeat = "item in name"><span>{{item}}</span></span> <br> </span>
+              </div>
+              <div class="col-md-offset-2 col-md-2 " >
+                  <span><a  class="btn btn-primary " style="cursor:pointer;" target="_blank" href="">Material Issue<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
+              </div>
+            </div>
+          </div>
+       </div>
+      </div>
+     </div>
+    </div>
   </div>
