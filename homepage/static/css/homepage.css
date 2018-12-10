@@ -353,10 +353,7 @@
     height: 20px !important;
     right: -10px !important;
   }
-  .articleImg {
-    width: 60px !important;
-    height: 60px !important;
-  }
+
   blockquote>h6 {
     font-size: 12px !important;
   }
@@ -493,6 +490,7 @@
 
 .toggleBtn span {
   background-color: #e0e0e0;
+  
 }
 
 .barRotate1 {
@@ -742,8 +740,8 @@ figure {
   background-image: linear-gradient(rgba(11, 29, 92, 0.65), rgba(18, 24, 97, 0.52)), url("/static/images/background4.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  width: 80px;
-  height: 80px;
+  /*width: 100%;*/
+  padding: 5px;
   border-radius: 4px;
 }
 
