@@ -1797,6 +1797,7 @@ function activeAudioCall(){
               border-radius: 50%;\
               margin: 10px;\
               padding: 10px;\
+              box-sizing:border-box;\
             }\
             .chatBox_header .chatBox_info{\
               margin: 20px 10px;;\
@@ -1823,6 +1824,7 @@ function activeAudioCall(){
               width: 50px;\
               height:34px;\
               transition: 0.5s;\
+              box-sizing:border-box;\
             }\
             .paperClip{\
               margin: 10px 10px;\
