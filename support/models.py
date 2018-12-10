@@ -74,14 +74,15 @@ class Inventory(models.Model):
     qty = models.PositiveIntegerField(null=True , default=0)
     rate = models.FloatField(null = True)
 
-class Invoice(models.Model):
+class MaterialIssue(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey( Products , null = True)
     qty = models.PositiveIntegerField(null=True , default=0)
     price = models.FloatField(null = True)
+    stock = models.CharField(max_length = 500 , null = True , blank =True)
 
-class InvoiceMain(models.Model):
+class MaterialIssueMain(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    invoice = models.ManyToManyField(Invoice, related_name='invoiceqty')
-    user =  models.ForeignKey(User , related_name='invoiceuser')
-    project = models.ForeignKey(Projects , related_name='invoiceproject')
+    materialIssue = models.ManyToManyField(MaterialIssue, related_name='materialqty')
+    user =  models.ForeignKey(User , related_name='materialuser')
+    project = models.ForeignKey(Projects , related_name='materialproject')

@@ -2,13 +2,12 @@
   <breadcrumb></breadcrumb>
 
 
-
-
   <div class="row">
-    <div class="col-md-3" style="padding-top:2em">
-      <strong style="margin:0 13px 0 25px;">Inventory</strong><switch ng-model="modeToggle" class="neutral"></switch><strong style="margin-left:13px;">Material Issue</strong>
+    <div class="col-md-3" style="padding-top:20px">
+      <strong style="margin:0 13px 0 20px">Inventory</strong><switch ng-model="modeToggle" class="neutral "></switch>
+      <strong style="margin-left:13px">Material Issue</strong>
     </div>
-    <div class="col-md-8  text-right" ng-if="!modeToggle" style="padding-top:2em">
+    <div class="col-md-8  text-right" ng-if="!modeToggle" style="padding-top:20px">
       <div class="container-fluid">
         <div class="input-group">
           <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()" style="height:40px" />
@@ -16,66 +15,78 @@
           <span class="input-group-addon" ng-click="prev()" style="cursor:{{offset!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i class="fa fa-arrow-left"></i>Prev</span>
           <span class="input-group-addon" ng-click="next()" style="cursor:pointer; background-color:#fff;">Next <i class="fa fa-arrow-right"></i></span>
           <span class="input-group-addon" ng-click="new()" style="cursor:pointer; background-color:#fff;">New <i class="fa fa-plus"></i></span>
-          <!-- <span tclass="input-group-addon" ng-click="topButtonsClick('New')"><i class="fa fa-plus"></i> New </button> -->
-        &nbsp;&nbsp;&nbsp;  <span class="input-group-addon" ng-click="reset()" style="cursor:pointer; background-color:#fff;">Reset</span>
-        <span class="input-group-addon" ng-click="getList();" style="cursor:pointer; background-color:#fff;border:1px solid #fff;color:#286090"> <i class="fa fa-shopping-cart fa-2x"></i> {{cart.length}}</span>
+          <!-- <span tclass="input-group-addon"
+ng-click="topButtonsClick('New')"><i class="fa fa-plus"></i> New
+</button> -->
+          &nbsp;&nbsp;&nbsp; <span class="input-group-addon" ng-click="reset()" style="cursor:pointer; background-color:#fff;">Reset</span>
+          <span class="input-group-addon" ng-click="getList();" style="cursor:pointer; background-color:#fff;border:1px solid #fff;color:#286090"> <i class="fa fa-shopping-cart fa-2x"></i>
+            {{cart.length}}</span>
         </div>
       </div>
 
     </div>
   </div>
   <!-- <div class="row">
-    <div class="col-md-10 col-md-offset-1 " ng-repeat=" p in products" >
-      <div class="row card" ng-click="toggle(p.productPk,$index)" style="margin-top:20px;padding:25px;height:8vh">
-        <div class="row">
-        <div class="col-md-4">
-          <strong> Part No : </strong> {{p.productPartno}}
-        </div>
-        <div class="col-md-4">
-          <strong> Description : </strong> {{p.productDesc}}
-        </div>
-        <div class="col-md-4">
-          <strong> Quantity : </strong> {{p.totalqty}}
-        </div>
-        <div class="col-md-4">
-          <strong> Part No : </strong> {{p.totalprice}}
-        </div>
-      </div>
-        <div  class="row" ng-repeat="i in p.data" ng-if="p.open" style="padding:10px;">
-          {{i.qty}} - {{i.rate}}
-        </div>
-      </div>
-    </div>
-  </div> -->
+     <div class="col-md-10 col-md-offset-1 " ng-repeat=" p in products" >
+       <div class="row card" ng-click="toggle(p.productPk,$index)"
+style="margin-top:20px;padding:25px;height:8vh">
+         <div class="row">
+         <div class="col-md-4">
+           <strong> Part No : </strong> {{p.productPartno}}
+         </div>
+         <div class="col-md-4">
+           <strong> Description : </strong> {{p.productDesc}}
+         </div>
+         <div class="col-md-4">
+           <strong> Quantity : </strong> {{p.totalqty}}
+         </div>
+         <div class="col-md-4">
+           <strong> Part No : </strong> {{p.totalprice}}
+         </div>
+       </div>
+         <div  class="row" ng-repeat="i in p.data" ng-if="p.open"
+style="padding:10px;">
+           {{i.qty}} - {{i.rate}}
+         </div>
+       </div>
+     </div>
+   </div> -->
 
   <div class="row" style="margin-top:20px;" ng-if="!modeToggle">
     <div class="col-md-10 col-md-offset-1  text-right" style="padding-right:20px;">
-    <h2>  Total : {{total.toFixed(2)}} </h2>
+      <h2> Total : {{total.toFixed(2)}} </h2>
     </div>
     <div class="col-md-12">
       <div class="container-fluid" style="margin-top:15px;" ng-repeat="p in products">
         <div class="card" style="padding:10px;">
-          <div class="row container-fluid" ng-click="toggle(p.productPk,$index)"  style="cursor:pointer;height:5vh;padding:10px">
+          <div class="row container-fluid" ng-click="toggle(p.productPk,$index)" style="cursor:pointer;height:5vh;padding:10px">
             <div class="col-md-12 text-left">
 
-              <div class="col-md-2" >
-                <span style="font-size:12px"><strong> Part No : </strong>{{p.productPartno}} </span>
+              <div class="col-md-2">
+                <span style="font-size:12px"><strong> Part No :
+                  </strong>{{p.productPartno}} </span>
               </div>
               <div class="col-md-2">
-                <span style="font-size:12px"><strong> Description : </strong>{{p.productDesc}} </span>
+                <span style="font-size:12px"><strong> Description :
+                  </strong>{{p.productDesc}} </span>
               </div>
               <div class="col-md-2">
-                <span style="font-size:12px"><strong> Quantity : </strong>{{p.totalqty}} </span>
+                <span style="font-size:12px"><strong> Quantity :
+                  </strong>{{p.totalqty}} </span>
               </div>
               <div class="col-md-2">
-                <span style="font-size:12px"><strong> Price : </strong>{{p.totalprice.toFixed(2)}} </span>
+                <span style="font-size:12px"><strong> Price :
+                  </strong>{{p.totalprice.toFixed(2)}} </span>
               </div>
               <div class="col-md-2">
-                <span style="font-size:12px"><strong> Total : </strong>{{p.totalVal.toFixed(2)}} </span>
+                <span style="font-size:12px"><strong> Total :
+                  </strong>{{p.totalVal.toFixed(2)}} </span>
               </div>
               <div class="col-md-2">
-                  <button class="btn btn-primary" ng-if="p.totalqty>0"  style="font-size:12px" ng-click="addToCart(p.productPk);$event.stopPropagation();">Add to Cart </button>
-                  <!-- <button class="btn btn-default" ng-if="p.totalqty>0"  style="font-size:12px">Added to Cart </button> -->
+                <button class="btn btn-primary" ng-if="p.totalqty>0" style="font-size:12px" ng-click="addToCart(p.productPk);$event.stopPropagation();">Add to Cart
+                </button>
+                <!-- <button class="btn btn-default"
+ng-if="p.totalqty>0"  style="font-size:12px">Added to Cart </button> -->
               </div>
             </div>
           </div>
@@ -84,16 +95,19 @@
               <hr>
             </div>
             <div class="col-md-4">
-              <div class = "row">
+              <div class="row">
                 <div class="col-md-2">
-                  <span style="font-size:14px"><strong> Detail: </strong></span><br/><br/>
-                  <span style="font-size:14px"><strong> Weight: </strong></span><br/><br/>
-                  <span style="font-size:14px"><strong> Price: </strong></span><br/>
+                  <span style="font-size:14px"><strong> Detail:
+                    </strong></span><br /><br />
+                  <span style="font-size:14px"><strong> Weight:
+                    </strong></span><br /><br />
+                  <span style="font-size:14px"><strong> Price:
+                    </strong></span><br />
                 </div>
                 <div class="col-md-10">
-                  <span style="font-size:14px">{{p.productDesc2}}</span><br/><br/>
-                  <span style="font-size:14px">{{p.weight}}</span><br/><br/>
-                  <span style="font-size:14px">{{p.price}} </span><br/>
+                  <span style="font-size:14px">{{p.productDesc2}}</span><br /><br />
+                  <span style="font-size:14px">{{p.weight}}</span><br /><br />
+                  <span style="font-size:14px">{{p.price}} </span><br />
                 </div>
               </div>
             </div>
@@ -113,10 +127,10 @@
                     <span>{{f.qty}}</span>
                   </td>
                   <td class="text-center">
-                    <span>{{(f.rate).toFixed(2)}}</span>
+                    <span>{{f.rate}}</span>
                   </td>
                   <td class="text-center">
-                    <span>{{(f.rate * f.qty).toFixed(2) }}</span>
+                    <span>{{f.rate * f.qty }}</span>
                   </td>
                 </tr>
               </table>
@@ -130,44 +144,59 @@
   </div>
   <div class="row" style="margin:5px 20px 0 20px;" ng-if="modeToggle">
     <!-- <div class="col-md-8 col-md-offset-2 text-right">
-      <div class="container-fluid">
-        <div class="input-group">
-          <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Project" ng-enter="enterFun()" style="height:40px" />
-          <span class="input-group-addon" ng-click="refresh()" style="cursor:pointer; background-color:#fff;"><i class="fa fa-refresh"></i></span>
-          <span class="input-group-addon" ng-click="prev()" style="cursor:{{offset!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i class="fa fa-arrow-left"></i>Prev</span>
-          <span class="input-group-addon" ng-click="next()" style="cursor:pointer; background-color:#fff;">Next <i class="fa fa-arrow-right"></i></span>
-          <span class="input-group-addon" ng-click="new()" style="cursor:pointer; background-color:#fff;">New <i class="fa fa-plus"></i></span>
-        </div>
-      </div>
+       <div class="container-fluid">
+         <div class="input-group">
+           <input type='text' ng-model='searchText' class="form-control"
+placeholder="Search a Project" ng-enter="enterFun()" style="height:40px"
+/>
+           <span class="input-group-addon" ng-click="refresh()"
+style="cursor:pointer; background-color:#fff;"><i class="fa
+fa-refresh"></i></span>
+           <span class="input-group-addon" ng-click="prev()"
+style="cursor:{{offset!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i
+class="fa fa-arrow-left"></i>Prev</span>
+           <span class="input-group-addon" ng-click="next()"
+style="cursor:pointer; background-color:#fff;">Next <i class="fa
+fa-arrow-right"></i></span>
+           <span class="input-group-addon" ng-click="new()"
+style="cursor:pointer; background-color:#fff;">New <i class="fa
+fa-plus"></i></span>
+         </div>
+       </div>
 
-    </div> -->
+     </div> -->
 
 
-  <div class="row" style="margin-top:20px;" >
-    <div class="col-md-12">
-      <div class="container-fluid" style="margin-top:15px;" ng-repeat="m in materialIssue">
-        <div class="card" style="padding:10px;">
-          <div class="row container-fluid" ng-click="toggle(p.productPk,$index)"  style="cursor:pointer;height:5vh;padding:10px">
-            <div class="col-md-12 text-left">
+    <div class="row" style="margin-top:20px;">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="container-fluid" style="margin-top:15px;" ng-repeat="m in materialIssue">
+          <div class="card" style="padding:10px;">
+            <div class="row container-fluid" ng-click="toggle(p.productPk,$index)" style="cursor:pointer;height:5vh;padding:10px">
+              <div class="col-md-12 text-left">
 
-              <div class="col-md-3" >
-                <span style="font-size:12px"><strong> Project Title : </strong>{{m.project.title}} </span>
-              </div>
-              <div class="col-md-3">
-                <span style="font-size:12px"><strong> Engineer : </strong> {{m.user.first_name}}</span>
-              </div>
-              <!-- <div class="col-md-3">
-                <span style="font-size:12px"><strong> No of Items : </strong> {{}}</span>
-              </div> -->
-              <div class="col-md-offset-1 col-md-2 " >
-                  <!-- <span><a  class="btn btn-primary " style="cursor:pointer;" target="_blank" href="">Material Issue<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span> -->
-                  <span><a class="btn btn-primary"  style="cursor:pointer;" target="_blank" href="/api/support/materialIssue/?value={{m.pk}}">Invoice <i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+                <div class="col-md-4">
+                  <span style="font-size:12px"><strong>Project Title :
+                    </strong>{{m.project.title}} </span>
                 </div>
+                <div class="col-md-4">
+                  <span style="font-size:12px"><strong> Enginner:
+                    </strong> {{m.user.first_name}}</span>
+                </div>
+                <div class="col-md-offset-1 col-md-2 ">
+                  <!-- <span><a  class="btn btn-primary "
+style="cursor:pointer;" target="_blank" href="">Material Issue<i
+class="fa fa-download"
+style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span> -->
+                  <span><a class="btn btn-primary" style="cursor:pointer;" target="_blank" href="/api/support/materialIssued/?value={{m.pk}}">Material Isuue <i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+                </div>
+                <div class="col-md-1">
+                  <button type="button" class="btn btn-danger btn-sm" ng-click="delete(m.pk,$index)"> <i class="fa fa-trash"></i> </button>
+                  </div>
               </div>
             </div>
           </div>
-       </div>
+        </div>
       </div>
-     </div>
     </div>
   </div>
+</div>

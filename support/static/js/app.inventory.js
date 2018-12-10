@@ -54,7 +54,7 @@ console.log(newValue,'kkkkkkkkkkkkkkkkkk');
 if(newValue==true){
   $http({
     method: 'GET',
-    url: '/api/support/invoice/'
+    url: '/api/support/material/'
   }).
   then(function(response) {
     console.log(response.data,'aaaaaaaaaaaaaa');
@@ -64,6 +64,16 @@ if(newValue==true){
 
 }
 });
+
+$scope.delete = function(pk,index){
+  $http({method : 'DELETE' , url : '/api/support/material/' + pk + '/' }).
+  then( function(response){
+    Flash.create('success','Deleted' );
+    console.log(index,'jjjjj');
+    $scope.materialIssue.splice(index,1)
+  })
+}
+
 
 // modeToggle
 
@@ -124,6 +134,8 @@ if(newValue==true){
           });
 
         }
+
+
     },
   }).result.then(function() {}, function() {
       $scope.fetchProdInventory($scope.offset)
@@ -166,6 +178,13 @@ $scope.getList = function(){
             $scope.productsOrdered.push(response.data);
           })
       }
+      // $scope.delete = function(pk,index){
+      //   $http({method : 'DELETE' , url : '/api/support/products/' + pk + '/' }).
+      //   then( function(response){
+      //     Flash.create('success','Deleted' );
+      //     console.log(index,'jjjjj');
+      //     $scope.productsOrdered.splice(index,1)
+      //   })
 
 
 
