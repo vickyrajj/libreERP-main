@@ -596,21 +596,21 @@ def materialIssue(response , value , request):
         print i['product_id'],'dddddddddddddddddd'
         product = Products.objects.get(pk = i['product_id'])
         partno = product.part_no
-        desc = product.description_1
+        description = product.description_1
         qty = i['qty']
 
-        p5_01 =Paragraph(partno,styles['Normal'])
-        p5_02 =Paragraph(desc,styles['Normal'])
-        p5_03 =Paragraph(str(qty),styles['Normal'])
-        p5_04 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-        p5_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-        data2+=[[p5_01,p5_03,p5_03,p5_04,p5_05]]
+        # p5_01 =Paragraph(partno,styles['Normal'])
+        # p5_02 =Paragraph(str(description),styles['Normal'])
+        # p5_03 =Paragraph(str(qty),styles['Normal'])
+        # p5_04 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+        # p5_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
 
-    # p6_01 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p6_02 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p6_03 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p6_04 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p6_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+        p6_01 =Paragraph(partno,styles['Normal'])
+        p6_02 =Paragraph(str(description),styles['Normal'])
+        p6_03 =Paragraph(str(qty),styles['Normal'])
+        p6_04 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+        p6_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+        data2+=[[p6_01,p6_02,p6_03,p6_04,p6_05]]
     #
     # p7_01 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
     # p7_02 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
