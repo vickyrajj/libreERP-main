@@ -597,6 +597,7 @@ def materialIssue(response , value , request):
         product = Products.objects.get(pk = i['product_id'])
         partno = product.part_no
         description = product.description_1
+        print description,'aaaaaaaaaaaaaaaa'
         qty = i['qty']
 
         # p5_01 =Paragraph(partno,styles['Normal'])
