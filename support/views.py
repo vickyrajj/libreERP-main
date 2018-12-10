@@ -546,10 +546,8 @@ class QuotationAPIView(APIView):
 from reportlab.platypus.flowables import HRFlowable
 
 def materialIssued(response , value , request):
-    print value,'aaaaaaaaaaaaaaaa'
+
     invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
-
-
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
@@ -593,11 +591,9 @@ def materialIssued(response , value , request):
     for i in list(invdata.materialIssue.values()):
         # print i.product.part_no ,'aaaaaaaaaaaaa'
         # partno = i['product']
-        print i['product_id'],'dddddddddddddddddd'
         product = Products.objects.get(pk = i['product_id'])
         partno = product.part_no
         description = product.description_1
-        print description,'aaaaaaaaaaaaaaaa'
         qty = i['qty']
 
         # p5_01 =Paragraph(partno,styles['Normal'])
@@ -607,17 +603,18 @@ def materialIssued(response , value , request):
         # p5_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
 
         p6_01 =Paragraph(partno,styles['Normal'])
-        p6_02 =Paragraph(str(description),styles['Normal'])
+        p6_02 =Paragraph(description,styles['Normal'])
         p6_03 =Paragraph(str(qty),styles['Normal'])
         p6_04 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
         p6_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
         data2+=[[p6_01,p6_02,p6_03,p6_04,p6_05]]
-    #
-    # p7_01 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p7_02 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p7_03 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-    # p7_04 =Paragraph("<para fontSize=8 >Total</para>",styles['Normal'])
-    # p7_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+
+    p7_01 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+    p7_02 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+    p7_03 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+    p7_04 =Paragraph("<para fontSize=8 >Total</para>",styles['Normal'])
+    p7_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+    data2+=[[p7_01,p7_02,p7_03,p7_04,p7_05]]
 
     rheight=0.4*inch #[1.1*inch,1.1*inch]
     cwidth=1.6*inch,1.6*inch,1.6*inch,1.6*inch,1.8*inch
@@ -868,47 +865,43 @@ import json
 class OrderAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
-        print request.data,'aaaaaaaaaaaaaaaaaaaa'
         user =  User.objects.get(pk=request.data["user"])
         project = Projects.objects.get(pk=request.data["project"])
         prodList = request.data["products"]
         orderlist =[]
         for i in prodList:
             prodListQty = i['prodQty']
-            print prodListQty,'aaaaaaaaaaaaaaaaccccccccccc'
             invlist = Inventory.objects.filter(product=i['pk'])
-            print prodListQty,'kkkkkkkkkkkkkkkkk'
             list = []
+            stockList = []
+            price = 0
             for p in invlist:
-                price = 0
-                if p.rate>=price:
-                    price = p.rate
-                else:
-                    price=price
                 if p.qty>0:
-                    # stockList = []
-                    print prodListQty,'aaaaaaaaaaaaaaaaa'
+                    if p.rate>=price:
+                        price = p.rate
+                    else:
+                        price=price
                     if prodListQty!=0:
                         if prodListQty>=p.qty:
-                            # stockList.append({'part_no':p.product.part_no,'qty': p.qty})
+                            stockList.append({'part_no':p.product.part_no,'qty': p.qty})
                             prodListQty = prodListQty - p.qty
                             p.qty = 0
                             p.save()
                         elif prodListQty<p.qty:
-                            # prodListQty = prodListQty - p.qty
-                            # stockList.append({'part_no':p.product.part_no,'qty': prodListQty})
+                            stockList.append({'part_no':p.product.part_no,'qty': p.qty})
                             p.qty = p.qty - prodListQty
                             prodListQty = 0
                             p.save()
                     if prodListQty==0:
+                        print stockList
                         data = {
                         'qty': i['prodQty'],
                         'product' :Products.objects.get(pk=i['pk']),
                         'price' : price,
+                        'stock': stockList
                         }
                         orderObj = MaterialIssue.objects.create(**data)
                         orderObj.save()
-                        print orderObj,'kkkkkkkkkkkkkkkk'
                         orderlist.append(orderObj.pk)
             dataVal = {
                 "user" : user,
