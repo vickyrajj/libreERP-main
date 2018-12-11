@@ -48,33 +48,117 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     $rootScope.cart.push(product)
     console.log($rootScope.cart.length);
   }
+
+
+
+  $scope.getMaterialIssue = function(offset){
+    console.log($scope.searchmaterial,'kkkkkkkkkkkkkkk');
+    $http({
+      method: 'GET',
+      url: '/api/support/material/?limit=4&offset=' + offset+ '&search=' + $scope.searchtmaterial
+    }).
+    then(function(response) {
+      console.log(response.data, 'aaaaaaaaaaaaaa');
+      $scope.materialIssue = response.data.results
+      for (var i = 0; i < $scope.materialIssue.length; i++) {
+
+        $scope.issue = $scope.materialIssue[i].materialIssue
+        $scope.sum.push($scope.issue.map(function(m){
+          return m.qty*m.price
+        }).reduce(function(a,b){return a+b},0))
+        console.log($scope.sum,'aaaaaaa');
+
+      }
+    })
+  }
+
+  $scope.offsetmaterial = 0
+
+  $scope.refreshmaterial = function() {
+    $scope.getMaterialIssue($scope.offset)
+  }
+
+  $scope.nextmaterial = function() {
+    $scope.offsetmaterial  = $scope.offsetmaterial  + 4
+    $scope.getMaterialIssue($scope.offsetmaterial)
+    if ($scope.materialIssue.length == 0) {
+        $scope.offsetmaterial  =  $scope.offsetmaterial  - 4
+      $scope.getMaterialIssue($scope.offsetmaterial)
+    }
+  }
+
+  $scope.prevmaterial = function() {
+    if ($scope.offsetmaterial== 0) {
+      return
+    }
+    $scope.offsetmaterial =  $scope.offsetmaterial  - 4
+    console.log('calling from prev');
+    $scope.getMaterialIssue($scope.offsetmaterial)
+  }
+
+  $scope.enterFunmaterial = function() {
+    $scope.getMaterialIssue($scope.offset)
+  }
+
+
+
+
   $scope.sum = []
   $scope.$watch('modeToggle', function(newValue, oldValue) {
     console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
     if (newValue == true) {
-      $http({
-        method: 'GET',
-        url: '/api/support/material/'
-      }).
-      then(function(response) {
-        $scope.materialIssue = response.data
-        for (var i = 0; i < $scope.materialIssue.length; i++) {
-
-          $scope.issue = $scope.materialIssue[i].materialIssue
-          $scope.sum.push($scope.issue.map(function(m){
-            return m.qty*m.price
-          }).reduce(function(a,b){return a+b},0))
-          console.log($scope.sum,'aaaaaaa');
-
-        }
-
-
-        console.log($scope.totalSum,'lllllllll');
-
-      })
-
+      $scope.getMaterialIssue($scope.offsetmaterial)
     }
   });
+
+
+
+//
+//   $scope.$watch('modeToggle', function(newValue, oldValue) {
+//   console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
+//   if (newValue == true) {
+//     $http({
+//       method: 'GET',
+//       url: '/api/support/material/'
+//     }).
+//     then(function(response) {
+//       $scope.materialIssue = response.data
+//       for (var i = 0; i < $scope.materialIssue.length; i++) {
+//
+//         $scope.issue = $scope.materialIssue[i].materialIssue
+//         $scope.sum.push($scope.issue.map(function(m){
+//           return m.qty*m.price
+//         }).reduce(function(a,b){return a+b},0))
+//         console.log($scope.sum,'aaaaaaa');
+//
+//       }
+//
+//
+//       console.log($scope.totalSum,'lllllllll');
+//
+//     })
+//
+//   }
+// });
+
+  // $scope.$watch('modeToggle', function(newValue, oldValue) {
+  //   console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
+  //   if (newValue == true) {
+  //     $http({
+  //       method: 'GET',
+  //       url: '/api/support/material/'
+  //     }).
+  //     then(function(response) {
+  //       console.log(response.data, 'aaaaaaaaaaaaaa');
+  //       $scope.materialIssue = response.data
+  //
+  //     })
+  //
+  //   }
+  // });
+
+
+
 
   $scope.delete = function(pk, index) {
     $http({
@@ -198,11 +282,20 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           then(function(response) {
             $scope.productsOrdered.push(response.data);
           })
-        }
-        $scope.delete = function(pk, index) {
-          $scope.productsOrdered.splice(index, 1)
 
-        }
+      }
+
+      $scope.delete = function(index){
+        $scope.productsOrdered.splice(index,1);
+      }
+      // $scope.delete = function(pk,index){
+      //   $http({method : 'DELETE' , url : '/api/support/products/' + pk + '/' }).
+      //   then( function(response){
+      //     Flash.create('success','Deleted' );
+      //     console.log(index,'jjjjj');
+      //     $scope.productsOrdered.splice(index,1)
+      //   })
+
 
 
         $scope.form = {}

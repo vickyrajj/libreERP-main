@@ -37,6 +37,15 @@
             <generic-Table data="data2.tableData" config-Obj="{{config2}}" callback-Fn="tableAction2"></generic-Table>
           </div>
         </uib-tab>
+        <uib-tab >
+          <uib-tab-heading>
+            Invoice
+            <i class="fa fa-list-ul"></i>
+          </uib-tab-heading>
+          <div class="container-fluid" >
+            <div ng-include="'/static/ngTemplates/app.projects.invoice.html'"></div> 
+          </div>
+        </uib-tab>
         <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
           <uib-tab-heading>
             {{tab.title}}

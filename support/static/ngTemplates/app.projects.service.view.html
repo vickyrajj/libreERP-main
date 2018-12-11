@@ -1,123 +1,110 @@
 <div class="container-fluid" style="padding:20px;" ng-controller="businessManagement.projects.service.view">
-      <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:80vh;">
+  <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:80vh;">
+    <div class="row">
+      <div class="col-md-12">
         <div class="row">
-
-
-        <div class="row">
-          <div class="col-md-5 text-right">
-            <label><h4> Project Title :  </h4> </label>
-          </div>
-          <div class="col-md-7">
-            <h4>{{form.title}}</h4> <br>
+          <div class="col-md-12 text-left">
+            <label> Project Title : </label> {{form.title}} <br />
+            <label> Service Name :</label> {{form.service.name}} <br />
+            <label>Closing Date : </label> {{form.date}} <br />
           </div>
         </div>
         <div class="row">
-          <div class="col-md-5 text-right">
-            <label><h4> Service Name :  </h4> </label> <br>
+          <div class="col-md-12 text-center">
+            <label> Responsible Persons : </label>
           </div>
-          <div class="col-md-7">
-            <h4>{{form.service.name}}</h4> <br>
-          </div>
-        </div>
-        <div class="row" >
-          <div class="col-md-5 text-right">
-            <label><h4> Tentative Closing Date :  </h4> </label> <br>
-          </div>
-          <div class="col-md-7">
-            <h4>{{form.date}}</h4> <br>
-          </div>
-        </div>
-        <div class="row" >
-          <div class="col-md-5 text-right">
-            <label><h4> Responsible Person :  </h4> </label> <br>
-          </div>
-          <div class="col-md-7" >
-            <h4 ng-repeat = "item in name"><span>{{item}}</span></h4> <br>
-          </div>
-          </div>
-        <div class="row">
-          <div class="col-md-5 text-right">
-            <label><h4> Revision :  </h4> </label>
-          </div>
-          <div class="col-md-6 ">
-            <input type="text"  class="form-control text-center" ng-model="form.revision" ng-change="revision()" placeholder="Revision"> <br>
+          <div class="col-md-12">
+            <div ng-repeat="r in form.responsible">
+              <div class="card container-fluid" style="padding-left:0px;position:relative;margin-top:10px">
+                <div class="col-md-4" style="padding-top:5px;">
+                  <img ng-src="{{r | getDP}}" class="img-circle" alt="DP" height="50" width="50" />
+                </div>
+                <div class="col-md-8">
+                  {{r | getName}} <br>
+                  ID : <strong>{{r}}</strong>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
+            <label> Revision : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.revision" ng-change="revision()" placeholder="Revision">
+          </div>
         </div>
-
       </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <!-- <div class="row" style="border-bottom:solid 2px #eeeeee;margin:5px"> -->
+    <table class="invoiceTable" style=" width: 100%;">
+      <tbody>
+        <tr style="background-color: #eeeeee;height: 96px;">
+          <th>S.No</th>
+          <th>Part No</th>
+          <th>Products</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Customer Price</th>
+          <th></th>
+        </tr>
+        <tr ng-repeat="v in projects track by $index">
+          <td>{{$index + 1}}</td>
+          <td>{{v.products.part_no}}</td>
+          <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
+          <td> <input class="form-control-pos text-center" ng-model="v.price"></td>
+          <td><input type="text" class="form-control-pos text-center" ng-model="v.quantity1"></td>
+          <td><input type="text" class="form-control-pos text-center" ng-model="v.customer_price"></td>
+          <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
+        </tr>
+        <tr ng-repeat="item in data track by $index">
+          <td>{{$index + 1 + projects.length}}</td>
+          <td><input ng-model="item.part_no" uib-typeahead="product as product.part_no for product in change($viewValue)" type="text" class="form-control-pos text-center"></td>
+          <td>
+            <!-- <input  class="form-control-pos text-center" ng-model="item.description_1"> -->
+            {{item.description_1}}<span ng-if="item.description_2"> &nbsp({{item.description_2}})</span>
+          </td>
+          <td>
+            <input class="form-control-pos text-center" ng-model="item.price">
+          </td>
+          <td>
+            <input type="text" class="form-control-pos text-center" ng-model="item.quantity1">
+          </td>
+          <td>
+            <input type="text" class="form-control-pos text-center" ng-model="item.customer_price">
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable(item.part_no,$index)"> <i class="fa fa-trash"></i> </button>
+          </td>
+        </tr>
+        <tr>
+          <td><button style="background-color:white;border:none;" ng-click="addTableRow($index)"><i class="fa fa-plus" style="cursor:pointer"></i></button></td>
+        </tr>
+
+      </tbody>
+    </table>
+    <div class="row" ng-if="showbutton||projects.length>0">
       <div class="col-md-9">
-          <!-- <div class="row" style="border-bottom:solid 2px #eeeeee;margin:5px"> -->
-            <table class="invoiceTable" style=" width: 100%;">
-            <tbody>
-              <tr style="background-color: #eeeeee;height: 96px;">
-                <th>S.No</th>
-                <th>Part No</th>
-                <th>Products</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Customer Price</th>
-                <th></th>
-               </tr>
-                <tr ng-repeat="v in projects track by $index">
-                  <td>{{$index + 1}}</td>
-                  <td>{{v.products.part_no}}</td>
-                  <td>{{v.products.description_1}}</td>
-                  <td> <input  class="form-control-pos text-center" ng-model="v.price"></td>
-                  <td><input type="text"  class="form-control-pos text-center" ng-model="v.quantity1"></td>
-                  <td><input type="text"  class="form-control-pos text-center" ng-model="v.customer_price"></td>
-                  <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
-                </tr>
-                <tr ng-repeat="item in data track by $index">
-                  <td>{{$index + 1 + projects.length}}</td>
-                  <td><input  ng-model="item.part_no"   uib-typeahead="product as product.part_no for product in change($viewValue)" type="text" class="form-control-pos text-center"></td>
-                  <td>
-                    <!-- <input  class="form-control-pos text-center" ng-model="item.description_1"> -->
-                    {{item.description_1}}
-                  </td>
-                  <td>
-                    <input  class="form-control-pos text-center" ng-model="item.price">
-                  </td>
-                  <td>
-                    <input type="text"  class="form-control-pos text-center" ng-model="item.quantity1">
-                  </td>
-                  <td>
-                     <input type="text"  class="form-control-pos text-center" ng-model="item.customer_price">
-                    </td>
-                  <td>
-                    <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable(item.part_no,$index)"> <i class="fa fa-trash"></i> </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td><button style="background-color:white;border:none;" ng-click="addTableRow($index)"><i class="fa fa-plus" style="cursor:pointer"></i></button></td>
-                </tr>
-
-            </tbody>
-          </table>
-          <div class="row">
-            <div class="col-md-9">
-              <button type="button" class="btn btn-success pull-right" ng-click="send()"   >Send For Approval</button>
-            </div>
-            <div class="col-md-1">
-              <!-- <button type="button" class="btn btn-success pull-right"  style="margin-right:55px;"> -->
-                <span><a  class="btn btn-primary pull-right" style="cursor:pointer;" target="_blank" href="/api/support/slip/?project={{form.pk}}">PO<i  class="fa fa-download" style="font-size:1;margin-left:1em"  ></i></a></span>
-              <!-- </button> -->
-            </div>
-            <div class="col-md-2">
-              <!-- <button type="button" class="btn btn-success pull-right"  style="margin-right:55px;"> -->
-                <span><a  class="btn btn-primary " style="cursor:pointer;" target="_blank" href="/api/support/quotation/?project={{form.pk}}">Quotation<i  class="fa fa-download" style="font-size:1;margin-left:1em" ></i></a></span>
-              <!-- </button> -->
-            </div>
-          </div>
-         <!-- </div> -->
-          <div class="row">
-            <table cellpadding="0" cellspacing="0" border="0" align="center" width="600" class="container">
-
-            </table>
-          </div>
+        <button type="button" class="btn btn-success pull-right" ng-click="send()"> Send For Approval</button>
       </div>
-
-
-
-
+      <div class="col-md-1">
+        <!-- <button type="button" class="btn btn-success pull-right"  style="margin-right:55px;"> -->
+        <span><a class="btn btn-primary pull-right" style="cursor:pointer;" target="_blank" href="/api/support/slip/?project={{form.pk}}">PO<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+        <!-- </button> -->
+      </div>
+      <div class="col-md-2">
+        <!-- <button type="button" class="btn btn-success pull-right"  style="margin-right:55px;"> -->
+        <span><a class="btn btn-primary " style="cursor:pointer;" target="_blank" href="/api/support/quotation/?project={{form.pk}}">Quotation<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+        <!-- </button> -->
+      </div>
+    </div>
+    <!-- </div> -->
+    <!-- <div class="row">
+      <table cellpadding="0" cellspacing="0" border="0" align="center" width="600" class="container">
+      </table>
+    </div> -->
+  </div>
 </div>

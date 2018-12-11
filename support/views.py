@@ -821,10 +821,16 @@ class MaterialIssueViewSet(viewsets.ModelViewSet):
 
 class MaterialIssueMainViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )
-    queryset = MaterialIssueMain.objects.all()
+    # queryset = MaterialIssueMain.objects.all()
     serializer_class = MaterialIssueMainSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['project']
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['products','project']
+    def get_queryset(self):
+        if self.request.GET['search']!='undefined':
+            return MaterialIssueMain.objects.filter(project_title__icontains=self.request.GET['search'])
+        else:
+            return MaterialIssueMain.objects.all()
+
 
 class MaterialIssuedNoteAPIView(APIView):
     def get(self , request , format = None):
@@ -867,7 +873,8 @@ class ProductInventoryAPIView(APIView):
             total+=totalSum
         returnData ={'data' :toReturn[offset : limit],'total':total }
         return Response(returnData,status=status.HTTP_200_OK)
-import json
+
+
 class OrderAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
