@@ -83,12 +83,12 @@
         <tr>
           <td><button style="background-color:white;border:none;" ng-click="addTableRow($index)"><i class="fa fa-plus" style="cursor:pointer"></i></button></td>
         </tr>
-
       </tbody>
     </table>
     <div class="row" ng-if="showbutton||projects.length>0">
       <div class="col-md-9">
-        <button type="button" class="btn btn-success pull-right" ng-click="send()"> Send For Approval</button>
+        <button type="button" class="btn btn-success pull-right"  mwl-confirm title="Delete" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="sendForApproval()"
+          confirm-button-type="default" cancel-button-type="default"> Send For Approval</button>
       </div>
       <div class="col-md-1">
         <!-- <button type="button" class="btn btn-success pull-right"  style="margin-right:55px;"> -->

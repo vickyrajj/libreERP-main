@@ -204,10 +204,9 @@ style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span> -->
 
             <div class="col-md-2" >
                   <span><a class="btn btn-primary" style="cursor:pointer;" target="_blank" href="/api/support/materialIssued/?value={{m.pk}}">Material Isuue <i class="fa fa-download"  ng-click="$event.stopPropagation();"></i></a></span>
-
                 </div>
                 <div class="col-md-1">
-                  <button type="button" class="btn btn-danger btn-sm" ng-click="$event.stopPropagation();" mwl-confirm title="Close Chat" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="delete(m.pk,$index);"
+                  <button type="button" class="btn btn-danger btn-sm" ng-click="$event.stopPropagation();" mwl-confirm title="Delete" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="delete(m.pk,$index);"
                     confirm-button-type="default" cancel-button-type="default"> <i class="fa fa-trash"></i> </button>
                   </div>
               </div>

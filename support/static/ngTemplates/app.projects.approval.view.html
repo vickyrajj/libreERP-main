@@ -105,14 +105,11 @@
             </table>
             <div class="row">
               <div class="col-md-12">
-                <button type="button" class="btn btn-success pull-right"  ng-click="send()"  style="margin:35px;" >Approve</button>
+                <button type="button" class="btn btn-danger pull-right"  mwl-confirm title="Reject" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="reject();"
+                  confirm-button-type="default" cancel-button-type="default" style="margin:10px;">    Reject</button>
+                <button type="button" class="btn btn-success pull-right"   mwl-confirm title="Accept" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="accept();"
+                  confirm-button-type="default" cancel-button-type="default" style="margin:10px;">  Approve</button>
               </div>
             </div>
-
-
           </div>
-
-
-
-
 </div>
