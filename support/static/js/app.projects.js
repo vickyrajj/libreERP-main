@@ -890,9 +890,6 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
 
         $scope.total += $scope.projects[i].quantity2* $scope.projects[i].price
 
-
-
-
         var sendtoBom = {
           quantity2 : $scope.projects[i].quantity2,
           price : $scope.price,
