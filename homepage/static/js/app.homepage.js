@@ -90,6 +90,20 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
+    .state('remote', {
+      url: "/remote",
+      templateUrl: '/static/ngTemplates/app.homepage.remote.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+
+  $stateProvider
+    .state('training', {
+      url: "/training",
+      templateUrl: '/static/ngTemplates/app.homepage.training.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+
+  $stateProvider
     .state('pages', {
       url: "/:title",
       templateUrl: '/static/ngTemplates/app.homepage.page.html',

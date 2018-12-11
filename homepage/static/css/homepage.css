@@ -235,6 +235,126 @@
   font-family: sans-serif;
 }
 
+.hero-button {
+  border: 2px solid #013157;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 40px;
+  background-color: #013157;
+  color: #fff;
+  position: absolute;
+  top: 78%;
+  left: 25%;
+  width: 50%;
+}
+
+.hero-button:hover {
+  color: #fff;
+}
+
+.remote-box {
+  background-color: #fff;
+  padding: 0px;
+  min-height: 350px;
+  margin: 10px;
+  width: 22%;
+}
+
+.remote-top {
+  width: 100%;
+  border-left: 8px solid #0da5e4;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100px;
+  background-image: linear-gradient(rgba(11, 29, 92, 0.82), rgba(18, 24, 97, 0.6)), url('/static/images/left.jpg');
+  color: #fff;
+  padding: 10px;
+}
+
+.remote-bottom {
+  width: 100%;
+  padding: 10px;
+  min-height: 250px;
+}
+
+.price-box {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 256px;
+  height: 124px;
+  margin: 10px auto 0;
+  border: 1px solid #0f5891;
+  color: #0f5891;
+  font-size: 22px;
+  background-color: #f5fcff;
+}
+
+.ribbon.blue {
+  position: absolute;
+  top: 10px;
+  left: -9px;
+  height: 29px;
+  padding: 12px 2rem;
+  background-color: #0f5891;
+  font-size: 1.33333rem;
+  left: -12px !important;
+  padding: 2px 2rem !important;
+  color: #fff;
+  font-weight: bold;
+}
+
+.ribbon.blue div::before {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: -.7em;
+  left: 0;
+  border-width: .8em 0 0 .9em;
+  border-style: solid;
+  border-color: #636363 transparent transparent;
+}
+
+.laptop_bg {
+  margin: 0px;
+  background-image: url('/static/images/lapmob.jpg');
+  min-height: 600px;
+}
+
+.platform_img {
+  padding-top: 330px;
+  padding-left: 70px;
+}
+
+.playbtn {
+  padding-top: 130px;
+}
+
+.demo_video {
+  padding: 20px;
+  font-size: 16px;
+}
+
+.demo_row {
+  margin: 0px;
+  padding: 10px;
+  background: url('/static/images/andro.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 500px;
+  background-position: center;
+}
+
+.bgrnd {
+  background-image: linear-gradient(to right, rgba(5, 20, 43, 0.85), rgba(5, 20, 43, 0.14)), url('/static/images/hero1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 500px;
+  background-position: center;
+}
+
 @media only screen and (min-width:1500px) {
   .flex_section {
     margin: 100px 200px 100px 200px !important;
@@ -243,7 +363,8 @@
   .blog_section {
     margin: 100px 200px 100px 200px !important;
   }
-  .enterpriseimg{
+
+  .enterpriseimg {
     display: none;
   }
 }
@@ -262,7 +383,44 @@
     padding: 10px;
   }
 
-  
+  .hero-button {
+    top: 86%;
+  }
+
+  .remote-box {
+    width: 100%;
+    margin-left: 0px;
+  }
+
+  .laptop_bg {
+    background-image: none;
+    background-color: #00CDC8;
+  }
+
+  .platform_img {
+    padding: 20px 100px 0px 80px;
+  }
+
+  .playbtn {
+    display: none;
+  }
+
+  .demo_video {
+    padding: 10px;
+  }
+
+  .demo_row {
+    margin: 0px;
+    padding: 10px;
+    background: url('/static/images/andro.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 500px;
+  }
+
+  .bgrnd {
+    display: none;
+  }
 
   /* .blog_container, .sec1Right, .sec2Left, .sec2thirdRow{
     flex-direction: column;
@@ -848,6 +1006,7 @@ figure {
   max-width: 200px;
   padding: .8em 2.5em;
   color: #fff;
+  font-size: 16px;
 }
 
 .list {
