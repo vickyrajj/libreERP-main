@@ -22,21 +22,23 @@
       <input type="radio" name="slot" ng-model="form.slot" value="{{timeVal.time}}"><strong> {{timeVal.time}} </strong>
     </div>
   </div>
+  <form>
   <div class="row" style="padding-top:30px">
     <div class="col-md-12">
       <!-- <h3>Leave your Name and Email-Id</h3> -->
-      <input type="text" class="form-control" ng-model="form.name" placeholder="Name">
+      <input type="text" class="form-control" ng-model="form.name" placeholder="Name*" required>
     </div>
   </div>
   <div class="row" style="padding-top:10px">
     <div class="col-md-12">
       <!-- <h3>Add your Email Id</h3> -->
-      <input type="email" class="form-control" ng-model="form.emailId" placeholder="Email-Id">
+      <input type="email" class="form-control" ng-model="form.emailId" placeholder="Email-Id*" required>
     </div>
   </div>
   <div class="row" style="padding-top:30px">
-    <button type="button" class="btn btn-primary" ng-click="scheduleMeeting()">Schedule</button>
+    <button type="submit" class="btn btn-primary" ng-click="scheduleMeeting()">Schedule</button>
   </div>
+</form>
 </div>
 <div class="col-md-12 text-center" style="background-color:white;min-height:490px;" ng-if="thankYou">
   <h2 style="position:absolute;top:200px;left:200px;align:center">Thank You!!! Please check your mail</h2>

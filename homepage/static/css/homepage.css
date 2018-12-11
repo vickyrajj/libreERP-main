@@ -234,14 +234,17 @@
 
   .calenderDiv {
     padding-left: 0px !important;
+    padding-top: 0px !important;
   }
 
   .calendarBox {
     min-height: 300px !important;
+    margin-top: 40px !important;
   }
 
   .calendarBox img {
     left: 36% !important;
+    top:-40px !important;
   }
 
   .scheduleDatePic td {
@@ -315,12 +318,15 @@
   }
 
 
-  .blog_container, .sec2Left {
+  .blog_container, .sec2Left, .sec1Right {
     flex-direction: column;
   }
-  .flex_50Perc {
-    height: 25vh;
+
+  .sec1RightBox2, .sec1RightBox1{
+    width: 100% !important;
+    flex:none;
   }
+
   .blog_text {
     font-size: 15px !important;
   }
@@ -490,7 +496,7 @@
 
 .toggleBtn span {
   background-color: #e0e0e0;
-  
+
 }
 
 .barRotate1 {

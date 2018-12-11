@@ -222,6 +222,23 @@ app.filter('getDate' , function(){
   }
 })
 
+app.filter('getDateNum' , function(){
+  return function(input){
+    var date = new Date(input.split('T')[0])
+    var today = date.getDate()
+    return today
+  }
+})
+
+app.filter('getMonth' , function(){
+  return function(input){
+    var date = new Date(input.split('T')[0])
+    var month = date.getMonth()
+    var monthList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return monthList[month];
+  }
+})
+
 app.filter('getDP' , function($users){
   return function(input){
     if (typeof input == 'undefined' || input == -1 ) {

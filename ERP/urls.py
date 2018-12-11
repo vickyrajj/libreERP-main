@@ -13,9 +13,9 @@ router.register(r'appSettingsAdminMode' , applicationSettingsAdminViewSet , base
 router.register(r'groupPermission' , groupPermissionViewSet , base_name = 'groupAccess')
 router.register(r'permission' , permissionViewSet , base_name = 'access')
 router.register(r'profile' , profileViewSet , base_name = 'profile')
-router.register(r'address' , addressViewSet , base_name = 'address')
-router.register(r'service' , serviceViewSet , base_name = 'service')
-router.register(r'companyHoliday' , CompanyHolidayViewSet , base_name = 'companyHoliday')
+router.register(r'visitor' , visitorViewSet , base_name = 'visitor')
+router.register(r'activity' , activityViewSet , base_name = 'activity')
+
 
 urlpatterns = [
     url(r'^', include(router.urls)),
@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
     url(r'sendSMS/$' , SendSMSApi.as_view()),
     url(r'locationTracker/$' , LocationTrackerAPI.as_view()),
+    url(r'subscribeBlogs/$' , SubscribeBlogsApi.as_view()),
 
 ]
