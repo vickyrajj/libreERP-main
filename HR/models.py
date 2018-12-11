@@ -117,7 +117,7 @@ class profile(models.Model):
     note3 = models.TextField(max_length = 500 , null = True , blank = True)
     primaryAddress = models.ForeignKey(Address , related_name = "primaryAddress" , null = True , blank = True)
     addresses = models.ManyToManyField(Address)
-    details = models.CharField(max_length = 100 , null = True , blank = True)
+    details = models.TextField(max_length = 1000 , null = True , blank = True)
 
 User.profile = property(lambda u : profile.objects.get_or_create(user = u)[0])
 

@@ -112,7 +112,7 @@ app.filter('convertUnit', function() {
 
 app.filter('convertSize', function() {
   return function (qty, unit) {
-    // console.log('in filter cponvert' ,qty, unit );
+    console.log('in filter cponvert' ,qty, unit );
     if (unit=='Size' || unit == 'Size and Color') {
       if (qty==1) {
         toReturn = 'XS'
@@ -134,6 +134,8 @@ app.filter('convertSize', function() {
       }
       else if (qty==5) {
         toReturn = 'XXXL'
+      }else {
+        toReturn = qty
       }
     }
     return toReturn

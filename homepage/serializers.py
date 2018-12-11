@@ -35,6 +35,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         print instance
         print validated_data
         if 'emailOTP' in self.context['request'].data:
+            print 'coommmmmmmmmreeeeeeeeherere'
             d = self.context['request'].data;
             if not globalSettings.VERIFY_MOBILE:
                 if( d['token'] == instance.token and d['emailOTP']== instance.emailOTP ):
