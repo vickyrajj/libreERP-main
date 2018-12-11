@@ -51,6 +51,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
 
+
   $scope.getMaterialIssue = function(offset){
     console.log($scope.searchmaterial,'kkkkkkkkkkkkkkk');
     $http({
@@ -60,8 +61,8 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     then(function(response) {
       console.log(response.data, 'aaaaaaaaaaaaaa');
       $scope.materialIssue = response.data.results
+      $scope.sum = []
       for (var i = 0; i < $scope.materialIssue.length; i++) {
-
         $scope.issue = $scope.materialIssue[i].materialIssue
         $scope.sum.push($scope.issue.map(function(m){
           return m.qty*m.price
@@ -103,7 +104,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
 
-  $scope.sum = []
   $scope.$watch('modeToggle', function(newValue, oldValue) {
     console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
     if (newValue == true) {
