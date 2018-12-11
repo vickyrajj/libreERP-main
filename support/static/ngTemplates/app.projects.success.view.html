@@ -82,7 +82,7 @@
            </tr>
             <tr ng-repeat="v in projects track by $index">
               <td>{{$index + 1}}</td>
-              <td>{{v.products.description_1}}</td>
+              <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
               <td>{{v.products.part_no}}</td>
               <td>{{v.quantity1}}</td>
               <td >{{v.price}}</td>

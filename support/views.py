@@ -938,6 +938,10 @@ class EmailApi(APIView):
     def post(self, request, format=None):
         email=[]
         link = request.data['link']
+        # linkd = json.dumps(link)
+        print link['origin']
+        linkUrl = link['origin']
+        # print linkd.split('/#')[0]
         projectPk = request.data['pkValue']
         project = Projects.objects.get(pk=projectPk)
         productDetails = BoM.objects.filter(project__id = projectPk)
@@ -945,8 +949,8 @@ class EmailApi(APIView):
             'recieverName' : 'admin',
             'productDetails' : productDetails,
             'project':project,
-            'link':link,
-            'message' : 'Please find the link to change the status'
+            'link':linkUrl,
+            'message' : 'Please click on the below link to change the status'
 
         }
         email.append('ankita.k@cioc.in')
