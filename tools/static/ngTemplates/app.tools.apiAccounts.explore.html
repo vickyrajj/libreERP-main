@@ -6,6 +6,7 @@
     <thead>
       <tr>
         <th>Account ID</th>
+        <th>Name</th>
         <th>Email</th>
         <th>Active</th>
         <th>Created</th>
@@ -15,6 +16,7 @@
     <tbody>
       <tr>
         <td>{{account.pk}}</td>
+        <td>{{account.name}}</td>
         <td>{{account.email}}</td>
         <td><switch ng-model="account.active" class="green"></switch></td>
         <td>{{account.created | date:'dd-mm-yyyy'}}</td>

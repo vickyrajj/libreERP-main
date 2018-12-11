@@ -27,7 +27,8 @@ class ApiAccount(models.Model):
     remaining = models.PositiveIntegerField(default=0)
     active = models.BooleanField(default = False)
     apiKey = models.CharField(max_length = 100, null = False)
-    email = models.EmailField(null=True) # say this is an external user and to identify the owner this email can be used
+    email = models.EmailField(null=True,unique = True) # say this is an external user and to identify the owner this email can be used
+    name = models.CharField(max_length = 100, null = True)
 
 class ApiAccountLog(models.Model):
     updated = models.DateTimeField(auto_now_add=True)

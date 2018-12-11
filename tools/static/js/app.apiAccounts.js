@@ -32,7 +32,7 @@ app.controller('home.apiAccounts' , function($scope , $http , $aside , $state, F
     if (action == 'info') {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)){
-          $scope.addTab({title : 'Account summary : ' + $scope.data.tableData[i].email , cancel : true , app : 'apiAccountBrowser' , data : {pk : target, index : i} , active : true})
+          $scope.addTab({title : 'Account summary : ' + $scope.data.tableData[i].pk , cancel : true , app : 'apiAccountBrowser' , data : {pk : target, index : i} , active : true})
         }
       }
     }
@@ -68,12 +68,21 @@ app.controller('home.apiAccounts' , function($scope , $http , $aside , $state, F
 
 app.controller('home.apiAccounts.create' , function($scope , $http, $aside, $uibModal , Flash){
 
-  $scope.form = {email : '' , accountType: 'trial', remaining : 0, active : true};
+  $scope.form = {name:'',email : '' , accountType: 'trial', remaining : 0, active : true};
 
   $scope.save = function() {
+    if ($scope.form.name.length==0) {
+      Flash.create('warning' , 'Name Is Required')
+      return
+    }
+    if ($scope.form.email.length==0) {
+      Flash.create('warning' , 'Email Is Required')
+      return
+    }
 
     var dataToSend = {
       email : $scope.form.email,
+      name : $scope.form.name,
       accountType : $scope.form.accountType,
       remaining : $scope.form.remaining,
       active : $scope.form.active
@@ -81,7 +90,7 @@ app.controller('home.apiAccounts.create' , function($scope , $http, $aside, $uib
 
     $http({method : 'POST' , url : '/api/tools/apiAccount/' , data : dataToSend}).
     then(function(response) {
-      $scope.form = {email : '' , accountType: 'trial', remaining : 0, active : true};
+      $scope.form = {name:'',email : '' , accountType: 'trial', remaining : 0, active : true};
       Flash.create('success' , 'New account created')
     }, function(response) {
       Flash.create('danger' , 'Failed')

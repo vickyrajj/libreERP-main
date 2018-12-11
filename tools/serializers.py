@@ -44,7 +44,7 @@ class FileCacheSerializer(serializers.ModelSerializer):
 class ApiAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApiAccount
-        fields = ('pk', 'user' ,'created', 'accountType', 'remaining', 'active','email', 'apiKey')
+        fields = ('pk', 'user' ,'created', 'accountType', 'remaining', 'active','email', 'apiKey' , 'name')
         read_only_fields = ('user','apiKey',)
     def create(self , validated_data):
         aa = ApiAccount(**validated_data)
