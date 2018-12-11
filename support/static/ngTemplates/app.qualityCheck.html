@@ -114,6 +114,12 @@
                 </div>
               </div>
             </div>
+
+            <div ng-if="reviewData.length>14" class="col-sm-12" style="text-align:center">
+              <button style="background-color:#286090;padding:5px;color:white" ng-click="loadMore()">Load More</button>
+            </div>
+
+
           </div>
         </div>
       </uib-tab>
@@ -176,6 +182,9 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div ng-if="archivedData.length>14" class="col-sm-12" style="text-align:center">
+              <button style="background-color:#286090;padding:5px;color:white" ng-click="loadMoreArchived()">Load More</button>
             </div>
           </div>
         </div>

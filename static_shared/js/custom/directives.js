@@ -854,6 +854,7 @@ app.directive('chatBox', function() {
           }).
           then(function(response) {
             console.log(response.data, 'dataaa');
+            $scope.chatBox.messageToSend = ''
             $scope.data.messages.push(response.data)
             console.log($scope.me);
 
@@ -866,7 +867,7 @@ app.directive('chatBox', function() {
               console.log("Published", $scope.data.uid);
             });
 
-            $scope.chatBox.messageToSend = ''
+
             $scope.scroll()
 
 

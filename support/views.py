@@ -183,7 +183,8 @@ class ReviewFilterCalAPIView(APIView):
 
     def get(self, request, format=None):
         print '****** entered', request.GET
-
+        offset=int(request.GET['offset'])
+        limit= offset+int(request.GET['limit'])
         toSend = []
         res = []
         sobj = SupportChat.objects.all()
@@ -349,7 +350,7 @@ class ReviewFilterCalAPIView(APIView):
             return response
             # return ExcelResponse(res)
 
-        return Response(toSend, status=status.HTTP_200_OK)
+        return Response(toSend[offset : limit], status=status.HTTP_200_OK)
 
 
 def encrypt(raw, password):

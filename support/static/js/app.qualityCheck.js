@@ -380,7 +380,8 @@ $scope.archiveTab = false;
 
   $scope.getArchData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?status=archived'
+    var url = '/api/support/reviewHomeCal/?status=archived&limit=15&offset='+$scope.offsett+'&'
+    // var url = '/api/support/reviewHomeCal/?limit=10&offset='+$scope.offsett+'&'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -409,25 +410,22 @@ $scope.archiveTab = false;
   }
 // innerHTML=$scope.reviewData.statusChat+'By'
   // $scope.filterParams=[];
-
+$scope.offsett=0;
+$scope.Archoffsett=0;
   $scope.getData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?'
+    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.Archoffsett+'&'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
-      // $scope.filterParams.push({key : 'date' , value :date.toJSON().split('T')[0]})
     }
     if (typeof user == 'object') {
       url += '&user=' + user.pk
-      // $scope.filterParams.push({key : 'user' , value :user.pk})
     }
     if (typeof client == 'object') {
       url += '&client=' + client.pk
-      // $scope.filterParams.push({key : 'client' , value :client.pk})
     }
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
-      // $scope.filterParams.push({key : 'email' , value :email})
     }
     if (download) {
       $window.open(url+'&download','_blank');
@@ -439,9 +437,17 @@ $scope.archiveTab = false;
       then(function(response) {
         // $scope.custDetails = response.data[0]
         console.log(response.data,'dddddddddddd',typeof response.data);
-        $scope.reviewData =response.data
+        $scope.reviewData=response.data
       });
     }
+  }
+  $scope.loadMore=function(){
+    $scope.offsett+15
+      $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+  }
+  $scope.loadMoreArchived=function(){
+    $scope.Archoffsett+15
+      $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
   }
   $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
   $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)

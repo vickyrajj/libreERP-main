@@ -1200,7 +1200,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
   };
 
   $scope.getPermissionSuggestions = function(query) {
-    return $http.get('/api/ERP/application/?name__contains=' + query)
+    return $http.get('/api/ERP/application/?type=1&name__contains=' + query)
   }
 
   $scope.updateProfile = function(index) {

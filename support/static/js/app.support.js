@@ -138,7 +138,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       });
 
 
-  }, 1000);
+  },0);
 
   $scope.onNotification = function(uid, msg, i = 'a') {
 

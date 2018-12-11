@@ -70,12 +70,15 @@ ul.tools li {
 .uibTypeaheadDropup ul li{
 		transform: rotate(180deg);
 		/* transform: scaleY(-1); */
+    overflow-x: hidden
 }
 
 .uibTypeaheadDropup ul{
 	margin-bottom: 100px;
+  width:300px;
+  left:-30px !important;
 	transform: rotate(180deg);
-  transform-origin: top left;
+  transform-origin: top right;
 	/* transform: scaleY(-1); */
 }
 

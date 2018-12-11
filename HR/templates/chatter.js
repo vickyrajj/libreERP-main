@@ -1762,8 +1762,9 @@ function activeAudioCall(){
                 top:0px;\
                 right: 0px;\
                 min-width: 100%;\
-                z-index:99999\
-                box-shadow: 0px 0px 25px 5px rgba(0,0,0,0.2);\
+                color:black;\
+                z-index:9999999999999999999;\
+                border-radius:0px\
               }\
               .closeIcon{\
                 display:block;\
@@ -1786,7 +1787,8 @@ function activeAudioCall(){
                 min-width: 370px;\
                 border-radius:10px;\
                 box-shadow: 0px 0px 25px 5px rgba(0,0,0,0.2);\
-                z-index:99999\
+                z-index:9999999999999999999;\
+                color:black;\
               }\
               .closeIcon{\
                 display:none;\
@@ -2397,6 +2399,7 @@ videoBtn.addEventListener("click",function(){
     alert('Audio call is Active')
     return
   }
+  audioBtn.style.display='none'
   isVideoClicked=!isVideoClicked
   togglingActive(videoBtn,isVideoClicked)
   activeVideoCall()
@@ -2407,6 +2410,7 @@ audioBtn.addEventListener("click",function(){
     alert('Video call is Active')
     return
   }
+  videoBtn.style.display='none'
   isAudioClicked=!isAudioClicked
   togglingActive(audioBtn,isAudioClicked)
   activeAudioCall()

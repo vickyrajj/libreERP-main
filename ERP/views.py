@@ -254,6 +254,8 @@ class applicationViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name' , 'module']
     def get_queryset(self):
+        if 'type' in self.request.GET:
+            return application.objects.filter(inMenu = True)
         u = self.request.user
         if not u.is_superuser:
             return getApps(u)

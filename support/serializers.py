@@ -43,21 +43,22 @@ class SupportChatSerializer(serializers.ModelSerializer):
         fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent','responseTime','logs' )
     def create(self ,  validated_data):
         s = SupportChat(**validated_data)
-        lstMsg= SupportChat.objects.latest('created')
         s.save()
-        responseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
-        if lstMsg.sentByAgent==False and s.sentByAgent==True:
-            s.responseTime = responseTime
-        s.save()
-        chatThObj = ChatThread.objects.filter(uid=s.uid)
-        if len(chatThObj)>0 and s.sentByAgent==True:
-            print chatThObj[0].firstResponseTime ,'frt'
-            if chatThObj[0].firstResponseTime:
-                print 'frt is already there'
-            else:
-                print 'create frt'
-                chatThObj[0].firstResponseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
-                chatThObj[0].save()
+        if len(SupportChat.objects.all())>0:
+            lstMsg= SupportChat.objects.latest('created')
+            responseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
+            if lstMsg.sentByAgent==False and s.sentByAgent==True:
+                s.responseTime = responseTime
+            s.save()
+            chatThObj = ChatThread.objects.filter(uid=s.uid)
+            if len(chatThObj)>0 and s.sentByAgent==True:
+                print chatThObj[0].firstResponseTime ,'frt'
+                if chatThObj[0].firstResponseTime:
+                    print 'frt is already there'
+                else:
+                    print 'create frt'
+                    chatThObj[0].firstResponseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
+                    chatThObj[0].save()
         return s
 
 class VisitorSerializer(serializers.ModelSerializer):
