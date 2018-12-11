@@ -745,7 +745,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         },
       }).
       then(function(response) {
-        Flash.create('success', 'Saved');
+        Flash.create('success', 'Email Sent');
       })
     })
   }
