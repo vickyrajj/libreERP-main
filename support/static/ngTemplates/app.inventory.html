@@ -10,7 +10,7 @@
     <div class="col-md-8  text-right" ng-if="!modeToggle" style="padding-top:20px">
       <div class="container-fluid">
         <div class="input-group">
-          <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()" style="height:40px" />
+          <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()" />
           <span class="input-group-addon" ng-click="refresh()" style="cursor:pointer; background-color:#fff;"><i class="fa fa-refresh"></i></span>
           <span class="input-group-addon" ng-click="prev()" style="cursor:{{offset!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i class="fa fa-arrow-left"></i>Prev</span>
           <span class="input-group-addon" ng-click="next()" style="cursor:pointer; background-color:#fff;">Next <i class="fa fa-arrow-right"></i></span>
@@ -21,6 +21,17 @@ ng-click="topButtonsClick('New')"><i class="fa fa-plus"></i> New
           &nbsp;&nbsp;&nbsp; <span class="input-group-addon" ng-click="reset()" style="cursor:pointer; background-color:#fff;">Reset</span>
           <span class="input-group-addon" ng-click="getList();" style="cursor:pointer; background-color:#fff;border:1px solid #fff;color:#286090"> <i class="fa fa-shopping-cart fa-2x"></i>
             {{cart.length}}</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-7 text-left" ng-if="modeToggle" style="padding-top:20px">
+      <div class="container-fluid">
+        <div class="input-group">
+          <input type='text' ng-model='searchmaterial' class="form-control" placeholder="Search a Project " ng-enter="enterFunmaterial()" style="height:40px" />
+          <span class="input-group-addon" ng-click="refreshmaterial()" style="cursor:pointer; background-color:#fff;"><i class="fa fa-refresh"></i></span>
+          <span class="input-group-addon" ng-click="prevmaterial()" style="cursor:{{offsetmaterial!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i class="fa fa-arrow-left"></i>Prev</span>
+          <span class="input-group-addon" ng-click="nextmaterial()" style="cursor:pointer; background-color:#fff;">Next <i class="fa fa-arrow-right"></i></span>
         </div>
       </div>
 
@@ -85,8 +96,7 @@ style="padding:10px;">
               <div class="col-md-2">
                 <button class="btn btn-primary" ng-if="p.totalqty>0" style="font-size:12px" ng-click="addToCart(p.productPk);$event.stopPropagation();">Add to Cart
                 </button>
-                <!-- <button class="btn btn-default"
-ng-if="p.totalqty>0"  style="font-size:12px">Added to Cart </button> -->
+                <!-- <button class="btn btn-default" ng-if="p.totalqty>0"  style="font-size:12px">Added to Cart </button> -->
               </div>
             </div>
           </div>
@@ -182,15 +192,12 @@ fa-plus"></i></span>
                   <span style="font-size:12px"><strong> Enginner:
                     </strong> {{m.user.first_name}}</span>
                 </div>
-                <div class="col-md-offset-1 col-md-2 ">
-                  <!-- <span><a  class="btn btn-primary "
-style="cursor:pointer;" target="_blank" href="">Material Issue<i
-class="fa fa-download"
-style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span> -->
-                  <span><a class="btn btn-primary" style="cursor:pointer;" target="_blank" href="/api/support/materialIssued/?value={{m.pk}}">Material Isuue <i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+                <div class="col-md-offset-1 col-md-2" >
+                  <span><a class="btn btn-primary" style="cursor:pointer;" target="_blank" href="/api/support/materialIssued/?value={{m.pk}}">Material Isuue <i class="fa fa-download"  ng-click="$event.stopPropagation();"></i></a></span>
                 </div>
                 <div class="col-md-1">
-                  <button type="button" class="btn btn-danger btn-sm" ng-click="delete(m.pk,$index)"> <i class="fa fa-trash"></i> </button>
+                  <button type="button" class="btn btn-danger btn-sm" ng-click="$event.stopPropagation();" mwl-confirm title="Close Chat" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="delete(m.pk,$index);"
+                    confirm-button-type="default" cancel-button-type="default"> <i class="fa fa-trash"></i> </button>
                   </div>
               </div>
             </div>

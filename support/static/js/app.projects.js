@@ -572,7 +572,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }
   }, true)
 
-
+  $scope.showbutton = false
   $scope.$watch('data', function(newValue, oldValue) {
     if (typeof newValue[0].part_no == 'object') {
       $scope.data[$scope.data.length - 1] = newValue[0].part_no
@@ -596,6 +596,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         $scope.data[$scope.data.length - 1].listPk = response.data.pk
         $scope.productpk.push(response.data);
         console.log($scope.productpk ,'ooooooo');
+        $scope.showbutton = true
       })
       return
     } else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
@@ -919,7 +920,7 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     if($scope.form.savedStatus==true){
       Flash.create('warning', 'Already Saved in Inventory');
     }
-    else{  
+    else{
       for (var i = 0; i < $scope.projects.length; i++) {
         $scope.qty = $scope.projects[i].quantity2;
         $scope.rate =$scope.projects[i].price.toFixed(2)
