@@ -589,4 +589,4 @@ class genericPincodeSerializer(serializers.ModelSerializer):
 class genericImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenericImage
-        fields = ( 'pk', 'backgroundImage' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage','topBanner','topMobileBanner')
+        fields = ( 'pk' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage','topBanner','topMobileBanner')

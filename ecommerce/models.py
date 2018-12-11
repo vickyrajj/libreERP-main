@@ -313,7 +313,7 @@ class GenericPincode(models.Model):
     pin_status = models.CharField( max_length = 2, default = "1")
 
 class GenericImage(models.Model):
-    backgroundImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    # backgroundImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     cartImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     paymentImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     paymentPortrait = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)

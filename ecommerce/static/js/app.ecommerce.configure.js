@@ -457,9 +457,9 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
 
   $scope.addImage = function(){
     var fd = new FormData();
-    if ($scope.form.backgroundImage != null && typeof $scope.form.backgroundImage != 'string') {
-      fd.append('backgroundImage', $scope.form.backgroundImage);
-    }
+    // if ($scope.form.backgroundImage != null && typeof $scope.form.backgroundImage != 'string') {
+    //   fd.append('backgroundImage', $scope.form.backgroundImage);
+    // }
     if ($scope.form.cartImage != null && typeof $scope.form.cartImage != 'string') {
       fd.append('cartImage', $scope.form.cartImage);
     }
