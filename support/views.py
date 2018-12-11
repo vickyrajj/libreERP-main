@@ -60,6 +60,8 @@ from reportlab.lib.styles import ParagraphStyle,getSampleStyleSheet
 from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.colors import *
 from reportlab.lib.units import inch, cm
+from django.template.loader import render_to_string, get_template
+from django.core.mail import send_mail, EmailMessage
 
 class ProductsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -929,3 +931,28 @@ class OrderAPIView(APIView):
                 materialIssueObj.save()
 
         return Response(materialIssueObj.pk,status=status.HTTP_200_OK)
+
+
+class EmailApi(APIView):
+    permission_classes = (permissions.AllowAny ,)
+    def post(self, request, format=None):
+        email=[]
+        link = request.data['link']
+        projectPk = request.data['pkValue']
+        project = Projects.objects.get(pk=projectPk)
+        productDetails = BoM.objects.filter(project__id = projectPk)
+        ctx = {
+            'recieverName' : 'admin',
+            'productDetails' : productDetails,
+            'project':project,
+            'link':link,
+            'message' : 'Please find the link to change the status'
+
+        }
+        email.append('ankita.k@cioc.in')
+        email_subject = 'Approval'
+        email_body = get_template('app.approval.email.html').render(ctx)
+        msg = EmailMessage(email_subject, email_body, to= email , from_email= 'ankita.k@cioc.in' )
+        msg.content_subtype = 'html'
+        msg.send()
+        return Response(status = status.HTTP_200_OK)

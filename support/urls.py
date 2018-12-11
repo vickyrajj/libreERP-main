@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'order/$' , OrderAPIView.as_view() ),
     url(r'materialIssued/$' , MaterialIssuedNoteAPIView.as_view() ),
     url(r'grn/$' , GrnAPIView.as_view() ),
+    url(r'sendEmail/$' , EmailApi.as_view() ),
 
 
 ]

@@ -719,7 +719,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     })
 }
 
-  $scope.send = function() {
+  $scope.sendForApproval = function() {
     var date =new Date().toJSON().split('T')[0]
     var sendStatus = {
       status: 'sent_for_approval',
@@ -734,9 +734,23 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }).
     then(function(response) {
       Flash.create('success', 'Saved');
+      link = window.location
       console.log(response.data, 'aaaaaa');
+      $http({
+        method: 'POST',
+        url: '/api/support/sendEmail/',
+        data: {
+          'pkValue': $scope.form.pk,
+          'link':link
+        },
+      }).
+      then(function(response) {
+        Flash.create('success', 'Saved');
+      })
     })
   }
+
+
 
 
 
@@ -819,28 +833,60 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
       }
     }
   }, true)
-  $scope.send = function() {
+  // $scope.send = function() {
+  //   var date =new Date().toJSON().split('T')[0]
+  //   var sendStatus = {
+  //     status: 'approved',
+  //     approved2:true,
+  //     approved2_user:$scope.me.pk,
+  //     approved2_date:date
+  //   }
+  //
+  //   $http({
+  //     method: 'PATCH',
+  //     url: '/api/support/projects/' + $scope.form.pk + '/',
+  //     data: sendStatus,
+  //   }).
+  //   then(function(response) {
+  //     Flash.create('success', 'Approved');
+  //     console.log(response.data, 'aaaaaa');
+  //   })
+  //
+  // }
+
+  $scope.accept = function() {
     var date =new Date().toJSON().split('T')[0]
     var sendStatus = {
-      status: 'approved',
-      approved2:true,
-      approved2_user:$scope.me.pk,
-      approved2_date:date
+      status: 'sent_for_approval',
+      approved1:true,
+      approved1_user:$scope.me.pk,
+      approved1_date:date
     }
-
     $http({
       method: 'PATCH',
       url: '/api/support/projects/' + $scope.form.pk + '/',
       data: sendStatus,
     }).
     then(function(response) {
-      Flash.create('success', 'Approved');
+      Flash.create('success', 'Saved');
       console.log(response.data, 'aaaaaa');
     })
-
   }
 
-
+  $scope.reject = function() {
+    var sendStatus = {
+      status: 'created',
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: sendStatus,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      console.log(response.data, 'aaaaaa');
+    })
+  }
 
 
 
