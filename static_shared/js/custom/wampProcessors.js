@@ -239,6 +239,8 @@ var hasAccesss=true;
           }else if(args[1]=='calledToShowVideo'){
             scope.myUsers[i].isVideoShowing = true
             scope.myUsers[i].alreadyDone=false
+          }else if(args[1]=='CustmorClosedTheChat'){
+            scope.myUsers[i].AudioVideoOn = true
           }else if(args[1]=='UC'){
             scope.myUsers[i].currentUrl = args[2]
             // alert(args[2]);
@@ -334,6 +336,7 @@ var hasAccesss=true;
         video:false,
         videoUrl:'',
         isVideoShowing:true,
+        AudioVideoOn:true,
         alreadyDone:false
       }
 

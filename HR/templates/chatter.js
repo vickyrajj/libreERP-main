@@ -940,8 +940,6 @@ function createChatDiv() {
   var device;
   var chatOpen = false;
   var audioContains=false,videoContains=false;
-  // var chatIconSvg = document.getElementById('chatIconSvg');
-  // var chatCloseSvg = document.getElementById('closeChatSvg');
   var chatBox = document.getElementById('chatBox');
   var closeIcon = document.getElementById("closeIcon");
   var headerChat = document.getElementById("headerChat");
@@ -953,8 +951,6 @@ function createChatDiv() {
   var filePicker = document.getElementById('filePicker');
   var inputText = document.getElementById("inputText");
   var startConversation = document.getElementById("startConversation");
-  // var demo = document.getElementById("demo");
-  // var exploreSyrow = document.getElementById('exploreSyrow');
   var headerInit = document.getElementById('headerInit');
   var closeIconInit = document.getElementById('closeIconInit');
   var onlineStatus = document.getElementById('onlineStatus');
@@ -987,7 +983,6 @@ function createChatDiv() {
    // xhttp1.open('GET', '{{serverAddress}}/api/support/supportChat/', true);
    xhttp1.send();
 
-  // var isTyping = document.getElementById('isTyping');
 
   var exitBtn = document.getElementById('exitBtn');
 
@@ -1019,21 +1014,6 @@ function createChatDiv() {
           console.log('here');
         }
   })
-
-  // inputText.style.display = "none"
-
-  // var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-  // var eventer = window[eventMethod];
-  // var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-  //
-  // // Listen to message from child window
-  // eventer(messageEvent,function(e) {
-  //     var key = e.message ? "message" : "data";
-  //     var data = e[key];
-  //     alert('cameeee')
-  //     //run function//
-  // },false);
-
 
   var chatCircleText =   document.getElementById('chatCircleText')
   var callCircleText =   document.getElementById('callCircleText')
@@ -1073,26 +1053,25 @@ function activeAudioCall(){
 }
 
   videoCircle.addEventListener('click',function () {
-    //  winCol = windowColor.split('#')[1]
-    //  urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
-    //  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
-    //  console.log(urlforConference);
-    //  if (device=='sm') {
-    //    urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
-    //    urlforConference = urlforConference + '&userMob=true'
-    //  }
-    // openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
     activeVideoCall()
-    openChat()
+    openChat();
+    hideAudioAndVidoeBtn();
   })
 
+  function reachChatBoxForInfo(){
+    connection.session.publish('service.support.agent.'+agentPk, [uid , 'CustmorClosedTheChat' ] , {}, {
+      acknowledge: true
+    }).
+    then(function(publication) {
+      console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+    });
+  }
+
   audioCircle.addEventListener('click',function () {
-    //  winCol = windowColor.split('#')[1]
-    //  urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
-    //  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
-    // openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
     activeAudioCall();
-    openChat()
+    openChat();
+    hideAudioAndVidoeBtn();
+
   })
 
   var videoOpened = false
@@ -1659,28 +1638,29 @@ function activeAudioCall(){
               -moz-animation: item-5 0.5s forwards; \
             }\
                 div.stars {\
-                width: 270px;\
                 display: inline-block;\
               }\
               input.star { display: none; }\
               label.star {\
                 float: right;\
-                padding: 10px;\
-                font-size: 36px;\
-                color: #444;\
-                transition: all .2s;\
+                padding: 8px;\
+                font-size: 32px;\
+                color: #fff;\
+                text-shadow: #ff720b 1px 0 1px;\
+                transition: all .5s;\
               }\
               input.star:checked ~ label.star:before {\
                 content: '\\2605';\
-                color: #FD4;\
+                color: #ff720b;\
                 transition: all .25s;\
               }\
               input.star-5:checked ~ label.star:before {\
-                color: #FE7;\
+                color: #ff720b;\
                 text-shadow: 0 0 20px #952;\
               }\
-              input.star-1:checked ~ label.star:before { color: #F62; }\
-              label.star:hover { transform: rotate(-15deg) scale(1.3); }\
+              input.star-1:checked ~ label.star:before { color: #ff720b; }\
+              label.star:hover { color: #ff720b; }\
+              label.star:hover ~ label.star:before { color: #ff720b; }\
               label.star:before {\
                 content: '\\2605';\
               }\
@@ -2079,7 +2059,7 @@ function activeAudioCall(){
     var div = document.createElement("div");
     div.id="offlineMessage"
     div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;font-size:14px">'+
+                      '<div style="text-align:center;clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; box-sizing:border-box;font-size:14px">'+
                       '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Please provide your feedback below:</p>'+
                       '<form>'+
                         '<div class="stars">'+
@@ -2096,8 +2076,8 @@ function activeAudioCall(){
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
-                        '<input type="text" id="emailId" placeholder="Emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
-                         '<textarea id="feedbackText" style="width:100%;outline:none; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
+                        '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
+                         '<textarea id="feedbackText" style="width:100%;outline:none;padding:2px; resize:none; box-shadow:1px 1px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback..."></textarea>'+
                          '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
                          '</button>'+
@@ -2310,11 +2290,11 @@ function activeAudioCall(){
        window.open(url);
 
     }
-    if(event.data=='AgentcalledToHideVideo'){
-      console.log('in chatter');
-
-      getFrameContent.postMessage('callFromAgentplease','*')
-    }
+    // if(event.data=='AgentcalledToHideVideo'){
+    //   console.log('in chatter');
+    //
+    //   getFrameContent.postMessage('callFromAgentplease','*')
+    // }
     if (event.data=='calledToHideVideo') {
       setIframeRotated()
       connection.session.publish('service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
@@ -2338,45 +2318,52 @@ function activeAudioCall(){
     }else if(event.data=='showTheMainFrame'){
       document.getElementById('iframeDiv').style.display = "block";
     }
-    if (event.data== 'userleft'){
+    if (event.data== 'replyToUseruserleft'){
 
-      document.getElementById('iframeDiv').style.display="none"
-      setTimeout(function () {
-        if (videoOpened) {
-
-          if (device=='sm') {
-            videoSection.innerHTML = "";
-            videoSection.style.display = "none";
-            chatBox_content.style.marginTop = "0";
-          }else {
-            chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-            chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-            // chatBox.style.borderRadius = "10px 10px 10px 10px"
-            var iframeDiv = document.getElementById('iframeDiv')
-            iframeDiv.parentNode.removeChild(iframeDiv);
-          }
-          var iFrame = document.getElementById('iFrame1')
-          iFrame.src = '';
-          videoOpened = false
-        }else if (audioOpened) {
-          var iFrame = document.getElementById('iFrame1')
-          iFrame.src = '';
-          audioSection.innerHTML = "";
-          audioSection.style.display = "none";
-          chatBox_content.style.marginTop = "0";
-          audioOpened = false;
-        }
-      }, 5000);
+      // document.getElementById('iframeDiv').style.display="none"
+      setTimeout(endOfConversation, 5000);
     }
   }
+
+function endOfConversation() {
+    if (videoOpened) {
+
+      if (device=='sm') {
+        videoSection.innerHTML = "";
+        videoSection.style.display = "none";
+        chatBox_content.style.marginTop = "0";
+      }else {
+        chatBox_header.style.borderRadius = "10px 10px 0px 0px"
+        chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
+        // chatBox.style.borderRadius = "10px 10px 10px 10px"
+        var iframeDiv = document.getElementById('iframeDiv')
+        iframeDiv.parentNode.removeChild(iframeDiv);
+      }
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      videoOpened = false
+    }else if (audioOpened) {
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      audioSection.innerHTML = "";
+      audioSection.style.display = "none";
+      chatBox_content.style.marginTop = "0";
+      audioOpened = false;
+    }
+  }
+
+function deactivateAudioFrame(){
+  if(getFrameContent!=undefined){
+    getFrameContent.postMessage('userleft',webRtcAddress );
+  }
+  audioSection.style.display = "none";
+  chatBox_content.style.marginTop = "0";
+}
 
 function togglingActive(element,value){
   if(value){
     element.classList.add('changeColor')
   }else{
-    if(getFrameContent!=undefined){
-      getFrameContent.postMessage('userleft',webRtcAddress );
-    }
     element.classList.remove('changeColor')
   }
 }
@@ -2406,15 +2393,21 @@ videoBtn.addEventListener("click",function(){
 })
 
 audioBtn.addEventListener("click",function(){
+  videoBtn.style.display='none'
+  isAudioClicked=!isAudioClicked
   if(isVideoClicked){
     alert('Video call is Active')
     return
   }
-  videoBtn.style.display='none'
-  isAudioClicked=!isAudioClicked
+  if(isAudioClicked){
+    activeAudioCall()
+  }else{
+    deactivateAudioFrame()
+  }
   togglingActive(audioBtn,isAudioClicked)
-  activeAudioCall()
 })
+
+
 function hideAudioAndVidoeBtn(){
   videoBtn.style.display='none'
   audioBtn.style.display='none'
@@ -3228,35 +3221,36 @@ chatSuggestionBar.style.display="none"
 
   closeSupport.addEventListener("click", function() {
 
-    if (videoOpened) {
-
-      if (device=='sm') {
-        videoSection.innerHTML = "";
-        videoSection.style.display = "none";
-        chatBox_content.style.marginTop = "0";
-        var iFrame = document.getElementById('iFrame1')
-        iFrame.src = '';
-      }else {
-        chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-        chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-        // chatBox.style.borderRadius = "10px 10px 10px 10px"
-        var iFrame = document.getElementById('iFrame1')
-        iFrame.src = '';
-        var iframeDiv = document.getElementById('iframeDiv')
-        iframeDiv.parentNode.removeChild(iframeDiv);
-      }
-
-      console.log(document.getElementById('iFrame1'));
-
-      videoOpened = false
-    }else if (audioOpened) {
-      var iFrame = document.getElementById('iFrame1')
-      iFrame.src = '';
-      audioSection.innerHTML = "";
-      audioSection.style.display = "none";
-      chatBox_content.style.marginTop = "0";
-      audioOpened = false;
-    }
+    // if (videoOpened) {
+    //
+    //   if (device=='sm') {
+    //     videoSection.innerHTML = "";
+    //     videoSection.style.display = "none";
+    //     chatBox_content.style.marginTop = "0";
+    //     var iFrame = document.getElementById('iFrame1')
+    //     iFrame.src = '';
+    //   }else {
+    //     chatBox_header.style.borderRadius = "10px 10px 0px 0px"
+    //     chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
+    //     // chatBox.style.borderRadius = "10px 10px 10px 10px"
+    //     var iFrame = document.getElementById('iFrame1')
+    //     iFrame.src = '';
+    //     var iframeDiv = document.getElementById('iframeDiv')
+    //     iframeDiv.parentNode.removeChild(iframeDiv);
+    //   }
+    //
+    //   console.log(document.getElementById('iFrame1'));
+    //
+    //   videoOpened = false
+    // }else if (audioOpened) {
+    //   var iFrame = document.getElementById('iFrame1')
+    //   iFrame.src = '';
+    //   audioSection.innerHTML = "";
+    //   audioSection.style.display = "none";
+    //   chatBox_content.style.marginTop = "0";
+    //   audioOpened = false;
+    // }
+    endOfConversation();
 
     if (chatOpen) {
       chatOpen = !chatOpen
