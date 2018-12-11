@@ -111,11 +111,41 @@
               <span><a  class="btn btn-primary " style="cursor:pointer;margin:30px 60px 0 0;" target="_blank" href="/api/support/slip/?project={{form.pk}}">PO<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
           </div> -->
           <div class="col-md-2">
-              <span><a  class="btn btn-primary " style="cursor:pointer;margin:30px 60px 0 0;" target="_blank" href="/api/support/grn/?project={{form.pk}}">GRN<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
+              <span><a  class="btn btn-primary " style="cursor:pointer;margin:30px 60px 20px 0;" target="_blank" href="/api/support/grn/?project={{form.pk}}">GRN<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
           </div>
         </div>
+      <div class="row" ng-if="issue">
+        <hr>
+        <div class="col-md-12">
+        <table class="invoiceTable" style=" width: 100%;" >
+        <tbody>
+          <tr style="background-color: #eeeeee;height: 50px;">
+            <th>Si.No</th>
+            <th>Part No</th>
+            <th>Quantity</th>
+            <th>Stockvalue/unit</th>
+            <th>Stock value Consumed</th>
+           </tr>
+            <tr ng-repeat="m in issue track by $index" ng-init="setTotals(m)">
+              <td>{{$index + 1}}</td>
+              <td>{{m.product.part_no}}</td>
+              <td>{{m.qty}}</td>
+              <td >{{m.price}}</td>
+              <td >{{(m.qty*m.price).toFixed(2)}}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Total</td>
+              <td ><b>{{sum.toFixed(2)}}</b</td>
+            </tr>
 
 
+        </tbody>
+        </table>
+        </div>
+        </div>
       </div>
 
 

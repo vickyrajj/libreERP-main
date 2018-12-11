@@ -50,6 +50,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
 
 
+
   $scope.getMaterialIssue = function(offset){
     console.log($scope.searchmaterial,'kkkkkkkkkkkkkkk');
     $http({
@@ -59,14 +60,22 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     then(function(response) {
       console.log(response.data, 'aaaaaaaaaaaaaa');
       $scope.materialIssue = response.data.results
+      for (var i = 0; i < $scope.materialIssue.length; i++) {
 
+        $scope.issue = $scope.materialIssue[i].materialIssue
+        $scope.sum.push($scope.issue.map(function(m){
+          return m.qty*m.price
+        }).reduce(function(a,b){return a+b},0))
+        console.log($scope.sum,'aaaaaaa');
+
+      }
     })
   }
 
   $scope.offsetmaterial = 0
 
   $scope.refreshmaterial = function() {
-    $scope.fetchProdInventory($scope.offset)
+    $scope.getMaterialIssue($scope.offset)
   }
 
   $scope.nextmaterial = function() {
@@ -94,12 +103,43 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
 
+  $scope.sum = []
   $scope.$watch('modeToggle', function(newValue, oldValue) {
     console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
     if (newValue == true) {
       $scope.getMaterialIssue($scope.offsetmaterial)
     }
   });
+
+
+
+//
+//   $scope.$watch('modeToggle', function(newValue, oldValue) {
+//   console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
+//   if (newValue == true) {
+//     $http({
+//       method: 'GET',
+//       url: '/api/support/material/'
+//     }).
+//     then(function(response) {
+//       $scope.materialIssue = response.data
+//       for (var i = 0; i < $scope.materialIssue.length; i++) {
+//
+//         $scope.issue = $scope.materialIssue[i].materialIssue
+//         $scope.sum.push($scope.issue.map(function(m){
+//           return m.qty*m.price
+//         }).reduce(function(a,b){return a+b},0))
+//         console.log($scope.sum,'aaaaaaa');
+//
+//       }
+//
+//
+//       console.log($scope.totalSum,'lllllllll');
+//
+//     })
+//
+//   }
+// });
 
   // $scope.$watch('modeToggle', function(newValue, oldValue) {
   //   console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
@@ -293,8 +333,12 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     });
   }
   // console.log($scope.valueList,'aaaaaaaaaaaahhhhhhhhhhhhhhhhhhhaaaaaaaaaa');
+     // var vm = this
+     // vm.Total = 0;
 
-
+ //     $scope.totalSum = $scope.materialIssue.keys(cart.products).map(function(k){
+ //     return +cart.products[k].price;
+ // }).reduce(function(a,b){ return a + b },0);
 
 
 

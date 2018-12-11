@@ -892,9 +892,6 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
 
         $scope.total += $scope.projects[i].quantity2* $scope.projects[i].price
 
-
-
-
         var sendtoBom = {
           quantity2 : $scope.projects[i].quantity2,
           price : $scope.price,
@@ -949,6 +946,7 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
           }).
           then(function(response) {
             Flash.create('success', 'Saved');
+            $scope.form.savedStatus = response.data.savedStatus
             console.log(response.data, 'aaaaaa');
 
           })
@@ -956,6 +954,27 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
       }
     }
     }
+    $http({
+      method: 'GET',
+      url: '/api/support/material/?project='+ $scope.form.pk ,
+    }).
+    then(function(response) {
+       $scope.material = response.data
+       for (var i = 0; i < $scope.material.length; i++) {
+         $scope.issue = $scope.material[i].materialIssue
+         $scope.sum = $scope.issue.map(function(m){
+           return m.qty*m.price
+         }).reduce(function(a,b){return a+b},0)
+       }
+    })
+
+    // $scope.setTotals= function(m){
+    //   if (m){
+    //     console.log(typeof m.price,typeof m.qty,'vvvvvvvvv');
+    //     $scope.sum += m.qty * m.price
+    //   }
+
+
 
 
 
