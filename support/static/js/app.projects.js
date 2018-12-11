@@ -273,13 +273,13 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
         // console.log(data);
         $scope.form = {
           service: data,
-          mobile: '',
-          about: '',
-          telephone: '',
-          cin: '',
-          tin: '',
-          logo: '',
-          web: '',
+          mobile: null,
+          about: null,
+          telephone: null,
+          cin: null,
+          tin: null,
+          logo: null,
+          web: null,
           address: {
             street: null,
             city: null,
@@ -288,6 +288,7 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
             pincode: null
           }
         }
+
         if (typeof data == 'object') {
           $scope.form.service = data.name
           $scope.form.mobile = data.mobile
@@ -912,21 +913,21 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
 
 
   $scope.send = function(){
+    if($scope.form.savedStatus==true){
+      Flash.create('warning', 'Already Saved in Inventory');
+    }
+    else{
+      for (var i = 0; i < $scope.projects.length; i++) {
+        $scope.qty = $scope.projects[i].quantity2;
+        $scope.rate =$scope.projects[i].price.toFixed(2)
+        $scope. pkforProduct = $scope.projects[i].products.pk
 
-    for (var i = 0; i < $scope.projects.length; i++) {
-      $scope.qty = $scope.projects[i].quantity2;
-      $scope.rate =$scope.projects[i].price.toFixed(2)
 
-
-
-      $scope. pkforProduct = $scope.projects[i].products.pk
-
-
-      $scope.inventory = {
-        product:$scope. pkforProduct,
-        qty:$scope.qty ,
-        rate:$scope.rate,
-      }
+        $scope.inventory = {
+          product:$scope. pkforProduct,
+          qty:$scope.qty ,
+          rate:$scope.rate,
+        }
         $http({
           method: 'POST',
           url: '/api/support/inventory/',
@@ -935,9 +936,44 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
         then(function(response) {
           Flash.create('success', 'Saved');
           console.log(response.data, 'aaaaaa');
+          $http({
+            method: 'PATCH',
+            url: '/api/support/projects/'+$scope.form.pk+'/',
+            data: {
+              savedStatus : true
+            } ,
+          }).
+          then(function(response) {
+            Flash.create('success', 'Saved');
+            $scope.form.savedStatus = response.data.savedStatus
+            console.log(response.data, 'aaaaaa');
+
+          })
         })
+      }
     }
     }
+    $http({
+      method: 'GET',
+      url: '/api/support/material/?project='+ $scope.form.pk ,
+    }).
+    then(function(response) {
+       $scope.material = response.data
+       for (var i = 0; i < $scope.material.length; i++) {
+         $scope.issue = $scope.material[i].materialIssue
+         $scope.sum = $scope.issue.map(function(m){
+           return m.qty*m.price
+         }).reduce(function(a,b){return a+b},0)
+       }
+    })
+
+    // $scope.setTotals= function(m){
+    //   if (m){
+    //     console.log(typeof m.price,typeof m.qty,'vvvvvvvvv');
+    //     $scope.sum += m.qty * m.price
+    //   }
+
+
 
 
 

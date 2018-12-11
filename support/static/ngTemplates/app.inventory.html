@@ -170,17 +170,21 @@ fa-plus"></i></span>
     <div class="row" style="margin-top:20px;">
       <div class="col-md-10 col-md-offset-1">
         <div class="container-fluid" style="margin-top:15px;" ng-repeat="m in materialIssue">
-          <div class="card" style="padding:10px;">
+          <div class="card" style="padding:10px;" >
             <div class="row container-fluid" ng-click="toggleMaterial(m.pk,$index)" style="cursor:pointer;height:5vh;padding:10px">
               <div class="col-md-12 text-left">
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <span style="font-size:12px"><strong>Project Title :
                     </strong>{{m.project.title}} </span>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <span style="font-size:12px"><strong> Enginner:
                     </strong> {{m.user.first_name}}</span>
+                </div>
+                <div class="col-md-2">
+                  <span style="font-size:12px"><strong> Total:
+                    </strong>{{sum[$index].toFixed(2)}}</span>
                 </div>
                 <div class="col-md-offset-1 col-md-2 ">
                   <!-- <span><a  class="btn btn-primary "
@@ -224,10 +228,10 @@ style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span> -->
                     Quantity
                   </th>
                   <th class="text-center">
-                    Price
+                    Stock value/unit
                   </th>
                   <th class="text-center">
-                    Total
+                    Stock value Consumed
                   </th>
                   <tr ng-repeat="f in m.materialIssue" >
                     <td class="text-center">
@@ -240,7 +244,7 @@ style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span> -->
                       <span>{{f.price.toFixed(2)}}</span>
                     </td>
                     <td class="text-center">
-                      <span>{{(f.price * f.qty).toFixed(2) }}</span>
+                      <span ng-init="itemTotal = (f.price * f.qty).toFixed(2);">{{itemTotal}}</span>
                     </td>
                   </tr>
                 </table>

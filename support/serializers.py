@@ -37,7 +37,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Projects
-        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision')
+        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus')
 
     def create(self , validated_data):
         p = Projects()
@@ -71,7 +71,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
             instance.service = service.objects.get(pk=int(self.context['request'].data['service']))
         if 'date' in self.context['request'].data:
             instance.date = self.context['request'].data['date']
-        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','customer_ref','machinemodel','approved1','approved1_user','approved1_date','revision']:
+        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','customer_ref','machinemodel','approved1','approved1_user','approved1_date','revision','savedStatus']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -107,16 +107,6 @@ class BoMSerializer(serializers.ModelSerializer):
             instance.save()
             return instance
 
-# <<<<<<< HEAD
-#     def update (self, instance, validated_data):
-#
-#         if 'price' in validated_data:
-#             instance.price = validated_data['price']
-#         instance.save()
-#         if 'quantity2' in validated_data:
-#             instance.quantity2 = validated_data['quantity2']
-#         instance.save()
-#         return instance
 
 class InventorySerializer(serializers.ModelSerializer):
     product = ProductsSerializer(many = False , read_only = True)
@@ -157,7 +147,6 @@ class MaterialIssueMainSerializer(serializers.ModelSerializer):
             b.save()
         if 'project' in self.context['request'].data:
             b.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
-
         if 'user' in self.context['request'].data:
             b.user = User.objects.get(pk=int(self.context['request'].data['user']))
         b.save()

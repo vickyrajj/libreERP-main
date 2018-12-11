@@ -48,7 +48,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     $rootScope.cart.push(product)
     console.log($rootScope.cart.length);
   }
-
+  $scope.sum = []
   $scope.$watch('modeToggle', function(newValue, oldValue) {
     console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
     if (newValue == true) {
@@ -57,8 +57,19 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
         url: '/api/support/material/'
       }).
       then(function(response) {
-        console.log(response.data, 'aaaaaaaaaaaaaa');
         $scope.materialIssue = response.data
+        for (var i = 0; i < $scope.materialIssue.length; i++) {
+
+          $scope.issue = $scope.materialIssue[i].materialIssue
+          $scope.sum.push($scope.issue.map(function(m){
+            return m.qty*m.price
+          }).reduce(function(a,b){return a+b},0))
+          console.log($scope.sum,'aaaaaaa');
+
+        }
+
+
+        console.log($scope.totalSum,'lllllllll');
 
       })
 
@@ -229,8 +240,12 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     });
   }
   // console.log($scope.valueList,'aaaaaaaaaaaahhhhhhhhhhhhhhhhhhhaaaaaaaaaa');
+     // var vm = this
+     // vm.Total = 0;
 
-
+ //     $scope.totalSum = $scope.materialIssue.keys(cart.products).map(function(k){
+ //     return +cart.products[k].price;
+ // }).reduce(function(a,b){ return a + b },0);
 
 
 

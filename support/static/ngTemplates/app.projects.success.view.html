@@ -74,7 +74,7 @@
         </table>
         <div class="row">
           <div class="col-md-10">
-              <button type="button" class="btn btn-success pull-right"  ng-click="send()" style="margin:30px 0 20px 0;">save</button>
+              <button type="button" class="btn btn-success pull-right"  mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="send()" confirm-button-type="danger" cancel-button-type="default"  style="margin:30px 0 0 0;">Save</button>
           </div>
 
           <!-- <div class="col-md-1">
@@ -84,38 +84,32 @@
               <span><a  class="btn btn-primary " style="cursor:pointer;margin:30px 60px 20px 0;" target="_blank" href="/api/support/grn/?project={{form.pk}}">GRN<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
           </div>
         </div>
+      <div class="row" ng-if="issue">
         <hr>
-      <div class="row">
         <div class="col-md-12">
-        <table class="invoiceTable" style=" width: 100%;">
+        <table class="invoiceTable" style=" width: 100%;" >
         <tbody>
           <tr style="background-color: #eeeeee;height: 50px;">
             <th>Si.No</th>
-            <th>Product</th>
             <th>Part No</th>
             <th>Quantity</th>
-            <th>Price</th>
-            <th>Quantity Received</th>
-            <th>Total</th>
+            <th>Stockvalue/unit</th>
+            <th>Stock value Consumed</th>
            </tr>
-            <tr ng-repeat="v in projects track by $index">
+            <tr ng-repeat="m in issue track by $index" ng-init="setTotals(m)">
               <td>{{$index + 1}}</td>
-              <td>{{v.products.description_1}}</td>
-              <td>{{v.products.part_no}}</td>
-              <td>{{v.quantity1}}</td>
-              <td >{{v.price}}</td>
-              <td ><input type="number"  step=1 class="form-control-pos" ng-init="v.quantity2 = v.quantity1" ng-model="v.quantity2"></td>
-              <td >{{(v.price*v.quantity2).toFixed(2)}}</td>
+              <td>{{m.product.part_no}}</td>
+              <td>{{m.qty}}</td>
+              <td >{{m.price}}</td>
+              <td >{{(m.qty*m.price).toFixed(2)}}</td>
             </tr>
             <tr>
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
-              <td></td>
               <td>Total</td>
-              <td ><b>{{total.toFixed(2)}}</b</td>
-              </tr>
+              <td ><b>{{sum.toFixed(2)}}</b</td>
+            </tr>
 
 
         </tbody>
