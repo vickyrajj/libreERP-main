@@ -104,7 +104,7 @@
         </table>
         <div class="row">
           <div class="col-md-10">
-              <button type="button" class="btn btn-success pull-right"  mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="send()" confirm-button-type="danger" cancel-button-type="default"  style="margin:30px 0 0 0;">Save</button>
+              <button type="button" class="btn btn-success pull-right" ng-if="form.savedStatus==false" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="send()" confirm-button-type="danger" cancel-button-type="default"  style="margin:30px 0 0 0;">Save</button>
           </div>
 
           <!-- <div class="col-md-1">

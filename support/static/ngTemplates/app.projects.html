@@ -1,4 +1,4 @@
-<div class="shaddowed card bg-white" style="min-height:93vh;">
+<div class="shaddowed card bg-white" style="min-height:95vh;">
   <breadcrumb></breadcrumb>
   <div class="container-fluid">
     <div class="container-fluid">
@@ -43,7 +43,8 @@
             <i class="fa fa-list-ul"></i>
           </uib-tab-heading>
           <div class="container-fluid" >
-            <div ng-include="'/static/ngTemplates/app.projects.invoice.html'"></div>
+            <generic-Table data="data3.tableData" config-Obj="{{config3}}" callback-Fn="tableAction3"></generic-Table>
+            <!-- <div ng-include="'/static/ngTemplates/app.projects.invoice.html'"></div>  -->
           </div>
         </uib-tab>
         <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
@@ -62,6 +63,9 @@
           </div>
           <div ng-if="tab.app == 'bomApproved'">
             <div ng-include="'/static/ngTemplates/app.projects.success.view.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'invoiceDetails'">
+            <div ng-include="'/static/ngTemplates/app.projects.invoice.view.html'"></div>
           </div>
         </uib-tab>
 

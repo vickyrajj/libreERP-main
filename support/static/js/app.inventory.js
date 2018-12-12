@@ -3,7 +3,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   $scope.fetchProdInventory = function(offset) {
     $http({
       method: 'GET',
-      url: '/api/support/inventoryData/?limit=4&offset=' + offset + '&search=' + $scope.searchText
+      url: '/api/support/inventoryData/?limit=7&offset=' + offset + '&search=' + $scope.searchText
     }).
     then(function(response) {
       $scope.products = response.data.data
@@ -22,10 +22,10 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
 
   $scope.next = function() {
-    $scope.offset = $scope.offset + 4
+    $scope.offset = $scope.offset + 7
     $scope.fetchProdInventory($scope.offset)
     if ($scope.products.length == 0) {
-      $scope.offset = $scope.offset - 4
+      $scope.offset = $scope.offset - 7
       $scope.fetchProdInventory($scope.offset)
     }
   }
@@ -34,7 +34,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     if ($scope.offset == 0) {
       return
     }
-    $scope.offset = $scope.offset - 4
+    $scope.offset = $scope.offset - 7
     console.log('calling from prev');
     $scope.fetchProdInventory($scope.offset)
   }
@@ -55,6 +55,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
 
 
+
   $scope.getMaterialIssue = function(offset){
     console.log($scope.searchmaterial.search,'kkkkkkkkkkkkkkk');
     $http({
@@ -64,8 +65,8 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     then(function(response) {
       console.log(response.data, 'aaaaaaaaaaaaaa');
       $scope.materialIssue = response.data.results
+      $scope.sum = []
       for (var i = 0; i < $scope.materialIssue.length; i++) {
-
         $scope.issue = $scope.materialIssue[i].materialIssue
         $scope.sum.push($scope.issue.map(function(m){
           return m.qty*m.price
@@ -109,7 +110,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
 
-  $scope.sum = []
   $scope.$watch('modeToggle', function(newValue, oldValue) {
     console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
     if (newValue == true) {
@@ -175,6 +175,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
       Flash.create('success', 'Deleted');
       console.log(index, 'jjjjj');
       $scope.materialIssue.splice(index, 1)
+      $scope.sum.splice(index, 1)
     })
   }
   $scope.toggleMaterial = function(pk, indx) {
