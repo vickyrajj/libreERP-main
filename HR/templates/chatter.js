@@ -2076,9 +2076,12 @@ function activeAudioCall(){
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
-                        '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
-                         '<textarea id="feedbackText" style="width:100%;outline:none;padding:2px; resize:none; box-shadow:1px 1px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback..."></textarea>'+
-                         '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                        '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:100%; padding-bottom:5px; margin-bottom:10px;">'+
+                         '<textarea id="feedbackText" style="width:100%;outline:none;padding:2px; resize:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
+                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:#eeeee ; color:#000; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                           'Cancel'+
+                         '</button>'+
+                         '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
                          '</button>'+
                         '</form>'+
@@ -2123,7 +2126,19 @@ function activeAudioCall(){
   scroll();
   }
 
+
+
+
   function submitStarForm(id) {
+
+    var submitCancel=document.getElementById('submitCancel')
+    var offlineMessage=document.getElementById('offlineMessage')
+
+    submitCancel.addEventListener('click',function(){
+        thankYouMessage();
+        submitStars.style.display = "none";
+        offlineMessage.style.display="none"
+    })
 
 
     submitStars.addEventListener("click", function() {
@@ -2181,6 +2196,7 @@ function activeAudioCall(){
            console.log('posted successfully');
            console.log(ratingForm);
            submitStars.style.display = "none";
+           submitCancel.style.display='none'
            thankYouMessage()
            feedbackFormSubmitted = true
            // var dataToPublish = [uid , status , message , custID ];
