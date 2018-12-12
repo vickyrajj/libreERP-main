@@ -164,6 +164,12 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.homepage.training.html',
       // controller: 'controller.ecommerce.PagesDetails'
     })
+  $stateProvider
+    .state('impliment', {
+      url: "/impliment",
+      templateUrl: '/static/ngTemplates/app.homepage.impliment.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
 
   $stateProvider
     .state('pages', {
@@ -388,7 +394,7 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
           }
           $http({
             method: 'POST',
-            url: erpUrl +'/api/ERP/generateApiKey/',
+            url: erpUrl + '/api/ERP/generateApiKey/',
             data: {
               email: $scope.form.email
             }
@@ -430,7 +436,7 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
           document.execCommand('copy');
           window.getSelection().removeAllRanges();
           $scope.copied = true;
-          $timeout(function () {
+          $timeout(function() {
             $scope.copied = false;
           }, 1000);
         }
