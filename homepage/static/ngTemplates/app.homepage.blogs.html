@@ -2,16 +2,16 @@
   <h2 class="genericHeading" style="margin:25px;">RPA Developer's Blogs</h2>
 
   <div ng-if="firstSection.length>0" class="blog_container">
-    <div class="flex_50Perc" ng-click="openBlog(firstSection[0].pk)" >
+    <div class="flex_50Perc" ng-click="openBlog(firstSection[0].shortUrl,firstSection[0].pk)" >
       <img class="blog_image" ng-src="{{firstSection[0].ogimage}}" alt="">
       <p class="blog_text">{{firstSection[0].title}}</p>
     </div>
     <div class="sec1Right">
-      <div class="sec1RightBox1" ng-click="openBlog(firstSection[1].pk)">
+      <div class="sec1RightBox1" ng-click="openBlog(firstSection[1].shortUrl,firstSection[1].pk)">
         <img class="blog_image" ng-src="{{firstSection[1].ogimage}}" alt="">
         <p class="blog_text">{{firstSection[1].title}}</p>
       </div>
-      <div class="sec1RightBox2" ng-repeat="blog in firstSection | limitTo: (2 - firstSection.length)" ng-click="openBlog(blog.pk)">
+      <div class="sec1RightBox2" ng-repeat="blog in firstSection | limitTo: (2 - firstSection.length)" ng-click="openBlog(blog.shortUrl,blog.pk)">
         <img class="blog_image" ng-src="{{blog.ogimage}}" alt="">
         <p class="blog_text">{{blog.title}}</p>
       </div>
@@ -21,38 +21,33 @@
 
   <div class="blog_container">
     <div class="sec2Left">
-      <div class="flex_33Perc" ng-repeat="blog in second_sec1" ng-click="openBlog(blog.pk)">
+      <div ng-if="second_sec1.length>0" class="flex_33Perc" ng-repeat="blog in second_sec1" ng-click="openBlog(blog.shortUrl,blog.pk)">
         <img class="blog_image" ng-src="{{blog.ogimage}}" alt="">
         <p class="blog_text">{{blog.title}}</p>
       </div>
-      <div class="flex_33Perc" ng-repeat="blog in second_sec2" ng-click="openBlog(blog.pk)">
+      <div ng-if="second_sec2.length>0" class="flex_33Perc" ng-repeat="blog in second_sec2" ng-click="openBlog(blog.shortUrl,blog.pk)">
         <img class="blog_image" ng-src="{{blog.ogimage}}" alt="">
         <p class="blog_text">{{blog.title}}</p>
       </div>
 
       <div class="sec1Right">
-        <div class="sec1RightBox1" ng-click="openBlog(thirdSection[0].pk)">
+        <div ng-if="thirdSection[0]" class="sec1RightBox1" ng-click="openBlog(thirdSection[0].shortUrl,thirdSection[0].pk)">
           <img class="blog_image" ng-src="{{thirdSection[0].ogimage}}" alt="">
           <p class="blog_text">{{thirdSection[0].title}}</p>
         </div>
-        <div class="sec1RightBox2" ng-repeat="blog in thirdSection | limitTo: (2 - thirdSection.length)" ng-click="openBlog(blog.pk)">
+        <div ng-if="thirdSection.length>0" class="sec1RightBox2" ng-repeat="blog in thirdSection | limitTo: (2 - thirdSection.length)" ng-click="openBlog(blog.shortUrl,blog.pk)">
           <img class="blog_image" ng-src="{{blog.ogimage}}" alt="">
           <p class="blog_text">{{blog.title}}</p>
         </div>
       </div>
 
-      <div class="flex_50Perc" ng-click="openBlog(thirdSection[1].pk)">
+      <div ng-if="thirdSection[1]" class="flex_50Perc" ng-click="openBlog(thirdSection[1].shortUrl,thirdSection[1].pk)">
         <img class="blog_image" ng-src="{{thirdSection[1].ogimage}}" alt="">
         <p class="blog_text">{{thirdSection[1].title}}</p>
       </div>
-
-
-
     </div>
 
     <div class="sec2Right">
-
-
       <div class="socialIcons" style="background-color: rgba(0, 0, 0, 0.2);">
         <div>
           <i class="fa fa-linkedin" aria-hidden="true"></i>
@@ -86,7 +81,7 @@
         </div>
         <div style="padding:0 30px;">
           <div style="border-bottom:1px solid #e0e0e0;" ng-repeat="p in recentPosts" >
-            <h4 ng-click="openBlog(p.pk)" style="font-size:14px; font-weight:bold; cursor:pointer;"> <span>{{$index + 1}}. </span> <span> {{p.title}} </span>  </h4>
+            <h4 ng-click="openBlog(p.shortUrl,p.pk)" style="font-size:14px; font-weight:bold; cursor:pointer;"> <span>{{$index + 1}}. </span> <span> {{p.title}} </span>  </h4>
           </div>
         </div>
       </div>

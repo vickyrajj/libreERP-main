@@ -13,7 +13,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
 
 });
 
-app.run(['$rootScope', '$state', '$stateParams','$http', function($rootScope, $state, $stateParams, $http) {
+app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $state, $stateParams, $http) {
   $rootScope.$state = $state;
   $rootScope.$stateParams = $stateParams;
   $rootScope.$on("$stateChangeError", console.log.bind(console));
@@ -34,7 +34,9 @@ app.run(['$rootScope', '$state', '$stateParams','$http', function($rootScope, $s
       $http({
         method: 'POST',
         url: '/api/ERP/visitor/',
-        data: {uid: uid}
+        data: {
+          uid: uid
+        }
       }).
       then(function(response) {
         visitorPk = response.data.pk;
@@ -53,7 +55,11 @@ app.run(['$rootScope', '$state', '$stateParams','$http', function($rootScope, $s
       if ($rootScope.newTime) {
         $rootScope.timeSpentInSec = (new Date().getTime() - $rootScope.newTime) / 1000;
         console.log(from.name, $rootScope.timeSpentInSec, uid);
-        toSend = {visitor:visitorPk,page:from.name,timeDuration:$rootScope.timeSpentInSec}
+        toSend = {
+          visitor: visitorPk,
+          page: from.name,
+          timeDuration: $rootScope.timeSpentInSec
+        }
         console.log(toSend);
         $http({
           method: 'POST',
@@ -97,7 +103,7 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('blogDetails', {
-      url: "/blogs/:pk",
+      url: "/blogs/:name",
       templateUrl: '/static/ngTemplates/app.homepage.blogDetails.html',
       controller: 'controller.blogDetails'
     })
@@ -139,6 +145,13 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
+    .state('conatact_us', {
+      url: "/conatact_us",
+      templateUrl: '/static/ngTemplates/app.homepage.contact_us.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+
+  $stateProvider
     .state('pages', {
       url: "/:title",
       templateUrl: '/static/ngTemplates/app.homepage.page.html',
@@ -152,7 +165,7 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
 
   console.log($stateParams);
 
-  $scope.blogPk = $stateParams.pk
+  $scope.blogPk = $stateParams.name.split('&')[1]
 
   $http.get('/api/PIM/blog/' + $scope.blogPk + '/').
   then(function(response) {
@@ -172,6 +185,13 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
 
   $scope.fetchRecentPosts()
 
+
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
+  }
+
 });
 
 
@@ -182,6 +202,7 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
   $scope.emailAddress = '';
 
   $scope.fetchBlogs = function() {
+    $scope.blogs = [];
     $http.get('/api/PIM/blog/?limit=14&offset=' + $scope.offset).
     then(function(response) {
       $scope.blogs = response.data.results;
@@ -203,9 +224,9 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
   $scope.fetchRecentPosts()
   $scope.fetchBlogs()
 
-  $scope.openBlog = function(pk) {
+  $scope.openBlog = function(name, pk) {
     $state.go('blogDetails', {
-      pk: pk
+      name: name + '&' + pk
     })
   }
 
@@ -233,6 +254,14 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
 
 
 app.controller('controller.pricing', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $aside) {
+
+
+  $http({
+    method: 'GET',
+    url: erpUrl + '/api/marketing/leads/'
+  }).then(function(response) {
+    console.log(response.data);
+  })
 
   $scope.contactSales = function() {
     $uibModal.open({
@@ -276,6 +305,7 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
 
           console.log(toSend);
 
+
           $http({
             method: 'POST',
             url: erpUrl + '/api/marketing/leads/',
@@ -310,28 +340,85 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
       templateUrl: '/static/ngTemplates/app.homepage.generateApiKey.modal.html',
       size: 'md',
       backdrop: true,
-      controller: function($scope, Flash, $uibModalInstance) {
-        $scope.thankYou = false;
+      controller: function($scope, Flash, $uibModalInstance, $timeout) {
+
+        $timeout(function() {
+          document.getElementById('otp').classList.add("till");
+        }, 100);
+
+        $scope.otpSent = false;
+        $scope.invalidEmail = false;
         $scope.refresh = function() {
           $scope.form = {
-            email: ''
+            email: '',
+            otp: '',
+            apiKey: ''
           }
+          $scope.apiKey = ''
         }
 
         $scope.refresh()
+        $scope.$watch('form.email', function(newValue, oldValue) {
+          if ($scope.invalidEmail) {
+            $scope.invalidEmail = false;
+          }
+        })
 
         $scope.sendOtp = function() {
           if ($scope.form.email == '') {
             return;
           }
-          $scope.thankYou = true;
+          if ($scope.form.email.includes('gmail') || $scope.form.email.includes('outlook') || $scope.form.email.includes('yahoo')) {
+            $scope.invalidEmail = true;
+            return;
+          }
+          $http({
+            method: 'POST',
+            url: erpUrl +'/api/ERP/generateApiKey/',
+            data: {
+              email: $scope.form.email
+            }
+          }).then(function(response) {
+            $scope.otpSent = true;
+          })
+        }
+        $scope.correctOtp = true;
+        $scope.submitOtp = function() {
+          if ($scope.form.otp.length < 4 || $scope.form.otp.length > 4) {
+            $scope.correctOtp = false;
+            return
+          }
+
+          $scope.correctOtp = true;
+          $scope.apiKey = 'SDFSDFSsdfSDfsdfsdWERwerQQ!@#123123sgsgsGSDFFFFFFf'
+          document.getElementById('otp').classList.remove("till");
+          document.getElementById('confirm').classList.add("till");
+
           // $http({
           //   method:'POST',
-          //   url:'',
-          //   data:{}
-          // }).then(function (data) {
-          //   console.log(response.data);
+          //   url:'/api/ERP/generateApiKey/',
+          //   data:{email:$scope.form.email, otp: ''}
+          // }).then(function (response) {
+          //   $scope.correctOtp = true;
+          //   $scope.apiKey = 'SDFSDFSsdfSDfsdfsdWERwerQQ!@#123123sgsgsGSDFFFFFFf'
+          //   document.getElementById('otp').classList.remove("till");
+          //   document.getElementById('confirm').classList.add("till");
           // })
+
+        }
+        $scope.copied = false;
+        $scope.copyAPI = function(id) {
+          var from = document.getElementById(id);
+          var range = document.createRange();
+          window.getSelection().removeAllRanges();
+          range.selectNode(from);
+          window.getSelection().addRange(range);
+          document.execCommand('copy');
+          window.getSelection().removeAllRanges();
+          $scope.copied = true;
+          $timeout(function () {
+            $scope.copied = false;
+          }, 1000);
         }
 
         $scope.closeModal = function() {
@@ -404,6 +491,12 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
   }
   $scope.fetchBlogs();
 
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
+  }
+
 
   $scope.friends = [{
       name: 'John',
@@ -433,6 +526,48 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
   ];
 
 
+  $scope.brands = [{
+      name: 'apache',
+      age: 0,
+      dp: '/static/images/apache.png'
+    },
+    {
+      name: 'blender',
+      age: 1,
+      dp: '/static/images/blender.png'
+    },
+    {
+      name: 'dis',
+      age: 2,
+      dp: '/static/images/dis.png'
+    },
+    {
+      name: 'dropbox',
+      age: 3,
+      dp: '/static/images/dropbox.jpg'
+    },
+    {
+      name: 'ima',
+      age: 4,
+      dp: '/static/images/ima.png'
+    },
+    {
+      name: 'noname',
+      age: 5,
+      dp: '/static/images/noname.png'
+    },
+    {
+      name: 'skill',
+      age: 6,
+      dp: '/static/images/skill.png'
+    },
+    {
+      name: 'zendesk',
+      age: 7,
+      dp: '/static/images/zendesk.png'
+    },
+  ];
+
 
 })
 
@@ -440,7 +575,7 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope) {
 
 
-  $rootScope.getCookie = function (cname) {
+  $rootScope.getCookie = function(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');
@@ -457,7 +592,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   }
 
 
-   $rootScope.setCookie = function(cname, cvalue, exdays) {
+  $rootScope.setCookie = function(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
@@ -609,12 +744,12 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
 
 
         $scope.scheduleMeeting = function() {
-          if($scope.form.emailId == '' || $scope.form.name == ''){
+          if ($scope.form.emailId == '' || $scope.form.name == '') {
             return;
           }
 
           $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
-          if ($scope.visitorDetails!="") {
+          if ($scope.visitorDetails != "") {
             $rootScope.setCookie("visitorDetails", JSON.stringify({
               uid: JSON.parse($scope.visitorDetails).uid,
               name: $scope.form.name,
@@ -654,10 +789,14 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
 
             $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
             $http({
-              method:'PATCH',
-              url:'/api/ERP/visitor/'+ JSON.parse($scope.visitorDetails).visitorPk + '/',
-              data:{demoRequested:true, email:JSON.parse($scope.visitorDetails).email, name: JSON.parse($scope.visitorDetails).name}
-            }).then(function (response) {
+              method: 'PATCH',
+              url: '/api/ERP/visitor/' + JSON.parse($scope.visitorDetails).visitorPk + '/',
+              data: {
+                demoRequested: true,
+                email: JSON.parse($scope.visitorDetails).email,
+                name: JSON.parse($scope.visitorDetails).name
+              }
+            }).then(function(response) {
               console.log(response.data);
             })
 
@@ -702,15 +841,15 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   $scope.show = [false, false, false, false]
   $scope.keepshow = false;
   $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
-  if ($scope.visitorDetails!="") {
+  if ($scope.visitorDetails != "") {
     if (JSON.parse($scope.visitorDetails).email != '' && JSON.parse($scope.visitorDetails).email != undefined) {
       $scope.subscribeForm = {
-        email:JSON.parse($scope.visitorDetails).email
+        email: JSON.parse($scope.visitorDetails).email
       }
     }
-  }else {
+  } else {
     $scope.subscribeForm = {
-      email:''
+      email: ''
     }
   }
 
@@ -718,23 +857,25 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   $scope.blogSubscribed = false;
 
 
-  $scope.subscribeToBlogs = function () {
+  $scope.subscribeToBlogs = function() {
 
-    if ($scope.subscribeForm.email=='') {
+    if ($scope.subscribeForm.email == '') {
       return;
     }
 
     $http({
-      method:'POST',
-      url:'/api/ERP/subscribeBlogs/',
-      data:{email: $scope.subscribeForm.email}
-    }).then(function (response) {
+      method: 'POST',
+      url: erpUrl + '/api/marketing/conatacts/',
+      data: {
+        email: $scope.subscribeForm.email
+      }
+    }).then(function(response) {
       Flash.create('success', 'Subscribed');
     })
 
 
 
-    if ($scope.visitorDetails!="") {
+    if ($scope.visitorDetails != "") {
       $rootScope.setCookie("visitorDetails", JSON.stringify({
         uid: JSON.parse($scope.visitorDetails).uid,
         name: JSON.parse($scope.visitorDetails).name,
@@ -744,13 +885,16 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     }
 
     $http({
-      method:'PATCH',
-      url:'/api/ERP/visitor/'+ JSON.parse($scope.visitorDetails).visitorPk + '/',
-      data:{blogsSubscribed:true, email:$scope.subscribeForm.email}
-    }).then(function (response) {
+      method: 'PATCH',
+      url: '/api/ERP/visitor/' + JSON.parse($scope.visitorDetails).visitorPk + '/',
+      data: {
+        blogsSubscribed: true,
+        email: $scope.subscribeForm.email
+      }
+    }).then(function(response) {
       console.log(response.data);
       $scope.subscribeForm = {
-        email:''
+        email: ''
       }
       $scope.blogSubscribed = true;
       Flash.create('success', 'Subscribed');

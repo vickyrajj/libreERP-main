@@ -161,14 +161,14 @@
   <div class="col-md-6 col-sm-12" style="padding:0px;">
     <div class="blogimg">
       <div id="date">
-        <span style="font-size:24px;font-weight:500;color:#fff;">27 November 2018</span><br><br>
+        <span style="font-size:24px;font-weight:500;color:#fff;">{{articles[0].created | getDateNum}} {{articles[0].created | getMonth}} {{articles[0].created | getYear}}</span><br><br>
         <span style="font-size:34px;font-weight:700;color:#fff">{{articles[0].title}}</span>
       </div>
     </div>
     <div style="padding:20px;">
       <p style="color:#002855;font-size: 15px;line-height: 1.7;"  ng-bind-html="articles[0].header" >
       </p>
-      <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name="" ng-click="$state.go('blogDetails', {pk: articles[0].pk})"><b>Read Article</b> </button>
+      <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name="" ng-click="openBlog(articles[0].shortUrl,articles[0].pk)"><b>Read Article</b> </button>
     </div>
   </div>
   <div class="col-md-6  col-sm-12" style="background-color:rgba(245,248,250,.5);padding:0px;padding-top:10px;">
@@ -176,13 +176,13 @@
       <div class="col-xs-3 col-md-1" style="background-image:linear-gradient(rgba(11, 29, 92, 0.65), rgba(18, 24, 97, 0.52)), url({{i.ogimage}}); background-size: cover;background-repeat: no-repeat;padding: 5px;border-radius: 4px;">
         <div class="text-center" style="">
           <span style="font-size:1.875em;color:#fff;"> <strong>{{i.created | getDateNum }}</strong></span><br>
-          <span style="font-size:0.875em;color:#fff;">{{i.created | getMonth}}</span>
+          <span style="font-size:0.875em;color:#fff;">{{i.created | getMonth:3}}</span>
         </div>
       </div>
       <div class="col-xs-9 col-md-11" style="">
         <div id="articleHead">
           <span style="font-size:1.2em;color:#09075c"> {{i.title}}</span><br>
-          <span class="text-primary"><strong> <a href="#" style="color:none;" ng-click="$state.go('blogDetails', {pk: i.pk})">Read More...</a> </strong></span>
+          <span class="text-primary"><strong> <a href="#" style="color:none;" ng-click="openBlog(i.shortUrl,i.pk)">Read More...</a> </strong></span>
         </div>
       </div>
     </div>

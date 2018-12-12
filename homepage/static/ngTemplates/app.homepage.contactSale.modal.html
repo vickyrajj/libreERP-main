@@ -26,15 +26,13 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-group">
               <label for="">Work Email <span >*</span></label>
               <input type="text" class="form-control" id="" placeholder="Work Email" required ng-model="form.emailId">
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-group">
               <label for="">Phone Number</label>
               <input type="text" class="form-control" id="" placeholder="Work Phone Number" ng-model="form.mobileNumber">
@@ -42,23 +40,13 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-group">
-              <label for="">Requirments <span>*</span> </label>
-              <input type="text" class="form-control" id="" placeholder="Requirments" required ng-model="form.requirements">
+              <label for="">What's your field of expertise?</label>
+              <select ng-init="form.companyExpertise = companyExpertise[0]"  class="form-control" ng-model="form.companyExpertise" ng-options="ce for ce in companyExpertise"></select>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label for="">Job Level</label>
-              <select  ng-init="form.jobLevel = jobLevel[0]" class="form-control" ng-model="form.jobLevel" ng-options="j for j in jobLevel"></select>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-group">
               <label for="">Company <span>*</span> </label>
               <input type="text" class="form-control" ng-model="form.comapany" id="" placeholder="Your Company" required>
@@ -66,19 +54,16 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="">Job Level</label>
+              <select  ng-init="form.jobLevel = jobLevel[0]" class="form-control" ng-model="form.jobLevel" ng-options="j for j in jobLevel"></select>
+            </div>
+          </div>
+          <div class="col-md-6">
             <div class="form-group">
               <label for="">Company Industry</label>
               <select  ng-init="form.companyCategory = companyCategory[0]" class="form-control" ng-model="form.companyCategory" ng-options="cc for cc in companyCategory"></select>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label for="">What's your field of expertise?</label>
-              <select ng-init="form.companyExpertise = companyExpertise[0]"  class="form-control" ng-model="form.companyExpertise" ng-options="ce for ce in companyExpertise"></select>
             </div>
           </div>
         </div>
@@ -90,6 +75,15 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="">Requirments <span>*</span> </label>
+              <textarea type="text" class="form-control" rows="4" id="" placeholder="Requirments" required ng-model="form.requirements"></textarea>
+            </div>
+          </div>
+        </div>
+
 
 
         <div class="row text-center">

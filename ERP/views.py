@@ -300,15 +300,3 @@ class activityViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = Activity.objects.all()
     serializer_class = activitySerializer
-
-class SubscribeBlogsApi(APIView):
-    renderer_classes = (JSONRenderer,)
-    permission_classes = (permissions.AllowAny , )
-    def post(self, request, format=None):
-        emailIds = []
-        emailIds.append(request.data['email'])
-        email_body = 'Hello, Thank you for subsribing. We will send you regular updates!! '
-        msg = EmailMessage("Thanks for subscribing" , email_body, to= emailIds)
-        # msg.content_subtype = 'html'
-        msg.send()
-        return Response({}, status = status.HTTP_200_OK)

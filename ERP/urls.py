@@ -23,6 +23,4 @@ urlpatterns = [
     url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
     url(r'sendSMS/$' , SendSMSApi.as_view()),
     url(r'locationTracker/$' , LocationTrackerAPI.as_view()),
-    url(r'subscribeBlogs/$' , SubscribeBlogsApi.as_view()),
-
 ]

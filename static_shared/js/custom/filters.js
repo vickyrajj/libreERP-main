@@ -224,18 +224,39 @@ app.filter('getDate' , function(){
 
 app.filter('getDateNum' , function(){
   return function(input){
+    if (typeof input == 'undefined'){
+      return "";
+    }
     var date = new Date(input.split('T')[0])
     var today = date.getDate()
     return today
   }
 })
 
-app.filter('getMonth' , function(){
+app.filter('getYear' , function(){
   return function(input){
+    if (typeof input == 'undefined'){
+      return "";
+    }
+    var date = new Date(input.split('T')[0])
+    var year = date.getFullYear()
+    return year
+  }
+})
+
+app.filter('getMonth' , function(){
+  return function(input,short){
+    if (typeof input == 'undefined'){
+      return "";
+    }
     var date = new Date(input.split('T')[0])
     var month = date.getMonth()
-    var monthList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return monthList[month];
+    var monthList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    if (typeof short != 'undefined') {
+      return monthList[month].slice(0,short);
+    }else {
+      return monthList[month];
+    }
   }
 })
 

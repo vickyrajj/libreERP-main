@@ -78,4 +78,13 @@ app.controller("controller.home", function($scope , $state) {
   //   });
 
 
+  $scope.labels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  $scope.series = ['client', 'Requested for demo','Subscribed'];
+  $scope.stat = [
+    [65, 59, 80, 81, 56, 55, 40],
+    [28, 10, 20, 19, 50, 12, 60],
+    [28, 48, 40, 19, 86, 27, 90]
+  ];
+
+
 })
