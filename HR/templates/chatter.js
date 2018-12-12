@@ -2073,8 +2073,8 @@ function activeAudioCall(){
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
-                        '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:95%; padding-bottom:5px; margin-bottom:10px;">'+
-                         '<textarea id="feedbackText" style="width:100%;outline:none;padding:5px; resize:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
+                        '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:95%; padding:5px;border:none; margin-bottom:10px;">'+
+                         '<textarea id="feedbackText" style="width:100%;outline:none;padding:5px; resize:none;border:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
                          '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:#eeeee ; color:#000; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Cancel'+
                          '</button>'+
