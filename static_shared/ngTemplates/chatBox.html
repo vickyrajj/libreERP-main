@@ -68,6 +68,12 @@
     <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px; height:{{msgDivHeight}}vh; overflow-y:auto; overflow-x:hidden;">
       <div class="row" style="padding:0px;" ng-repeat="message in data.messages track by $index">
 
+        <div ng-if="!message.logs" class="row container-fluid" style="{{message.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
+          <span ng-if="!message.sentByAgent" style="float:left;  font-size:11px; " class="text-muted">{{message.created | getTime}},</span>
+          <span ng-if="message.sentByAgent" style="float:right;  font-size:11px; " class="text-muted">{{message.user | getName}}, {{message.created | getTime}},</span>
+          <!-- {{message.created}} -->
+        </div>
+
         <div class="row container-fluid">
           <div ng-if="!message.logs" style="float:{{message.sentByAgent ? 'right; background-color:#E4E5E9; ':'left; background-color:#DDF7C8;'}} padding:10px;margin:8px;border-radius:{{message.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
             <p ng-if="message.message.length>0 && message.attachmentType!='youtubeLink'" style="word-wrap: break-word; !important; white-space: pre-wrap;   "> <span ng-if="message.message.includes('www.') || message.message.includes('http')"> <a href="{{message.message}}">{{message.message}}</a> </span> <span ng-if="!message.message.includes('www.') && !message.message.includes('http')">{{message.message }}</span>  </p>
@@ -105,11 +111,7 @@
 
         </div>
 
-        <div ng-if="!message.logs" class="row container-fluid" style="{{message.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
-          <span ng-if="!message.sentByAgent" style="float:left;  font-size:11px; " class="text-muted">{{message.created | getTime}}</span>
-          <span ng-if="message.sentByAgent" style="float:right;  font-size:11px; " class="text-muted">{{message.user | getName}}, {{message.created | getTime}}</span>
-          <!-- {{message.created}} -->
-        </div>
+
 
       </div>
 
