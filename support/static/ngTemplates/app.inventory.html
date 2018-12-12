@@ -26,7 +26,7 @@
     <div class="col-md-7 text-left" ng-if="modeToggle" style="padding-top:20px">
       <div class="container-fluid">
         <div class="input-group">
-          <input type='text' ng-model='searchmaterial' class="form-control" placeholder="Search a Project " ng-enter="enterFunmaterial()" style="height:40px" />
+          <input type='text' ng-model='searchmaterial.search' class="form-control" placeholder="Search a Project " ng-enter="enterFunmaterial()" style="height:40px" />
           <span class="input-group-addon" ng-click="refreshmaterial()" style="cursor:pointer; background-color:#fff;"><i class="fa fa-refresh"></i></span>
           <span class="input-group-addon" ng-click="prevmaterial()" style="cursor:{{offsetmaterial!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i class="fa fa-arrow-left"></i>Prev</span>
           <span class="input-group-addon" ng-click="nextmaterial()" style="cursor:pointer; background-color:#fff;">Next <i class="fa fa-arrow-right"></i></span>

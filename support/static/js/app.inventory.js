@@ -50,12 +50,16 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
 
 
+  $scope.searchmaterial = {
+    search : ""
+  }
+
 
   $scope.getMaterialIssue = function(offset){
-    console.log($scope.searchmaterial,'kkkkkkkkkkkkkkk');
+    console.log($scope.searchmaterial.search,'kkkkkkkkkkkkkkk');
     $http({
       method: 'GET',
-      url: '/api/support/material/?limit=4&offset=' + offset+ '&search=' + $scope.searchtmaterial
+      url: '/api/support/material/?limit=4&offset=' + offset+ '&search=' + $scope.searchmaterial.search
     }).
     then(function(response) {
       console.log(response.data, 'aaaaaaaaaaaaaa');
@@ -73,6 +77,8 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
 
   $scope.offsetmaterial = 0
+
+
 
   $scope.refreshmaterial = function() {
     $scope.getMaterialIssue($scope.offset)
@@ -97,7 +103,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
 
   $scope.enterFunmaterial = function() {
-    $scope.getMaterialIssue($scope.offset)
+    $scope.getMaterialIssue($scope.offsetmaterial)
   }
 
 
@@ -249,88 +255,93 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
   $scope.getList = function() {
     console.log($rootScope.cart);
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.inventory.cart.modal.html',
-      size: 'lg',
-      resolve: {
-        cartData: function() {
-          return $rootScope.cart;
-        }
-      },
-      controller: function($scope, $uibModalInstance, cartData) {
-        $scope.projectSearch = function(query) {
-          return $http.get('/api/support/projects/?title__contains=' + query).
-          then(function(response) {
-            return response.data;
-          })
-        };
-
-        $scope.userSearch = function(query) {
-          return $http.get('/api/HR/userSearch/?first_name__contains=' + query).
-          then(function(response) {
-            return response.data;
-          })
-        };
-        console.log(cartData, 'aaaaaaaaaaa');
-        $scope.cartData = cartData
-        $scope.productsOrdered = []
-        for (var i = 0; i < $scope.cartData.length; i++) {
-          $http({
-            method: 'GET',
-            url: '/api/support/products/' + $scope.cartData[i]
-          }).
-          then(function(response) {
-            $scope.productsOrdered.push(response.data);
-          })
-
-      }
-
-      $scope.delete = function(index){
-        $scope.productsOrdered.splice(index,1);
-      }
-      // $scope.delete = function(pk,index){
-      //   $http({method : 'DELETE' , url : '/api/support/products/' + pk + '/' }).
-      //   then( function(response){
-      //     Flash.create('success','Deleted' );
-      //     console.log(index,'jjjjj');
-      //     $scope.productsOrdered.splice(index,1)
-      //   })
-
-
-
-        $scope.form = {}
-        $scope.save = function() {
-          console.log($scope.form.responsible, 'kkkkkkkkkkkkkkkkk');
-          if ($scope.form.responsible == undefined) {
-            Flash.create('warning', 'Select Responsible person');
-            return
+    if($rootScope.cart.length>0){
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.inventory.cart.modal.html',
+        size: 'lg',
+        resolve: {
+          cartData: function() {
+            return $rootScope.cart;
           }
-          if ($scope.form.project == undefined) {
-            Flash.create('warning', 'Select Project');
-            return
+        },
+        controller: function($scope, $uibModalInstance, cartData) {
+          $scope.projectSearch = function(query) {
+            return $http.get('/api/support/projects/?title__contains=' + query).
+            then(function(response) {
+              return response.data;
+            })
+          };
+
+          $scope.userSearch = function(query) {
+            return $http.get('/api/HR/userSearch/?first_name__contains=' + query).
+            then(function(response) {
+              return response.data;
+            })
+          };
+          console.log(cartData, 'aaaaaaaaaaa');
+          $scope.cartData = cartData
+          $scope.productsOrdered = []
+          for (var i = 0; i < $scope.cartData.length; i++) {
+            $http({
+              method: 'GET',
+              url: '/api/support/products/' + $scope.cartData[i]
+            }).
+            then(function(response) {
+              $scope.productsOrdered.push(response.data);
+            })
+
           }
-          console.log($scope.productsOrdered);
-          var dataToSend = {
-            products: $scope.productsOrdered,
-            user: $scope.form.responsible.pk,
-            project: $scope.form.project.pk,
+
+          $scope.delete = function(index){
+            $scope.productsOrdered.splice(index,1);
           }
-          $http({
-            method: 'POST',
-            url: '/api/support/order/',
-            data: dataToSend
-          }).
-          then(function(response) {
-            console.log(response.data, 'kkkkkkkkk');
-            $scope.values = response.data
-          })
-        }
-        // $uibModalInstance.dismiss($scope.values)
-      },
-    }).result.then(function() {}, function(values) {
-      $scope.fetchProdInventory($scope.offset)
-      // $scope.valueList = values
-    });
+          // $scope.delete = function(pk,index){
+          //   $http({method : 'DELETE' , url : '/api/support/products/' + pk + '/' }).
+          //   then( function(response){
+          //     Flash.create('success','Deleted' );
+          //     console.log(index,'jjjjj');
+          //     $scope.productsOrdered.splice(index,1)
+          //   })
+
+
+
+          $scope.form = {}
+          $scope.save = function() {
+            console.log($scope.form.responsible, 'kkkkkkkkkkkkkkkkk');
+            if ($scope.form.responsible == undefined) {
+              Flash.create('warning', 'Select Responsible person');
+              return
+            }
+            if ($scope.form.project == undefined) {
+              Flash.create('warning', 'Select Project');
+              return
+            }
+            console.log($scope.productsOrdered);
+            var dataToSend = {
+              products: $scope.productsOrdered,
+              user: $scope.form.responsible.pk,
+              project: $scope.form.project.pk,
+            }
+            $http({
+              method: 'POST',
+              url: '/api/support/order/',
+              data: dataToSend
+            }).
+            then(function(response) {
+              console.log(response.data, 'kkkkkkkkk');
+              $scope.values = response.data
+            })
+          }
+          // $uibModalInstance.dismiss($scope.values)
+        },
+      }).result.then(function() {}, function(values) {
+        $scope.fetchProdInventory($scope.offset)
+        // $scope.valueList = values
+      });
+    }
+    else{
+      Flash.create("warning",'Add items to Cart')
+    }
   }
   // console.log($scope.valueList,'aaaaaaaaaaaahhhhhhhhhhhhhhhhhhhaaaaaaaaaa');
      // var vm = this
