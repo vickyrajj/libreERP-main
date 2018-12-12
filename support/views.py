@@ -825,8 +825,8 @@ class MaterialIssueMainViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )
     # queryset = MaterialIssueMain.objects.all()
     serializer_class = MaterialIssueMainSerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['products','project']
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['project']
     def get_queryset(self):
         if self.request.GET['search']!='undefined':
             return MaterialIssueMain.objects.filter(project_title__icontains=self.request.GET['search'])
