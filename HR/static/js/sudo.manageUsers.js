@@ -12,6 +12,16 @@
 //   }
 // });
 
+
+
+// 
+// app.controller('sudo.explore.project', function($scope, $http, Flash, $users) {
+// $scope.apps = "fggggggggggggggggggh"
+// });
+//
+
+
+
 app.controller('sudo.manageUsers.customers.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
   $scope.data = $scope.tab.data;
@@ -68,6 +78,9 @@ app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $stat
 
 
 });
+
+
+
 
 app.controller('sudo.manageUsers.editPayroll', function($scope, $http, Flash, $users) {
   console.log($scope.tab.data);

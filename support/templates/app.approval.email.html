@@ -196,7 +196,8 @@
     }
     #tableHead{
       background-color: rgb(192, 201, 214);
-      color:rgb(15, 15, 15)
+      color:rgb(15, 15, 15);
+      border:1px solid rgb(15, 15, 15)
     }
   </style>
 
@@ -223,16 +224,16 @@
           </table>
             <table cellpadding="2" cellspacing="0" border="0" align="left" width="600"  class="container" style="margin-top:20px">
             <tr id="tableHead" height="50">
-              <th width="100" align="center">
+              <th width="100" align="center" style="border-right:1px solid rgb(15, 15, 15)">
                 Part No
               </th>
-              <th width="300" align="center">
+              <th width="300" align="center" style="border-right:1px solid rgb(15, 15, 15)">
                 Products
               </th>
-              <th width="100" align="center">
+              <th width="100" align="center" style="border-right:1px solid rgb(15, 15, 15)">
                 Price
               </th>
-              <th width="100" align="center">
+              <th width="100" align="center" style="border-right:1px solid rgb(15, 15, 15)">
                 Quantity
               </th>
               <th width="100" align="center">
@@ -258,6 +259,23 @@
               </td>
             </tr>
             {% endfor %}
+            <tr height="50"  border="1">
+              <td width="100" align="center" style="border:1px solid rgb(15, 15, 15);">
+
+              </td>
+              <td width="300" align="center" style="border:1px solid rgb(15, 15, 15);">
+
+              </td>
+              <td width="100" align="center" style="border:1px solid rgb(15, 15, 15);">
+                {{totalPrice}}
+              </td>
+              <td width="100" align="center" style="border:1px solid rgb(15, 15, 15);">
+                {{totalQty}}
+              </td>
+              <td width="100" align="center" style="border:1px solid rgb(15, 15, 15);">
+                {{totalCustomerPrice}}
+              </td>
+            </tr>
           </table>
           <table cellpadding="2" cellspacing="0" border="0" align="left" width="600"  class="container" style="margin-top:20px">
             <tr height="50">
