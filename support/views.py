@@ -853,7 +853,7 @@ class ProductInventoryAPIView(APIView):
         total = 0
         toReturn = []
         if request.GET['search']!='undefined':
-            productlist = Inventory.objects.filter(product__part_no__icontains=request.GET['search'])
+            productlist = Inventory.objects.filter(product__part_no__icontains=request.GET['search'],product__description_1__icontains=request.GET['search'])
         else:
             productlist = Inventory.objects.all()
         productsList = list(productlist.values('product').distinct().values('product__pk','product__description_1','product__part_no','product__description_2','product__weight','product__price'))

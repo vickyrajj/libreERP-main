@@ -10,7 +10,7 @@
     <div class="col-md-8  text-left" ng-if="!modeToggle" style="padding-top:20px">
       <div class="container-fluid">
         <div class="input-group">
-          <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product" ng-enter="enterFun()" style="height:42.5px;float:none" />
+          <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product" ng-enter="enterFun()" style="height:42.5px;float:none" ng-change="see()" />
           <span class="input-group-addon" ng-click="refresh()" style="cursor:pointer; background-color:#fff;"><i class="fa fa-refresh"></i></span>
           <span class="input-group-addon" ng-click="prev()" style="cursor:{{offset!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i class="fa fa-arrow-left"></i>Prev</span>
           <span class="input-group-addon" ng-click="next()" style="cursor:pointer; background-color:#fff;">Next <i class="fa fa-arrow-right"></i></span>

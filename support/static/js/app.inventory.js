@@ -1,5 +1,15 @@
 app.controller("businessManagement.inventory", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
   $scope.offset = 0
+  // $scope.see = function(){
+  //     $scope.text = $scope.searchText
+  //         console.log($scope.text,'jjjjjjjj');
+  //
+  // }
+  // // $scope.$watch('searchText', function(newValue, oldValue) {
+  // //   if (typeof newValue == 'object') {
+  // //   }else{
+  // //   }
+  // // },true)
   $scope.fetchProdInventory = function(offset) {
     $http({
       method: 'GET',
