@@ -351,8 +351,11 @@ var metaTag=document.createElement('meta');
   metaTag.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
   document.getElementsByTagName('head')[0].appendChild(metaTag);
 
-  // Store the meta element
-// var viewport_meta = document.getElementById('viewport-meta');
+var linkStyle = document.createElement('link');
+    linkStyle.rel = 'stylesheet';
+    linkStyle.href = 'https://fonts.googleapis.com/css?family=Muli';
+    document.head.appendChild(linkStyle);
+
 
 // Define our viewport meta values
 var viewports = {
@@ -1732,6 +1735,7 @@ function activeAudioCall(){
                 height: 100%;\
                 position: fixed;\
                 top:0px;\
+                font-family: 'Muli', sans-serif;\
                 right: 0px;\
                 min-width: 100%;\
                 color:black;\
@@ -1756,6 +1760,7 @@ function activeAudioCall(){
                 position: fixed;\
                 bottom: 100px;\
                 right: 40px;\
+                font-family: 'Muli', sans-serif;\
                 min-width: 370px;\
                 border-radius:10px;\
                 box-shadow: 0px 0px 25px 5px rgba(0,0,0,0.2);\
@@ -1863,7 +1868,7 @@ function activeAudioCall(){
             .paperClip{\
               font-size:25px;\
               margin:10px;\
-              color:"+windowColor+"\
+              color:#A0A0A0\
             }\
             .exitBtn:hover{\
               transform: scale(1.2) ;\
@@ -2051,8 +2056,8 @@ function activeAudioCall(){
     var div = document.createElement("div");
     div.id="offlineMessage"
     div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                      '<div style="text-align:center;clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; box-sizing:border-box;font-size:14px">'+
-                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Please provide your feedback below:</p>'+
+                      '<div style="text-align:center;clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; box-sizing:border-box;font-size:14px">'+
+                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px;color:rgba(0,0,0,0.5); box-sizing:border-box;">Please provide your feedback below:</p>'+
                       '<form>'+
                         '<div class="stars">'+
                           '<form id="stars">'+
@@ -2069,7 +2074,7 @@ function activeAudioCall(){
                           '</form>'+
                         '</div>'+
                         '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:95%; padding-bottom:5px; margin-bottom:10px;">'+
-                         '<textarea id="feedbackText" style="width:100%;outline:none;padding:2px; resize:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
+                         '<textarea id="feedbackText" style="width:100%;outline:none;padding:5px; resize:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
                          '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:#eeeee ; color:#000; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Cancel'+
                          '</button>'+
@@ -2110,7 +2115,7 @@ function activeAudioCall(){
     var div = document.createElement("div");
     div.id="thankYou"
     div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                    '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                    '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                     '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Thank You !</p>'+
                     '</div> '+
                     '</div>'
@@ -2553,7 +2558,7 @@ var isConfirmedToEnd=false;
 
       }else {
         var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                  '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
                   '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
@@ -2653,7 +2658,7 @@ setInterval(function () {
         firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
         firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
           div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div id="herere" style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:14px">'+
+                  '<div id="herere" style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:14px">'+
                      firstMessage+
                   '</div> '+
                 '</div> '
@@ -2881,7 +2886,7 @@ console.log(firstMessage);
         div.id="offlineMessage"
 
         div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                          '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                          '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                           '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
                           '<form>'+
                             '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
