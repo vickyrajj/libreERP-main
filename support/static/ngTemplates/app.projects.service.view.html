@@ -73,8 +73,8 @@
           <td>
             <input type="text" class="form-control-pos text-center" ng-model="item.quantity1">
           </td>
-          <td>
-            <input type="text" class="form-control-pos text-center" ng-model="item.customer_price">
+          <td >
+            <input type="text" class="form-control-pos text-center"  ng-model="item.customer_price" ng-init="item.customer_price=item.price">
           </td>
           <td>
             <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable(item.part_no,$index)"> <i class="fa fa-trash"></i> </button>

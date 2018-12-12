@@ -1,45 +1,18 @@
-<div class="container-fluid" style="padding:20px;" ng-controller="businessManagement.projects.invoice">
-
-  <div class="col-md-12">
-    <table class="invoiceTable" style=" width: 100%;">
-    <tbody>
-      <tr style="background-color: #eeeeee;height: 96px;">
-        <th>Si.No</th>
-        <th>Product</th>
-        <th>Part No</th>
-        <th>Quantity</th>
-        <th>Price</th>
-        <th>Quantity Received</th>
-        <th>Total</th>
-       </tr>
-        <tr ng-repeat="v in projects track by $index">
-          <td>{{}}</td>
-          <td>{{}}</td>
-          <td>{{}}</td>
-          <td>{{}}</td>
-          <td >{{}}</td>
-          <td >{{}}</td>
-          <td >{{}}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>Total</td>
-          <td ><b></b</td>
-          </tr>
-
-
-    </tbody>
-    </table>
-    <div class="row">
-      <div class="col-md-12">
-          <span><a  class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 60px 20px 0;" target="_blank" href="/api/support/grn/?project={{form.pk}}">GRN<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
+<div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.projects.invoice">
+  <div class="container-fluid card" style="border: 1px solid rgb(51, 122, 183);" ng-click="rowActionClicked('invoice')">
+    <div class="row text-center" style="border-bottom: 1px solid #dedede;background-color:rgb(51, 122, 183);color:white;height:6vh;">
+      <div class="col-md-12" style="position:relative;display:block;">
+        <div class="row" style="padding-left:10px;">
+          <h3>{{data.project.title}}</h3>
+        </div>
       </div>
     </div>
-
-</div>
-
+    <div class="row container-fluid" style="padding-top:20px;height:12vh;">
+      <div class="col-md-10" style="z-index: 1;">
+        <span style="font-size:15px;"><strong> Service </strong>: {{data.project.service.name}}</span><br>
+        <span style="font-size:15px;"><strong>Mobile </strong>: {{data.project.service.mobile}}</span><br>
+        <span><strong>Closing date </strong>: {{data.project.date}}</span><br>
+      </div>
+    </div>
+  </div>
 </div>

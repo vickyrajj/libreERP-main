@@ -67,7 +67,7 @@ class BoM(models.Model):
     quantity1 = models.PositiveIntegerField(null=True , default=0)
     quantity2 = models.PositiveIntegerField(null=True , default=0)
     price = models.FloatField(null = True)
-    customer_price = models.PositiveIntegerField(null=True , default=0)
+    customer_price = models.FloatField(null=True , default=0)
 
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)

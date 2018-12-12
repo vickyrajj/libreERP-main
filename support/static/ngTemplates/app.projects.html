@@ -1,4 +1,4 @@
-<div class="shaddowed card bg-white" style="min-height:93vh;">
+<div class="shaddowed card bg-white" style="min-height:95vh;">
   <breadcrumb></breadcrumb>
   <div class="container-fluid">
     <div class="container-fluid">
@@ -39,7 +39,7 @@
         </uib-tab>
         <uib-tab >
           <uib-tab-heading>
-            Invoice
+            On Going
             <i class="fa fa-list-ul"></i>
           </uib-tab-heading>
           <div class="container-fluid" >
@@ -63,6 +63,9 @@
           </div>
           <div ng-if="tab.app == 'bomApproved'">
             <div ng-include="'/static/ngTemplates/app.projects.success.view.html'"></div>
+          </div>
+          <div ng-if="tab.app == 'invoiceDetails'">
+            <div ng-include="'/static/ngTemplates/app.projects.invoice.view.html'"></div>
           </div>
         </uib-tab>
 

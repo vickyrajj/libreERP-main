@@ -78,6 +78,32 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     searchField: 'title',
   }
 
+  $scope.data3 = {
+    tableData: []
+  };
+  console.log($scope.data3.tableData,'jjjjjjjjj');
+
+  views3 = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.projects.invoice.html',
+  }, ];
+
+  $scope.config3 = {
+    views: views3,
+    url: '/api/support/material/',
+    // filterSearch: true,
+    // searchField: 'title',
+    deletable: true,
+    itemsNumPerView: [9, 15, 21],
+    // getParams: [{
+    //   key: '',
+    //   value: 'approved'
+    // }],
+    searchField: 'project__title',
+  }
+
 
 
 
@@ -158,6 +184,31 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
       $scope.addTab({
         title: title + $scope.data2.tableData[i].title,
+        cancel: true,
+        app: appType,
+        data: {
+          pk: target,
+          index: i
+        },
+        active: true
+      })
+    }
+
+    }
+  }
+  $scope.tableAction3 = function(target, action, mode) {
+    console.log(target, action, mode, 'ggggggggggggggggggggggggggggg');
+
+
+    for (var i = 0; i < $scope.data3.tableData.length; i++) {
+      if ($scope.data3.tableData[i].pk == parseInt(target)) {
+        if (action == 'invoice') {
+          var title = 'On Going Details:';
+          var appType = 'invoiceDetails';
+        }
+
+      $scope.addTab({
+        title: title + $scope.data3.tableData[i].project.title,
         cancel: true,
         app: appType,
         data: {
@@ -554,6 +605,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   // }
   $scope.$watch('projects', function(newValue, oldValue) {
     for (var i = 0; i < newValue.length; i++) {
+      console.log(newValue[i].customer_price,'hhhhhh');
       if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].customer_price != oldValue[i].customer_price) {
         var dataSend = {
           quantity1: newValue[i].quantity1,
@@ -594,6 +646,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }).
       then(function(response) {
         $scope.data[$scope.data.length - 1].listPk = response.data.pk
+        $scope.data[$scope.data.length - 1].customer_price = response.data.price
         $scope.productpk.push(response.data);
         console.log($scope.productpk ,'ooooooo');
         $scope.showbutton = true
@@ -619,6 +672,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }).
       then(function(response) {
         $scope.data[$scope.data.length - 1].listPk = response.data.pk
+        $scope.data[$scope.data.length - 1].customer_price = response.data.price
         $scope.productpk.push(response.data);
       })
       return
@@ -745,7 +799,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         },
       }).
       then(function(response) {
-        Flash.create('success', 'Saved');
+        Flash.create('success', 'Email Sent');
       })
     })
   }
@@ -857,7 +911,7 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
   $scope.accept = function() {
     var date =new Date().toJSON().split('T')[0]
     var sendStatus = {
-      status: 'sent_for_approval',
+      status: 'approved',
       approved1:true,
       approved1_user:$scope.me.pk,
       approved1_date:date
@@ -1017,6 +1071,45 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
 
 
 
+
+
+
+})
+
+app.controller("businessManagement.projects.invoice", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+
+})
+app.controller("businessManagement.projects.invoice.view", function($scope, $state, $users, $stateParams, $http, Flash) {
+
+  if ($scope.tab == undefined) {
+    $scope.resetForm();
+  } else {
+    $scope.form = $scope.data3.tableData[$scope.tab.data.index]
+  }
+
+  $http({
+    method: 'GET',
+    url: '/api/support/bom/?project='+ $scope.form.project.pk ,
+  }).
+  then(function(response) {
+      $scope.purchase = response.data;
+      $scope.purchaseSum = sum($scope.purchase)
+  })
+
+  function sum(data){
+    if(data == $scope.form.materialIssue){
+      return data.map(function(m){
+           return m.qty*m.price
+      }).reduce(function(a,b){return a+b},0)
+   }else if(data == $scope.purchase){
+     return data.map(function(m){
+         return m.quantity1*m.price
+     }).reduce(function(a,b){return a+b},0)
+   }
+ }
+
+  $scope.materialSum = sum($scope.form.materialIssue)
 
 
 

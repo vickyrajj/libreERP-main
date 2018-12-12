@@ -828,8 +828,8 @@ class MaterialIssueMainViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['project']
     def get_queryset(self):
-        if self.request.GET['search']!='undefined':
-            return MaterialIssueMain.objects.filter(project_title__icontains=self.request.GET['search'])
+        if 'search' in self.request.GET:
+            return MaterialIssueMain.objects.filter(project__title__icontains=self.request.GET['search'])
         else:
             return MaterialIssueMain.objects.all()
 
