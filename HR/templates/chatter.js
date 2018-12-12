@@ -824,9 +824,9 @@ function createChatDiv() {
         '</div>'+
 
         '<div id="supportCircle">'+
-    			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
+    			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation" onclick="" id="sy-main-icon">'+
     				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
-    				'<span id="chatSuggestionBar" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">We are here to help you</span>'+
+    				'<span id="chatSuggestionBar" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">We are here to help you</span>'+
     				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
     				'<div  id="sy-sub-icons">'+
     					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
@@ -853,8 +853,9 @@ function createChatDiv() {
     			'</div>'+
     		'</div>'+
 
-        '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle">'+
+        '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation">'+
           '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ; right:105px; display:none; transition: .5s" class="sy-text">Chat</span>'+
+
           '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
         '</div>'+
           '</div>'+
@@ -1578,12 +1579,26 @@ function activeAudioCall(){
               font-size: 28px;\
               font-weight: bold;\
           }\
+              .first_animation {\
+              animation:  first_animation 1s;\
+          }\
           @keyframes modalBox{\
         	0%{\
               transform:translateY(-200px);\
           	}\
             70%{\
               transform:translateY(20px);\
+          	}\
+            100%{\
+              	transform:translateY(0px);\
+          	}\
+          }\
+          @keyframes first_animation{\
+        	0%{\
+              transform:translateY(400px);\
+          	}\
+            50%{\
+              transform:translateY(-100px);\
           	}\
             100%{\
               	transform:translateY(0px);\
