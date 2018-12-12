@@ -15,73 +15,55 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="">First Name<span>*</span></label>
-              <input type="text" class="form-control" id="" placeholder="" required ng-model="form.firstName">
+              <input type="text" class="form-control" id="" placeholder="First Name" required ng-model="form.firstName">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="">Last Name</label>
-              <input type="text" class="form-control" id="" placeholder="" ng-model="form.lastName">
+              <input type="text" class="form-control" id="" placeholder="Last Name" ng-model="form.lastName">
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-group">
               <label for="">Work Email <span >*</span></label>
               <input type="text" class="form-control" id="" placeholder="Work Email" required ng-model="form.emailId">
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-group">
-              <label for="">Phone Number <span >*</span></label>
+              <label for="">Phone Number</label>
               <input type="text" class="form-control" id="" placeholder="Work Phone Number" ng-model="form.mobileNumber">
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label for="">Requirments <span>*</span> </label>
-              <input type="text" class="form-control" id="" placeholder="" required ng-model="form.requirements">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label for="">Job Level</label>
-              <select class="form-control" ng-model="form.jobLevel" ng-options="cc as cc for cc in jobLevel"></select>
-              <!-- <input type="text" class="form-control" id="" placeholder="" required ng-model="form.jobLevel"> -->
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label for="">Company <span>*</span> </label>
-              <input type="text" class="form-control" id="" placeholder="Your Company" required ng-model="form.comapny">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label for="">Company Industry <span>*</span></label>
-              <select class="form-control" ng-model="form.companyCategory" ng-options="cc as cc for cc in companyCategory"></select>
-              <!-- <input type="text" class="form-control" id="" placeholder="" required ng-model="form.companyCategory"> -->
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-group">
               <label for="">What's your field of expertise?</label>
-              <select class="form-control" ng-model="form.companyExpertise" ng-options="cc as cc for cc in companyExpertise"></select>
-              <!-- <input type="text" class="form-control" id="" placeholder="" ng-model="form.companyExpertise"> -->
+              <select ng-init="form.companyExpertise = companyExpertise[0]"  class="form-control" ng-model="form.companyExpertise" ng-options="ce for ce in companyExpertise"></select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="">Company <span>*</span> </label>
+              <input type="text" class="form-control" ng-model="form.comapany" id="" placeholder="Your Company" required>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="">Job Level</label>
+              <select  ng-init="form.jobLevel = jobLevel[0]" class="form-control" ng-model="form.jobLevel" ng-options="j for j in jobLevel"></select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="">Company Industry</label>
+              <select  ng-init="form.companyCategory = companyCategory[0]" class="form-control" ng-model="form.companyCategory" ng-options="cc for cc in companyCategory"></select>
             </div>
           </div>
         </div>
@@ -89,11 +71,19 @@
           <div class="col-md-12">
             <div class="form-group">
               <label for="">Country</label>
-              <select class="form-control" ng-model="form.country" ng-options="cc as cc for cc in country"></select>
-              <!-- <input type="text" class="form-control" id="" placeholder="" ng-model="form.country"> -->
+              <select ng-init="form.country = country[0]" class="form-control" ng-model="form.country" ng-options="c for c in country"></select>
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="">Requirments <span>*</span> </label>
+              <textarea type="text" class="form-control" rows="4" id="" placeholder="Requirments" required ng-model="form.requirements"></textarea>
+            </div>
+          </div>
+        </div>
+
 
 
         <div class="row text-center">

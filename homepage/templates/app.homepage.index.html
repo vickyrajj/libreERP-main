@@ -157,32 +157,32 @@
 </div>
 
 
-<div class="blog_section shaddowed" style="min-height:560px; border-radius:10px;">
+<div class="blog_section shaddowed" style="min-height:580px; border-radius:10px;">
   <div class="col-md-6 col-sm-12" style="padding:0px;">
     <div class="blogimg">
       <div id="date">
-        <span style="font-size:24px;font-weight:500;color:#fff;">27 November 2018</span><br><br>
-        <span style="font-size:34px;font-weight:700;color:#fff">RPA Adoption: Top-down or Bottom-up?</span>
+        <span style="font-size:24px;font-weight:500;color:#fff;">{{articles[0].created | getDateNum}} {{articles[0].created | getMonth}} {{articles[0].created | getYear}}</span><br><br>
+        <span style="font-size:34px;font-weight:700;color:#fff">{{articles[0].title}}</span>
       </div>
     </div>
     <div style="padding:20px;">
-      <p style="color:#002855;font-size: 15px;line-height: 1.7;">It has been a fascinating journey so far to watch the adoption of RPA technology among client organizations. We have observed several different paths to adoption while everyone is still wondering if there is one template for the best approach.
+      <p style="color:#002855;font-size: 15px;line-height: 1.7;"  ng-bind-html="articles[0].header" >
       </p>
-      <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name=""><b>Read Article</b> </button>
+      <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name="" ng-click="openBlog(articles[0].shortUrl,articles[0].pk)"><b>Read Article</b> </button>
     </div>
   </div>
   <div class="col-md-6  col-sm-12" style="background-color:rgba(245,248,250,.5);padding:0px;padding-top:10px;">
-    <div class="row" ng-repeat="i in articles" style="margin:0px;margin-left:10px;margin-bottom:10px;{{$odd ? 'background:#fff;':''}};">
-      <div class="col-xs-3 articleImg col-md-1">
+    <div class="row" ng-repeat="i in articles | limitTo: (1 - articles.length)" style="margin:0px;margin-left:10px;margin-bottom:10px;{{$odd ? 'background:#fff;':''}};">
+      <div class="col-xs-3 col-md-1" style="background-image:linear-gradient(rgba(11, 29, 92, 0.65), rgba(18, 24, 97, 0.52)), url({{i.ogimage}}); background-size: cover;background-repeat: no-repeat;padding: 5px;border-radius: 4px;">
         <div class="text-center" style="">
-          <span style="font-size:1.875em;color:#fff;"> <strong>21</strong></span><br>
-          <span style="font-size:0.875em;color:#fff;">Nov</span>
+          <span style="font-size:1.875em;color:#fff;"> <strong>{{i.created | getDateNum }}</strong></span><br>
+          <span style="font-size:0.875em;color:#fff;">{{i.created | getMonth:3}}</span>
         </div>
       </div>
       <div class="col-xs-9 col-md-11" style="">
         <div id="articleHead">
-          <span style="font-size:1.2em;color:#09075c"> RPA technology among client organizations cool text here. Great yeaa...</span><br>
-          <span class="text-primary"><strong>Read More...</strong></span>
+          <span style="font-size:1.2em;color:#09075c"> {{i.title}}</span><br>
+          <span class="text-primary"><strong> <a href="#" style="color:none;" ng-click="openBlog(i.shortUrl,i.pk)">Read More...</a> </strong></span>
         </div>
       </div>
     </div>
@@ -275,9 +275,9 @@
   </div>
   <div class="col-md-3">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Email ID">
+      <input type="text" class="form-control" placeholder="Email ID" ng-model="subscribeForm.email">
       <span class="input-group-btn">
-        <button type="button" class="btn btn-warning">Subscribe</button>
+        <button type="button" class="btn btn-warning" ng-click="subscribeToBlogs()">Subscribe</button>
       </span>
     </div>
   </div>

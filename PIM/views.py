@@ -90,7 +90,7 @@ class blogViewSet(viewsets.ModelViewSet):
     filter_fields = ['title' , 'state']
     def get_queryset(self):
         if 'state' not in self.request.GET and 'tags' not in self.request.GET and 'user' not in self.request.GET:
-            return blogPost.objects.all()
+            return blogPost.objects.order_by('-created')
         if 'state' in self.request.GET:
             st = self.request.GET['state']
             if st != 'published':

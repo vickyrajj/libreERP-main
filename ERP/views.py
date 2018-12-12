@@ -19,9 +19,9 @@ import requests
 from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
 import calendar
-from HR.models import payroll
 from rest_framework import filters
 from django.utils import translation
+from django.core.mail import send_mail, EmailMessage
 
 
 def renderedStatic(request , filename):
@@ -34,12 +34,6 @@ def renderedStatic(request , filename):
     translation.activate(language )
     request.LANGUAGE_CODE = translation.get_language()
     return render(request , filename , {"lang" : request.LANGUAGE_CODE})
-
-
-
-
-
-
 
 
 class LocationTrackerAPI(APIView):
@@ -163,24 +157,6 @@ class serviceRegistrationApi(APIView):
             content = {'pk' : user.pk , 'username' : user.username , 'email' : user.email}
             ak.save()
             return Response(content , status = status.HTTP_200_OK)
-
-class addressViewSet(viewsets.ModelViewSet):
-    permission_classes = (isAdmin , )
-    serializer_class = addressSerializer
-    def get_queryset(self):
-        u = self.request.user
-        has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.orders'])
-        return address.objects.all()
-
-class serviceViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny , )
-    serializer_class = serviceSerializer
-    filter_backends = [DjangoFilterBackend,filters.SearchFilter]
-    filter_fields = ['name','vendor']
-    search_fields = ('name','web')
-    def get_queryset(self):
-        # u = self.request.user
-        return service.objects.all()
 
 class registerDeviceApi(APIView):
     renderer_classes = (JSONRenderer,)
@@ -315,9 +291,12 @@ class permissionViewSet(viewsets.ModelViewSet):
     queryset = permission.objects.all()
     serializer_class = permissionSerializer
 
-class CompanyHolidayViewSet(viewsets.ModelViewSet):
+class visitorViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    queryset = CompanyHolidays.objects.all()
-    serializer_class = CompanyHolidaySerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = [ 'name','date']
+    queryset = Visitor.objects.all()
+    serializer_class = visitorSerializer
+
+class activityViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
+    queryset = Activity.objects.all()
+    serializer_class = activitySerializer

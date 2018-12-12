@@ -1,33 +1,36 @@
-{% load i18n %}
+``{% load i18n %}
 
 <nav class="navbar navbar-default navbar-fixed-top" style="box-shadow: rgba(8, 19, 31, 0.5) 0px 3px 10px 0px;background-color:white;">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
       {% verbatim %}
     <div class="navbar-header">
-      <a class="navbar-brand" href="/" style="color:rgb(0, 133, 202);padding:0px;font-size:30px;padding-top:15px;">Epsilon<span style="color:black;">AI</span>  </a>
+      <a class="navbar-brand" href="/" style="padding:0px;"> <img src="/static/images/g2569.png" alt="" style="height:100%;"> </a>
+      <!-- <button type="button" class="btn btn-warning hidden-lg hidden-md" style="background-color:#ff6900;margin-top:10px;" ng-click="schedule()">
+        Request a Demo
+      </button> -->
       <div class="navbar-toggle toggleBtn" data-toggle="collapse" data-target="#myNavbar" ng-click="toggleNavbar = !toggleNavbar" style="border:none;">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </div>
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar">
+    <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar" >
 
       <ul class="nav navbar-nav header_nav {{device.smallDevice?'pull-left':'pull-right'}}">
         {% endverbatim %}
         <li class="header_element">
-          <a href="/" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true"> RPA</a>
-          <ul ng-mouseleave="keepshow[0]=false" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box" >
+          <a href="" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true"> RPA</a>
+          <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box" >
             <li><a href="#">{% trans 'whatisrpa' %}</a></li>
             <li><a href="#">RPA in 2018</a></li>
             <li><a href="#">RPA Resources</a></li>
           </ul>
         </li>
         <li class="header_element">
-          <a href="/" ng-mouseleave="show[1]=false" ng-mouseover="show[1]=true"> Services</a>
-          <ul ng-mouseleave="keepshow[1]=false" ng-mouseover="keepshow[1]=true" ng-show="show[1]||keepshow[1]" class="container_box" style="width:300px;">
-            <li><a href="#">EpsilonAI Implimentation</a></li>
+          <a href="" ng-mouseleave="show[1]=false" ng-mouseover="show[1]=true"> Services</a>
+          <ul ng-mouseleave="keepshow[1]=false" ng-click="keepshow[1] = false; toggleNavbar = false;" ng-mouseover="keepshow[1]=true" ng-show="show[1]||keepshow[1]" class="container_box" style="width:300px;">
+            <li><a href="#">UIPath Implimentation</a></li>
             <li><a href="#">Automation Anywhere Implimentation</a></li>
             <li><a href="/remote">Remote technical assistance</a></li>
             <li><a href="#">Custom ML models</a></li>
@@ -35,16 +38,16 @@
           </ul>
         </li>
         <li class="header_element">
-          <a href="/" ng-mouseleave="show[2]=false" ng-mouseover="show[2]=true"> Solutions </a>
-          <ul ng-mouseleave="keepshow[2]=false" ng-mouseover="keepshow[2]=true" ng-show="show[2]||keepshow[2]" class="container_box">
+          <a href="" ng-mouseleave="show[2]=false" ng-mouseover="show[2]=true"> Solutions </a>
+          <ul ng-mouseleave="keepshow[2]=false" ng-click="keepshow[2] = false; toggleNavbar = false;" ng-mouseover="keepshow[2]=true" ng-show="show[2]||keepshow[2]" class="container_box">
           <li><a href="/industry">By Industry</a></li>
           <li><a href="#">By Technology</a></li>
           <li><a href="#">Webinars</a></li>
           </ul>
         </li>
         <li class="header_element">
-          <a href="/" ng-mouseleave="show[3]=false" ng-mouseover="show[3]=true"> Company</a>
-            <ul ng-mouseleave="keepshow[3]=false" ng-mouseover="keepshow[3]=true" ng-show="show[3]||keepshow[3]" class="container_box">
+          <a href="" ng-mouseleave="show[3]=false" ng-mouseover="show[3]=true"> Company</a>
+            <ul ng-mouseleave="keepshow[3]=false" ng-click="keepshow[3] = false; toggleNavbar = false;" ng-mouseover="keepshow[3]=true" ng-show="show[3]||keepshow[3]" class="container_box">
           <li><a href="/about">About US</a></li>
           <li><a href="#">Investors</a></li>
           <li><a href="/career">Careers</a></li>

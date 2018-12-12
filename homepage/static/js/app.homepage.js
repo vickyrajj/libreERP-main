@@ -13,10 +13,72 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
 
 });
 
-app.run(['$rootScope', '$state', '$stateParams', function($rootScope, $state, $stateParams) {
+app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $state, $stateParams, $http) {
   $rootScope.$state = $state;
   $rootScope.$stateParams = $stateParams;
   $rootScope.$on("$stateChangeError", console.log.bind(console));
+
+  $rootScope.$on("$stateChangeSuccess", function(params, to, toParams, from, fromParams) {
+
+    window.scrollTo(0, 0);
+
+
+    var visitorDetails = $rootScope.getCookie("visitorDetails");
+    if (visitorDetails != "") {
+      var uid = JSON.parse(visitorDetails).uid
+      var visitorPk = JSON.parse(visitorDetails).visitorPk
+      createActivity()
+    } else {
+      var uid = new Date().getTime()
+      var visitorPk;
+      $http({
+        method: 'POST',
+        url: '/api/ERP/visitor/',
+        data: {
+          uid: uid
+        }
+      }).
+      then(function(response) {
+        visitorPk = response.data.pk;
+        createActivity()
+        $rootScope.setCookie("visitorDetails", JSON.stringify({
+          uid: response.data.uid,
+          name: "",
+          email: "",
+          visitorPk: response.data.pk
+        }), 365);
+      })
+
+    }
+
+    function createActivity() {
+      if ($rootScope.newTime) {
+        $rootScope.timeSpentInSec = (new Date().getTime() - $rootScope.newTime) / 1000;
+        console.log(from.name, $rootScope.timeSpentInSec, uid);
+        toSend = {
+          visitor: visitorPk,
+          page: from.name,
+          timeDuration: $rootScope.timeSpentInSec
+        }
+        console.log(toSend);
+        $http({
+          method: 'POST',
+          url: '/api/ERP/activity/',
+          data: toSend
+        }).
+        then(function(response) {
+          console.log(response.data);
+        })
+
+        $rootScope.newTime = new Date().getTime();
+      } else {
+        $rootScope.newTime = new Date().getTime();
+      }
+    }
+
+
+
+  });
 }]);
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
@@ -41,7 +103,7 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('blogDetails', {
-      url: "/blogs/:pk",
+      url: "/blogs/:name",
       templateUrl: '/static/ngTemplates/app.homepage.blogDetails.html',
       controller: 'controller.blogDetails'
     })
@@ -111,15 +173,13 @@ app.config(function($stateProvider) {
     })
 
 
-
-
 });
 
 app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
   console.log($stateParams);
 
-  $scope.blogPk = $stateParams.pk
+  $scope.blogPk = $stateParams.name.split('&')[1]
 
   $http.get('/api/PIM/blog/' + $scope.blogPk + '/').
   then(function(response) {
@@ -140,6 +200,12 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
   $scope.fetchRecentPosts()
 
 
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
+  }
+
 });
 
 
@@ -150,17 +216,14 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
   $scope.emailAddress = '';
 
   $scope.fetchBlogs = function() {
+    $scope.blogs = [];
     $http.get('/api/PIM/blog/?limit=14&offset=' + $scope.offset).
     then(function(response) {
       $scope.blogs = response.data.results;
-
-      console.log($scope.blogs);
-
       $scope.firstSection = $scope.blogs.slice(0, 4)
       $scope.second_sec1 = $scope.blogs.slice(4, 7)
       $scope.second_sec2 = $scope.blogs.slice(7, 10)
       $scope.thirdSection = $scope.blogs.slice(10, 14)
-
     })
   }
 
@@ -175,9 +238,9 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
   $scope.fetchRecentPosts()
   $scope.fetchBlogs()
 
-  $scope.openBlog = function(pk) {
+  $scope.openBlog = function(name, pk) {
     $state.go('blogDetails', {
-      pk: pk
+      name: name + '&' + pk
     })
   }
 
@@ -206,6 +269,14 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
 
 app.controller('controller.pricing', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $aside) {
 
+
+  $http({
+    method: 'GET',
+    url: erpUrl + '/api/marketing/leads/'
+  }).then(function(response) {
+    console.log(response.data);
+  })
+
   $scope.contactSales = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.homepage.contactSale.modal.html',
@@ -222,36 +293,38 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
             mobileNumber: '',
             requirements: '',
             jobLevel: '',
-            comapny: '',
+            comapany: '',
             companyCategory: '',
             companyExpertise: '',
             country: ''
           }
 
-          $scope.companyCategory = ['Automative', 'Banking', 'Biotechnology', 'Construction', 'Chemicals', 'Consulting', 'Education', 'Electroncics', 'Entertainment', 'Finance', 'Food & Bevarage', 'Government', 'Healthcare', 'IT', 'Insurance', 'Machinery', 'Manufacturing', 'Pharmaceuticals', 'Retail', 'Public Sector', 'Telecommunications', 'Transport', 'Other']
-          $scope.jobLevel = ['Individual Contributor', 'Manager', 'Director', 'Vice President', 'Executive', 'Other'];
-          $scope.companyExpertise = ['Administrative', 'Analyst/Consultancy/Advisor', 'Account & Financing', 'Product', 'HR', 'Marketing', 'IT/Developer/Engineer', 'Legal', 'Purchasing', 'Sales', 'Other']
-          $scope.country = ['India', 'Other']
-
+          $scope.companyCategory = ['Please Select', 'Automative', 'Banking', 'Biotechnology', 'Construction', 'Chemicals', 'Consulting', 'Education', 'Electroncics', 'Entertainment', 'Finance', 'Food & Bevarage', 'Government', 'Healthcare', 'IT', 'Insurance', 'Machinery', 'Manufacturing', 'Pharmaceuticals', 'Retail', 'Public Sector', 'Telecommunications', 'Transport', 'Other']
+          $scope.jobLevel = ['Please Select', 'Individual Contributor', 'Manager', 'Director', 'Vice President', 'Executive', 'Other'];
+          $scope.companyExpertise = ['Please Select', 'Administrative', 'Analyst/Consultancy/Advisor', 'Account & Financing', 'Product', 'HR', 'Marketing', 'IT/Developer/Engineer', 'Legal', 'Purchasing', 'Sales', 'Other']
+          $scope.country = ['Please Select', 'India', 'Other']
 
         }
         $scope.refresh()
 
         $scope.connect = function() {
-          if ($scope.form.firstName == '' || $scope.form.emailId == '' || $scope.form.comapny == '' || $scope.form.companyCategory == '' || $scope.form.companyExpertise == '' || $scope.form.country == '') {
+          if ($scope.form.firstName == '' || $scope.form.emailId == '' || $scope.form.requirements == '' || $scope.form.comapny == '') {
             return;
           }
-          var toSend = {
-            name: $scope.form.firstName + $scope.form.lastName,
-            emailId: $scope.form.emailId,
-            requirments: $scope.form.requirments,
-            role: $scope.form.role
-          }
+          var toSend = { ...$scope.form
+          };
+          toSend.name = $scope.form.firstName + ' ' + $scope.form.lastName;
+          delete toSend.firstName;
+          delete toSend.lastName;
+
+          console.log(toSend);
+
+
           $http({
             method: 'POST',
             url: erpUrl + '/api/marketing/leads/',
             data: toSend
-          }).then(function(data) {
+          }).then(function(response) {
             console.log(response.data);
             $scope.refresh();
             $scope.thankYou = true;
@@ -281,28 +354,85 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
       templateUrl: '/static/ngTemplates/app.homepage.generateApiKey.modal.html',
       size: 'md',
       backdrop: true,
-      controller: function($scope, Flash, $uibModalInstance) {
-        $scope.thankYou = false;
+      controller: function($scope, Flash, $uibModalInstance, $timeout) {
+
+        $timeout(function() {
+          document.getElementById('otp').classList.add("till");
+        }, 100);
+
+        $scope.otpSent = false;
+        $scope.invalidEmail = false;
         $scope.refresh = function() {
           $scope.form = {
-            email: ''
+            email: '',
+            otp: '',
+            apiKey: ''
           }
+          $scope.apiKey = ''
         }
 
         $scope.refresh()
+        $scope.$watch('form.email', function(newValue, oldValue) {
+          if ($scope.invalidEmail) {
+            $scope.invalidEmail = false;
+          }
+        })
 
         $scope.sendOtp = function() {
           if ($scope.form.email == '') {
             return;
           }
-          $scope.thankYou = true;
+          if ($scope.form.email.includes('gmail') || $scope.form.email.includes('outlook') || $scope.form.email.includes('yahoo')) {
+            $scope.invalidEmail = true;
+            return;
+          }
+          $http({
+            method: 'POST',
+            url: erpUrl +'/api/ERP/generateApiKey/',
+            data: {
+              email: $scope.form.email
+            }
+          }).then(function(response) {
+            $scope.otpSent = true;
+          })
+        }
+        $scope.correctOtp = true;
+        $scope.submitOtp = function() {
+          if ($scope.form.otp.length < 4 || $scope.form.otp.length > 4) {
+            $scope.correctOtp = false;
+            return
+          }
+
+          $scope.correctOtp = true;
+          $scope.apiKey = 'SDFSDFSsdfSDfsdfsdWERwerQQ!@#123123sgsgsGSDFFFFFFf'
+          document.getElementById('otp').classList.remove("till");
+          document.getElementById('confirm').classList.add("till");
+
           // $http({
           //   method:'POST',
-          //   url:'',
-          //   data:{}
-          // }).then(function (data) {
-          //   console.log(response.data);
+          //   url:'/api/ERP/generateApiKey/',
+          //   data:{email:$scope.form.email, otp: ''}
+          // }).then(function (response) {
+          //   $scope.correctOtp = true;
+          //   $scope.apiKey = 'SDFSDFSsdfSDfsdfsdWERwerQQ!@#123123sgsgsGSDFFFFFFf'
+          //   document.getElementById('otp').classList.remove("till");
+          //   document.getElementById('confirm').classList.add("till");
           // })
+
+        }
+        $scope.copied = false;
+        $scope.copyAPI = function(id) {
+          var from = document.getElementById(id);
+          var range = document.createRange();
+          window.getSelection().removeAllRanges();
+          range.selectNode(from);
+          window.getSelection().addRange(range);
+          document.execCommand('copy');
+          window.getSelection().removeAllRanges();
+          $scope.copied = true;
+          $timeout(function () {
+            $scope.copied = false;
+          }, 1000);
         }
 
         $scope.closeModal = function() {
@@ -316,7 +446,7 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
 
 });
 
-app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope, $sce) {
   $scope.properties = {
     // autoHeight:true,
     // animateIn: 'fadeIn',
@@ -329,43 +459,57 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
   };
 
 
-  $scope.articles = [{
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    {
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    {
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    {
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    {
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    // {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
-  ]
+  // $scope.articles = [{
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  //   {
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  //   {
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  //   {
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  //   {
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  // ]
+
+  $scope.fetchBlogs = function() {
+    $http.get('/api/PIM/blog/?limit=6').
+    then(function(response) {
+      $scope.articles = response.data.results;
+      $scope.articles[0].header = $sce.trustAsHtml($scope.articles[0].header);
+    })
+  }
+  $scope.fetchBlogs();
+
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
+  }
 
 
   $scope.friends = [{
@@ -442,7 +586,32 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
 })
 
 
-app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope) {
+
+
+  $rootScope.getCookie = function(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+
+  $rootScope.setCookie = function(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
 
   $scope.device = {
     smallDevice: false
@@ -493,6 +662,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
 
 
   $scope.toggleNavbar = false;
+
 
   $scope.langOptions = [{
       flag: '/static/images/flags/USA-1.svg',
@@ -588,15 +758,20 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
 
 
         $scope.scheduleMeeting = function() {
-          // if($scope.form.dated == null || $scope.form.dated == undefined){
-          //   Flash.create("warning","PLease Select Date")
-          //   return;
-          // }
-          // if($scope.form.emailId == '' || $scope.form.emailId == undefined){
-          //   console.log("dddffffffffffff");
-          //   Flash.create('danger', 'Please fill Email Id')
-          //   return;
-          // }
+          if ($scope.form.emailId == '' || $scope.form.name == '') {
+            return;
+          }
+
+          $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+          if ($scope.visitorDetails != "") {
+            $rootScope.setCookie("visitorDetails", JSON.stringify({
+              uid: JSON.parse($scope.visitorDetails).uid,
+              name: $scope.form.name,
+              email: $scope.form.emailId,
+              visitorPk: JSON.parse($scope.visitorDetails).visitorPk,
+            }), 365);
+          }
+
 
           var dataToSend = {
             dated: $scope.form.dated.toJSON().split('T')[0],
@@ -604,12 +779,14 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
             emailId: $scope.form.emailId,
             name: $scope.form.name,
           }
+
           $http({
             method: 'POST',
             url: erpUrl + '/api/marketing/schedule/',
             data: dataToSend
           }).
           then(function(response) {
+
             Flash.create('success', 'Saved');
             $scope.calendar = false
             $scope.thankYou = true
@@ -623,6 +800,20 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
             then(function(response) {
               $scope.refresh()
             });
+
+            $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+            $http({
+              method: 'PATCH',
+              url: '/api/ERP/visitor/' + JSON.parse($scope.visitorDetails).visitorPk + '/',
+              data: {
+                demoRequested: true,
+                email: JSON.parse($scope.visitorDetails).email,
+                name: JSON.parse($scope.visitorDetails).name
+              }
+            }).then(function(response) {
+              console.log(response.data);
+            })
+
           });
 
         }
@@ -663,6 +854,67 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   console.log('here');
   $scope.show = [false, false, false, false]
   $scope.keepshow = false;
+  $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+  if ($scope.visitorDetails != "") {
+    if (JSON.parse($scope.visitorDetails).email != '' && JSON.parse($scope.visitorDetails).email != undefined) {
+      $scope.subscribeForm = {
+        email: JSON.parse($scope.visitorDetails).email
+      }
+    }
+  } else {
+    $scope.subscribeForm = {
+      email: ''
+    }
+  }
+
+
+  $scope.blogSubscribed = false;
+
+
+  $scope.subscribeToBlogs = function() {
+
+    if ($scope.subscribeForm.email == '') {
+      return;
+    }
+
+    $http({
+      method: 'POST',
+      url: erpUrl + '/api/marketing/conatacts/',
+      data: {
+        email: $scope.subscribeForm.email
+      }
+    }).then(function(response) {
+      Flash.create('success', 'Subscribed');
+    })
+
+
+
+    if ($scope.visitorDetails != "") {
+      $rootScope.setCookie("visitorDetails", JSON.stringify({
+        uid: JSON.parse($scope.visitorDetails).uid,
+        name: JSON.parse($scope.visitorDetails).name,
+        email: $scope.subscribeForm.email,
+        visitorPk: JSON.parse($scope.visitorDetails).visitorPk,
+      }), 365);
+    }
+
+    $http({
+      method: 'PATCH',
+      url: '/api/ERP/visitor/' + JSON.parse($scope.visitorDetails).visitorPk + '/',
+      data: {
+        blogsSubscribed: true,
+        email: $scope.subscribeForm.email
+      }
+    }).then(function(response) {
+      console.log(response.data);
+      $scope.subscribeForm = {
+        email: ''
+      }
+      $scope.blogSubscribed = true;
+      Flash.create('success', 'Subscribed');
+    })
+
+  }
 
 });
 
