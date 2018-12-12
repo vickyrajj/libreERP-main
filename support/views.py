@@ -104,6 +104,13 @@ class GetMyUser(APIView):
                 print dic
                 toSend.append(dic)
             return Response(toSend, status=status.HTTP_200_OK)
+        if 'getDetail' in request.GET:
+            # uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
+            toSend = []
+            currentUser=User.objects.filter(pk=request.GET['pk'])
+            print currentUser
+            toSend.append(currentUser.values())
+            return Response(toSend, status=status.HTTP_200_OK)
         if 'getNewUser' in request.GET:
             print 'getNewUser'
             time_threshold = datetime.datetime.now() - timedelta(hours=4)
@@ -183,8 +190,8 @@ class ReviewFilterCalAPIView(APIView):
 
     def get(self, request, format=None):
         print '****** entered', request.GET
-        offset=int(request.GET['offset'])
-        limit= offset+int(request.GET['limit'])
+        # offset=int(request.GET['offset'])
+        # limit= offset+int(request.GET['limit'])
         toSend = []
         res = []
         sobj = SupportChat.objects.all()
@@ -350,7 +357,7 @@ class ReviewFilterCalAPIView(APIView):
             return response
             # return ExcelResponse(res)
 
-        return Response(toSend[offset : limit], status=status.HTTP_200_OK)
+        return Response(toSend, status=status.HTTP_200_OK)
 
 
 def encrypt(raw, password):
@@ -810,6 +817,7 @@ class HeartbeatApi(APIView):
             return Response({}, status = status.HTTP_200_OK)
         elif 'getDetailData' in request.GET:
             u = User.objects.get(pk = request.GET['pk'])
+            # sobj = sobj.filter(user = self.request.user)
             toSend=[]
             heartbtObj = Heartbeat.objects.all()
             if 'date' in request.GET:

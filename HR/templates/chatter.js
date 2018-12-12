@@ -1530,6 +1530,10 @@ function activeAudioCall(){
                 color: #ff720b;\
                 transition: all .25s;\
               }\
+              .star1 {\
+                content: '\\2605';\
+                color: #ff720b;\
+              }\
               input.star-5:checked ~ label.star:before {\
                 color: #ff720b;\
                 text-shadow: 0 0 20px #952;\
@@ -1968,9 +1972,9 @@ function activeAudioCall(){
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
-                        '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:95%; padding:5px;border:none; margin-bottom:10px;">'+
+                        '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:100%; padding:5px;border:none; margin-bottom:10px;">'+
                          '<textarea id="feedbackText" style="width:100%;outline:none;padding:5px; resize:none;border:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
-                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:#eeeee ; color:#000; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:'+windowColor+' ; color:'+fontAndIconColor+'; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Cancel'+
                          '</button>'+
                          '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
@@ -2025,8 +2029,25 @@ function activeAudioCall(){
     })
 
 
+    // submitStars.addEventListener('click',function(){
+    //
+    // })
+var myformrating;
+
     submitStars.addEventListener("click", function() {
       console.log('somthing hereeeeee' , this);
+
+      // var stars=document.getElementById('stars')
+      // console.log(stars);
+      // stars.innerHTML=''
+      // console.log(stars);
+      // for (var i = 0; i < myformrating; i++) {
+      //   stars.innerHTML+='<i class="star1" for=""></i>'
+      // }
+      // document.getElementById('emailId').style.display='none'
+      // document.getElementById('feedbackText').style.display='none'
+      submitStars.style.display = "none";
+      offlineMessage.style.display="none"
       // id="star-5"
       // console.log(document.getElementById('feedbackText').value);
       var feedbackText = document.getElementById('feedbackText')
@@ -2066,7 +2087,7 @@ function activeAudioCall(){
       if (star5.checked) {
         ratingForm.customerRating = 5
       }
-
+      myformrating=ratingForm.customerRating
     console.log(ratingForm);
     ratingFormObject = ratingForm
     ratingForm = JSON.stringify(ratingForm)

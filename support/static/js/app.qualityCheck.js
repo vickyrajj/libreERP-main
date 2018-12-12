@@ -380,7 +380,7 @@ $scope.archiveTab = false;
 
   $scope.getArchData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?status=archived&limit=15&offset='+$scope.offsett+'&'
+    var url = '/api/support/reviewHomeCal/'
     // var url = '/api/support/reviewHomeCal/?limit=10&offset='+$scope.offsett+'&'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
@@ -414,7 +414,7 @@ $scope.offsett=0;
 $scope.Archoffsett=0;
   $scope.getData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.Archoffsett+'&'
+    var url = '/api/support/reviewHomeCal/'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }

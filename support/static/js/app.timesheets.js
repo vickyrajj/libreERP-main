@@ -1,50 +1,51 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.timesheet', {
-    url: "/timesheet",
+  $stateProvider.state('businessManagement.timesheets', {
+    url: "/timesheets",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.timesheet.html',
-        controller: 'businessManagement.timesheet',
+        templateUrl: '/static/ngTemplates/app.timesheets.html',
+        controller: 'businessManagement.timesheets',
       }
     }
   })
 });
-app.controller("businessManagement.timesheet.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
-
-console.log($scope.me);
-
-$scope.form1 = {date:new Date()}
-
-$scope.fetchhh=function(date){
-  var url = '/api/support/heartbeat/?pk='+$scope.tab.data+'&getDetailData'
-
-  if (date!=null&&typeof date == 'object') {
-    url += '&date=' + date.toJSON().split('T')[0]
-  }
-  $http({
-  method: 'GET',
-  url: url,
-  }).
-  then(function(response) {
-
-  console.log(response.data,'dddddddddddd',typeof response.data);
-  $scope.fullInfo =response.data
-  });
-}
-$scope.fetchhh($scope.form1.date);
-$scope.filterCall=function(){
-  $scope.fetchhh($scope.form1.date);
-}
-
-
-})
-app.controller("businessManagement.timesheet", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
+// app.controller("businessManagement.timesheets.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
+//
+// console.log($scope.me);
+//
+// $scope.form1 = {date:new Date()}
+//
+// $scope.fetchhh=function(date){
+//   var url = '/api/support/heartbeat/?pk='+$scope.tab.data+'&getDetailData'
+//
+//   if (date!=null&&typeof date == 'object') {
+//     url += '&date=' + date.toJSON().split('T')[0]
+//   }
+//   $http({
+//   method: 'GET',
+//   url: url,
+//   }).
+//   then(function(response) {
+//
+//   console.log(response.data,'dddddddddddd',typeof response.data);
+//   $scope.fullInfo =response.data
+//   });
+// }
+// $scope.fetchhh($scope.form1.date);
+// $scope.filterCall=function(){
+//   $scope.fetchhh($scope.form1.date);
+// }
+//
+//
+// })
+app.controller("businessManagement.timesheets", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
 
   $scope.data = {
     tableData: []
   };
 
+console.log($users.get('mySelf'));
   $scope.form = {date:new Date(),user:'',email:'',client:''}
   $scope.reviewData = []
   // $scope.archivedData=[]
@@ -59,8 +60,9 @@ $scope.archiveTab = false;
 
   $scope.getData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/heartbeat/?'
-    url += 'getTimeSheetData'
+    $scope.me=$users.get('mySelf')
+    console.log($scope.me.pk);
+    var url = '/api/support/heartbeat/?pk='+$scope.me.pk+'&getDetailData'
 
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
