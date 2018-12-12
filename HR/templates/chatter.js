@@ -638,12 +638,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
          }
 
-      agentName.innerHTML = args[2];
+      // agentName.innerHTML = args[2];
+      agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+      document.getElementById('logo_ji').src=args[2].profile.displayPicture
+      // dpSupport= args[2].profile.displayPicture
 
       }else if (args[0]=="MF") {
         console.log('MF');
         // notification.play();
-        agentName.innerHTML = args[2]
+        agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+        document.getElementById('logo_ji').src=args[2].profile.displayPicture
 
         if (!chatOpen) {
           unreadMsgCount+=1;
@@ -676,7 +680,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       }else if (args[0]=='ML') {
         console.log('ML');
-        agentName.innerHTML = args[2]
+        // agentName.innerHTML = args[2]
+        agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+        document.getElementById('logo_ji').src=args[2].profile.displayPicture
         if (!chatOpen) {
           unreadMsgCount+=1;
           // unreadMsg.style.display = "";
@@ -797,38 +803,15 @@ function createChatDiv() {
 
   mainDiv.innerHTML = '<div id="chatBox" class="ChatBoxDiv">'+
           '<div id="chatBox_header" class="chatBox_header flex_container">'+
-            '<img class="logo_image" src="'+dpSupport+'" alt="">'+
+            '<img class="logo_image" id="logo_ji" src="'+dpSupport+'" alt="">'+
             '<div class="chatBox_info">'+
               '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
-            // '<svg viewBox="0 0 24 24" class="exitBtn" >'+
-            //   '<path id="audioBtn" style="fill:'+fontAndIconColor+';display:none;" d="M20 22.621l-3.521-6.795c-.008.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.083-1.026-3.493-6.817-2.106 1.039c-7.202 3.755 4.233 25.982 11.6 22.615.121-.055 2.102-1.029 2.11-1.033z"/>'+
-            // '</svg>'+
-            // '<svg viewBox="0 0 24 24" class="exitBtn">'+
-            //   '<path style="fill:'+fontAndIconColor+';display:none" id="videoBtn" d="M13.5 8c.276 0 .5.224.5.5v7c0 .276-.224.5-.5.5h-11c-.276 0-.5-.224-.5-.5v-7c0-.276.224-.5.5-.5h11zm2.5 0c0-1.104-.896-2-2-2h-12c-1.104 0-2 .896-2 2v8c0 1.104.896 2 2 2h12c1.104 0 2-.896 2-2v-8zm6 1.854v4.293l-2-1.408v-1.478l2-1.407zm2-3.854l-6 4.223v3.554l6 4.223v-12z"/>'+
-            // '</svg>'+
-            // '<svg viewBox="0 0 24 24" class="closeIcon">'+
-            //   '<path style="fill:'+fontAndIconColor+'" id="closeIcon" class="closeIcon" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>'+
-            // '</svg>'+
-            // '<svg viewBox="0 0 24 24" class="exitBtn">'+
-            //   '<path style="fill:'+fontAndIconColor+';" id="exitBtn" class="exitBtn" d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>'+
-            // '</svg>'+
-            // '<i id="exitBtn" class="SyrowFont font-SyrowPhone-off"></i>'+
-            // '<svg  viewBox="0 0 24 24" class="exitBtn">'+
-            //   '<path d="M0 2v20h14v-2h-12v-16h12v-2h-14zm18 7.408l2.963 2.592-2.963 2.592v-1.592h-8v-2h8v-1.592zm-2-4.408v4h-8v6h8v4l8-7-8-7z"/>'+
-            // '</svg>'+
             '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
             '<i class="exitBtn SyrowFont font-SyrowVideoCall" style="display:none" id="videoBtn"></i>'+
             '<i class="closeIcon SyrowFont font-SyrowX" id="closeIcon"></i>'+
             '<i class="exitBtn SyrowFont font-SyrowLog-out" id="exitBtn"></i>'+
-            // '<i id="exitBtn" class="SyrowFont font-SyrowBunny" aria-hidden="true"></i>'+
-            // '<svg viewBox="0 0 24 24" class="closeIcon">'+
-            //   '<path style="fill:'+fontAndIconColor+'" id="closeIcon" class="closeIcon" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>'+
-            // '</svg>'+
-            // '<svg viewBox="0 0 24 24" class="exitBtn">'+
-            //   '<path style="fill:'+fontAndIconColor+';" id="exitBtn" class="exitBtn" d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>'+
-            // '</svg>'+
           '</div>'+
           '<div id="audioSection" class="audio_section">'+
           '</div>'+
@@ -999,20 +982,29 @@ function createChatDiv() {
       }
   }
 
+
   chatBox.style.display = "none";
 
   inputText.addEventListener('keydown',function(e){
-    if (e.keyCode == 13 && !e.shiftKey)
-        {
-            // prevent default behavior
-            e.preventDefault();
-            console.log('both');
-            sendMessage(inputText.value);
-        }
-        if (e.keyCode == 13&&e.shiftKey)
-        {
-          console.log('here');
-        }
+
+    if(window.innerWidth <= 600) {
+      console.log('mobile');
+     return
+   } else {
+     console.log('desktop');
+     if (e.keyCode == 13 && !e.shiftKey)
+         {
+             // prevent default behavior
+             e.preventDefault();
+             console.log('both');
+             sendMessage(inputText.value);
+         }
+         if (e.keyCode == 13&&e.shiftKey)
+         {
+           console.log('here');
+         }
+   }
+
   })
 
   var chatCircleText =   document.getElementById('chatCircleText')

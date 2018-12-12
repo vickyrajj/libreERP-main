@@ -794,7 +794,7 @@ app.directive('chatBox', function() {
 
 
             $scope.status = 'MF';
-            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me.first_name+' '+$scope.me.last_name, new Date()], {}, {
+            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -860,7 +860,7 @@ app.directive('chatBox', function() {
 
             console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
 
-            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me.first_name+' '+$scope.me.last_name, new Date()], {}, {
+            connection.session.publish('service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -1697,7 +1697,7 @@ app.directive('chatWindow', function($users) {
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
             console.log('sending.......', response.data.message, $scope.friend.username);
-            connection.session.publish('service.chat.' + $scope.friend.username, [$scope.status, response.data.message, $scope.me.first_name+' '+$scope.me.last_name, response.data.pk], {}, {
+            connection.session.publish('service.chat.' + $scope.friend.username, [$scope.status, response.data.message, $scope.me, response.data.pk], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -1750,7 +1750,7 @@ app.directive('chatWindow', function($users) {
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
             console.log(response.data.attachment);
-            connection.session.publish('service.chat.' + $scope.friend.username, [$scope.status, response.data.attachment, $scope.me.first_name+' '+$scope.me.last_name, response.data.pk], {}, {
+            connection.session.publish('service.chat.' + $scope.friend.username, [$scope.status, response.data.attachment, $scope.me, response.data.pk], {}, {
               acknowledge: true
             }).
             then(function(publication) {});
