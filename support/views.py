@@ -1030,5 +1030,9 @@ class CalculateAPIView(APIView):
             clearingCharges2Per = 0
         project.clearingCharges2 = clearingCharges2Per
         project.save()
-        print   round(packingPer, 2),round(insurancePer, 2),round(freightPer, 2),round(assessableValuePer, 2),round(gst1Per, 2),round(gst2Per, 2),clearingCharges1Per,clearingCharges2Per,'nnnnnnnn'
-        return Response(status = status.HTTP_200_OK)
+
+        bomData = BoM.objects.filter(project__id=request.data['projectPK'])
+        print bomData,'aaaaaaaaaaa'
+
+        percentage = {'packingPer':packingPer,'insurancePer':insurancePer,'freightPer':freightPer,'assessableValuePer':assessableValuePer,'gst1Per':gst1Per,'gst2Per':gst2Per,'clearingCharges1Per':clearingCharges1Per,'clearingCharges2Per':clearingCharges2Per}
+        return Response(percentage,status = status.HTTP_200_OK)
