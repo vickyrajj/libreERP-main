@@ -298,6 +298,7 @@ var webRtcAddress = '{{webrtcAddress}}';
 
 
 var custID = {{pk}};
+var CustName='{{name}}'
 console.log('customer id....', custID);
 // var borderColor = '#ACA626';
 // var custName = 'CIOC'

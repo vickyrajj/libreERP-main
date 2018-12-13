@@ -23,7 +23,7 @@ app.controller("businessManagement.activeAdvisors", function($scope, $state, $us
     $scope.allAgents = response.data.allAgents
     setTimeout(function () {
       refetchAll()
-    }, 1000);
+    }, 2000);
   });
 
 

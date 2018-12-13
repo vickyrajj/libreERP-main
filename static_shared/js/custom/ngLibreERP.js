@@ -68,8 +68,7 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       return "";
   }
 
-
-setTimeout(function () {
+function checkingHeartbeat(){
   $http({
     method: 'GET',
     url: '/api/support/heartbeat/?pk=' + $scope.me.pk +'&timesheet=true'
@@ -77,8 +76,13 @@ setTimeout(function () {
   then(function(response) {
     console.log('here');
   }, function(response) {});
+}
 
-}, 5000);
+checkingHeartbeat()
+
+setInterval(function () {
+  checkingHeartbeat()
+}, 20000);
 
 setTimeout(function () {
   $http({

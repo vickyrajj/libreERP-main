@@ -78,6 +78,10 @@ class GetMyUser(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
         print '****** entered', request.GET
+        if 'getCompanyDetails' in request.GET:
+            objjj=list(CustomerProfile.objects.filter(pk=request.GET['pk']).values_list('name',flat=True))
+
+            return Response(objjj, status=status.HTTP_200_OK)
         if 'allAgents' in request.GET:
             print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
             allAgents = list(User.objects.exclude(pk=self.request.user.pk).values_list('pk',flat=True))
@@ -485,6 +489,7 @@ class ChatThreadViewSet(viewsets.ModelViewSet):
             print 'tttttttttttttttt',threadObj
             return threadObj
         return ChatThread.objects.all()
+
 
 class DocumentationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)

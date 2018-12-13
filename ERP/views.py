@@ -163,6 +163,9 @@ class serviceViewSet(viewsets.ModelViewSet):
     # def get_queryset(self):
     #     u = self.request.user
     #     return service.objects.all()
+    
+
+
 
 class registerDeviceApi(APIView):
     renderer_classes = (JSONRenderer,)
