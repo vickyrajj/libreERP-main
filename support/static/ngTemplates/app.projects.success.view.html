@@ -27,6 +27,85 @@
                 </div>
               </div>
             </div>
+            <div class="row" style="padding-top:10px">
+              <div class="col-md-4 text-center">
+                <label> Invoice Value: </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control text-center" ng-model="form.invoiceValue"  >
+              </div>
+            </div>
+            <div class="row" style="padding-top:10px">
+              <div class="col-md-4 text-center">
+                <label> Packing: </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control text-center" ng-model="form.packing"  >
+              </div>
+            </div>
+            <div class="row" style="padding-top:10px">
+              <div class="col-md-4 text-center">
+                <label> Insurance: </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control text-center" ng-model="form.insurance"  >
+              </div>
+            </div>
+            <div class="row" style="padding-top:10px">
+              <div class="col-md-4 text-center">
+                <label> Freight: </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control text-center" ng-model="form.freight"  >
+              </div>
+            </div>
+            <div class="row" style="padding-top:10px">
+              <div class="col-md-4 text-center">
+                <label> Assessable Value: </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control text-center" ng-model="form.assessableValue"  >
+              </div>
+            </div>
+            <div class="row" style="padding-top:10px">
+              <div class="col-md-4 text-center">
+                <label> GST: </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control text-center" ng-model="form.gst1"  >
+              </div>
+            </div>
+            <div class="row" style="padding-top:10px">
+              <div class="col-md-4 text-center">
+                <label> GST: </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control text-center" ng-model="form.gst2"  >
+              </div>
+            </div>
+            <div class="row" style="padding-top:10px">
+              <div class="col-md-4 text-center">
+                <label> Clearing Charges 1: </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control text-center" ng-model="form.clearingCharges1"  >
+              </div>
+            </div>
+            <div class="row" style="padding-top:10px">
+              <div class="col-md-4 text-center">
+                <label> Clearing Charges 2: </label>
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control text-center" ng-model="form.clearingCharges2"  >
+              </div>
+            </div>
+
+            <div class="row" style="padding-top:10px">
+
+              <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-primary btn-sm" ng-click="saveInfo()"> Save </button>
+              </div>
+            </div>
 
           </div>
         </div>
@@ -76,6 +155,7 @@
             <th>Product</th>
             <th>Part No</th>
             <th>Quantity</th>
+            <th>Customer Price</th>
             <th>Price</th>
             <th>Quantity Received</th>
             <th>Total</th>
@@ -85,11 +165,13 @@
               <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
               <td>{{v.products.part_no}}</td>
               <td>{{v.quantity1}}</td>
+              <td>{{v.customer_price}}</td>
               <td >{{v.price}}</td>
               <td ><input type="number"  step=1 class="form-control-pos" ng-init="v.quantity2 = v.quantity1" ng-model="v.quantity2"></td>
               <td >{{(v.price*v.quantity2).toFixed(2)}}</td>
             </tr>
             <tr>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>

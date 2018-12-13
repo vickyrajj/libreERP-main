@@ -24,6 +24,5 @@ urlpatterns = [
     url(r'materialIssued/$' , MaterialIssuedNoteAPIView.as_view() ),
     url(r'grn/$' , GrnAPIView.as_view() ),
     url(r'sendEmail/$' , EmailApi.as_view() ),
-
-
+    url(r'calculate/$' , CalculateAPIView.as_view() ),
 ]
