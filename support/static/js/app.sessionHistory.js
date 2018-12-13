@@ -377,6 +377,8 @@ function archived(){
 
 $scope.browseTab = true;
 $scope.archiveTab = false;
+$scope.offsett=0;
+$scope.Archoffsett=0;
 
   $scope.getArchData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
