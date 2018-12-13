@@ -105,11 +105,16 @@
             </table>
             <div class="row">
               <div class="col-md-12">
+                <span><a class="btn btn-primary pull-right" style="cursor:pointer;margin:10px;" target="_blank" href="/api/support/quotation/?project={{form.pk}}">Quotation<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+                <span ><a class="btn btn-primary pull-right" style="cursor:pointer;margin:10px;" target="_blank" href="/api/support/slip/?project={{form.pk}}">PO<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
                 <button type="button" class="btn btn-danger pull-right"  mwl-confirm title="Reject" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="reject();"
                   confirm-button-type="default" cancel-button-type="default" style="margin:10px;">    Reject</button>
                 <button type="button" class="btn btn-success pull-right"   mwl-confirm title="Accept" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="accept();"
                   confirm-button-type="default" cancel-button-type="default" style="margin:10px;">  Approve</button>
-              </div>
+                </div>
+                <!-- <div class="col-md-2">
+
+                </div> -->
             </div>
           </div>
 </div>

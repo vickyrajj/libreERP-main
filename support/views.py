@@ -247,22 +247,22 @@ def purchaseOrder(response , project , purchaselist , request):
     data2 = []
     id=0
     for i in purchaselist:
-        if project.status == 'created':
-            id+=1
-            part_no = i.products.part_no
-            desc = i.products.description_1
-            price = i.products.price
-            qty = i.quantity1
-            amnt = price * qty
-            grandTotal +=amnt
-        else:
-            id+=1
-            part_no = i.products.part_no
-            desc = i.products.description_1
-            price = i.price
-            qty = i.quantity2
-            amnt = price * qty
-            grandTotal +=amnt
+        # if project.status == 'created':
+        id+=1
+        part_no = i.products.part_no
+        desc = i.products.description_1
+        price = i.products.price
+        qty = i.quantity1
+        amnt = price * qty
+        grandTotal +=amnt
+        # else:
+        #     id+=1
+        #     part_no = i.products.part_no
+        #     desc = i.products.description_1
+        #     price = i.price
+        #     qty = i.quantity2
+        #     amnt = price * qty
+        #     grandTotal +=amnt
 
         p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
         p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
@@ -853,7 +853,7 @@ class ProductInventoryAPIView(APIView):
         total = 0
         toReturn = []
         if request.GET['search']!='undefined':
-            productlist = Inventory.objects.filter(product__part_no__icontains=request.GET['search'],product__description_1__icontains=request.GET['search'])
+            productlist = Inventory.objects.filter( Q(product__part_no__icontains=request.GET['search']) | Q(product__description_1__icontains=request.GET['search']))
         else:
             productlist = Inventory.objects.all()
         productsList = list(productlist.values('product').distinct().values('product__pk','product__description_1','product__part_no','product__description_2','product__weight','product__price'))

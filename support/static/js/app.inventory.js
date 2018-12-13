@@ -1,19 +1,11 @@
 app.controller("businessManagement.inventory", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
   $scope.offset = 0
-  // $scope.see = function(){
-  //     $scope.text = $scope.searchText
-  //         console.log($scope.text,'jjjjjjjj');
-  //
-  // }
-  // // $scope.$watch('searchText', function(newValue, oldValue) {
-  // //   if (typeof newValue == 'object') {
-  // //   }else{
-  // //   }
-  // // },true)
+  $scope.text = {}
   $scope.fetchProdInventory = function(offset) {
+    console.log($scope.text.searchText,'hhhhhhh');
     $http({
       method: 'GET',
-      url: '/api/support/inventoryData/?limit=7&offset=' + offset + '&search=' + $scope.searchText
+      url: '/api/support/inventoryData/?limit=7&offset=' + offset + '&search=' + $scope.text.searchText
     }).
     then(function(response) {
       $scope.products = response.data.data

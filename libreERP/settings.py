@@ -36,7 +36,7 @@ ECOMMERCE_APP = {
     'offtime':[23, 9],
 }
 
-LOGIN_PAGE_IMAGE = '/static/images/i2iBack.jpg'
+LOGIN_PAGE_IMAGE = '/static/images/bruderer.jpg'
 
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
