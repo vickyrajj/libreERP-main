@@ -63,6 +63,11 @@ class ProjectsSerializer(serializers.ModelSerializer):
         return p
 
     def update (self, instance, validated_data):
+        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','customer_ref','machinemodel','approved1','approved1_user','approved1_date','revision','savedStatus','invoiceValue','packing','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
         if 'responsible' in self.context['request'].data:
             instance.responsible.clear()
             for i in self.context['request'].data['responsible']:
@@ -71,11 +76,6 @@ class ProjectsSerializer(serializers.ModelSerializer):
             instance.service = service.objects.get(pk=int(self.context['request'].data['service']))
         if 'date' in self.context['request'].data:
             instance.date = self.context['request'].data['date']
-        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','customer_ref','machinemodel','approved1','approved1_user','approved1_date','revision','savedStatus']:
-            try:
-                setattr(instance , key , validated_data[key])
-            except:
-                pass
         instance.save()
         return instance
 
