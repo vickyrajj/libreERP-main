@@ -2132,6 +2132,7 @@ var myformrating;
   startNewChatBtn.addEventListener("click" , function () {
     // or you can use variable feedbackFormSubmitted which is true only if feedbackForm is submitted
     messageBox.innerHTML = '';
+    isConfirmedToEnd=false;
     // messageBox.innerHTML = '';
     agentName.innerHTML = nameSupport
     // delete uid from cookies and create a new one
