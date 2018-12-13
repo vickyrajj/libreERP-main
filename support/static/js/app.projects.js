@@ -981,15 +981,15 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
 })
 app.controller("businessManagement.projects.success.view", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  $scope.form.invoiceValue = 0;
-  $scope.form.packing = 0;
-  $scope.form.insurance = 0;
-  $scope.form.freight = 0;
-  $scope.form.assessableValue = 0;
-  $scope.form.gst1 = 0;
-  $scope.form.gst2 = 0;
-  $scope.form.clearingCharges1 = 0;
-  $scope.form.clearingCharges2 = 0;
+  // $scope.form.invoiceValue = 0;
+  // $scope.form.packing = 0;
+  // $scope.form.insurance = 0;
+  // $scope.form.freight = 0;
+  // $scope.form.assessableValue = 0;
+  // $scope.form.gst1 = 0;
+  // $scope.form.gst2 = 0;
+  // $scope.form.clearingCharges1 = 0;
+  // $scope.form.clearingCharges2 = 0;
 
   if ($scope.tab == undefined) {
     $scope.resetForm();
@@ -1075,6 +1075,7 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     then(function(response) {
       Flash.create('success', 'Saved');
       console.log(response.data, 'aaaaaa');
+      $scope.fetchData()
     })
 
   }
