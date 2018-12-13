@@ -76,6 +76,9 @@ class Schedule(models.Model):
     slot = models.CharField(max_length = 15 , null= False)
     name  = models.CharField(max_length = 50 , null= False)
     emailId = models.EmailField(null= False)
+    organizer = models.ForeignKey(User , related_name="scheduleOrganizer",null=True)
+    participants = models.ManyToManyField(User , related_name="scheduleParticipants",blank = True)
+    status = models.CharField(max_length = 15 , null= True , default='Created')
 
 class Leads(models.Model):
     created = models.DateTimeField(auto_now_add = True)

@@ -57,7 +57,9 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.151', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.0.15','192.168.1.123','192.168.0.109']
+ALLOWED_HOSTS = ['192.168.1.151', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.0.15','192.168.1.123','192.168.0.109','192.168.0.110','192.168.0.112']
+
+TRUSTED_DOMAINS = ['http://192.168.0.112','http://127.0.0.1','http://localhost']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -106,11 +108,8 @@ INSTALLED_APPS = (
     'projects',
     'virtualWorkforce',
 	'finance',# billing , invoicing , finance etc
-	'tools',# general purpose tools like OCR, AI or big data related stuffs
 	'clientRelationships',# CRM like sales force
-	# 'LMS',# LMS
 	'workforceManagement',# canvas
-    # 'support',# canvas
 	'employees',# employees details
 	'payroll',# payroll
 	'performance',# performance
@@ -119,6 +118,9 @@ INSTALLED_APPS = (
 	'logistic',# logistics
 	'assets',# assets
 	'marketing',# Marketing Application
+    # 'tools',# general purpose tools like OCR, AI or big data related stuffs
+    # 'LMS',# LMS
+    # 'support',# canvas
 )
 
 
@@ -163,6 +165,8 @@ ACCOUNT_UNIQUE_EMAIL = False
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+
 
 CORS_ALLOW_HEADERS = (
     'x-requested-with',

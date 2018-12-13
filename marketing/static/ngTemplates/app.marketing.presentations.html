@@ -1,34 +1,3 @@
-<!-- <breadcrumb></breadcrumb>
-<div class="container-fluid">
-  <uib-tabset>
-    <uib-tab>
-      <uib-tab-heading>
-        New <i class="fa fa-plus"></i>
-      </uib-tab-heading>
-      <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.html'">
-      </div>
-    </uib-tab>
-    <uib-tab active="searchTabActive">
-        <uib-tab-heading>
-            Browse
-            <i class="fa fa-list-ul"></i>
-        </uib-tab-heading>
-        <div class="container-fluid">
-            <generic-Table data="data.tableData" config-Obj="{{Config}}" callback-Fn="tableAction"></generic-Table>
-        </div>
-    </uib-tab>
-
-    <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
-        <uib-tab-heading >
-            {{tab.title}}
-            <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
-        </uib-tab-heading>
-        <div ng-if="tab.app == 'leadsInfo'">
-            <div ng-include="'/static/ngTemplates/app.marketing.leads.info.html'"></div>
-        </div>
-    </uib-tab>
-  </uib-tabset>
-</div> -->
 
 <div class="" style="min-height:93vh;position:relative;">
 
@@ -42,11 +11,14 @@
           <button class="btn btn-default col-sm-3 col-xs-3" ng-click="gotoNext()"> <i class="glyphicon glyphicon-chevron-right"></i></button>
           <button class="btn btn-success col-sm-6 col-xs-6" ng-click="gotoToday()">Today</button>
         </div>
-        <div class="headerCalender col-md-5 col-sm-12 col-xs-12">
+        <div class="headerCalender col-md-4 col-sm-12 col-xs-12">
           <p>{{dateDisp | date:'dd MMM yyyy'}} </p>
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-          <div class="col-md-7 col-sm-6 col-xs-6">
+        <div class="col-md-5 col-sm-12 col-xs-12">
+          <div class="col-md-3 col-sm-4 col-xs-4 btn btn-primary" ng-click="createNewDemo()">
+            New Demo <i class="fa fa-plus"></i>
+          </div>
+          <div class="col-md-5 col-sm-4 col-xs-4">
             <div class="dropdown">
              <button class="btn btn-default btn-block dropdown-toggle" type="button" data-toggle="dropdown"> {{listOfMonths[dropMonth.val].disp}}
              <span class="caret" style="margin-left:30px;"></span></button>
@@ -55,7 +27,7 @@
              </ul>
             </div>
           </div>
-          <div class="col-md-5 col-sm-6 col-xs-6 pull-right">
+          <div class="col-md-4 col-sm-4 col-xs-4 pull-right">
             <div class="dropdown">
              <button class="btn btn-default btn-block dropdown-toggle" type="button" data-toggle="dropdown"> {{dropYear.val}}
              <span class="caret" style="margin-left:30px;"></span></button>
@@ -66,7 +38,7 @@
           </div>
         </div>
       </div>
-      <hr></hr>
+      <hr>
       <div class="row">
         <div class="weekHeader">
           <div class="weekDay text-muted">Sunday</div>
@@ -81,18 +53,14 @@
       <div class="week">
         <table width="100%" style="height:74vh;">
           <tr ng-repeat="w in range(0,5)">
-            <td class="day {{(dates[w*7 + d] == (dateDisp|date : 'dd')) && (dateFlags[w*7 + d]=='Cur') ? 'dayActive': ''}}"  ng-repeat="d in range(0,6) track by $index" ng-click="showDay(w*7 + d)">
+            <td class="day {{(dates[w*7 + d] == (dateDisp|date : 'dd')) && (dateFlags[w*7 + d]=='Cur') ? 'dayActive': ''}}"  ng-repeat="d in range(0,6) track by $index" ng-click="showSlots(scheduleData[dates[w*7 + d]],dateFlags[w*7 + d]);showDay(w*7 + d)" style="cursor:{{(dateFlags[w*7 + d]=='Cur') ? 'pointer': 'default'}}">
               <span style="top:1%;right:2%;position:absolute;" class="dayType{{dateFlags[w*7 + d]}} ">
                 {{dates[w*7 + d]}}
               </span>
-              <div class="dayItems " style="position:absolute;width:102%;left:-2px;">
-                <div ng-if="itemsGroup[w*7 + d].length != 0 && $index<2" ng-repeat="i in itemsGroup[w*7 + d] track by $index" ng-include="itemTemplates"
-                  style="height:23px;position:absolute;z-index:99;bottom:{{-2 + 23*$index}}px;width:99%;padding:2px;" class="{{i | rainbow}}" ng-click="itemClicked(i); $event.stopPropagation();">
-                </div>
-                <div ng-if="itemsGroup[w*7 + d].length>2" style="height:23px;position:absolute;z-index:999;bottom:{{-2 + 23*2}}px;width:99%;padding:2px;" class="card {{i | rainbow}}" ng-click="showDay(w*7 + d)">
-                  ... More
-                </div>
-              </div>
+              <span ng-if="dateFlags[w*7 + d]=='Cur'">
+                <!-- <span ng-if="scheduleData[dates[w*7 + d]].length==0" style="top:40%;right:35%;position:absolute;font-size:20px;color:#8f8f8f">No Demo</span> -->
+                <span ng-if="scheduleData[dates[w*7 + d]].length>0" style="top:40%;right:35%;position:absolute;font-size:20px;color:#2b6cdb">{{scheduleData[dates[w*7 + d]].length}} {{scheduleData[dates[w*7 + d]].length>1?'Demos':'Demo'}}</span>
+              </span>
             </td>
           </tr>
         </table>

@@ -159,6 +159,7 @@ app.directive('genericCalendar' , function(){
         step = step || 1;
         var input = [];
         for (var i = min; i <= max; i += step) input.push(i);
+        // console.log(input,'rangeeeeeeeeeeeeee');
         return input;
       };
 

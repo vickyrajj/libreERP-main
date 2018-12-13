@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.conf import settings as globalSettings
 from datetime import date,timedelta
 from dateutil.relativedelta import relativedelta
+from django.core.mail import send_mail , EmailMessage
 
 
 def campaigncontactsList(campId):
@@ -166,9 +167,39 @@ class CampaignLogsSerializer(serializers.ModelSerializer):
         return CampaignLogs.objects.filter(contact = obj.pk).values('pk' , 'created' , 'user' , 'contact', 'campaign', 'data' , 'typ' , 'followupDate')
 
 class SheduleSerializer(serializers.ModelSerializer):
+    organizer = userSearchSerializer(many=False,read_only=True)
+    participants = userSearchSerializer(many=True,read_only=True)
     class Meta:
         model = Schedule
-        fields = ('pk','created','dated','slot','name','emailId')
+        fields = ('pk','created','dated','slot','name','emailId','organizer','participants','status')
+    def update(self ,instance, validated_data):
+        for key in ['dated','slot','name','emailId','status']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        if 'organizer' in self.context['request'].data:
+            instance.organizer = User.objects.get(pk=int(self.context['request'].data['organizer']))
+            instance.save()
+        emailUserList = []
+        if 'participantsPksList' in self.context['request'].data:
+            instance.participants.clear()
+            for i in self.context['request'].data['participantsPksList']:
+                userObj = User.objects.get(pk = int(i))
+                emailUserList.append(userObj.email)
+                instance.participants.add(userObj)
+        try:
+            if instance.status == 'Assigned' and len(emailUserList) > 0:
+                print emailUserList,'sending emailllllllll'
+                email_subject = 'Invitation For Demo'
+                email_body = 'Hi , \nYou Have Been Invited For Demo on {0} at {1}\nThe Organizer For This Demo is {2} {3}'.format(instance.dated,instance.slot,instance.organizer.first_name,instance.organizer.last_name)
+                msg = EmailMessage(email_subject , email_body, to= emailUserList)
+                msg.send()
+        except:
+            print 'invalid user emals'
+            pass
+        return instance
 
 class LeadsSerializer(serializers.ModelSerializer):
     class Meta:

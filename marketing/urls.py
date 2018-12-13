@@ -21,4 +21,6 @@ urlpatterns = [
     url(r'sourceSuggest/$' , SourceSuggestAPIView.as_view()),
     url(r'campaignDetails/$' , CampaignDetailsAPIView.as_view()),
     url(r'inviteMail/$' , InvitationMailApi.as_view()),
+    url(r'schedulesData/$' , SchedulesDataApi.as_view()),
+    url(r'convertLead/$' , ConvertLeadApi.as_view()),
 ]

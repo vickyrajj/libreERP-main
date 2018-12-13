@@ -32,6 +32,8 @@ from dateutil import parser
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+from clientRelationships.models import Contact
+from ERP.models import service
 # Create your views here.
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -69,6 +71,8 @@ class LeadsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     serializer_class = LeadsSerializer
     queryset = Leads.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['mobileNumber',]
 
 # class LeadsViewSet(viewsets.ModelViewSet):
 #     permission_classes = (permissions.IsAuthenticated ,)
@@ -167,6 +171,25 @@ class ContactsScrapedAPIView(APIView):
 
         return Response({"count" : count}, status = status.HTTP_200_OK)
 
+class ConvertLeadApi(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request, format=None):
+        print 'ttttttttttt',request.data,request.user
+        leadObj = Leads.objects.get(pk=int(request.data['leadPk']))
+        contactData = {'user':request.user,'name':leadObj.name,'email':leadObj.emailId,'mobile':leadObj.mobileNumber}
+        if leadObj.jobLevel:
+            contactData['designation'] = leadObj.jobLevel
+        if leadObj.company:
+            try:
+                companyObj = service.objects.filter(name__iexact=leadObj.company)[0]
+            except:
+                companyObj = service(name=leadObj.company,user=request.user)
+                companyObj.save()
+            contactData['company'] = companyObj
+        contactObj = Contact.objects.create(**contactData)
+        leadObj.delete()
+        return Response({}, status = status.HTTP_200_OK)
+
 class SourceSuggestAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def post(self, request, format=None):
@@ -214,7 +237,24 @@ class CampaignDetailsAPIView(APIView):
             return ExcelResponse(excelData)
         else:
             return Response(sendData)
+from bson import json_util
+class SchedulesDataApi(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self, request, format=None):
+        toReturn = {}
+        DaysData = request.data['data']
+        curDate = request.data['curDate']
+        splitDates = curDate.split('-')
+        # print DaysData,curDate
+        print datetime.date(int(splitDates[0]),int(splitDates[1]),int(splitDates[2]))
+        for idx,d in enumerate(DaysData['days']):
+            if DaysData['flags'][idx]=='Cur':
+                dt = datetime.date(int(splitDates[0]),int(splitDates[1]),int(d))
+                scheduleObj = Schedule.objects.filter(dated=dt)
+                sd = SheduleSerializer(scheduleObj,many=True)
+                toReturn[d] = sd.data
 
+        return Response(toReturn, status=status.HTTP_200_OK)
 
 class InvitationMailApi(APIView):
     renderer_classes = (JSONRenderer,)
