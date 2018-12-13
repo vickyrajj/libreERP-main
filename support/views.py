@@ -966,3 +966,23 @@ class EmailApi(APIView):
         msg.content_subtype = 'html'
         msg.send()
         return Response(status = status.HTTP_200_OK)
+
+class CalculateAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+
+        project = Projects.objects.get(pk=request.data['projectPK'])
+        invoiceValue = request.data['invoiceValue']
+        packing = request.data['packing']
+        insurance = request.data['insurance']
+        freight = request.data['freight']
+        assessableValue = request.data['assessableValue']
+        gst1 = request.data['gst1']
+        gst2 = request.data['gst2']
+        clearingCharges1 = request.data['clearingCharges1']
+        clearingCharges2 = request.data['clearingCharges2']
+        if packing > 0:
+            packingPer = packing*100 / invoiceValue
+        else:
+            packingPer = 0
+        return Response(status = status.HTTP_200_OK)

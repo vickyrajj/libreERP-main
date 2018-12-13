@@ -907,6 +907,32 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
   //
   // }
 
+  $scope.saveInfo = function() {
+    var dataToSave = {
+      'invoiceValue' : $scope.form.invoiceValue,
+      'packing' : $scope.form.packing,
+      'insurance' : $scope.form.insurance,
+      'freight' : $scope.form.freight,
+      'assessableValue' : $scope.form.assessableValue,
+      'gst1' : $scope.form.gst1,
+      'gst2' : $scope.form.gst2,
+      'clearingCharges1' : $scope.form.clearingCharges1,
+      'clearingCharges2' : $scope.form.clearingCharges2,
+      'projectPK' : $scope.form.pk
+    }
+    $http({
+      method: 'POST',
+      url: '/api/support/calculate/',
+      data: dataToSave,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      console.log(response.data, 'aaaaaa');
+    })
+
+  }
+
+
   $scope.accept = function() {
     var date =new Date().toJSON().split('T')[0]
     var sendStatus = {
