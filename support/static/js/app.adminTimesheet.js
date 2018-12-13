@@ -1,16 +1,16 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.adminTimeheet', {
-    url: "/adminTimeheet",
+  $stateProvider.state('businessManagement.adminTimesheet', {
+    url: "/adminTimesheet",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.adminTimeheet.html',
-        controller: 'businessManagement.adminTimeheet',
+        templateUrl: '/static/ngTemplates/app.adminTimesheet.html',
+        controller: 'businessManagement.adminTimesheet',
       }
     }
   })
 });
-app.controller("businessManagement.adminTimeheet.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
+app.controller("businessManagement.adminTimesheet.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
 
 console.log($scope.me);
 
@@ -39,7 +39,7 @@ $scope.filterCall=function(){
 
 
 })
-app.controller("businessManagement.adminTimeheet", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
+app.controller("businessManagement.adminTimesheet", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
 
   $scope.data = {
     tableData: []

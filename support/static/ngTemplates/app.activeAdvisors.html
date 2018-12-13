@@ -7,16 +7,19 @@
           <div class="container-fluid card" style="padding-bottom:0px">
             <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:40px; opacity:0.9;letter-spacing:0.6px;{{ActiveRows[$index] ? 'background-color: #bfbfbf':''}}">
               <div class="col-md-6">
-                <h5 style="font-weight:501;">{{data | getName}}
+                <h5 style="font-weight:501;">
+                  <span style="margin-right:20px">{{data.pk | getName}}</span>
+                  <span style="margin-right:20px">Active Users: {{data.activeUsers}}</span>
+                  <span style="margin-right:20px">Active : {{data.activeSince}} mins</span>
                 </h5>
               </div>
             </div>
           </div>
         </div>
-        <div ng-if="" class="col-md-12" style=";margin-bottom:20px; padding-left:10px;padding-right:10px;">
-          <p>No Active User</p>
-        </div>
       </div>
+    </div>
+    <div ng-if="!onlineAgents.length>0" style="width: 100%;position: absolute;top:400px;left:40%;color:#f0f0f0;font-size:40px">
+      No Active Advisor
     </div>
   </div>
 </div>

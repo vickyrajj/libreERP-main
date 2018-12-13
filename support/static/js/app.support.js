@@ -52,10 +52,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       method: 'GET',
       url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
     }).then(function(response) {
-      // console.log(response.data , 'distinct resssssssssss');
+
       for (var i = 0; i < response.data.length; i++) {
-        // console.log(response.data[i]);
-        // console.log(response.data[i].chatThreadPk);
         $scope.myUsers.push({
           name: response.data[i].name,
           email: response.data[i].email,
@@ -91,9 +89,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       method: 'GET',
       url: '/api/support/getMyUser/?getNewUser=1',
     }).then(function(response) {
-      // console.log(response.data , 'Got unhamdled');
       for (var i = 0; i < response.data.length; i++) {
-        // console.log(response.data[i]);
         $scope.newUsers.push({
           name: '',
           uid: response.data[i].uid,
@@ -122,14 +118,19 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         $scope.myCompanies=response.data
 
       });
-    }, 3000);
+    }, 1000);
 
-
+var myActiveTime=Date.now();
     function heartbeat() {
-      return $scope.me.pk
+      
+      return {
+        ActiveUsers:$scope.myUsers,
+        pk:$scope.me.pk,
+        activeTime:myActiveTime
+      }
     }
 
-    connection.session.register('service.support.heartbeat.'+$scope.me.pk, heartbeat).then(
+    connection.session.register('service.support.hhhhh.'+$scope.me.pk, heartbeat).then(
       function (res) {
         console.log("registered to service.support.heartbeat iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
       },
@@ -137,8 +138,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         console.log("failed to registered: ");
       });
 
-
-  },0);
+  },1000);
 
   $scope.onNotification = function(uid, msg, i = 'a') {
 
@@ -224,15 +224,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
   $scope.addToChat = function(indx, uid) {
 
-    console.log(indx);
-    console.log(uid);
-    // $scope.status = 'AP';
-    // connection.session.publish('service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
-    //   acknowledge: true
-    // }).
-    // then(function(publication) {
-    //   console.log("Published");
-    // });
     addToCookie(uid, indx);
 
     for (var i = 0; i < $scope.chatsInView.length; i++) {
@@ -253,17 +244,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       console.log('elseeee');
     }
   }
-
-  // $scope.removeChat = function(indx) {
-  //   for (var i = 0; i < $scope.chatsInView.length; i++) {
-  //     if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
-  //       $scope.chatsInView.splice(i,1)
-  //       console.log('removing from chat');
-  //       return
-  //     }
-  //   }
-  // }
-
 
   $scope.getOpenedChatFromCookie = function() {
 
@@ -286,10 +266,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   setTimeout(function() {
     $scope.getOpenedChatFromCookie();
   }, 3200);
-
-  // $scope.addToChat(openedChats[i].index,openedChats[i].uid)
-
-
 
 
   $scope.chatClose = function(idx, chatThreadPk) {
@@ -314,27 +290,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       return
     });
   }
-
-
-  // $scope.tabs=[
-  //   {
-  //     name: "Templates",
-  //     active:"true",
-  //     icon: "indent"
-  //   },
-  //   {
-  //     name: "Events",
-  //     active:"false",
-  //     icon: "clock-o"
-  //   },
-  //   {
-  //     name: "Comments",
-  //     active:"true",
-  //     icon: "envelope-o"
-  //   }
-  // ]
-  //
-  // $scope.comments = [{msg:"hii,how are you,i am fine",date:"2nd march",time:"2.00 pm"},{msg:"hello,how are you",date:"3nd march",time:"6.00 pm"},{msg:"In computer programming, a comment is a programmer-readable explanation or annotation in the source code of a computer program. They are added with the purpose of making the source code easier for humans to understand, and are generally ignored by compilers and interpreters.",date:"5th march",time:"4.00 pm"},{msg:"yups,how are you",date:"1st march",time:"8.00 pm"}]
 
   $scope.assignUser = function(indx, uid) {
 
@@ -397,8 +352,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     then(function(publication) {
       console.log("Published");
     });
-
-
 
   }
 

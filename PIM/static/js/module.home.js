@@ -175,12 +175,12 @@ app.config(function($stateProvider) {
       }
     })
 
-    .state('home.adminTimeheet', {
-      url: "/adminTimeheet",
+    .state('home.adminTimesheet', {
+      url: "/adminTimesheet",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.adminTimeheet.html',
-          controller: 'businessManagement.adminTimeheet',
+          templateUrl: '/static/ngTemplates/app.adminTimesheet.html',
+          controller: 'businessManagement.adminTimesheet',
         }
       }
     })

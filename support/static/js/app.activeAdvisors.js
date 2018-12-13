@@ -14,22 +14,39 @@ app.config(function($stateProvider) {
 app.controller("businessManagement.activeAdvisors", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
 
   console.log($scope.data, 'entireeeeeeeeeeeeee');
-  $scope.onlineAgents = []
-  $scope.offlineAgents = []
   $http({
     method: 'GET',
     url: '/api/support/getMyUser/?allAgents',
   }).
   then(function(response) {
-    
     console.log(response.data.allAgents, '@@@@@@@@@@@@@@@@@@@@@');
     $scope.allAgents = response.data.allAgents
+    setTimeout(function () {
+      refetchAll()
+    }, 1000);
+  });
+
+
+  setInterval(function () {
+    refetchAll()
+  }, 15000);
+
+
+  function refetchAll(){
+    $scope.onlineAgents = []
+    $scope.offlineAgents = []
     for (var i = 0; i < $scope.allAgents.length; i++) {
-      connection.session.call('service.support.heartbeat.' + $scope.allAgents[i], []).
+      connection.session.call('service.support.hhhhh.' + $scope.allAgents[i], []).
       then((function(i) {
         return function(res) {
+          console.log(res);
           console.log('online', i);
-          $scope.onlineAgents.push($scope.allAgents[i])
+          let pushData={
+            pk:res.pk,
+            activeUsers:res.ActiveUsers.length,
+            activeSince:Math.round((Date.now()-res.activeTime)/60000)
+          }
+          $scope.onlineAgents.push(pushData)
           console.log($scope.onlineAgents);
         }
       })(i), (function(i) {
@@ -39,6 +56,6 @@ app.controller("businessManagement.activeAdvisors", function($scope, $state, $us
         }
       })(i))
     }
-  });
+  }
 
 });

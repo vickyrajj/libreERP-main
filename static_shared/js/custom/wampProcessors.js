@@ -10,8 +10,6 @@ connection.onopen = function(session) {
 
   console.log("session established!");
 
-  // our event handler we will subscribe on our topic
-  //
   function chatResonse(args) {
     console.log(args);
 
@@ -173,9 +171,6 @@ var hasAccesss=true;
           if (args[1] == 'M') {
             scope.sound.play();
             scope.myUsers[i].messages.push(args[2])
-            // if (!scope.myUsers[i].boxOpen) {
-            //   scope.myUsers[i].boxOpen = false
-            // }
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value = ''
             // scope.myUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created:  args[2].created })
@@ -340,25 +335,6 @@ var hasAccesss=true;
         alreadyDone:false
       }
 
-      // function createVisitor(email, phoneNumber , name) {
-      //   console.log(email , phoneNumber , name,'sometinhhhhhhhhh###');
-      //   var toPost = JSON.stringify({"email":email , "phoneNumber":phoneNumber , "name":name ,"uid":args[0]})
-      //   console.log(toPost);
-      //   // console.log(typeof toPost);
-      //   var xhttp = new XMLHttpRequest();
-      //    xhttp.onreadystatechange = function() {
-      //      if (this.readyState == 4 && this.status == 201) {
-      //        var data = JSON.parse(this.responseText)
-      //        detail.name = data.name
-      //        detail.email = data.email
-      //      }
-      //    };
-      //    xhttp.open('POST', '/api/support/visitor/', true);
-      //    xhttp.setRequestHeader("Content-type", "application/json");
-      //    xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-      //    xhttp.send(toPost);
-      // }
-
       console.log(args[4]);
 
       if (args[4]) {
@@ -367,11 +343,6 @@ var hasAccesss=true;
         detail.email = args[4].email
         // createVisitor(args[4].email , args[4].phoneNumber , args[4].name)
       }
-
-
-
-      console.log('no');
-      console.log(args);
       if (args[1] == 'M') {
         scope.sound.play();
         console.log(args, 'argssssssssss');
@@ -411,9 +382,7 @@ var hasAccesss=true;
       }
     }
 
-
   };
-
 
   function checkOnline() {
     var scope = angular.element(document.getElementById('chatTab')).scope();
@@ -456,6 +425,7 @@ var hasAccesss=true;
     }
   }
 
+
   function sendBackHeartBeat() {
     var scope = angular.element(document.getElementById('chatTab')).scope();
     if (scope) {
@@ -482,11 +452,9 @@ var hasAccesss=true;
            xhttp.setRequestHeader("Content-type", "application/json");
            xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
            xhttp.send(JSON.stringify({user:scope.me.pk}));
-
-
-
           return
-        }else {
+        }
+        else {
           console.log('onlieeeeeeeeeeeeeeeeeeeeeeeee');
           return true
         }
@@ -517,15 +485,11 @@ var hasAccesss=true;
     checkOnline();
   }, 10000)
 
-  function heartbeat() {
-    console.log('coming in heartttt');
-    return scope.me.pk
-  }
-
-
-
-
-
+  // function heartbeat(args) {
+  //   console.log('coming in heartttt');
+  //   console.log(scope.me,'check this outttttttttttttttttttt');
+  //   return scope.me.pk
+  // }
 
   session.subscribe('service.support.agent', supportChatResponse).then(
     function(sub) {
