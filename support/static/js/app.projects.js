@@ -917,6 +917,33 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
 
 
 
+
+  // $scope.saveInfo = function() {
+  //   var dataToSave = {
+  //     'invoiceValue' : $scope.form.invoiceValue,
+  //     'packing' : $scope.form.packing,
+  //     'insurance' : $scope.form.insurance,
+  //     'freight' : $scope.form.freight,
+  //     'assessableValue' : $scope.form.assessableValue,
+  //     'gst1' : $scope.form.gst1,
+  //     'gst2' : $scope.form.gst2,
+  //     'clearingCharges1' : $scope.form.clearingCharges1,
+  //     'clearingCharges2' : $scope.form.clearingCharges2,
+  //     'projectPK' : $scope.form.pk
+  //   }
+  //   $http({
+  //     method: 'POST',
+  //     url: '/api/support/calculate/',
+  //     data: dataToSave,
+  //   }).
+  //   then(function(response) {
+  //     Flash.create('success', 'Saved');
+  //     console.log(response.data, 'aaaaaa');
+  //   })
+
+
+
+
   $scope.accept = function() {
     var date =new Date().toJSON().split('T')[0]
     var sendStatus = {
@@ -957,10 +984,21 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
 })
 app.controller("businessManagement.projects.success.view", function($scope, $state, $users, $stateParams, $http, Flash) {
 
+  // $scope.form.invoiceValue = 0;
+  // $scope.form.packing = 0;
+  // $scope.form.insurance = 0;
+  // $scope.form.freight = 0;
+  // $scope.form.assessableValue = 0;
+  // $scope.form.gst1 = 0;
+  // $scope.form.gst2 = 0;
+  // $scope.form.clearingCharges1 = 0;
+  // $scope.form.clearingCharges2 = 0;
+
   if ($scope.tab == undefined) {
     $scope.resetForm();
   } else {
     $scope.form = $scope.data2.tableData[$scope.tab.data.index]
+    console.log($scope.form,'qqqqqqqqqq');
   }
   $http.get('/api/HR/userSearch/').
   then(function(response) {
@@ -983,9 +1021,6 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     }).
     then(function(response) {
       $scope.projects = response.data
-      for (var i = 0; i < $scope.projects; i++) {
-
-      }
 
     })
   }
@@ -1041,6 +1076,7 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     then(function(response) {
       Flash.create('success', 'Saved');
       console.log(response.data, 'aaaaaa');
+      $scope.fetchData()
     })
 
   }

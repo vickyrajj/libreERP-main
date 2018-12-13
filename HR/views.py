@@ -200,12 +200,14 @@ def loginView(request):
     return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
 
 from django.shortcuts import render_to_response
-
+#
 def ApproveView(request):
+    print request,'hhhhhhhhhhhhhhhhhhhh'
     if request.user.is_authenticated():
         return render_to_response(globalSettings.APPROVAL_URL,{'project':request.GET['project'],'useCDN' : globalSettings.USE_CDN })
     else:
         return redirect(globalSettings.LOGIN_URL)
+        # return render(request , globalSettings.LOGIN_TEMPLATE)
         # return render(request,globalSettings.LOGIN_TEMPLATE)
 
 

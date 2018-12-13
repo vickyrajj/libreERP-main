@@ -970,6 +970,7 @@ class EmailApi(APIView):
 class CalculateAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
+
         packing =0
         insurance =0
         freight =0
@@ -978,6 +979,7 @@ class CalculateAPIView(APIView):
         gst2 =0
         clearingCharges1 =0
         clearingCharges2 =0
+
         project = Projects.objects.get(pk=request.data['projectPK'])
         invoiceValue = request.data['invoiceValue']
         packing = request.data['packing']
@@ -993,48 +995,56 @@ class CalculateAPIView(APIView):
             packingPer = round((float(packing) / float(invoiceValue))*100, 2)
         else:
             packingPer = 0
-        project.packing = packingPer
+        project.packing = packing
         if insurance > 0:
             insurancePer = round((float(insurance) / float(invoiceValue))*100, 2)
         else:
             insurancePer = 0
-        project.insurance = insurancePer
+        project.insurance = insurance
         if freight > 0:
             freightPer = round((float(freight) / float(invoiceValue))*100, 2)
         else:
             freightPer = 0
-        project.freight =  freightPer
+        project.freight =  freight
         if assessableValue > 0:
             assessableValuePer = round((float(assessableValue) / float(invoiceValue))*100, 2)
         else:
             assessableValuePer = 0
-        project.assessableValue = assessableValuePer
+        project.assessableValue = assessableValue
         if gst1 > 0:
             gst1Per = round((float(gst1) / float(invoiceValue))*100, 2)
         else:
             gst1Per = 0
-        project.gst1 = gst1Per
+        project.gst1 = gst1
         if gst2 > 0:
             gst2Per = round((float(gst2) / float(invoiceValue))*100, 2)
         else:
             gst2Per = 0
-        project.gst2 = gst2Per
+        project.gst2 = gst2
         if clearingCharges1 > 0:
             clearingCharges1Per = round((float(clearingCharges1) / float(invoiceValue))*100, 2)
         else:
             clearingCharges1Per = 0
-        project.clearingCharges1 = clearingCharges1Per
+        project.clearingCharges1 = clearingCharges1
         if clearingCharges2 > 0:
             clearingCharges2Per = round((float(clearingCharges2) / float(invoiceValue))*100, 2)
         else:
             clearingCharges2Per = 0
-        project.clearingCharges2 = clearingCharges2Per
+        project.clearingCharges2 = clearingCharges2
         project.save()
 
         bomData = BoM.objects.filter(project__id=request.data['projectPK'])
-        print bomData,'aaaaaaaaaaa'
-
-        # for i in 
-
-        percentage = {'packingPer':packingPer,'insurancePer':insurancePer,'freightPer':freightPer,'assessableValuePer':assessableValuePer,'gst1Per':gst1Per,'gst2Per':gst2Per,'clearingCharges1Per':clearingCharges1Per,'clearingCharges2Per':clearingCharges2Per}
-        return Response(percentage,status = status.HTTP_200_OK)
+        for i in bomData:
+            packingTotal = round((float(i.price)*packingPer)/100, 2)
+            insuranceTotal = round((float(i.price)*insurancePer)/100, 2)
+            freightTotal = round((float(i.price)*freightPer)/100, 2)
+            assessableValueTotal = round((float(i.price)*assessableValuePer)/100, 2)
+            gst1Total = round((float(i.price)*gst1Per)/100, 2)
+            gst2Total = round((float(i.price)*gst2Per)/100, 2)
+            clearingCharges1Total = round((float(i.price)*clearingCharges1Per)/100, 2)
+            clearingCharges2Total = round((float(i.price)*clearingCharges2Per)/100, 2)
+            total = packingTotal + insuranceTotal + freightTotal + assessableValueTotal + gst1Total + gst2Total + clearingCharges1Total + clearingCharges2Total
+            i.customer_price = total + i.price
+            i.save()
+            print i.customer_price
+        return Response(status = status.HTTP_200_OK)
