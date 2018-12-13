@@ -59,15 +59,18 @@
             </tr>
           </table>
         </div> -->
-        <div id="myDynamicTable" style="padding-top:20px">
+        <div id="myDynamicTable" class="row" style="padding-top:20px">
         </div>
-        <div style="padding-top:20px">
-
+        <div class="row" style="padding-top:20px">
           <div class="col-md-8 text-right">
-            <button type="submit" class="btn btn-danger pull-right" onclick="reject()" > Reject</button>
+            <button type="button" class="btn btn-danger pull-right" onclick="reject()" > Reject</button>
             </div>
             <div class="col-md-2 text-right">
-            <button type="submit" class="btn btn-success pull-right" onclick="approve()">  Approve</button>
+            <button type="button" class="btn btn-success pull-right" onclick="approve()">  Approve</button>
+          </div>
+        </div>
+        <div class="row" style="padding-top:20px">
+          <div class="col-md-6" id="alerts">
           </div>
 
         </div>
@@ -117,6 +120,7 @@
         return "";
       }
 
+      var csrftoken = getCookie("csrftoken")
     function loadDoc() {
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
@@ -136,7 +140,7 @@
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           var productDetails = JSON.parse(this.responseText);
-          var myTableDiv = document.getElementById("myDynamicTable");
+          var myTable = document.getElementById("myDynamicTable");
           var table = document.createElement('table');
           table.border = '1';
           var tableBody = document.createElement('tbody');
@@ -174,7 +178,7 @@
             tr.appendChild(td5);
             tr.setAttribute("id", "bodytr")
           }
-          myTableDiv.appendChild(table);
+          myTable.appendChild(table);
         }
       };
       url = '/api/support/bom/?project=' + projects
@@ -185,14 +189,11 @@
     products()
 
     function reject(){
-      var csrf = getCookie("csrftoken")
-      console.log(csrf,'aaaaaaaaaaaaa');
       var xhttp = new XMLHttpRequest();
-
       xhttp.onreadystatechange = function() {
-        console.log(this.status,'AAAAAAAAAAA');
         if (this.readyState == 4 && this.status == 200) {
-
+          document.getElementById('alerts').innerHTML='<div class="alert alert-success">Saved!!</div>'
+          location.replace('/')
         }
       };
       var formData = "status=created"
@@ -200,21 +201,17 @@
       var formData = "status="+status
       var url = '/api/support/projects/' + projects + '/'
       xhttp.open("PATCH", url,true);
-      console.log(formData);
-      xhttp.setRequestHeader('X-CSRF-Token', csrf);
+      xhttp.setRequestHeader('X-CSRFToken', csrftoken);
       xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded")
       xhttp.setRequestHeader("Content-length", formData.length);
       xhttp.send(formData);
     }
     function approve(){
-      var csrf = getCookie("csrftoken")
-      console.log(csrf,'aaaaaaaaaaaaa');
       var xhttp = new XMLHttpRequest();
-
       xhttp.onreadystatechange = function() {
-        console.log(this.status,'AAAAAAAAAAA');
         if (this.readyState == 4 && this.status == 200) {
-
+          document.getElementById('alerts').innerHTML='<div class="alert alert-success">Saved!!</div>'
+          location.replace('/')
         }
       };
       var formData = "status=created"
@@ -222,13 +219,10 @@
       var formData = "status="+status
       var url = '/api/support/projects/' + projects + '/'
       xhttp.open("PATCH", url,true);
-      console.log(formData,csrf,'aaaaaaaaaaaa');
-      xhttp.setRequestHeader('X-CSRF-Token', csrf);
+      xhttp.setRequestHeader('X-CSRFToken', csrftoken);
       xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded")
-      // xhttp.setRequestHeader("Content-length", formData.length);
       xhttp.send(formData);
     }
-
   </script>
 </body>
 
