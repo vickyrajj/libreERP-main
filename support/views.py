@@ -1034,5 +1034,7 @@ class CalculateAPIView(APIView):
         bomData = BoM.objects.filter(project__id=request.data['projectPK'])
         print bomData,'aaaaaaaaaaa'
 
+        # for i in 
+
         percentage = {'packingPer':packingPer,'insurancePer':insurancePer,'freightPer':freightPer,'assessableValuePer':assessableValuePer,'gst1Per':gst1Per,'gst2Per':gst2Per,'clearingCharges1Per':clearingCharges1Per,'clearingCharges2Per':clearingCharges2Per}
         return Response(percentage,status = status.HTTP_200_OK)
