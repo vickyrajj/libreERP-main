@@ -15,6 +15,7 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
 from ERP.models import  permission , module , CompanyHolidays , service
+from support.models import  *
 from ERP.views import getApps, getModules
 from django.db.models import Q,Count ,F
 from django.http import JsonResponse
@@ -197,6 +198,22 @@ def loginView(request):
 
 
     return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+
+from django.shortcuts import render_to_response
+
+def ApproveView(request):
+    if request.user.is_authenticated():
+        # print request.GET['project'],'aaaaaaaaaaaaaaaaaaaaaaa'
+        # projectdata = Projects.objects.get(pk=request.GET['project'])
+        # print projectdata,'aaaaaaaaaaa'
+        # return render(globalSettings.APPROVAL_URL,{'projects':projectdata})
+        return render_to_response(globalSettings.APPROVAL_URL,{'project':request.GET['project'],'useCDN' : globalSettings.USE_CDN })
+        # return redirect(globalSettings.APPROVAL_URL)
+    else:
+        print 'vvv'
+        return redirect(globalSettings.LOGIN_URL)
+        # return render(request , globalSettings.APPROVAL_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN , 'backgroundImage': globalSettings.LOGIN_PAGE_IMAGE , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT}, status=statusCode)
+
 
 def registerView(request):
     if globalSettings.REGISTER_URL != 'register':

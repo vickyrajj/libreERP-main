@@ -41,9 +41,13 @@ LOGIN_PAGE_IMAGE = '/static/images/bruderer.jpg'
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'
+APPROVAL_URL = 'approval.html'
 
 LOGIN_TEMPLATE = 'login.html'
 SMS_TRAINED_MODEL = '1540626861'
+APPROVAL_TEMPLATE = 'approval.html'
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -65,6 +69,8 @@ ALLOWED_HOSTS = ['192.168.1.106', '192.168.0.111', 'cioc.co.in', 'localhost', '1
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
+
+
 
 LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed one logged out
 

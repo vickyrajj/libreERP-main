@@ -837,8 +837,6 @@ class MaterialIssueMainViewSet(viewsets.ModelViewSet):
 class MaterialIssuedNoteAPIView(APIView):
     def get(self , request , format = None):
         value = request.GET['value']
-        # project = Projects.objects.get(pk = request.GET['project'])
-        # purchaselist = BoM.objects.filter(project = request.GET['project'])
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
         materialIssued(response , value , request)
@@ -863,7 +861,6 @@ class ProductInventoryAPIView(APIView):
             totalVal =0
             totalSum = 0
             data = list(productlist.filter(product=i['product__pk']).values())
-            # print  len(data) - 1 ,'aaaaaaaaaaaaa'
             for k in data:
                 print k['rate'] ,k['qty']
                 print type(k['rate']) ,type(k['qty'])
@@ -933,23 +930,32 @@ class OrderAPIView(APIView):
         return Response(materialIssueObj.pk,status=status.HTTP_200_OK)
 
 
+import requests
 class EmailApi(APIView):
     permission_classes = (permissions.AllowAny ,)
     def post(self, request, format=None):
         email=[]
-        link = request.data['link']
-        # linkd = json.dumps(link)
-        print link['origin']
-        linkUrl = link['origin']
-        # print linkd.split('/#')[0]
         projectPk = request.data['pkValue']
+        link = request.data['link']
+        linkUrl = link['origin'] + '/approve/?project=' + str(projectPk)
+        print linkUrl,'aaaaaaaaaaaaaaaaa'
         project = Projects.objects.get(pk=projectPk)
         productDetails = BoM.objects.filter(project__id = projectPk)
+        totalprice = 0
+        totalqty = 0
+        totalcustomerPrice = 0
+        for i in productDetails:
+            totalprice+=i.price
+            totalqty+=i.quantity1
+            totalcustomerPrice+=i.customer_price
         ctx = {
             'recieverName' : 'admin',
             'productDetails' : productDetails,
             'project':project,
             'link':linkUrl,
+            'totalPrice':totalprice,
+            'totalQty' : totalqty,
+            'totalCustomerPrice' : totalcustomerPrice,
             'message' : 'Please click on the below link to change the status'
 
         }

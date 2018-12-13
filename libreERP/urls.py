@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
+from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView,  ApproveView
 # from support.views import getChatterScript
 # from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration,index,crmHome,customerLoginView , customerHomeView
 
@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^robots\.txt', include('robots.urls')),
     url(r'^generateOTP', generateOTP, name="generateOTP"),
     url(r'^documents', documentView , name ='document'),
+    url(r'^approve', ApproveView , name ='approve'),
     # url(r'^CRM/', crmHome , name ='CRM'),
     # url(r'^register', registration , name ='register'),
     # url(r'^corporate/', index , name ='index'),
