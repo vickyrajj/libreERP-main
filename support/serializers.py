@@ -37,7 +37,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Projects
-        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus')
+        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus','invoiceValue','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','packing')
 
     def create(self , validated_data):
         p = Projects()

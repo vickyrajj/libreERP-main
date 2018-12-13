@@ -995,7 +995,7 @@ class CalculateAPIView(APIView):
             packingPer = round((float(packing) / float(invoiceValue))*100, 2)
         else:
             packingPer = 0
-        project.packing = packing
+        project.packing = float(packing)
         if insurance > 0:
             insurancePer = round((float(insurance) / float(invoiceValue))*100, 2)
         else:
@@ -1044,7 +1044,7 @@ class CalculateAPIView(APIView):
             clearingCharges1Total = round((float(i.price)*clearingCharges1Per)/100, 2)
             clearingCharges2Total = round((float(i.price)*clearingCharges2Per)/100, 2)
             total = packingTotal + insuranceTotal + freightTotal + assessableValueTotal + gst1Total + gst2Total + clearingCharges1Total + clearingCharges2Total
-            i.customer_price = total + i.price
+            i.customer_price = round(total + i.price,2)
             i.save()
             print i.customer_price
         return Response(status = status.HTTP_200_OK)
