@@ -605,6 +605,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   $scope.$watch('projects', function(newValue, oldValue) {
     for (var i = 0; i < newValue.length; i++) {
       console.log(newValue[i].customer_price,'hhhhhh');
+      if(newValue[i] == "undefined"){}else{
       if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].customer_price != oldValue[i].customer_price) {
         var dataSend = {
           quantity1: newValue[i].quantity1,
@@ -620,11 +621,13 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
         })
       }
+     }
     }
   }, true)
 
   $scope.showbutton = false
   $scope.$watch('data', function(newValue, oldValue) {
+  if(newValue[0] == "undefined" && oldValue[0] == "undefined"){}else{
     if (typeof newValue[0].part_no == 'object') {
       $scope.data[$scope.data.length - 1] = newValue[0].part_no
       $scope.data[$scope.data.length - 1].quantity1 = 1
@@ -695,6 +698,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
       }
     }
+  }
 
 
   }, true)
@@ -910,30 +914,31 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
 
 
 
-  $scope.saveInfo = function() {
-    var dataToSave = {
-      'invoiceValue' : $scope.form.invoiceValue,
-      'packing' : $scope.form.packing,
-      'insurance' : $scope.form.insurance,
-      'freight' : $scope.form.freight,
-      'assessableValue' : $scope.form.assessableValue,
-      'gst1' : $scope.form.gst1,
-      'gst2' : $scope.form.gst2,
-      'clearingCharges1' : $scope.form.clearingCharges1,
-      'clearingCharges2' : $scope.form.clearingCharges2,
-      'projectPK' : $scope.form.pk
-    }
-    $http({
-      method: 'POST',
-      url: '/api/support/calculate/',
-      data: dataToSave,
-    }).
-    then(function(response) {
-      Flash.create('success', 'Saved');
-      console.log(response.data, 'aaaaaa');
-    })
 
-  }
+  // $scope.saveInfo = function() {
+  //   var dataToSave = {
+  //     'invoiceValue' : $scope.form.invoiceValue,
+  //     'packing' : $scope.form.packing,
+  //     'insurance' : $scope.form.insurance,
+  //     'freight' : $scope.form.freight,
+  //     'assessableValue' : $scope.form.assessableValue,
+  //     'gst1' : $scope.form.gst1,
+  //     'gst2' : $scope.form.gst2,
+  //     'clearingCharges1' : $scope.form.clearingCharges1,
+  //     'clearingCharges2' : $scope.form.clearingCharges2,
+  //     'projectPK' : $scope.form.pk
+  //   }
+  //   $http({
+  //     method: 'POST',
+  //     url: '/api/support/calculate/',
+  //     data: dataToSave,
+  //   }).
+  //   then(function(response) {
+  //     Flash.create('success', 'Saved');
+  //     console.log(response.data, 'aaaaaa');
+  //   })
+
+
 
 
   $scope.accept = function() {
@@ -1049,7 +1054,30 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     }
   }, true)
 
+  $scope.saveInfo = function() {
+    var dataToSave = {
+      'invoiceValue' : $scope.form.invoiceValue,
+      'packing' : $scope.form.packing,
+      'insurance' : $scope.form.insurance,
+      'freight' : $scope.form.freight,
+      'assessableValue' : $scope.form.assessableValue,
+      'gst1' : $scope.form.gst1,
+      'gst2' : $scope.form.gst2,
+      'clearingCharges1' : $scope.form.clearingCharges1,
+      'clearingCharges2' : $scope.form.clearingCharges2,
+      'projectPK' : $scope.form.pk
+    }
+    $http({
+      method: 'POST',
+      url: '/api/support/calculate/',
+      data: dataToSave,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      console.log(response.data, 'aaaaaa');
+    })
 
+  }
 
   $scope.send = function(){
     if($scope.form.savedStatus==true){

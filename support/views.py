@@ -970,6 +970,16 @@ class EmailApi(APIView):
 class CalculateAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
+
+        packing =0
+        insurance =0
+        freight =0
+        assessableValue =0
+        gst1 =0
+        gst2 =0
+        clearingCharges1 =0
+        clearingCharges2 =0
+
         project = Projects.objects.get(pk=request.data['projectPK'])
         invoiceValue = request.data['invoiceValue']
         packing = request.data['packing']
@@ -980,8 +990,47 @@ class CalculateAPIView(APIView):
         gst2 = request.data['gst2']
         clearingCharges1 = request.data['clearingCharges1']
         clearingCharges2 = request.data['clearingCharges2']
+        project.invoiceValue = invoiceValue
         if packing > 0:
-            packingPer = packing*100 / invoiceValue
+            packingPer = round((float(packing) / float(invoiceValue))*100, 2)
         else:
             packingPer = 0
+        project.packing = packingPer
+        if insurance > 0:
+            insurancePer = round((float(insurance) / float(invoiceValue))*100, 2)
+        else:
+            insurancePer = 0
+        project.insurance = insurancePer
+        if freight > 0:
+            freightPer = round((float(freight) / float(invoiceValue))*100, 2)
+        else:
+            freightPer = 0
+        project.freight =  freightPer
+        if assessableValue > 0:
+            assessableValuePer = round((float(assessableValue) / float(invoiceValue))*100, 2)
+        else:
+            assessableValuePer = 0
+        project.assessableValue = assessableValuePer
+        if gst1 > 0:
+            gst1Per = round((float(gst1) / float(invoiceValue))*100, 2)
+        else:
+            gst1Per = 0
+        project.gst1 = gst1Per
+        if gst2 > 0:
+            gst2Per = round((float(gst2) / float(invoiceValue))*100, 2)
+        else:
+            gst2Per = 0
+        project.gst2 = gst2Per
+        if clearingCharges1 > 0:
+            clearingCharges1Per = round((float(clearingCharges1) / float(invoiceValue))*100, 2)
+        else:
+            clearingCharges1Per = 0
+        project.clearingCharges1 = clearingCharges1Per
+        if clearingCharges2 > 0:
+            clearingCharges2Per = round((float(clearingCharges2) / float(invoiceValue))*100, 2)
+        else:
+            clearingCharges2Per = 0
+        project.clearingCharges2 = clearingCharges2Per
+        project.save()
+        print   round(packingPer, 2),round(insurancePer, 2),round(freightPer, 2),round(assessableValuePer, 2),round(gst1Per, 2),round(gst2Per, 2),clearingCharges1Per,clearingCharges2Per,'nnnnnnnn'
         return Response(status = status.HTTP_200_OK)
