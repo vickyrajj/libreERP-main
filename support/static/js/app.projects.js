@@ -178,7 +178,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     for (var i = 0; i < $scope.data2.tableData.length; i++) {
       if ($scope.data2.tableData[i].pk == parseInt(target)) {
         if (action == 'success') {
-          var title = 'Approved:';
+          var title = 'GRN :';
           var appType = 'bomApproved';
         }
 
@@ -1013,11 +1013,10 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     }
     $scope.persons.filter(filterByPk);
   })
-  $scope.fetchData = function(index) {
+  $scope.fetchData = function() {
     $http({
       method: 'GET',
       url: '/api/support/bom/?project=' + $scope.form.pk
-
     }).
     then(function(response) {
       $scope.projects = response.data
@@ -1056,6 +1055,37 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
   }, true)
 
   $scope.saveInfo = function() {
+
+      if($scope.form.invoiceValue==null||$scope.form.invoiceValue<0||$scope.form.invoiceValue==undefined){
+      $scope.form.invoiceValue = 0
+      }
+      if($scope.form.packing==null||$scope.form.packing<0||$scope.form.packing==undefined){
+        $scope.form.packing = 0
+      }
+      if($scope.form.insurance==null||$scope.form.insurance<0||$scope.form.insurance==undefined){
+        $scope.form.insurance = 0
+      }
+      if($scope.form.freight==null||$scope.form.freight<0||$scope.form.freight==undefined){
+        $scope.form.freight = 0
+      }
+      if($scope.form.assessableValue==null||$scope.form.assessableValue<0||$scope.form.assessableValue==undefined){
+        $scope.form.assessableValue = 0
+
+      }
+      if($scope.form.gst1==null||$scope.form.gst1<0||$scope.form.gst1==undefined){
+       $scope.form.gst1 = 0
+      }
+      if($scope.form.gst2==null||$scope.form.gst2<0||$scope.form.gst2==undefined){
+        $scope.form.gst2 = 0
+      }
+      if($scope.form.clearingCharges1==null||$scope.form.clearingCharges1<0||$scope.form.clearingCharges1==undefined){
+        $scope.form.clearingCharges1 = 0
+      }
+      if($scope.form.clearingCharges2==null||$scope.form.clearingCharges2<0||$scope.form.clearingCharges2==undefined){
+        $scope.form.clearingCharges2 = 0
+      }
+
+
     var dataToSave = {
       'invoiceValue' : $scope.form.invoiceValue,
       'packing' : $scope.form.packing,
