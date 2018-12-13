@@ -380,7 +380,7 @@ $scope.archiveTab = false;
 
   $scope.getArchData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?status=archived'
+    var url = '/api/support/reviewHomeCal/?status=archived&limit=15&offset='+$scope.Archoffsett
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -404,6 +404,11 @@ $scope.archiveTab = false;
         // $scope.custDetails = response.data[0]
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.archivedData =response.data
+        if(response.data.length<1){
+          $scope.archievedMyDialouge=true;
+        }else{
+          $scope.archievedMyDialouge=false;
+        }
       });
     }
   }
@@ -412,7 +417,7 @@ $scope.archiveTab = false;
 
   $scope.getData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?'
+    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.Archoffsett
     url += '&getMyReviews=1'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
@@ -441,7 +446,42 @@ $scope.archiveTab = false;
         // $scope.custDetails = response.data[0]
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.reviewData =response.data
+        if(response.data.length<1){
+          $scope.myDialouge=true;
+        }else{
+          $scope.myDialouge=false;
+        }
       });
+    }
+  }
+
+  $scope.loadMore=function(){
+    $scope.onceClicked=true
+      $scope.offsett+=15
+        $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+
+  }
+  $scope.loadMoreArchived=function(){
+    $scope.archievedOnceClicked=true
+    $scope.Archoffsett+=15
+      $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+  }
+  $scope.goBack=function(){
+    if($scope.offsett>=15){
+      $scope.offsett-=15
+        $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+    }else{
+      $scope.isFirstSetOfData=true
+    }
+
+  }
+  $scope.goBackArchived=function(){
+
+    if($scope.Archoffsett>=15){
+      $scope.Archoffsett-=15
+          $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+    }else{
+
     }
   }
   $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)

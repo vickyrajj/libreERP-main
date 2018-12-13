@@ -380,7 +380,7 @@ $scope.archiveTab = false;
 
   $scope.getArchData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.Archoffsett+'&'
+    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.Archoffsett
     // var url = '/api/support/reviewHomeCal/?limit=10&offset='+$scope.offsett+'&'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
@@ -405,6 +405,11 @@ $scope.archiveTab = false;
         // $scope.custDetails = response.data[0]
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.archivedData =response.data
+        if(response.data.length<1){
+          $scope.archievedMyDialouge=true;
+        }else{
+          $scope.archievedMyDialouge=false;
+        }
       });
     }
   }
@@ -415,7 +420,7 @@ $scope.Archoffsett=0;
   $scope.isLastSetOfData=false;
   $scope.getData = function(date,user,email,client,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.offsett+'&'
+    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.offsett
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -448,17 +453,15 @@ $scope.Archoffsett=0;
       });
     }
   }
-console.log($scope.isLastSetOfData,"8888888888888888888");
-  $scope.loadMore=function(){
-      console.log('load more clicked');
-    $scope.onceClicked=true
 
-      console.log('hereeeeeeeeeeeeeeeee');
+  $scope.loadMore=function(){
+    $scope.onceClicked=true
       $scope.offsett+=15
         $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
 
   }
   $scope.loadMoreArchived=function(){
+    $scope.archievedOnceClicked=true
     $scope.Archoffsett+=15
       $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
   }
@@ -472,8 +475,13 @@ console.log($scope.isLastSetOfData,"8888888888888888888");
 
   }
   $scope.goBackArchived=function(){
-    $scope.Archoffsett-=15
-      $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+
+    if($scope.Archoffsett>=15){
+      $scope.Archoffsett-=15
+          $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+    }else{
+    
+    }
   }
   $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
   $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
