@@ -524,7 +524,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     })
   };
 
-
+$scope.saveInfo = function(){
+  console.log("ddddddddddddd");
+}
 
 
   $scope.deleteTable = function(val, index) {
