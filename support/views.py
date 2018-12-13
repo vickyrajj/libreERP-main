@@ -970,7 +970,6 @@ class EmailApi(APIView):
 class CalculateAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
-
         project = Projects.objects.get(pk=request.data['projectPK'])
         invoiceValue = request.data['invoiceValue']
         packing = request.data['packing']
