@@ -330,7 +330,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               return
             }
 
-
+            // if ($scope.productsOrdered.length <=0) {
 
             if ($scope.productsOrdered.length<=0) {
 

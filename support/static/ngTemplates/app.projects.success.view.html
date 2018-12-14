@@ -135,7 +135,7 @@
 
 
               <td >{{v.price.toFixed(2)}}</td>
-              <td ><input   step=1 class="form-control-pos" ng-init="v.quantity2 = v.quantity1" ng-model="v.quantity2"></td>
+              <td ><input   step=1 class="form-control-pos"  ng-model="v.quantity2"></td>
               <td ><input step=1 class="form-control-pos"  ng-model="v.invoice_price"></td>
               <td ><input   step=1 class="form-control-pos"  ng-model="v.landed_price"></td>
               <td >{{(v.landed_price*v.quantity2).toFixed(2)}}</td>
