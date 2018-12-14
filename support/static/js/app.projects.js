@@ -549,7 +549,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
 
     } else {
-      console.log('jjjjjjjjj');
       $scope.data.splice(index, 1);
     }
   };
@@ -563,45 +562,10 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }).
     then(function(response) {
       $scope.projects = response.data
-      // for (var i = 0; i < response.data.length; i++) {
-      //   $scope.projects.push(response.data[i].products)
-      //   console.log($scope.projects,'bbbbbbbbb');
-      // }
     })
   }
   $scope.productpk = []
   $scope.fetchData()
-  // ng-blur="append($index, item.part_no)"
-
-  // $scope.append = function(indx, data){
-  //   console.log('in append');
-  //   console.log($scope.data[indx]);
-  //   $scope.projectlist = []
-  //   $scope.projectlist.push($scope.form.pk)
-  //   if (typeof data == 'object') {
-  //     $scope.data[indx].description_1 = data.description_1
-  //     $scope.data[indx].price = data.price
-  //     $scope.data[indx].part_no = data.part_no
-  //     $scope.data[indx].pk = data.pk
-  //     var dataSend = {
-  //       user: $scope.me.pk,
-  //       products: $scope.data[indx].pk,
-  //       project: $scope.projectlist,
-  //     }
-  //     console.log($scope.form.pk,'vvvvvvvvvvvv');
-  //     $http({
-  //         method: 'POST',
-  //         url: '/api/support/bom/',
-  //         data : dataSend
-  //       }).
-  //       then(function(response) {
-  //            $scope.productpk.push(response.data);
-  //            console.log($scope.productpk);
-  //
-  //         })
-  //   }
-  //
-  // }
   $scope.$watch('projects', function(newValue, oldValue) {
     for (var i = 0; i < newValue.length; i++) {
       console.log(typeof oldValue[i],'11111111111');
@@ -711,8 +675,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
 
   $scope.deleteData = function(pk, index) {
-    // console.log('---------------delelelele------------');
-    // console.log($scope.vendorServiceData);
     $scope.projects.splice(index, 1);
     $http({
       method: 'DELETE',
@@ -746,7 +708,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         products: $scope.data[i].products,
         project: $scope.form.pk,
       }
-      // console.log(toSend);
       $http({
         method: method,
         url: url,
@@ -759,8 +720,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
             Flash.create('success', 'Saved');
             $scope.data = []
           }
-          // $scope.items[i].pk = response.data.pk;
-          // $scope.resetRow()
         }
       })(i))
     }
@@ -886,63 +845,11 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
               data: sendtoBom,
             }).
             then(function(response) {
-
-              console.log(response.data, 'aaaaaa');
             })
 
       }
     }
   }, true)
-  // $scope.send = function() {
-  //   var date =new Date().toJSON().split('T')[0]
-  //   var sendStatus = {
-  //     status: 'approved',
-  //     approved2:true,
-  //     approved2_user:$scope.me.pk,
-  //     approved2_date:date
-  //   }
-  //
-  //   $http({
-  //     method: 'PATCH',
-  //     url: '/api/support/projects/' + $scope.form.pk + '/',
-  //     data: sendStatus,
-  //   }).
-  //   then(function(response) {
-  //     Flash.create('success', 'Approved');
-  //     console.log(response.data, 'aaaaaa');
-  //   })
-  //
-  // }
-
-
-
-
-
-  // $scope.saveInfo = function() {
-  //   var dataToSave = {
-  //     'invoiceValue' : $scope.form.invoiceValue,
-  //     'packing' : $scope.form.packing,
-  //     'insurance' : $scope.form.insurance,
-  //     'freight' : $scope.form.freight,
-  //     'assessableValue' : $scope.form.assessableValue,
-  //     'gst1' : $scope.form.gst1,
-  //     'gst2' : $scope.form.gst2,
-  //     'clearingCharges1' : $scope.form.clearingCharges1,
-  //     'clearingCharges2' : $scope.form.clearingCharges2,
-  //     'projectPK' : $scope.form.pk
-  //   }
-  //   $http({
-  //     method: 'POST',
-  //     url: '/api/support/calculate/',
-  //     data: dataToSave,
-  //   }).
-  //   then(function(response) {
-  //     Flash.create('success', 'Saved');
-  //     console.log(response.data, 'aaaaaa');
-  //   })
-
-
-
 
   $scope.accept = function() {
     var date =new Date().toJSON().split('T')[0]
@@ -974,7 +881,6 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
     }).
     then(function(response) {
       Flash.create('success', 'Saved');
-      console.log(response.data, 'aaaaaa');
     })
   }
 
@@ -984,30 +890,17 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
 })
 app.controller("businessManagement.projects.success.view", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  // $scope.form.invoiceValue = 0;
-  // $scope.form.packing = 0;
-  // $scope.form.insurance = 0;
-  // $scope.form.freight = 0;
-  // $scope.form.assessableValue = 0;
-  // $scope.form.gst1 = 0;
-  // $scope.form.gst2 = 0;
-  // $scope.form.clearingCharges1 = 0;
-  // $scope.form.clearingCharges2 = 0;
-
   if ($scope.tab == undefined) {
     $scope.resetForm();
   } else {
     $scope.form = $scope.data2.tableData[$scope.tab.data.index]
-    console.log($scope.form,'qqqqqqqqqq');
   }
   $http.get('/api/HR/userSearch/').
   then(function(response) {
     $scope.persons = response.data;
-    console.log($scope.form.responsible, 'bbbbbbbbbbbb');
     $scope.name =[]
     function filterByPk(item) {
       if ($scope.form.responsible.includes(item.pk)) {
-        console.log(item.first_name + item.last_name, 'vvvvvvvvv');
          $scope.name.push(item.first_name + item.last_name)
       }
     }
@@ -1045,8 +938,6 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
           data: sendtoBom,
         }).
         then(function(response) {
-
-          console.log(response.data, 'aaaaaa');
         })
 
 

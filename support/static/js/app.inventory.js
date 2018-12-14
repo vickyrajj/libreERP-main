@@ -10,7 +10,16 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     then(function(response) {
       $scope.products = response.data.data
       $scope.total = response.data.total
-      // if()
+      if($rootScope.cart.length){
+        for (var i = 0; i < $rootScope.cart.length; i++) {
+          for (var j = 0; j < $scope.products.length; j++) {
+            if($rootScope.cart[i]==$scope.products[j].productPk){
+              $scope.products[j].addedCart = true
+            }
+
+          }
+        }
+      }
     })
   }
   $scope.fetchProdInventory($scope.offset)
@@ -43,11 +52,13 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
   $scope.reset = function() {
     $rootScope.cart = []
+    $scope.fetchProdInventory($scope.offset)
   }
   $scope.reset()
-  $scope.addToCart = function(product) {
+  $scope.addToCart = function(product,indx) {
     console.log(product, 'aaaaaaaaaaaaaa');
     $rootScope.cart.push(product)
+    $scope.products[indx].addedCart = true
     console.log($rootScope.cart.length);
   }
 
@@ -317,6 +328,10 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             }
             if ($scope.form.project == undefined) {
               Flash.create('warning', 'Select Project');
+              return
+            }
+            if ($scope.productsOrdered.length <=0) {
+              Flash.create('warning', 'Add Products');
               return
             }
             console.log($scope.productsOrdered);

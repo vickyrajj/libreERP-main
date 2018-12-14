@@ -882,60 +882,58 @@ class OrderAPIView(APIView):
         prodList = request.data["products"]
         orderlist =[]
         for i in prodList:
-            # prodListQty = i['prodQty']
+            prodListQty = i['prodQty']
             invlist = Inventory.objects.filter(product=i['pk'])
             list = []
             stockList = []
             price = 0
-            for p in invlist:
-                prodListQty = i['prodQty']
-                if p.qty>0:
-                    print prodListQty , p ,'zzzzzzzzzzzzzz'
-                    if prodListQty!=0:
-                        print prodListQty , p ,'aaaaaaaaaa'
-                        if prodListQty>p.qty:
-                            stockList.append({'part_no':p.product.part_no,'qty': p.qty})
-                            prodListQty = prodListQty - p.qty
-                            p.qty = 0
-                            p.save()
-                        elif prodListQty<p.qty:
-                            stockList.append({'part_no':p.product.part_no,'qty': p.qty})
-                            p.qty = p.qty - prodListQty
-                            prodListQty = 0
-                            p.save()
-                        elif prodListQty==p.qty:
-                            stockList.append({'part_no':p.product.part_no,'qty': p.qty})
-                            prodListQty = prodListQty - p.qty
-                            print prodListQty
-                            prodListQty = 0
-                            p.qty = 0
-                            p.save()
-                        if p.rate>=price:
-                            price = p.rate
-                        else:
-                            price=price
-                    if prodListQty==0:
-                        print prodListQty , p ,'bbbbbbbbbbbbbb'
-                        data = {
-                        'qty': i['prodQty'],
-                        'product' :Products.objects.get(pk=i['pk']),
-                        'price' : price,
-                        'stock': stockList
-                        }
-                        orderObj = MaterialIssue.objects.create(**data)
-                        orderObj.save()
-                        orderlist.append(orderObj.pk)
-            dataVal = {
-                "user" : user,
-                "project" : project,
-            }
-            materialIssueObj = MaterialIssueMain.objects.create(**dataVal)
+            if prodListQty!=0:
+                for p in invlist:
+                    if p.qty>0:
+                            if prodListQty>p.qty:
+                                stockList.append({'part_no':p.product.part_no,'qty': p.qty})
+                                prodListQty = prodListQty - p.qty
+                                p.qty = 0
+                                p.save()
+                            elif prodListQty<p.qty:
+                                stockList.append({'part_no':p.product.part_no,'qty': p.qty})
+                                p.qty = p.qty - prodListQty
+                                prodListQty = 0
+                                p.save()
+                            elif prodListQty==p.qty:
+                                stockList.append({'part_no':p.product.part_no,'qty': p.qty})
+                                prodListQty = prodListQty - p.qty
+                                print prodListQty
+                                prodListQty = 0
+                                p.qty = 0
+                                p.save()
+                            if p.rate>=price:
+                                price = p.rate
+                            else:
+                                price=price
+            if prodListQty==0:
+                data = {
+                'qty': i['prodQty'],
+                'product' :Products.objects.get(pk=i['pk']),
+                'price' : price,
+                'stock': stockList
+                }
+                prodListQty = 0
+                orderObj = MaterialIssue.objects.create(**data)
+                orderObj.save()
+                orderlist.append(orderObj.pk)
+        dataVal = {
+            "user" : user,
+            "project" : project,
+        }
+        materialIssueObj = MaterialIssueMain.objects.create(**dataVal)
+        materialIssueObj.save()
+        for i in orderlist:
+            print i
+            inv = MaterialIssue.objects.get(pk=i)
+            materialIssueObj.materialIssue.add(inv)
             materialIssueObj.save()
-            for i in orderlist:
-                print i
-                inv = MaterialIssue.objects.get(pk=i)
-                materialIssueObj.materialIssue.add(inv)
-                materialIssueObj.save()
+            print materialIssueObj,'aaaaaaaaa'
 
         return Response(materialIssueObj.pk,status=status.HTTP_200_OK)
 

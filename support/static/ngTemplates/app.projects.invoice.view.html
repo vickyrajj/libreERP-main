@@ -57,7 +57,7 @@
           <tr ng-repeat="v in purchase  track by $index">
             <td>{{$index + 1}}</td>
             <td>{{v.products.part_no}}</td>
-            <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
+            <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> ({{v.products.description_2}})</span></td>
             <td> {{v.quantity1}}</td>
             <td>{{v.price.toFixed(2)}}</td>
             <td>{{(v.quantity1*v.price).toFixed(2)}}</td>
@@ -76,7 +76,7 @@
         <hr />
         <div class="col-md-12">
 
-      <table class="invoiceTable" style=" width: 100%;" ng-if="form.materialIssue" >
+      <table class="invoiceTable" style=" width: 100%;" ng-if="form.materialIssue.length>0" >
       <tbody>
         <tr style="background-color: #eeeeee;height: 50px;">
           <th>Si.No</th>
@@ -88,7 +88,7 @@
          </tr>
           <tr ng-repeat="m in form.materialIssue track by $index">
             <td>{{$index + 1}}</td>
-            <td>{{m.product.description_1}}</td>
+            <td>{{m.product.description_1}}<span ng-if="m.product.description_2"> ({{m.product.description_2}})</span></td>
             <td>{{m.product.part_no}}</td>
             <td>{{m.qty}}</td>
             <td >{{m.price.toFixed(2)}}</td>

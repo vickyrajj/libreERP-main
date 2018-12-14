@@ -110,42 +110,6 @@
 
           </div>
         </div>
-        <!-- <div class="row">
-
-
-        <div class="row">
-          <div class="col-md-5 text-right">
-            <label><h4> Project Title :  </h4> </label>
-          </div>
-          <div class="col-md-7">
-            <h4>{{form.title}}</h4> <br>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-5 text-right">
-            <label><h4> Service Name :  </h4> </label> <br>
-          </div>
-          <div class="col-md-7">
-            <h4>{{form.service.name}}</h4> <br>
-          </div>
-        </div>
-        <div class="row" >
-          <div class="col-md-5 text-right">
-            <label><h4> Tentative Closing Date :  </h4> </label> <br>
-          </div>
-          <div class="col-md-7">
-            <h4>{{form.date}}</h4> <br>
-          </div>
-        </div>
-        <div class="row" >
-          <div class="col-md-5 text-right">
-            <label><h4> Responsible Person :  </h4> </label> <br>
-          </div>
-          <div class="col-md-7" >
-            <h4 ng-repeat = "item in name"><span>{{item}}</span></h4> <br>
-          </div>
-        </div>
-        </div> -->
 
       </div>
       <div class="col-md-9">
@@ -156,9 +120,10 @@
             <th>Product</th>
             <th>Part No</th>
             <th>Quantity</th>
-            <th>Landed Price</th>
             <th>Price</th>
             <th>Quantity Received</th>
+            <th>Invoice Price</th>
+            <th>Landed Price</th>
             <th>Total</th>
            </tr>
             <tr ng-repeat="v in projects track by $index">
@@ -166,12 +131,14 @@
               <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
               <td>{{v.products.part_no}}</td>
               <td>{{v.quantity1}}</td>
-              <td ><input step=1 class="form-control-pos" ng-init="v.customer_price =v.price" ng-model="v.customer_price"></td>
               <td >{{v.price.toFixed(2)}}</td>
               <td ><input   step=1 class="form-control-pos" ng-init="v.quantity2 = v.quantity1" ng-model="v.quantity2"></td>
+              <td ><input step=1 class="form-control-pos" ng-init="v.customer_price =v.price" ng-model="v.customer_price"></td>
+              <td ><input   step=1 class="form-control-pos" ng-init="v.customer_price = v.price" ng-model="v.customer_price"></td>
               <td >{{(v.price*v.quantity2).toFixed(2)}}</td>
             </tr>
             <tr>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
