@@ -882,19 +882,18 @@ class OrderAPIView(APIView):
         prodList = request.data["products"]
         orderlist =[]
         for i in prodList:
-            prodListQty = i['prodQty']
+            # prodListQty = i['prodQty']
             invlist = Inventory.objects.filter(product=i['pk'])
             list = []
             stockList = []
             price = 0
             for p in invlist:
+                prodListQty = i['prodQty']
                 if p.qty>0:
-                    if p.rate>=price:
-                        price = p.rate
-                    else:
-                        price=price
+                    print prodListQty , p ,'zzzzzzzzzzzzzz'
                     if prodListQty!=0:
-                        if prodListQty>=p.qty:
+                        print prodListQty , p ,'aaaaaaaaaa'
+                        if prodListQty>p.qty:
                             stockList.append({'part_no':p.product.part_no,'qty': p.qty})
                             prodListQty = prodListQty - p.qty
                             p.qty = 0
@@ -904,8 +903,19 @@ class OrderAPIView(APIView):
                             p.qty = p.qty - prodListQty
                             prodListQty = 0
                             p.save()
+                        elif prodListQty==p.qty:
+                            stockList.append({'part_no':p.product.part_no,'qty': p.qty})
+                            prodListQty = prodListQty - p.qty
+                            print prodListQty
+                            prodListQty = 0
+                            p.qty = 0
+                            p.save()
+                        if p.rate>=price:
+                            price = p.rate
+                        else:
+                            price=price
                     if prodListQty==0:
-                        print stockList
+                        print prodListQty , p ,'bbbbbbbbbbbbbb'
                         data = {
                         'qty': i['prodQty'],
                         'product' :Products.objects.get(pk=i['pk']),
