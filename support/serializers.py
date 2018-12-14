@@ -84,7 +84,7 @@ class BoMSerializer(serializers.ModelSerializer):
     project =  ProjectsSerializer(many = True  , read_only =True)
     class Meta:
         model = BoM
-        fields = ('pk','created','user' , 'products','project','quantity1','quantity2','price','customer_price')
+        fields = ('pk','created','user' , 'products','project','quantity1','quantity2','price','landed_price','invoice_price','customer_price')
 
     def create(self, validated_data):
 
@@ -99,7 +99,7 @@ class BoMSerializer(serializers.ModelSerializer):
         b.save()
         return b
         def update (self, instance, validated_data):
-            for key in ['pk','created','user' , 'products','project','quantity1','quantity2','price']:
+            for key in ['pk','created','user' , 'products','project','quantity1','quantity2','price','landed_price','invoice_price','customer_price']:
                 try:
                     setattr(instance , key , validated_data[key])
                 except:

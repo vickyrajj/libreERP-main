@@ -410,7 +410,7 @@ def quotation(response , project , purchaselist , request):
         id+=1
         part_no = i.products.part_no
         desc = i.products.description_1
-        price = i.customer_price
+        price = i.landed_price
         qty = i.quantity1
         amnt = price * qty
         grandTotal +=amnt
@@ -954,7 +954,7 @@ class EmailApi(APIView):
         for i in productDetails:
             totalprice+=i.price
             totalqty+=i.quantity1
-            totalcustomerPrice+=i.customer_price
+            totalcustomerPrice+=i.landed_price
         ctx = {
             'recieverName' : 'admin',
             'productDetails' : productDetails,
@@ -1051,7 +1051,7 @@ class CalculateAPIView(APIView):
             clearingCharges1Total = round((float(i.price)*clearingCharges1Per)/100, 2)
             clearingCharges2Total = round((float(i.price)*clearingCharges2Per)/100, 2)
             total = packingTotal + insuranceTotal + freightTotal + assessableValueTotal + gst1Total + gst2Total + clearingCharges1Total + clearingCharges2Total
-            i.customer_price = round(total + i.price,2)
+            i.landed_price = round(total + i.price,2)
             i.save()
-            print i.customer_price
+            print i.landed_price
         return Response(status = status.HTTP_200_OK)

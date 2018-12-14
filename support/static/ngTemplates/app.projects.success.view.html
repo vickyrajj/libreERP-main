@@ -166,7 +166,7 @@
               <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
               <td>{{v.products.part_no}}</td>
               <td>{{v.quantity1}}</td>
-              <td ><input step=1 class="form-control-pos" ng-init="v.customer_price =v.price" ng-model="v.customer_price"></td>
+              <td ><input step=1 class="form-control-pos" ng-init="v.landed_price =v.price" ng-model="v.landed_price"></td>
               <td >{{v.price.toFixed(2)}}</td>
               <td ><input   step=1 class="form-control-pos" ng-init="v.quantity2 = v.quantity1" ng-model="v.quantity2"></td>
               <td >{{(v.price*v.quantity2).toFixed(2)}}</td>

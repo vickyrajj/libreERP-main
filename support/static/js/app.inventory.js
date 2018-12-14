@@ -16,7 +16,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             if($rootScope.cart[i]==$scope.products[j].productPk){
               $scope.products[j].addedCart = true
             }
-
           }
         }
       }
@@ -52,6 +51,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
   $scope.reset = function() {
     $rootScope.cart = []
+    $scope.fetchProdInventory($scope.offset)
   }
   $scope.reset()
   $scope.addToCart = function(product,indx) {
@@ -327,6 +327,10 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             }
             if ($scope.form.project == undefined) {
               Flash.create('warning', 'Select Project');
+              return
+            }
+            if ($scope.productsOrdered.length<=0) {
+              Flash.create('warning', 'Add Products');
               return
             }
             console.log($scope.productsOrdered);

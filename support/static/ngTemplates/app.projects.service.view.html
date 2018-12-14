@@ -58,7 +58,7 @@
           <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
           <td> <input class="form-control-pos text-center" ng-model="v.price"></td>
           <td><input type="text" class="form-control-pos text-center" ng-model="v.quantity1"></td>
-          <td><input type="text" class="form-control-pos text-center" ng-model="v.customer_price"></td>
+          <td><input type="text" class="form-control-pos text-center" ng-model="v.landed_price"></td>
           <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
         </tr>
         <tr ng-repeat="item in data track by $index">
@@ -75,7 +75,7 @@
             <input type="text" class="form-control-pos text-center" ng-model="item.quantity1">
           </td>
           <td >
-            <input type="text" class="form-control-pos text-center"  ng-model="item.customer_price" ng-init="item.customer_price=item.price">
+            <input type="text" class="form-control-pos text-center"  ng-model="item.landed_price" ng-init="item.landed_price=item.price">
           </td>
           <td>
             <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable(item.part_no,$index)"> <i class="fa fa-trash"></i> </button>
