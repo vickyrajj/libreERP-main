@@ -298,7 +298,7 @@ var webRtcAddress = '{{webrtcAddress}}';
 
 
 var custID = {{pk}};
-var CustName='{{name}}'
+var custName='{{name}}'
 console.log('customer id....', custID);
 // var borderColor = '#ACA626';
 // var custName = 'CIOC'
@@ -1074,7 +1074,7 @@ function activeAudioCall(){
      xhttp.send(dataToSend);
 
       if (threadExist==undefined) {
-        dataToPublish = [uid, callType, [] , custID]
+        dataToPublish = [uid, callType, [] , custID,custName]
         details = getCookie("uidDetails");
         if (details != "") {
           console.log(details);
@@ -1119,7 +1119,7 @@ function activeAudioCall(){
 
 
 
-        dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
+        dataToPublish = [uid, callType, [] , custID,custName, urlforConferenceForAgent]
         if (isAgentOnline) {
           console.log('ONLINE' , agentPk);
           connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
@@ -1975,10 +1975,10 @@ function activeAudioCall(){
                         '</div>'+
                         '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:100%; padding:5px;border:none; margin-bottom:10px;">'+
                          '<textarea id="feedbackText" style="width:100%;outline:none;padding:5px; resize:none;border:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
-                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:'+windowColor+' ; color:'+fontAndIconColor+'; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:'+fontAndIconColor+' ; color:'+windowColor+'; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Cancel'+
                          '</button>'+
-                         '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                         '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:'+windowColor+' ; color:'+fontAndIconColor+'; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
                          '</button>'+
                         '</form>'+
@@ -2646,7 +2646,7 @@ console.log(firstMessage);
      var dataToPublish = [uid , status , message ];
 
      if (threadExist==undefined) {
-      var dataToPublish = [uid , status , message , custID ];
+      var dataToPublish = [uid , status , message , custID ,custName];
       details = getCookie("uidDetails");
       if (details != "") {
         console.log(details);
@@ -2764,7 +2764,7 @@ console.log(firstMessage);
           filePicker.value = ""
           var dataToPublish = [uid , status , fileData];
           if (threadExist==undefined) {
-            var dataToPublish = [uid , status , fileData , custID ];
+            var dataToPublish = [uid , status , fileData , custID ,custName];
             details = getCookie("uidDetails");
             if (details != "") {
               console.log(details);

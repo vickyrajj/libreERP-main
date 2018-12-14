@@ -120,23 +120,7 @@ setInterval(function(){
   // $(window).on('mouseover', function() {
   //
   // })
-  $scope.timeSheet=[{}]
-setTimeout(function () {
-  console.log(connection.session);
-  connection.session.call('service.isOnline' + 2, []).then(
-    function (res) {
-     console.log("Result:", res);
-     // isAgentOnline = true;
-     // onlineStatus.innerHTML = 'Online';
-   },
-   function (err) {
-    console.log("Error:", err);
-    // isAgentOnline = false;
-    // onlineStatus.innerHTML = 'Away';
-  }
- );
 
-}, 1000);
 
 $scope.onHover=false;
 console.log($scope.onHover);

@@ -244,23 +244,7 @@ app.filter('getName' , function($users){
     }
   }
 })
-app.filter('getCompanyName' , function($http){
 
-  return function(input){
-    if (typeof input == 'undefined') {
-      return '';
-    }
-    $http({
-      method: 'GET',
-      url: '/api/support/getMyUser/?getCompanyDetails=1&pk=' + input,
-    }).
-    then(function(response) {
-      console.log(response.data[0]);
-      return response.data[0]
-    });
-
-  }
-})
 
 app.filter('newlines', function () {
     return function(text) {

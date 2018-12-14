@@ -385,6 +385,7 @@ var hasAccesss=true;
   };
 
   function checkOnline() {
+    console.log('in check');
     var scope = angular.element(document.getElementById('chatTab')).scope();
     if (scope) {
       console.log(scope.myUsers);

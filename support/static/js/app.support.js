@@ -84,32 +84,41 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
       }
     });
+    $http({
+      method: 'GET',
+      url: '/api/support/getMyUser/?getNewComp='+$scope.me.pk,
+    }).then(function(response) {
+      console.log(response.data , 'Got unhamdled');
+      $scope.myCompanies=response.data
+    });
 
     $http({
       method: 'GET',
       url: '/api/support/getMyUser/?getNewUser=1',
     }).then(function(response) {
       for (var i = 0; i < response.data.length; i++) {
-        $scope.newUsers.push({
-          name: '',
-          uid: response.data[i].uid,
-          messages: [],
-          isOnline: true,
-          companyPk: response.data[i].companyPk,
-          email: '',
-          boxOpen: false,
-          chatThreadPk: response.data[i].chatThreadPk,
-          spying: {
-            value: '',
-            isTyping: false
-          },
-          video: false,
-          videoUrl: ''
-        })
+        if($scope.myCompanies.indexOf(response.data[i].companyPk)>=0){
+          $scope.newUsers.push({
+            name: '',
+            uid: response.data[i].uid,
+            messages: [],
+            isOnline: true,
+            companyPk: response.data[i].companyPk,
+            email: '',
+            boxOpen: false,
+            chatThreadPk: response.data[i].chatThreadPk,
+            spying: {
+              value: '',
+              isTyping: false
+            },
+            video: false,
+            videoUrl: ''
+          })
+        }
+
       }
     });
 
-    setTimeout(function () {
       $http({
         method: 'GET',
         url: '/api/support/getMyUser/?getNewComp='+$scope.me.pk,
@@ -118,11 +127,11 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         $scope.myCompanies=response.data
 
       });
-    }, 1000);
+
 
 var myActiveTime=Date.now();
     function heartbeat() {
-      
+
       return {
         ActiveUsers:$scope.myUsers,
         pk:$scope.me.pk,

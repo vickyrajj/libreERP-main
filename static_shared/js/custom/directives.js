@@ -346,6 +346,15 @@ app.directive('chatBox', function() {
       //     }
       //   })
 
+
+        $http({
+            method: 'GET',
+            url: '/api/support/getMyUser/?getCompanyDetails=' + $scope.data.companyPk,
+          }).then(function(response){
+            $scope.companyName=response.data[0]
+          })
+
+
       $scope.textAreaBehavior = function(e){
         if (e.keyCode == 13 && !e.shiftKey)
             {
@@ -701,19 +710,21 @@ app.directive('chatBox', function() {
       }
 
 
-      if ($scope.data.email.length > 0 && $scope.data.email!=undefined) {
-        $http({
-          method: 'GET',
-          url: '/api/support/visitor/?email=' + $scope.data.email,
-        }).
-        then(function(response) {
-          console.log(response);
-          if (response.data.length > 1) {
-            $scope.chatHistBtn = true
-          }
-        })
-      }
+      if(!typeof($scope.data.email)=='undefined'){
+        if ($scope.data.email.length > 0 && $scope.data.email!=undefined) {
+          $http({
+            method: 'GET',
+            url: '/api/support/visitor/?email=' + $scope.data.email,
+          }).
+          then(function(response) {
+            console.log(response);
+            if (response.data.length > 1) {
+              $scope.chatHistBtn = true
+            }
+          })
+        }
 
+      }
       $scope.sound = ngAudio.load("static/audio/notification.mp3");
 
       $http({
