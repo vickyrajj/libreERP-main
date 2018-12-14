@@ -42,7 +42,6 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
 
 
-
   function setCookie(cname,cvalue,exdays) {
       var d = new Date();
       d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -117,9 +116,7 @@ setInterval(function(){
       $scope.mobileView=false;
   }
 },10)
-  // $(window).on('mouseover', function() {
-  //
-  // })
+
 
 
 $scope.onHover=false;

@@ -43,111 +43,118 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     return "";
   }
 
-  $scope.myCompanies=[];
+  $scope.myCompanies = [];
 
+  function fetchUsers() {
+    console.log('in fetch user');
+    if (connectionOpened) {
+      console.log('iffffffffffffffffff');
+      $http({
+        method: 'GET',
+        url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
+      }).then(function(response) {
 
-
-  setTimeout(function() {
-    $http({
-      method: 'GET',
-      url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
-    }).then(function(response) {
-
-      for (var i = 0; i < response.data.length; i++) {
-        $scope.myUsers.push({
-          name: response.data[i].name,
-          email: response.data[i].email,
-          uid: response.data[i].uid,
-          chatThreadPk: response.data[i].chatThreadPk,
-          messages: [],
-          isOnline: true,
-          unreadMsg: 0,
-          boxOpen: false,
-          companyPk: response.data[i].companyPk,
-          servicePk: response.data[i].servicePk,
-          spying: {
-            value: '',
-            isTyping: false
-          },
-          video: false,
-          videoUrl: '',
-          isVideoShowing:true,
-          alreadyDone:false
-        })
-
-        connection.session.publish('service.support.agent', [response.data[i].uid, 'R'], {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("Published");
-        });
-
-      }
-    });
-    $http({
-      method: 'GET',
-      url: '/api/support/getMyUser/?getNewComp='+$scope.me.pk,
-    }).then(function(response) {
-      console.log(response.data , 'Got unhamdled');
-      $scope.myCompanies=response.data
-    });
-
-    $http({
-      method: 'GET',
-      url: '/api/support/getMyUser/?getNewUser=1',
-    }).then(function(response) {
-      for (var i = 0; i < response.data.length; i++) {
-        if($scope.myCompanies.indexOf(response.data[i].companyPk)>=0){
-          $scope.newUsers.push({
-            name: '',
+        for (var i = 0; i < response.data.length; i++) {
+          $scope.myUsers.push({
+            name: response.data[i].name,
+            email: response.data[i].email,
             uid: response.data[i].uid,
+            chatThreadPk: response.data[i].chatThreadPk,
             messages: [],
             isOnline: true,
-            companyPk: response.data[i].companyPk,
-            email: '',
+            unreadMsg: 0,
             boxOpen: false,
-            chatThreadPk: response.data[i].chatThreadPk,
+            companyPk: response.data[i].companyPk,
+            servicePk: response.data[i].servicePk,
             spying: {
               value: '',
               isTyping: false
             },
             video: false,
-            videoUrl: ''
+            videoUrl: '',
+            isVideoShowing: true,
+            alreadyDone: false
           })
+
+          connection.session.publish(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
         }
 
-      }
-    });
+        $scope.getOpenedChatFromCookie();
+
+      });
+      $http({
+        method: 'GET',
+        url: '/api/support/getMyUser/?getNewComp=' + $scope.me.pk,
+      }).then(function(response) {
+        console.log(response.data, 'Got unhamdled');
+        $scope.myCompanies = response.data
+      });
 
       $http({
         method: 'GET',
-        url: '/api/support/getMyUser/?getNewComp='+$scope.me.pk,
+        url: '/api/support/getMyUser/?getNewUser=1',
       }).then(function(response) {
-        console.log(response.data , 'Got unhamdled');
-        $scope.myCompanies=response.data
 
+
+        for (var i = 0; i < response.data.length; i++) {
+
+          if($scope.myCompanies.indexOf(response.data[i].companyPk)>=0){
+            $scope.newUsers.push({
+              name: '',
+              uid: response.data[i].uid,
+              messages: [],
+              isOnline: true,
+              companyPk: response.data[i].companyPk,
+              email: '',
+              boxOpen: false,
+              chatThreadPk: response.data[i].chatThreadPk,
+              spying: {
+                value: '',
+                isTyping: false
+              },
+              video: false,
+              videoUrl: ''
+            })
+          }
+        }
       });
 
 
-var myActiveTime=Date.now();
-    function heartbeat() {
+      var myActiveTime = Date.now();
 
-      return {
-        ActiveUsers:$scope.myUsers,
-        pk:$scope.me.pk,
-        activeTime:myActiveTime
+      function heartbeat() {
+        return {
+          ActiveUsers: $scope.myUsers,
+          pk: $scope.me.pk,
+          activeTime: myActiveTime
+        }
       }
+
+      connection.session.register(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
+        function(res) {
+          console.log("registered to service.support.hhhh ");
+        },
+        function(err) {
+          console.log("failed to registered: ");
+        });
+
+      return
+    }else {
+      setTimeout(function () {
+        console.log('elseeeeeeeeeeeeeeeeee');
+        fetchUsers()
+      }, 500);
     }
+  }
 
-    connection.session.register('service.support.hhhhh.'+$scope.me.pk, heartbeat).then(
-      function (res) {
-        console.log("registered to service.support.heartbeat iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-      },
-      function (err) {
-        console.log("failed to registered: ");
-      });
+  fetchUsers();
 
-  },1000);
+
 
   $scope.onNotification = function(uid, msg, i = 'a') {
 
@@ -255,26 +262,24 @@ var myActiveTime=Date.now();
   }
 
   $scope.getOpenedChatFromCookie = function() {
-
+    console.log($scope.myUsers);
     var openedChats = getCookie('openedChats')
     if (openedChats.length == 0) {
       return
     }
-
     openedChats = JSON.parse(openedChats);
     console.log(openedChats);
     for (var i = 0; i < openedChats.length; i++) {
       for (var j = 0; j < $scope.myUsers.length; j++) {
         if ($scope.myUsers[j].uid == openedChats[i].uid) {
-          console.log(openedChats[i]);
-          $scope.addToChat(openedChats[i].index, openedChats[i].uid)
+          if (openedChats[i].index) {
+            $scope.addToChat(openedChats[i].index, openedChats[i].uid)
+          }
         }
       }
     }
   }
-  setTimeout(function() {
-    $scope.getOpenedChatFromCookie();
-  }, 3200);
+
 
 
   $scope.chatClose = function(idx, chatThreadPk) {
@@ -346,7 +351,7 @@ var myActiveTime=Date.now();
     });
 
     $scope.status = 'AP';
-    connection.session.publish('service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
+    connection.session.publish(wamp_prefix+'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -355,7 +360,7 @@ var myActiveTime=Date.now();
 
 
     $scope.status = 'R';
-    connection.session.publish('service.support.agent', [uid, $scope.status], {}, {
+    connection.session.publish(wamp_prefix+'service.support.agent', [uid, $scope.status], {}, {
       acknowledge: true
     }).
     then(function(publication) {
