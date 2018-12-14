@@ -346,7 +346,6 @@ app.directive('chatBox', function() {
       //     }
       //   })
 
-
         $http({
             method: 'GET',
             url: '/api/support/getMyUser/?getCompanyDetails=' + $scope.data.companyPk,

@@ -927,7 +927,6 @@ function createChatDiv() {
    // xhttp1.open('GET', '{{serverAddress}}/api/support/supportChat/', true);
    xhttp1.send();
 
-
   var exitBtn = document.getElementById('exitBtn');
 
   var singleService = document.getElementById('singleService');
@@ -947,6 +946,12 @@ function createChatDiv() {
   chatBox.style.display = "none";
 
   inputText.addEventListener('keydown',function(e){
+    // console.log(inputText.value.length);
+    // if(inputText.value.length>0){
+    //   document.getElementById('paperPlane').style.display="block"
+    // }else{
+    //   document.getElementById('paperPlane').style.display="none"
+    // }
 
     if(window.innerWidth <= 600) {
       console.log('mobile');
@@ -1642,6 +1647,12 @@ function activeAudioCall(){
                 color:black;\
                 z-index:9999999999999999999;\
                 border-radius:0px\
+              }\
+              .chatBox_header{\
+                border-radius:0px !important;\
+              }\
+              .chatBox_footer{\
+                border-radius:0px !important;\
               }\
               .closeIcon{\
                 display:block;\
@@ -2397,7 +2408,20 @@ var isConfirmedToEnd=false;
         if (message.attachment==null) {
           console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
           console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
-          var pTag = message.message.includes('www.') || message.message.includes('http') ? '<a href="'+message.message+'"><p style="word-break: break-all !important; font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p></a>':'<p style="word-break: break-all !important; font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ message.message.replace(/\n/g,'<br>') +'</p>'
+          // alert(typeof(message.message))
+          var str= message.message
+          var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+          var regex = new RegExp(expression);
+          var res = str.split(' ');
+          var pTag
+          res.forEach((r)=>{
+            if (r.match(regex)) {
+              str=str.replace(r,'<a href="'+r+'" target="_blank">'+r+'</a>')
+                pTag='<p style="word-break: break-all !important; font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
+            }else{
+                 pTag='<p style="word-break: break-all !important; font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
+            }
+          })
           msgDiv = pTag
         }else {
           msgDiv = attachedFile
@@ -2430,7 +2454,6 @@ var isConfirmedToEnd=false;
     }else {
       return ''
     }
-
   }
 
   let currentUrl=window.location.href;

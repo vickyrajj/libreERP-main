@@ -262,6 +262,26 @@ app.filter('noHTML', function () {
     }
 });
 
+app.filter('linkInText',()=>{
+  return function(input){
+    var str= input
+    var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    var regex = new RegExp(expression);
+    var res = str.split(' ');
+    var pTag
+    // alert(res);
+    res.forEach((r)=>{
+      if (r.match(regex)) {
+        str=str.replace(r,'<a href="'+r+'" target="_blank">'+r+'</a>')
+           pTag=str
+      }else{
+           pTag=str
+      }
+    })
+    return pTag
+  }
+})
+
 app.filter('getTime',function(){
    return function(date) {
      if(date==null||date==undefined){
