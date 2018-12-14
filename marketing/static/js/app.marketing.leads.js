@@ -1,5 +1,4 @@
 app.controller("businessManagement.marketing.leads", function($scope, $state, $users, $stateParams, $http, Flash) {
-  console.log('ssssssssssss',BRAND_LOGO,wampServer,SOURCE_LIST);
   $scope.data = {
     tableData: []
   };
