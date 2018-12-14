@@ -27,7 +27,7 @@
           <td>{{$index + 1}}</td>
           <td>{{v.description_1}}</td>
           <td>{{v.part_no}}</td>
-          <td><input type="number" step=1 class="form-control-pos" ng-model="v.prodQty"></td>
+          <td><input type="number" step=1 class="form-control-pos" ng-model="v.prodQty" ng-init="v.prodQty=1"></td>
           <td>
             <button type="button" class="btn btn-danger btn-sm" ng-click="delete($index)"> <i class="fa fa-trash"></i> </button>
           </td>
