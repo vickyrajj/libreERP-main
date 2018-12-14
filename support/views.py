@@ -68,7 +68,7 @@ class ProductsViewSet(viewsets.ModelViewSet):
     queryset = Products.objects.all()
     serializer_class = ProductsSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['part_no','parent','created']
+    filter_fields = ['part_no','parent','created' , 'bar_code']
 
 
 
@@ -255,14 +255,7 @@ def purchaseOrder(response , project , purchaselist , request):
         qty = i.quantity1
         amnt = price * qty
         grandTotal +=amnt
-        # else:
-        #     id+=1
-        #     part_no = i.products.part_no
-        #     desc = i.products.description_1
-        #     price = i.price
-        #     qty = i.quantity2
-        #     amnt = price * qty
-        #     grandTotal +=amnt
+
 
         p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
         p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
@@ -273,30 +266,6 @@ def purchaseOrder(response , project , purchaselist , request):
         data2.append([p12_01,p12_02,p12_03,p12_04,p12_05,p12_06])
 
 
-
-    #
-    # p13_01 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p13_02 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p13_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p13_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p13_05 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p13_06 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    #
-    # p14_01 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p14_02 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p14_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p14_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p14_05 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p14_06 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    #
-    # p15_01 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p15_02 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p15_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p15_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    # p15_05 =Paragraph("<para fontSize=8>Total</para>",styles['Normal'])
-    # p15_06 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    #
-    # print purchaselist ,'hhhhhhhhh'
     t2=Table(data2,6*[1.4*inch],id*[0.4*inch])
     t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
 
@@ -604,11 +573,7 @@ def materialIssued(response , value , request):
         grandtotal+=total
         print str(total),'aaaaaaaaaaaaa'
         gtotal = str(grandtotal)
-        # p5_01 =Paragraph(partno,styles['Normal'])
-        # p5_02 =Paragraph(str(description),styles['Normal'])
-        # p5_03 =Paragraph(str(qty),styles['Normal'])
-        # p5_04 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
-        # p5_05 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+        
 
         p6_01 =Paragraph(partno,styles['Normal'])
         p6_02 =Paragraph(description,styles['Normal'])
@@ -632,14 +597,6 @@ def materialIssued(response , value , request):
     elements.append(t2)
 
 
-    # ('TEXTFONT', (0, 0), (-1, -1),'Times-Bold'),
-
-
-    # elements.append(Spacer(1, 50))
-    #
-    # elements.append(HRFlowable(width="100%", thickness=1, color=darkblue))
-    #
-    # elements.append(Spacer(1, 12))
 
 
 
@@ -650,162 +607,7 @@ def materialIssued(response , value , request):
 
 
 
-# def invoice(response , projects , request):
-#     styles = getSampleStyleSheet()
-#     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
-#     doc.request = request
-#     elements = []
-#
-#     elements.append(Paragraph("<para alignment='center'fontSize=12  ><b> BRUDERER PRESSES INDIA PVT.LTD.</b></para>",styles['Normal']))
-#     elements.append(Spacer(1,8))
-#     elements.append(Paragraph("<para alignment='center'fontSize=8  >No. 17p, Sadaramangala Industrial Area, Whitefield Road,</para>",styles['Normal']))
-#     elements.append(Paragraph("<para alignment='center'fontSize=8 >Kadugodi, BANGALORE-560048, KARNATAKA</para>",styles['Normal']))
-#     elements.append(Paragraph("<para alignment='center'fontSize=8  >Phone : 080-28411049</para>",styles['Normal']))
-#     elements.append(Paragraph("<para alignment='center'fontSize=8  ><b>GSTIN NO.29QWDSCB56E</b></para>",styles['Normal']))
-#
-#     elements.append(Spacer(1,12))
-#     elements.append(HRFlowable(width="100%", thickness=1, color=black))
-#     elements.append(Spacer(1,4))
-#     elements.append(HRFlowable(width="100%", thickness=1, color=black))
-#     elements.append(Spacer(1,3))
-#
-#     elements.append(Paragraph("<para alignment='center'fontSize=15  ><b> TAX INVOICE</b></para>",styles['Normal']))
-#     elements.append(Spacer(1,12))
-#
-#
-#     p1 = Paragraph("<para fontSize=6><b>Invoice No:</b></para>",styles['Normal'])
-#     p01 = Paragraph("<para fontSize=6><b>BP/09/HG</b></para>",styles['Normal'])
-#
-#     p2 = Paragraph("<para fontSize=6><b>Invoice date:</b></para>",styles['Normal'])
-#     p02 = Paragraph("<para fontSize=6><b>14.07.4018</b></para>",styles['Normal'])
-#
-#     p3 = Paragraph("<para fontSize=6><b>Customer Po ref.</b></para>",styles['Normal'])
-#     p4 = Paragraph("<para fontSize=6><b></b></para>",styles['Normal'])
-#     p5 = Paragraph("<para fontSize=6><b>Insurance</b></para>",styles['Normal'])
-#     p6 = Paragraph("<para fontSize=6><b>NA</b></para>",styles['Normal'])
-#     p7 = Paragraph("<para fontSize=6><b>Transporter Name:</b></para>",styles['Normal'])
-#     p8 = Paragraph("<para fontSize=6><b></b></para>",styles['Normal'])
-#     p9 = Paragraph("<para fontSize=6><b>LR No.</b></para>",styles['Normal'])
-#     p10 = Paragraph("<para fontSize=6><b>NA</b></para>",styles['Normal'])
-#     p11 = Paragraph("<para fontSize=6 alignment='center'><b>Bill to Party</b></para>",styles['Normal'])
-#     p12 = Paragraph("<para fontSize=6 alignment='center'><b>Ship to Party</b></para>",styles['Normal'])
-#
-#     p13 = Paragraph("<para fontSize=6><b>Name:</b></para>",styles['Normal'])
-#     p14 = Paragraph("<para fontSize=6><b>SHRUJANA Enterprises</b></para>",styles['Normal'])
-#     p15 = Paragraph("<para fontSize=6><b>Name:</b></para>",styles['Normal'])
-#     p16 = Paragraph("<para fontSize=6><b>SHRUJANA Enterprises</b></para>",styles['Normal'])
-#     p17 = Paragraph("<para fontSize=6><b>Adderess : <br/> #no 14,btm ist stage ,Madiwala Bangalore</b></para>",styles['Normal'])
-#     p18 = Paragraph("<para fontSize=6><b>Adderess : <br/> #no 14,btm ist stage ,Madiwala Bangalore</b></para>",styles['Normal'])
-#
-#     p19 = Paragraph("<para fontSize=6><b>GSTIN:</b></para>",styles['Normal'])
-#     p20 = Paragraph("<para fontSize=6><b>49HJKDF76</b></para>",styles['Normal'])
-#     p21 = Paragraph("<para fontSize=6><b>GSTIN:</b></para>",styles['Normal'])
-#     p22 = Paragraph("<para fontSize=6><b>49HJKDF76</b></para>",styles['Normal'])
-#
-#     p23 = Paragraph("<para fontSize=6><b>STATE</b></para>",styles['Normal'])
-#     p24 = Paragraph("<para fontSize=6><b>KARNATAKA</b></para>",styles['Normal'])
-#     p25 = Paragraph("<para fontSize=6><b>code</b></para>",styles['Normal'])
-#     p26 = Paragraph("<para fontSize=6><b>49</b></para>",styles['Normal'])
-#     p27 = Paragraph("<para fontSize=6><b>STATE</b></para>",styles['Normal'])
-#     p28 = Paragraph("<para fontSize=6><b>KARNATAKA</b></para>",styles['Normal'])
-#     p29 = Paragraph("<para fontSize=6><b>code</b></para>",styles['Normal'])
-#     p30 = Paragraph("<para fontSize=6><b>29</b></para>",styles['Normal'])
-#
-#
-#
-#     data1 = [[p1,p01,'','',p2,p02,'',''],[p3,'',p4,'',p5,p6,'',''],[p7,'',p8,'',p9,p10,'',''],[p11,'','','',p12,'','',''],
-#              [p13,'',p14,'',p15,p16,'',''],[p17,'','','',p18,'','',''],[p19,p20,'','',p21,p22,'',''],[p23,p24,p25,p26,p27,p28,p29,p30]]
-#     rheight=0.2*inch,0.2*inch,0.2*inch,0.2*inch,0.2*inch,0.4*inch,0.2*inch,0.2*inch #[1.1*inch,1.1*inch]
-#     cwidth=8*[1.04*inch]
-#     t1=Table(data1,rowHeights=rheight,colWidths=cwidth)
-#     t1.setStyle(TableStyle([('TEXTCOLOR',(0,0),(-1,-1),black),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),('SPAN',(0,0),(3,0)),
-#                            ('SPAN',(4,0),(7,0)),('SPAN',(1,0),(3,0)),('SPAN',(5,0),(7,0)),('SPAN',(0,1),(1,1)),('SPAN',(2,1),(3,1)),('SPAN',(5,1),(7,1)),('SPAN',(0,2),(1,2)),
-#                            ('SPAN',(5,2),(7,2)),('SPAN',(2,2),(3,2)),('SPAN',(0,3),(3,3)), ('SPAN',(4,3),(7,3)),('SPAN',(0,4),(1,4)),('SPAN',(2,4),(3,4)),('SPAN',(5,4),(7,4)),
-#                            ('SPAN',(0,5),(3,5)),('SPAN',(4,5),(7,5)),('SPAN',(0,6),(3,6)),('SPAN',(4,6),(7,6)),('BACKGROUND', (0, 3), (7, 3), colors.lavender),('SPAN',(1,6),(3,6)),
-#                            ('SPAN',(5,6),(7,6)),('VALIGN',(0,0),(-1,-1),'TOP'),]))
-#
-#     elements.append(t1)
-#     elements.append(Spacer(1,15))
-#
-#     q1 = Paragraph("<para fontSize=6><b>S.No</b></para>",styles['Normal'])
-#     q01 = Paragraph("<para fontSize=6><b>Product Description</b></para>",styles['Normal'])
-#
-#     q2 = Paragraph("<para fontSize=6><b>HSN/SAC<br/>Code</b></para>",styles['Normal'])
-#     q02 = Paragraph("<para fontSize=6><b>Qty</b></para>",styles['Normal'])
-#
-#     q3 = Paragraph("<para fontSize=6><b>UOM</b></para>",styles['Normal'])
-#     q4 = Paragraph("<para fontSize=6><b>Rate</b></para>",styles['Normal'])
-#     q5 = Paragraph("<para fontSize=6><b>Taxable Value</b></para>",styles['Normal'])
-#
-#     q6 = Paragraph("<para fontSize=6><b>CGST</b></para>",styles['Normal'])
-#     q6_1 = Paragraph("<para fontSize=6><b>Rate</b></para>",styles['Normal'])
-#     q6_2 = Paragraph("<para fontSize=6><b>Amount</b></para>",styles['Normal'])
-#
-#
-#     q7 = Paragraph("<para fontSize=6><b>SGST</b></para>",styles['Normal'])
-#     q7_1 = Paragraph("<para fontSize=6><b>Rate</b></para>",styles['Normal'])
-#     q7_2 = Paragraph("<para fontSize=6><b>Amount</b></para>",styles['Normal'])
-#
-#     q8 = Paragraph("<para fontSize=6><b>IGST</b></para>",styles['Normal'])
-#     q8_1 = Paragraph("<para fontSize=6><b>Rate</b></para>",styles['Normal'])
-#     q8_2 = Paragraph("<para fontSize=6><b>Amount</b></para>",styles['Normal'])
-#
-#     q9 = Paragraph("<para fontSize=6 alignment='center'><b>Total</b></para>",styles['Normal'])
-#     q10 = Paragraph("<para fontSize=8 alignment='center'><b>Total</b></para>",styles['Normal'])
-#
-#     data2 = [[q1,q01,q2,q02,q3,q4,q5,'','','','','','',q9],['','','','','','','',q6_1,q6_2,q7_1,q7_2,q8_1,q8_2,''],['','','','','','','','','','','','','',''],
-#              ['','','','','','','','','','','','','',''],[q10,'','','','','','','','','','','','','']]
-#
-#     rheights=5*[0.4*inch]
-#     rheights[0]=0.19*inch
-#     rheights[1]=0.19*inch
-#     cwidths=14*[0.45*inch]
-#     cwidths[0]=0.4*inch
-#     cwidths[1]=1*inch
-#     cwidths[2]=0.7*inch
-#     cwidths[3]=0.4*inch
-#     cwidths[6]=1*inch
-#     cwidths[5]=0.7*inch
-#     cwidths[13]=0.81*inch
-#     cwidths[7]=0.4*inch
-#     cwidths[9]=0.4*inch
-#     cwidths[11]=0.4*inch
-#     cwidths[8]=0.55*inch
-#     cwidths[10]=0.55*inch
-#     cwidths[12]=0.55*inch
-#     t2=Table(data2,rowHeights=rheights,colWidths=cwidths)
-#     t2.setStyle(TableStyle([('TEXTCOLOR',(0,0),(-1,-1),black),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),('SPAN',(0,0),(0,1)),
-#                              ('SPAN',(1,0),(1,1)),('SPAN',(2,0),(2,1)),('SPAN',(3,0),(3,1)),('SPAN',(4,0),(4,1)),('SPAN',(5,0),(5,1)),('SPAN',(6,0),(6,1)),('SPAN',(7,0),(8,0)),
-#                              ('SPAN',(9,0),(10,0)),('SPAN',(11,0),(12,0)),('SPAN',(13,0),(13,1)),('SPAN',(0,4),(2,4)),('VALIGN',(0,0),(-1,-1),'MIDDLE')]))
-#
-#     elements.append(t2)
-#     elements.append(Spacer(1,4))
-#     elements.append(Paragraph("<para fontSize=6 > Rupees Two Lakh Thirty thosand </para>",styles['Normal']))
-#
-#     r1 = Paragraph("<para fontSize=6><b>Payment Terms:</b>{0}</para>".format('100% against delivery'),styles['Normal'])
-#
-#
-#     r3 = [Paragraph("<para fontSize=6 alignment='center'>{0}<br/></para>".format('Certificate that the particulars given above are true and correct'),styles['Normal']),
-#            Paragraph("<para fontSize=8 alignment='center'><b>{0}</b></para>".format('BRUDERER PRESSES INDIA PVT.LTD.'),styles['Normal'])]
-#
-#     r4 = [Paragraph("<para fontSize=6><b>Bank Details :{0}</b></para>".format('IDBI Bank LTD.'),styles['Normal']),
-#           Paragraph("<para fontSize=6><b>{0}</b><br/></para>".format('BANGALORE-560048, KARNATAKA'),styles['Normal']),
-#           Paragraph("<para fontSize=6><b>Account No : {0}</b><br/></para>".format('9845201345657'),styles['Normal']),
-#           Paragraph("<para fontSize=6><b>IFSC code : {0}</b><br/></para>".format('BFGN87'),styles['Normal'])]
-#
-#
-#     data3 = [[r1,'',r3],[r4,'','']]
-#     rheightss=2*[0.8*inch]
-#     cwidthss=3*[2.24*inch]
-#     cwidthss[2]=3*inch
-#     cwidthss[0]=3.1*inch
-#     t3=Table(data3,rowHeights=rheightss,colWidths=cwidthss)
-#     t3.setStyle(TableStyle([('TEXTCOLOR',(0,0),(-1,-1),black),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),('SPAN',(2,0),(2,1)),
-#                              ('SPAN',(1,0),(1,1)),('VALIGN',(0,0),(-1,-1),'TOP')]))
-#     elements.append(t3)
-#
-#
-#     doc.build(elements)
+
 
 class InventoryViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )

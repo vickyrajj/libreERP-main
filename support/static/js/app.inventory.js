@@ -1,6 +1,6 @@
 app.controller("businessManagement.inventory", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
   $scope.offset = 0
-  $scope.text = {}
+  $scope.text = {searchText:''}
   $scope.fetchProdInventory = function(offset) {
     console.log($scope.text.searchText,'hhhhhhh');
     $http({
@@ -294,6 +294,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           console.log(cartData, 'aaaaaaaaaaa');
           $scope.cartData = cartData
           $scope.productsOrdered = []
+          $scope.productsOrderedpk = []
           for (var i = 0; i < $scope.cartData.length; i++) {
             $http({
               method: 'GET',
@@ -301,6 +302,11 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             }).
             then(function(response) {
               $scope.productsOrdered.push(response.data);
+            //   $scope.productsOrderedpk = $scope.productsOrdered.map(function(product){
+            //
+            //   return product.pk
+            //
+            // })
             })
 
           }
@@ -330,14 +336,13 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               return
             }
 
-            // if ($scope.productsOrdered.length <=0) {
 
             if ($scope.productsOrdered.length<=0) {
 
               Flash.create('warning', 'Add Products');
               return
             }
-            console.log($scope.productsOrdered);
+
             var dataToSend = {
               products: $scope.productsOrdered,
               user: $scope.form.responsible.pk,

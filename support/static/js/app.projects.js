@@ -511,16 +511,16 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       description_1: '',
       price: '',
       quantity1: 1,
-      landed_price:0,
+      // landed_price:0,
     });
   }
 
 
 
   $scope.change = function(query) {
-    return $http.get('/api/support/products/?part_no__contains=' + query).
+    return $http.get('/api/support/products/?limit=10&part_no__contains=' + query).
     then(function(response) {
-      return response.data;
+      return response.data.results;
     })
   };
 
@@ -572,11 +572,13 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       if(typeof oldValue[i] == "undefined"){
 
       }
-      else if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].landed_price != oldValue[i].landed_price) {
+      // || newValue[i].landed_price != oldValue[i].landed_price
+      else if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 ) {
         var dataSend = {
           quantity1: newValue[i].quantity1,
           price: newValue[i].price,
-          landed_price:newValue[i].landed_price,
+          // invoice_price: newValue[i].price,
+          // landed_price:newValue[i].landed_price,
         }
         $http({
           method: 'PATCH',
@@ -607,7 +609,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         project: $scope.projectlist,
         quantity1: 1,
         price: $scope.data[$scope.data.length - 1].price,
-        landed_price:$scope.data[$scope.data.length - 1].landed_price
+        // landed_price:$scope.data[$scope.data.length - 1].landed_price
       }
       $http({
         method: 'POST',
@@ -633,7 +635,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         project: $scope.projectlist,
         quantity1: 1,
         price: $scope.data[$scope.data.length - 1].price,
-        landed_price:$scope.data[$scope.data.length - 1].landed_price
+        // landed_price:$scope.data[$scope.data.length - 1].landed_price
       }
       $http({
         method: 'POST',
@@ -653,7 +655,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
             var dataSend = {
               quantity1: newValue[i].quantity1,
               price: newValue[i].price,
-              landed_price:newValue[i].landed_price,
+              // landed_price:newValue[i].landed_price,
             }
             $http({
               method: 'PATCH',
@@ -834,10 +836,16 @@ app.controller("businessManagement.projects.approval.view", function($scope, $st
           $scope.total += $scope.projects[i].quantity1 * $scope.projects[i].price
           $scope.quanty = $scope.projects[i].quantity1
           $scope.price = $scope.projects[i].price
+          $scope.invoice_price = $scope.projects[i].price
+          $scope.landed_price = $scope.projects[i].price
+          $scope.quanty2 = $scope.projects[i].quantity1
 
             var sendtoBom = {
               quantity1 : $scope.quanty,
               price : $scope.price,
+              invoice_price : $scope.invoice_price,
+              landed_price : $scope.landed_price,
+              quantity2 : $scope.quanty2,
             }
             $http({
               method: 'PATCH',

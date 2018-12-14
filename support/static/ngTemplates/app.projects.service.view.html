@@ -64,7 +64,7 @@
         </tr>
         <tr ng-repeat="item in data track by $index">
           <td>{{$index + 1 + projects.length}}</td>
-          <td><input ng-model="item.part_no" uib-typeahead="product as product.part_no for product in change($viewValue)" type="text" class="form-control-pos text-center"></td>
+          <td><input ng-model="item.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></td>
           <td>
             <!-- <input  class="form-control-pos text-center" ng-model="item.description_1"> -->
             {{item.description_1}}<span ng-if="item.description_2"> &nbsp;({{item.description_2}})</span>
