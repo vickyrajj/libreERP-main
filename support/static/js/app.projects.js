@@ -511,7 +511,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       description_1: '',
       price: '',
       quantity1: 1,
-      customer_price:0,
+      landed_price:0,
     });
   }
 
@@ -572,11 +572,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       if(typeof oldValue[i] == "undefined"){
 
       }
-      else if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].customer_price != oldValue[i].customer_price) {
+      else if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].landed_price != oldValue[i].landed_price) {
         var dataSend = {
           quantity1: newValue[i].quantity1,
           price: newValue[i].price,
-          customer_price:newValue[i].customer_price,
+          landed_price:newValue[i].landed_price,
         }
         $http({
           method: 'PATCH',
@@ -607,7 +607,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         project: $scope.projectlist,
         quantity1: 1,
         price: $scope.data[$scope.data.length - 1].price,
-        customer_price:$scope.data[$scope.data.length - 1].customer_price
+        landed_price:$scope.data[$scope.data.length - 1].landed_price
       }
       $http({
         method: 'POST',
@@ -616,7 +616,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }).
       then(function(response) {
         $scope.data[$scope.data.length - 1].listPk = response.data.pk
-        $scope.data[$scope.data.length - 1].customer_price = response.data.price
+        $scope.data[$scope.data.length - 1].landed_price = response.data.price
         $scope.productpk.push(response.data);
         console.log($scope.productpk ,'ooooooo');
         $scope.showbutton = true
@@ -633,7 +633,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         project: $scope.projectlist,
         quantity1: 1,
         price: $scope.data[$scope.data.length - 1].price,
-        customer_price:$scope.data[$scope.data.length - 1].customer_price
+        landed_price:$scope.data[$scope.data.length - 1].landed_price
       }
       $http({
         method: 'POST',
@@ -642,18 +642,18 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }).
       then(function(response) {
         $scope.data[$scope.data.length - 1].listPk = response.data.pk
-        $scope.data[$scope.data.length - 1].customer_price = response.data.price
+        $scope.data[$scope.data.length - 1].landed_price = response.data.price
         $scope.productpk.push(response.data);
       })
       return
     } else {
       for (var i = 0; i < newValue.length; i++) {
         if (newValue[i].listPk) {
-          if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 ||  newValue[i].customer_price != oldValue[i].customer_price) {
+          if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 ||  newValue[i].landed_price != oldValue[i].landed_price) {
             var dataSend = {
               quantity1: newValue[i].quantity1,
               price: newValue[i].price,
-              customer_price:newValue[i].customer_price,
+              landed_price:newValue[i].landed_price,
             }
             $http({
               method: 'PATCH',
@@ -923,14 +923,13 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     if (typeof newValue == 'object') {
       $scope.total = 0
       for (var i = 0; i < $scope.projects.length; i++) {
-
-        if(isNaN($scope.projects[i].quantity2 * $scope.projects[i].price)==false)
-
-        $scope.total += $scope.projects[i].quantity2* $scope.projects[i].price
-
+        $scope.total += $scope.projects[i].quantity2* $scope.projects[i].landed_price
+         console.log($scope.projects[i].invoice_price,$scope.projects[i].landed_price,'jjjjjjjjjj');
         var sendtoBom = {
           quantity2 : $scope.projects[i].quantity2,
-          price : $scope.price,
+          price : $scope.projects[i].price,
+          invoice_price : $scope.projects[i].invoice_price,
+          landed_price : $scope.projects[i].landed_price,
         }
         $http({
           method: 'PATCH',
@@ -1009,7 +1008,7 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     else{
       for (var i = 0; i < $scope.projects.length; i++) {
         $scope.qty = $scope.projects[i].quantity2;
-        $scope.rate =$scope.projects[i].price.toFixed(2)
+        $scope.rate =$scope.projects[i].landed_price.toFixed(2)
         $scope. pkforProduct = $scope.projects[i].products.pk
 
 

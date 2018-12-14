@@ -16,7 +16,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             if($rootScope.cart[i]==$scope.products[j].productPk){
               $scope.products[j].addedCart = true
             }
-
           }
         }
       }
@@ -330,7 +329,11 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               Flash.create('warning', 'Select Project');
               return
             }
-            if ($scope.productsOrdered.length <=0) {
+
+
+
+            if ($scope.productsOrdered.length<=0) {
+
               Flash.create('warning', 'Add Products');
               return
             }
