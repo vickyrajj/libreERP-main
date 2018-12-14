@@ -937,8 +937,7 @@ class EmailApi(APIView):
         email=[]
         projectPk = request.data['pkValue']
         link = request.data['link']
-        linkUrl = link['origin'] + '/approve/?project=' + str(projectPk)
-        print linkUrl,'aaaaaaaaaaaaaaaaa'
+        linkUrl = link['origin'] + '/login?next=/approve/?project=' + str(projectPk)
         project = Projects.objects.get(pk=projectPk)
         productDetails = BoM.objects.filter(project__id = projectPk)
         totalprice = 0
