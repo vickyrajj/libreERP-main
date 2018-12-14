@@ -1075,7 +1075,7 @@ function activeAudioCall(){
      xhttp.send(dataToSend);
 
       if (threadExist==undefined) {
-        dataToPublish = [uid, callType, [] , custID,custName]
+        dataToPublish = [uid, callType, [] , custID]
         details = getCookie("uidDetails");
         if (details != "") {
           console.log(details);
@@ -1120,7 +1120,7 @@ function activeAudioCall(){
 
 
 
-        dataToPublish = [uid, callType, [] , custID,custName, urlforConferenceForAgent]
+        dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
         if (isAgentOnline) {
           console.log('ONLINE' , agentPk);
           connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
@@ -2647,7 +2647,7 @@ console.log(firstMessage);
      var dataToPublish = [uid , status , message ];
 
      if (threadExist==undefined) {
-      var dataToPublish = [uid , status , message , custID ,custName];
+      var dataToPublish = [uid , status , message , custID ];
       details = getCookie("uidDetails");
       if (details != "") {
         console.log(details);
@@ -2765,7 +2765,7 @@ console.log(firstMessage);
           filePicker.value = ""
           var dataToPublish = [uid , status , fileData];
           if (threadExist==undefined) {
-            var dataToPublish = [uid , status , fileData , custID ,custName];
+            var dataToPublish = [uid , status , fileData , custID ];
             details = getCookie("uidDetails");
             if (details != "") {
               console.log(details);
