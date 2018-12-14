@@ -185,10 +185,14 @@
 
         </tbody>
         </table>
+            <!-- <div class="col-md-8" style="padding-top:32px">
+          <button type="button" class="btn btn-primary  pull-right" style="cursor:pointer" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="send()" confirm-button-type="primary" cancel-button-type="default"  ng-if="!form.savedStatus">Save</button>
+          </div> -->
           <div class="col-md-12">
               <span><a  class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" target="_blank" href="/api/support/grn/?project={{form.pk}}">GRN<i  class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
               <span><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px  ;" target="_blank" href="/api/support/quotation/?project={{form.pk}}">Quotation<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
               <span ><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" target="_blank" href="/api/support/slip/?project={{form.pk}}">PO<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+              <button type="button" class="btn btn-success  pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="send()" confirm-button-type="primary" cancel-button-type="default"  ng-if="!form.savedStatus">Save</button>
           </div>
         </div>
       <!-- <div class="row" ng-if="issue">
