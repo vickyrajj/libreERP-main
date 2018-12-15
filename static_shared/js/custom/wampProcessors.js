@@ -6,8 +6,6 @@ var connection = new autobahn.Connection({
 var webRtcAddress = webRtcAddress
 var connectionOpened= false;
 
-var myUrl = 'cioc.'
-
 // "onopen" handler will fire when WAMP session has been established ..
 connection.onopen = function(session) {
 
@@ -397,7 +395,7 @@ var hasAccesss=true;
       console.log(scope.myUsers);
       for (var i = 0; i < scope.myUsers.length; i++) {
         console.log(scope.myUsers[i].uid , 'call');
-        session.call(myUrl+'service.support.heartbeat.' + scope.myUsers[i].uid, []).
+        session.call(wamp_prefix+'service.support.heartbeat.' + scope.myUsers[i].uid, []).
         then((function(i) {
           return function (res) {
             console.log(res,'res');
@@ -413,7 +411,7 @@ var hasAccesss=true;
 
       for (var i = 0; i < scope.newUsers.length; i++) {
         console.log(scope.newUsers[i].uid , 'newwww');
-        session.call(myUrl+'service.support.heartbeat.' + scope.newUsers[i].uid, []).
+        session.call(wamp_prefix+'service.support.heartbeat.' + scope.newUsers[i].uid, []).
         then((function(i) {
           return function (res) {
             scope.newUsers[i].isOnline = true;
@@ -438,7 +436,7 @@ var hasAccesss=true;
           alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
           scope.myUsers.push(args[2]);
 
-          connection.session.publish(myUrl+'service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
+          connection.session.publish(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -463,7 +461,7 @@ var hasAccesss=true;
         }
       }
       console.log(scope.me.pk+'heeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-      session.register(myUrl+'service.support.heartbeat.'+scope.me.pk, heartbeat).then(
+      session.register(wamp_prefix+'service.support.heartbeat.'+scope.me.pk, heartbeat).then(
         function (res) {
           console.log("registered to service.support.heartbeat iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
         },
@@ -493,7 +491,7 @@ var hasAccesss=true;
   //   return scope.me.pk
   // }
 
-  session.subscribe(myUrl+'service.support.agent', supportChatResponse).then(
+  session.subscribe(wamp_prefix+'service.support.agent', supportChatResponse).then(
     function(sub) {
       console.log("subscribed to topic 'supportChatResponse'");
     },
@@ -504,7 +502,7 @@ var hasAccesss=true;
 
 setTimeout(function () {
   var scope = angular.element(document.getElementById('main')).scope();
-  session.subscribe(myUrl+'service.support.agent.'+scope.me.pk, supportChatResponse).then(
+  session.subscribe(wamp_prefix+'service.support.agent.'+scope.me.pk, supportChatResponse).then(
     function(sub) {
       console.log("subscribed to topic 'supportChatResponse'");
     },
@@ -517,7 +515,7 @@ setTimeout(function () {
 
 
 
-  session.subscribe(myUrl+'service.chat.' + wampBindName, chatResonse).then(
+  session.subscribe(wamp_prefix+'service.chat.' + wampBindName, chatResonse).then(
     function(sub) {
       console.log("subscribed to topic 'chatResonse'");
     },
@@ -525,7 +523,7 @@ setTimeout(function () {
       console.log("failed to subscribed: " + err);
     }
   );
-  session.subscribe(myUrl+'service.notification.' + wampBindName, processNotification).then(
+  session.subscribe(wamp_prefix+'service.notification.' + wampBindName, processNotification).then(
     function(sub) {
       console.log("subscribed to topic 'notification'");
     },
@@ -533,7 +531,7 @@ setTimeout(function () {
       console.log("failed to subscribed: " + err);
     }
   );
-  session.subscribe(myUrl+'service.updates.' + wampBindName, processUpdates).then(
+  session.subscribe(wamp_prefix+'service.updates.' + wampBindName, processUpdates).then(
     function(sub) {
       console.log("subscribed to topic 'updates'");
     },
@@ -541,7 +539,7 @@ setTimeout(function () {
       console.log("failed to subscribed: " + err);
     }
   );
-  session.subscribe(myUrl+'service.dashboard.' + wampBindName, processDashboardUpdates).then(
+  session.subscribe(wamp_prefix+'service.dashboard.' + wampBindName, processDashboardUpdates).then(
     // for the various dashboard updates
     function(sub) {
       console.log("subscribed to topic 'dashboard'");

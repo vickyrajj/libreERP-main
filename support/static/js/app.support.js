@@ -76,7 +76,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
             alreadyDone: false
           })
 
-          connection.session.publish(myUrl+'service.support.agent', [response.data[i].uid, 'R'], {}, {
+          connection.session.publish(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -130,7 +130,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         }
       }
 
-      connection.session.register(myUrl+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
+      connection.session.register(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
         function(res) {
           console.log("registered to service.support.hhhh ");
         },
@@ -346,7 +346,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     });
 
     $scope.status = 'AP';
-    connection.session.publish(myUrl+'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
+    connection.session.publish(wamp_prefix+'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -355,7 +355,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
 
     $scope.status = 'R';
-    connection.session.publish(myUrl+'service.support.agent', [uid, $scope.status], {}, {
+    connection.session.publish(wamp_prefix+'service.support.agent', [uid, $scope.status], {}, {
       acknowledge: true
     }).
     then(function(publication) {

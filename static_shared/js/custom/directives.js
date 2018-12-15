@@ -377,7 +377,7 @@ app.directive('chatBox', function() {
           if(!$scope.isVisitorVideoShowing){
             // document.getElementById("iframeChat" + $scope.data.uid).style.height="14%";
             $scope.msgDivHeight = 51
-            connection.session.publish(myUrl+'service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -388,7 +388,7 @@ app.directive('chatBox', function() {
           // document.getElementById("iframeChat" + $scope.data.uid).style.height="100%"
           $scope.msgDivHeight = 52
           // document.getElementById("iframeChat" + $scope.data.uid).style.transition=".5s"
-          connection.session.publish(myUrl+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
+          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -401,7 +401,7 @@ app.directive('chatBox', function() {
       $scope.hideVisitorScreen = function() {
         $scope.IsVisitorOn=!$scope.IsVisitorOn;
         if($scope.IsVisitorOn){
-          connection.session.publish(myUrl+'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
+          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -409,7 +409,7 @@ app.directive('chatBox', function() {
           });
         }
       else{
-        connection.session.publish(myUrl+'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
+        connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
           acknowledge: true
         }).
         then(function(publication) {
@@ -794,7 +794,7 @@ app.directive('chatBox', function() {
 
 
             $scope.status = 'MF';
-            connection.session.publish(myUrl+'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me, new Date()], {}, {
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -860,7 +860,7 @@ app.directive('chatBox', function() {
 
             console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
 
-            connection.session.publish(myUrl+'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -883,7 +883,7 @@ app.directive('chatBox', function() {
       $scope.$watch('chatBox.messageToSend', function(newValue, oldValue) {
         $scope.status = "T";
         if (newValue != "") {
-          connection.session.publish(myUrl+'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
+          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -895,7 +895,7 @@ app.directive('chatBox', function() {
 
       $scope.chatClose = function(indx, uid, chatThreadPk) {
         $scope.status = "F";
-        connection.session.publish(myUrl+'service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
+        connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
         }).
         then(function(publication) {
@@ -1192,7 +1192,7 @@ app.directive('chatBox', function() {
           console.log(response.data.allAgents, '@@@@@@@@@@@@@@@@@@@@@');
           $scope.allAgents = response.data.allAgents
           for (var i = 0; i < $scope.allAgents.length; i++) {
-            connection.session.call(myUrl+'service.support.heartbeat.' + $scope.allAgents[i], []).
+            connection.session.call(wamp_prefix+'service.support.heartbeat.' + $scope.allAgents[i], []).
             then((function(i) {
               return function(res) {
                 console.log('online', i);
@@ -1241,7 +1241,7 @@ app.directive('chatBox', function() {
 
             $scope.transferChat = function() {
               console.log('in traaaaa');
-              connection.session.call(myUrl+'service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
+              connection.session.call(wamp_prefix+'service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
                 function(res) {
                   console.log(userData.chatThreadPk, $scope.agentForm.pk);
                   $http({
@@ -1404,7 +1404,7 @@ app.directive('chatBox', function() {
                 $uibModalInstance.dismiss(response.data)
 
 
-                connection.session.call(myUrl+'service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
+                connection.session.call(wamp_prefix+'service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
                   function(res) {},
                   function(err) {
 
@@ -1698,7 +1698,7 @@ app.directive('chatWindow', function($users) {
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
             console.log('sending.......', response.data.message, $scope.friend.username);
-            connection.session.publish(myUrl+'service.chat.' + $scope.friend.username, [$scope.status, response.data.message, $scope.me, response.data.pk], {}, {
+            connection.session.publish(wamp_prefix+'service.chat.' + $scope.friend.username, [$scope.status, response.data.message, $scope.me, response.data.pk], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -1751,7 +1751,7 @@ app.directive('chatWindow', function($users) {
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
             console.log(response.data.attachment);
-            connection.session.publish(myUrl+'service.chat.' + $scope.friend.username, [$scope.status, response.data.attachment, $scope.me, response.data.pk], {}, {
+            connection.session.publish(wamp_prefix+'service.chat.' + $scope.friend.username, [$scope.status, response.data.attachment, $scope.me, response.data.pk], {}, {
               acknowledge: true
             }).
             then(function(publication) {});
@@ -1853,7 +1853,7 @@ app.directive('chatWindow', function($users) {
         // console.log("changing");
         scope.status = "T"; // the sender is typing a message
         if (newValue != "") {
-          connection.session.publish(myUrl+'service.chat.' + scope.friend.username, [scope.status, scope.chatForm.messageToSend, scope.me.username]);
+          connection.session.publish(wamp_prefix+'service.chat.' + scope.friend.username, [scope.status, scope.chatForm.messageToSend, scope.me.username]);
         }
         scope.status = "N";
       }); // watch for the messageTosend

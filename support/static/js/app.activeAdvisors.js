@@ -36,7 +36,7 @@ app.controller("businessManagement.activeAdvisors", function($scope, $state, $us
     $scope.onlineAgents = []
     $scope.offlineAgents = []
     for (var i = 0; i < $scope.allAgents.length; i++) {
-      connection.session.call(myUrl+'service.support.hhhhh.' + $scope.allAgents[i], []).
+      connection.session.call(wamp_prefix+'service.support.hhhhh.' + $scope.allAgents[i], []).
       then((function(i) {
         return function(res) {
           console.log(res);

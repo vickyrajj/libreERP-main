@@ -295,6 +295,9 @@ function getCookie(cname) {
 var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
 
 var webRtcAddress = '{{webrtcAddress}}';
+var wamp_prefix = '{{wamp_prefix}}'
+
+alert(wamp_prefix)
 
 
 var custID = {{pk}};
@@ -737,7 +740,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
     }
 
-    session.register(myUrl+'service.support.createDetailCookie.'+uid, createCookieDetail).then(
+    session.register(wamp_prefix+'service.support.createDetailCookie.'+uid, createCookieDetail).then(
       function (res) {
         console.log("registered to service.support.createDetailCookie'");
       },
@@ -746,7 +749,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
     );
 
-    session.register(myUrl+'service.support.heartbeat.'+uid, heartbeat).then(
+    session.register(wamp_prefix+'service.support.heartbeat.'+uid, heartbeat).then(
       function (res) {
         console.log("registered to service.support.heartbeat'");
       },
@@ -755,7 +758,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
     );
 
-    session.subscribe(myUrl+'service.support.chat.' + uid, supportChat).then(
+    session.subscribe(wamp_prefix+'service.support.chat.' + uid, supportChat).then(
       function (sub) {
         console.log("subscribed to topic 'service.support.chat'" , uid );
       },
@@ -913,7 +916,6 @@ function createChatDiv() {
   var chatBox_header = document.getElementById('chatBox_header')
   var chatBox_footer = document.getElementById('chatBox_footer')
   var chatBox_content = document.getElementById('chatBox_content')
-  var myUrl = 'cioc.'
 
 
   var xhttp1 = new XMLHttpRequest();
@@ -1007,7 +1009,7 @@ function activeAudioCall(){
   })
 
   function reachChatBoxForInfo(){
-    connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'CustmorClosedTheChat' ] , {}, {
+    connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CustmorClosedTheChat' ] , {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -1094,7 +1096,7 @@ function activeAudioCall(){
              chatThreadPk = data.pk
              dataToPublish.push(chatThreadPk)
              dataToPublish.push(urlforConferenceForAgent)
-             connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
+             connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
                acknowledge: true
              }).
              then(function(publication) {
@@ -1123,7 +1125,7 @@ function activeAudioCall(){
         dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
         if (isAgentOnline) {
           console.log('ONLINE' , agentPk);
-          connection.session.publish(myUrl+'service.support.agent.'+agentPk, dataToPublish , {}, {
+          connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -1131,7 +1133,7 @@ function activeAudioCall(){
           });
         }else {
           console.log('offline send to all');
-          connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
+          connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -1922,7 +1924,7 @@ function activeAudioCall(){
 
          var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-         connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
+         connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
            acknowledge: true
          }).
          then(function(publication) {
@@ -2108,7 +2110,7 @@ var myformrating;
 
             var dataToSend = {uid:uid , usersFeedback:ratingFormObject.customerFeedback  , rating:ratingFormObject.customerRating , sentByAgent:false };
 
-             connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
+             connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
                acknowledge: true
              }).
              then(function(publication) {
@@ -2195,7 +2197,7 @@ var myformrating;
     }
     if (event.data=='calledToHideVideo') {
       setIframeRotated()
-      connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -2204,7 +2206,7 @@ var myformrating;
     }
     if (event.data=='calledToShowVideo') {
       setIframeToNormal()
-      connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -2435,7 +2437,7 @@ var isConfirmedToEnd=false;
 
   let currentUrl=window.location.href;
 setTimeout(function () {
-  connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
+  connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
     acknowledge: true
   }).
   then(function(publication) {
@@ -2448,7 +2450,7 @@ setInterval(function () {
     console.log('changed url $$$$$$$$$$$$$$$$$$$$$$$$$$$4');
 
     currentUrl=window.location.href;
-    connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
+    connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -2498,7 +2500,7 @@ console.log(firstMessage);
   function onlineAgent() {
     console.log('in onlineAgent######333333333' , agentPk);
     if (agentPk) {
-        connection.session.call(myUrl+'service.support.heartbeat.' + agentPk, []).then(
+        connection.session.call(wamp_prefix+'service.support.heartbeat.' + agentPk, []).then(
           function (res) {
            console.log("Result:", res);
            isAgentOnline = true;
@@ -2525,7 +2527,7 @@ console.log(firstMessage);
   function spying(inputVal) {
     countOnchange = 0;
     console.log('values' , inputVal);
-      connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -2666,7 +2668,7 @@ console.log(firstMessage);
             console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
             chatThreadPk = data.pk
             dataToPublish.push(chatThreadPk)
-            connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
+            connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -2681,7 +2683,7 @@ console.log(firstMessage);
        console.log('chat threAD EXIST');
        if (isAgentOnline) {
          console.log('ONLINE' , agentPk);
-         connection.session.publish(myUrl+'service.support.agent.'+agentPk, dataToPublish , {}, {
+         connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
            acknowledge: true
          }).
          then(function(publication) {
@@ -2689,7 +2691,7 @@ console.log(firstMessage);
          });
        }else {
          console.log('offline send to all');
-         connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
+         connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
            acknowledge: true
          }).
          then(function(publication) {
@@ -2783,7 +2785,7 @@ console.log(firstMessage);
                  chatThreadPk = data.pk
                  dataToPublish.push(chatThreadPk)
 
-                 connection.session.publish(myUrl+'service.support.agent', dataToPublish, {}, {
+                 connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish, {}, {
                    acknowledge: true
                  }).
                  then(function(publication) {
@@ -2798,7 +2800,7 @@ console.log(firstMessage);
             console.log('chat threAD EXIST');
             if (isAgentOnline) {
               console.log('ONLINE' , agentPk);
-              connection.session.publish(myUrl+'service.support.agent.'+agentPk, dataToPublish , {}, {
+              connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {
@@ -2806,7 +2808,7 @@ console.log(firstMessage);
               });
             }else {
               console.log('offline send to all');
-              connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
+              connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {
