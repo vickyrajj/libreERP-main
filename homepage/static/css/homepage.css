@@ -353,6 +353,12 @@
   background-position: center;
 }
 
+.bgrnd_main {
+  background-color: rgba(5, 20, 43, 0.85);
+  min-height: 500px;
+  color: #fff;
+}
+
 .bgrnd {
   background-image: linear-gradient(to right, rgba(5, 20, 43, 0.85), rgba(5, 20, 43, 0.14)), url('/static/images/hero1.png');
   background-repeat: no-repeat;
@@ -430,17 +436,238 @@
   padding: 20px;
 }
 
+.arrow_btn {
+  transition: all 0.5s ease;
+  display: inline-block;
+  cursor: pointer;
+  width: 105px;
+  height: 105px;
+  background: url("/static/images/red.svg") no-repeat center center;
+}
+
+.arrow_btn:hover {
+  background: url('/static/images/white.svg') no-repeat center center;
+  width: 105px;
+  height: 105px;
+}
+
+.arrow_text {
+  display: inline-block;
+  float: left;
+  font-weight: bold;
+  letter-spacing: 0.88px;
+  margin-top: 40px;
+}
+
+.box_div {
+  min-height: 108vh;
+  position: relative;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+.box_container {
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding-bottom: 0rem;
+}
+
+.boxes {
+  min-height: 50vh;
+  height: auto;
+  padding: 4rem;
+  z-index: 1;
+  margin-top: -15vh;
+}
+
+.primary_text {
+  margin: 0;
+  padding: 0;
+}
+
+.secondary_text {
+  margin: 0;
+  padding: 0;
+}
+
+.clear_text {
+  margin: 0;
+  padding: 0;
+}
+
+.stat_number sup {
+  top: -7rem;
+  left: -0.5rem;
+  font-size: 4rem;
+  letter-spacing: 0.3px;
+  line-height: 1.5;
+  display: inline-block;
+  font-family: cursive, sans-serif;
+  position: relative;
+}
+
+.stat_number .counter-up {
+  font-size: 12rem;
+  margin-bottom: 1.5rem;
+  margin-top: 0;
+  font-weight: lighter;
+  text-transform: uppercase;
+  line-height: 1;
+  font-family: cursive, sans-serif;
+}
+
+.stat_description {
+  width: 40%;
+  font-size: 4rem;
+  font-family: cursive, sans-serif;
+  margin-bottom: 30px;
+  text-transform: none;
+  margin-top: 0;
+  font-weight: lighter;
+  font-style: normal;
+  line-height: 1;
+}
+
+.box-primary {
+  float: left;
+  display: block;
+  margin-right: .57586%;
+  width: 49.71207%;
+  margin-top: -10vh;
+  background-color: #ff555f;
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.box-secondary {
+  background-color: #8c5d8e;
+  float: left;
+  display: block;
+  margin-right: .57586%;
+  width: 41.33075%;
+  margin-left: 58.66925%;
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.box-clear {
+  margin-right: 0;
+  float: left;
+  display: block;
+  width: 41.33075%;
+  margin-left: 8.38132%;
+}
+
+.box-clear .stat_number {
+  color: #ff555f;
+}
+
+.main_div {
+  min-height: 108vh;
+  position: relative;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+.main_container {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding-bottom: 0rem;
+}
+
+.main_bg_p {
+  min-height: 85vh;
+  padding: 4rem;
+  margin-top: 0;
+}
+
+.main_bg_s {
+  width: 50%;
+  min-height: 108vh;
+  padding: 4rem;
+  z-index: 0;
+  margin-top: 0;
+  color: #fff;
+}
+
+.bg_primary {
+  width: 100%;
+  float: left;
+  display: block;
+  color: #fff;
+  background-color: #8c5d8e;
+  z-index: 0;
+}
+
+.bg_secondary {
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.85)), url('/static/images/building_hero.jpg');
+  background-repeat: no-repeat;
+  float: left;
+  display: block;
+  margin-right: 0;
+  width: 50.33075%;
+  margin-left: 49.622%;
+  z-index: 3;
+  margin-top: -43.9333%;
+  background-size: cover;
+}
+
+.left_text {
+  position: absolute;
+  z-index: 20;
+  width: 90%;
+  padding: 6rem;
+}
+
+.left_title {
+  font-family: cursive;
+  font-weight: bold;
+  font-size: 1.5rem
+}
+
+.left_description {
+  font-family: cursive;
+  font-weight: lighter;
+  font-size: 7.5rem;
+}
+
+.right_text {
+  position: absolute;
+  z-index: 20;
+  width: 28%;
+  padding-top: 70rem;
+}
+
+.right_description {
+  font-size: 2rem;
+}
+
+.right_btn {
+  position: absolute;
+  right: -50%;
+  bottom: 1%;
+}
+
+/* currently working**********************************************************************************************************8 */
+/* for iphones.... */
 @media only screen and (device-width : 414px) and (device-height : 736px) and (-webkit-device-pixel-ratio : 3) {
   .personInfo {
     padding-left: 0px !important;
     margin: 30px !important;
   }
+
   .circles {
     right: 10px;
   }
-
 }
 
+/* for bigger display size.... */
 @media only screen and (min-width:1500px) {
   .flex_section {
     margin: 100px 200px 100px 200px !important;
@@ -453,8 +680,13 @@
   .enterpriseimg {
     display: none;
   }
+
+  /* .box_section {
+    margin: 25px 0px 0px 0px !important;
+  } */
 }
 
+/* mobile display size starts here.... */
 @media only screen and (max-width:768px) {
   .detailRight {
     width: 100%;
@@ -514,6 +746,14 @@
     min-height: 500px;
   }
 
+  .bgrnd_main {
+    background-image: linear-gradient(rgba(5, 20, 43, 0.92), rgba(5, 20, 43, 0.68)), url('/static/images/hero1.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 500px;
+    background-position: center;
+  }
+
   .bgrnd {
     display: none;
   }
@@ -539,6 +779,149 @@
 
   .explore_text {
     text-align: center;
+  }
+
+  .arrow_text {
+    padding: 0px 0px 0px 40px;
+    margin-right: -50px;
+  }
+
+  .head {
+    padding: 4px 40px 30px 15px;
+  }
+
+  .head h1 {
+    font-size: 25px;
+    font-weight: lighter;
+    font-family: cursive;
+    line-height: 1.5;
+  }
+
+  .purple_bg {
+    height: 90vh;
+    padding: 0px;
+  }
+
+  .head_bg {
+    margin: 0px;
+    background-size: 80% 50%;
+    transform: translateX(24px)translateY(-195px);
+    width: 90%;
+    height: 78%;
+    padding: 0px;
+  }
+
+  .box_div {
+    min-height: 150vh;
+  }
+
+  .box_container {
+    max-width: 100%;
+  }
+
+  .box-primary {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .box-secondary {
+    float: left;
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0px;
+  }
+
+  .box-clear {
+    float: left;
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0px;
+  }
+
+  .stat_number sup {
+    font-size: 3rem;
+    letter-spacing: 0.2px;
+  }
+
+  .stat_number .counter-up {
+    font-size: 10rem;
+  }
+
+  .stat_description {
+    width: 70%;
+    font-size: 3rem;
+  }
+
+  .main_div {
+    min-height: 108vh;
+    position: relative;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .main_container {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding-bottom: 0rem;
+  }
+
+  .main_bg_p {
+    min-height: 85vh;
+    padding: 4rem;
+    margin-top: 0;
+  }
+
+  .main_bg_s {
+    width: 50%;
+    min-height: 30vh;
+    padding: 1.7rem;
+    z-index: 0;
+    margin-top: 0;
+  }
+
+  .bg_primary {
+    width: 100%;
+    float: left;
+    display: block;
+    color: #fff;
+    background-color: #8c5d8e;
+    z-index: 0;
+  }
+
+  .bg_secondary {
+    margin-right: 0;
+    width: 74.331%;
+    margin-left: 25.669%;
+    z-index: 3;
+    margin-top: -42.333%;
+  }
+
+  .left_text {
+    width: 70%;
+    padding: 0;
+  }
+
+  .left_title {
+    font-size: 1.4rem
+  }
+
+  .left_description {
+    font-family: cursive;
+    font-weight: lighter;
+    font-size: 2.5rem;
+    line-height: 1.6;
+  }
+
+  .right_text {
+    width: 65%;
+    padding-top: 1rem;
+  }
+
+  .right_description {
+    font-size: 1.5944rem;
   }
 
   /* .blog_container, .sec1Right, .sec2Left, .sec2thirdRow{
@@ -717,6 +1100,7 @@
   }
 }
 
+/* mobile display size ends here.... */
 .dp {
   width: 80px;
 }
@@ -1088,7 +1472,7 @@ blockquote>p {
   right: 50px;
 }
 
-.stat-circleo {
+/* .stat-circleo {
   z-index: 2;
   content: "";
   display: inline-block;
@@ -1127,8 +1511,7 @@ blockquote>p {
   position: absolute;
   top: 650px;
   left: 80px;
-}
-
+} */
 figure {
   font-weight: bold;
 }

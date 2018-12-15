@@ -9,8 +9,6 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
   $httpProvider.defaults.withCredentials = true;
   $locationProvider.html5Mode(true);
 
-
-
 });
 
 app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $state, $stateParams, $http) {
@@ -170,7 +168,18 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.homepage.impliment.html',
       // controller: 'controller.ecommerce.PagesDetails'
     })
-
+  $stateProvider
+    .state('rpa', {
+      url: "/rpa",
+      templateUrl: '/static/ngTemplates/app.homepage.rpa.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+  $stateProvider
+    .state('finance', {
+      url: "/finance",
+      templateUrl: '/static/ngTemplates/app.homepage.finance.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
   $stateProvider
     .state('pages', {
       url: "/:title",
