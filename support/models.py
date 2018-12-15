@@ -16,6 +16,9 @@ PURCHASE_STATUS = (
 ('approved' , 'approved'),
 )
 
+STOCK__STATUS = (
+('live' , 'live'),('completed' , 'completed')
+)
 
 class ProductSheet(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -100,3 +103,12 @@ class MaterialIssueMain(models.Model):
     materialIssue = models.ManyToManyField(MaterialIssue, related_name='materialqty')
     user =  models.ForeignKey(User , related_name='materialuser')
     project = models.ForeignKey(Projects , related_name='materialproject')
+
+class StockCheck(models.Model):
+    inventory =   models.ForeignKey( Inventory , null = True)
+    date = models.DateField(null = True)
+    count = models.PositiveIntegerField(null=True , default=0)
+    status = models.CharField(choices = STOCK__STATUS , max_length = 10 , default = 'live')
+
+class StockCheckLog(models.Model):
+    product =  models.ForeignKey( StockCheck , null = True)

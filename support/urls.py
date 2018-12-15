@@ -11,6 +11,8 @@ router.register(r'bom' , BoMViewSet , base_name = 'bom')
 router.register(r'inventory' , InventoryViewSet , base_name = 'inventory')
 router.register(r'materialqty' , MaterialIssueViewSet , base_name = 'materialIssue')
 router.register(r'material' , MaterialIssueMainViewSet , base_name = 'materialIssuemain')
+router.register(r'stockcheck' , StockCheckViewSet , base_name = 'stockcheck')
+router.register(r'stockchecklog' , StockCheckLogViewSet , base_name = 'stockchecklog')
 
 
 
@@ -25,4 +27,5 @@ urlpatterns = [
     url(r'grn/$' , GrnAPIView.as_view() ),
     url(r'sendEmail/$' , EmailApi.as_view() ),
     url(r'calculate/$' , CalculateAPIView.as_view() ),
+    # url(r'stock/$' , StockAPIView.as_view() ),
 ]

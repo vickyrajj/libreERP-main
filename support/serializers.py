@@ -151,3 +151,25 @@ class MaterialIssueMainSerializer(serializers.ModelSerializer):
             b.user = User.objects.get(pk=int(self.context['request'].data['user']))
         b.save()
         return b
+
+class StockCheckSerializer(serializers.ModelSerializer):
+    # inventory = InventorySerializer(many = False , read_only = True)
+    class Meta:
+        model = StockCheck
+        fields = ('pk','date','inventory','count','status')
+
+        # def create(self, validated_data):
+        #     s = StockCheck(**validated_data)
+        #     if 'inventory' in self.context['request'].data:
+        #        s.product = Inventory.objects.get(pk=int(self.context['request'].data['inventory']))
+        #     s.save()
+        #     return s
+
+class StockCheckLogSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StockCheckLog
+        fields = ('pk','product')
+
+
+        #     return s

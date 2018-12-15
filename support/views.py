@@ -93,6 +93,20 @@ class BoMViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['products','project']
 
+class StockCheckViewSet(viewsets.ModelViewSet):
+    permissions_classes  = (permissions.AllowAny , )
+    queryset = StockCheck.objects.all()
+    serializer_class = StockCheckSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['products','project']
+
+class StockCheckLogViewSet(viewsets.ModelViewSet):
+    permissions_classes  = (permissions.AllowAny , )
+    queryset = StockCheckLog.objects.all()
+    serializer_class = StockCheckLogSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['products','project']
+
 class ProductsUploadAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
 
@@ -573,7 +587,7 @@ def materialIssued(response , value , request):
         grandtotal+=total
         print str(total),'aaaaaaaaaaaaa'
         gtotal = str(grandtotal)
-        
+
 
         p6_01 =Paragraph(partno,styles['Normal'])
         p6_02 =Paragraph(description,styles['Normal'])
@@ -647,12 +661,10 @@ class MaterialIssuedNoteAPIView(APIView):
 class ProductInventoryAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        offset = int(request.GET['offset'])
-        limit = offset + int(request.GET['limit'])
-        print offset,limit
+
         total = 0
         toReturn = []
-        if request.GET['search']!='undefined':
+        if 'search' in request.GET:
             productlist = Inventory.objects.filter( Q(product__part_no__icontains=request.GET['search']) | Q(product__description_1__icontains=request.GET['search']))
         else:
             productlist = Inventory.objects.all()
@@ -666,13 +678,28 @@ class ProductInventoryAPIView(APIView):
             for k in data:
                 print k['rate'] ,k['qty']
                 print type(k['rate']) ,type(k['qty'])
-                totalVal = k['rate'] * k['qty']
-                totalprice += k['rate']
-                totalqty += k['qty']
+                if k['rate']:
+                    rt = k['rate']
+                else:
+                    rt = 0
+                if k['qty']:
+                    qt = k['qty']
+                else:
+                    qt = k['qty']
+
+                totalVal = rt * qt
+                totalprice += rt
+                totalqty += qt
                 totalSum+=totalVal
             toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty,'totalVal':totalSum})
             total+=totalSum
-        returnData ={'data' :toReturn[offset : limit],'total':total }
+        if 'offset' in request.GET:
+            offset = int(request.GET['offset'])
+            limit = offset + int(request.GET['limit'])
+            print offset,limit
+            returnData ={'data' :toReturn[offset : limit],'total':total }
+        else:
+            returnData ={'data' :toReturn,'total':total }
         return Response(returnData,status=status.HTTP_200_OK)
 
 
@@ -681,10 +708,15 @@ class OrderAPIView(APIView):
     def post(self , request , format = None):
         user =  User.objects.get(pk=request.data["user"])
         project = Projects.objects.get(pk=request.data["project"])
+        # prodList =[]
+        # for i in request.data["products"]:
+        #     prodList.append(Products.objects.get(pk=i))
+        #     print prodList,'llllll'
         prodList = request.data["products"]
         orderlist =[]
         for i in prodList:
             prodListQty = i['prodQty']
+            print prodListQty,'hhhhhhhhhh'
             invlist = Inventory.objects.filter(product=i['pk'])
             list = []
             stockList = []
@@ -858,3 +890,45 @@ class CalculateAPIView(APIView):
             i.save()
             print i.landed_price,'ggggggggggggggggg'
         return Response(status = status.HTTP_200_OK)
+
+
+# class StockAPIView(APIView):
+#     def get(self , request , format = None):
+#         total = 0
+#         toReturn = []
+#
+#         inventorylist = StockCheck.objects.all()
+#         inventorylist = list(inventorylist.values())
+#         # print inventorylist,'jjjjjjj'
+#         for i in inventorylist:
+#             # print list(i.values()),'jjjjjjj'
+#             data = Inventory.objects.get(id=i['inventory_id'])
+#             #
+#             for item , value in data.__dict__.iteritems():
+#                 # print item,'iiiiiiii'
+#                 if item == 'product_id':
+#                     product = Products.objects.filter(id=value)
+#                     for p in product:
+#                       # inventorylist = StockCheck.objects.filter(inventory__product__id)
+#                         print p[''],'fff'
+#
+#         #     for product in i.inventory:
+#         # inventorylist = list(inventorylist.values('inventory').distinct().values('inventory__pk','inventory__product__pk','inventory__qty','inventory__rate'))
+#         # for i in inventorylist:
+#         #     totalprice = 0
+#         #     totalqty = 0
+#         #     totalVal =0
+#         #     totalSum = 0
+#         #     data = list(inventorylist.filter(inventory=i['inventory__pk']).values())
+#         #     print data,'ssssssss'
+#         #     for k in data:
+#         #         print k['rate'] ,k['qty']
+#         #         print type(k['rate']) ,type(k['qty'])
+#         #         totalVal = k['rate'] * k['qty']
+#         #         totalprice += k['rate']
+#         #         totalqty += k['qty']
+#         #         totalSum+=totalVal
+#         #     toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty,'totalVal':totalSum})
+#         #     total+=totalSum
+#         # returnData ={'data' :toReturn[offset : limit],'total':total }
+#         return Response(status=status.HTTP_200_OK)

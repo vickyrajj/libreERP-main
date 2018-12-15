@@ -3,9 +3,14 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   $scope.text = {searchText:''}
   $scope.fetchProdInventory = function(offset) {
     console.log($scope.text.searchText,'hhhhhhh');
+    if ($scope.text.searchText.length>0) {
+      var url = '/api/support/inventoryData/?limit=7&offset=' + offset + '&search=' + $scope.text.searchText
+    }else {
+      var url = '/api/support/inventoryData/?limit=7&offset=' + offset
+    }
     $http({
       method: 'GET',
-      url: '/api/support/inventoryData/?limit=7&offset=' + offset + '&search=' + $scope.text.searchText
+      url: url
     }).
     then(function(response) {
       $scope.products = response.data.data
@@ -72,7 +77,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     console.log($scope.searchmaterial.search,'kkkkkkkkkkkkkkk');
     $http({
       method: 'GET',
-      url: '/api/support/material/?limit=4&offset=' + offset+ '&search=' + $scope.searchmaterial.search
+      url: '/api/support/material/?limit=7&offset=' + offset+ '&search=' + $scope.searchmaterial.search
     }).
     then(function(response) {
       console.log(response.data, 'aaaaaaaaaaaaaa');
@@ -98,19 +103,20 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
 
   $scope.nextmaterial = function() {
-    $scope.offsetmaterial  = $scope.offsetmaterial  + 4
-    $scope.getMaterialIssue($scope.offsetmaterial)
+    console.log($scope.materialIssue.length,'ooooo');
     if ($scope.materialIssue.length == 0) {
-        $scope.offsetmaterial  =  $scope.offsetmaterial  - 4
+        $scope.offsetmaterial  =  $scope.offsetmaterial -7
       $scope.getMaterialIssue($scope.offsetmaterial)
     }
+    $scope.offsetmaterial  = $scope.offsetmaterial  + 7
+    $scope.getMaterialIssue($scope.offsetmaterial)
   }
 
   $scope.prevmaterial = function() {
     if ($scope.offsetmaterial== 0) {
       return
     }
-    $scope.offsetmaterial =  $scope.offsetmaterial  - 4
+    $scope.offsetmaterial =  $scope.offsetmaterial  - 7
     console.log('calling from prev');
     $scope.getMaterialIssue($scope.offsetmaterial)
   }
@@ -294,7 +300,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           console.log(cartData, 'aaaaaaaaaaa');
           $scope.cartData = cartData
           $scope.productsOrdered = []
-          $scope.productsOrderedpk = []
+          // $scope.productsOrderedpk = []
           for (var i = 0; i < $scope.cartData.length; i++) {
             $http({
               method: 'GET',
@@ -304,9 +310,10 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               $scope.productsOrdered.push(response.data);
             //   $scope.productsOrderedpk = $scope.productsOrdered.map(function(product){
             //
-            //   return product.pk
+            //   return  product.pk
             //
             // })
+
             })
 
           }
@@ -369,14 +376,51 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
       Flash.create("warning",'Add items to Cart')
     }
   }
-  // console.log($scope.valueList,'aaaaaaaaaaaahhhhhhhhhhhhhhhhhhhaaaaaaaaaa');
-     // var vm = this
-     // vm.Total = 0;
 
- //     $scope.totalSum = $scope.materialIssue.keys(cart.products).map(function(k){
- //     return +cart.products[k].price;
- // }).reduce(function(a,b){ return a + b },0);
+    $scope.download = function(){
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.inventory.stockcheck.modal.html',
+        size: 'lg',
+        controller: function($scope, $uibModalInstance) {
+          $scope.off = 0;
+        $scope.fectchStock = function(){
+          $http({
+              method: 'GET',
+              url: '/api/support/inventoryData/?limit=7&offset=' + $scope.off ,
+            }).
+            then(function(response) {
+              console.log(response.data,'dddddddddddddddd');
+              $scope.stockdata = response.data.data
 
+            })
+        }
+        $scope.fectchStock()
+
+          $scope.refresh = function() {
+            $scope.fectchStock($scope.off)
+          }
+
+          $scope.next = function() {
+            $scope.off = $scope.off + 7
+            $scope.fectchStock($scope.off)
+            if ($scope.stockdata.length == 0) {
+              
+              $uibModalInstance.close()
+            }
+          }
+         $scope.count=0
+          $scope.prev = function() {
+            if ($scope.off == 0) {
+              return
+            }
+            $scope.off = $scope.off - 7
+            console.log('calling from prev');
+            $scope.fectchStock($scope.off)
+          }
+
+        },
+      })
+    }
 
 
 })

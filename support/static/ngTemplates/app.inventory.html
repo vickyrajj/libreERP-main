@@ -6,6 +6,7 @@
     <div class="col-md-3" style="padding-top:20px">
       <strong style="margin:0 13px 0 20px">Inventory</strong><switch ng-model="modeToggle" class="neutral "></switch>
       <strong style="margin-left:13px">Material Issue</strong>
+      <span><button type="button" class="btn btn-success  pull-right" ng-click="download()">Download</button></span>
     </div>
     <div class="col-md-8  text-left" ng-if="!modeToggle" style="padding-top:20px">
       <div class="container-fluid">
@@ -99,9 +100,10 @@ style="padding:10px;">
             </div>
           </div>
           <div class="row container-fluid" ng-if="p.open">
-            <div class="container-fluid">
-              <hr>
-            </div>
+              <div class="container-fluid">
+                <hr>
+              </div>
+            <div class="row">
             <div class="col-md-4">
               <div class="row">
                 <div class="col-md-2">
@@ -142,6 +144,7 @@ style="padding:10px;">
                   </td>
                 </tr>
               </table>
+            </div>
             </div>
 
           </div>
