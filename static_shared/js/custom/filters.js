@@ -244,6 +244,23 @@ app.filter('getName' , function($users){
     }
   }
 })
+app.filter('getCompanyName' , function($http){
+
+  return function(input){
+    if (typeof input == 'undefined') {
+      return '';
+    }
+    $http({
+      method: 'GET',
+      url: '/api/support/getMyUser/?getCompanyDetails=1&pk=' + input,
+    }).
+    then(function(response) {
+      console.log(response.data[0]);
+      return response.data[0]
+    });
+
+  }
+})
 
 app.filter('newlines', function () {
     return function(text) {
@@ -285,10 +302,6 @@ app.filter('toSet',function(){
      if(date==null||date==undefined){
        return date
      }
-
-    // console.log(strTime);
-    // var dateString = date + "-" +(month + 1) + "-" + year;
-    // return dateString + ', ' + strTime
     return date.toFixed(2);
   }
 })

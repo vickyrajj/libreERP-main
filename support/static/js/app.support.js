@@ -43,102 +43,113 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     return "";
   }
 
-  $scope.myCompanies=[];
+  $scope.myCompanies = [];
 
-
-
-  setTimeout(function() {
-    $http({
-      method: 'GET',
-      url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
-    }).then(function(response) {
-      // console.log(response.data , 'distinct resssssssssss');
-      for (var i = 0; i < response.data.length; i++) {
-        // console.log(response.data[i]);
-        // console.log(response.data[i].chatThreadPk);
-        $scope.myUsers.push({
-          name: response.data[i].name,
-          email: response.data[i].email,
-          uid: response.data[i].uid,
-          chatThreadPk: response.data[i].chatThreadPk,
-          messages: [],
-          isOnline: true,
-          unreadMsg: 0,
-          boxOpen: false,
-          companyPk: response.data[i].companyPk,
-          servicePk: response.data[i].servicePk,
-          spying: {
-            value: '',
-            isTyping: false
-          },
-          video: false,
-          videoUrl: '',
-          isVideoShowing:true,
-          alreadyDone:false
-        })
-
-        connection.session.publish('service.support.agent', [response.data[i].uid, 'R'], {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("Published");
-        });
-
-      }
-    });
-
-    $http({
-      method: 'GET',
-      url: '/api/support/getMyUser/?getNewUser=1',
-    }).then(function(response) {
-      // console.log(response.data , 'Got unhamdled');
-      for (var i = 0; i < response.data.length; i++) {
-        // console.log(response.data[i]);
-        $scope.newUsers.push({
-          name: '',
-          uid: response.data[i].uid,
-          messages: [],
-          isOnline: true,
-          companyPk: response.data[i].companyPk,
-          email: '',
-          boxOpen: false,
-          chatThreadPk: response.data[i].chatThreadPk,
-          spying: {
-            value: '',
-            isTyping: false
-          },
-          video: false,
-          videoUrl: ''
-        })
-      }
-    });
-
-    setTimeout(function () {
+  function fetchUsers() {
+    console.log('in fetch user');
+    if (connectionOpened) {
+      console.log('iffffffffffffffffff');
       $http({
         method: 'GET',
-        url: '/api/support/getMyUser/?getNewComp='+$scope.me.pk,
+        url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
       }).then(function(response) {
-        console.log(response.data , 'Got unhamdled');
-        $scope.myCompanies=response.data
+
+        for (var i = 0; i < response.data.length; i++) {
+          $scope.myUsers.push({
+            name: response.data[i].name,
+            email: response.data[i].email,
+            uid: response.data[i].uid,
+            chatThreadPk: response.data[i].chatThreadPk,
+            messages: [],
+            isOnline: true,
+            unreadMsg: 0,
+            boxOpen: false,
+            companyPk: response.data[i].companyPk,
+            servicePk: response.data[i].servicePk,
+            spying: {
+              value: '',
+              isTyping: false
+            },
+            video: false,
+            videoUrl: '',
+            isVideoShowing: true,
+            alreadyDone: false
+          })
+
+          connection.session.publish(myUrl+'service.support.agent', [response.data[i].uid, 'R'], {}, {
+            acknowledge: true
+          }).
+          then(function(publication) {
+            console.log("Published");
+          });
+        }
+
+        $scope.getOpenedChatFromCookie();
 
       });
-    }, 3000);
 
+      $http({
+        method: 'GET',
+        url: '/api/support/getMyUser/?getNewUser=1',
+      }).then(function(response) {
+        for (var i = 0; i < response.data.length; i++) {
+          $scope.newUsers.push({
+            name: '',
+            uid: response.data[i].uid,
+            messages: [],
+            isOnline: true,
+            companyPk: response.data[i].companyPk,
+            email: '',
+            boxOpen: false,
+            chatThreadPk: response.data[i].chatThreadPk,
+            spying: {
+              value: '',
+              isTyping: false
+            },
+            video: false,
+            videoUrl: ''
+          })
+        }
+      });
 
-    function heartbeat() {
-      return $scope.me.pk
+        $http({
+          method: 'GET',
+          url: '/api/support/getMyUser/?getNewComp=' + $scope.me.pk,
+        }).then(function(response) {
+          console.log(response.data, 'Got unhamdled');
+          $scope.myCompanies = response.data
+        });
+
+      var myActiveTime = Date.now();
+
+      function heartbeat() {
+        return {
+          ActiveUsers: $scope.myUsers,
+          pk: $scope.me.pk,
+          activeTime: myActiveTime
+        }
+      }
+
+      connection.session.register(myUrl+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
+        function(res) {
+          console.log("registered to service.support.hhhh ");
+        },
+        function(err) {
+          console.log("failed to registered: ");
+        });
+
+      return
+    }else {
+      setTimeout(function () {
+        console.log('elseeeeeeeeeeeeeeeeee');
+        fetchUsers()
+      }, 500);
     }
+  }
 
-    connection.session.register('service.support.heartbeat.'+$scope.me.pk, heartbeat).then(
-      function (res) {
-        console.log("registered to service.support.heartbeat iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-      },
-      function (err) {
-        console.log("failed to registered: ");
-      });
+  fetchUsers();
 
 
-  },0);
 
   $scope.onNotification = function(uid, msg, i = 'a') {
 
@@ -224,15 +235,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
   $scope.addToChat = function(indx, uid) {
 
-    console.log(indx);
-    console.log(uid);
-    // $scope.status = 'AP';
-    // connection.session.publish('service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
-    //   acknowledge: true
-    // }).
-    // then(function(publication) {
-    //   console.log("Published");
-    // });
     addToCookie(uid, indx);
 
     for (var i = 0; i < $scope.chatsInView.length; i++) {
@@ -254,41 +256,24 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     }
   }
 
-  // $scope.removeChat = function(indx) {
-  //   for (var i = 0; i < $scope.chatsInView.length; i++) {
-  //     if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
-  //       $scope.chatsInView.splice(i,1)
-  //       console.log('removing from chat');
-  //       return
-  //     }
-  //   }
-  // }
-
-
   $scope.getOpenedChatFromCookie = function() {
-
+    console.log($scope.myUsers);
     var openedChats = getCookie('openedChats')
     if (openedChats.length == 0) {
       return
     }
-
     openedChats = JSON.parse(openedChats);
     console.log(openedChats);
     for (var i = 0; i < openedChats.length; i++) {
       for (var j = 0; j < $scope.myUsers.length; j++) {
         if ($scope.myUsers[j].uid == openedChats[i].uid) {
-          console.log(openedChats[i]);
-          $scope.addToChat(openedChats[i].index, openedChats[i].uid)
+          if (openedChats[i].index) {
+            $scope.addToChat(openedChats[i].index, openedChats[i].uid)
+          }
         }
       }
     }
   }
-  setTimeout(function() {
-    $scope.getOpenedChatFromCookie();
-  }, 3200);
-
-  // $scope.addToChat(openedChats[i].index,openedChats[i].uid)
-
 
 
 
@@ -314,27 +299,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       return
     });
   }
-
-
-  // $scope.tabs=[
-  //   {
-  //     name: "Templates",
-  //     active:"true",
-  //     icon: "indent"
-  //   },
-  //   {
-  //     name: "Events",
-  //     active:"false",
-  //     icon: "clock-o"
-  //   },
-  //   {
-  //     name: "Comments",
-  //     active:"true",
-  //     icon: "envelope-o"
-  //   }
-  // ]
-  //
-  // $scope.comments = [{msg:"hii,how are you,i am fine",date:"2nd march",time:"2.00 pm"},{msg:"hello,how are you",date:"3nd march",time:"6.00 pm"},{msg:"In computer programming, a comment is a programmer-readable explanation or annotation in the source code of a computer program. They are added with the purpose of making the source code easier for humans to understand, and are generally ignored by compilers and interpreters.",date:"5th march",time:"4.00 pm"},{msg:"yups,how are you",date:"1st march",time:"8.00 pm"}]
 
   $scope.assignUser = function(indx, uid) {
 
@@ -382,7 +346,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     });
 
     $scope.status = 'AP';
-    connection.session.publish('service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
+    connection.session.publish(myUrl+'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -391,14 +355,12 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
 
     $scope.status = 'R';
-    connection.session.publish('service.support.agent', [uid, $scope.status], {}, {
+    connection.session.publish(myUrl+'service.support.agent', [uid, $scope.status], {}, {
       acknowledge: true
     }).
     then(function(publication) {
       console.log("Published");
     });
-
-
 
   }
 

@@ -175,12 +175,30 @@ app.config(function($stateProvider) {
       }
     })
 
-    .state('home.timesheet', {
-      url: "/timesheet",
+    .state('home.adminTimesheet', {
+      url: "/adminTimesheet",
       views: {
         "": {
-          templateUrl: '/static/ngTemplates/app.timesheet.html',
-          controller: 'businessManagement.timesheet',
+          templateUrl: '/static/ngTemplates/app.adminTimesheet.html',
+          controller: 'businessManagement.adminTimesheet',
+        }
+      }
+    })
+    .state('home.timesheets', {
+      url: "/timesheets",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.timesheets.html',
+          controller: 'businessManagement.timesheets',
+        }
+      }
+    })
+    .state('home.activeAdvisors', {
+      url: "/activeAdvisors",
+      views: {
+        "": {
+          templateUrl: '/static/ngTemplates/app.activeAdvisors.html',
+          controller: 'businessManagement.activeAdvisors',
         }
       }
     })

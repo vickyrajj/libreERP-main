@@ -263,14 +263,6 @@ p,k){p.exports={name:"autobahn",version:"0.9.6",description:"An implementation o
 
 
 
-!function(a){function b(a,d){if(a=a?a:"",d=d||{},a instanceof b)return a;if(!(this instanceof b))return new b(a,d);var e=c(a);this._originalInput=a,this._r=e.r,this._g=e.g,this._b=e.b,this._a=e.a,this._roundA=P(100*this._a)/100,this._format=d.format||e.format,this._gradientType=d.gradientType,this._r<1&&(this._r=P(this._r)),this._g<1&&(this._g=P(this._g)),this._b<1&&(this._b=P(this._b)),this._ok=e.ok,this._tc_id=O++}function c(a){var b={r:0,g:0,b:0},c=1,e=null,g=null,i=null,j=!1,k=!1;return"string"==typeof a&&(a=K(a)),"object"==typeof a&&(J(a.r)&&J(a.g)&&J(a.b)?(b=d(a.r,a.g,a.b),j=!0,k="%"===String(a.r).substr(-1)?"prgb":"rgb"):J(a.h)&&J(a.s)&&J(a.v)?(e=G(a.s),g=G(a.v),b=h(a.h,e,g),j=!0,k="hsv"):J(a.h)&&J(a.s)&&J(a.l)&&(e=G(a.s),i=G(a.l),b=f(a.h,e,i),j=!0,k="hsl"),a.hasOwnProperty("a")&&(c=a.a)),c=z(c),{ok:j,format:a.format||k,r:Q(255,R(b.r,0)),g:Q(255,R(b.g,0)),b:Q(255,R(b.b,0)),a:c}}function d(a,b,c){return{r:255*A(a,255),g:255*A(b,255),b:255*A(c,255)}}function e(a,b,c){a=A(a,255),b=A(b,255),c=A(c,255);var d,e,f=R(a,b,c),g=Q(a,b,c),h=(f+g)/2;if(f==g)d=e=0;else{var i=f-g;switch(e=h>.5?i/(2-f-g):i/(f+g),f){case a:d=(b-c)/i+(c>b?6:0);break;case b:d=(c-a)/i+2;break;case c:d=(a-b)/i+4}d/=6}return{h:d,s:e,l:h}}function f(a,b,c){function d(a,b,c){return 0>c&&(c+=1),c>1&&(c-=1),1/6>c?a+6*(b-a)*c:.5>c?b:2/3>c?a+6*(b-a)*(2/3-c):a}var e,f,g;if(a=A(a,360),b=A(b,100),c=A(c,100),0===b)e=f=g=c;else{var h=.5>c?c*(1+b):c+b-c*b,i=2*c-h;e=d(i,h,a+1/3),f=d(i,h,a),g=d(i,h,a-1/3)}return{r:255*e,g:255*f,b:255*g}}function g(a,b,c){a=A(a,255),b=A(b,255),c=A(c,255);var d,e,f=R(a,b,c),g=Q(a,b,c),h=f,i=f-g;if(e=0===f?0:i/f,f==g)d=0;else{switch(f){case a:d=(b-c)/i+(c>b?6:0);break;case b:d=(c-a)/i+2;break;case c:d=(a-b)/i+4}d/=6}return{h:d,s:e,v:h}}function h(b,c,d){b=6*A(b,360),c=A(c,100),d=A(d,100);var e=a.floor(b),f=b-e,g=d*(1-c),h=d*(1-f*c),i=d*(1-(1-f)*c),j=e%6,k=[d,h,g,g,i,d][j],l=[i,d,d,h,g,g][j],m=[g,g,i,d,d,h][j];return{r:255*k,g:255*l,b:255*m}}function i(a,b,c,d){var e=[F(P(a).toString(16)),F(P(b).toString(16)),F(P(c).toString(16))];return d&&e[0].charAt(0)==e[0].charAt(1)&&e[1].charAt(0)==e[1].charAt(1)&&e[2].charAt(0)==e[2].charAt(1)?e[0].charAt(0)+e[1].charAt(0)+e[2].charAt(0):e.join("")}function j(a,b,c,d,e){var f=[F(P(a).toString(16)),F(P(b).toString(16)),F(P(c).toString(16)),F(H(d))];return e&&f[0].charAt(0)==f[0].charAt(1)&&f[1].charAt(0)==f[1].charAt(1)&&f[2].charAt(0)==f[2].charAt(1)&&f[3].charAt(0)==f[3].charAt(1)?f[0].charAt(0)+f[1].charAt(0)+f[2].charAt(0)+f[3].charAt(0):f.join("")}function k(a,b,c,d){var e=[F(H(d)),F(P(a).toString(16)),F(P(b).toString(16)),F(P(c).toString(16))];return e.join("")}function l(a,c){c=0===c?0:c||10;var d=b(a).toHsl();return d.s-=c/100,d.s=B(d.s),b(d)}function m(a,c){c=0===c?0:c||10;var d=b(a).toHsl();return d.s+=c/100,d.s=B(d.s),b(d)}function n(a){return b(a).desaturate(100)}function o(a,c){c=0===c?0:c||10;var d=b(a).toHsl();return d.l+=c/100,d.l=B(d.l),b(d)}function p(a,c){c=0===c?0:c||10;var d=b(a).toRgb();return d.r=R(0,Q(255,d.r-P(255*-(c/100)))),d.g=R(0,Q(255,d.g-P(255*-(c/100)))),d.b=R(0,Q(255,d.b-P(255*-(c/100)))),b(d)}function q(a,c){c=0===c?0:c||10;var d=b(a).toHsl();return d.l-=c/100,d.l=B(d.l),b(d)}function r(a,c){var d=b(a).toHsl(),e=(d.h+c)%360;return d.h=0>e?360+e:e,b(d)}function s(a){var c=b(a).toHsl();return c.h=(c.h+180)%360,b(c)}function t(a){var c=b(a).toHsl(),d=c.h;return[b(a),b({h:(d+120)%360,s:c.s,l:c.l}),b({h:(d+240)%360,s:c.s,l:c.l})]}function u(a){var c=b(a).toHsl(),d=c.h;return[b(a),b({h:(d+90)%360,s:c.s,l:c.l}),b({h:(d+180)%360,s:c.s,l:c.l}),b({h:(d+270)%360,s:c.s,l:c.l})]}function v(a){var c=b(a).toHsl(),d=c.h;return[b(a),b({h:(d+72)%360,s:c.s,l:c.l}),b({h:(d+216)%360,s:c.s,l:c.l})]}function w(a,c,d){c=c||6,d=d||30;var e=b(a).toHsl(),f=360/d,g=[b(a)];for(e.h=(e.h-(f*c>>1)+720)%360;--c;)e.h=(e.h+f)%360,g.push(b(e));return g}function x(a,c){c=c||6;for(var d=b(a).toHsv(),e=d.h,f=d.s,g=d.v,h=[],i=1/c;c--;)h.push(b({h:e,s:f,v:g})),g=(g+i)%1;return h}function y(a){var b={};for(var c in a)a.hasOwnProperty(c)&&(b[a[c]]=c);return b}function z(a){return a=parseFloat(a),(isNaN(a)||0>a||a>1)&&(a=1),a}function A(b,c){D(b)&&(b="100%");var d=E(b);return b=Q(c,R(0,parseFloat(b))),d&&(b=parseInt(b*c,10)/100),a.abs(b-c)<1e-6?1:b%c/parseFloat(c)}function B(a){return Q(1,R(0,a))}function C(a){return parseInt(a,16)}function D(a){return"string"==typeof a&&-1!=a.indexOf(".")&&1===parseFloat(a)}function E(a){return"string"==typeof a&&-1!=a.indexOf("%")}function F(a){return 1==a.length?"0"+a:""+a}function G(a){return 1>=a&&(a=100*a+"%"),a}function H(b){return a.round(255*parseFloat(b)).toString(16)}function I(a){return C(a)/255}function J(a){return!!V.CSS_UNIT.exec(a)}function K(a){a=a.replace(M,"").replace(N,"").toLowerCase();var b=!1;if(T[a])a=T[a],b=!0;else if("transparent"==a)return{r:0,g:0,b:0,a:0,format:"name"};var c;return(c=V.rgb.exec(a))?{r:c[1],g:c[2],b:c[3]}:(c=V.rgba.exec(a))?{r:c[1],g:c[2],b:c[3],a:c[4]}:(c=V.hsl.exec(a))?{h:c[1],s:c[2],l:c[3]}:(c=V.hsla.exec(a))?{h:c[1],s:c[2],l:c[3],a:c[4]}:(c=V.hsv.exec(a))?{h:c[1],s:c[2],v:c[3]}:(c=V.hsva.exec(a))?{h:c[1],s:c[2],v:c[3],a:c[4]}:(c=V.hex8.exec(a))?{r:C(c[1]),g:C(c[2]),b:C(c[3]),a:I(c[4]),format:b?"name":"hex8"}:(c=V.hex6.exec(a))?{r:C(c[1]),g:C(c[2]),b:C(c[3]),format:b?"name":"hex"}:(c=V.hex4.exec(a))?{r:C(c[1]+""+c[1]),g:C(c[2]+""+c[2]),b:C(c[3]+""+c[3]),a:I(c[4]+""+c[4]),format:b?"name":"hex8"}:(c=V.hex3.exec(a))?{r:C(c[1]+""+c[1]),g:C(c[2]+""+c[2]),b:C(c[3]+""+c[3]),format:b?"name":"hex"}:!1}function L(a){var b,c;return a=a||{level:"AA",size:"small"},b=(a.level||"AA").toUpperCase(),c=(a.size||"small").toLowerCase(),"AA"!==b&&"AAA"!==b&&(b="AA"),"small"!==c&&"large"!==c&&(c="small"),{level:b,size:c}}var M=/^\s+/,N=/\s+$/,O=0,P=a.round,Q=a.min,R=a.max,S=a.random;b.prototype={isDark:function(){return this.getBrightness()<128},isLight:function(){return!this.isDark()},isValid:function(){return this._ok},getOriginalInput:function(){return this._originalInput},getFormat:function(){return this._format},getAlpha:function(){return this._a},getBrightness:function(){var a=this.toRgb();return(299*a.r+587*a.g+114*a.b)/1e3},getLuminance:function(){var b,c,d,e,f,g,h=this.toRgb();return b=h.r/255,c=h.g/255,d=h.b/255,e=.03928>=b?b/12.92:a.pow((b+.055)/1.055,2.4),f=.03928>=c?c/12.92:a.pow((c+.055)/1.055,2.4),g=.03928>=d?d/12.92:a.pow((d+.055)/1.055,2.4),.2126*e+.7152*f+.0722*g},setAlpha:function(a){return this._a=z(a),this._roundA=P(100*this._a)/100,this},toHsv:function(){var a=g(this._r,this._g,this._b);return{h:360*a.h,s:a.s,v:a.v,a:this._a}},toHsvString:function(){var a=g(this._r,this._g,this._b),b=P(360*a.h),c=P(100*a.s),d=P(100*a.v);return 1==this._a?"hsv("+b+", "+c+"%, "+d+"%)":"hsva("+b+", "+c+"%, "+d+"%, "+this._roundA+")"},toHsl:function(){var a=e(this._r,this._g,this._b);return{h:360*a.h,s:a.s,l:a.l,a:this._a}},toHslString:function(){var a=e(this._r,this._g,this._b),b=P(360*a.h),c=P(100*a.s),d=P(100*a.l);return 1==this._a?"hsl("+b+", "+c+"%, "+d+"%)":"hsla("+b+", "+c+"%, "+d+"%, "+this._roundA+")"},toHex:function(a){return i(this._r,this._g,this._b,a)},toHexString:function(a){return"#"+this.toHex(a)},toHex8:function(a){return j(this._r,this._g,this._b,this._a,a)},toHex8String:function(a){return"#"+this.toHex8(a)},toRgb:function(){return{r:P(this._r),g:P(this._g),b:P(this._b),a:this._a}},toRgbString:function(){return 1==this._a?"rgb("+P(this._r)+", "+P(this._g)+", "+P(this._b)+")":"rgba("+P(this._r)+", "+P(this._g)+", "+P(this._b)+", "+this._roundA+")"},toPercentageRgb:function(){return{r:P(100*A(this._r,255))+"%",g:P(100*A(this._g,255))+"%",b:P(100*A(this._b,255))+"%",a:this._a}},toPercentageRgbString:function(){return 1==this._a?"rgb("+P(100*A(this._r,255))+"%, "+P(100*A(this._g,255))+"%, "+P(100*A(this._b,255))+"%)":"rgba("+P(100*A(this._r,255))+"%, "+P(100*A(this._g,255))+"%, "+P(100*A(this._b,255))+"%, "+this._roundA+")"},toName:function(){return 0===this._a?"transparent":this._a<1?!1:U[i(this._r,this._g,this._b,!0)]||!1},toFilter:function(a){var c="#"+k(this._r,this._g,this._b,this._a),d=c,e=this._gradientType?"GradientType = 1, ":"";if(a){var f=b(a);d="#"+k(f._r,f._g,f._b,f._a)}return"progid:DXImageTransform.Microsoft.gradient("+e+"startColorstr="+c+",endColorstr="+d+")"},toString:function(a){var b=!!a;a=a||this._format;var c=!1,d=this._a<1&&this._a>=0,e=!b&&d&&("hex"===a||"hex6"===a||"hex3"===a||"hex4"===a||"hex8"===a||"name"===a);return e?"name"===a&&0===this._a?this.toName():this.toRgbString():("rgb"===a&&(c=this.toRgbString()),"prgb"===a&&(c=this.toPercentageRgbString()),("hex"===a||"hex6"===a)&&(c=this.toHexString()),"hex3"===a&&(c=this.toHexString(!0)),"hex4"===a&&(c=this.toHex8String(!0)),"hex8"===a&&(c=this.toHex8String()),"name"===a&&(c=this.toName()),"hsl"===a&&(c=this.toHslString()),"hsv"===a&&(c=this.toHsvString()),c||this.toHexString())},clone:function(){return b(this.toString())},_applyModification:function(a,b){var c=a.apply(null,[this].concat([].slice.call(b)));return this._r=c._r,this._g=c._g,this._b=c._b,this.setAlpha(c._a),this},lighten:function(){return this._applyModification(o,arguments)},brighten:function(){return this._applyModification(p,arguments)},darken:function(){return this._applyModification(q,arguments)},desaturate:function(){return this._applyModification(l,arguments)},saturate:function(){return this._applyModification(m,arguments)},greyscale:function(){return this._applyModification(n,arguments)},spin:function(){return this._applyModification(r,arguments)},_applyCombination:function(a,b){return a.apply(null,[this].concat([].slice.call(b)))},analogous:function(){return this._applyCombination(w,arguments)},complement:function(){return this._applyCombination(s,arguments)},monochromatic:function(){return this._applyCombination(x,arguments)},splitcomplement:function(){return this._applyCombination(v,arguments)},triad:function(){return this._applyCombination(t,arguments)},tetrad:function(){return this._applyCombination(u,arguments)}},b.fromRatio=function(a,c){if("object"==typeof a){var d={};for(var e in a)a.hasOwnProperty(e)&&(d[e]="a"===e?a[e]:G(a[e]));a=d}return b(a,c)},b.equals=function(a,c){return a&&c?b(a).toRgbString()==b(c).toRgbString():!1},b.random=function(){return b.fromRatio({r:S(),g:S(),b:S()})},b.mix=function(a,c,d){d=0===d?0:d||50;var e=b(a).toRgb(),f=b(c).toRgb(),g=d/100,h={r:(f.r-e.r)*g+e.r,g:(f.g-e.g)*g+e.g,b:(f.b-e.b)*g+e.b,a:(f.a-e.a)*g+e.a};return b(h)},b.readability=function(c,d){var e=b(c),f=b(d);return(a.max(e.getLuminance(),f.getLuminance())+.05)/(a.min(e.getLuminance(),f.getLuminance())+.05)},b.isReadable=function(a,c,d){var e,f,g=b.readability(a,c);switch(f=!1,e=L(d),e.level+e.size){case"AAsmall":case"AAAlarge":f=g>=4.5;break;case"AAlarge":f=g>=3;break;case"AAAsmall":f=g>=7}return f},b.mostReadable=function(a,c,d){var e,f,g,h,i=null,j=0;d=d||{},f=d.includeFallbackColors,g=d.level,h=d.size;for(var k=0;k<c.length;k++)e=b.readability(a,c[k]),e>j&&(j=e,i=b(c[k]));return b.isReadable(a,i,{level:g,size:h})||!f?i:(d.includeFallbackColors=!1,b.mostReadable(a,["#fff","#000"],d))};var T=b.names={aliceblue:"f0f8ff",antiquewhite:"faebd7",aqua:"0ff",aquamarine:"7fffd4",azure:"f0ffff",beige:"f5f5dc",bisque:"ffe4c4",black:"000",blanchedalmond:"ffebcd",blue:"00f",blueviolet:"8a2be2",brown:"a52a2a",burlywood:"deb887",burntsienna:"ea7e5d",cadetblue:"5f9ea0",chartreuse:"7fff00",chocolate:"d2691e",coral:"ff7f50",cornflowerblue:"6495ed",cornsilk:"fff8dc",crimson:"dc143c",cyan:"0ff",darkblue:"00008b",darkcyan:"008b8b",darkgoldenrod:"b8860b",darkgray:"a9a9a9",darkgreen:"006400",darkgrey:"a9a9a9",darkkhaki:"bdb76b",darkmagenta:"8b008b",darkolivegreen:"556b2f",darkorange:"ff8c00",darkorchid:"9932cc",darkred:"8b0000",darksalmon:"e9967a",darkseagreen:"8fbc8f",darkslateblue:"483d8b",darkslategray:"2f4f4f",darkslategrey:"2f4f4f",darkturquoise:"00ced1",darkviolet:"9400d3",deeppink:"ff1493",deepskyblue:"00bfff",dimgray:"696969",dimgrey:"696969",dodgerblue:"1e90ff",firebrick:"b22222",floralwhite:"fffaf0",forestgreen:"228b22",fuchsia:"f0f",gainsboro:"dcdcdc",ghostwhite:"f8f8ff",gold:"ffd700",goldenrod:"daa520",gray:"808080",green:"008000",greenyellow:"adff2f",grey:"808080",honeydew:"f0fff0",hotpink:"ff69b4",indianred:"cd5c5c",indigo:"4b0082",ivory:"fffff0",khaki:"f0e68c",lavender:"e6e6fa",lavenderblush:"fff0f5",lawngreen:"7cfc00",lemonchiffon:"fffacd",lightblue:"add8e6",lightcoral:"f08080",lightcyan:"e0ffff",lightgoldenrodyellow:"fafad2",lightgray:"d3d3d3",lightgreen:"90ee90",lightgrey:"d3d3d3",lightpink:"ffb6c1",lightsalmon:"ffa07a",lightseagreen:"20b2aa",lightskyblue:"87cefa",lightslategray:"789",lightslategrey:"789",lightsteelblue:"b0c4de",lightyellow:"ffffe0",lime:"0f0",limegreen:"32cd32",linen:"faf0e6",magenta:"f0f",maroon:"800000",mediumaquamarine:"66cdaa",mediumblue:"0000cd",mediumorchid:"ba55d3",mediumpurple:"9370db",mediumseagreen:"3cb371",mediumslateblue:"7b68ee",mediumspringgreen:"00fa9a",mediumturquoise:"48d1cc",mediumvioletred:"c71585",midnightblue:"191970",mintcream:"f5fffa",mistyrose:"ffe4e1",moccasin:"ffe4b5",navajowhite:"ffdead",navy:"000080",oldlace:"fdf5e6",olive:"808000",olivedrab:"6b8e23",orange:"ffa500",orangered:"ff4500",orchid:"da70d6",palegoldenrod:"eee8aa",palegreen:"98fb98",paleturquoise:"afeeee",palevioletred:"db7093",papayawhip:"ffefd5",peachpuff:"ffdab9",peru:"cd853f",pink:"ffc0cb",plum:"dda0dd",powderblue:"b0e0e6",purple:"800080",rebeccapurple:"663399",red:"f00",rosybrown:"bc8f8f",royalblue:"4169e1",saddlebrown:"8b4513",salmon:"fa8072",sandybrown:"f4a460",seagreen:"2e8b57",seashell:"fff5ee",sienna:"a0522d",silver:"c0c0c0",skyblue:"87ceeb",slateblue:"6a5acd",slategray:"708090",slategrey:"708090",snow:"fffafa",springgreen:"00ff7f",steelblue:"4682b4",tan:"d2b48c",teal:"008080",thistle:"d8bfd8",tomato:"ff6347",turquoise:"40e0d0",violet:"ee82ee",wheat:"f5deb3",white:"fff",whitesmoke:"f5f5f5",yellow:"ff0",yellowgreen:"9acd32"},U=b.hexNames=y(T),V=function(){var a="[-\\+]?\\d+%?",b="[-\\+]?\\d*\\.\\d+%?",c="(?:"+b+")|(?:"+a+")",d="[\\s|\\(]+("+c+")[,|\\s]+("+c+")[,|\\s]+("+c+")\\s*\\)?",e="[\\s|\\(]+("+c+")[,|\\s]+("+c+")[,|\\s]+("+c+")[,|\\s]+("+c+")\\s*\\)?";return{CSS_UNIT:new RegExp(c),rgb:new RegExp("rgb"+d),rgba:new RegExp("rgba"+e),hsl:new RegExp("hsl"+d),hsla:new RegExp("hsla"+e),hsv:new RegExp("hsv"+d),hsva:new RegExp("hsva"+e),hex3:/^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,hex6:/^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,hex4:/^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,hex8:/^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/}}();"undefined"!=typeof module&&module.exports?module.exports=b:"function"==typeof define&&define.amd?define(function(){return b}):window.tinycolor=b}(Math);
-
-
-
-var colorji= tinycolor("red");
-console.log(colorji.getOriginalInput());
-
-
 function setCookie(cname, cvalue, exdays) {
   console.log('set cookie');
   var d = new Date();
@@ -306,6 +298,7 @@ var webRtcAddress = '{{webrtcAddress}}';
 
 
 var custID = {{pk}};
+var CustName='{{name}}'
 console.log('customer id....', custID);
 // var borderColor = '#ACA626';
 // var custName = 'CIOC'
@@ -323,23 +316,11 @@ var firstMessage = `{{firstMessage}}`;
 var iconColor = '{{iconColor}}'
 var fontAndIconColor='{{fontColor}}'
 
-// console.log(fontColor + 'jfhdjfjkdjfksdjfkjskdfjk');
-
 
 if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
-var color1 = tinycolor(windowColor);
-// var fontAndIconColor
-// if(!color1.isLight()){
-//   fontAndIconColor='#f8f8ff'
-// }
-// else{
-//   fontAndIconColor='#080800'
-// }
-
-
-// windowColor = "#1f5b82"
+// var color1 = tinycolor(windowColor);
 
 var windowColorR = parseInt(windowColor.slice(1,3),16)
 var windowColorG = parseInt(windowColor.slice(3,5),16)
@@ -351,8 +332,11 @@ var metaTag=document.createElement('meta');
   metaTag.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
   document.getElementsByTagName('head')[0].appendChild(metaTag);
 
-  // Store the meta element
-// var viewport_meta = document.getElementById('viewport-meta');
+var linkStyle = document.createElement('link');
+    linkStyle.rel = 'stylesheet';
+    linkStyle.href = 'https://fonts.googleapis.com/css?family=Muli';
+    document.head.appendChild(linkStyle);
+
 
 // Define our viewport meta values
 var viewports = {
@@ -375,11 +359,6 @@ viewport_set();
 window.onresize = function() {
 	viewport_set();
 }
-// var FontLink = document.createElement('link');
-//     FontLink.rel = 'stylesheet';
-//     FontLink.href = 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
-//     document.head.appendChild(FontLink);
-// var FontLink=document.createElement('Link')
 
 
 if (dpSupport=='') {
@@ -638,12 +617,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
            // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
          }
 
-      agentName.innerHTML = args[2];
+      // agentName.innerHTML = args[2];
+      agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+      document.getElementById('logo_ji').src=args[2].profile.displayPicture
+      // dpSupport= args[2].profile.displayPicture
 
       }else if (args[0]=="MF") {
         console.log('MF');
         // notification.play();
-        agentName.innerHTML = args[2]
+        agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+        document.getElementById('logo_ji').src=args[2].profile.displayPicture
 
         if (!chatOpen) {
           unreadMsgCount+=1;
@@ -676,7 +659,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       }else if (args[0]=='ML') {
         console.log('ML');
-        agentName.innerHTML = args[2]
+        // agentName.innerHTML = args[2]
+        agentName.innerHTML = args[2].first_name+' '+args[2].last_name
+        document.getElementById('logo_ji').src=args[2].profile.displayPicture
         if (!chatOpen) {
           unreadMsgCount+=1;
           // unreadMsg.style.display = "";
@@ -752,7 +737,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
     }
 
-    session.register('service.support.createDetailCookie.'+uid, createCookieDetail).then(
+    session.register(myUrl+'service.support.createDetailCookie.'+uid, createCookieDetail).then(
       function (res) {
         console.log("registered to service.support.createDetailCookie'");
       },
@@ -761,7 +746,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
     );
 
-    session.register('service.support.heartbeat.'+uid, heartbeat).then(
+    session.register(myUrl+'service.support.heartbeat.'+uid, heartbeat).then(
       function (res) {
         console.log("registered to service.support.heartbeat'");
       },
@@ -770,7 +755,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
     );
 
-    session.subscribe('service.support.chat.' + uid, supportChat).then(
+    session.subscribe(myUrl+'service.support.chat.' + uid, supportChat).then(
       function (sub) {
         console.log("subscribed to topic 'service.support.chat'" , uid );
       },
@@ -786,49 +771,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
-
 function createChatDiv() {
 
 
   var body = document.getElementsByTagName("BODY")[0];
   var mainDiv = document.createElement("mainDiv");
   mainDiv.id="mainDiv"
-  //chatboxhtml
 
   mainDiv.innerHTML = '<div id="chatBox" class="ChatBoxDiv">'+
           '<div id="chatBox_header" class="chatBox_header flex_container">'+
-            '<img class="logo_image" src="'+dpSupport+'" alt="">'+
+            '<img class="logo_image" id="logo_ji" src="'+dpSupport+'" alt="">'+
             '<div class="chatBox_info">'+
               '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
-            // '<svg viewBox="0 0 24 24" class="exitBtn" >'+
-            //   '<path id="audioBtn" style="fill:'+fontAndIconColor+';display:none;" d="M20 22.621l-3.521-6.795c-.008.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.083-1.026-3.493-6.817-2.106 1.039c-7.202 3.755 4.233 25.982 11.6 22.615.121-.055 2.102-1.029 2.11-1.033z"/>'+
-            // '</svg>'+
-            // '<svg viewBox="0 0 24 24" class="exitBtn">'+
-            //   '<path style="fill:'+fontAndIconColor+';display:none" id="videoBtn" d="M13.5 8c.276 0 .5.224.5.5v7c0 .276-.224.5-.5.5h-11c-.276 0-.5-.224-.5-.5v-7c0-.276.224-.5.5-.5h11zm2.5 0c0-1.104-.896-2-2-2h-12c-1.104 0-2 .896-2 2v8c0 1.104.896 2 2 2h12c1.104 0 2-.896 2-2v-8zm6 1.854v4.293l-2-1.408v-1.478l2-1.407zm2-3.854l-6 4.223v3.554l6 4.223v-12z"/>'+
-            // '</svg>'+
-            // '<svg viewBox="0 0 24 24" class="closeIcon">'+
-            //   '<path style="fill:'+fontAndIconColor+'" id="closeIcon" class="closeIcon" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>'+
-            // '</svg>'+
-            // '<svg viewBox="0 0 24 24" class="exitBtn">'+
-            //   '<path style="fill:'+fontAndIconColor+';" id="exitBtn" class="exitBtn" d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>'+
-            // '</svg>'+
-            // '<i id="exitBtn" class="SyrowFont font-SyrowPhone-off"></i>'+
-            // '<svg  viewBox="0 0 24 24" class="exitBtn">'+
-            //   '<path d="M0 2v20h14v-2h-12v-16h12v-2h-14zm18 7.408l2.963 2.592-2.963 2.592v-1.592h-8v-2h8v-1.592zm-2-4.408v4h-8v6h8v4l8-7-8-7z"/>'+
-            // '</svg>'+
             '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
             '<i class="exitBtn SyrowFont font-SyrowVideoCall" style="display:none" id="videoBtn"></i>'+
             '<i class="closeIcon SyrowFont font-SyrowX" id="closeIcon"></i>'+
             '<i class="exitBtn SyrowFont font-SyrowLog-out" id="exitBtn"></i>'+
-            // '<i id="exitBtn" class="SyrowFont font-SyrowBunny" aria-hidden="true"></i>'+
-            // '<svg viewBox="0 0 24 24" class="closeIcon">'+
-            //   '<path style="fill:'+fontAndIconColor+'" id="closeIcon" class="closeIcon" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>'+
-            // '</svg>'+
-            // '<svg viewBox="0 0 24 24" class="exitBtn">'+
-            //   '<path style="fill:'+fontAndIconColor+';" id="exitBtn" class="exitBtn" d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>'+
-            // '</svg>'+
           '</div>'+
           '<div id="audioSection" class="audio_section">'+
           '</div>'+
@@ -845,22 +805,13 @@ function createChatDiv() {
               '<div id="messageComposer" class="flex_container">'+
                 '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
                 '<input id="filePicker" type="file" style="display:none;"/>'+
-                // '<i id="paperClip" class="fa fa-paperclip" aria-hidden="true"></i>'+
-                // '<img class="paperClip" id="paperClip" src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip">'+
-              //   '<svg class="paperClip" viewBox="0 0 24 24">'+
-              //     '<path style="fill:'+fontAndIconColor+'" id="paperClip" d="M21.586 10.461l-10.05 10.075c-1.95 1.949-5.122 1.949-7.071 0s-1.95-5.122 0-7.072l10.628-10.585c1.17-1.17 3.073-1.17 4.243 0 1.169 1.17 1.17 3.072 0 4.242l-8.507 8.464c-.39.39-1.024.39-1.414 0s-.39-1.024 0-1.414l7.093-7.05-1.415-1.414-7.093 7.049c-1.172 1.172-1.171 3.073 0 4.244s3.071 1.171 4.242 0l8.507-8.464c.977-.977 1.464-2.256 1.464-3.536 0-2.769-2.246-4.999-5-4.999-1.28 0-2.559.488-3.536 1.465l-10.627 10.583c-1.366 1.368-2.05 3.159-2.05 4.951 0 3.863 3.13 7 7 7 1.792 0 3.583-.684 4.95-2.05l10.05-10.075-1.414-1.414z"/>'+
-              //   '</svg>'+
-              //   '<svg class="paperClip" viewBox="0 0 24 24">'+
-              //     '<path style="fill:'+fontAndIconColor+'" id="paperPlane" d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z"/></svg>'+
-              //   // '<img id="paperPlane" src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="height:30px !important; width:30px !important;">'+
-              //   // '<i id="paperPlane" class="fa fa-paper-plane-o" aria-hidden="true"></i>'+
               '<i id="paperClip" class="paperClip SyrowFont font-SyrowPaperclip" aria-hidden="true"></i>'+
               '<i id="paperPlane" class="paperClip SyrowFont font-SyrowNavigation" aria-hidden="true"></i>'+
               '</div>'+
 
 
               '<div class="startNewChatBtn flex_container" id="startNewChatBtn" class="flex_container">'+
-                '<span>Sart New Conversation </span>'+
+                '<span>Start New Conversation </span>'+
               '</div>'+
           '</div>'+
         '</div>'+
@@ -874,9 +825,9 @@ function createChatDiv() {
         '</div>'+
 
         '<div id="supportCircle">'+
-    			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle" onclick="" id="sy-main-icon">'+
+    			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation" onclick="" id="sy-main-icon">'+
     				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
-    				'<span id="chatSuggestionBar" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">We are here to help you</span>'+
+    				'<span id="chatSuggestionBar" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">We are here to help you</span>'+
     				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
     				'<div  id="sy-sub-icons">'+
     					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
@@ -903,19 +854,11 @@ function createChatDiv() {
     			'</div>'+
     		'</div>'+
 
-        '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle">'+
+        '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation">'+
           '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ; right:105px; display:none; transition: .5s" class="sy-text">Chat</span>'+
+
           '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
         '</div>'+
-        // '<div id="syrowBranding" style="height:2vh; background-color:'+ windowColor +'; text-align:center;">'+
-        // '<span style="color:#fff; font-weight:bolder; font-size:11px;" > We run on Syrow </span>'+
-        // '</div>'+
-        // '<div id="footer" style="border-top: 1px solid #e0e0e0;  width:100%; height:9vh;">'+
-        //   '<div style="padding-top:"10px" >'+
-        //      '<textarea id="inputText" rows="2" style="border:none; font-size:17px; resize:none;width:70%;padding:10px; height:40px;outline:none;background-color:#fff;" placeholder="Write a reply..." ></textarea>'+
-        //      '<input id="filePicker" type="file" style="display:none; margin-top:15px;" />'+
-        //      '<span id="paperClip" style="background-color:#fff; padding:0% 2%;cursor:pointer;"><img src="{{serverAddress}}/static/images/clip.png" alt="Paper Clip" style="width:25px" ></span>'+
-        //      '<span id="paperPlane" style="background-color:#fff;cursor:pointer;float:right;padding:5px"><img src="{{serverAddress}}/static/images/paperPlane.png" alt="Paper Plane" style="width:40px; padding-top:1%;"></span>'+
           '</div>'+
         '</div>'+
         '<div id="myModal" class="modal">'+
@@ -940,8 +883,6 @@ function createChatDiv() {
   var device;
   var chatOpen = false;
   var audioContains=false,videoContains=false;
-  // var chatIconSvg = document.getElementById('chatIconSvg');
-  // var chatCloseSvg = document.getElementById('closeChatSvg');
   var chatBox = document.getElementById('chatBox');
   var closeIcon = document.getElementById("closeIcon");
   var headerChat = document.getElementById("headerChat");
@@ -953,8 +894,6 @@ function createChatDiv() {
   var filePicker = document.getElementById('filePicker');
   var inputText = document.getElementById("inputText");
   var startConversation = document.getElementById("startConversation");
-  // var demo = document.getElementById("demo");
-  // var exploreSyrow = document.getElementById('exploreSyrow');
   var headerInit = document.getElementById('headerInit');
   var closeIconInit = document.getElementById('closeIconInit');
   var onlineStatus = document.getElementById('onlineStatus');
@@ -974,6 +913,7 @@ function createChatDiv() {
   var chatBox_header = document.getElementById('chatBox_header')
   var chatBox_footer = document.getElementById('chatBox_footer')
   var chatBox_content = document.getElementById('chatBox_content')
+  var myUrl = 'cioc.'
 
 
   var xhttp1 = new XMLHttpRequest();
@@ -987,7 +927,6 @@ function createChatDiv() {
    // xhttp1.open('GET', '{{serverAddress}}/api/support/supportChat/', true);
    xhttp1.send();
 
-  // var isTyping = document.getElementById('isTyping');
 
   var exitBtn = document.getElementById('exitBtn');
 
@@ -1004,36 +943,30 @@ function createChatDiv() {
       }
   }
 
+
   chatBox.style.display = "none";
 
   inputText.addEventListener('keydown',function(e){
-    if (e.keyCode == 13 && !e.shiftKey)
-        {
-            // prevent default behavior
-            e.preventDefault();
-            console.log('both');
-            sendMessage(inputText.value);
-        }
-        if (e.keyCode == 13&&e.shiftKey)
-        {
-          console.log('here');
-        }
+
+    if(window.innerWidth <= 600) {
+      console.log('mobile');
+     return
+   } else {
+     console.log('desktop');
+     if (e.keyCode == 13 && !e.shiftKey)
+         {
+             // prevent default behavior
+             e.preventDefault();
+             console.log('both');
+             sendMessage(inputText.value);
+         }
+         if (e.keyCode == 13&&e.shiftKey)
+         {
+           console.log('here');
+         }
+   }
+
   })
-
-  // inputText.style.display = "none"
-
-  // var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-  // var eventer = window[eventMethod];
-  // var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-  //
-  // // Listen to message from child window
-  // eventer(messageEvent,function(e) {
-  //     var key = e.message ? "message" : "data";
-  //     var data = e[key];
-  //     alert('cameeee')
-  //     //run function//
-  // },false);
-
 
   var chatCircleText =   document.getElementById('chatCircleText')
   var callCircleText =   document.getElementById('callCircleText')
@@ -1042,11 +975,6 @@ function createChatDiv() {
   var ticketCircleText = document.getElementById('ticketCircleText')
   var Syrow24hSupportText = document.getElementById('Syrow24hSupportText')
   var urlforConferenceForAgent,urlforConference,winCol;
-
-  // exitBtn.style.display ="none"
-  // var videoCallAccepted = false;
-
-
 
 
   function openModal(imageSrc) {
@@ -1073,26 +1001,25 @@ function activeAudioCall(){
 }
 
   videoCircle.addEventListener('click',function () {
-    //  winCol = windowColor.split('#')[1]
-    //  urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
-    //  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
-    //  console.log(urlforConference);
-    //  if (device=='sm') {
-    //    urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
-    //    urlforConference = urlforConference + '&userMob=true'
-    //  }
-    // openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
     activeVideoCall()
-    openChat()
+    openChat();
+    hideAudioAndVidoeBtn();
   })
 
+  function reachChatBoxForInfo(){
+    connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'CustmorClosedTheChat' ] , {}, {
+      acknowledge: true
+    }).
+    then(function(publication) {
+      console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+    });
+  }
+
   audioCircle.addEventListener('click',function () {
-    //  winCol = windowColor.split('#')[1]
-    //  urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
-    //  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
-    // openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
     activeAudioCall();
-    openChat()
+    openChat();
+    hideAudioAndVidoeBtn();
+
   })
 
   var videoOpened = false
@@ -1167,7 +1094,7 @@ function activeAudioCall(){
              chatThreadPk = data.pk
              dataToPublish.push(chatThreadPk)
              dataToPublish.push(urlforConferenceForAgent)
-             connection.session.publish('service.support.agent', dataToPublish , {}, {
+             connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
                acknowledge: true
              }).
              then(function(publication) {
@@ -1196,7 +1123,7 @@ function activeAudioCall(){
         dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
         if (isAgentOnline) {
           console.log('ONLINE' , agentPk);
-          connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+          connection.session.publish(myUrl+'service.support.agent.'+agentPk, dataToPublish , {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -1204,7 +1131,7 @@ function activeAudioCall(){
           });
         }else {
           console.log('offline send to all');
-          connection.session.publish('service.support.agent', dataToPublish , {}, {
+          connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -1257,40 +1184,7 @@ function activeAudioCall(){
             body.appendChild(iframeDiv)
           }
         }
-
-
-        // checkVideoCallAccepted()
-
-
-        // span.addEventListener('click',function () {
-        //   videoOpened = false
-        //   iFrame.src = '';
-        //   iframeDiv.parentNode.removeChild(iframeDiv);
-        //
-        //   dataToPublish = [uid, 'VCC']
-        //   connection.session.publish('service.support.agent', dataToPublish , {}, {
-        //     acknowledge: true
-        //   }).
-        //   then(function(publication) {
-        //     console.log("Published");
-        //   });
-        // })
     }
-
-  // function checkVideoCallAccepted() {
-  //   if (videoCallAccepted) {
-  //     iframeDiv.style.display = "";
-  //   }else {
-  //     iframeDiv.style.display = "none";
-  //   }
-  // }
-
-
-  // isTyping.style.display = "none";
-//   setTimeout(function(){
-//   footer.style.display = "none";
-//
-// }, 3000);
 
   singleService.style.display = "none";
 
@@ -1302,44 +1196,7 @@ function activeAudioCall(){
 
   }, 2000);
 
-  // console.log(supportCircle,'scir');
-  // console.log(document.getElementsByClassName('font-SyrowCallBack'));
-  // var docTitle = document.title;
-  // console.log(docTitle);
-
-
-
   var unreadMsgCount = 0;
-
-
-
-  // window.onfocus = function() {
-  //   console.log('coming');
-  //   document.title = docTitle
-  //   unreadMsgCount = 0
-  // };
-  //
-  // window.onblur = function() {
-  //   console.log('going');
-  //   console.log(unreadMsgCount);
-  //   if (unreadMsgCount>0) {
-  //     document.title = "New message";
-  //   }
-  // };
-
-
-
-  // function setColors(colors) {
-  //   console.log('coming in set colorsssssssssssssssssssssssssssssss');
-  //   headerChat.style.backgroundColor = colors.main
-  //   console.log(headerChat.style.backgroundColor);
-  //   console.log(colors);
-  //   // startConversation.style =  colors.main
-  //   // border-top: 2px solid '+ windowColor +'"
-  // }
-
-  // xhttp.open('GET', 'http://localhost:8080/api/support/customerProfile/' + custID + '/' , true);
-  // xhttp.send();
 
   var mainStr = "";
   var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:true} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
@@ -1659,28 +1516,33 @@ function activeAudioCall(){
               -moz-animation: item-5 0.5s forwards; \
             }\
                 div.stars {\
-                width: 270px;\
                 display: inline-block;\
               }\
               input.star { display: none; }\
               label.star {\
                 float: right;\
-                padding: 10px;\
-                font-size: 36px;\
-                color: #444;\
-                transition: all .2s;\
+                padding: 8px;\
+                font-size: 32px;\
+                color: #fff;\
+                text-shadow: #ff720b 1px 0 1px;\
+                transition: all .5s;\
               }\
               input.star:checked ~ label.star:before {\
                 content: '\\2605';\
-                color: #FD4;\
+                color: #ff720b;\
                 transition: all .25s;\
               }\
+              .star1 {\
+                content: '\\2605';\
+                color: #ff720b;\
+              }\
               input.star-5:checked ~ label.star:before {\
-                color: #FE7;\
+                color: #ff720b;\
                 text-shadow: 0 0 20px #952;\
               }\
-              input.star-1:checked ~ label.star:before { color: #F62; }\
-              label.star:hover { transform: rotate(-15deg) scale(1.3); }\
+              input.star-1:checked ~ label.star:before { color: #ff720b; }\
+              label.star:hover { color: #ff720b; }\
+              label.star:hover ~ label.star:before { color: #ff720b; }\
               label.star:before {\
                 content: '\\2605';\
               }\
@@ -1723,12 +1585,26 @@ function activeAudioCall(){
               font-size: 28px;\
               font-weight: bold;\
           }\
+              .first_animation {\
+              animation:  first_animation 1s;\
+          }\
           @keyframes modalBox{\
         	0%{\
               transform:translateY(-200px);\
           	}\
             70%{\
               transform:translateY(20px);\
+          	}\
+            100%{\
+              	transform:translateY(0px);\
+          	}\
+          }\
+          @keyframes first_animation{\
+        	0%{\
+              transform:translateY(400px);\
+          	}\
+            50%{\
+              transform:translateY(-100px);\
           	}\
             100%{\
               	transform:translateY(0px);\
@@ -1760,6 +1636,7 @@ function activeAudioCall(){
                 height: 100%;\
                 position: fixed;\
                 top:0px;\
+                font-family: 'Muli', sans-serif;\
                 right: 0px;\
                 min-width: 100%;\
                 color:black;\
@@ -1784,6 +1661,7 @@ function activeAudioCall(){
                 position: fixed;\
                 bottom: 100px;\
                 right: 40px;\
+                font-family: 'Muli', sans-serif;\
                 min-width: 370px;\
                 border-radius:10px;\
                 box-shadow: 0px 0px 25px 5px rgba(0,0,0,0.2);\
@@ -1891,10 +1769,10 @@ function activeAudioCall(){
             .paperClip{\
               font-size:25px;\
               margin:10px;\
-              color:"+windowColor+"\
+              color:#A0A0A0\
             }\
             .exitBtn:hover{\
-              transform: scale(1.2) ;\
+              transform: scale(1.1) ;\
               cursor: pointer;\
             }\
             .closeIcon:hover{\
@@ -2044,7 +1922,7 @@ function activeAudioCall(){
 
          var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-         connection.session.publish('service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
+         connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
            acknowledge: true
          }).
          then(function(publication) {
@@ -2079,8 +1957,8 @@ function activeAudioCall(){
     var div = document.createElement("div");
     div.id="offlineMessage"
     div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                      '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;font-size:14px">'+
-                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Please provide your feedback below:</p>'+
+                      '<div style="text-align:center;clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; box-sizing:border-box;font-size:14px">'+
+                      '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:12px;color:rgba(0,0,0,0.5); box-sizing:border-box;">Please provide your feedback below:</p>'+
                       '<form>'+
                         '<div class="stars">'+
                           '<form id="stars">'+
@@ -2096,9 +1974,12 @@ function activeAudioCall(){
                             '<label class="star star-1" for="star-1"></label>'+
                           '</form>'+
                         '</div>'+
-                        '<input type="text" id="emailId" placeholder="Emaid id (optional)"  style="width:100%; padding-bottom:10px; margin-bottom:10px;">'+
-                         '<textarea id="feedbackText" style="width:100%;outline:none; resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your feedback here.."></textarea>'+
-                         '<button id="submitStars" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                        '<input type="text" id="emailId" placeholder="Email (Optional)"  style="width:100%; padding:5px;border:none; margin-bottom:10px;">'+
+                         '<textarea id="feedbackText" style="width:100%;outline:none;padding:5px; resize:none;border:none; box-shadow:.3px .3px #fff; box-sizing:border-box;" rows="3" placeholder="Feedback"></textarea>'+
+                         '<button id="submitCancel" type="button" style="margin-top:10px; padding:4px 8px; border-radius:8px; background-color:'+windowColor+' ; color:'+fontAndIconColor+'; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                           'Cancel'+
+                         '</button>'+
+                         '<button id="submitStars" type="button" style="margin-top:10px;margin-left:10%; padding:4px 8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
                            'Submit'+
                          '</button>'+
                         '</form>'+
@@ -2108,14 +1989,6 @@ function activeAudioCall(){
     scroll();
     var stars = document.getElementById('stars');
     var submitStars = document.getElementById('submitStars');
-
-    // disable input type here.. and remove send and attach button
-
-    // inputText.disabled = true;
-    // inputText.placeholder = "Chat is closed....";
-    //
-    // paperClip.style.display = "none";
-    // paperPlane.style.display = "none";
 
     messageComposer.style.display = "none";
     startNewChatBtn.style.display = "block";
@@ -2135,7 +2008,7 @@ function activeAudioCall(){
     var div = document.createElement("div");
     div.id="thankYou"
     div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                    '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                    '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                     '<p style="line-height: 1.75; margin:0px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Thank You !</p>'+
                     '</div> '+
                     '</div>'
@@ -2143,11 +2016,40 @@ function activeAudioCall(){
   scroll();
   }
 
+
+
+
   function submitStarForm(id) {
 
+    var submitCancel=document.getElementById('submitCancel')
+    var offlineMessage=document.getElementById('offlineMessage')
+
+    submitCancel.addEventListener('click',function(){
+        thankYouMessage();
+        submitStars.style.display = "none";
+        offlineMessage.style.display="none"
+    })
+
+
+    // submitStars.addEventListener('click',function(){
+    //
+    // })
+var myformrating;
 
     submitStars.addEventListener("click", function() {
       console.log('somthing hereeeeee' , this);
+
+      // var stars=document.getElementById('stars')
+      // console.log(stars);
+      // stars.innerHTML=''
+      // console.log(stars);
+      // for (var i = 0; i < myformrating; i++) {
+      //   stars.innerHTML+='<i class="star1" for=""></i>'
+      // }
+      // document.getElementById('emailId').style.display='none'
+      // document.getElementById('feedbackText').style.display='none'
+      submitStars.style.display = "none";
+      offlineMessage.style.display="none"
       // id="star-5"
       // console.log(document.getElementById('feedbackText').value);
       var feedbackText = document.getElementById('feedbackText')
@@ -2163,9 +2065,6 @@ function activeAudioCall(){
       if (!emailRecieved) {
         ratingForm.email = emailId
       }
-
-
-
 
       var star1 = document.getElementById('star-1')
       var star2 = document.getElementById('star-2')
@@ -2190,17 +2089,17 @@ function activeAudioCall(){
       if (star5.checked) {
         ratingForm.customerRating = 5
       }
-
+      myformrating=ratingForm.customerRating
     console.log(ratingForm);
     ratingFormObject = ratingForm
     ratingForm = JSON.stringify(ratingForm)
-    // feedbackText.value = ''
       var xhttp = new XMLHttpRequest();
        xhttp.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {
            console.log('posted successfully');
            console.log(ratingForm);
            submitStars.style.display = "none";
+           submitCancel.style.display='none'
            thankYouMessage()
            feedbackFormSubmitted = true
            // var dataToPublish = [uid , status , message , custID ];
@@ -2209,7 +2108,7 @@ function activeAudioCall(){
 
             var dataToSend = {uid:uid , usersFeedback:ratingFormObject.customerFeedback  , rating:ratingFormObject.customerRating , sentByAgent:false };
 
-             connection.session.publish('service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
+             connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
                acknowledge: true
              }).
              then(function(publication) {
@@ -2228,16 +2127,14 @@ function activeAudioCall(){
 
   }
 
-
   closeSupport.style.display = "none";
 
-
   var chatClosed = false
-
 
   startNewChatBtn.addEventListener("click" , function () {
     // or you can use variable feedbackFormSubmitted which is true only if feedbackForm is submitted
     messageBox.innerHTML = '';
+    isConfirmedToEnd=false;
     // messageBox.innerHTML = '';
     agentName.innerHTML = nameSupport
     // delete uid from cookies and create a new one
@@ -2250,16 +2147,11 @@ function activeAudioCall(){
     pushMessages()
 
     console.log('Came here ... chat ');
-    // first welcome message should come
-    // reset chat.messages  var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
-    // call pushMessages() again
     messageComposer.style.display = "";
     startNewChatBtn.style.display = "none";
     audioSection.style.display = "none";
     videoSection.style.display = "none";
     chatBox_content.style.marginTop = "0"
-
-    // display footer and hide start chat button
 
     agentPk =  null;
     threadExist = undefined;
@@ -2267,14 +2159,8 @@ function activeAudioCall(){
     emailRecieved = false;
     unreadMsgCount = 0;
     isAgentOnline = false;
-    // chatClosed = false;
 
     connection._transport.close()
-    // console.log(connection);
-    // connection.onclose()
-    // connection.open()
-
-
     inputText.disabled = true;
     inputText.placeholder = "Initializing....";
     paperClip.style.display = "none";
@@ -2293,9 +2179,6 @@ function activeAudioCall(){
       connection.open()
     }
 
-    //subscribe to this uid again
-    // alert('initialise chat again')
-
     feedbackFormOpened = false
     feedbackFormSubmitted = false
 
@@ -2310,14 +2193,9 @@ function activeAudioCall(){
        window.open(url);
 
     }
-    if(event.data=='AgentcalledToHideVideo'){
-      console.log('in chatter');
-
-      getFrameContent.postMessage('callFromAgentplease','*')
-    }
     if (event.data=='calledToHideVideo') {
       setIframeRotated()
-      connection.session.publish('service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
+      connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -2326,7 +2204,7 @@ function activeAudioCall(){
     }
     if (event.data=='calledToShowVideo') {
       setIframeToNormal()
-      connection.session.publish('service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
+      connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -2338,45 +2216,49 @@ function activeAudioCall(){
     }else if(event.data=='showTheMainFrame'){
       document.getElementById('iframeDiv').style.display = "block";
     }
-    if (event.data== 'userleft'){
-
-      document.getElementById('iframeDiv').style.display="none"
-      setTimeout(function () {
-        if (videoOpened) {
-
-          if (device=='sm') {
-            videoSection.innerHTML = "";
-            videoSection.style.display = "none";
-            chatBox_content.style.marginTop = "0";
-          }else {
-            chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-            chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-            // chatBox.style.borderRadius = "10px 10px 10px 10px"
-            var iframeDiv = document.getElementById('iframeDiv')
-            iframeDiv.parentNode.removeChild(iframeDiv);
-          }
-          var iFrame = document.getElementById('iFrame1')
-          iFrame.src = '';
-          videoOpened = false
-        }else if (audioOpened) {
-          var iFrame = document.getElementById('iFrame1')
-          iFrame.src = '';
-          audioSection.innerHTML = "";
-          audioSection.style.display = "none";
-          chatBox_content.style.marginTop = "0";
-          audioOpened = false;
-        }
-      }, 5000);
+    if (event.data== 'replyToUseruserleft'){
+      setTimeout(endOfConversation, 5000);
     }
   }
+
+function endOfConversation() {
+    if (videoOpened) {
+
+      if (device=='sm') {
+        videoSection.innerHTML = "";
+        videoSection.style.display = "none";
+        chatBox_content.style.marginTop = "0";
+      }else {
+        chatBox_header.style.borderRadius = "10px 10px 0px 0px"
+        chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
+        var iframeDiv = document.getElementById('iframeDiv')
+        iframeDiv.parentNode.removeChild(iframeDiv);
+      }
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      videoOpened = false
+    }else if (audioOpened) {
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
+      audioSection.innerHTML = "";
+      audioSection.style.display = "none";
+      chatBox_content.style.marginTop = "0";
+      audioOpened = false;
+    }
+  }
+
+function deactivateAudioFrame(){
+  if(getFrameContent!=undefined){
+    getFrameContent.postMessage('userleft',webRtcAddress );
+  }
+  audioSection.style.display = "none";
+  chatBox_content.style.marginTop = "0";
+}
 
 function togglingActive(element,value){
   if(value){
     element.classList.add('changeColor')
   }else{
-    if(getFrameContent!=undefined){
-      getFrameContent.postMessage('userleft',webRtcAddress );
-    }
     element.classList.remove('changeColor')
   }
 }
@@ -2406,15 +2288,21 @@ videoBtn.addEventListener("click",function(){
 })
 
 audioBtn.addEventListener("click",function(){
+  videoBtn.style.display='none'
+  isAudioClicked=!isAudioClicked
   if(isVideoClicked){
     alert('Video call is Active')
     return
   }
-  videoBtn.style.display='none'
-  isAudioClicked=!isAudioClicked
+  if(isAudioClicked){
+    activeAudioCall()
+  }else{
+    deactivateAudioFrame()
+  }
   togglingActive(audioBtn,isAudioClicked)
-  activeAudioCall()
 })
+
+
 function hideAudioAndVidoeBtn(){
   videoBtn.style.display='none'
   audioBtn.style.display='none'
@@ -2447,15 +2335,11 @@ var isConfirmedToEnd=false;
   }, false);
 
   paperPlane.addEventListener("click", function() {
+    document.getElementById('inputText').focus()
     sendMessage(inputText.value);
   }, false);
 
-
-
-
   function messageDiv(message) {
-
-    // console.log('inside messageDiv ',message);
 
     function timeSince(date) {
       t = date;
@@ -2472,25 +2356,16 @@ var isConfirmedToEnd=false;
 
     function timeWithDate(date) {
       var abc  = date
-      // var date = abc.getDate();
-      // var month = abc.getMonth();
-      // var year = abc.getFullYear();
-
       var hours = abc.getHours();
       var minutes = abc.getMinutes();
       var ampm = hours >= 12 ? 'pm' : 'am';
       hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
+      hours = hours ? hours : 12;
       minutes = minutes < 10 ? '0'+minutes : minutes;
       var strTime = hours + ':' + minutes + ' ' + ampm;
-      // console.log(strTime);
-      // var dateString = date + "-" +(month + 1) + "-" + year;
-      // return dateString + ', ' + strTime
       return strTime
     }
 
-
-    // message.timeAgo = timeSince(new Date(message.created))
     message.timeDate = timeWithDate(new Date(message.created))
 
     if (message.attachment) {
@@ -2511,10 +2386,6 @@ var isConfirmedToEnd=false;
           console.log('application');
           attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
       }
-      // else if (message.link) {
-      //   console.log('yesssssssss' , message.link);
-      // attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
-      // }
     }
 
     if (message.logs==null) {
@@ -2531,14 +2402,11 @@ var isConfirmedToEnd=false;
         }else {
           msgDiv = attachedFile
         }
-        // var msgDiv = message.attachment!=null ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box;">'+ message.message +'</p>'
+
       }
     }else {
-      // msgDiv = '<p>'+ message.logs + ' at ' +message.timeDate+'</p>'
     }
 
-
-    // console.log(msgDiv , 'msgDivvvvvvvvvvvvvv');
 
     if (message.logs==null) {
       if (!message.sentByAgent) {
@@ -2552,7 +2420,7 @@ var isConfirmedToEnd=false;
 
       }else {
         var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                  '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
                   '<div style="clear: both; float:left; padding:0px 10px; font-size:9px">'+ message.timeDate +'</div>'+
@@ -2560,58 +2428,14 @@ var isConfirmedToEnd=false;
         return msgHtml
       }
     }else {
-      // var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-      //           '<div style="clear: both; text-align:center; box-sizing:border-box; letter-spacing:2px;">'+
-      //              msgDiv+
-      //           '</div> '+
-      //         '</div> '
       return ''
     }
-
-
-
-
-    // if (message.msg=='') {
-    //   if (message.img) {
-    //     attachedFile = '<img  src="'+ message.img +'" style="width:200px; box-sizing:border-box;">'
-    //   }else if (message.audio) {
-    //     attachedFile = '<audio style="width:200px; box-sizing:border-box;" src="'+ message.audio +'" controls></audio>'
-    //   }else if (message.video) {
-    //     attachedFile = '<video width="200" height="180" style="box-sizing:border-box;" src="'+ message.video +'" controls></video>'
-    //   }else if (message.doc) {
-    //       attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.doc+'"> '+message.doc+' </a></p>'
-    //   }else if (message.link) {
-    //     console.log('yesssssssss' , message.link);
-    //   attachedFile = '<iframe width="100%" height="180" style="box-sizing:border-box;;" src="'+message.link+'" frameborder="0" allowfullscreen></iframe>'
-    //   }
-    // }
-    //
-    // var msgDiv = message.msg=='' ? attachedFile : '<p style="word-break: break-all !important; font-size:12px; margin:5px 0px; box-sizing:border-box; ">'+ message.msg +'</p>'
-    //
-    // if (message.sentByMe) {
-    //   var msgHtml = '<div style="margin : 0px 0px 10px; box-sizing:border-box;">'+
-    //                   '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:#fff;  padding:10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
-    //                     msgDiv+
-    //                   '</div>'+
-    //                 '</div>'
-    //   return msgHtml
-    //
-    // }else {
-    //   var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-    //             '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-    //                msgDiv+
-    //             '</div> '+
-    //           '</div> '
-    //   return msgHtml
-    // }
-
-
 
   }
 
   let currentUrl=window.location.href;
 setTimeout(function () {
-  connection.session.publish('service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
+  connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
     acknowledge: true
   }).
   then(function(publication) {
@@ -2624,7 +2448,7 @@ setInterval(function () {
     console.log('changed url $$$$$$$$$$$$$$$$$$$$$$$$$$$4');
 
     currentUrl=window.location.href;
-    connection.session.publish('service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
+    connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -2634,25 +2458,18 @@ setInterval(function () {
   }
 }, 5000);
 
-
-
-
-
   function pushMessages() {
     for (var i = 0; i < chat.messages.length; i++) {
       var div = document.createElement("div");
       div.setAttribute("id", "herere")
-      // console.log(chat.messages[i].message);
       if (chat.messages[i].message=="first") {
-        // div.innerHTML = '<p>hello</p>'
-        // console.log(div,'divvvvvvvvvvv');
         console.log(firstMessage);
         firstMessage = firstMessage.replaceAll("&lt;",'<')
         firstMessage = firstMessage.replaceAll("&gt;",">")
         firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
         firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
           div.innerHTML = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                  '<div id="herere" style="clear: both; float:left; background-color:#e0e0e0; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:14px">'+
+                  '<div id="herere" style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:5px; box-sizing:border-box;font-size:14px">'+
                      firstMessage+
                   '</div> '+
                 '</div> '
@@ -2667,52 +2484,9 @@ console.log(firstMessage);
     scroll();
   }
 
-
   setTimeout(function () {
     pushMessages();
   }, 2000);
-
-
-
-  // function checkChatOpen(){
-  //   chatOpenCookie = getCookie("chatOpenCookie");
-  //   if (chatOpenCookie != "") {
-  //     console.log(chatOpenCookie , 'ALREadyyyyyyyyyyyyyyyy');
-  //     if (chatOpenCookie=='true') {
-  //       chatOpen = true
-  //       if (serviceCount==1) {
-  //         singleService.style.display = "none"
-  //       }
-  //       console.log('opneddd');
-  //       supportCircle.style.display = "none";
-  //       if (device=='xs' || device =='sm') {
-  //         closeSupport.style.display = "none";
-  //         document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
-  //       }else {
-  //         closeSupport.style.display = "";
-  //       }
-  //       unreadMsgCount = 0;
-  //       chatBox.style.display = "";
-  //       headerChat.style.display = "";
-  //       messageBox.style.display = "";
-  //       footer.style.display = "";
-  //       startConvoBtn.style.display = "none";
-  //       startConversation.style.display = "none";
-  //       headerInit.style.display = "none";
-  //     }else {
-  //       chatOpen = false
-  //       console.log('closed');
-  //     }
-  //   }else {
-  //
-  //   }
-  // }
-  //
-  //
-  // setTimeout (function() {
-  //     checkChatOpen()
-  // },2000)
-
 
   function scroll() {
     setTimeout(function () {
@@ -2721,13 +2495,10 @@ console.log(firstMessage);
     }, 200);
   }
 
-
   function onlineAgent() {
     console.log('in onlineAgent######333333333' , agentPk);
     if (agentPk) {
-      // setInterval(function () {
-        // status = "O";
-        connection.session.call('service.support.heartbeat.' + agentPk, []).then(
+        connection.session.call(myUrl+'service.support.heartbeat.' + agentPk, []).then(
           function (res) {
            console.log("Result:", res);
            isAgentOnline = true;
@@ -2739,13 +2510,6 @@ console.log(firstMessage);
           onlineStatus.innerHTML = 'Away';
         }
        );
-        // connection.session.publish('service.support.agent.'+ agentPk , [uid , status], {}, {
-        //   acknowledge: true
-        // }).
-        // then(function(publication) {
-        //   console.log("check online status");
-        // });
-      // }, 30000);
     }
   }
 
@@ -2758,11 +2522,10 @@ console.log(firstMessage);
     onlineAgent();
   },10000 )
 
-
   function spying(inputVal) {
     countOnchange = 0;
     console.log('values' , inputVal);
-      connection.session.publish('service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
+      connection.session.publish(myUrl+'service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -2772,14 +2535,11 @@ console.log(firstMessage);
 
 
   inputText.addEventListener('keydown', function(evt) {
-    // countOnchange++
     console.log(evt.keyCode);
     console.log(this.value);
     if (evt.keyCode==32 || evt.keyCode == 8 || evt.keyCode == 13 ) {
       spying(this.value)
     }
-    // if ((countOnchange % 4) == 0) {
-    // }
   });
 
 
@@ -2790,10 +2550,6 @@ console.log(firstMessage);
       return;
     }
 
-
-    // chat.message.push(inptText)
-    // console.log(chat);
-
     console.log(inptText,'input');
 
     console.log(uid);
@@ -2802,30 +2558,14 @@ console.log(firstMessage);
       uid = getCookie("uid");
     }
 
-
     console.log(uid);
     console.log(chat.messages.length);
 
-
     var youtubeLink = inptText.includes("yout");
-
-
-
-    // if (youtubeLink) {
-    //   status = "ML";
-    //   link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-    //   var message = {msg:"" , link:link ,  sentByMe:true , created: new Date() }
-    //   var dataToSend = JSON.stringify({uid: uid , message: message.link });
-    // }else {
-    //   status = "M";
-    //   var message = {msg:inptText ,  sentByMe:true , created: new Date() }
-    //   var dataToSend = JSON.stringify({uid: uid , message: message.msg });
-    // }
 
     if (youtubeLink) {
       status = "ML";
       link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-
 
       var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
       if (agentPk) {
@@ -2842,7 +2582,6 @@ console.log(firstMessage);
       dataToSend = JSON.stringify(dataToSend)
     }else {
       status = "M";
-      // var message = {message:inptText ,  sentByAgent:false , created: new Date() }
       var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
       console.log(agentPk);
       if (agentPk) {
@@ -2858,9 +2597,6 @@ console.log(firstMessage);
       var message = dataToSend
       dataToSend = JSON.stringify(dataToSend)
     }
-
-
-
 
     var div = document.createElement("div");
     div.className = "messageOpacity"
@@ -2880,7 +2616,7 @@ console.log(firstMessage);
         div.id="offlineMessage"
 
         div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                          '<div style="clear: both; float:left; background-color:#e0e0e0; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                          '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                           '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
                           '<form>'+
                             '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
@@ -2892,9 +2628,6 @@ console.log(firstMessage);
                           '</div> '+
                         '</div>'
         scroll();
-
-        // var sendEmail = document.getElementById('sendEmail');
-        // sendEmail();
         }
     }, 4000)
 
@@ -2912,15 +2645,6 @@ console.log(firstMessage);
 
 
      var dataToPublish = [uid , status , message ];
-
-     // setCookie("uidDetails", {}, 365);
-     // details = getCookie("uidDetails");
-     // console.log('********************8',details);
-     // if (details != "") {
-     //    dataToPublish.push(details)
-     // } else {
-     //   dataToPublish.push(false)
-     // }
 
      if (threadExist==undefined) {
       var dataToPublish = [uid , status , message , custID ];
@@ -2942,7 +2666,7 @@ console.log(firstMessage);
             console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
             chatThreadPk = data.pk
             dataToPublish.push(chatThreadPk)
-            connection.session.publish('service.support.agent', dataToPublish , {}, {
+            connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -2957,7 +2681,7 @@ console.log(firstMessage);
        console.log('chat threAD EXIST');
        if (isAgentOnline) {
          console.log('ONLINE' , agentPk);
-         connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+         connection.session.publish(myUrl+'service.support.agent.'+agentPk, dataToPublish , {}, {
            acknowledge: true
          }).
          then(function(publication) {
@@ -2965,7 +2689,7 @@ console.log(firstMessage);
          });
        }else {
          console.log('offline send to all');
-         connection.session.publish('service.support.agent', dataToPublish , {}, {
+         connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
            acknowledge: true
          }).
          then(function(publication) {
@@ -2973,24 +2697,12 @@ console.log(firstMessage);
          });
        }
        console.log('chat thread exist');
-
      }
-
-
   }
-
-  // inputText.addEventListener("keydown", function (e) {
-  //     if (e.keyCode === 13) {
-  //       if (inputText.value.length>0) {
-  //         sendMessage(inputText.value)
-  //       }
-  //     }
-  // }, false);
 
   paperClip.addEventListener("click", function() {
     filePicker.click();
   }, false);
-
 
   function sendFile() {
 
@@ -3051,22 +2763,17 @@ console.log(firstMessage);
           scroll();
           chat.messages.push(data);
           filePicker.value = ""
-
           var dataToPublish = [uid , status , fileData];
-
-
           if (threadExist==undefined) {
-
-          var dataToPublish = [uid , status , fileData , custID ];
-          details = getCookie("uidDetails");
-          if (details != "") {
-            console.log(details);
-             dataToPublish.push(JSON.parse(details))
-          } else {
-            dataToPublish.push(false)
-          }
-
-           var dataToSend = JSON.stringify({uid: uid , company: custID});
+            var dataToPublish = [uid , status , fileData , custID ];
+            details = getCookie("uidDetails");
+            if (details != "") {
+              console.log(details);
+               dataToPublish.push(JSON.parse(details))
+            } else {
+              dataToPublish.push(false)
+            }
+            var dataToSend = JSON.stringify({uid: uid , company: custID});
             var xhttp = new XMLHttpRequest();
              xhttp.onreadystatechange = function() {
                if (this.readyState == 4 && this.status == 201) {
@@ -3076,14 +2783,12 @@ console.log(firstMessage);
                  chatThreadPk = data.pk
                  dataToPublish.push(chatThreadPk)
 
-                 connection.session.publish('service.support.agent', dataToPublish, {}, {
+                 connection.session.publish(myUrl+'service.support.agent', dataToPublish, {}, {
                    acknowledge: true
                  }).
                  then(function(publication) {
                    console.log("Published");
                  });
-
-
                }
              };
              xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
@@ -3093,7 +2798,7 @@ console.log(firstMessage);
             console.log('chat threAD EXIST');
             if (isAgentOnline) {
               console.log('ONLINE' , agentPk);
-              connection.session.publish('service.support.agent.'+agentPk, dataToPublish , {}, {
+              connection.session.publish(myUrl+'service.support.agent.'+agentPk, dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {
@@ -3101,7 +2806,7 @@ console.log(firstMessage);
               });
             }else {
               console.log('offline send to all');
-              connection.session.publish('service.support.agent', dataToPublish , {}, {
+              connection.session.publish(myUrl+'service.support.agent', dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {
@@ -3111,36 +2816,10 @@ console.log(firstMessage);
             console.log('chat thread exist');
           }
 
-
-
-
-
-
         }
       };
       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
       xhttp.send(fd);
-
-
-      //
-      // if (threadExist==undefined) {
-      //  var dataToSend = JSON.stringify({uid: uid , company: custID});
-      //   var xhttp = new XMLHttpRequest();
-      //    xhttp.onreadystatechange = function() {
-      //      if (this.readyState == 4 && this.status == 201) {
-      //        console.log('posted successfully');
-      //        threadExist=true
-      //        console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-      //        chatThreadPk = data.pk
-      //      }
-      //    };
-      //    xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-      //    xhttp.setRequestHeader("Content-type", "application/json");
-      //    xhttp.send(dataToSend);
-      // }
-
-
-
 
   }
 
@@ -3166,11 +2845,7 @@ chatSuggestionBar.style.display="none"
   function openChat() {
     chathasOpenedOnce=true;
     chatSuggestionBar.style.display="none"
-    // welcomeMessage.style.display ="none";
-    // console.log(chatOpen);
-    // console.log('click');
     chatOpen = !chatOpen
-    // console.log(chatOpen);
     setCookie("chatOpenCookie", chatOpen, 365);
 
     if (chatOpen) {
@@ -3188,14 +2863,6 @@ chatSuggestionBar.style.display="none"
 
       console.log('oddddd' , device);
 
-      // if (device=='xs' || device =='sm') {
-      //   closeSupport.style.display = "none";
-      //   document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
-      // }else {
-      //   closeSupport.style.display = "";
-      //   document.getElementsByTagName("BODY")[0].style.overflowY = "";
-      // }
-
       if (device=='sm') {
         document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
       }else {
@@ -3204,8 +2871,6 @@ chatSuggestionBar.style.display="none"
       closeSupport.style.display = "";
       // unreadMsg.style.display = "none";
       unreadMsgCount = 0;
-      // chatIconSvg.style.display = "none"
-      // closeChatSvg.style.display = ""
       chatBox.style.animation = ""
       chatBox.style.display = "block";
       messageBox.style.animation = "moveInLeft 3s ease-out"
@@ -3213,50 +2878,12 @@ chatSuggestionBar.style.display="none"
       // closeChatSvg.style.animation = "rotateAnti 1s"
     }else {
       document.getElementsByTagName("BODY")[0].style.overflowY = "";
-      // if (unreadMsgCount>0) {
-      //   // unreadMsg.style.display = "";
-      //   unreadMsgCount+=1;
-      //   // unreadMsg.innerHTML = '<span style="color:#286EFA; box-sizing:border-box;" >'+unreadMsgCount+'</span>'
-      // }
-      //
-      // console.log('close chat');
-      // // chatIconSvg.style.display = ""
-      // // closeChatSvg.style.display = "none"
-      // chatBox.style.display = "none";
     }
   }
 
   closeSupport.addEventListener("click", function() {
 
-    if (videoOpened) {
-
-      if (device=='sm') {
-        videoSection.innerHTML = "";
-        videoSection.style.display = "none";
-        chatBox_content.style.marginTop = "0";
-        var iFrame = document.getElementById('iFrame1')
-        iFrame.src = '';
-      }else {
-        chatBox_header.style.borderRadius = "10px 10px 0px 0px"
-        chatBox_footer.style.borderRadius = "0px 0px 10px 10px"
-        // chatBox.style.borderRadius = "10px 10px 10px 10px"
-        var iFrame = document.getElementById('iFrame1')
-        iFrame.src = '';
-        var iframeDiv = document.getElementById('iframeDiv')
-        iframeDiv.parentNode.removeChild(iframeDiv);
-      }
-
-      console.log(document.getElementById('iFrame1'));
-
-      videoOpened = false
-    }else if (audioOpened) {
-      var iFrame = document.getElementById('iFrame1')
-      iFrame.src = '';
-      audioSection.innerHTML = "";
-      audioSection.style.display = "none";
-      chatBox_content.style.marginTop = "0";
-      audioOpened = false;
-    }
+    endOfConversation();
 
     if (chatOpen) {
       chatOpen = !chatOpen
@@ -3287,7 +2914,6 @@ chatSuggestionBar.style.display="none"
       setCookie("chatOpenCookie", chatOpen, 365);
       console.log('coming here.');
       messageBox.style.animation = ""
-      // supportCircle.style.display = "";
       if (serviceCount==1) {
         supportCircle.style.display = "none";
         singleService.style.display = "";
@@ -3305,23 +2931,6 @@ chatSuggestionBar.style.display="none"
       }
     }
   } , false);
-
-
-// document.getElementById('inputText').addEventListener('keyup',function(o){
-//     var my=document.getElementsByClassName('chatBox_content')[0]
-//     if(o.scrollHeight>'177'){
-//       console.log('inside');
-//       o.style.overflow='scroll'
-//     }else{
-//       o.style.height = "1px";
-//       o.style.height = (25+o.scrollHeight)+"px";
-//       console.log(o.style.height);
-//         my.style.bottom="9rem";
-//           my.style.bottom=(2.5+o.scrollHeight/10)+"rem";
-//       console.log(my.style.bottom);
-//     }
-// })
-
 
 function lgDevice(x) {
     if (x.matches) {

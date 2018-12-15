@@ -114,6 +114,13 @@
                 </div>
               </div>
             </div>
+            <div class="" style="width: 100%;position: absolute;top:400px;left:40%;color:#f0f0f0;font-size:40px" ng-if="myDialouge">
+              No More Data
+            </div>
+            <div ng-if="reviewData.length>14||onceClicked" class="col-sm-12" style="text-align:center">
+              <button style="background-color:#286090;padding:5px;color:white" ng-click="goBack()" ng-if="onceClicked">Go Back</button>
+              <button style="background-color:#286090;padding:5px;color:white" ng-click="loadMore()" ng-if="!myDialouge">Load More</button>
+            </div>
           </div>
         </div>
       </uib-tab>
@@ -177,6 +184,16 @@
                 </div>
               </div>
             </div>
+
+            <div class="" style="width: 100%;position: absolute;top:400px;left:40%;color:#f0f0f0;font-size:40px" ng-if="myDialouge">
+              No More Data
+            </div>
+
+            <div ng-if="archivedData.length>14||archievedOnceClicked" class="col-sm-12" style="text-align:center">
+              <button style="background-color:#286090;padding:5px;color:white" ng-click="goBackArchived()" ng-if="archievedOnceClicked">Go Back</button>
+              <button style="background-color:#286090;padding:5px;color:white" ng-click="loadMoreArchived()" ng-if="!archievedMyDialouge">Load More</button>
+            </div>
+
           </div>
         </div>
       </uib-tab>

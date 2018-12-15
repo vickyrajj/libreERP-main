@@ -4,14 +4,17 @@ var connection = new autobahn.Connection({
 });
 
 var webRtcAddress = webRtcAddress
+var connectionOpened= false;
+
+var myUrl = 'cioc.'
 
 // "onopen" handler will fire when WAMP session has been established ..
 connection.onopen = function(session) {
 
   console.log("session established!");
 
-  // our event handler we will subscribe on our topic
-  //
+   connectionOpened = true;
+
   function chatResonse(args) {
     console.log(args);
 
@@ -173,9 +176,6 @@ var hasAccesss=true;
           if (args[1] == 'M') {
             scope.sound.play();
             scope.myUsers[i].messages.push(args[2])
-            // if (!scope.myUsers[i].boxOpen) {
-            //   scope.myUsers[i].boxOpen = false
-            // }
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value = ''
             // scope.myUsers[i].messages.push( {msg : args[2].msg, sentByMe:false , created:  args[2].created })
@@ -239,6 +239,8 @@ var hasAccesss=true;
           }else if(args[1]=='calledToShowVideo'){
             scope.myUsers[i].isVideoShowing = true
             scope.myUsers[i].alreadyDone=false
+          }else if(args[1]=='CustmorClosedTheChat'){
+            scope.myUsers[i].AudioVideoOn = true
           }else if(args[1]=='UC'){
             scope.myUsers[i].currentUrl = args[2]
             // alert(args[2]);
@@ -334,27 +336,9 @@ var hasAccesss=true;
         video:false,
         videoUrl:'',
         isVideoShowing:true,
+        AudioVideoOn:true,
         alreadyDone:false
       }
-
-      // function createVisitor(email, phoneNumber , name) {
-      //   console.log(email , phoneNumber , name,'sometinhhhhhhhhh###');
-      //   var toPost = JSON.stringify({"email":email , "phoneNumber":phoneNumber , "name":name ,"uid":args[0]})
-      //   console.log(toPost);
-      //   // console.log(typeof toPost);
-      //   var xhttp = new XMLHttpRequest();
-      //    xhttp.onreadystatechange = function() {
-      //      if (this.readyState == 4 && this.status == 201) {
-      //        var data = JSON.parse(this.responseText)
-      //        detail.name = data.name
-      //        detail.email = data.email
-      //      }
-      //    };
-      //    xhttp.open('POST', '/api/support/visitor/', true);
-      //    xhttp.setRequestHeader("Content-type", "application/json");
-      //    xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-      //    xhttp.send(toPost);
-      // }
 
       console.log(args[4]);
 
@@ -364,11 +348,6 @@ var hasAccesss=true;
         detail.email = args[4].email
         // createVisitor(args[4].email , args[4].phoneNumber , args[4].name)
       }
-
-
-
-      console.log('no');
-      console.log(args);
       if (args[1] == 'M') {
         scope.sound.play();
         console.log(args, 'argssssssssss');
@@ -408,18 +387,17 @@ var hasAccesss=true;
       }
     }
 
-
   };
 
-
-  function checkOnline() {
+   function checkOnline() {
+    console.log('in check online');
     var scope = angular.element(document.getElementById('chatTab')).scope();
+    console.log(scope);
     if (scope) {
       console.log(scope.myUsers);
-      console.log(scope.newUsers);
       for (var i = 0; i < scope.myUsers.length; i++) {
         console.log(scope.myUsers[i].uid , 'call');
-        session.call('service.support.heartbeat.' + scope.myUsers[i].uid, []).
+        session.call(myUrl+'service.support.heartbeat.' + scope.myUsers[i].uid, []).
         then((function(i) {
           return function (res) {
             console.log(res,'res');
@@ -433,10 +411,9 @@ var hasAccesss=true;
         })(i))
       }
 
-
       for (var i = 0; i < scope.newUsers.length; i++) {
         console.log(scope.newUsers[i].uid , 'newwww');
-        session.call('service.support.heartbeat.' + scope.newUsers[i].uid, []).
+        session.call(myUrl+'service.support.heartbeat.' + scope.newUsers[i].uid, []).
         then((function(i) {
           return function (res) {
             scope.newUsers[i].isOnline = true;
@@ -448,10 +425,9 @@ var hasAccesss=true;
           }
         })(i))
       }
-
-
     }
   }
+
 
   function sendBackHeartBeat() {
     var scope = angular.element(document.getElementById('chatTab')).scope();
@@ -462,7 +438,7 @@ var hasAccesss=true;
           alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
           scope.myUsers.push(args[2]);
 
-          connection.session.publish('service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
+          connection.session.publish(myUrl+'service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -479,17 +455,15 @@ var hasAccesss=true;
            xhttp.setRequestHeader("Content-type", "application/json");
            xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
            xhttp.send(JSON.stringify({user:scope.me.pk}));
-
-
-
           return
-        }else {
+        }
+        else {
           console.log('onlieeeeeeeeeeeeeeeeeeeeeeeee');
           return true
         }
       }
       console.log(scope.me.pk+'heeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-      session.register('service.support.heartbeat.'+scope.me.pk, heartbeat).then(
+      session.register(myUrl+'service.support.heartbeat.'+scope.me.pk, heartbeat).then(
         function (res) {
           console.log("registered to service.support.heartbeat iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
         },
@@ -502,29 +476,24 @@ var hasAccesss=true;
   }
 
 
-
-
   setTimeout(function() {
-    checkOnline();
     sendBackHeartBeat();
+    checkOnline();
   }, 1500);
+
 
   setInterval(function() {
     console.log('comin in interval');
     checkOnline();
   }, 10000)
 
-  function heartbeat() {
-    console.log('coming in heartttt');
-    return scope.me.pk
-  }
+  // function heartbeat(args) {
+  //   console.log('coming in heartttt');
+  //   console.log(scope.me,'check this outttttttttttttttttttt');
+  //   return scope.me.pk
+  // }
 
-
-
-
-
-
-  session.subscribe('service.support.agent', supportChatResponse).then(
+  session.subscribe(myUrl+'service.support.agent', supportChatResponse).then(
     function(sub) {
       console.log("subscribed to topic 'supportChatResponse'");
     },
@@ -535,7 +504,7 @@ var hasAccesss=true;
 
 setTimeout(function () {
   var scope = angular.element(document.getElementById('main')).scope();
-  session.subscribe('service.support.agent.'+scope.me.pk, supportChatResponse).then(
+  session.subscribe(myUrl+'service.support.agent.'+scope.me.pk, supportChatResponse).then(
     function(sub) {
       console.log("subscribed to topic 'supportChatResponse'");
     },
@@ -548,7 +517,7 @@ setTimeout(function () {
 
 
 
-  session.subscribe('service.chat.' + wampBindName, chatResonse).then(
+  session.subscribe(myUrl+'service.chat.' + wampBindName, chatResonse).then(
     function(sub) {
       console.log("subscribed to topic 'chatResonse'");
     },
@@ -556,7 +525,7 @@ setTimeout(function () {
       console.log("failed to subscribed: " + err);
     }
   );
-  session.subscribe('service.notification.' + wampBindName, processNotification).then(
+  session.subscribe(myUrl+'service.notification.' + wampBindName, processNotification).then(
     function(sub) {
       console.log("subscribed to topic 'notification'");
     },
@@ -564,7 +533,7 @@ setTimeout(function () {
       console.log("failed to subscribed: " + err);
     }
   );
-  session.subscribe('service.updates.' + wampBindName, processUpdates).then(
+  session.subscribe(myUrl+'service.updates.' + wampBindName, processUpdates).then(
     function(sub) {
       console.log("subscribed to topic 'updates'");
     },
@@ -572,7 +541,7 @@ setTimeout(function () {
       console.log("failed to subscribed: " + err);
     }
   );
-  session.subscribe('service.dashboard.' + wampBindName, processDashboardUpdates).then(
+  session.subscribe(myUrl+'service.dashboard.' + wampBindName, processDashboardUpdates).then(
     // for the various dashboard updates
     function(sub) {
       console.log("subscribed to topic 'dashboard'");
@@ -583,6 +552,7 @@ setTimeout(function () {
   );
 
 };
+
 
 
 // fired when connection was lost (or could not be established)

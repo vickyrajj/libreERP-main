@@ -78,6 +78,10 @@ class GetMyUser(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
         print '****** entered', request.GET
+        if 'getCompanyDetails' in request.GET:
+            objjj=list(CustomerProfile.objects.filter(pk=request.GET['pk']).values_list('name',flat=True))
+
+            return Response(objjj, status=status.HTTP_200_OK)
         if 'allAgents' in request.GET:
             print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
             allAgents = list(User.objects.exclude(pk=self.request.user.pk).values_list('pk',flat=True))
@@ -103,6 +107,13 @@ class GetMyUser(APIView):
                 dic['servicePk'] = service.objects.filter(pk = dic['companyPk'])[0].pk
                 print dic
                 toSend.append(dic)
+            return Response(toSend, status=status.HTTP_200_OK)
+        if 'getDetail' in request.GET:
+            # uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
+            toSend = []
+            currentUser=User.objects.filter(pk=request.GET['pk'])
+            print currentUser
+            toSend.append(currentUser.values())
             return Response(toSend, status=status.HTTP_200_OK)
         if 'getNewUser' in request.GET:
             print 'getNewUser'
@@ -350,7 +361,7 @@ class ReviewFilterCalAPIView(APIView):
             return response
             # return ExcelResponse(res)
 
-        return Response(toSend[offset : limit], status=status.HTTP_200_OK)
+        return Response(toSend[offset:limit], status=status.HTTP_200_OK)
 
 
 def encrypt(raw, password):
@@ -478,6 +489,7 @@ class ChatThreadViewSet(viewsets.ModelViewSet):
             print 'tttttttttttttttt',threadObj
             return threadObj
         return ChatThread.objects.all()
+
 
 class DocumentationViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
@@ -810,6 +822,7 @@ class HeartbeatApi(APIView):
             return Response({}, status = status.HTTP_200_OK)
         elif 'getDetailData' in request.GET:
             u = User.objects.get(pk = request.GET['pk'])
+            # sobj = sobj.filter(user = self.request.user)
             toSend=[]
             heartbtObj = Heartbeat.objects.all()
             if 'date' in request.GET:

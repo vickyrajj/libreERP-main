@@ -1,16 +1,16 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.timesheet', {
-    url: "/timesheet",
+  $stateProvider.state('businessManagement.adminTimesheet', {
+    url: "/adminTimesheet",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.timesheet.html',
-        controller: 'businessManagement.timesheet',
+        templateUrl: '/static/ngTemplates/app.adminTimesheet.html',
+        controller: 'businessManagement.adminTimesheet',
       }
     }
   })
 });
-app.controller("businessManagement.timesheet.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
+app.controller("businessManagement.adminTimesheet.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
 
 console.log($scope.me);
 
@@ -39,12 +39,13 @@ $scope.filterCall=function(){
 
 
 })
-app.controller("businessManagement.timesheet", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
+app.controller("businessManagement.adminTimesheet", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
 
   $scope.data = {
     tableData: []
   };
 
+console.log($users.get('mySelf'));
   $scope.form = {date:new Date(),user:'',email:'',client:''}
   $scope.reviewData = []
   // $scope.archivedData=[]
