@@ -22,6 +22,8 @@ import calendar
 from rest_framework import filters
 from django.utils import translation
 from django.core.mail import send_mail, EmailMessage
+import datetime
+from datetime import timedelta
 
 
 def renderedStatic(request , filename):
@@ -300,3 +302,84 @@ class activityViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = Activity.objects.all()
     serializer_class = activitySerializer
+
+
+class GraphData(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def get(self, request , format = None):
+        graphLabels = []
+        graphData = []
+        totalVisitors = 0
+        totalDemoReq = 0
+        totalApiGent = 0
+        totalBlogSubs = 0
+        totalContacts = 0
+        if 'Monthly' in request.GET:
+            print 'monthly'
+            noOfMonths = 6
+            months = []
+            today = datetime.datetime.now().date()
+            month = today.month - noOfMonths + 1
+            for i in range(noOfMonths):
+                visitor = Visitor.objects.filter(created__month=month)
+                demoReq = visitor.filter(demoRequested = True).count()
+                enterCont = visitor.filter(enterpriseContact = True).count()
+                blogsSubs = visitor.filter(blogsSubscribed = True).count()
+                apiGen = visitor.filter(apiGenerated = True).count()
+                graphData.append({'demoRequested':demoReq,'enterCont':enterCont,'blogsSubs':blogsSubs,'apiGen':apiGen})
+                graphLabels.append(datetime.date(2015, month, 1).strftime('%b'))
+                month = month + 1
+                totalVisitors = visitor.count() + totalVisitors
+                totalDemoReq = demoReq + totalDemoReq
+                totalApiGent = blogsSubs + totalApiGent
+                totalBlogSubs = blogsSubs + totalBlogSubs
+                totalContacts = enterCont + totalContacts
+        # elif 'Weekly' in request.GET:
+        #     print 'weeeeeeeeeeeeeeeeeeeeeeeee'
+        #     noOfWeeks = 4
+        #     today = datetime.datetime.now().date()
+        #     lastToLastWeek = today - relativedelta(days=7*noOfWeeks)
+        #     print lastToLastWeek,'week'
+        #     j = 0;
+        #     k = 6;
+        #     for i in range(noOfWeeks):
+        #         print i
+        #         dt1 = lastToLastWeek + relativedelta(days=j)
+        #         dt2 = lastToLastWeek + relativedelta(days=k + 1)
+        #         dt2ToDisplay= lastToLastWeek + relativedelta(days=k)
+        #         j = j+7;
+        #         k = k+7;
+        #         print dt1 , dt2,'gggggggggggggggggggg'
+        #         visitor = Visitor.objects.filter(created__range=(dt1,dt2))
+        #         demoReq = visitor.filter(demoRequested = True).count()
+        #         enterCont = visitor.filter(enterpriseContact = True).count()
+        #         blogsSubs = visitor.filter(blogsSubscribed = True).count()
+        #         apiGen = visitor.filter(apiGenerated = True).count()
+        #         graphData.append({'demoRequested':demoReq,'enterCont':enterCont,'blogsSubs':blogsSubs,'apiGen':apiGen})
+        #         graphLabels.append(datetime.datetime.combine(dt1, datetime.datetime.min.time()).strftime('%b %d') +' - '+ datetime.datetime.combine(dt2ToDisplay, datetime.datetime.min.time()).strftime('%b %d'))
+        #         totalVisitors = visitor.count() + totalVisitors
+        #         totalDemoReq = demoReq + totalDemoReq
+        #         totalApiGent = blogsSubs + totalApiGent
+        #         totalBlogSubs = blogsSubs + totalBlogSubs
+        #         totalContacts = enterCont + totalContacts
+        elif 'Weekly' in request.GET:
+            noOfDays = 7
+            today = datetime.datetime.now().date()
+            lastWeek = today - relativedelta(days=noOfDays)
+            for i in range(noOfDays):
+                dt = lastWeek + relativedelta(days=i - 1)
+                visitor = Visitor.objects.filter(created__startswith=dt)
+                demoReq = visitor.filter(demoRequested = True).count()
+                enterCont = visitor.filter(enterpriseContact = True).count()
+                blogsSubs = visitor.filter(blogsSubscribed = True).count()
+                apiGen = visitor.filter(apiGenerated = True).count()
+                graphData.append({'demoRequested':demoReq,'enterCont':enterCont,'blogsSubs':blogsSubs,'apiGen':apiGen})
+                # graphLabels.append(datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'))
+                graphLabels.append(dt.strftime("%A"))
+                totalVisitors = visitor.count() + totalVisitors
+                totalDemoReq = demoReq + totalDemoReq
+                totalApiGent = blogsSubs + totalApiGent
+                totalBlogSubs = blogsSubs + totalBlogSubs
+                totalContacts = enterCont + totalContacts
+        return Response({'graphLabels':graphLabels,'graphData':graphData,'totalVisitors':totalVisitors,'totalContacts':totalContacts,'totalBlogSubs':totalBlogSubs,'totalApiGent':totalApiGent,'totalDemoReq':totalDemoReq},status = status.HTTP_200_OK)
