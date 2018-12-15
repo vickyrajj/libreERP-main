@@ -173,6 +173,37 @@
   z-index: 3;
 }
 
+.hoverEffect:hover {
+    display: none;
+    opacity: 0.3 !important
+}
+
+.overlay {
+  position: absolute;
+  width: 92%;
+  height:100%;
+  top:0;
+  bottom:0;
+  background: rgba(0, 0, 0, 0.9);
+  text-align: center;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.box12:hover .overlay {
+  opacity: 1;
+  transition: 0.5s ease;
+}
+
+.search12 {
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 96px;
+}
+
 .circles li:nth-child(2) {
   background-color: #36d4ff;
   border-radius: 50%;
@@ -672,12 +703,230 @@
   pointer-events: none;
   right: 0;
   width: 100%;
+  left: -14px;
 }
 
 .chart_svg {
   width: 100vw;
 }
 
+.jumbo_div {
+  padding: 5rem 0 1rem 0;
+}
+
+.Jumbo_title {
+  color: #000;
+  font-size: 7rem;
+  font-family: sans-serif;
+  font-weight: lighter;
+  min-height: 100px;
+  padding: 3rem 5rem;
+}
+
+.jumbo_text {
+  color: #fff;
+  font-size: 4.5rem;
+  font-family: sans-serif;
+  font-weight: lighter;
+}
+
+.tiny_text {
+  color: #fff;
+  font-size: 2rem;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.hero_div {
+  min-height: 60vh;
+  position: relative;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+.hero_container {
+  max-width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding-bottom: 0rem;
+}
+
+.hero_left {
+  width: 50%;
+  float: left;
+  height: 50vh;
+  padding: 6rem 9rem 0 9rem;
+}
+
+.hero_left h1 {
+  font-size: 4.6rem;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.vertical_bar_left {
+  border: 6px solid #FF540A;
+  height: 43vh;
+  position: absolute;
+  left: 17%;
+  top: 5%
+}
+
+.vertical_bar_right {
+  border: 6px solid #FF540A;
+  height: 43vh;
+  position: absolute;
+  left: 53%;
+  top: 5%
+}
+
+.hero_right {
+  background-image: url('/static/images/robots.jpg');
+  background-size: cover;
+  width: 50%;
+  height: 50vh;
+  float: left;
+  right: 0;
+}
+
+.ai_div {
+  padding: 6rem;
+}
+
+.ai_title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #002856;
+}
+
+.ai_description {
+  font-size: 2rem;
+  color: #222222;
+}
+
+.ai_btn {
+  background-color: #fff;
+  padding: 1.7rem 2.6rem;
+  border-radius: 0px;
+  border: 2px solid #002856;
+  font-size: 1.7rem;
+  font-family: sans-serif;
+  font-weight: bold;
+  width: 35%;
+}
+
+.ai_btn:hover {
+  background-color: #002856;
+  color: #fff;
+}
+
+.ai_img {
+  padding: 0;
+}
+
+.ai_text {
+  padding: 0;
+}
+
+.resource_div {
+  min-height: 20vh;
+  position: relative;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+.resource_container {
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding-bottom: 0rem;
+}
+
+.resource {
+  min-height: 20vh;
+  height: auto;
+  z-index: 1;
+  margin-top: 0;
+  border-radius: 9px;
+}
+
+.resource_primary {
+  padding: 1.5rem;
+}
+
+.resource_secondary {
+  padding: 1.5rem;
+}
+
+.resource_clear {
+  padding: 1.5rem;
+}
+
+.resource_primary {
+  float: left;
+  width: 45vh;
+  position: absolute;
+  background-color: #FF540A;
+  top: -10vh;
+  color: #fff;
+  text-align: center;
+
+}
+
+.resource_secondary {
+  float: left;
+  width: 45vh;
+  position: absolute;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.9)), url('/static/images/neurons.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  left: 40.6%;
+  top: -10vh;
+  color: #fff;
+  text-align: center;
+}
+
+.resource_clear {
+  float: left;
+  width: 45vh;
+  position: absolute;
+  background-color: #002856;
+  top: -10vh;
+  right: 8%;
+  color: #fff;
+  text-align: center;
+}
+.res_1{
+  position: relative;
+}
+.res_2{
+  position: relative;
+}
+.res_3{
+  position: relative;
+}
+.res_icon{
+  width: 8vh;
+}
+.res_description{
+  font-size: 2.6rem;
+  font-weight: bold;
+  font-family: sans-serif;
+  position: absolute;
+  top: 136%;
+  left: 2%;
+}
+
+/* .active_line{
+  border: 3px solid #000;
+  width:50%;
+  position: absolute;
+  bottom: -6%;
+} */
 /* currently working**********************************************************************************************************8 */
 /* for iphones.... */
 @media only screen and (device-width : 414px) and (device-height : 736px) and (-webkit-device-pixel-ratio : 3) {
@@ -960,9 +1209,70 @@
   }
 
   .chart_graphic {
-    top: -270px;
+    top: -290px;
     padding-top: 0px;
+    left: 0;
   }
+
+  .jumbo_div {
+    padding: 5rem 0 0 0;
+  }
+
+  .Jumbo_title {
+    font-size: 3rem;
+    padding: 1rem;
+  }
+
+  .jumbo_text {
+    font-size: 1.9rem;
+  }
+
+  .tiny_text {
+    font-size: 1.6rem;
+  }
+
+  .hero_div {
+    min-height: 54vh;
+  }
+
+  .hero_left {
+    width: 100%;
+    padding: 0;
+  }
+
+  .hero_left h1 {
+    font-size: 3.3rem;
+  }
+
+  .hero_left h3 {
+    font-size: 1.9rem;
+  }
+
+  .vertical_bar_left {
+    left: 5%;
+  }
+
+  .vertical_bar_right {
+    left: 91%;
+  }
+
+  .ai_div {
+    padding: 0 2rem 4rem 2rem;
+  }
+
+  .ai_title {
+    font-size: 2.5rem;
+  }
+
+  .ai_btn {
+    width: 100%;
+  }
+
+  .ai_img {
+    padding-left: 6rem;
+  }
+
+
 
   /* .blog_container, .sec1Right, .sec2Left, .sec2thirdRow{
     flex-direction: column;

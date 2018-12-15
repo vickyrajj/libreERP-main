@@ -178,7 +178,19 @@ app.config(function($stateProvider) {
     .state('finance', {
       url: "/finance",
       templateUrl: '/static/ngTemplates/app.homepage.finance.html',
-      // controller: 'controller.ecommerce.PagesDetails'
+      // controller: 'controller.index'
+    })
+  $stateProvider
+    .state('rpa_2019', {
+      url: "/rpa_2019",
+      templateUrl: '/static/ngTemplates/app.homepage.rpa_2019.html',
+      // controller: 'controller.index'
+    })
+  $stateProvider
+    .state('resources', {
+      url: "/resources",
+      templateUrl: '/static/ngTemplates/app.homepage.resources.html',
+      controller: 'controller.resource'
     })
   $stateProvider
     .state('pages', {
@@ -220,6 +232,11 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
       name: name + '&' + pk
     })
   }
+
+});
+app.controller('controller.resource', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+
 
 });
 
@@ -596,7 +613,6 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
       dp: '/static/images/zendesk.png'
     },
   ];
-
 
 })
 
