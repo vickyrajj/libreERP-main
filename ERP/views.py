@@ -374,7 +374,6 @@ class GraphData(APIView):
                 enterCont = visitor.filter(enterpriseContact = True).count()
                 blogsSubs = visitor.filter(blogsSubscribed = True).count()
                 apiGen = visitor.filter(apiGenerated = True).count()
-                print dt.strftime("%A")
                 graphData.append({'demoRequested':demoReq,'enterCont':enterCont,'blogsSubs':blogsSubs,'apiGen':apiGen})
                 # graphLabels.append(datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'))
                 graphLabels.append(dt.strftime("%A"))
