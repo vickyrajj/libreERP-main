@@ -26,11 +26,11 @@ app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $
     var visitorDetails = $rootScope.getCookie("visitorDetails");
     if (visitorDetails != "") {
       var uid = JSON.parse(visitorDetails).uid
-      var visitorPk = JSON.parse(visitorDetails).visitorPk
+      $rootScope.visitorPk = JSON.parse(visitorDetails).visitorPk
       createActivity()
     } else {
       var uid = new Date().getTime()
-      var visitorPk;
+      $rootScope.visitorPk;
       $http({
         method: 'POST',
         url: '/api/ERP/visitor/',
@@ -39,13 +39,14 @@ app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $
         }
       }).
       then(function(response) {
-        visitorPk = response.data.pk;
+        $rootScope.visitorPk = response.data.pk;
         createActivity()
         $rootScope.setCookie("visitorDetails", JSON.stringify({
           uid: response.data.uid,
           name: "",
           email: "",
-          visitorPk: response.data.pk
+          visitorPk: $rootScope.visitorPk,
+          blogSubscribed: false
         }), 365);
       })
 
@@ -56,7 +57,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $
         $rootScope.timeSpentInSec = (new Date().getTime() - $rootScope.newTime) / 1000;
         console.log(from.name, $rootScope.timeSpentInSec, uid);
         toSend = {
-          visitor: visitorPk,
+          visitor: $rootScope.visitorPk,
           page: from.name,
           timeDuration: $rootScope.timeSpentInSec
         }
@@ -267,7 +268,7 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
 });
 
 
-app.controller('controller.pricing', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $aside) {
+app.controller('controller.pricing', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $aside, $rootScope) {
 
 
   $http({
@@ -293,7 +294,7 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
             mobileNumber: '',
             requirements: '',
             jobLevel: '',
-            comapany: '',
+            company: '',
             companyCategory: '',
             companyExpertise: '',
             country: ''
@@ -307,8 +308,16 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
         }
         $scope.refresh()
 
+        $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+        if ($scope.visitorDetails != "") {
+          $scope.form.firstName = JSON.parse($scope.visitorDetails).name || ''
+          $scope.form.emailId = JSON.parse($scope.visitorDetails).email || ''
+        }
+
+
+
         $scope.connect = function() {
-          if ($scope.form.firstName == '' || $scope.form.emailId == '' || $scope.form.requirements == '' || $scope.form.comapny == '') {
+          if ($scope.form.firstName == '' || $scope.form.emailId == '' || $scope.form.requirements == '' || $scope.form.comapny == '' || $scope.form.mobileNumber == '') {
             return;
           }
           var toSend = { ...$scope.form
@@ -316,6 +325,7 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
           toSend.name = $scope.form.firstName + ' ' + $scope.form.lastName;
           delete toSend.firstName;
           delete toSend.lastName;
+          toSend.source = $rootScope.source;
 
           console.log(toSend);
 
@@ -356,25 +366,44 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
       backdrop: true,
       controller: function($scope, Flash, $uibModalInstance, $timeout) {
 
-        $timeout(function() {
-          document.getElementById('otp').classList.add("till");
-        }, 100);
-
-        $scope.otpSent = false;
-        $scope.invalidEmail = false;
+        // $scope.otpSent = false;
+        // $scope.invalidEmail = false;
+        // $scope.apiKeyAlreadySent = false;
+        // $scope.loading = false;
         $scope.refresh = function() {
           $scope.form = {
             email: '',
             otp: '',
             apiKey: ''
           }
-          $scope.apiKey = ''
+        }
+        $scope.booleanForm = {
+          apiKey: '',
+          otpSent: false,
+          invalidEmail: false,
+          apiKeyAlreadySent: false,
+          loading: false,
+          copied: false,
+          correctOtp: true
         }
 
         $scope.refresh()
         $scope.$watch('form.email', function(newValue, oldValue) {
-          if ($scope.invalidEmail) {
-            $scope.invalidEmail = false;
+          if ($scope.booleanForm.invalidEmail) {
+            $scope.booleanForm.invalidEmail = false;
+          }
+          if ($scope.booleanForm.apiKeyAlreadySent) {
+            $scope.booleanForm.apiKeyAlreadySent = false;
+          }
+
+          if ($scope.booleanForm.loading) {
+            $scope.booleanForm.loading = false;
+          }
+        })
+
+        $scope.$watch('form.otp', function(newValue, oldValue) {
+          if (!$scope.booleanForm.correctOtp) {
+            $scope.booleanForm.correctOtp = true;
           }
         })
 
@@ -383,44 +412,64 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
             return;
           }
           if ($scope.form.email.includes('gmail') || $scope.form.email.includes('outlook') || $scope.form.email.includes('yahoo')) {
-            $scope.invalidEmail = true;
+            $scope.booleanForm.invalidEmail = true;
             return;
           }
+          $scope.booleanForm.loading = true;
           $http({
             method: 'POST',
-            url: erpUrl +'/api/ERP/generateApiKey/',
+            url: apiManagerUrl + '/api/tools/generateAPIKEY/',
             data: {
               email: $scope.form.email
             }
           }).then(function(response) {
-            $scope.otpSent = true;
+            $scope.booleanForm.loading = false;
+            if (response.data.msg == 'Invalid Email') {
+              //invlaide emailId
+              console.log(response.data.msg);
+              $scope.booleanForm.invalidEmail = true;
+            } else if (response.data.msg == 'apiKey_exists') {
+              //already sent
+              // $scope.otpSent = true;
+              $scope.booleanForm.apiKeyAlreadySent = true;
+              console.log('already sent');
+            } else if (response.data.msg == 'otp') {
+              $scope.booleanForm.otpSent = true;
+              //otp
+            }
           })
         }
-        $scope.correctOtp = true;
         $scope.submitOtp = function() {
-          if ($scope.form.otp.length < 4 || $scope.form.otp.length > 4) {
-            $scope.correctOtp = false;
+          if ($scope.form.otp.length != 4) {
+            $scope.booleanForm.correctOtp = false;
             return
           }
+          $scope.booleanForm.loading = true;
+          $http({
+            method: 'POST',
+            url: apiManagerUrl + '/api/tools/generateAPIKEY/',
+            data: {
+              email: $scope.form.email,
+              otp: $scope.form.otp
+            }
+          }).then(function(response) {
+            $scope.booleanForm.loading = false;
+            if (response.data.msg == 'otpError') {
+              //ot error
+              console.log(response.data.msg);
+              $scope.booleanForm.correctOtp = false;
+            } else {
+              //api key
+              console.log(response.data.msg);
+              $scope.booleanForm.correctOtp = true;
+              $scope.booleanForm.apiKey = response.data.msg;
+              document.getElementById('otp').classList.remove("till");
+              document.getElementById('confirm').classList.add("till");
+            }
 
-          $scope.correctOtp = true;
-          $scope.apiKey = 'SDFSDFSsdfSDfsdfsdWERwerQQ!@#123123sgsgsGSDFFFFFFf'
-          document.getElementById('otp').classList.remove("till");
-          document.getElementById('confirm').classList.add("till");
-
-          // $http({
-          //   method:'POST',
-          //   url:'/api/ERP/generateApiKey/',
-          //   data:{email:$scope.form.email, otp: ''}
-          // }).then(function (response) {
-          //   $scope.correctOtp = true;
-          //   $scope.apiKey = 'SDFSDFSsdfSDfsdfsdWERwerQQ!@#123123sgsgsGSDFFFFFFf'
-          //   document.getElementById('otp').classList.remove("till");
-          //   document.getElementById('confirm').classList.add("till");
-          // })
-
+          })
         }
-        $scope.copied = false;
+
         $scope.copyAPI = function(id) {
           var from = document.getElementById(id);
           var range = document.createRange();
@@ -429,9 +478,9 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
           window.getSelection().addRange(range);
           document.execCommand('copy');
           window.getSelection().removeAllRanges();
-          $scope.copied = true;
-          $timeout(function () {
-            $scope.copied = false;
+          $scope.booleanForm.copied = true;
+          $timeout(function() {
+            $scope.booleanForm.copied = false;
           }, 1000);
         }
 
@@ -617,27 +666,6 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     smallDevice: false
   }
 
-
-  $scope.elementInViewport = function(el) {
-    var top = el.offsetTop;
-    var left = el.offsetLeft;
-    var width = el.offsetWidth;
-    var height = el.offsetHeight;
-
-    while (el.offsetParent) {
-      el = el.offsetParent;
-      top += el.offsetTop;
-      left += el.offsetLeft;
-    }
-
-    return (
-      top >= window.pageYOffset &&
-      left >= window.pageXOffset &&
-      (top + height) <= (window.pageYOffset + window.innerHeight) &&
-      (left + width) <= (window.pageXOffset + window.innerWidth)
-    );
-  }
-
   $scope.smDevice = function(x) {
     if (x.matches) {
       console.log('trueeeeeeee');
@@ -662,6 +690,8 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
 
 
   $scope.toggleNavbar = false;
+
+  $rootScope.source = 'EpsilonAI'
 
 
   $scope.langOptions = [{
@@ -719,6 +749,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
       controller: function($scope, Flash) {
         $scope.calendar = true
         $scope.thankYou = false
+
         $scope.refresh = function() {
           $scope.form = {
             dated: new Date(),
@@ -728,6 +759,14 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
           }
         }
         $scope.refresh()
+
+        $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+        if ($scope.visitorDetails != "") {
+          $scope.form.name = JSON.parse($scope.visitorDetails).name || ''
+          $scope.form.emailId = JSON.parse($scope.visitorDetails).email || ''
+        }
+
+
         $scope.timeSlot = [{
             'time': '8 - 9'
           },
@@ -768,7 +807,8 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
               uid: JSON.parse($scope.visitorDetails).uid,
               name: $scope.form.name,
               email: $scope.form.emailId,
-              visitorPk: JSON.parse($scope.visitorDetails).visitorPk,
+              visitorPk: $rootScope.visitorPk,
+              blogSubscribed: JSON.parse($scope.visitorDetails).blogSubscribed
             }), 365);
           }
 
@@ -778,6 +818,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
             slot: $scope.form.slot,
             emailId: $scope.form.emailId,
             name: $scope.form.name,
+            source: $rootScope.source
           }
 
           $http({
@@ -798,21 +839,21 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
               }
             }).
             then(function(response) {
-              $scope.refresh()
+              // $scope.refresh()
             });
 
-            $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
             $http({
               method: 'PATCH',
-              url: '/api/ERP/visitor/' + JSON.parse($scope.visitorDetails).visitorPk + '/',
+              url: '/api/ERP/visitor/' + $rootScope.visitorPk + '/',
               data: {
                 demoRequested: true,
-                email: JSON.parse($scope.visitorDetails).email,
-                name: JSON.parse($scope.visitorDetails).name
+                email: $scope.form.emailId,
+                name: $scope.form.name
               }
             }).then(function(response) {
               console.log(response.data);
             })
+
 
           });
 
@@ -854,66 +895,55 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   console.log('here');
   $scope.show = [false, false, false, false]
   $scope.keepshow = false;
+
+
   $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
   if ($scope.visitorDetails != "") {
-    if (JSON.parse($scope.visitorDetails).email != '' && JSON.parse($scope.visitorDetails).email != undefined) {
-      $scope.subscribeForm = {
-        email: JSON.parse($scope.visitorDetails).email
-      }
-    }
+    $scope.subscribeForm = {}
+    $scope.subscribeForm.email = JSON.parse($scope.visitorDetails).email || ''
+    $scope.subscribeForm.blogSubscribed = JSON.parse($scope.visitorDetails).blogSubscribed || false
   } else {
     $scope.subscribeForm = {
-      email: ''
+      email: '',
+      blogSubscribed: false
     }
   }
 
-
-  $scope.blogSubscribed = false;
-
-
   $scope.subscribeToBlogs = function() {
-
     if ($scope.subscribeForm.email == '') {
       return;
     }
-
     $http({
       method: 'POST',
       url: erpUrl + '/api/marketing/conatacts/',
       data: {
-        email: $scope.subscribeForm.email
+        email: $scope.subscribeForm.email,
+        source: $rootScope.source
       }
     }).then(function(response) {
       Flash.create('success', 'Subscribed');
     })
 
+    $scope.subscribeForm.blogSubscribed = true
 
-
-    if ($scope.visitorDetails != "") {
-      $rootScope.setCookie("visitorDetails", JSON.stringify({
-        uid: JSON.parse($scope.visitorDetails).uid,
-        name: JSON.parse($scope.visitorDetails).name,
-        email: $scope.subscribeForm.email,
-        visitorPk: JSON.parse($scope.visitorDetails).visitorPk,
-      }), 365);
-    }
+    $rootScope.setCookie("visitorDetails", JSON.stringify({
+      uid: JSON.parse($scope.visitorDetails).uid,
+      name: JSON.parse($scope.visitorDetails).name,
+      email: $scope.subscribeForm.email,
+      visitorPk: $rootScope.visitorPk,
+      blogSubscribed: $scope.subscribeForm.blogSubscribed
+    }), 365);
 
     $http({
       method: 'PATCH',
-      url: '/api/ERP/visitor/' + JSON.parse($scope.visitorDetails).visitorPk + '/',
+      url: '/api/ERP/visitor/' + $rootScope.visitorPk + '/',
       data: {
         blogsSubscribed: true,
         email: $scope.subscribeForm.email
       }
     }).then(function(response) {
       console.log(response.data);
-      $scope.subscribeForm = {
-        email: ''
-      }
-      $scope.blogSubscribed = true;
-      Flash.create('success', 'Subscribed');
     })
-
   }
 
 });

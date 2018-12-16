@@ -49,6 +49,7 @@
 
 .sec1Right {
   display: flex;
+  display: -webkit-flex;
   flex-wrap: wrap;
   flex: 50%;
   height: 50vh;
@@ -92,6 +93,7 @@
 .sec2Left {
   flex: 75%;
   display: flex;
+  display: -webkit-flex;
   flex-wrap: wrap;
 }
 
@@ -543,6 +545,10 @@
   .sec1RightBox2, .sec1RightBox1{
     width: 100% !important;
     flex:none;
+  }
+
+  .sec1Right{
+    flex-wrap: nowrap !important;
   }
 
   .blog_text {
@@ -1105,6 +1111,7 @@ figure {
   padding: .8em 2.5em;
   color: #fff;
   font-size: 16px;
+  text-align: center;
 }
 
 .list {

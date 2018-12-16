@@ -99,6 +99,7 @@ class Visitor(models.Model):
     demoRequested = models.BooleanField(default = False)
     enterpriseContact = models.BooleanField(default = False)
     blogsSubscribed = models.BooleanField(default = False)
+    apiGenerated = models.BooleanField(default = False)
     isAgent = models.BooleanField(default = False)
     ipAddress = models.CharField(max_length = 20 , null = True)
 

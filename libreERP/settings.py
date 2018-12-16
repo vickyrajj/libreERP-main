@@ -38,7 +38,8 @@ ECOMMERCE_APP = {
 
 LOGIN_PAGE_IMAGE = '/static/images/frontBanner.jpg'
 
-ERP_URL_PREFIX = 'http://192.168.0.110:8080'
+ERP_URL_PREFIX = 'http://192.168.0.112:8080'
+APIMANAGER_URL_PREFIX = 'http://192.168.0.112:8000'
 
 LOGIN_URL = 'login' # this can be 'login' or 'account_login'
 REGISTER_URL = 'register' # this can be 'register' or 'account_signup'

@@ -148,7 +148,7 @@ class groupPermissionSerializer(serializers.ModelSerializer):
 class visitorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Visitor
-        fields = ( 'pk' ,'uid', 'demoRequested','email' , 'enterpriseContact','blogsSubscribed','isAgent','ipAddress')
+        fields = ( 'pk','created' ,'uid', 'demoRequested','email' , 'enterpriseContact','apiGenerated','blogsSubscribed','isAgent','ipAddress')
     def create(self, validated_data):
         v = Visitor(**validated_data)
         if self.context['request'].META.get('REMOTE_ADDR'):
