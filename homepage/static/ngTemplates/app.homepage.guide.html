@@ -1,0 +1,44 @@
+<div class="row" style="margin:0px;padding:40px 0 20px 0;background-image: linear-gradient(rgba(0, 0, 0, 0.61), rgba(4, 68, 126, 0.9)), url('/static/images/aai.jpg');min-height:30vh;background-repeat:no-repeat;background-size:auto;">
+</div>
+<div class="row" style="margin:0px;padding:0px;">
+  <div class="col-md-2 noPadding" style="background-color:#043966;min-height:90vh;">
+    <div class="vertical-menu">
+      <a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+      <a href="#"><i class="fa fa-list fa-fw" aria-hidden="true"></i> Trending</a>
+      <a href="#"><i class="fa fa-history fa-fw" aria-hidden="true"></i> History</a>
+    </div>
+    <hr>
+    <h3 class="text-muted" style="padding-left:20px;color:#fa7800">Best of AI</h3>
+    <hr>
+    <div class="vertical-menu">
+      <a href="#"><i class="fa fa-video-camera fa-fw" aria-hidden="true"></i> Getting started</a>
+      <a href="#"><i class="fa fa-video-camera fa-fw" aria-hidden="true"></i> Installation</a>
+      <a href="#"><i class="fa fa-video-camera fa-fw" aria-hidden="true"></i> Machine Learning</a>
+      <a href="#"><i class="fa fa-video-camera fa-fw" aria-hidden="true"></i> Artificial Intelligence</a>
+      <a href="#"><i class="fa fa-video-camera fa-fw" aria-hidden="true"></i> AI Powered</a>
+    </div>
+    <hr>
+    <h3 class="text-muted" style="padding-left:20px;color:#fa7800">More from AI</h3>
+    <div class="vertical-menu">
+      <a href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> Settings</a>
+    </div>
+    <hr>
+  </div>
+  <div class="col-md-10" style="margin-top:10px;">
+    <div class="col-md-3" ng-repeat="v in [1,2,3,4]">
+      <div class="container-fluid" ng-repeat="i in [1,2,3]">
+        <div class="thumbnil" style="background-image: url('/static/images/ai.jpg');">
+          <div class="thumbnil_overlay" ng-click="watchVideo(v,$index)">
+            <span class="play12"> <i class="fa fa-play" aria-hidden="true"></i></i></span>
+          </div>
+        </div>
+        <div class="vid_desc">
+          <span>
+            <strong> Intro at AI.</strong>
+          </span><br>
+          <span class="text-muted">Tried&Refused Productions.</span><br>
+          <span class="text-muted"> 3 days ago</span>
+        </div>
+      </div>
+    </div>
+  </div>

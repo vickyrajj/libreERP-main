@@ -193,6 +193,31 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.homepage.resources.html',
       controller: 'controller.resource'
     })
+
+  $stateProvider
+    .state('resource_explore', {
+      url: "/resources/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.guide.html',
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('watchVideo', {
+      url: "/watch/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.play.html',
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('custom', {
+      url: "/resources/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.custom.html',
+      // controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('doc', {
+      url: "/resources/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.documentation.html',
+      // controller: 'controller.resource'
+    })
   $stateProvider
     .state('pages', {
       url: "/:title",
@@ -237,8 +262,28 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
 });
 app.controller('controller.resource', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
-
-
+  $scope.openResource = function(name) {
+    $state.go('resource_explore', {
+      name: name
+    })
+  }
+  $scope.watchVideo = function(name, idx) {
+    $state.go('watchVideo', {
+      name: name + '&' + idx
+    })
+  }
+  $scope.openCustom = function(name) {
+    console.log('cuuuuuuuuuuuusssssssssss');
+    $state.go('custom', {
+      name: name
+    })
+  }
+  $scope.openDoc = function(name) {
+    console.log('ddddddddddoooooooooooccccccc');
+    $state.go('doc', {
+      name: name
+    })
+  }
 });
 
 

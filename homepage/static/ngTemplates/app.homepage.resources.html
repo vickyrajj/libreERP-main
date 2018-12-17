@@ -6,18 +6,15 @@
 </div>
 <div class="resource_div">
   <div class="resource_container">
-    <div class="resource resource_primary">
+    <div class="resource resource_primary" ng-click="openResource('how_to_guide')">
       <div class="res_1">
         <div class="res_icon">
           <img src="/static/images/notebook.svg" width="100%">
         </div>
         <span class="res_description">How to Guides</span>
       </div>
-      <!-- <div class="active_line">
-      </div> -->
-
     </div>
-    <div class="resource resource_secondary">
+    <div class="resource resource_secondary" ng-click="openCustom('custom_ml_ai')">
       <div class="res_2">
         <div class="res_icon"> <img src="/static/images/chip.svg" width="100%">
         </div>
@@ -25,7 +22,7 @@
       </div>
     </div>
 
-    <div class="resource resource_clear">
+    <div class="resource resource_clear" ng-click="openDoc('documentation')">
       <div class="res_3">
         <div class="res_icon"> <img src="/static/images/arm.svg" width="100%">
         </div>
@@ -36,7 +33,7 @@
 </div>
 <div class="row" style="margin:0px;margin-bottom:30px;">
   <div class="col-md-10 col-md-offset-1">
-    <div class="col-md-3 box12"  style="position:relative">
+    <div class="col-md-3 box12" style="position:relative;box-sizing:border-box">
       <div class="shaddowed noPadding container-fluid">
         <div class="row" style="background-image:url('/static/images/word.png');background-size:cover;height:30vh;width:100%;padding:0;margin:0px;">
         </div>
@@ -46,26 +43,23 @@
           <span class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolo t, sed do eiusmod tempor incididunt ut labore </span>
 
           <div class="row" style="position:absolute;bottom:5px;width:100%;font-size:20px;">
-            <div class="col-md-8" style="color:#FF540A;">
+            <div class="col-md-8" style="color:#FF540A;float:left">
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" style="float:right;padding-right:50px;">
               20 <i class="fa fa-cloud-download" aria-hidden="true"></i>
             </div>
           </div>
-
         </div>
       </div>
       <div class="overlay">
-        <span class="search12">  <i class="fa fa-search" aria-hidden="true"></i></span>
+        <span class="search12"> <i class="fa fa-search" aria-hidden="true"></i></span>
       </div>
     </div>
-
-
     <div class="col-md-3 box12 ">
       <div class="shaddowed noPadding container-fluid">
         <div class="row" style="background-image:url('/static/images/docu.jpg');background-size:cover;height:30vh;width:100%;padding:0;margin:0px;">
@@ -76,22 +70,21 @@
           <span class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolo t, sed do eiusmod tempor incididunt ut labore </span>
 
           <div class="row" style="position:absolute;bottom:5px;width:100%;font-size:20px;">
-            <div class="col-md-8" style="color:#FF540A;">
+            <div class="col-md-8" style="color:#FF540A;float:left;">
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" style="float:right;padding-right:50px;">
               20 <i class="fa fa-cloud-download" aria-hidden="true"></i>
             </div>
           </div>
-
         </div>
       </div>
       <div class="overlay">
-      <span class="search12">  <i class="fa fa-search" aria-hidden="true"></i></span>
+        <span class="search12"> <i class="fa fa-search" aria-hidden="true"></i></span>
       </div>
     </div>
     <div class="col-md-3 box12">
@@ -100,29 +93,26 @@
         </div>
         <div class="container-fluid" style="min-height:200px;">
           <h3>Digitally signed Pdf documents</h3>
-
           <span class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolo t, sed do eiusmod tempor incididunt ut labore </span>
-
           <div class="row" style="position:absolute;bottom:5px;width:100%;font-size:20px;">
-            <div class="col-md-8" style="color:#FF540A;">
+            <div class="col-md-8" style="color:#FF540A;float:left;">
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" style="float:right;padding-right:50px;">
               20 <i class="fa fa-cloud-download" aria-hidden="true"></i>
             </div>
           </div>
-
         </div>
       </div>
       <div class="overlay">
-      <span class="search12">  <i class="fa fa-search" aria-hidden="true"></i></span>
+        <span class="search12"> <i class="fa fa-search" aria-hidden="true"></i></span>
       </div>
     </div>
-    <div class="col-md-3 box12 ">
+    <div class="col-md-3 box12">
       <div class="shaddowed noPadding container-fluid">
         <div class="row" style="background-image:url('/static/images/paper.jpg');background-size:cover;height:30vh;width:100%;padding:0;margin:0px;">
         </div>
@@ -130,21 +120,21 @@
           <h3>Digitally signed Pdf documents</h3>
           <span class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolo t, sed do eiusmod tempor incididunt ut labore </span>
           <div class="row" style="position:absolute;bottom:5px;width:100%;font-size:20px;">
-            <div class="col-md-8" style="color:#FF540A;">
+            <div class="col-md-8" style="color:#FF540A;float:left;">
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
               <i class="fa fa-star-o" aria-hidden="true"></i>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" style="float:right;padding-right:50px;">
               20 <i class="fa fa-cloud-download" aria-hidden="true"></i>
             </div>
           </div>
         </div>
       </div>
       <div class="overlay">
-      <span class="search12">  <i class="fa fa-search" aria-hidden="true"></i></span>
+        <span class="search12"> <i class="fa fa-search" aria-hidden="true"></i></span>
       </div>
     </div>
 
