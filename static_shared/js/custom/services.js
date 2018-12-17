@@ -65,16 +65,14 @@ app.factory('$permissions', function($http){
   }
 
 
-  setTimeout(function () {
-    console.log(appps)
-  }, 1000);;
+
 
   myPk = myProfile().pk
-
+var myPerms;
   $http({method : 'GET' , url : '/api/ERP/permission/?user='+myPk}).
   then(function(response){
     myPerms = response.data;
-    // console.log(myPerms);
+    console.log(myPerms);
   })
 
 
@@ -109,6 +107,7 @@ app.factory('$permissions', function($http){
 
     }, myPerms : function(input) {
       if (typeof input != 'undefined') {
+        console.log('myp',myPerms,input);
         for (var i = 0; i < myPerms.length; i++) {
           if (myPerms[i].app.name == input) {
             return true

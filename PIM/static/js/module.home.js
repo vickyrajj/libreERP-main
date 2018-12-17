@@ -766,8 +766,7 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
   $timeout(function() {
     $scope.isCustomer = $permissions.myPerms('app.customer.access')
     $scope.fetchGraphData();
-
-  },500)
+  },2500)
 
 
 

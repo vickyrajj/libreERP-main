@@ -38,7 +38,7 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
     $scope.isCustomer = $permissions.myPerms('app.customer.access')
     console.log($scope.isCustomer);
     $scope.showw=true;
-  }, 3500);
+  }, 3000);
 
 
 
@@ -48,6 +48,32 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       var expires = "expires=" + d.toGMTString();
       document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
+
+  // var myPk = myProfile().pk
+  //
+  //   $http({method : 'GET' , url : '/api/ERP/permission/?user='+myPk}).
+  //   then(function(response){
+  //     myPerms = response.data;
+  //     console.log(myPerms);
+  //   })
+  //
+  // var myProfile= function (){
+  //   var httpRequest = new XMLHttpRequest()
+  //   httpRequest.open('GET', "/api/HR/users/?mode=mySelf&format=json" , false);
+  //   httpRequest.send(null);
+  //   if (httpRequest.status == 200) { // successfully
+  //     var temp = JSON.parse(httpRequest.responseText);
+  //     me = temp[0];
+  //     if (typeof me.url == 'undefined') {
+  //       me.url = '/api/HR/userSearch/'+ me.pk + '/';
+  //     }else {
+  //       me.url = me.url.split('?')[0]
+  //     }
+  //     return me;
+  //   } else if (httpRequest.status == 403) {
+  //     return null;
+  //   }
+  // }
 
 
 
