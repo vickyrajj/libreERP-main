@@ -1,7 +1,7 @@
-<div class="" ng-controller="sideMenu" style="">
+<div class="" ng-controller="sideMenu" style="background: linear-gradient(245deg, #e5e5e6 0%, #fff 51%, #fff 75%);height:100vh">
   <!-- {{sideMenuVisibility}} -->
   <div ng-if="sideMenuVisibility" class="row" style="margin:0px;">
-    <div class="container-fluid" style="background-image: url('/static/images/nav-menu-header-bg4.jpg');background-size: cover;padding:20px;padding-bottom:30px;padding-left:40px;">
+    <div class="container-fluid" style="background-image: url('https://png.pngtree.com/thumb_back/fw800/back_pic/03/95/04/5757eb8d28d1012.jpg');background-size: cover;padding:20px;padding-bottom:30px;padding-left:40px;">
       <div class="row">
         <img ng-src="{{user.pk | getDP}}" class="img img-circle pull-left" style="width:100px;">
       </div>
@@ -18,14 +18,14 @@
         <span style="font-size:12px; padding-left:5px;">{{user.pk | getName}}</span>
       </div>
   </div> -->
-  <div ng-if="!sideMenuVisibility" class="row" style="{{mobileView ? ';':'width:30%;'}};padding:15px;">
-    <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;margin-left:20px;">
+  <div ng-if="!sideMenuVisibility" class="row" style="{{mobileView ? ';':'width:30%;'}};padding:15px;text-align:center">
+    <img ng-src="{{user.pk | getDP}}" class="img img-circle" style="width:50px;float: none;">
   </div>
   <div class="row" style="{{sideMenuVisibility ? 'border-bottom:solid 2px #eeeeee;':''}}; margin:0px;">
     <div class="container-fluid">
       <div class="col-md-3 basicAppLink text-center" ng-repeat="a in fixedApps" ng-class="{active: $state.is(a.state)}" ng-click="$state.go(a.state)">
         <span>
-          <i class="fa fa-{{a.icon}} fa-2x"></i>
+          <i class="fa fa-{{a.icon}} fa-lg"></i>
         </span>
       </div>
     </div>
@@ -37,17 +37,23 @@
         <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" style="width:transition:10s" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
           <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:215%;border-radius:0 30px 30px 0' : ''}}">
             <div ng-if="sideMenuVisibility" align="left">
-              <div class="row container-fluid">
-                <div class="col-md-3">
-                  <i class="fa {{a.icon}} fa-2x"></i>
-                </div>
-                <div class="col-md-9">
-                  {{a.dispName | humanize}}
+              <div class="row container-fluid" >
+                <div style="display:flex;padding:0px 1.5rem">
+                  <i style="padding-top:4px;font-size:1.333333em" class="fa {{a.icon}} fa-lg"></i>
+                  <span style="padding-left:10px">{{a.dispName | humanize}}</span>
                 </div>
               </div>
+              <!-- <div class="row container-fluid">
+                <div class="col-md-3">
+                  <i class="fa {{a.icon}} fa-lg"></i>
+                </div>
+                <div class="col-md-9">
+                  <p class="pull-right">{{a.dispName | humanize}}</p>
+                </div>
+              </div> -->
             </div>
-            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;overflow-x:visible;"><i class="fa {{a.icon}} fa-2x pull-left zoomOnHover" style="margin-left:15px"></i>
-              <span ng-if="onHover" style="float:right;">{{a.dispName | humanize}}</span>
+            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;overflow-x:visible;"><i class="fa {{a.icon}} fa-lg pull-left zoomOnHover" style="margin-left:15px"></i>
+              <span ng-if="onHover" class="pull-right">{{a.dispName | humanize}}</span>
             </div>
           </a>
         </li>

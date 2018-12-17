@@ -20,8 +20,20 @@ ul.tools li {
 
 
 /* The whole thing */
+html {
+    font-size: 16px;
+}
 
+body {
+    font-family: "Noto Sans", Tahoma, sans-serif;
+    font-size: 0.8rem;
+}
 
+/* @media only screen and (max-width:600px) {
+  html {
+      font-size: 10px;
+  }
+} */
 
 
 .custom-menu {

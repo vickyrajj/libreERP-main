@@ -97,9 +97,9 @@ $scope.mobileView=false;
 
 setInterval(function(){
 
-  if($(window).width() < 600) {
+  if($(window).width() < 800) {
     document.getElementById('mainUI').addEventListener('click', function() {
-        if($(window).width() < 600) {
+        if($(window).width() < 800) {
         $scope.sideMenuVisibility=false
       }
 
