@@ -944,14 +944,16 @@ function createChatDiv() {
 
 
   chatBox.style.display = "none";
+    inputText.addEventListener('keyup',function(e){
+      if(inputText.value.length>0){
+        document.getElementById('paperPlane').style.color=windowColor
+      }else{
+        document.getElementById('paperPlane').style.color="#A0A0A0"
+      }
+    })
+
 
   inputText.addEventListener('keydown',function(e){
-    // console.log(inputText.value.length);
-    // if(inputText.value.length>0){
-    //   document.getElementById('paperPlane').style.display="block"
-    // }else{
-    //   document.getElementById('paperPlane').style.display="none"
-    // }
 
     if(window.innerWidth <= 600) {
       console.log('mobile');
@@ -2558,8 +2560,7 @@ console.log(firstMessage);
 
 
   inputText.addEventListener('keydown', function(evt) {
-    console.log(evt.keyCode);
-    console.log(this.value);
+
     if (evt.keyCode==32 || evt.keyCode == 8 || evt.keyCode == 13 ) {
       spying(this.value)
     }
