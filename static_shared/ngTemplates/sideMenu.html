@@ -2,11 +2,9 @@
   <!-- {{sideMenuVisibility}} -->
   <div ng-if="sideMenuVisibility" class="row" style="margin:0px;">
     <div class="container-fluid" style="background-image: url('https://png.pngtree.com/thumb_back/fw800/back_pic/03/95/04/5757eb8d28d1012.jpg');background-size: cover;padding:20px;padding-bottom:30px;padding-left:40px;">
-      <div class="row">
-        <img ng-src="{{user.pk | getDP}}" class="img img-circle pull-left" style="width:100px;">
-      </div>
-      <div class="row" style="margin-top:30px;">
-        <span style="font-size:18px;color:white;">{{user.pk | getName}}</span>
+      <div class="row" style="display:flex;flex-direction:column;justify-content:center;align-items:center">
+        <img ng-src="{{user.pk | getDP}}" class="img img-circle pull-left" style="width:100px;"><br>
+        <h3 style="color:grey">{{user.pk | getName}}</h3>
       </div>
     </div>
   </div>
@@ -34,8 +32,8 @@
   <div class="row">
     <div class="container-fluid">
       <ul class="nav nav-sidebar padded" style="width:100%;">
-        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" style="width:transition:10s" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
-          <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:215%;border-radius:0 30px 30px 0' : ''}}">
+        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
+          <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:255%;border-radius:0 30px 30px 0' : ''}}">
             <div ng-if="sideMenuVisibility" align="left">
               <div class="row container-fluid" >
                 <div style="display:flex;padding:0px 1.5rem">
@@ -52,7 +50,7 @@
                 </div>
               </div> -->
             </div>
-            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:30px;overflow-x:visible;"><i class="fa {{a.icon}} fa-lg pull-left zoomOnHover" style="margin-left:15px"></i>
+            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:15px;overflow-x:visible;"><i class="fa {{a.icon}} fa-lg pull-left zoomOnHover" style="margin-left:15px;padding-top:4px"></i>
               <span ng-if="onHover" class="pull-right">{{a.dispName | humanize}}</span>
             </div>
           </a>
