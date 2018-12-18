@@ -31,11 +31,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='product',
-            name='productMeta',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='POSProducts', to='clientRelationships.ProductMeta'),
-        ),
-        migrations.AlterField(
-            model_name='product',
             name='serialId',
             field=models.CharField(blank=True, max_length=50, null=True),
         ),

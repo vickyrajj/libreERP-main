@@ -28,9 +28,4 @@ class Migration(migrations.Migration):
             name='logistics',
             field=models.PositiveIntegerField(default=0),
         ),
-        migrations.AddField(
-            model_name='product',
-            name='productMeta',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='POSProducts', to='clientRelationships.ProductMeta'),
-        ),
     ]

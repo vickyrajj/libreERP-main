@@ -66,7 +66,7 @@ def getOGImageAttachment(instance , filename ):
     return 'blogs/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 def getClientRelationshipContactDP(instance , filename ):
-    return 'clientRelationships/dp/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
+    return 'PIM/dp/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
 class Contact(models.Model):
     user = models.ForeignKey(User , related_name = 'contactsuser' , null = False) # the user created it
