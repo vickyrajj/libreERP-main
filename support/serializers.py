@@ -31,13 +31,20 @@ class ProductSheetSerializer(serializers.ModelSerializer):
         fields = ('pk','created','sheet','file_name')
 
 
+class VendorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Vendor
+        fields = ('pk','created','name' , 'city','street','state','pincode','country','mobile','gst','email')
+        
 class ProjectsSerializer(serializers.ModelSerializer):
     # responsible = userSearchSerializer(many = True , read_only = True)
     service = serviceLiteSerializer(many = False , read_only = True)
+    vendor = VendorSerializer(many = False , read_only = True)
 
     class Meta:
         model = Projects
-        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus','invoiceValue','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','packing')
+        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus','invoiceValue','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','packing','vendor')
 
     def create(self , validated_data):
         p = Projects()
@@ -55,6 +62,8 @@ class ProjectsSerializer(serializers.ModelSerializer):
             p.date = self.context['request'].data['date']
         if 'revision' in self.context['request'].data:
             p.revision = self.context['request'].data['revision']
+        if 'vendor' in self.context['request'].data:
+            p.vendor = Vendor.objects.get(pk=int(self.context['request'].data['vendor']))
         p.save()
         if 'responsible' in self.context['request'].data:
             for i in self.context['request'].data['responsible']:
@@ -74,10 +83,17 @@ class ProjectsSerializer(serializers.ModelSerializer):
                 instance.responsible.add(User.objects.get(pk = i))
         if 'service' in self.context['request'].data:
             instance.service = service.objects.get(pk=int(self.context['request'].data['service']))
+        if 'vendor' in self.context['request'].data:
+            instance.vendor = Vendor.objects.get(pk=int(self.context['request'].data['vendor']))
         if 'date' in self.context['request'].data:
             instance.date = self.context['request'].data['date']
         instance.save()
         return instance
+
+
+
+
+
 
 class BoMSerializer(serializers.ModelSerializer):
     products = ProductsSerializer(many = False , read_only = True)

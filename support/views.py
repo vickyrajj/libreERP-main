@@ -86,6 +86,13 @@ class ProjectsViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['status','title']
 
+class VendorViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = Vendor.objects.all()
+    serializer_class = VendorSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
+
 class BoMViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )
     queryset = BoM.objects.all()

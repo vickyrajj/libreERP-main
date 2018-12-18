@@ -32,13 +32,13 @@
         <span>{{s.totalqty}}</span>
       </td>
       <td class="text-center">
-        <span><input type='number'  step=1 class="form-control-pos" ng-model='count' ng-init='count=0' ></span>
+        <span><input type='number'  step=1 class="form-control-pos" ng-model='s.count'  ></span>
       </td>
     </tr>
   </table>
 </div>
 <div class="modal-footer">
-  <!-- <button class="btn btn-primary" ng-click="refresh()" style="cursor:pointer;"><i class="fa fa-refresh"></i></button> -->
+  <button class="btn btn-success" ng-click="save()" style="cursor:pointer;">Save</button>
   <button class="btn btn-primary" ng-click="prev()" style="cursor:pointer;"><i class="fa fa-arrow-left"></i>Prev</button>
   <button class="btn btn-primary" ng-click="next()" style="cursor:pointer;">Next <i class="fa fa-arrow-right"></i></button>
 </div>

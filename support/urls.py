@@ -13,6 +13,7 @@ router.register(r'materialqty' , MaterialIssueViewSet , base_name = 'materialIss
 router.register(r'material' , MaterialIssueMainViewSet , base_name = 'materialIssuemain')
 router.register(r'stockcheck' , StockCheckViewSet , base_name = 'stockcheck')
 router.register(r'stockchecklog' , StockCheckLogViewSet , base_name = 'stockchecklog')
+router.register(r'vendor' , VendorViewSet , base_name = 'vendor')
 
 
 

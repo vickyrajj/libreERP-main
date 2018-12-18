@@ -141,6 +141,12 @@ app.config(function($stateProvider) {
       controller: 'businessManagement.inventory'
     })
 
+    .state('home.vendor', {
+      url: "/vendor",
+      templateUrl: '/static/ngTemplates/app.vendor.html',
+      controller: 'businessManagement.vendor'
+    })
+
     // .state('home.settings', {
     //   url: "/settings",
     //   views: {

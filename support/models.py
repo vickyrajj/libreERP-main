@@ -43,6 +43,19 @@ class Test(models.Model):
     created = models.DateTimeField(auto_now_add = True)
 
 
+class Vendor(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length = 100 , null = True,)
+    city = models.CharField(max_length = 100 , null = True,blank =True)
+    street = models.CharField(max_length = 100 , null = True,blank =True)
+    state = models.CharField(max_length = 100 , null = True,blank =True)
+    pincode = models.CharField(max_length = 20 , null = True,blank =True)
+    country = models.CharField(max_length = 20 , null = True,blank =True)
+    mobile = models.CharField(max_length = 12 , null = True,blank =True)
+    gst = models.CharField(max_length = 20 , null = True,)
+    email = models.EmailField(null = True,)
+
+
 class Projects(models.Model):
     created = models.DateTimeField(auto_now_add  = True )
     title = models.CharField(max_length = 20)
@@ -70,6 +83,7 @@ class Projects(models.Model):
     gst2 = models.FloatField(null = True)
     clearingCharges1 = models.FloatField(null = True)
     clearingCharges2 = models.FloatField(null = True)
+    vendor = models.ForeignKey(Vendor , related_name='vendor' , null = True)
 
 
 

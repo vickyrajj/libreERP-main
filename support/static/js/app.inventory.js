@@ -404,11 +404,11 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             $scope.off = $scope.off + 7
             $scope.fectchStock($scope.off)
             if ($scope.stockdata.length == 0) {
-              
+
               $uibModalInstance.close()
             }
           }
-         $scope.count=0
+
           $scope.prev = function() {
             if ($scope.off == 0) {
               return
@@ -416,6 +416,29 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             $scope.off = $scope.off - 7
             console.log('calling from prev');
             $scope.fectchStock($scope.off)
+          }
+
+          $scope.$watch('stockdata', function(newValue, oldValue) {
+            if (typeof newValue == 'object'){
+              console.log( newValue,'jkqqqqqqqqqqq');
+              for(var i=0;i<$scope.stockdata.length;i++){
+
+              }
+            }
+            // $http({
+            //     method: 'PATCH',
+            //     url: '/api/support/stockcheck/' ,
+            //     data:
+            //   }).
+            //   then(function(response) {
+            //     console.log(response.data,'dddddddddddddddd');
+            //     $scope.stockdata = response.data.data
+            //
+            //   })
+          });
+
+          $scope.save = function (){
+
           }
 
         },
