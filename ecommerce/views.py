@@ -267,6 +267,12 @@ class PromoCheckAPI(APIView):
                 toReturn = 'Invalid Promocode'
             return Response({'msg':toReturn,'val':val}, status = status.HTTP_200_OK)
 
+from rate_request import getShipmentCharges
+class ShipmentChargeAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def get(self , request , format = None):
+        return Response(getShipmentCharges(request.GET['pincode'] , request.GET['country'] , float(request.GET['weight'])    ))
 
 class CategorySortListAPI(APIView):
     renderer_classes = (JSONRenderer,)

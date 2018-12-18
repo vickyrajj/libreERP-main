@@ -100,7 +100,10 @@ INVENTORY_ENABLED = True
 LITE_REGISTRATION = False
 AUTH_PASSWORD = 'titan@1'
 
-
+FEDEX_AUTH_KEY = 'abOhatnikLWCa8Hj'
+FEDEX_PASSWORD = 'Yk1agUkfxS1P3ABNemVGYJFOB'
+FEDEX_ACCOUNT_NUMBER = '870648022'
+FEDEX_METER_NUMBER = '113921415'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
