@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ERP.models import service
 from time import time
 from ecommerce.models import listing
 
@@ -64,8 +65,26 @@ def getCalendarAttachment(instance , filename ):
 def getOGImageAttachment(instance , filename ):
     return 'blogs/%s_%s' % (str(time()).replace('.', '_'), filename)
 
+def getClientRelationshipContactDP(instance , filename ):
+    return 'clientRelationships/dp/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
-from clientRelationships.models import Contact
+class Contact(models.Model):
+    user = models.ForeignKey(User , related_name = 'contactsuser' , null = False) # the user created it
+    name = models.CharField(max_length = 100 , null = False)
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    company = models.ForeignKey(service , null = True , related_name='contactsPIM')
+    email = models.EmailField(null = True)
+    emailSecondary = models.EmailField(null = True)
+    mobile = models.CharField(max_length = 12 , null = True)
+    mobileSecondary = models.CharField(max_length = 12 , null = True)
+    designation = models.CharField(max_length = 30 , null = True)
+    notes = models.TextField(max_length=300 , null=True)
+    linkedin = models.CharField(max_length = 100 , null = True)
+    facebook = models.CharField(max_length = 100 , null = True)
+    dp = models.FileField(null = True , upload_to = getClientRelationshipContactDP)
+    male = models.BooleanField(default = True)
+
 class calendar(models.Model):
     TYPE_CHOICE = (
         ('Meeting' , 'Meeting'),

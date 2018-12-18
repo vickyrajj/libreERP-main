@@ -15,10 +15,8 @@
 
   <div class="container-fluid">
     <div class="row ">
-      <div class="col-md-8 text-right">
-        <!-- <div class="form-group">
-          <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()" />
-        </div> -->
+      <div class="col-md-7 text-right">
+
         <div class="input-group">
           <input type='text' ng-model='searchText' class="form-control" placeholder="Search a Product " ng-enter="enterFun()" />
           <span class="input-group-addon" ng-click="refresh()" style="cursor:pointer; background-color:#fff;" ><i class="fa fa-refresh"></i></span>
@@ -26,12 +24,9 @@
           <span class="input-group-addon" ng-click="next()" style="cursor:pointer; background-color:#fff;" >Next <i class="fa fa-arrow-right"></i></span>
         </div>
       </div>
-      <!-- <div class="col-md-2 text-center">
-        <button type="button" class="btn btn-default" ng-click="prev()" ng-disabled="offset==0?true:false" style="width:100px"> <i class="fa fa-arrow-left"> </i> Prev </button>
-        <button type="button" class="btn btn-default" ng-click="next()" style="width:100px"> Next <i class="fa fa-arrow-right"></i>  </button>
-      </div> -->
-      <div class="col-md-4">
-        <div class="btn-group pull-right">
+
+      <div class="col-md-5" style="padding:0px;">
+        <div class="btn-group">
           <button type="button" class="btn btn-default" ng-click="topButtonsClick('New')"><i class="fa fa-plus"></i> New </button>
           <button type="button" class="btn btn-default" ng-click="topButtonsClick('Reorder')"><i class="fa fa-shopping-cart"></i> Reorder</button>
           <button type="button" class="btn btn-default" ng-click="topButtonsClick('stockReport')"><i class="fa fa-file"></i> Stock Report</button>
@@ -42,43 +37,32 @@
   </div>
 
   <div class="container-fluid" style="margin-top:15px;" ng-repeat="pi in prodInventories">
-    <div class="card">
+    <div class="card" style="padding:0px;">
       <div class="row container-fluid" ng-click="toggle(pi.productPk,$index)">
-        <div class="col-md-1 text-center">
-          <!-- <h4>{{$index+1}}</h4> -->
+        <div class="col-md-1 text-center" style="padding-left:0px;border-left:3px solid rgb(247, 98, 43)">
           <img ng-src="{{'/media/' +pi.productdp}}" style="width:100%" />
         </div>
-        <div class="col-md-10 text-left">
-          <h3><strong>{{pi.productName}}</strong></h3>
-          <div class="col-md-3">
-            <!-- <span style="font-size:18px"><strong>Serial Id : </strong>{{pi.productSerialId}} </span> -->
+        <div class="col-md-11 text-left">
+
+          <div class="col-md-6">
+            <h4><strong>{{pi.productName}}</strong></h4>
           </div>
-          <div class="col-md-2">
-            <span style="font-size:18px"><strong> Unit : </strong>{{pi.productUnit}} </span>
+          <div class="col-md-6" style="padding-top:20px;">
+            <div class="col-md-3">
+              <span style="font-size:14px"><strong> Unit : </strong>{{pi.productUnit}} </span>
+            </div>
+            <div class="col-md-3">
+              <span style="font-size:14px"><strong> Price : </strong>{{pi.productPrice}} </span>
+            </div>
+            <div class="col-md-4">
+              <span style="font-size:14px"><strong> Discount : </strong>{{pi.productDiscount}}% </span>
+            </div>
+            <div class="col-md-2 text-right">
+              <i class="fa fa-pencil fa-2x" style="cursor:pointer; color:#2583ce;" ng-click="$event.stopPropagation(); openProductForm(pi.productPk)"></i> &nbsp;&nbsp;
+              <i class="fa fa-info fa-2x" style="cursor:pointer; color:#2583ce;" ng-click="$event.stopPropagation(); openProductInfo(pi.productPk)"></i>
+            </div>
           </div>
-          <div class="col-md-2">
-            <span style="font-size:18px"><strong> Price : </strong>{{pi.productPrice}} </span>
-          </div>
-          <div class="col-md-2">
-            <span style="font-size:18px"><strong> Discount : </strong>{{pi.productDiscount}}% </span>
-          </div>
-          <div class="col-md-2 text-right">
-            <i class="fa fa-pencil fa-2x" style="cursor:pointer; color:#2583ce;" ng-click="$event.stopPropagation(); openProductForm(pi.productPk)"></i> &nbsp;&nbsp;
-            <i class="fa fa-info fa-2x" style="cursor:pointer; color:#2583ce;" ng-click="$event.stopPropagation(); openProductInfo(pi.productPk)"></i>
-          </div>
-          <!-- <div class="col-md-3 text-center">
-          <h4>{{pi.quantity}}</h4>
-        </div> -->
-          <!-- <div class="col-md-3 text-center"> -->
-          <!-- <h4><label>Product Variant : </label> {{data.productVariant}}</h4> -->
-          <!-- <div class="row" style="margin:10px 0px;">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default" ng-click="editQuantity($index)">Edit</button> -->
-          <!-- <button type="button" class="btn btn-default" ng-click="toggle($index)">Info</button> -->
-          <!-- <button type="button" class="btn btn-default" ng-click="rowActionClicked('editMaster')">Edit Master</button> -->
-          <!-- </div>
-          </div>
-        </div> -->
+
         </div>
       </div>
       <div class="row container-fluid" ng-if="pi.open">
@@ -106,10 +90,20 @@
               </td>
               <td>
                 <span ng-if="f.productVariant__sku==null">
+                  <span ng-if="f.product__unit!='Size and Color'&&f.product__unit!='Size'">
                   {{f.product__howMuch | convertUnit: f.product__unit }}
                 </span>
+                <span ng-if="f.product__unit=='Size and Color'||f.product__unit=='Size'">
+                    {{f.product__howMuch | convertSize: f.product__unit}}
+                </span>
+                </span>
                 <span ng-if="f.productVariant__sku!=null">
+                  <span ng-if="f.product__unit!='Size and Color'&&f.product__unit!='Size'">
                   {{f.product__howMuch * f.productVariant__unitPerpack | convertUnit: f.product__unit}}
+                </span>
+                  <span ng-if="f.product__unit=='Size and Color'||f.product__unit=='Size'">
+                      {{f.productVariant__unitPerpack | convertSize: f.product__unit}}
+                  </span>
                 </span>
               </td>
               <td>
@@ -121,34 +115,14 @@
                 <div class="btn-group">
                   <button class="btn btn-primary" ng-click="saveStoreQty(f.pk,f.quantity)">Save</button>
                   <button type="button" class="btn btn-danger" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteInventory(pi.productPk , f.pk , $index)" confirm-button-type="default" cancel-button-type="default">Delete </button>
-                  <!-- <button class="btn btn-danger" ng-click="deleteInventory(pi.productPk , f.pk , $index)">Delete</button> -->
                 </div>
               </td>
             </tr>
           </table>
         </div>
-        <!-- <div class="col-md-offset-2 col-md-3 text-center">
-             <h4>{{pi.product.name}}
-               <span ng-if="pi.productVariant==null"> {{pi.product.howMuch | convertUnit: pi.product.unit}} </span>
-               <span ng-if="pi.productVariant"> {{pi.productVariant.unitPerpack * pi.product.howMuch | convertUnit: pi.product.unit}} </span>
-             </h4>
-         </div>
-         <div class="col-md-3">
-
-         </div>
-         <div class="col-md-3">
-
-         </div>
-         <div class="col-md-3">
-
-         </div> -->
 
       </div>
     </div>
 
-    <!-- <divstyle="padding-right:10px;padding-left:10px;" id="dashboard">
-    <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction">
-    </generic-Table>
-  </div> -->
 
   </div>

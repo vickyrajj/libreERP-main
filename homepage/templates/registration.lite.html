@@ -58,7 +58,7 @@
 
   <div class="body">
       <hr style="margin:0px;border: solid 2px #DCDCDC;">
-    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;">
+    <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;" ng-if="!details">
       <section style="background-color:white">
         <div class="row">
           <div class="col-lg-12 text-center" style="margin-bottom:30px;">
@@ -78,7 +78,7 @@
                       <div class="col-md-6 col-md-offset-3">
                         <div class="row">
                           <div class="col-md-3 col-sm-3 col-xs-3">
-                            <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i> &nbsp;&nbsp;&nbsp; +91</span>
+                            <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i> &nbsp;&nbsp;&nbsp;+91</span>
                           </div>
                           <div class="col-md-9 col-sm-9 col-xs-9">
                             <div class="form-group">
@@ -93,11 +93,13 @@
 
 
                     <div class="row" style="margin-top:50px;"  ng-if="mode == 'main'">
-                      <div class="col-md-2 col-sm-2 col-xs-2">
+                      <div class="col-md-3 col-sm-3 col-xs-3">
                         <input type="checkbox" class="pull-right" ng-model="form.agree">
                       </div>
-                      <div class="col-md-10 col-sm-10 col-xs-10">
-                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  Sterling Select.</span>
+                      <div class="col-md-9 col-sm-9 col-xs-9">
+                        {% endverbatim %}
+                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  {{brand_title}}.</span>
+                        {% verbatim %}
                       </div>
                     </div>
                     <div ng-if="validityChecked && !form.agree" class="row">
@@ -110,10 +112,10 @@
                   <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
                     <div class="col-md-6 col-md-offset-3">
                       <div class="row">
-                        <div class="col-md-2 col-sm-2 col-xs-2">
+                        <div class="col-md-3 col-sm-3 col-xs-3">
                           <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                         </div>
-                        <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="col-md-9 col-sm-9 col-xs-9">
                           <div class="form-group">
                             <input ng-model="form.mobileOTP" type="password" class="form-control floatInput" required/>
                             <span class="floating-label">Mobile OTP *</span>
@@ -155,6 +157,60 @@
       {% include "footer.html" %}
 
     </div>
+
+      <div class="container" style="padding-left:0px;padding-right:0px;box-shadow: 0px 30px 50px 12px #d0d5dd;" ng-if="details">
+        <div class="row" style="padding-top:20px">
+          <div class="col-lg-12 text-center" style="margin-bottom:30px;">
+            <h4 class="section-heading" style="color: #a39c9c;margin-bottom:0px">One more last step.....</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
+            <div class="row">
+              <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+                <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+              </div>
+              <div class="col-md-9 col-sm-9 col-xs-9">
+                <div class="form-group">
+                  <input ng-model="form.name" type="text" class="form-control floatInput" />
+                  <span class="floating-label">Name </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+                  <span><i class="fa fa-envelope-o" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+              </div>
+              <div class="col-md-9 col-sm-9 col-xs-9">
+                <div class="form-group">
+                  <input ng-model="form.email" type="email" class="form-control floatInput" />
+                  <span class="floating-label">Email </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+                <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+              </div>
+              <div class="col-md-9 col-sm-9 col-xs-9">
+                <div class="form-group">
+                  <input ng-model="form.password" type="password" class="form-control floatInput" />
+                  <span class="floating-label">Password</span>
+                </div>
+              </div>
+            </div>
+            <div class="row" style= "padding-bottom:20px">
+            <div class="col-lg-6 col-md-6 text-right" style="margin-top:20px;">
+              <button ng-click="skip()" style="width:100px" class="btn btn-primary">Skip</button>
+            </div>
+                <div class="col-lg-6 col-md-6 text-left" style="margin-top:20px;">
+              <button  ng-click="saveData()" style="width:100px"  class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+          </div>
+        </div>
+        {% include "footer.html" %}
+      </div>
   </div>
 </div>
 

@@ -2,12 +2,47 @@
   border-top:6px solid var(--themeMain) !important;
 }*/
 
+.showOptions{
+	animation: showOptions 0.4s;
+}
 
+
+@keyframes showOptions {
+  0%{
+		opacity: 0
+	}
+	100%{
+		opacity: 1
+	}
+}
+
+.fadeInOpacity{
+	animation: opacityChange 1s;
+}
+
+
+@keyframes opacityChange {
+  0%{
+		opacity: 0
+	}
+	100%{
+		opacity: 1
+	}
+}
+
+
+
+.toplevelmenuOption:hover{
+	background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;;
+	cursor:pointer;
+}
 
 .categoryDropDown{
 	position:absolute;
-	top:7vh;
+	/*top:7vh;*/
+	margin-top:-5px;
 	min-width:400px;
+	z-index:9;
 }
 
 .categoryMenu {
@@ -20,7 +55,7 @@
 
 .shopByCatDiv {
 	padding:0px;
-	height: 5vh;
+	height: 6vh;
 	cursor:pointer;
 }
 

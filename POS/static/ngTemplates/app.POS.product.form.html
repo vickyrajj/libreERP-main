@@ -1,3 +1,5 @@
+
+<!-- <div ng-controller="controller.POS.productForm.modal"> -->
 <div class="modal-header">
   <span ng-if="mode == 'new'">Create a new Product</span>
   <span ng-if="mode == 'edit'">Edit product : {{product.name}}</span>
@@ -79,13 +81,22 @@
           </div>
         </div>
       </div>
-
-      <div class="form-group">
-        <label>Product Meta</label>
-        <input type="text" class="form-control" ng-model="product.productMeta" uib-typeahead="meta as meta.description for meta in searchTaxCode($viewValue)" ng-if="!showTaxCodeDetails">
-        <span ng-if="showTaxCodeDetails"> <button type="button" class="btn btn-default btn-sm" ng-click="product.productMeta = ''">
-          Edit <i class="fa fa-pencil"></i>
-        </button> <br> {{product.productMeta.description}} <br><strong>Code Type : </strong> {{product.productMeta.typ}} <br> <strong>Code : </strong> {{product.productMeta.code}} <br> <strong>Tax Rate :</strong>{{product.productMeta.taxRate}}</span>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Product Meta</label>
+            <input type="text" class="form-control" ng-model="product.productMeta" uib-typeahead="meta as meta.description for meta in searchTaxCode($viewValue)" ng-if="!showTaxCodeDetails">
+            <span ng-if="showTaxCodeDetails"> <button type="button" class="btn btn-default btn-sm" ng-click="product.productMeta = ''">
+                Edit <i class="fa fa-pencil"></i>
+              </button> <br> {{product.productMeta.description}} <br><strong>Code Type : </strong> {{product.productMeta.typ}} <br> <strong>Code : </strong> {{product.productMeta.code}} <br> <strong>Tax Rate :</strong>{{product.productMeta.taxRate}}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Gross Weight</label>
+            <input type="text" class="form-control" ng-model="product.grossWeight">
+          </div>
+        </div>
       </div>
 
       <div class="row">
@@ -99,6 +110,9 @@
               <option value="Litre">Litre</option>
               <option value="Millilitre">Millilitre</option>
               <option value="Quantity">Quantity</option>
+              <option value="Size">Size</option>
+              <option value="Size and Color">Size and Color</option>
+
             </select>
           </div>
         </div>
@@ -160,7 +174,9 @@
             <p class="text-muted">Price</p>
           </div>
           <div class="col-md-3">
-            <p class="text-muted">{{product.unit=='Quantity' ? 'Items per pack': 'Multiple'}}</p>
+            <p class="text-muted" ng-if="product.unit=='Quantity'">Items per pack</p>
+            <p class="text-muted" ng-if="product.unit!='Quantity' && product.unit=='Size' && product.unit=='Size and Color' ">Multiple</p>
+            <p class="text-muted" ng-if="product.unit=='Size' || product.unit=='Size and Color' ">Size</p>
           </div>
         </div>
 
@@ -181,19 +197,26 @@
             </div>
           </div>
           <div class="col-md-3">
-            <div class="input-group">
-              <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack" placeholder="No. of items per pack">
-              <div class="input-group-btn">
-                <button type="button" class="btn btn-primary" ng-click="saveUnits()">Add</button>
-              </div>
-            </div>
+              <input type="text" class="form-control" ng-model="productVerientForm.unitPerpack" placeholder="{{product.unit=='Size' || product.unit=='Size and Color'? 'Size' : 'No. of items per pack' }}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12" ng-if="product.unit=='Size and Color' || product.unit=='Size'">
+            <p class="text-muted" style="font-size:12px;" >Size: <span> 1 = XS </span>, <span>2 = S </span>, <span>3 = M </span>, <span>4 = XL </span>, <span>5 = XXL </span> </p>
+          </div>
+          <div class="col-md-6">
+              <input ng-if="product.unit=='Size and Color'" type="text" class="form-control" ng-model="productVerientForm.prodDesc" placeholder="Colors of your Product">
+          </div>
+          <div class="col-md-6">
+            <button type="button" class="btn btn-primary" ng-click="saveUnits()">Add</button>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-12" ng-if="product.unit!='Size and Color' && product.unit!='Size'">
             <p>Preview: {{product.howMuch * productVerientForm.unitPerpack}} {{product.unit=='Quantity' ? 'pcs': product.unit}}</p>
           </div>
+
         </div>
 
 
@@ -201,13 +224,15 @@
           <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top: 15px;" ng-repeat="data in productData">
             <div class="row" style="padding: 15px;min-height:100px;" ng-mouseenter="hover = true;" ng-mouseleave="hover = false;">
               <div class="col-md-12">
-                <span><strong>Secondary SKU:</strong>{{data.sku}}</span><br/>
-                <span><strong>Serial Id : </strong>{{data.serialId}}</span><br/>
-                <span><strong>Units / Pack:</strong>{{data.unitPerpack}}</span><br/>
-                <span><strong>Price : </strong>{{data.price}}</span>
+                <p style="margin:0" ><strong>Secondary SKU:</strong>{{data.sku}}</p>
+                <p style="margin:0"><strong>Serial Id : </strong>{{data.serialId}}</p>
+                <p style="margin:0" ng-if="product.unit!='Size and Color' && product.unit!='Size' "><strong >Units / Pack:</strong>{{data.unitPerpack}}</p>
+                <p style="margin:0" ng-if="product.unit=='Size and Color' || product.unit=='Size' "><strong >Size : </strong>{{data.unitPerpack | convertSize : product.unit}}</p>
+                <p style="margin:0"><strong>Price : </strong>{{data.price}}</p>
+                <p style="margin:0" ng-if="data.prodDesc">{{data.prodDesc}}</p>
                 <!-- <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a> -->
-                <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default" class="btn-danger btn-sm  pull-right"
-                  style="padding-bottom: 9px;"> <i class="fa fa-trash fa-lg"></i> </button>
+                <button type="button" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteProduct(data.pk , $index)" confirm-button-type="danger" cancel-button-type="default"
+                  class="btn-danger btn-sm  pull-right" style="padding-bottom: 9px;"> <i class="fa fa-trash fa-lg"></i> </button>
               </div>
             </div>
           </div>
@@ -270,12 +295,20 @@
           <button type="button" class="btn btn-primary" ng-click="addCategories()">Add <i class="fa fa-plus"></i></button>
         </div>
       </div>
-      <div class="row" style="margin-top: 30px;padding:5px 20px">
+      <div class="row">
+        <div class="col-md-7">
+          <span class="text-muted">Preview :{{categoryForm.qty | convertUnit: product.unit}}</span>
+        </div>
+        <div class=" col-md-3">
+         <span class="text-muted">( in {{product.unit}} )</span>
+        </div>
+      </div>
+      <div class="row" style="padding:5px 20px">
         <div class="cards" style="border-left:4px solid #4192cd;box-shadow:0 2px 8px rgba(26,24,20,0.2);margin-top:15px;" ng-repeat="c in categoriesList">
           <div class="row" style="padding:15px">
             <div class="col-md-11">
-              <span><strong>Name : </strong> {{c.category.name}}</span><br/><br/>
-              <span><strong>Quantity : </strong> {{c.qty}}</span>
+              <span><strong>Name : </strong> {{c.category.name}}</span><br /><br />
+              <span><strong>Quantity : </strong>  {{c.qty | convertUnit: c.unit}}</span>
             </div>
             <div class="col-md-1">
               <i class="fa fa-pencil fa-lg" ng-click="editCategories($index)" style="cursor:pointer"></i>
@@ -296,3 +329,4 @@
     </div>
   </div>
 </div>
+<!-- </div> -->

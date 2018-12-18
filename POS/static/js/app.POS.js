@@ -300,10 +300,10 @@ app.controller("controller.POS.productMeta.form", function($scope, $http, Flash)
     }
     if ($scope.configureForm.pk == undefined) {
       var method = 'POST';
-      var url = '/api/clientRelationships/productMeta/'
+      var url = '/api/POS/productMeta/'
     } else {
       var method = 'PATCH';
-      url = '/api/clientRelationships/productMeta/' + $scope.configureForm.pk + '/';
+      url = '/api/POS/productMeta/' + $scope.configureForm.pk + '/';
     }
     var toSend = {
       description: f.description,
@@ -363,6 +363,8 @@ app.controller("controller.POS.productinfo.form", function($scope, product, $htt
         category: $scope.product.compositions[i],
         qty: 1
       }
+
+
       if ($scope.compositionQtyMap[i] != undefined) {
         a.qty = $scope.compositionQtyMap[i].qty
       }
@@ -630,8 +632,11 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
 
 })
 
-app.controller("controller.POS.productForm.modal", function($scope, product, $http, Flash) {
-  console.log(product, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+app.controller("controller.POS.productForm.modal", function($scope, product,newProduct, $http, Flash,$uibModalInstance) {
+  console.log(product,newProduct, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+  $scope.newProduct = newProduct
+  console.log(typeof $scope.newProduct);
+
 
   $scope.multiStores = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=multipleStore').
@@ -652,7 +657,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   })
 
   $scope.searchTaxCode = function(c) {
-    return $http.get('/api/clientRelationships/productMeta/?description__contains=' + c).
+    return $http.get('/api/POS/productMeta/?description__contains=' + c).
     then(function(response) {
       return response.data;
     })
@@ -679,7 +684,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   $scope.categoriesPk = []
   $scope.categoryForm = {
     category: '',
-    qty: 1
+    qty: 1,
+    unit: product.unit
   }
   // $scope.storeData = []
   // $scope.checkStore = []
@@ -692,7 +698,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     //   $scope.storeData.push($scope.product.storeQty[i].pk)
     //   $scope.checkStore.push($scope.product.storeQty[i].store.pk)
     // }
-    if ($scope.product.compositionQtyMap == null) {
+    if ($scope.product.compositionQtyMap == null || $scope.product.compositionQtyMap.length == 0 || $scope.product.compositionQtyMap.length == '') {
       $scope.compositionQtyMap = []
     } else {
       $scope.compositionQtyMap = JSON.parse($scope.product.compositionQtyMap)
@@ -705,6 +711,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     then(function(response) {
       $scope.productData = response.data;
     })
+
     for (var i = 0; i < $scope.product.compositions.length; i++) {
       $scope.categoriesPk.push($scope.product.compositions[i].pk)
       var a = {
@@ -714,9 +721,41 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       if ($scope.compositionQtyMap[i] != undefined) {
         a.qty = $scope.compositionQtyMap[i].qty
       }
+      if ($scope.compositionQtyMap[i]!= undefined && $scope.compositionQtyMap[i].unit != undefined) {
+        a.unit = $scope.compositionQtyMap[i].unit
+      }
       $scope.categoriesList.push(a)
     }
-  } else {
+
+  }
+  else if(typeof $scope.newProduct== 'object'){
+      $scope.mode = 'edit';
+      $scope.product = $scope.newProduct
+    }
+  else if(typeof $scope.newProduct== 'string'){
+      $scope.mode = 'new';
+      $scope.product = {
+        'name': $scope.newProduct,
+        'productMeta': '',
+        'price': 0,
+        'displayPicture': emptyFile,
+        'serialNo': '',
+        'description': '',
+        'alias': '',
+        'inStock': 0,
+        'cost': 0,
+        'logistics': 0,
+        'serialId': '',
+        'reorderTrashold': 0,
+        'pk': null,
+        'unit': '',
+        'grossWeight':'',
+        'discount': 0,
+        'storeQty': [],
+        'howMuch': '',
+      }
+    }
+  else {
     $scope.mode = 'new';
     $scope.product = {
       'name': '',
@@ -733,6 +772,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       'reorderTrashold': 0,
       'pk': null,
       'unit': '',
+      'grossWeight':'',
       'discount': 0,
       'storeQty': [],
       'howMuch': '',
@@ -779,6 +819,12 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   // }
 
   $scope.addCategories = function() {
+    if ($scope.product.unit == null) {
+      Flash.create('warning','Please select Unit type')
+      return;
+    }else {
+      $scope.categoryForm.unit = $scope.product.unit
+    }
     if (typeof $scope.categoryForm.category != 'object') {
       Flash.create('warning', 'Category Should Be Suggested One');
       return;
@@ -789,28 +835,39 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     }
     $scope.categoriesList.push($scope.categoryForm)
     $scope.categoriesPk.push($scope.categoryForm.category.pk)
+
     $scope.compositionQtyMap.push({
       'categoryPk': $scope.categoryForm.category.pk,
-      'qty': $scope.categoryForm.qty
+      'qty': $scope.categoryForm.qty,
+      'unit': $scope.product.unit
     })
+
     $scope.categoryForm = {
       category: '',
-      qty: 1
+      qty: 1,
+      unit: $scope.product.unit
     }
   }
   $scope.editCategories = function(idx) {
     $scope.categoryForm = {
       category: $scope.categoriesList[idx].category,
-      qty: $scope.categoriesList[idx].qty
+      qty: $scope.categoriesList[idx].qty,
+      unit: $scope.product.unit
     }
     $scope.categoriesList.splice(idx, 1)
     $scope.categoriesPk.splice(idx, 1)
     $scope.compositionQtyMap.splice(idx, 1)
   }
   $scope.removeCategories = function(idx) {
+    console.log($scope.categoriesList);
+
+
     $scope.categoriesList.splice(idx, 1)
     $scope.categoriesPk.splice(idx, 1)
     $scope.compositionQtyMap.splice(idx, 1)
+
+    console.log($scope.categoriesList);
+
   }
 
 
@@ -819,6 +876,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
   });
 
   $scope.save = function() {
+    console.log($scope.categoriesList);
+    console.log($scope.compositionQtyMap);
     // console.log($scope.storeData.length, 'lllllllllllllllllllllllll');
     console.log('entered', $scope.product.discount, 'aaaa');
     // console.log($scope.product.productMeta);
@@ -879,7 +938,7 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     fd.append('cost', f.cost);
     fd.append('serialNo', f.serialNo);
     fd.append('description', f.description);
-    // fd.append('inStock', f.inStock);
+    fd.append('grossWeight', f.grossWeight);
     fd.append('logistics', f.logistics);
     fd.append('serialId', f.serialId);
     fd.append('reorderTrashold', f.reorderTrashold);
@@ -908,6 +967,8 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       console.log(JSON.stringify($scope.compositionQtyMap));
     } else {
       fd.append('haveComposition', false);
+      fd.append('compositions', []);
+      fd.append('compositionQtyMap', '');
     }
     // fd.append('storeQty', $scope.storeData)
     // if($scope.storeData.length>0){
@@ -936,6 +997,27 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       if ($scope.mode == 'new') {
         $scope.product.pk = response.data.pk;
         $scope.mode = 'edit';
+        if($scope.newProduct.length>0){
+          $uibModalInstance.dismiss(response.data)
+        }
+        if (response.data.serialNo ==="") {
+          $http({
+            method: 'POST',
+            url: '/api/POS/addProductSKU/',
+            data:{
+              value:response.data.pk
+            }
+          }).
+          then(function(response) {
+              $scope.product.serialNo = response.data
+          })
+
+        }
+      }
+      else{
+        if(typeof $scope.newProduct == 'object'){
+          $uibModalInstance.dismiss(response.data)
+        }
       }
     })
   }
@@ -986,13 +1068,22 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
     'sku': '',
     'unitPerpack': 2,
     'price': '',
-    'serialId': ''
+    'serialId': '',
+    'prodDesc' :''
   }
 
   $scope.productData = [];
   $scope.saveUnits = function() {
     console.log('aaaaaaaaaaaaa');
     var f = $scope.productVerientForm;
+
+
+    if ($scope.product.unit =='Size' || $scope.product.unit =='Size and Color' ) {
+        if (isNaN(parseInt(f.unitPerpack))) {
+          Flash.create('warning','Format of Size os not correct')
+          return ;
+        }
+    }
 
     if (f.price == null || f.price.length == 0) {
       Flash.create('warning', 'Please enter secondary SKU price')
@@ -1017,23 +1108,57 @@ app.controller("controller.POS.productForm.modal", function($scope, product, $ht
       serialId: f.serialId
     }
 
-    $http({
-      method: 'POST',
-      url: '/api/POS/productVerient/',
-      data: toSend
-    }).
-    then(function(response) {
-      $scope.productData.push(response.data);
-      $scope.productVerientForm = {
-        'sku': '',
-        'unitPerpack': 2,
-        'serialId': ''
+    if (f.prodDesc!='' && f.prodDesc != null ) {
+      // toSend.prodDesc = f.prodDesc
+      prodDescArr  = f.prodDesc.split(',')
+      var constSku = toSend.sku
+      for (var i = 0; i < prodDescArr .length; i++) {
+        var toSend2 = {...toSend}
+        toSend2.prodDesc = prodDescArr[i]
+        toSend2.sku = constSku +'&'+ prodDescArr[i]
+
+        console.log(toSend2);
+
+        $http({
+          method: 'POST',
+          url: '/api/POS/productVerient/',
+          data: toSend2
+        }).
+        then(function(response) {
+          $scope.productData.push(response.data);
+          $scope.productVerientForm = {
+            'sku': '',
+            'unitPerpack': 2,
+            'serialId': '',
+            'prodDesc':''
+          }
+          Flash.create('success', 'Saved');
+        }, function(err) {
+          console.log(err);
+          Flash.create('danger', err.statusText)
+        })
       }
-      Flash.create('success', 'Saved');
-    }, function(err) {
-      console.log(err);
-      Flash.create('danger', err.statusText)
-    })
+
+    }else {
+      $http({
+        method: 'POST',
+        url: '/api/POS/productVerient/',
+        data: toSend
+      }).
+      then(function(response) {
+        $scope.productData.push(response.data);
+        $scope.productVerientForm = {
+          'sku': '',
+          'unitPerpack': 2,
+          'serialId': ''
+        }
+        Flash.create('success', 'Saved');
+      }, function(err) {
+        console.log(err);
+        Flash.create('danger', err.statusText)
+      })
+    }
+
   }
 
 
@@ -1048,19 +1173,32 @@ function getMonday(date) {
 }
 
 
-app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter) {
+app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter,$rootScope) {
 
   // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
-  $scope.posShowAll = true
+  // $scope.posShowAll = true
+  // if (settings_posScanner) {
+  //   $scope.posShowAll = false
+  // }
+
+// console.log(settings_posScanner,'@@@@@@@@@@@@@@@@@@@@@@@@');
+
+  $http({
+    method: 'POST',
+    url: '/api/POS/addProductSKU/',
+  }).
+  then(function(response) {
+
+  })
+
+ $scope.posShowAll = false
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=posScanner').
   then(function(response) {
-    console.log('Scennerrrrrrrrrrrrrrr', response.data);
-    if (response.data[0] != null) {
+    if(response.data[0]!=null){
       if (response.data[0].flag) {
-        $scope.posShowAll = false
+         $scope.posShowAll = true
       }
     }
-    console.log($scope.posScanner);
   })
 
   $scope.today = new Date();
@@ -1918,7 +2056,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           } else {
             return $scope.data.tableData[idx];
           }
-        }
+        },
+        newProduct: function() {
+            return '';
+        },
       },
       controller: 'controller.POS.productForm.modal',
     }).result.then(function() {
@@ -1956,7 +2097,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
         $scope.configProductMeta = {
           views: views,
-          url: '/api/clientRelationships/productMeta/',
+          url: '/api/POS/productMeta/',
           searchField: 'description',
           itemsNumPerView: [8, 16, 24],
         }
@@ -1983,7 +2124,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
                 $http({
                   method: 'DELETE',
-                  url: '/api/clientRelationships/productMeta/' + target + '/'
+                  url: '/api/POS/productMeta/' + target + '/'
                 }).
                 then(function(response) {
                   Flash.create('success', 'Deleted');

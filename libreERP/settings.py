@@ -39,7 +39,7 @@ ECOMMERCE_APP = {
 
 LOGIN_PAGE_IMAGE = '/static/images/ecommerce2.jpeg'
 LOGIN_PAGE_LOGO = '/static/images/company_icon.svg'
-ICON_LOGO = '/static/images/sterlin_select.png'
+ICON_LOGO = '/static/images/bni_logo.png'
 
 SHOW_COMMON_APPS = False
 
@@ -61,7 +61,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.124', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.116' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.123','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10']
+ALLOWED_HOSTS = ['1192.168.0.17','192.168.1.124', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.110' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.123','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10','192.168.1.111','192.168.1.102']
 
 
 LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
@@ -93,7 +93,17 @@ SEO_SITE_NAME = 'STERLING SELECT'
 SEO_URL = 'https://sterlingselect.com/'
 SEO_PUBLISHER = 'https://plus.google.com/b/105723801328437605094/'
 
+
+ECOMMERCE_THEME = '#631516' ##631516
+INVENTORY_ENABLED = True
+
 LITE_REGISTRATION = False
+AUTH_PASSWORD = 'titan@1'
+
+FEDEX_AUTH_KEY = 'abOhatnikLWCa8Hj'
+FEDEX_PASSWORD = 'Yk1agUkfxS1P3ABNemVGYJFOB'
+FEDEX_ACCOUNT_NUMBER = '870648022'
+FEDEX_METER_NUMBER = '113921415'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -123,31 +133,28 @@ INSTALLED_APPS = (
     'businessManagement', # BM application
     'ecommerce', # ecommerce
     'blogs', # publically accesible blogging site
-	'clientRelationships',# CRM like sales force
+	# 'clientRelationships',# CRM like sales force
 	'POS',# POS terminal like tally
     'support',# canvas
 	'productsInventory',# inventory for POS products
-    'payu', # payubiz payment integration
-    # 'employees',# employees details
-    # 'events',# to manage events like test, hackathon or something like that
-    # 'finance',# billing , invoicing , finance etc
-    # 'organization',# organization
-    # 'payroll',# payroll
-    # 'logistic',# logistics
-    # 'performance',# performance
-    # 'recruitment',# recruitment
-    # 'assets',# assets
-    # 'workforceManagement',# canvas
+    'paypal.standard.ipn', # payubiz payment integration
+    #payu
 )
 
 
-PAYU_MERCHANT_KEY = "gtKFFx",
-
-PAYU_MERCHANT_SALT = "eCwWELxi",
-
+#payu payment gateway settings
+PAYU_MERCHANT_KEY = "gtKFFx"
+PAYU_MERCHANT_SALT = "eCwWELxi"
 # And add the PAYU_MODE to 'TEST' for testing and 'LIVE' for production.
 PAYU_MODE = "TEST"
 
+
+PAYMENT_MODE = 'PAYU' # options are EBS , paypal , paytm , PAYU
+
+
+# paypal payment gateway details
+PAYPAL_RECEIVER_EMAIL = 'online@papered.in'
+PAYPAL_TEST = True
 
 SITE_ID = 1
 
@@ -186,7 +193,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username'
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = False
-
+VERIFY_MOBILE = False
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -209,7 +216,7 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR, 'HR', 'templates'),
             os.path.join(BASE_DIR, 'libreERP', 'templates'),
             os.path.join(BASE_DIR, 'ecommerce', 'templates'),
-            os.path.join(BASE_DIR, 'clientRelationships', 'templates'),
+            # os.path.join(BASE_DIR, 'clientRelationships', 'templates'),
             os.path.join(BASE_DIR, 'LMS', 'templates'),
         ],
         'APP_DIRS': True,
@@ -279,7 +286,13 @@ EMAIL_HOST_PASSWORD = '51GX4]N1_0uw'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 EMAIL_API=True
+G_FROM='onlinestore@bni-india.in'
+G_KEY='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'
+
+
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@24tutors.com'
 # Static files (CSS, JavaScript, Images)
@@ -333,3 +346,18 @@ if DEBUG:
     Password : Paytm12345
     This test wallet is topped-up to a balance of 7000 Rs. every 5 minutes.
     '''
+
+
+REGISTRATION_EXTRA_FIELD = [
+                            {'name':'GST', 'type' : 'text' , 'icon' : 'fa-map-marker' , 'placeholder' : 'GSTIN'},
+                            {'name':'Company', 'type' : 'text' , 'icon' : 'fa-building' , 'placeholder' : 'Company Name'},
+                            {'name':'Address', 'type' : 'text' , 'icon' : 'fa-building' , 'placeholder' : 'Company Address'},
+                            {'name':'pincode', 'type' : 'text' , 'icon' : 'fa-map-marker' , 'placeholder' : 'Pincode'},
+                            {'name' : 'designation', 'type' : 'choice', 'option' : ['manager', 'admin', 'director' ], 'icon' : 'fa-id-card-o' , 'placeholder' : 'Please select your role'
+                            },
+                            {'name' : 'statecode',
+                            'type' : 'choice',
+                            'option' : ['KA', 'MH', 'AP' , 'AR' , 'AS' , 'BR' , 'CT' , 'GA' , 'GJ' , 'HR' , 'HP' , 'JK' , 'JH' , 'KL' , 'MP' , 'MN' , 'ML' , 'MZ' , 'NL' , 'OR' , 'PB' , 'RJ' , 'SK' , 'TN' , 'TG' , 'TR' , 'UT' , 'UP' , 'WB' , 'AN' , 'CH' , 'DN' , 'DD' , 'DL' , 'LD' , 'PY' , 'TS'] ,
+                            'icon' : 'fa-id-card-o' , 'placeholder' : 'Please select your State code'
+                            },
+                            ]

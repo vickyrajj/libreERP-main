@@ -6,8 +6,11 @@
       </div>
       <div class="col-xs-6">
         <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
-        <span ng-if="match.model.howMuch==null">{{match.model.howMuch}}{{match.model.unit | getUnit}}</span>
-        <span ng-if="match.model.howMuch!=null">{{match.model.howMuch | convertUnit :match.model.unit}} </span>
+        <span ng-if="match.model.unit == 'Size and Color' || match.model.unit == 'Size'"> {{match.model.unitPerpack | convertSize: match.model.unit}} {{match.model.prodDesc}} </span>
+        <span ng-if="match.model.unit != 'Size and Color' && match.model.unit != 'Size'">
+          <span ng-if="match.model.howMuch==null">{{match.model.howMuch}}{{match.model.unit | getUnit}}</span>
+          <span ng-if="match.model.howMuch!=null">{{match.model.howMuch | convertUnit :match.model.unit}} </span>
+        </span>
         <!-- <ul  ng-if="match.model.prodVar.length>0">
           <li ng-repeat="a in match.model.prodVar">{{a.sku}}</li>
         </ul> -->
@@ -30,15 +33,7 @@
           <span style="font-size:20px; padding:0px 0px 0px 0px;margin-right:10px"> {{match.model.added}} </span>
         <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="incrementCart(match.model);$event.stopPropagation()"></i></span>
         </div>
-        <!-- <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-          <i class="fa fa-minus-circle fa-lg" style="cursor:pointer" ng-if="match.model.added>0&&me.pk"  ng-click="decrementCart(match.model);$event.stopPropagation()"></i>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-3 text-center" style="bottom: 10px">
-          <span style="font-size:20px; padding:0px 0px 0px 0px;"> {{match.model.added}} </span>
-        </div>
-        <div class="col-md-4 col-sm-4 col-xs-4">
-          <i class="fa fa-plus-circle fa-lg" style="cursor:pointer"  ng-click="incrementCart(match.model);$event.stopPropagation()"></i>
-        </div> -->
+
       </div>
       <div ng-if="match.model.typ == 'list'&& !match.model.added  &&  !me.pk&&match.model.inStock>0" class="col-xs-4 text-right" style="padding-top:7px;" ng-click="$event.stopPropagation();">
         <button type="button" class="btn btn-success" ng-click="addToCartCookie(match.model)">
@@ -55,18 +50,7 @@
           <span style="font-size:20px; padding:0px 0px 0px 0px;margin-right:10px"> {{match.model.added}} </span>
         <i class="fa fa-plus-circle fa-2x" style="cursor:pointer"  ng-click="incrementCookie(match.model);$event.stopPropagation()"></i></span>
         </div>
-        <!-- <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-          <i class="fa fa-minus-circle fa-lg" style="cursor:pointer" ng-if="match.model.added>1&&!me.pk"  ng-click="decrementCookie(match.model);$event.stopPropagation()"></i>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-3 text-center" style="bottom: 10px">
-          <span style="font-size:20px; padding:0px 0px 0px 0px;"> {{match.model.added}} </span>
-        </div>
-        <div class="col-md-4 col-sm-4 col-xs-4">
-          <i class="fa fa-plus-circle fa-lg" style="cursor:pointer"  ng-click="incrementCookie(match.model);$event.stopPropagation()"></i>
-        </div> -->
-        <!-- <button type="button" class="btn btn-default">
-          Added
-        </button> -->
+
       </div>
     </div>
     <div ng-if="$parent.$parent.$last">

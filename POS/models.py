@@ -42,7 +42,16 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
 
-from clientRelationships.models import ProductMeta
+PRODUCT_META_TYPE_CHOICES = (
+    ('HSN' , 'HSN'),
+    ('SAC' , 'SAC')
+)
+
+class ProductMeta(models.Model):
+    description = models.CharField(max_length = 500 , null = False)
+    typ = models.CharField(max_length = 5 , default = 'HSN' , choices = PRODUCT_META_TYPE_CHOICES)
+    code = models.PositiveIntegerField(null=False)
+    taxRate = models.PositiveIntegerField(null = False)
 
 UNIT_CHOICES = (
     ('Ton' , 'Ton'),
@@ -51,6 +60,8 @@ UNIT_CHOICES = (
     ('Litre' , 'Litre'),
     ('Millilitre' , 'Millilitre'),
     ('Quantity' , 'Quantity'),
+    ('Size' , 'Size'),
+    ('Size and Color' , 'Size and Color'),
 )
 
 
@@ -76,6 +87,7 @@ class Product(models.Model):
     compositions = models.ManyToManyField("self" , related_name="parent" , blank = True)
     compositionQtyMap = models.CharField(max_length = 1000 , null = True, blank = True)
     discount = models.PositiveIntegerField(default = 0)
+    grossWeight = models.CharField(max_length = 50 , null = True)
     # storeQty = models.ManyToManyField(StoreQty , related_name="productStore" , blank = True)
     alias = models.CharField(max_length = 500 , null = True)
     howMuch = models.FloatField(null=True)
@@ -97,6 +109,21 @@ MONTH_CHOICES = (
     ('oct-dec' , 'oct-dec')
 )
 
+
+PROGRESS_STATUS = (
+    ('Created','Created'),
+    ('Started','Started'),
+    ('Completed','Completed')
+)
+
+class ManufactureManifest(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User , related_name = 'manufactureManifest' , null = True)
+    product = models.ForeignKey(Product , related_name='inProgress')
+    quantity = models.FloatField(null= True)
+    status = models.CharField(choices = PROGRESS_STATUS, default='Created', max_length = 10 , null = True)
+    specialInstruction = models.CharField(max_length = 500, null = True, blank = True)
 
 class Invoice(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -122,10 +149,11 @@ class ProductVerient(models.Model):
     updated = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey(Product , related_name='parentProducts')
     sku = models.CharField(max_length=255,null=True)
-    unitPerpack = models.PositiveIntegerField(default = 0)
+    unitPerpack = models.FloatField(default = 0)
     price = models.FloatField(null=True)
     discountedPrice = models.FloatField(default = 0.0)
     serialId = models.CharField(max_length = 50, null=True, blank = True)
+    prodDesc =  models.CharField(max_length = 500, null=True, blank = True)
 
 class Store(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -138,7 +166,7 @@ class Store(models.Model):
 class StoreQty(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     store = models.ForeignKey(Store , related_name="POSStoreDetail", blank=True, null=True)
-    quantity = models.PositiveIntegerField(default = 0)
+    quantity = models.FloatField(default = 0)
     product = models.ForeignKey(Product , related_name="storeProduct")
     productVariant = models.ForeignKey(ProductVerient , related_name="storeProdVar", blank=True, null=True)
     master = models.BooleanField(default = False)

@@ -117,11 +117,13 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
 
   $scope.resetForm = function(){
     if ($scope.mode == 'new') {
-      $scope.form = {title:'',pageurl:'',body:''}
+      $scope.form = {title:'',pageurl:'',body:'',topLevelMenu:false,bottomMenu:false}
     }else {
       $scope.form.title = ''
       $scope.form.pageurl = ''
       $scope.form.body = ''
+      $scope.form.topLevelMenu = false
+      $scope.form.bottomMenu = false
     }
   }
 
@@ -146,6 +148,7 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
   $scope.save = function() {
     console.log('entered');
     var f = $scope.form;
+    console.log(f);
 
     if (f.title == null || f.title.length==0) {
       Flash.create('warning','Please Mention Title')
@@ -158,7 +161,7 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
     if (f.body == null || f.body.length==0) {
       Flash.create('warning','Please Create Some Body Content')
       return
-    }else if (f.body.length > 9990) {
+    }else if (f.body.length > 50000) {
       Flash.create('warning','Body Content Is Too Big')
       return
     }
@@ -174,7 +177,9 @@ app.controller("businessManagement.ecommerce.pages.form", function($scope, $stat
     var toSend = {
       title:f.title,
       pageurl:f.pageurl,
-      body:f.body
+      body:f.body,
+      topLevelMenu : f.topLevelMenu,
+      bottomMenu: f.bottomMenu
     }
     console.log('dataaaaaaaaaaaaaaaaaaa',toSend);
 

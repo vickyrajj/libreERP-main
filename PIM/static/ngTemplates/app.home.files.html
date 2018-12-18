@@ -1,0 +1,59 @@
+<div class="shaddowed card bg-white" style="min-height:93vh;position:relative;padding-right:20px;padding-left:20px">
+  <breadcrumb></breadcrumb>
+  <div class="row">
+    <div class="col-md-9">
+      <div class="form-group  pull-right">
+        <input type="file" file-model="form.file">
+        <p class="help-block">Select the file.</p>
+      </div>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-primary" ng-click="addMedia()">Save</button>
+    </div>
+    <div class="col-md-2 ">
+      <span style="margin-right:10px;font-size:18px">Static</span>
+      <switch ng-model="imagesSearch" class="neutral"></switch><span style="margin-left:10px;font-size:18px">Media</span>
+    </div>
+  </div>
+
+  <div class="row" style="padding:15px;">
+    <div class="col-md-3" ng-repeat="img in allImages" style="padding-top:20px;padding-right:20px" ng-mouseover="options=true" ng-mouseleave="options=false">
+      <!-- {{img}}<br />
+      <span>
+        <i ng-show="deleteObjOption" ng-click="removeMedia($index,img)" class="fa fa-times fa-3x" style="position:absolute;top:-5px;right:0px;text-align: center;z-index:10;cursor:pointer"></i>
+      </span> -->
+
+
+
+      <div class="row" style="height:30px;">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-10 showOptions" ng-show="options" >
+          <div class="col-md-9" >
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="renameText" required placeholder="rename">
+              <span class="input-group-addon" ng-click="rename(renameText , $index)" style="cursor:pointer;" >save</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <i ng-click="removeMedia($index,img.path)" class="fa fa-times fa-2x"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="padding:10px;">
+        <img class="fadeInOpacity" ng-src="{{img.path}}" style="width:100%;height:200px">
+      </div>
+
+      <div class="row text-center">
+        <span>{{img.name}}</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- <div class="row">
+    <span ng-repeat="img in allImages">
+      <img ng-src="{{img}}" style="height:200px; margin:15px;">
+    </span>
+  </div> -->
