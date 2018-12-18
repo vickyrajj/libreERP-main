@@ -19,77 +19,69 @@ import requests
 import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
+import hashlib
 
 
-class MakePaytmPayment(APIView):
+def makeOnlinePayment(request):
+    if globalSettings.PAYMENT_MODE == 'EBS':
+        return redirect("/api/ERP/ebsPayment/?orderid=" + request.GET['orderid'])
+    elif globalSettings.PAYMENT_MODE == 'paypal':
+        return redirect("/paypalPaymentInitiate/?orderid=" + request.GET['orderid'])
+    elif globalSettings.PAYMENT_MODE == 'PAYU':
+        return redirect("/payuPaymentInitiate/?orderid=" + request.GET['orderid'])
+
+
+from django.http import HttpResponse
+import requests
+from ecommerce.models import Order
+class MakeEBSPayment(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.IsAuthenticated ,)
-    def post(self , request , format = None):
-        print request.data
-
+    def get(self , request , format = None):
         MERCHANT_KEY = globalSettings.PAYTM_MERCHANT_KEY
-        MERCHANT_ID = globalSettings.PAYTM_MERCHANT_ID
-        order_id = Checksum.__id_generator__() + str(request.user.pk)
-
+        order_id = request.GET['orderid']
         data_dict = {
-                    'MID':MERCHANT_ID,
-                    'ORDER_ID':order_id + '||_' + str(request.data['minutes']),
-                    'TXN_AMOUNT': str(request.data['grandTotal']),
-                    'CUST_ID': request.user.pk,
-                    'INDUSTRY_TYPE_ID':'Retail109',
-                    'WEBSITE': 'WEBPROD',
-                    'CHANNEL_ID':'WEB',
-                    'MOBILE_NO': '9702438730',
-                    'EMAIL': request.user.email,
-                    'CALLBACK_URL':'http://24tutors.com/paymentResponse/',
-            }
+                    'channel':'0',
+                    'account_id':'19591',
+                    'reference_no': order_id,
+                    'amount': Order.objects.get(pk = order_id).totalAmount,
+                    'mode':'TEST',
+                    'currency': 'INR',
+                    'description':'test ',
+                    'return_url': 'http://localhost:8000/ebsPaymanetResponse/',
+                    'name': request.user.first_name,
+                    'address':'ABC , kudlu',
+                    'city':'Bengaluru',
+                    'state':'Karnataka',
+                    'country' : 'IND',
+                    'postal_code':'560068',
+                    'phone':'9702438730',
+                    'email':'pkyisky@gmail.com',
+                    'cust_email':'pkyisky@gmail.com'
+                }
         param_dict = data_dict
-        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
 
-        return Response(param_dict, status = status.HTTP_200_OK)
+        hashVal = 'b47b8d9994e3356cf3c841ce9e025089'
 
-@csrf_exempt
-def PaymentResponse(request):
-    # return redirect(globalSettings.PAYMENT_SUCCESS_REDIRECT)
-    if request.method == "POST":
-        MERCHANT_KEY = globalSettings.PAYTM_MERCHANT_KEY
-        data_dict = {}
-        for key in request.POST:
-            data_dict[key] = request.POST[key]
+        for key in sorted(param_dict.iterkeys()):
+            print (("{} --> {}").format(key, param_dict[key]))
+            hashVal += '|' + str(param_dict[key])
 
-        # ORDERID = KSXMK4
-        # TXNDATE = 2018-03-28 13:54:09.0
-        # STATUS = TXN_SUCCESS
-        # RESPCODE = 01
-        # BANKNAME = WALLET
-        # PAYMENTMODE = PPI
-        # BANKTXNID =
-        # TXNID = 20180328111212800110168500600013338
-        # MID = CIOCFM47179245218344
-        # CURRENCY = INR
-        # RESPMSG = Txn Success
-        # TXNAMOUNT = 10.00
-        # GATEWAYNAME = WALLET
-        profile = request.user.tutors24Profile
-        profile.balance += int(data_dict['ORDERID'].split('||_')[1])
-        profile.save()
 
-        chkSum = data_dict['CHECKSUMHASH']
-        verify = Checksum.verify_checksum(data_dict, MERCHANT_KEY, chkSum)
-        data_dict['CHECKSUMHASH'] = chkSum
+        m = hashlib.md5()
+        m.update(hashVal)
+        param_dict['secure_hash'] = m.hexdigest().upper()
 
-        query = '"MID":"%s","ORDERID":"%s","CHECKSUMHASH":"%s"'%( globalSettings.PAYTM_MERCHANT_ID  ,data_dict['ORDERID'], chkSum )
+        # res = requests.post('https://secure.ebs.in/pg/ma/payment/request', data = param_dict)
 
-        reqUrl = 'https://securegw.paytm.in/merchant-status/getTxnStatus?JsonData={'+ urllib.pathname2url(query) + '}'
+        # print res.headers
+        # print res.text
 
-        data_dict['reqUrl'] = reqUrl
 
-        r = requests.get(reqUrl)
-        data_dict['confirmation_response'] = r.text
-        if verify and r.json()['STATUS'] == 'TXN_SUCCESS':
-            return redirect(globalSettings.PAYMENT_SUCCESS_REDIRECT)
-        else:
-            return HttpResponse("checksum verify failed")
+
+        # return HttpResponse(res.text)
+        return render(request, "ebs.payment.html" , {'data' : param_dict} )
+
 
 class SendSMSApi(APIView):
     renderer_classes = (JSONRenderer,)
@@ -336,7 +328,7 @@ class applicationSettingsViewSet(viewsets.ModelViewSet):
     filter_fields = ['app' , 'name']
 
 class applicationSettingsAdminViewSet(viewsets.ModelViewSet):
-    # permission_classes = (isAdmin,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = appSettingsField.objects.all()
     serializer_class = applicationSettingsAdminSerializer
     filter_backends = [DjangoFilterBackend]

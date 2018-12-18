@@ -45,6 +45,7 @@ class genericProduct(models.Model): # such as MI5, Nokia N8 etc
     visual = models.ImageField(upload_to=getEcommerceProductVisualUploadPath , null = True)
     bannerImage = models.ImageField(upload_to=getEcommerceGenericProductBannerUploadPath , null = True)
     parent = models.ForeignKey('self' , related_name='children' , null= True)
+    restricted = models.BooleanField(default = False)
     def __repr__(self):
         return  "Generic Product : " + self.name
 
@@ -85,6 +86,9 @@ class listing(models.Model):
     parentType = models.ForeignKey(genericProduct , related_name='products' , null = True)
     source = models.TextField(max_length = 40000 , null = True ,blank=True)# ths may contain the html source for the description giving the admin a way to full featured webpage description
     dfs = models.ManyToManyField(DataField , blank = True)
+    productIndex = models.PositiveIntegerField(null = True,blank = True)
+    # class Meta:
+    #     ordering = [('productIndex'),]
     def __repr__(self):
         return  "Listing : " + self.product.name + self.specifications
 
@@ -108,7 +112,9 @@ class Pages(models.Model):
     updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=100 ,null = False)
     pageurl = models.CharField(max_length=100 ,null = False)
-    body = models.CharField(max_length=10000 ,null = False)
+    body = models.CharField(max_length=50000 ,null = False)
+    topLevelMenu = models.BooleanField(default = False)
+    bottomMenu = models.BooleanField(default = False)
 
 class offerBanner(models.Model):
     user = models.ForeignKey(User, null = False)
@@ -130,11 +136,12 @@ CART_TYPE_CHOICES = (
 
 class Cart(models.Model):
     product = models.ForeignKey(listing, null = False)
-    user = models.ForeignKey(User, null = False)
+    user = models.ForeignKey(User, null = False , related_name = 'cartItems')
     qty = models.PositiveIntegerField(null = True)
     typ = models.CharField(choices = CART_TYPE_CHOICES, max_length = 10, default = 'cart')
     prodSku = models.CharField(max_length = 50, null = True, blank = True)
     prodVarPrice = models.PositiveIntegerField(null = True , blank = True)
+    desc = models.CharField(max_length = 50, null = True, blank = True)
 
 User.cart = property(lambda u : Cart.objects.get_or_create(user = u)[0])
 
@@ -222,6 +229,7 @@ class OrderQtyMap(models.Model):
     courierAWBNo =  models.CharField(max_length=50 ,null = True , blank = True)
     notes =  models.CharField(max_length=500 ,null = True , blank = True)
     prodSku = models.CharField(max_length = 50, null = True, blank = True)
+    desc = models.CharField(max_length = 50, null = True, blank = True)
 
 
 class Order(models.Model):
@@ -240,12 +248,19 @@ class Order(models.Model):
     approved = models.NullBooleanField()
     status = models.CharField(choices = ORDERSTATUS_CHOICES , max_length = 10 , default='created')
     landMark = models.CharField(max_length=100 , null = True , blank = True)
+    billingLandMark = models.CharField(max_length=100 , null = True , blank = True)
     street = models.CharField(max_length=300 , null = True , blank = True)
+    billingStreet =  models.CharField(max_length=300 , null = True , blank = True)
     city = models.CharField(max_length=100 , null = True , blank = True)
+    billingCity = models.CharField(max_length=100 , null = True , blank = True)
     state = models.CharField(max_length=50 , null = True , blank = True)
+    billingState = models.CharField(max_length=50 , null = True , blank = True)
     pincode = models.PositiveIntegerField(null = True , blank = True)
+    billingPincode =  models.PositiveIntegerField(null = True , blank = True)
     country = models.CharField(max_length = 50 , null = True , blank = True)
+    billingCountry = models.CharField(max_length = 50 , null = True , blank = True)
     mobileNo = models.CharField(max_length=15 ,null = True , blank = True)
+    shippingCharges =  models.IntegerField(default = 0)
 
 
 class Promocode(models.Model):
@@ -298,9 +313,11 @@ class GenericPincode(models.Model):
     pin_status = models.CharField( max_length = 2, default = "1")
 
 class GenericImage(models.Model):
-    backgroundImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    # backgroundImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     cartImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     paymentImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     paymentPortrait = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     searchBgImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     blogPageImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    topBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+    topMobileBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)

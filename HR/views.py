@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.conf import settings as globalSettings
 from django.core.exceptions import ObjectDoesNotExist , SuspiciousOperation
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from rest_framework.renderers import JSONRenderer
 # Related to the REST Framework
 from rest_framework import viewsets , permissions , serializers
 from rest_framework.exceptions import *
@@ -18,11 +19,14 @@ from ERP.models import application, permission , module
 from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
+from rest_framework.response import Response
 import random, string
 import requests
 from django.utils import timezone
 from rest_framework.views import APIView
 from ecommerce.models import GenericImage
+from django.template.loader import render_to_string, get_template
+from django.core.mail import send_mail, EmailMessage
 
 def documentView(request):
     docID = None
@@ -87,8 +91,8 @@ def tokenAuthentication(request):
 
 @csrf_exempt
 def generateOTP(request):
-    print request.POST
-    print request.POST['id'],'kkkkkkkkllllllllllllkkkkkkkkkkk'
+    print request.POST ,'*****************'
+    print request.POST["id"],'kkkkkkkkllllllllllllkkkkkkkkkkk'
 
     key_expires = timezone.now() + datetime.timedelta(2)
     otp = generateOTPCode()
@@ -259,7 +263,7 @@ def home(request):
     ,'BRAND_NAME' :  globalSettings.BRAND_NAME, 'serviceName' : globalSettings.SERVICE_NAME , 'defaultRoute' : defaultRoute , 'showCommonApps' : showCommonApps})
 
 class userProfileViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = userProfileSerializer
     queryset = profile.objects.all()
 
@@ -329,3 +333,36 @@ class payrollViewSet(viewsets.ModelViewSet):
     serializer_class = payrollSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user' ]
+
+
+class SendActivatedStatus(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        print request.data
+
+        msgBody = ['You have successfully registered' ]
+
+        ctx = {
+            'heading' : 'Welcome to Ecommerce',
+            'recieverName' : str(request.data['name']),
+            'message': msgBody,
+            'linkUrl': 'sterlingselect.com',
+            'linkText' : 'View Online',
+            'sendersAddress' : 'sterlingselect',
+            'sendersPhone' : '841101',
+            'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
+            'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
+            'twitterUrl' : 'twitter.com',
+            'brandName' : globalSettings.BRAND_NAME,
+        }
+
+        email_body = get_template('app.HR.userActivated.html').render(ctx)
+        print email_body
+        email_subject = 'Registration Successfull!!!!!'
+        sentEmail=[]
+        sentEmail.append(str(request.data['email']))
+        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+        msg = EmailMessage(email_subject, email_body, to= sentEmail)
+        msg.content_subtype = 'html'
+        msg.send()
+        return Response({}, status = status.HTTP_200_OK)

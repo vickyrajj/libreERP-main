@@ -35,9 +35,23 @@ from openpyxl import load_workbook
 from io import BytesIO
 import re
 from rest_framework import filters
+import ast
 from django.db.models import F ,Value,CharField
 
+class ProductMetaViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly , )
+    serializer_class = ProductMetaSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['description', 'code']
+    def get_queryset(self):
+        return ProductMeta.objects.all()
 
+class ManufactureManifestViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ManufactureManifestSerializer
+    queryset = ManufactureManifest.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['product']
 
 class CustomerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
@@ -70,21 +84,15 @@ class StoreViewSet(viewsets.ModelViewSet):
                 toReturn = gt
             else:
                 if gt[0].pincode - val < val-lt[0].pincode:
-                    print 'greaterrrrrrrrrrrrr'
                     toReturn = gt.first()
                 elif val-lt[0].pincode < gt[0].pincode - val:
-                    print 'lessssssssssss'
                     toReturn = lt.first()
                 else:
-                    print 'equallllllllll'
                     toReturn = lt.first()
             try:
-                print toReturn.pk
                 toReturn = Store.objects.filter(pk=toReturn.pk)
             except:
-                print 'in excepttttttttttttttttt'
                 toReturn = toReturn
-            print toReturn
         return toReturn
 
 class StoreQtyViewSet(viewsets.ModelViewSet):
@@ -124,9 +132,11 @@ class ProductViewSet(viewsets.ModelViewSet):
         product=[]
         unit=0
         if 'search' in self.request.GET:
+            print '@@@@@@@@@@@@@@@@@@'
             if 'storepk' in self.request.GET:
-                storeQtylist = list(StoreQty.objects.filter(store = int(self.request.GET['storepk'])).values_list('pk',flat=True))
-                objs = Product.objects.filter(storeQty__in=storeQtylist)
+                # storeQtylist = list(StoreQty.objects.filter(store = int(self.request.GET['storepk'])).values_list('pk',flat=True))
+                productPkList = list(StoreQty.objects.filter(store = int(self.request.GET['storepk'])).values_list('product',flat=True))
+                objs = Product.objects.filter(pk__in=productPkList)
             else:
                 objs = Product.objects.all()
             product = objs.filter(name__contains=str(self.request.GET['search']))
@@ -134,6 +144,9 @@ class ProductViewSet(viewsets.ModelViewSet):
             product2 = list(ProductVerient.objects.filter(sku__contains=str(self.request.GET['search'])).values_list('parent',flat=True))
             product3  = objs.filter(pk__in=product2).annotate(myUnit=Value(unit, output_field=CharField()))
             return product | product1 | product3
+        elif 'value__search' in self.request.GET:
+            productList = list(listing.objects.filter(product__name__icontains = self.request.GET['value__search']).values_list('product',flat=True))
+            return Product.objects.filter(pk__in=productList)
         else:
             return Product.objects.all()
 
@@ -229,9 +242,9 @@ styleN = styles['Normal']
 styleH = styles['Heading1']
 
 try:
-    settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()
+    settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
 except:
-    print "ERROR : settingsFields = application.objects.get(name = 'app.clientRelationships').settings.all()"
+    print "ERROR : settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()"
 
 class expanseReportHead(Flowable):
 
@@ -440,8 +453,12 @@ def genInvoice(response , invoice, request):
 
     for i in json.loads(invoice.products):
         print '***********',i
-        print i['data']['price']
-        print i['data']['productMeta']
+        if i['data']['productVariant']:
+            # print i['data']['productVariant'],'@@@@@@@@@@@@@@@@@@@@@@'
+            price = i['data']['productVariant']['price']
+        else:
+            price = i['data']['product']['price']
+
         pDescSrc = i['data']['name']
 
         totalQuant += i['quantity']
@@ -451,24 +468,24 @@ def genInvoice(response , invoice, request):
         #     print "Continuing"
         #     continue
 
-        i['subTotalTax'] = i['data']['price'] * i['quantity'] * ( i['data']['productMeta']['taxRate']/float(100)) if i['data']['productMeta'] and  i['data']['productMeta']['taxRate'] else 0
+        i['subTotalTax'] = price * i['quantity'] * ( i['data']['product']['productMeta']['taxRate']/float(100)) if i['data']['product']['productMeta'] and  i['data']['product']['productMeta']['taxRate'] else 0
 
-        i['subTotal'] = i['data']['price'] * i['quantity'] + i['subTotalTax']
+        i['subTotal'] = price * i['quantity'] + i['subTotalTax']
 
         totalTax += i['subTotalTax']
         grandTotal += i['subTotal']
-        if  i['data']['productMeta'] and i['data']['productMeta']['code'] and i['data']['productMeta']['taxRate']:
-            taxCode = '%s(%s %%)' %(i['data']['productMeta']['code'] , i['data']['productMeta']['taxRate'])
+        if  i['data']['product']['productMeta'] and i['data']['product']['productMeta']['code'] and i['data']['product']['productMeta']['taxRate']:
+            taxCode = '%s(%s %%)' %(i['data']['product']['productMeta']['code'] , i['data']['product']['productMeta']['taxRate'])
         else:
             taxCode = ''
 
-        pBodyProd = Paragraph('Service' if i['data']['productMeta'] and i['data']['productMeta']['typ'] == 'SAC' else 'Product' , tableBodyStyle)
+        pBodyProd = Paragraph('Service' if i['data']['product']['productMeta'] and i['data']['product']['productMeta']['typ'] == 'SAC' else 'Product' , tableBodyStyle)
         pBodyTitle = Paragraph( pDescSrc , tableBodyStyle)
         pBodyTaxCode = Paragraph(taxCode , tableBodyStyle)
         if invoice.customer is not None:
-            pBodyPrice = Paragraph(str(i['data']['price']) , tableBodyStyle)
+            pBodyPrice = Paragraph(str(price) , tableBodyStyle)
         else:
-            pBodyPrice = Paragraph(str(i['data']['price'] + (i['data']['price'] * i['data']['productMeta']['taxRate']/float(100) if i['data']['productMeta'] and  i['data']['productMeta']['taxRate'] else 0)) , tableBodyStyle)
+            pBodyPrice = Paragraph(str(price + (price * i['data']['product']['productMeta']['taxRate']/float(100) if i['data']['product']['productMeta'] and  i['data']['product']['productMeta']['taxRate'] else 0)) , tableBodyStyle)
         pBodyQty = Paragraph(str(i['quantity']) , tableBodyStyle)
         # pBodyTotal = Paragraph(str(i['quantity']*i['data']['price']) , tableBodyStyle)
         pBodysubTotalTax = Paragraph(str(round(i['subTotalTax'],2)) , tableBodyStyle)
@@ -919,10 +936,11 @@ class ProductInventoryAPIView(APIView):
         print offset,limit
         toReturn = []
         if 'store' in request.GET:
+            print 'multistoreeeeeeeeeeeeeee',request.GET['store']
             storeQtyObj = StoreQty.objects.filter(store=request.GET['store'])
+            print 'storeQtyObj',storeQtyObj
             if 'search' in request.GET:
                 storeQtyObj = storeQtyObj.filter(product__name__icontains=request.GET['search'])
-            print 'multistoreeeeeeeeeeeeeee'
         elif 'master' in request.GET:
             print 'singlestoreeeeeeeeeeeeeeeeeee'
             storeQtyObj = StoreQty.objects.filter(master=True)
@@ -935,7 +953,7 @@ class ProductInventoryAPIView(APIView):
         productsList = list(storeQtyObj.values('product').distinct().values('product__pk','product__name','product__displayPicture','product__unit','product__serialId','product__price','product__discount'))
 
         for i in productsList:
-            data = list(storeQtyObj.filter(product=i['product__pk']).values('pk','product','product__price','product__howMuch','productVariant','productVariant__sku','productVariant__unitPerpack','product__serialNo','product__unit','quantity','productVariant__price'))
+            data = list(storeQtyObj.filter(product=i['product__pk']).values('pk','product','product__price','product__howMuch','productVariant','productVariant__sku','productVariant__unitPerpack','product__serialNo','product__unit','quantity','productVariant__price' ,'productVariant__serialId' ))
             toReturn.append({'productPk':i['product__pk'],'productName':i['product__name'],'productUnit':i['product__unit'],'productSerialId':i['product__serialId'],'productdp':i['product__displayPicture'],'productPrice':i['product__price'],'productDiscount':i['product__discount'],'data':data})
 
         print toReturn[offset : limit]
@@ -1360,4 +1378,63 @@ class ProductPrintGrns(APIView):
         response['Content-Disposition'] = 'attachment; filename="POsdownload%s%s.pdf"'
         genPurchaseOrder(response,o, request,typ='GRN')
 
-        return response
+        # return response
+
+
+class GetTaxList(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print request.GET
+        value =request.GET
+        frm = value['frm']
+        to = value['to']
+        mode = value['mode']
+        typ = value['typ']
+        toReturn =[]
+        frm = datetime.datetime.strptime(frm,'%Y-%m-%dT%H:%M:%S.%fZ' )
+        to =  datetime.datetime.strptime(to,'%Y-%m-%dT%H:%M:%S.%fZ' )
+        if mode == 'offline':
+            obj =  Invoice.objects.filter(created__range =(datetime.datetime.combine(frm, datetime.time.min),datetime.datetime.combine(to, datetime.time.max)))
+            for i in obj:
+                toReturn.append({'customername':i.customer.name,'tax':i.totalTax,'dated':i.created })
+        else:
+            toReturn =[]
+        if typ == 'data':
+            return Response(toReturn, status = status.HTTP_200_OK)
+        else:
+             return ExcelResponse(toReturn)
+
+
+    # class GetTaxListExcel(APIView):
+    #     renderer_classes = (JSONRenderer,)
+    #     def get(self , request , format = None):
+    #         print request.GET
+    #         value =request.GET
+    #         frm = value['frm']
+    #         to = value['to']
+    #         mode = value['mode']
+    #         toReturn =[]
+    #         frm = datetime.datetime.strptime(frm,'%Y-%m-%dT%H:%M:%S.%fZ' )
+    #         to =  datetime.datetime.strptime(to,'%Y-%m-%dT%H:%M:%S.%fZ' )
+    #         if mode == 'offline':
+    #             obj =  Invoice.objects.filter(created__range =(datetime.datetime.combine(frm, datetime.time.min),datetime.datetime.combine(to, datetime.time.max)))
+    #             for i in obj:
+    #                 toReturn.append({'customername':i.customer.name,'product':i.products,'tax':i.totalTax,'dated':i.created })
+    #         else:
+    #             toReturn =[]
+    #         return ExcelResponse(toReturn)
+
+class AddProductSKU(APIView):
+    renderer_classes = (JSONRenderer,)
+    def post(self , request , format = None):
+        if 'value' in request.data:
+            p = Product.objects.get(pk = request.data['value'])
+            p.serialNo = "PRO"+str(p.pk)
+            p.save()
+        else:
+            productLIst = Product.objects.all()
+            for p in productLIst:
+                if p.serialNo=='':
+                    p.serialNo="PRO"+str(p.pk)
+                    p.save()
+        return Response(p.serialNo,status = status.HTTP_200_OK)

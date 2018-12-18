@@ -43,6 +43,16 @@ app.filter('getCRMDP', function() {
   }
 })
 
+app.filter('startFrom', function() {
+    return function(input, start) {
+        if(input) {
+            start = +start; //parse to int
+            return input.slice(start);
+        }
+        return [];
+    }
+});
+
 app.filter('getUnit', function() {
   return function (input) {
     if (input=='Kilogram') {
@@ -77,8 +87,56 @@ app.filter('convertUnit', function() {
       }else {
         toReturn = qty + ' ml'
       }
+    }else if (unit=='Kilogram' || unit=='kg' || unit=='Kg') {
+      if (qty<1) {
+        toReturn = qty*1000 + ' gm'
+      }else {
+        toReturn = qty + ' Kilogram'
+      }
+    }else if (unit=='Litre' || unit=='Lt' || unit=='lt') {
+      if (qty<1) {
+        toReturn = qty*1000 + ' ml'
+      }else {
+        toReturn = qty + ' Litre'
+      }
+    }else if (unit=='Quantity') {
+      toReturn = qty + ' Qty'
+    }else if (unit=='' || unit == null) {
+      toReturn = qty
     }else {
-      toReturn = qty + unit
+      toReturn = qty + ' ' + unit
+    }
+    return toReturn
+  }
+})
+
+app.filter('convertSize', function() {
+  return function (qty, unit) {
+    // console.log('in filter cponvert' ,qty, unit );
+    if (unit=='Size' || unit == 'Size and Color') {
+      if (qty==1) {
+        toReturn = 'XS'
+      }
+      else if (qty==2) {
+        toReturn = 'S'
+      }
+      else if (qty==3) {
+        toReturn = 'M'
+      }
+      else if (qty==4) {
+        toReturn = 'L'
+      }
+      else if (qty==5) {
+        toReturn = 'XL'
+      }
+      else if (qty==5) {
+        toReturn = 'XXL'
+      }
+      else if (qty==5) {
+        toReturn = 'XXXL'
+      }else {
+        toReturn = qty
+      }
     }
     return toReturn
   }

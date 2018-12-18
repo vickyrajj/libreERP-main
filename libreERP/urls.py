@@ -7,9 +7,8 @@ from homepage.views import index
 # from events.views import eventHome
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
-from ecommerce.views import ecommerceHome
-from ERP.views import serviceRegistration
-from ERP.views import PaymentResponse
+from ecommerce.views import ecommerceHome , paypalPaymentInitiate , paypal_cancel_view , paypal_return_view , payuPaymentInitiate , payUPaymentResponse
+from ERP.views import serviceRegistration , makeOnlinePayment
 
 app_name="libreERP"
 urlpatterns = [
@@ -24,17 +23,18 @@ urlpatterns = [
     url(r'^token', tokenAuthentication , name ='tokenAuthentication'),
     url(r'^logout', logoutView , name ='logout'),
     url(r'^corporate/', index , name ='index'),
-    # url(r'^events/', eventHome, name = 'event'), # public blogs app
-    # url(r'^blogs/', include('blogs.urls')), # public blogs app
     url(r'^api-auth/', include('rest_framework.urls', namespace ='rest_framework')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^robots\.txt', include('robots.urls')),
     url(r'^generateOTP', generateOTP, name="generateOTP"),
     url(r'^documents', documentView , name ='document'),
-    # url(r'^blog/$', blog , name ='blog'),
-    url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
-    # url(r'^customer/login/', customerLoginView , name ='customerLogin'),
-    # url(r'^customerhome/', customerHomeView , name ='customerhome'),
+    url(r'^paypal/', include('paypal.standard.ipn.urls')),
+    url(r'paypalPaymentInitiate/$' , paypalPaymentInitiate , name = "paypalPaymentInitiate" ),
+    url(r'paypal_return_view/$' , paypal_return_view , name = "paypal_return_view" ),
+    url(r'paypal_cancel_view/$' , paypal_cancel_view , name = "paypal_cancel_view" ),
+    url(r'makeOnlinePayment/$' , makeOnlinePayment , name = "makeOnlinePayment" ),
+    url(r'payuPaymentInitiate/$' , payuPaymentInitiate , name = "paypalPaymentInitiate" ),
+    url(r'payUPaymentResponse/$' , payUPaymentResponse , name = "paypalPaymentInitiate" ),
 ]
 
 if settings.DEBUG:
@@ -42,4 +42,3 @@ if settings.DEBUG:
     urlpatterns +=static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)
 
 urlpatterns.append(url(r'^', ecommerceHome , name ='ecommerceHome'))
-# urlpatterns.append(url(r'^(?P<blogname>[\w|\W]+)/', blogDetails , name ='blogDetails'))

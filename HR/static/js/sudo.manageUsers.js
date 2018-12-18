@@ -1,5 +1,6 @@
 
 app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
+
   $scope.generateMailPasskey = function() {
     console.log($scope);
     console.log($scope.data);
@@ -8,9 +9,85 @@ app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
       $scope.data.mailAccount = response.data;
     });
   }
+
+  $scope.addActive=function(){
+    $scope.data.is_active = true
+
+    var dataToSend = {
+      is_active : $scope.data.is_active,
+      username : $scope.data.username,
+      last_name : $scope.data.last_name,
+      first_name : $scope.data.first_name,
+      is_staff : $scope.data.is_staff,
+    }
+
+   $http({method : 'PATCH' , url : '/api/HR/usersAdminMode/' + $scope.data.pk + '/', data : dataToSend}).
+   then(function(response) {
+     var toSend = {email : response.data.email,
+                  name : response.data.first_name};
+     $http({method : 'POST' , url : '/api/HR/sendActivatedStatus/' , data : toSend}).
+     then(function(response) {
+       console.log(response.data);
+     })
+   });
+
+
+  }
 });
 
+app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
+  $scope.data = $scope.tab.data;
+  console.log($scope.data);
+
+
+  console.log('aaaaaaaaaaaaaaaaaaaaaa', $scope.data.pk);
+  $http({
+    method: 'GET',
+    url: '/api/HR/payroll/?user=' + $scope.data.userPK
+  }).
+  then(function(response) {
+    $scope.payroll = response.data[0];
+    console.log($scope.payroll);
+  })
+  console.log('((((((((((((((()))))))))))))))', $scope.data.userPK);
+  $http({
+    method: 'GET',
+    url: '/api/HR/designation/?user=' + $scope.data.userPK
+  }).
+  then(function(response) {
+    console.log(response.data, '&&&&&&&&&&&&&&&&&&&&&&&7');
+    $scope.designation = response.data[0];
+    console.log($scope.designation);
+
+
+    // if (typeof $scope.designation.division == 'number') {
+    //   $http({
+    //     method: 'GET',
+    //     url: '/api/organization/divisions/' + $scope.designation.division + '/'
+    //   }).
+    //   then(function(response) {
+    //     $scope.designation.division = response.data;
+    //   })
+    // }
+
+    // if (typeof $scope.designation.unit == 'number') {
+    //   $http({
+    //     method: 'GET',
+    //     url: '/api/organization/unit/' + $scope.designation.unit + '/'
+    //   }).
+    //   then(function(response) {
+    //     $scope.designation.unit = response.data;
+    //   })
+    //
+    // }
+
+  })
+
+
+
+
+});
 
 app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
 
@@ -22,7 +99,7 @@ app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
   })
 
   $scope.save = function() {
-    // make patch request
+    // make  request
     var f = $scope.form;
     dataToSend = {
       user : f.pk,
@@ -70,66 +147,232 @@ app.controller('sudo.manageUsers.editPayroll' , function($scope , $http,Flash){
 });
 
 
-app.controller('admin.manageUsers' , function($scope , $http , $aside , $state , Flash , $users , $filter){
+app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state, Flash, $users, $filter, $timeout) {
 
-  var views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
-      {name : 'thumbnail' , icon : 'fa-th-large' , template : '/static/ngTemplates/empSearch/tableThumbnail.html'},
-      {name : 'icon' , icon : 'fa-th' , template : '/static/ngTemplates/empSearch/tableIcon.html'},
-      {name : 'graph' , icon : 'fa-pie-chart' , template : '/static/ngTemplates/empSearch/tableGraph.html'}
+
+  $scope.data = $scope.tab.data;
+
+
+  $scope.save = function() {
+    var prof = $scope.data;
+
+    if(prof.mobile == null||prof.mobile == undefined ||prof.mobile.length==0){
+        Flash.create('danger', "Plaese add the Mobile Number");
+        return;
+    }
+
+    if(prof.email == null||prof.email == undefined ||prof.email.length==0){
+        Flash.create('danger', "Plaese add the Email id");
+        return;
+    }
+
+    var dataToSend = {
+      prefix: prof.prefix,
+      // dateOfBirth: prof.dateOfBirth.toJSON().split('T')[0],
+
+      gender: prof.gender,
+      permanentAddressStreet: prof.permanentAddressStreet,
+      permanentAddressCity: prof.permanentAddressCity,
+      permanentAddressPin: prof.permanentAddressPin,
+      permanentAddressState: prof.permanentAddressState,
+      permanentAddressCountry: prof.permanentAddressCountry,
+      sameAsShipping: prof.sameAsShipping,
+      localAddressStreet: prof.localAddressStreet,
+      localAddressCity: prof.localAddressCity,
+      localAddressPin: prof.localAddressPin,
+      localAddressState: prof.localAddressState,
+      localAddressCountry: prof.localAddressCountry,
+      email: prof.email,
+      mobile: prof.mobile,
+    }
+
+    $http({
+      method: 'PATCH',
+      url: '/api/HR/profileAdminMode/' + prof.pk + '/',
+      data: dataToSend
+    }).
+    then(function(response) {
+      Flash.create('success', "Saved");
+    })
+  }
+
+
+
+
+
+});
+
+
+app.controller('admin.manageUsers' , function($scope , $http , $aside , $state , Flash , $users , $filter,$timeout){
+
+  // var views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
+  //     {name : 'thumbnail' , icon : 'fa-th-large' , template : '/static/ngTemplates/empSearch/tableThumbnail.html'},
+  //     {name : 'icon' , icon : 'fa-th' , template : '/static/ngTemplates/empSearch/tableIcon.html'},
+  //     {name : 'graph' , icon : 'fa-pie-chart' , template : '/static/ngTemplates/empSearch/tableGraph.html'}
+  //   ];
+  //
+  // var options = {main : {icon : 'fa-envelope-o', text: 'im'} ,
+  //   others : [{icon : '' , text : 'social' },
+  //     {icon : '' , text : 'editProfile' },
+  //     {icon : '' , text : 'editDesignation' },
+  //     {icon : '' , text : 'editPermissions' },
+  //     {icon : '' , text : 'editMaster' },
+  //     {icon : '' , text : 'editPayroll' },
+  //   ]
+  //   };
+  // var fields = ['username' , 'email' , 'first_name' , 'last_name' , 'profile'];
+  //
+  // var multiselectOptions = [{icon : 'fa fa-book' , text : 'Learning' },
+  //   {icon : 'fa fa-bar-chart-o' , text : 'Performance' },
+  //   {icon : 'fa fa-envelope-o' , text : 'message' },
+  // ];
+  //
+  // $scope.config = {
+  //   url : '/api/HR/users/' ,
+  //   views : views ,
+  //   options : options,
+  //   multiselectOptions : multiselectOptions,
+  //   searchField : 'username',
+  //   fields : fields,
+  // };
+  //
+  // $scope.tabs = [];
+  // $scope.searchTabActive = true;
+  // $scope.data = {tableData : []};
+  //
+  // $scope.closeTab = function(index){
+  //   $scope.tabs.splice(index , 1)
+  // }
+  //
+  // $scope.addTab = function( input ){
+  //   $scope.searchTabActive = false;
+  //   alreadyOpen = false;
+  //   for (var i = 0; i < $scope.tabs.length; i++) {
+  //
+  //     if ($scope.tabs[i].app == input.app) {
+  //       if ((typeof $scope.tabs[i].data.url != 'undefined' && $scope.tabs[i].data.url == input.data.url )|| (typeof $scope.tabs[i].data.pk != 'undefined' && $scope.tabs[i].data.pk == input.data.pk)) {
+  //         $scope.tabs[i].active = true;
+  //         alreadyOpen = true;
+  //       }
+  //     }else{
+  //       $scope.tabs[i].active = false;
+  //     }
+  //   }
+  //   if (!alreadyOpen) {
+  //     $scope.tabs.push(input)
+  //   }
+  // }
+  //
+
+
+
+
+    // var views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
+    //     {name : 'thumbnail' , icon : 'fa-th-large' , template : '/static/ngTemplates/empSearch/tableThumbnail.html'},
+    //     {name : 'icon' , icon : 'fa-th' , template : '/static/ngTemplates/empSearch/tableIcon.html'},
+    //     {name : 'graph' , icon : 'fa-pie-chart' , template : '/static/ngTemplates/empSearch/tableGraph.html'}
+    //   ];
+
+    $scope.data = {
+      tableData: [],
+    }
+
+    var views = [{
+        name: 'table',
+        icon: 'fa-bars',
+        template: '/static/ngTemplates/genericTable/genericSearchList.html',
+        itemTemplate: '/static/ngTemplates/app.HR.manage.users.items.html'
+      },
+      // {name : 'thumbnail' , icon : 'fa-th-large' , template : '/static/ngTemplates/empSearch/tableThumbnail.html'},
+      // {name : 'icon' , icon : 'fa-th' , template : '/static/ngTemplates/empSearch/tableIcon.html'},
+      // {name : 'graph' , icon : 'fa-pie-chart' , template : '/static/ngTemplates/empSearch/tableGraph.html'}
     ];
 
-  var options = {main : {icon : 'fa-envelope-o', text: 'im'} ,
-    others : [{icon : '' , text : 'social' },
-      {icon : '' , text : 'editProfile' },
-      {icon : '' , text : 'editDesignation' },
-      {icon : '' , text : 'editPermissions' },
-      {icon : '' , text : 'editMaster' },
-      {icon : '' , text : 'editPayroll' },
-    ]
+    var options = {
+      main: {
+        icon: 'fa-envelope-o',
+        text: 'im'
+      },
+      others: [{
+          icon: '',
+          text: 'social'
+        },
+        {
+          icon: '',
+          text: 'editProfile'
+        },
+        // {
+        //   icon: '',
+        //   text: 'editDesignation'
+        // },
+        {
+          icon: '',
+          text: 'editPermissions'
+        },
+        {
+          icon: '',
+          text: 'editMaster'
+        },
+        // {
+        //   icon: '',
+        //   text: 'editPayroll'
+        // },
+        {
+          icon: '',
+          text: 'viewProfile'
+        },
+      ]
     };
-  var fields = ['username' , 'email' , 'first_name' , 'last_name' , 'profile'];
 
-  var multiselectOptions = [{icon : 'fa fa-book' , text : 'Learning' },
-    {icon : 'fa fa-bar-chart-o' , text : 'Performance' },
-    {icon : 'fa fa-envelope-o' , text : 'message' },
-  ];
+    var multiselectOptions = [{
+        icon: 'fa fa-book',
+        text: 'Learning'
+      },
+      {
+        icon: 'fa fa-bar-chart-o',
+        text: 'Performance'
+      },
+      {
+        icon: 'fa fa-envelope-o',
+        text: 'message'
+      },
+    ];
 
-  $scope.config = {
-    url : '/api/HR/users/' ,
-    views : views ,
-    options : options,
-    multiselectOptions : multiselectOptions,
-    searchField : 'username',
-    fields : fields,
-  };
+    $scope.config = {
+      url: '/api/HR/users/',
+      views: views,
+      options: options,
+      itemsNumPerView: [12, 24, 48],
+      // multiselectOptions: multiselectOptions,
+      searchField: 'username',
+    };
 
-  $scope.tabs = [];
-  $scope.searchTabActive = true;
-  $scope.data = {tableData : []};
 
-  $scope.closeTab = function(index){
-    $scope.tabs.splice(index , 1)
-  }
+    $scope.tabs = [];
+    $scope.searchTabActive = true;
 
-  $scope.addTab = function( input ){
-    $scope.searchTabActive = false;
-    alreadyOpen = false;
-    for (var i = 0; i < $scope.tabs.length; i++) {
+    $scope.closeTab = function(index) {
+      $scope.tabs.splice(index, 1)
+    }
 
-      if ($scope.tabs[i].app == input.app) {
-        if ((typeof $scope.tabs[i].data.url != 'undefined' && $scope.tabs[i].data.url == input.data.url )|| (typeof $scope.tabs[i].data.pk != 'undefined' && $scope.tabs[i].data.pk == input.data.pk)) {
-          $scope.tabs[i].active = true;
-          alreadyOpen = true;
+    $scope.addTab = function(input) {
+      $scope.searchTabActive = false;
+      alreadyOpen = false;
+      for (var i = 0; i < $scope.tabs.length; i++) {
+
+        if ($scope.tabs[i].app == input.app) {
+          if ((typeof $scope.tabs[i].data.url != 'undefined' && $scope.tabs[i].data.url == input.data.url) || (typeof $scope.tabs[i].data.pk != 'undefined' && $scope.tabs[i].data.pk == input.data.pk)) {
+            $scope.tabs[i].active = true;
+            alreadyOpen = true;
+          }
+        } else {
+          $scope.tabs[i].active = false;
         }
-      }else{
-        $scope.tabs[i].active = false;
+      }
+      if (!alreadyOpen) {
+        $scope.tabs.push(input)
       }
     }
-    if (!alreadyOpen) {
-      $scope.tabs.push(input)
-    }
-  }
-
 
 
 
@@ -147,85 +390,246 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
   }
 
 
-  $scope.tableAction = function(target , action , mode){
-    // target is the url of the object
-    if (typeof mode == 'undefined') {
-      if (action == 'im') {
-        $scope.$parent.$parent.addIMWindow(target);
-      } else if (action == 'editProfile') {
 
-        $http({method :'options' , url : '/api/HR/profileAdminMode'}).
-        then(function(response){
-          $scope.profileFormStructure = response.data.actions.POST;
-          console.log(target);
-          console.log($scope.data);
-          for (var i = 0; i < $scope.data.tableData.length; i++) {
-            if ($scope.data.tableData[i].pk == target){
-              url = '/api/HR/profileAdminMode/' + $scope.data.tableData[i].profile.pk + '/';
-            }
-          }
-          $http({method :'GET' , url : url}).
-          then((function(target) {
-            return function(response){
-              $scope.profile = response.data;
-              for(key in $scope.profileFormStructure){
-                if ($scope.profileFormStructure[key].type.indexOf('upload') !=-1) {
-                  $scope.profile[key] = emptyFile;
-                }
-              }
-              console.log(target);
+  $scope.tableAction = function(target, action, mode) {
+  // target is the url of the object
+  if (typeof mode == 'undefined') {
+    if (action == 'im') {
+      $scope.$parent.$parent.addIMWindow(target);
+    } else if (action == 'editProfile') {
+      for (var i = 0; i < $scope.data.tableData.length; i++) {
+        if ($scope.data.tableData[i].pk == target) {
+          u = $users.get(target)
+          $http.get('/api/HR/profileAdminMode/' + $scope.data.tableData[i].profile.pk + '/').
+          success((function(target) {
+            return function(response) {
               u = $users.get(target)
-              $scope.addTab({title : 'Edit profile of ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editProfile' , data : $scope.profile , active : true})
+              console.log("will add tab profile : ");
+              console.log(response);
+              $scope.addTab({
+                title: 'Edit Profile for ' + u.first_name + ' ' + u.last_name,
+                cancel: true,
+                app: 'editProfile',
+                data: response,
+                active: true
+              })
+
+              console.log($scope.tabs);
             }
           })(target));
-        });
-
-      } else if (action == 'social') {
-        $state.go('home.social' , {id : target})
-      } else if (action == 'editMaster') {
-        console.log(target);
-        $http({method : 'GET' , url : '/api/HR/usersAdminMode/' + target + '/'}).
-        then(function(response){
-          $http({method : 'GET' , url : '/api/mail/account/?user=' + target }).
-          then((function(userData){
-            return function(response) {
-              userData.mailAccount = response.data[0];
-              $scope.addTab({title : 'Edit master data  for ' + userData.first_name + ' ' + userData.last_name , cancel : true , app : 'editMaster' , data : userData , active : true})
-            }
-          })(response.data))
-        })
-      } else if (action == 'editPermissions') {
-        u = $users.get(target)
-        $http.get('/api/ERP/application/?user='+ u.username ).
-        success((function(target){
-          return function(data){
-            u = $users.get(target)
-            permissionsFormData = {
-              appsToAdd : data,
-              url : target,
-            }
-            $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPermissions' , data : permissionsFormData , active : true})
-          }
-        })(target));
-      } else if (action == 'editPayroll') {
-        u = $users.get(target)
-        $http.get('/api/HR/payroll/?user='+ u.username ).
-        success((function(target){
-          return function(data){
-            u = $users.get(target)
-
-            $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPayroll' , data : data , active : true})
-          }
-        })(target));
+        }
       }
-      // for the single select actions
-    } else {
-      if (mode == 'multi') {
-        console.log(target);
-        console.log(action);
+
+    } else if (action == 'social') {
+      $state.go('home.social', {
+        id: target
+      })
+    } else if (action == 'editMaster') {
+      console.log(target);
+      $http({
+        method: 'GET',
+        url: '/api/HR/usersAdminMode/' + target + '/'
+      }).
+      then(function(response) {
+        $http({
+          method: 'GET',
+          url: '/api/mail/account/?user=' + target
+        }).
+        then((function(userData) {
+          return function(response) {
+            userData.mailAccount = response.data[0];
+            $scope.addTab({
+              title: 'Edit master data  for ' + userData.first_name + ' ' + userData.last_name,
+              cancel: true,
+              app: 'editMaster',
+              data: userData,
+              active: true
+            })
+          }
+        })(response.data))
+      })
+    } else if (action == 'editPermissions') {
+      u = $users.get(target)
+      $http.get('/api/ERP/application/?user=' + u.username).
+      success((function(target) {
+        return function(data) {
+          u = $users.get(target)
+          permissionsFormData = {
+            appsToAdd: data,
+            url: target,
+          }
+          $scope.addTab({
+            title: 'Edit permissions for ' + u.first_name + ' ' + u.last_name,
+            cancel: true,
+            app: 'editPermissions',
+            data: permissionsFormData,
+            active: true
+          })
+        }
+      })(target));
+    } else if (action == 'viewProfile') {
+      for (var i = 0; i < $scope.data.tableData.length; i++) {
+        if ($scope.data.tableData[i].pk == target) {
+          u = $users.get(target)
+          $http.get('/api/HR/profileAdminMode/' + $scope.data.tableData[i].profile.pk + '/').
+          success((function(target) {
+            return function(response) {
+              response.userPK = target;
+              u = $users.get(target)
+              console.log("will add tab profile : ");
+              console.log(response);
+              $scope.addTab({
+                title: 'Profile for ' + u.first_name + ' ' + u.last_name,
+                cancel: true,
+                app: 'viewProfile',
+                data: response,
+                active: true
+              })
+
+              console.log($scope.tabs);
+            }
+          })(target));
+        }
+      }
+    } else if (action == 'editDesignation') {
+      for (var i = 0; i < $scope.data.tableData.length; i++) {
+        if ($scope.data.tableData[i].pk == target) {
+          u = $users.get(target)
+          $http.get('/api/HR/designation/' + $scope.data.tableData[i].designation + '/').
+          success((function(target) {
+            return function(response) {
+              response.userPK = target;
+              // console.log(target);
+              u = $users.get(target)
+              console.log("will add tab profile : ");
+              console.log(response);
+              $scope.addTab({
+                title: 'Edit Designation for ' + u.first_name + ' ' + u.last_name,
+                cancel: true,
+                app: 'editDesignation',
+                data: response,
+                active: true
+              })
+
+              console.log($scope.tabs);
+            }
+          })(target));
+        }
+      }
+    } else if (action == 'editPayroll') {
+      for (var i = 0; i < $scope.data.tableData.length; i++) {
+        if ($scope.data.tableData[i].pk == target) {
+          u = $users.get(target)
+          $http.get('/api/HR/payroll/' + $scope.data.tableData[i].payroll.pk + '/').
+          success((function(target) {
+            return function(response) {
+              u = $users.get(target)
+              console.log("will add tab payroll : ");
+              console.log(response);
+              $scope.addTab({
+                title: 'Edit payroll for ' + u.first_name + ' ' + u.last_name,
+                cancel: true,
+                app: 'editPayroll',
+                data: response,
+                active: true
+              })
+
+              console.log($scope.tabs);
+
+            }
+          })(target));
+        }
       }
     }
+    // for the single select actions
+  } else {
+    if (mode == 'multi') {
+      console.log(target);
+      console.log(action);
+    }
   }
+}
+
+  //
+  // $scope.tableAction = function(target , action , mode){
+  //   // target is the url of the object
+  //   if (typeof mode == 'undefined') {
+  //     if (action == 'im') {
+  //       $scope.$parent.$parent.addIMWindow(target);
+  //     } else if (action == 'editProfile') {
+  //
+  //       $http({method :'options' , url : '/api/HR/profileAdminMode'}).
+  //       then(function(response){
+  //         $scope.profileFormStructure = response.data.actions.POST;
+  //         console.log(target);
+  //         console.log($scope.data);
+  //         for (var i = 0; i < $scope.data.tableData.length; i++) {
+  //           if ($scope.data.tableData[i].pk == target){
+  //             url = '/api/HR/profileAdminMode/' + $scope.data.tableData[i].profile.pk + '/';
+  //           }
+  //         }
+  //         $http({method :'GET' , url : url}).
+  //         then((function(target) {
+  //           return function(response){
+  //             $scope.profile = response.data;
+  //             for(key in $scope.profileFormStructure){
+  //               if ($scope.profileFormStructure[key].type.indexOf('upload') !=-1) {
+  //                 $scope.profile[key] = emptyFile;
+  //               }
+  //             }
+  //             console.log(target);
+  //             u = $users.get(target)
+  //             $scope.addTab({title : 'Edit profile of ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editProfile' , data : $scope.profile , active : true})
+  //           }
+  //         })(target));
+  //       });
+  //
+  //     } else if (action == 'social') {
+  //       $state.go('home.social' , {id : target})
+  //     } else if (action == 'editMaster') {
+  //       console.log(target);
+  //       $http({method : 'GET' , url : '/api/HR/usersAdminMode/' + target + '/'}).
+  //       then(function(response){
+  //         $http({method : 'GET' , url : '/api/mail/account/?user=' + target }).
+  //         then((function(userData){
+  //           return function(response) {
+  //             userData.mailAccount = response.data[0];
+  //             $scope.addTab({title : 'Edit master data  for ' + userData.first_name + ' ' + userData.last_name , cancel : true , app : 'editMaster' , data : userData , active : true})
+  //           }
+  //         })(response.data))
+  //       })
+  //     } else if (action == 'editPermissions') {
+  //       u = $users.get(target)
+  //       $http.get('/api/ERP/application/?user='+ u.username ).
+  //       success((function(target){
+  //         return function(data){
+  //           u = $users.get(target)
+  //           permissionsFormData = {
+  //             appsToAdd : data,
+  //             url : target,
+  //           }
+  //           $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPermissions' , data : permissionsFormData , active : true})
+  //         }
+  //       })(target));
+  //     } else if (action == 'editPayroll') {
+  //       u = $users.get(target)
+  //       $http.get('/api/HR/payroll/?user='+ u.username ).
+  //       success((function(target){
+  //         return function(data){
+  //           u = $users.get(target)
+  //
+  //           $scope.addTab({title : 'Edit permissions for ' + u.first_name + ' ' + u.last_name  , cancel : true , app : 'editPayroll' , data : data , active : true})
+  //         }
+  //       })(target));
+  //     }
+  //     // for the single select actions
+  //   } else {
+  //     if (mode == 'multi') {
+  //       console.log(target);
+  //       console.log(action);
+  //     }
+  //   }
+  // }
 
   $scope.updateUserPermissions = function(index){
     var userData = $scope.tabs[index].data;
@@ -296,11 +700,14 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
     }
     $http({method : 'PATCH' , url : userData.url.replace('users' , 'usersAdminMode') , data : dataToSend }).
     then(function(response){
+      console.log(response.data,'gggggfffffffff');
        Flash.create('success', response.status + ' : ' + response.statusText);
     }, function(response){
        Flash.create('danger', response.status + ' : ' + response.statusText);
     });
   }
+
+
 
 
    $scope.editDesignation = function(index){

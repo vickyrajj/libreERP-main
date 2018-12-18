@@ -16,6 +16,7 @@ import requests
 from HR.models import profile
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+import ast
 
 class EnquiryAndContactsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,26 +35,130 @@ class RegistrationSerializer(serializers.ModelSerializer):
         print instance
         print validated_data
         if 'emailOTP' in self.context['request'].data:
+            print 'coommmmmmmmmreeeeeeeeherere'
             d = self.context['request'].data;
-            if( d['token'] == instance.token and d['mobileOTP'] == instance.mobileOTP and d['emailOTP']== instance.emailOTP ):
-                print "will create a new user"
-                u = User(username = d['email'].split('@')[0])
-                u.first_name = d['firstName']
-                u.email = d['email']
-                u.last_name = d['lastName']
-                u.set_password(d['password'])
-                u.is_active = True
-                u.save()
-                print 'ddddddddddddddddd'
-                for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
-                    print a ,'gggggggggggggggggggggg'
-                    app = application.objects.get(name = a)
-                    p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
-                login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
-                instance.delete()
-                return instance
+            if not globalSettings.VERIFY_MOBILE:
+                if( d['token'] == instance.token and d['emailOTP']== instance.emailOTP ):
+                    print "will create a new user"
+                    u = User(username = d['email'].split('@')[0])
+                    u.first_name = d['firstName']
+                    u.email = d['email']
+                    u.last_name = d['lastName']
+                    u.set_password(d['password'])
+                    if globalSettings.AUTO_ACTIVE_ON_REGISTER == False:
+                        u.is_active = False
+                        adminData =  User.objects.get(pk=1)
+                        print adminData.email
+                        msgBody = ['Provide the user permission for new registered customer Name : <strong>%s</strong> with EmailID : <strong>%s</strong>' %(u.first_name , u.email) ]
+                        ctx = {
+                            'heading' : 'Welcome to Ecommerce',
+                            'recieverName' : 'Admin',
+                            'message': msgBody,
+                            'linkUrl': 'sterlingselect.com',
+                            'linkText' : 'View Online',
+                            'sendersAddress' : 'sterlingselect',
+                            'sendersPhone' : '841101',
+                            'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
+                            'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
+                            'twitterUrl' : 'twitter.com',
+                            'brandName' : globalSettings.BRAND_NAME,
+                        }
+
+                        email_body = get_template('app.homepage.permission.html').render(ctx)
+                        print email_body
+                        email_subject = 'Permission for the new user'
+                        sentEmail=[]
+                        sentEmail.append(str(adminData.email))
+                        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                        msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                        msg.content_subtype = 'html'
+                        msg.send()
+
+                    else:
+                        u.is_active = True
+                    if d['designation']:
+                        if d['designation'] == 'manager' or 'admin' or 'director':
+                            u.is_staff = True
+                        else:
+                            u.is_staff = False
+
+                    # u.is_active = True
+                    u.save()
+                    print u.profile.pk
+                    pobj = profile.objects.get(pk=u.profile.pk)
+                    try:
+                        pobj.details = d
+                    except:
+                        pass
+                    pobj.save()
+                    for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
+                        app = application.objects.get(name = a)
+                        p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
+                    login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
+                    instance.delete()
+                    return instance
+                else:
+                    raise SuspiciousOperation('Expired')
             else:
-                raise SuspiciousOperation('Expired')
+                if( d['token'] == instance.token and d['mobileOTP'] == instance.mobileOTP and d['emailOTP']== instance.emailOTP ):
+                    print "will create a new user"
+                    u = User(username = d['email'].split('@')[0])
+                    u.first_name = d['firstName']
+                    u.email = d['email']
+                    u.last_name = d['lastName']
+                    u.set_password(d['password'])
+                    if globalSettings.AUTO_ACTIVE_ON_REGISTER == False:
+                        u.is_active = False
+                        adminData =  User.objects.get(pk=1)
+                        print adminData.email
+                        msgBody = ['Provide the user permission for new registered customer Name : <strong>%s</strong> with EmailID : <strong>%s</strong>' %(u.first_name , u.email) ]
+                        ctx = {
+                            'heading' : 'Welcome to Ecommerce',
+                            'recieverName' : 'Admin',
+                            'message': msgBody,
+                            'linkUrl': 'sterlingselect.com',
+                            'linkText' : 'View Online',
+                            'sendersAddress' : 'sterlingselect',
+                            'sendersPhone' : '841101',
+                            'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
+                            'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
+                            'twitterUrl' : 'twitter.com',
+                            'brandName' : globalSettings.BRAND_NAME,
+                        }
+
+                        email_body = get_template('app.homepage.permission.html').render(ctx)
+                        print email_body
+                        email_subject = 'Permission for the new user'
+                        sentEmail=[]
+                        sentEmail.append(str(adminData.email))
+                        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                        msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                        msg.content_subtype = 'html'
+                        msg.send()
+
+                    else:
+                        u.is_active = True
+                    if d['designation']:
+                        if d['designation'] == 'manager' or 'admin' or 'director':
+                            u.is_staff = True
+                        else:
+                            u.is_staff = False
+                    u.save()
+                    print u.profile.pk
+                    pobj = profile.objects.get(pk=u.profile.pk)
+                    try:
+                        pobj.details = d
+                    except:
+                        pass
+                    pobj.save()
+                    for a in globalSettings.DEFAULT_APPS_ON_REGISTER:
+                        app = application.objects.get(name = a)
+                        p = permission.objects.create(app =  app, user = u , givenBy = User.objects.get(pk=1))
+                    login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
+                    instance.delete()
+                    return instance
+                else:
+                    raise SuspiciousOperation('Expired')
         else:
             d = self.context['request'].data;
             if( d['token'] == instance.token and d['mobileOTP'] == instance.mobileOTP ):
@@ -76,6 +181,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 print u, u.profile, u.profile.pk, u.profile.mobile ,'ddddddddd'
                 pobj = profile.objects.get(user=u)
                 pobj.mobile = d['mobile']
+                try:
+                    pobj.details = d
+                except:
+                    pass
                 pobj.save()
                 return instance
             else:
@@ -95,10 +204,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
         else:
             key = hashlib.sha1(salt+validated_data.pop('mobile')).hexdigest()
             reg.token = key
+        if not globalSettings.LITE_REGISTRATION:
+            if globalSettings.VERIFY_MOBILE:
+                reg.mobileOTP = generateOTPCode()
+                print reg.mobileOTP
+        else:
+                reg.mobileOTP = generateOTPCode()
+                print reg.mobileOTP
 
-        reg.mobileOTP = generateOTPCode()
-
-        print reg.mobileOTP,'aaaaaaaaaaaaaaaaaaaaaaaaa'
 
         if reg.email!=None:
             reg.emailOTP = generateOTPCode()
@@ -130,10 +243,13 @@ class RegistrationSerializer(serializers.ModelSerializer):
             msg = EmailMessage(email_subject, email_body, to= sentEmail)
             msg.content_subtype = 'html'
             msg.send()
-
-        url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
-        requests.get(url)
-
+        if not globalSettings.LITE_REGISTRATION:
+            if globalSettings.VERIFY_MOBILE:
+                url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+                requests.get(url)
+        else:
+                url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+                requests.get(url)
         reg.save()
         reg.emailOTP = ''
         reg.mobileOTP = ''

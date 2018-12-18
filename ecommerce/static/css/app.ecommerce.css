@@ -5,7 +5,10 @@
 	color:white;
 }
 
-:root { --themeColor: red;}
+h5{
+  font-size: 16px !important;
+}
+
 
 
 .glassyButton{
@@ -15,6 +18,7 @@
 	color:white;
 	cursor:pointer;
 }
+
 .glassyButton:hover{
 	background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;
 

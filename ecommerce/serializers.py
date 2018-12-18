@@ -36,7 +36,7 @@ class genericProductSerializer(serializers.ModelSerializer):
     parent = genericProductLiteSerializer(many = False, read_only = True)
     class Meta:
         model = genericProduct
-        fields = ('pk' , 'fields' , 'name' , 'minCost' , 'visual' , 'bannerImage' , 'parent')
+        fields = ('pk' , 'fields' , 'name' , 'minCost' , 'visual' , 'bannerImage' , 'parent' ,'restricted')
     def create(self , validated_data):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.configure'])
@@ -64,7 +64,7 @@ class genericProductSerializer(serializers.ModelSerializer):
         u = self.context['request'].user
         has_application_permission(u , ['app.ecommerce' , 'app.ecommerce.configure'])
 
-        for key in ['name', 'minCost', 'visual', 'bannerImage']:
+        for key in ['name', 'minCost', 'visual', 'bannerImage','restricted']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -141,12 +141,13 @@ class listingSerializer(serializers.ModelSerializer):
     added_cart = serializers.SerializerMethodField()
     added_saved = serializers.SerializerMethodField()
     in_stock = serializers.SerializerMethodField()
+    variantsInStoreQty = serializers.SerializerMethodField()
     product_variants = serializers.SerializerMethodField()
     # parentType = genericProductSerializer(many = False , read_only = True)
 
     class Meta:
         model = listing
-        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock','product_variants')
+        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock','variantsInStoreQty','product_variants','productIndex')
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
@@ -177,21 +178,20 @@ class listingSerializer(serializers.ModelSerializer):
         instance.source = self.context['request'].data['source']
         instance.product = Product.objects.get(pk = self.context['request'].data['product'])
         instance.save()
-
+        if 'productIndex' in self.context['request'].data:
+            instance.productIndex = self.context['request'].data['productIndex']
+            instance.save()
         if 'specifications' in self.context['request'].data:
             instance.specifications = self.context['request'].data['specifications']
             instance.save()
-
             for d in instance.dfs.all():
                 DataField.objects.get(pk = d.pk).delete()
-
             instance.dfs.clear()
             print json.loads(instance.specifications)
             for s in json.loads(instance.specifications):
                 dF = DataField(name = s['name'], value = s['value'] , typ = s['fieldType'] )
                 dF.save()
                 instance.dfs.add(dF)
-
         if 'files' in self.context['request'].data:
             instance.files.clear()
             for m in self.context['request'].data['files']:
@@ -199,7 +199,6 @@ class listingSerializer(serializers.ModelSerializer):
                 # mObj = media.objects.get(pk = m)
                 # mObj.id =
                 instance.files.add(media.objects.get(pk = m))
-
         instance.save()
         return instance
 
@@ -225,12 +224,22 @@ class listingSerializer(serializers.ModelSerializer):
         else:
             return 'false'
 
+    def get_variantsInStoreQty(self , obj):
+        try:
+            # pvList = list(obj.product.parentProducts.all().values_list('pk',flat=True))
+            storeQtyObj = list(StoreQty.objects.filter(product=obj.product).values('quantity','pk','store','productVariant','product'))
+            # print storeQtyObj,'***********',obj.product.name
+        except:
+            storeQtyObj = []
+            # print 'errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
+        return storeQtyObj
+
     def get_product_variants(self , obj):
-        prodVar = ProductVerient.objects.filter(parent = obj.product.pk)
+        prodVar = ProductVerient.objects.filter(parent = obj.product)
         return prodVar.values()
 
 
-from django.db.models import Avg
+from django.db.models import Avg, Value, CharField
 
 class listingLiteSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
@@ -241,10 +250,11 @@ class listingLiteSerializer(serializers.ModelSerializer):
     added_cart = serializers.SerializerMethodField()
     added_saved = serializers.SerializerMethodField()
     in_stock = serializers.SerializerMethodField()
+    variantsInStoreQty = serializers.SerializerMethodField()
     product_variants = serializers.SerializerMethodField()
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock','product_variants')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock','product_variants','variantsInStoreQty','productIndex')
     def get_rating(self , obj):
         return obj.ratings.all().aggregate(Avg('rating'))
 
@@ -275,9 +285,22 @@ class listingLiteSerializer(serializers.ModelSerializer):
         else:
             return 'false'
 
+    def get_variantsInStoreQty(self , obj):
+        try:
+            # pvList = list(obj.product.parentProducts.all().values_list('pk',flat=True))
+            storeQtyObj = list(StoreQty.objects.filter(product=obj.product).values('quantity','pk','store','productVariant','product'))
+            # print storeQtyObj,'***********',obj.product.name
+        except:
+            storeQtyObj = []
+            # print 'errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
+        return storeQtyObj
+
     def get_product_variants(self , obj):
-        prodVar = ProductVerient.objects.filter(parent = obj.product.pk)
+        prodVar = ProductVerient.objects.filter(parent = obj.product)
         return prodVar.values()
+
+
+
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -288,7 +311,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class PagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pages
-        fields = ( 'pk', 'created' , 'updated' ,'title' , 'pageurl' , 'body')
+        fields = ( 'pk', 'created' , 'updated' ,'title' , 'pageurl' , 'body' ,'topLevelMenu','bottomMenu')
 
 class offerBannerSerializer(serializers.ModelSerializer):
     page = PagesSerializer(many = False , read_only = True)
@@ -320,7 +343,7 @@ class CartSerializer(serializers.ModelSerializer):
     prod_howMuch = serializers.SerializerMethodField()
     class Meta:
         model = Cart
-        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice','prod_howMuch')
+        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice','prod_howMuch','desc')
     def create(self , validated_data):
     	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 
@@ -430,11 +453,11 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
     trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc')
 
     def update(self ,instance, validated_data):
         print 'updateeeeeeeeeeeeeeeeeee'
-        for key in ['product', 'qty' ,'totalAmount' , 'status' , 'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes',]:
+        for key in ['product', 'qty' ,'totalAmount' , 'status' , 'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','desc']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -496,7 +519,7 @@ class OrderSerializer(serializers.ModelSerializer):
     promoDiscount = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount')
+        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges')
         read_only_fields = ('user',)
     def get_promoDiscount(self, obj):
         pD = Promocode.objects.filter(name = obj.promoCode)
@@ -566,4 +589,4 @@ class genericPincodeSerializer(serializers.ModelSerializer):
 class genericImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenericImage
-        fields = ( 'pk', 'backgroundImage' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage')
+        fields = ( 'pk' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage','topBanner','topMobileBanner')

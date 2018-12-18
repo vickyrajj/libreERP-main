@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <h3>Create Manifest for {{data.name}}</h3>
+</div>
+<div class="modal-body">
+
+  <span style="padding-right:15px"> <strong>User: </strong>  {{createManifestForm.user | getName}}</span>
+  <span style="padding-right:15px;"> <strong>Quantity: </strong>  {{createManifestForm.quantity}}</span>
+
+  <div class="form-group" style="padding-top:15px;">
+    <label>Special Intructions : </label>
+    <textarea type="text" class="form-control" ng-model="createManifestForm.specialInstruction" id="" placeholder="Write special instructions here..." ></textarea>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" ng-click="create()">Create</button>
+</div>

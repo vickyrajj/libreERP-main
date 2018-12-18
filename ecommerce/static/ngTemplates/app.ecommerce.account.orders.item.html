@@ -1,4 +1,4 @@
- <div class="container-fluid card" style="padding:20px; border-left:4px solid #0c9a9e;position:relative;">
+ <div class="container-fluid card" style="padding:20px; border-left:4px solid #0c9a9e;position:relative;" ng-controller="controller.ecommerce.account.orders.item" >
   <div class="row">
     <strong> Order No. : #{{data.pk}} </strong>
   </div>
@@ -6,7 +6,7 @@
     <div class="col-md-9 hidden-sm hidden-xs">
       <div class="row">
         <div class="col-md-3 hidden-sm hidden-xs">
-          <span style="font-size:15px;" > Total Amount : <i class="fa fa-inr"></i> {{data.totalAmount}} </span>
+          <span style="font-size:15px;" > Total Amount : <i class="fa {{currency}}"></i> {{data.totalAmount}} </span>
         </div>
         <div class="col-md-3 hidden-sm hidden-xs">
           <span style="font-size:15px;" > Payment Mode : {{data.paymentMode}} </span>
@@ -33,7 +33,7 @@
     <div class="col-xs-8 col-sm-8 hidden-md hidden-lg">
       <div class="row">
         <div class="col-xs-12 col-sm-3 hidden-md hidden-lg">
-          <span style="font-size:10px;" > Total Amount : <i class="fa fa-inr"></i> {{data.totalAmount}} </span>
+          <span style="font-size:10px;" > Total Amount : <i class="fa {{currency}}"></i> {{data.totalAmount}} </span>
         </div>
         <div class="col-xs-12 col-sm-3 hidden-md hidden-lg">
           <span style="font-size:10px;" > Payment Mode : {{data.paymentMode}} </span>
@@ -82,11 +82,14 @@
           <div class="col-md-1 col-sm-1 hidden-xs" >
             <strong>Qty </strong>
           </div>
-          <div class="col-md-3 col-sm-3  hidden-xs">
+          <div class="col-md-2 col-sm-2  hidden-xs">
             <strong>Amount</strong>
           </div>
-          <div class="col-md-3 col-sm-3  hidden-xs">
+          <div class="col-md-2 col-sm-2  hidden-xs">
             <strong>Status </strong>
+          </div>
+          <div class="col-md-2 col-sm-2  hidden-xs">
+            <strong>Track </strong>
           </div>
         </div>
         <div class="row" ng-repeat="i in data.orderQtyMap">
@@ -95,16 +98,24 @@
           </div>
           <div class="col-md-4 col-sm-4 hidden-xs">
             <span ng-if="i.prodVar==undefined"> {{i.productName.slice(0,25)}} {{i.product.product.howMuch}}{{i.product.product.unit | getUnit}}</span>
-            <span ng-if="i.prodVar"> {{i.productName.slice(0,25)}} {{i.prodVar[0].unitPerpack * i.product.product.howMuch| convertUnit:i.product.product.unit}} </span>
+            <span ng-if="i.prodVar">
+              <span ng-if="i.product.product.unit!='Size and Color'&&i.product.product.unit!='Size'"> {{i.productName.slice(0,25)}} {{i.prodVar[0].unitPerpack * i.product.product.howMuch| convertUnit:i.product.product.unit}}
+              </span>
+              <span ng-if="i.product.product.unit=='Size and Color'||i.product.product.unit=='Size'"> {{i.productName.slice(0,25)}} {{i.prodVar[0].unitPerpack | convertSize:i.product.product.unit}} {{i.desc}}
+              </span>
+               </span>
           </div>
           <div class="col-md-1 col-sm-1 hidden-xs">
             {{i.qty}}
           </div>
-          <div class="col-md-3 col-sm-3 hidden-xs">
-            <i class="fa fa-inr"></i> {{(i.ppAfterDiscount * i.qty).toFixed(2)}}
+          <div class="col-md-2 col-sm-2 hidden-xs">
+            <i class="fa {{currency}}"></i> {{(i.ppAfterDiscount * i.qty).toFixed(2)}}
           </div>
-          <div class="col-md-3 col-sm-3 hidden-xs" >
+          <div class="col-md-2 col-sm-2 hidden-xs" >
             {{i.status}}
+          </div>
+          <div class="col-md-2 col-sm-2 hidden-xs text-center" >
+            <i class="fa fa-info fa-lg" ng-click="showDetails(i)"></i>
           </div>
         </div>
         <div class="row" ng-repeat="i in data.orderQtyMap">
@@ -121,13 +132,18 @@
           <div class="col-xs-1 hidden-sm  hidden-md hidden-lg">
             {{i.qty}}
           </div>
-          <div class="col-xs-5 hidden-sm hidden-md hidden-lg">
-            <i class="fa fa-inr"></i> {{(i.ppAfterDiscount * i.qty).toFixed(2)}}
+          <div class="col-xs-5 hidden-sm hidden-md hidden-lg" style="cursor:pointer;">
+            <i class="fa {{currency}}" ></i> {{(i.ppAfterDiscount * i.qty).toFixed(2)}}
           </div>
-          <div class="col-xs-5 hidden-sm  hidden-md hidden-lg">
+          <div class="col-xs-4 hidden-sm  hidden-md hidden-lg">
             {{i.status}}
           </div>
+          <div class="col-xs-1 hidden-sm  hidden-md hidden-lg text-center">
+            <i class="fa fa-info" ng-click="showDetails(i)"></i>
+          </div>
+
         </div>
+
         </div>
         </div>
       </div>

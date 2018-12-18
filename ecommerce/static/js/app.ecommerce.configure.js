@@ -437,18 +437,29 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     console.log(indx,'kkkkkkkkkkkkkkkkkk');
   }
 
-  
+
   $http({method : 'GET' , url : '/api/ecommerce/addPincode/'}).
   then(function(response) {
     $scope.pincodelist=response.data
   })
 
 
+  $scope.topStaticBanner = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=topStaticBanner').
+  then(function(response) {
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.topStaticBanner = true
+      }
+    }
+  })
+
+
   $scope.addImage = function(){
     var fd = new FormData();
-    if ($scope.form.backgroundImage != null && typeof $scope.form.backgroundImage != 'string') {
-      fd.append('backgroundImage', $scope.form.backgroundImage);
-    }
+    // if ($scope.form.backgroundImage != null && typeof $scope.form.backgroundImage != 'string') {
+    //   fd.append('backgroundImage', $scope.form.backgroundImage);
+    // }
     if ($scope.form.cartImage != null && typeof $scope.form.cartImage != 'string') {
       fd.append('cartImage', $scope.form.cartImage);
     }
@@ -463,6 +474,12 @@ app.controller('businessManagement.ecommerce.configure', function($scope, $uibMo
     }
     if ($scope.form.blogPageImage != null && typeof $scope.form.blogPageImage != 'string') {
       fd.append('blogPageImage',$scope.form.blogPageImage);
+    }
+    if ($scope.form.topBanner != null && typeof $scope.form.topBanner != 'string') {
+      fd.append('topBanner',$scope.form.topBanner);
+    }
+    if ($scope.form.topMobileBanner != null && typeof $scope.form.topMobileBanner != 'string') {
+      fd.append('topMobileBanner',$scope.form.topMobileBanner);
     }
     $http({method : 'GET' , url : '/api/ecommerce/genericImage/'}).
     then(function(response) {
@@ -585,6 +602,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
       default: '',
       fields: [],
       minCost: 0,
+      restricted:false,
       visual: emptyFile,
       bannerImage:emptyFile
     }
@@ -705,6 +723,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
       fd.append('name', d.name);
       fd.append('fields', fs);
       fd.append('minCost', d.minCost);
+      fd.append('restricted', d.restricted);
       if (d.parent != null && d.parent.pk != undefined) {
         fd.append('parent', d.parent.pk);
       }
@@ -743,6 +762,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
             default: '',
             fields: [],
             minCost: 0,
+            restricted:false,
             visual: emptyFile,
             bannerImage:emptyFile
           };
@@ -777,6 +797,7 @@ app.controller('businessManagement.ecommerce.configure.form', function($scope, $
             default: '',
             fields: [],
             minCost: 0,
+            restricted:false,
             visual: emptyFile,
             bannerImage:emptyFile
           }

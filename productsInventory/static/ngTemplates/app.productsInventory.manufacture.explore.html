@@ -1,6 +1,9 @@
 <div class="container-fluid" ng-controller="businessManagement.productsInventory.manufacture.explore">
   <div class="row" style="margin-top:30px">
     <div class="col-md-3">
+      <div class="container-fluid">
+        <strong style="font-size:18px;" > {{data.name}} </strong>
+      </div>
       <div class="container-fluid text-center">
         <img ng-src="{{data.displayPicture}}" style="width:200px;height:200px">
       </div>
@@ -89,13 +92,19 @@
     </div>
     <div class="col-md-9" style="border-left:1px solid #eeeeee;min-height:70vh">
         <div class="container-fluid">
+
           <div class="col-md-4" style="padding:15px">
             <div class="form-group">
-              <label>Products</label>
+              <label>Product</label>
               <input type="number" class="form-control" ng-model="data.totalQuantity">
             </div>
           </div>
-          <div class="col-md-8 text-right" style="padding-top:40px">
+
+          <div class="col-md-4" style="padding-top:40px">
+            <button type="button" name="button" class="btn btn-primary" ng-click="createManifest()">Create Manifest</button>
+          </div>
+
+          <div class="col-md-4 text-right" style="padding-top:40px">
             <button type="button" name="button" class="btn btn-primary" ng-click="save()">Save</button>
           </div>
           <table class="table table-striped">
@@ -112,8 +121,8 @@
             <tbody>
               <tr ng-repeat="c in data.categoriesList">
                 <td style="width:30%">{{c.category.name}}</td>
-                <td style="width:13%;text-align: center">{{c.qty}}</td>
-                <td style="width:12%;text-align: center">{{c.qty * data.totalQuantity}}</td>
+                <td style="width:13%;text-align: center"> <span>{{c.qty | convertUnit: c.unit}}  </span> </td>
+                <td style="width:12%;text-align: center">{{(c.qty * data.totalQuantity).toFixed(2) | convertUnit: c.unit }}</td>
                 <td style="width:12%;text-align: center">{{c.category.inStock}}</td>
                 <td style="width:10%;text-align: center"><div class="btn btn-danger" ng-if="c.category.inStock < (c.qty * data.totalQuantity)" ng-click="reorder($index)">
                   Reorder

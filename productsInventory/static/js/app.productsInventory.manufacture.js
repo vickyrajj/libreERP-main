@@ -193,15 +193,15 @@ app.controller("businessManagement.productsInventory.manufacture.form", function
       $scope.form.pk = response.data.pk;
       Flash.create('success', 'Saved')
     }, function(err) {
-      Flash.create('danger' , 'Profile already available, please edit')
+      Flash.create('danger', 'Profile already available, please edit')
     })
   }
 
 
 });
 
-app.controller("businessManagement.productsInventory.manufacture.reorder", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$uibModalInstance, $rootScope , category ,qtyReq , $rootScope) {
-  console.log('ssssssssssssssssssss',category);
+app.controller("businessManagement.productsInventory.manufacture.reorder", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $uibModalInstance, $rootScope, category, qtyReq, $rootScope) {
+  console.log('ssssssssssssssssssss', category);
   $scope.category = category
   $scope.selectedVendor = ''
   $http({
@@ -211,17 +211,19 @@ app.controller("businessManagement.productsInventory.manufacture.reorder", funct
   then(function(response) {
     $scope.vendors = response.data;
   })
-  $scope.reorder ={qty:qtyReq}
+  $scope.reorder = {
+    qty: qtyReq
+  }
   $scope.$watch('reorder.qty', function(newValue, oldValue) {
-    if (newValue < qtyReq ) {
+    if (newValue < qtyReq) {
       $scope.reorder.qty = qtyReq
     }
   });
-  $scope.selectVendor = function(obj){
+  $scope.selectVendor = function(obj) {
     $scope.selectedVendor = obj
     console.log($scope.selectedVendor);
   }
-  $scope.saveReorder = function(){
+  $scope.saveReorder = function() {
     console.log($scope.reorder.qty);
     if (typeof $scope.selectedVendor != 'object') {
       Flash.create('warning', 'Please Select One Of The Vendors');
@@ -250,10 +252,14 @@ app.controller("productsInventory.manufacture.reorderSend.modelForm", function($
     $scope.count = 0
     for (var j = 0; j < $scope.POs.length; j++) {
       if (pk == $scope.POs[j].reorderVendor.vendor.service.pk) {
-        $scope.POs[i].products.push({product:$scope.POs[j].category,qty:$scope.POs[j].reorderVendor.qty,rate:$scope.POs[j].reorderVendor.rate})
+        $scope.POs[i].products.push({
+          product: $scope.POs[j].category,
+          qty: $scope.POs[j].reorderVendor.qty,
+          rate: $scope.POs[j].reorderVendor.rate
+        })
         $scope.count = $scope.count + 1
         if ($scope.count > 1) {
-          $scope.POs.splice(j,1)
+          $scope.POs.splice(j, 1)
         }
       }
     }
@@ -287,7 +293,7 @@ app.controller("productsInventory.manufacture.reorderSend.modelForm", function($
   }
 
 
-  console.log('777777777777777',$scope.POs);
+  console.log('777777777777777', $scope.POs);
 
 
   $scope.showbtn = true
@@ -328,7 +334,7 @@ app.controller("businessManagement.productsInventory.manufacture.explore", funct
 
 
   $scope.data = $scope.tab.data;
-  console.log('gfghfhgfh', $scope.data,typeof $scope.data.compositionQtyMap);
+  console.log('gfghfhgfh', $scope.data, typeof $scope.data.compositionQtyMap);
   if (typeof $scope.data.compositionQtyMap == 'string') {
     $scope.data.compositionQtyMap = JSON.parse($scope.data.compositionQtyMap)
   }
@@ -343,21 +349,26 @@ app.controller("businessManagement.productsInventory.manufacture.explore", funct
   then(function(response) {
     $scope.data.skuData = response.data;
   })
-  for (var i = 0; i < $scope.data.compositions .length; i++) {
-    $scope.data.categoriesList.push({
-      category : $scope.data.compositions[i],
-      qty : $scope.data.compositionQtyMap[i].qty
-    })
+  var tempOb;
+  for (var i = 0; i < $scope.data.compositions.length; i++) {
+    tempOb = {
+      category: $scope.data.compositions[i],
+      qty: $scope.data.compositionQtyMap[i].qty
+    }
+    if ($scope.data.compositionQtyMap[i].unit) {
+      tempOb.unit = $scope.data.compositionQtyMap[i].unit
+    }
+    $scope.data.categoriesList.push(tempOb)
   }
   $scope.$watch('data.totalQuantity', function(newValue, oldValue) {
-    if (newValue < 1 ) {
+    if (newValue < 1) {
       $scope.data.totalQuantity = 1
     }
   });
 
-  $scope.reorder = function(idx){
+  $scope.reorder = function(idx) {
     $scope.idx = idx
-    console.log($scope.data.compositions[idx],$scope.data.categoriesList[idx]);
+    console.log($scope.data.compositions[idx], $scope.data.categoriesList[idx]);
     $scope.qtyReq = $scope.data.totalQuantity * $scope.data.categoriesList[idx].qty - $scope.data.compositions[idx].inStock
     console.log($scope.qtyReq);
     $uibModal.open({
@@ -386,6 +397,52 @@ app.controller("businessManagement.productsInventory.manufacture.explore", funct
       console.log($scope.data.categoriesList);
 
     });
+  }
+
+  $scope.createManifest = function() {
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.productsInventory.manufacture.createManifest.Modal.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return $scope.data;
+        },
+        me: function() {
+          return $scope.me;
+        }
+      },
+      controller: function($scope, data, me, $http, Flash, $uibModal, $uibModalInstance, $rootScope) {
+        console.log('data', data);
+        $scope.data = data;
+        $scope.me = me;
+        $scope.createManifestForm = {
+          user: $scope.me.pk,
+          product: $scope.data.pk,
+          quantity: $scope.data.totalQuantity,
+          specialInstruction: ''
+        }
+
+        $scope.create = function() {
+          $http({
+            method: 'POST',
+            url: '/api/POS/manufactureManifest/',
+            data: $scope.createManifestForm
+          }).then(function(response) {
+            console.log('response');
+            $uibModalInstance.dismiss()
+          })
+        }
+
+
+      },
+    }).result.then(function() {
+      Flash.create('success', 'Created')
+    }, function() {
+      // $rootScope.$broadcast('forceRefetch' , {});
+    });
+
   }
 
   $scope.save = function() {
@@ -455,7 +512,8 @@ app.controller("businessManagement.productsInventory.manufacture.explore", funct
 app.controller("businessManagement.productsInventory.manufacture", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope) {
 
   $scope.data = {
-    tableData: []
+    tableData: [],
+    inProcessData: []
   };
 
   views = [{
@@ -471,7 +529,10 @@ app.controller("businessManagement.productsInventory.manufacture", function($sco
     url: '/api/POS/product/',
     searchField: 'name',
     itemsNumPerView: [16, 32, 48],
-    getParams : [{key : 'haveComposition' , value : true}]
+    getParams: [{
+      key: 'haveComposition',
+      value: true
+    }]
   }
 
 
@@ -485,7 +546,7 @@ app.controller("businessManagement.productsInventory.manufacture", function($sco
         var appType = 'profuctInfo';
 
         $scope.addTab({
-          title: title + $scope.data.tableData[i].pk +' ',
+          title: title + $scope.data.tableData[i].pk + ' ',
           cancel: true,
           app: appType,
           data: $scope.data.tableData[i],
@@ -517,6 +578,82 @@ app.controller("businessManagement.productsInventory.manufacture", function($sco
     if (!alreadyOpen) {
       $scope.tabs.push(input)
     }
+  }
+
+
+
+  //following code is related to in-process
+
+  inProcessviews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.productsInventory.manufacture.inProgress.items.html',
+  }];
+
+
+  $scope.inProcessConfig = {
+    views: inProcessviews,
+    url: '/api/POS/manufactureManifest/',
+    searchField: 'name',
+    itemsNumPerView: [16, 32, 48]
+  }
+
+
+  $scope.inProcessTableAction = function(target, action, mode) {
+    console.log(target, action, mode);
+    console.log($scope.data.inProcessData);
+
+    for (var i = 0; i < $scope.data.inProcessData.length; i++) {
+      if ($scope.data.inProcessData[i].pk == parseInt(target)) {
+        if (action == 'openModal') {
+          $scope.openInProgressModal(i);
+        }
+      }
+    }
+  }
+
+
+  $scope.openInProgressModal = function(index) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.productsInventory.manufacture.inProgressModal.html',
+      size: 'lg',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return $scope.data.inProcessData[index]
+        },
+        index: function() {
+          return index
+        }
+      },
+      controller: function($scope, index, data, $uibModalInstance) {
+        $scope.data = data
+        console.log($scope.data);
+        $scope.tempStatus = $scope.data.status
+
+        $scope.changeStatus = function() {
+
+          if ($scope.tempStatus!=$scope.data.status) {
+            $http({
+              method: 'PATCH',
+              url: '/api/POS/manufactureManifest/' + $scope.data.pk + '/',
+              data: {
+                status: $scope.tempStatus
+              }
+            }).then(function(response) {
+              $scope.data.status = response.data.status
+            })
+          }
+
+        }
+
+      },
+    }).result.then(function() {
+
+    }, function() {
+
+    });
   }
 
 });

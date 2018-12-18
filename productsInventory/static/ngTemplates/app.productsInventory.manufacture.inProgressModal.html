@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <h3>{{data.product.name}}</h3>
+</div>
+<div class="modal-body">
+
+  <div class="row">
+    <div class="col-md-6">
+      <h4><strong>Created By:  </strong> {{data.user | getName}} </h4>
+    </div>
+    <div class="col-md-6">
+      <h4><strong>Special Instructions:  </strong> {{data.specialInstruction}} </h4>
+    </div>
+  </div>
+
+  <div class="row" style="padding-top:15px;">
+    <div class="col-md-2">
+      <h4><strong>Status:  </strong> </h4>
+    </div>
+    <div class="col-md-4">
+      <select class="form-control" ng-model="tempStatus">
+        <option value="Created">Created</option>
+        <option value="Started">Started</option>
+        <option value="Completed">Completed</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <button type="button" class="btn btn-primary" ng-click ="changeStatus()">Change</button>
+    </div>
+  </div>
+
+
+  <!-- <div class="row" ng-if="data.status!='Completed'">
+    <div class="col-md-6" ng-if="data.status=='Created'">
+      <div class="row text-center">
+        <button type="button" class="text-center btn btn-primary" ng-click="changeStatus('Started')"> Started </button>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row text-center">
+        <button type="button" class="btn btn-success" ng-click="changeStatus('Completed')"> Completed </button>
+      </div>
+    </div>
+  </div> -->
+
+  <div class="row text-center" style="padding-top:15px" ng-if="data.status=='Completed'" >
+    <p style="color:green" >Order Completed !</p>
+  </div>
+
+</div>

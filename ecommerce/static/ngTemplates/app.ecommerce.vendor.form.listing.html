@@ -3,37 +3,28 @@
     <div  class="col-md-6">
 
       <!-- <div class="form-group">
-        <label>Title</label>
-        <input class="form-control" type="text" ng-model = "data.form.title" >
-      </div>
-
-      <div class="form-group">
-        <label>Description</label>
-        <textarea ng-model = "data.form.description" class="form-control"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Price Model</label>
-        <select class="form-control" ng-model = "data.form.priceModel">
-          <option value = "quantity">Quantity</option>
-          <option value = "weight">Weight</option>
-          <option value = "time">Time</option>
-          <option value = "custom">Custom</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Category</label>
-        <select class="form-control" ng-model = "data.form.category">
-          <option value = "product">Product</option>
-          <option value = "service">Service</option>
-        </select>
-      </div> -->
-      <div class="form-group">
         <label>Product</label>
         <input uib-typeahead="p as p.name for p in productSearch($viewValue)" class="form-control" type="text" ng-model = "data.form.product" placeholder="Search By Product Name">
-      </div>
+          <span class="input-group-addon" ng-click="refresh()" style="cursor:pointer; background-color:#fff;" >New</span>
+      </div> -->
 
+      <div class="row">
+        <div class="col-md-12" style="padding:0px">
+
+          <label  ng-if=data.form.product.pk>Category</label>
+          <div  ng-if=data.form.product.pk>
+            <input uib-typeahead="c as c.name for c in genericProductSearch($viewValue)" class="form-control" type="text" ng-model = "data.genericProduct" placeholder="Search By Category Name">
+          </div>
+
+          <label>Product</label>
+          <div class="input-group">
+            <input uib-typeahead="p as p.name for p in productSearch($viewValue)" class="form-control" type="text" ng-model = "data.form.product" placeholder="Search By Product Name">
+            <span class="input-group-addon" ng-if=!data.form.product.pk ng-click="openProductmodal()" style="cursor:pointer; background-color:#fff;" >New</span>
+            <span class="input-group-addon" ng-if=data.form.product.pk ng-click="openProductmodal()" style="cursor:pointer; background-color:#fff;" >Edit</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
       <div ng-repeat="f in data.genericProduct.fields">
         <div class="form-group">
           <!-- {{f.data}} -->
@@ -56,13 +47,21 @@
           <p class="help-block">{{f.helpText}}.</p>
         </div>
 
+
+      </div>
+      <div style="margin-top:5px;margin-bottom:10px">
+        <label >Product Index</label>
+        <input class="form-control" type="number" ng-model="data.form.productIndex">
       </div>
       <div class="btn-group">
         <button ng-if="false" type="button" class="btn btn-default" ng-click="preview()">Preview </button>
         <button type="button" class="btn btn-primary" ng-click="submitListing()">Submit </button>
       </div>
+    </div>
+  </div>
 
     </div>
+  </div>
     <div class="col-md-6">
       <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
