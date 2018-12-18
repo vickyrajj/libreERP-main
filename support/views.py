@@ -199,13 +199,23 @@ def purchaseOrder(response , project , purchaselist , request):
 
     p1 = Paragraph("<para alignment='center'fontSize=15  ><b> PURCHASE ORDER </b></para>",styles['Normal'])
 
+
     elements.append(p1)
 
-    p2 = Paragraph("<para fontSize=10 ><b> BRUDERER AG </b></para>",styles['Normal'])
-    p3 = Paragraph("<para fontSize=8  >Egnacherstrasse 44,</para>",styles['Normal'])
-    p4 =  Paragraph("<para fontSize=8 >CH-9320</para>",styles['Normal'])
-    p5 = Paragraph("<para fontSize=8 >Frasnacht</para>",styles['Normal'])
-    p6 = Paragraph("<para fontSize=8 >Switzerland</para>",styles['Normal'])
+
+    if project.vendor == None:
+        p2 = Paragraph("<para fontSize=10 ><b>Name</b></para>",styles['Normal'])
+        p3 = Paragraph("<para fontSize=8  >Street</para>",styles['Normal'])
+        p4 =  Paragraph("<para fontSize=8 >city</para>",styles['Normal'])
+        p5 = Paragraph("<para fontSize=8 >state</para>",styles['Normal'])
+        p6 = Paragraph("<para fontSize=8 >country</para>",styles['Normal'])
+    else:
+        p2 = Paragraph("<para fontSize=10 ><b>{0}</b></para>".format(project.vendor.name.upper()),styles['Normal'])
+        p3 = Paragraph("<para fontSize=8  >{0}</para>".format(project.vendor.street),styles['Normal'])
+        p4 =  Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.city),styles['Normal'])
+        p5 = Paragraph("<para fontSize=8 >{0}-{1}</para>".format(project.vendor.state,project.vendor.pincode),styles['Normal'])
+        p6 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.country),styles['Normal'])
+
 
     elements.append(Spacer(1, 10))
     elements.append(p2)

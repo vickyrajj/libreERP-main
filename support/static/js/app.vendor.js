@@ -17,7 +17,7 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
     filterSearch: true,
     searchField: 'name',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [6, 12, 18],
     // getParams: [{
     //   key: 'name',
     //   value: true
@@ -87,9 +87,9 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
       $scope.tabs.push(input)
     }
   }
+});
 
-
-
+app.controller("businessManagement.vendor.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
   $scope.form = {
     name: '',
     mobile: '',
@@ -117,6 +117,7 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
   if (typeof $scope.tab == 'undefined') {
     $scope.mode = 'new';
     $scope.resetForm()
+    console.log($scope.form ,'jjjjjjjjjjjj');
   } else {
     $scope.mode = 'edit';
     $scope.form = $scope.data.tableData[$scope.tab.data.index]
@@ -124,7 +125,9 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
 
 
   $scope.createVendor = function() {
-    console.log('rfsefdsfgrtret--------------');
+
+    var method = 'POST'
+    var Url = 'api/support/vendor/'
     var dataTosend = {
       name: $scope.form.name,
       mobile: $scope.form.mobile,
@@ -136,15 +139,24 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
       state: $scope.form.state,
       country: $scope.form.country,
     };
+    if ($scope.mode == 'edit') {
+      method = 'PATCH'
+      Url = Url + $scope.form.pk + '/'
+    }
     $http({
-      method: 'POST',
-      url: 'api/support/vendor/',
+      method: method,
+      url: Url,
       data: dataTosend
     }).
     then(function(response) {
       console.log('hhhhhhhhhhh');
       Flash.create('success', 'Saved');
-      $scope.resetForm()
+      if ($scope.mode == 'edit') {
+        return
+      }else{
+        $scope.resetForm()
+      }
+
     });
   }
 

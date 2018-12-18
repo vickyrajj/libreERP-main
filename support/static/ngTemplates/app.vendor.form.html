@@ -1,3 +1,4 @@
+<div ng-controller="businessManagement.vendor.form">
 <div class="container-fluid" ng-if="mode=='new'">
   <h3>Create a new Vendor Form</h3>
 </div>
@@ -43,9 +44,10 @@
     <input type="text" ng-model="form.country" class="form-control" placeholder="Country">
   </div>
   <div class="btn-group pull-right">
-    <button type="button" class="btn btn-default" ng-click="resetForm()">
+    <button ng-if="mode=='new'" type="button" class="btn btn-default" ng-click="resetForm()">
       Reset
     </button>
     <button type="button" class="btn btn-primary pull-right" ng-click="createVendor()">Save</button>
   </div>
+</div>
 </div>
