@@ -279,6 +279,7 @@ EMAIL_HOST_PASSWORD = '51GX4]N1_0uw'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_API=True
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@24tutors.com'
 # Static files (CSS, JavaScript, Images)

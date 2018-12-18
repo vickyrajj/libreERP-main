@@ -94,6 +94,9 @@ import ast
 from flask import Markup
 from PIM.models import blogPost
 from django.db.models.functions import Concat
+import sendgrid
+import os
+from sendgrid.helpers.mail import *
 
 # Create your views here.
 
