@@ -40,6 +40,6 @@ urlpatterns = [
     url(r'bulklistingCreation/$' , BulklistingCreationAPIView.as_view() ),
     url(r'updateCart/$' , UpdateCartAPIView.as_view() ),
     url(r'getinStock/$' , GetInStockAPIView.as_view() ),
-
-
+    url(r'searchCountry/$' , SearchCountryAPI.as_view()),
+    url(r'shipmentCharge/$' , ShipmentChargeAPI.as_view()),
 ]
