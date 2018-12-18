@@ -32,16 +32,16 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
     var now = new Date();
     var timeSpent = (now.getTime() - startTime.getTime()) / 1000;
     startTime = new Date();
-    console.log('time spent', timeSpent, 'on', $rootScope.previousState);
+    // console.log('time spent', timeSpent, 'on', $rootScope.previousState);
 
 
     function getCookie(cname) {
-      console.log(cname, '##################################');
+      // console.log(cname, '##################################');
       var name = cname + "=";
       var decodedCookie = decodeURIComponent(document.cookie);
-      console.log(decodedCookie, 'hhhhhhhhhhhhhhhhhhhhhh');
+      // console.log(decodedCookie, 'hhhhhhhhhhhhhhhhhhhhhh');
       var ca = decodedCookie.split(';');
-      console.log(ca);
+      // console.log(ca);
       for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) == ' ') {
@@ -56,7 +56,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
 
 
     function setCookie(cname, cvalue, exdays) {
-      console.log('set cookie');
+      // console.log('set cookie');
       var d = new Date();
       d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
       var expires = "expires=" + d.toUTCString();
@@ -65,7 +65,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
 
     if (me != null) {
       if ($rootScope.previousState == '') {
-        console.log('logged in ');
+        // console.log('logged in ');
         dataToSend = {
           user: me.pk,
           typ: 'loggedIn'
@@ -116,9 +116,9 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
         })
       }
     } else {
-      console.log('cookieeee', $rootScope.previousState);
+      // console.log('cookieeee', $rootScope.previousState);
       if ($rootScope.previousState == 'details') {
-        console.log(fromParams);
+        // console.log(fromParams);
         var data = {
           timeSpent: timeSpent,
           product: fromParams.id
@@ -131,7 +131,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$users', '$http', function($ro
         }
         detail = getCookie("unknownUserRecentViewed");
         if (detail != "") {
-          console.log('already there');
+          // console.log('already there');
           document.cookie = encodeURIComponent("unknownUserRecentViewed") + "=deleted; expires=" + new Date(0).toUTCString()
         }
         setCookie("unknownUserRecentViewed", JSON.stringify(dataToSend), 365);
@@ -236,7 +236,7 @@ app.config(function($stateProvider) {
 });
 
 app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
-  console.log('bloggggggggggggggggggggggggggggggggggg', BRAND_TITLE);
+  // console.log('bloggggggggggggggggggggggggggggggggggg', BRAND_TITLE);
   $window.scrollTo(0, 0)
   document.title = BRAND_TITLE + ' |  Blog'
   document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping Blogs')
@@ -302,7 +302,7 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
   $scope.me = $users.get('mySelf');
   // if($scope.me!=null){
   $scope.$watch('match', function(newValue, oldValue) {
-    console.log($scope.match);
+    // console.log($scope.match);
     $scope.match.model.added = 0
     if ($scope.me) {
       if ($rootScope.inCart != undefined) {
@@ -357,7 +357,7 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
 
 
 
-    console.log('coming here', model);
+    // console.log('coming here', model);
     var dataToSend = {
       product: model.pk,
       qty: 1,
@@ -365,7 +365,7 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
       user: $users.get('mySelf').pk,
       prodSku: model.serialNo,
     }
-    console.log(dataToSend);
+    // console.log(dataToSend);
     $http({
       method: 'POST',
       url: '/api/ecommerce/cart/',
@@ -386,7 +386,7 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
   }
 
   $scope.incrementCart = function(modal) {
-    console.log(modal, 'aaaaaaaaaaaaaaaaaaaaaaa');
+    // console.log(modal, 'aaaaaaaaaaaaaaaaaaaaaaa');
     $scope.match.model.added++
       for (var i = 0; i < $rootScope.inCart.length; i++) {
         if ($rootScope.inCart[i].product.pk == modal.pk) {
@@ -440,9 +440,9 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
   function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
-    console.log(decodedCookie, 'hhhhhhhhhhhhhhhhhhhhhh');
+    // console.log(decodedCookie, 'hhhhhhhhhhhhhhhhhhhhhh');
     var ca = decodedCookie.split(';');
-    console.log(ca);
+    // console.log(ca);
     for (var i = 0; i < ca.length; i++) {
       var c = ca[i];
       while (c.charAt(0) == ' ') {
@@ -456,7 +456,7 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
   }
 
   function setCookie(cname, cvalue, exdays) {
-    console.log('set cookie');
+    // console.log('set cookie');
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
@@ -469,15 +469,15 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
       url: '/api/ecommerce/listing/' + model.pk + '/'
     }).
     then(function(response) {
-      console.log(response.data, 'aaaaaaaaaaaaaaa');
-      console.log(model.serialNo);
-      console.log(response.data.product.howMuch);
+      // console.log(response.data, 'aaaaaaaaaaaaaaa');
+      // console.log(model.serialNo);
+      // console.log(response.data.product.howMuch);
       if (response.data.product.howMuch == null) {
         return
       }
       for (var i = 0; i < response.data.product_variants.length; i++) {
         if (response.data.product_variants[i].sku == model.serialNo) {
-          console.log('hereeeee');
+          // console.log('hereeeee');
           $scope.item = {
             'productName': response.data.product.name,
             'qty': 1,
@@ -521,21 +521,21 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
       // }
       detail = getCookie("addToCart");
       if (detail != "") {
-        console.log('already there');
+        // console.log('already there');
         $rootScope.addToCart = JSON.parse(detail)
         document.cookie = encodeURIComponent("addToCart") + "=deleted; expires=" + new Date(0).toUTCString()
       }
-      console.log($scope.item);
+      // console.log($scope.item);
       $rootScope.addToCart.push($scope.item)
       $scope.match.model.added = 1;
       setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
-      console.log($rootScope.addToCart);
+      // console.log($rootScope.addToCart);
     })
   }
   $scope.incrementCookie = function(details) {
     $scope.match.model.added++
       for (var i = 0; i < $rootScope.addToCart.length; i++) {
-        console.log(details.pk, 'aaaaaaaaaaaaa');
+        // console.log(details.pk, 'aaaaaaaaaaaaa');
         if ($rootScope.addToCart[i].prodSku == details.serialNo) {
           $rootScope.addToCart[i].qty = $rootScope.addToCart[i].qty + 1
           setCookie("addToCart", JSON.stringify($rootScope.addToCart), 365);
@@ -567,7 +567,7 @@ app.controller('ecommerce.search.typeheadResult', function($scope, $rootScope, $
 app.controller('ecommerce.body', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
 
 
-  console.log($rootScope.addToCart, 'aaaaaaaaaaaaaaaaaaaagggggggggggggggggggggggg');
+  // console.log($rootScope.addToCart, 'aaaaaaaaaaaaaaaaaaaagggggggggggggggggggggggg');
 
   $scope.var1 = "hello";
 
@@ -2244,6 +2244,7 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
   $scope.me = $users.get('mySelf');
   document.title = BRAND_TITLE + ' | My Settings'
   document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
+
   $scope.refresh = function() {
     $scope.form = {
       title: '',
@@ -2617,6 +2618,31 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
     // $scope.data.address.mobileNo = mob
     // $scope.data.address.landMark = ''
+  }
+
+
+  $scope.countrySearch = function(query) {
+    console.log(query);
+    return $http.get('/api/ecommerce/searchCountry/?query=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
+  $scope.stateSearch = function(query, country) {
+    console.log(country);
+    return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + country).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
+  $scope.citySearch = function(query, state) {
+    console.log(state);
+    return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + state).
+    then(function(response) {
+      return response.data;
+    })
   }
 
 

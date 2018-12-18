@@ -477,25 +477,25 @@
                     <div class="row">
                       <div class="col-md-5 col-xs-12 col-sm-6">
                         <div class="form-group">
-                          <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
+                          <input ng-model="data.address.country" uib-typeahead="c as c.name for c in countrySearch($viewValue)" type="text" class="form-control" id="country" placeholder="Enter Country..">
                         </div>
                       </div>
 
                       <div class="col-md-5 col-xs-12 col-sm-6">
                         <div class="form-group">
-                          <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State.." disabled>
+                          <input ng-model="data.address.state" uib-typeahead="s as s.name for s in stateSearch($viewValue, data.address.country.id)" type="text" class="form-control" id="state" placeholder="Enter State..">
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-5 col-xs-12 col-sm-6">
                         <div class="form-group">
-                          <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." disabled>
+                          <input ng-model="data.address.city" type="text" uib-typeahead="c as c.name for c in citySearch($viewValue, data.address.state.id)" class="form-control" id="city" placeholder="Enter City..">
                         </div>
                       </div>
                       <div class="col-md-5 col-xs-12 col-sm-6">
                         <div class="form-group">
-                          <input ng-model="data.address.country" type="text" class="form-control" id="country" placeholder="Enter Country.." disabled>
+                          <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
                         </div>
                       </div>
                     </div>
