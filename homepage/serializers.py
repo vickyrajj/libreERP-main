@@ -32,13 +32,7 @@ def sendMail(d,email):
         data = {
           "personalizations": [
             {
-              "to": [
-                {
-                  "email": str(email)
-                  # "email": 'bhanubalram5@gmail.com'
-                  # str(orderObj.user.email)
-                }
-              ],
+              "to": globalSettings.G_ADMIN,
               "subject": email_subject
             }
           ],
