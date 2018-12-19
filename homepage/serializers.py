@@ -315,7 +315,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             }
 
             email_body = get_template('app.homepage.emailOTP.html').render(ctx)
-            email_subject = 'SterlingSelect Email OTP'
+            email_subject = 'Regisration OTP'
             if globalSettings.EMAIL_API:
                 sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
                 # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
@@ -354,10 +354,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 msg.send()
         if not globalSettings.LITE_REGISTRATION:
             if globalSettings.VERIFY_MOBILE:
-                url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+                url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
                 requests.get(url)
         else:
-                url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+                url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
                 requests.get(url)
         reg.save()
         reg.emailOTP = ''
