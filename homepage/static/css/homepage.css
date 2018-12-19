@@ -938,7 +938,8 @@
   min-height: 200px;
   width: 100%
 }
-.play12{
+
+.play12 {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -946,6 +947,17 @@
   color: rgba(255, 255, 255, 0.8);
   font-size: 96px;
 }
+
+.load12 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 90px;
+  width: 100%
+}
+
 .thumbnil {
   background-size: cover;
   min-height: 200px;
@@ -953,34 +965,91 @@
   cursor: pointer;
   position: relative;
 }
+
 .thumbnil:hover .thumbnil_overlay {
   opacity: 0.8;
   transition: 0.2s ease;
-  color:red;
+  color: red;
 }
 
-
-.vertical-menu {
-  width: 100%;
+.content_div {
+  padding-top: 20px;
 }
 
-.vertical-menu a {
-  background-color: #043966;
-  color: #fff;
+.content_bar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.content_bar div {
+  float: left;
+  padding-right: 30px;
+  width: auto;
+}
+
+.content_bar div a {
   display: block;
-  padding: 20px;
+  color: #000;
+  text-align: center;
+  padding: 14px 16px;
   text-decoration: none;
-  font-size: 1.6rem;
 }
 
-.vertical-menu a:hover {
-  background-color: #FF6900;
+.content_bar div a:hover {
+  background-color: #003058;
+  color: #fff;
 }
 
-.vertical-menu a.active {
-  background-color: #FF6900;
-  color: white;
+.player {
+  width: 100%;
+  height: 40vh;
 }
+
+.content_data {
+  height: 30vh;
+  padding: 27px;
+}
+
+.content_data ul {
+  padding: 0px;
+}
+
+.custom_btn {
+  color: #2a49e4;
+  width: 300px;
+  border-radius: 0px;
+  background-color: #fff;
+  border: 1px solid #2a49e4;
+  font-size: 16px;
+}
+
+.custom_btn:hover {
+  color: #fff;
+  width: 300px;
+  border-radius: 0px;
+  background-color: #040b50
+}
+
+.content_details {
+  margin-left: 33px;
+}
+
+.playlist {
+  padding: 40px;
+}
+
+.loadmore {
+  font-weight: bold;
+  font-size: 4rem;
+  color: #19056a;
+  position: absolute;
+  top: 42%;
+  left: 20%;
+}
+
 /* .active_line{
   border: 3px solid #000;
   width:50%;
@@ -1368,6 +1437,40 @@
     font-size: 5.8vw;
   }
 
+  .content_div {
+    padding: 0px;
+  }
+
+  .content_bar div {
+    width: 100%;
+    padding: 0px;
+  }
+
+  .content_data {
+    height: auto;
+    padding: 20px;
+  }
+
+  .content_data ul {
+    padding: 0px;
+  }
+
+  .rating_div {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .content_details {
+    margin-left: 0px;
+  }
+
+  .playlist {
+    padding: 0px;
+  }
+
+  .box12{
+    margin-bottom:20px;
+  }
   /* .blog_container, .sec1Right, .sec2Left, .sec2thirdRow{
     flex-direction: column;
     width: 100%;

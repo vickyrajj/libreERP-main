@@ -194,12 +194,7 @@ app.config(function($stateProvider) {
       controller: 'controller.resource'
     })
 
-  $stateProvider
-    .state('resource_explore', {
-      url: "/resources/:name",
-      templateUrl: '/static/ngTemplates/app.homepage.guide.html',
-      controller: 'controller.resource'
-    })
+
   $stateProvider
     .state('watchVideo', {
       url: "/watch/:name",
@@ -207,16 +202,52 @@ app.config(function($stateProvider) {
       controller: 'controller.resource'
     })
   $stateProvider
-    .state('custom', {
+    .state('resource_explore', {
       url: "/resources/:name",
-      templateUrl: '/static/ngTemplates/app.homepage.custom.html',
-      // controller: 'controller.resource'
+      templateUrl: '/static/ngTemplates/app.homepage.guide.html',
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('custom', {
+      url: "/custom_item/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.custom_items.html',
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('custom_detail', {
+      url: "/custom_detail/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.custom_details.html',
+      controller: 'controller.resource'
     })
   $stateProvider
     .state('doc', {
-      url: "/resources/:name",
+      url: "/docs/:name",
       templateUrl: '/static/ngTemplates/app.homepage.documentation.html',
-      // controller: 'controller.resource'
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('chatbot', {
+      url: "/chatbot",
+      templateUrl: '/static/ngTemplates/app.homepage.chatbot.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+  $stateProvider
+    .state('pdf_process', {
+      url: "/pdf_process",
+      templateUrl: '/static/ngTemplates/app.homepage.pdf_process.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+  $stateProvider
+    .state('nlp', {
+      url: "/nlp",
+      templateUrl: '/static/ngTemplates/app.homepage.nlp.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+  $stateProvider
+    .state('excel_automation', {
+      url: "/excel_automation",
+      templateUrl: '/static/ngTemplates/app.homepage.excel_automation.html',
+      // controller: 'controller.ecommerce.PagesDetails'
     })
   $stateProvider
     .state('pages', {
@@ -268,21 +299,60 @@ app.controller('controller.resource', function($scope, $state, $http, $timeout, 
     })
   }
   $scope.watchVideo = function(name, idx) {
-    $state.go('watchVideo', {
+    console.log(name + ' ' + idx);
+    $state.transitionTo('watchVideo', {
       name: name + '&' + idx
     })
+    // $state.transitionTo('watchVideo', {
+    //   name: name + '&' + idx
+    // }, {
+    //   location: true,
+    //   inherit: true,
+    //   relative: $state.$current,
+    //   notify: false
+    // })
   }
   $scope.openCustom = function(name) {
-    console.log('cuuuuuuuuuuuusssssssssss');
     $state.go('custom', {
       name: name
     })
   }
+  $scope.custom_detail = function(name, idx) {
+    $state.go('custom_detail', {
+      name: name + '&pk=' + idx
+    })
+  }
+
   $scope.openDoc = function(name) {
-    console.log('ddddddddddoooooooooooccccccc');
     $state.go('doc', {
       name: name
     })
+  }
+
+  $scope.show_benefit = true;
+  $scope.show_dependencies = false;
+  $scope.show_compatibility = false;
+  $scope.l1 = "the background automation is very fast and the automation is safe because it’s totally independent from your web browsers and the salesforce layout";
+  $scope.l2 = "implementation time is 5 to 10 times faster compared to traditional Ui-Automation. The speed of the activities are due to the wizards, which allow you to test everything during the design time. This significantly minimizes the testing time to almost no time at all. In a normal implementation, testing time is huge and lasts much longer than the design time.";
+  $scope.l3 = "interactions between the robot and the software are greatly reduced, leading to a reduction in the number of errors. For example, in a normal Ui-Automation on Salesforce, a simple process takes two minutes and 40 seconds. This means it interacts with the web page approximately 85 times. The component, on the other hand takes about 11 seconds and interacts with the webpage only eight times, greatly minimizing the risk of error.";
+  $scope.dependencies_content = "Salesforce REST API enabled.";
+  $scope.compatibility_content = "Component is compatible with any Salseforce systems with version higher that V.42 (Spring 2018) .UiPath Studio 2017.1";
+
+  $scope.changeview = function(val) {
+    if (val == 'benefit') {
+      $scope.show_benefit = true;
+      $scope.show_dependencies = false;
+      $scope.show_compatibility = false;
+    } else if (val == 'dependencies') {
+      $scope.show_benefit = false;
+      $scope.show_dependencies = true;
+      $scope.show_compatibility = false;
+    } else if (val == 'compatibility') {
+      $scope.show_benefit = false;
+      $scope.show_dependencies = false;
+      $scope.show_compatibility = true;
+    }
+
   }
 });
 
