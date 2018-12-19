@@ -26,13 +26,17 @@ def sendMail(d,email):
     }
     email_body = get_template('app.ecommerce.newUserEmail.html').render(ctx)
     email_subject = 'New User'
+    emails=[]
     if globalSettings.EMAIL_API:
         sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
         # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+        for i in globalSettings.G_ADMIN:
+            emails.append({"email":i})
+        print emails,"**************&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
         data = {
           "personalizations": [
             {
-              "to": globalSettings.G_ADMIN,
+              "to": emails,
               "subject": email_subject
             }
           ],
@@ -267,6 +271,12 @@ class RegistrationSerializer(serializers.ModelSerializer):
         print "createaaaaaaaaaa"
         reg = Registration(**validated_data)
         salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+        username = reg.email.split('@')[0]
+        u = User.objects.filter(username=username)
+        print 'ggggggggggggggggg'
+        if len(u)>0:
+            raise ValidationError(detail={'PARAMS' : 'Username already taken'} )
+        print 'cominggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg'
         if reg.email!=None:
             key = hashlib.sha1(salt+validated_data.pop('email')).hexdigest()
             reg.token = key
@@ -285,7 +295,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             reg.emailOTP = generateOTPCode()
             print reg.emailOTP
 
-            msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP) ]
+            msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP)]
 
             ctx = {
                 'heading' : 'Welcome to Ecommerce',
@@ -299,6 +309,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
                 'twitterUrl' : 'twitter.com',
                 'brandName' : globalSettings.BRAND_NAME,
+                'username':username
             }
 
             email_body = get_template('app.homepage.emailOTP.html').render(ctx)

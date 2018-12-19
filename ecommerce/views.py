@@ -276,6 +276,7 @@ class ShipmentChargeAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny ,)
     def get(self , request , format = None):
+        print 'hereeeeee'
         return Response(getShipmentCharges(request.GET['pincode'] , request.GET['country'] , float(request.GET['weight'])    ))
 
 class CategorySortListAPI(APIView):
@@ -1042,11 +1043,17 @@ class DownloadManifestAPI(APIView):
     # permission_classes = (permissions.IsAuthenticated ,)
     def get(self , request , format = None):
         print self.request.GET
-        item = OrderQtyMap.objects.get(pk = request.GET['qPk'])
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
-        manifest(response,item)
-        return response
+        if 'trackingId':
+            fd = open(os.path.join(globalSettings.BASE_DIR, 'media_root/ecommerce/manifest','example_shipment_label'+request.GET['trackingId']+'.pdf'))
+            response = HttpResponse(fd, content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename=manifest.pdf'
+            return response
+        else:
+            item = OrderQtyMap.objects.get(pk = request.GET['qPk'])
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
+            manifest(response,item)
+            return response
 
 class SendStatusAPI(APIView):
     renderer_classes = (JSONRenderer,)
@@ -1084,8 +1091,40 @@ class SendStatusAPI(APIView):
             msgBody = "Product has been returned to origin"
         elif productStatus == 'returned':
             msgBody ="Product has been returned"
-        msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
-        msg.send()
+
+        print emailAddr[0],'ffffffffffff'
+
+        if globalSettings.EMAIL_API:
+            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            data = {
+              "personalizations": [
+                {
+                  "to": [
+                    {
+                      "email": emailAddr[0]
+                      # str(orderObj.user.email)
+                    }
+                  ],
+                  "subject": "Invoice Details"
+                }
+              ],
+              "from": {
+                "email": globalSettings.G_FROM,
+                "name":"BNI India"
+              },
+              "content": [
+                {
+                  "type": "text/html",
+                  "value": msgBody
+                }
+              ]
+            }
+            response = sg.client.mail.send.post(request_body=data)
+            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        else:
+            msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
+            msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
 class SendDeliveredStatus(APIView):
@@ -2059,16 +2098,67 @@ class SearchCountryAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny , )
     def get(self , request , format = None):
+        if 'getCountryCode' in request.GET:
+            toReturn = []
+            try:
+                c = Countries.objects.filter(name__iexact = request.GET['getCountryCode'])
+                if len(c)>0:
+                    toReturn.append(c[0].sortname)
+                else:
+                    toReturn.append('US')
+                return Response(toReturn, status = status.HTTP_200_OK)
+            except:
+                toReturn = ['US']
+                return Response(toReturn, status = status.HTTP_200_OK)
+
         if 'country' in request.GET:
-            print 'country'
+            print 'state' , request.GET['country'], request.GET['query']
             states = States.objects.filter(name__icontains=request.GET['query'], country_id = request.GET['country'])
-            print 'hj',len(states)
+            print len(states)
             return Response(list(states.values())[:10], status = status.HTTP_200_OK)
         elif 'state' in request.GET:
-            print 'state'
             city = Cities.objects.filter(name__icontains=request.GET['query'], state_id = request.GET['state'])
-            print 'city',len(city)
             return Response(list(city.values())[:10], status = status.HTTP_200_OK)
         else:
             countries = Countries.objects.filter(Q(name__icontains=request.GET['query']) | Q(sortname__icontains=request.GET['query']))
             return Response(list(countries.values())[:10], status = status.HTTP_200_OK)
+
+from create_shipment import createShipment
+class CreateShipmentAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny , )
+    def get(self , request , format = None):
+        print request.GET ,'ddddddddd'
+        order = Order.objects.get(pk = int(request.GET['orderPk']))
+        recipientCompany = 'company'
+        try:
+            recipientName =  order.user
+        except:
+            recipientName = 'recipientName'
+        try:
+            recipientPhone = int(order.mobileNo)
+        except:
+            recipientPhone = 9999999999
+        try:
+            recipientAddress = str(order.landMark) +" "+ str(order.street)
+        except:
+            recipientAddress = 'recipientAddress'
+        try:
+            city = order.city
+        except:
+            city = 'city'
+        try:
+            state = 'VA'
+        except:
+            state = 'state'
+        try:
+            country = 'US'
+        except:
+            country = 'US'
+        try:
+            pincode = 20171
+        except:
+            pincode = 20171
+        weight = 1.0
+        awbPath , trackingID = createShipment(recipientName , recipientCompany , recipientPhone , [recipientAddress] ,  city, state , pincode , country,  weight)
+        return Response({'awbPath':awbPath,'trackingID':trackingID,'courierName':'Fedex'}, status = status.HTTP_200_OK)

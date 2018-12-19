@@ -95,7 +95,7 @@ SEO_PUBLISHER = 'https://plus.google.com/b/105723801328437605094/'
 
 
 ECOMMERCE_THEME = '#631516' ##631516
-INVENTORY_ENABLED = True
+INVENTORY_ENABLED = False
 
 LITE_REGISTRATION = False
 AUTH_PASSWORD = 'titan@1'
@@ -291,11 +291,7 @@ EMAIL_USE_TLS = True
 EMAIL_API=True
 G_FROM='onlinestore@bni-india.in'
 G_KEY='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'
-G_ADMIN=[{
-			"email": "bhanubalram5@gmail.com"
-		},{
-        "email": "vikas.motla@gmail.com"
-        }]
+G_ADMIN=[ "bhanubalram5@gmail.com","vikas.motla@gmail.com"]
 
 
 

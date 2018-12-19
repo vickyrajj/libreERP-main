@@ -2,6 +2,9 @@ import logging
 import binascii
 import datetime
 import sys
+import os
+from os import path
+from django.conf import settings as globalSettings
 
 from fedex_config import CONFIG_OBJ
 from fedex.services.ship_service import FedexProcessShipmentRequest
@@ -82,16 +85,18 @@ def createShipment(recipientName , recipientCompany , recipientPhone , recipient
         print('WARNING: Unable to get shipping rate.')
 
     ascii_label_data = shipment.response.CompletedShipmentDetail.CompletedPackageDetails[0].Label.Parts[0].Image
-
+    trackingId = shipment.response.CompletedShipmentDetail.CompletedPackageDetails[0].TrackingIds[0].TrackingNumber
+    print trackingId ,'GGGGGGGGGGGGGG'
     label_binary_data = binascii.a2b_base64(ascii_label_data)
 
-    out_path = 'example_shipment_label.%s' % GENERATE_IMAGE_TYPE.lower()
-    print("Writing to file {}".format(out_path))
-    out_file = open(out_path, 'wb')
+    # out_path = 'example_shipment_label.%s' % GENERATE_IMAGE_TYPE.lower()
+    filepath = os.path.join(globalSettings.BASE_DIR,'media_root/ecommerce/manifest','example_shipment_label'+trackingId + '.pdf')
+    # print("Writing to file {}".format(out_path))
+    out_file = open(filepath, 'wb')
     out_file.write(label_binary_data)
     out_file.close()
 
-    return out_path , shipment.response.CompletedShipmentDetail.CompletedPackageDetails[0].TrackingIds[0].TrackingNumber
+    return filepath , trackingId
 
 if __name__ == '__main__':
     awbPath , trackingID = createShipment('name' , 'company' , '99999999' , ['Address Line 1'] ,  'Herndon', 'VA' , '20171' , 'US',  1.0)

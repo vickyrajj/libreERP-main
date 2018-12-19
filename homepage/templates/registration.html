@@ -26,7 +26,7 @@
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
 {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> 
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
 {% endblock %} {% block header %}
 
 
@@ -145,6 +145,7 @@
                               <input ng-model="form.email" type="text" class="form-control floatInput" required/>
                               <span class="floating-label">Email *</span>
                               <p class="help-text text-danger" ng-if="validityChecked == true && (form.email.length ==0 || form.email == null || form.email == undefined) ">Email is required</p>
+                              <p class="help-text text-danger" ng-if="usernameExist">Email is already taken!</p>
                             </div>
                           </div>
                         </div>

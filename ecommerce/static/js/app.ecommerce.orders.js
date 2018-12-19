@@ -151,6 +151,11 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
   // $scope.sts = 'aaa'
   $scope.currency =''
   // $scope.currency = settings_currencySymbol;
+
+  for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
+    $scope.tab.data.order.orderQtyMap[i].selected = false;
+  }
+
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
   then(function(response) {
     if (response.data[0] != null) {
@@ -209,6 +214,9 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         $scope.saveLog(i, $scope.msg)
       }
     })
+  }
+  $scope.openManifestFile=function(){
+    window.open('/home/cioc/Desktop/libreERP-main/media_root/ecommerce/manifest/example_shipment_label794650.pdf','_blank');
   }
   $scope.openManifest = function(idx) {
     $uibModal.open({
@@ -333,6 +341,149 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
 
       }
     })(idx, sts))
+  }
+
+  $scope.selectAll = {
+    toWatch:false
+  }
+  $scope.$watch('selectAll.toWatch',function (newValue, oldValue) {
+    if (newValue !=undefined && newValue!=null) {
+      if (newValue) {
+        for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
+          $scope.tab.data.order.orderQtyMap[i].selected = true;
+        }
+      }else {
+        for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
+          $scope.tab.data.order.orderQtyMap[i].selected = false;
+        }
+      }
+    }
+  })
+  $scope.generateManfestForAll = function () {
+    console.log($scope.order);
+    $scope.items = []
+    for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
+      console.log($scope.order.orderQtyMap[i].selected);
+      if ($scope.order.orderQtyMap[i].selected) {
+        $scope.items.push($scope.order.orderQtyMap[i])
+      }
+    }
+    if ($scope.items.length==0) {
+      Flash.create('warning', 'please select order')
+      return
+    }
+
+      $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
+      $http({
+        method:'GET',
+        url:'/api/ecommerce/createShipment/?country=US&orderPk='+$scope.order.pk
+      }).then(function (response) {
+        console.log(response.data);
+        $scope.courierForm.courierName = response.data.courierName
+        $scope.courierForm.courierAWBNo = response.data.trackingID
+
+        for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
+          if ($scope.order.orderQtyMap[i].selected) {
+            if ($scope.courierForm.courierName.length==0||$scope.courierForm.courierAWBNo.length==0) {
+              Flash.create('warning','All Fields Are Required')
+              return
+            }
+            $http({
+              method: 'PATCH',
+              url: '  /api/ecommerce/orderQtyMap/' + $scope.order.orderQtyMap[i].pk + '/',
+              data: {
+                courierName: $scope.courierForm.courierName,
+                courierAWBNo: $scope.courierForm.courierAWBNo,
+                notes: 'AUTO GENERATED',
+              }
+            }).then((function(i){
+                return function(response){
+                  $scope.order.orderQtyMap[i].courierName = response.data.courierName
+                  $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
+                  console.log(response.data,$scope.item);
+                  Flash.create('success', 'Saved');
+                }
+              })(i))
+          }
+        }
+
+        // for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
+        //   if ($scope.order.orderQtyMap[i].selected) {
+        //     $scope.order.orderQtyMap[i].courierName = response.data.courierName
+        //     $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
+        //   }
+        // }
+        $scope.selectAll.toWatch = false
+
+      })
+
+
+    // $uibModal.open({
+    //   templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.manifestForm.html',
+    //   size: 'lg',
+    //   backdrop: true,
+    //   resolve: {
+    //     items: function() {
+    //       return $scope.items;
+    //     },
+    //     order: function() {
+    //       return $scope.order;
+    //     }
+    //   },
+    //   controller: function($scope, items ,order, $uibModalInstance) {
+    //     $scope.items = items;
+    //     $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
+    //
+    //     $http({
+    //       method:'GET',
+    //       url:'/api/ecommerce/createShipment/?country=US&city='+order.city+'&pincode='+order.pincode+'&state='+order.state +'/'
+    //     }).then(function (response) {
+    //       console.log(response.data);
+    //       $scope.courierForm.courierName = response.data.courierName
+    //       $scope.courierForm.courierAWBNo = response.data.trackingID
+    //     })
+    //
+    //
+    //
+    //     $scope.saveManifest = function(){
+    //       for (var i = 0; i < $scope.items.length; i++) {
+    //           if ($scope.courierForm.courierName.length==0||$scope.courierForm.courierAWBNo.length==0) {
+    //             Flash.create('warning','All Fields Are Required')
+    //             return
+    //           }
+    //           $http({
+    //             method: 'PATCH',
+    //             url: '  /api/ecommerce/orderQtyMap/' + $scope.items[i].pk + '/',
+    //             data: {
+    //               courierName: $scope.courierForm.courierName,
+    //               courierAWBNo: $scope.courierForm.courierAWBNo,
+    //               notes: $scope.courierForm.notes,
+    //             }
+    //           }).
+    //           then(function(response) {
+    //             console.log(response.data,$scope.item);
+    //             Flash.create('success', 'Saved');
+    //             $uibModalInstance.dismiss(response.data);
+    //           })
+    //       }
+    //     }
+    //   },
+    // }).result.then(function() {
+    //
+    // }, function(res) {
+    //   if (res !='Backdrop Clicked') {
+    //     console.log(res);
+    //     $scope.tab.data.order.orderQtyMap
+    //     for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
+    //       console.log($scope.order.orderQtyMap[i]);
+    //       if ($scope.order.orderQtyMap[i].selected) {
+    //         $scope.order.orderQtyMap[i].courierName = res.courierName
+    //         $scope.order.orderQtyMap[i].courierAWBNo = res.courierAWBNo
+    //       }
+    //     }
+    //     $scope.selectAll.toWatch = false
+    //   }
+    // });
   }
 
 });
