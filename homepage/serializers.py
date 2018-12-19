@@ -17,6 +17,51 @@ from HR.models import profile
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 import ast
+import sendgrid
+import os
+
+def sendMail(d,email):
+    ctx = {
+        'user':d
+    }
+    email_body = get_template('app.ecommerce.newUserEmail.html').render(ctx)
+    email_subject = 'New User'
+    if globalSettings.EMAIL_API:
+        sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+        # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+        data = {
+          "personalizations": [
+            {
+              "to": [
+                {
+                  "email": str(email)
+                  # "email": 'bhanubalram5@gmail.com'
+                  # str(orderObj.user.email)
+                }
+              ],
+              "subject": email_subject
+            }
+          ],
+          "from": {
+            "email": globalSettings.G_FROM,
+            "name":"BNI India"
+          },
+          "content": [
+            {
+              "type": "text/html",
+              "value": email_body
+            }
+          ]
+        }
+        response = sg.client.mail.send.post(request_body=data)
+        print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+    else:
+        sentEmail=[]
+        sentEmail.append(str(email))
+        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+        msg = EmailMessage(email_subject, email_body, to= sentEmail)
+        msg.content_subtype = 'html'
+        msg.send()
 
 class EnquiryAndContactsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +75,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
         model = Registration
         fields = ('pk', 'created' , 'token' , 'mobileOTP' , 'emailOTP' , 'email', 'mobile')
         read_only_fields = ( 'token' , 'mobileOTP' , 'emailOTP')
+
+
+
     def update(self , instance , validated_data):
         print "updateeeeaaaaaaaaaaa", self.context['request'].data;
         print instance
@@ -40,6 +88,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             if not globalSettings.VERIFY_MOBILE:
                 if( d['token'] == instance.token and d['emailOTP']== instance.emailOTP ):
                     print "will create a new user"
+                    print d,'bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy'
                     u = User(username = d['email'].split('@')[0])
                     u.first_name = d['firstName']
                     u.email = d['email']
@@ -48,7 +97,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                     if globalSettings.AUTO_ACTIVE_ON_REGISTER == False:
                         u.is_active = False
                         adminData =  User.objects.get(pk=1)
-                        print adminData.email
+                        print adminData.email,'*************************888'
                         msgBody = ['Provide the user permission for new registered customer Name : <strong>%s</strong> with EmailID : <strong>%s</strong>' %(u.first_name , u.email) ]
                         ctx = {
                             'heading' : 'Welcome to Ecommerce',
@@ -65,7 +114,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
                         }
 
                         email_body = get_template('app.homepage.permission.html').render(ctx)
-                        print email_body
                         email_subject = 'Permission for the new user'
                         sentEmail=[]
                         sentEmail.append(str(adminData.email))
@@ -84,6 +132,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
                     # u.is_active = True
                     u.save()
+                    sendMail(d,d['email'])
                     print u.profile.pk
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
@@ -127,15 +176,42 @@ class RegistrationSerializer(serializers.ModelSerializer):
                         }
 
                         email_body = get_template('app.homepage.permission.html').render(ctx)
-                        print email_body
                         email_subject = 'Permission for the new user'
-                        sentEmail=[]
-                        sentEmail.append(str(adminData.email))
-                        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-                        msg = EmailMessage(email_subject, email_body, to= sentEmail)
-                        msg.content_subtype = 'html'
-                        msg.send()
-
+                        if globalSettings.EMAIL_API:
+                            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                            data = {
+                              "personalizations": [
+                                {
+                                  "to": [
+                                    {
+                                      "email": str(reg.email)
+                                      # str(orderObj.user.email)
+                                    }
+                                  ],
+                                  "subject": email_subject
+                                }
+                              ],
+                              "from": {
+                                "email": globalSettings.G_FROM,
+                                "name":"BNI India"
+                              },
+                              "content": [
+                                {
+                                  "type": "text/html",
+                                  "value": email_body
+                                }
+                              ]
+                            }
+                            response = sg.client.mail.send.post(request_body=data)
+                            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+                        else:
+                            sentEmail=[]
+                            sentEmail.append(str(adminData.email))
+                            # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                            msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                            msg.content_subtype = 'html'
+                            msg.send()
                     else:
                         u.is_active = True
                     if d['designation']:
@@ -144,6 +220,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                         else:
                             u.is_staff = False
                     u.save()
+                    sendMail(d,d['email'])
                     print u.profile.pk
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
@@ -170,6 +247,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 u.set_password('titan@1')
                 u.is_active = True
                 u.save()
+                sendMail(d,d['email'])
                 # pobj=profile()
                 # pobj.mobile = d['mobile']
                 # pobj.save()
@@ -193,10 +271,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return instance
     def create(self , validated_data):
         print "createaaaaaaaaaa"
-
         reg = Registration(**validated_data)
-
-
         salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
         if reg.email!=None:
             key = hashlib.sha1(salt+validated_data.pop('email')).hexdigest()
@@ -212,11 +287,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 reg.mobileOTP = generateOTPCode()
                 print reg.mobileOTP
 
-
         if reg.email!=None:
             reg.emailOTP = generateOTPCode()
             print reg.emailOTP
-
 
             msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP) ]
 
@@ -235,14 +308,43 @@ class RegistrationSerializer(serializers.ModelSerializer):
             }
 
             email_body = get_template('app.homepage.emailOTP.html').render(ctx)
-            print email_body
             email_subject = 'SterlingSelect Email OTP'
-            sentEmail=[]
-            sentEmail.append(str(reg.email))
-            # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-            msg = EmailMessage(email_subject, email_body, to= sentEmail)
-            msg.content_subtype = 'html'
-            msg.send()
+            if globalSettings.EMAIL_API:
+                sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                data = {
+                  "personalizations": [
+                    {
+                      "to": [
+                        {
+                          # "email": 'bhanubalram5@gmail.com'
+                          "email": str(reg.email)
+                          # str(orderObj.user.email)
+                        }
+                      ],
+                      "subject": email_subject
+                    }
+                  ],
+                  "from": {
+                    "email": globalSettings.G_FROM,
+                    "name":"BNI India"
+                  },
+                  "content": [
+                    {
+                      "type": "text/html",
+                      "value": email_body
+                    }
+                  ]
+                }
+                response = sg.client.mail.send.post(request_body=data)
+                print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+            else:
+                sentEmail=[]
+                sentEmail.append(str(reg.email))
+                # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                msg.content_subtype = 'html'
+                msg.send()
         if not globalSettings.LITE_REGISTRATION:
             if globalSettings.VERIFY_MOBILE:
                 url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))

@@ -20,6 +20,8 @@ import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
 import hashlib
+import sendgrid
+import os
 
 
 def makeOnlinePayment(request):
@@ -190,10 +192,38 @@ class serviceRegistrationApi(APIView):
             # Send email with activation key
             email_subject = 'Account confirmation'
             email_body = get_template('app.ecommerce.email.html').render(ctx)
-
-            msg = EmailMessage(email_subject, email_body, to= [email] , from_email= 'pkyisky@gmail.com' )
-            msg.content_subtype = 'html'
-            msg.send()
+            if globalSettings.EMAIL_API:
+                sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                data = {
+                  "personalizations": [
+                    {
+                      "to": [
+                        {
+                          "email": email
+                          # str(orderObj.user.email)
+                        }
+                      ],
+                      "subject": email_subject
+                    }
+                  ],
+                  "from": {
+                    "email": globalSettings.G_FROM,
+                    "name":"BNI India"
+                  },
+                  "content": [
+                    {
+                      "type": "text/html",
+                      "value": email_body
+                    }
+                  ]
+                }
+                response = sg.client.mail.send.post(request_body=data)
+                print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+            else:
+                msg = EmailMessage(email_subject, email_body, to= [email] , from_email= 'pkyisky@gmail.com' )
+                msg.content_subtype = 'html'
+                msg.send()
             content = {'pk' : user.pk , 'username' : user.username , 'email' : user.email}
             ak.save()
             return Response(content , status = status.HTTP_200_OK)

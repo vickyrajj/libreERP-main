@@ -24,6 +24,8 @@ from rest_framework.views import APIView
 from PIM.models import blogPost
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+import sendgrid
+import os
 
 
 def index(request):
@@ -138,5 +140,45 @@ class UpdateInfoAPI(APIView):
         u.set_password(d['password'])
         u.backend = 'django.contrib.auth.backends.ModelBackend'
         u.save()
+        # ctx = {
+        #     'userData':d
+        # }
+        #
+        # # Send email with activation key
+        # email=d['email']
+        # email_subject = 'New account'
+        # email_body = get_template('app.ecommerce.newUserEmail.html').render(ctx)
+        # if globalSettings.EMAIL_API:
+        #     sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+        #     # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+        #     data = {
+        #       "personalizations": [
+        #         {
+        #           "to": [
+        #             {
+        #               "email": "bhanubalram5@gmail.com"
+        #               # str(orderObj.user.email)
+        #             }
+        #           ],
+        #           "subject": email_subject
+        #         }
+        #       ],
+        #       "from": {
+        #         "email": globalSettings.G_FROM,
+        #         "name":"BNI India"
+        #       },
+        #       "content": [
+        #         {
+        #           "type": "text/html",
+        #           "value": email_body
+        #         }
+        #       ]
+        #     }
+        #     response = sg.client.mail.send.post(request_body=data)
+        #     print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        # else:
+        # msg = EmailMessage(email_subject, email_body, to= [email] , from_email= 'pkyisky@gmail.com' )
+        # msg.content_subtype = 'html'
+        # msg.send()
         login(request , u)
         return Response( status = status.HTTP_200_OK)

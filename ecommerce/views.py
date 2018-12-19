@@ -96,6 +96,10 @@ from PIM.models import blogPost
 from django.db.models.functions import Concat
 from openpyxl import load_workbook
 from io import BytesIO
+import sendgrid
+import os
+# from sendgrid.helpers.mail import *
+
 # Create your views here.
 
 defaultSettingsData = appSettingsField.objects.filter(app_id=25)
@@ -547,16 +551,46 @@ class CreateOrderAPI(APIView):
                 }
                 print ctx
                 email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-                # email_subject = "Order Details:"
-                # msgBody = " Your Order has been placed and details are been attached"
-                contactData.append(str(orderObj.user.email))
-                print 'aaaaaaaaaaaaaaa'
-                msg = EmailMessage("Order Details" , email_body, to= contactData  )
-                msg.content_subtype = 'html'
-                # a = str(f).split('media_root/')[1]
-                # b = str(a).split("', mode")[0]
-                # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
-                msg.send()
+                if globalSettings.EMAIL_API:
+                    sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                    # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                    data = {
+                      "personalizations": [
+                        {
+                          "to": [
+                            {
+                              "email": orderObj.user.email
+                              # str(orderObj.user.email)
+                            }
+                          ],
+                          "subject": "Invoice Details"
+                        }
+                      ],
+                      "from": {
+                        "email": globalSettings.G_FROM,
+                        "name":"BNI India"
+                      },
+                      "content": [
+                        {
+                          "type": "text/html",
+                          "value": email_body
+                        }
+                      ]
+                    }
+                    response = sg.client.mail.send.post(request_body=data)
+                    print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+
+                else:
+                    # email_subject = "Order Details:"
+                    # msgBody = " Your Order has been placed and details are been attached"
+                    contactData.append(str(orderObj.user.email))
+                    print 'aaaaaaaaaaaaaaa'
+                    msg = EmailMessage("Order Details" , email_body, to= contactData  )
+                    msg.content_subtype = 'html'
+                    # a = str(f).split('media_root/')[1]
+                    # b = str(a).split("', mode")[0]
+                    # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
+                    msg.send()
             return Response({'paymentMode':orderObj.paymentMode,'dt':orderObj.created,'odnumber':orderObj.pk}, status = status.HTTP_200_OK)
 
 
@@ -1101,10 +1135,40 @@ class SendDeliveredStatus(APIView):
         }
         print ctx
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
-        msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
-        msg.content_subtype = 'html'
-        # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
-        msg.send()
+        if globalSettings.EMAIL_API:
+            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            data = {
+              "personalizations": [
+                {
+                  "to": [
+                    {
+                      "email": o.user.email
+                      # str(orderObj.user.email)
+                    }
+                  ],
+                  "subject": "Invoice Details"
+                }
+              ],
+              "from": {
+                "email": globalSettings.G_FROM,
+                "name":"BNI India"
+              },
+              "content": [
+                {
+                  "type": "text/html",
+                  "value": email_body
+                }
+              ]
+            }
+            response = sg.client.mail.send.post(request_body=data)
+            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+
+        else:
+            msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
+            msg.content_subtype = 'html'
+            # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
+            msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
 
@@ -1118,9 +1182,8 @@ class SendFeedBackAPI(APIView):
         # responseData = BeautifulSoup(response, 'html.parser')
         responseData = Markup(response)
         emailAddr.append(supportObj.email)
-
         ctx = {
-            'heading' : " On response to your Feed Back",
+            'heading' : "On response to your Feed Back",
             'linkUrl': globalSettings.BRAND_NAME,
             'sendersAddress' : globalSettings.SEO_TITLE,
             'question' : supportObj.message,
@@ -1131,9 +1194,38 @@ class SendFeedBackAPI(APIView):
         }
         print ctx
         email_body = get_template('app.ecommerce.support.email.html').render(ctx)
-        msg = EmailMessage("Response" , email_body, to= emailAddr)
-        msg.content_subtype = 'html'
-        msg.send()
+        if globalSettings.EMAIL_API:
+            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            data = {
+              "personalizations": [
+                {
+                  "to": [
+                    {
+                      "email": supportObj.email
+                      # str(orderObj.user.email)
+                    }
+                  ],
+                  "subject": "On response to your Feed Back"
+                }
+              ],
+              "from": {
+                "email": globalSettings.G_FROM,
+                "name":"BNI India"
+              },
+              "content": [
+                {
+                  "type": "text/html",
+                  "value": email_body
+                }
+              ]
+            }
+            response = sg.client.mail.send.post(request_body=data)
+            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        else:
+            msg = EmailMessage("Response" , email_body, to= emailAddr)
+            msg.content_subtype = 'html'
+            msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
 
