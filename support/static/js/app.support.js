@@ -141,6 +141,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         },
         function(err) {
           console.log("failed to registered: ");
+
         });
 
       return

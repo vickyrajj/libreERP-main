@@ -870,12 +870,19 @@ app.directive('chatBox', function() {
 
             console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
 
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published", $scope.data.uid);
-            });
+            if(connection.session){
+              connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("Published", $scope.data.uid);
+                alert('deleiverd')
+              },function(){
+                alert('not deleivered')
+              });
+            }else{
+              alert('you are not connected to internet')
+            }
 
 
             $scope.scroll()
@@ -893,12 +900,16 @@ app.directive('chatBox', function() {
       $scope.$watch('chatBox.messageToSend', function(newValue, oldValue) {
         $scope.status = "T";
         if (newValue != "") {
-          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
+          if(connection.session){
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }else{
+            alert('you are not connected to internet')
+          }
         }
       });
 

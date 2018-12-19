@@ -435,7 +435,6 @@ var hasAccesss=true;
           console.log(args[2]);
           alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
           scope.myUsers.push(args[2]);
-
           connection.session.publish(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
             acknowledge: true
           }).
@@ -484,12 +483,6 @@ var hasAccesss=true;
     console.log('comin in interval');
     checkOnline();
   }, 10000)
-
-  // function heartbeat(args) {
-  //   console.log('coming in heartttt');
-  //   console.log(scope.me,'check this outttttttttttttttttttt');
-  //   return scope.me.pk
-  // }
 
   session.subscribe(wamp_prefix+'service.support.agent', supportChatResponse).then(
     function(sub) {

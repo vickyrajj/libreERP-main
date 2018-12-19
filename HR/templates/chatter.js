@@ -275,9 +275,9 @@ function setCookie(cname, cvalue, exdays) {
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
-  console.log(decodedCookie);
+  // console.log(decodedCookie);
   var ca = decodedCookie.split(';');
-  console.log(ca);
+  // console.log(ca);
   for(var i = 0; i < ca.length; i++) {
       var c = ca[i];
       while (c.charAt(0) == ' ') {
@@ -566,12 +566,15 @@ function setIframeToNormal(){
   document.getElementById('iFrame1').style.height='100%'
   iframeDiv.style.boxShadow='-5px -10px 10px rgb(0,0,0,0.2)';
 }
+// var subs;
+var connectionIsOff=true
 document.addEventListener("DOMContentLoaded", function(event) {
-
 
 
   connection.onopen = function (session) {
      console.log("session established!");
+     connectionIsOff=false
+     document.getElementById('noConnection').style.display='none'
 
     var supportChat = function(args) {
       console.log(args);
@@ -758,6 +761,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     session.subscribe(wamp_prefix+'service.support.chat.' + uid, supportChat).then(
       function (sub) {
+        subs=sub
+        // alert("subscribed to topic 'service.support.chat'" , uid)
         console.log("subscribed to topic 'service.support.chat'" , uid );
       },
       function (err) {
@@ -766,7 +771,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     );
 
 
+
   };
+
+    connection.onclose = function (session) {
+      // alert('hererere');
+      connectionIsOff=true;
+      document.getElementById('noConnection').style.display='block'
+    }
 
   connection.open();
 
@@ -797,6 +809,7 @@ function createChatDiv() {
           '</div>'+
           '<div id="chatBox_content" class="chatBox_content">'+
             '<div id="messageBox" class="content_section">'+
+              '<p id="noConnection" style="position:fixed;top:50%;right:120px;font-size:20px;padding:35px 5px;background-color:black;color:#fff;box-shadow:10px 10px 5px grey">No internet connection</p>'+
             '</div>'+
           '</div>'+
           '<div id="chatBox_footer" class="chatBox_footer">'+
@@ -1106,6 +1119,8 @@ function activeAudioCall(){
              }).
              then(function(publication) {
                console.log("Published");
+             }).catch(function(){
+               // alert('disconnected');
              });
            }
          };
@@ -1135,6 +1150,8 @@ function activeAudioCall(){
           }).
           then(function(publication) {
             console.log("Published service.support.agent."+agentPk);
+          }).catch(function(){
+            // alert('problem ho gyi internet me')
           });
         }else {
           console.log('offline send to all');
@@ -2043,24 +2060,10 @@ function activeAudioCall(){
         offlineMessage.style.display="none"
     })
 
-
-    // submitStars.addEventListener('click',function(){
-    //
-    // })
 var myformrating;
 
     submitStars.addEventListener("click", function() {
-      console.log('somthing hereeeeee' , this);
-
-      // var stars=document.getElementById('stars')
-      // console.log(stars);
-      // stars.innerHTML=''
-      // console.log(stars);
-      // for (var i = 0; i < myformrating; i++) {
-      //   stars.innerHTML+='<i class="star1" for=""></i>'
-      // }
-      // document.getElementById('emailId').style.display='none'
-      // document.getElementById('feedbackText').style.display='none'
+      // console.log('somthing hereeeeee' , this);
       submitStars.style.display = "none";
       offlineMessage.style.display="none"
       // id="star-5"
@@ -2135,8 +2138,6 @@ var myformrating;
        xhttp.send(ratingForm);
 
     }, false);
-
-
 
   }
 
@@ -2231,6 +2232,13 @@ var myformrating;
     }
     if (event.data== 'replyToUseruserleft'){
       setTimeout(endOfConversation, 5000);
+    }
+    if (event.data== 'dintPickTheCall'){
+      if(isAudioClicked){
+        audioBtn.click()
+      }else if(isVideoClicked){
+        videoBtn.click()
+      }
     }
   }
 
@@ -2710,6 +2718,8 @@ console.log(firstMessage);
          }).
          then(function(publication) {
            console.log("Published service.support.agent."+agentPk);
+         }).catch(function(){
+           // alert('error aa gya')
          });
        }else {
          console.log('offline send to all');
@@ -2718,6 +2728,8 @@ console.log(firstMessage);
          }).
          then(function(publication) {
            console.log("Published");
+         }).catch(function(){
+           // alert('error aa gya message send krne me')
          });
        }
        console.log('chat thread exist');
@@ -2893,19 +2905,27 @@ chatSuggestionBar.style.display="none"
         document.getElementsByTagName("BODY")[0].style.overflowY = "";
       }
       closeSupport.style.display = "";
-      // unreadMsg.style.display = "none";
       unreadMsgCount = 0;
       chatBox.style.animation = ""
       chatBox.style.display = "block";
       messageBox.style.animation = "moveInLeft 3s ease-out"
       closeSupport.style.animation = "rotateAnti 0.4s"
-      // closeChatSvg.style.animation = "rotateAnti 1s"
     }else {
       document.getElementsByTagName("BODY")[0].style.overflowY = "";
     }
   }
 
   closeSupport.addEventListener("click", function() {
+    // if(isConfirmedToEnd){
+    //   connection.session.unsubscribe(subs).then(
+    //     function (gone) {
+    //       alert('unsubscrribed')
+    //     },
+    //     function (err) {
+    //       console.log("failed to subscribed: " + err);
+    //     }
+    //   );
+    // }
 
     endOfConversation();
 
@@ -2914,7 +2934,6 @@ chatSuggestionBar.style.display="none"
       setCookie("chatOpenCookie", chatOpen, 365);
       console.log('coming here.');
       messageBox.style.animation = ""
-      // supportCircle.style.display = "";
       if (serviceCount==1) {
         supportCircle.style.display = "none";
         singleService.style.display = "";
