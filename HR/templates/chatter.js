@@ -567,14 +567,14 @@ function setIframeToNormal(){
   iframeDiv.style.boxShadow='-5px -10px 10px rgb(0,0,0,0.2)';
 }
 // var subs;
-var connectionIsOff=true
+// var connectionIsOff=true
 document.addEventListener("DOMContentLoaded", function(event) {
 
 
   connection.onopen = function (session) {
      console.log("session established!");
-     connectionIsOff=false
-     document.getElementById('noConnection').style.display='none'
+     // connectionIsOff=false
+     // document.getElementById('noConnection').style.display='none'
 
     var supportChat = function(args) {
       console.log(args);
@@ -776,8 +776,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     connection.onclose = function (session) {
       // alert('hererere');
-      connectionIsOff=true;
-      document.getElementById('noConnection').style.display='block'
+      // connectionIsOff=true;
+      // document.getElementById('noConnection').style.display='block'
     }
 
   connection.open();
@@ -809,7 +809,7 @@ function createChatDiv() {
           '</div>'+
           '<div id="chatBox_content" class="chatBox_content">'+
             '<div id="messageBox" class="content_section">'+
-              '<p id="noConnection" style="position:fixed;top:50%;right:120px;font-size:20px;padding:35px 5px;background-color:black;color:#fff;box-shadow:10px 10px 5px grey">No internet connection</p>'+
+              // '<p id="noConnection" style="position:fixed;top:50%;right:120px;font-size:20px;padding:35px 5px;background-color:black;color:#fff;box-shadow:10px 10px 5px grey">No internet connection</p>'+
             '</div>'+
           '</div>'+
           '<div id="chatBox_footer" class="chatBox_footer">'+
