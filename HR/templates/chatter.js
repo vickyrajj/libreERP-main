@@ -1036,9 +1036,10 @@ function activeAudioCall(){
   }
 
   audioCircle.addEventListener('click',function () {
-    activeAudioCall();
+    // activeAudioCall();
     openChat();
-    hideAudioAndVidoeBtn();
+    // hideAudioAndVidoeBtn();
+    audioBtn.click()
 
   })
 
@@ -1069,7 +1070,7 @@ function activeAudioCall(){
     }
 
 
-    console.log(agentPk);
+    // console.log(agentPk);
     if (agentPk) {
       console.log('agent pk is pnline',isAgentOnline);
       dataToSend.user = agentPk
@@ -1974,6 +1975,7 @@ function activeAudioCall(){
   feedbackFormSubmitted = false
 
   function openFeedback(id) {
+    hideAudioAndVidoeBtn();
 
     console.log(feedbackFormOpened , 'feedbackFormOpened');
 
@@ -2159,6 +2161,11 @@ var myformrating;
     // uidDetails should remane same
     chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
     pushMessages()
+    setAudioVideoBtn();
+    countForFrameContent=0;
+    if(countForFrameContent>0){
+      document.getElementById('iFrame1').src = '';
+    }
 
     console.log('Came here ... chat ');
     messageComposer.style.display = "";
@@ -2235,8 +2242,10 @@ var myformrating;
     }
     if (event.data== 'dintPickTheCall'){
       if(isAudioClicked){
+        hideTheIframeOnAgentSide()
         audioBtn.click()
       }else if(isVideoClicked){
+        // isVideoClicked=false
         videoBtn.click()
       }
     }
@@ -2288,15 +2297,18 @@ var audioBtn=document.getElementById('audioBtn')
 var isVideoClicked=false;
 var isAudioClicked=false;
 
-setTimeout(function () {
-  if(videoContains){
-    videoBtn.style.display='block'
-  }
-  if(audioContains){
-    console.log('comgggggggggggggggggg');
-    audioBtn.style.display='block'
-  }
-}, 1000);
+function setAudioVideoBtn(){
+  setTimeout(function () {
+    if(videoContains){
+      videoBtn.style.display='block'
+    }
+    if(audioContains){
+      console.log('comgggggggggggggggggg');
+      audioBtn.style.display='block'
+    }
+  }, 1000);
+}
+setAudioVideoBtn();
 videoBtn.addEventListener("click",function(){
   if(isAudioClicked){
     alert('Audio call is Active')
@@ -2304,26 +2316,49 @@ videoBtn.addEventListener("click",function(){
   }
   audioBtn.style.display='none'
   isVideoClicked=!isVideoClicked
+  if(isVideoClicked){
+    videoOpened=false;
+    countForFrameContent++;
+    if(countForFrameContent>1){
+      getFrameContent.postMessage('refreshIT',webRtcAddress);
+    }
+  }
   togglingActive(videoBtn,isVideoClicked)
   activeVideoCall()
 })
 
+var countForFrameContent=0;
+
 audioBtn.addEventListener("click",function(){
-  videoBtn.style.display='none'
+  videoBtn.style.display='none';
   isAudioClicked=!isAudioClicked
   if(isVideoClicked){
     alert('Video call is Active')
     return
   }
+  // alert(isAudioClicked);
   if(isAudioClicked){
+    countForFrameContent++;
     activeAudioCall()
+    audioOpened = false
+    if(countForFrameContent>1){
+      getFrameContent.postMessage('refreshIT',webRtcAddress);
+    }
   }else{
     deactivateAudioFrame()
+    hideTheIframeOnAgentSide()
   }
   togglingActive(audioBtn,isAudioClicked)
 })
 
-
+function hideTheIframeOnAgentSide(){
+  connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'hideTheIframe' ] , {}, {
+    acknowledge: true
+  }).
+  then(function(publication) {
+    // alert('maine to bol diya chhupane ko')
+  });
+}
 function hideAudioAndVidoeBtn(){
   videoBtn.style.display='none'
   audioBtn.style.display='none'

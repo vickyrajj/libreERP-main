@@ -291,4 +291,4 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = 'wss://ws.cioc.in:443/ws'
+WAMP_SERVER = 'wss://ws.syrow.com:443/ws'

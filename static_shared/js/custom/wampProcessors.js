@@ -229,6 +229,7 @@ var hasAccesss=true;
           }else if (args[1] == 'AC') {
             scope.sound.play();
             scope.myUsers[i].audio = true
+            scope.myUsers[i].closeIframe = false
             scope.myUsers[i].audioUrl = args[4]
             //this is for audio call
           }else if(args[1]=='calledToHideVideo'){
@@ -237,7 +238,12 @@ var hasAccesss=true;
           }else if(args[1]=='calledToShowVideo'){
             scope.myUsers[i].isVideoShowing = true
             scope.myUsers[i].alreadyDone=false
-          }else if(args[1]=='CustmorClosedTheChat'){
+          }
+          else if(args[1]=='hideTheIframe'){
+            // alert('iframe chhupega abbb')
+            scope.myUsers[i].closeIframe = true
+          }
+          else if(args[1]=='CustmorClosedTheChat'){
             scope.myUsers[i].AudioVideoOn = true
           }else if(args[1]=='UC'){
             scope.myUsers[i].currentUrl = args[2]
@@ -335,7 +341,8 @@ var hasAccesss=true;
         videoUrl:'',
         isVideoShowing:true,
         AudioVideoOn:true,
-        alreadyDone:false
+        alreadyDone:false,
+        closeIframe:false
       }
 
       console.log(args[4]);

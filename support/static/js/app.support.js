@@ -73,7 +73,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
             video: false,
             videoUrl: '',
             isVideoShowing: true,
-            alreadyDone: false
+            alreadyDone: false,
+            closeIframe:false
           })
 
           connection.session.publish(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
