@@ -272,6 +272,7 @@ class ShipmentChargeAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny ,)
     def get(self , request , format = None):
+        print 'hereeeeee'
         return Response(getShipmentCharges(request.GET['pincode'] , request.GET['country'] , float(request.GET['weight'])    ))
 
 class CategorySortListAPI(APIView):
@@ -1008,11 +1009,17 @@ class DownloadManifestAPI(APIView):
     # permission_classes = (permissions.IsAuthenticated ,)
     def get(self , request , format = None):
         print self.request.GET
-        item = OrderQtyMap.objects.get(pk = request.GET['qPk'])
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
-        manifest(response,item)
-        return response
+        if 'trackingId':
+            fd = open(os.path.join(globalSettings.BASE_DIR, 'media_root/ecommerce/manifest','example_shipment_label'+request.GET['trackingId']+'.pdf'))
+            response = HttpResponse(fd, content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename=manifest.pdf'
+            return response
+        else:
+            item = OrderQtyMap.objects.get(pk = request.GET['qPk'])
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
+            manifest(response,item)
+            return response
 
 class SendStatusAPI(APIView):
     renderer_classes = (JSONRenderer,)
@@ -1968,15 +1975,32 @@ class SearchCountryAPI(APIView):
     permission_classes = (permissions.AllowAny , )
     def get(self , request , format = None):
         if 'country' in request.GET:
-            print 'country'
+            print 'state' , request.GET['country'], request.GET['query']
             states = States.objects.filter(name__icontains=request.GET['query'], country_id = request.GET['country'])
-            print 'hj',len(states)
+            print len(states)
             return Response(list(states.values())[:10], status = status.HTTP_200_OK)
         elif 'state' in request.GET:
-            print 'state'
             city = Cities.objects.filter(name__icontains=request.GET['query'], state_id = request.GET['state'])
-            print 'city',len(city)
             return Response(list(city.values())[:10], status = status.HTTP_200_OK)
         else:
             countries = Countries.objects.filter(Q(name__icontains=request.GET['query']) | Q(sortname__icontains=request.GET['query']))
             return Response(list(countries.values())[:10], status = status.HTTP_200_OK)
+
+from create_shipment import createShipment
+class CreateShipmentAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny , )
+    def get(self , request , format = None):
+        print request.GET
+        recipientName = 'recipientName'
+        recipientCompany = 'recipientCompany'
+        recipientPhone = 9999999
+        recipientAddress = request.GET['address']
+        city = request.GET['city']
+        state = 'VA'
+        pincode = 20171
+        country = request.GET['country']
+        weight = 1
+        # awbPath , trackingID = createShipment(recipientName , recipientCompany , recipientPhone , recipientAddress , city , state , pincode , country , weight)
+        awbPath , trackingID = createShipment('name' , 'company' , '99999999' , [recipientAddress] ,  city, state , pincode , 'US',  1.0)
+        return Response({'awbPath':awbPath,'trackingID':trackingID,'courierName':'Fedex'}, status = status.HTTP_200_OK)

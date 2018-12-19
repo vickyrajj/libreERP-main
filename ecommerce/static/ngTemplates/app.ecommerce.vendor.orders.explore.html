@@ -42,16 +42,30 @@
     </div>
     <div class="col-md-9">
       <div class="row">
-        <div class="text-center" ng-if="order.approved">
-          <h3>Approved <i class='fa fa-check' style="color:green"></i></h3>
+        <div class="col-md-4">
+          <div class="col-md-4">
+            <input type="checkbox" ng-model="selectAll.toWatch"> SelectAll
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <button type="button" class="btn btn-default" ng-click="generateManfestForAll()">Generate Manifest</button>
+              <p class="help-block">Generate Manifest for selected orders</p>
+            </div>
+          </div>
         </div>
-        <div class="text-center" ng-if="order.approved!=null && !order.approved">
-          <h3>Rejected <i class='fa fa-times' style="color:red"></i></h3>
+        <div class="col-md-4">
+          <div class="text-center" ng-if="order.approved">
+            <h3>Approved <i class='fa fa-check' style="color:green"></i></h3>
+          </div>
+          <div class="text-center" ng-if="order.approved!=null && !order.approved">
+            <h3>Rejected <i class='fa fa-times' style="color:red"></i></h3>
+          </div>
         </div>
-
-        <div class="btn-group pull-right" ng-if="order.approved==null">
-          <button type="button" class="btn btn-primary" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk,true)" confirm-button-type="default" cancel-button-type="default">Approve </button>
-          <button type="button" class="btn btn-danger" mwl-confirm title="Reject" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk,false)" confirm-button-type="default" cancel-button-type="default">Reject </button>
+        <div class="col-md-4">
+          <div class="btn-group pull-right" ng-if="order.approved==null">
+            <button type="button" class="btn btn-primary" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk,true)" confirm-button-type="default" cancel-button-type="default">Approve </button>
+            <button type="button" class="btn btn-danger" mwl-confirm title="Reject" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk,false)" confirm-button-type="default" cancel-button-type="default">Reject </button>
+          </div>
         </div>
 
         <!-- <div class="btn btn-primary pull-right" ng-if="!order.approved" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderApproved(order.pk)" confirm-button-type="default" cancel-button-type="default">
@@ -62,18 +76,21 @@
         <div class="" ng-repeat="pData in order.orderQtyMap" style="margin-bottom:10px">
           <div class="container-fluid card" style="padding:20px; border-left:4px solid #0c9a9e;position:relative;">
 
-            <input type="checkbox" >
+            <input type="checkbox" ng-checked="pData.selected" ng-model="pData.selected">
 
             <div class="fa fa-trash-o pull-right fa-2x" style="cursor:pointer;color:red" mwl-confirm title="Cancel Item" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderItemCancel($index)" confirm-button-type="default"
               cancel-button-type="default" ng-if="order.status!='failed' && pData.status=='created' || pData.status=='packed'">
             </div>
-            <div class="btn btn-default btn-sm pull-right" ng-if="(pData.courierNaime==null||pData.courierAWBNo==null||pData.notes==null && order.status!='failed') && pData.status!='cancelled'" ng-click="openManifest($index)">
+            <div class="btn btn-default btn-sm pull-right" ng-if="(pData.courierName==null||pData.courierAWBNo==null && order.status!='failed') && pData.status!='cancelled'" ng-click="openManifest($index)">
               Generate Manifest
             </div>
-            <div class="btn-group pull-right" ng-if="order.status!='failed' && pData.courierName!=null && pData.courierAWBNo!=null && pData.notes!=null">
+            <div class="btn-group pull-right" ng-if="order.status!='failed' && pData.courierName!=null && pData.courierAWBNo!=null">
               <button type="button" class="btn btn-primary" ng-click="openManifest($index)">Edit Manifest </button>
-              <a href="/api/ecommerce/downloadManifest/?qPk={{pData.pk}}" target="_blank">
-               <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
+              <!-- <a href="/api/ecommerce/downloadManifest/?qPk={{pData.pk}}" target="_blank">
+               <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a> -->
+               <a href="/api/ecommerce/downloadManifest/?trackingId={{pData.courierAWBNo}}" target="_blank">
+                <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
+
 
             </div>
 

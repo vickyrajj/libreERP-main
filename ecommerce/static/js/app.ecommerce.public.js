@@ -806,10 +806,9 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
   $scope.priceDisplay = false
   $scope.priceDisplay = settings_isPrice;
   $scope.showPrice = false
-  if(!$scope.me&&!$scope.priceDisplay){
+  if (!$scope.me && !$scope.priceDisplay) {
     $scope.showPrice = false
-  }
-  else{
+  } else {
     $scope.showPrice = true
   }
 
@@ -1331,10 +1330,9 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
     $scope.prod_var = $scope.details.product_variants;
     $scope.prodVarList = []
     $scope.details.product.unit = $filter('getUnit')($scope.details.product.unit);
-    if(!$scope.showPrice){
+    if (!$scope.showPrice) {
       var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit)
-    }
-    else{
+    } else {
       var str = $filter('convertUnit')($scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.details.product.discountedPrice
     }
     $scope.prodVarList = [{
@@ -1347,10 +1345,9 @@ app.controller('controller.ecommerce.details', function($scope, $rootScope, $sta
 
     if ($scope.prod_var) {
       for (var i = 0; i < $scope.prod_var.length; i++) {
-        if(!$scope.showPrice){
+        if (!$scope.showPrice) {
           str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit)
-        }
-        else{
+        } else {
           str = $filter('convertUnit')($scope.prod_var[i].unitPerpack * $scope.details.product.howMuch, $scope.details.product.unit) + ' -  ' + $scope.prod_var[i].price
         }
 
@@ -2256,6 +2253,10 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
       country: 'India',
       primary: false
     }
+    if (settings_isStoreGlobal) {
+      $scope.form.country = ''
+    }
+
   }
   $scope.refresh()
   $scope.update = function(idx) {
@@ -2308,8 +2309,8 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
         })
       } else if (newValue.length < 6) {
         $scope.showMessage = false
-        $scope.form.city = ''
-        $scope.form.state = ''
+        // $scope.form.city = ''
+        // $scope.form.state = ''
       }
     }
   })
@@ -2366,6 +2367,97 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
       Flash.create('danger', response.status + ' : ' + response.statusText);
     })
   }
+
+  $scope.countrySearch = function(query) {
+    return $http.get('/api/ecommerce/searchCountry/?query=' + query).
+    then(function(response) {
+      $scope.countrList = response.data
+      return response.data;
+    })
+  }
+
+  $scope.stateSearch = function(query) {
+    if ($scope.selectedCountryObj.uniqueId) {
+      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.uniqueId).
+      then(function(response) {
+        $scope.stateList = response.data
+        return response.data;
+      })
+    }
+  }
+
+  $scope.citySearch = function(query) {
+    if ($scope.selectedStateObj.uniqueId) {
+      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.uniqueId).
+      then(function(response) {
+        return response.data;
+      })
+    }
+  }
+
+  $scope.showAddressForm = {
+    state:false,
+    city:false
+  }
+
+  $scope.showBillingAddressForm = {
+    state:false,
+    city:false
+  }
+
+  $scope.$watch('form.country', function(newValue, oldValue) {
+    if (newValue != null && newValue != undefined) {
+
+      if (newValue == '') {
+        $scope.form.state = ''
+      }
+
+      if ($scope.countrList) {
+        for (var i = 0; i < $scope.countrList.length; i++) {
+          if ($scope.countrList[i].name==newValue) {
+            $scope.selectedCountryObj = $scope.countrList[i]
+            break;
+          }else {
+            $scope.selectedCountryObj = ''
+          }
+        }
+        console.log($scope.selectedCountryObj);
+      }
+      if (typeof $scope.selectedCountryObj == 'object') {
+        $scope.showAddressForm.state = true
+      }else {
+        $scope.showAddressForm.state = false
+      }
+    }
+  });
+
+  $scope.$watch('form.state', function(newValue, oldValue) {
+    if (newValue != null && newValue != undefined) {
+
+      if (newValue == '') {
+        $scope.form.city = ''
+      }
+
+      if ($scope.stateList) {
+        for (var i = 0; i < $scope.stateList.length; i++) {
+          if ($scope.stateList[i].name==newValue) {
+            $scope.selectedStateObj = $scope.stateList[i]
+            break;
+          }else {
+            $scope.selectedStateObj = ''
+          }
+        }
+        console.log($scope.selectedStateObj);
+      }
+      if (typeof $scope.selectedStateObj == 'object') {
+        $scope.showAddressForm.city = true
+      }else {
+        $scope.showAddressForm.city = false
+      }
+    }
+  });
+
+
 
 });
 
@@ -2499,6 +2591,10 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       billingLandMark: ''
     }
   };
+  if (settings_isStoreGlobal) {
+    $scope.data.address.country = ''
+    $scope.data.billingAddress.country = ''
+  }
 
 
 
@@ -2622,29 +2718,124 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 
   $scope.countrySearch = function(query) {
-    console.log(query);
     return $http.get('/api/ecommerce/searchCountry/?query=' + query).
     then(function(response) {
+      $scope.countrList = response.data
       return response.data;
     })
   }
 
-  $scope.stateSearch = function(query, country) {
-    console.log(country);
-    return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + country).
-    then(function(response) {
-      return response.data;
-    })
+  $scope.stateSearch = function(query) {
+    if ($scope.selectedCountryObj.uniqueId) {
+      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.uniqueId).
+      then(function(response) {
+        $scope.stateList = response.data
+        return response.data;
+      })
+    }
   }
 
-  $scope.citySearch = function(query, state) {
-    console.log(state);
-    return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + state).
-    then(function(response) {
-      return response.data;
-    })
+  $scope.citySearch = function(query) {
+    if ($scope.selectedStateObj.uniqueId) {
+      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.uniqueId).
+      then(function(response) {
+        return response.data;
+      })
+    }
   }
 
+  $scope.showAddressForm = {
+    state:false,
+    city:false
+  }
+
+  $scope.showBillingAddressForm = {
+    state:false,
+    city:false
+  }
+
+  $scope.$watch('data.address.country', function(newValue, oldValue) {
+    if (newValue != null && newValue != undefined) {
+
+      if (newValue == '') {
+        $scope.data.address.state = ''
+      }
+
+      if ($scope.countrList) {
+        for (var i = 0; i < $scope.countrList.length; i++) {
+          if ($scope.countrList[i].name==newValue) {
+            $scope.selectedCountryObj = $scope.countrList[i]
+            break;
+          }else {
+            $scope.selectedCountryObj = ''
+          }
+        }
+        console.log($scope.selectedCountryObj);
+      }
+      if (typeof $scope.selectedCountryObj == 'object') {
+        $scope.showAddressForm.state = true
+      }else {
+        $scope.showAddressForm.state = false
+      }
+    }
+  });
+
+  $scope.$watch('data.address.state', function(newValue, oldValue) {
+    if (newValue != null && newValue != undefined) {
+
+      if (newValue == '') {
+        $scope.data.address.city = ''
+      }
+
+      if ($scope.stateList) {
+        for (var i = 0; i < $scope.stateList.length; i++) {
+          if ($scope.stateList[i].name==newValue) {
+            $scope.selectedStateObj = $scope.stateList[i]
+            break;
+          }else {
+            $scope.selectedStateObj = ''
+          }
+        }
+        console.log($scope.selectedStateObj);
+      }
+      if (typeof $scope.selectedStateObj == 'object') {
+        $scope.showAddressForm.city = true
+      }else {
+        $scope.showAddressForm.city = false
+      }
+    }
+  });
+
+
+  $scope.$watch('data.billingAddress.country', function(newValue, oldValue) {
+    if (newValue != null && newValue != undefined) {
+
+      if (newValue == '') {
+        $scope.data.billingAddress.state = ''
+      }
+
+      if (typeof newValue == 'object') {
+        $scope.showBillingAddressForm.state = true
+      }else {
+        $scope.showBillingAddressForm.state = false
+      }
+    }
+  });
+
+  $scope.$watch('data.billingAddress.state', function(newValue, oldValue) {
+    if (newValue != null && newValue != undefined) {
+
+      if (newValue == '') {
+        $scope.data.billingAddress.city = ''
+      }
+
+      if (typeof newValue == 'object') {
+        $scope.showBillingAddressForm.city = true
+      }else {
+        $scope.showBillingAddressForm.city = false
+      }
+    }
+  });
 
 
   $scope.change = function() {
@@ -2657,6 +2848,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       country: 'India',
       mobileNo: $scope.me.profile.mobile,
       landMark: ''
+    }
+    if (settings_isStoreGlobal) {
+      $scope.data.address.country = ''
     }
   }
   $scope.cancel = function() {
@@ -2677,6 +2871,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       mobileNo: $scope.me.profile.mobile,
       landMark: ''
     }
+    if (settings_isStoreGlobal) {
+      $scope.data.address.country = ''
+    }
   }
   $scope.show = function(idx) {
     $scope.addressview = false
@@ -2692,6 +2889,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
         }).
         then(function(response) {
+          console.log(response.data);
           if (response.data.length > 0) {
             $scope.showMessage = false
             $scope.data.address.city = response.data[0].city
@@ -2711,8 +2909,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         })
       } else if (newValue.length < 6) {
         $scope.showMessage = false
-        $scope.data.address.city = ''
-        $scope.data.address.state = ''
+        // $scope.data.address.city = ''
+        // $scope.data.address.state = ''
       }
     }
   })
@@ -2737,7 +2935,6 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
   })
 
-  $scope.shippingCharges = 0
 
   $scope.saveAdd = function() {
     if ($scope.data.address.street.length == 0) {
@@ -3048,6 +3245,18 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         }
       }
       $scope.data.stage = 'payment';
+
+      if (settings_isStoreGlobal) {
+        $http({
+          method:'GET',
+          url:'/api/ecommerce/shipmentCharge/?country=US&pincode='+$scope.data.address.pincode +'&weight=1'
+        }).then(function (response) {
+          $scope.shippingCharges = response.data
+        })
+      }else {
+        $scope.shippingCharges = 0
+      }
+
     }
   }
 
@@ -3415,7 +3624,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   $scope.isContactUs = settings_isContactUs;
   $scope.isFaq = settings_isFaq;
 
-  console.log(settings_isFeedback,'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG')
+  console.log(settings_isFeedback, 'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG')
   console.log(settings_isContactUs)
   console.log(settings_isFaq)
 
@@ -3433,8 +3642,8 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
     $scope.copyArr = [...$scope.bottomMenuPagesCopy];
 
-    $scope.bottomMenuPages1 = $scope.copyArr.slice(0, $scope.copyArr.length/2)
-    $scope.bottomMenuPages2 = $scope.copyArr.slice($scope.copyArr.length/2, $scope.copyArr.length)
+    $scope.bottomMenuPages1 = $scope.copyArr.slice(0, $scope.copyArr.length / 2)
+    $scope.bottomMenuPages2 = $scope.copyArr.slice($scope.copyArr.length / 2, $scope.copyArr.length)
 
   })
 

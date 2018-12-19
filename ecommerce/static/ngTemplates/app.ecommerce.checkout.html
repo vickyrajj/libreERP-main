@@ -382,24 +382,24 @@
                           <div class="row">
                             <div class="col-md-6 col-xs-12 col-sm-6">
                               <div class="form-group">
-                                <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
+                                <input ng-model="data.address.country" uib-typeahead="c.name as c.name for c in countrySearch($viewValue)" type="text" class="form-control" id="country" placeholder="Enter Country.." >
                               </div>
                             </div>
                             <div class="col-md-6 col-xs-12 col-sm-6">
                               <div class="form-group">
-                                <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State.." disabled>
+                                <input ng-model="data.address.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.address.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showAddressForm.state">
                               </div>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-md-6 col-xs-12 col-sm-6">
                               <div class="form-group">
-                                <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." disabled>
+                                <input ng-model="data.address.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.address.state.uniqueId)" type="text" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showAddressForm.city">
                               </div>
                             </div>
                             <div class="col-md-6 col-xs-12 col-sm-6">
                               <div class="form-group">
-                                <input ng-model="data.address.country" type="text" class="form-control" id="country" placeholder="Enter Country.." disabled>
+                                <input ng-model="data.address.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
                               </div>
                             </div>
                           </div>
@@ -427,24 +427,24 @@
                             <div class="row">
                               <div class="col-md-6 col-xs-12 col-sm-6">
                                 <div class="form-group">
-                                  <input ng-model="data.billingAddress.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
+                                  <input ng-model="data.billingAddress.country" uib-typeahead="c.name as c.name for c in countrySearch($viewValue)" type="text" class="form-control" id="country" placeholder="Enter Country.." >
                                 </div>
                               </div>
                               <div class="col-md-6 col-xs-12 col-sm-6">
                                 <div class="form-group">
-                                  <input ng-model="data.billingAddress.state" type="text" class="form-control" id="state" placeholder="Enter State.." disabled>
+                                  <input ng-model="data.billingAddress.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.billingAddress.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showBillingAddressForm.state">
                                 </div>
                               </div>
                             </div>
                             <div class="row">
                               <div class="col-md-6 col-xs-12 col-sm-6">
                                 <div class="form-group">
-                                  <input ng-model="data.billingAddress.city" type="text" class="form-control" id="city" placeholder="Enter City.." disabled>
+                                  <input ng-model="data.billingAddress.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.billingAddress.state.uniqueId)" type="text" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showBillingAddressForm.city">
                                 </div>
                               </div>
                               <div class="col-md-6 col-xs-12 col-sm-6">
                                 <div class="form-group">
-                                  <input ng-model="data.billingAddress.country" type="text" class="form-control" id="country" placeholder="Enter Country.." disabled>
+                                  <input ng-model="data.billingAddress.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
                                 </div>
                               </div>
                             </div>
@@ -477,20 +477,20 @@
                     <div class="row">
                       <div class="col-md-5 col-xs-12 col-sm-6">
                         <div class="form-group">
-                          <input ng-model="data.address.country" uib-typeahead="c as c.name for c in countrySearch($viewValue)" type="text" class="form-control" id="country" placeholder="Enter Country..">
+                          <input ng-model="data.address.country" uib-typeahead="c.name as c.name for c in countrySearch($viewValue)" type="text" class="form-control" id="country" placeholder="Enter Country..">
                         </div>
                       </div>
 
                       <div class="col-md-5 col-xs-12 col-sm-6">
                         <div class="form-group">
-                          <input ng-model="data.address.state" uib-typeahead="s as s.name for s in stateSearch($viewValue, data.address.country.id)" type="text" class="form-control" id="state" placeholder="Enter State..">
+                          <input ng-model="data.address.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.address.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showAddressForm.state">
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-5 col-xs-12 col-sm-6">
                         <div class="form-group">
-                          <input ng-model="data.address.city" type="text" uib-typeahead="c as c.name for c in citySearch($viewValue, data.address.state.id)" class="form-control" id="city" placeholder="Enter City..">
+                          <input ng-model="data.address.city" type="text" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.address.state.uniqueId)" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showAddressForm.city">
                         </div>
                       </div>
                       <div class="col-md-5 col-xs-12 col-sm-6">
@@ -542,24 +542,24 @@
                       <div class="row">
                         <div class="col-md-6 col-xs-12 col-sm-6">
                           <div class="form-group">
-                            <input ng-model="data.billingAddress.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
+                            <input ng-model="data.billingAddress.country" uib-typeahead="c.name as c.name for c in countrySearch($viewValue)" type="text" class="form-control" id="country" placeholder="Enter Country.." >
                           </div>
                         </div>
                         <div class="col-md-6 col-xs-12 col-sm-6">
                           <div class="form-group">
-                            <input ng-model="data.billingAddress.state" type="text" class="form-control" id="state" placeholder="Enter State.." disabled>
+                            <input ng-model="data.billingAddress.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.billingAddress.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showBillingAddressForm.city">
                           </div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6 col-xs-12 col-sm-6">
                           <div class="form-group">
-                            <input ng-model="data.billingAddress.city" type="text" class="form-control" id="city" placeholder="Enter City.." disabled>
+                            <input ng-model="data.billingAddress.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.billingAddress.state.uniqueId)" type="text" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showBillingAddressForm.city">
                           </div>
                         </div>
                         <div class="col-md-6 col-xs-12 col-sm-6">
                           <div class="form-group">
-                            <input ng-model="data.billingAddress.country" type="text" class="form-control" id="country" placeholder="Enter Country.." disabled>
+                            <input ng-model="data.billingAddress.pincode" type="text" class="form-control" id="pincode" placeholder="Enter Pincode..">
                           </div>
                         </div>
                       </div>
@@ -613,15 +613,15 @@
             </div>
 
           </div>
-          <div class="row" style="padding:20px;" >
+          <div class="row" style="padding:20px;">
             <p>
               <strong>Shipping Charges :</strong>
-              <span>{{shippingCharges.toFixed(2)}}</span>
+              <span><i class="fa {{currency}}"></i> {{shippingCharges.toFixed(2)}}</span>
             </p>
             <p>
               <strong>Total amount payable :</strong>
-              <span ng-if="msg=='Success'" >{{totalAfterPromo.toFixed(2)}}</span>
-            <span ng-if="msg!='Success'">{{totalAfterDiscount.toFixed(2)}}</span>
+              <span ng-if="msg=='Success'" > <i class="fa {{currency}}"></i> {{totalAfterPromo.toFixed(2)}}</span>
+            <span ng-if="msg!='Success'"><i class="fa {{currency}}"></i> {{totalAfterDiscount.toFixed(2)}}</span>
             </p>
           </div>
 
