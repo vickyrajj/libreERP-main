@@ -1,3 +1,9 @@
+var projectsStepsData = [
+  {indx: 1, text : 'created', display : 'Created'},
+  {indx: 2 , text : 'sent_for_approval', display : 'Sent For Approval'},
+  {indx: 3 , text : 'approved', display : 'Approved'},
+  {indx: 4 , text : 'ongoing', display : 'OnGoing'},
+];
 app.controller("businessManagement.projects", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
 
   $scope.data = {
@@ -138,10 +144,10 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'edit') {
-          var title = 'Edit Project :';
+          var title = 'Edit Project : ';
           var appType = 'projectEditor';
         } else if (action == 'details') {
-          var title = 'Project Details :';
+          var title = 'Project Details : ';
           var appType = 'projectDetails';
         } else if (action == 'delete') {
           console.log("aaaaaaaaa");
@@ -170,6 +176,10 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     }
 
   }
+
+  $timeout(function() {
+    $scope.addTab({"title":"Project Details : dfdsfsd","cancel":true,"app":"projectDetails","data":{"pk":1,"index":0},"active":true})
+  },1000)
 
   $scope.tableActionArchieve = function(target, action, mode) {
     console.log(target, action, mode, 'fffffffffgggggggggggggggg');
@@ -545,13 +555,21 @@ app.controller("businessManagement.projects.service.item", function($scope, $sta
 
 app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-
-
+  $scope.projectSteps = {steps : projectsStepsData}
   if ($scope.tab == undefined) {
     $scope.resetForm();
   } else {
-    $scope.form = $scope.data.tableData[$scope.tab.data.index]
+    $scope.form = $scope.data.tableData[$scope.tab.data.index];
   }
+  // $scope.form.exRate = 75;
+
+  console.log($scope.form);
+  for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+      if ($scope.projectSteps.steps[i].text == $scope.form.status) {
+        $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
+        break;
+      }
+    }
 
 
   $scope.me = $users.get('mySelf');
@@ -774,12 +792,12 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   }, true)
 
 
-  $scope.form.invoiceValue = ''
-  $scope.$watch('form.invoiceValue', function(newValue, oldValue) {
-    console.log(newValue,'aaaaaaaaaaaaaaa');
-    $scope.form.invoiceValueINR = $scope.newValue*form.exrate
-
-  })
+  // $scope.form.invoiceValue = ''
+  // $scope.$watch('form.invoiceValue', function(newValue, oldValue) {
+  //   console.log(newValue,'aaaaaaaaaaaaaaa');
+  //   $scope.form.invoiceValueINR = $scope.newValue*form.exrate
+  //
+  // })
 
 
 
@@ -898,12 +916,19 @@ app.controller("businessManagement.projects.approval.success", function($scope, 
 })
 app.controller("businessManagement.projects.approval.view", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-
   if ($scope.tab == undefined) {
     $scope.resetForm();
   } else {
-    $scope.form = $scope.data1.tableData[$scope.tab.data.index]
+    $scope.form = $scope.data.tableData[$scope.tab.data.index]
   }
+  console.log($scope.form);
+  $scope.projectSteps = {steps : projectsStepsData}
+  for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+      if ($scope.projectSteps.steps[i].text == $scope.form.status) {
+        $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
+        break;
+      }
+    }
   $scope.me = $users.get('mySelf');
   $http.get('/api/HR/userSearch/').
   then(function(response) {
@@ -1009,8 +1034,17 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
   if ($scope.tab == undefined) {
     $scope.resetForm();
   } else {
-    $scope.form = $scope.data2.tableData[$scope.tab.data.index]
+    $scope.form = $scope.data.tableData[$scope.tab.data.index]
+    $scope.form.exRate = 75;
   }
+  console.log($scope.form);
+  $scope.projectSteps = {steps : projectsStepsData}
+  for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+      if ($scope.projectSteps.steps[i].text == $scope.form.status) {
+        $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
+        break;
+      }
+    }
   $http.get('/api/HR/userSearch/').
   then(function(response) {
     $scope.persons = response.data;
@@ -1059,6 +1093,9 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
       }
     }
   }, true)
+
+
+
 
   $scope.saveInfo = function() {
 
@@ -1144,7 +1181,8 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
             method: 'PATCH',
             url: '/api/support/projects/' + $scope.form.pk + '/',
             data: {
-              savedStatus: true
+              savedStatus: true,
+              status:'ongoing'
             },
           }).
           then(function(response) {
@@ -1190,14 +1228,49 @@ app.controller("businessManagement.projects.invoice.view", function($scope, $sta
   if ($scope.tab == undefined) {
     $scope.resetForm();
   } else {
-    $scope.form = $scope.data3.tableData[$scope.tab.data.index]
+    $scope.form = $scope.data.tableData[$scope.tab.data.index]
   }
+  console.log($scope.form);
+  $scope.projectSteps = {steps : projectsStepsData}
+  for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+      if ($scope.projectSteps.steps[i].text == $scope.form.status) {
+        $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
+        break;
+      }
+    }
+    function sum(data) {
+      console.log(data);
+      if (data == $scope.form.materialIssue) {
+        return data.map(function(m) {
+          return m.qty * m.price
+        }).reduce(function(a, b) {
+          return a + b
+        }, 0)
+      } else if (data == $scope.purchase) {
+        return data.map(function(m) {
+          return m.quantity1 * m.price
+        }).reduce(function(a, b) {
+          return a + b
+        }, 0)
+      }
+    }
+
+    $http({
+      method: 'GET',
+      url: '/api/support/material/?project=' + $scope.form.pk,
+    }).
+    then(function(response) {
+      console.log(response.data)
+      $scope.form.materialIssue = response.data
+      $scope.materialSum = sum($scope.form.materialIssue)
+    })
 
   $http({
     method: 'GET',
-    url: '/api/support/bom/?project=' + $scope.form.project.pk,
+    url: '/api/support/bom/?project=' + $scope.form.pk,
   }).
   then(function(response) {
+    console.log(response.data);
     $scope.purchase = response.data;
     $scope.purchaseSum = sum($scope.purchase)
   })
@@ -1219,7 +1292,8 @@ app.controller("businessManagement.projects.invoice.view", function($scope, $sta
   }
   console.log($scope.form,'aaaaaaaaaaaaaaaaa');
 
-  $scope.materialSum = sum($scope.form.materialIssue)
+
+
 
 
 

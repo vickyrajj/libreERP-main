@@ -28,7 +28,7 @@
             <generic-Table data="data.archieveData" config-Obj="{{archieveConfig}}" callback-Fn="tableActionArchieve"></generic-Table>
           </div>
         </uib-tab>
-        <uib-tab >
+        <!-- <uib-tab >
           <uib-tab-heading>
             Pending Approval
             <i class="fa fa-list-ul"></i>
@@ -53,9 +53,8 @@
           </uib-tab-heading>
           <div class="container-fluid" >
             <generic-Table data="data3.tableData" config-Obj="{{config3}}" callback-Fn="tableAction3"></generic-Table>
-            <!-- <div ng-include="'/static/ngTemplates/app.projects.invoice.html'"></div>  -->
           </div>
-        </uib-tab>
+        </uib-tab> -->
         <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
           <uib-tab-heading>
             {{tab.title}}

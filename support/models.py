@@ -12,8 +12,8 @@ def getUploadedProductSheets(instance , filename ):
 PURCHASE_STATUS = (
 ('created' , 'created'),
 ('sent_for_approval' , 'sent_for_approval'),
-('reconciled' , 'reconciled'),
 ('approved' , 'approved'),
+('ongoing' , 'ongoing'),
 ('archieve' , 'archieve'),
 )
 
@@ -77,15 +77,15 @@ class Projects(models.Model):
     revision =  models.CharField( max_length = 20 ,null = True , blank = True)
     savedStatus = models.BooleanField(default = False)
     invoiceValue = models.FloatField(null = True)
-    packing = models.FloatField(null = True)
-    insurance = models.FloatField(null = True)
-    freight = models.FloatField(null = True)
-    assessableValue = models.FloatField(null = True)
-    gst1 = models.FloatField(null = True)
-    gst2 = models.FloatField(null = True)
-    clearingCharges1 = models.FloatField(null = True)
-    clearingCharges2 = models.FloatField(null = True)
-    exRate = models.FloatField(null = True)
+    packing = models.FloatField(default = 0)
+    insurance = models.FloatField(default = 0)
+    freight = models.FloatField(default = 0)
+    assessableValue = models.FloatField(default = 0)
+    gst1 = models.FloatField(default = 0)
+    gst2 = models.FloatField(default = 0)
+    clearingCharges1 = models.FloatField(default = 0)
+    clearingCharges2 = models.FloatField(default = 0)
+    exRate = models.FloatField( default = 75)
     vendor = models.ForeignKey(Vendor , related_name='vendor' , null = True)
 
 
