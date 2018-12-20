@@ -53,6 +53,7 @@ LOGIN_TEMPLATE = 'login.html'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'apfwdssalfeag7)cp4jve5gfb%l8wbn4cyvym(tez^m@z1o#3f'
+MOBILE_SECRET_KEY = '1234'
 
 GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git operations are
 # computationaly heavy and can be used to overload with git operations. So the server will have
@@ -61,7 +62,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['1192.168.0.17','192.168.1.124', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.110' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.123','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10','192.168.1.111','192.168.1.102']
+ALLOWED_HOSTS = ['192.168.0.26','1192.168.0.17','192.168.1.124', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.110' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.123','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10','192.168.1.111','192.168.1.102']
 
 
 LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
@@ -84,7 +85,6 @@ SEO_DESCRIPTION = 'Sterling Select Online Shopping'
 SEO_IMG = '/static/images/company_icon.png'
 SEO_IMG_WIDTH = 1024
 SEO_IMG_HEIGHT = 719
-
 
 SEO_AUTHOR = 'sterlingselect.com'
 SEO_TWITTER_CREATOR = '@sterlingselect'
@@ -291,7 +291,7 @@ EMAIL_USE_TLS = True
 EMAIL_API=True
 G_FROM='onlinestore@bni-india.in'
 G_KEY='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'
-G_ADMIN=[ "bhanubalram5@gmail.com","vikas.motla@gmail.com"]
+G_ADMIN=[ "vikas.m@cioc.in","vikas.motla@gmail.com"]
 
 
 
@@ -301,7 +301,7 @@ DEFAULT_FROM_EMAIL = 'do_not_reply@24tutors.com'
 
 STATIC_URL = '/static/'
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_HEADERS = (
     'x-requested-with',

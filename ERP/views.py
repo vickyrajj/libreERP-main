@@ -296,7 +296,6 @@ class moduleViewSet(viewsets.ModelViewSet):
         return getModules(u , includeAll)
 
 def getApps(user):
-    print 'appssssssssssssssssssssssss',appSettingsField.objects.get(app=25,name='multipleStore')
     aa = []
     for a in user.accessibleApps.all().values('app'):
         aa.append(a['app'])
@@ -329,7 +328,6 @@ class applicationViewSet(viewsets.ModelViewSet):
         else:
             if 'user' in self.request.GET:
                 return getApps(User.objects.get(username = self.request.GET['user']))
-            print 'cameeeeeeeeeeeeeeeeee',appSettingsField.objects.get(app=25,name='multipleStore').flag
             try:
                 if appSettingsField.objects.get(app=25,name='multipleStore').flag:
                     return application.objects.filter()

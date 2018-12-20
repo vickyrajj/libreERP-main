@@ -2,6 +2,8 @@
 app.controller('registration' , function($scope , $state , $http , $timeout , $interval){
   console.log("registration loded");
   $scope.mode = 'main';
+  $scope.autoActiveReg = autoActiveReg
+  $scope.showActiveMsg = false
 
   $scope.validity = {firstName : null , lastName : null, email : null ,mobile : null,password : null , rePassword: null };
 
@@ -36,8 +38,6 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       // then(function(response) {
       //   console.log(response.data);
       // })
-      console.log(response.data);
-
       if (($scope.form.password != null && $scope.form.password.length <3) || $scope.form.password == null ) {
         return;
       }
@@ -46,6 +46,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       $scope.form.token = response.data.token;
       $scope.form.reg = response.data.pk;
       $scope.mode = 'verify';
+      $scope.usernameExist = false
     }).catch(function (err) {
       // $scope.mode = 'sendingOTP';
       $scope.mode = 'main';
@@ -62,8 +63,15 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
     console.log($scope.form,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     $http({method : 'PATCH' , url : '/api/homepage/registration/' + $scope.form.reg + '/', data : $scope.form }).
     then(function(response) {
-      console.log(response);
-      window.location.href = "/ERP";
+      if ($scope.autoActiveReg=='True') {
+        $scope.showActiveMsg = false
+        alert($scope.showActiveMsg)
+        window.location.href = "/";
+      }else{
+        $scope.showActiveMsg = true
+        alert($scope.showActiveMsg)
+
+      }
     }, function(err) {
       console.log(err);
       if (err.status == 400) {
@@ -98,5 +106,9 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
     }
 
   }, true)
+
+  $scope.continue = function () {
+    window.location.href = "/";
+  }
 
 });

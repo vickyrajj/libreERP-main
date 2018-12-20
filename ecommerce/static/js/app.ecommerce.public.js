@@ -802,6 +802,26 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
 
 app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window, ngMeta, $filter, Flash) {
 
+$scope.call = function () {
+  var fd = new FormData()
+  fd.append('secretKey', 1234);
+  fd.append('username', 'vikas');
+  fd.append('email', 'vikas.m@cioc.in');
+  fd.append('password', 123);
+  $http({
+    method: 'POST',
+    url: '/socialMobileLogin',
+    data: fd,
+    transformRequest: angular.identity,
+    headers: {
+      'Content-Type': undefined
+    }
+  }).
+  then(function(response) {
+    location.reload();
+  })
+}
+
   $scope.me = $users.get('mySelf');
   $scope.showRatings = false
   $scope.priceDisplay = false
