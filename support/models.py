@@ -12,12 +12,14 @@ def getUploadedProductSheets(instance , filename ):
 PURCHASE_STATUS = (
 ('created' , 'created'),
 ('sent_for_approval' , 'sent_for_approval'),
-('reconciled' , 'reconciled'),
 ('approved' , 'approved'),
+('ongoing' , 'ongoing'),
+('archieve' , 'archieve'),
 )
 
 STOCK__STATUS = (
-('live' , 'live'),('completed' , 'completed')
+('live' , 'live'),
+('completed' , 'completed')
 )
 
 class ProductSheet(models.Model):
