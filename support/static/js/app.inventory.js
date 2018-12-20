@@ -333,6 +333,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
           $scope.form = {}
           $scope.save = function() {
+            console.log($scope.productsOrdered);
             console.log($scope.form.responsible, 'kkkkkkkkkkkkkkkkk');
             if ($scope.form.responsible == undefined) {
               Flash.create('warning', 'Select Responsible person');

@@ -624,13 +624,7 @@ def materialIssued(response , value , request):
     cwidth=1.6*inch,1.6*inch,1.6*inch,1.6*inch,1.8*inch
     t2=Table(data2,rowHeights=rheight,colWidths=cwidth)
     t2.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-
     elements.append(t2)
-
-
-
-
-
     doc.build(elements)
 
 

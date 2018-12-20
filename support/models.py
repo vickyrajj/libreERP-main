@@ -14,10 +14,12 @@ PURCHASE_STATUS = (
 ('sent_for_approval' , 'sent_for_approval'),
 ('reconciled' , 'reconciled'),
 ('approved' , 'approved'),
+('archieve' , 'archieve'),
 )
 
 STOCK__STATUS = (
-('live' , 'live'),('completed' , 'completed')
+('live' , 'live'),
+('completed' , 'completed')
 )
 
 class ProductSheet(models.Model):

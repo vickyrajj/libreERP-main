@@ -1,7 +1,8 @@
 app.controller("businessManagement.projects", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
 
   $scope.data = {
-    tableData: []
+    tableData: [],
+    archieveData: []
   };
 
   views = [{
@@ -18,9 +19,31 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     // searchField: 'title',
     deletable: true,
     itemsNumPerView: [12, 21, 30],
+    // getParams: [{
+    //   key: 'status',
+    //   value: 'created'
+    // }],
+    searchField: 'title',
+  }
+
+
+  views = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.projects.archieve.item.html',
+  }, ];
+
+  $scope.archieveConfig = {
+    views: views,
+    url: '/api/support/projects/',
+    // filterSearch: true,
+    // searchField: 'title',
+    deletable: true,
+    itemsNumPerView: [12, 21, 30],
     getParams: [{
       key: 'status',
-      value: 'created'
+      value: 'archieve'
     }],
     searchField: 'title',
   }
@@ -147,6 +170,33 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     }
 
   }
+
+  $scope.tableActionArchieve = function(target, action, mode) {
+    console.log(target, action, mode, 'fffffffffgggggggggggggggg');
+
+
+    for (var i = 0; i < $scope.data.archieveData.length; i++) {
+      if ($scope.data.archieveData[i].pk == parseInt(target)) {
+        if (action == 'details') {
+          var title = 'Details :';
+          var appType = 'projectarchieveDetails';
+        }
+
+        $scope.addTab({
+          title: title + $scope.data.archieveData[i].title,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i
+          },
+          active: true
+        })
+      }
+    }
+
+  }
+
   $scope.tableAction1 = function(target, action, mode) {
 
 
@@ -577,18 +627,30 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }).
     then(function(response) {
       $scope.projects = response.data
+      for (var i = 0; i < $scope.projects.length; i++) {
+        var totalprice = $scope.projects[i].price*$scope.projects[i].quantity1
+        $scope.form.invoiceValue += totalprice
+      }
+
     })
   }
+
+
   $scope.productpk = []
   $scope.fetchData()
   $scope.$watch('projects', function(newValue, oldValue) {
+        var cost = 0
     for (var i = 0; i < newValue.length; i++) {
+
+        var totalprice = newValue[i].price*newValue[i].quantity1
+        cost += totalprice
       console.log(typeof oldValue[i], '11111111111');
       if (typeof oldValue[i] == "undefined") {
 
       }
       // || newValue[i].landed_price != oldValue[i].landed_price
       else if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1) {
+        $scope.form.invoiceValue = 0
         var dataSend = {
           quantity1: newValue[i].quantity1,
           price: newValue[i].price,
@@ -606,6 +668,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }
 
     }
+    $scope.form.invoiceValue = cost
   }, true)
 
   $scope.showbutton = false
@@ -613,6 +676,12 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     if (typeof newValue[0] == 'undefined') {
 
     } else if (typeof newValue[0].part_no == 'object') {
+      var cost = 0
+      for (var i = 0; i < newValue.length; i++) {
+        var totalprice = newValue[i].price*newValue[i].quantity1
+        cost += totalprice
+      }
+      $scope.form.invoiceValue =cost
       $scope.data[$scope.data.length - 1] = newValue[0].part_no
       $scope.data[$scope.data.length - 1].quantity1 = 1
       $scope.projectlist = []
@@ -639,6 +708,10 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       })
       return
     } else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
+      for (var i = 0; i < $scope.data.length; i++) {
+        var totalprice = $scope.data[i].price*$scope.data[i].quantity1
+        $scope.form.invoiceValue += totalprice
+      }
       $scope.data[$scope.data.length - 1] = $scope.data[$scope.data.length - 1].part_no
       $scope.data[$scope.data.length - 1].quantity1 = 1
       $scope.projectlist = []
@@ -663,9 +736,16 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       })
       return
     } else {
+      var cost = 0
       for (var i = 0; i < newValue.length; i++) {
+        console.log("aaaaaaaaaaaaaaa");
+
+          var totalprice = newValue[i].price*newValue[i].quantity1
+          cost+= totalprice
+
         if (newValue[i].listPk) {
           if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].landed_price != oldValue[i].landed_price) {
+
             var dataSend = {
               quantity1: newValue[i].quantity1,
               price: newValue[i].price,
@@ -681,6 +761,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         }
 
       }
+      $scope.form.invoiceValue =   $scope.form.invoiceValue +cost
     }
 
 
