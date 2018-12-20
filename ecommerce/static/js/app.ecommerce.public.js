@@ -2242,6 +2242,12 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
   document.title = BRAND_TITLE + ' | My Settings'
   document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
 
+  if (settings_isStoreGlobal) {
+    $scope.isStoreGlobal = true
+  } else {
+    $scope.isStoreGlobal = false
+  }
+
   $scope.refresh = function() {
     $scope.form = {
       title: '',
@@ -2256,8 +2262,8 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
     if (settings_isStoreGlobal) {
       $scope.form.country = ''
     }
-
   }
+
   $scope.refresh()
   $scope.update = function(idx) {
     $scope.form = $scope.savedAddress[idx]
@@ -2281,39 +2287,140 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
     })
   }
 
-  $scope.showMessage = false
-  $scope.$watch('form.pincode', function(newValue, oldValue) {
-    if (newValue != null) {
-      if (newValue.length == 6) {
-        $http({
-          method: 'GET',
-          url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
-        }).
+  if (settings_isStoreGlobal) {
+    $scope.countrySearch = function(query) {
+      return $http.get('/api/ecommerce/searchCountry/?query=' + query).
+      then(function(response) {
+        $scope.countrList = response.data
+        return response.data;
+      })
+    }
+
+    $scope.stateSearch = function(query) {
+      if ($scope.selectedCountryObj.uniqueId) {
+        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.uniqueId).
         then(function(response) {
-          if (response.data.length > 0) {
-            $scope.showMessage = false
-            $scope.form.city = response.data[0].city
-            $scope.form.state = response.data[0].state
-          } else {
-            $scope.showMessage = true
-          }
-          $http({
-            method: 'GET',
-            url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
-          }).
-          then(function(response) {
-            if (response.data.length == 0) {
-              $scope.showMessage = true
-            }
-          })
+          $scope.stateList = response.data
+          return response.data;
         })
-      } else if (newValue.length < 6) {
-        $scope.showMessage = false
-        // $scope.form.city = ''
-        // $scope.form.state = ''
       }
     }
-  })
+
+    $scope.citySearch = function(query) {
+      if ($scope.selectedStateObj.uniqueId) {
+        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.uniqueId).
+        then(function(response) {
+          return response.data;
+        })
+      }
+    }
+
+    $scope.showAddressForm = {
+      state: false,
+      city: false
+    }
+
+    $scope.showBillingAddressForm = {
+      state: false,
+      city: false
+    }
+
+    $scope.$watch('form.country', function(newValue, oldValue) {
+      if (newValue != null && newValue != undefined) {
+
+        if (newValue == '') {
+          $scope.form.state = ''
+        }
+
+        if ($scope.countrList) {
+          for (var i = 0; i < $scope.countrList.length; i++) {
+            if ($scope.countrList[i].name == newValue) {
+              $scope.selectedCountryObj = $scope.countrList[i]
+              break;
+            } else {
+              $scope.selectedCountryObj = ''
+            }
+          }
+          console.log($scope.selectedCountryObj);
+        }
+        if (typeof $scope.selectedCountryObj == 'object') {
+          $scope.showAddressForm.state = true
+        } else {
+          $scope.showAddressForm.state = false
+        }
+      }
+    });
+
+    $scope.$watch('form.state', function(newValue, oldValue) {
+      if (newValue != null && newValue != undefined) {
+
+        if (newValue == '') {
+          $scope.form.city = ''
+        }
+
+        if ($scope.stateList) {
+          for (var i = 0; i < $scope.stateList.length; i++) {
+            if ($scope.stateList[i].name == newValue) {
+              $scope.selectedStateObj = $scope.stateList[i]
+              break;
+            } else {
+              $scope.selectedStateObj = ''
+            }
+          }
+          console.log($scope.selectedStateObj);
+        }
+        if (typeof $scope.selectedStateObj == 'object') {
+          $scope.showAddressForm.city = true
+        } else {
+          $scope.showAddressForm.city = false
+        }
+      }
+    });
+  } else {
+    $scope.showAddressForm = {
+      state: true,
+      city: true
+    }
+
+    $scope.showBillingAddressForm = {
+      state: true,
+      city: true
+    }
+    $scope.showMessage = false
+    $scope.$watch('form.pincode', function(newValue, oldValue) {
+      if (newValue != null) {
+        if (newValue.length == 6) {
+          $http({
+            method: 'GET',
+            url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
+          }).
+          then(function(response) {
+            if (response.data.length > 0) {
+              $scope.showMessage = false
+              $scope.form.city = response.data[0].city
+              $scope.form.state = response.data[0].state
+            } else {
+              $scope.showMessage = true
+            }
+            $http({
+              method: 'GET',
+              url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
+            }).
+            then(function(response) {
+              if (response.data.length == 0) {
+                $scope.showMessage = true
+              }
+            })
+          })
+        } else if (newValue.length < 6) {
+          $scope.showMessage = false
+          // $scope.form.city = ''
+          // $scope.form.state = ''
+        }
+      }
+    })
+  }
+
 
 
 
@@ -2367,98 +2474,6 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
       Flash.create('danger', response.status + ' : ' + response.statusText);
     })
   }
-
-  $scope.countrySearch = function(query) {
-    return $http.get('/api/ecommerce/searchCountry/?query=' + query).
-    then(function(response) {
-      $scope.countrList = response.data
-      return response.data;
-    })
-  }
-
-  $scope.stateSearch = function(query) {
-    if ($scope.selectedCountryObj.uniqueId) {
-      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.uniqueId).
-      then(function(response) {
-        $scope.stateList = response.data
-        return response.data;
-      })
-    }
-  }
-
-  $scope.citySearch = function(query) {
-    if ($scope.selectedStateObj.uniqueId) {
-      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.uniqueId).
-      then(function(response) {
-        return response.data;
-      })
-    }
-  }
-
-  $scope.showAddressForm = {
-    state:false,
-    city:false
-  }
-
-  $scope.showBillingAddressForm = {
-    state:false,
-    city:false
-  }
-
-  $scope.$watch('form.country', function(newValue, oldValue) {
-    if (newValue != null && newValue != undefined) {
-
-      if (newValue == '') {
-        $scope.form.state = ''
-      }
-
-      if ($scope.countrList) {
-        for (var i = 0; i < $scope.countrList.length; i++) {
-          if ($scope.countrList[i].name==newValue) {
-            $scope.selectedCountryObj = $scope.countrList[i]
-            break;
-          }else {
-            $scope.selectedCountryObj = ''
-          }
-        }
-        console.log($scope.selectedCountryObj);
-      }
-      if (typeof $scope.selectedCountryObj == 'object') {
-        $scope.showAddressForm.state = true
-      }else {
-        $scope.showAddressForm.state = false
-      }
-    }
-  });
-
-  $scope.$watch('form.state', function(newValue, oldValue) {
-    if (newValue != null && newValue != undefined) {
-
-      if (newValue == '') {
-        $scope.form.city = ''
-      }
-
-      if ($scope.stateList) {
-        for (var i = 0; i < $scope.stateList.length; i++) {
-          if ($scope.stateList[i].name==newValue) {
-            $scope.selectedStateObj = $scope.stateList[i]
-            break;
-          }else {
-            $scope.selectedStateObj = ''
-          }
-        }
-        console.log($scope.selectedStateObj);
-      }
-      if (typeof $scope.selectedStateObj == 'object') {
-        $scope.showAddressForm.city = true
-      }else {
-        $scope.showAddressForm.city = false
-      }
-    }
-  });
-
-
-
 });
 
 app.controller('controller.ecommerce.account.support', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash) {
@@ -2658,7 +2673,11 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   document.title = BRAND_TITLE + ' | Review Order > Select Shipping Address > Place Order'
   document.querySelector('meta[name="description"]').setAttribute("content", BRAND_TITLE + ' Online Shopping')
 
-
+  if (settings_isStoreGlobal) {
+    $scope.isStoreGlobal = true
+  } else {
+    $scope.isStoreGlobal = false
+  }
 
   $scope.fetchaddress = function() {
     $http({
@@ -2744,98 +2763,169 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
   }
 
-  $scope.showAddressForm = {
-    state:false,
-    city:false
+
+  if (settings_isStoreGlobal) {
+    $scope.showAddressForm = {
+      state: false,
+      city: false
+    }
+
+    $scope.showBillingAddressForm = {
+      state: false,
+      city: false
+    }
+
+    $scope.$watch('data.address.country', function(newValue, oldValue) {
+      if (newValue != null && newValue != undefined) {
+
+        if (newValue == '') {
+          $scope.data.address.state = ''
+        }
+
+        if ($scope.countrList) {
+          for (var i = 0; i < $scope.countrList.length; i++) {
+            if ($scope.countrList[i].name == newValue) {
+              $scope.selectedCountryObj = $scope.countrList[i]
+              break;
+            } else {
+              $scope.selectedCountryObj = ''
+            }
+          }
+          console.log($scope.selectedCountryObj);
+        }
+        if (typeof $scope.selectedCountryObj == 'object') {
+          $scope.showAddressForm.state = true
+        } else {
+          $scope.showAddressForm.state = false
+        }
+      }
+    });
+
+    $scope.$watch('data.address.state', function(newValue, oldValue) {
+      if (newValue != null && newValue != undefined) {
+
+        if (newValue == '') {
+          $scope.data.address.city = ''
+        }
+
+        if ($scope.stateList) {
+          for (var i = 0; i < $scope.stateList.length; i++) {
+            if ($scope.stateList[i].name == newValue) {
+              $scope.selectedStateObj = $scope.stateList[i]
+              break;
+            } else {
+              $scope.selectedStateObj = ''
+            }
+          }
+          console.log($scope.selectedStateObj);
+        }
+        if (typeof $scope.selectedStateObj == 'object') {
+          $scope.showAddressForm.city = true
+        } else {
+          $scope.showAddressForm.city = false
+        }
+      }
+    });
+
+
+    $scope.$watch('data.billingAddress.country', function(newValue, oldValue) {
+      if (newValue != null && newValue != undefined) {
+
+        if (newValue == '') {
+          $scope.data.billingAddress.state = ''
+        }
+
+        if (typeof newValue == 'object') {
+          $scope.showBillingAddressForm.state = true
+        } else {
+          $scope.showBillingAddressForm.state = false
+        }
+      }
+    });
+
+    $scope.$watch('data.billingAddress.state', function(newValue, oldValue) {
+      if (newValue != null && newValue != undefined) {
+
+        if (newValue == '') {
+          $scope.data.billingAddress.city = ''
+        }
+
+        if (typeof newValue == 'object') {
+          $scope.showBillingAddressForm.city = true
+        } else {
+          $scope.showBillingAddressForm.city = false
+        }
+      }
+    });
+  } else {
+    $scope.showAddressForm = {
+      state: true,
+      city: true
+    }
+
+    $scope.showBillingAddressForm = {
+      state: true,
+      city: true
+    }
+
+    $scope.showMessage = false
+
+    $scope.$watch('data.address.pincode', function(newValue, oldValue) {
+      if (newValue != null) {
+        if (newValue.length == 6) {
+          $http({
+            method: 'GET',
+            url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
+          }).
+          then(function(response) {
+            console.log(response.data);
+            if (response.data.length > 0) {
+              $scope.showMessage = false
+              $scope.data.address.city = response.data[0].city
+              $scope.data.address.state = response.data[0].state
+            } else {
+              $scope.showMessage = true
+            }
+            $http({
+              method: 'GET',
+              url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
+            }).
+            then(function(response) {
+              if (response.data.length == 0) {
+                $scope.showMessage = true
+              }
+            })
+          })
+        } else if (newValue.length < 6) {
+          $scope.showMessage = false
+          // $scope.data.address.city = ''
+          // $scope.data.address.state = ''
+        }
+      }
+    })
+
+    $scope.$watch('data.billingAddress.pincode', function(newValue, oldValue) {
+      if (newValue != null) {
+        if (newValue.length == 6) {
+          $http({
+            method: 'GET',
+            url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
+          }).
+          then(function(response) {
+            if (response.data.length > 0) {
+              $scope.data.billingAddress.city = response.data[0].city
+              $scope.data.billingAddress.state = response.data[0].state
+            }
+          })
+        } else if (newValue.length < 6) {
+          $scope.data.billingAddress.city = ''
+          $scope.data.billingAddress.state = ''
+        }
+      }
+    })
   }
 
-  $scope.showBillingAddressForm = {
-    state:false,
-    city:false
-  }
 
-  $scope.$watch('data.address.country', function(newValue, oldValue) {
-    if (newValue != null && newValue != undefined) {
-
-      if (newValue == '') {
-        $scope.data.address.state = ''
-      }
-
-      if ($scope.countrList) {
-        for (var i = 0; i < $scope.countrList.length; i++) {
-          if ($scope.countrList[i].name==newValue) {
-            $scope.selectedCountryObj = $scope.countrList[i]
-            break;
-          }else {
-            $scope.selectedCountryObj = ''
-          }
-        }
-        console.log($scope.selectedCountryObj);
-      }
-      if (typeof $scope.selectedCountryObj == 'object') {
-        $scope.showAddressForm.state = true
-      }else {
-        $scope.showAddressForm.state = false
-      }
-    }
-  });
-
-  $scope.$watch('data.address.state', function(newValue, oldValue) {
-    if (newValue != null && newValue != undefined) {
-
-      if (newValue == '') {
-        $scope.data.address.city = ''
-      }
-
-      if ($scope.stateList) {
-        for (var i = 0; i < $scope.stateList.length; i++) {
-          if ($scope.stateList[i].name==newValue) {
-            $scope.selectedStateObj = $scope.stateList[i]
-            break;
-          }else {
-            $scope.selectedStateObj = ''
-          }
-        }
-        console.log($scope.selectedStateObj);
-      }
-      if (typeof $scope.selectedStateObj == 'object') {
-        $scope.showAddressForm.city = true
-      }else {
-        $scope.showAddressForm.city = false
-      }
-    }
-  });
-
-
-  $scope.$watch('data.billingAddress.country', function(newValue, oldValue) {
-    if (newValue != null && newValue != undefined) {
-
-      if (newValue == '') {
-        $scope.data.billingAddress.state = ''
-      }
-
-      if (typeof newValue == 'object') {
-        $scope.showBillingAddressForm.state = true
-      }else {
-        $scope.showBillingAddressForm.state = false
-      }
-    }
-  });
-
-  $scope.$watch('data.billingAddress.state', function(newValue, oldValue) {
-    if (newValue != null && newValue != undefined) {
-
-      if (newValue == '') {
-        $scope.data.billingAddress.city = ''
-      }
-
-      if (typeof newValue == 'object') {
-        $scope.showBillingAddressForm.city = true
-      }else {
-        $scope.showBillingAddressForm.city = false
-      }
-    }
-  });
 
 
   $scope.change = function() {
@@ -2880,60 +2970,6 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     $scope.idx = idx
     $scope.newAdr = false
   }
-  $scope.showMessage = false
-  $scope.$watch('data.address.pincode', function(newValue, oldValue) {
-    if (newValue != null) {
-      if (newValue.length == 6) {
-        $http({
-          method: 'GET',
-          url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
-        }).
-        then(function(response) {
-          console.log(response.data);
-          if (response.data.length > 0) {
-            $scope.showMessage = false
-            $scope.data.address.city = response.data[0].city
-            $scope.data.address.state = response.data[0].state
-          } else {
-            $scope.showMessage = true
-          }
-          $http({
-            method: 'GET',
-            url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
-          }).
-          then(function(response) {
-            if (response.data.length == 0) {
-              $scope.showMessage = true
-            }
-          })
-        })
-      } else if (newValue.length < 6) {
-        $scope.showMessage = false
-        // $scope.data.address.city = ''
-        // $scope.data.address.state = ''
-      }
-    }
-  })
-
-  $scope.$watch('data.billingAddress.pincode', function(newValue, oldValue) {
-    if (newValue != null) {
-      if (newValue.length == 6) {
-        $http({
-          method: 'GET',
-          url: '/api/ecommerce/genericPincode/?pincode__iexact=' + newValue
-        }).
-        then(function(response) {
-          if (response.data.length > 0) {
-            $scope.data.billingAddress.city = response.data[0].city
-            $scope.data.billingAddress.state = response.data[0].state
-          }
-        })
-      } else if (newValue.length < 6) {
-        $scope.data.billingAddress.city = ''
-        $scope.data.billingAddress.state = ''
-      }
-    }
-  })
 
 
   $scope.saveAdd = function() {
@@ -3047,15 +3083,22 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           $scope.product_var = $scope.cartItems[i].prod_var.id
         }
 
-        $http({
-          method: 'GET',
-          url: '/api/ecommerce/getinStock/?product_id=' + $scope.cartItems[i].product.product.pk + '&product_var=' + $scope.product_var + '&store=' + $scope.store,
-        }).
-        then(function(response) {
-          $scope.stock.push(response.data)
-        })
+        if (INVENTORY_ENABLED == 'False') {
+          $scope.cartItems[i].stock = 1000;
+          $scope.showReview = true;
+        } else {
+          $http({
+            method: 'GET',
+            url: '/api/ecommerce/getinStock/?product_id=' + $scope.cartItems[i].product.product.pk + '&product_var=' + $scope.product_var + '&store=' + $scope.store,
+          }).
+          then(function(response) {
+            $scope.stock.push(response.data)
+          })
+        }
+
 
       }
+
       $scope.calcTotal();
     })
   } else {
@@ -3073,7 +3116,6 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   $scope.getinStock = function() {
     for (var i = 0; i < $scope.cartItems.length; i++) {
       for (var j = 0; j < $scope.stock.length; j++) {
-        console.log($scope.stock[j], 'stocproo');
         if ($rootScope.pin.pk == undefined) {
           $scope.code = "undefined"
         } else {
@@ -3090,24 +3132,26 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           if ($scope.stock[j].store == $scope.code) {
             if ($scope.stock[j].product == $scope.cartItems[i].product.product.pk) {
               if ($scope.stock[j].product_var == $scope.prod_var) {
-                console.log("aaaaaaaaaaafaaaalssssss");
-                console.log("aaaaaaaaaaaaaadffffffffffffffff");
                 $scope.cartItems[i].stock = $scope.stock[j].stock
               }
             }
           }
         }
       }
-
     }
   }
 
-  $scope.nextButtonEnable = false;
 
-  $timeout(function() {
-    $scope.nextButtonEnable = true;
-    $scope.getinStock()
-  }, 4000);
+
+  if (INVENTORY_ENABLED == 'True') {
+    $timeout(function() {
+      $scope.showReview = true;
+      $scope.getinStock()
+    }, 4000);
+  }
+
+  $scope.showReview = false;
+
 
 
   $scope.changeQty = function() {
@@ -3245,15 +3289,33 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
         }
       }
       $scope.data.stage = 'payment';
-
-      if (settings_isStoreGlobal) {
+      $scope.getShippingCharges = false
+      if (settings_isShipmentPrice) {
         $http({
-          method:'GET',
-          url:'/api/ecommerce/shipmentCharge/?country=US&pincode='+$scope.data.address.pincode +'&weight=1'
-        }).then(function (response) {
-          $scope.shippingCharges = response.data
+          method: 'GET',
+          url: '/api/ecommerce/searchCountry/?getCountryCode='+$scope.data.address.country
+        }).then(function(response) {
+          console.log(response.data);
+          if (response.data) {
+            $scope.country = response.data[0]
+          }else {
+            $scope.country = 'US'
+          }
+          $http({
+            method: 'GET',
+            url: '/api/ecommerce/shipmentCharge/?country='+$scope.country+'&pincode=' + $scope.data.address.pincode + '&weight=1'
+          }).then(function(response) {
+            $scope.shippingCharges = response.data
+            $scope.getShippingCharges = true
+          }).catch(function (err) {
+            console.log(err);
+            $scope.shippingCharges = 0
+            $scope.errorInshipping = true
+            $scope.getShippingCharges = true
+          })
         })
-      }else {
+      } else {
+        $scope.getShippingCharges = true
         $scope.shippingCharges = 0
       }
 

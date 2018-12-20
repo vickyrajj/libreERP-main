@@ -376,7 +376,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
       $http({
         method:'GET',
-        url:'/api/ecommerce/createShipment/?country=US&city='+$scope.order.city+'&pincode='+$scope.order.pincode+'&state='+$scope.order.state +'&address=' +$scope.order.street +' '+ $scope.order.landMark +'/'
+        url:'/api/ecommerce/createShipment/?country=US&orderPk='+$scope.order.pk
       }).then(function (response) {
         console.log(response.data);
         $scope.courierForm.courierName = response.data.courierName

@@ -8,6 +8,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
   $scope.form = {firstName :null ,lastName : null , email : null ,mobile : null , password : null, rePassword : null , emailOTP : null , mobileOTP: null , token: null , reg : null , agree : false};
   $scope.validityChecked = false;
   $scope.validityChecked2 = false;
+  $scope.usernameExist = false;
 
   $scope.getOTP = function() {
     $scope.validityChecked = true;
@@ -35,7 +36,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       // then(function(response) {
       //   console.log(response.data);
       // })
-
+      console.log(response.data);
 
       if (($scope.form.password != null && $scope.form.password.length <3) || $scope.form.password == null ) {
         return;
@@ -45,6 +46,13 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       $scope.form.token = response.data.token;
       $scope.form.reg = response.data.pk;
       $scope.mode = 'verify';
+    }).catch(function (err) {
+      // $scope.mode = 'sendingOTP';
+      $scope.mode = 'main';
+      if (err.data.PARAMS == 'Username already taken') {
+        $scope.usernameExist = true
+      }
+      console.log();
     })
 
 
@@ -72,7 +80,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       $scope.loading = false;
       return;
     }
-    console.log(newValue);
+    // console.log(newValue);
     if (newValue.firstName != null && newValue.firstName.length > 0) {
       $scope.validity.firstName = true;
       $scope.form.firstName = toTitleCase(newValue.firstName);
@@ -89,7 +97,6 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       $scope.validity.lastName = false;
     }
 
-    console.log($scope.validity);
   }, true)
 
 });
