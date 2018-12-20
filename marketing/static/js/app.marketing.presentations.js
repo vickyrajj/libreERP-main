@@ -6,8 +6,13 @@ app.controller("businessManagement.marketing.presentations", function($scope, $s
       size: 'xl',
       backdrop: true,
       controller : function($scope, $state, $users, $stateParams, $http, Flash,$uibModalInstance){
+        console.log('ssssssssssss',SOURCE_LIST,typeof(SOURCE_LIST));
+        $scope.sourceList = SOURCE_LIST
+        if ($scope.sourceList.length==0) {
+          $scope.sourceList.push('CIOC')
+        }
         $scope.slots = ['8 - 9','9 - 10','10 - 11','11 - 12','12 - 13','13 - 14','14 - 15','15 - 16','16 - 17',]
-        $scope.form = {name:'',emailId:'',dated:new Date(),slot:'8 - 9'}
+        $scope.form = {name:'',emailId:'',dated:new Date(),slot:'8 - 9',source:$scope.sourceList[0]}
         $scope.minDate = new Date()
         $scope.saveDemo = function(){
           var f = $scope.form
@@ -20,12 +25,12 @@ app.controller("businessManagement.marketing.presentations", function($scope, $s
             Flash.create('warning', 'Please Select The Proper Email')
             return
           }
-          toSend = {name:f.name,emailId:f.emailId,slot:f.slot,dated:f.dated.toJSON().split('T')[0]}
+          toSend = {name:f.name,emailId:f.emailId,slot:f.slot,dated:f.dated.toJSON().split('T')[0],source:f.source}
           $http({url : '/api/marketing/schedule/' , method : 'POST',data:toSend}).
           then(function(response){
             console.log(response.data);
             Flash.create('success', 'Created')
-            $scope.form = {name:'',emailId:'',dated:new Date(),slot:'8 - 9'}
+            $scope.form = {name:'',emailId:'',dated:new Date(),slot:'8 - 9',source:$scope.sourceList[0]}
             $uibModalInstance.close()
           })
 

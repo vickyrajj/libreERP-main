@@ -1,4 +1,4 @@
-app.controller("businessManagement.marketing.leads", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.marketing.leads", function($scope, $state, $users, $stateParams, $http, Flash) {  
   $scope.data = {
     tableData: []
   };

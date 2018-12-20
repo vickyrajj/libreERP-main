@@ -70,15 +70,31 @@ class ContactsSerializer(serializers.ModelSerializer):
     # srcCount = serializers.SerializerMethodField()
     class Meta:
         model = Contacts
-        fields = ('pk' , 'created' , 'referenceId' , 'name', 'email', 'mobile' , 'source' , 'pinCode' , 'notes' , 'tags' )
+        fields = ('pk' , 'created' , 'referenceId' , 'name', 'email', 'mobile' , 'source' , 'pinCode' , 'notes' , 'tags' ,'subscribe' )
+        read_only_fields=('subscribe',)
     def create(self , validated_data):
         print self.context['request'].data['tags'],validated_data
+        try:
+            contatcObj = Contacts.objects.get(email=self.context['request'].data['email'],source=self.context['request'].data['source'])
+            contatcObj.subscribe = True
+            for key in ['referenceId' , 'name','mobile' ,'notes' , 'pinCode']:
+                try:
+                    setattr(contatcObj , key , validated_data[key])
+                except:
+                    pass
+            contatcObj.save()
+            print 'contact already thereeeeeeeee'
+        except:
+            pass
+
         if 'tags' in validated_data:
             del validated_data['tags']
         c = Contacts(**validated_data)
+        c.subscribe = True
         c.save()
-        for i in self.context['request'].data['tags']:
-            c.tags.add(Tag.objects.get(pk = int(i)))
+        if 'tags' in self.context['request'].data:
+            for i in self.context['request'].data['tags']:
+                c.tags.add(Tag.objects.get(pk = int(i)))
         return c
     def update(self ,instance, validated_data):
         for key in ['referenceId' , 'name', 'email', 'mobile' , 'source' , 'notes' , 'pinCode']:
@@ -172,6 +188,20 @@ class SheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = ('pk','created','dated','slot','name','emailId','organizer','participants','status')
+
+    def create(self , validated_data):
+        print self.context['request'].data,validated_data
+        s = Schedule(**validated_data)
+        s.save()
+        if 'source' in self.context['request'].data:
+            try:
+                contatcObj = Contacts.objects.get(email=self.context['request'].data['emailId'],source=self.context['request'].data['source'])
+                print 'contact already thereeeeeeeee'
+            except:
+                dt = {'email':self.context['request'].data['emailId'],'source':self.context['request'].data['source']}
+                contatcObj = Contacts.objects.create(**dt)
+                print 'new contact createddddddddddd'
+        return s
     def update(self ,instance, validated_data):
         for key in ['dated','slot','name','emailId','status']:
             try:
@@ -205,3 +235,21 @@ class LeadsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Leads
         fields = ('pk','created','name','emailId','requirements','jobLevel','company','companyCategory','companyExpertise','country','mobileNumber')
+
+    def create(self , validated_data):
+        print self.context['request'].data,validated_data
+        l = Leads(**validated_data)
+        l.save()
+        if 'source' in self.context['request'].data:
+            try:
+                contatcObj = Contacts.objects.get(email=self.context['request'].data['emailId'],source=self.context['request'].data['source'])
+                contatcObj.name = self.context['request'].data['name']
+                if 'mobileNumber' in self.context['request'].data:
+                    contatcObj.mobile = self.context['request'].data['mobileNumber']
+                contatcObj.save()
+                print 'contact already thereeeeeeeee'
+            except:
+                dt = {'email':self.context['request'].data['emailId'],'source':self.context['request'].data['source']}
+                contatcObj = Contacts.objects.create(**dt)
+                print 'new contact createddddddddddd'
+        return l

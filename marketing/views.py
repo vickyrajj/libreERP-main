@@ -87,27 +87,33 @@ class LeadsViewSet(viewsets.ModelViewSet):
 class ContactsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated ,)
     serializer_class = ContactsSerializer
-    queryset = Contacts.objects.all()
+    # queryset = Contacts.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name','source']
+    filter_fields = ['name','source','email']
 
-    # def get_queryset(self):
-    #     if 'fd' in self.request.GET:
-    #         if len(self.request.GET['fd']) > 0:
-    #             print self.request.GET,'777777777'
-    #             fromDate = self.request.GET['fd'].split('-')
-    #             toDate = self.request.GET['td'].split('-')
-    #             fd = date(int(fromDate[0]), int(fromDate[1]), int(fromDate[2]))
-    #             td = date(int(toDate[0]), int(toDate[1]), int(toDate[2]))
-    #             fromDate = fd + relativedelta(days=1)
-    #             toDate = td + relativedelta(days=1)
-    #             print Contacts.objects.filter(created__range=(str(fromDate),str(toDate)),source__contains = str(self.request.GET['source__contains']))
-    #             return Contacts.objects.filter(created__range=(str(fromDate),str(toDate)),source__contains = str(self.request.GET['source__contains']))
-    #         else:
-    #             print Contacts.objects.filter(source__contains = str(self.request.GET['source__contains'])).values_list('source', flat=True).distinct()
-    #             return Contacts.objects.filter(source__contains = str(self.request.GET['source__contains']))
-    #     else:
-    #         return Contacts.objects.all()
+    def get_queryset(self):
+        toReturn = Contacts.objects.all()
+        for i in globalSettings.SOURCE_LIST:
+            if i in self.request.GET and int(self.request.GET[i]) == 0:
+                toReturn = toReturn.exclude(source=i)
+        return toReturn
+
+        # if 'fd' in self.request.GET:
+        #     if len(self.request.GET['fd']) > 0:
+        #         print self.request.GET,'777777777'
+        #         fromDate = self.request.GET['fd'].split('-')
+        #         toDate = self.request.GET['td'].split('-')
+        #         fd = date(int(fromDate[0]), int(fromDate[1]), int(fromDate[2]))
+        #         td = date(int(toDate[0]), int(toDate[1]), int(toDate[2]))
+        #         fromDate = fd + relativedelta(days=1)
+        #         toDate = td + relativedelta(days=1)
+        #         print Contacts.objects.filter(created__range=(str(fromDate),str(toDate)),source__contains = str(self.request.GET['source__contains']))
+        #         return Contacts.objects.filter(created__range=(str(fromDate),str(toDate)),source__contains = str(self.request.GET['source__contains']))
+        #     else:
+        #         print Contacts.objects.filter(source__contains = str(self.request.GET['source__contains'])).values_list('source', flat=True).distinct()
+        #         return Contacts.objects.filter(source__contains = str(self.request.GET['source__contains']))
+        # else:
+        #     return Contacts.objects.all()
 
 
 
@@ -115,12 +121,8 @@ class ContactsViewSet(viewsets.ModelViewSet):
 class BulkContactsAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated , isAdmin)
     def post(self, request, format=None):
-
         print 'ttttttttttt',request.FILES['fil'],request.POST['source'],
-        if 'tags' in request.POST:
-            print request.POST['tags']
-            for i in request.POST['tags'].split(','):
-                print i
+
         fil = StringIO(request.FILES['fil'].read().decode('utf-8'))
         reader = csv.reader(fil, delimiter=':')
         count = 0
@@ -128,18 +130,28 @@ class BulkContactsAPIView(APIView):
             dat = row[0].split(',')
             print 'aaaaaaaaaaaaa',dat
             try:
-                check = Contacts.objects.filter(Q(email=dat[2]) | Q(mobile=dat[3]))
+                check = Contacts.objects.get(email=dat[2],source=str(request.POST['source']))
             except:
-                check = Contacts.objects.filter(Q(email=dat[2]))
+                check = None
+            if check:
+                try:
+                    check.name = dat[1]
+                    check.referenceId = dat[0]
+                    if len(dat)>3:
+                        check.mobile = dat[3]
 
-            if len(check)>0:
-                continue
+                    if len(dat) >4:
+                        check.pinCode = dat[4]
+                    check.save()
+                    if 'tags' in request.POST:
+                        for i in request.POST['tags'].split(','):
+                            check.tags.add(Tag.objects.get(pk = int(i)))
+                except:
+                    pass
             else:
                 contactData = {"name" : dat[1] ,  "email" : dat[2] ,"referenceId" : dat[0] , "source" : str(request.POST['source'])}
-
                 if len(dat)>3:
                     contactData['mobile'] = dat[3]
-
                 if len(dat) >4:
                     contactData['pinCode'] = dat[4]
                 cObj = Contacts.objects.create(**contactData)
@@ -147,7 +159,6 @@ class BulkContactsAPIView(APIView):
                     for i in request.POST['tags'].split(','):
                         cObj.tags.add(Tag.objects.get(pk = int(i)))
                 count += 1
-
 
         return Response({"count" : count}, status = status.HTTP_200_OK)
 

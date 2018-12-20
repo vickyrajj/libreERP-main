@@ -61,6 +61,8 @@ ALLOWED_HOSTS = ['192.168.1.151', 'cioc.co.in', 'localhost', '127.0.0.1', '192.1
 
 TRUSTED_DOMAINS = ['http://192.168.0.112','http://127.0.0.1','http://localhost']
 
+SOURCE_LIST = ['CIOC','MONOMERCE','TUTORS_24','RACKMINT','EPSILON_AI']
+
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate

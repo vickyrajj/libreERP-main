@@ -15,12 +15,15 @@ class Contacts(models.Model):
     updated = models.DateTimeField(auto_now=True)
     referenceId = models.CharField(max_length = 20 , null = True , blank = True)
     name = models.CharField(max_length = 100 , null = True , blank = True)
-    email = models.EmailField(null = True , blank = True , unique=True)
-    mobile = models.CharField(max_length = 12 , null = True , blank = True , unique=True)
+    email = models.EmailField(null = True , blank = True)
+    mobile = models.CharField(max_length = 12 , null = True , blank = True)
     source = models.CharField(max_length = 20 , null = True , blank = True)
     notes = models.TextField(max_length=500 , null=True , blank = True)
     tags = models.ManyToManyField(Tag)
     pinCode = models.CharField(max_length = 10 , null = True)
+    subscribe = models.BooleanField(default=False)
+    class Meta:
+        unique_together = ('email', 'source')
 
 CAMPAIGN_STATUS = (
     ('created' , 'created'),

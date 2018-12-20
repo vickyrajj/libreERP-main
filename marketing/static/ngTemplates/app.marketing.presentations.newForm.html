@@ -5,11 +5,19 @@
   <div class="container-fluid">
   <div class="row">
     <div class="col-md-12" style="padding-bottom:15px;">
-      <div class="col-md-1 col-md-offset-1 text-right" style="paddin-right:0px;padding-top:5px">
+      <div class="col-md-1 text-right" style="paddin-right:0px;padding-top:5px">
         <label>Time : </label>
       </div>
       <div class="col-md-1" ng-repeat="slt in slots" style="padding-left:0px">
         <input type="radio" ng-model="form.slot" value="{{slt}}"> <strong> {{slt}}</strong>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label>Source</label>
+          <select class="form-control" ng-model="form.source">
+            <option value="{{s}}" ng-repeat="s in sourceList">{{s}}</option>
+          </select>
+        </div>
       </div>
     </div>
     <div class="col-md-12">
