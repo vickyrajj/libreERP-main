@@ -13,9 +13,9 @@ from ERP.views import serviceRegistration , renderedStatic
 app_name="libreERP"
 
 urlpatterns = [
-    url(r'^$', index , name ='root'),
+    url(r'^$', home , name ='ERP'),
     url(r'^CRM/', crmHome , name ='CRM'),
-    url(r'^ERP/', home , name ='ERP'),
+    # url(r'^ERP/', home , name ='ERP'),
     url(r'^api/', include('API.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login', loginView , name ='login'),
