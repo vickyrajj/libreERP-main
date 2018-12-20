@@ -1,3 +1,9 @@
+var projectsStepsData = [
+  {indx: 1, text : 'created', display : 'Created'},
+  {indx: 2 , text : 'sent_for_approval', display : 'Sent For Approval'},
+  {indx: 3 , text : 'reconciled', display : 'Reconciled'},
+  {indx: 4 , text : 'approved', display : 'Approved'},
+];
 app.controller("businessManagement.projects", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
 
   $scope.data = {
@@ -495,12 +501,19 @@ app.controller("businessManagement.projects.service.item", function($scope, $sta
 
 app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-
+  $scope.projectSteps = {steps : projectsStepsData}
   if ($scope.tab == undefined) {
     $scope.resetForm();
   } else {
     $scope.form = $scope.data.tableData[$scope.tab.data.index]
   }
+  console.log($scope.form);
+  for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+      if ($scope.projectSteps.steps[i].text == $scope.form.status) {
+        $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
+        break;
+      }
+    }
 
 
   $scope.me = $users.get('mySelf');
