@@ -2755,7 +2755,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   }
 
   $scope.citySearch = function(query) {
-    if ($scope.selectedStateObj.uniqueId) {
+    if ($scope.selectedStateObj.id) {
       return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.id).
       then(function(response) {
         return response.data;
