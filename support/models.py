@@ -85,6 +85,7 @@ class Projects(models.Model):
     gst2 = models.FloatField(null = True)
     clearingCharges1 = models.FloatField(null = True)
     clearingCharges2 = models.FloatField(null = True)
+    exRate = models.FloatField(null = True)
     vendor = models.ForeignKey(Vendor , related_name='vendor' , null = True)
 
 

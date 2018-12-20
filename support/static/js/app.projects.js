@@ -546,6 +546,7 @@ app.controller("businessManagement.projects.service.item", function($scope, $sta
 app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash) {
 
 
+
   if ($scope.tab == undefined) {
     $scope.resetForm();
   } else {
@@ -604,7 +605,10 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
             }).
             then((function(index) {
               return function(response) {
+                var price =   $scope.data[index].price* $scope.data[index].quantity1
+                $scope.form.invoiceValue -= price
                 $scope.data.splice(index, 1);
+
                 Flash.create('success', 'Deleted');
               }
             })(index))
@@ -639,11 +643,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   $scope.productpk = []
   $scope.fetchData()
   $scope.$watch('projects', function(newValue, oldValue) {
-        var cost = 0
+    var cost = 0
     for (var i = 0; i < newValue.length; i++) {
 
-        var totalprice = newValue[i].price*newValue[i].quantity1
-        cost += totalprice
+      var totalprice = newValue[i].price*newValue[i].quantity1
+      cost += totalprice
       console.log(typeof oldValue[i], '11111111111');
       if (typeof oldValue[i] == "undefined") {
 
@@ -673,15 +677,15 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
   $scope.showbutton = false
   $scope.$watch('data', function(newValue, oldValue) {
+    var cost = 0
     if (typeof newValue[0] == 'undefined') {
 
     } else if (typeof newValue[0].part_no == 'object') {
-      var cost = 0
       for (var i = 0; i < newValue.length; i++) {
         var totalprice = newValue[i].price*newValue[i].quantity1
         cost += totalprice
       }
-      $scope.form.invoiceValue =cost
+      $scope.form.invoiceValue += cost
       $scope.data[$scope.data.length - 1] = newValue[0].part_no
       $scope.data[$scope.data.length - 1].quantity1 = 1
       $scope.projectlist = []
@@ -709,9 +713,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       return
     } else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
       for (var i = 0; i < $scope.data.length; i++) {
+        var cost = 0
         var totalprice = $scope.data[i].price*$scope.data[i].quantity1
-        $scope.form.invoiceValue += totalprice
+        cost+= totalprice
       }
+      $scope.form.invoiceValue = cost
       $scope.data[$scope.data.length - 1] = $scope.data[$scope.data.length - 1].part_no
       $scope.data[$scope.data.length - 1].quantity1 = 1
       $scope.projectlist = []
@@ -768,18 +774,26 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   }, true)
 
 
+  $scope.form.invoiceValue = ''
+  $scope.$watch('form.invoiceValue', function(newValue, oldValue) {
+    console.log(newValue,'aaaaaaaaaaaaaaa');
+    $scope.form.invoiceValueINR = $scope.newValue*form.exrate
+
+  })
 
 
 
   $scope.deleteData = function(pk, index) {
-    $scope.projects.splice(index, 1);
+
     $http({
       method: 'DELETE',
       url: '/api/support/bom/' + pk + '/'
     }).
     then((function(index) {
       return function(response) {
-
+        var price = $scope.projects[index].price* $scope.projects[index].quantity1
+        $scope.form.invoiceValue -= price
+        $scope.projects.splice(index, 1);
         Flash.create('success', 'Deleted');
       }
     })(index))
@@ -1203,6 +1217,7 @@ app.controller("businessManagement.projects.invoice.view", function($scope, $sta
       }, 0)
     }
   }
+  console.log($scope.form,'aaaaaaaaaaaaaaaaa');
 
   $scope.materialSum = sum($scope.form.materialIssue)
 
