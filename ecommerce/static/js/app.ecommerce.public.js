@@ -787,6 +787,7 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
             $scope.typ = 'blog'
           } else {
             $scope.typ = 'nothing'
+            $state.go('ecommerce', {})
           }
         }, function(err) {
           $scope.typ = 'nothing'

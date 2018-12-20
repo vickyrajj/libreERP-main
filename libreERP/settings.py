@@ -291,6 +291,7 @@ EMAIL_USE_TLS = True
 EMAIL_API=True
 G_FROM='onlinestore@bni-india.in'
 G_KEY='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'
+G_ADMIN=[ "bhanubalram5@gmail.com","vikas.motla@gmail.com"]
 
 
 
