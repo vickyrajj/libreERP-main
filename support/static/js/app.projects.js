@@ -557,6 +557,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   } else {
     $scope.form = $scope.data.tableData[$scope.tab.data.index]
   }
+  $scope.form.revision = 1
   console.log($scope.form);
   for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
       if ($scope.projectSteps.steps[i].text == $scope.form.status) {

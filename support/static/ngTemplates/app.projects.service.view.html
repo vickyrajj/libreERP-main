@@ -31,6 +31,14 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-12 text-center">
+              <label> PO Number : </label>
+            </div>
+            <div class="col-md-12">
+              <input type="text" class="form-control text-center" ng-model="form.poNumber" ng-change="revision()" placeholder="PO Number">
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-12 text-center">
               <label> Revision : </label>
             </div>
             <div class="col-md-12">
@@ -42,7 +50,7 @@
               <label> Ex Rate : </label>
             </div>
             <div class="col-md-6">
-              <input type="number" class="form-control text-center" ng-model="form.exrate">
+              <input type="number" class="form-control text-center" ng-model="form.exrate" min="1">
             </div>
 
           </div>
@@ -57,9 +65,9 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="btn-group">
-              <button type="button" class="btn btn-primary " ng-click="edit();$event.stopPropagation();"> Download PO </button><br><br>
-              <button type="button" class="btn btn-primary" ng-click="delete(data.pk , index);$event.stopPropagation();"> Download Quotation In CHF</button><br><br>
-              <button type="button" class="btn btn-primary" ng-click="delete(data.pk , index);$event.stopPropagation();"> Download Quotation In INR</button>
+              <span><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}"><i class="fa fa-download"></i> Download PO </a></span><br><br>
+              <span><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exrate}}&typ=CHF"><i class="fa fa-download"></i> Download Quotation In CHF </a></span><br><br>
+              <span><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exrate}}&typ=INR"><i class="fa fa-download"></i> Download Quotation In INR </a></span>
             </div>
 
           </div>
