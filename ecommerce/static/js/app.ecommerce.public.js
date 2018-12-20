@@ -2297,8 +2297,8 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
     }
 
     $scope.stateSearch = function(query) {
-      if ($scope.selectedCountryObj.uniqueId) {
-        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.uniqueId).
+      if ($scope.selectedCountryObj.id) {
+        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.id).
         then(function(response) {
           $scope.stateList = response.data
           return response.data;
@@ -2307,8 +2307,8 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
     }
 
     $scope.citySearch = function(query) {
-      if ($scope.selectedStateObj.uniqueId) {
-        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.uniqueId).
+      if ($scope.selectedStateObj.id) {
+        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.id).
         then(function(response) {
           return response.data;
         })
@@ -2745,8 +2745,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   }
 
   $scope.stateSearch = function(query) {
-    if ($scope.selectedCountryObj.uniqueId) {
-      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.uniqueId).
+    if ($scope.selectedCountryObj.id) {
+      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.id).
       then(function(response) {
         $scope.stateList = response.data
         return response.data;
@@ -2756,7 +2756,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
   $scope.citySearch = function(query) {
     if ($scope.selectedStateObj.uniqueId) {
-      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.uniqueId).
+      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.id).
       then(function(response) {
         return response.data;
       })
