@@ -3750,6 +3750,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
   // })
 
   $scope.topIcon = settings_topIcon
+  // $scope.topIcon = false
 
   $rootScope.genericImage = {}
   $http({
