@@ -723,9 +723,12 @@ class OrderAPIView(APIView):
         # for i in request.data["products"]:
         #     prodList.append(Products.objects.get(pk=i))
         #     print prodList,'llllll'
+        print  request.data,'aaaaaaaa'
         prodList = request.data["products"]
         orderlist =[]
+        print type(prodList),'kkkkkkkkkkkkkkkkkkkkkkkkkk'
         for i in prodList:
+            print type(i),'lllllllllllllll'
             prodListQty = i['prodQty']
             print prodListQty,'hhhhhhhhhh'
             invlist = Inventory.objects.filter(product=i['pk'])

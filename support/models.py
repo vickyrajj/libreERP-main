@@ -86,6 +86,7 @@ class Projects(models.Model):
     clearingCharges1 = models.FloatField(default = 0)
     clearingCharges2 = models.FloatField(default = 0)
     exRate = models.FloatField( default = 75)
+    profitMargin = models.FloatField( default = 0)
     vendor = models.ForeignKey(Vendor , related_name='vendor' , null = True)
 
 
