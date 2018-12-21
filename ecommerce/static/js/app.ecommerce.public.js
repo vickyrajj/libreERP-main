@@ -2733,14 +2733,14 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 
 
-
   $scope.ChangeAdd = function(idx, value) {
     console.log(value);
     if (value == "use") {
       $scope.addressview = false
       $scope.idx = null
-      $scope.saved = true
-      Flash.create('success', 'Address Added');
+      $scope.show(idx)
+      // $scope.saved = true
+      // Flash.create('success', 'Address Added');
 
     } else if (value == "edit") {
       $scope.idx = null
@@ -2749,6 +2749,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
     // mob = $scope.data.address.mobileNo
     $scope.data.address = $scope.savedAddress[idx]
+    console.log($scope.data.address);
     if ($scope.data.address.mobileNo == null || $scope.data.address.mobileNo.length == 0) {
       $scope.data.address.mobileNo = $scope.me.profile.mobile
     }
@@ -2982,6 +2983,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       mobileNo: $scope.me.profile.mobile,
       landMark: ''
     }
+    console.log($scope.data.address.pk);
     if (settings_isStoreGlobal) {
       $scope.data.address.country = ''
     }
@@ -3342,7 +3344,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
     }
   }
-
+  $scope.idx = 0
   $scope.prev = function() {
     if ($scope.data.stage == 'shippingDetails') {
       $scope.data.stage = 'review';
@@ -3351,12 +3353,17 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
   }
 
+  $scope.username = $scope.me.username
+
   $scope.pay = function() {
     $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment
     $scope.dataToSend.modeOfShopping = 'online'
     $scope.dataToSend.paidAmount = 0
     $scope.dataToSend.approved = false
     $scope.data.stage = 'processing'
+    if ($scope.shippingCharges>0) {
+      $scope.dataToSend.shippingCharges = $scope.shippingCharges
+    }
     // if ($rootScope.multiStore) {
     //   console.log('multiiiiiiiiiiiiii');
     //   $scope.dataToSend.storepk = $rootScope.storepk
@@ -3380,6 +3387,10 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.dataToSend.paidAmount = 0
     } else {
       $scope.dataToSend.paidAmount = 0
+    }
+
+    if ($scope.shippingCharges>0) {
+      $scope.dataToSend.shippingCharges = $scope.shippingCharges
     }
 
     $scope.data.stage = 'processing';

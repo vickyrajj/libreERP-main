@@ -98,6 +98,8 @@ from openpyxl import load_workbook
 from io import BytesIO
 import sendgrid
 import os
+
+from xhtml2pdf import pisa
 # from sendgrid.helpers.mail import *
 
 # Create your views here.
@@ -421,6 +423,8 @@ class CreateOrderAPI(APIView):
             if len(str(request.data['promoCode'])) > 0:
                 data['promoCode'] = str(request.data['promoCode'])
             print data
+            if 'shippingCharges' in request.data:
+                data['shippingCharges'] = request.data['shippingCharges']
             orderObj = Order.objects.create(**data)
             for i in oQMp:
                 orderObj.orderQtyMap.add(i)
@@ -1575,10 +1579,12 @@ def genInvoice(response, contract, request):
                 name = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' +str(desc)
                 tableData.append([name,i.qty,price,totalprice])
 
+    shippingCharges = contract.shippingCharges
     grandTotal=total-(promoAmount * total)/100
-    grandTotal=round(grandTotal, 2)
+    grandTotal=round(grandTotal + shippingCharges, 2)
     tableData.append(['','','TOTAL (INR)',total])
     tableData.append(['','COUPON APPLIED(%)',promoCode,promoAmount])
+    tableData.append(['','SHIPPING CHARGES','',shippingCharges])
     tableData.append(['','','GRAND TOTAL (INR)',grandTotal])
     t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 1.5*inch , 1.5*inch])
     t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#bdd3f4')) ]))
@@ -1661,22 +1667,76 @@ def genInvoice(response, contract, request):
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
 
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
+    resources
+    """
+    # use short variable names
+    sUrl = settings.STATIC_URL      # Typically /static/
+    sRoot = settings.STATIC_ROOT    # Typically /home/userX/project_static/
+    mUrl = settings.MEDIA_URL       # Typically /static/media/
+    mRoot = settings.MEDIA_ROOT     # Typically /home/userX/project_static/media/
+
+    # convert URIs to absolute system paths
+    if uri.startswith(mUrl):
+        path = os.path.join(mRoot, uri.replace(mUrl, ""))
+    elif uri.startswith(sUrl):
+        path = os.path.join(sRoot, uri.replace(sUrl, ""))
+    else:
+        return uri  # handle absolute uri (ie: http://some.tld/foo.png)
+
+    # make sure that file exists
+    if not os.path.isfile(path):
+            raise Exception(
+                'media URI must start with %s or %s' % (sUrl, mUrl)
+            )
+    return path
+
+# def genBNIInvoice(response,o, request):
+#     template_path = 'invoice.html'
+#     context = {'myvar': {'name':'vikas'}}
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+#     template = get_template(template_path)
+#     html = template.render(context)
+#     pisaStatus = pisa.CreatePDF(
+#        html, dest=response, link_callback=link_callback)
+#     if pisaStatus.err:
+#        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+#     return response
+
 
 class DownloadInvoiceAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
         response = HttpResponse(content_type='application/pdf')
         o = Order.objects.get(pk=request.GET['value'])
+        # invoice = 'bni'
+        # if invoice=='bni':
+        #     template_path = 'invoice.html'
+        #     context = {'myvar': {'name':'vikas'}}
+        #     response = HttpResponse(content_type='application/pdf')
+        #     response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        #     template = get_template(template_path)
+        #     html = template.render(context)
+        #     pisaStatus = pisa.CreatePDF(
+        #        html, dest=response, link_callback=link_callback)
+        #     if pisaStatus.err:
+        #        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        #     return response
+        # else:
         print o
         response['Content-Disposition'] = 'attachment; filename="invoice%s_%s.pdf"' % (
              datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)
         genInvoice(response, o, request)
+
         f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/invoice%s_%s.pdf' %
                               ( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)), 'wb')
         f.write(response.content)
         f.close()
-        # return Response(status=status.HTTP_200_OK)
         return response
+
 
 class RatingViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
