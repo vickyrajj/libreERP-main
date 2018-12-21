@@ -198,7 +198,7 @@ class ReviewFilterCalAPIView(APIView):
         limit= offset+int(request.GET['limit'])
         toSend = []
         res = []
-        sobj = SupportChat.objects.all().order_by('-id')
+        sobj = SupportChat.objects.all()
         if 'customer' in self.request.GET:
             userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
             userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
@@ -348,7 +348,6 @@ class ReviewFilterCalAPIView(APIView):
                 resolvedOn=Value(resolvedOn, output_field=CharField()),resolvedBy=Value(resolvedBy, output_field=CharField()),
                 reviewedBy=Value(resolvedBy, output_field=CharField()),reviewedOn=Value(reviewedOn, output_field=CharField()),
                 closedOn=Value(closedOn, output_field=CharField()),closedBy=Value(closedBy, output_field=CharField())))
-
                 toSend.append(agUidObj)
                 res = res + list(agSobj.filter(uid=j).values('uid','user','message','attachment','attachmentType','sentByAgent').annotate(company=Value(company, output_field=CharField()), rating=Value(rating, output_field=CharField()), numOfComments=Value(numOfComments, output_field=CharField()) , chatDuration=Value(chatDuration, output_field=CharField())  ,email=Value(email, output_field=CharField())))
         # print toSend

@@ -69,7 +69,7 @@
               <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
             </div>
 
-            <div class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData" ng-click="tableAction($index)">
+            <div class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData | reverse" ng-click="tableAction(reviewData.length-1-$index)">
               <!-- {{data[0].numOfComments}} {{data[0].statusChat}} -->
               <div class="container-fluid card" style="padding-bottom:0px">
                 <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:170px; opacity:0.9;letter-spacing:0.6px; {{data[0].user_id==null ? 'background-color: #fc000033':''}}; {{data[0].statusChat=='closed'?'background-color: #16e61133':'' }}">
@@ -111,7 +111,7 @@
                 <div class="row container-fluid" style="padding-top:10px;height:50px;background-color:#286090; opacity:1">
                   <div class="col-md-12" style="color:#fff">
                     <h5>Date: {{data[0].created | date : 'dd-MMM-yyyy'}}
-                      <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg" ng-click="tableAction($index)"></i></span>
+                      <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
                     </h5>
                   </div>
                 </div>
@@ -151,7 +151,7 @@
               <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
             </div>
 
-            <div class="col-md-4" style="margin-bottom:10px; padding-left:10px;padding-right:10px;" ng-repeat="data in archivedData" ng-click="tableArchAction($index)">
+            <div class="col-md-4" style="margin-bottom:10px; padding-left:10px;padding-right:10px;" ng-repeat="data in archivedData " ng-click="tableArchAction($index)">
               <!-- {{data[0]}} -->
               <div class="container-fluid card" style="padding-bottom:0px">
                 <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:150px; opacity:0.9;letter-spacing:0.6px;">
