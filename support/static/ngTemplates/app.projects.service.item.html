@@ -1,6 +1,6 @@
-<div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.projects.service.item">
+<div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.projects.service.item" ng-click="rowActionClicked('details');$event.stopPropagation();">
   <div class="container-fluid card" style="border: 1px solid rgb(51, 122, 183);">
-    <div class="row text-center" style="border-bottom: 1px solid #dedede;background-color:rgb(51, 122, 183);color:white;height:6vh;">
+    <div class="row text-center" style="height:6vh;">
       <div class="col-md-12" style="position:relative;display:block;">
         <div class="row" style="padding-left:10px;">
           <h3>{{data.title}}</h3>
@@ -9,7 +9,24 @@
     </div>
     <div class="row container-fluid" style="padding-top:20px;height:12vh;">
       <div class="col-md-10" style="z-index: 1;">
-        <span style="font-size:15px;"><strong> Service </strong>: {{data.service.name}}</span><br>
+        <div class="row">
+          <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Customer </strong>:</span>
+          </div>
+          <div class="col-md-7">
+          <span>  {{data.service.name}}</span>
+          </div>
+        </div>
+       <br>
+       <div class="row">
+         <div class="col-md-5">
+             <span style="font-size:15px;"><strong> Stage </strong>:</span>
+         </div>
+         <div class="col-md-7">
+         <span>  {{data.status}}</span>
+         </div>
+       </div>
+
         <span style="font-size:15px;"><strong>Mobile </strong>: {{data.service.mobile}}</span><br>
         <span><strong>Closing date </strong>: {{data.date}}</span><br>
         <!-- <div ng-repeat='d in data.responsible '><strong>Responsible Person</strong>: {{d.first_name}} {{d.last_name}}</div><br> -->
@@ -28,11 +45,11 @@
               <i class="fa fa-trash fa-lg" style="margin-top:15px;"></i>
             </span>
           </div>
-          <div class="row">
-            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('details')">
+          <!-- <div class="row">
+            <span class="pull-right" style="cursor:pointer;" >
               <i class="fa fa-info-circle fa-lg" style="margin-top:15px;"></i>
             </span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

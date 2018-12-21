@@ -81,7 +81,7 @@ class ProductSheetViewSet(viewsets.ModelViewSet):
 
 class ProjectsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
-    queryset = Projects.objects.all()
+    queryset = Projects.objects.all().order_by('-created')
     serializer_class = ProjectsSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['status','title']
@@ -521,6 +521,7 @@ def grn(response , project , purchaselist , request):
 
 class GetPurchaseAPIView(APIView):
     def get(self , request , format = None):
+        print request.GET,'dnfjkdhfjkhdfk'
         project = Projects.objects.get(pk = request.GET['project'])
         purchaselist = BoM.objects.filter(project = request.GET['project'])
         response = HttpResponse(content_type='application/pdf')
