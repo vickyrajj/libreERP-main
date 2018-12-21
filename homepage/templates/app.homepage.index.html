@@ -15,7 +15,6 @@
   </div>
 </div>
 
-
 <!-- <div style="background-color:#0f4b8d; height:60vh; width:100%;">
   <img style="clip-path:polygon(100% 60vh, 50% 60vh, 40% 50px, 100% 50px); width:100%;height:100%" src="/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg" alt="">
   <div style="position:absolute;top:200px;left:100px;width:30vw;">
@@ -24,8 +23,6 @@
 </div> -->
 
 {% verbatim %}
-
-
 <div class="flex_section">
   <div style="flex:45%; margin-top: 80px; order:1;">
     <div class="content">
@@ -157,7 +154,7 @@
 </div>
 
 
-<div class="blog_section shaddowed" style="min-height:580px; border-radius:10px;">
+<div class="blog_section shaddowed" style="min-height:530px; border-radius:10px;">
   <div class="col-md-6 col-sm-12" style="padding:0px;">
     <div class="blogimg">
       <div id="date">
@@ -171,22 +168,22 @@
       <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name="" ng-click="openBlog(articles[0].shortUrl,articles[0].pk)"><b>Read Article</b> </button>
     </div>
   </div>
-  <div class="col-md-6  col-sm-12" style="background-color:rgba(245,248,250,.5);padding:0px;padding-top:10px;">
-    <div class="row" ng-repeat="i in articles | limitTo: (1 - articles.length)" style="margin:0px;margin-left:10px;margin-bottom:10px;{{$odd ? 'background:#fff;':''}};">
-      <div class="col-xs-3 col-md-1" style="background-image:linear-gradient(rgba(11, 29, 92, 0.65), rgba(18, 24, 97, 0.52)), url({{i.ogimage}}); background-size: cover;background-repeat: no-repeat;padding: 5px;border-radius: 4px;">
+  <div class="col-md-6  col-sm-12" style="background-color:rgba(244, 244, 247, 0.5);padding:0px;padding-top:10px;">
+    <div class="row blog_title_row" ng-repeat="i in articles | limitTo: (1 - articles.length)" style="{{$odd ? 'background:#fff;':''}};">
+      <div class="col-xs-3 col-md-2" style="background-image:linear-gradient(rgba(11, 29, 92, 0.65), rgba(18, 24, 97, 0.52)), url({{i.ogimage}}); background-size: cover;background-repeat: no-repeat;padding: 5px;border-radius: 4px;">
         <div class="text-center" style="">
           <span style="font-size:1.875em;color:#fff;"> <strong>{{i.created | getDateNum }}</strong></span><br>
           <span style="font-size:0.875em;color:#fff;">{{i.created | getMonth:3}}</span>
         </div>
       </div>
-      <div class="col-xs-9 col-md-11" style="">
+      <div class="col-xs-9 col-md-10" style="padding-right:25px;">
         <div id="articleHead">
-          <span style="font-size:1.2em;color:#09075c"> {{i.title}}</span><br>
+          <span style="font-size:1.3em;color:#09075c"> <b>{{i.title}}</b> </span><br>
           <span class="text-primary"><strong> <a href="#" style="color:none;" ng-click="openBlog(i.shortUrl,i.pk)">Read More...</a> </strong></span>
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-primary" style="margin-bottom:15px;margin-left:10px;">See More Articles</button>
+    <button type="button" class="btn btn-primary" style="margin-bottom:15px;margin-left:10px;margin-top:17px;">See More Articles</button>
   </div>
 </div>
 

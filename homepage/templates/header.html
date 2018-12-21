@@ -1,9 +1,9 @@
-``{% load i18n %}
+{% load i18n %}
 
 <nav class="navbar navbar-default navbar-fixed-top" style="box-shadow: rgba(8, 19, 31, 0.5) 0px 3px 10px 0px;background-color:white;">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
-      {% verbatim %}
+    {% verbatim %}
     <div class="navbar-header">
       <a class="navbar-brand" href="/" style="padding:0px;"> <img src="/static/images/g2569.png" alt="" style="height:100%;"> </a>
       <!-- <button type="button" class="btn btn-warning hidden-lg hidden-md" style="background-color:#ff6900;margin-top:10px;" ng-click="schedule()">
@@ -15,13 +15,13 @@
         <span class="icon-bar"></span>
       </div>
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar" >
+    <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar">
 
       <ul class="nav navbar-nav header_nav {{device.smallDevice?'pull-left':'pull-right'}}">
         {% endverbatim %}
         <li class="header_element">
           <a href="" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true"> RPA</a>
-          <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box" >
+          <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box">
             <li><a href="/rpa">{% trans 'whatisrpa' %}</a></li>
             <li><a href="/rpa_2019">RPA in 2019</a></li>
             <li><a href="/resources">RPA Resources</a></li>
@@ -40,32 +40,32 @@
         <li class="header_element">
           <a href="" ng-mouseleave="show[2]=false" ng-mouseover="show[2]=true"> Solutions </a>
           <ul ng-mouseleave="keepshow[2]=false" ng-click="keepshow[2] = false; toggleNavbar = false;" ng-mouseover="keepshow[2]=true" ng-show="show[2]||keepshow[2]" class="container_box">
-          <li><a href="/bpo">For BPO</a></li>
-          <li><a href="/finance">For Finance & Banking</a></li>
-          <li><a href="/chatbot">Chatbot</a></li>
-          <li><a href="/pdf_process">PDF Processing</a></li>
-          <li><a href="/nlp">NLP</a></li>
-          <li><a href="/excel_automation">Excel Automation</a></li>
-          <!-- <li><a href="#">Webinars</a></li> -->
+            <li><a href="/bpo">For BPO</a></li>
+            <li><a href="/finance">For Finance & Banking</a></li>
+            <li><a href="/chatbot">Chatbot</a></li>
+            <li><a href="/pdf_process">PDF Processing</a></li>
+            <li><a href="/nlp">NLP</a></li>
+            <li><a href="/excel_automation">Excel Automation</a></li>
+            <!-- <li><a href="#">Webinars</a></li> -->
           </ul>
         </li>
         <li class="header_element">
           <a href="" ng-mouseleave="show[3]=false" ng-mouseover="show[3]=true"> Company</a>
-            <ul ng-mouseleave="keepshow[3]=false" ng-click="keepshow[3] = false; toggleNavbar = false;" ng-mouseover="keepshow[3]=true" ng-show="show[3]||keepshow[3]" class="container_box">
-          <li><a href="/about">About US</a></li>
-          <!-- <li><a href="#">Investors</a></li> -->
-          <li><a href="/career">Careers</a></li>
-          <li><a href="/conatact_us">Contact US</a></li>
+          <ul ng-mouseleave="keepshow[3]=false" ng-click="keepshow[3] = false; toggleNavbar = false;" ng-mouseover="keepshow[3]=true" ng-show="show[3]||keepshow[3]" class="container_box">
+            <li><a href="/about">About US</a></li>
+            <!-- <li><a href="#">Investors</a></li> -->
+            <li><a href="/career">Careers</a></li>
+            <li><a href="/conatact_us">Contact US</a></li>
           </ul>
         </li>
         <li class="header_element" ng-click="toggleNavbar = false">
-          <a href="/pricing" > Pricing</a>
+          <a href="/pricing"> Pricing</a>
         </li>
         <li class="header_element" ng-click="toggleNavbar = false">
-          <a href="/blogs" > Blogs</a>
+          <a href="/blogs"> Blogs</a>
         </li>
 
-          {% verbatim %}
+        {% verbatim %}
         <li style="margin-left:30px; {{device.smallDevice ? 'display:inline-block;': ''}}">
           <button type="button" class="btn btn-warning" style="background-color:#ff6900;margin-top:10px;" ng-click="schedule()">
             Schedule a Demo
@@ -77,11 +77,23 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-              <li class="selectLang"><a href="" ng-repeat="l in langOptions" ng-click="changeLan(l)" ng-if="data.currentLang != l"><img ng-src="{{l.flag}}" style="height:15px;" alt="">  {{l.lang}}</a></li>
+              <li class="selectLang"><a href="" ng-repeat="l in langOptions" ng-click="changeLan(l)" ng-if="data.currentLang != l"><img ng-src="{{l.flag}}" style="height:15px;" alt=""> {{l.lang}}</a></li>
             </ul>
           </div>
         </li>
       </ul>
+    </div>
+  </div>
+  <div class="row" style="position:relative;" ng-show="show_cokie_agree">
+    <div class="col-md-12 cookie_agremt">
+      <div class="col-md-10">
+        <span>This website uses cookies, including third-party cookies.
+           This policy will inform you how the cookies are placed, used on this
+            website and how you can manage them.</span>
+      </div>
+      <div class=" col-md-2 common_padding">
+        <button type="button" class="btn accept_btn" ng-click="cookie(0)"style="">Accept</button>
+      </div>
     </div>
   </div>
   {% endverbatim %}

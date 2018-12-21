@@ -1328,6 +1328,21 @@
   transition: all .6s ease-in-out
 }
 
+.accept_btn {
+  background-color: #f24b4b;
+  color: #fff;
+  outline: 0;
+  border-radius: 6px;
+  z-index: 100;
+  border: 1px solid #f24b4b;
+  max-width: 200px;
+  padding: .3em 1.3em;
+  font-size: 16px;
+  position: absolute;
+  right: 5vw;
+  top: 3vh;
+}
+
 /*  vignessshh*/
 .button-blue {
   color: #fff;
@@ -1449,25 +1464,89 @@
   color: #fff;
 }
 
+.blog_title_row {
+  margin: 0px;
+  margin-left: 10px;
+  margin-bottom: 1.87rem;
+}
+
+.cookie_agremt {
+  position: absolute;
+  top: 76vh;
+  left: 15px;
+  background-color: #142e5c;
+  color: #fff;
+  height: 20vh;
+  font-size: 16px;
+  padding-top: 20px;
+}
+
+.excelmain {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/static/images/excelmain.jpg');
+  min-height: 50vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.excelmain h1 {
+  color: #fff;
+  font-weight: 1000;
+  font-size: 50px;
+}
+
+.imgwidth {
+  width: 25%;
+  padding-bottom: 2em;
+}
+
+.autoimg {
+  width: 100%;
+  padding-top: 1em;
+}
+
+.check, .check ul {
+  margin-top: 0;
+  padding-left: 2em;
+  list-style-type: none;
+}
+
+.check li:before {
+  position: absolute;
+  margin-left: -1.3em;
+  font-weight: bold;
+}
+
+.check li.tick:before {
+  content: "\2713";
+  color: #000;
+}
+
 /*  vignesshhh*/
 /* currently working***********************************************************************************************************/
 /* for bigger display size.... */
 @media only screen and (min-width:1500px) {
   .flex_section {
-    margin: 100px 200px 100px 200px !important;
+    margin: 100px 300px 100px 300px !important;
   }
 
   .blog_section {
-    margin: 100px 200px 100px 200px !important;
+    margin: 100px 300px 100px 300px !important;
   }
 
   .enterpriseimg {
     display: none;
   }
 
-  /* .box_section {
+  .box_section {
     margin: 25px 0px 0px 0px !important;
-  } */
+  }
+
+  .cookie_agremt {
+    top: 82vh;
+    left: 15px;
+    font-size: 18px;
+    padding-top: 20px;
+  }
 }
 
 /* mobile display size starts here.... */
@@ -1950,6 +2029,13 @@
     font-size: 2.6em;
   }
 
+  .cookie_agremt {
+    top: 73vh;
+    left: 15px;
+    font-size: 12px;
+    padding-top: 14px;
+  }
+
   /* vignesshhh */
   .visualimg {
     min-height: 65vh;
@@ -1977,6 +2063,25 @@
 
   .fluid {
     height: 25vh;
+  }
+
+  .excelmain {
+    min-height: 40vh;
+  }
+
+  .excelmain h1 {
+    color: #fff;
+    font-weight: 1000;
+    font-size: 20px;
+  }
+
+  .imgwidth {
+    width: 20%;
+  }
+
+  .autoimg {
+    height: 40vh;
+    padding-top: 1em;
   }
 
   /* vignesshhh */
@@ -2158,6 +2263,20 @@
   .lineSvg {
     display: none;
   }
+}
+
+.accept_btn {
+  background-color: #f24b4b;
+  color: #fff;
+  outline: 0;
+  border-radius: 6px;
+  z-index: 100;
+  border: 1px solid #f24b4b;
+  max-width: 200px;
+  padding: .3em 1.3em;
+  font-size: 16px;
+  top: 1vh;
+  right: 5vw;
 }
 
 /* mobile display size ends here.... */
@@ -2554,46 +2673,6 @@ blockquote>p {
   right: 50px;
 }
 
-/* .stat-circleo {
-  z-index: 2;
-  content: "";
-  display: inline-block;
-  width: 440px;
-  height: 440px;
-  background-color: #fff;
-  border-radius: 100%;
-  border: 50px solid #080738;
-  position: absolute;
-  top: 118px;
-  left: 87px;
-}
-
-.stat-circles {
-  z-index: 1;
-  content: "";
-  display: inline-block;
-  width: 300px;
-  height: 300px;
-  background-color: #36d4ff;
-  border-radius: 100%;
-  border: 0px solid #36d4ff;
-  position: absolute;
-  top: 450px;
-  left: 0px;
-}
-
-.stat-circlet {
-  z-index: -1;
-  content: "";
-  display: inline-block;
-  width: 330px;
-  height: 330px;
-  border-radius: 100%;
-  border: 18px solid #7500ff;
-  position: absolute;
-  top: 650px;
-  left: 80px;
-} */
 figure {
   font-weight: bold;
 }
@@ -2742,3 +2821,16 @@ figure {
   border-left: 1px solid #aaa;
   min-height: 450px;
 }
+
+/* @media  screen and (max-width: 1920px) {
+  .flex_section {
+    margin: 100px 300px 100px 300px !important;
+  }
+  .blog_section {
+    margin: 100px 300px 100px 300px !important;
+  }
+
+    .enterpriseimg {
+      display: none;
+
+} */

@@ -80,6 +80,8 @@ app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $
   });
 }]);
 
+
+
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 
 
@@ -247,7 +249,7 @@ app.config(function($stateProvider) {
     .state('excel_automation', {
       url: "/excel_automation",
       templateUrl: '/static/ngTemplates/app.homepage.excel_automation.html',
-      // controller: 'controller.ecommerce.PagesDetails'
+      controller: 'controller.excelautomation'
     })
   $stateProvider
     .state('pages', {
@@ -292,6 +294,57 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
 
 });
 
+app.controller('controller.excelautomation', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  $scope.excel1 = "Excel is a powerful, efficient and user - friendly application for data storing, calculating, organizing and report generation purposes.No doubt this application became very popular from small - scale industry to corporate organizations as there is a continuous need to access, analyze, retrieve, calculate, manipulate and report real - time data on a daily basis.However, sometimes integrating excel with other application becomes tedious.Even for many repetitive tasks like Data retrieval, extraction, migration, Import and Export, etc.automation is required to avoid this repetitiveness in any activities."
+
+  $scope.excel2 = "With AutomationEdge, Excel automation has become very simple, it reduces manual errors; eliminates repetitive and time-consuming work. Moreover, it is ten times faster than other tools and does not require a screen. AutomationEdge executes at backend without any software. It is a flexible tool which works with any spreadsheet format with different header styles and positions of columns."
+
+
+  $scope.images1 = [{
+      img: '/static/images/usecase1.png',
+      text: ' Import and export the data'
+    },
+    {
+      img: '/static/images/usecase2.png',
+      text: ' Data extraction and migration'
+    },
+    {
+      img: '/static/images/usecase3.png',
+      text: ' Comparing columns and deciding on outcom'
+    }, {
+      img: '/static/images/usecase4.png',
+      text: ' Reading and writing data in Excel'
+    },
+    {
+      img: '/static/images/usecase5.png',
+      text: ' Remove duplicate rows from Excel'
+    },
+  ]
+
+
+  $scope.images2 = [{
+      img: '/static/images/usecase6.png',
+      text: ' Excel integration with other applications'
+    },
+    {
+      img: '/static/images/usecase7.png',
+      text: ' Data Retrieving and creating own spreadsheet'
+    },
+    {
+      img: '/static/images/usecase8.png',
+      text: ' Auto filling the data in web forms from Excel'
+    }, {
+      img: '/static/images/usecase9.png',
+      text: ' Creating and running reports'
+    },
+    {
+      img: '/static/images/usecase10.png',
+      text: ' Report generation from big data'
+    },
+  ]
+
+});
 app.controller('controller.pdfprocess', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
   $scope.properties = {
     // autoHeight:true,
@@ -1057,6 +1110,13 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     }
   }
 
+
+  $scope.show_cokie_agree = true;
+
+  $scope.cookie = function(val) {
+    console.log('accepted');
+    $scope.show_cokie_agree = false;
+  }
 
   $scope.schedule = function(idx) {
     $uibModal.open({
