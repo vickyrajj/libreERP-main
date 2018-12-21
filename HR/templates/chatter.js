@@ -296,7 +296,7 @@ var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default
 
 var webRtcAddress = '{{webrtcAddress}}';
 var wamp_prefix = '{{wamp_prefix}}'
-
+  var msgCount=0;
 
 var custID = {{pk}};
 var custName='{{name}}'
@@ -1717,7 +1717,7 @@ function activeAudioCall(){
               padding:0px;\
               margin:0px;\
               position: absolute;\
-              top:80px;\
+              top:81px;\
               width:100%;\
               bottom: 80px;\
               background-color: white;\
@@ -2151,6 +2151,7 @@ var myformrating;
     // or you can use variable feedbackFormSubmitted which is true only if feedbackForm is submitted
     messageBox.innerHTML = '';
     isConfirmedToEnd=false;
+    msgCount=0;
     // messageBox.innerHTML = '';
     agentName.innerHTML = nameSupport
     // delete uid from cookies and create a new one
@@ -2395,6 +2396,11 @@ var isConfirmedToEnd=false;
     sendMessage(inputText.value);
   }, false);
 
+  // document.getElementById('hereg').addEventListener('click',function(e){
+  //   alert(e)
+  // })
+
+
   function messageDiv(message) {
 
     function timeSince(date) {
@@ -2422,12 +2428,30 @@ var isConfirmedToEnd=false;
       return strTime
     }
 
+
+
+    // setTimeout(function () {
+    //   for (var i = 1; i <= msgCount; i++) {
+    //     console.log(i,msgCount,"***************");
+    //     document.getElementById('attachedFile'+i).addEventListener("click",function(e){
+    //       openModal(e.target.src)
+    //       alert(msgCount);
+    //     },false)
+    //   }
+    // }, 1000);
     message.timeDate = timeWithDate(new Date(message.created))
 
     if (message.attachment) {
+      setTimeout(function () {
+        for (var i = 1; i <= msgCount; i++) {
+          document.getElementById('attachedFile'+i).addEventListener("click",function(e){
+            openModal(e.target.src)
+          },false)
+        }
+      }, 1000);
       if (message.attachmentType=='image') {
-          console.log('image');
-        attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
+        msgCount++;
+        attachedFile = '<img  id="attachedFile'+msgCount+'" src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
       }else if (message.attachmentType=='instructionImage') {
           console.log('instructionImage');
         attachedFile = '<img  src="'+ message.attachment +'" style="width:200px; box-sizing:border-box;">'
@@ -2443,6 +2467,7 @@ var isConfirmedToEnd=false;
           attachedFile ='<p style="line-height: 1.75; margin:0px 0px 10px; box-sizing:border-box;">  <a style="color:#fff;" href="'+message.attachment+'"> '+message.attachment+' </a></p>'
       }
     }
+
 
     if (message.logs==null) {
       if (message.message!=null && message.attachmentType!=null) {
@@ -2525,6 +2550,7 @@ setInterval(function () {
 
   }
 }, 5000);
+
 
   function pushMessages() {
     for (var i = 0; i < chat.messages.length; i++) {

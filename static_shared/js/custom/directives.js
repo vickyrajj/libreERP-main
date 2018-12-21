@@ -876,26 +876,42 @@ app.directive('chatBox', function() {
               }).
               then(function(publication) {
                 console.log("Published", $scope.data.uid);
-                alert('deleiverd')
+                // alert('deleiverd')
               },function(){
                 alert('not deleivered')
               });
             }else{
               alert('you are not connected to internet')
             }
-
-
             $scope.scroll()
-
-
           });
-
-
-
-
-
         }
       };
+
+      $scope.imageClicked=function(val){
+        // alert(val)
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.chatBox.imageModal.html',
+          size: 'lg',
+          backdrop: true,
+          resolve: {
+            imageSrc: function() {
+              return val;
+            }
+          },
+          controller: function($scope, $users,imageSrc, $uibModalInstance) {
+            $scope.myImageSrc=imageSrc
+          },
+          }).result.then(function() {
+
+          }, function(data) {
+
+          if (data != 'backdrop click' && data != '' && data != 'escape key press') {
+            console.log(data);
+            $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
+          }
+        });
+      }
 
       $scope.$watch('chatBox.messageToSend', function(newValue, oldValue) {
         $scope.status = "T";

@@ -26,6 +26,12 @@ app.filter('rainbow' , function(){
   }
 })
 
+app.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});
+
 app.filter('getCRMDP', function() {
   return function(input) {
     if (input == undefined) {
