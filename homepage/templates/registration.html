@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% load staticfiles %} {% block specific_head %}{% load socialaccount %}
 <title>Register For {{seoDetails.title}}</title>
 
-<meta name="description" content="{{seoDetails.description}}"/>
+<meta name="description" content="{{seoDetails.description}}" />
 <link rel="canonical" href="{{seoDetails.url}}" />
-<link rel="publisher" href="{{seoDetails.publisher}}"/>
+<link rel="publisher" href="{{seoDetails.publisher}}" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Register For {{seoDetails.title}}" />
@@ -23,11 +23,9 @@
 <meta name="twitter:creator" content="{{seoDetails.twitter_creator}}" />
 
 <meta property="article:author" content="{{seoDetails.author}}" />
-<link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16">
-{% endblock %} {% block specific_css %}
+<link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16"> {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
-{% endblock %} {% block header %}
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
 
 
 
@@ -39,10 +37,10 @@
   </a>
   </div>
 
-  <div class="col-md-5 hidden-xs hidden-sm  text-right"style="margin-top: 20px;">
+  <div class="col-md-5 hidden-xs hidden-sm  text-right" style="margin-top: 20px;">
     <a href="/login" style="cursor:pointer;font-size:17px;color:white;text-decoration:none;color:var(--themeColor)"> Already User? <i class="fa fa-user fa-lg"></i></a>
   </div>
-  <div class="col-xs-6 hidden-lg hidden-md  text-right"style="margin-top:15px">
+  <div class="col-xs-6 hidden-lg hidden-md  text-right" style="margin-top:15px">
     <a href="/login" style="cursor:pointer;font-size:17px;color:white;text-decoration:none;color:var(--themeColor)"> Already User? <i class="fa fa-user fa-lg"></i></a>
   </div>
 </div>
@@ -65,8 +63,7 @@
           <div class="col-lg-12 text-center" style="margin-bottom:30px;">
             {% verbatim %}
 
-            <h2 class="section-heading" style="color: #a39c9c;margin-bottom:0px">{{ mode != 'sendingOTP' ? 'Registration': 'Please wait, Sending OTP'}}</h2>
-            {% endverbatim %}
+            <h2 class="section-heading" style="color: #a39c9c;margin-bottom:0px">{{ mode != 'sendingOTP' ? 'Registration': 'Please wait, Sending OTP'}}</h2> {% endverbatim %}
             <img src="/static/images/bottom-border.png" alt="">
           </div>
         </div>
@@ -98,188 +95,183 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
 
 
-                  <div ng-if="mode == 'sendingOTP'" style="padding-top:100px;" class="text-center">
-                    <img ng-src="'/static/images/tutor/science.gif'" alt="">
+              <div ng-if="mode == 'sendingOTP'" style="padding-top:100px;" class="text-center">
+                <img ng-src="'/static/images/tutor/science.gif'" alt="">
+              </div>
+
+
+              <div ng-if="mode == 'main'">
+                <div class="row" style="margin-bottom:15px;">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+                      </div>
+                      <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group has-{{ validity.firstName != null && validity.firstName ? 'success':'danger'}}">
+                          <input ng-model="form.firstName" type="text" class="form-control floatInput" required/>
+                          <span class="floating-label">First Name *</span>
+                          <p class="help-text text-danger" ng-if="validityChecked == true && (form.firstName.length ==0 || form.firstName == null || form.firstName == undefined) ">First name is required</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-
-                  <div ng-if="mode == 'main'">
-                    <div class="row" style="margin-bottom:15px;">
-                      <div class="col-md-6">
-                        <div class="row">
-                          <div class="col-md-2 col-sm-2 col-xs-2">
-                            <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
-                          </div>
-                          <div class="col-md-10 col-sm-10 col-xs-10">
-                            <div class="form-group has-{{ validity.firstName != null && validity.firstName ? 'success':'danger'}}">
-                              <input ng-model="form.firstName" type="text" class="form-control floatInput" required/>
-                              <span class="floating-label">First Name *</span>
-                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.firstName.length ==0 || form.firstName == null || form.firstName == undefined) ">First name is required</p>
-                            </div>
-                          </div>
-                        </div>
-                        </div>
-                      <div class="col-md-6">
-                        <div class="row">
-                          <div class="col-md-2 col-sm-2 col-xs-2">
-                            <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
-                          </div>
-                          <div class="col-md-10 col-sm-10 col-xs-10">
-                            <div class="form-group has-{{ validity.lastName != null && validity.lastName ? 'success':'danger'}}">
-                              <input ng-model="form.lastName" type="text" class="form-control floatInput" required/>
-                              <span class="floating-label">Last Name </span>
-                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.lastName.length ==0 || form.lastName == null || form.lastName == undefined) ">Last name is required</p>
-                            </div>
-                          </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <span><i class="fa fa-user" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+                      </div>
+                      <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group has-{{ validity.lastName != null && validity.lastName ? 'success':'danger'}}">
+                          <input ng-model="form.lastName" type="text" class="form-control floatInput" required/>
+                          <span class="floating-label">Last Name </span>
+                          <p class="help-text text-danger" ng-if="validityChecked == true && (form.lastName.length ==0 || form.lastName == null || form.lastName == undefined) ">Last name is required</p>
                         </div>
                       </div>
                     </div>
-                    <div class="row" style="margin-bottom:15px;">
-                      <div class="col-md-6">
-                        <div class="row">
-                          <div class="col-md-2 col-sm-2 col-xs-2">
-                            <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
-                          </div>
-                          <div class="col-md-10 col-sm-10 col-xs-10">
-                            <div class="form-group">
-                              <input ng-model="form.email" type="text" class="form-control floatInput" required/>
-                              <span class="floating-label">Email *</span>
-                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.email.length ==0 || form.email == null || form.email == undefined) ">Email is required</p>
-                              <p class="help-text text-danger" ng-if="usernameExist">Email is already taken!</p>
-                            </div>
-                          </div>
-                        </div>
+                  </div>
+                </div>
+                <div class="row" style="margin-bottom:15px;">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
                       </div>
-                      <div class="col-md-6">
-                        <div class="row">
-                          <div class="col-md-2 col-sm-2 col-xs-2">
-                            <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
-                          </div>
-                          <div class="col-md-10 col-sm-10 col-xs-10">
-                            <div class="form-group">
-                              <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)'  ng-model="form.mobile" type="text" class="form-control floatInput" required/>
-                              <span class="floating-label">Phone *</span>
-                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
-                            </div>
-                          </div>
+                      <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group">
+                          <input ng-model="form.email" type="text" class="form-control floatInput" required/>
+                          <span class="floating-label">Email *</span>
+                          <p class="help-text text-danger" ng-if="validityChecked == true && (form.email.length ==0 || form.email == null || form.email == undefined) ">Email is required</p>
+                          <p class="help-text text-danger" ng-if="usernameExist">Email is already taken!</p>
                         </div>
                       </div>
                     </div>
-                    <div class="row" style="margin-bottom:15px;">
-                      <div class="col-md-6">
-                        <div class="row">
-                          <div class="col-md-2 col-sm-2 col-xs-2">
-                            <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
-                          </div>
-                          <div class="col-md-10 col-sm-10 col-xs-10">
-                            <div class="form-group">
-                              <input ng-model="form.password" type="password" class="form-control floatInput" required/>
-                              <span class="floating-label">Password *</span>
-                              <p class="help-text text-danger" ng-if="validityChecked == true && (form.password.length ==0 || form.password == null || form.password == undefined) ">Password is required (minimum length is 6)</p>
-                            </div>
-                          </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+                      </div>
+                      <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group">
+                          <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)' ng-model="form.mobile" type="text" class="form-control floatInput" required/>
+                          <span class="floating-label">Phone *</span>
+                          <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
                         </div>
                       </div>
-                      <div class="col-md-6">
-                        <div class="row">
-                          <div class="col-md-2 col-sm-2 col-xs-2">
-                            <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
-                          </div>
-                          <div class="col-md-10 col-sm-10 col-xs-10">
-                            <div class="form-group">
-                              <input ng-model="form.rePassword" type="password" class="form-control floatInput" required/>
-                              <span class="floating-label">Confirm Password *</span>
-                                <p class="help-text text-danger" ng-if="validityChecked == true && (form.rePassword.length ==0 || form.rePassword == null || form.rePassword == undefined || form.rePassword != form.password)">Confirm password does not match</p>
-                            </div>
-                          </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="margin-bottom:15px;">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                      </div>
+                      <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group">
+                          <input ng-model="form.password" type="password" class="form-control floatInput" required/>
+                          <span class="floating-label">Password *</span>
+                          <p class="help-text text-danger" ng-if="validityChecked == true && (form.password.length ==0 || form.password == null || form.password == undefined) ">Password is required (minimum length is 6)</p>
                         </div>
                       </div>
-                      <!-- <div class="col-md-12">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <span><i class="fa fa-lock" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                      </div>
+                      <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group">
+                          <input ng-model="form.rePassword" type="password" class="form-control floatInput" required/>
+                          <span class="floating-label">Confirm Password *</span>
+                          <p class="help-text text-danger" ng-if="validityChecked == true && (form.rePassword.length ==0 || form.rePassword == null || form.rePassword == undefined || form.rePassword != form.password)">Confirm password does not match</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="col-md-12">
                         <span class="help-text">Password Should Contains Minimum 6 Characters( Atleast 1Capital Letter , 1Small Letter, 1Number )</span>
                       </div> -->
 
-                    {% endverbatim %}
+                  {% endverbatim %} {% for fields in regextra %}
+                  <div class="col-md-6">
+                    <div class="row">
 
-                      {% for fields in regextra %}
-                      <div class="col-md-6">
-                        <div class="row">
-
-                            {% if fields.type == 'text' %}
-                              <div class="col-md-2 col-sm-2 col-xs-2">
-                                <span><i class="fa fa-map-pin" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
-                              </div>
-                              <div class="col-md-10 col-sm-10 col-xs-10">
-                                <div class="form-group">
-                                  <input ng-model="form.{{fields.name}}" type="text" class="form-control floatInput" required/><br/>
-                                  <span class="floating-label">{{fields.placeholder}}*</span>
-                                </div>
-                              </div>
-                            {% endif %}
-                            {% if fields.type == 'choice' %}
-                                <div class="col-md-2 col-sm-2 col-xs-2">
-                                  <span><i class="fa {{fields.icon}}" style="margin-top: 30px;font-size: 22px;color:#147fcc"></i></span>
-                                </div>
-                                <div class="col-md-10 col-sm-10 col-xs-10" style="padding-top:25px">
-                                <select  class="form-control" ng-model="form.{{fields.name}}" ng-init="form.{{fields.name}} = '{{fields.placeholder}}'">
+                      {% if fields.type == 'text' %}
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <span><i class="fa fa-map-pin" style="margin-top: 45px;font-size: 22px;color:#147fcc"></i></span>
+                      </div>
+                      <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group">
+                          <input ng-model="form.{{fields.name}}" type="text" class="form-control floatInput" required/><br/>
+                          <span class="floating-label">{{fields.placeholder}}*</span>
+                        </div>
+                      </div>
+                      {% endif %} {% if fields.type == 'choice' %}
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <span><i class="fa {{fields.icon}}" style="margin-top: 30px;font-size: 22px;color:#147fcc"></i></span>
+                      </div>
+                      <div class="col-md-10 col-sm-10 col-xs-10" style="padding-top:25px">
+                        <select class="form-control" ng-model="form.{{fields.name}}" ng-init="form.{{fields.name}} = '{{fields.placeholder}}'">
                                   <option selected value="{{fields.placeholder}}">{{fields.placeholder}}</option>
                                   {% for des in fields.option %}
                                   <option value={{des}}>{{des}}</option>
                                   {% endfor %}
                                 </select>
-                              </div>
-                            {% endif %}
-                        </div>
                       </div>
-
-                      {% endfor %}
-
-
-
-
-
+                      {% endif %}
                     </div>
-
-
-
-                      {% verbatim %}
-                    <div class="row" style="margin-top:50px;">
-                      <div class="col-md-2 col-sm-2 col-xs-2">
-                        <input type="checkbox" class=" pull-right" ng-model="form.agree">
-                      </div>
-                      <div class="col-md-10 col-sm-10 col-xs-10">
-                        {% endverbatim %}
-                        <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  {{brand_title}}.</span>
-                        {% verbatim %}
-                      </div>
-                    </div>
-                    <div ng-if="validityChecked && !form.agree" class="row">
-                      <p class="help-text text-danger">Please agree to proceed</p>
-                    </div>
-
                   </div>
 
+                  {% endfor %}
 
-                  <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
+
+
+
+
+                </div>
+
+
+
+                {% verbatim %}
+                <div class="row" style="margin-top:50px;">
+                  <div class="col-md-2 col-sm-2 col-xs-2">
+                    <input type="checkbox" class=" pull-right" ng-model="form.agree">
+                  </div>
+                  <div class="col-md-10 col-sm-10 col-xs-10">
                     {% endverbatim %}
-                    {% if verifyMobile != False %}
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="col-md-2 col-sm-2 col-xs-2">
-                          <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
-                        </div>
-                        <div class="col-md-10 col-sm-10 col-xs-10">
-                          <div class="form-group">
-                            <input ng-model="form.mobileOTP" type="password" class="form-control floatInput" required/>
-                            <span class="floating-label">Mobile OTP *</span>
-                          </div>
+                    <span>I have read, understood, and I agree to the " <a target="_blank" href="/terms">Terms and Conditions</a> " set forth by  {{brand_title}}.</span> {% verbatim %}
+                  </div>
+                </div>
+                <div ng-if="validityChecked && !form.agree" class="row">
+                  <p class="help-text text-danger">Please agree to proceed</p>
+                </div>
+
+              </div>
+
+
+              <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
+                <div ng-if="!showActiveMsg">
+                  {% endverbatim %} {% if verifyMobile != False %}
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-2 col-sm-2 col-xs-2">
+                        <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
+                      </div>
+                      <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group">
+                          <input ng-model="form.mobileOTP" type="password" class="form-control floatInput" required/>
+                          <span class="floating-label">Mobile OTP *</span>
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                  </div>
+                  <div class="col-md-6">
                     {% else %}
                     <div class="col-md-offset-2 col-md-8">
-                    {% endif %}
-                    {% verbatim %}
+                      {% endif %} {% verbatim %}
                       <div class="row">
                         <div class="col-md-2 col-sm-2 col-xs-2">
                           <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
@@ -297,38 +289,45 @@
                   <div class="row text-center text-danger" ng-if="validityChecked2">
                     <span>Invalid OTP , please check both the OTPs and verify again</span>
                   </div>
-
-                  <div class="col-lg-12 text-center" style="margin-top:20px;">
+                </div>
+                  <div class="col-lg-12 text-center" style="margin-top:20px;" ng-if="!showActiveMsg">
                     <button ng-if="mode=='main'" class="btn btn-primary" ng-click="getOTP()">Submit</button>
                     <button ng-if="mode=='verify'" ng-click="verify()" class="btn btn-primary">Verify and Login</button>
                   </div>
+                <div class="col-lg-12 text-center" ng-if="showActiveMsg">
+                  <p> Your account is yet to be activated ! We will inform you once it is done! </p>
+                  <button ng-click="continue()" style="width:100px" class="btn btn-primary">Continue</button>
+                </div>
+              </div>
+
             </div>
+            {% endverbatim %}
           </div>
-          {% endverbatim %}
-        </div>
 
       </section>
 
-      {% endblock %} {% block footer %}
-      {% include "footer.html" %}
+      {% endblock %} {% block footer %} {% include "footer.html" %}
 
+      </div>
     </div>
   </div>
-</div>
 
 
 
-{% endblock %} {% block specific_js %}
-<script src="{% static 'js/jquery.easing.min.js' %}"></script>
-<script src="{% static 'js/classie.js' %}"></script>
-<!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
+  {% endblock %} {% block specific_js %}
+  <script>
+    var autoActiveReg = "{{autoActiveReg}}";
+  </script>
+  <script src="{% static 'js/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'js/classie.js' %}"></script>
+  <!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
 
-<script src="{% static 'js/agency.js' %}"></script>
-<script src="{% static 'js/angular.min.js' %}"></script>
-<script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
-<script src="{% static 'js/angular-ui-router.min.js' %}"></script>
-<script src="{% static 'js/angular-sanitize.min.js' %}"></script>
-<script src="{% static 'js/app.homepage.js' %}"></script>
-<script src="{% static 'js/app.homepage.registration.js' %}"></script>
+  <script src="{% static 'js/agency.js' %}"></script>
+  <script src="{% static 'js/angular.min.js' %}"></script>
+  <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
+  <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+  <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
+  <script src="{% static 'js/app.homepage.js' %}"></script>
+  <script src="{% static 'js/app.homepage.registration.js' %}"></script>
 
-{% endblock %}
+  {% endblock %}

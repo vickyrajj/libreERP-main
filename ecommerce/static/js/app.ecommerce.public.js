@@ -802,6 +802,7 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
 
 app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window, ngMeta, $filter, Flash) {
 
+
   $scope.me = $users.get('mySelf');
   $scope.showRatings = false
   $scope.priceDisplay = false

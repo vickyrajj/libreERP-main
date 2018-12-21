@@ -972,6 +972,8 @@ def manifest(response,item):
             qtyValue = 'XL'
         elif int(qtyData)==6:
             qtyValue = 'XL'
+        else:
+            qtyValue = qtyData
     else:
       qtyValue = qtyData
 
@@ -1522,6 +1524,8 @@ def genInvoice(response, contract, request):
                         qtyValue = 'XL'
                     elif int(qtyData)==6:
                         qtyValue = 'XL'
+                    else:
+                        qtyValue = qtyData
                 else:
                   qtyValue = qtyData
                 name = str(i.product.product.name) + ' '  + str(qtyValue) + ' ' +str(desc)
@@ -1562,6 +1566,8 @@ def genInvoice(response, contract, request):
                         qtyValue = 'XL'
                     elif int(qtyData)==6:
                         qtyValue = 'XL'
+                    else:
+                        qtyValue = qtyData
                 else:
                   qtyValue = qtyData
 

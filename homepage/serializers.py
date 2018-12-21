@@ -20,7 +20,7 @@ import ast
 import sendgrid
 import os
 
-def sendMail(d,email):
+def sendMail(d):
     ctx = {
         'user':d
     }
@@ -130,7 +130,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
                     # u.is_active = True
                     u.save()
-                    sendMail(d,d['email'])
+                    sendMail(d)
                     print u.profile.pk
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
@@ -218,7 +218,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                         else:
                             u.is_staff = False
                     u.save()
-                    sendMail(d,d['email'])
+                    sendMail(d)
                     print u.profile.pk
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
@@ -245,7 +245,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 u.set_password('titan@1')
                 u.is_active = True
                 u.save()
-                sendMail(d,d['email'])
+                sendMail(d)
                 # pobj=profile()
                 # pobj.mobile = d['mobile']
                 # pobj.save()
@@ -268,21 +268,19 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         return instance
     def create(self , validated_data):
-        print "createaaaaaaaaaa"
         reg = Registration(**validated_data)
         salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
-        username = reg.email.split('@')[0]
-        u = User.objects.filter(username=username)
-        print 'ggggggggggggggggg'
-        if len(u)>0:
-            raise ValidationError(detail={'PARAMS' : 'Username already taken'} )
-        print 'cominggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg'
         if reg.email!=None:
+            username = reg.email.split('@')[0]
             key = hashlib.sha1(salt+validated_data.pop('email')).hexdigest()
             reg.token = key
         else:
+            username = reg.mobile
             key = hashlib.sha1(salt+validated_data.pop('mobile')).hexdigest()
             reg.token = key
+        u = User.objects.filter(username=username)
+        if len(u)>0:
+            raise ValidationError(detail={'PARAMS' : 'Username already taken'} )
         if not globalSettings.LITE_REGISTRATION:
             if globalSettings.VERIFY_MOBILE:
                 reg.mobileOTP = generateOTPCode()

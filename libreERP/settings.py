@@ -53,6 +53,7 @@ LOGIN_TEMPLATE = 'login.html'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'apfwdssalfeag7)cp4jve5gfb%l8wbn4cyvym(tez^m@z1o#3f'
+MOBILE_SECRET_KEY = '1234'
 
 GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git operations are
 # computationaly heavy and can be used to overload with git operations. So the server will have
@@ -84,7 +85,6 @@ SEO_DESCRIPTION = 'Sterling Select Online Shopping'
 SEO_IMG = '/static/images/company_icon.png'
 SEO_IMG_WIDTH = 1024
 SEO_IMG_HEIGHT = 719
-
 
 SEO_AUTHOR = 'sterlingselect.com'
 SEO_TWITTER_CREATOR = '@sterlingselect'
@@ -291,7 +291,7 @@ EMAIL_USE_TLS = True
 EMAIL_API=True
 G_FROM='onlinestore@bni-india.in'
 G_KEY='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'
-G_ADMIN=[ "bhanubalram5@gmail.com","vikas.motla@gmail.com"]
+G_ADMIN=[ "vikas.m@cioc.in","vikas.motla@gmail.com"]
 
 
 

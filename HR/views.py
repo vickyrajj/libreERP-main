@@ -112,10 +112,8 @@ def generateOTP(request):
 def loginView(request):
 
     # print request.META['HTTP_USER_AGENT']
-    print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',request
 
-
-    print 'loginnnnnnnnnnnnnnnnn',request.POST
     backgroundImage = globalSettings.LOGIN_PAGE_IMAGE
     genericImg = GenericImage.objects.all()
     try:
@@ -135,8 +133,8 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
-        print request.POST,'lllllllllllllddddddddddddd'
     	usernameOrEmail = request.POST['username']
+        print usernameOrEmail ,'usernameOrEmail'
         otpMode = False
         if 'otp' in request.POST:
             print "otp"
@@ -365,4 +363,27 @@ class SendActivatedStatus(APIView):
         msg = EmailMessage(email_subject, email_body, to= sentEmail)
         msg.content_subtype = 'html'
         msg.send()
+        return Response({}, status = status.HTTP_200_OK)
+
+
+class SocialMobileLogin(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny,)
+    def post(self , request , format = None):
+        if request.data['secretKey'] == globalSettings.MOBILE_SECRET_KEY:
+            u = User.objects.filter(username = request.data['username'])
+            if len(u)>0:
+                print 'already exist'
+            else:
+                print 'create new'
+                u = User(username = request.data['username'])
+                u.email = request.data['email']
+                fname = request.data['email'].split('@')[0]
+                u.first_name = fname
+                u.is_active = True
+                u.set_password(request.data['password'])
+                u.save()
+            loginView(request)
+        else:
+            raise PermissionDenied()
         return Response({}, status = status.HTTP_200_OK)
