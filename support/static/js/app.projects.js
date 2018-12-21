@@ -1173,7 +1173,7 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
     $scope.resetForm();
   } else {
     $scope.form = $scope.data.tableData[$scope.tab.data.index]
-    // $scope.form.exRate = 75;
+    $scope.form.exRate = 75;
   }
   console.log($scope.form);
   $scope.projectSteps = {steps : projectsStepsData}

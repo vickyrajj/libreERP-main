@@ -212,8 +212,8 @@ def purchaseOrder(response , project , purchaselist , request):
     else:
         p2 = Paragraph("<para fontSize=10 ><b>{0}</b></para>".format(project.vendor.name.upper()),styles['Normal'])
         p3 = Paragraph("<para fontSize=8  >{0}</para>".format(project.vendor.street),styles['Normal'])
-        p4 =  Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.city),styles['Normal'])
-        p5 = Paragraph("<para fontSize=8 >{0}-{1}</para>".format(project.vendor.state,project.vendor.pincode),styles['Normal'])
+        p4 =  Paragraph("<para fontSize=8 >{0} - {1}</para>".format(project.vendor.city,project.vendor.pincode),styles['Normal'])
+        p5 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.state),styles['Normal'])
         p6 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.country),styles['Normal'])
 
 
@@ -323,8 +323,8 @@ def purchaseOrder(response , project , purchaselist , request):
 
 
 
-def quotation(response , project , purchaselist , request):
-
+def quotation(response , project , purchaselist , multNumber,request):
+    print multNumber,'factor numberrrrrrrrrr'
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
@@ -334,11 +334,11 @@ def quotation(response , project , purchaselist , request):
 
     elements.append(p1)
 
-    p2 = Paragraph("<para fontSize=10 ><b> MOLEX India Pvt Ltd., </b></para>",styles['Normal'])
-    p3 = Paragraph("<para fontSize=8  >Sadaramangala Industrial Area</para>",styles['Normal'])
-    p4 =  Paragraph("<para fontSize=8 >CH-9320</para>",styles['Normal'])
-    p5 = Paragraph("<para fontSize=8 >Whitefield</para>",styles['Normal'])
-    p6 = Paragraph("<para fontSize=8 >Bangalore</para>",styles['Normal'])
+    p2 = Paragraph("<para fontSize=10 ><b> {0} </b></para>".format(project.vendor.name.upper()),styles['Normal'])
+    p3 = Paragraph("<para fontSize=8  >{0}</para>".format(project.vendor.street),styles['Normal'])
+    p4 =  Paragraph("<para fontSize=8 >{0} {1}</para>".format(project.vendor.city,project.vendor.pincode),styles['Normal'])
+    p5 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.state),styles['Normal'])
+    p6 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.country),styles['Normal'])
 
     elements.append(Spacer(1, 10))
     elements.append(p2)
@@ -412,7 +412,7 @@ def quotation(response , project , purchaselist , request):
         desc = i.products.description_1
         price = i.landed_price
         qty = i.quantity1
-        amnt = price * qty
+        amnt = price * qty * multNumber
         grandTotal +=amnt
 
         p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
@@ -521,6 +521,7 @@ def grn(response , project , purchaselist , request):
 
 class GetPurchaseAPIView(APIView):
     def get(self , request , format = None):
+        print request.GET,'dnfjkdhfjkhdfk'
         project = Projects.objects.get(pk = request.GET['project'])
         purchaselist = BoM.objects.filter(project = request.GET['project'])
         response = HttpResponse(content_type='application/pdf')
@@ -539,11 +540,25 @@ class GrnAPIView(APIView):
 
 class QuotationAPIView(APIView):
     def get(self , request , format = None):
+        print 'in downloaddddddddddd'
+        print request.GET
+        try:
+            if 'typ' in request.GET:
+                print request.GET['typ']
+                if request.GET['typ'] == 'CHF':
+                    print 'chf valueeeeee',request.GET['exRate']
+                    multNumber = int(request.GET['exRate'])
+                else:
+                    multNumber = 1
+            else:
+                multNumber = 1
+        except:
+            multNumber = 1
         project = Projects.objects.get(pk = request.GET['project'])
         purchaselist = BoM.objects.filter(project = request.GET['project'])
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
-        quotation(response , project , purchaselist , request)
+        quotation(response , project , purchaselist  ,multNumber,request)
         return response
 from reportlab.platypus.flowables import HRFlowable
 

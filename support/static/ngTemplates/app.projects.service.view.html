@@ -2,8 +2,6 @@
   <div class="container-fluid" style="padding:20px;" ng-if="form.status=='created'">
     <div class="row">
       <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
-        <div class="row">
-          <div class="col-md-12">
             <div class="row">
               <div class="col-md-12 text-left">
                 <label> Project Title : </label> {{form.title}} <br />
@@ -29,6 +27,7 @@
                 </div>
               </div>
             </div>
+
             <div class="row" style="padding-top:10px">
               <div class="col-md-12 text-center">
                 <label> Revision : </label>
@@ -36,7 +35,16 @@
               <div class="col-md-12">
                 <input type="text" class="form-control text-center" ng-model="form.revision" ng-change="revision()" placeholder="Revision">
               </div>
+
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-12 text-center">
+              <label> PO Number : </label>
             </div>
+            <div class="col-md-12">
+              <input type="text" class="form-control text-center" ng-model="form.poNumber" ng-change="revision()" placeholder="PO Number">
+            </div>
+          </div>
             <div class="row" style="padding-top:10px">
               <div class="col-md-4 text-center">
                 <label> Ex Rate : </label>
@@ -55,18 +63,28 @@
               </div>
 
             </div>
-            <div class="row" style="padding-top:10px">
+            <!-- <div class="row" style="padding-top:10px">
               <div class="btn-group">
                 <button type="button" class="btn btn-primary " ng-click="edit();$event.stopPropagation();"> Download PO </button><br><br>
                 <button type="button" class="btn btn-primary" ng-click="delete(data.pk , index);$event.stopPropagation();"> Download Quotation In CHF</button><br><br>
                 <button type="button" class="btn btn-primary" ng-click="delete(data.pk , index);$event.stopPropagation();"> Download Quotation In INR</button>
               </div>
 
+
+
+          </div> -->
+          <div class="row" style="padding-top:10px">
+            <div class="btn-group">
+              <span ng-if="form.poNumber.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}"><i class="fa fa-download"></i> Download PO </a></span> <br><br>
+              <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br>
+              <span><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exrate}}&typ=CHF"><i class="fa fa-download"></i> Download Quotation In CHF </a></span><br><br>
+              <span><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exrate}}&typ=INR"><i
+                class="fa fa-download"></i> Download Quotation In INR </a> </span>
             </div>
 
           </div>
         </div>
-      </div>
+      <!-- </div> -->
       <div class="col-md-9">
         <wizard steps="projectSteps.steps" editable="false" active="form.selectedStatus" error="false"></wizard>
         <hr>
@@ -325,12 +343,12 @@
             </tr>
           </tbody>
         </table>
-        <!-- <div class="row" ng-if="showbutton||projects.length>0">
+        <div class="row" ng-if="showbutton||projects.length>0">
         <div class="col-md-11">
           <button type="button" class="btn btn-success pull-right" mwl-confirm title="Confirm" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="sendForApproval()"
             confirm-button-type="default" cancel-button-type="default"> Send For Approval</button>
         </div>
-      </div> -->
+      </div>
       </div>
     </div>
   </div>

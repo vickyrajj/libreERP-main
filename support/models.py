@@ -74,7 +74,7 @@ class Projects(models.Model):
     approved1_date = models.DateField(null = True)
     approved2_date = models.DateField(null = True)
     status = models.CharField(choices = PURCHASE_STATUS , max_length = 10 , default = 'created')
-    revision =  models.CharField( max_length = 20 ,null = True , blank = True)
+    revision =  models.CharField( max_length = 20 , default=1)
     savedStatus = models.BooleanField(default = False)
     invoiceValue = models.FloatField(null = True)
     packing = models.FloatField(default = 0)
@@ -86,7 +86,11 @@ class Projects(models.Model):
     clearingCharges1 = models.FloatField(default = 0)
     clearingCharges2 = models.FloatField(default = 0)
     exRate = models.FloatField( default = 75)
-    profitMargin = models.FloatField( default = 0)
+    profitMargin =  models.FloatField( default = 0)
+
+    poNumber =  models.CharField( max_length = 20 , null=True,blank=True)
+    
+
     vendor = models.ForeignKey(Vendor , related_name='vendor' , null = True)
 
 
