@@ -235,13 +235,13 @@ app.config(function($stateProvider) {
     .state('pdf_process', {
       url: "/pdf_process",
       templateUrl: '/static/ngTemplates/app.homepage.pdf_process.html',
-      // controller: 'controller.ecommerce.PagesDetails'
+      controller: 'controller.pdfprocess'
     })
   $stateProvider
     .state('nlp', {
       url: "/nlp",
       templateUrl: '/static/ngTemplates/app.homepage.nlp.html',
-      // controller: 'controller.ecommerce.PagesDetails'
+      controller: 'controller.nlp'
     })
   $stateProvider
     .state('excel_automation', {
@@ -291,6 +291,135 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
   }
 
 });
+
+app.controller('controller.pdfprocess', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+  $scope.properties = {
+    // autoHeight:true,
+    // animateIn: 'fadeIn',
+    lazyLoad: true,
+    items: 1,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 3000,
+    dots: false,
+    URLhashListener: true,
+    autoplayHoverPause: true,
+    startPosition: 'URLHash',
+  };
+  $scope.images = [{
+      img: '/static/images/visual1.jpg',
+      title: 'ABBYY Solutions',
+      head: 'Content Intelligence for Robotic Process Automation (RPA)',
+      para: 'Make robots smarter by turning unstructured content into structured, actionable information.',
+      headcol: '#9AECFF',
+      paracol: '#fff',
+      btn1: 'LEARN MORE',
+      btn2: 'DOWNLOAD  PAPER',
+
+    },
+    {
+      img: '/static/images/visual2.jpg',
+      title: 'ABBYY FineReader Engine',
+      head: 'The most comprehensive OCR SDK for developers',
+      para: 'Add text extraction, document conversion and classification to your software by integrating premium OCR technology.',
+      headcol: '#9AECFF',
+      paracol: '#fff',
+      btn1: 'LEARN MORE',
+      btn2: 'REQUEST TRAIL',
+    },
+    {
+      img: '/static/images/visual3.jpg',
+      title: 'ABBYY FineReader 14',
+      head: 'Your documents in action',
+      para: 'Edit, convert, and compare PDFs and scans ',
+      headcol: '#fff',
+      paracol: '#fff',
+      btn1: 'LEARN MORE',
+      btn2: 'DOWNLOAD TRAIL',
+    },
+    {
+      img: '/static/images/visual4.jpg',
+      title: 'ABBYY Real-Time Recognition SDK',
+      head: 'Point and capture',
+      para: 'New developer toolkit: texts viewed through smartphones instantly extracted and used in your app',
+      headcol: '#fff',
+      paracol: '#fff',
+      btn1: 'MORE INFO',
+      btn2: 'REQUEST TRAIL',
+    },
+    {
+      img: '/static/images/visual5.jpeg',
+      title: '',
+      head: 'Accounts payablewhite pape',
+      para: 'The Value of Intelligent Capture in Accounts Payable Automation',
+      headcol: '#416678',
+      paracol: '#000',
+      btn1: 'REQUEST WITH PAPER',
+    },
+  ]
+  $scope.property = {
+    // autoHeight:true,
+    // animateIn: 'fadeIn',
+    lazyLoad: true,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 3000,
+    dots: false,
+    URLhashListener: true,
+    autoplayHoverPause: true,
+    startPosition: 'URLHash',
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 1.5,
+
+      },
+      768: {
+        items: 3,
+
+      },
+      1000: {
+        items: 4,
+
+      }
+    }
+  };
+
+  $scope.navimg = [{
+      img: '/static/images/nav1.jpg',
+      text: 'Banking and Finance'
+    },
+    {
+      img: '/static/images/nav2.jpg',
+      text: 'Legal'
+    },
+    {
+      img: '/static/images/nav3.jpg',
+      text: 'Healthcare'
+    },
+    {
+      img: '/static/images/nav4.jpg',
+      text: 'Government'
+    },
+    {
+      img: '/static/images/nav5.jpg',
+      text: 'Insurance'
+    },
+    {
+      img: '/static/images/nav6.jpg',
+      text: 'Transportation'
+    },
+    {
+      img: '/static/images/nav7.jpg',
+      text: 'BPO'
+    },
+    {
+      img: '/static/images/nav8.jpg',
+      text: 'Education'
+    },
+  ]
+});
+
 app.controller('controller.resource', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
   $scope.openResource = function(name) {
@@ -354,6 +483,48 @@ app.controller('controller.resource', function($scope, $state, $http, $timeout, 
     }
 
   }
+});
+app.controller('controller.nlp', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+
+  $scope.show_c1 = true;
+  $scope.show_c2 = false;
+  $scope.show_c3 = false;
+  $scope.status_c1 = "active"
+  $scope.c1 = "NL API has shown it can accelerate our offering in the natural language understanding area and is a viable alternative to a custom model we had built for our initial use case.";
+  $scope.c2 = "Classifying Opinion and Editorials can be time-consuming and difficult work for any data science team, but Cloud Natural Language was able to instantly identify clear topics with a high-level of confidence. This tool has saved me weeks, if not months, of work to achieve a level of accuracy that may not have been possible with our in-house resources.";
+  $scope.c3 = "In the newsroom, precision and speed are critical to engaging our readers. Google Cloud Natural Language is unmatched in its accuracyfor content classification.AtHearst, we publish several thousand articles a day across 30 + properties and, withnatural language processing, we 're able to quickly gain insight into what content isbeing published and how it resonates with our audiences.";
+  $scope.q1 = "Dan Nelson, Head of Data, Ocado Technology"
+  $scope.q2 = "Jonathan Brooks-Bartlett, Data Scientist, News UK"
+  $scope.q3 = "Naveed Ahmad, Senior Director of Data, Hearst"
+
+  $scope.carousel = function(val) {
+    if (val == '0') {
+      $scope.show_c1 = true;
+      $scope.show_c2 = false;
+      $scope.show_c3 = false;
+      $scope.status_c1 = "active"
+      $scope.status_c2 = ""
+      $scope.status_c3 = ""
+    } else if (val == '1') {
+      $scope.show_c1 = false;
+      $scope.show_c2 = true;
+      $scope.show_c3 = false;
+      $scope.status_c2 = "active"
+      $scope.status_c1 = ""
+      $scope.status_c3 = ""
+    } else if (val == '2') {
+      $scope.show_c1 = false;
+      $scope.show_c2 = false;
+      $scope.show_c3 = true;
+      $scope.status_c3 = "active"
+      $scope.status_c1 = ""
+      $scope.status_c2 = ""
+
+    }
+
+  }
+
+
 });
 
 
