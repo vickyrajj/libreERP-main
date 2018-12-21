@@ -379,8 +379,10 @@ $scope.browseTab = true;
 $scope.archiveTab = false;
 
   $scope.getArchData = function(date,user,email,client,download){
+    $scope.archivedData=null;
+    $scope.loadingDataForArc=true;
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.Archoffsett
+    var url = '/api/support/reviewHomeCal/?status=archived&limit=15&offset='+$scope.Archoffsett
     // var url = '/api/support/reviewHomeCal/?limit=10&offset='+$scope.offsett+'&'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
@@ -405,6 +407,7 @@ $scope.archiveTab = false;
         // $scope.custDetails = response.data[0]
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.archivedData =response.data
+        $scope.loadingDataForArc=false;
         if(response.data.length<1){
           $scope.archievedMyDialouge=true;
         }else{
@@ -419,6 +422,8 @@ $scope.offsett=0;
 $scope.Archoffsett=0;
   $scope.isLastSetOfData=false;
   $scope.getData = function(date,user,email,client,download){
+    $scope.reviewData=null;
+    $scope.loadingData=true;
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
     var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.offsett
     if (date!=null&&typeof date == 'object') {
@@ -445,6 +450,7 @@ $scope.Archoffsett=0;
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.reviewData=response.data
         console.log($scope.isLastSetOfData);
+        $scope.loadingData=false;
         if(response.data.length<1){
           $scope.myDialouge=true;
         }else{
@@ -480,7 +486,7 @@ $scope.Archoffsett=0;
       $scope.Archoffsett-=15
           $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
     }else{
-    
+
     }
   }
   $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)

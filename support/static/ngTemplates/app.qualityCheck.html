@@ -65,8 +65,11 @@
         <div class="container-fluid">
           <!-- <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table> -->
           <div class="row" style="padding-top:25px">
+            <div style="width: 100%;position: absolute;top:400px;left:35%;" ng-if="loadingData">
+              <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
+            </div>
 
-            <div class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData | reverse" ng-click="tableAction($index)">
+            <div class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData" ng-click="tableAction($index)">
               <!-- {{data[0].numOfComments}} {{data[0].statusChat}} -->
               <div class="container-fluid card" style="padding-bottom:0px">
                 <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:170px; opacity:0.9;letter-spacing:0.6px; {{data[0].user_id==null ? 'background-color: #fc000033':''}}; {{data[0].statusChat=='closed'?'background-color: #16e61133':'' }}">
@@ -119,7 +122,7 @@
               No More Data
             </div>
 
-            <div ng-if="reviewData.length>14||onceClicked" class="col-sm-12" style="text-align:center">
+            <div ng-if="reviewData.length>14||onceClicked" ng-show="!loadingData" class="col-sm-12" style="text-align:center">
               <button style="background-color:#286090;padding:5px;color:white" ng-click="goBack()" ng-if="onceClicked">Go Back</button>
               <button style="background-color:#286090;padding:5px;color:white" ng-click="loadMore()" ng-if="!myDialouge">Load More</button>
             </div>
@@ -144,7 +147,11 @@
           <!-- <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table> -->
           <div class="row" style="padding-top:25px">
 
-            <div class="col-md-4" style="margin-bottom:10px; padding-left:10px;padding-right:10px;" ng-repeat="data in archivedData | reverse" ng-click="tableArchAction($index)">
+            <div style="width: 100%;position: absolute;top:400px;left:35%;" ng-if="loadingDataForArc">
+              <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
+            </div>
+
+            <div class="col-md-4" style="margin-bottom:10px; padding-left:10px;padding-right:10px;" ng-repeat="data in archivedData" ng-click="tableArchAction($index)">
               <!-- {{data[0]}} -->
               <div class="container-fluid card" style="padding-bottom:0px">
                 <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:150px; opacity:0.9;letter-spacing:0.6px;">
@@ -192,7 +199,7 @@
               No More Data
             </div>
 
-            <div ng-if="archivedData.length>14||archievedOnceClicked" class="col-sm-12" style="text-align:center">
+            <div ng-if="archivedData.length>14||archievedOnceClicked" ng-show="loadingDataForArc" class="col-sm-12" style="text-align:center">
               <button style="background-color:#286090;padding:5px;color:white" ng-click="goBackArchived()" ng-if="archievedOnceClicked">Go Back</button>
               <button style="background-color:#286090;padding:5px;color:white" ng-click="loadMoreArchived()" ng-if="!archievedMyDialouge">Load More</button>
             </div>

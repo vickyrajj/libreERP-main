@@ -2120,7 +2120,6 @@ var myformrating;
            submitCancel.style.display='none'
            thankYouMessage()
            feedbackFormSubmitted = true
-           // var dataToPublish = [uid , status , message , custID ];
 
            console.log(ratingFormObject);
 
@@ -2132,7 +2131,6 @@ var myformrating;
              then(function(publication) {
                console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
              });
-
          }
        };
        xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
@@ -2152,14 +2150,10 @@ var myformrating;
     messageBox.innerHTML = '';
     isConfirmedToEnd=false;
     msgCount=0;
-    // messageBox.innerHTML = '';
     agentName.innerHTML = nameSupport
-    // delete uid from cookies and create a new one
     document.cookie = encodeURIComponent("uid") + "=deleted; expires=" + new Date(0).toUTCString()
     uid = new Date().getTime()
-    // console.log('nn',uid ,document.cookie);
     setCookie("uid", uid, 365);
-    // uidDetails should remane same
     chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
     pushMessages()
     setAudioVideoBtn();
