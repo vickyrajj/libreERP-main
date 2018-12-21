@@ -17,7 +17,6 @@
           <span>  {{data.service.name}}</span>
           </div>
         </div>
-       <br>
        <div class="row">
          <div class="col-md-5">
              <span style="font-size:15px;"><strong> Stage </strong>:</span>
@@ -26,9 +25,22 @@
          <span>  {{data.status}}</span>
          </div>
        </div>
-
-        <span style="font-size:15px;"><strong>Mobile </strong>: {{data.service.mobile}}</span><br>
-        <span><strong>Closing date </strong>: {{data.date}}</span><br>
+       <div class="row">
+         <div class="col-md-5">
+             <span style="font-size:15px;"><strong>Mobile </strong>:</span>
+         </div>
+         <div class="col-md-7">
+         <span>{{data.service.mobile}}</span>
+         </div>
+       </div>
+       <div class="row">
+         <div class="col-md-5">
+             <span><strong>Closing date </strong>: </span>
+         </div>
+         <div class="col-md-7">
+         <span>{{data.date}}</span>
+         </div>
+       </div>
         <!-- <div ng-repeat='d in data.responsible '><strong>Responsible Person</strong>: {{d.first_name}} {{d.last_name}}</div><br> -->
       </div>
       <!-- <i style="width:30px;" class="fa fa-mobile fa-lg"></i>

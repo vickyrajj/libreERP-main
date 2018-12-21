@@ -102,7 +102,7 @@
           <input type="number" class="form-control text-center" ng-model="form.invoiceValue">
         </div>
         <div class="col-md-3 text-center">
-          <span> {{form.invoiceValue * form.exRate}}</span>
+          <span> {{(form.invoiceValue * form.exRate).toFixed(2)}}</span>
           <!-- <input type="number" class="form-control text-center" ng-model="form.invoiceValueINR"> -->
         </div>
 
@@ -115,10 +115,10 @@
           <input type="number" class="form-control text-center" ng-model="form.packing">
         </div>
         <div class="col-md-3 text-center">
-          <span>  {{form.packing * form.exRate}}</span>
+          <span>  {{(form.packing * form.exRate).toFixed(2)}}</span>
         </div>
         <div class="col-md-2 text-center">
-          <span> {{form.packing / form.invoiceValue}}</span>
+          <span> {{(form.packing / form.invoiceValue).toFixed(2)}}</span>
         </div>
       </div>
       <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
@@ -129,11 +129,11 @@
           <input type="number" class="form-control text-center" ng-model="form.insurance">
         </div>
         <div class="col-md-3 text-center">
-            <span> {{form.insurance * form.exRate}}</span>
+            <span> {{(form.insurance * form.exRate).toFixed(2)}}</span>
           <!-- <input type="number" class="form-control text-center" ng-model="form.insuranceINR"> -->
         </div>
         <div class="col-md-2 text-center">
-          <span> {{form.insurance/ form.invoiceValue}}</span>
+          <span> {{(form.insurance/ form.invoiceValue).toFixed(2)}}</span>
           <!-- <input type="number" class="form-control text-center" ng-model="form.insurancePer"> -->
         </div>
       </div>
@@ -145,11 +145,11 @@
           <input type="number" class="form-control text-center" ng-model="form.freight">
         </div>
         <div class="col-md-3 text-center">
-            <span> {{form.freight * form.exRate}}</span>
+            <span> {{(form.freight * form.exRate).toFixed(2)}}</span>
           <!-- <input type="number" class="form-control text-center" ng-model="form.freightINR"> -->
         </div>
         <div class="col-md-2 text-center">
-          <span> {{form.freight/ form.invoiceValue}}</span>
+          <span> {{(form.freight/ form.invoiceValue).toFixed(2)}}</span>
           <!-- <input type="number" class="form-control text-center" ng-model="form.freightPer"> -->
         </div>
       </div>
@@ -162,7 +162,7 @@
           <!-- <input type="number" class="form-control text-center" ng-model="form.assessableValue"> -->
         </div>
         <div class="col-md-3 text-center">
-          <span>{{form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100}}</span>
+          <span>{{(form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100).toFixed(2)}}</span>
         </div>
         <div class="col-md-2 text-center">
           <input type="number" class="form-control text-center" ng-model="form.assessableValueFraction">
@@ -179,7 +179,7 @@
         </div>
         <div class="col-md-3 text-center">
           <!-- <input type="number" class="form-control text-center" ng-model="form.gst1"> -->
-          <span>{{form.gst18}}</span>
+          <span>{{(form.gst18).toFixed(2)}}</span>
         </div>
         <div class="col-md-2 text-center">
             <span> 18% </span>
@@ -195,7 +195,7 @@
           <input type="number" class="form-control text-center" ng-model="form.gst2"> -->
         </div>
         <div class="col-md-3 text-center">
-          <span>{{form.gst28}}</span>
+          <span>{{(form.gst28).toFixed(2)}}</span>
         </div>
         <div class="col-md-2 text-center">
             <span> 28% </span>
@@ -215,7 +215,7 @@
         </div>
         <div class="col-md-2 text-center">
           <!-- <input type="number" class="form-control text-center" ng-model="form.clearingCharges1Per"> -->
-          <span> {{form.clearingCharges1/form.exRate}} </span>
+          <span> {{(form.clearingCharges1/form.exRate).toFixed(2)}} </span>
         </div>
       </div>
       <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
@@ -230,7 +230,7 @@
         </div>
         <div class="col-md-2 text-center">
           <!-- <input type="number" class="form-control text-center" ng-model="form.clearingCharges2Per"> -->
-          <span> {{form.clearingCharges2/form.exRate}} </span>
+          <span> {{(form.clearingCharges2/form.exRate).toFixed(2)}} </span>
         </div>
       </div>
       <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
@@ -238,15 +238,16 @@
           <label> Total: </label>
         </div>
         <div class="col-md-3 text-center">
-          <!-- {{form.packing+}} -->
+          {{(form.packing+form.freight+form.insurance).toFixed(2)}}
           <!-- <input type="number" class="form-control text-center" ng-model="form.clearingCharges2"> -->
         </div>
         <div class="col-md-3 text-center">
+          {{(form.clearingCharges2+form.clearingCharges1).toFixed(2)}}
           <!-- <input type="number" class="form-control text-center" ng-model="form.clearingCharges2"> -->
         </div>
         <div class="col-md-2 text-center">
           <!-- <input type="number" class="form-control text-center" ng-model="form.clearingCharges2Per"> -->
-          <span> {{form.clearingCharges2/form.exRate}} </span>
+          <span> {{(form.assessableValue+18+28).toFixed(2)}} </span>
         </div>
       </div>
 
