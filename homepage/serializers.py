@@ -132,7 +132,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
                     # u.is_active = True
                     u.save()
-                    sendMail(d,d['email'])
+                    if 'email' in d:sendMail(d,d['email'])
                     print u.profile.pk
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
@@ -220,7 +220,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                         else:
                             u.is_staff = False
                     u.save()
-                    sendMail(d,d['email'])
+                    if 'email' in d:sendMail(d,d['email'])
                     print u.profile.pk
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
@@ -247,7 +247,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 u.set_password('titan@1')
                 u.is_active = True
                 u.save()
-                sendMail(d,d['email'])
+                if 'email' in d:sendMail(d,d['email'])
                 # pobj=profile()
                 # pobj.mobile = d['mobile']
                 # pobj.save()
