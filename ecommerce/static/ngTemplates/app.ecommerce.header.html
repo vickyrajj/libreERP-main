@@ -7,15 +7,20 @@
   </div>
 
 
-  <div class="col-xs-2 text-center hidden-xs hidden-sm" ng-if="!SortByCategory" style="padding-top:2px;">
-    <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:40px;cursor:pointer;" alt="" ng-if="topIcon">
+  <div class="col-xs-2 text-center hidden-xs hidden-sm" ng-if="!SortByCategory&&topIcon" style="padding-top:2px;">
+    <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:40px;cursor:pointer;" alt="">
+  </div>
+  <div class="col-xs-2 text-center hidden-xs hidden-sm" style="padding-top:2px;font-size:28px;color:var(--themeColor);cursor:pointer;" ng-if="!topIcon&&!SortByCategory">
+    <i ng-click="$state.go('ecommerce')" class="fa fa-home" aria-hidden="true"></i>
   </div>
 
   <div class="col-xs-{{SortByCategory?'3':'2'}} text-center hidden-xs hidden-sm" ng-if="SortByCategory">
     <div class="col-xs-6 " style="padding-top:3px;" ng-if="topIcon">
       <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:40px;cursor:pointer;" alt="" >
     </div>
-
+    <div class="col-xs-6 text-center hidden-xs hidden-sm" style="padding-top:2px;font-size:28px;color:var(--themeColor);cursor:pointer;" ng-if="!topIcon">
+      <i ng-click="$state.go('ecommerce')" class="fa fa-home" aria-hidden="true"></i>
+    </div>
 
     <div class="col-xs-6 " >
         <div class="well shopByCatDiv" class="dropdown-toggle" style="padding-top:10px;margin-bottom:0px;" ng-mouseenter="onBtnEnter = true;resetAll()"  ng-mouseleave="onBtnEnter = false">
@@ -46,6 +51,10 @@
 
   <div class="col-xs-2 hidden-md hidden-lg" style="padding:7px;" ng-if="topIcon">
     <img ng-click="$state.go('ecommerce')" src="{{ICON_LOGO}}" style="height:40px;cursor:pointer;" alt="">
+  </div>
+
+  <div class="col-xs-2 hidden-md hidden-lg" style="padding-top:2px;font-size:28px;color:var(--themeColor);cursor:pointer;" ng-if="!topIcon">
+    <i ng-click="$state.go('ecommerce')" class="fa fa-home" aria-hidden="true"></i>
   </div>
 
 

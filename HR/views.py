@@ -27,6 +27,12 @@ from rest_framework.views import APIView
 from ecommerce.models import GenericImage
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
 
 def documentView(request):
     docID = None
@@ -112,10 +118,8 @@ def generateOTP(request):
 def loginView(request):
 
     # print request.META['HTTP_USER_AGENT']
-    print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',request
 
-
-    print 'loginnnnnnnnnnnnnnnnn',request.POST
     backgroundImage = globalSettings.LOGIN_PAGE_IMAGE
     genericImg = GenericImage.objects.all()
     try:
@@ -135,8 +139,8 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
-        print request.POST,'lllllllllllllddddddddddddd'
     	usernameOrEmail = request.POST['username']
+        print usernameOrEmail ,'usernameOrEmail'
         otpMode = False
         if 'otp' in request.POST:
             print "otp"
@@ -366,3 +370,24 @@ class SendActivatedStatus(APIView):
         msg.content_subtype = 'html'
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
+
+@csrf_exempt
+def socialMobileView(request):
+    print request.POST,'ddddddddddddddddd'
+    if request.POST['secretKey'] == globalSettings.MOBILE_SECRET_KEY:
+        u = User.objects.filter(username = request.POST['username'])
+        if len(u)>0:
+            print 'already exist'
+        else:
+            print 'create new'
+            u = User(username = request.POST['username'])
+            u.email = request.POST['email']
+            fname = request.POST['email'].split('@')[0]
+            u.first_name = fname
+            u.is_active = True
+            u.set_password(request.POST['password'])
+            u.save()
+        loginView(request)
+    else:
+        raise PermissionDenied()
+    return render(request,"ngEcommerce.html")

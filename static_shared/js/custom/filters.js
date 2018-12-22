@@ -137,6 +137,8 @@ app.filter('convertSize', function() {
       }else {
         toReturn = qty
       }
+    }else{
+      toReturn = qty
     }
     return toReturn
   }

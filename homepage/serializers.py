@@ -20,25 +20,23 @@ import ast
 import sendgrid
 import os
 
-def sendMail(d,email):
+def sendMail(d):
     ctx = {
         'user':d
     }
     email_body = get_template('app.ecommerce.newUserEmail.html').render(ctx)
     email_subject = 'New User'
+    emails=[]
     if globalSettings.EMAIL_API:
         sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
         # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+        for i in globalSettings.G_ADMIN:
+            emails.append({"email":i})
+        print emails,"**************&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
         data = {
           "personalizations": [
             {
-              "to": [
-                {
-                  "email": str(email)
-                  # "email": 'bhanubalram5@gmail.com'
-                  # str(orderObj.user.email)
-                }
-              ],
+              "to": emails,
               "subject": email_subject
             }
           ],
@@ -132,7 +130,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
                     # u.is_active = True
                     u.save()
-                    if 'email' in d:sendMail(d,d['email'])
+                    if 'email' in d:sendMail(d)
                     print u.profile.pk
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
@@ -220,7 +218,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                         else:
                             u.is_staff = False
                     u.save()
-                    if 'email' in d:sendMail(d,d['email'])
+                    if 'email' in d:sendMail(d)
                     print u.profile.pk
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
@@ -247,7 +245,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 u.set_password('titan@1')
                 u.is_active = True
                 u.save()
-                if 'email' in d:sendMail(d,d['email'])
+                if 'email' in d:sendMail(d)
                 # pobj=profile()
                 # pobj.mobile = d['mobile']
                 # pobj.save()
@@ -270,15 +268,19 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         return instance
     def create(self , validated_data):
-        print "createaaaaaaaaaa"
         reg = Registration(**validated_data)
         salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
         if reg.email!=None:
+            username = reg.email.split('@')[0]
             key = hashlib.sha1(salt+validated_data.pop('email')).hexdigest()
             reg.token = key
         else:
+            username = reg.mobile
             key = hashlib.sha1(salt+validated_data.pop('mobile')).hexdigest()
             reg.token = key
+        u = User.objects.filter(username=username)
+        if len(u)>0:
+            raise ValidationError(detail={'PARAMS' : 'Username already taken'} )
         if not globalSettings.LITE_REGISTRATION:
             if globalSettings.VERIFY_MOBILE:
                 reg.mobileOTP = generateOTPCode()
@@ -291,7 +293,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             reg.emailOTP = generateOTPCode()
             print reg.emailOTP
 
-            msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP) ]
+            msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP)]
 
             ctx = {
                 'heading' : 'Welcome to Ecommerce',
@@ -305,10 +307,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
                 'twitterUrl' : 'twitter.com',
                 'brandName' : globalSettings.BRAND_NAME,
+                'username':username
             }
 
             email_body = get_template('app.homepage.emailOTP.html').render(ctx)
-            email_subject = 'SterlingSelect Email OTP'
+            email_subject = 'Regisration OTP'
             if globalSettings.EMAIL_API:
                 sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
                 # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
@@ -347,10 +350,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 msg.send()
         if not globalSettings.LITE_REGISTRATION:
             if globalSettings.VERIFY_MOBILE:
-                url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+                url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
                 requests.get(url)
         else:
-                url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+                url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
                 requests.get(url)
         reg.save()
         reg.emailOTP = ''
