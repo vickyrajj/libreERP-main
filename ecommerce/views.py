@@ -98,8 +98,8 @@ from openpyxl import load_workbook
 from io import BytesIO
 import sendgrid
 import os
+from svglib.svglib import svg2rlg
 
-from xhtml2pdf import pisa
 # from sendgrid.helpers.mail import *
 
 # Create your views here.
@@ -1430,10 +1430,22 @@ class PageNumCanvas(canvas.Canvas):
 
         p2 = Paragraph( settingsFields.get(name = 'contactDetails').value, compNameStyle)
         p2.wrapOn(self , 200*mm , 10*mm)
-        p2.drawOn(self , 40*mm  , 4*mm)
+        p2.drawOn(self , 40*mm  , 1*mm)
 
-        from svglib.svglib import svg2rlg
-        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'company_icon.svg'))
+        ab = appSettingsField.objects.filter(name='GST')
+        try:
+            gstin = ab[0].value
+        except :
+            gstin = '29ABCDEF1234F2Z5'
+
+
+        p4 = Paragraph('GSTIN :'+gstin , compNameStyle)
+        p4.wrapOn(self , 200*mm , 10*mm)
+        p4.drawOn(self , 80*mm  , 5*mm)
+
+        brandLogo = globalSettings.BRAND_LOGO.split('static/')[1]
+        print os.path.join(globalSettings.BASE_DIR , 'static_shared',brandLogo)
+        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared', brandLogo))
         sx=sy=0.5
         drawing.width,drawing.height = drawing.minWidth()*sx, drawing.height*sy
         drawing.scale(sx,sy)
@@ -1489,6 +1501,14 @@ def genInvoice(response, contract, request):
     else:
         promoCode="None"
     tableData=[['Product','Quantity','Price','Total Price']]
+    isStoreGlobal = False
+    ab = appSettingsField.objects.filter(name='isStoreGlobal')
+    currency = '(INR)'
+    if len(ab)>0:
+        if ab[0].flag:
+            isStoreGlobal = True
+    if not isStoreGlobal:
+        tableData=[['Product','Quantity','Price' + currency,'GST (%)','Total Price'+currency]]
     for i in contract.orderQtyMap.all():
         print i.desc,'ssssssssssssss'
         if str(i.status)!='cancelled':
@@ -1498,7 +1518,6 @@ def genInvoice(response, contract, request):
                 price=round(price, 2)
                 totalprice = i.qty*price
                 totalprice=round(totalprice, 2)
-                total+=totalprice
                 total=round(total, 2)
                 if i.desc:
                     desc =i.desc
@@ -1533,14 +1552,21 @@ def genInvoice(response, contract, request):
                 else:
                   qtyValue = qtyData
                 name = str(i.product.product.name) + ' '  + str(qtyValue) + ' ' +str(desc)
-                tableData.append([name,i.qty,price,totalprice])
+                if not isStoreGlobal:
+                    if i.product.product.productMeta is None:
+                        tableData.append([name,i.qty,price,'',totalprice])
+                    else:
+                        totalprice = totalprice + (i.product.product.productMeta.taxRate * totalprice)/100
+                        tableData.append([name,i.qty,price,i.product.product.productMeta.taxRate,totalprice])
+                else:
+                    tableData.append([name,i.qty,price,totalprice])
+                total+=totalprice
             else:
                 prodData = ProductVerient.objects.get(sku = i.prodSku)
                 price = prodData.discountedPrice
                 price=round(price, 2)
                 totalprice = i.qty*price
                 totalprice=round(totalprice, 2)
-                total+=totalprice
                 total=round(total, 2)
                 if i.desc:
                     desc =i.desc
@@ -1577,16 +1603,35 @@ def genInvoice(response, contract, request):
 
 
                 name = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' +str(desc)
-                tableData.append([name,i.qty,price,totalprice])
 
+                if not isStoreGlobal:
+                    if i.product.product.productMeta is None:
+                        tableData.append([name,i.qty,price,'',totalprice])
+                    else:
+                        print 'i.qty,price,i.product.product.productMeta.taxRate',i.qty,price,i.product.product.productMeta.taxRate
+                        totalprice = totalprice + (i.product.product.productMeta.taxRate * totalprice)/100
+                        tableData.append([name,i.qty,price,i.product.product.productMeta.taxRate,totalprice])
+                    tableData.append([name,i.qty,price,'',totalprice])
+                else:
+                    tableData.append([name,i.qty,price,totalprice])
+                total+=totalprice
     shippingCharges = contract.shippingCharges
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal + shippingCharges, 2)
-    tableData.append(['','','TOTAL (INR)',total])
-    tableData.append(['','COUPON APPLIED(%)',promoCode,promoAmount])
-    tableData.append(['','SHIPPING CHARGES','',shippingCharges])
-    tableData.append(['','','GRAND TOTAL (INR)',grandTotal])
-    t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 1.5*inch , 1.5*inch])
+    if not isStoreGlobal:
+        tableData.append(['','','','TOTAL' + currency,total])
+        tableData.append(['','','COUPON APPLIED(%)',promoCode,promoAmount])
+        tableData.append(['','','SHIPPING CHARGES' + currency,'',shippingCharges])
+        tableData.append(['','','GRAND TOTAL'+ currency,'',grandTotal])
+        t1=Table(tableData,colWidths=[2.8*inch , 0.8*inch , 1.5*inch, 0.8*inch , 1.5*inch])
+
+    else:
+        tableData.append(['','','TOTAL'+currency,total])
+        tableData.append(['','COUPON APPLIED(%)',promoCode,promoAmount])
+        tableData.append(['','SHIPPING CHARGES','',shippingCharges])
+        tableData.append(['','','GRAND TOTAL'+currency,grandTotal])
+        t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 0.8*inch , 1.5*inch])
+
     t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#bdd3f4')) ]))
     if ecommerceSetting.get(name = 'gstEnabled').flag == True:
         gst = """
@@ -1614,35 +1659,66 @@ def genInvoice(response, contract, request):
     """
     story.append(Paragraph(summryParaSrc3 , styleN))
 
-    summryParaSrc = Paragraph("""
-    <para backColor = '#bdd3f4' leftIndent = 10>
-    <font size='6'><strong>Your Billing Address:</strong></font> <br/>
-    <font size='6'>
-    %s %s<br/>
-    %s <br/>
-    %s <br/>
-    %s %s - %s<br/>
-    India<br/>
-    %s<br/>
-    %s  %s
-    </font>
-    </para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.mobileNo,gst,gstVal),styles['Normal'])
+    if isStoreGlobal:
+        summryParaSrc = Paragraph("""
+        <para backColor = '#bdd3f4' leftIndent = 10>
+        <font size='6'><strong>Your Billing Address:</strong></font> <br/>
+        <font size='6'>
+        %s %s<br/>
+        %s <br/>
+        %s <br/>
+        %s %s - %s<br/>
+        %s <br/>
+        %s
+        </font>
+        </para>
+        """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.country, contract.mobileNo),styles['Normal'])
+    else:
+        summryParaSrc = Paragraph("""
+        <para backColor = '#bdd3f4' leftIndent = 10>
+        <font size='6'><strong>Your Billing Address:</strong></font> <br/>
+        <font size='6'>
+        %s %s<br/>
+        %s <br/>
+        %s <br/>
+        %s %s - %s<br/>
+        %s <br/>
+        %s<br/>
+        %s  %s
+        </font>
+        </para>
+        """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.country, contract.mobileNo,gst,gstVal),styles['Normal'])
 
 
-    summryParaSrc1 = Paragraph("""
-    <para backColor = #bdd3f4 leftIndent = 10>
-    <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
-    <font size='6'>
-    %s %s<br/>
-    %s <br/>
-    %s <br/>
-    %s %s - %s<br/>
-    India<br/>
-    %s<br/>
-    %s %s
-    </font></para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo,gst,gstVal),styles['Normal'])
+    if isStoreGlobal:
+        summryParaSrc1 = Paragraph("""
+        <para backColor = #bdd3f4 leftIndent = 10>
+        <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
+        <font size='6'>
+        %s %s<br/>
+        %s ,
+        %s <br/>
+        %s %s - %s<br/>
+        %s<br/>
+        %s
+        </font></para>
+        """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.country, contract.mobileNo),styles['Normal'])
+    else:
+        summryParaSrc1 = Paragraph("""
+        <para backColor = #bdd3f4 leftIndent = 10>
+        <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
+        <font size='6'>
+        %s %s<br/>
+        %s ,
+        %s <br/>
+        %s %s - %s<br/>
+        %s<br/>
+        %s<br/>
+        %s %s
+        </font></para>
+        """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.country, contract.mobileNo,gst,gstVal),styles['Normal'])
+
+
 
 
     td=[[summryParaSrc,' ',summryParaSrc1]]
