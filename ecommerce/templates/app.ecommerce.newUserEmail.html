@@ -87,68 +87,72 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus dolor aliquid om
             <tr>
                 <td align="center" style="padding: 35px; background-color: #ffffff;" bgcolor="#ffffff">
                 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
-                    <tr>
-                        <td align="center">
-                            <img src="hero-image-feedback.png" width="120" height="96" />
-                        </td>
-                    </tr>
                        <tr>
                         <td align="center" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding-top: 25px; padding-bottom: 15px; border-bottom: 3px solid #eeeeee;">
                             <h4 style="font-size: 30px; font-weight: 800; line-height: 36px; color: #333333; margin: 0;">
                                {{user.firstName}} {{user.lastName}} has just created an account on BNI Global Store.
                             </h4>
-                            <!-- <p style="font-size: 16px; font-weight: 400; line-height: 24px; color: #777777;">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod, quae. Animi eum obcaecati ab porro!
-                            </p> -->
+
                         </td>
                        </tr>
-                    <tr>
-                        <td align="center" style="padding: 35px 0 15px 0;">
-                            <table border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td align="center" style="border-radius: 5px;" bgcolor="#ed8e20">
-                                      <a href="https://bniglobalstore.com/user/ebcooper/" target="_blank" style="font-size: 18px; font-family: Open Sans, Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 5px; background-color: #ed8e20; padding: 15px 30px; border: 1px solid #ed8e20; display: block;">View profile</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
+
                     <tr>
                         <td align="center" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;">
                             <p style="font-size: 18px; font-weight: 800; line-height: 24px; color: #333333;">Submitted Form</p>
 
                         </td>
-                       </tr>
+                    </tr>
+
+                        <tr>
+                            <td style="font-size: 15px;"> first name: {{user.firstName}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> last name: {{user.lastName}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> email: {{user.email}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> emailOTP: {{user.emailOTP}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> mobile OTP: {{user.mobileOTP}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> password: {{user.password}}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> phone: {{user.mobile}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> GSTIN: {{user.GST}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> Company name:{{user.Company}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> Company address:{{user.Address}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> Pincode: {{user.pincode}}</td>
+                        </tr>
+
+                        <tr>
+                            <td style="font-size: 15px;"> Role: {{user.designation}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> Token: {{user.token}} </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px;"> state code: {{user.statecode}} </td>
+                        </tr>
+
+
                   </table>
 
                 </td>
             </tr>
-            <tr>
-                <td align="center" style="padding: 35px; background-color: #ffffff;" bgcolor="#ffffff">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
-                    <tr>
-                        <td align="center">
-                            <img src="logo-footer.png" width="37" height="37" style="display: block; border: 0px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 24px; padding: 5px 0 10px 0;">
-                            <p style="font-size: 14px; font-weight: 800; line-height: 18px; color: #333333;">
-                                675 Massachusetts Avenue<br>
-                                Cambridge, MA 02139
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 24px;">
-                            <p style="font-size: 14px; font-weight: 400; line-height: 20px; color: #777777;">
-                                If you didn't create an account using this email address, please ignore this email or <a href="http://litmus.com" target="_blank" style="color: #777777;">unsusbscribe</a>.
-                            </p>
-                        </td>
-                    </tr>
-                </table>
-                </td>
-            </tr>
+
         </table>
         </td>
     </tr>

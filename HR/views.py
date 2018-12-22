@@ -27,6 +27,12 @@ from rest_framework.views import APIView
 from ecommerce.models import GenericImage
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
 
 def documentView(request):
     docID = None
@@ -365,25 +371,23 @@ class SendActivatedStatus(APIView):
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
-
-class SocialMobileLogin(APIView):
-    renderer_classes = (JSONRenderer,)
-    permission_classes = (permissions.AllowAny,)
-    def post(self , request , format = None):
-        if request.data['secretKey'] == globalSettings.MOBILE_SECRET_KEY:
-            u = User.objects.filter(username = request.data['username'])
-            if len(u)>0:
-                print 'already exist'
-            else:
-                print 'create new'
-                u = User(username = request.data['username'])
-                u.email = request.data['email']
-                fname = request.data['email'].split('@')[0]
-                u.first_name = fname
-                u.is_active = True
-                u.set_password(request.data['password'])
-                u.save()
-            loginView(request)
+@csrf_exempt
+def socialMobileView(request):
+    print request.POST,'ddddddddddddddddd'
+    if request.POST['secretKey'] == globalSettings.MOBILE_SECRET_KEY:
+        u = User.objects.filter(username = request.POST['username'])
+        if len(u)>0:
+            print 'already exist'
         else:
-            raise PermissionDenied()
-        return Response({}, status = status.HTTP_200_OK)
+            print 'create new'
+            u = User(username = request.POST['username'])
+            u.email = request.POST['email']
+            fname = request.POST['email'].split('@')[0]
+            u.first_name = fname
+            u.is_active = True
+            u.set_password(request.POST['password'])
+            u.save()
+        loginView(request)
+    else:
+        raise PermissionDenied()
+    return render(request,"ngEcommerce.html")

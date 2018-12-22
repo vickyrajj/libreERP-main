@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 # from events.views import eventHome
-from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
+from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView, socialMobileView
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
 from ecommerce.views import ecommerceHome , paypalPaymentInitiate , paypal_cancel_view , paypal_return_view , payuPaymentInitiate , payUPaymentResponse
 from ERP.views import serviceRegistration , makeOnlinePayment
@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'makeOnlinePayment/$' , makeOnlinePayment , name = "makeOnlinePayment" ),
     url(r'payuPaymentInitiate/$' , payuPaymentInitiate , name = "paypalPaymentInitiate" ),
     url(r'payUPaymentResponse/$' , payUPaymentResponse , name = "paypalPaymentInitiate" ),
+    url(r'^socialMobileLogin', socialMobileView , name ='socialMobileLogin'),
 ]
 
 if settings.DEBUG:

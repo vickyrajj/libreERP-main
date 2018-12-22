@@ -423,6 +423,8 @@ class CreateOrderAPI(APIView):
             if len(str(request.data['promoCode'])) > 0:
                 data['promoCode'] = str(request.data['promoCode'])
             print data
+            if 'shippingCharges' in request.data:
+                data['shippingCharges'] = request.data['shippingCharges']
             orderObj = Order.objects.create(**data)
             for i in oQMp:
                 orderObj.orderQtyMap.add(i)
@@ -1576,7 +1578,8 @@ def genInvoice(response, contract, request):
 
                 name = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' +str(desc)
                 tableData.append([name,i.qty,price,totalprice])
-    shippingCharges = 0
+
+    shippingCharges = contract.shippingCharges
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal + shippingCharges, 2)
     tableData.append(['','','TOTAL (INR)',total])

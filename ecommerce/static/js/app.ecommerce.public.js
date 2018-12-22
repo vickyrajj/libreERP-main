@@ -802,6 +802,25 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
 
 app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window, ngMeta, $filter, Flash) {
 
+$scope.call = function () {
+  var fd = new FormData()
+  fd.append('secretKey', 1234);
+  fd.append('username', 'vikas');
+  fd.append('email', 'vikas.m@cioc.in');
+  fd.append('password', 123);
+  $http({
+    method: 'POST',
+    url: '/socialMobileLogin',
+    data: fd,
+    transformRequest: angular.identity,
+    headers: {
+      'Content-Type': undefined
+    }
+  }).
+  then(function(response) {
+    location.reload();
+  })
+}
 
   $scope.me = $users.get('mySelf');
   $scope.showRatings = false
@@ -2720,8 +2739,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     if (value == "use") {
       $scope.addressview = false
       $scope.idx = null
-      $scope.saved = true
-      Flash.create('success', 'Address Added');
+      $scope.show(idx)
+      // $scope.saved = true
+      // Flash.create('success', 'Address Added');
 
     } else if (value == "edit") {
       $scope.idx = null
@@ -2730,6 +2750,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     }
     // mob = $scope.data.address.mobileNo
     $scope.data.address = $scope.savedAddress[idx]
+    console.log($scope.data.address);
     if ($scope.data.address.mobileNo == null || $scope.data.address.mobileNo.length == 0) {
       $scope.data.address.mobileNo = $scope.me.profile.mobile
     }
@@ -2963,6 +2984,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       mobileNo: $scope.me.profile.mobile,
       landMark: ''
     }
+    console.log($scope.data.address.pk);
     if (settings_isStoreGlobal) {
       $scope.data.address.country = ''
     }
