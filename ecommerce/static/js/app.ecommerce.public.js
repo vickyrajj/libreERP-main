@@ -3338,6 +3338,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     $scope.dataToSend.paidAmount = 0
     $scope.dataToSend.approved = false
     $scope.data.stage = 'processing'
+    if ($scope.shippingCharges>0) {
+      $scope.dataToSend.shippingCharges = $scope.shippingCharges
+    }
     // if ($rootScope.multiStore) {
     //   console.log('multiiiiiiiiiiiiii');
     //   $scope.dataToSend.storepk = $rootScope.storepk
@@ -3361,6 +3364,10 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.dataToSend.paidAmount = 0
     } else {
       $scope.dataToSend.paidAmount = 0
+    }
+
+    if ($scope.shippingCharges>0) {
+      $scope.dataToSend.shippingCharges = $scope.shippingCharges
     }
 
     $scope.data.stage = 'processing';

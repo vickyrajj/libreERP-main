@@ -65,11 +65,9 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
     then(function(response) {
       if ($scope.autoActiveReg=='True') {
         $scope.showActiveMsg = false
-        alert($scope.showActiveMsg)
         window.location.href = "/";
       }else{
         $scope.showActiveMsg = true
-        alert($scope.showActiveMsg)
 
       }
     }, function(err) {
