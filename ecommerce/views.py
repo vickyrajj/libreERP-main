@@ -1632,7 +1632,7 @@ def genInvoice(response, contract, request):
         tableData.append(['','','GRAND TOTAL'+currency,grandTotal])
         t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 0.8*inch , 1.5*inch])
 
-    t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#bdd3f4')) ]))
+    t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#f0f0f0')) ]))
     if ecommerceSetting.get(name = 'gstEnabled').flag == True:
         gst = """
         <font size='6'><strong>GST : </strong></font>
@@ -1661,7 +1661,7 @@ def genInvoice(response, contract, request):
 
     if isStoreGlobal:
         summryParaSrc = Paragraph("""
-        <para backColor = '#bdd3f4' leftIndent = 10>
+        <para backColor = '#ffffff' leftIndent = 10>
         <font size='6'><strong>Your Billing Address:</strong></font> <br/>
         <font size='6'>
         %s %s<br/>
@@ -1675,7 +1675,7 @@ def genInvoice(response, contract, request):
         """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.country, contract.mobileNo),styles['Normal'])
     else:
         summryParaSrc = Paragraph("""
-        <para backColor = '#bdd3f4' leftIndent = 10>
+        <para backColor = '#ffffff' leftIndent = 10>
         <font size='6'><strong>Your Billing Address:</strong></font> <br/>
         <font size='6'>
         %s %s<br/>
@@ -1692,7 +1692,7 @@ def genInvoice(response, contract, request):
 
     if isStoreGlobal:
         summryParaSrc1 = Paragraph("""
-        <para backColor = #bdd3f4 leftIndent = 10>
+        <para backColor = #ffffff leftIndent = 10>
         <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
         <font size='6'>
         %s %s<br/>
@@ -1705,7 +1705,7 @@ def genInvoice(response, contract, request):
         """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.country, contract.mobileNo),styles['Normal'])
     else:
         summryParaSrc1 = Paragraph("""
-        <para backColor = #bdd3f4 leftIndent = 10>
+        <para backColor = #ffffff leftIndent = 10>
         <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
         <font size='6'>
         %s %s<br/>
@@ -1724,7 +1724,7 @@ def genInvoice(response, contract, request):
     td=[[summryParaSrc,' ',summryParaSrc1]]
     # story.append(Paragraph(summryParaSrc , styleN))
     t=Table(td,colWidths=[3*inch , 1*inch , 3*inch])
-    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (0, 0),colors.HexColor('#bdd3f4')),('BACKGROUND', (-1, -1), (-1,-1 ),colors.HexColor('#bdd3f4')) ]))
+    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (0, 0),colors.HexColor('#ffffff')),('BACKGROUND', (-1, -1), (-1,-1 ),colors.HexColor('#ffffff')) ]))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
     summryParaSrc4 = """
