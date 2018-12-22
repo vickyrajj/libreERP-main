@@ -350,7 +350,7 @@
                   <div class="col-md-12" ng-repeat="adr in savedAddress">
                     <div class="row" style="margin-top:15px">
                       <div class="col-md-1 col-xs-1 col-sm-1">
-                        <input ng-model="check" type="radio" name="radio" value="adr.pk" ng-click="ChangeAdd($index,'use')">
+                        <input ng-model="check" type="radio" name="radio" value="adr.pk" ng-click="ChangeAdd($index,'use')" >
                       </div>
                       <div class="col-md-10 col-xs-7 col-sm-10">
                         <div class="row">
@@ -784,17 +784,17 @@
             <img src="static/images/lg.dual-ring-loader.gif" alt="">
           </div>
           <div class="row" ng-if="getShippingCharges">
-            <span style="font-size:15px;">Order Summary<span >
-            <div class="col-xs-12" style="padding:0px 60px;">
+            <span style="font-size:20px;">Order Summary</span> <br>
+             <span style="font-size:15px; padding-left:35px;">  Shipping Details </span>: <span style="font-size:14px;">  {{username}} ,{{data.address.mobileNo}} {{data.address.landMark}} {{data.address.street}}, {{data.address.city}}, {{data.address.state}}, {{data.address.country}} - {{data.address.pincode}} </span>
+          </div>
+          <div class="row" ng-if="getShippingCharges">
+            <div class="col-xs-12" style="margin-left:15px;">
               <div class="col-md-3 col-xs-12" ng-repeat="c in cartItems" style="margin-top:15px;">
                 <div class="card">
                   <img style="width: 100%; height:150px;" class="img" ng-src="{{c.product.files[0].attachment}}">
                   <div class="row" style="height:60px; padding:0px 10px">
                     <div class="col-xs-8" style="padding-right:5px;">
                       <!-- <p style="margin:0px">{{c.product.product.name.slice(0,25)}}</p> -->
-
-
-
 
                       <p ng-if="c.prod_var==undefined" style="margin:0px"> {{c.product.product.name.slice(0,25)}}<span ng-if="c.product.product.howMuch!=null">  {{c.product.product.howMuch | convertUnit: c.product.product.unit}} </span> </p>
 

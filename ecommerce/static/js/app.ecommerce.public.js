@@ -2733,7 +2733,6 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 
 
-
   $scope.ChangeAdd = function(idx, value) {
     console.log(value);
     if (value == "use") {
@@ -3345,7 +3344,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
     }
   }
-
+  $scope.idx = 0
   $scope.prev = function() {
     if ($scope.data.stage == 'shippingDetails') {
       $scope.data.stage = 'review';
@@ -3353,6 +3352,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.data.stage = 'shippingDetails';
     }
   }
+
+  $scope.username = $scope.me.username
 
   $scope.pay = function() {
     $scope.dataToSend.modeOfPayment = $scope.data.modeOfPayment

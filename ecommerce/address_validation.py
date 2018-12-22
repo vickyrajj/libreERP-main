@@ -6,7 +6,7 @@ class can handle up to 100 addresses for validation.
 import logging
 import sys
 
-from example_config import CONFIG_OBJ
+from fedex_config import CONFIG_OBJ
 from fedex.services.address_validation_service import FedexAddressValidationRequest
 
 # NOTE: TO USE ADDRESS VALIDATION SERVICES, YOU NEED TO REQUEST FEDEX TO ENABLE THIS SERVICE FOR YOUR ACCOUNT.
