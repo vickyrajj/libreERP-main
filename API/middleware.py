@@ -17,7 +17,7 @@ class simple_middleware(object):
             domainUrl = domainORG
         print domainUrl,'ffffffffffffffff'
 
-        if any(str(domainUrl).startswith(domain) for domain in globalSettings.TRUSTED_DOMAINS):
+        if any(str(domainUrl).startswith(domain) for domain in globalSettings.TRUSTED_DOMAINS) or domainHST in globalSettings.SITE_ADDRESS:
             try:
                 print dict((regex.sub('', header), value) for (header, value) in request.META.items() if header.startswith('HTTP_'))
                 if any(api in request.META['PATH_INFO'] for api in apiList):
