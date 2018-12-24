@@ -875,10 +875,23 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
     loop: true,
     autoplay: true,
     autoplayTimeout: 3000,
-    dots: false
+    dots: false,
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 2,
+
+      },
+      768: {
+        items: 3,
+
+      },
+      1000: {
+        items: 6,
+
+      }
+    }
   };
-
-
   // $scope.articles = [{
   //     date: new Date(),
   //     title: 'das',
