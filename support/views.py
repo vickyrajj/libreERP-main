@@ -1032,7 +1032,8 @@ class OrderAPIView(APIView):
         # for i in request.data["products"]:
         #     prodList.append(Products.objects.get(pk=i))
         #     print prodList,'llllll'
-        print  request.data,'aaaaaaaa'
+        print  request.data
+        print  request.data["products"],'aaaaaaaa'
         prodList = request.data["products"]
         orderlist =[]
         print type(prodList),'kkkkkkkkkkkkkkkkkkkkkkkkkk'

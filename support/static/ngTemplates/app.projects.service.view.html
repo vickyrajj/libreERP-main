@@ -143,7 +143,7 @@
                 <div class="row">
                   <div class="col-md-6 text-center">
                     <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF"><i
-                        class="fa fa-download"></i> Download PO in CHF </a></span>
+                          class="fa fa-download"></i> Download PO in CHF </a></span>
                   </div>
                   <div class="col-md-6 text-center">
                     <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR"><i
@@ -153,14 +153,14 @@
                 <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
                 <div class="row">
                   <div class="col-md-12 text-center">
-                <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF"><i class="fa fa-download"></i>
-                    Download Quotation In CHF </a></span><br><br>
+                    <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF"><i class="fa fa-download"></i>
+                        Download Quotation In CHF </a></span><br><br>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-12 text-center">
-                <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR"><i class="fa fa-download"></i>
-                    Download Quotation In INR </a> </span>
+                    <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR"><i class="fa fa-download"></i>
+                        Download Quotation In INR </a> </span>
                   </div>
                 </div>
               </div>
@@ -560,148 +560,403 @@
   <div class="container-fluid" style="padding:20px;" ng-if="form.status=='approved'">
     <div class="col-md-3" style="border-right:solid 2px #eeeeee;min-height:80vh;">
       <div class="row">
+        <div class="col-md-12 text-left">
+          <label> Project Title : </label> {{form.title}} <br />
+          <label> Service Name :</label> {{form.service.name}} <br />
+          <label>Closing Date : </label> {{form.date}} <br />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <label> Responsible Persons : </label>
+        </div>
         <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-12 text-left">
-              <label> Project Title : </label> {{form.title}} <br />
-              <label> Service Name :</label> {{form.service.name}} <br />
-              <label>Closing Date : </label> {{form.date}} <br />
+          <div ng-repeat="r in form.responsible">
+            <div class="card container-fluid" style="padding-left:0px;position:relative;margin-top:10px">
+              <div class="col-md-4" style="padding-top:5px;">
+                <img ng-src="{{r | getDP}}" class="img-circle" alt="DP" height="50" width="50" />
+              </div>
+              <div class="col-md-8">
+                {{r | getName}} <br>
+                ID : <strong>{{r}}</strong>
+              </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-12 text-center">
-              <label> Responsible Persons : </label>
+        </div>
+      </div>
+
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-12 text-center">
+          <label> Revision : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.revision" ng-change="revision()" placeholder="Revision">
+        </div>
+
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-12 text-center">
+          <label> Quotation ref Number : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.quoteRefNumber" placeholder="Quotation Ref Number">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-12 text-center">
+          <label> PO Number : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.poNumber" placeholder="PO Number">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-12 text-center">
+          <label> Invoice Number : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.invoiceNumber" placeholder="Invoice Number">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-12 text-center">
+          <label> BOE ref Number : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.boeRefNumber" placeholder="BOE Ref Number">
+        </div>
+      </div>
+      <div class="row text-right" style="padding-top:10px" ng-if="!options">
+        <a class="btn" href="" ng-click="showOption()"> <i class="fa fa-arrow-down"></i> View More Options </a>
+      </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label> Quotation Validity : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.quoteValidity" placeholder="Quotation Validity" ng-change="validity()">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label> INCO Terms : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.terms" placeholder="INCO Terms" ng-change="incoTerms()">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label> Delivery : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.delivery" placeholder="Delivery" ng-change="deliverySave()">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label> Payment Terms : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.paymentTerms" placeholder="Payment Terms" ng-change="paymentSave()">
+        </div>
+      </div>
+      <div class="row text-right" style="padding-top:10px" ng-if="options">
+        <a class="btn" href="" ng-click="showOption()"> <i class="fa fa-arrow-up"></i> View Less Options </a>
+      </div>
+
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-4 text-center">
+          <label> Ex Rate : </label>
+        </div>
+        <div class="col-md-6">
+          <input type="number" class="form-control text-center" ng-model="form.exRate">
+        </div>
+
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-4 text-center">
+          <label> Profit Margin : </label>
+        </div>
+        <div class="col-md-6">
+          <input type="number" class="form-control text-center" ng-model="form.profitMargin">
+        </div>
+
+      </div>
+      <!-- <div class="row" style="padding-top:10px">
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary " ng-click="edit();$event.stopPropagation();"> Download PO </button><br><br>
+              <button type="button" class="btn btn-primary" ng-click="delete(data.pk , index);$event.stopPropagation();"> Download Quotation In CHF</button><br><br>
+              <button type="button" class="btn btn-primary" ng-click="delete(data.pk , index);$event.stopPropagation();"> Download Quotation In INR</button>
             </div>
+
+
+
+        </div> -->
+      <div class="row" style="padding-top:10px">
+        <div class="btn-group">
+          <div class="row">
             <div class="col-md-12">
-              <div ng-repeat="r in form.responsible">
-                <div class="card container-fluid" style="padding-left:0px;position:relative;margin-top:10px">
-                  <div class="col-md-4" style="padding-top:5px;">
-                    <img ng-src="{{r | getDP}}" class="img-circle" alt="DP" height="50" width="50" />
-                  </div>
-                  <div class="col-md-8">
-                    {{r | getName}} <br>
-                    ID : <strong>{{r}}</strong>
-                  </div>
+              <div class="row">
+                <div class="col-md-6 text-center">
+                  <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF"><i
+                        class="fa fa-download"></i> Download PO in CHF </a></span>
+                </div>
+                <div class="col-md-6 text-center">
+                  <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR"><i
+                        class="fa fa-download"></i> Download PO in INR </a></span>
+                </div>
+              </div><br>
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF"><i class="fa fa-download"></i>
+                      Download Quotation In CHF </a></span><br><br>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR"><i class="fa fa-download"></i>
+                      Download Quotation In INR </a> </span><br><br>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <span ng-if="form.savedStatus"><a class="btn btn-primary"  target="_blank" href="/api/support/grn/?project={{form.pk}}">GRN<i class="fa fa-download"></i></a></span>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="row" style="padding-top:20px">
-            <div class="col-md-4 text-center">
-              <label> Invoice Value: </label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" class="form-control text-center" ng-model="form.invoiceValue">
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-4 text-center">
-              <label> Packing: </label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" class="form-control text-center" ng-model="form.packing">
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-4 text-center">
-              <label> Insurance: </label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" class="form-control text-center" ng-model="form.insurance">
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-4 text-center">
-              <label> Freight: </label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" class="form-control text-center" ng-model="form.freight">
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-4 text-center">
-              <label> Assessable Value: </label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" class="form-control text-center" ng-model="form.assessableValue">
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-4 text-center">
-              <label> GST: </label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" class="form-control text-center" ng-model="form.gst1">
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-4 text-center">
-              <label> GST: </label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" class="form-control text-center" ng-model="form.gst2">
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-4 text-center">
-              <label> Clearing Charges 1: </label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" class="form-control text-center" ng-model="form.clearingCharges1">
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-4 text-center">
-              <label> Clearing Charges 2: </label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" class="form-control text-center" ng-model="form.clearingCharges2">
-            </div>
-          </div>
-
-          <div class="row" style="padding-top:10px">
-
-            <div class="col-md-12 text-right">
-              <button type="button" class="btn btn-primary btn-sm" ng-click="saveInfo()"> Save </button>
-            </div>
-          </div>
-
         </div>
-      </div>
 
+      </div>
     </div>
+    <!-- </div> -->
     <div class="col-md-9">
       <wizard steps="projectSteps.steps" editable="false" active="form.selectedStatus" error="false"></wizard>
       <hr>
-      <table class="invoiceTable" style=" width: 100%;">
-        <tbody>
-          <tr style="background-color: #eeeeee;height: 96px;">
-            <th>Si.No</th>
-            <th>Product</th>
-            <th>Part No</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Quantity Received</th>
-            <th>Invoice Price</th>
+
+      <div class="row" style="padding-top:20px">
+        <div class="col-md-4 text-center">
+        </div>
+        <div class="col-md-3 text-center">
+          <label>Ex Works Value In CHF</label>
+        </div>
+        <div class="col-md-3 text-center">
+          <label>Value In INR</label>
+        </div>
+        <div class="col-md-2 text-center">
+          <label>Factor</label>
+        </div>
+      </div>
+      <div class="row" style="padding-top:20px;border-bottom:1px solid #eeeeee">
+        <div class="col-md-4 text-center">
+          <label> Ex Work Price: </label>
+        </div>
+        <div class="col-md-3 text-center">
+          <input type="number" class="form-control text-center" ng-model="form.invoiceValue">
+        </div>
+        <div class="col-md-3 text-center">
+          <span> {{((form.invoiceValue * form.exRate)).toFixed(2) | number}}</span>
+          <!-- <input type="number" class="form-control text-center" ng-model="form.invoiceValueINR"> -->
+        </div>
+
+      </div>
+      <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
+        <div class="col-md-4 text-center">
+          <label> Packing: </label>
+        </div>
+        <div class="col-md-3 text-center">
+          <input type="number" class="form-control text-center" ng-model="form.packing">
+        </div>
+        <div class="col-md-3 text-center">
+          <span> {{(form.packing * form.exRate).toFixed(2)}}</span>
+        </div>
+        <div class="col-md-2 text-center">
+          <span> {{(form.packing *100 / form.invoiceValue).toFixed(2)}} %</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
+        <div class="col-md-4 text-center">
+          <label> Insurance: </label>
+        </div>
+        <div class="col-md-3 text-center">
+          <input type="number" class="form-control text-center" ng-model="form.insurance">
+        </div>
+        <div class="col-md-3 text-center">
+          <span> {{(form.insurance * form.exRate).toFixed(2)}}</span>
+          <!-- <input type="number" class="form-control text-center" ng-model="form.insuranceINR"> -->
+        </div>
+        <div class="col-md-2 text-center">
+          <span> {{(form.insurance*100/ form.invoiceValue).toFixed(2)}}% </span>
+          <!-- <input type="number" class="form-control text-center" ng-model="form.insurancePer"> -->
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
+        <div class="col-md-4 text-center">
+          <label> Freight: </label>
+        </div>
+        <div class="col-md-3 text-center">
+          <input type="number" class="form-control text-center" ng-model="form.freight">
+        </div>
+        <div class="col-md-3 text-center">
+          <span> {{(form.freight * form.exRate).toFixed(2)}}</span>
+          <!-- <input type="number" class="form-control text-center" ng-model="form.freightINR"> -->
+        </div>
+        <div class="col-md-2 text-center">
+          <span> {{(form.freight*100/ form.invoiceValue).toFixed(2)}} %</span>
+          <!-- <input type="number" class="form-control text-center" ng-model="form.freightPer"> -->
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
+        <div class="col-md-4 text-center">
+          <label> Assessable Value: </label>
+        </div>
+        <div class="col-md-3 text-center">
+
+          <!-- <input type="number" class="form-control text-center" ng-model="form.assessableValue"> -->
+        </div>
+        <div class="col-md-3 text-center">
+          <span>{{(form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100).toFixed(2)}}</span>
+        </div>
+        <div class="col-md-2 text-center">
+          <input type="number" class="form-control text-center" ng-model="form.assessableValue">
+
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
+        <div class="col-md-4 text-center">
+          <label> GST: </label>
+        </div>
+        <div class="col-md-3 text-center">
+          <!--
+        <input type="number" class="form-control text-center" ng-model="form.gst1"> -->
+        </div>
+        <div class="col-md-3 text-center">
+          <!-- <input type="number" class="form-control text-center" ng-model="form.gst1"> -->
+          <!-- <span>{{(form.gst18).toFixed(2)}} %</span> -->
+        </div>
+        <div class="col-md-2 text-center">
+          <span> 18% </span>
+          <!-- <input type="number" class="form-control text-center" ng-model="form.gst1Per"> -->
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
+        <div class="col-md-4 text-center">
+          <label> GST: </label>
+        </div>
+        <div class="col-md-3 text-center">
+          <!--
+        <input type="number" class="form-control text-center" ng-model="form.gst2"> -->
+        </div>
+        <div class="col-md-3 text-center">
+          <!-- <span>{{(form.gst28).toFixed(2)}}</span> -->
+        </div>
+        <div class="col-md-2 text-center">
+          <span> 28% </span>
+          <!-- <input type="number" class="form-control text-center" ng-model="form.gst2Per">
+      </div> -->
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
+        <div class="col-md-4 text-center">
+          <label> Clearing Charges 1: </label>
+        </div>
+        <div class="col-md-3 text-center">
+          <!-- <input type="number" class="form-control text-center" ng-model="form.clearingCharges1"> -->
+        </div>
+        <div class="col-md-3 text-center">
+          <input type="number" class="form-control text-center" ng-model="form.clearingCharges1">
+        </div>
+        <div class="col-md-2 text-center">
+          <!-- <input type="number" class="form-control text-center" ng-model="form.clearingCharges1Per"> -->
+          <span> {{(form.clearingCharges1*100/(form.invoiceValue* form.exRate)).toFixed(2)}} %</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
+        <div class="col-md-4 text-center">
+          <label> Clearing Charges 2: </label>
+        </div>
+        <div class="col-md-3 text-center">
+          <!-- <input type="number" class="form-control text-center" ng-model="form.clearingCharges2"> -->
+        </div>
+        <div class="col-md-3 text-center">
+          <input type="number" class="form-control text-center" ng-model="form.clearingCharges2">
+        </div>
+        <div class="col-md-2 text-center">
+          <!-- <input type="number" class="form-control text-center" ng-model="form.clearingCharges2Per"> -->
+          <span> {{(form.clearingCharges2*100/(form.invoiceValue * form.exRate)).toFixed(2)}} %</span>
+        </div>
+      </div>
+
+
+
+      <!-- <div class="row" style="padding-top:10px">
+
+      <div class="col-md-12 text-right">
+        <button type="button" class="btn btn-primary btn-sm" ng-click="saveInfo()"> Save </button>
+      </div>
+    </div> -->
+
+    </div>
+  </div>
+  <div class="col-md-12" ng-if="form.status=='approved'">
+
+    <table class="invoiceTable" style=" width: 100%;">
+      <tbody>
+        <tr style="background-color: #eeeeee;height: 96px;">
+          <th>Si.No</th>
+          <th>Product</th>
+          <th>Part No</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Quantity Received</th>
+          <!-- <th>Invoice Price</th>
             <th>Landed Price</th>
-            <th>Total</th>
-          </tr>
-          <tr ng-repeat="v in projects track by $index">
-            <td>{{$index + 1}}</td>
-            <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
-            <td>{{v.products.part_no}}</td>
-            <td>{{v.quantity1}}</td>
-
-
-
-            <td>{{v.price.toFixed(2)}}</td>
-            <td><input step=1 class="form-control-pos" ng-model="v.quantity2"></td>
-            <td><input step=1 class="form-control-pos" ng-model="v.invoice_price"></td>
+            <th>Total</th> -->
+          <th>Quote Price (CHF)</th>
+          <th>Ex-Work Price (INR)</th>
+          <th>Packing Cost</th>
+          <th>Insurance</th>
+          <th>Freight</th>
+          <th>CIF/Pc</th>
+          <th>Total CIF</th>
+          <th>Customs Duty (%)</th>
+          <th>Customs Duty value</th>
+          <th>Social Welfare Exchange</th>
+          <th>GST (%)</th>
+          <th>GST </th>
+          <th>Claering Charges 1 </th>
+          <th>Claering Charges 2 </th>
+          <th>Landing Cost/pc </th>
+        </tr>
+        <tr ng-repeat="v in projects track by $index">
+          <td>{{$index + 1}}</td>
+          <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
+          <td>{{v.products.part_no}}</td>
+          <td>{{v.quantity1}}</td>
+          <td>{{v.price.toFixed(2)}}</td>
+          <td><input step=1 class="form-control-pos" ng-model="v.quantity2"></td>
+          <!-- <td><input step=1 class="form-control-pos" ng-model="v.invoice_price"></td>
             <td><input step=1 class="form-control-pos" ng-model="v.landed_price"></td>
-            <td>{{(v.landed_price*v.quantity2).toFixed(2)}}</td>
-          </tr>
-          <tr>
+            <td>{{(v.landed_price*v.quantity2).toFixed(2)}}</td> -->
+          <td>{{v.quotePrice}}</td>
+          <td>{{v.inrPrice}}</td>
+          <td>{{v.packing}}</td>
+          <td>{{v.insurance}}</td>
+          <td>{{v.freight}}</td>
+          <td>{{v.cif}}</td>
+          <td>{{(v.cif*v.quantity1).toFixed(2)}}</td>
+          <!-- <td><select ng-model ="v.custom"><option value="7.5">7.5</option></select></td> -->
+          <td>{{v.custom}}%</td>
+          <td>{{v.customVal}} </td>
+          <td>{{v.socialVal}}</td>
+          <td>18% </td>
+          <td>{{((v.cif*18)/100).toFixed(2)}} </td>
+          <td>{{v.charge1}} </td>
+          <td>{{v.charge2}} </td>
+          <td>{{(v.cif + v.customVal + v.socialVal +  v.charge1 + v.charge2).toFixed(2)}}</td>
+        </tr>
+        <!-- <tr>
             <td></td>
             <td></td>
             <td></td>
@@ -710,14 +965,17 @@
             <td></td>
             <td></td>
             <td>Total</td>
-            <td><b>{{total.toFixed(2)}}</b</td> </tr> </tbody> </table> <!-- <div class="col-md-8" style="padding-top:32px">
+            <td><b>{{total.toFixed(2)}}</b</td> </tr> -->
+      </tbody>
+    </table>
+    <!-- <div class="col-md-8" style="padding-top:32px">
                 <button type="button" class="btn btn-primary  pull-right" style="cursor:pointer" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="send()"
                   confirm-button-type="primary" cancel-button-type="default" ng-if="!form.savedStatus">Save</button>
     </div> -->
     <div class="col-md-12">
-      <span ng-if="form.savedStatus"><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" target="_blank" href="/api/support/grn/?project={{form.pk}}">GRN<i class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
+<!--
       <span ng-if="form.savedStatus"><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px  ;" target="_blank" href="/api/support/quotation/?project={{form.pk}}">Quotation<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
-      <span ng-if="form.savedStatus"><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" target="_blank" href="/api/support/POSlip/?project={{form.pk}}">PO<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+      <span ng-if="form.savedStatus"><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" target="_blank" href="/api/support/POSlip/?project={{form.pk}}">PO<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span> -->
       <button type="button" class="btn btn-success  pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="send()"
         confirm-button-type="primary" cancel-button-type="default" ng-if="!form.savedStatus">Save</button>
     </div>
@@ -762,7 +1020,7 @@
 </div>
 
 
-</div>
+
 
 <div ng-controller="businessManagement.projects.invoice.view">
   <div class="container-fluid" style="padding:20px;" ng-if="form.status=='ongoing'">
@@ -823,6 +1081,7 @@
             <th>Price</th>
             <th>Total</th>
           </tr>
+
           <tr ng-repeat="v in purchase  track by $index">
             <td>{{$index + 1}}</td>
             <td>{{v.products.part_no}}</td>
@@ -841,7 +1100,7 @@
                 <hr />
                 <div class="col-md-12">
 
-                  <table class="invoiceTable" style=" width: 100%;" ng-if="form.materialIssue.length>0">
+                  <table class="invoiceTable" style=" width: 100%;" ng-if="materialIssue.length>0">
                     <tbody>
                       <tr style="background-color: #eeeeee;height: 50px;">
                         <th>Si.No</th>
@@ -851,7 +1110,7 @@
                         <th>Stock value/unit</th>
                         <th>Stock value Consumed</th>
                       </tr>
-                      <tr ng-repeat="m in form.materialIssue track by $index">
+                      <tr ng-repeat="m in materialIssue track by $index">
                         <td>{{$index + 1}}</td>
                         <td>{{m.product.description_1}}<span ng-if="m.product.description_2"> ({{m.product.description_2}})</span></td>
                         <td>{{m.product.part_no}}</td>
