@@ -783,12 +783,14 @@
           <div ng-if="!getShippingCharges" class="text-center" style="padding-top:60px">
             <img src="static/images/lg.dual-ring-loader.gif" alt="">
           </div>
-          <div class="row" ng-if="getShippingCharges">
-            <span style="font-size:20px;">Order Summary</span> <br>
+          <div class="row" ng-if="getShippingCharges" style="margin-left:15px;">
+            <div class="row">
+              <span style="font-size:20px;">Order Summary<span >
+            </div>
              <span style="font-size:15px; padding-left:35px;">  Shipping Details </span>: <span style="font-size:14px;">  {{username}} ,{{data.address.mobileNo}} {{data.address.landMark}} {{data.address.street}}, {{data.address.city}}, {{data.address.state}}, {{data.address.country}} - {{data.address.pincode}} </span>
           </div>
           <div class="row" ng-if="getShippingCharges">
-            <div class="col-xs-12" style="margin-left:15px;">
+            <div class="col-xs-12" style="margin-left:30px;">
               <div class="col-md-3 col-xs-12" ng-repeat="c in cartItems" style="margin-top:15px;">
                 <div class="card">
                   <img style="width: 100%; height:150px;" class="img" ng-src="{{c.product.files[0].attachment}}">

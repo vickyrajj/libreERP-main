@@ -80,7 +80,7 @@ BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
 SMART_REGISTRATION = True
 AUTO_ACTIVE_ON_REGISTER = False
 
-SEO_TITLE = 'Sterling Select'
+SEO_TITLE = 'BNI'
 SEO_DESCRIPTION = 'Sterling Select Online Shopping'
 SEO_IMG = '/static/images/company_icon.png'
 SEO_IMG_WIDTH = 1024
