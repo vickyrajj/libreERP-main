@@ -1,160 +1,199 @@
-app.controller("controller.home.notes", function($scope , $state , $users ,  $stateParams , $http , Flash) {
-  $scope.me = $users.get('mySelf');
-  $scope.editor = {pencil : false}
-  $scope.canvas = new fabric.Canvas('canvas');
-  $scope.canvas.selection = true;
-  $scope.canvas.isDrawingMode = false;
+app.controller("controller.home.notes", function($scope, $state, $users, $stateParams, $http, Flash) {
 
-  $scope.bookInView = -1;
-  $scope.pageInView = -1;
-  $scope.notebooks = [];
-
-  $scope.$watch('bookInView' , function(newValue , oldValue){
-    if (newValue != -1) {
-      if ($scope.notebooks[newValue].pages.length == 0) {
-        dataToSend =  {
-          source : 'blank',
-          parent : $scope.notebooks[newValue].pk,
-          title : 'untitled',
-          user : $scope.me.pk,
-        }
-        $http({ method : 'POST' , url : '/api/PIM/page/' , data : dataToSend }).
-        then(function(response){
-          $scope.pageInView = 0;
-          $scope.data = response.data;
-        })
-      } else {
-        $scope.pageInView = 0;
-        $scope.getPage();
-      }
-    }
-  });
-
-  $http({ method : 'GET' , url : '/api/PIM/notebook/'}).
-  then(function(response){
+  //--------------------fetch notebooks-------------
+  $http({
+    method: 'GET',
+    url: '/api/PIM/notebook/'
+  }).
+  then(function(response) {
     $scope.notebooks = response.data;
     if (response.data.length != 0) {
       $scope.bookInView = 0;
-    } else{
+    } else {
       dataToSend = {
-        user : $scope.me.pk,
-        title : 'untitled',
+        user: $scope.me.pk,
+        title: 'untitled',
       }
-      $http({ method : 'POST' , url : '/api/PIM/notebook/' , data : dataToSend }).
-      then(function(response){
+      $http({
+        method: 'POST',
+        url: '/api/PIM/notebook/',
+        data: dataToSend
+      }).
+      then(function(response) {
         $scope.notebooks.push(response.data);
+        console.log($scope.notebooks);
         $scope.bookInView = 0;
       })
     }
   })
 
-  $scope.getPage = function(){
-    $http({ method : 'GET' , url : '/api/PIM/page/' +$scope.notebooks[$scope.bookInView].pages[$scope.pageInView] + '/'}).
-    then(function(response){
-      $scope.data = response.data;
-      $scope.canvas.loadFromJSON($scope.data.source , $scope.canvas.renderAll.bind($scope.canvas) );
+  //--------------------------open book and view pages----
+  $scope.pages = [];
+  $scope.openBook = function(pid) {
+    // console.log(pid, '---------parent');
+    $http({
+      method: 'GET',
+      url: '/api/PIM/page/?parent=' + pid,
+    }).
+    then(function(response) {
+      $scope.pages = response.data;
+      console.log($scope.pages, '-------opened page is');
+      setTimeout(function() {
+        for (var i = 0; i < $scope.pages.length; i++) {
+          $scope.createCanvas(i, $scope.pages[i].source)
+        }
+      }, 700);
+
     })
   }
 
-  $scope.changeNotebook = function(index){
-    $scope.bookInView = index;
+  $scope.activeTab = 0;
+  $scope.openPage = function(id, pid, indx) {
+    $scope.activeTab = indx
   }
 
-  $scope.changePage = function(index){
-    $scope.pageInView = index;
-    $scope.getPage();
-  }
+  $scope.notebooks = [];
+  $scope.canvas = [];
+  $scope.editor = {
+    pencil: false
+  };
 
-  $scope.save = function(){
-    dataToSend = {
-      source : JSON.stringify($scope.canvas),
-      parent : $scope.notebooks[$scope.bookInView].pk,
-      title : $scope.data.title,
-      user : $scope.me.pk,
+
+
+  $scope.createCanvas = function(i, src) {
+
+    $scope.canvas.push(new fabric.Canvas('canvas' + i))
+    $scope.canvas[i].loadFromJSON(src, $scope.canvas[i].renderAll.bind($scope.canvas[i]));
+
+    $scope.color = '#000'
+
+    $scope.pencil = function(indx) {
+      $scope.textOn = false
+      console.log('pencil');
+      $scope.canvas[indx].isDrawingMode = true
+      $scope.canvas[indx].freeDrawingBrush.color = $scope.color;
     }
-    $http({ method : 'PATCH' , url : '/api/PIM/page/' + $scope.data.pk + '/', data : dataToSend }).
-    then(function(response){
-      Flash.create('success' , response.status + ' : ' + response.statusText);
-    }, function(response){
-      Flash.create('danger' , response.status + ' : ' + response.statusText);
-    })
-  }
 
-  $scope.pencil = function(){
-    $scope.canvas.isDrawingMode = !$scope.canvas.isDrawingMode;
-    $scope.editor.pencil = !$scope.editor.pencil;
-  }
+    $scope.setColor = function(col, indx) {
+      console.log(col, '------is the color');
+      $scope.color = col;
+      $scope.canvas[indx].freeDrawingBrush.color = col;
+    }
 
-  $scope.clearAll = function(){
-    $scope.canvas.clear().renderAll();
-  }
+    $scope.clearAll = function(indx) {
+      $scope.canvas[indx].clear().renderAll();
+    }
 
-  $scope.addText = function(e){
-    // console.log("will add text");
-    newText = new fabric.IText('', {
-      fontFamily: 'arial black',
-      left: e.layerX,
-      top: e.layerY ,
-      fontSize:14,
+    $scope.startx;
+    $scope.starty;
+    $scope.endx;
+    $scope.endy;
+
+    $scope.canvas[i].on('mouse:down', function(options) {
+      if ($scope.textOn) {
+        if (!$scope.canvas[i].isDrawingMode) {
+          $scope.addText(i);
+        }
+      }
+      $scope.pointer = $scope.canvas[i].getPointer(options.e);
+      $scope.startx = $scope.pointer.x;
+      $scope.starty = $scope.pointer.y;
     });
-    // newText.set('selectable', true);
-    // console.log(newText);
-    $scope.canvas.add(newText);
-    $scope.canvas.setActiveObject(newText);
-    newText.enterEditing();
-    newText.hiddenTextarea.focus();
 
-  }
-  $scope.canvas.on('mouse:down', function(options) {
-    if (!$scope.canvas.isDrawingMode){
-      $scope.addText(options.e);
+    $scope.canvas[i].on('mouse:move', function(options) {
+      $scope.pointer = $scope.canvas[i].getPointer(options.e);
+      $scope.endx = $scope.pointer.x;
+      $scope.endy = $scope.pointer.y;
+    });
+
+    $scope.shape = function(indx, ob) {
+      $scope.canvas[indx].isDrawingMode = false;
+      console.log($scope.color);
+      // $scope.setColor('black',indx);
+      console.log(indx, '---------', ob);
+      if (ob == 0) {
+        var rect = new fabric.Rect({
+          top: $scope.starty,
+          left: $scope.startx,
+          width: 60,
+          height: 70,
+          fill: false,
+          stroke: $scope.color
+        });
+        $scope.canvas[indx].add(rect).setActiveObject(rect);
+      } else if (ob == 1) {
+        var circle = new fabric.Circle({
+          radius: 30,
+          fill: false,
+          stroke: $scope.color,
+          left: $scope.startx,
+          top: $scope.starty
+        });
+        $scope.canvas[indx].add(circle).setActiveObject(circle);
+      } else if (ob == 2) {
+        var triangle = new fabric.Triangle({
+          width: 60,
+          height: 60,
+          fill: false,
+          stroke: $scope.color,
+          left: $scope.startx,
+          top: $scope.starty
+        });
+        $scope.canvas[indx].add(triangle).setActiveObject(triangle);
+      }
+
     }
-  });
 
-
-  window.addEventListener('resize', resizeCanvas, false);
-
-  function resizeCanvas() {
-    $scope.canvas.setHeight(window.innerHeight*0.75);
-    $scope.canvas.setWidth(window.innerWidth*0.88);
-    $scope.canvas.renderAll();
-  }
-
-  // resize on init
-  resizeCanvas();
-
-  $scope.canvas.on('object:moving', function (e) {
-    var obj = e.target;
-     // if object is too big ignore
-    if(obj.currentHeight > obj.canvas.height || obj.currentWidth > obj.canvas.width){
-      return;
-    }
-    obj.setCoords();
-    // top-left  corner
-    if(obj.getBoundingRect().top < 0 || obj.getBoundingRect().left < 0){
-      obj.top = Math.max(obj.top, obj.top-obj.getBoundingRect().top);
-      obj.left = Math.max(obj.left, obj.left-obj.getBoundingRect().left);
-    }
-    // bot-right corner
-    if(obj.getBoundingRect().top+obj.getBoundingRect().height  > obj.canvas.height || obj.getBoundingRect().left+obj.getBoundingRect().width  > obj.canvas.width){
-      obj.top = Math.min(obj.top, obj.canvas.height-obj.getBoundingRect().height+obj.top-obj.getBoundingRect().top);
-      obj.left = Math.min(obj.left, obj.canvas.width-obj.getBoundingRect().width+obj.left-obj.getBoundingRect().left);
-    }
-  });
-
-
-
-  $scope.addImage = function(){
-
-    fabric.Image.fromURL('/static/images/about/2.jpg', function(img) {
-    img.scale(0.5).set({
-        left: 100,
-        top: 100,
+    $scope.addImage = function(indx) {
+      fabric.Image.fromURL('/static/images/about/2.jpg', function(img) {
+        img.scale(0.5).set({
+          left: $scope.startx,
+          top: $scope.starty,
+        });
+        $scope.canvas[indx].add(img).setActiveObject(img);
       });
-      $scope.canvas.add(img).setActiveObject(img);
-    });
-  }
+    }
 
 
+    $scope.addText = function(indx) {
+      console.log('text');
+      $scope.textOn = true
+      $scope.canvas[indx].isDrawingMode = false
+
+      // console.log("will add text");
+      newText = new fabric.IText('', {
+        fontFamily: 'arial black',
+        left: $scope.startx,
+        top: $scope.starty,
+        fontSize: 14,
+        fill: $scope.color
+      });
+      $scope.canvas[indx].add(newText);
+      $scope.canvas[indx].setActiveObject(newText);
+      newText.enterEditing();
+      newText.hiddenTextarea.focus();
+    }
+
+    $scope.save = function(indx) {
+      console.log($scope.pages[indx].pk, '----------pk');
+      dataToSend = {
+        source: JSON.stringify($scope.canvas[indx]),
+        parent: $scope.pages[indx].parent,
+        title: $scope.pages[indx].title,
+        user: $scope.me.pk,
+      }
+      $http({
+        method: 'PATCH',
+        url: '/api/PIM/page/' + $scope.pages[indx].pk + '/',
+        data: dataToSend
+      }).
+      then(function(response) {
+        Flash.create('success', response.status + ' : ' + response.statusText);
+      }, function(response) {
+        Flash.create('danger', response.status + ' : ' + response.statusText);
+      })
+    }
+
+  } //========create canvas ends
 
 });
