@@ -1418,8 +1418,8 @@ class PageNumCanvas(canvas.Canvas):
         compNameStyle = styleN.clone('footerCompanyName')
         compNameStyle.textColor = colors.white;
 
-        # p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
-        p = Paragraph('Business Network International' , compNameStyle)
+        p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
+        # p = Paragraph('Business Network International' , compNameStyle)
 
         p.wrapOn(self , 50*mm , 10*mm)
         p.drawOn(self , 85*mm  , 18*mm)
@@ -1503,7 +1503,14 @@ def genInvoice(response, contract, request):
     tableData=[['Product','Quantity','Price','Total Price']]
     isStoreGlobal = False
     ab = appSettingsField.objects.filter(name='isStoreGlobal')
-    currency = '(INR)'
+    currencySymbol = appSettingsField.objects.filter(name='currencySymbol')
+    if len(currencySymbol)>0:
+        if currencySymbol[0].value == 'fa-usd':
+            currency = '(USD)'
+        else:
+            currency = '(INR)'
+    else:
+        currency = '(USD)'
     if len(ab)>0:
         if ab[0].flag:
             isStoreGlobal = True
