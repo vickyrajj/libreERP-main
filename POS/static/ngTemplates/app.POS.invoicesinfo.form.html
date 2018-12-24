@@ -1,14 +1,42 @@
-
-
 <div class="modal-header">
   Invoice Info
 
-    <a class="btn btn-default pull-right"  target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}"><i class="fa fa-print" ></i></a>
+  <a class="btn btn-default pull-right" target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}"><i class="fa fa-print" ></i></a>
+  <span class="btn btn-primary pull-right" ng-click="changeInvoiceStatus(invoice)" ng-if="invoice.status!='Completed'" style="margin-right:15px">{{invoice.status=='Created'?'In Progress':'Completed'}}</span>
 
 </div>
 <div class="modal-body">
   <div class="container-fluid">
-    <div class="row" >
+    <div class="row">
+      <div class="container-fluid" style="padding:0px">
+        <table class="invoiceTable" style=" width: 100%;border-collapse: collapse;font-size:18px">
+          <tr style="background-color: #eeeeee;">
+            <td>#</td>
+            <td>Item Description</td>
+            <td>Qty</td>
+            <td>Rate(Rs.)</td>
+            <td>Subtotal</td>
+          </tr>
+          <tr ng-repeat="item in invoice.products" >
+            <td>{{$index + 1}}</td>
+            <td > <span>{{item.data.product.name}}</span></td>
+            <td > <span>{{item.quantity}}</span></td>
+            <td > <span>{{item.data.product.price}}</span></td>
+            <td > <span>{{(item.data.product.price * item.quantity).toFixed(0)}}</span></td>
+          </tr>
+          <tr>
+            <td style="border:none;"></td>
+            <td style="border:none;"></td>
+            <td style="border:none;"></td>
+            <td style="border:none;"></td>
+            <td>{{invoice.grandTotal}}</td>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+    <hr>
+    <div class="row">
       <div class="col-md-6">
         <span style="font-size: 25px;">{{invoice.pk}}</span><br>
         <span style="font-size: 18px;">{{invoice.customer.name}}</span><br>
@@ -50,7 +78,7 @@
             <strong>Amount Recieved :</strong>
           </div>
           <div class="col-md-6">
-             {{invoice.amountRecieved}}
+            {{invoice.amountRecieved}}
           </div>
         </div>
         <div class="row">
@@ -58,7 +86,7 @@
             <strong>GSTIN :</strong>
           </div>
           <div class="col-md-6">
-          {{invoice.customer.gst}}
+            {{invoice.customer.gst}}
           </div>
         </div>
         <div class="row">
@@ -95,37 +123,37 @@
         </div>
 
       </div>
-          <div class="col-md-6">
-            <!-- <span>Paid:{{invoice.paid}}</span><br> -->
-            <div class="form-group">
-              <label> Mode of Payment</label>
-              <select class="form-control" ng-model="invoice.modeOfPayment" ng-options="item for item in modeofpayment">
+      <div class="col-md-6">
+        <!-- <span>Paid:{{invoice.paid}}</span><br> -->
+        <div class="form-group">
+          <label> Mode of Payment</label>
+          <select class="form-control" ng-model="invoice.modeOfPayment" ng-options="item for item in modeofpayment">
                 <option value="" disabled selected>select mode of payment</option>
               </select>
-            </div>
-            <div class="form-group">
-              <label>Amount Recieved</label>
-              <input type="number" min="0" class="form-control" ng-model="invoice.amountRecieved">
-            </div>
-            <div class="form-group">
-              <label>Reference Number</label>
-              <textarea type="text" class="form-control" ng-model="invoice.paymentRefNum"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Received Date</label>
-              <div class="input-group">
-                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.receivedDate" is-open="statusDue.opened" ng-init="today" />
-                <span class="input-group-btn">
+        </div>
+        <div class="form-group">
+          <label>Amount Recieved</label>
+          <input type="number" min="0" class="form-control" ng-model="invoice.amountRecieved">
+        </div>
+        <div class="form-group">
+          <label>Reference Number</label>
+          <textarea type="text" class="form-control" ng-model="invoice.paymentRefNum"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Received Date</label>
+          <div class="input-group">
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.receivedDate" is-open="statusDue.opened" ng-init="today" />
+            <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="statusDue.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
-              </div>
-            </div>
+          </div>
+        </div>
 
-            <button type="button" class="btn btn-success" ng-click="save()">
+        <button type="button" class="btn btn-success" ng-click="save()">
               Save <i class="fa fa-floppy-o"></i>
             </button>
 
-          </div>
+      </div>
     </div>
   </div>
 </div>

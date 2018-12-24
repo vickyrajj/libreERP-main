@@ -58,7 +58,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
     queryset = Customer.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name' ]
+    filter_fields = ['name','mobile' ]
 
 class StoreViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny, )
@@ -163,9 +163,11 @@ class ProductViewSet(viewsets.ModelViewSet):
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = InvoiceSerializer
-    queryset = Invoice.objects.all()
+    # queryset = Invoice.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['customer' , 'id']
+    def get_queryset(self):
+        return Invoice.objects.all().order_by('-status')
 
 
 class VendorServicesViewSet(viewsets.ModelViewSet):

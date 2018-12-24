@@ -274,7 +274,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)
     class Meta:
         model = Invoice
-        fields = ('pk' , 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'customer' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate')
+        fields = ('pk' , 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'customer' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate','status')
         read_only_fields = ( 'user' , 'customer')
 
     def create(self , validated_data):
@@ -295,6 +295,14 @@ class InvoiceSerializer(serializers.ModelSerializer):
                 # data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':inv}
                 # InventoryLog.objects.create(**data)
         if 'connectedDevice' in self.context['request'].data:
+            try:
+                doubleCopyObj = appSettingsField.objects.get(name='doubleInvoiceCopy')
+                if doubleCopyObj.flag:
+                    billTimes = 2
+                else:
+                    billTimes = 1
+            except:
+                billTimes = 1
             try:
                 companyName = appSettingsField.objects.get(app__id=69,name='companyName').value
                 companyAddress = appSettingsField.objects.get(app__id=69,name='companyAddress').value
@@ -336,12 +344,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
                 # toSend.pop('invoicedate', None)
                 # toSend.pop('duedate', None)
                 # toSend.pop('receivedDate', None)
-                requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
-                        json={
-                          'topic': 'service.POS.Printer.{0}'.format(self.context['request'].data['connectedDevice']),
-                          'args': [{'data':toSend}]
-                        }
-                    )
+                for tim in range(billTimes):
+                    requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
+                            json={
+                              'topic': 'service.POS.Printer.{0}'.format(self.context['request'].data['connectedDevice']),
+                              'args': [{'data':toSend}]
+                            }
+                        )
             except:
                 print 'Server Has Not Connected'
         return inv
@@ -428,7 +437,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         #     InventoryLog.objects.create(**data)
 
 
-        for key in ['serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate']:
+        for key in ['serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate','status']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
