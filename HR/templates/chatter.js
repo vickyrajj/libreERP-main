@@ -1843,7 +1843,7 @@ function activeAudioCall(){
               cursor: pointer;\
             }\
             .chatBox_footer .chatbox_branding{\
-              min-height: 13px;\
+              min-height: 15px;\
               text-align: center;\
               font-size: 10px;\
               background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\

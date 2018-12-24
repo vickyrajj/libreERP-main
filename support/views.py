@@ -360,7 +360,7 @@ class ReviewFilterCalAPIView(APIView):
             excelData.save(response)
             return response
             # return ExcelResponse(res)
-
+        toSend.reverse()
         return Response(toSend[offset:limit], status=status.HTTP_200_OK)
 
 

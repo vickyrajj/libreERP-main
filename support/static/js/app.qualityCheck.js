@@ -377,13 +377,16 @@ function archived(){
 
 $scope.browseTab = true;
 $scope.archiveTab = false;
+$scope.offsett=0;
+$scope.Archoffsett=0;
+$scope.limit=39;
+$scope.isLastSetOfData=false;
 
   $scope.getArchData = function(date,user,email,client,download){
     $scope.archivedData=null;
     $scope.loadingDataForArc=true;
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?status=archived&limit=15&offset='+$scope.Archoffsett
-    // var url = '/api/support/reviewHomeCal/?limit=10&offset='+$scope.offsett+'&'
+    var url = '/api/support/reviewHomeCal/?status=archived&limit='+$scope.limit+'&offset='+$scope.Archoffsett
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -416,16 +419,15 @@ $scope.archiveTab = false;
       });
     }
   }
-// innerHTML=$scope.reviewData.statusChat+'By'
-  // $scope.filterParams=[];
-$scope.offsett=0;
-$scope.Archoffsett=0;
-  $scope.isLastSetOfData=false;
+  $scope.setMyView=function(){
+    $scope.isTableView=!$scope.isTableView
+  }
+
   $scope.getData = function(date,user,email,client,download){
     $scope.reviewData=null;
     $scope.loadingData=true;
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.offsett
+    var url = '/api/support/reviewHomeCal/?limit='+$scope.limit+'&offset='+$scope.offsett
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -462,28 +464,26 @@ $scope.Archoffsett=0;
 
   $scope.loadMore=function(){
     $scope.onceClicked=true
-      $scope.offsett+=15
-        $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+      $scope.offsett+=39
+    $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
 
   }
   $scope.loadMoreArchived=function(){
     $scope.archievedOnceClicked=true
-    $scope.Archoffsett+=15
+    $scope.Archoffsett+=39
       $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
   }
   $scope.goBack=function(){
-    if($scope.offsett>=15){
-      $scope.offsett-=15
-        $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
-    }else{
-      $scope.isFirstSetOfData=true
-    }
-
+      if($scope.offsett>=39){
+        $scope.offsett-=39
+          $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+      }else{
+        $scope.isFirstSetOfData=true
+      }
   }
   $scope.goBackArchived=function(){
-
-    if($scope.Archoffsett>=15){
-      $scope.Archoffsett-=15
+    if($scope.Archoffsett>=39){
+      $scope.Archoffsett-=39
           $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
     }else{
 
@@ -620,7 +620,6 @@ $scope.Archoffsett=0;
   }
 
   $scope.addTab = function(input) {
-    // console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {

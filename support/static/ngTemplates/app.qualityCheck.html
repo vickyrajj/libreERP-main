@@ -40,6 +40,10 @@
         <button type="button" class="btn btn-default" ng-click="download()" ng-if="reviewData.length>0">
           Download <i class="fa fa-download"></i>
         </button>
+        <button type="button" class="btn btn-default" ng-click="setMyView()" ng-if="reviewData.length>0">
+           <i ng-if="!isTableView"class="fa fa-table"  aria-hidden="true"></i>
+           <i ng-if="isTableView" class="fa fa-address-card-o" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
 
@@ -69,12 +73,12 @@
               <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
             </div>
 
-            <div ng-if="!loadingData" class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData | reverse" ng-click="tableAction(reviewData.length-1-$index)">
-              <!-- {{data[0].numOfComments}} {{data[0].statusChat}} -->
+            <div ng-if="!isTableView" class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData" ng-click="tableAction($index)">
+
               <div class="container-fluid card" style="padding-bottom:0px">
                 <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:170px; opacity:0.9;letter-spacing:0.6px; {{data[0].user_id==null ? 'background-color: #fc000033':''}}; {{data[0].statusChat=='closed'?'background-color: #16e61133':'' }}">
                   <div class="col-md-12">
-                    <!-- {{data[0]}} <br> -->
+
                     <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}
                        <span ng-if="data[0].rating == 5" class="pull-right">
                          <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
@@ -117,6 +121,31 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-12" ng-if="isTableView">
+              <table style="width:100%;font-size:16px" id="myQATable">
+                 <tr id="myQATableHeader">
+                   <th style="text-align:center">Chat Start</th>
+                   <th style="text-align:center">Company</th>
+                   <th>Advisor</th>
+                   <th>UID/Visitor Name</th>
+                   <th>Rating</th>
+                   <th>Status</th>
+                 </tr>
+                 <tr ng-repeat="data in reviewData" style="text-align:center" ng-click="tableAction(reviewData.length-1-$index)">
+                   <td>{{data[0].created | date : 'dd-MMM-yyyy'}}</td>
+                   <td>{{data[0].company}}</td>
+                   <td>{{data[0].user_id | getName}}</td>
+                   <td>{{data[0].uid}}</td>
+                   <td>{{data[0].rating? data[0].rating:'-'}}</td>
+                   <td ng-if="data[0].statusChat=='closed'" style="background-color:rgba(255, 0, 0,0.7)">{{data[0].statusChat}}</td>
+                   <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td>
+                   <td ng-if="data[0].statusChat!=='started'&&data[0].statusChat!=='closed'">{{data[0].statusChat}}</td>
+                   <!-- <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td> -->
+                   <!-- <td style="background-color:red">{{data[0].statusChat}}</td>
+                   <td style="background-color:red">{{data[0].statusChat}}</td> -->
+                 </tr>
+                </table>
+            </div>
 
             <div class="" style="width: 100%;position: absolute;top:400px;left:40%;color:#f0f0f0;font-size:40px" ng-if="myDialouge">
               No More Data
@@ -126,7 +155,6 @@
               <button style="background-color:#286090;padding:5px;color:white" ng-click="goBack()" ng-if="onceClicked">Go Back</button>
               <button style="background-color:#286090;padding:5px;color:white" ng-click="loadMore()" ng-if="!myDialouge">Load More</button>
             </div>
-
 
           </div>
         </div>
@@ -138,20 +166,12 @@
         </uib-tab-heading>
 
 
-        <!-- <div class="container-fluid">
-          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
-        </div> -->
-
-
         <div class="container-fluid">
-          <!-- <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table> -->
           <div class="row" style="padding-top:25px">
-
             <div style="width: 100%;position: absolute;top:400px;left:35%;" ng-if="loadingDataForArc">
               <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
             </div>
-
-            <div class="col-md-4" style="margin-bottom:10px; padding-left:10px;padding-right:10px;" ng-repeat="data in archivedData " ng-click="tableArchAction($index)">
+            <div ng-if="!isTableView" class="col-md-4" style="margin-bottom:10px; padding-left:10px;padding-right:10px;" ng-repeat="data in archivedData " ng-click="tableArchAction($index)">
               <!-- {{data[0]}} -->
               <div class="container-fluid card" style="padding-bottom:0px">
                 <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:150px; opacity:0.9;letter-spacing:0.6px;">
@@ -189,11 +209,36 @@
                 <div class="row container-fluid" style="padding-top:10px;height:50px;background-color:#286090; opacity:1">
                   <div class="col-md-12" style="color:#fff">
                     <h5>Date: {{data[0].created | date : 'dd-MMM-yyyy'}}
-                      <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg" ng-click="tableArchAction($index)"></i></span>
+                      <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
                     </h5>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="col-md-12" ng-if="isTableView">
+              <table style="width:100%;font-size:16px" id="myQATable">
+                 <tr id="myQATableHeader">
+                   <th style="text-align:center">Chat Start</th>
+                   <th style="text-align:center">Company</th>
+                   <th>Advisor</th>
+                   <th>UID/Visitor Name</th>
+                   <th>Rating</th>
+                   <th>Status</th>
+                 </tr>
+                 <tr ng-repeat="data in archivedData" style="text-align:center" ng-click="tableArchAction($index)">
+                   <td>{{data[0].created | date : 'dd-MMM-yyyy'}}</td>
+                   <td>{{data[0].company}}</td>
+                   <td>{{data[0].user_id | getName}}</td>
+                   <td>{{data[0].uid}}</td>
+                   <td>{{data[0].rating? data[0].rating:'-'}}</td>
+                   <td ng-if="data[0].statusChat=='closed'" style="background-color:rgba(255, 0, 0,0.7)">{{data[0].statusChat}}</td>
+                   <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td>
+                   <!-- <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td>
+                   <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td> -->
+                   <!-- <td style="background-color:red">{{data[0].statusChat}}</td>
+                   <td style="background-color:red">{{data[0].statusChat}}</td> -->
+                 </tr>
+                </table>
             </div>
             <div class="" style="width: 100%;position: absolute;top:400px;left:40%;color:#f0f0f0;font-size:40px" ng-if="myDialouge">
               No More Data

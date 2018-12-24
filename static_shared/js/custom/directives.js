@@ -353,6 +353,9 @@ app.directive('chatBox', function() {
             $scope.companyName=response.data[0]
           })
 
+      setTimeout(function () {
+        document.getElementById('chatBoxdiv'+$scope.index).focus()
+      }, 1000);
 
       $scope.textAreaBehavior = function(e){
         if (e.keyCode == 13 && !e.shiftKey)

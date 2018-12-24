@@ -241,6 +241,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
   $scope.addToChat = function(indx, uid) {
+    // alert('inside add chat')
 
     addToCookie(uid, indx);
 
@@ -306,10 +307,13 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       return
     });
   }
-
+$scope.count=0;
   $scope.assignUser = function(indx, uid) {
 
     $scope.myUsers.push($scope.newUsers[indx]);
+    $scope.count++;
+    // alert('adding to chat')
+    $scope.addToChat($scope.count, uid)
     $scope.newUsers.splice(indx, 1);
 
     $http({
