@@ -48,12 +48,12 @@
       <div class="col-md-2">
         <div style="padding-right:20px;">
           <div class="row">
-            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit')">
+            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit');$event.stopPropagation();">
               <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
             </span>
           </div>
           <div class="row">
-            <span class="pull-right" style="cursor:pointer;"  mwl-confirm title="Delete" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('delete')" confirm-button-type="default" cancel-button-type="default"></i>
+            <span class="pull-right" style="cursor:pointer;"  mwl-confirm title="Delete" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('delete');$event.stopPropagation();" confirm-button-type="default" cancel-button-type="default"></i>
               <i class="fa fa-trash fa-lg" style="margin-top:15px;"></i>
             </span>
           </div>

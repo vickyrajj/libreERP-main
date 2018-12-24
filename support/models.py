@@ -87,11 +87,15 @@ class Projects(models.Model):
     clearingCharges2 = models.FloatField(default = 0)
     exRate = models.FloatField( default = 75)
     profitMargin =  models.FloatField( default = 0)
-
     poNumber =  models.CharField( max_length = 20 , null=True,blank=True)
-    
-
+    invoiceNumber = models.CharField( max_length = 20 , null=True,blank=True)
+    boeRefNumber =  models.CharField( max_length = 20 , null=True,blank=True)
+    quoteRefNumber = models.CharField( max_length = 20 , null=True,blank=True)
     vendor = models.ForeignKey(Vendor , related_name='vendor' , null = True)
+    quoteValidity = models.CharField(max_length = 200, default = "30 days from quote date")
+    terms = models.CharField(max_length = 200, default = "EX-WORKS, BRUDERER AG, Switzerland")
+    delivery = models.CharField(max_length = 200, default = "6 weeks from the date of receipt of PO and advance")
+    paymentTerms = models.CharField(max_length = 200, default = "100% advance along with order")
 
 
 

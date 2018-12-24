@@ -2,68 +2,131 @@
   <div class="container-fluid" style="padding:20px;" ng-if="form.status=='created'">
     <div class="row">
       <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
-            <div class="row">
-              <div class="col-md-12 text-left">
-                <label> Project Title : </label> {{form.title}} <br />
-                <label> Service Name :</label> {{form.service.name}} <br />
-                <label>Closing Date : </label> {{form.date}} <br />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 text-center">
-                <label> Responsible Persons : </label>
-              </div>
-              <div class="col-md-12">
-                <div ng-repeat="r in form.responsible">
-                  <div class="card container-fluid" style="padding-left:0px;position:relative;margin-top:10px">
-                    <div class="col-md-4" style="padding-top:5px;">
-                      <img ng-src="{{r | getDP}}" class="img-circle" alt="DP" height="50" width="50" />
-                    </div>
-                    <div class="col-md-8">
-                      {{r | getName}} <br>
-                      ID : <strong>{{r}}</strong>
-                    </div>
-                  </div>
+        <div class="row">
+          <div class="col-md-12 text-left">
+            <label> Project Title : </label> {{form.title}} <br />
+            <label> Service Name :</label> {{form.service.name}} <br />
+            <label>Closing Date : </label> {{form.date}} <br />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <label> Responsible Persons : </label>
+          </div>
+          <div class="col-md-12">
+            <div ng-repeat="r in form.responsible">
+              <div class="card container-fluid" style="padding-left:0px;position:relative;margin-top:10px">
+                <div class="col-md-4" style="padding-top:5px;">
+                  <img ng-src="{{r | getDP}}" class="img-circle" alt="DP" height="50" width="50" />
+                </div>
+                <div class="col-md-8">
+                  {{r | getName}} <br>
+                  ID : <strong>{{r}}</strong>
                 </div>
               </div>
             </div>
-
-            <div class="row" style="padding-top:10px">
-              <div class="col-md-12 text-center">
-                <label> Revision : </label>
-              </div>
-              <div class="col-md-12">
-                <input type="text" class="form-control text-center" ng-model="form.revision" ng-change="revision()" placeholder="Revision">
-              </div>
-
           </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-12 text-center">
-              <label> PO Number : </label>
-            </div>
-            <div class="col-md-12">
-              <input type="text" class="form-control text-center" ng-model="form.poNumber" ng-change="revision()" placeholder="PO Number">
-            </div>
+        </div>
+
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
+            <label> Revision : </label>
           </div>
-            <div class="row" style="padding-top:10px">
-              <div class="col-md-4 text-center">
-                <label> Ex Rate : </label>
-              </div>
-              <div class="col-md-6">
-                <input type="number" class="form-control text-center" ng-model="form.exRate">
-              </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.revision" ng-change="revision()" placeholder="Revision">
+          </div>
 
-            </div>
-            <div class="row" style="padding-top:10px">
-              <div class="col-md-4 text-center">
-                <label> Profit Margin : </label>
-              </div>
-              <div class="col-md-6">
-                <input type="number" class="form-control text-center" ng-model="form.profitMargin">
-              </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
+            <label> Quotation ref Number : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.quoteRefNumber" placeholder="Quotation Ref Number">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
+            <label> PO Number : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.poNumber" placeholder="PO Number">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
+            <label> Invoice Number : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.invoiceNumber" placeholder="Invoice Number">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
+            <label> BOE ref Number : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.boeRefNumber" placeholder="BOE Ref Number">
+          </div>
+        </div>
+        <div class="row text-right" style="padding-top:10px" ng-if="!options">
+          <a class="btn" href="" ng-click="showOption()"> <i class="fa fa-arrow-down"></i> View More Options </a>
+        </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> Quotation Validity : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.quoteValidity" placeholder="Quotation Validity" ng-change="validity()">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> INCO Terms : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.terms" placeholder="INCO Terms" ng-change="incoTerms()">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> Delivery : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.delivery" placeholder="Delivery" ng-change="deliverySave()">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> Payment Terms : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.paymentTerms" placeholder="Payment Terms" ng-change="paymentSave()">
+          </div>
+        </div>
+        <div class="row text-right" style="padding-top:10px" ng-if="options">
+          <a class="btn" href="" ng-click="showOption()"> <i class="fa fa-arrow-up"></i> View Less Options </a>
+        </div>
 
-            </div>
-            <!-- <div class="row" style="padding-top:10px">
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-4 text-center">
+            <label> Ex Rate : </label>
+          </div>
+          <div class="col-md-6">
+            <input type="number" class="form-control text-center" ng-model="form.exRate">
+          </div>
+
+        </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-4 text-center">
+            <label> Profit Margin : </label>
+          </div>
+          <div class="col-md-6">
+            <input type="number" class="form-control text-center" ng-model="form.profitMargin">
+          </div>
+
+        </div>
+        <!-- <div class="row" style="padding-top:10px">
               <div class="btn-group">
                 <button type="button" class="btn btn-primary " ng-click="edit();$event.stopPropagation();"> Download PO </button><br><br>
                 <button type="button" class="btn btn-primary" ng-click="delete(data.pk , index);$event.stopPropagation();"> Download Quotation In CHF</button><br><br>
@@ -73,17 +136,39 @@
 
 
           </div> -->
-          <div class="row" style="padding-top:10px">
-            <div class="btn-group">
-              <span ng-if="form.poNumber.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}"><i class="fa fa-download"></i> Download PO </a></span> <br><br>
-              <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br>
-              <span><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exrate}}&typ=CHF"><i class="fa fa-download"></i> Download Quotation In CHF </a></span><br><br>
-              <span><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exrate}}&typ=INR"><i
-                class="fa fa-download"></i> Download Quotation In INR </a> </span>
+        <div class="row" style="padding-top:10px">
+          <div class="btn-group">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-6 text-center">
+                    <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF"><i
+                        class="fa fa-download"></i> Download PO in CHF </a></span>
+                  </div>
+                  <div class="col-md-6 text-center">
+                    <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR"><i
+                          class="fa fa-download"></i> Download PO in INR </a></span>
+                  </div>
+                </div><br>
+                <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF"><i class="fa fa-download"></i>
+                    Download Quotation In CHF </a></span><br><br>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR"><i class="fa fa-download"></i>
+                    Download Quotation In INR </a> </span>
+                  </div>
+                </div>
+              </div>
             </div>
-
           </div>
+
         </div>
+      </div>
       <!-- </div> -->
       <div class="col-md-9">
         <wizard steps="projectSteps.steps" editable="false" active="form.selectedStatus" error="false"></wizard>
@@ -173,7 +258,7 @@
             <span>{{(form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100).toFixed(2)}}</span>
           </div>
           <div class="col-md-2 text-center">
-            <input type="number" class="form-control text-center" ng-model="form.assessableValueFraction">
+            <input type="number" class="form-control text-center" ng-model="form.assessableValue">
 
           </div>
         </div>
@@ -302,7 +387,7 @@
               <td>{{((v.cif*18)/100).toFixed(2)}} </td>
               <td>{{v.charge1}} </td>
               <td>{{v.charge2}} </td>
-              <td>{{(v.cif  + v.customVal + v.socialVal +  v.charge1 + v.charge2).toFixed(2)}}</td>
+              <td>{{(v.cif + v.customVal + v.socialVal +  v.charge1 + v.charge2).toFixed(2)}}</td>
               <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
             </tr>
             <tr ng-repeat="item in data track by $index">
@@ -331,7 +416,7 @@
               <td>{{((item.cif*18)/100).toFixed(2)}} </td>
               <td>{{item.charge1}} </td>
               <td>{{item.charge2}} </td>
-              <td>{{(item.cif  + item.customVal + item.socialVal +  item.charge1 + item.charge2).toFixed(2)}}</td>
+              <td>{{(item.cif + item.customVal + item.socialVal +  item.charge1 + item.charge2).toFixed(2)}}</td>
 
 
               <td>
@@ -344,11 +429,11 @@
           </tbody>
         </table>
         <div class="row" ng-if="showbutton||projects.length>0">
-        <div class="col-md-11">
-          <button type="button" class="btn btn-success pull-right" mwl-confirm title="Confirm" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="sendForApproval()"
-            confirm-button-type="default" cancel-button-type="default"> Send For Approval</button>
+          <div class="col-md-11">
+            <button type="button" class="btn btn-success pull-right" mwl-confirm title="Confirm" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="sendForApproval()"
+              confirm-button-type="default" cancel-button-type="default"> Send For Approval</button>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
@@ -458,7 +543,7 @@
             <td ng-model="total"><b>{{total.toFixed(2)}}</b</td> </tr> </tbody> </table> <div class="row">
                 <div class="col-md-12">
                   <span><a class="btn btn-primary pull-right" style="cursor:pointer;margin:10px;" target="_blank" href="/api/support/quotation/?project={{form.pk}}">Quotation<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
-                  <span><a class="btn btn-primary pull-right" style="cursor:pointer;margin:10px;" target="_blank" href="/api/support/slip/?project={{form.pk}}">PO<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+                  <span><a class="btn btn-primary pull-right" style="cursor:pointer;margin:10px;" target="_blank" href="/api/support/POSlip/?project={{form.pk}}">PO<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
                   <button type="button" class="btn btn-danger pull-right" mwl-confirm title="Reject" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="reject();"
                     confirm-button-type="default" cancel-button-type="default" style="margin:10px;"> Reject</button>
                   <button type="button" class="btn btn-success pull-right" mwl-confirm title="Accept" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="accept();"
@@ -632,7 +717,7 @@
     <div class="col-md-12">
       <span ng-if="form.savedStatus"><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" target="_blank" href="/api/support/grn/?project={{form.pk}}">GRN<i class="fa fa-download" style="font-size:1em;cursor:pointer;margin-left:1em"></i></a></span>
       <span ng-if="form.savedStatus"><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px  ;" target="_blank" href="/api/support/quotation/?project={{form.pk}}">Quotation<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
-      <span ng-if="form.savedStatus"><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" target="_blank" href="/api/support/slip/?project={{form.pk}}">PO<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+      <span ng-if="form.savedStatus"><a class="btn btn-primary pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" target="_blank" href="/api/support/POSlip/?project={{form.pk}}">PO<i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
       <button type="button" class="btn btn-success  pull-right" style="cursor:pointer;margin:30px 0 0 10px ;" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="send()"
         confirm-button-type="primary" cancel-button-type="default" ng-if="!form.savedStatus">Save</button>
     </div>
@@ -686,9 +771,9 @@
         <div class="col-md-12">
           <div class="row">
             <div class="col-md-12 text-left">
-              <label> Project Title : </label> {{form.project.title}} <br />
-              <label> Service Name :</label> {{form.project.service.name}} <br />
-              <label>Closing Date : </label> {{form.project.date}} <br />
+              <label> Project Title : </label> {{form.title}} <br />
+              <label> Service Name :</label> {{form.service.name}} <br />
+              <label>Closing Date : </label> {{form.date}} <br />
             </div>
           </div>
           <div class="row">
@@ -696,7 +781,7 @@
               <label> Responsible Persons : </label>
             </div>
             <div class="col-md-12">
-              <div ng-repeat="r in form.project.responsible">
+              <div ng-repeat="r in form.responsible">
                 <div class="card container-fluid" style="padding-left:0px;position:relative;margin-top:10px">
                   <div class="col-md-4" style="padding-top:5px;">
                     <img ng-src="{{r | getDP}}" class="img-circle" alt="DP" height="50" width="50" />

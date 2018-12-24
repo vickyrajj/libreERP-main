@@ -443,6 +443,8 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
           then(function(response) {
             var dataToSend = {
               name: $scope.form.service,
+              customerName : $scope.form.customerName,
+              email : $scope.form.email,
               mobile: $scope.form.mobile,
               about: $scope.form.about,
               address: response.data.pk,
@@ -595,10 +597,31 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       description_1: '',
       price: '',
       quantity1: 1,
+      quotePrice:0,
+      inrPrice:0,
+      packing:0,
+      insurance:0,
+      freight:0,
+      cif:0,
+      custom : 7.5,
+      customVal:0,
+      socialVal:0,
+      charge1:0,
+      charge2:0
+
+
       // landed_price:0,
     });
   }
-
+$scope.options = false
+$scope.showOption=function(){
+  if($scope.options == false){
+    $scope.options = true
+  }
+  else{
+    $scope.options = false
+  }
+}
 
 
   $scope.change = function(query) {
@@ -657,7 +680,36 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     })
   }
 
-
+  $scope.updateAll = function(){
+    for (var i = 0; i < $scope.projects.length; i++) {
+      $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin*$scope.projects[i].price)/100  + $scope.projects[i].price).toFixed(2))
+      $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
+      $scope.projects[i].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
+      $scope.projects[i].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
+      $scope.projects[i].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
+      $scope.projects[i].cif =  parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+      $scope.projects[i].cif =  parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+      $scope.projects[i].custom = 7.5
+      $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif*$scope.projects[i].custom)/100).toFixed(2))
+      $scope.projects[i].socialVal = parseFloat(((($scope.projects[i].cif*$scope.projects[i].custom)/100)/10).toFixed(2))
+      $scope.projects[i].charge1 =  parseFloat(($scope.projects[i].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+      $scope.projects[i].charge2 =  parseFloat(($scope.projects[i].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+    }
+    for (var i = 0; i < $scope.data.length; i++) {
+      $scope.data[i].quotePrice = parseFloat((($scope.form.profitMargin*$scope.data[i].price)/100  + $scope.data[i].price).toFixed(2))
+      $scope.data[i].inrPrice = parseFloat(($scope.data[i].quotePrice * $scope.form.exRate).toFixed(2))
+      $scope.data[i].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/ $scope.data[i].inrPrice).toFixed(2))
+      $scope.data[i].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.data[i].inrPrice).toFixed(2))
+      $scope.data[i].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.data[i].inrPrice).toFixed(2))
+      $scope.data[i].cif =  parseFloat(($scope.data[i].inrPrice + $scope.data[i].packing + $scope.data[i].insurance + $scope.data[i].freight).toFixed(2))
+      $scope.data[i].cif =  parseFloat(($scope.data[i].inrPrice + $scope.data[i].packing + $scope.data[i].insurance + $scope.data[i].freight).toFixed(2))
+      $scope.data[i].custom = 7.5
+      $scope.data[i].customVal = parseFloat((($scope.data[i].cif*$scope.data[i].custom)/100).toFixed(2))
+      $scope.data[i].socialVal = parseFloat(((($scope.data[i].cif*$scope.data[i].custom)/100)/10).toFixed(2))
+      $scope.data[i].charge1 =  parseFloat(($scope.data[i].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+      $scope.data[i].charge2 =  parseFloat(($scope.data[i].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+    }
+  }
 
 
 
@@ -668,17 +720,19 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     for (var i = 0; i < newValue.length; i++) {
       var totalprice = newValue[i].price*newValue[i].quantity1
       cost += totalprice
-      $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin*newValue[i].price)/100  + newValue[i].price).toFixed(2))
-      $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
-      $scope.projects[i].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].cif =  parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
-      $scope.projects[i].custom = 7.5
-      $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif*$scope.projects[i].custom)/100).toFixed(2))
-      $scope.projects[i].socialVal = parseFloat(((($scope.projects[i].cif*$scope.projects[i].custom)/100)/10).toFixed(2))
-      $scope.projects[i].charge1 =  parseFloat(($scope.projects[i].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
-      $scope.projects[i].charge2 =  parseFloat(($scope.projects[i].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+
+      // $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin*newValue[i].price)/100  + newValue[i].price).toFixed(2))
+      // $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
+      // $scope.projects[i].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
+      // $scope.projects[i].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
+      // $scope.projects[i].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
+      // $scope.projects[i].cif =  parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+      // $scope.projects[i].custom = 7.5
+      // $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif*$scope.projects[i].custom)/100).toFixed(2))
+      // $scope.projects[i].socialVal = parseFloat(((($scope.projects[i].cif*$scope.projects[i].custom)/100)/10).toFixed(2))
+      // $scope.projects[i].charge1 =  parseFloat(($scope.projects[i].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+      // $scope.projects[i].charge2 =  parseFloat(($scope.projects[i].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+
       if (typeof oldValue[i] == "undefined") {
       }
       else if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1) {
@@ -698,7 +752,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
     }
     $scope.form.invoiceValue = cost
+    $scope.updateAll()
   }, true)
+
+
+
 
   $scope.showbutton = false
   $scope.$watch('data', function(newValue, oldValue) {
@@ -710,18 +768,20 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       $scope.data[$scope.data.length - 1].quantity1 = 1
       var totalprice =   $scope.data[$scope.data.length - 1].price*$scope.data[$scope.data.length - 1].quantity1
       cost += totalprice
-      $scope.data[$scope.data.length - 1].quotePrice = parseFloat((($scope.form.profitMargin*newValue[0].price)/100  + newValue[0].price).toFixed(2))
-      $scope.data[$scope.data.length - 1].inrPrice = parseFloat(($scope.data[$scope.data.length - 1].quotePrice * $scope.form.exRate).toFixed(2))
-      $scope.data[$scope.data.length - 1].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/$scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
-      $scope.data[$scope.data.length - 1].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
-      $scope.data[$scope.data.length - 1].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
-      $scope.data[$scope.data.length - 1].cif =  parseFloat(($scope.data[$scope.data.length - 1].inrPrice + $scope.data[$scope.data.length - 1].packing + $scope.data[$scope.data.length - 1].insurance + $scope.data[$scope.data.length - 1].freight).toFixed(2))
-      $scope.data[$scope.data.length - 1].custom = 7.5
-      $scope.data[$scope.data.length - 1].customVal = parseFloat((($scope.data[$scope.data.length - 1].cif*$scope.data[$scope.data.length - 1].custom)/100).toFixed(2))
-      $scope.data[$scope.data.length - 1].socialVal = parseFloat(((($scope.data[$scope.data.length - 1].cif*$scope.data[$scope.data.length - 1].custom)/100)/10).toFixed(2))
-      $scope.data[$scope.data.length - 1].charge1 =  parseFloat(($scope.data[$scope.data.length - 1].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
-      $scope.data[$scope.data.length - 1].charge2 =  parseFloat(($scope.data[$scope.data.length - 1].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+      // $scope.data[$scope.data.length - 1].quotePrice = parseFloat((($scope.form.profitMargin*newValue[0].price)/100  + newValue[0].price).toFixed(2))
+      // $scope.data[$scope.data.length - 1].inrPrice = parseFloat(($scope.data[$scope.data.length - 1].quotePrice * $scope.form.exRate).toFixed(2))
+      // console.log($scope.form.packing,$scope.form.invoiceValue,$scope.data[$scope.data.length - 1].inrPrice,'aaaaaaaaaaa');
+      // $scope.data[$scope.data.length - 1].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/$scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
+      // $scope.data[$scope.data.length - 1].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
+      // $scope.data[$scope.data.length - 1].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
+      // $scope.data[$scope.data.length - 1].cif =  parseFloat(($scope.data[$scope.data.length - 1].inrPrice + $scope.data[$scope.data.length - 1].packing + $scope.data[$scope.data.length - 1].insurance + $scope.data[$scope.data.length - 1].freight).toFixed(2))
+      // $scope.data[$scope.data.length - 1].custom = 7.5
+      // $scope.data[$scope.data.length - 1].customVal = parseFloat((($scope.data[$scope.data.length - 1].cif*$scope.data[$scope.data.length - 1].custom)/100).toFixed(2))
+      // $scope.data[$scope.data.length - 1].socialVal = parseFloat(((($scope.data[$scope.data.length - 1].cif*$scope.data[$scope.data.length - 1].custom)/100)/10).toFixed(2))
+      // $scope.data[$scope.data.length - 1].charge1 =  parseFloat(($scope.data[$scope.data.length - 1].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+      // $scope.data[$scope.data.length - 1].charge2 =  parseFloat(($scope.data[$scope.data.length - 1].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
       $scope.form.invoiceValue += cost
+      $scope.updateAll()
       $scope.projectlist = []
       $scope.projectlist.push($scope.form.pk)
       var dataSend = {
@@ -752,18 +812,20 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       $scope.data[$scope.data.length - 1].quantity1 = 1
       var totalprice = $scope.data[$scope.data.length - 1].price*$scope.data[$scope.data.length - 1].quantity1
       cost+= totalprice
-      $scope.data[$scope.data.length - 1].quotePrice = parseFloat((($scope.form.profitMargin*$scope.data[$scope.data.length - 1].price)/100  + $scope.data[$scope.data.length - 1].price).toFixed(2))
-      $scope.data[$scope.data.length - 1].inrPrice = parseFloat(($scope.data[$scope.data.length - 1].quotePrice * $scope.form.exRate).toFixed(2))
-      $scope.data[$scope.data.length - 1].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/$scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
-      $scope.data[$scope.data.length - 1].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
-      $scope.data[$scope.data.length - 1].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
-      $scope.data[$scope.data.length - 1].cif =  parseFloat(($scope.data[$scope.data.length - 1].inrPrice + $scope.data[$scope.data.length - 1].packing + $scope.data[$scope.data.length - 1].insurance + $scope.data[$scope.data.length - 1].freight).toFixed(2))
-      $scope.data[$scope.data.length - 1].custom = 7.5
-      $scope.data[$scope.data.length - 1].customVal = parseFloat((($scope.data[$scope.data.length - 1].cif*$scope.data[$scope.data.length - 1].custom)/100).toFixed(2))
-      $scope.data[$scope.data.length - 1].socialVal = parseFloat(((($scope.data[$scope.data.length - 1].cif*$scope.data[$scope.data.length - 1].custom)/100)/10).toFixed(2))
-      $scope.data[$scope.data.length - 1].charge1 =  parseFloat(($scope.data[$scope.data.length - 1].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
-      $scope.data[$scope.data.length - 1].charge2 =  parseFloat(($scope.data[$scope.data.length - 1].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
       $scope.form.invoiceValue = cost
+      $scope.updateAll()
+      // $scope.data[$scope.data.length - 1].quotePrice = parseFloat((($scope.form.profitMargin*$scope.data[$scope.data.length - 1].price)/100  + $scope.data[$scope.data.length - 1].price).toFixed(2))
+      // $scope.data[$scope.data.length - 1].inrPrice = parseFloat(($scope.data[$scope.data.length - 1].quotePrice * $scope.form.exRate).toFixed(2))
+      // $scope.data[$scope.data.length - 1].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/$scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
+      // $scope.data[$scope.data.length - 1].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
+      // $scope.data[$scope.data.length - 1].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.data[$scope.data.length - 1].inrPrice).toFixed(2))
+      // $scope.data[$scope.data.length - 1].cif =  parseFloat(($scope.data[$scope.data.length - 1].inrPrice + $scope.data[$scope.data.length - 1].packing + $scope.data[$scope.data.length - 1].insurance + $scope.data[$scope.data.length - 1].freight).toFixed(2))
+      // $scope.data[$scope.data.length - 1].custom = 7.5
+      // $scope.data[$scope.data.length - 1].customVal = parseFloat((($scope.data[$scope.data.length - 1].cif*$scope.data[$scope.data.length - 1].custom)/100).toFixed(2))
+      // $scope.data[$scope.data.length - 1].socialVal = parseFloat(((($scope.data[$scope.data.length - 1].cif*$scope.data[$scope.data.length - 1].custom)/100)/10).toFixed(2))
+      // $scope.data[$scope.data.length - 1].charge1 =  parseFloat(($scope.data[$scope.data.length - 1].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+      // $scope.data[$scope.data.length - 1].charge2 =  parseFloat(($scope.data[$scope.data.length - 1].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
+
       $scope.projectlist = []
       $scope.projectlist.push($scope.form.pk)
       var dataSend = {
@@ -888,6 +950,55 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     then(function(response) {})
   }
 
+  $scope.validity = function() {
+    var send = {
+      quoteValidity: $scope.form.quoteValidity,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
+
+  $scope.incoTerms = function() {
+    var send = {
+      terms: $scope.form.terms,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
+
+  $scope.deliverySave = function() {
+    var send = {
+      Delivery: $scope.form.Delivery,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
+
+
+  $scope.paymentSave = function() {
+    var send = {
+      paymentTerms: $scope.form.paymentTerms,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
+
   $scope.sendForApproval = function() {
     var date = new Date().toJSON().split('T')[0]
     var sendStatus = {
@@ -918,41 +1029,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       })
     })
   }
-
-  $scope.updateAll = function(){
-    for (var i = 0; i < $scope.projects.length; i++) {
-      $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin*$scope.projects[i].price)/100  + $scope.projects[i].price).toFixed(2))
-      $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
-      $scope.projects[i].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].cif =  parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
-      $scope.projects[i].cif =  parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
-      $scope.projects[i].custom = 7.5
-      $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif*$scope.projects[i].custom)/100).toFixed(2))
-      $scope.projects[i].socialVal = parseFloat(((($scope.projects[i].cif*$scope.projects[i].custom)/100)/10).toFixed(2))
-      $scope.projects[i].charge1 =  parseFloat(($scope.projects[i].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
-      $scope.projects[i].charge2 =  parseFloat(($scope.projects[i].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
-    }
-    for (var i = 0; i < $scope.data.length; i++) {
-      $scope.data[i].quotePrice = parseFloat((($scope.form.profitMargin*$scope.data[i].price)/100  + $scope.data[i].price).toFixed(2))
-      $scope.data[i].inrPrice = parseFloat(($scope.data[i].quotePrice * $scope.form.exRate).toFixed(2))
-      $scope.data[i].packing = parseFloat((($scope.form.packing *100 / $scope.form.invoiceValue)/ $scope.data[i].inrPrice).toFixed(2))
-      $scope.data[i].insurance = parseFloat((($scope.form.insurance *100 / $scope.form.invoiceValue)/ $scope.data[i].inrPrice).toFixed(2))
-      $scope.data[i].freight = parseFloat((($scope.form.freight *100 / $scope.form.invoiceValue)/ $scope.data[i].inrPrice).toFixed(2))
-      $scope.data[i].cif =  parseFloat(($scope.data[i].inrPrice + $scope.data[i].packing + $scope.data[i].insurance + $scope.data[i].freight).toFixed(2))
-      $scope.data[i].cif =  parseFloat(($scope.data[i].inrPrice + $scope.data[i].packing + $scope.data[i].insurance + $scope.data[i].freight).toFixed(2))
-      $scope.data[i].custom = 7.5
-      $scope.data[i].customVal = parseFloat((($scope.data[i].cif*$scope.data[i].custom)/100).toFixed(2))
-      $scope.data[i].socialVal = parseFloat(((($scope.data[i].cif*$scope.data[i].custom)/100)/10).toFixed(2))
-      $scope.data[i].charge1 =  parseFloat(($scope.data[i].cif*($scope.form.clearingCharges1*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
-      $scope.data[i].charge2 =  parseFloat(($scope.data[i].cif*($scope.form.clearingCharges2*100/($scope.form.invoiceValue* $scope.form.exRate))/100).toFixed(2))
-    }
-  }
-  $scope.$watch('form.packing', function(newValue, oldValue) {
-      $scope.updateAll()
+  $scope.$watch('form.poNumber', function(newValue, oldValue) {
       var send = {
-        packing: $scope.form.packing,
+        poNumber: newValue,
       }
       $http({
         method: 'PATCH',
@@ -962,6 +1041,79 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       then(function(response) {})
 
   })
+  $scope.$watch('form.quoteRefNumber', function(newValue, oldValue) {
+      var send = {
+        quoteRefNumber: newValue,
+      }
+      $http({
+        method: 'PATCH',
+        url: '/api/support/projects/' + $scope.form.pk + '/',
+        data: send,
+      }).
+      then(function(response) {})
+
+  })
+
+  $scope.$watch('form.invoiceNumber', function(newValue, oldValue) {
+      var send = {
+        invoiceNumber: newValue,
+      }
+      $http({
+        method: 'PATCH',
+        url: '/api/support/projects/' + $scope.form.pk + '/',
+        data: send,
+      }).
+      then(function(response) {})
+
+  })
+
+
+  $scope.$watch('form.boeRefNumber', function(newValue, oldValue) {
+      var send = {
+        boeRefNumber: newValue,
+      }
+      $http({
+        method: 'PATCH',
+        url: '/api/support/projects/' + $scope.form.pk + '/',
+        data: send,
+      }).
+      then(function(response) {})
+
+  })
+
+
+  $scope.$watch('form.packing', function(newValue, oldValue) {
+
+      var send = {
+        packing: $scope.form.packing,
+      }
+      $http({
+        method: 'PATCH',
+        url: '/api/support/projects/' + $scope.form.pk + '/',
+        data: send,
+      }).
+      then(function(response) {
+        $scope.updateAll()
+      })
+
+  })
+  $scope.$watch('form.assessableValue', function(newValue, oldValue) {
+
+      var send = {
+        assessableValue: $scope.form.assessableValue,
+      }
+      $http({
+        method: 'PATCH',
+        url: '/api/support/projects/' + $scope.form.pk + '/',
+        data: send,
+      }).
+      then(function(response) {
+            $scope.updateAll()
+      })
+
+  })
+
+
   $scope.$watch('form.insurance', function(newValue, oldValue) {
     var send = {
       insurance: $scope.form.insurance,
@@ -971,8 +1123,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       url: '/api/support/projects/' + $scope.form.pk + '/',
       data: send,
     }).
-    then(function(response) {})
+    then(function(response) {
       $scope.updateAll()
+    })
   })
   $scope.$watch('form.freight', function(newValue, oldValue) {
     var send = {
@@ -983,8 +1136,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       url: '/api/support/projects/' + $scope.form.pk + '/',
       data: send,
     }).
-    then(function(response) {})
+    then(function(response) {
       $scope.updateAll()
+    })
   })
   $scope.$watch('form.clearingCharges1', function(newValue, oldValue) {
     var send = {
@@ -995,8 +1149,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       url: '/api/support/projects/' + $scope.form.pk + '/',
       data: send,
     }).
-    then(function(response) {})
+    then(function(response) {
       $scope.updateAll()
+    })
   })
   $scope.$watch('form.clearingCharges2', function(newValue, oldValue) {
     var send = {
@@ -1007,8 +1162,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       url: '/api/support/projects/' + $scope.form.pk + '/',
       data: send,
     }).
-    then(function(response) {})
+    then(function(response) {
       $scope.updateAll()
+    })
   })
   $scope.$watch('form.exRate', function(newValue, oldValue) {
     var send = {
@@ -1019,10 +1175,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       url: '/api/support/projects/' + $scope.form.pk + '/',
       data: send,
     }).
-    then(function(response) {})
-    if(newValue!=null){
-      $scope.updateAll()
-    }
+    then(function(response) {
+      if(newValue!=null){
+        $scope.updateAll()
+      }
+    })
   })
   $scope.$watch('form.profitMargin', function(newValue, oldValue) {
     var send = {
@@ -1033,8 +1190,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       url: '/api/support/projects/' + $scope.form.pk + '/',
       data: send,
     }).
-    then(function(response) {})
+    then(function(response) {
       $scope.updateAll()
+    })
   })
 
 
