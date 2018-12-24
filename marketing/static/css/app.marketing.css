@@ -1,0 +1,30 @@
+
+.square-box {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: rgb(64, 80, 87);
+
+}
+.square-box::after{
+  content: "";
+  display: block;
+  padding-top: 60%;
+}
+
+.square-box  h3 {
+    font-size: 38px;
+    font-weight: bold;
+    margin: 0px 0px 0px;
+    margin-left:10px;
+    white-space: nowrap;
+    padding: 10px;
+    color:#fff;
+}
+.square-box  .header {
+    text-align: center;
+    padding: 3px 0px;
+    color: white;
+    display: block;
+    background: rgba(0, 0, 0, 0.1) none repeat scroll 0% 0%;
+}
