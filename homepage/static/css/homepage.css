@@ -2266,17 +2266,39 @@
 }
 
 .accept_btn {
-  background-color: #f24b4b;
+  background-color: #FF6900;
   color: #fff;
   outline: 0;
   border-radius: 6px;
   z-index: 100;
-  border: 1px solid #f24b4b;
+  border: 1px solid #FF6900;
   max-width: 200px;
   padding: .3em 1.3em;
   font-size: 16px;
   top: 1vh;
   right: 5vw;
+}
+.accept_btn:hover {
+  background-color: #FF6900;
+  color: #fff;
+}
+.decline_btn {
+  position: absolute;
+  background-color: #142E5C;
+  color: #fff;
+  outline: 0;
+  border-radius: 6px;
+  z-index: 100;
+  border: 1px solid #142E5C;
+  max-width: 200px;
+  padding: .3em 1.3em;
+  font-size: 16px;
+  top: 1vh;
+  right: 11vw;
+}
+.decline_btn:hover {
+  background-color: #142E5C;
+  color: #fff;
 }
 
 /* mobile display size ends here.... */

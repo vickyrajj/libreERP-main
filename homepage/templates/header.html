@@ -5,7 +5,7 @@
     <!-- Brand and toggle get grouped for better mobile display -->
     {% verbatim %}
     <div class="navbar-header">
-      <a class="navbar-brand" href="/" style="padding:0px;"> <img src="/static/images/g2569.png" alt="" style="height:100%;"> </a>
+      <a class="navbar-brand" href="/" style="padding:0px;"> <img src="/static/images/eai_logo.png" alt="" style="height:100%;"> </a>
       <!-- <button type="button" class="btn btn-warning hidden-lg hidden-md" style="background-color:#ff6900;margin-top:10px;" ng-click="schedule()">
         Request a Demo
       </button> -->
@@ -55,7 +55,7 @@
             <li><a href="/about">About US</a></li>
             <!-- <li><a href="#">Investors</a></li> -->
             <li><a href="/career">Careers</a></li>
-            <li><a href="/conatact_us">Contact US</a></li>
+            <li><a href="/contact_us">Contact US</a></li>
           </ul>
         </li>
         <li class="header_element" ng-click="toggleNavbar = false">
@@ -87,11 +87,12 @@
   <div class="row" style="position:relative;" ng-show="show_cokie_agree">
     <div class="col-md-12 cookie_agremt">
       <div class="col-md-10">
-        <span>This website uses cookies, including third-party cookies.
-           This policy will inform you how the cookies are placed, used on this
+        <span>This website uses cookie.
+           This <a href="/policy">policy</a> will inform you how the cookies are placed, used on this
             website and how you can manage them.</span>
       </div>
       <div class=" col-md-2 common_padding">
+        <button type="button" class="btn decline_btn" ng-click="cookie(0)"style="">Decline</button>
         <button type="button" class="btn accept_btn" ng-click="cookie(0)"style="">Accept</button>
       </div>
     </div>

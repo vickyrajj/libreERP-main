@@ -146,8 +146,8 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
-    .state('conatact_us', {
-      url: "/conatact_us",
+    .state('contact_us', {
+      url: "/contact_us",
       templateUrl: '/static/ngTemplates/app.homepage.contact_us.html',
       // controller: 'controller.ecommerce.PagesDetails'
     })
@@ -1110,12 +1110,28 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     }
   }
 
+    var cookieAccepted = $rootScope.getCookie("accepted");
+    if (cookieAccepted !="") {
+      cookieAccepted = JSON.parse(cookieAccepted)
+      if (cookieAccepted.accepted) {
+        $scope.show_cokie_agree = false;
+      } else {
+        $scope.show_cokie_agree = true;
+      }
+    }else {
+      $scope.show_cokie_agree = true;
+    }
 
-  $scope.show_cokie_agree = true;
-
-  $scope.cookie = function(val) {
-    console.log('accepted');
+  var visitorDetails = $rootScope.getCookie("visitorDetails");
+  $rootScope.cookie = function(val) {
     $scope.show_cokie_agree = false;
+    if (visitorDetails !="") {
+      var uid = JSON.parse(visitorDetails).uid
+      $rootScope.setCookie("accepted", JSON.stringify({
+        'accepted': true,
+        'uid': uid
+      }), 365)
+    }
   }
 
   $scope.schedule = function(idx) {
