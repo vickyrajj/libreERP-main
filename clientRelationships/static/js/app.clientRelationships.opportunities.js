@@ -180,6 +180,7 @@ app.controller("businessManagement.clientRelationships.opportunities.created", f
 
 
 app.controller("businessManagement.clientRelationships.opportunities.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $timeout, $rootScope, $aside) {
+  console.log($scope.deal);
   $scope.disableNext = false;
   $scope.pageNo = 0;
   $scope.sms = {text : '' , include : [] , selectAll : false , preventUnselect : false}

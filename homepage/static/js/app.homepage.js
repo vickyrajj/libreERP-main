@@ -47,31 +47,31 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
-    .state('pages', {
-      url: "/pages/:title",
-      templateUrl: '/static/ngTemplates/app.homepage.page.html',
-      // controller: 'controller.ecommerce.PagesDetails'
-    })
-
-  $stateProvider
     .state('industry', {
       url: "/industry",
       templateUrl: '/static/ngTemplates/app.homepage.industry.html',
-      // controller: 'controller.blogDetails'
+      // controller: 'controller.industry'
     })
 
   $stateProvider
     .state('bpo', {
       url: "/bpo",
       templateUrl: '/static/ngTemplates/app.homepage.bpo.html',
-      // controller: 'controller.blogDetails'
+      // controller: 'controller.bpo'
     })
 
   $stateProvider
     .state('about', {
       url: "/about",
       templateUrl: '/static/ngTemplates/app.homepage.about.html',
-      // controller: 'controller.blogDetails'
+      // controller: 'controller.about'
+    })
+
+  $stateProvider
+    .state('pages', {
+      url: "/:title",
+      templateUrl: '/static/ngTemplates/app.homepage.page.html',
+      // controller: 'controller.ecommerce.PagesDetails'
     })
 
 
@@ -79,17 +79,29 @@ app.config(function($stateProvider) {
 
 });
 
-app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams) {
+app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
   console.log($stateParams);
 
   $scope.blogPk = $stateParams.pk
 
-  $http.get('/api/PIM/blog/' + $scope.blogPk).
+  $http.get('/api/PIM/blog/' + $scope.blogPk + '/').
   then(function(response) {
     $scope.blogDetail = response.data
     console.log($scope.blogDetail);
+
+    $scope.blogDetail.source = $sce.trustAsHtml($scope.blogDetail.source);
   })
+
+  $scope.fetchRecentPosts = function() {
+    $http.get('/api/PIM/blog/?limit=5').
+    then(function(response) {
+      console.log(response);
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
 
 
 });
@@ -103,7 +115,7 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
   $scope.emailAddress = '';
 
   $scope.fetchBlogs = function() {
-    $http.get('/api/PIM/blog?limit=14&offset=' + $scope.offset).
+    $http.get('/api/PIM/blog/?limit=14&offset=' + $scope.offset).
     then(function(response) {
       $scope.blogs = response.data.results;
 
@@ -119,7 +131,7 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
 
 
   $scope.fetchRecentPosts = function() {
-    $http.get('/api/PIM/blog?limit=5').
+    $http.get('/api/PIM/blog/?limit=5').
     then(function(response) {
       $scope.recentPosts = response.data.results
     });
