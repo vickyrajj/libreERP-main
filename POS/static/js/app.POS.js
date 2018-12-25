@@ -1302,7 +1302,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     if (query.length > 0) {
 
       console.log("called1");
-      var url = '/api/POS/storeQty/?product__name__contains' + query + '&limit=10'
+      var url = '/api/POS/storeQty/?product__name__icontains=' + query + '&limit=10'
       // var url = '/api/POS/product/?search=' + query + '&limit=10'
       if ($rootScope.multiStore) {
         console.log($rootScope.storepk);
