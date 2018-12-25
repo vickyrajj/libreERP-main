@@ -1193,23 +1193,7 @@ function getMonday(date) {
 }
 
 
-app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter,$rootScope) {
-
-  // $scope.modeofpayment = ["card", "netBanking", "cash", "cheque"];
-  // $scope.posShowAll = true
-  // if (settings_posScanner) {
-  //   $scope.posShowAll = false
-  // }
-
-// console.log(settings_posScanner,'@@@@@@@@@@@@@@@@@@@@@@@@');
-
-  $http({
-    method: 'POST',
-    url: '/api/POS/addProductSKU/',
-  }).
-  then(function(response) {
-
-  })
+app.controller("businessManagement.POS.default", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $aside, $filter,$rootScope, $timeout) {
 
  $scope.posShowAll = true
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=posScanner').
@@ -1285,18 +1269,6 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
 
   })
-
-  // $scope.posProductDel = false
-  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=posProduct').
-  // then(function(response) {
-  //   if(response.data[0]!=null){
-  //     if (response.data[0].flag) {
-  //       $scope.posProductDel = true
-  //     }
-  //   }
-  //   console.log($scope.posProductDel,'aaaaaaaaaaaaa');
-  // })
-
 
   $scope.productSearch = function(query) {
     if (query.length > 0) {
@@ -2580,6 +2552,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     })
   }
 
+
+  if (window.location.href.indexOf('invoice')) {
+    $scope.createInvoice();
+  }
 
 
 });
