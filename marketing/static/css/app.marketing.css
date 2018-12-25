@@ -1,30 +1,106 @@
-
 .square-box {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    background: rgb(64, 80, 87);
-
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #2A2A2A;
+  height: 15em;
 }
-.square-box::after{
+
+.box {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #2A2A2A;
+  height: 31.5em;
+}
+
+.box h3 {
+  font-size: 50px;
+  font-weight: bold;
+  margin: 0px 0px 0px;
+  margin-left: 10px;
+  white-space: nowrap;
+  padding: 10px;
+  color: #fff;
+}
+
+.box .header {
+  text-align: center;
+  padding: 10px 0px;
+  color: white;
+  display: block;
+  background: rgba(0, 0, 0, 0.1) none repeat scroll 0% 0%;
+}
+
+/* .square-box::after{
   content: "";
   display: block;
-  padding-top: 60%;
+  padding-top: 30%;
+} */
+.square-box h3 {
+  font-size: 50px;
+  font-weight: bold;
+  margin: 0px 0px 0px;
+  margin-left: 10px;
+  white-space: nowrap;
+  padding: 10px;
+  color: #fff;
 }
 
-.square-box  h3 {
-    font-size: 38px;
-    font-weight: bold;
-    margin: 0px 0px 0px;
-    margin-left:10px;
-    white-space: nowrap;
-    padding: 10px;
-    color:#fff;
+.square-box .header {
+  text-align: center;
+  padding: 10px 0px;
+  color: white;
+  display: block;
+  background: #272727 none repeat scroll 0% 0%;
 }
-.square-box  .header {
-    text-align: center;
-    padding: 3px 0px;
-    color: white;
-    display: block;
-    background: rgba(0, 0, 0, 0.1) none repeat scroll 0% 0%;
+
+.bottom {
+  position: absolute;
+  bottom: 0px;
+}
+
+.caret1:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 110px;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 30px solid #8FC564;
+}
+.caret2:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 110px;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 30px solid #E3524F;
+}
+.caret3:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 110px;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 30px solid #8FC564;
+}
+
+.carettext {
+  font-size: 50px;
+  font-weight: bold;
+  margin: 0px 0px 0px;
+  color: rgb(141, 195, 110);
+  position: absolute;
+  bottom: 40px;
+  left: 3em;
+}
+.subtext{
+  font-size: 30px;
+
 }
