@@ -285,9 +285,8 @@ class CategorySortListAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny ,)
     def get(self , request , format = None):
-        # toReturn = []
         gpList = list(genericProduct.objects.filter(parent__isnull=True).values('name','pk','restricted').annotate(img=Concat(Value('/media/'),'visual')))
-        print gpList
+        print gpList,'GPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP#####################33'
         user = request.user
         for idx, val in enumerate(gpList):
             if val['restricted']==True:
@@ -1468,6 +1467,8 @@ class PageNumCanvas(canvas.Canvas):
         compNameStyle.textColor = colors.white;
 
         p = Paragraph(settingsFields.get(name = 'companyName').value , compNameStyle)
+        # p = Paragraph('Business Network International' , compNameStyle)
+
         p.wrapOn(self , 50*mm , 10*mm)
         p.drawOn(self , 85*mm  , 18*mm)
 
@@ -1484,12 +1485,11 @@ class PageNumCanvas(canvas.Canvas):
         try:
             gstin = ab[0].value
         except :
-            gstin = '29ABCDEF1234F2Z5'
+            gstin = ''
 
-
-        p4 = Paragraph('GSTIN :'+gstin , compNameStyle)
+        p4 = Paragraph(gstin , compNameStyle)
         p4.wrapOn(self , 200*mm , 10*mm)
-        p4.drawOn(self , 80*mm  , 5*mm)
+        p4.drawOn(self , 85*mm  , 5*mm)
 
         brandLogo = globalSettings.BRAND_LOGO.split('static/')[1]
         print os.path.join(globalSettings.BASE_DIR , 'static_shared',brandLogo)
@@ -1499,7 +1499,7 @@ class PageNumCanvas(canvas.Canvas):
         drawing.scale(sx,sy)
         #if you want to see the box around the image
         # drawing._showBoundary = True
-        renderPDF.draw(drawing, self,10*mm  , self._pagesize[1]-20*mm)
+        renderPDF.draw(drawing, self,10*mm  , self._pagesize[1]-25*mm)
 
         #width = self._pagesize[0]
         # page = "Page %s of %s" % (, page_count)
@@ -1551,7 +1551,14 @@ def genInvoice(response, contract, request):
     tableData=[['Product','Quantity','Price','Total Price']]
     isStoreGlobal = False
     ab = appSettingsField.objects.filter(name='isStoreGlobal')
-    currency = '(INR)'
+    currencySymbol = appSettingsField.objects.filter(name='currencySymbol')
+    if len(currencySymbol)>0:
+        if currencySymbol[0].value == 'fa-usd':
+            currency = '(USD)'
+        else:
+            currency = '(INR)'
+    else:
+        currency = '(USD)'
     if len(ab)>0:
         if ab[0].flag:
             isStoreGlobal = True
@@ -1667,7 +1674,7 @@ def genInvoice(response, contract, request):
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal + shippingCharges, 2)
     if not isStoreGlobal:
-        tableData.append(['','','','TOTAL' + currency,total])
+        tableData.append(['','','TOTAL' + currency,'',total])
         tableData.append(['','','COUPON APPLIED(%)',promoCode,promoAmount])
         tableData.append(['','','SHIPPING CHARGES' + currency,'',shippingCharges])
         tableData.append(['','','GRAND TOTAL'+ currency,'',grandTotal])
@@ -1775,6 +1782,15 @@ def genInvoice(response, contract, request):
     t.setStyle(TableStyle([('BACKGROUND', (0, 0), (0, 0),colors.HexColor('#ffffff')),('BACKGROUND', (-1, -1), (-1,-1 ),colors.HexColor('#ffffff')) ]))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
+
+    orderNumber = contract.pk
+
+    summryParaSrc13 = """
+    <font size='8'><strong>Order Number: %s </strong></font> <br/> <br/>
+    """ % ( orderNumber)
+    story.append(Paragraph(summryParaSrc13 , styleN))
+
+
     summryParaSrc4 = """
     <font size='8'><strong>Order details:</strong></font> <br/>
     """
@@ -1791,31 +1807,31 @@ def genInvoice(response, contract, request):
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
 
-def link_callback(uri, rel):
-    """
-    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
-    resources
-    """
-    # use short variable names
-    sUrl = settings.STATIC_URL      # Typically /static/
-    sRoot = settings.STATIC_ROOT    # Typically /home/userX/project_static/
-    mUrl = settings.MEDIA_URL       # Typically /static/media/
-    mRoot = settings.MEDIA_ROOT     # Typically /home/userX/project_static/media/
-
-    # convert URIs to absolute system paths
-    if uri.startswith(mUrl):
-        path = os.path.join(mRoot, uri.replace(mUrl, ""))
-    elif uri.startswith(sUrl):
-        path = os.path.join(sRoot, uri.replace(sUrl, ""))
-    else:
-        return uri  # handle absolute uri (ie: http://some.tld/foo.png)
-
-    # make sure that file exists
-    if not os.path.isfile(path):
-            raise Exception(
-                'media URI must start with %s or %s' % (sUrl, mUrl)
-            )
-    return path
+# def link_callback(uri, rel):
+#     """
+#     Convert HTML URIs to absolute system paths so xhtml2pdf can access those
+#     resources
+#     """
+#     # use short variable names
+#     sUrl = settings.STATIC_URL      # Typically /static/
+#     sRoot = settings.STATIC_ROOT    # Typically /home/userX/project_static/
+#     mUrl = settings.MEDIA_URL       # Typically /static/media/
+#     mRoot = settings.MEDIA_ROOT     # Typically /home/userX/project_static/media/
+#
+#     # convert URIs to absolute system paths
+#     if uri.startswith(mUrl):
+#         path = os.path.join(mRoot, uri.replace(mUrl, ""))
+#     elif uri.startswith(sUrl):
+#         path = os.path.join(sRoot, uri.replace(sUrl, ""))
+#     else:
+#         return uri  # handle absolute uri (ie: http://some.tld/foo.png)
+#
+#     # make sure that file exists
+#     if not os.path.isfile(path):
+#             raise Exception(
+#                 'media URI must start with %s or %s' % (sUrl, mUrl)
+#             )
+#     return path
 
 # def genBNIInvoice(response,o, request):
 #     template_path = 'invoice.html'

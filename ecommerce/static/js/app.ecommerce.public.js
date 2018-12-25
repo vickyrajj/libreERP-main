@@ -802,25 +802,25 @@ app.controller('controller.ecommerce.PagesDetails', function($scope, $rootScope,
 
 app.controller('controller.ecommerce.details', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window, ngMeta, $filter, Flash) {
 
-$scope.call = function () {
-  var fd = new FormData()
-  fd.append('secretKey', 1234);
-  fd.append('username', 'vikas');
-  fd.append('email', 'vikas.m@cioc.in');
-  fd.append('password', 123);
-  $http({
-    method: 'POST',
-    url: '/socialMobileLogin',
-    data: fd,
-    transformRequest: angular.identity,
-    headers: {
-      'Content-Type': undefined
-    }
-  }).
-  then(function(response) {
-    location.reload();
-  })
-}
+  $scope.call = function() {
+    var fd = new FormData()
+    fd.append('secretKey', 1234);
+    fd.append('username', 'vikas');
+    fd.append('email', 'vikas.m@cioc.in');
+    fd.append('password', 123);
+    $http({
+      method: 'POST',
+      url: '/socialMobileLogin',
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+      location.reload();
+    })
+  }
 
   $scope.me = $users.get('mySelf');
   $scope.showRatings = false
@@ -2421,17 +2421,24 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
               $scope.form.city = response.data[0].city
               $scope.form.state = response.data[0].state
             } else {
-              $scope.showMessage = true
-            }
-            $http({
-              method: 'GET',
-              url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
-            }).
-            then(function(response) {
-              if (response.data.length == 0) {
+              if (settings_isServiceArea) {
                 $scope.showMessage = true
               }
-            })
+            }
+            if (settings_isServiceArea) {
+              $http({
+                method: 'GET',
+                url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
+              }).
+              then(function(response) {
+                if (response.data.length == 0) {
+                  $scope.showMessage = true
+                }
+              })
+            } else {
+              $scope.showMessage = false
+            }
+
           })
         } else if (newValue.length < 6) {
           $scope.showMessage = false
@@ -2906,17 +2913,23 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
               $scope.data.address.city = response.data[0].city
               $scope.data.address.state = response.data[0].state
             } else {
-              $scope.showMessage = true
-            }
-            $http({
-              method: 'GET',
-              url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
-            }).
-            then(function(response) {
-              if (response.data.length == 0) {
+              if (settings_isServiceArea) {
                 $scope.showMessage = true
               }
-            })
+            }
+            if (settings_isServiceArea) {
+              $http({
+                method: 'GET',
+                url: '/api/ecommerce/addPincode/?pincodes__iexact=' + newValue
+              }).
+              then(function(response) {
+                if (response.data.length == 0) {
+                  $scope.showMessage = true
+                }
+              })
+            } else {
+              $scope.showMessage = false
+            }
           })
         } else if (newValue.length < 6) {
           $scope.showMessage = false
@@ -3316,21 +3329,21 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       if (settings_isShipmentPrice) {
         $http({
           method: 'GET',
-          url: '/api/ecommerce/searchCountry/?getCountryCode='+$scope.data.address.country
+          url: '/api/ecommerce/searchCountry/?getCountryCode=' + $scope.data.address.country
         }).then(function(response) {
           console.log(response.data);
           if (response.data) {
             $scope.country = response.data[0]
-          }else {
+          } else {
             $scope.country = 'US'
           }
           $http({
             method: 'GET',
-            url: '/api/ecommerce/shipmentCharge/?country='+$scope.country+'&pincode=' + $scope.data.address.pincode + '&weight=1'
+            url: '/api/ecommerce/shipmentCharge/?country=' + $scope.country + '&pincode=' + $scope.data.address.pincode + '&weight=1'
           }).then(function(response) {
             $scope.shippingCharges = response.data
             $scope.getShippingCharges = true
-          }).catch(function (err) {
+          }).catch(function(err) {
             console.log(err);
             $scope.shippingCharges = 0
             $scope.errorInshipping = true
@@ -3361,7 +3374,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
     $scope.dataToSend.paidAmount = 0
     $scope.dataToSend.approved = false
     $scope.data.stage = 'processing'
-    if ($scope.shippingCharges>0) {
+    if ($scope.shippingCharges > 0) {
       $scope.dataToSend.shippingCharges = $scope.shippingCharges
     }
     // if ($rootScope.multiStore) {
@@ -3389,7 +3402,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.dataToSend.paidAmount = 0
     }
 
-    if ($scope.shippingCharges>0) {
+    if ($scope.shippingCharges > 0) {
       $scope.dataToSend.shippingCharges = $scope.shippingCharges
     }
 

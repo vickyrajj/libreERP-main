@@ -75,12 +75,12 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 BRAND_NAME = 'sterlingselect.com'
 SERVICE_NAME = 'Inventory, Sales and Ecommerce'
-BRAND_LOGO = '/static/images/company_icon.svg'
+BRAND_LOGO = '/static/images/bni-2.svg'
 BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
 SMART_REGISTRATION = True
 AUTO_ACTIVE_ON_REGISTER = False
 
-SEO_TITLE = 'Sterling Select'
+SEO_TITLE = 'BNI'
 SEO_DESCRIPTION = 'Sterling Select Online Shopping'
 SEO_IMG = '/static/images/company_icon.png'
 SEO_IMG_WIDTH = 1024
