@@ -122,7 +122,7 @@
                 <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus($index,'returned')" confirm-button-type="default" cancel-button-type="default" ng-if="pData.status=='returnToOrigin'">Returned</span>
               </div>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-{{checkConditions.splitOrder?7:12}}">
 
               <div class="fa fa-trash-o pull-right fa-2x" style="cursor:pointer;color:red" mwl-confirm title="Cancel Item" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="orderItemCancel($index)" confirm-button-type="default"
                 cancel-button-type="default" ng-if="order.status!='failed' && pData.status=='created' || pData.status=='packed'">
