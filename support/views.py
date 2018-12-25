@@ -221,16 +221,14 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     <para leftIndent = 10>
     <font size ='10'>
     <b>Purchase Order Ref No :</b> %s <br/>
-    <b>Quote Ref Date :</b> %s <br/>
+    <b>Purchase Order Ref Date :</b> %s <br/>
     </font></para>
     """ %(project.poNumber , project.date),styles['Normal'])
 
 
     tdheader=[[summryHeader,' ',summryHeader1]]
-    # story.append(Paragraph(summryParaSrc , styleN))
     theader=Table(tdheader,colWidths=[3*inch , 1*inch , 3*inch])
     theader.hAlign = 'LEFT'
-    # t.setStyle(TableStyle([ ]))
     elements.append(theader)
 
 
@@ -259,12 +257,9 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
 
 
     td=[[summryParaSrc,' ',summryParaSrc1]]
-    # story.append(Paragraph(summryParaSrc , styleN))
     t=Table(td,colWidths=[3*inch , 1*inch , 3*inch])
     t.hAlign = 'LEFT'
-    # t.setStyle(TableStyle([ ]))
     elements.append(t)
-    # elements.append(Spacer(2.5,0.5*cm))
 
 
 
@@ -290,79 +285,13 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
 
 
     tmachine=[[summrymachineDetails,' ',summrymachineDetails1]]
-    # story.append(Paragraph(summryParaSrc , styleN))
     tdmachine=Table(tmachine,colWidths=[3*inch , 1*inch , 3*inch])
     tdmachine.hAlign = 'LEFT'
-    # t.setStyle(TableStyle([ ]))
     elements.append(tdmachine)
-    #
-    # p1 = Paragraph("<para alignment='center'fontSize=15  ><b> PURCHASE ORDER </b></para>",styles['Normal'])
-    #
-    #
-    # elements.append(p1)
-    #
-    #
-    # if project.vendor == None:
-    #     p2 = Paragraph("<para fontSize=10 ><b>Name</b></para>",styles['Normal'])
-    #     p3 = Paragraph("<para fontSize=8  >Street</para>",styles['Normal'])
-    #     p4 =  Paragraph("<para fontSize=8 >city</para>",styles['Normal'])
-    #     p5 = Paragraph("<para fontSize=8 >state</para>",styles['Normal'])
-    #     p6 = Paragraph("<para fontSize=8 >country</para>",styles['Normal'])
-    # else:
-    #     p2 = Paragraph("<para fontSize=10 ><b>{0}</b></para>".format(project.vendor.name.upper()),styles['Normal'])
-    #     p3 = Paragraph("<para fontSize=8  >{0}</para>".format(project.vendor.street),styles['Normal'])
-    #     p4 =  Paragraph("<para fontSize=8 >{0} - {1}</para>".format(project.vendor.city,project.vendor.pincode),styles['Normal'])
-    #     p5 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.state),styles['Normal'])
-    #     p6 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.country),styles['Normal'])
-    #
-    #
-    # elements.append(Spacer(1, 10))
-    # elements.append(p2)
-    # elements.append(p3)
-    # elements.append(p4)
-    # elements.append(p5)
-    # elements.append(p6)
-    # elements.append(Spacer(1,10))
-    #
-    # p7_01 =Paragraph("<para fontSize=8>Purchase order ref</para>",styles['Normal'])
-    # p7_02 =Paragraph("<para fontSize=8>{0}</para>".format(ponumber),styles['Normal'])
-    # p7_03 =Paragraph("<para fontSize=8>Your Quotation ref</para>",styles['Normal'])
-    # p7_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    #
-    # p8_01 =Paragraph("<para fontSize=8>Purchase order date</para>",styles['Normal'])
-    # p8_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.date),styles['Normal'])
-    # p8_03 =Paragraph("<para fontSize=8>Your Quotation Date</para>",styles['Normal'])
-    # p8_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    #
-    # p9_01 =Paragraph("<para fontSize=8>Machine Model</para>",styles['Normal'])
-    # p9_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.machinemodel),styles['Normal'])
-    # p9_03 =Paragraph("<para fontSize=8>Our GST No.</para>",styles['Normal'])
-    # p9_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    #
-    # p10_01 =Paragraph("<para fontSize=8>Comm Nr</para>",styles['Normal'])
-    # p10_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.comm_nr),styles['Normal'])
-    # p10_03 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    # p10_04 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    #
-    # p11_01 =Paragraph("<para fontSize=8>Customer ref</para>",styles['Normal'])
-    # p11_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.customer_ref),styles['Normal'])
-    # p11_03 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    # p11_04 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    #
-    #
-    # data1=[[p7_01,p7_02,p7_03,p7_04],[p8_01,p8_02,p8_03,p8_04],[p9_01,p9_02,p9_03,p9_04],[p10_01,p10_02,p10_03,p10_04],[p11_01,p11_02,p11_03,p11_04]]
-    # rheights=0.2*inch,0.2*inch,0.4*inch,0.2*inch,0.2*inch #[1.1*inch,1.1*inch]
-    # cwidths=2*inch,2.4*inch,2*inch,2*inch
-    # t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
-    #
-    # elements.append(t1)
     elements.append(Spacer(1,10))
     elements.append(Paragraph("<para fontSize=8>Dear Sir,</para>",styles['Normal']))
     elements.append(Spacer(1,10))
     elements.append(Paragraph("<para fontSize=8>We are pleased to order the following items:</para>",styles['Normal']))
-
-    # tableStyle = styles['Normal'].clone['tableBodyStyle']
-    # tableStyle.fontSize = 8
 
     if currencyTyp == 'CHF':
         priceFormat = 'Unit price in CHF'
@@ -389,7 +318,6 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     data2 = []
     id=0
     for i in purchaselist:
-        # if project.status == 'created':
         id+=1
         part_no = i.products.part_no
         desc = i.products.description_1
@@ -424,7 +352,6 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     elements.append(t5)
     elements.append(t2)
     elements.append(t3)
-    # elements.append(t3)
     elements.append(Spacer(1,8))
     elements.append(Paragraph("<para fontSize=8>Notes:</para>",styles['Normal']))
     elements.append(Spacer(1,8))
@@ -435,7 +362,6 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
 
 
 def quotation(response , project , purchaselist , multNumber,typ,request):
-    print typ,'factor numberrrrrrrrrr'
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
@@ -447,29 +373,6 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
     logo.scale(sx,sy)
     elements.append(logo)
     elements.append(Spacer(1,10))
-
-    # p1 = Paragraph("<para fontSize=15  alignment='center'><b> QUOTATION </b></para>",styles['Normal'])
-    # dataquote=[[p1],[p1quote]]
-    # rheights=0.2*inch,0.2*inch#[1.1*inch,1.1*inch]
-    # cwidths=4*inch
-    # tquote=Table(dataquote,rowHeights=rheights,colWidths=cwidths)
-    # elements.append(p1)
-    # elements.append(Spacer(1,10))
-
-
-    # p2 = Paragraph("<para fontSize=10 ><b> {0} </b></para>".format(project.vendor.name.upper()),styles['Normal'])
-    # p3 = Paragraph("<para fontSize=8  >{0}</para>".format(project.vendor.street),styles['Normal'])
-    # p4 =  Paragraph("<para fontSize=8 >{0} {1}</para>".format(project.vendor.city,project.vendor.pincode),styles['Normal'])
-    # p5 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.state),styles['Normal'])
-    # p6 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.country),styles['Normal'])
-    #
-    # elements.append(Spacer(1, 10))
-    # elements.append(p2)
-    # elements.append(p3)
-    # elements.append(p4)
-    # elements.append(p5)
-    # elements.append(p6)
-    # elements.append(Spacer(1,10))
 
     summryHeader = Paragraph("""
     <para >
@@ -492,10 +395,8 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
 
 
     tdheader=[[summryHeader,' ',summryHeader1]]
-    # story.append(Paragraph(summryParaSrc , styleN))
     theader=Table(tdheader,colWidths=[3*inch , 1*inch , 3*inch])
     theader.hAlign = 'LEFT'
-    # t.setStyle(TableStyle([ ]))
     elements.append(theader)
 
 
@@ -524,14 +425,9 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
 
 
     td=[[summryParaSrc,' ',summryParaSrc1]]
-    # story.append(Paragraph(summryParaSrc , styleN))
     t=Table(td,colWidths=[3*inch , 1*inch , 3*inch])
     t.hAlign = 'LEFT'
-    # t.setStyle(TableStyle([ ]))
     elements.append(t)
-    # elements.append(Spacer(2.5,0.5*cm))
-
-
 
     summrymachineDetails = Paragraph("""
     <para >
@@ -546,62 +442,14 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
 
 
     tmachine=[[summrymachineDetails,' ','']]
-    # story.append(Paragraph(summryParaSrc , styleN))
     tdmachine=Table(tmachine,colWidths=[3*inch , 1*inch , 3*inch])
     tdmachine.hAlign = 'LEFT'
-    # t.setStyle(TableStyle([ ]))
     elements.append(tdmachine)
-
-
-
-    # p7_01 =Paragraph("<para fontSize=8>Quotation Number : </para>",styles['Normal'])
-    # p7_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.quoteRefNumber),styles['Normal'])
-    # p7_03 =Paragraph("<para fontSize=8>Your Enquiry Ref : </para>",styles['Normal'])
-    # p7_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    #
-    # p8_01 =Paragraph("<para fontSize=8>Quotation Date : </para>",styles['Normal'])
-    # p8_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.date),styles['Normal'])
-    # p8_03 =Paragraph("<para fontSize=8>Your Enquiry Date : </para>",styles['Normal'])
-    # p8_04 =Paragraph("<para fontSize=8>{0}</para>".format(project.customer_ref),styles['Normal'])
-    # #
-    # # p9_11 =Paragraph("<para fontSize=8>Revision : </para>",styles['Normal'])
-    # # p9_12 =Paragraph("<para fontSize=8>{0}</para>".format(project.revision),styles['Normal'])
-    # # p9_13 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    # # p9_14 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    #
-    # p9_01 =Paragraph("<para fontSize=8>Machine Type</para>",styles['Normal'])
-    # p9_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.machinemodel),styles['Normal'])
-    # p9_03 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    # p9_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    #
-    # p10_01 =Paragraph("<para fontSize=8>Comm Nr</para>",styles['Normal'])
-    # p10_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.comm_nr),styles['Normal'])
-    # p10_03 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    # p10_04 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    #
-    # # p11_01 =Paragraph("<para fontSize=8>Customer ref</para>",styles['Normal'])
-    # # p11_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.customer_ref),styles['Normal'])
-    # # p11_03 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    # # p11_04 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    #
-    #
-    # data1=[[p7_01,p7_02,p7_03,p7_04],[p8_01,p8_02,p8_03,p8_04],[p9_01,p9_02,p9_03,p9_04],[p10_01,p10_02,p10_03,p10_04]]
-    # rheights=0.2*inch,0.2*inch,0.4*inch,0.2*inch#[1.1*inch,1.1*inch]
-    # cwidths=2*inch,2.4*inch,2*inch,2*inch
-    # t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
-    #
-    # elements.append(t1)
-
-
-
-
     elements.append(Spacer(1,10))
     elements.append(Paragraph("<para fontSize=8>Dear Sir,</para>",styles['Normal']))
     elements.append(Spacer(1,10))
     elements.append(Paragraph("<para fontSize=8>We thank you for your enquiry and take pleasure in quoting as follows:</para>",styles['Normal']))
 
-    # tableStyle = styles['Normal'].clone['tableBodyStyle']
-    # tableStyle.fontSize = 8
 
     if typ == 'CHF':
         priceFormat = 'Unit price in CHF'
@@ -728,11 +576,11 @@ def grn(response , project , purchaselist , request):
     p1 = Paragraph("<para alignment='center'fontSize=15  ><b> Goods Received Note </b></para>",styles['Normal'])
     elements.append(p1)
 
-    p2 = Paragraph("<para fontSize=10 ><b> MOLEX India Pvt Ltd., </b></para>",styles['Normal'])
-    p3 = Paragraph("<para fontSize=8  >Sadaramangala Industrial Area</para>",styles['Normal'])
-    p4 =  Paragraph("<para fontSize=8 >CH-9320</para>",styles['Normal'])
-    p5 = Paragraph("<para fontSize=8 >Whitefield</para>",styles['Normal'])
-    p6 = Paragraph("<para fontSize=8 >Bangalore</para>",styles['Normal'])
+    p2 = Paragraph("<para fontSize=10 ><b> {0} </b></para>".format(project.vendor.name),styles['Normal'])
+    p3 = Paragraph("<para fontSize=8  >{0}</para>".format(project.vendor.street),styles['Normal'])
+    p4 =  Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.city),styles['Normal'])
+    p5 = Paragraph("<para fontSize=8 >{0}</para>".format(project.vendor.pincode),styles['Normal'])
+    p6 = Paragraph("<para fontSize=8 >{0} - {1}</para>".format(project.vendor.state, project.vendor.country),styles['Normal'])
 
     elements.append(Spacer(1, 10))
     elements.append(p2)
@@ -754,8 +602,6 @@ def grn(response , project , purchaselist , request):
 
     data1=[[p7_01,p7_02,p7_03,p7_04],[p8_01,p8_02,p8_03,p8_04]]
     t1=Table(data1,4*[2.1*inch],2*[0.2*inch])
-    # t1.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-
     elements.append(t1)
     elements.append(Spacer(1,10))
     p9_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
@@ -856,9 +702,14 @@ class QuotationAPIView(APIView):
         return response
 from reportlab.platypus.flowables import HRFlowable
 
-def materialIssued(response , value , request):
+def materialIssued(response , value ,projectPk, request):
+    
+    if value !='':
+        invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
+    elif projectPk!='':
+        data = MaterialIssueMain.objects.filter(project__id = request.GET['projectPk'])
+        invdata = data[0]
 
-    invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
@@ -899,28 +750,66 @@ def materialIssued(response , value , request):
     data2= [[p4_01,p4_02,p4_03,p4_04,p4_05]]
 
     grandtotal = 0
-    for i in list(invdata.materialIssue.values()):
+    if value !='':
+        for i in list(invdata.materialIssue.values()):
+            product = Products.objects.get(pk = i['product_id'])
+            partno = product.part_no
+            description = product.description_1
+            qty = i['qty']
+            qdata = str(qty)
+            price = i['price']
+            pdata = str(price)
+            total = qty*price
+            tdata = str(total)
+            grandtotal+=total
+            gtotal = str(grandtotal)
+            p6_01 =Paragraph(partno,styles['Normal'])
+            p6_02 =Paragraph(description,styles['Normal'])
+            p6_03 =Paragraph(qdata,styles['Normal'])
+            p6_04 =Paragraph(pdata,styles['Normal'])
+            p6_05 =Paragraph(tdata,styles['Normal'])
+            data2+=[[p6_01,p6_02,p6_03,p6_04,p6_05]]
+    else:
+        print data,'aaaaaaaaaaaaaaaa'
+        for i in data:
+            print i.materialIssue,'aaaaaaaaaaaaaaaaafffffffffffff'
+            for j in list(i.materialIssue.values()):
+                product = Products.objects.get(pk = j['product_id'])
+                partno = product.part_no
+                description = product.description_1
+                qty = j['qty']
+                qdata = str(qty)
+                price = j['price']
+                pdata = str(price)
+                total = qty*price
+                tdata = str(total)
+                grandtotal+=total
+                gtotal = str(grandtotal)
+                p6_01 =Paragraph(partno,styles['Normal'])
+                p6_02 =Paragraph(description,styles['Normal'])
+                p6_03 =Paragraph(qdata,styles['Normal'])
+                p6_04 =Paragraph(pdata,styles['Normal'])
+                p6_05 =Paragraph(tdata,styles['Normal'])
+                data2+=[[p6_01,p6_02,p6_03,p6_04,p6_05]]
 
-        product = Products.objects.get(pk = i['product_id'])
-        partno = product.part_no
-        description = product.description_1
-        qty = i['qty']
-        qdata = str(qty)
-        price = i['price']
-        pdata = str(price)
-        total = qty*price
-        tdata = str(total)
-        grandtotal+=total
-        print str(total),'aaaaaaaaaaaaa'
-        gtotal = str(grandtotal)
-
-
-        p6_01 =Paragraph(partno,styles['Normal'])
-        p6_02 =Paragraph(description,styles['Normal'])
-        p6_03 =Paragraph(qdata,styles['Normal'])
-        p6_04 =Paragraph(pdata,styles['Normal'])
-        p6_05 =Paragraph(tdata,styles['Normal'])
-        data2+=[[p6_01,p6_02,p6_03,p6_04,p6_05]]
+            # for j in list(invdata[i].materialIssue):
+            #     product = Products.objects.get(pk = j['product_id'])
+            #     partno = product.part_no
+            #     description = product.description_1
+            #     qty = j['qty']
+            #     qdata = str(qty)
+            #     price = j['price']
+            #     pdata = str(price)
+            #     total = qty*price
+            #     tdata = str(total)
+            #     grandtotal+=total
+            #     gtotal = str(grandtotal)
+            #     p6_01 =Paragraph(partno,styles['Normal'])
+            #     p6_02 =Paragraph(description,styles['Normal'])
+            #     p6_03 =Paragraph(qdata,styles['Normal'])
+            #     p6_04 =Paragraph(pdata,styles['Normal'])
+            #     p6_05 =Paragraph(tdata,styles['Normal'])
+            #     data2+=[[p6_01,p6_02,p6_03,p6_04,p6_05]]
 
     p7_01 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
     p7_02 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
@@ -972,10 +861,18 @@ class MaterialIssueMainViewSet(viewsets.ModelViewSet):
 
 class MaterialIssuedNoteAPIView(APIView):
     def get(self , request , format = None):
-        value = request.GET['value']
+        if 'value' in request.GET:
+            value = request.GET['value']
+        else:
+            value = ''
+        if 'projectPk' in request.GET:
+            projectPk = request.GET['projectPk']
+        else:
+            projectPk = ''
+
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
-        materialIssued(response , value , request)
+        materialIssued(response , value , projectPk,request)
         return response
 
 class ProductInventoryAPIView(APIView):
@@ -1032,15 +929,10 @@ class OrderAPIView(APIView):
         # for i in request.data["products"]:
         #     prodList.append(Products.objects.get(pk=i))
         #     print prodList,'llllll'
-        print  request.data
-        print  request.data["products"],'aaaaaaaa'
         prodList = request.data["products"]
         orderlist =[]
-        print type(prodList),'kkkkkkkkkkkkkkkkkkkkkkkkkk'
         for i in prodList:
-            print type(i),'lllllllllllllll'
             prodListQty = i['prodQty']
-            print prodListQty,'hhhhhhhhhh'
             invlist = Inventory.objects.filter(product=i['pk'])
             list = []
             stockList = []
