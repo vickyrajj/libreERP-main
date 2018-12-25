@@ -96,6 +96,12 @@ from PIM.models import blogPost
 from django.db.models.functions import Concat
 from openpyxl import load_workbook
 from io import BytesIO
+import sendgrid
+import os
+from svglib.svglib import svg2rlg
+
+# from sendgrid.helpers.mail import *
+
 # Create your views here.
 
 defaultSettingsData = appSettingsField.objects.filter(app_id=25)
@@ -272,6 +278,7 @@ class ShipmentChargeAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny ,)
     def get(self , request , format = None):
+        print 'hereeeeee'
         return Response(getShipmentCharges(request.GET['pincode'] , request.GET['country'] , float(request.GET['weight'])    ))
 
 class CategorySortListAPI(APIView):
@@ -416,6 +423,8 @@ class CreateOrderAPI(APIView):
             if len(str(request.data['promoCode'])) > 0:
                 data['promoCode'] = str(request.data['promoCode'])
             print data
+            if 'shippingCharges' in request.data:
+                data['shippingCharges'] = request.data['shippingCharges']
             orderObj = Order.objects.create(**data)
             for i in oQMp:
                 orderObj.orderQtyMap.add(i)
@@ -475,6 +484,8 @@ class CreateOrderAPI(APIView):
                             qtyValue = 'XL'
                         elif int(qtyData)==6:
                             qtyValue = 'XL'
+                        else:
+                            qtyValue = qtyData
                     else:
                       qtyValue = qtyData
 
@@ -516,9 +527,12 @@ class CreateOrderAPI(APIView):
                             qtyValue = 'XL'
                         elif int(qtyData)==6:
                             qtyValue = 'XL'
+                        else:
+                            qtyValue = qtyData
                     else:
                       qtyValue = qtyData
 
+                    print qtyValue ,'ddddddddddddddddddddddddddddddddd'
                     if i.desc:
                          desc = i.desc
                     else:
@@ -546,16 +560,46 @@ class CreateOrderAPI(APIView):
                 }
                 print ctx
                 email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-                # email_subject = "Order Details:"
-                # msgBody = " Your Order has been placed and details are been attached"
-                contactData.append(str(orderObj.user.email))
-                print 'aaaaaaaaaaaaaaa'
-                msg = EmailMessage("Order Details" , email_body, to= contactData  )
-                msg.content_subtype = 'html'
-                # a = str(f).split('media_root/')[1]
-                # b = str(a).split("', mode")[0]
-                # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
-                msg.send()
+                if globalSettings.EMAIL_API:
+                    sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                    # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                    data = {
+                      "personalizations": [
+                        {
+                          "to": [
+                            {
+                              "email": orderObj.user.email
+                              # str(orderObj.user.email)
+                            }
+                          ],
+                          "subject": "Invoice Details"
+                        }
+                      ],
+                      "from": {
+                        "email": globalSettings.G_FROM,
+                        "name":"BNI India"
+                      },
+                      "content": [
+                        {
+                          "type": "text/html",
+                          "value": email_body
+                        }
+                      ]
+                    }
+                    response = sg.client.mail.send.post(request_body=data)
+                    print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+
+                else:
+                    # email_subject = "Order Details:"
+                    # msgBody = " Your Order has been placed and details are been attached"
+                    contactData.append(str(orderObj.user.email))
+                    print 'aaaaaaaaaaaaaaa'
+                    msg = EmailMessage("Order Details" , email_body, to= contactData  )
+                    msg.content_subtype = 'html'
+                    # a = str(f).split('media_root/')[1]
+                    # b = str(a).split("', mode")[0]
+                    # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
+                    msg.send()
             return Response({'paymentMode':orderObj.paymentMode,'dt':orderObj.created,'odnumber':orderObj.pk}, status = status.HTTP_200_OK)
 
 
@@ -892,127 +936,183 @@ class PincodeViewSet(viewsets.ModelViewSet):
 
 
 
-def manifest(response,item):
+def manifest(response,item,typ,filTyp):
     settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
     print settingsFields.get(name = 'address').value
-    order = item.order.get()
+
     now = datetime.datetime.now()
-    print item.pk , order.pk
     print now.year,now.month,now.day
-    total = (item.totalAmount-item.discountAmount) * item.qty
+
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=1*cm,leftMargin=0.2*cm,rightMargin=0.2*cm)
     elements = []
-    if item.prodSku != item.product.product.serialNo:
-        product = ProductVerient.objects.get(sku=item.prodSku)
-        qtyData = product.unitPerpack * item.product.product.howMuch
+    txtData = []
+    if typ == 'all':
+        order = item
+        orderQtsObj = item.orderQtyMap.all()
+        courierName = orderQtsObj[0].courierName
+        courierAWBNo = orderQtsObj[0].courierAWBNo
+        total = 0
+        for i in orderQtsObj:
+            total += (i.totalAmount-i.discountAmount) * i.qty
     else:
-        qtyData =  item.product.product.howMuch
-
-    if str(item.product.product.unit)=='Gram' or str(item.product.product.unit)=='gm':
-        if qtyData >1000:
-            qtyValue = str(qtyData/1000) + ' Kg'
-        else:
-            qtyValue = str(qtyData) + ' gm'
-    elif str(item.product.product.unit)=='Millilitre' or str(item.product.product.unit)=='ml':
-        if qtyData>1000:
-            qtyValue = str(qtyData/1000) + ' lt'
-        else:
-            qtyValue = str(qtyData) + ' ml'
-    elif str(item.product.product.unit)=='Size and Color' or str(item.product.product.unit)=='Size':
-        if int(qtyData)==1:
-            qtyValue = 'XS'
-        elif int(qtyData)==2:
-            qtyValue = 'S'
-        elif int(qtyData)==2:
-            qtyValue = 'M'
-        elif int(qtyData)==4:
-            qtyValue = 'L'
-        elif int(qtyData)==5:
-            qtyValue = 'XL'
-        elif int(qtyData)==6:
-            qtyValue = 'XL'
-    else:
-      qtyValue = qtyData
-
-    if item.desc:
-         desc = item.desc
-    else:
-        desc =""
-
-    name = str(item.product.product.name)+ ' ' + str(qtyValue)+ ' ' +str(desc)
+        order = item.order.get()
+        orderQtsObj = [item]
+        courierName = item.courierName
+        courierAWBNo = item.courierAWBNo
+        total = (item.totalAmount-item.discountAmount) * item.qty
 
 
     elements.append(HRFlowable(width="100%", thickness=1, color=black,spaceAfter=10))
     if order.paymentMode == 'card':
         txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>PREPAID - DO NOT COLLECT CASH</b></para>'
+        txtData.append('PREPAID - DO NOT COLLECT CASH')
     else:
         txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(total)
+        txtData.append('CASH ON DELIVERY {0} INR'.format(total))
     elements.append(Paragraph(txt1, styles['Normal']))
     elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
     elements.append(Paragraph(txt2, styles['Normal']))
+    txtData.append('DELIVERY ADDRESS : {0}'.format(order.landMark))
+    txtData.append(str(order.street))
+    txtData.append(str(order.city) + ' - ' + str(order.pincode))
+    txtData.append(str(order.state)+' , ' + str(order.country))
     elements.append(Spacer(1, 30))
 
-    txt3 = '<para size=10 leftIndent=150 rightIndent=150><b>COURIER NAME : </b>{0}<br/><b>COURIER AWB No. : </b>{1}</para>'.format(item.courierName,item.courierAWBNo)
+    txt3 = '<para size=10 leftIndent=150 rightIndent=150><b>COURIER NAME : </b>{0}<br/><b>COURIER AWB No. : </b>{1}</para>'.format(courierName,courierAWBNo)
     elements.append(Paragraph(txt3, styles['Normal']))
-    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=5,spaceAfter=5))
+    txtData.append('COURIER NAME : {0}'.format(courierName))
+    txtData.append('COURIER AWB No. : {0}'.format(courierAWBNo))
     elements.append(Spacer(1, 10))
 
     txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'address').value)
     elements.append(Paragraph(txt4, styles['Normal']))
+    txtData.append('SOLD BY : {0}'.format(settingsFields.get(name = 'address').value))
     elements.append(Spacer(1, 3))
     txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat_tinNo').value,settingsFields.get(name = 'cstNo').value)
     elements.append(Paragraph(txt5, styles['Normal']))
+    txtData.append('VAT/TIN No. : {0}'.format(settingsFields.get(name = 'vat_tinNo').value))
+    txtData.append('CST No. : {0}'.format(settingsFields.get(name = 'cstNo').value))
     elements.append(Spacer(1, 10))
     invNo = str(now.year)+str(now.month)+str(now.day)+str(order.pk)
     txt6 = '<para size=10 leftIndent=150 rightIndent=150><b>Invoice No. : </b>{0} </para>'.format(invNo)
     elements.append(Paragraph(txt6, styles['Normal']))
-    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=30,spaceAfter=10))
+    txtData.append('Invoice No. : {0}'.format(invNo))
     elements.append(Spacer(1, 30))
-    pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(name),styles['Normal'])
-    tableData=[['Product','Price','Qty','Discount','Final Price'],[pd,item.totalAmount,item.qty,item.discountAmount,total],['TOTAL','','','',total]]
+
+    tableData=[['Product','Price','Qty','Discount','Final Price']]
+    txtData.append('Product , Price , Qty , Discount , Final Price')
+    for item in orderQtsObj:
+        if item.prodSku != item.product.product.serialNo:
+            product = ProductVerient.objects.get(sku=item.prodSku)
+            qtyData = product.unitPerpack * item.product.product.howMuch
+        else:
+            qtyData =  item.product.product.howMuch
+
+        if str(item.product.product.unit)=='Gram' or str(item.product.product.unit)=='gm':
+            if qtyData >1000:
+                qtyValue = str(qtyData/1000) + ' Kg'
+            else:
+                qtyValue = str(qtyData) + ' gm'
+        elif str(item.product.product.unit)=='Millilitre' or str(item.product.product.unit)=='ml':
+            if qtyData>1000:
+                qtyValue = str(qtyData/1000) + ' lt'
+            else:
+                qtyValue = str(qtyData) + ' ml'
+        elif str(item.product.product.unit)=='Size and Color' or str(item.product.product.unit)=='Size':
+            if int(qtyData)==1:
+                qtyValue = 'XS'
+            elif int(qtyData)==2:
+                qtyValue = 'S'
+            elif int(qtyData)==2:
+                qtyValue = 'M'
+            elif int(qtyData)==4:
+                qtyValue = 'L'
+            elif int(qtyData)==5:
+                qtyValue = 'XL'
+            elif int(qtyData)==6:
+                qtyValue = 'XL'
+            else:
+                qtyValue = qtyData
+        else:
+          qtyValue = qtyData
+
+        if item.desc:
+             desc = item.desc
+        else:
+            desc =""
+
+        name = str(item.product.product.name)+ ' ' + str(qtyValue)+ ' ' +str(desc)
+        pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(name),styles['Normal'])
+        tableData.append([pd,item.totalAmount,item.qty,item.discountAmount,(item.totalAmount-item.discountAmount) * item.qty])
+        txtData.append('{0} , {1} , {2} , {3} , {4}'.format(name,item.totalAmount,item.qty,item.discountAmount,(item.totalAmount-item.discountAmount) * item.qty))
+
+    tableData.append(['TOTAL','','','',total])
+    txtData.append('TOTAL , ' ' , ' ' , ' ' , {0}'.format(total))
 
     t1=Table(tableData,colWidths=[1.7*inch , 0.5*inch , 0.5*inch, 0.7*inch , 0.7*inch])
     t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),('BOX', (0,0), (-1,-1), 0.25, colors.black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
-    # elements.append(Indenter(left=10))
     elements.append(t1)
-    # elements.append(Indenter(left=-10))
     elements.append(Spacer(1, 10))
     if order.paymentMode != 'card':
         txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(total)
         elements.append(Paragraph(txt7, styles['Normal']))
-    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=20,spaceAfter=5))
+        txtData.append('CASH TO BE COLLECT {0} INR'.format(total))
     elements.append(Spacer(1, 20))
 
-    txt8 = '<para size=10 leftIndent=150 rightIndent=150><b>Tracking ID. : </b>{0} </para>'.format(item.courierAWBNo)
+    txt8 = '<para size=10 leftIndent=150 rightIndent=150><b>Tracking ID. : </b>{0} </para>'.format(courierAWBNo)
     elements.append(Paragraph(txt8, styles['Normal']))
+    txtData.append('Tracking ID. : {0}'.format(courierAWBNo))
     elements.append(Spacer(1, 10))
-    barVal = str(item.courierAWBNo)
+    barVal = str(courierAWBNo)
     barcode=code39.Extended39(barVal,barWidth=0.4*mm,barHeight=10*mm)
     elements.append(Indenter(left=140))
     elements.append(barcode)
     elements.append(Indenter(left=-140))
     elements.append(Spacer(1, 10))
-    # orderNo = str(now.year)+str(now.month)+str(now.day)+str(item.pk)
     txt9 = '<para size=10 leftIndent=150 rightIndent=150><b>Order ID. : </b>{0} </para>'.format(invNo)
     elements.append(Paragraph(txt9, styles['Normal']))
-    # elements.append(HRFlowable(width="50%", thickness=1, color=black,spaceBefore=5,spaceAfter=5))
+    txtData.append('Order ID. : {0}'.format(invNo))
     elements.append(Spacer(1, 5))
 
 
     doc.build(elements)
+    if filTyp=='txtFile':
+        return txtData
 
 class DownloadManifestAPI(APIView):
     renderer_classes = (JSONRenderer,)
     # permission_classes = (permissions.IsAuthenticated ,)
     def get(self , request , format = None):
         print self.request.GET
-        item = OrderQtyMap.objects.get(pk = request.GET['qPk'])
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
-        manifest(response,item)
-        return response
+        if 'trackingId' in request.GET:
+            fd = open(os.path.join(globalSettings.BASE_DIR, 'media_root/ecommerce/manifest','example_shipment_label'+request.GET['trackingId']+'.pdf'))
+            response = HttpResponse(fd, content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename=manifest.pdf'
+            return response
+        else:
+            if 'allData' in request.GET:
+                item = Order.objects.get(pk=request.GET['allData'])
+                typ='all'
+            elif 'qPk' in request.GET:
+                item = OrderQtyMap.objects.get(pk = request.GET['qPk'])
+                typ='one'
+            else:
+                return Response({}, status = status.HTTP_200_OK)
+
+            ab = appSettingsField.objects.filter(name='posPrinting')
+            if len(ab)>0:
+                if ab[0].flag:
+                    dt = manifest('textResponse',item,typ,'txtFile')
+                    resData = '\n'.join(dt)
+                    response = HttpResponse(resData,content_type='text/plain')
+                    response['Content-Disposition'] = 'attachment;filename="manifest.txt"'
+                    return response
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
+            manifest(response,item,typ,'pdfFile')
+            return response
 
 class SendStatusAPI(APIView):
     renderer_classes = (JSONRenderer,)
@@ -1050,8 +1150,40 @@ class SendStatusAPI(APIView):
             msgBody = "Product has been returned to origin"
         elif productStatus == 'returned':
             msgBody ="Product has been returned"
-        msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
-        msg.send()
+
+        print emailAddr[0],'ffffffffffff'
+
+        if globalSettings.EMAIL_API:
+            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            data = {
+              "personalizations": [
+                {
+                  "to": [
+                    {
+                      "email": emailAddr[0]
+                      # str(orderObj.user.email)
+                    }
+                  ],
+                  "subject": "Invoice Details"
+                }
+              ],
+              "from": {
+                "email": globalSettings.G_FROM,
+                "name":"BNI India"
+              },
+              "content": [
+                {
+                  "type": "text/html",
+                  "value": msgBody
+                }
+              ]
+            }
+            response = sg.client.mail.send.post(request_body=data)
+            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        else:
+            msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
+            msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
 class SendDeliveredStatus(APIView):
@@ -1094,10 +1226,40 @@ class SendDeliveredStatus(APIView):
         }
         print ctx
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
-        msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
-        msg.content_subtype = 'html'
-        # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
-        msg.send()
+        if globalSettings.EMAIL_API:
+            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            data = {
+              "personalizations": [
+                {
+                  "to": [
+                    {
+                      "email": o.user.email
+                      # str(orderObj.user.email)
+                    }
+                  ],
+                  "subject": "Invoice Details"
+                }
+              ],
+              "from": {
+                "email": globalSettings.G_FROM,
+                "name":"BNI India"
+              },
+              "content": [
+                {
+                  "type": "text/html",
+                  "value": email_body
+                }
+              ]
+            }
+            response = sg.client.mail.send.post(request_body=data)
+            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+
+        else:
+            msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
+            msg.content_subtype = 'html'
+            # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
+            msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
 
@@ -1111,9 +1273,8 @@ class SendFeedBackAPI(APIView):
         # responseData = BeautifulSoup(response, 'html.parser')
         responseData = Markup(response)
         emailAddr.append(supportObj.email)
-
         ctx = {
-            'heading' : " On response to your Feed Back",
+            'heading' : "On response to your Feed Back",
             'linkUrl': globalSettings.BRAND_NAME,
             'sendersAddress' : globalSettings.SEO_TITLE,
             'question' : supportObj.message,
@@ -1124,9 +1285,38 @@ class SendFeedBackAPI(APIView):
         }
         print ctx
         email_body = get_template('app.ecommerce.support.email.html').render(ctx)
-        msg = EmailMessage("Response" , email_body, to= emailAddr)
-        msg.content_subtype = 'html'
-        msg.send()
+        if globalSettings.EMAIL_API:
+            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            data = {
+              "personalizations": [
+                {
+                  "to": [
+                    {
+                      "email": supportObj.email
+                      # str(orderObj.user.email)
+                    }
+                  ],
+                  "subject": "On response to your Feed Back"
+                }
+              ],
+              "from": {
+                "email": globalSettings.G_FROM,
+                "name":"BNI India"
+              },
+              "content": [
+                {
+                  "type": "text/html",
+                  "value": email_body
+                }
+              ]
+            }
+            response = sg.client.mail.send.post(request_body=data)
+            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        else:
+            msg = EmailMessage("Response" , email_body, to= emailAddr)
+            msg.content_subtype = 'html'
+            msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
 
@@ -1288,10 +1478,22 @@ class PageNumCanvas(canvas.Canvas):
 
         p2 = Paragraph( settingsFields.get(name = 'contactDetails').value, compNameStyle)
         p2.wrapOn(self , 200*mm , 10*mm)
-        p2.drawOn(self , 40*mm  , 4*mm)
+        p2.drawOn(self , 40*mm  , 1*mm)
 
-        from svglib.svglib import svg2rlg
-        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'company_icon.svg'))
+        ab = appSettingsField.objects.filter(name='GST')
+        try:
+            gstin = ab[0].value
+        except :
+            gstin = '29ABCDEF1234F2Z5'
+
+
+        p4 = Paragraph('GSTIN :'+gstin , compNameStyle)
+        p4.wrapOn(self , 200*mm , 10*mm)
+        p4.drawOn(self , 80*mm  , 5*mm)
+
+        brandLogo = globalSettings.BRAND_LOGO.split('static/')[1]
+        print os.path.join(globalSettings.BASE_DIR , 'static_shared',brandLogo)
+        drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared', brandLogo))
         sx=sy=0.5
         drawing.width,drawing.height = drawing.minWidth()*sx, drawing.height*sy
         drawing.scale(sx,sy)
@@ -1347,6 +1549,14 @@ def genInvoice(response, contract, request):
     else:
         promoCode="None"
     tableData=[['Product','Quantity','Price','Total Price']]
+    isStoreGlobal = False
+    ab = appSettingsField.objects.filter(name='isStoreGlobal')
+    currency = '(INR)'
+    if len(ab)>0:
+        if ab[0].flag:
+            isStoreGlobal = True
+    if not isStoreGlobal:
+        tableData=[['Product','Quantity','Price' + currency,'GST (%)','Total Price'+currency]]
     for i in contract.orderQtyMap.all():
         print i.desc,'ssssssssssssss'
         if str(i.status)!='cancelled':
@@ -1356,7 +1566,6 @@ def genInvoice(response, contract, request):
                 price=round(price, 2)
                 totalprice = i.qty*price
                 totalprice=round(totalprice, 2)
-                total+=totalprice
                 total=round(total, 2)
                 if i.desc:
                     desc =i.desc
@@ -1386,17 +1595,26 @@ def genInvoice(response, contract, request):
                         qtyValue = 'XL'
                     elif int(qtyData)==6:
                         qtyValue = 'XL'
+                    else:
+                        qtyValue = qtyData
                 else:
                   qtyValue = qtyData
                 name = str(i.product.product.name) + ' '  + str(qtyValue) + ' ' +str(desc)
-                tableData.append([name,i.qty,price,totalprice])
+                if not isStoreGlobal:
+                    if i.product.product.productMeta is None:
+                        tableData.append([name,i.qty,price,'',totalprice])
+                    else:
+                        totalprice = totalprice + (i.product.product.productMeta.taxRate * totalprice)/100
+                        tableData.append([name,i.qty,price,i.product.product.productMeta.taxRate,totalprice])
+                else:
+                    tableData.append([name,i.qty,price,totalprice])
+                total+=totalprice
             else:
                 prodData = ProductVerient.objects.get(sku = i.prodSku)
                 price = prodData.discountedPrice
                 price=round(price, 2)
                 totalprice = i.qty*price
                 totalprice=round(totalprice, 2)
-                total+=totalprice
                 total=round(total, 2)
                 if i.desc:
                     desc =i.desc
@@ -1426,20 +1644,43 @@ def genInvoice(response, contract, request):
                         qtyValue = 'XL'
                     elif int(qtyData)==6:
                         qtyValue = 'XL'
+                    else:
+                        qtyValue = qtyData
                 else:
                   qtyValue = qtyData
 
 
                 name = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' +str(desc)
-                tableData.append([name,i.qty,price,totalprice])
 
+                if not isStoreGlobal:
+                    if i.product.product.productMeta is None:
+                        tableData.append([name,i.qty,price,'',totalprice])
+                    else:
+                        print 'i.qty,price,i.product.product.productMeta.taxRate',i.qty,price,i.product.product.productMeta.taxRate
+                        totalprice = totalprice + (i.product.product.productMeta.taxRate * totalprice)/100
+                        tableData.append([name,i.qty,price,i.product.product.productMeta.taxRate,totalprice])
+                    tableData.append([name,i.qty,price,'',totalprice])
+                else:
+                    tableData.append([name,i.qty,price,totalprice])
+                total+=totalprice
+    shippingCharges = contract.shippingCharges
     grandTotal=total-(promoAmount * total)/100
-    grandTotal=round(grandTotal, 2)
-    tableData.append(['','','TOTAL (INR)',total])
-    tableData.append(['','COUPON APPLIED(%)',promoCode,promoAmount])
-    tableData.append(['','','GRAND TOTAL (INR)',grandTotal])
-    t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 1.5*inch , 1.5*inch])
-    t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#bdd3f4')) ]))
+    grandTotal=round(grandTotal + shippingCharges, 2)
+    if not isStoreGlobal:
+        tableData.append(['','','','TOTAL' + currency,total])
+        tableData.append(['','','COUPON APPLIED(%)',promoCode,promoAmount])
+        tableData.append(['','','SHIPPING CHARGES' + currency,'',shippingCharges])
+        tableData.append(['','','GRAND TOTAL'+ currency,'',grandTotal])
+        t1=Table(tableData,colWidths=[2.8*inch , 0.8*inch , 1.5*inch, 0.8*inch , 1.5*inch])
+
+    else:
+        tableData.append(['','','TOTAL'+currency,total])
+        tableData.append(['','COUPON APPLIED(%)',promoCode,promoAmount])
+        tableData.append(['','SHIPPING CHARGES','',shippingCharges])
+        tableData.append(['','','GRAND TOTAL'+currency,grandTotal])
+        t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 0.8*inch , 1.5*inch])
+
+    t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#f0f0f0')) ]))
     if ecommerceSetting.get(name = 'gstEnabled').flag == True:
         gst = """
         <font size='6'><strong>GST : </strong></font>
@@ -1466,41 +1707,72 @@ def genInvoice(response, contract, request):
     """
     story.append(Paragraph(summryParaSrc3 , styleN))
 
-    summryParaSrc = Paragraph("""
-    <para backColor = '#bdd3f4' leftIndent = 10>
-    <font size='6'><strong>Your Billing Address:</strong></font> <br/>
-    <font size='6'>
-    %s %s<br/>
-    %s <br/>
-    %s <br/>
-    %s %s - %s<br/>
-    India<br/>
-    %s<br/>
-    %s  %s
-    </font>
-    </para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.mobileNo,gst,gstVal),styles['Normal'])
+    if isStoreGlobal:
+        summryParaSrc = Paragraph("""
+        <para backColor = '#ffffff' leftIndent = 10>
+        <font size='6'><strong>Your Billing Address:</strong></font> <br/>
+        <font size='6'>
+        %s %s<br/>
+        %s <br/>
+        %s <br/>
+        %s %s - %s<br/>
+        %s <br/>
+        %s
+        </font>
+        </para>
+        """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.country, contract.mobileNo),styles['Normal'])
+    else:
+        summryParaSrc = Paragraph("""
+        <para backColor = '#ffffff' leftIndent = 10>
+        <font size='6'><strong>Your Billing Address:</strong></font> <br/>
+        <font size='6'>
+        %s %s<br/>
+        %s <br/>
+        %s <br/>
+        %s %s - %s<br/>
+        %s <br/>
+        %s<br/>
+        %s  %s
+        </font>
+        </para>
+        """ %(contract.user.first_name , contract.user.last_name , contract.billingLandMark , contract.billingStreet , contract.billingCity , contract.billingState , contract.billingPincode, contract.country, contract.mobileNo,gst,gstVal),styles['Normal'])
 
 
-    summryParaSrc1 = Paragraph("""
-    <para backColor = #bdd3f4 leftIndent = 10>
-    <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
-    <font size='6'>
-    %s %s<br/>
-    %s <br/>
-    %s <br/>
-    %s %s - %s<br/>
-    India<br/>
-    %s<br/>
-    %s %s
-    </font></para>
-    """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.mobileNo,gst,gstVal),styles['Normal'])
+    if isStoreGlobal:
+        summryParaSrc1 = Paragraph("""
+        <para backColor = #ffffff leftIndent = 10>
+        <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
+        <font size='6'>
+        %s %s<br/>
+        %s ,
+        %s <br/>
+        %s %s - %s<br/>
+        %s<br/>
+        %s
+        </font></para>
+        """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.country, contract.mobileNo),styles['Normal'])
+    else:
+        summryParaSrc1 = Paragraph("""
+        <para backColor = #ffffff leftIndent = 10>
+        <font size='6'><strong>Your Shipping Address:</strong></font> <br/>
+        <font size='6'>
+        %s %s<br/>
+        %s ,
+        %s <br/>
+        %s %s - %s<br/>
+        %s<br/>
+        %s<br/>
+        %s %s
+        </font></para>
+        """ %(contract.user.first_name , contract.user.last_name , contract.landMark , contract.street , contract.city , contract.state , contract.pincode, contract.country, contract.mobileNo,gst,gstVal),styles['Normal'])
+
+
 
 
     td=[[summryParaSrc,' ',summryParaSrc1]]
     # story.append(Paragraph(summryParaSrc , styleN))
     t=Table(td,colWidths=[3*inch , 1*inch , 3*inch])
-    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (0, 0),colors.HexColor('#bdd3f4')),('BACKGROUND', (-1, -1), (-1,-1 ),colors.HexColor('#bdd3f4')) ]))
+    t.setStyle(TableStyle([('BACKGROUND', (0, 0), (0, 0),colors.HexColor('#ffffff')),('BACKGROUND', (-1, -1), (-1,-1 ),colors.HexColor('#ffffff')) ]))
     story.append(t)
     story.append(Spacer(2.5,0.5*cm))
     summryParaSrc4 = """
@@ -1519,22 +1791,76 @@ def genInvoice(response, contract, request):
     pdf_doc.build(story,onFirstPage=addPageNumber, onLaterPages=addPageNumber, canvasmaker=PageNumCanvas)
 
 
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
+    resources
+    """
+    # use short variable names
+    sUrl = settings.STATIC_URL      # Typically /static/
+    sRoot = settings.STATIC_ROOT    # Typically /home/userX/project_static/
+    mUrl = settings.MEDIA_URL       # Typically /static/media/
+    mRoot = settings.MEDIA_ROOT     # Typically /home/userX/project_static/media/
+
+    # convert URIs to absolute system paths
+    if uri.startswith(mUrl):
+        path = os.path.join(mRoot, uri.replace(mUrl, ""))
+    elif uri.startswith(sUrl):
+        path = os.path.join(sRoot, uri.replace(sUrl, ""))
+    else:
+        return uri  # handle absolute uri (ie: http://some.tld/foo.png)
+
+    # make sure that file exists
+    if not os.path.isfile(path):
+            raise Exception(
+                'media URI must start with %s or %s' % (sUrl, mUrl)
+            )
+    return path
+
+# def genBNIInvoice(response,o, request):
+#     template_path = 'invoice.html'
+#     context = {'myvar': {'name':'vikas'}}
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+#     template = get_template(template_path)
+#     html = template.render(context)
+#     pisaStatus = pisa.CreatePDF(
+#        html, dest=response, link_callback=link_callback)
+#     if pisaStatus.err:
+#        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+#     return response
+
 
 class DownloadInvoiceAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
         response = HttpResponse(content_type='application/pdf')
         o = Order.objects.get(pk=request.GET['value'])
+        # invoice = 'bni'
+        # if invoice=='bni':
+        #     template_path = 'invoice.html'
+        #     context = {'myvar': {'name':'vikas'}}
+        #     response = HttpResponse(content_type='application/pdf')
+        #     response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        #     template = get_template(template_path)
+        #     html = template.render(context)
+        #     pisaStatus = pisa.CreatePDF(
+        #        html, dest=response, link_callback=link_callback)
+        #     if pisaStatus.err:
+        #        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        #     return response
+        # else:
         print o
         response['Content-Disposition'] = 'attachment; filename="invoice%s_%s.pdf"' % (
              datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)
         genInvoice(response, o, request)
+
         f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/invoice%s_%s.pdf' %
                               ( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)), 'wb')
         f.write(response.content)
         f.close()
-        # return Response(status=status.HTTP_200_OK)
         return response
+
 
 class RatingViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -1967,16 +2293,67 @@ class SearchCountryAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny , )
     def get(self , request , format = None):
+        if 'getCountryCode' in request.GET:
+            toReturn = []
+            try:
+                c = Countries.objects.filter(name__iexact = request.GET['getCountryCode'])
+                if len(c)>0:
+                    toReturn.append(c[0].sortname)
+                else:
+                    toReturn.append('US')
+                return Response(toReturn, status = status.HTTP_200_OK)
+            except:
+                toReturn = ['US']
+                return Response(toReturn, status = status.HTTP_200_OK)
+
         if 'country' in request.GET:
-            print 'country'
+            print 'state' , request.GET['country'], request.GET['query']
             states = States.objects.filter(name__icontains=request.GET['query'], country_id = request.GET['country'])
-            print 'hj',len(states)
+            print len(states)
             return Response(list(states.values())[:10], status = status.HTTP_200_OK)
         elif 'state' in request.GET:
-            print 'state'
             city = Cities.objects.filter(name__icontains=request.GET['query'], state_id = request.GET['state'])
-            print 'city',len(city)
             return Response(list(city.values())[:10], status = status.HTTP_200_OK)
         else:
             countries = Countries.objects.filter(Q(name__icontains=request.GET['query']) | Q(sortname__icontains=request.GET['query']))
             return Response(list(countries.values())[:10], status = status.HTTP_200_OK)
+
+from create_shipment import createShipment
+class CreateShipmentAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny , )
+    def get(self , request , format = None):
+        print request.GET ,'ddddddddd'
+        order = Order.objects.get(pk = int(request.GET['orderPk']))
+        recipientCompany = 'company'
+        try:
+            recipientName =  order.user
+        except:
+            recipientName = 'recipientName'
+        try:
+            recipientPhone = int(order.mobileNo)
+        except:
+            recipientPhone = 9999999999
+        try:
+            recipientAddress = str(order.landMark) +" "+ str(order.street)
+        except:
+            recipientAddress = 'recipientAddress'
+        try:
+            city = order.city
+        except:
+            city = 'city'
+        try:
+            state = 'VA'
+        except:
+            state = 'state'
+        try:
+            country = 'US'
+        except:
+            country = 'US'
+        try:
+            pincode = 20171
+        except:
+            pincode = 20171
+        weight = 1.0
+        awbPath , trackingID = createShipment(recipientName , recipientCompany , recipientPhone , [recipientAddress] ,  city, state , pincode , country,  weight)
+        return Response({'awbPath':awbPath,'trackingID':trackingID,'courierName':'Fedex'}, status = status.HTTP_200_OK)

@@ -455,6 +455,15 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
         model = OrderQtyMap
         fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc')
 
+    def create(self , validated_data):
+        print '******************' , self.context['request'].data
+        l = OrderQtyMap(**validated_data)
+        if 'product' in self.context['request'].data:
+            lstObj = listing.objects.get(pk = int(self.context['request'].data['product']))
+            l.product = lstObj
+        l.save()
+        return l
+
     def update(self ,instance, validated_data):
         print 'updateeeeeeeeeeeeeeeeeee'
         for key in ['product', 'qty' ,'totalAmount' , 'status' , 'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','desc']:
@@ -521,6 +530,20 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges')
         read_only_fields = ('user',)
+
+    def update(self ,instance, validated_data):
+        print 'updateeeeeeeeeeeeeeeeeee Orderrrrrrr'
+        for key in ['totalAmount' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        if 'addingNewQty' in self.context['request'].data:
+            instance.orderQtyMap.add(OrderQtyMap.objects.get(pk = int(self.context['request'].data['orderQtyMap'])))
+            instance.save()
+        return instance
+
     def get_promoDiscount(self, obj):
         pD = Promocode.objects.filter(name = obj.promoCode)
         promoDiscount = 0

@@ -1697,6 +1697,16 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       return response.data;
     })
   }
+  $scope.form.cMobileRequired = false
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=customerAddress').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.form.cMobileRequired = true
+      }
+    }
+  })
   $scope.openInvoiceCustomerForm = function(){
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.Invoice.newCustomer.form.html',
@@ -1874,6 +1884,10 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     })
   }
   $scope.payPopup = function() {
+    if ($scope.form.cMobileRequired && typeof $scope.form.customer != 'object') {
+      Flash.create('danger', 'Please Add The Customer Address')
+      return;
+    }
     if ($rootScope.multiStore) {
       if (typeof $scope.storeForm.name == 'string') {
         Flash.create('danger', 'Please Select The Store')

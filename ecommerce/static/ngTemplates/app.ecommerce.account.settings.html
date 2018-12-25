@@ -21,34 +21,68 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 col-xs-6">
-          <div class="form-group">
-            <label>Pincode : </label>
-            <input ng-model="form.pincode" type="text" class="form-control" placeholder="Pincode...">
+      <div ng-if="isStoreGlobal">
+        <div class="row">
+          <div class="col-md-6 col-xs-6">
+            <div class="form-group">
+              <label>Country : </label>
+              <input ng-model="form.country" uib-typeahead="c.name as c.name for c in countrySearch($viewValue)" type="text" class="form-control" placeholder="Country...">
+            </div>
+          </div>
+          <div class="col-md-6 col-xs-6" >
+            <div class="form-group">
+              <label>State : </label>
+              <input ng-model="form.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue)" type="text" class="form-control" placeholder="State..." ng-disabled="!showAddressForm.state">
+            </div>
           </div>
         </div>
-        <div class="col-md-6 col-xs-6" >
-          <div class="form-group">
-            <label>City : </label>
-            <input ng-model="form.city" type="text" class="form-control" placeholder="City..." disabled>
+        <div class="row">
+          <div class="col-md-6 col-xs-6">
+            <div class="form-group">
+              <label>City : </label>
+              <input ng-model="form.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue)" type="text" class="form-control" placeholder="City..." ng-disabled="!showAddressForm.city">
+            </div>
+          </div>
+          <div class="col-md-6 col-xs-6">
+            <div class="form-group">
+              <label>Pincode : </label>
+              <input ng-model="form.pincode" type="text" class="form-control" placeholder="Pincode...">
+            </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 col-xs-6">
-          <div class="form-group">
-            <label>State : </label>
-            <input ng-model="form.state" type="text" class="form-control" placeholder="State..." disabled>
+      {{isStoreGlobal}}ddd
+      <div ng-if="!isStoreGlobal">
+        <div class="row">
+          <div class="col-md-6 col-xs-6">
+            <div class="form-group">
+              <label>Pincode : </label>
+              <input ng-model="form.pincode" type="text" class="form-control" placeholder="Pincode...">
+            </div>
+          </div>
+          <div class="col-md-6 col-xs-6" >
+            <div class="form-group">
+              <label>City : </label>
+              <input ng-model="form.city" type="text" class="form-control" placeholder="City..." disabled>
+            </div>
           </div>
         </div>
-        <div class="col-md-6 col-xs-6">
-          <div class="form-group">
-            <label>Country : </label>
-            <input ng-model="form.country" type="text" class="form-control">
+        <div class="row">
+          <div class="col-md-6 col-xs-6">
+            <div class="form-group">
+              <label>State : </label>
+              <input ng-model="form.state" type="text" class="form-control" placeholder="State..." disabled>
+            </div>
+          </div>
+          <div class="col-md-6 col-xs-6">
+            <div class="form-group">
+              <label>Country : </label>
+              <input ng-model="form.country" type="text" class="form-control" placeholder="Country..." disabled>
+            </div>
           </div>
         </div>
       </div>
+
       <div class="form-group">
         <input type="checkbox" ng-model="form.primary">
         <label>Primary Address </label></br>

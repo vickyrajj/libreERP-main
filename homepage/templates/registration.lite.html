@@ -85,6 +85,7 @@
                               <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)'  maxlength="10" ng-model="form.mobile" type="text" class="form-control floatInput" required/>
                               <span class="floating-label">Phone *</span>
                               <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
+                              <p class="help-text text-danger" ng-if="usernameExist">Phone number is already taken!</p>
                             </div>
                           </div>
                         </div>
@@ -230,6 +231,7 @@
 <script src="{% static 'js/app.homepage.registration.lite.js' %}"></script>
 <script type="text/javascript">
    var mobile = "{{mobile}}";
+   var autoActiveReg = "{{autoActiveReg}}";
 </script>
 
 {% endblock %}
