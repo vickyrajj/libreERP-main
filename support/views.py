@@ -355,7 +355,7 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     elements.append(Spacer(1,8))
     elements.append(Paragraph("<para fontSize=8>Notes:</para>",styles['Normal']))
     elements.append(Spacer(1,8))
-    elements.append(Paragraph("<para fontSize=8>Yours faithfully</para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=8>Yours faithfully <br/> BRUDERER PRESSES INDIA PVT LTD.,</para>",styles['Normal']))
 
     doc.build(elements)
 
@@ -703,7 +703,7 @@ class QuotationAPIView(APIView):
 from reportlab.platypus.flowables import HRFlowable
 
 def materialIssued(response , value ,projectPk, request):
-    
+
     if value !='':
         invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
     elif projectPk!='':
