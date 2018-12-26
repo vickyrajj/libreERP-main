@@ -475,6 +475,7 @@ app.controller('genericTableItem' , function($scope , $uibModal){
   // anything passed in the rowScope variable in the generic-table directive is available (without binding) to the modal's controller (in the $scope variable)
   // as well as the table row scope (in $scope.rowScope variable)
   $scope.edit = function(){
+    console.log("heeeeeeeeerrrrrrrreeeeeeeeee",$scope.data);
     $uibModal.open({
       templateUrl: $scope.editorTemplate,
       size: 'lg',

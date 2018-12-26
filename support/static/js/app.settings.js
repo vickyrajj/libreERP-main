@@ -58,6 +58,9 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
   var multiselectOptions = [{
     icon: 'fa fa-plus',
     text: 'upload'
+  },{
+    icon: 'fa fa-plus',
+    text: 'new'
   }, ];
 
 
@@ -66,17 +69,21 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
     views: views,
     url: '/api/support/products/',
     searchField: 'part_no',
-    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1'],
+    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1', 'gst', 'customs_no'],
     checkbox: false,
+    deletable:true,
     multiselectOptions: multiselectOptions,
+    editorTemplate:'/static/ngTemplates/app.settings.newProduct.html',
     itemsNumPerView: [16, 32, 48],
   }
 
 
   $scope.tableAction = function(target, action, mode) {
     if (action == 'upload') {
-
       $scope.uploadProduct()
+    }
+    else if (action == 'new') {
+      $scope.newProduct()
     }
   }
 
@@ -121,6 +128,14 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
     });
   }
 
+  $scope.newProduct = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.settings.newProduct.html',
+      size: 'lg',
+      controller:'businessManagement.settings.newProduct'
+    });
+  }
+
   // $scope.tabs = [];
   // $scope.searchTabActive = true;
   //
@@ -144,6 +159,47 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
   //     $scope.tabs.push(input)
   //   }
   // }
+
+
+})
+
+
+app.controller('businessManagement.settings.newProduct', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
+  $scope.mode = 'new'
+  $scope.reset=function(){
+    $scope.data={
+      part_no : '',
+      description_1:'',
+      description_2:'',
+      weight:0,
+      price:0,
+      customs_no:'',
+      gst:18,
+      custom:7.5
+    }
+  }
+  $scope.reset()
+  $scope.save = function() {
+    if($scope.mode=="new"){
+      var method = 'POST'
+      var url='/api/support/products/'
+    }
+    else{
+      var method = 'PATCH'
+      var url = '/api/support/products/'+$scope.data.pk +'/'
+    }
+    var send = $scope.data
+    $http({
+      method: method,
+      url: url,
+      data: send,
+    }).
+    then(function(response) {
+      if($scope.mode=="new"){
+        $scope.reset()
+      }
+    })
+  }
 
 
 })

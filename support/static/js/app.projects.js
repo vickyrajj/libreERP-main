@@ -189,18 +189,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
   }
 
-  $timeout(function() {
-    $scope.addTab({
-      "title": "Project Details : dfdsfsd",
-      "cancel": true,
-      "app": "projectDetails",
-      "data": {
-        "pk": 1,
-        "index": 0
-      },
-      "active": true
-    })
-  }, 1000)
+
 
   $scope.tableActionArchieve = function(target, action, mode) {
     console.log(target, action, mode, 'fffffffffgggggggggggggggg');
@@ -586,7 +575,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   } else {
     $scope.form = $scope.data.tableData[$scope.tab.data.index];
   }
-  // $scope.form.exRate = 75;
+
 
   $scope.updateStatus=function(){
     for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
@@ -657,21 +646,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
 
   $scope.projects = []
-  $scope.fetchData = function(index) {
-    $http({
-      method: 'GET',
-      url: '/api/support/bom/?project=' + $scope.form.pk
 
-    }).
-    then(function(response) {
-      $scope.projects = response.data
-      for (var i = 0; i < $scope.projects.length; i++) {
-        var totalprice = $scope.projects[i].price * $scope.projects[i].quantity1
-        $scope.form.invoiceValue += totalprice
-      }
-
-    })
-  }
 
   $scope.updateAll = function() {
     for (var i = 0; i < $scope.projects.length; i++) {
@@ -710,10 +685,24 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }
   }
 
+  $scope.fetchData = function(index) {
+    $http({
+      method: 'GET',
+      url: '/api/support/bom/?project=' + $scope.form.pk
 
+    }).
+    then(function(response) {
+      $scope.projects = response.data
+      for (var i = 0; i < $scope.projects.length; i++) {
+        var totalprice = $scope.projects[i].price * $scope.projects[i].quantity1
+        $scope.form.invoiceValue += totalprice
+        $scope.updateAll()
+      }
+
+    })
+  }
 
   $scope.deleteTable = function(val, index) {
-    console.log(val, index,'fffffffffffffffffff');
     if ($scope.data[index].pk != undefined) {
       console.log(val,$scope.productpk[index].products.part_no,'heeeeeeerrrrrrrrrrrrrrreeeeeeeeeeeeee');
           if (val === $scope.productpk[index].products.part_no) {
@@ -1004,7 +993,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       $scope.updateStatus()
       Flash.create('success', 'Saved');
       link = window.location
-      console.log(response.data, 'aaaaaa');
+
       $http({
         method: 'POST',
         url: '/api/support/sendEmail/',

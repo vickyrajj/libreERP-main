@@ -919,22 +919,22 @@ class ProductInventoryAPIView(APIView):
             returnData ={'data' :toReturn,'total':total }
         return Response(returnData,status=status.HTTP_200_OK)
 
-
+import json, ast
 class OrderAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def post(self , request , format = None):
+        print request.data["user"],'hhhhhhhhh'
         user =  User.objects.get(pk=request.data["user"])
         project = Projects.objects.get(pk=request.data["project"])
-        # prodList =[]
-        # for i in request.data["products"]:
-        #     prodList.append(Products.objects.get(pk=i))
-        #     print prodList,'llllll'
-        prodList = request.data["products"]
+        if type(request.data["products"])==unicode:
+            prodList = ast.literal_eval(request.data["products"])
+        else:
+            prodList = request.data["products"]
         orderlist =[]
         for i in prodList:
             prodListQty = i['prodQty']
             invlist = Inventory.objects.filter(product=i['pk'])
-            list = []
+            listData = []
             stockList = []
             price = 0
             if prodListQty!=0:

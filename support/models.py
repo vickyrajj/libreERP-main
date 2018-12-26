@@ -32,14 +32,17 @@ class ProductSheet(models.Model):
 class Products(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     part_no = models.CharField(max_length=20, unique=True , null=True)
-    description_1 = models.CharField(max_length=100, null=True)
-    description_2 = models.CharField(max_length=100, null=True)
-    weight = models.FloatField(null=True)
-    price = models.FloatField(null=True)
+    description_1 = models.CharField(max_length=100, null=True,blank =True)
+    description_2 = models.CharField(max_length=100, null=True,blank =True)
+    weight = models.FloatField(null=True,blank =True)
+    price = models.FloatField(null=True,blank =True)
     parent = models.ForeignKey('self', related_name='parentProduct', null=True)
     sheet = models.ForeignKey(ProductSheet, related_name='productsSheet', null=True)
-    customs_no = models.CharField(max_length=15, null=True)
-    bar_code = models.CharField(max_length=50, null=True)
+    customs_no = models.CharField(max_length=15, null=True,blank =True)
+    bar_code = models.CharField(max_length=50, null=True,blank =True)
+    gst = models.FloatField(default = 18)
+    custom = models.FloatField(default = 7.5)
+
 
 class Test(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -54,8 +57,8 @@ class Vendor(models.Model):
     pincode = models.CharField(max_length = 20 , null = True,blank =True)
     country = models.CharField(max_length = 20 , null = True,blank =True)
     mobile = models.CharField(max_length = 12 , null = True,blank =True)
-    gst = models.CharField(max_length = 20 , null = True,)
-    email = models.EmailField(null = True,)
+    gst = models.CharField(max_length = 20 , null = True)
+    email = models.EmailField(null = True)
 
 
 class Projects(models.Model):

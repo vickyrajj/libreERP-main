@@ -21,7 +21,7 @@ from django.core.exceptions import SuspiciousOperation
 class ProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
-        fields = ('pk', 'created', 'part_no','description_1','description_2','parent','weight','price','customs_no','sheet','bar_code')
+        fields = ('pk', 'created', 'part_no','description_1','description_2','parent','weight','price','customs_no','sheet','bar_code','gst','custom')
 
 
 
