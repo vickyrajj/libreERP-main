@@ -31,7 +31,6 @@
 }
 
 
-
 .toplevelmenuOption:hover{
 	background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;;
 	cursor:pointer;
@@ -677,6 +676,15 @@ body {
     color: #ffffff;
     background-color: var(--headerNavbarHighlight);
   }
+
+	.pagination > li > a {
+		padding: 0px 7px !important;
+	}
+
+	.pagination > li > .input-group{
+		display: none !important;
+	}
+
 }
 
 

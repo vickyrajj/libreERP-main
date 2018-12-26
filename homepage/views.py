@@ -140,6 +140,15 @@ class UpdateInfoAPI(APIView):
         u.set_password(d['password'])
         u.backend = 'django.contrib.auth.backends.ModelBackend'
         u.save()
+
+        try:
+            pobj = profile.objects.get(pk=u.profile.pk)
+            pObj.details = pObj.details + d
+        except :
+            pass
+
+
+
         # ctx = {
         #     'userData':d
         # }

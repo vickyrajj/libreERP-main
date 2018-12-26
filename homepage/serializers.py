@@ -19,6 +19,8 @@ from django.core.mail import send_mail, EmailMessage
 import ast
 import sendgrid
 import os
+import unicodedata
+
 
 def sendMail(d):
     ctx = {
@@ -130,8 +132,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
                     # u.is_active = True
                     u.save()
-                    if 'email' in d:sendMail(d)
-                    print u.profile.pk
+                    if 'email' in d:
+                        sendMail(d)
+                    print u.profile.pk ,'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG'
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
                         pobj.details = d
@@ -219,7 +222,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                             u.is_staff = False
                     u.save()
                     if 'email' in d:sendMail(d)
-                    print u.profile.pk
+                    print u.profile.pk ,'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
                         pobj.details = d
@@ -255,6 +258,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
                 instance.delete()
                 print u, u.profile, u.profile.pk, u.profile.mobile ,'ddddddddd'
+                print d ,'fffffffffffffffffffffff'.typ(d)
+                djson = unicodedata.normalize('NFKD', d).encode('ascii','ignore')
+                print d,'fffffffffffffffffffffffffffffffffffffffffffffff'
                 pobj = profile.objects.get(user=u)
                 pobj.mobile = d['mobile']
                 try:
