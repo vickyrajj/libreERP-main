@@ -1,9 +1,9 @@
 <div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.projects.service.item" ng-click="rowActionClicked('details');$event.stopPropagation();">
-  <div class="container-fluid card" style="border: 1px solid rgb(51, 122, 183);cursor:pointer;">
+  <div class="container-fluid card" style="border: 2px solid {{data.status=='created'?'#b8b5b3':''}}{{data.status=='sent_for_approval'?'#F08080':''}}{{data.status=='approved'?'#449d44':''}}{{data.status=='ongoing'?'#337ab7':''}};cursor:pointer;">
     <div class="row text-center" style="height:6vh;">
-      <div class="col-md-1" style="position:relative;display:block;color:{{data.status=='created'?'#F4F2F1':''}}{{data.status=='sent_for_approval'?'#F08080':''}}{{data.status=='approved'?'#91cf91':''}}{{data.status=='ongoing'?'#9bd5f9':''}}">
+      <!-- <div class="col-md-1" style="position:relative;display:block;color:{{data.status=='created'?'#b8b5b3':''}}{{data.status=='sent_for_approval'?'#F08080':''}}{{data.status=='approved'?'#d9534f':''}}{{data.status=='ongoing'?'#337ab7':''}}">
         <i class="fa fa-circle fa-lg" style="margin-top:10px;"></i>
-    </div>
+    </div> -->
       <div class="col-md-11" style="position:relative;display:block;">
         <div class="row" style="padding-left:10px;">
           <h3>{{data.title}}</h3>
