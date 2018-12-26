@@ -29,7 +29,7 @@ app.controller("businessManagement.customerSettings", function($scope, $state, $
   $scope.cpForm = {};
   $http({
     method: 'GET',
-    url: '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+    url: '/api/support/reviewHomeCal/?customer&customerProfilePkList&offset=15&limit=15',
   }).
   then(function(response) {
     console.log(response.data);

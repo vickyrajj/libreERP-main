@@ -2593,7 +2593,6 @@ setInterval(function () {
     setTimeout(function () {
       var id = document.getElementById("chatBox_content");
       id.scrollTop = id.scrollHeight;
-      console.log(id.scrollTop,'****************9');
     }, 200);
   }
 
@@ -2602,13 +2601,13 @@ setInterval(function () {
     if (agentPk) {
         connection.session.call(wamp_prefix+'service.support.heartbeat.' + agentPk, []).then(
           function (res) {
-           // console.log("Result:", res);
            isAgentOnline = true;
            onlineStatus.innerHTML = 'Online';
+           console.log('online');
          },
          function (err) {
-          // console.log("Error:", err);
           isAgentOnline = false;
+          console.log('offline ' , err);
           onlineStatus.innerHTML = 'Away';
         }
        );

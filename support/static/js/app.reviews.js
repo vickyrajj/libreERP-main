@@ -23,7 +23,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
 
   $http({
     method: 'GET',
-    url: '/api/support/reviewHomeCal/?customer',
+    url:'/api/support/reviewHomeCal/?customer&limit=15&offset=15',
   }).
   then(function(response) {
     $scope.reviewData = response.data
@@ -71,7 +71,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
 
   $scope.getData = function(date,email,download){
     console.log('@@@@@@@@@@@@@@@@@@',date,email,download);
-    var url = '/api/support/reviewHomeCal/?'
+    var url = '/api/support/reviewHomeCal/?customer&limit=15&offset=15'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }

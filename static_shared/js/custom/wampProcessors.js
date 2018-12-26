@@ -467,15 +467,15 @@ var hasAccesss=true;
         }
       }
       console.log(scope.me.pk+'heeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+
       session.register(wamp_prefix+'service.support.heartbeat.'+scope.me.pk, heartbeat).then(
-        function (res) {
-          console.log("registered to service.support.heartbeat iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-        },
-        function (err) {
-          console.log("failed to registered: ");
-        }
-      );
-      console.log(scope.me.pk);
+          function (res) {
+            console.log("registered to service.support.heartbeat with "+scope.me.pk);
+          },
+          function (err) {
+            console.log("failed to registered: ");
+          }
+        );
     }
   }
 
@@ -510,8 +510,8 @@ setTimeout(function () {
       console.log("failed to registered: " + err);
     }
   );
-}, 100);
 
+}, 100);
 
 
 
@@ -522,7 +522,7 @@ setTimeout(function () {
     function(err) {
       console.log("failed to subscribed: " + err);
     }
-  );
+   );
   session.subscribe(wamp_prefix+'service.notification.' + wampBindName, processNotification).then(
     function(sub) {
       console.log("subscribed to topic 'notification'");

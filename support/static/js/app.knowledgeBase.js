@@ -28,7 +28,7 @@ app.controller("businessManagement.customerKnowledgeBase", function($scope, $sta
   $scope.custDetailsPk;
   $http({
     method: 'GET',
-    url: '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+    url: '/api/support/reviewHomeCal/?customer&customerProfilePkList&offset=15&limit=15',
   }).
   then(function(response) {
     console.log(response.data);
