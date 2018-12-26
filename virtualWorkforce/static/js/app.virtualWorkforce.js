@@ -70,23 +70,72 @@ app.config(function($stateProvider) {
 
 app.controller('businessManagement.virtualWorkforce.default', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   // settings main page controller
-  $scope.labels = ["Download Sales", "In-Store Sales"];
-  $scope.data = [70, 30];
-  $scope.labels1 = ["Download Sales", "In-Store Sales"];
-  $scope.data1 = [30, 70];
+  var ctx = document.getElementById("myChart");
+  var data = {
+    labels: [
+      "Blue",
+      "Yellow"
+    ],
+    datasets: [{
+      data: [300, 50],
+      backgroundColor: [
+        "#36A2EB",
+        "#FFCE56"
+      ],
+      hoverBackgroundColor: [
+        "#36A2EB",
+        "#FFCE56"
+      ]
+    }]
+  };
+  var myDoughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: {
+      rotation: 1 * Math.PI,
+      circumference: 1 * Math.PI
+    }
+  });
+  var ctxx = document.getElementById("myChart1");
+  var datas = {
+    labels: [
+      "Blue",
+      "Yellow"
+    ],
+    datasets: [{
+      data: [50, 300],
+      backgroundColor: [
+        "#36A2EB",
+        "#FFCE56"
+      ],
+      hoverBackgroundColor: [
+        "#36A2EB",
+        "#FFCE56"
+      ]
+    }]
+  };
+  var myDoughnutChart = new Chart(ctxx, {
+    type: 'doughnut',
+    data: datas,
+    options: {
+      rotation: 1 * Math.PI,
+      circumference: 1 * Math.PI
+    }
+  });
 
-  $scope.barlabels = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16'];
+
+  $scope.barlabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16'];
 
   $scope.bardata = [
-    [28, 48, 40, 19, 86, 27, 90,34,55,21,32,32,32,45,56,45]
+    [28, 48, 40, 19, 86, 27, 90, 34, 55, 21, 32, 32, 32, 45, 56, 45]
   ];
 
   new Chart(document.getElementById("line-chart"), {
     type: 'line',
     data: {
-      labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','', '', '', '', '', '', '', '', '', ''],
+      labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
       datasets: [{
-        data: [860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478, 860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478,860, -114, 1060, -306, 107, -888, -133, 1000,],
+        data: [860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478, 860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478, 860, -114, 1060, -306, 107, -888, -133, 1000, ],
         label: "",
         borderColor: "#1DA381",
         fill: false,
@@ -95,8 +144,8 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
       }]
     },
     options: {
-      legend:{
-        display:false
+      legend: {
+        display: false
       },
       scales: {
         xAxes: [{
@@ -132,9 +181,9 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
   new Chart(document.getElementById("line-chart1"), {
     type: 'line',
     data: {
-      labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','', '', '', '', '', '', '', '', '', ''],
+      labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
       datasets: [{
-        data: [860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478, 860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478,860, -114, 1060, -306, 107, -888, -133, 1000,],
+        data: [860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478, 860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478, 860, -114, 1060, -306, 107, -888, -133, 1000, ],
         label: "",
         borderColor: "#1DA381",
         fill: false,
@@ -143,8 +192,8 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
       }]
     },
     options: {
-      legend:{
-        display:false
+      legend: {
+        display: false
       },
       scales: {
         xAxes: [{
@@ -180,9 +229,9 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
   new Chart(document.getElementById("line-chart2"), {
     type: 'line',
     data: {
-      labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','', '', '', '', '', '', '', '', '', ''],
+      labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
       datasets: [{
-        data: [860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478, 860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478,860, -114, 1060, -306, 107, -888, -133, 1000,],
+        data: [860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478, 860, -114, 1060, -306, 107, -888, -133, 1000, -783, 2478, 860, -114, 1060, -306, 107, -888, -133, 1000, ],
         label: "",
         borderColor: "#1DA381",
         fill: false,
@@ -191,8 +240,8 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
       }]
     },
     options: {
-      legend:{
-        display:false
+      legend: {
+        display: false
       },
       scales: {
         xAxes: [{
