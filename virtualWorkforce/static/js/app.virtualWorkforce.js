@@ -73,19 +73,16 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
   var ctx = document.getElementById("myChart");
   var data = {
     labels: [
-      "Blue",
-      "Yellow"
+      "Green",
+      "Grey"
     ],
     datasets: [{
       data: [300, 50],
       backgroundColor: [
-        "#36A2EB",
-        "#FFCE56"
+        "#1DA381",
+        "#ECECEC"
       ],
-      hoverBackgroundColor: [
-        "#36A2EB",
-        "#FFCE56"
-      ]
+
     }]
   };
   var myDoughnutChart = new Chart(ctx, {
@@ -99,19 +96,16 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
   var ctxx = document.getElementById("myChart1");
   var datas = {
     labels: [
-      "Blue",
-      "Yellow"
+      "Green",
+      "Grey"
     ],
     datasets: [{
       data: [50, 300],
       backgroundColor: [
-        "#36A2EB",
-        "#FFCE56"
+        "#1DA381",
+        "#ECECEC"
       ],
-      hoverBackgroundColor: [
-        "#36A2EB",
-        "#FFCE56"
-      ]
+
     }]
   };
   var myDoughnutChart = new Chart(ctxx, {
