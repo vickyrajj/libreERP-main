@@ -4,47 +4,44 @@
 
       <!-- middle part -->
        <div class="col-md-10" style="padding:0px; min-height:92vh;">
-        <div class="col-md-3 anim-in-out anim-fade" style="padding:0px;height:92vh;border-right:2px #eeeeee solid;" ng-repeat="cust in chatsInView">
+        <div class="col-md-3 anim-in-out anim-fade" style="width:24%;padding:0px;height:92vh;border-right:2px #eeeeee solid;" ng-repeat="cust in chatsInView">
           <chat-box data = "cust" index="$index" id="chatBox{{cust.uid}}" close-chat="closeChatBox" webRtcAddress = "webRtcAddress" ></chat-box>
         </div>
       </div>
       <!-- right side part -->
-       <div class="col-md-2" style="padding:0px; background-color:var(--themeMain);color:white; min-height:92vh;">
+       <div class="col-md-2" style="padding:0px;overflow: hidden;position: fixed;top: 50px;bottom: 0;right: 0;background-color:var(--themeMain);color:white; min-height:92vh;">
 
         <div class="container-fluid" style="padding:0px;">
           <div class="container-fluid"style="border:1px solid #474444">
-          <div class="row" style="margin-top:10px;margin-bottom:10px;">
-            <div class="col-md-9">
-              <span><b>My Users</b></span><br>
+          <div class="row" style="margin:5px 0px">
+            <div style="padding:8px" class="col-xs-9">
+              <span ><b>My Users</b></span><br>
             </div>
-            <div class="col-md-2">
+            <div class="col-xs-3">
               <button class="btn btn-default" style="background-color:var(--themeMain);color:white;">{{myUsers.length}}</button>
             </div>
           </div>
         </div>
           <ul class="nav nav-sidebar-inverse" style="width:100%;">
-            <!-- <li ng-repeat="x in newUsers" ng-click="data.xInView = $index" class="ripple "> -->
             <li ng-repeat="x in myUsers track by $index"  class="ripple animated fadeIn">
               <a>
                 <div class="row" style="cursor:pointer">
                   <div class="container-fluid">
-                    <div class="col-md-10"  ng-click="addToChat($index , x.uid); x.unreadMsg=0">
-                      <!-- <div class="row">
-                        <span> {{x.uid}}</span>
-                      </div> -->
+                    <div class="col-xs-11"  ng-click="addToChat($index , x.uid); x.unreadMsg=0">
+
                       <div class="row">
                         <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline>0 ? '#37a508':'#ff0022'}}"></i>
-                        <!-- {{x.name}} -->
                         <span ng-if="x.name" >{{x.name}}</span>
                         <span ng-if="!x.name" >{{x.uid}}</span>
                         <span ng-if="!x.boxOpen && x.unreadMsg>0" >( {{x.unreadMsg}} )</span>
                         <span ng-if="x.video&&!x.closeIframe"><i class="fa fa-video-camera" aria-hidden="true"></i></span>
                         <span ng-if="x.audio&&!x.closeIframe"><i class="fa fa-volume-up" aria-hidden="true"></i></span>
+                        <i style="padding:2px" ng-if="!x.isOnline" class="fa fa-times fa-lg pull-right" ng-click="chatClose($index,x.chatThreadPk);"></i>
                       </div>
                     </div>
-                    <div class="col-md-2">
+                    <!-- <div class="col-xs-2">
                       <i ng-if="!x.isOnline" class="fa fa-times fa-lg" ng-click="chatClose($index,x.chatThreadPk);"></i>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </a>
@@ -55,11 +52,11 @@
 
         <div class="container-fluid" style="padding:0px;">
           <div class="container-fluid"style="border:1px solid #474444">
-          <div class="row" style="margin-top:10px;margin-bottom:10px;">
-            <div class="col-md-9">
+          <div class="row" style="margin:5px 0px">
+            <div style="padding:8px" class="col-xs-9">
               <span><b>New Users</b></span><br>
             </div>
-            <div class="col-md-2">
+            <div class="col-xs-2">
               <button class="btn btn-default" style="background-color:var(--themeMain);color:white;">{{newUsers.length}}</button>
             </div>
           </div>
@@ -70,16 +67,12 @@
               <a>
                 <div class="row" style="cursor:pointer" >
                   <div class="container-fluid">
-                    <div class="col-md-12">
-                      <!-- <div class="row">
-                        <span >{{x.uid}}</span>
-                      </div> -->
+                    <div class="col-xs-12">
                       <div class="row">
                         <i class="fa fa-circle" aria-hidden="true" style="color:{{x.isOnline ? '#37a508':'#ff0022'}}"></i><span> {{x.uid}} </span>
                         <span ng-if="x.messages.length>0">( {{x.messages.length}} )</span>
                         <span ng-if="x.video"><i class="fa fa-video-camera" aria-hidden="true"></i></span>
                       </div>
-
                     </div>
                   </div>
                 </div>

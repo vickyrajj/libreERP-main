@@ -442,7 +442,7 @@ var hasAccesss=true;
           console.log(args[2]);
           alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
           scope.myUsers.push(args[2]);
-          connection.session.publish(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
+          connection.session.call(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -491,26 +491,26 @@ var hasAccesss=true;
     checkOnline();
   }, 10000)
 
-  session.subscribe(wamp_prefix+'service.support.agent', supportChatResponse).then(
+  session.register(wamp_prefix+'service.support.agent', supportChatResponse).then(
     function(sub) {
-      console.log("subscribed to topic 'supportChatResponse'");
+      console.log("registered to topic 'supportChatResponse'");
     },
     function(err) {
-      console.log("failed to subscribed: " + err);
+      console.log("failed to registered: " + err);
     }
   );
 
 setTimeout(function () {
   var scope = angular.element(document.getElementById('main')).scope();
-  session.subscribe(wamp_prefix+'service.support.agent.'+scope.me.pk, supportChatResponse).then(
+  session.register(wamp_prefix+'service.support.agent.'+scope.me.pk, supportChatResponse).then(
     function(sub) {
-      console.log("subscribed to topic 'supportChatResponse'");
+      console.log("registered to topic 'supportChatResponse'");
     },
     function(err) {
-      console.log("failed to subscribed: " + err);
+      console.log("failed to registered: " + err);
     }
   );
-}, 1500);
+}, 100);
 
 
 

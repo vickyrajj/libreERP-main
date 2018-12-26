@@ -34,10 +34,14 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
     $scope.showw=false;
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
+  // $scope.brandName = BRAND_NAME;
+  $scope.brandName = 'Syrow';
   $timeout(function() {
     $scope.isCustomer = $permissions.myPerms('app.customer.access')
     console.log($scope.isCustomer);
     $scope.showw=true;
+    console.log($scope.me);
+    // $scope.brandName = 'Customer';
   }, 3000);
 
 

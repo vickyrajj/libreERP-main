@@ -337,7 +337,8 @@ var linkStyle = document.createElement('link');
     linkStyle.rel = 'stylesheet';
     linkStyle.href = 'https://fonts.googleapis.com/css?family=Muli';
     document.head.appendChild(linkStyle);
-
+var failedMessages=[];
+var trySendingAgain=[];
 
 // Define our viewport meta values
 var viewports = {
@@ -575,6 +576,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
      console.log("session established!");
      // connectionIsOff=false
      // document.getElementById('noConnection').style.display='none'
+     // var div2 = document.createElement("div");
+     // div2.id = "bubble";
+     // messageBox.appendChild(div2);
 
     var supportChat = function(args) {
       console.log(args);
@@ -599,13 +603,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
 
       if (args[0]=='T') {
+
+        document.getElementById('TypingBox').style.display="block"
+
         console.log('typingggggggggggggggggggggg');
         onlineStatus.innerHTML = 'Typing...';
         // isTyping.style.display = "";
+        // console.log(message,'message');
+        // div2.innerHTML = messageDiv('...')
+
+        scroll();
         setTimeout(function(){
+            document.getElementById('TypingBox').style.display="none"
+
           // isTyping.style.display = "none";
+          // messageBox.removeChild(div2);
+          // list.removeChild(list.childNodes[0]);
         onlineStatus.innerHTML = 'Online';
-        }, 1500);
+      }, 5000);
         return
       }
 
@@ -759,19 +774,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
     );
 
-    session.subscribe(wamp_prefix+'service.support.chat.' + uid, supportChat).then(
+    session.register(wamp_prefix+'service.support.chat.' + uid, supportChat).then(
       function (sub) {
         subs=sub
-        // alert("subscribed to topic 'service.support.chat'" , uid)
         console.log("subscribed to topic 'service.support.chat'" , uid );
+        enableTextArea()
       },
       function (err) {
         console.log("failed to subscribed: " + err);
+        disableTextArea()
       }
     );
-
-
-
   };
 
     connection.onclose = function (session) {
@@ -809,7 +822,7 @@ function createChatDiv() {
           '</div>'+
           '<div id="chatBox_content" class="chatBox_content">'+
             '<div id="messageBox" class="content_section">'+
-              // '<p id="noConnection" style="position:fixed;top:50%;right:120px;font-size:20px;padding:35px 5px;background-color:black;color:#fff;box-shadow:10px 10px 5px grey">No internet connection</p>'+
+              '<p id="TypingBox" style="display:none;position:fixed;bottom:190px;right:330px;font-size:16px;padding:5px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;">Typing....</p>'+
             '</div>'+
           '</div>'+
           '<div id="chatBox_footer" class="chatBox_footer">'+
@@ -819,7 +832,7 @@ function createChatDiv() {
               '<div id="messageComposer" class="flex_container">'+
                 '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
                 '<input id="filePicker" type="file" style="display:none;"/>'+
-              '<i id="paperClip" class="paperClip SyrowFont font-SyrowPaperclip" aria-hidden="true"></i>'+
+              '<i id="paperClip"  class="paperClip SyrowFont font-SyrowPaperclip" aria-hidden="true"></i>'+
               '<i id="paperPlane" class="paperClip SyrowFont font-SyrowNavigation" aria-hidden="true"></i>'+
               '</div>'+
 
@@ -1027,7 +1040,7 @@ function activeAudioCall(){
   })
 
   function reachChatBoxForInfo(){
-    connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CustmorClosedTheChat' ] , {}, {
+    connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CustmorClosedTheChat' ] , {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -1115,7 +1128,7 @@ function activeAudioCall(){
              chatThreadPk = data.pk
              dataToPublish.push(chatThreadPk)
              dataToPublish.push(urlforConferenceForAgent)
-             connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+             connection.session.call(wamp_prefix+'service.support.agent', dataToPublish , {}, {
                acknowledge: true
              }).
              then(function(publication) {
@@ -1146,17 +1159,17 @@ function activeAudioCall(){
         dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
         if (isAgentOnline) {
           console.log('ONLINE' , agentPk);
-          connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
+          connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
             acknowledge: true
           }).
           then(function(publication) {
             console.log("Published service.support.agent."+agentPk);
-          }).catch(function(){
-            // alert('problem ho gyi internet me')
+          },function(err){
+            console.log(err);
           });
         }else {
           console.log('offline send to all');
-          connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+          connection.session.call(wamp_prefix+'service.support.agent', dataToPublish , {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -1467,8 +1480,8 @@ function activeAudioCall(){
               transition: transform .16s linear,opacity .08s linear;\
               transition: transform .16s linear,opacity .08s linear,-webkit-transform .16s linear;\
             }\
-            .changeColor{\
-              animation:coloringg 2s infinite\
+            .changeOpacity{\
+              animation:changingOpacity 3s infinite\
             }\
               .sy-text {\
               position: fixed;\
@@ -1635,12 +1648,15 @@ function activeAudioCall(){
               	transform:translateY(0px);\
           	}\
           }\
-          @keyframes coloringg{\
+          @keyframes changingOpacity{\
         	0%{\
-              color:red;\
+              opacity:0.2;\
+          	}\
+            90%{\
+              	opacity:1;\
           	}\
             100%{\
-              	color:green;\
+              	opacity:1;\
           	}\
           }\
           @keyframes chatSuggestionBar{\
@@ -1799,7 +1815,7 @@ function activeAudioCall(){
             }\
             .paperClip{\
               font-size:25px;\
-              margin:10px;\
+              margin:15px 15px 0px 0px;\
               color:#A0A0A0\
             }\
             .exitBtn:hover{\
@@ -1953,15 +1969,12 @@ function activeAudioCall(){
 
          var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-         connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
+         connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
            acknowledge: true
          }).
          then(function(publication) {
            console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
          });
-
-
-
        }
      };
      xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
@@ -2125,7 +2138,7 @@ var myformrating;
 
             var dataToSend = {uid:uid , usersFeedback:ratingFormObject.customerFeedback  , rating:ratingFormObject.customerRating , sentByAgent:false };
 
-             connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
+             connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
                acknowledge: true
              }).
              then(function(publication) {
@@ -2211,7 +2224,7 @@ var myformrating;
     }
     if (event.data=='calledToHideVideo') {
       setIframeRotated()
-      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
+      connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -2220,7 +2233,7 @@ var myformrating;
     }
     if (event.data=='calledToShowVideo') {
       setIframeToNormal()
-      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
+      connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -2282,9 +2295,9 @@ function deactivateAudioFrame(){
 
 function togglingActive(element,value){
   if(value){
-    element.classList.add('changeColor')
+    element.classList.add('changeOpacity')
   }else{
-    element.classList.remove('changeColor')
+    element.classList.remove('changeOpacity')
   }
 }
 var videoBtn=document.getElementById('videoBtn')
@@ -2347,7 +2360,7 @@ audioBtn.addEventListener("click",function(){
 })
 
 function hideTheIframeOnAgentSide(){
-  connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'hideTheIframe' ] , {}, {
+  connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'hideTheIframe' ] , {}, {
     acknowledge: true
   }).
   then(function(publication) {
@@ -2470,8 +2483,8 @@ var isConfirmedToEnd=false;
         var msgDiv =attachedFile
       }else {
         if (message.attachment==null) {
-          console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
-          console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
+          // console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
+          // console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
           // alert(typeof(message.message))
           var str= message.message
           var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
@@ -2498,7 +2511,7 @@ var isConfirmedToEnd=false;
 
     if (message.logs==null) {
       if (!message.sentByAgent) {
-        var msgHtml = '<div style="margin : 0px 0px 15px; box-sizing:border-box;">'+
+        var msgHtml = '<div id="msg'+chat.messages.length+'" style="margin : 0px 0px 15px; box-sizing:border-box;">'+
                         '<div style=" clear: both; float:right; background-color:'+ windowColor +'; color:'+fontAndIconColor+';  padding:5px 10px;margin:8px; border-radius:20px 0px 20px 20px; box-sizing:border-box;">'+
                           msgDiv+
                         '</div>'+
@@ -2507,7 +2520,7 @@ var isConfirmedToEnd=false;
         return msgHtml
 
       }else {
-        var msgHtml = '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+        var msgHtml = '<div id="msg'+chat.messages.length+'" style="margin:0px 0px 10px; box-sizing:border-box;" >'+
                   '<div style="clear: both; float:left; background-color:#f6f6f6; padding:5px 10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
                      msgDiv+
                   '</div> '+
@@ -2522,7 +2535,7 @@ var isConfirmedToEnd=false;
 
   let currentUrl=window.location.href;
 setTimeout(function () {
-  connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
+  connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
     acknowledge: true
   }).
   then(function(publication) {
@@ -2532,10 +2545,10 @@ setTimeout(function () {
 
 setInterval(function () {
   if(currentUrl!==window.location.href){
-    console.log('changed url $$$$$$$$$$$$$$$$$$$$$$$$$$$4');
+    // console.log('changed url $$$$$$$$$$$$$$$$$$$$$$$$$$$4');
 
     currentUrl=window.location.href;
-    connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
+    connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -2551,7 +2564,7 @@ setInterval(function () {
       var div = document.createElement("div");
       div.setAttribute("id", "herere")
       if (chat.messages[i].message=="first") {
-        console.log(firstMessage);
+        // console.log(firstMessage);
         firstMessage = firstMessage.replaceAll("&lt;",'<')
         firstMessage = firstMessage.replaceAll("&gt;",">")
         firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
@@ -2561,9 +2574,9 @@ setInterval(function () {
                      firstMessage+
                   '</div> '+
                 '</div> '
-console.log(firstMessage);
-        console.log(div);
-        console.log('firstttttttt' , typeof firstMessage);
+// console.log(firstMessage);
+        // console.log(div);
+        // console.log('firstttttttt' , typeof firstMessage);
       }else {
         div.innerHTML = messageDiv(chat.messages[i])
       }
@@ -2580,20 +2593,21 @@ console.log(firstMessage);
     setTimeout(function () {
       var id = document.getElementById("chatBox_content");
       id.scrollTop = id.scrollHeight;
+      console.log(id.scrollTop,'****************9');
     }, 200);
   }
 
   function onlineAgent() {
-    console.log('in onlineAgent######333333333' , agentPk);
+    // console.log('in onlineAgent######333333333' , agentPk);
     if (agentPk) {
         connection.session.call(wamp_prefix+'service.support.heartbeat.' + agentPk, []).then(
           function (res) {
-           console.log("Result:", res);
+           // console.log("Result:", res);
            isAgentOnline = true;
            onlineStatus.innerHTML = 'Online';
          },
          function (err) {
-          console.log("Error:", err);
+          // console.log("Error:", err);
           isAgentOnline = false;
           onlineStatus.innerHTML = 'Away';
         }
@@ -2613,7 +2627,7 @@ console.log(firstMessage);
   function spying(inputVal) {
     countOnchange = 0;
     console.log('values' , inputVal);
-      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
+      connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
@@ -2632,184 +2646,232 @@ console.log(firstMessage);
 
 
   function sendMessage(inptText) {
-
-    if (inptText.length<=0) {
-      return;
-    }
-
-    console.log(inptText,'input');
-
-    console.log(uid);
-    console.log(getCookie("uid"));
-    if (uid!=getCookie("uid")) {
-      uid = getCookie("uid");
-    }
-
-    console.log(uid);
-    console.log(chat.messages.length);
-
-    var youtubeLink = inptText.includes("yout");
-
-    if (youtubeLink) {
-      status = "ML";
-      link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
-
-      var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
-      if (agentPk) {
-        console.log('agent pk is pnline',isAgentOnline);
-        dataToSend.user = agentPk
-        if (!isAgentOnline) {
-          console.log('agetn oflineee');
-          dataToSend.user = null
-        }else {
+      if (inptText.length<=0) {
+        return;
+      }
+      if (uid!=getCookie("uid")) {
+        uid = getCookie("uid");
+      }
+      var youtubeLink = inptText.includes("yout");
+      if (youtubeLink) {
+        status = "ML";
+        link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
+        var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
+        if (agentPk) {
+          console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
-        }
-      }
-      var message = dataToSend
-      dataToSend = JSON.stringify(dataToSend)
-    }else {
-      status = "M";
-      var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
-      console.log(agentPk);
-      if (agentPk) {
-        console.log('agent pk is pnline',isAgentOnline);
-        dataToSend.user = agentPk
-        if (!isAgentOnline) {
-          console.log('agetn oflineee');
-          dataToSend.user = null
-        }else {
-          dataToSend.user = agentPk
-        }
-      }
-      var message = dataToSend
-      dataToSend = JSON.stringify(dataToSend)
-    }
-
-    var div = document.createElement("div");
-    div.className = "messageOpacity"
-    div.innerHTML = messageDiv(message)
-    messageBox.appendChild(div);
-    scroll();
-
-    chat.messages.push(message);
-    inputText.value ='';
-
-    setTimeout(function() {
-      console.log(isAgentOnline, ' is agent online..........');
-
-      if (!isAgentOnline) {
-        agentName.innerHTML = nameSupport
-        var div = document.createElement("div");
-        div.id="offlineMessage"
-
-        div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
-                          '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
-                          '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
-                          '<form>'+
-                            '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
-                             '<textarea style="width:100%; outline:none;resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
-                             '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
-                               'Submit'+
-                             '</button>'+
-                            '</form>'+
-                          '</div> '+
-                        '</div>'
-        scroll();
-        }
-    }, 4000)
-
-
-    console.log(dataToSend,'data to send');
-    var xhttp = new XMLHttpRequest();
-     xhttp.onreadystatechange = function() {
-       if (this.readyState == 4 && this.status == 201) {
-         console.log('posted successfully');
-       }
-     };
-     xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
-     xhttp.setRequestHeader("Content-type", "application/json");
-     xhttp.send(dataToSend);
-
-
-     var dataToPublish = [uid , status , message ];
-
-     if (threadExist==undefined) {
-      var dataToPublish = [uid , status , message , custID ];
-      details = getCookie("uidDetails");
-      if (details != "") {
-        console.log(details);
-         dataToPublish.push(JSON.parse(details))
-      } else {
-        dataToPublish.push(false)
-      }
-
-      var dataToSend = JSON.stringify({uid: uid , company: custID});
-       var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 201) {
-            console.log('posted successfully');
-            var data = JSON.parse(this.responseText)
-            threadExist=true
-            console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
-            chatThreadPk = data.pk
-            dataToPublish.push(chatThreadPk)
-            connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published");
-            });
+          if (!isAgentOnline) {
+            console.log('agetn oflineee');
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
           }
-        };
-        xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-        xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.send(dataToSend);
-     }else {
-       console.log('chat threAD EXIST');
-       if (isAgentOnline) {
-         console.log('ONLINE' , agentPk);
-         connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published service.support.agent."+agentPk);
-         }).catch(function(){
-           // alert('error aa gya')
-         });
+        }
+        var message = dataToSend
+        dataToSend = JSON.stringify(dataToSend)
+      }else {
+        status = "M";
+        var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
+        console.log(agentPk);
+        if (agentPk) {
+          console.log('agent pk is pnline',isAgentOnline);
+          dataToSend.user = agentPk
+          if (!isAgentOnline) {
+            console.log('agetn oflineee');
+            dataToSend.user = null
+          }else {
+            dataToSend.user = agentPk
+          }
+        }
+        var message = dataToSend
+        dataToSend = JSON.stringify(dataToSend)
+      }
+
+      var div = document.createElement("div");
+      div.className = "messageOpacity"
+      div.innerHTML = messageDiv(message)
+      messageBox.appendChild(div);
+      scroll();
+      chat.messages.push(message);
+      inputText.value ='';
+      setTimeout(function() {
+        console.log(isAgentOnline, ' is agent online..........');
+
+        if (!isAgentOnline) {
+          agentName.innerHTML = nameSupport
+          var div = document.createElement("div");
+          div.id="offlineMessage"
+
+          div.innerHTML =  '<div style="margin:0px 0px 10px; box-sizing:border-box;" >'+
+                            '<div style="clear: both; float:left; background-color:#f6f6f6; padding:10px;margin:8px; border-radius:0px 20px 20px 20px; box-sizing:border-box;">'+
+                            '<p style="line-height: 1.75; margin:0px 0px 10px; word-wrap: break-word; font-size:14px; box-sizing:border-box;">Sorry we are offline. Please email us your query.</p>'+
+                            '<form>'+
+                              '<input id="emailAddr" style="width:100%; margin-bottom:8px; box-sizing:border-box;" name="fname" type="text" placeholder="Email.." >'+
+                               '<textarea style="width:100%; outline:none;resize:none; box-shadow:none; box-sizing:border-box;" rows="3" placeholder="Type your message here.."></textarea>'+
+                               '<button id="sendEmail" type="button" style="margin-top:10px; border:none; margin-left:38%; padding:8px; border-radius:8px; background-color:#286EFA ; color:#fff; text-transform:none; font-size:11px; cursor:pointer;" >'+
+                                 'Submit'+
+                               '</button>'+
+                              '</form>'+
+                            '</div> '+
+                          '</div>'
+          scroll();
+          }
+      }, 4000)
+
+       var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 201) {
+           console.log('posted successfully');
+         }
+       };
+       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(dataToSend);
+       var dataToPublish = [uid , status , message ];
+       if (threadExist==undefined) {
+        var dataToPublish = [uid , status , message , custID ];
+        details = getCookie("uidDetails");
+        if (details != "") {
+          console.log(details);
+           dataToPublish.push(JSON.parse(details))
+        } else {
+          dataToPublish.push(false)
+        }
+        var dataToSend = JSON.stringify({uid: uid , company: custID});
+         var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 201) {
+              console.log('posted successfully');
+              var data = JSON.parse(this.responseText)
+              threadExist=true
+              console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+              chatThreadPk = data.pk
+              dataToPublish.push(chatThreadPk)
+              publishMessageToAll(dataToPublish);
+            }
+          };
+          xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(dataToSend);
        }else {
-         console.log('offline send to all');
-         connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
-           acknowledge: true
-         }).
-         then(function(publication) {
-           console.log("Published");
-         }).catch(function(){
-           // alert('error aa gya message send krne me')
-         });
+         console.log('chat threAD EXIST');
+         if (isAgentOnline) {
+           console.log('ONLINE' , agentPk);
+           publishMessageToOne(agentPk,dataToPublish)
+         }else {
+           publishMessageToAll(dataToPublish)
+         }
        }
-       console.log('chat thread exist');
-     }
+
+       // console.log(trySendingAgain);
+       // // var testArray=[]
+       // for (var i = 0; i < trySendingAgain.length; i++) {
+       //   (function(){
+       //     trySendingAgain[i].index = i
+       //     var obj = trySendingAgain[i]
+       //     console.log(trySendingAgain,'before splice');
+       //     trySendingAgain[i].element.addEventListener("click",function(e){
+       //       if(connection.session.isOpen||connection.session!=null){
+       //         alert('there');
+       //         console.log(obj);
+       //         trySendingAgain.splice(obj.index,1)
+       //         publishMessageToOne(agentPk,obj.dataToPublish)
+       //         this.style.opacity = "1";
+       //         console.log(trySendingAgain,'after splice');
+       //       }
+       //     },false)
+       //   }())
+       // }
+       // trySendingAgain=testArray;
   }
 
   paperClip.addEventListener("click", function() {
     filePicker.click();
   }, false);
 
+
+
+  function publishMessageToAll(dataToPublish){
+    console.log('offline send to all');
+    // console.log(connection.session,this,trySendingAgain)
+    if(connection.session==null||!connection.session.isOpen){
+      var chatArrayLength=chat.messages.length-1;
+      var obj={
+        'element':document.getElementById('msg'+chatArrayLength),
+        'dataToPublish':dataToPublish
+      }
+      disableTextArea()
+      trySendingAgain.push(obj);
+      document.getElementById('msg'+chatArrayLength).style.opacity = "0.5";
+    }
+    else{
+      failedMessages.push(dataToPublish)
+      for (var i = 0; i < failedMessages.length; i++) {
+        connection.session.call(wamp_prefix+'service.support.agent', failedMessages[i] , {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published service.support.agent."+agentPk);
+        },function (error) {
+          failedMessages.push(dataToPublish)
+          console.log('failed to send');
+       })
+      }
+      failedMessages=[]
+    }
+  }
+
+  function publishMessageToOne(MyPk,dataToPublish){
+    console.log('publisshing message');
+    if(connection.session==null||!connection.session.isOpen){
+      var chatArrayLength=chat.messages.length-1;
+      var obj={
+        'element':document.getElementById('msg'+chatArrayLength),
+        'dataToPublish':dataToPublish
+      }
+      disableTextArea()
+      trySendingAgain.push(obj);
+      document.getElementById('msg'+chatArrayLength).style.opacity = "0.5";
+    }
+    else{
+
+      failedMessages.push(dataToPublish)
+      for (var i = 0; i < failedMessages.length; i++) {
+        connection.session.call(wamp_prefix+'service.support.agent.'+MyPk, failedMessages[i] , {}, {
+          acknowledge: true
+        }).
+        then(function(publication) {
+          console.log("Published service.support.agent."+agentPk);
+        },function (error) {
+          failedMessages.push(dataToPublish)
+          console.log('failed to send');
+       })
+      }
+      failedMessages=[]
+    }
+  }
+
+  function disableTextArea(){
+    // connection._transport.close()
+    inputText.disabled = true;
+    inputText.placeholder = "Re connectiong....";
+    paperClip.style.display = "none";
+    paperPlane.style.display = "none";
+  }
+  function enableTextArea(){
+      inputText.disabled = false;
+      inputText.placeholder = "Message...";
+      paperClip.style.display = "";
+      paperPlane.style.display = "";
+  }
+
   function sendFile() {
 
     status = "MF";
-
-
     if (uid!=getCookie("uid")) {
       uid = getCookie("uid");
     }
-
     var file = filePicker;
-    console.log(file.files[0],'typpppppppppppppppppppppp' );
-
-
-    console.log(chat.messages.length);
-
     var fd = new FormData();
     fd.append('uid', uid);
     fd.append('attachment', file.files[0]);
@@ -2874,7 +2936,7 @@ console.log(firstMessage);
                  chatThreadPk = data.pk
                  dataToPublish.push(chatThreadPk)
 
-                 connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish, {}, {
+                 connection.session.call(wamp_prefix+'service.support.agent', dataToPublish, {}, {
                    acknowledge: true
                  }).
                  then(function(publication) {
@@ -2889,7 +2951,7 @@ console.log(firstMessage);
             console.log('chat threAD EXIST');
             if (isAgentOnline) {
               console.log('ONLINE' , agentPk);
-              connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
+              connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {
@@ -2897,7 +2959,7 @@ console.log(firstMessage);
               });
             }else {
               console.log('offline send to all');
-              connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+              connection.session.call(wamp_prefix+'service.support.agent', dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {

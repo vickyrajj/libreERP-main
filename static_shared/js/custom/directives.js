@@ -388,7 +388,7 @@ app.directive('chatBox', function() {
           if(!$scope.isVisitorVideoShowing){
             // document.getElementById("iframeChat" + $scope.data.uid).style.height="14%";
             $scope.msgDivHeight = 51
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
+            connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -399,7 +399,7 @@ app.directive('chatBox', function() {
           // document.getElementById("iframeChat" + $scope.data.uid).style.height="100%"
           $scope.msgDivHeight = 52
           // document.getElementById("iframeChat" + $scope.data.uid).style.transition=".5s"
-          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
+          connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -412,7 +412,7 @@ app.directive('chatBox', function() {
       $scope.hideVisitorScreen = function() {
         $scope.IsVisitorOn=!$scope.IsVisitorOn;
         if($scope.IsVisitorOn){
-          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
+          connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -420,7 +420,7 @@ app.directive('chatBox', function() {
           });
         }
       else{
-        connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
+        connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
           acknowledge: true
         }).
         then(function(publication) {
@@ -807,7 +807,7 @@ app.directive('chatBox', function() {
 
 
             $scope.status = 'MF';
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me, new Date()], {}, {
+            connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -874,7 +874,7 @@ app.directive('chatBox', function() {
             console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
 
             if(connection.session){
-              connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
+              connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
                 acknowledge: true
               }).
               then(function(publication) {
@@ -920,7 +920,7 @@ app.directive('chatBox', function() {
         $scope.status = "T";
         if (newValue != "") {
           if(connection.session){
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
+            connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -935,7 +935,7 @@ app.directive('chatBox', function() {
 
       $scope.chatClose = function(indx, uid, chatThreadPk) {
         $scope.status = "F";
-        connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
+        connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
         }).
         then(function(publication) {

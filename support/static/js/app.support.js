@@ -77,7 +77,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
             closeIframe:false
           })
 
-          connection.session.publish(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
+          connection.session.call(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -142,7 +142,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         },
         function(err) {
           console.log("failed to registered: ");
-
         });
 
       return
@@ -241,8 +240,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
   $scope.addToChat = function(indx, uid) {
-    // alert('inside add chat')
-
     addToCookie(uid, indx);
 
     for (var i = 0; i < $scope.chatsInView.length; i++) {
@@ -311,9 +308,8 @@ $scope.count=0;
   $scope.assignUser = function(indx, uid) {
 
     $scope.myUsers.push($scope.newUsers[indx]);
-    $scope.count++;
-    // alert('adding to chat')
-    $scope.addToChat($scope.count, uid)
+    // $scope.count++;
+    $scope.addToChat($scope.myUsers.length-1, uid)
     $scope.newUsers.splice(indx, 1);
 
     $http({
@@ -357,7 +353,7 @@ $scope.count=0;
     });
 
     $scope.status = 'AP';
-    connection.session.publish(wamp_prefix+'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
+    connection.session.call(wamp_prefix+'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -366,7 +362,7 @@ $scope.count=0;
 
 
     $scope.status = 'R';
-    connection.session.publish(wamp_prefix+'service.support.agent', [uid, $scope.status], {}, {
+    connection.session.call(wamp_prefix+'service.support.agent', [uid, $scope.status], {}, {
       acknowledge: true
     }).
     then(function(publication) {

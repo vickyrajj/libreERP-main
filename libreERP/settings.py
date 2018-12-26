@@ -61,7 +61,7 @@ DEBUG = True
 
 
 
-ALLOWED_HOSTS = ['192.168.1.112', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.1.117' ,'192.168.1.121','192.168.1.124']
+ALLOWED_HOSTS = ['192.168.1.112', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.26', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.1.117' ,'192.168.1.121','192.168.1.124']
 
 
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
@@ -72,8 +72,8 @@ LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
 # Application definition
-BRAND_NAME = 'Syrow'
 
+BRAND_NAME = 'Syrow'
 BRAND_LOGO = '/static/images/cioc_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 

@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <div class="form-group">
         <label> Agent Name </label>
         <input type="text" class="form-control" placeholder="Search and select" uib-typeahead="user as user.username for user in userSearch($viewValue)" ng-model="form.user">
@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <div class="col-sm-2">
+    <div class="col-sm-3">
       <div class="btn-group" style="padding-top:20px;">
         <button type="button" class="btn btn-primary" ng-click="filterData()">
           <strong>Filter</strong>
@@ -133,7 +133,7 @@
                  </tr>
                  <tr ng-repeat="data in reviewData" style="text-align:center" ng-click="tableAction(reviewData.length-1-$index)">
                    <td>{{data[0].created | date : 'dd-MMM-yyyy'}}</td>
-                   <td>{{data[0].company}}</td>
+                   <td>{{data[0].company? data[0].company:'-'}}</td>
                    <td>{{data[0].user_id | getName}}</td>
                    <td>{{data[0].uid}}</td>
                    <td>{{data[0].rating? data[0].rating:'-'}}</td>
