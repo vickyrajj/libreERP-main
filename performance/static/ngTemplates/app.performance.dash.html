@@ -34,17 +34,19 @@
         <div class="header">
           <p>performance Summary On-time vs Scrap</p>
         </div>
+        <canvas id="line-chart4" height="150"></canvas>
       </div>
       <div class="col-md-4 firstrow">
         <div class="header">
           <p>Jobs on Time Weekly Trend</p>
         </div>
+        <canvas id="line-chart3" height="150"></canvas>
       </div>
       <div class="col-md-4 firstrow">
         <div class="header">
           <p>Inventory Finished Goods by Loaction</p>
         </div>
-        <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels">
+        <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels" chart-dataset-override='dataset'>
         </canvas>
       </div>
     </div>
@@ -54,11 +56,13 @@
         <div class="header">
           <p>Production Scrap by Top 10 Part Type</p>
         </div>
+        <canvas id="barwithline"></canvas>
       </div>
       <div class="col-md-4 firstrow">
         <div class="header">
           <p>Jobs by Status</p>
         </div>
+        <canvas id="barchart"></canvas>
       </div>
       <div class="col-md-4 firstrow">
         <div class="header">
