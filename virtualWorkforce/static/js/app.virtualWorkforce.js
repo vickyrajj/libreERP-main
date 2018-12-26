@@ -90,7 +90,8 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
     data: data,
     options: {
       rotation: 1 * Math.PI,
-      circumference: 1 * Math.PI
+      circumference: 1 * Math.PI,
+      cutoutPercentage: 80
     }
   });
   var ctxx = document.getElementById("myChart1");
@@ -113,7 +114,8 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
     data: datas,
     options: {
       rotation: 1 * Math.PI,
-      circumference: 1 * Math.PI
+      circumference: 1 * Math.PI,
+      cutoutPercentage: 80,
     }
   });
 

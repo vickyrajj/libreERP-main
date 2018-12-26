@@ -196,6 +196,27 @@ app.controller("businessManagement.marketing.default", function($scope, $state, 
       }
     }
   });
+  var ctx = document.getElementById("myChart");
+  var data = {
+    labels: [],
+    datasets: [{
+      data: [300, 50],
+      backgroundColor: [
+        "#fff",
+        "#ECECEC"
+      ],
+
+    }]
+  };
+  var myDoughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: {
+      rotation: 1 * Math.PI,
+      circumference: 1 * Math.PI,
+      cutoutPercentage: 80
+    }
+  });
 
 
 })

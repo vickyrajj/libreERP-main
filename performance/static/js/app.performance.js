@@ -299,7 +299,7 @@ app.controller("workforceManagement.performance.dash", function($scope, $state, 
       pointHoverBorderColor: '#92B670',
       yAxisID: 'y-axis-2',
 
-    },{
+    }, {
       type: 'bar',
       label: "Scrap Amount",
       data: [200, 185, 590, 621, 250, 400, 95],
@@ -309,7 +309,7 @@ app.controller("workforceManagement.performance.dash", function($scope, $state, 
       hoverBackgroundColor: '#7397AF',
       hoverBorderColor: '#7397AF',
       yAxisID: 'y-axis-1'
-    },]
+    }, ]
   };
 
   new Chart(document.getElementById("barwithline"), {
@@ -363,12 +363,42 @@ app.controller("workforceManagement.performance.dash", function($scope, $state, 
           ticks: {
             min: 0,
             max: 65,
-        // Your absolute max value
+            // Your absolute max value
             callback: function(value) {
               return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
             },
           },
         }]
+      }
+    }
+  });
+  var ctx = document.getElementById("myChart");
+  var data = {
+    labels: [
+      "A1",
+      "Pack",
+      "Furnance",
+      "Grouping:< 10% of Total"
+    ],
+    datasets: [{
+      data: [300, 50, 60, 100],
+      backgroundColor: [
+        "#7397AF",
+        "#D3D3D3",
+        "#92B670",
+        "#A0B9CF"
+
+      ],
+
+    }]
+  };
+  var myDoughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: {
+      cutoutPercentage: 50,
+      legend: {
+        position: 'right'
       }
     }
   });
