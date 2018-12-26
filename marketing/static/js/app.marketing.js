@@ -62,6 +62,7 @@ app.controller("businessManagement.marketing.default", function($scope, $state, 
         borderColor: "#3e95cd",
         fill: false,
         lineTension: 0,
+        pointRadius: 0,
       }]
     },
     options: {
@@ -109,6 +110,7 @@ app.controller("businessManagement.marketing.default", function($scope, $state, 
         borderColor: "#3e95cd",
         fill: false,
         lineTension: 0,
+        pointRadius: 0,
       }]
     },
     options: {
@@ -156,6 +158,7 @@ app.controller("businessManagement.marketing.default", function($scope, $state, 
         borderColor: "#3e95cd",
         fill: false,
         lineTension: 0,
+        pointRadius: 0,
       }]
     },
     options: {

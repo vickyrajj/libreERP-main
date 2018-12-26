@@ -91,6 +91,7 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
         borderColor: "#1DA381",
         fill: false,
         lineTension: 0,
+        pointRadius: 0,
       }]
     },
     options: {
@@ -138,6 +139,7 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
         borderColor: "#1DA381",
         fill: false,
         lineTension: 0,
+        pointRadius: 0,
       }]
     },
     options: {
@@ -185,6 +187,7 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
         borderColor: "#1DA381",
         fill: false,
         lineTension: 0,
+        pointRadius: 0,
       }]
     },
     options: {
