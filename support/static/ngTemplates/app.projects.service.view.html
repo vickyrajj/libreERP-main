@@ -876,9 +876,9 @@
       </div>
     </div>
   </div>
-</div>
+<!-- </div>
 
-<div ng-controller="businessManagement.projects.success.view">
+<div ng-controller="businessManagement.projects.success.view"> -->
   <div class="container-fluid" style="padding:20px;" ng-if="form.status=='approved'">
     <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
       <div class="row">
@@ -1497,8 +1497,8 @@
             <th>S.No</th>
             <th>Part No</th>
             <th>Products</th>
-            <th> Quantity</th>
             <th>HSN</th>
+            <th> Quantity</th>
             <th>Price</th>
             <th>Total</th>
           </tr>
@@ -1506,12 +1506,13 @@
             <td>{{$index + 1}}</td>
             <td>{{v.products.part_no}}</td>
             <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> ({{v.products.description_2}})</span></td>
-            <td> {{v.quantity1}}</td>
             <td>{{v.customs_no}}</td>
+            <td> {{v.quantity1}}</td>
             <td>{{v.price.toFixed(2)}}</td>
             <td>{{(v.quantity1*v.price).toFixed(2)}}</td>
           </tr>
           <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

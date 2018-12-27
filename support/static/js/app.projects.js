@@ -565,7 +565,7 @@ app.controller("businessManagement.projects.service.item", function($scope, $sta
 
 })
 
-app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash,$rootScope) {
 
   $scope.projectSteps = {
     steps: projectsStepsData
@@ -653,6 +653,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
   $scope.updateAll = function() {
     for (var i = 0; i < $scope.projects.length; i++) {
+      console.log($scope.projects[i].gst,$scope.projects[i].custom);
       $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.projects[i].price) / 100 + $scope.projects[i].price).toFixed(2))
       $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
       $scope.projects[i].packing = parseFloat((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
@@ -666,7 +667,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       $scope.projects[i].charge1 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
       $scope.projects[i].charge2 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
       $scope.projects[i].landed_price = (($scope.projects[i].cif + $scope.projects[i].customVal + $scope.projects[i].socialVal + $scope.projects[i].charge1 + $scope.projects[i].charge2).toFixed(2))
-      console.log($scope.projects[i].landed_price, 'aaaaaaaa');
     }
     if( $scope.data.length>0){
       for (var i = 0; i < $scope.data.length; i++) {
@@ -687,7 +687,8 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }
   }
 
-  $scope.fetchData = function(index) {
+  $scope.fetchData = function() {
+    console.log("hhhhhhhhhhhhhhhhhhhhhh");
     $http({
       method: 'GET',
       url: '/api/support/bom/?project=' + $scope.form.pk
@@ -699,6 +700,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         $scope.form.invoiceValue += totalprice
         $scope.updateAll()
       }
+      // $rootScope.allData =  $scope.projects
 
     })
   }
@@ -739,12 +741,13 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     for (var i = 0; i < newValue.length; i++) {
       var totalprice = newValue[i].price * newValue[i].quantity1
       cost += totalprice
-      if (typeof oldValue[i] == "undefined") {} else if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1||newValue[i].custom != oldValue[i].custom||newValue[i].gst != oldValue[i].gst) {
+      if (typeof oldValue[i] == "undefined") {} else if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1||newValue[i].custom != oldValue[i].custom||newValue[i].gst != oldValue[i].gst||newValue[i].quantity2!= oldValue[i].quantity2) {
         var dataSend = {
           quantity1: newValue[i].quantity1,
           price: newValue[i].price,
           custom : newValue[i].custom,
           gst : newValue[i].gst,
+          quantity2: newValue[i].quantity2,
         }
         $http({
           method: 'PATCH',
@@ -1221,593 +1224,27 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }).
     then(function(response) {
       Flash.create('success', 'Saved');
-      console.log(response.data, 'aaaaaa');
       $scope.form.status = response.data.status
       $scope.updateStatus()
-        $scope.updateAll()
-    })
-  }
-
-  $scope.reject = function() {
-    var sendStatus = {
-      status: 'created',
-    }
-    $http({
-      method: 'PATCH',
-      url: '/api/support/projects/' + $scope.form.pk + '/',
-      data: sendStatus,
-    }).
-    then(function(response) {
-      Flash.create('success', 'Saved');
-      $scope.form.status = response.data.status
-      $scope.updateStatus()
-      $scope.updateAll()
-      $scope.data=[]
-    })
-  }
-
-
-
-
-
-
-})
-app.controller("businessManagement.projects.approval", function($scope, $state, $users, $stateParams, $http, Flash) {
-
-
-})
-app.controller("businessManagement.projects.approval.success", function($scope, $state, $users, $stateParams, $http, Flash) {
-
-
-})
-app.controller("businessManagement.projects.approval.view", function($scope, $state, $users, $stateParams, $http, Flash) {
-
-  if ($scope.tab == undefined) {
-    $scope.resetForm();
-  } else {
-    $scope.form = $scope.data.tableData[$scope.tab.data.index]
-    console.log($scope.form,'ffffooooooorrrrrrmmmmmmmmmmmm');
-  }
-  console.log($scope.form);
-  $scope.projectSteps = {
-    steps: projectsStepsData
-  }
-  $scope.updateStatus=function(){
-    for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
-      if ($scope.projectSteps.steps[i].text == $scope.form.status) {
-        $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
-        break;
-      }
-    }
-  }
-  $scope.updateStatus()
-  $scope.me = $users.get('mySelf');
-  $http.get('/api/HR/userSearch/').
-  then(function(response) {
-    $scope.persons = response.data;
-    console.log($scope.form.responsible, 'bbbbbbbbbbbb');
-    $scope.name = []
-
-    function filterByPk(item) {
-      if ($scope.form.responsible.includes(item.pk)) {
-        console.log(item.first_name + item.last_name, 'vvvvvvvvv');
-        $scope.name.push(item.first_name + item.last_name)
-      }
-    }
-    $scope.persons.filter(filterByPk);
-  })
-  $scope.projects = []
-  $scope.updateAll=function(){
-    if($scope.projects.length>0){
-      for (var i = 0; i < $scope.projects.length; i++) {
-        $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.projects[i].price) / 100 + $scope.projects[i].price).toFixed(2))
-        $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
-        $scope.projects[i].packing = parseFloat((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
-        $scope.projects[i].insurance = parseFloat((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
-        $scope.projects[i].freight = parseFloat((($scope.form.freight / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
-        $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
-        $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
-        $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif +(($scope.projects[i].cif * $scope.form.assessableValue)/100))*($scope.projects[i].custom)/100).toFixed(2))
-        $scope.projects[i].socialVal = parseFloat(($scope.projects[i].customVal *0.1).toFixed(2))
-        $scope.projects[i].gstVal = parseFloat(($scope.projects[i].cif+$scope.projects[i].customVal+$scope.projects[i].socialVal)*($scope.projects[i].gst/100)).toFixed(2)
-        $scope.projects[i].charge1 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
-        $scope.projects[i].charge2 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
-        $scope.projects[i].landed_price = (($scope.projects[i].cif + $scope.projects[i].customVal + $scope.projects[i].socialVal + $scope.projects[i].charge1 + $scope.projects[i].charge2).toFixed(2))
-      }
-    }
-  }
-  $scope.fetchData = function(index) {
-    $http({
-      method: 'GET',
-      url: '/api/support/bom/?project=' + $scope.form.pk
-    }).
-    then(function(response) {
-      $scope.projects = response.data
-      console.log();
-      $scope.updateAll($scope.projects,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
-    })
-  }
-  $scope.fetchData()
-//   setTimeout(function () {
-//     console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-//   $scope.updateAll()
-// },1000)
-
-
-  // $scope.$watch('projects', function(newValue, oldValue) {
-  //   if (typeof newValue == 'object') {
-  //     $scope.total = 0
-  //     for (var i = 0; i < $scope.projects.length; i++) {
-  //       console.log($scope.projects[i].pk);
-  //       if (isNaN($scope.projects[i].quantity1 * $scope.projects[i].price) == false)
-  //         $scope.total += $scope.projects[i].quantity1 * $scope.projects[i].price
-  //       $scope.quanty = $scope.projects[i].quantity1
-  //       $scope.price = $scope.projects[i].price
-  //       $scope.invoice_price = $scope.projects[i].price
-  //       $scope.quanty2 = $scope.projects[i].quantity1
-  //
-  //       var sendtoBom = {
-  //         quantity1: $scope.quanty,
-  //         price: $scope.price,
-  //         invoice_price: $scope.invoice_price,
-  //         landed_price: $scope.landed_price,
-  //         quantity2: $scope.quanty2,
-  //       }
-  //       $http({
-  //         method: 'PATCH',
-  //         url: 'api/support/bom/' + $scope.projects[i].pk + '/',
-  //         data: sendtoBom,
-  //       }).
-  //       then(function(response) {})
-  //
-  //     }
-  //   }
-  // }, true)
-
-  $scope.accept = function() {
-    var date = new Date().toJSON().split('T')[0]
-    var sendStatus = {
-      status: 'approved',
-      approved1: true,
-      approved1_user: $scope.me.pk,
-      approved1_date: date
-    }
-    $http({
-      method: 'PATCH',
-      url: '/api/support/projects/' + $scope.form.pk + '/',
-      data: sendStatus,
-    }).
-    then(function(response) {
-      Flash.create('success', 'Saved');
-      console.log(response.data, 'aaaaaa');
-      $scope.form.status = response.data.status
-      $scope.updateStatus()
-    })
-  }
-
-  $scope.reject = function() {
-    var sendStatus = {
-      status: 'created',
-    }
-    $http({
-      method: 'PATCH',
-      url: '/api/support/projects/' + $scope.form.pk + '/',
-      data: sendStatus,
-    }).
-    then(function(response) {
-      Flash.create('success', 'Saved');
-      $scope.form.status = response.data.status
-      $scope.updateStatus()
-    })
-  }
-
-
-
-
-
-})
-app.controller("businessManagement.projects.success.view", function($scope, $state, $users, $stateParams, $http, Flash) {
-
-  if ($scope.tab == undefined) {
-    $scope.resetForm();
-  } else {
-    $scope.form = $scope.data.tableData[$scope.tab.data.index]
-    $scope.form.exRate = 75;
-  }
-  console.log($scope.form);
-  $scope.projectSteps = {
-    steps: projectsStepsData
-  }
-    $scope.updateStatus=function(){
-      for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
-        if ($scope.projectSteps.steps[i].text == $scope.form.status) {
-          $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
-          break;
-        }
-      }
-    }
-    $scope.updateStatus()
-  $http.get('/api/HR/userSearch/').
-  then(function(response) {
-    $scope.persons = response.data;
-    $scope.name = []
-
-    function filterByPk(item) {
-      if ($scope.form.responsible.includes(item.pk)) {
-        $scope.name.push(item.first_name + item.last_name)
-      }
-    }
-    $scope.persons.filter(filterByPk);
-  })
-  $scope.fetchData = function() {
-    $http({
-      method: 'GET',
-      url: '/api/support/bom/?project=' + $scope.form.pk
-    }).
-    then(function(response) {
-      $scope.projects = response.data
-
-    })
-  }
-  $scope.fetchData()
-
-  $scope.options = false
-  $scope.showOption = function() {
-    if ($scope.options == false) {
-      $scope.options = true
-    } else {
-      $scope.options = false
-    }
-  }
-
-  $scope.updateAll = function() {
-    for (var i = 0; i < $scope.projects.length; i++) {
-      $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.projects[i].price) / 100 + $scope.projects[i].price).toFixed(2))
-      $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
-      $scope.projects[i].packing = parseFloat((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].insurance = parseFloat((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].freight = parseFloat((($scope.form.freight / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
-      $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
-      $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif +(($scope.projects[i].cif * $scope.form.assessableValue)/100))*($scope.projects[i].custom)/100).toFixed(2))
-      $scope.projects[i].socialVal = parseFloat(($scope.projects[i].customVal *0.1).toFixed(2))
-      $scope.projects[i].gstVal = parseFloat(($scope.projects[i].cif+$scope.projects[i].customVal+$scope.projects[i].socialVal)*($scope.projects[i].gst/100)).toFixed(2)
-      $scope.projects[i].charge1 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
-      $scope.projects[i].charge2 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
-      $scope.projects[i].landed_price = (($scope.projects[i].cif + $scope.projects[i].customVal + $scope.projects[i].socialVal + $scope.projects[i].charge1 + $scope.projects[i].charge2).toFixed(2))
-    }
-
-  }
-
-  $scope.$watch('projects', function(newValue, oldValue) {
-    if (typeof newValue == 'object') {
-      $scope.total = 0
-      for (var i = 0; i < $scope.projects.length; i++) {
-        $scope.total += $scope.projects[i].quantity2 * $scope.projects[i].landed_price
-        console.log($scope.projects[i].invoice_price, $scope.projects[i].landed_price, 'jjjjjjjjjj');
-        var sendtoBom = {
-          quantity2: $scope.projects[i].quantity2,
-          price: $scope.projects[i].price,
-          invoice_price: $scope.projects[i].invoice_price,
-          landed_price: $scope.projects[i].landed_price,
-        }
-        $http({
-          method: 'PATCH',
-          url: 'api/support/bom/' + $scope.projects[i].pk + '/',
-          data: sendtoBom,
-        }).
-        then(function(response) {
-          $scope.updateAll()
-        })
-
-
-        $scope.poChange = function() {
-          var send = {
-            poNumber: $scope.form.poNumber,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            return
-          })
-        }
-
-
-
-        $scope.quoteChange = function() {
-          var send = {
-            quoteRefNumber: $scope.form.quoteRefNumber,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            return
-          })
-
-        }
-
-
-        $scope.invoiceChange = function() {
-          var send = {
-            invoiceNumber: $scope.form.invoiceNumber,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            return
-          })
-        }
-
-
-
-        $scope.boeChange = function() {
-          var send = {
-            boeRefNumber: $scope.form.boeRefNumber,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            return
-          })
-
-        }
-
-
-        $scope.packingChange = function() {
-
-          var send = {
-            packing: $scope.form.packing,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            $scope.updateAll()
-          })
-
-        }
-
-
-
-        $scope.assemblyValChange = function() {
-          var send = {
-            assessableValue: $scope.form.assessableValue,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            $scope.updateAll()
-          })
-
-        }
-
-
-        $scope.insuranceChange = function() {
-          var send = {
-            insurance: $scope.form.insurance,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            $scope.updateAll()
-          })
-        }
-
-        $scope.freightChange = function() {
-          var send = {
-            freight: $scope.form.freight,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            $scope.updateAll()
-          })
-        }
-        $scope.clearingchar1Change = function() {
-          var send = {
-            clearingCharges1: $scope.form.clearingCharges1,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            $scope.updateAll()
-          })
-        }
-        $scope.clearingchar2Change = function() {
-          var send = {
-            clearingCharges2: $scope.form.clearingCharges2,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            $scope.updateAll()
-          })
-        }
-
-        $scope.exrateChange = function() {
-          var send = {
-            exRate: $scope.form.exRate,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            if (newValue != null) {
-              $scope.updateAll()
-            }
-          })
-        }
-        $scope.profitmarginChange = function() {
-          var send = {
-            profitMargin: $scope.form.profitMargin,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {
-            $scope.updateAll()
-          })
-        }
-
-
-
-        $scope.revision = function() {
-          var send = {
-            revision: $scope.form.revision,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {})
-        }
-
-        $scope.validity = function() {
-          var send = {
-            quoteValidity: $scope.form.quoteValidity,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {})
-        }
-
-        $scope.incoTerms = function() {
-          var send = {
-            terms: $scope.form.terms,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {})
-        }
-
-        $scope.deliverySave = function() {
-          var send = {
-            Delivery: $scope.form.Delivery,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {})
-        }
-
-
-        $scope.paymentSave = function() {
-          var send = {
-            paymentTerms: $scope.form.paymentTerms,
-          }
-          $http({
-            method: 'PATCH',
-            url: '/api/support/projects/' + $scope.form.pk + '/',
-            data: send,
-          }).
-          then(function(response) {})
-        }
-
-
-      }
-    }
-  }, true)
-
-
-
-
-  $scope.saveInfo = function() {
-
-    if ($scope.form.invoiceValue == null || $scope.form.invoiceValue < 0 || $scope.form.invoiceValue == undefined) {
-      $scope.form.invoiceValue = 0
-    }
-    if ($scope.form.packing == null || $scope.form.packing < 0 || $scope.form.packing == undefined) {
-      $scope.form.packing = 0
-    }
-    if ($scope.form.insurance == null || $scope.form.insurance < 0 || $scope.form.insurance == undefined) {
-      $scope.form.insurance = 0
-    }
-    if ($scope.form.freight == null || $scope.form.freight < 0 || $scope.form.freight == undefined) {
-      $scope.form.freight = 0
-    }
-    if ($scope.form.assessableValue == null || $scope.form.assessableValue < 0 || $scope.form.assessableValue == undefined) {
-      $scope.form.assessableValue = 0
-
-    }
-    if ($scope.form.gst1 == null || $scope.form.gst1 < 0 || $scope.form.gst1 == undefined) {
-      $scope.form.gst1 = 0
-    }
-    if ($scope.form.gst2 == null || $scope.form.gst2 < 0 || $scope.form.gst2 == undefined) {
-      $scope.form.gst2 = 0
-    }
-    if ($scope.form.clearingCharges1 == null || $scope.form.clearingCharges1 < 0 || $scope.form.clearingCharges1 == undefined) {
-      $scope.form.clearingCharges1 = 0
-    }
-    if ($scope.form.clearingCharges2 == null || $scope.form.clearingCharges2 < 0 || $scope.form.clearingCharges2 == undefined) {
-      $scope.form.clearingCharges2 = 0
-    }
-
-
-    var dataToSave = {
-      'invoiceValue': $scope.form.invoiceValue,
-      'packing': $scope.form.packing,
-      'insurance': $scope.form.insurance,
-      'freight': $scope.form.freight,
-      'assessableValue': $scope.form.assessableValue,
-      'gst1': $scope.form.gst1,
-      'gst2': $scope.form.gst2,
-      'clearingCharges1': $scope.form.clearingCharges1,
-      'clearingCharges2': $scope.form.clearingCharges2,
-      'projectPK': $scope.form.pk
-    }
-    $http({
-      method: 'POST',
-      url: '/api/support/calculate/',
-      data: dataToSave,
-    }).
-    then(function(response) {
-      Flash.create('success', 'Saved');
-      console.log(response.data, 'aaaaaa');
       $scope.fetchData()
     })
+  }
 
+  $scope.reject = function() {
+    var sendStatus = {
+      status: 'created',
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: sendStatus,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Saved');
+      $scope.form.status = response.data.status
+      $scope.updateStatus()
+      $scope.data=[]
+    })
   }
 
   $scope.send = function() {
@@ -1848,29 +1285,631 @@ app.controller("businessManagement.projects.success.view", function($scope, $sta
         })
       }
   }
-  $http({
-    method: 'GET',
-    url: '/api/support/material/?project=' + $scope.form.pk,
-  }).
-  then(function(response) {
-    $scope.material = response.data
-    console.log($scope.material, 'llllllllll');
-    for (var i = 0; i < $scope.material.length; i++) {
-      $scope.issue = $scope.material[i].materialIssue
-      $scope.sum = $scope.issue.map(function(m) {
-        return m.qty * m.price
-      }).reduce(function(a, b) {
-        return a + b
-      }, 0)
-    }
-  })
-
-
 
 
 
 
 })
+// app.controller("businessManagement.projects.approval", function($scope, $state, $users, $stateParams, $http, Flash) {
+//
+//
+// })
+// app.controller("businessManagement.projects.approval.success", function($scope, $state, $users, $stateParams, $http, Flash) {
+//
+//
+// })
+// app.controller("businessManagement.projects.approval.view", function($scope, $state, $users, $stateParams, $http, Flash) {
+//
+//   if ($scope.tab == undefined) {
+//     $scope.resetForm();
+//   } else {
+//     $scope.form = $scope.data.tableData[$scope.tab.data.index]
+//     console.log($scope.form,'ffffooooooorrrrrrmmmmmmmmmmmm');
+//   }
+//   console.log($scope.form);
+//   $scope.projectSteps = {
+//     steps: projectsStepsData
+//   }
+//   $scope.updateStatus=function(){
+//     for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+//       if ($scope.projectSteps.steps[i].text == $scope.form.status) {
+//         $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
+//         break;
+//       }
+//     }
+//   }
+//   $scope.updateStatus()
+//   $scope.me = $users.get('mySelf');
+//   $http.get('/api/HR/userSearch/').
+//   then(function(response) {
+//     $scope.persons = response.data;
+//     console.log($scope.form.responsible, 'bbbbbbbbbbbb');
+//     $scope.name = []
+//
+//     function filterByPk(item) {
+//       if ($scope.form.responsible.includes(item.pk)) {
+//         console.log(item.first_name + item.last_name, 'vvvvvvvvv');
+//         $scope.name.push(item.first_name + item.last_name)
+//       }
+//     }
+//     $scope.persons.filter(filterByPk);
+//   })
+//   $scope.projects = []
+//   $scope.updateAll=function(){
+//     if($scope.projects.length>0){
+//       for (var i = 0; i < $scope.projects.length; i++) {
+//         $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.projects[i].price) / 100 + $scope.projects[i].price).toFixed(2))
+//         $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
+//         $scope.projects[i].packing = parseFloat((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
+//         $scope.projects[i].insurance = parseFloat((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
+//         $scope.projects[i].freight = parseFloat((($scope.form.freight / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
+//         $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+//         $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+//         $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif +(($scope.projects[i].cif * $scope.form.assessableValue)/100))*($scope.projects[i].custom)/100).toFixed(2))
+//         $scope.projects[i].socialVal = parseFloat(($scope.projects[i].customVal *0.1).toFixed(2))
+//         $scope.projects[i].gstVal = parseFloat(($scope.projects[i].cif+$scope.projects[i].customVal+$scope.projects[i].socialVal)*($scope.projects[i].gst/100)).toFixed(2)
+//         $scope.projects[i].charge1 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
+//         $scope.projects[i].charge2 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
+//         $scope.projects[i].landed_price = (($scope.projects[i].cif + $scope.projects[i].customVal + $scope.projects[i].socialVal + $scope.projects[i].charge1 + $scope.projects[i].charge2).toFixed(2))
+//       }
+//     }
+//   }
+//   $scope.fetchData = function(index) {
+//     $http({
+//       method: 'GET',
+//       url: '/api/support/bom/?project=' + $scope.form.pk
+//     }).
+//     then(function(response) {
+//       $scope.projects = response.data
+//       $scope.updateAll()
+//     })
+//   }
+//   $scope.fetchData()
+// //   setTimeout(function () {
+// //     console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+// //   $scope.updateAll()
+// // },1000)
+//
+//
+//   // $scope.$watch('projects', function(newValue, oldValue) {
+//   //   if (typeof newValue == 'object') {
+//   //     $scope.total = 0
+//   //     for (var i = 0; i < $scope.projects.length; i++) {
+//   //       console.log($scope.projects[i].pk);
+//   //       if (isNaN($scope.projects[i].quantity1 * $scope.projects[i].price) == false)
+//   //         $scope.total += $scope.projects[i].quantity1 * $scope.projects[i].price
+//   //       $scope.quanty = $scope.projects[i].quantity1
+//   //       $scope.price = $scope.projects[i].price
+//   //       $scope.invoice_price = $scope.projects[i].price
+//   //       $scope.quanty2 = $scope.projects[i].quantity1
+//   //
+//   //       var sendtoBom = {
+//   //         quantity1: $scope.quanty,
+//   //         price: $scope.price,
+//   //         invoice_price: $scope.invoice_price,
+//   //         landed_price: $scope.landed_price,
+//   //         quantity2: $scope.quanty2,
+//   //       }
+//   //       $http({
+//   //         method: 'PATCH',
+//   //         url: 'api/support/bom/' + $scope.projects[i].pk + '/',
+//   //         data: sendtoBom,
+//   //       }).
+//   //       then(function(response) {})
+//   //
+//   //     }
+//   //   }
+//   // }, true)
+//
+//   $scope.accept = function() {
+//     var date = new Date().toJSON().split('T')[0]
+//     var sendStatus = {
+//       status: 'approved',
+//       approved1: true,
+//       approved1_user: $scope.me.pk,
+//       approved1_date: date
+//     }
+//     $http({
+//       method: 'PATCH',
+//       url: '/api/support/projects/' + $scope.form.pk + '/',
+//       data: sendStatus,
+//     }).
+//     then(function(response) {
+//       Flash.create('success', 'Saved');
+//       console.log(response.data, 'aaaaaa');
+//       $scope.form.status = response.data.status
+//       $scope.updateStatus()
+//     })
+//   }
+//
+//   $scope.reject = function() {
+//     var sendStatus = {
+//       status: 'created',
+//     }
+//     $http({
+//       method: 'PATCH',
+//       url: '/api/support/projects/' + $scope.form.pk + '/',
+//       data: sendStatus,
+//     }).
+//     then(function(response) {
+//       Flash.create('success', 'Saved');
+//       $scope.form.status = response.data.status
+//       $scope.updateStatus()
+//     })
+//   }
+//
+//
+//
+//
+//
+// })
+// app.controller("businessManagement.projects.success.view", function($scope, $state, $users, $stateParams, $http, Flash,$rootScope) {
+//
+//   if ($scope.tab == undefined) {
+//     $scope.resetForm();
+//   } else {
+//     $scope.form = $scope.data.tableData[$scope.tab.data.index]
+//     $scope.form.exRate = 75;
+//   }
+//   console.log($scope.form);
+//   $scope.projectSteps = {
+//     steps: projectsStepsData
+//   }
+//     $scope.updateStatus=function(){
+//       for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+//         if ($scope.projectSteps.steps[i].text == $scope.form.status) {
+//           $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
+//           break;
+//         }
+//       }
+//     }
+//     $scope.updateStatus()
+//   $http.get('/api/HR/userSearch/').
+//   then(function(response) {
+//     $scope.persons = response.data;
+//     $scope.name = []
+//
+//     function filterByPk(item) {
+//       if ($scope.form.responsible.includes(item.pk)) {
+//         $scope.name.push(item.first_name + item.last_name)
+//       }
+//     }
+//     $scope.persons.filter(filterByPk);
+//   })
+//   $scope.fetchData = function() {
+//     $http({
+//       method: 'GET',
+//       url: '/api/support/bom/?project=' + $scope.form.pk
+//     }).
+//     then(function(response) {
+//       $scope.projects = response.data
+//
+//     })
+//   }
+//   $scope.fetchData()
+//
+//   $scope.options = false
+//   $scope.showOption = function() {
+//     if ($scope.options == false) {
+//       $scope.options = true
+//     } else {
+//       $scope.options = false
+//     }
+//   }
+//
+//   $scope.updateAll = function() {
+//     for (var i = 0; i < $scope.projects.length; i++) {
+//       console.log($scope.projects[i].custom,$scope.projects[i].gst);
+//       $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.projects[i].price) / 100 + $scope.projects[i].price).toFixed(2))
+//       $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
+//       $scope.projects[i].packing = parseFloat((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
+//       $scope.projects[i].insurance = parseFloat((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
+//       $scope.projects[i].freight = parseFloat((($scope.form.freight / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
+//       $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+//       $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+//       $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif +(($scope.projects[i].cif * $scope.form.assessableValue)/100))*($scope.projects[i].custom)/100).toFixed(2))
+//       $scope.projects[i].socialVal = parseFloat(($scope.projects[i].customVal *0.1).toFixed(2))
+//       $scope.projects[i].gstVal = parseFloat(($scope.projects[i].cif+$scope.projects[i].customVal+$scope.projects[i].socialVal)*($scope.projects[i].gst/100)).toFixed(2)
+//       $scope.projects[i].charge1 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
+//       $scope.projects[i].charge2 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
+//       $scope.projects[i].landed_price = (($scope.projects[i].cif + $scope.projects[i].customVal + $scope.projects[i].socialVal + $scope.projects[i].charge1 + $scope.projects[i].charge2).toFixed(2))
+//     }
+//
+//   }
+//
+//   $scope.$watch('projects', function(newValue, oldValue) {
+//     console.log("gggggggggggggggggggggggg");
+//     if (typeof newValue == 'object') {
+//       $scope.total = 0
+//       for (var i = 0; i < $scope.projects.length; i++) {
+//         $scope.total += $scope.projects[i].quantity2 * $scope.projects[i].landed_price
+//         console.log($scope.projects[i].invoice_price, $scope.projects[i].landed_price, 'jjjjjjjjjj');
+//         var sendtoBom = {
+//           quantity2: $scope.projects[i].quantity2,
+//           price: $scope.projects[i].price,
+//           invoice_price: $scope.projects[i].invoice_price,
+//           landed_price: $scope.projects[i].landed_price,
+//         }
+//         $http({
+//           method: 'PATCH',
+//           url: 'api/support/bom/' + $scope.projects[i].pk + '/',
+//           data: sendtoBom,
+//         }).
+//         then(function(response) {
+//           $scope.updateAll()
+//         })
+//
+//
+//         $scope.poChange = function() {
+//           var send = {
+//             poNumber: $scope.form.poNumber,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             return
+//           })
+//         }
+//
+//
+//
+//         $scope.quoteChange = function() {
+//           var send = {
+//             quoteRefNumber: $scope.form.quoteRefNumber,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             return
+//           })
+//
+//         }
+//
+//
+//         $scope.invoiceChange = function() {
+//           var send = {
+//             invoiceNumber: $scope.form.invoiceNumber,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             return
+//           })
+//         }
+//
+//
+//
+//         $scope.boeChange = function() {
+//           var send = {
+//             boeRefNumber: $scope.form.boeRefNumber,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             return
+//           })
+//
+//         }
+//
+//
+//         $scope.packingChange = function() {
+//
+//           var send = {
+//             packing: $scope.form.packing,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             $scope.updateAll()
+//           })
+//
+//         }
+//
+//
+//
+//         $scope.assemblyValChange = function() {
+//           var send = {
+//             assessableValue: $scope.form.assessableValue,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             $scope.updateAll()
+//           })
+//
+//         }
+//
+//
+//         $scope.insuranceChange = function() {
+//           var send = {
+//             insurance: $scope.form.insurance,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             $scope.updateAll()
+//           })
+//         }
+//
+//         $scope.freightChange = function() {
+//           var send = {
+//             freight: $scope.form.freight,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             $scope.updateAll()
+//           })
+//         }
+//         $scope.clearingchar1Change = function() {
+//           var send = {
+//             clearingCharges1: $scope.form.clearingCharges1,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             $scope.updateAll()
+//           })
+//         }
+//         $scope.clearingchar2Change = function() {
+//           var send = {
+//             clearingCharges2: $scope.form.clearingCharges2,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             $scope.updateAll()
+//           })
+//         }
+//
+//         $scope.exrateChange = function() {
+//           var send = {
+//             exRate: $scope.form.exRate,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             if (newValue != null) {
+//               $scope.updateAll()
+//             }
+//           })
+//         }
+//         $scope.profitmarginChange = function() {
+//           var send = {
+//             profitMargin: $scope.form.profitMargin,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {
+//             $scope.updateAll()
+//           })
+//         }
+//
+//
+//
+//         $scope.revision = function() {
+//           var send = {
+//             revision: $scope.form.revision,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {})
+//         }
+//
+//         $scope.validity = function() {
+//           var send = {
+//             quoteValidity: $scope.form.quoteValidity,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {})
+//         }
+//
+//         $scope.incoTerms = function() {
+//           var send = {
+//             terms: $scope.form.terms,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {})
+//         }
+//
+//         $scope.deliverySave = function() {
+//           var send = {
+//             Delivery: $scope.form.Delivery,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {})
+//         }
+//
+//
+//         $scope.paymentSave = function() {
+//           var send = {
+//             paymentTerms: $scope.form.paymentTerms,
+//           }
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: send,
+//           }).
+//           then(function(response) {})
+//         }
+//
+//
+//       }
+//     }
+//   }, true)
+//
+//
+//
+//
+//   $scope.saveInfo = function() {
+//
+//     if ($scope.form.invoiceValue == null || $scope.form.invoiceValue < 0 || $scope.form.invoiceValue == undefined) {
+//       $scope.form.invoiceValue = 0
+//     }
+//     if ($scope.form.packing == null || $scope.form.packing < 0 || $scope.form.packing == undefined) {
+//       $scope.form.packing = 0
+//     }
+//     if ($scope.form.insurance == null || $scope.form.insurance < 0 || $scope.form.insurance == undefined) {
+//       $scope.form.insurance = 0
+//     }
+//     if ($scope.form.freight == null || $scope.form.freight < 0 || $scope.form.freight == undefined) {
+//       $scope.form.freight = 0
+//     }
+//     if ($scope.form.assessableValue == null || $scope.form.assessableValue < 0 || $scope.form.assessableValue == undefined) {
+//       $scope.form.assessableValue = 0
+//
+//     }
+//     if ($scope.form.gst1 == null || $scope.form.gst1 < 0 || $scope.form.gst1 == undefined) {
+//       $scope.form.gst1 = 0
+//     }
+//     if ($scope.form.gst2 == null || $scope.form.gst2 < 0 || $scope.form.gst2 == undefined) {
+//       $scope.form.gst2 = 0
+//     }
+//     if ($scope.form.clearingCharges1 == null || $scope.form.clearingCharges1 < 0 || $scope.form.clearingCharges1 == undefined) {
+//       $scope.form.clearingCharges1 = 0
+//     }
+//     if ($scope.form.clearingCharges2 == null || $scope.form.clearingCharges2 < 0 || $scope.form.clearingCharges2 == undefined) {
+//       $scope.form.clearingCharges2 = 0
+//     }
+//
+//
+//     var dataToSave = {
+//       'invoiceValue': $scope.form.invoiceValue,
+//       'packing': $scope.form.packing,
+//       'insurance': $scope.form.insurance,
+//       'freight': $scope.form.freight,
+//       'assessableValue': $scope.form.assessableValue,
+//       'gst1': $scope.form.gst1,
+//       'gst2': $scope.form.gst2,
+//       'clearingCharges1': $scope.form.clearingCharges1,
+//       'clearingCharges2': $scope.form.clearingCharges2,
+//       'projectPK': $scope.form.pk
+//     }
+//     $http({
+//       method: 'POST',
+//       url: '/api/support/calculate/',
+//       data: dataToSave,
+//     }).
+//     then(function(response) {
+//       Flash.create('success', 'Saved');
+//       console.log(response.data, 'aaaaaa');
+//       $scope.fetchData()
+//     })
+//
+//   }
+//
+//   $scope.send = function() {
+//       for (var i = 0; i < $scope.projects.length; i++) {
+//         console.log( $scope.projects[i],'aaaaaaaaaaaaaaaaaa');
+//         $scope.qty = $scope.projects[i].quantity2;
+//         $scope.rate = $scope.projects[i].landed_price
+//         $scope.pkforProduct = $scope.projects[i].products.pk
+//         $scope.inventory = {
+//           product: $scope.pkforProduct,
+//           qty: $scope.qty,
+//           rate: $scope.rate,
+//         }
+//         $http({
+//           method: 'POST',
+//           url: '/api/support/inventory/',
+//           data: $scope.inventory,
+//         }).
+//         then(function(response) {
+//           Flash.create('success', 'Saved');
+//           console.log(response.data, 'aaaaaa');
+//           $http({
+//             method: 'PATCH',
+//             url: '/api/support/projects/' + $scope.form.pk + '/',
+//             data: {
+//               savedStatus: true,
+//               status: 'ongoing'
+//             },
+//           }).
+//           then(function(response) {
+//             Flash.create('success', 'Saved');
+//             $scope.form.savedStatus = response.data.savedStatus
+//             $scope.form.status = response.data.status
+//             console.log(response.data, 'aaaaaa');
+//             $scope.updateStatus()
+//
+//           })
+//         })
+//       }
+//   }
+//   $http({
+//     method: 'GET',
+//     url: '/api/support/material/?project=' + $scope.form.pk,
+//   }).
+//   then(function(response) {
+//     $scope.material = response.data
+//     console.log($scope.material, 'llllllllll');
+//     for (var i = 0; i < $scope.material.length; i++) {
+//       $scope.issue = $scope.material[i].materialIssue
+//       $scope.sum = $scope.issue.map(function(m) {
+//         return m.qty * m.price
+//       }).reduce(function(a, b) {
+//         return a + b
+//       }, 0)
+//     }
+//   })
+//
+//
+//
+//
+//
+//
+// })
 
 app.controller("businessManagement.projects.invoice", function($scope, $state, $users, $stateParams, $http, Flash) {
 

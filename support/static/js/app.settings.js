@@ -92,6 +92,7 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
         }).
         then(function(response){
           console.log(response.data);
+            $scope.$broadcast('forceGenericTableRowRefresh',  response.data);
           Flash.create('success', response.status + ' : ' + response.statusText );
         }, function(response){
           Flash.create('danger', response.status + ' : ' + response.statusText );
@@ -108,6 +109,7 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
         }).
         then(function(response){
           console.log(response.data);
+          $scope.$broadcast('forceInsetTableData', response.data);
           Flash.create('success', response.status + ' : ' + response.statusText );
         }, function(response){
           Flash.create('danger', response.status + ' : ' + response.statusText );

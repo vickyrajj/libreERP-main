@@ -40,7 +40,7 @@ class Products(models.Model):
     sheet = models.ForeignKey(ProductSheet, related_name='productsSheet', null=True)
     customs_no = models.PositiveIntegerField( null=True,blank =True,default=0)
     bar_code = models.CharField(max_length=50, null=True,blank =True)
-    gst = models.FloatField(default = 18)
+    gst = models.FloatField(default = 18.0)
     custom = models.FloatField(default = 7.5)
 
 
