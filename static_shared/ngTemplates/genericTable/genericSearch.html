@@ -35,7 +35,7 @@
   </ul>
   <ul class="pagination" id="genericTableSearch" style="margin-left: 40px;max-width:900px;">
     <li>
-      <div class="input-group" style="width:100%;" >
+      <div class="input-group hidden-xs hidden-sm" style="width:100%;" >
         <input ng-show="{{searchShow}}" type="text" class="form-control" placeholder="Search by {{searchField}}" ng-model = "searchText" ng-enter="updateData()" style="wisth:100%;{{views.length==1 ? 'width:100%;' : ''}}">
         <div class="input-group-btn"  ng-if="views.length > 1">
           <a ng-repeat = "view in views" class='btn btn-default ' ng-click = "changeView($index)"><i class="fa {{view.icon}}"></i></a>

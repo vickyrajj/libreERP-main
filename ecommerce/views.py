@@ -2445,3 +2445,28 @@ class CreateShipmentAPI(APIView):
         weight = 1.0
         awbPath , trackingID = createShipment(recipientName , recipientCompany , recipientPhone , [recipientAddress] ,  city, state , pincode , country,  weight)
         return Response({'awbPath':awbPath,'trackingID':trackingID,'courierName':'Fedex'}, status = status.HTTP_200_OK)
+
+# from django.core.files import File
+#
+# class AddImageAPI(APIView):
+#     renderer_classes = (JSONRenderer,)
+#     permission_classes = (permissions.AllowAny , )
+#     def get(self , request , format = None):
+#         print 'GGGGGGGGGGGGGGGGGGGGGGGG'
+#         allObj = Countries.objects.all()
+#         for i in allObj:
+#             name = i.sortname.lower()
+#             try:
+#                 img = open(os.path.join(globalSettings.BASE_DIR, 'media_root/Flags/'+name +'.png'))
+#                 print File(img)
+#                 # i.flag.save(name+'.png', File(img))
+#             except Exception as e:
+#                 pass
+#         return Response({'awbPath':12}, status = status.HTTP_200_OK)
+
+class CountryViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = Countries.objects.all()
+    serializer_class = CountrySerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']

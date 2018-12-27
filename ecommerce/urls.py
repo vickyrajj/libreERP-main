@@ -24,6 +24,8 @@ router.register(r'pages' , PagesViewSet , base_name='pages')
 router.register(r'addPincode' , PincodeViewSet , base_name='addPincode')
 router.register(r'genericPincode' , GenericPincodeViewSet , base_name='genericPincode')
 router.register(r'genericImage' , GenericImageViewSet , base_name='genericImage')
+router.register(r'country' , CountryViewSet , base_name='country')
+
 
 urlpatterns = [
     url(r'^', include(router.urls)),
@@ -44,6 +46,7 @@ urlpatterns = [
     url(r'shipmentCharge/$' , ShipmentChargeAPI.as_view()),
     url(r'createShipment/$' , CreateShipmentAPI.as_view()),
     url(r'postBarcode/$' , PostBarcodeAPI.as_view()),
+
 
 
 ]

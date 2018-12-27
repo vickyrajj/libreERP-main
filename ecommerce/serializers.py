@@ -613,3 +613,8 @@ class genericImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenericImage
         fields = ( 'pk' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage','topBanner','topMobileBanner')
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Countries
+        fields = ( 'pk' , 'uniqueId' ,'sortname' , 'name','phonecode','flag')

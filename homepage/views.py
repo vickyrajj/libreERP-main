@@ -26,7 +26,8 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 import sendgrid
 import os
-
+from ERP.models import appSettingsField
+from ecommerce.models import Countries
 
 def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
@@ -108,8 +109,14 @@ def desclaimer(request):
 def registration(request):
 
     if not globalSettings.LITE_REGISTRATION:
-        return render(request,"registration.html" , {"home" : False ,"brand_title":globalSettings.SEO_TITLE,"autoActiveReg":globalSettings.AUTO_ACTIVE_ON_REGISTER , "brandLogo" : globalSettings.BRAND_LOGO ,'icon_logo':globalSettings.ICON_LOGO, "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'regextra':globalSettings.REGISTRATION_EXTRA_FIELD,'verifyMobile':globalSettings.VERIFY_MOBILE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
-
+        data = {"home" : False ,"brand_title":globalSettings.SEO_TITLE,"autoActiveReg":globalSettings.AUTO_ACTIVE_ON_REGISTER , "brandLogo" : globalSettings.BRAND_LOGO ,'icon_logo':globalSettings.ICON_LOGO, "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'regextra':globalSettings.REGISTRATION_EXTRA_FIELD,'verifyMobile':globalSettings.VERIFY_MOBILE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
+        objIsGlobal = appSettingsField.objects.filter(name='isStoreGlobal')
+        isStoreGlobal = False
+        if len(objIsGlobal)>0:
+            if objIsGlobal[0].flag:
+                isStoreGlobal = True
+        data['isStoreGlobal'] = isStoreGlobal
+        return render(request,"registration.html" , data)
     else:
         mobile = ''
         if 'mobile' in request.POST:
@@ -140,6 +147,18 @@ class UpdateInfoAPI(APIView):
         u.set_password(d['password'])
         u.backend = 'django.contrib.auth.backends.ModelBackend'
         u.save()
+
+        try:
+            pobj = profile.objects.get(pk=u.profile.pk)
+            z  = merge_two_dicts(pObj.details, d)
+            pObj.details = z
+            print z,'***************************************************'
+            pObj.save()
+        except :
+            pass
+
+
+
         # ctx = {
         #     'userData':d
         # }
