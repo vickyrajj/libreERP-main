@@ -15,6 +15,7 @@
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/animatecss/3.5.1/animate.min.css" charset="utf-8">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.0/rzslider.min.css" charset="utf-8">
       <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
       <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css"> -->
     {% else %}
       <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" charset="utf-8">
@@ -22,6 +23,7 @@
       <link rel="stylesheet" href="{% static 'css/angular-chart.min.css' %}" charset="utf-8">
       <link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
       <link rel="stylesheet" href="{% static 'css/rzslider.min.css' %}" charset="utf-8">
+      <link rel="stylesheet" href="{% static 'css/angular-datatables.css' %}" charset="utf-8">
     {% endif %}
     <link rel="stylesheet" href="{% static 'css/githubHighlightJSTheme.min.css' %}" charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/angular-aside.min.css' %}" charset="utf-8">
@@ -187,6 +189,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.4.9/angular-sanitize.min.js"></script>
       <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.min.js"></script> -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-chart.js/0.8.8/angular-chart.min.js"></script>
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
       <script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.3/fabric.min.js"></script>
       <!-- <script src="https://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script> -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.3.4/tinymce.min.js"></script>
@@ -199,8 +202,10 @@
     <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script> -->
       <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
       <script src="{% static 'js/jquery.cookie-1.4.1.min.js' %}"></script>
+      <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
       <script src="{% static 'js/bootstrap.min.js' %}"></script>
       <script src="{% static 'js/angular.min.js' %}"></script>
+      <script src="{% static 'js/angular-datatables.min.js' %}"></script>
       <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
       <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
       <script src="{% static 'js/Chart.min.js' %}"></script>
@@ -229,6 +234,7 @@
     <script src="{% static 'js/markdown.min.js' %}"></script>
     <script src="{% static 'js/angular-ui-switch.min.js' %}"></script>
     <script src="{% static 'js/jquery.orgchart.min.js' %}"></script>
+
     <!-- <script src="{% static 'js/angular-cookies.js' %}"></script> -->
     <!-- Custom JS files -->
     <script type="text/javascript">
@@ -237,6 +243,7 @@
       var webRtcAddress = '{{webRtcAddress}}'
       var wamp_prefix = '{{wamp_prefix}}'
       var BRAND_LOGO = "{{BRAND_LOGO}}";
+      var BRAND_NAME = "{{BRAND_NAME}}";
       var appps;
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
@@ -260,6 +267,7 @@
     <script src="{% static 'js/custom/services.js' %}"></script>
     <script src="{% static 'js/chart.funnel.bundled.min.js' %}"></script>
     <script src="{% static 'js/gauge.min.js' %}"></script>
+
 
     {% for a in appsWithJs %}
       <script src="{% static '' %}js/{{a.name}}.js"></script>

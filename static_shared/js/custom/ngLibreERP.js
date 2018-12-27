@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngAside', 'ngDraggable', 'flash', 'chart.js', 'ngTagsInput', 'ui.tinymce', 'hljs', 'mwl.confirm', 'ngAudio', 'uiSwitch', 'rzModule','angular-web-notification']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngAside', 'ngDraggable', 'flash', 'chart.js', 'ngTagsInput', 'ui.tinymce', 'hljs', 'mwl.confirm', 'ngAudio', 'uiSwitch', 'rzModule','angular-web-notification','datatables']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, hljsServiceProvider) {
   hljsServiceProvider.setOptions({
@@ -34,15 +34,30 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
     $scope.showw=false;
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
-  // $scope.brandName = BRAND_NAME;
-  $scope.brandName = 'Syrow';
+   $scope.brandName = BRAND_NAME;
+  // $scope.brandName = 'Syrow';
   $timeout(function() {
     $scope.isCustomer = $permissions.myPerms('app.customer.access')
     console.log($scope.isCustomer);
     $scope.showw=true;
     console.log($scope.me);
     // $scope.brandName = 'Customer';
-  }, 3000);
+      // if($scope.isCustomer){
+      //   $http({
+      //     method: 'GET',
+      //     url: '/api/ERP/service/?company=' + $scope.me.pk
+      //   }).
+      //   then(function(response) {
+      //     console.log(response.data[0],"**************************")
+      //     $scope.brandName=response.data[0].name
+      //   }, function(response) {
+      //     console.log('mooooooooo');
+      //   });
+      // }
+      // else {
+      //   $scope.brandName = BRAND_NAME;
+      // }
+  }, 1000);
 
 
 
@@ -293,6 +308,7 @@ console.log($scope.onHover);
     }
 
   };
+
 
 
   $scope.$watch('terminal.show', function(newValue, oldValue) {

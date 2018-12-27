@@ -121,29 +121,33 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-12" ng-if="isTableView">
-              <table style="width:100%;font-size:16px" id="myQATable">
-                 <tr id="myQATableHeader">
-                   <th style="text-align:center">Chat Start</th>
-                   <th style="text-align:center">Company</th>
-                   <th>Advisor</th>
-                   <th>UID/Visitor Name</th>
-                   <th>Rating</th>
-                   <th>Status</th>
-                 </tr>
-                 <tr ng-repeat="data in reviewData" style="text-align:center" ng-click="tableAction(reviewData.length-1-$index)">
-                   <td>{{data[0].created | date : 'dd-MMM-yyyy'}}</td>
-                   <td>{{data[0].company? data[0].company:'-'}}</td>
-                   <td>{{data[0].user_id | getName}}</td>
-                   <td>{{data[0].uid}}</td>
-                   <td>{{data[0].rating? data[0].rating:'-'}}</td>
-                   <td ng-if="data[0].statusChat=='closed'" style="background-color:rgba(255, 0, 0,0.7)">{{data[0].statusChat}}</td>
-                   <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td>
-                   <td ng-if="data[0].statusChat!=='started'&&data[0].statusChat!=='closed'">{{data[0].statusChat}}</td>
-                   <!-- <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td> -->
-                   <!-- <td style="background-color:red">{{data[0].statusChat}}</td>
-                   <td style="background-color:red">{{data[0].statusChat}}</td> -->
-                 </tr>
+            <div class="col-md-12" ng-if="isTableView&&reviewData.length>0">
+                <table style="width:100%;font-size:16px" id="myQATable" datatable="" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="row-border hover">
+                  <thead>
+                    <tr id="myQATableHeader">
+                      <th style="text-align:center">Chat Start</th>
+                      <th style="text-align:center">Company</th>
+                      <th>Advisor</th>
+                      <th>UID/Visitor Name</th>
+                      <th>Rating</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                 <tbody>
+                   <tr ng-repeat="data in reviewData" style="text-align:center" ng-click="tableAction(data,true)">
+                     <td>{{data[0].created | date : 'dd-MMM-yyyy'}}</td>
+                     <td>{{data[0].company? data[0].company:'-'}}</td>
+                     <td>{{data[0].user_id | getName}}</td>
+                     <td>{{data[0].uid}}</td>
+                     <td>{{data[0].rating? data[0].rating:'-'}}</td>
+                     <td ng-if="data[0].statusChat=='closed'" style="background-color:rgba(255, 0, 0,0.7)">{{data[0].statusChat}}</td>
+                     <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td>
+                     <td ng-if="data[0].statusChat!=='started'&&data[0].statusChat!=='closed'">{{data[0].statusChat}}</td>
+                     <!-- <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td> -->
+                     <!-- <td style="background-color:red">{{data[0].statusChat}}</td>
+                     <td style="background-color:red">{{data[0].statusChat}}</td> -->
+                   </tr>
+                 </tbody>
                 </table>
             </div>
 
@@ -217,28 +221,33 @@
             </div>
             <div class="col-md-12" ng-if="isTableView">
               <table style="width:100%;font-size:16px" id="myQATable">
-                 <tr id="myQATableHeader">
-                   <th style="text-align:center">Chat Start</th>
-                   <th style="text-align:center">Company</th>
-                   <th>Advisor</th>
-                   <th>UID/Visitor Name</th>
-                   <th>Rating</th>
-                   <th>Status</th>
-                 </tr>
-                 <tr ng-repeat="data in archivedData" style="text-align:center" ng-click="tableArchAction($index)">
-                   <td>{{data[0].created | date : 'dd-MMM-yyyy'}}</td>
-                   <td>{{data[0].company}}</td>
-                   <td>{{data[0].user_id | getName}}</td>
-                   <td>{{data[0].uid}}</td>
-                   <td>{{data[0].rating? data[0].rating:'-'}}</td>
-                   <td ng-if="data[0].statusChat=='closed'" style="background-color:rgba(255, 0, 0,0.7)">{{data[0].statusChat}}</td>
-                   <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td>
-                   <!-- <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td>
-                   <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td> -->
-                   <!-- <td style="background-color:red">{{data[0].statusChat}}</td>
-                   <td style="background-color:red">{{data[0].statusChat}}</td> -->
-                 </tr>
-                </table>
+              <!-- <table style="width:100%;font-size:16px" id="myQATable" datatable="" dt-options="showCase.dtOptions" dt-column-defs="showCase.dtColumnDefs" class="row-border hover"> -->
+                 <thead>
+                   <tr id="myQATableHeader">
+                     <th style="text-align:center">Chat Start</th>
+                     <th style="text-align:center">Company</th>
+                     <th>Advisor</th>
+                     <th>UID/Visitor Name</th>
+                     <th>Rating</th>
+                     <th>Status</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr ng-repeat="data in archivedData" style="text-align:center" ng-click="tableArchAction($index)">
+                     <td>{{data[0].created | date : 'dd-MMM-yyyy'}}</td>
+                     <td>{{data[0].company}}</td>
+                     <td>{{data[0].user_id | getName}}</td>
+                     <td>{{data[0].uid}}</td>
+                     <td>{{data[0].rating? data[0].rating:'-'}}</td>
+                     <td ng-if="data[0].statusChat=='closed'" style="background-color:rgba(255, 0, 0,0.7)">{{data[0].statusChat}}</td>
+                     <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td>
+                     <!-- <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td>
+                     <td ng-if="data[0].statusChat=='started'" style="background-color:green">{{data[0].statusChat}}</td> -->
+                     <!-- <td style="background-color:red">{{data[0].statusChat}}</td>
+                     <td style="background-color:red">{{data[0].statusChat}}</td> -->
+                   </tr>
+                 </tbody>
+              </table>
             </div>
             <div class="" style="width: 100%;position: absolute;top:400px;left:40%;color:#f0f0f0;font-size:40px" ng-if="myDialouge">
               No More Data

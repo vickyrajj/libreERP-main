@@ -23,7 +23,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
 
   $http({
     method: 'GET',
-    url:'/api/support/reviewHomeCal/?customer&limit=15&offset=15',
+    url:'/api/support/reviewHomeCal/?customer&chatedDate='+new Date()
   }).
   then(function(response) {
     $scope.reviewData = response.data

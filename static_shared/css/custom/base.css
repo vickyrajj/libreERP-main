@@ -31,6 +31,7 @@ body {
 #myQATableHeader th{
   text-align: center;
   padding: 10px;
+  cursor: pointer
 }
 
 #myQATable{
@@ -38,12 +39,12 @@ body {
   width: 100%;
 
 }
-#myQATable tr:not(:first-child){
+#myQATable tr{
 cursor: pointer
 }
 #myQATable td{
   border: 1px solid #dddddd;
-  padding: 10px 5px;
+  padding: 7px 5px;
 }
 #myQATable tr:nth-child(even){
   background-color: #dddddd;

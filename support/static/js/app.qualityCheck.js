@@ -361,11 +361,42 @@ $scope.snap=function() {
     }
   }
 })
-app.controller("businessManagement.reviews", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
+app.controller("businessManagement.reviews", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window,DTOptionsBuilder,DTColumnBuilder) {
 
   $scope.data = {
     tableData: []
   };
+
+   // var vm = this;
+   // vm.dtOptions = DTOptionsBuilder.newOptions()
+   //     .withPaginationType('full_numbers')
+   //     .withDisplayLength(2)
+   //     .withOption('rowCallback', rowCallback)
+   //     .withDOM('pitrfl');
+   // vm.dtColumnDefs = [
+   //     DTColumnDefBuilder.newColumnDef(0),
+   //     DTColumnDefBuilder.newColumnDef(1).notVisible(),
+   //     DTColumnDefBuilder.newColumnDef(2).notSortable()
+   // ];
+
+
+
+    // $scope.mydtOptions=vm.dtOptions
+    // function someClickHandler(info) {
+    //     vm.message = info.id + ' - ' + info.firstName;
+    // }
+    // function rowCallback(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+    //     // Unbind first in order to avoid any duplicate handler (see https://github.com/l-lin/angular-datatables/issues/87)
+    //     alert('in row call ack')
+    //     $('td', nRow).unbind('click');
+    //     $('td', nRow).bind('click', function() {
+    //       alert('here')
+    //         $scope.$apply(function() {
+    //             $scope.tableAction(iDisplayIndex)
+    //         });
+    //     });
+    //     return nRow;
+    // }
 
   $scope.form = {date:new Date(),user:'',email:'',client:''}
   $scope.reviewData = []
@@ -381,6 +412,7 @@ $scope.offsett=0;
 $scope.Archoffsett=0;
 $scope.limit=39;
 $scope.isLastSetOfData=false;
+
 
   $scope.getArchData = function(date,user,email,client,download){
     $scope.archivedData=null;
@@ -422,9 +454,22 @@ $scope.isLastSetOfData=false;
   $scope.setMyView=function(){
     $scope.isTableView=!$scope.isTableView
   }
+  var that=this
 
   $scope.getData = function(date,user,email,client,download){
-    $scope.reviewData=null;
+     $scope.reviewData=[]
+
+    // $scope.reviewData=null;
+    var vm = that;
+     vm.message = '';
+     // vm.someClickHandler = someClickHandler;
+     vm.dtOptions = DTOptionsBuilder.fromSource('data.json')
+         .withPaginationType('full_numbers')
+     vm.dtColumns = [
+         DTColumnBuilder.newColumn('id').withTitle('ID'),
+         DTColumnBuilder.newColumn('firstName').withTitle('First name'),
+         DTColumnBuilder.newColumn('lastName').withTitle('Last name').notVisible()
+     ];
     $scope.loadingData=true;
     console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
     var url = '/api/support/reviewHomeCal/?limit='+$scope.limit+'&offset='+$scope.offsett
@@ -443,6 +488,7 @@ $scope.isLastSetOfData=false;
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
+
       $http({
         method: 'GET',
         url: url,
@@ -557,8 +603,14 @@ $scope.isLastSetOfData=false;
   }
 
 
-  $scope.tableAction = function(target) {
+  $scope.tableAction = function(target,table) {
     // console.log(target, action, mode);
+    // alert($scope.reviewData.indexOf(target))
+    if(table){
+      target=$scope.reviewData.indexOf(target)
+    }
+
+
     console.log($scope.reviewData[target]);
     var appType = 'Info';
     $scope.addTab({

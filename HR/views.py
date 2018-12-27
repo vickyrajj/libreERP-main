@@ -231,17 +231,20 @@ def home(request):
     # permissions = permission.objects.filter(user = u)
     # print '####################################',permissions
 
-
+    myBrand=globalSettings.BRAND_NAME
     if u.is_superuser:
         apps = application.objects.all()
         modules = module.objects.filter(~Q(name='public'))
     else:
         apps = getApps(u)
         modules = getModules(u)
+        if len(permission.objects.filter(user=u,app__name='app.customer.access'))>0:
+            if len(service.objects.filter(contactPerson=u))>0:
+                myBrand=service.objects.filter(contactPerson=u)[0].name
     apps = apps.filter(~Q(name__startswith='configure.' )).filter(~Q(name='app.users')).filter(~Q(name__endswith='.public'))
     return render(request , 'ngBase.html' , {'wampServer' : globalSettings.WAMP_SERVER,'wamp_prefix':globalSettings.WAMP_PREFIX, 'webRtcAddress' :  globalSettings.WEBRTC_ADDRESS,  'appsWithJs' : apps.filter(haveJs=True) \
-    ,'appsWithCss' : apps.filter(haveCss=True) , 'modules' : modules , 'useCDN' : globalSettings.USE_CDN , 'BRAND_LOGO' : globalSettings.BRAND_LOGO \
-    ,'BRAND_NAME' :  globalSettings.BRAND_NAME })
+    ,'appsWithCss' : apps.filter(haveCss=True) , 'modules' : modules , 'useCDN' : globalSettings.USE_CDN , 'BRAND_LOGO' :globalSettings.BRAND_LOGO  \
+    ,'BRAND_NAME' :  myBrand })
 
 class userProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)

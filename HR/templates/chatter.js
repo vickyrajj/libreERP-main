@@ -812,6 +812,7 @@ function createChatDiv() {
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
             '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
+            // '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
             '<i class="exitBtn SyrowFont font-SyrowVideoCall" style="display:none" id="videoBtn"></i>'+
             '<i class="closeIcon SyrowFont font-SyrowX" id="closeIcon"></i>'+
             '<i class="exitBtn SyrowFont font-SyrowLog-out" id="exitBtn"></i>'+
@@ -1650,10 +1651,7 @@ function activeAudioCall(){
           }\
           @keyframes changingOpacity{\
         	0%{\
-              opacity:0.2;\
-          	}\
-            90%{\
-              	opacity:1;\
+              opacity:0.4;\
           	}\
             100%{\
               	opacity:1;\
@@ -2296,9 +2294,14 @@ function deactivateAudioFrame(){
 function togglingActive(element,value){
   if(value){
     element.classList.add('changeOpacity')
+    element.classList.remove('font-SyrowPhone1')
+    element.classList.add('font-SyrowPhone-call')
   }else{
     element.classList.remove('changeOpacity')
+    element.classList.add('font-SyrowPhone1')
+    element.classList.remove('font-SyrowPhone-call')
   }
+
 }
 var videoBtn=document.getElementById('videoBtn')
 var audioBtn=document.getElementById('audioBtn')
