@@ -3544,7 +3544,6 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
 
 
-
   $rootScope.addToCart = []
   $scope.addTCart = getCookie('addToCart')
   if ($scope.addTCart != '') {
