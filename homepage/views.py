@@ -143,7 +143,10 @@ class UpdateInfoAPI(APIView):
 
         try:
             pobj = profile.objects.get(pk=u.profile.pk)
-            pObj.details = pObj.details + d
+            z  = merge_two_dicts(pObj.details, d)
+            pObj.details = z
+            print z,'***************************************************'
+            pObj.save()
         except :
             pass
 

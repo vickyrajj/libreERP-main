@@ -22,6 +22,12 @@ import os
 import unicodedata
 
 
+def merge_two_dicts(x, y):
+    z = x.copy()   # start with x's keys and values
+    z.update(y)    # modifies z with y's keys and values & returns None
+    return z
+
+
 def sendMail(d):
     ctx = {
         'user':d
@@ -258,9 +264,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 login(self.context['request'] , u,backend='django.contrib.auth.backends.ModelBackend')
                 instance.delete()
                 print u, u.profile, u.profile.pk, u.profile.mobile ,'ddddddddd'
-                print d ,'fffffffffffffffffffffff'.typ(d)
-                djson = unicodedata.normalize('NFKD', d).encode('ascii','ignore')
-                print d,'fffffffffffffffffffffffffffffffffffffffffffffff'
+                z  = merge_two_dicts(d, d)
+                print z,'fffffffffffffffffffffffffffffffffffffffffffffff'
                 pobj = profile.objects.get(user=u)
                 pobj.mobile = d['mobile']
                 try:
