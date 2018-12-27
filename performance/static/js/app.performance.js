@@ -402,5 +402,42 @@ app.controller("workforceManagement.performance.dash", function($scope, $state, 
       }
     }
   });
+  var ctx1 = document.getElementById("myChart1");
+  var data1 = {
+    labels: [
+      "Workcenter",
+      "storage",
+      "Inventory",
+      "SILO"
+    ],
+    datasets: [{
+      data: [184, 123, 61, 0],
+      backgroundColor: [
+        "#ADD9E6",
+        "#D2D98C",
+        "#B1CB8A",
+        "#F5F8D9"
+
+      ],
+
+    }]
+  };
+  var myDoughnutChar1t = new Chart(ctx1, {
+    type: 'doughnut',
+    data: data1,
+    options: {
+      cutoutPercentage: 50,
+      legend: {
+        position: 'right'
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            return data['datasets'][0]['data'][tooltipItem['index']] + 'L';
+          }
+        }
+      }
+    }
+  });
 
 });
