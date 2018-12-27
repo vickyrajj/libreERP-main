@@ -183,8 +183,17 @@ class ProductsUploadAPIView(APIView):
                     except:
                         customs_no = None
 
+                    try:
+                        custom = ws['I' + str(i)].value
+                    except:
+                        custom = 7.5
+                    try:
+                        gst = ws['J' + str(i)].value
+                    except:
+                        gst = 18
+
                     print parent
-                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,weight=weight,parent=parent, price=price,customs_no=customs_no)
+                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,weight=weight,parent=parent, price=price,customs_no=customs_no,custom=custom,gst=gst)
                 except:
                     pass
         return Response(status=status.HTTP_200_OK)
@@ -206,27 +215,39 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
 
 
     drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'anchor_icon.svg'))
-    summryHeader = Paragraph("""
-    <para >
-    <font size='14'>
-    PURCHASE ORDER
-    <br/>
-    <br/>
-    </font>
-    </para>
-    """ %(),styles['Normal'])
+    if currencyTyp == 'INR':
+        summryHeader = Paragraph("""
+        <para >
+        <font size='14'>
+        LANDING DETAILS
+        <br/>
+        <br/>
+        </font>
+        </para>
+        """ %(),styles['Normal'])
+        tdheader=[[summryHeader]]
+    else:
+        summryHeader = Paragraph("""
+        <para >
+        <font size='14'>
+        PURCHASE ORDER
+        <br/>
+        <br/>
+        </font>
+        </para>
+        """ %(),styles['Normal'])
 
 
-    summryHeader1 = Paragraph("""
-    <para leftIndent = 10>
-    <font size ='10'>
-    <b>Purchase Order Ref No :</b> %s <br/>
-    <b>Purchase Order Ref Date :</b> %s <br/>
-    </font></para>
-    """ %(project.poNumber , project.date),styles['Normal'])
+        summryHeader1 = Paragraph("""
+        <para leftIndent = 10>
+        <font size ='10'>
+        <b>Purchase Order Ref No :</b> %s <br/>
+        <b>Purchase Order Ref Date :</b> %s <br/>
+        </font></para>
+        """ %(project.poNumber , project.date),styles['Normal'])
 
 
-    tdheader=[[summryHeader,' ',summryHeader1]]
+        tdheader=[[summryHeader,' ',summryHeader1]]
     theader=Table(tdheader,colWidths=[3*inch , 1*inch , 3*inch])
     theader.hAlign = 'LEFT'
     elements.append(theader)
@@ -321,7 +342,10 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
         id+=1
         part_no = i.products.part_no
         desc = i.products.description_1
-        price = i.products.price*multNumber
+        if currencyTyp == 'INR':
+            price = i.landed_price
+        else:
+            price = i.price
         qty = i.quantity1
         amnt = price * qty
         grandTotal +=amnt

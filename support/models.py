@@ -38,7 +38,7 @@ class Products(models.Model):
     price = models.FloatField(null=True,blank =True)
     parent = models.ForeignKey('self', related_name='parentProduct', null=True)
     sheet = models.ForeignKey(ProductSheet, related_name='productsSheet', null=True)
-    customs_no = models.CharField(max_length=15, null=True,blank =True)
+    customs_no = models.PositiveIntegerField( null=True,blank =True,default=0)
     bar_code = models.CharField(max_length=50, null=True,blank =True)
     gst = models.FloatField(default = 18)
     custom = models.FloatField(default = 7.5)
@@ -113,6 +113,9 @@ class BoM(models.Model):
     landed_price = models.FloatField(null=True , default=0)
     invoice_price = models.FloatField(null=True , default=0)
     customer_price = models.FloatField(null=True , default=0)
+    gst =  models.FloatField(null=True , default=0)
+    custom = models.FloatField(null=True , default=0)
+    customs_no = models.PositiveIntegerField(null=True , default=0)
 
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
