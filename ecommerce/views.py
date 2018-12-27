@@ -1130,10 +1130,19 @@ class DownloadManifestAPI(APIView):
             ab = appSettingsField.objects.filter(name='posPrinting')
             if len(ab)>0:
                 if ab[0].flag:
-                    dt = manifest('textResponse',item,typ,'txtFile')
-                    resData = '\n'.join(dt)
-                    response = HttpResponse(resData,content_type='text/plain')
+                    # print 'printing in printerrrrrrrrrr'
+                    # requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
+                    #         json={
+                    #           'topic': 'service.POS.Printer.{0}'.format('123'),
+                    #           'args': [{'data':resData,'manifest':'Yes'}]
+                    #         }
+                    #     )
+                    response = HttpResponse(content_type='text/plain')
                     response['Content-Disposition'] = 'attachment;filename="manifest.txt"'
+                    dt = manifest(response,item,typ,'txtFile')
+                    response.content = ''
+                    resData = '\n'.join(dt)
+                    response.write(resData)
                     return response
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
