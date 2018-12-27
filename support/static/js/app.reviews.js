@@ -12,7 +12,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller("businessManagement.customerReviews", function($scope, $state, $http, $rootScope) {
+app.controller("businessManagement.customerReviews", function($scope, $state, $http, $rootScope,DTOptionsBuilder,DTColumnBuilder) {
   $rootScope.state = 'Reviews';
   $scope.reviewData = []
 
@@ -68,8 +68,28 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
       $scope.tabs.push(input)
     }
   }
+  var that=this
+
+  $scope.setMyView=function(){
+    $scope.isTableView=!$scope.isTableView
+  }
 
   $scope.getData = function(date,email,download){
+
+    $scope.reviewData=[]
+
+   // $scope.reviewData=null;
+   var vm = that;
+    vm.message = '';
+    // vm.someClickHandler = someClickHandler;
+    vm.dtOptions = DTOptionsBuilder.fromSource('data.json')
+        .withPaginationType('full_numbers')
+    vm.dtColumns = [
+        DTColumnBuilder.newColumn('id').withTitle('ID'),
+        DTColumnBuilder.newColumn('firstName').withTitle('First name'),
+        DTColumnBuilder.newColumn('lastName').withTitle('Last name').notVisible()
+    ];
+   $scope.loadingData=true;
     console.log('@@@@@@@@@@@@@@@@@@',date,email,download);
     var url = '/api/support/reviewHomeCal/?customer&limit=15&offset=15'
     if (date!=null&&typeof date == 'object') {
@@ -89,6 +109,12 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
         // $scope.custDetails = response.data[0]
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.reviewData =response.data
+        $scope.loadingData=false;
+        if(response.data.length<1){
+          $scope.myDialouge=true;
+        }else{
+          $scope.myDialouge=false;
+        }
       });
     }
   }

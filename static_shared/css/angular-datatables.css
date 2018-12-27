@@ -9,7 +9,7 @@
 
 .dataTables_wrapper {
     /*border: 1px solid #DDDDDD;*/
-    padding: 1rem 0;
+    /* padding: 1rem 0; */
 }
 table.dataTable,
 table.dataTable.no-footer{

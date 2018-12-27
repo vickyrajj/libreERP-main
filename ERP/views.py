@@ -159,14 +159,11 @@ class serviceViewSet(viewsets.ModelViewSet):
     serializer_class = serviceSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name','contactPerson','advisors']
-    # queryset = service.objects.all()
-    def get_queryset(self):
-        print self.request.GET,'ffffffff'
-        if 'company' in self.request.GET:
-            u = self.request.GET['company']
-            user=User.objects.get(pk=u)
-            return service.objects.filter(contactPerson=user)
-        return service.objects.all()
+    queryset = service.objects.all()
+    # def get_queryset(self):
+    #     print self.request.GET,'ffffffff'
+    #
+    #     return service.objects.all()
 
 
 
