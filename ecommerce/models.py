@@ -230,6 +230,7 @@ class OrderQtyMap(models.Model):
     notes =  models.CharField(max_length=500 ,null = True , blank = True)
     prodSku = models.CharField(max_length = 50, null = True, blank = True)
     desc = models.CharField(max_length = 50, null = True, blank = True)
+    orderBy =  models.ForeignKey(User, null = True , related_name = 'orderedUser')
 
 
 class Order(models.Model):

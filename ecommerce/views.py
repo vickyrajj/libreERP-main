@@ -230,27 +230,38 @@ class SearchProductAPI(APIView):
                 # print globalSettings.INVENTORY_ENABLED
 
                 genericProd = list(genericProduct.objects.filter(name__icontains=search).values('pk','name', 'visual').annotate(typ= Value('generic',output_field=CharField())))
-                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name' ) , dp = F('files__attachment') ,inStock=F('product__inStock') , serialNo =F('product__serialNo'), howMuch =F('product__howMuch'), dpId = F('files__imageIndex') , unit = F('product__unit'), typ= Value('list',output_field=CharField())))
+                listProd = list(listing.objects.filter(Q(product__name__icontains=search) | Q(product__alias__icontains=search)).values('pk','product__id').annotate(name=F('product__name' ) , dp = F('files__attachment'), serialNo =F('product__serialNo'), howMuch =F('product__howMuch'), dpId = F('files__imageIndex') , unit = F('product__unit'), typ= Value('list',output_field=CharField())))
             newlist = []
             newListPks = []
             for i in listProd:
                 if i['pk'] not in newListPks:
-                    if i['dpId'] == 0:
-                        newlist.append(i)
-                        prodVar = ProductVerient.objects.filter(parent = i['product__id'])
-                        if len(prodVar)>0:
-                            for a in prodVar:
-                                prodVar = {'name':i['name'] , 'dp':i['dp'], 'serialNo':a.sku,'prodDesc':a.prodDesc ,'unitPerpack':a.unitPerpack ,'howMuch':i['howMuch']* a.unitPerpack , 'unit':i['unit'] ,'typ':i['typ'] ,'pk':i['pk'] }
-                                if globalSettings.INVENTORY_ENABLED:
-                                    prodVar['inStock'] = 1000
+                    if not globalSettings.INVENTORY_ENABLED:
+                        i['inStock'] = 1000
+                    else:
+                        storeQtyList = StoreQty.objects.filter(product__id = i['product__id'] ,productVariant__isnull = True)
+                        if len(storeQtyList)>0:
+                            i['inStock'] = storeQtyList[0].quantity
+                        else:
+                            i['inStock'] = 0
+                    print i['inStock']
+                    newlist.append(i)
+                    prodVar = ProductVerient.objects.filter(parent = i['product__id'])
+                    if len(prodVar)>0:
+                        print 'prod varienttttttttttt'
+                        for a in prodVar:
+                            prodVar = {'name':i['name'] , 'dp':i['dp'], 'serialNo':a.sku,'prodDesc':a.prodDesc ,'unitPerpack':a.unitPerpack ,'howMuch':i['howMuch']* a.unitPerpack , 'unit':i['unit'] ,'typ':i['typ'] ,'pk':i['pk'] }
+                            if not globalSettings.INVENTORY_ENABLED:
+                                prodVar['inStock'] = 1000
+                            else:
+                                storeQtyList = StoreQty.objects.filter(product__id = i['product__id'] ,productVariant__id = a.pk)
+                                if len(storeQtyList)>0:
+                                    print 'yesssssssssssssss'
+                                    prodVar['inStock'] = storeQtyList[0].quantity
                                 else:
-                                    storeQtyList = StoreQty.objects.filter(product__id = i['product__id'] ,productVariant__id = a.pk)
-                                    if len(storeQtyList)>0:
-                                        prodVar['inStock'] = storeQtyList[0].quantity
-                                    else:
-                                        prodVar['inStock'] = i['inStock']
-                                newlist.append(prodVar)
-                        newListPks.append(i['pk'])
+                                    print 'nonnnnnnnnnnnn'
+                                    prodVar['inStock'] = 0
+                            newlist.append(prodVar)
+                    newListPks.append(i['pk'])
             tosend = genericProd + newlist
             return Response(tosend[0:l], status = status.HTTP_200_OK)
 
@@ -896,13 +907,15 @@ class OrderQtyMapViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     queryset = OrderQtyMap.objects.all()
     serializer_class = OrderQtyMapSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['courierAWBNo']
 
 class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
     # queryset = Order.objects.all()
     serializer_class = OrderSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['status']
+    filter_fields = ['status','id']
     def get_queryset(self):
         # return Order.objects.filter( ~Q(status = 'failed')).order_by('-created')
         if 'user' in self.request.GET:
@@ -1003,6 +1016,10 @@ def manifest(response,item,typ,filTyp):
     tableData=[['Product','Price','Qty','Discount','Final Price']]
     txtData.append('Product , Price , Qty , Discount , Final Price')
     for item in orderQtsObj:
+        print item,item.status,'rrrrrrrrrrrrrrrrrrrrrrrr'
+        if item.status == 'created':
+            item.status = 'packed'
+            item.save()
         if item.prodSku != item.product.product.serialNo:
             product = ProductVerient.objects.get(sku=item.prodSku)
             qtyData = product.unitPerpack * item.product.product.howMuch
@@ -1065,7 +1082,8 @@ def manifest(response,item,typ,filTyp):
     txtData.append('Tracking ID. : {0}'.format(courierAWBNo))
     elements.append(Spacer(1, 10))
     barVal = str(courierAWBNo)
-    barcode=code39.Extended39(barVal,barWidth=0.4*mm,barHeight=10*mm)
+    print barVal,'bar vallllllllllllllllllllllll'
+    barcode=code39.Extended39(barVal,barWidth=0.4*mm,barHeight=10*mm,checksum=0)
     elements.append(Indenter(left=140))
     elements.append(barcode)
     elements.append(Indenter(left=-140))
@@ -1086,6 +1104,15 @@ class DownloadManifestAPI(APIView):
     def get(self , request , format = None):
         print self.request.GET
         if 'trackingId' in request.GET:
+            try:
+                qtyObjs = OrderQtyMap.objects.filter(courierAWBNo=request.GET['trackingId'])
+                for i in qtyObjs:
+                    print i.status,'statusssssssssss'
+                    if i.status == 'created':
+                        i.status = 'packed'
+                        i.save()
+            except:
+                pass
             fd = open(os.path.join(globalSettings.BASE_DIR, 'media_root/ecommerce/manifest','example_shipment_label'+request.GET['trackingId']+'.pdf'))
             response = HttpResponse(fd, content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename=manifest.pdf'
@@ -1112,6 +1139,42 @@ class DownloadManifestAPI(APIView):
             response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
             manifest(response,item,typ,'pdfFile')
             return response
+
+class PostBarcodeAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        print request.data
+        if 'barcode' in request.data and 'userId' in request.data:
+            qtyObjs = OrderQtyMap.objects.filter(courierAWBNo=request.data['barcode'])
+            print qtyObjs.count()
+            if qtyObjs.count()>0:
+                try:
+                    userObj = User.objects.get(pk=int(request.data['userId']))
+                    for i in qtyObjs:
+                        i.status = 'delivered'
+                        i.orderBy = userObj
+                        i.save()
+                except:
+                    return Response({'statusText':'Invalid UserId'}, status = status.HTTP_200_OK)
+
+                parentObj = qtyObjs[0].order.get()
+                childObjs = parentObj.orderQtyMap.all()
+                print childObjs.count(),'child countttttt'
+                for i in childObjs:
+                    if i.status != 'delivered':
+                        print 'not all products are delivered yet'
+                        break
+                else:
+                    print 'all products are delivered  so changing order status to completed'
+                    parentObj.status = 'completed'
+                    parentObj.save()
+
+            else:
+                return Response({'statusText':'Invalid Barcode'}, status = status.HTTP_200_OK)
+        else:
+            return Response({'statusText':'Invalid Data'}, status = status.HTTP_200_OK)
+        return Response({'statusText':'Status Updated'}, status = status.HTTP_200_OK)
 
 class SendStatusAPI(APIView):
     renderer_classes = (JSONRenderer,)

@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'searchCountry/$' , SearchCountryAPI.as_view()),
     url(r'shipmentCharge/$' , ShipmentChargeAPI.as_view()),
     url(r'createShipment/$' , CreateShipmentAPI.as_view()),
+    url(r'postBarcode/$' , PostBarcodeAPI.as_view()),
 
 
 ]
