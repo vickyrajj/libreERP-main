@@ -165,7 +165,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = InvoiceSerializer
     # queryset = Invoice.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['customer' , 'id']
+    filter_fields = ['customer' , 'id' , 'status']
     def get_queryset(self):
         return Invoice.objects.all().order_by('-status')
 

@@ -1819,12 +1819,36 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     console.log(args);
     $scope.a = args[0].parent
     console.log($scope.a);
-    $http({
-      method: 'GET',
-      url: '/api/POS/product/?serialNo=' + $scope.a
-    }).
+
+    var url = '/api/POS/storeQty/?product__serialNo=' + $scope.a
+    // var url = '/api/POS/product/?search=' + query + '&limit=10'
+    if ($rootScope.multiStore) {
+      console.log($rootScope.storepk);
+      if ($rootScope.storepk > 0) {
+        url = url + '&store=' + $rootScope.storepk
+      } else {
+        Flash.create('warning', 'Please Select Store First')
+        return
+      }
+    } else {
+      url = url + '&master=true'
+    }
+    return $http.get(url).
     then(function(response) {
-      console.log('resssssssss', response.data);
+      // console.log(response.data.results);
+      // return response.data.results;
+      var res;
+      for (var i = 0; i < response.data.length; i++) {
+        res = response.data[i]
+        console.log(res);
+        if (res.productVariant) {
+          // console.log(res.productVariant);
+          res.name = res.product.name + ' ' + $filter('convertUnit')(res.productVariant.unitPerpack * res.product.howMuch, res.product.unit)
+        } else {
+          res.name = res.product.name + ' ' + $filter('convertUnit')(res.product.howMuch, res.product.unit)
+        }
+      }
+
       if (response.data.length > 0) {
         if ($scope.wampData.indexOf($scope.a) >= 0) {
           var idx = $scope.wampData.indexOf($scope.a)
@@ -1853,7 +1877,45 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
           }
         }
       }
+
+      // return response.data;
     })
+
+    // $http({
+    //   method: 'GET',
+    //   url: '/api/POS/product/?serialNo=' + $scope.a
+    // }).
+    // then(function(response) {
+    //   console.log('resssssssss', response.data);
+    //   if (response.data.length > 0) {
+    //     if ($scope.wampData.indexOf($scope.a) >= 0) {
+    //       var idx = $scope.wampData.indexOf($scope.a)
+    //     } else {
+    //       $scope.wampData.push($scope.a)
+    //       var idx = -1
+    //     }
+    //     console.log($scope.wampData);
+    //     if ($scope.wampData.length == 1) {
+    //       if (idx >= 0) {
+    //         $scope.form.products[idx].quantity += 1
+    //       } else {
+    //         $scope.form.products = [{
+    //           data: response.data[0],
+    //           quantity: 1
+    //         }]
+    //       }
+    //     } else {
+    //       if (idx >= 0) {
+    //         $scope.form.products[idx].quantity += 1
+    //       } else {
+    //         $scope.form.products.push({
+    //           data: response.data[0],
+    //           quantity: 1
+    //         })
+    //       }
+    //     }
+    //   }
+    // })
   }
   $scope.payPopup = function() {
     if ($scope.form.cMobileRequired && typeof $scope.form.customer != 'object') {

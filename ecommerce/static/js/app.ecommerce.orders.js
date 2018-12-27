@@ -162,7 +162,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         $scope.currency =response.data[0].value
       }
     })
-    $scope.checkConditions = {splitOrder:false,thirdParty:false}
+    $scope.checkConditions = {splitOrder:false,thirdParty:false,changeStatus:false}
     $http.get('/api/ERP/appSettings/?app=25&name__iexact=splitOrderManagement').
     then(function(response) {
       console.log('ratingggggggggggggggggggg', response.data);
@@ -178,6 +178,15 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       if (response.data[0] != null) {
         if (response.data[0].flag) {
           $scope.checkConditions.thirdParty = true
+        }
+      }
+    })
+    $http.get('/api/ERP/appSettings/?app=25&name__iexact=changeOrderStatusManually').
+    then(function(response) {
+      console.log('ratingggggggggggggggggggg', response.data);
+      if (response.data[0] != null) {
+        if (response.data[0].flag) {
+          $scope.checkConditions.changeStatus = true
         }
       }
     })
@@ -385,28 +394,28 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     })(idx, sts))
   }
 
-  $scope.selectAll = {
-    toWatch:false
-  }
-  $scope.$watch('selectAll.toWatch',function (newValue, oldValue) {
-    if (newValue !=undefined && newValue!=null) {
-      if (newValue) {
-        for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
-          $scope.tab.data.order.orderQtyMap[i].selected = true;
-        }
-      }else {
-        for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
-          $scope.tab.data.order.orderQtyMap[i].selected = false;
-        }
-      }
-    }
-  })
+  // $scope.selectAll = {
+  //   toWatch:false
+  // }
+  // $scope.$watch('selectAll.toWatch',function (newValue, oldValue) {
+  //   if (newValue !=undefined && newValue!=null) {
+  //     if (newValue) {
+  //       for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
+  //         $scope.tab.data.order.orderQtyMap[i].selected = true;
+  //       }
+  //     }else {
+  //       for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
+  //         $scope.tab.data.order.orderQtyMap[i].selected = false;
+  //       }
+  //     }
+  //   }
+  // })
   $scope.changeStatusForAll = function(status){
     for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
       $scope.changeStatus(i,status)
     }
   }
-  $scope.generateManfestForAll = function () {
+  $scope.generateManifestForAll = function () {
     console.log($scope.order);
     if (!$scope.checkConditions.thirdParty) {
       console.log('self courierrrrrrrrr');
@@ -428,7 +437,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
             return function(response){
               $scope.order.orderQtyMap[i].courierName = response.data.courierName
               $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
-              console.log(response.data,$scope.item);
+              console.log(response.data);
               if (i == $scope.order.orderQtyMap.length-1) {
                 Flash.create('success', 'Saved');
               }
@@ -438,17 +447,17 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       }
     }else {
 
-      $scope.items = []
-      for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
-        console.log($scope.order.orderQtyMap[i].selected);
-        if ($scope.order.orderQtyMap[i].selected) {
-          $scope.items.push($scope.order.orderQtyMap[i])
-        }
-      }
-      if ($scope.items.length==0) {
-        Flash.create('warning', 'please select order')
-        return
-      }
+      // $scope.items = []
+      // for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
+      //   console.log($scope.order.orderQtyMap[i].selected);
+      //   if ($scope.order.orderQtyMap[i].selected) {
+      //     $scope.items.push($scope.order.orderQtyMap[i])
+      //   }
+      // }
+      // if ($scope.items.length==0) {
+      //   Flash.create('warning', 'please select order')
+      //   return
+      // }
 
       $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
       $http({
@@ -460,7 +469,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         $scope.courierForm.courierAWBNo = response.data.trackingID
 
         for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
-          if ($scope.order.orderQtyMap[i].selected) {
+          // if ($scope.order.orderQtyMap[i].selected) {
             if ($scope.courierForm.courierName.length==0||$scope.courierForm.courierAWBNo.length==0) {
               Flash.create('warning','All Fields Are Required')
               return
@@ -477,11 +486,13 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
               return function(response){
                 $scope.order.orderQtyMap[i].courierName = response.data.courierName
                 $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
-                console.log(response.data,$scope.item);
-                Flash.create('success', 'Saved');
+                console.log(response.data);
+                if (i == $scope.order.orderQtyMap.length-1) {
+                  Flash.create('success', 'Saved');
+                }
               }
             })(i))
-          }
+          // }
         }
 
         // for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
@@ -490,7 +501,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         //     $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
         //   }
         // }
-        $scope.selectAll.toWatch = false
+        // $scope.selectAll.toWatch = false
 
       })
     }
