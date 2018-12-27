@@ -149,14 +149,44 @@
                   </div>
                   <div class="col-md-6">
                     <div class="row">
-                      <div class="col-md-2 col-sm-2 col-xs-2">
+                      <div class="col-md-2 col-sm-2 col-xs-2" style="padding-right:0px;">
                         <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                       </div>
-                      <div class="col-md-10 col-sm-10 col-xs-10">
-                        <div class="form-group">
-                          <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)' ng-model="form.mobile" type="text" class="form-control floatInput" required/>
-                          <span class="floating-label">Phone *</span>
-                          <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
+                      <div ng-if="isStoreGlobal">
+                        <div class="col-md-2 col-sm-2 col-xs-2" style="padding:0px;">
+                          <!-- <select class="form-control" style="margin-top: 30px; padding:0px;" ng-model="form.phoneCode">
+                            <option value="{{x.phonecode}}" ng-repeat="x in countryList">
+                              {{x.phonecode}} - {{x.name}} - {{x.sortname}}
+                             </option>
+                          </select> -->
+
+                          <div class="dropdown" style="margin-top:37px;">
+                           <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" style="padding: 4px; background:none; border:1px solid #eee;">
+                            <span style="min-width:30px; height:22px"> <img ng-src="{{selected.flag}}" alt="flag" style="width:24px; height:18px"></span>
+                           <span class="caret" style="color:black;"></span></button>
+                           <ul class="dropdown-menu" style="height: 200px;overflow-y: scroll;width: 304px;">
+                             <li class="onHoverli" style="padding: 5px 15px; cursor:pointer;" ng-repeat="c in countryList" ng-click="setSelected(c)">
+                               <span style="min-width:30px; height:22px"> <img ng-src="{{c.flag}}" alt="flag" style="width:26px; height:20px"></span>
+                               {{c.name.slice(0,26)}} {{c.phonecode}}</li>
+                           </ul>
+                          </div>
+
+                        </div>
+                        <div class="col-md-8 col-sm-8 col-xs-8" style="padding-left:0px;">
+                          <div class="form-group">
+                            <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)' ng-model="form.mobile" type="text" class="form-control floatInput" required/>
+                            <span class="floating-label">Phone *</span>
+                            <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div ng-if="!isStoreGlobal">
+                        <div class="col-md-10 col-sm-10 col-xs-10" style="padding-left:0px;">
+                          <div class="form-group">
+                            <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)' ng-model="form.mobile" type="text" class="form-control floatInput" required/>
+                            <span class="floating-label">Phone *</span>
+                            <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -290,10 +320,10 @@
                     <span>Invalid OTP , please check both the OTPs and verify again</span>
                   </div>
                 </div>
-                  <div class="col-lg-12 text-center" style="margin-top:20px;" ng-if="!showActiveMsg">
-                    <button ng-if="mode=='main'" class="btn btn-primary" ng-click="getOTP()">Submit</button>
-                    <button ng-if="mode=='verify'" ng-click="verify()" class="btn btn-primary">Verify and Login</button>
-                  </div>
+                <div class="col-lg-12 text-center" style="margin-top:20px;" ng-if="!showActiveMsg">
+                  <button ng-if="mode=='main'" class="btn btn-primary" ng-click="getOTP()">Submit</button>
+                  <button ng-if="mode=='verify'" ng-click="verify()" class="btn btn-primary">Verify and Login</button>
+                </div>
                 <div class="col-lg-12 text-center" ng-if="showActiveMsg">
                   <p> Your account is not activated yet ! We will inform you once it is done! </p>
                   <button ng-click="continue()" style="width:100px" class="btn btn-primary">Continue</button>
@@ -317,6 +347,7 @@
   {% endblock %} {% block specific_js %}
   <script>
     var autoActiveReg = "{{autoActiveReg}}";
+    var isStoreGlobal = "{{isStoreGlobal}}"
   </script>
   <script src="{% static 'js/jquery.easing.min.js' %}"></script>
   <script src="{% static 'js/classie.js' %}"></script>

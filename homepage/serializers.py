@@ -361,11 +361,19 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 msg.send()
         if not globalSettings.LITE_REGISTRATION:
             if globalSettings.VERIFY_MOBILE:
-                url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+                mobile = reg.mobile
+                if 'phoneCode' in self.context['request'].data:
+                    phoneCode = self.context['request'].data['phoneCode']
+                    mobile = phoneCode +''+ reg.mobile
+                url = globalSettings.SMS_API_PREFIX.format(mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
                 requests.get(url)
         else:
-                url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
-                requests.get(url)
+            mobile = reg.mobile
+            if 'phoneCode' in self.context['request'].data:
+                phoneCode = self.context['request'].data['phoneCode']
+                mobile = phoneCode +''+ reg.mobile
+            url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+            requests.get(url)
         reg.save()
         reg.emailOTP = ''
         reg.mobileOTP = ''

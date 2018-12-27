@@ -30,6 +30,11 @@
 	}
 }
 
+.onHoverli{
+	background-color: #eee;
+	border:1px solid blac;
+}
+
 
 .toplevelmenuOption:hover{
 	background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;;
