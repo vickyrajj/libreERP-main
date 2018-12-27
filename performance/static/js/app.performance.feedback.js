@@ -12,4 +12,7 @@ app.config(function($stateProvider) {
     })
 });
 app.controller("workforceManagement.performance.feedback", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+  console.log('shafhsvfhdsv');
+
+  
 });

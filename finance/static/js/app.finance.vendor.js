@@ -37,7 +37,7 @@ app.controller('businessManagement.finance.vendor', function($scope, $http, $asi
         } else if (action == 'details') {
           var title = 'Details :';
           var appType = 'vendorExplorer';
-        }else if (action == 'invoiceDetails') {
+        } else if (action == 'invoiceDetails') {
           var title = 'Invoice :';
           var appType = 'vendorInvoice';
         }
@@ -280,7 +280,7 @@ app.controller("businessManagement.finance.vendor.form", function($scope, $state
             });
           })
         }
-      },//----controller ends
+      }, //----controller ends
     }).result.then(function(f) {
       $scope.fetchData();
     }, function(f) {
@@ -301,16 +301,12 @@ app.controller("businessManagement.finance.vendor.form", function($scope, $state
     $scope.mode = 'edit';
     $scope.form = $scope.data.tableData[$scope.tab.data.index]
   }
-
+  console.log($scope.form, '---------------');
   $scope.createVendor = function() {
-
-
     if ($scope.form.contactPerson == null || $scope.form.contactPerson.length == 0) {
       Flash.create('warning', 'Please Mention Contact Person Name')
       return
     }
-    var method = 'POST'
-    var Url = '/api/finance/vendorprofile/'
     var fd = new FormData();
     fd.append('contactPerson', $scope.form.contactPerson);
     if ($scope.form.service != null && typeof $scope.form.service == 'object') {
@@ -329,14 +325,9 @@ app.controller("businessManagement.finance.vendor.form", function($scope, $state
     if ($scope.form.paymentTerm != null && $scope.form.paymentTerm.length > 0) {
       fd.append('paymentTerm', $scope.form.paymentTerm);
     }
-
-    if ($scope.mode == 'edit') {
-      method = 'PATCH'
-      Url = Url + $scope.form.pk + '/'
-    }
     $http({
-      method: method,
-      url: Url,
+      method: 'POST',
+      url: '/api/finance/vendorprofile/',
       data: fd,
       transformRequest: angular.identity,
       headers: {
@@ -345,6 +336,74 @@ app.controller("businessManagement.finance.vendor.form", function($scope, $state
     }).
     then(function(response) {
       Flash.create('success', 'Saved');
+      if ($scope.mode == 'new') {
+        $scope.resetForm()
+      }
+    });
+  }
+
+  $scope.updateVendor = function() {
+    var addUrl = '/api/ERP/address/'
+    var vendorUrl = '/api/finance/vendorprofile/'
+    var serviceUrl = '/api/ERP/service/'
+    var addData = {
+      street: $scope.form.service.address.street,
+      city: $scope.form.service.address.city,
+      state: $scope.form.service.address.state,
+      country: $scope.form.service.address.country,
+      pincode: $scope.form.service.address.pincode,
+    }
+    var servData = {
+      telephone: $scope.form.service.telephone,
+      cin: $scope.form.service.cin,
+      tin: $scope.form.service.tin,
+      logo: $scope.form.service.logo,
+      web: $scope.form.service.web,
+    };
+    $http({
+      method: 'PATCH',
+      url: addUrl + $scope.form.service.address.pk + '/',
+      data: addData,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Updated');
+    });
+    $http({
+      method: 'PATCH',
+      url: serviceUrl + $scope.form.service.pk + '/',
+      data: servData,
+    }).
+    then(function(response) {
+      Flash.create('success', 'Updated');
+    });
+    var fd = new FormData();
+    fd.append('contactPerson', $scope.form.contactPerson);
+    if ($scope.form.service != null && typeof $scope.form.service == 'object') {
+      fd.append('service', $scope.form.service.pk);
+    }
+    if ($scope.form.contentDocs != null && $scope.form.contentDocs != emptyFile) {
+      fd.append('contentDocs', $scope.form.contentDocs);
+    }
+    if ($scope.form.mobile != null && $scope.form.mobile.length > 0) {
+      fd.append('mobile', $scope.form.mobile);
+    }
+    if ($scope.form.email != null && $scope.form.email.length > 0) {
+      fd.append('email', $scope.form.email);
+
+    }
+    if ($scope.form.paymentTerm != null && $scope.form.paymentTerm.length > 0) {
+      fd.append('paymentTerm', $scope.form.paymentTerm);
+    }
+    $http({
+      method: 'PATCH',
+      url: vendorUrl + $scope.form.pk + '/',
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).then(function(response) {
+      Flash.create('success', 'Updated vdnr');
       if ($scope.mode == 'new') {
         $scope.resetForm()
       }
@@ -472,7 +531,7 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
   }
 
   $scope.openUpload = function() {
-    console.log( '-----------------came to function');
+    console.log('-----------------came to function');
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.finance.vendor.upload.form.html',
       size: 'md',
@@ -482,7 +541,7 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
           return $scope.vendorData;
         }
       },
-      controller:function($scope, fdata, $uibModalInstance) {
+      controller: function($scope, fdata, $uibModalInstance) {
 
         $scope.form = {
           'dated': new Date(),
@@ -490,7 +549,7 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
           'amount': '',
           'invoice': emptyFile,
         }
-        $scope.reset = function(){
+        $scope.reset = function() {
           $scope.form = {
             'dated': new Date(),
             'dueDate': '',
@@ -505,6 +564,8 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
           var fd = new FormData();
           if ($scope.form.invoice != emptyFile) {
             fd.append('invoice', $scope.form.invoice)
+          }else{
+              Flash.create('danger', 'Please upload the invoice');
           }
           fd.append('vendorProfile', fdata.pk);
           fd.append('dated', $scope.form.dated.toJSON().split('T')[0]);
@@ -525,71 +586,69 @@ app.controller("businessManagement.finance.vendor.explore", function($scope, $st
             $uibModalInstance.dismiss(response.data);
           });
         }
-      },//----controller ends--------------
+      }, //----controller ends--------------
     }).result.then(function(f) {
 
     }, function(f) {
-      // console.log('777777777777777777777777', f);
-      console.log($scope.vendorInvoiceData);
-      $scope.vendorInvoiceData.push(f)
-
+      console.log($scope.vendorInvoiceData, );
+      // $scope.vendorInvoiceData.push(f)
+      $scope.fetchInvoiceData();
     });
-}//--------------openUploadfunction ends------------------
+  } //--------------openUploadfunction ends------------------
 
-//----------------fetch invoice -----------
-if ($scope.tab == undefined) {
-} else {
-  $scope.invoiceData = $scope.data.tableData[$scope.tab.data.index]
-}
+  //----------------fetch invoice -----------
+  if ($scope.tab == undefined) {} else {
+    $scope.invoiceData = $scope.data.tableData[$scope.tab.data.index]
+  }
 
-$scope.fetchInvoiceData = function() {
-  $http({
-    method: 'GET',
-    url: '/api/finance/vendorinvoice/?vendorProfile=' + $scope.invoiceData.pk
+  $scope.fetchInvoiceData = function() {
+    $http({
+      method: 'GET',
+      url: '/api/finance/vendorinvoice/?vendorProfile=' + $scope.invoiceData.pk
 
-  }).
-  then(function(response) {
-    $scope.vendorInvoiceData = response.data;
-  })
-}
-$scope.fetchInvoiceData()
-
+    }).
+    then(function(response) {
+      $scope.vendorInvoiceData = response.data;
+    })
+  }
+  $scope.fetchInvoiceData()
 
 
-//-------------------delete invoice-----------------
-$scope.deleteInvoice = function(pk, index) {
-  console.log('---------------delelelele------------');
-  // console.log($scope.vendorServiceData);
-  $scope.vendorServiceData.splice(index, 1);
-  $http({
-    method: 'DELETE',
-    url: '/api/finance/vendorinvoice/' + pk + '/'
-  }).
-  then((function(index) {
-    return function(response) {
-      $scope.fetchInvoiceData()
-      Flash.create('success', 'Deleted');
-    }
-  })(index))
 
-}
+  //-------------------delete invoice-----------------
+  $scope.deleteInvoice = function(pk, index) {
+    console.log('---------------delelelele------------');
+    // console.log($scope.vendorServiceData);
+    $scope.vendorServiceData.splice(index, 1);
+    $http({
+      method: 'DELETE',
+      url: '/api/finance/vendorinvoice/' + pk + '/'
+    }).
+    then((function(index) {
+      return function(response) {
+        $scope.fetchInvoiceData()
+        Flash.create('success', 'Deleted');
+      }
+    })(index))
 
-//-----------------chnage status and  apply date to approvedon and disbursedon
-$scope.setStatus = function(pk,idx,approved,disbursed){
-  console.log(idx,$scope.vendorInvoiceData[idx]);
-  $http({
-    method : 'PATCH' ,
-    url : '/api/finance/vendorinvoice/'+ pk + '/' ,
-    data : {
-      approved : approved,
-      disbursed : disbursed,
-    }
-  }).then(function(response) {
+  }
+
+  //-----------------chnage status and  apply date to approvedon and disbursedon
+  $scope.setStatus = function(pk, idx, approved, disbursed) {
+    console.log(idx, $scope.vendorInvoiceData[idx]);
+    $http({
+      method: 'PATCH',
+      url: '/api/finance/vendorinvoice/' + pk + '/',
+      data: {
+        approved: approved,
+        disbursed: disbursed,
+      }
+    }).then(function(response) {
       $scope.vendorInvoiceData[idx] = response.data
       console.log($scope.vendorInvoiceData);
-      Flash.create('success' , 'Saved');
-  });
-}
+      Flash.create('success', 'Saved');
+    });
+  }
 
 
 })

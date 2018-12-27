@@ -139,7 +139,7 @@ class VendorService(models.Model):
 class VendorInvoice(models.Model):
     vendorProfile = models.ForeignKey(VendorProfile , null = True , related_name='vendorInvoices')
     approver = models.ForeignKey(User , related_name='invoiceApprovedBy' , null = True)
-    invoice =  models.FileField(upload_to = getInvoiceUploadPath ,  null = True)
+    invoice =  models.FileField(upload_to = getInvoiceUploadPath ,  null = False)
     settled = models.BooleanField(default = False)
     disbursedOn = models.DateTimeField(null = True)
     approvedOn = models.DateTimeField(null = True)

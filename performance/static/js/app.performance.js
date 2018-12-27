@@ -14,10 +14,12 @@ app.config(function($stateProvider){
         },
         "@workforceManagement.performance": {
           templateUrl: '/static/ngTemplates/app.performance.dash.html',
-          // controller : 'projectManagement.LMS.default',
+          controller : 'workforceManagement.performance',
         }
     }
   })
 });
 app.controller("workforceManagement.performance", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
+
+
 });
