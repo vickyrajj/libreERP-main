@@ -73,8 +73,7 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
   var ctx = document.getElementById("myChart");
   var data = {
     labels: [
-      "Green",
-      "Grey"
+
     ],
     datasets: [{
       data: [300, 50],
@@ -97,8 +96,7 @@ app.controller('businessManagement.virtualWorkforce.default', function($scope, $
   var ctxx = document.getElementById("myChart1");
   var datas = {
     labels: [
-      "Green",
-      "Grey"
+      
     ],
     datasets: [{
       data: [50, 300],
