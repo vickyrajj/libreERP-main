@@ -227,7 +227,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
   $scope.addToChat = function(indx, uid) {
-    alert('adding '+uid)
+    // alert('adding '+uid)
     addToCookie(uid, indx);
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
