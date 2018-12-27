@@ -124,10 +124,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           }
         }
       });
-
-
       var myActiveTime = Date.now();
-
       function heartbeat() {
         return {
           ActiveUsers: $scope.myUsers,
@@ -135,7 +132,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           activeTime: myActiveTime
         }
       }
-
       connection.session.register(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
         function(res) {
           console.log("registered to service.support.hhhh ");
@@ -143,7 +139,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         function(err) {
           console.log("failed to registered: ");
         });
-
       return
     }else {
       setTimeout(function () {
@@ -152,19 +147,13 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       }, 500);
     }
   }
-
   fetchUsers();
 
-
-
   $scope.onNotification = function(uid, msg, i = 'a') {
-
-
     if (msg.length > 20) {
       msg = msg.substring(0, 20) + '....';
     }
     webNotification.showNotification(uid, {
-
       body: msg,
       icon: 'my-icon.ico',
       onClick: function onNotificationClicked() {
@@ -196,9 +185,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   $scope.data = {
     activeTab: 0,
   }
-
   $scope.data.xInView = 0;
-
   $scope.msgText = '';
 
   $scope.setxInView = function(indx) {
@@ -220,9 +207,9 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   function removeFromCookie(uid) {
     for (var i = 0; i < openedUsers.length; i++) {
       if (openedUsers[i].uid == uid) {
-        console.log(openedUsers);
+        // console.log(openedUsers);
         openedUsers.splice(i, 1);
-        console.log(openedUsers);
+        // console.log(openedUsers);
       }
     }
     setCookie('openedChats', JSON.stringify(openedUsers), 30);
@@ -240,8 +227,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
   $scope.addToChat = function(indx, uid) {
+    alert('adding '+uid)
     addToCookie(uid, indx);
-
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
         console.log('already in chat');
@@ -272,15 +259,13 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     for (var i = 0; i < openedChats.length; i++) {
       for (var j = 0; j < $scope.myUsers.length; j++) {
         if ($scope.myUsers[j].uid == openedChats[i].uid) {
-          if (openedChats[i].index) {
+          if (openedChats[i].index!=null) {
             $scope.addToChat(openedChats[i].index, openedChats[i].uid)
           }
         }
       }
     }
   }
-
-
 
   $scope.chatClose = function(idx, chatThreadPk) {
     console.log('coming in chatclose');
