@@ -27,17 +27,19 @@
           <div class="col-md-12">
             <span><strong>Service:</strong>{{data.service.name}}</span><br/><br/>
             <span><strong>Dated:</strong>{{data.dated}}</span>
-              <a href="{{data.attachment}}" target="_blank" class="btn btn-primary pull-right" > <i class="fa fa-download" ></i></a>
-              <button type="button"
-                mwl-confirm
-                title="Confirm"
-                message="Are you sure?"
-                confirm-text="Yes <i class='fa fa-check'></i>"
-                cancel-text="No"
-                on-confirm="deleteInvoice(data.pk , $index)"
-                confirm-button-type="danger"
-                cancel-button-type="default"
-               class="btn-danger btn-sm  pull-right" style="padding-bottom: 9px;"> <i class="fa fa-trash"></i> </button>
+              <div class="col-md-3 pull-right">
+                <a href="{{data.attachment}}" target="_blank" class="btn btn-primary " ><i class="fa fa-download" ></i></a>
+                <a
+                  mwl-confirm
+                  title="Confirm"
+                  message="Are you sure?"
+                  confirm-text="Yes <i class='fa fa-check'></i>"
+                  cancel-text="No"
+                  on-confirm="deleteInvoice(data.pk , $index)"
+                  confirm-button-type="danger"
+                  cancel-button-type="default"
+                 class="btn-danger btn" style="padding-bottom: 9px;"> <i class="fa fa-trash"></i> </a>
+              </div>
           </div>
         </div>
       </div>

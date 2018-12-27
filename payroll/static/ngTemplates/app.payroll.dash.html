@@ -1,11 +1,166 @@
 <div class="" style="min-height:93vh;position:relative;">
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
-  <p style="text-align:center;padding-top:200px;">
-    <i class="fa fa-search-plus fa-5x"></i>
-    <i class="fa fa-wrench fa-5x "></i>
-    <br>
-    <h3 class="text-muted" style="text-align:center;"> Dashboard for Payroll</h3>
-  </p>
-</div>
-</div>
+    <div class="container-fluid">
+      <div class="col-md-7">
+        <div class="container-fluid" style="border:1px solid #d5d5d5">
+          <h3>Quick Stats</h3>
+          <div class="row">
+            <div class="col-md-3 text-center">
+              <div class="in_center with_border">
+                <span class="bigfont">99,474</span><br><span>Production Volume</span>
+              </div>
+            </div>
+            <div class="col-md-6 text-center">
+              <div class="in_center with_border">
+                <div class="" style="padding-bottom:40px;">
+                  <canvas id="active-line-chart" height="50"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 text-center">
+              <div class="in_center with_border">
+                <span class="bigfont">99,474</span><br><span>Active Machines</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 text-center">
+              <div class="in_center">
+                <span class="bigfont">77.662</span><br><span>Quantity Ordered</span>
+              </div>
+            </div>
+            <div class="col-md-6 text-center">
+              <div class="" style="padding-top:20px;">
+                <canvas id="sales-bar-chart" height="60"></canvas>
+              </div>
+            </div>
+            <div class="col-md-3 text-center">
+              <div class="in_center">
+                <span class="bigfont">1.12L</span><br><span>Sales Revenue</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-5">
+        <div class="container-fluid" style="border:1px solid #d5d5d5">
+          <h3>Downtime</h3>
+          <div class="col-md-8">
+            <canvas id="downtime-doughnut-chart" height="240"></canvas>
+          </div>
+          <div class="col-md-4">
+            <h4> <b>Current Downtime</b> </h4>
+            <span>PJL-03456</span> &ensp;<span class="text-danger"> <b>5 min</b> </span><br>
+            <span>HTX-43313</span> &ensp;<span class="text-danger"> <b>8 min</b> </span><br>
+            <span>FTW-43312</span> &ensp;<span class="text-warning"> <b>3 min</b> </span><br>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid" style="margin-top:10px;">
+      <div class="col-md-6">
+        <div class="container-fluid" style="border:1px solid #d5d5d5">
+          <h3>Top 5 Products</h3>
+          <div class="row" style="border-bottom:1px solid #adadad;">
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-2 text-center">
+              <h5> <b>Product Name</b> </h5>
+            </div>
+            <div class="col-md-2">
+              <h5> <b>Price</b> </h5>
+            </div>
+            <div class="col-md-2 ">
+              <h5> <b>Sold Items</b> </h5>
+            </div>
+            <div class="col-md-4 text-center">
+              <h5> <b>Revenue</b> </h5>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px;">
+            <div class="col-md-1">
+              <span>1.</span>
+            </div>
+            <div class="col-md-2">
+              <span>Flat 47"1080p</span>
+            </div>
+            <div class="col-md-2">
+              <span>&#8377; 375</span>
+            </div>
+            <div class="col-md-2">
+              <span> 2,212</span>
+            </div>
+            <div class="col-md-4">
+              <canvas id="top-bar-chart1"></canvas>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px;">
+            <div class="col-md-1">
+              <span>2.</span>
+            </div>
+            <div class="col-md-2">
+              <span>LCD 32"360p</span>
+            </div>
+            <div class="col-md-2">
+              <span>&#8377; 775</span>
+            </div>
+            <div class="col-md-2">
+              <span> 5,000</span>
+            </div>
+            <div class="col-md-4">
+              <canvas id="top-bar-chart2"></canvas>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px;">
+            <div class="col-md-1">
+              <span>3.</span>
+            </div>
+            <div class="col-md-2">
+              <span>LED 38"720p</span>
+            </div>
+            <div class="col-md-2">
+              <span>&#8377; 475</span>
+            </div>
+            <div class="col-md-2">
+              <span> 3,909</span>
+            </div>
+            <div class="col-md-4">
+              <canvas id="top-bar-chart3"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="col-md-12" style="border:1px solid #d5d5d5">
+          <h3>Production Volume by </h3>
+          <div class="col-md-3 in_center"style="position:relative;">
+            <span class="doughnut_text_p"> <b>70%</b> </span>
+            <canvas id="volume-doughnut-chart1" height="200"></canvas>
+          </div>
+          <div class="col-md-3 in_center"style="position:relative;">
+            <span class="doughnut_text_p"> <b>60%</b> </span>
+            <canvas id="volume-doughnut-chart2" height="200"></canvas>
+          </div>
+          <div class="col-md-3 in_center"style="position:relative;">
+            <span class="doughnut_text_p"> <b>90%</b> </span>
+            <canvas id="volume-doughnut-chart3" height="200"></canvas>
+          </div>
+          <div class="col-md-3 in_center"style="position:relative;">
+            <span class="doughnut_text_p"> <b>65%</b> </span>
+            <canvas id="volume-doughnut-chart4" height="200"></canvas>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="container-fluid" style="margin-top:10px;border:1px solid #d5d5d5">
+            <h2>Returned items by Reason</h2>
+          <canvas id="returned-bar-chart" height="90px"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
