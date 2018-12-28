@@ -325,19 +325,19 @@ class GenericImage(models.Model):
     topBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     topMobileBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
 
-# class Countries(models.Model):
-#     uniqueId = models.PositiveIntegerField(default=0)
-#     sortname = models.CharField( max_length = 10, null = True)
-#     name = models.CharField( max_length = 50, null = True)
-#     phonecode =  models.PositiveIntegerField(default=0)
-#     flag = models.ImageField(null = True , upload_to = getEcommerceCountryUploadPath)
-#
-# class States(models.Model):
-#     uniqueId = models.PositiveIntegerField(default=0)
-#     name = models.CharField( max_length = 50, null = True)
-#     country = models.ForeignKey(Countries , related_name = 'state' , null = False)
-#
-# class Cities(models.Model):
-#     uniqueId = models.PositiveIntegerField(default=0)
-#     name = models.CharField( max_length = 50, null = True)
-#     state = models.ForeignKey(States , related_name = 'city' , null = False)
+class Countries(models.Model):
+    uniqueId = models.PositiveIntegerField(default=0)
+    sortname = models.CharField( max_length = 10, null = True)
+    name = models.CharField( max_length = 50, null = True)
+    phonecode =  models.PositiveIntegerField(default=0)
+    flag = models.ImageField(null = True , upload_to = getEcommerceCountryUploadPath)
+
+class States(models.Model):
+    uniqueId = models.PositiveIntegerField(default=0)
+    name = models.CharField( max_length = 50, null = True)
+    country = models.ForeignKey(Countries , related_name = 'state' , null = False)
+
+class Cities(models.Model):
+    uniqueId = models.PositiveIntegerField(default=0)
+    name = models.CharField( max_length = 50, null = True)
+    state = models.ForeignKey(States , related_name = 'city' , null = False)
