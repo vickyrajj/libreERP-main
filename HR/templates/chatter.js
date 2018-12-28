@@ -1038,7 +1038,7 @@ function createChatDiv() {
   var videoCircleText = document.getElementById('videoCircleText')
   var ticketCircleText = document.getElementById('ticketCircleText')
   var Syrow24hSupportText = document.getElementById('Syrow24hSupportText')
-  var urlforConferenceForAgent,urlforConference,winCol;
+  var urlforConferenceForAgent,urlforConference,winCol,streamTyp
 
 
   function openModal(imageSrc) {
@@ -1055,14 +1055,16 @@ function createChatDiv() {
       urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
       urlforConference = urlforConference + '&userMob=true'
     }
-   openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
+    streamTyp='video'
+   openVideoAudioIframe(urlforConference , urlforConferenceForAgent,streamTyp)
   }
   function activeAudioCall(){
     winCol = windowColor.split('#')[1]
     urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
     urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
     console.log('URL for activating audio call is '+urlforConference);
-    openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
+    streamTyp='audio'
+    openVideoAudioIframe(urlforConference , urlforConferenceForAgent , streamTyp)
   }
 
 
@@ -1091,110 +1093,6 @@ function createChatDiv() {
     }
 
 
-    var dataToSend = {uid: uid , sentByAgent:false , created: new Date() };
-
-    if (streamTyp=='video') {
-      videoOpened = true
-      var callType = 'VCS'
-      chatBox_header.style.borderRadius = "0px 10px 0px 0px"
-      chatBox_footer.style.borderRadius = "0px 0px 10px 0px"
-      dataToSend.logs = 'video call started'
-    }else if(streamTyp=='audio'){
-      audioOpened = true
-      var callType = 'AC'
-      dataToSend.logs = 'audio call started'
-    }
-
-    // console.log(agentPk);
-    if (agentPk) {
-      console.log('agent pk is pnline',isAgentOnline);
-      dataToSend.user = agentPk
-      if (!isAgentOnline) {
-        console.log('agetn oflineee');
-        dataToSend.user = null
-      }else {
-        dataToSend.user = agentPk
-      }
-    }
-    // var message = dataToSend
-    dataToSend = JSON.stringify(dataToSend)
-
-    var xhttp = new XMLHttpRequest();
-     xhttp.onreadystatechange = function() {
-       if (this.readyState == 4 && this.status == 201) {
-         console.log('posted successfully');
-       }
-     };
-     xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
-     xhttp.setRequestHeader("Content-type", "application/json");
-     xhttp.send(dataToSend);
-
-      if (threadExist==undefined) {
-        dataToPublish = [uid, callType, [] , custID]
-        details = getCookie("uidDetails");
-        if (details != "") {
-          // console.log(details);
-           dataToPublish.push(JSON.parse(details))
-        } else {
-          dataToPublish.push(false)
-        }
-
-        var dataToSend = JSON.stringify({uid: uid , company: custID, typ: streamTyp});
-        var xhttp = new XMLHttpRequest();
-         xhttp.onreadystatechange = function() {
-           if (this.readyState == 4 && this.status == 201) {
-             console.log('posted successfully');
-             var data = JSON.parse(this.responseText)
-             threadExist=true
-             chatThreadPk = data.pk
-             dataToPublish.push(chatThreadPk)
-             dataToPublish.push(urlforConferenceForAgent)
-             connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
-               acknowledge: true
-             }).
-             then(function(publication) {
-               console.log("Published to all");
-             },function(){
-               console.log('unable to publish to all');
-             })
-           }
-         };
-         xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
-         xhttp.setRequestHeader("Content-type", "application/json");
-         xhttp.send(dataToSend);
-      }else {
-
-        var xhttp = new XMLHttpRequest();
-         xhttp.onreadystatechange = function() {
-           if (this.readyState == 4 && this.status == 200) {
-             console.log('chat thread typ changed');
-           }
-         };
-         xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
-         xhttp.setRequestHeader("Content-type", "application/json");
-         xhttp.send(JSON.stringify({typ:streamTyp}));
-
-        dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
-        if (isAgentOnline) {
-          console.log('ONLINE' , agentPk);
-          connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("called service.support.agent."+agentPk);
-          },function(err){
-            console.log("failed to call "+agentPk);
-          });
-        }else {
-          console.log('offline send to all');
-          connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
-        }
-      }
 
       if (streamTyp=='video') {
         var body = document.getElementsByTagName("BODY")[0]
@@ -1207,6 +1105,8 @@ function createChatDiv() {
         iframeDiv.style.right = "410px";
         iframeDiv.style.animation = "moveInFront 0.6s"
         iframeDiv.style.boxShadow='-5px -5px 10px rgb(0,0,0,0.2)';
+        chatBox_header.style.borderRadius = "0px 10px 0px 0px"
+        chatBox_footer.style.borderRadius = "0px 0px 10px 0px"
       }
 
 
@@ -2290,6 +2190,118 @@ var myformrating;
       }else if(isVideoClicked){
         videoBtn.click()
       }
+    }
+    if (event.data== 'timeToStart'){
+
+      // alert('here')
+      var dataToSend = {uid: uid , sentByAgent:false , created: new Date() };
+
+      if (streamTyp=='video') {
+        videoOpened = true
+        var callType = 'VCS'
+        dataToSend.logs = 'video call started'
+      }else if(streamTyp=='audio'){
+        audioOpened = true
+        var callType = 'AC'
+        dataToSend.logs = 'audio call started'
+      }
+
+      // console.log(agentPk);
+      if (agentPk) {
+        console.log('agent pk is pnline',isAgentOnline);
+        dataToSend.user = agentPk
+        if (!isAgentOnline) {
+          console.log('agetn oflineee');
+          dataToSend.user = null
+        }else {
+          dataToSend.user = agentPk
+        }
+      }
+      // var message = dataToSend
+      dataToSend = JSON.stringify(dataToSend)
+
+      var xhttp = new XMLHttpRequest();
+       xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 201) {
+           console.log('posted successfully');
+         }
+       };
+       xhttp.open('POST', '{{serverAddress}}/api/support/supportChat/', true);
+       xhttp.setRequestHeader("Content-type", "application/json");
+       xhttp.send(dataToSend);
+
+        if (threadExist==undefined) {
+          dataToPublish = [uid, callType, [] , custID]
+          details = getCookie("uidDetails");
+          if (details != "") {
+            // console.log(details);
+             dataToPublish.push(JSON.parse(details))
+          } else {
+            dataToPublish.push(false)
+          }
+
+          var dataToSend = JSON.stringify({uid: uid , company: custID, typ: streamTyp});
+          var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 201) {
+               console.log('posted successfully');
+               var data = JSON.parse(this.responseText)
+               threadExist=true
+               chatThreadPk = data.pk
+               dataToPublish.push(chatThreadPk)
+               dataToPublish.push(urlforConferenceForAgent)
+              setTimeout(function () {
+                connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+                  acknowledge: true
+                }).
+                then(function(publication) {
+                  console.log("Published to all");
+                },function(){
+                  console.log('unable to publish to all');
+                })
+              }, 1000);
+             }
+           };
+           xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
+           xhttp.setRequestHeader("Content-type", "application/json");
+           xhttp.send(dataToSend);
+        }else {
+
+          var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+               console.log('chat thread typ changed');
+             }
+           };
+           xhttp.open('PATCH', '{{serverAddress}}/api/support/chatThread/'+ chatThreadPk + '/', true);
+           xhttp.setRequestHeader("Content-type", "application/json");
+           xhttp.send(JSON.stringify({typ:streamTyp}));
+
+          dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
+          if (isAgentOnline) {
+            console.log('ONLINE' , agentPk);
+            setTimeout(function () {
+              connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("called service.support.agent."+agentPk);
+              },function(err){
+                console.log("failed to call "+agentPk);
+              });
+            }, 1000);
+          }else {
+            console.log('offline send to all');
+          setTimeout(function () {
+            connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }, 1000);
+          }
+        }
     }
   }
 

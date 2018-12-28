@@ -519,6 +519,31 @@ setTimeout(function () {
 }, 100);
 
 
+function myNew(args){
+  console.log(args);
+}
+
+
+session.subscribe('com.myapp.hello', myNew).then(
+    function (res) {
+      console.log("registered to service.support.heartbeat ")
+    },
+    function (err) {
+      console.log("failed to registered: ");
+    }
+  );
+
+  // setTimeout(function () {
+  //   alert('sending')
+  //   session.publish('service.self',['here'],{},{
+  //     acknowledge:true
+  //   }).then(
+  //     function(sub){
+  //       alert('success');
+  //     }
+  //   )
+  // }, 3000);
+
 
   session.subscribe(wamp_prefix+'service.chat.' + wampBindName, chatResonse).then(
     function(sub) {
