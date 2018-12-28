@@ -139,7 +139,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           activeTime: myActiveTime
         }
       }
-      connection.session.subscribe(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
+      connection.session.register(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
         function(res) {
           console.log("registered to service.support.hhhh ");
         },
