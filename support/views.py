@@ -902,7 +902,6 @@ class MaterialIssuedNoteAPIView(APIView):
 class ProductInventoryAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-
         total = 0
         toReturn = []
         if 'search' in request.GET:
@@ -961,6 +960,16 @@ class OrderAPIView(APIView):
             listData = []
             stockList = []
             price = 0
+            totalqty = 0
+            prodListTot = 0
+            for j in invlist:
+                totalqty += j.qty
+                print totalqty,'aaaaaaaaaaa'
+                if prodListQty>totalqty:
+                    prodListTot = totalqty
+                else:
+                    prodListTot = prodListQty
+            prodListQty = prodListTot
             if prodListQty!=0:
                 for p in invlist:
                     if p.qty>0:
@@ -985,9 +994,10 @@ class OrderAPIView(APIView):
                                 price = p.rate
                             else:
                                 price=price
+
             if prodListQty==0:
                 data = {
-                'qty': i['prodQty'],
+                'qty': prodListTot,
                 'product' :Products.objects.get(pk=i['pk']),
                 'price' : price,
                 'stock': stockList

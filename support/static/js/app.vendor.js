@@ -8,12 +8,12 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
     name: 'list',
     icon: 'fa-th-large',
     template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.vendor.explore.html',
+    itemTemplate: '/static/ngTemplates/app.vendor.item.html',
   }, ];
 
   $scope.config = {
     views: views,
-    url: 'api/support/vendor/',
+    url: '/api/support/vendor/',
     filterSearch: true,
     searchField: 'name',
     deletable: true,
@@ -34,6 +34,17 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
         if (action == 'edit') {
           var title = 'Edit Vendor :';
           var appType = 'vendorEditor';
+        }
+        else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/support/vendor/' + $scope.data.tableData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Item Deleted');
+          })
+          $scope.data.tableData.splice(i, 1)
+          return;
         }
 
 

@@ -6,7 +6,7 @@
     </div> -->
       <div class="col-md-11" style="position:relative;display:block;">
         <div class="row" style="padding-left:10px;">
-          <h3>{{data.title}}</h3>
+          <h2>{{data.title}}</h2>
         </div>
       </div>
     </div>
@@ -52,12 +52,12 @@
         <div style="padding-right:20px;">
           <div class="row">
             <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit');$event.stopPropagation();">
-              <i class="fa fa-pencil fa-lg" style="margin-top:0px;"></i>
+              <i class="fa fa-pencil fa-2x" style="margin-top:0px;"></i>
             </span>
           </div>
           <div class="row">
             <span class="pull-right" style="cursor:pointer;" ng-click="$event.stopPropagation()" mwl-confirm title="Delete" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('delete');" confirm-button-type="default" cancel-button-type="default"></i>
-              <i class="fa fa-trash fa-lg" style="margin-top:15px;"></i>
+              <i class="fa fa-trash fa-2x" style="margin-top:15px;"></i>
             </span>
           </div>
           <!-- <div class="row">

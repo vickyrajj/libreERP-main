@@ -1,11 +1,11 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.settings', {
-    url: "/settings",
+  $stateProvider.state('businessManagement.masterSheet', {
+    url: "/masterSheet",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.settings.html',
-        controller: 'businessManagement.settings',
+        templateUrl: '/static/ngTemplates/app.masterSheet.html',
+        controller: 'businessManagement.masterSheet',
       }
     }
   })
@@ -41,7 +41,7 @@ app.config(function($stateProvider) {
 //   }
 // })
 
-app.controller("businessManagement.settings", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
+app.controller("businessManagement.masterSheet", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
 
   $scope.data = {
     tableData: []
@@ -71,7 +71,7 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
     deletable:true,
     canCreate : true,
     multiselectOptions: multiselectOptions,
-    editorTemplate:'/static/ngTemplates/app.settings.newProduct.html',
+    editorTemplate:'/static/ngTemplates/app.masterSheet.newProduct.html',
     itemsNumPerView: [16, 32, 48],
   }
 
@@ -120,7 +120,7 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
 
   $scope.uploadProduct = function() {
     $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.settings.products.html',
+      templateUrl: '/static/ngTemplates/app.masterSheet.products.html',
       size: 'lg',
 
       controller: function($scope, $uibModalInstance) {
@@ -208,7 +208,7 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
 })
 
 
-app.controller('businessManagement.settings.newProduct', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
+app.controller('businessManagement.masterSheet.newProduct', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
 
   console.log($scope.mode);
   $scope.mode = 'new'
