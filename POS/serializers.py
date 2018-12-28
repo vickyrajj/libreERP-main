@@ -76,9 +76,9 @@ class ProductSerializer(serializers.ModelSerializer):
     # StoreStock = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','alias','howMuch','productOption','grossWeight')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','alias','howMuch','productOption','grossWeight')
 
-        read_only_fields = ( 'user' , 'compositions')
+        read_only_fields = ( 'user' , 'productMeta', 'compositions')
     def create(self , validated_data):
         print self.context['request'].data
         print 'entered','***************'
