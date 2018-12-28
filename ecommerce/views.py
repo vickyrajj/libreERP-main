@@ -2464,9 +2464,9 @@ class CreateShipmentAPI(APIView):
 #                 pass
 #         return Response({'awbPath':12}, status = status.HTTP_200_OK)
 
-class CountryViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny , )
-    queryset = Countries.objects.all()
-    serializer_class = CountrySerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
+# class CountryViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.AllowAny , )
+#     queryset = Countries.objects.all()
+#     serializer_class = CountrySerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filter_fields = ['name']
