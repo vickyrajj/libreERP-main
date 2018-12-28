@@ -91,7 +91,6 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
           data: send,
         }).
         then(function(response){
-          console.log(response.data);
             $scope.$broadcast('forceGenericTableRowRefresh',  response.data);
           Flash.create('success', response.status + ' : ' + response.statusText );
         }, function(response){
@@ -108,7 +107,6 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
           data: send,
         }).
         then(function(response){
-          console.log(response.data);
           $scope.$broadcast('forceInsetTableData', response.data);
           Flash.create('success', response.status + ' : ' + response.statusText );
         }, function(response){
@@ -210,7 +208,6 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
 
 app.controller('businessManagement.masterSheet.newProduct', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
 
-  console.log($scope.mode);
   $scope.mode = 'new'
   $scope.reset=function(){
     $scope.data={
@@ -258,7 +255,6 @@ app.controller('businessManagement.seettings.mcgGeneralise', function($scope, $h
       url: '/api/HR/smsClassifier/'
     }).
     then(function(response) {
-      console.log(response.data);
       Flash.create('success', 'Generalised Sucessfully');
     })
   }
@@ -273,15 +269,12 @@ app.controller('businessManagement.seettings.negativeKeywords.form', function($s
   $scope.mode = 'new'
   $scope.msg = 'Create'
   $scope.$on('keyWordUpdate', function(event, input) {
-    console.log("recieved");
-    console.log(input.data);
     $scope.msg = 'Update'
     $scope.wordForm = input.data
     $scope.mode = 'edit'
 
   });
   $scope.saveKeyWord = function() {
-    console.log('7777777777777777777', $scope.wordForm);
     if ($scope.wordForm.name == null || $scope.wordForm.name.length == 0) {
       Flash.create('warning', 'Please Mention The Keyword')
       return;
@@ -323,15 +316,13 @@ app.controller('businessManagement.seettings.bankId.form', function($scope, $htt
   $scope.mode = 'new'
   $scope.msg = 'Create'
   $scope.$on('GEmailUpdate', function(event, input) {
-    console.log("recieved");
-    console.log(input.data);
+
     $scope.msg = 'Update'
     $scope.gEmailForm = input.data
     $scope.mode = 'edit'
 
   });
   $scope.saveGEmail = function() {
-    console.log('7777777777777777777', $scope.gEmailForm);
     if ($scope.gEmailForm.name == null || $scope.gEmailForm.name.length == 0) {
       Flash.create('warning', 'Please Mention The Email')
       return;
@@ -373,15 +364,12 @@ app.controller('businessManagement.seettings.socialId.form', function($scope, $h
   $scope.mode = 'new'
   $scope.msg = 'Create'
   $scope.$on('SEmailUpdate', function(event, input) {
-    console.log("recieved");
-    console.log(input.data);
     $scope.msg = 'Update'
     $scope.sEmailForm = input.data
     $scope.mode = 'edit'
 
   });
   $scope.saveSEmail = function() {
-    console.log('7777777777777777777', $scope.sEmailForm);
     if ($scope.sEmailForm.name == null || $scope.sEmailForm.name.length == 0) {
       Flash.create('warning', 'Please Mention The Email')
       return;

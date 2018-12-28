@@ -72,7 +72,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     tableData: []
   };
 
-  console.log($scope.data1.tableData, 'tttttttttt');
 
   views1 = [{
     name: 'list',
@@ -125,7 +124,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
   $scope.data3 = {
     tableData: []
   };
-  console.log($scope.data3.tableData, 'jjjjjjjjj');
 
   views3 = [{
     name: 'list',
@@ -152,7 +150,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
   $scope.me = $users.get('mySelf');
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode, 'fffffffff');
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'edit') {
@@ -162,7 +159,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
           var title = 'Project Details : ';
           var appType = 'projectDetails';
         } else if (action == 'delete') {
-          console.log("aaaaaaaaa");
           $http({
             method: 'DELETE',
             url: '/api/support/projects/' + $scope.data.tableData[i].pk + '/'
@@ -192,9 +188,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
 
   $scope.tableActionArchieve = function(target, action, mode) {
-    console.log(target, action, mode, 'fffffffffgggggggggggggggg');
-
-
     for (var i = 0; i < $scope.data.archieveData.length; i++) {
       if ($scope.data.archieveData[i].pk == parseInt(target)) {
         if (action == 'details') {
@@ -242,9 +235,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     }
   }
   $scope.tableAction2 = function(target, action, mode) {
-    console.log(target, action, mode, 'ggggggggggggggggggggggggggggg');
-
-
     for (var i = 0; i < $scope.data2.tableData.length; i++) {
       if ($scope.data2.tableData[i].pk == parseInt(target)) {
         if (action == 'success') {
@@ -267,9 +257,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     }
   }
   $scope.tableAction3 = function(target, action, mode) {
-    console.log(target, action, mode, 'ggggggggggggggggggggggggggggg');
-
-
     for (var i = 0; i < $scope.data3.tableData.length; i++) {
       if ($scope.data3.tableData[i].pk == parseInt(target)) {
         if (action == 'invoice') {
@@ -299,7 +286,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -341,7 +327,6 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
   $scope.companySearch = function(query) {
     return $http.get('/api/ERP/service/?name__contains=' + query).
     then(function(response) {
-      console.log(response.data, 'ccccccccccccccc');
       return response.data;
     })
   };
@@ -359,7 +344,6 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
   $scope.showCreateCompanyBtn = false;
   $scope.companyExist = false;
   $scope.me = $users.get('mySelf');
-  console.log($scope.me, 'hhhhhhhhhhhhhh');
 
   $scope.companySearch = function(query) {
     return $http.get('/api/ERP/service/?name__contains=' + query).
@@ -444,7 +428,6 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
             addUrl = addUrl + $scope.form.address.pk + '/'
             serviceUrl = serviceUrl + data.pk + '/'
           }
-          console.log(addUrl, serviceUrl);
           $http({
             method: method,
             url: addUrl,
@@ -479,7 +462,6 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
     }).result.then(function(f) {
       $scope.fetchData();
     }, function(f) {
-      console.log('777777777777777777777777', f);
       if (typeof f == 'object') {
         $scope.form.service = f
       }
@@ -500,8 +482,6 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
   //   $scope.date = $scope.form.date.toJSON().split('T')[0]
   // }
   $scope.createProjects = function() {
-    console.log($scope.form.responsible, 'vvvvvvvvvvvvvv');
-
     if ($scope.form.responsible == null || $scope.form.responsible.length == 0) {
       Flash.create('warning', 'Please Mention Responsible Person Name')
       return
@@ -510,20 +490,18 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
     if (typeof $scope.form.date == 'object') {
       $scope.form.date = $scope.form.date.toJSON().split('T')[0]
     }
-    $scope.$watch('form.vendor', function(newValue, oldValue) {
-      console.log(newValue, 'hhhhhhhhhhhhhh');
-
-    })
+    // $scope.$watch('form.vendor', function(newValue, oldValue) {
+    //   console.log(newValue, 'hhhhhhhhhhhhhh');
+    //
+    // })
     // if($scope.mode == 'new'){
     //   $scope.date = $scope.form.date.toJSON().split('T')[0]
     // }else{
     //
     //
     // }
-    console.log($scope.date, 'dddddddddddd');
     var method = 'POST'
     var Url = '/api/support/projects/'
-    console.log($scope.form.machinemodel, 'mmm');
     var dataToSend = {
       service: $scope.form.service.pk,
       vendor: $scope.form.vendor.pk,
@@ -595,7 +573,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
     function filterByPk(item) {
       if ($scope.form.responsible.includes(item.pk)) {
-        console.log(item.first_name + item.last_name, 'vvvvvvvvv');
         $scope.name.push(item.first_name + item.last_name)
       }
     }
@@ -653,7 +630,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
   $scope.updateAll = function() {
     for (var i = 0; i < $scope.projects.length; i++) {
-      console.log($scope.projects[i].gst,$scope.projects[i].custom);
       $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.projects[i].price) / 100 + $scope.projects[i].price).toFixed(2))
       $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
       $scope.projects[i].packing = parseFloat((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
@@ -687,14 +663,53 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }
   }
 
+
+  function sum(data) {
+    if (data == $scope.form.materialIssue) {
+      return data.map(function(m) {
+        return m.qty * m.price
+      }).reduce(function(a, b) {
+        return a + b
+      }, 0)
+    } else if (data == $scope.purchase) {
+      return data.map(function(m) {
+        return m.quantity1 * m.price
+      }).reduce(function(a, b) {
+        return a + b
+      }, 0)
+    }
+  }
+
+
+  $scope.materialIssue = []
+
+  $scope.fetchMaterial = function(){
+    $http({
+      method: 'GET',
+      url: '/api/support/material/?project=' + $scope.form.pk,
+    }).
+    then(function(response) {
+      for (var i = 0; i < response.data.length; i++) {
+        for (var j = 0; j < response.data[i].materialIssue.length; j++) {
+          $scope.materialIssue.push(response.data[i].materialIssue[j])
+          $scope.materialSum = sum($scope.materialIssue)
+        }
+      }
+    })
+  }
+  if($scope.form.status=='ongoing'){
+    $scope.fetchMaterial()
+  }
+
+
   $scope.fetchData = function() {
-    console.log("hhhhhhhhhhhhhhhhhhhhhh");
     $http({
       method: 'GET',
       url: '/api/support/bom/?project=' + $scope.form.pk
     }).
     then(function(response) {
       $scope.projects = response.data
+      $scope.purchaseSum = sum($scope.projects)
       for (var i = 0; i < $scope.projects.length; i++) {
         var totalprice = $scope.projects[i].price * $scope.projects[i].quantity1
         $scope.form.invoiceValue += totalprice
@@ -706,9 +721,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   }
 
   $scope.deleteTable = function(val, index) {
-    console.log($scope.data[index],'aaaaaaaaaaa');
     if ($scope.data[index].listPk != undefined) {
-      console.log(val,$scope.productpk[index].products.part_no,'heeeeeeerrrrrrrrrrrrrrreeeeeeeeeeeeee');
           if (val === $scope.data[index].listPk) {
             $http({
               method: 'DELETE',
@@ -716,7 +729,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
             }).
             then((function(index) {
               return function(response) {
-                console.log("aaaaaaaaaaaaacccccccccccc");
                 var price = $scope.data[index].price * $scope.data[index].quantity1
                 $scope.form.invoiceValue -= price
                 $scope.data.splice(index, 1);
@@ -771,7 +783,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     } else if (typeof newValue[0].part_no == 'object') {
       $scope.data[$scope.data.length - 1] = newValue[0].part_no
       $scope.data[$scope.data.length - 1].quantity1 = 1
-      console.log($scope.data[$scope.data.length - 1]);
       var totalprice = $scope.data[$scope.data.length - 1].price * $scope.data[$scope.data.length - 1].quantity1
       cost += totalprice
       $scope.form.invoiceValue += cost
@@ -838,7 +849,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       cost = $scope.form.invoiceValue
       for (var i = 0; i < newValue.length; i++) {
         if (newValue[i].listPk) {
-          console.log(newValue[i], oldValue[i]);
           if (newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].landed_price != oldValue[i].landed_price||newValue[i].custom != oldValue[i].custom||newValue[i].gst != oldValue[i].gst) {
             var oldtotalprice = oldValue[i].price * oldValue[i].quantity1
             var totalprice = newValue[i].price * newValue[i].quantity1
@@ -870,7 +880,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   }, true)
 
   $scope.deleteData = function(pk, index) {
-    console.log("aaaaaaaaaaaa");
     $http({
       method: 'DELETE',
       url: '/api/support/bom/' + pk + '/'
@@ -887,7 +896,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   }
 
   $scope.save = function() {
-    console.log($scope.data);
     for (var i = 0; i < $scope.data.length; i++) {
       if ($scope.data[i].user.length == 0) {
         Flash.create('warning', 'Please Remove Empty Rows');
@@ -1249,7 +1257,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
   $scope.send = function() {
       for (var i = 0; i < $scope.projects.length; i++) {
-        console.log( $scope.projects[i],'aaaaaaaaaaaaaaaaaa');
         $scope.qty = $scope.projects[i].quantity2;
         $scope.rate = $scope.projects[i].landed_price
         $scope.pkforProduct = $scope.projects[i].products.pk
@@ -1265,7 +1272,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         }).
         then(function(response) {
           Flash.create('success', 'Saved');
-          console.log(response.data, 'aaaaaa');
           $http({
             method: 'PATCH',
             url: '/api/support/projects/' + $scope.form.pk + '/',
@@ -1278,8 +1284,8 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
             Flash.create('success', 'Saved');
             $scope.form.savedStatus = response.data.savedStatus
             $scope.form.status = response.data.status
-            console.log(response.data, 'aaaaaa');
             $scope.updateStatus()
+            $scope.fetchMaterial()
 
           })
         })
@@ -1915,82 +1921,79 @@ app.controller("businessManagement.projects.invoice", function($scope, $state, $
 
 
 })
-app.controller("businessManagement.projects.invoice.view", function($scope, $state, $users, $stateParams, $http, Flash) {
-
-
-  if ($scope.tab == undefined) {
-    $scope.resetForm();
-  } else {
-    $scope.form = $scope.data.tableData[$scope.tab.data.index]
-  }
-  console.log($scope.form);
-  $scope.projectSteps = {
-    steps: projectsStepsData
-  }
-
-  $scope.updateStatus = function(){
-    for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
-      if ($scope.projectSteps.steps[i].text == $scope.form.status) {
-        $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
-        break;
-      }
-    }
-  }
-  $scope.updateStatus()
-
-  function sum(data) {
-    console.log(data);
-    if (data == $scope.form.materialIssue) {
-      return data.map(function(m) {
-        return m.qty * m.price
-      }).reduce(function(a, b) {
-        return a + b
-      }, 0)
-    } else if (data == $scope.purchase) {
-      return data.map(function(m) {
-        return m.quantity1 * m.price
-      }).reduce(function(a, b) {
-        return a + b
-      }, 0)
-    }
-  }
-  $scope.materialIssue = []
-  $http({
-    method: 'GET',
-    url: '/api/support/material/?project=' + $scope.form.pk,
-  }).
-  then(function(response) {
-    for (var i = 0; i < response.data.length; i++) {
-      for (var j = 0; j < response.data[i].materialIssue.length; j++) {
-        $scope.materialIssue.push(response.data[i].materialIssue[j])
-        $scope.materialSum = sum($scope.materialIssue)
-      }
-    }
-  })
-
-  $http({
-    method: 'GET',
-    url: '/api/support/bom/?project=' + $scope.form.pk,
-  }).
-  then(function(response) {
-    console.log(response.data);
-    $scope.purchase = response.data;
-    $scope.purchaseSum = sum($scope.purchase)
-  })
-
-  function sum(data) {
-    if (data == $scope.materialIssue) {
-      return data.map(function(m) {
-        return m.qty * m.price
-      }).reduce(function(a, b) {
-        return a + b
-      }, 0)
-    } else if (data == $scope.purchase) {
-      return data.map(function(m) {
-        return m.quantity1 * m.price
-      }).reduce(function(a, b) {
-        return a + b
-      }, 0)
-    }
-  }
-})
+// app.controller("businessManagement.projects.invoice.view", function($scope, $state, $users, $stateParams, $http, Flash) {
+//
+//
+//   if ($scope.tab == undefined) {
+//     $scope.resetForm();
+//   } else {
+//     $scope.form = $scope.data.tableData[$scope.tab.data.index]
+//   }
+//   $scope.projectSteps = {
+//     steps: projectsStepsData
+//   }
+//
+//   $scope.updateStatus = function(){
+//     for (var i = 0; i < $scope.projectSteps.steps.length; i++) {
+//       if ($scope.projectSteps.steps[i].text == $scope.form.status) {
+//         $scope.form.selectedStatus = $scope.projectSteps.steps[i].indx;
+//         break;
+//       }
+//     }
+//   }
+//   $scope.updateStatus()
+//
+//   function sum(data) {
+//     if (data == $scope.form.materialIssue) {
+//       return data.map(function(m) {
+//         return m.qty * m.price
+//       }).reduce(function(a, b) {
+//         return a + b
+//       }, 0)
+//     } else if (data == $scope.purchase) {
+//       return data.map(function(m) {
+//         return m.quantity1 * m.price
+//       }).reduce(function(a, b) {
+//         return a + b
+//       }, 0)
+//     }
+//   }
+//   $scope.materialIssue = []
+//   $http({
+//     method: 'GET',
+//     url: '/api/support/material/?project=' + $scope.form.pk,
+//   }).
+//   then(function(response) {
+//     for (var i = 0; i < response.data.length; i++) {
+//       for (var j = 0; j < response.data[i].materialIssue.length; j++) {
+//         $scope.materialIssue.push(response.data[i].materialIssue[j])
+//         $scope.materialSum = sum($scope.materialIssue)
+//       }
+//     }
+//   })
+//
+//   $http({
+//     method: 'GET',
+//     url: '/api/support/bom/?project=' + $scope.form.pk,
+//   }).
+//   then(function(response) {
+//     $scope.purchase = response.data;
+//     $scope.purchaseSum = sum($scope.purchase)
+//   })
+//
+//   function sum(data) {
+//     if (data == $scope.materialIssue) {
+//       return data.map(function(m) {
+//         return m.qty * m.price
+//       }).reduce(function(a, b) {
+//         return a + b
+//       }, 0)
+//     } else if (data == $scope.purchase) {
+//       return data.map(function(m) {
+//         return m.quantity1 * m.price
+//       }).reduce(function(a, b) {
+//         return a + b
+//       }, 0)
+//     }
+//   }
+// })

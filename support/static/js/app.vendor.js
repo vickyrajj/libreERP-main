@@ -26,9 +26,6 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
 
 
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableData);
-
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'edit') {
@@ -47,17 +44,6 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
           return;
         }
 
-
-        console.log({
-          title: title + $scope.data.tableData[i].name,
-          cancel: true,
-          app: appType,
-          data: {
-            pk: target,
-            index: i
-          },
-          active: true
-        });
 
 
         $scope.addTab({
@@ -83,7 +69,6 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -128,7 +113,6 @@ app.controller("businessManagement.vendor.form", function($scope, $state, $users
   if (typeof $scope.tab == 'undefined') {
     $scope.mode = 'new';
     $scope.resetForm()
-    console.log($scope.form ,'jjjjjjjjjjjj');
   } else {
     $scope.mode = 'edit';
     $scope.form = $scope.data.tableData[$scope.tab.data.index]
@@ -160,7 +144,6 @@ app.controller("businessManagement.vendor.form", function($scope, $state, $users
       data: dataTosend
     }).
     then(function(response) {
-      console.log('hhhhhhhhhhh');
       Flash.create('success', 'Saved');
       if ($scope.mode == 'edit') {
         return

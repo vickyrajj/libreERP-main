@@ -2,7 +2,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   $scope.offset = 0
   $scope.text = {searchText:''}
   $scope.fetchProdInventory = function(offset) {
-    console.log($scope.text.searchText,'hhhhhhh');
     if ($scope.text.searchText.length>0) {
       var url = '/api/support/inventoryData/?limit=7&offset=' + offset + '&search=' + $scope.text.searchText
     }else {
@@ -50,7 +49,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
       return
     }
     $scope.offset = $scope.offset - 7
-    console.log('calling from prev');
     $scope.fetchProdInventory($scope.offset)
   }
 
@@ -60,10 +58,8 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
   $scope.reset()
   $scope.addToCart = function(product,indx) {
-    console.log(product, 'aaaaaaaaaaaaaa');
     $rootScope.cart.push(product)
     $scope.products[indx].addedCart = true
-    console.log($rootScope.cart.length);
   }
 
 
@@ -74,13 +70,11 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
   $scope.getMaterialIssue = function(offset){
-    console.log($scope.searchmaterial.search,'kkkkkkkkkkkkkkk');
     $http({
       method: 'GET',
       url: '/api/support/material/?limit=7&offset=' + offset+ '&search=' + $scope.searchmaterial.search
     }).
     then(function(response) {
-      console.log(response.data, 'aaaaaaaaaaaaaa');
       $scope.materialIssue = response.data.results
       $scope.sum = []
       for (var i = 0; i < $scope.materialIssue.length; i++) {
@@ -88,7 +82,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
         $scope.sum.push($scope.issue.map(function(m){
           return m.qty*m.price
         }).reduce(function(a,b){return a+b},0))
-        console.log($scope.sum,'aaaaaaa');
 
       }
     })
@@ -103,7 +96,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
 
   $scope.nextmaterial = function() {
-    console.log($scope.materialIssue.length,'ooooo');
     if ($scope.materialIssue.length == 0) {
         $scope.offsetmaterial  =  $scope.offsetmaterial -7
       $scope.getMaterialIssue($scope.offsetmaterial)
@@ -117,7 +109,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
       return
     }
     $scope.offsetmaterial =  $scope.offsetmaterial  - 7
-    console.log('calling from prev');
     $scope.getMaterialIssue($scope.offsetmaterial)
   }
 
@@ -129,7 +120,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
   $scope.$watch('modeToggle', function(newValue, oldValue) {
-    console.log(newValue, 'kkkkkkkkkkkkkkkkkk');
     if (newValue == true) {
       $scope.getMaterialIssue($scope.offsetmaterial)
     }
@@ -191,7 +181,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     }).
     then(function(response) {
       Flash.create('success', 'Deleted');
-      console.log(index, 'jjjjj');
       $scope.materialIssue.splice(index, 1)
       $scope.sum.splice(index, 1)
     })
@@ -273,7 +262,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   }
 
   $scope.getList = function() {
-    console.log($rootScope.cart);
     if($rootScope.cart.length>0){
       $uibModal.open({
         templateUrl: '/static/ngTemplates/app.inventory.cart.modal.html',
@@ -297,7 +285,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               return response.data;
             })
           };
-          console.log(cartData, 'aaaaaaaaaaa');
           $scope.cartData = cartData
           $scope.productsOrdered = []
           // $scope.productsOrderedpk = []
@@ -333,8 +320,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
           $scope.form = {}
           $scope.save = function() {
-            console.log($scope.productsOrdered);
-            console.log($scope.form.responsible, 'kkkkkkkkkkkkkkkkk');
             if ($scope.form.responsible == undefined) {
               Flash.create('warning', 'Select Responsible person');
               return
@@ -362,7 +347,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               data: dataToSend
             }).
             then(function(response) {
-              console.log(response.data, 'kkkkkkkkk');
               $scope.values = response.data
             })
           }
@@ -390,7 +374,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               url: '/api/support/inventoryData/?limit=7&offset=' + $scope.off ,
             }).
             then(function(response) {
-              console.log(response.data,'dddddddddddddddd');
               $scope.stockdata = response.data.data
 
             })
@@ -415,13 +398,11 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               return
             }
             $scope.off = $scope.off - 7
-            console.log('calling from prev');
             $scope.fectchStock($scope.off)
           }
 
           $scope.$watch('stockdata', function(newValue, oldValue) {
             if (typeof newValue == 'object'){
-              console.log( newValue,'jkqqqqqqqqqqq');
               for(var i=0;i<$scope.stockdata.length;i++){
 
               }
