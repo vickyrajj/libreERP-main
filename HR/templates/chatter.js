@@ -577,29 +577,30 @@ function setIframeToNormal(){
 // var connectionIsOff=true
 document.addEventListener("DOMContentLoaded", function(event) {
 
-  // window.onbeforeunload=function(){
+  window.onbeforeunload=function(){
   // alert('winodw refreshed');
-  // if(isAudioClicked||isVideoClicked){
-  //   if (confirm("This call will be ended ?")) {
-  //     // isConfirmedToEnd=true
-  //       if(getFrameContent!=undefined){
-  //         getFrameContent.postMessage('userleft',webRtcAddress );
-  //       }
-  //       if (threadExist==undefined) {
-  //         return
-  //       }
-  //       if(isAudioClicked){
-  //         audioBtn.click()
-  //       }
-  //       if(isVideoClicked){
-  //         videoBtn.click()
-  //       }
-  //   } else {
-  //     return
-  //   }
-  // }
-  // }
+  if(isAudioClicked||isVideoClicked){
+        if(isAudioClicked){
+          audioBtn.click()
+        }
+        if(isVideoClicked){
+          videoBtn.click()
+        }
+    } else {
+      return
+    }
+    // return 'Are you sure you want to leave?';
+  }
 
+  // window.onbeforeunload = function(){
+  //   // console.log('herererere');
+  //   myfun();
+  //   return 'Are you sure you want to leave?';
+  // };
+  //
+  // function myfun(){
+  //   console.log('thererer');
+  // }
 
   connection.onopen = function (session) {
      console.log("session established!");

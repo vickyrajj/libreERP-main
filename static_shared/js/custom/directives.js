@@ -372,6 +372,8 @@ app.directive('chatBox', function() {
       }
 
 
+      // $scope.closeIframe1=$scope.data.closeIframe
+
       setTimeout(function() {
         if (document.getElementById("iframeChat" + $scope.data.uid) != null)
           $scope.getFrameContent = document.getElementById("iframeChat"+ $scope.data.uid).contentWindow;
@@ -382,6 +384,26 @@ app.directive('chatBox', function() {
         }
         $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
       }
+
+      // const permissionToRemove = {
+      //     permissions: ["microphone"]
+      //     }
+
+      // $scope.$watch('data.closeIframe',function(newValue,oldValue){
+      //   if(newValue){
+      //     // if ($scope.getFrameContent==undefined) {
+      //     //   $scope.getFrameContent = document.getElementById("iframeChat"+ $scope.data.uid).contentWindow;
+      //     // }
+      //     // console.log('going to call');
+      //     // $scope.getFrameContent.postMessage('agentCalled', webRtcAddress);
+      //     // $scope.closeIframe1=newValue
+      //
+      //           browser.permissions.remove(permissionToRemove).then(result => {
+      //             console.log(result);
+      //           });
+      //       }
+      // })
+
       $scope.toggleVisitorScreen=function(){
         if(!$scope.alreadyDone){
           $scope.isVisitorVideoShowing=!$scope.isVisitorVideoShowing;
@@ -973,7 +995,10 @@ app.directive('chatBox', function() {
         $scope.closeChatBox(indx, $scope.data.myUserIndex)
       }
 
+
+
       $scope.closeChatBox = function(indx, myUserIndex) {
+
         $scope.closeChat(indx, myUserIndex)
         $scope.data.boxOpen = false
       }
