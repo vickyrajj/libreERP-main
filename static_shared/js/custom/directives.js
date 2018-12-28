@@ -388,7 +388,7 @@ app.directive('chatBox', function() {
           if(!$scope.isVisitorVideoShowing){
             // document.getElementById("iframeChat" + $scope.data.uid).style.height="14%";
             $scope.msgDivHeight = 51
-            connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -399,7 +399,7 @@ app.directive('chatBox', function() {
           // document.getElementById("iframeChat" + $scope.data.uid).style.height="100%"
           $scope.msgDivHeight = 52
           // document.getElementById("iframeChat" + $scope.data.uid).style.transition=".5s"
-          connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
+          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -412,7 +412,7 @@ app.directive('chatBox', function() {
       $scope.hideVisitorScreen = function() {
         $scope.IsVisitorOn=!$scope.IsVisitorOn;
         if($scope.IsVisitorOn){
-          connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
+          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -420,7 +420,7 @@ app.directive('chatBox', function() {
           });
         }
       else{
-        connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
+        connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
           acknowledge: true
         }).
         then(function(publication) {
@@ -428,6 +428,8 @@ app.directive('chatBox', function() {
         });
       }
       }
+
+      // alert($scope.data.closeIframe+"******")
 
       $scope.setHeight = function () {
         console.log('timesss');
@@ -807,7 +809,7 @@ app.directive('chatBox', function() {
 
 
             $scope.status = 'MF';
-            connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me, new Date()], {}, {
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, $scope.fileData, $scope.me, new Date()], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -874,7 +876,7 @@ app.directive('chatBox', function() {
             console.log('publishing here... message', $scope.status, response.data, $scope.me.username);
 
             if(connection.session){
-              connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
+              connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, response.data, $scope.me, new Date()], {}, {
                 acknowledge: true
               }).
               then(function(publication) {
@@ -920,7 +922,7 @@ app.directive('chatBox', function() {
         $scope.status = "T";
         if (newValue != "") {
           if(connection.session){
-            connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status], {}, {
               acknowledge: true
             }).
             then(function(publication) {
@@ -935,7 +937,7 @@ app.directive('chatBox', function() {
 
       $scope.chatClose = function(indx, uid, chatThreadPk) {
         $scope.status = "F";
-        connection.session.call(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
+        connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, [$scope.status, uid], {}, {
           acknowledge: true
         }).
         then(function(publication) {
@@ -1232,7 +1234,7 @@ app.directive('chatBox', function() {
           console.log(response.data.allAgents, '@@@@@@@@@@@@@@@@@@@@@');
           $scope.allAgents = response.data.allAgents
           for (var i = 0; i < $scope.allAgents.length; i++) {
-            connection.session.call(wamp_prefix+'service.support.heartbeat.' + $scope.allAgents[i], []).
+            connection.session.publish(wamp_prefix+'service.support.heartbeat.' + $scope.allAgents[i], []).
             then((function(i) {
               return function(res) {
                 console.log('online', i);
@@ -1281,7 +1283,7 @@ app.directive('chatBox', function() {
 
             $scope.transferChat = function() {
               console.log('in traaaaa');
-              connection.session.call(wamp_prefix+'service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
+              connection.session.publish(wamp_prefix+'service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
                 function(res) {
                   console.log(userData.chatThreadPk, $scope.agentForm.pk);
                   $http({
@@ -1444,7 +1446,7 @@ app.directive('chatBox', function() {
                 $uibModalInstance.dismiss(response.data)
 
 
-                connection.session.call(wamp_prefix+'service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
+                connection.session.publish(wamp_prefix+'service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
                   function(res) {},
                   function(err) {
 

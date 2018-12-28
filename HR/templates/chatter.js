@@ -318,6 +318,10 @@ var iconColor = '{{iconColor}}'
 var fontAndIconColor='{{fontColor}}'
 
 
+// window.onbeforeunload = function() {
+//   alert('suere')
+// };
+
 if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
@@ -441,7 +445,7 @@ function fetchThread(uid) {
           chatThreadPk = data[0].pk
           agentPk = data[0].user
         }
-        console.log(data);
+        // console.log(data);
         fetchMessages(uid);
       } else if (this.responseText == '{"PARAMS":"createCookie"}') {
         console.log('genertate new uid');
@@ -466,7 +470,7 @@ function checkCookie() {
   uid = getCookie("uid");
   if (uid != "") {
       // alert("Welcome again " + user);
-      console.log('cookie exu=ist');
+      // console.log('cookie exu=ist');
       fetchThread(uid);
       // if (threadExist!=undefined && threadExist) {
       //   fetchMessages(uid);
@@ -474,7 +478,7 @@ function checkCookie() {
   } else {
       // uid = custID +'$'+custName+'$'+broswer.charAt(0)
       uid = new Date().getTime()
-      console.log(uid);
+      // console.log(uid);
       if (uid != "" && uid != null) {
           setCookie("uid", uid, 365);
       }
@@ -487,27 +491,27 @@ checkCookie();
 
 
 function setVisitorDetails(name , phoneNumber , email) {
-  console.log('coming in chatter', name , phoneNumber , email);
+  // console.log('coming in chatter', name , phoneNumber , email);
 
   detail = getCookie("uidDetails");
   if (detail != "") {
-    console.log('already there');
+    // console.log('already there');
     document.cookie = encodeURIComponent("uidDetails") + "=deleted; expires=" + new Date(0).toUTCString()
   }
 
   console.log(getCookie("uid") , uid , 'getttttttttttttt`');
 
   if (uid!="") {
-    console.log(uid);
+    // console.log(uid);
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+        // console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
         if (this.readyState == 4 && this.status == 200) {
-          console.log(this.responseText);
+          // console.log(this.responseText);
           var data = JSON.parse(this.responseText)
-          console.log(data,'');
+          // console.log(data,'');
           if (data.length==0) {
-            console.log('vistor not there');
+            // console.log('vistor not there');
             var xhttp = new XMLHttpRequest();
              xhttp.onreadystatechange = function() {
                if (this.readyState == 4 && this.status == 201) {
@@ -543,6 +547,8 @@ function getVisitorDetails() {
 }
 
 
+
+
 function setIframeRotated(){
   iframeDiv.style.position = "fixed";
   iframeDiv.style.height = "70vh";
@@ -571,6 +577,29 @@ function setIframeToNormal(){
 // var connectionIsOff=true
 document.addEventListener("DOMContentLoaded", function(event) {
 
+  // window.onbeforeunload=function(){
+  // alert('winodw refreshed');
+  // if(isAudioClicked||isVideoClicked){
+  //   if (confirm("This call will be ended ?")) {
+  //     // isConfirmedToEnd=true
+  //       if(getFrameContent!=undefined){
+  //         getFrameContent.postMessage('userleft',webRtcAddress );
+  //       }
+  //       if (threadExist==undefined) {
+  //         return
+  //       }
+  //       if(isAudioClicked){
+  //         audioBtn.click()
+  //       }
+  //       if(isVideoClicked){
+  //         videoBtn.click()
+  //       }
+  //   } else {
+  //     return
+  //   }
+  // }
+  // }
+
 
   connection.onopen = function (session) {
      console.log("session established!");
@@ -581,7 +610,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
      // messageBox.appendChild(div2);
 
     var supportChat = function(args) {
-      console.log(args);
+      console.log('These are the arguments '+ args);
       var message;
       if(args[0]=='hideVisitorScreen'){
         document.getElementById('iframeDiv').style.display = "none";
@@ -606,7 +635,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         document.getElementById('TypingBox').style.display="block"
 
-        console.log('typingggggggggggggggggggggg');
+        // console.log('typingggggggggggggggggggggg');
         onlineStatus.innerHTML = 'Typing...';
         // isTyping.style.display = "";
         // console.log(message,'message');
@@ -625,7 +654,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
 
       if (args[0]=="M") {
-        console.log('MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM');
+        // console.log('MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM');
           // notification.play();
           message = args[1]
          // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
@@ -657,15 +686,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var attachment;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
-            console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
+            // console.log(this.readyState , this.status , 'onreadyyyyyyyyyyyyyyyyyy' );
             if (this.readyState == 4 && this.status == 200) {
-              console.log(this.responseText);
+              // console.log(this.responseText);
               var data = JSON.parse(this.responseText)
               // attachment = data.attachment
               // console.log('attachmenttttttttttt' , attachment);
               message = data
 
-              console.log(data,'ddddddddddd');
+              // console.log(data,'ddddddddddd');
 
               if (data.attachmentType=='instructionImage') {
                 openModal(data.attachment)
@@ -688,7 +717,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
          message = args[1]
       }else if (args[0]=='AP') {
-        console.log('agent pk recieveddddddddddddddddddddddddddddddddd');
+        console.log('agent pk recieveddddddddddddddddddddddddddddddddd , it is '+ args[1]);
         agentPk = args[1];
         isAgentOnline = true;
         // videoCallAccepted = true
@@ -696,28 +725,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return
       }else if (args[0]=='O') {
         console.log('yes online');
-        console.log('O');
+        // console.log('O');
         isAgentOnline = true;
         onlineStatus.innerHTML = 'Online'
         // agentName.innerHTML = '<p style="line-height: 1.75;">Syrow Agent</p>'
         return
       }else if (args[0]=='A') {
         console.log('asigned');
-        console.log('A');
+        // console.log('A');
         isAgentOnline = true;
         agentName.innerHTML = args[1]
         return
       }else if (args[0]=='F') {
-        console.log('F');
+        // console.log('F');
         console.log('open feedback');
         openFeedback(args[1])
         return
       }
 
-      console.log('IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+      // console.log('IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
 
       setTimeout(function(){
-        console.log('inside timeooutttttttttttttt');
+        // console.log('inside timeooutttttttttttttt');
         var div = document.createElement("div");
         console.log(message,'message');
         div.innerHTML = messageDiv(message)
@@ -735,15 +764,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     function heartbeat() {
-      console.log('caming in heartttttttttttttttttttttttttttttttttttttt here');
+      console.log('coming in hearbeat');
       var isOnline = true
       return uid
     }
 
 
     function createCookieDetail(args) {
-      console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
-      console.log(args[0]);
+      // console.log('create deleteeeeeeeeeeeeeeeeeeeeeee');
+      // console.log(args[0]);
         detail = getCookie("uidDetails");
         if (detail != "") {
           console.log('already there');
@@ -752,36 +781,36 @@ document.addEventListener("DOMContentLoaded", function(event) {
         if (args[0].email!='') {
           emailRecieved = true
         }
-        console.log(emailRecieved);
+        // console.log(emailRecieved);
         setCookie("uidDetails", JSON.stringify({email:args[0].email , name:args[0].name , phoneNumber:args[0].phoneNumber}), 365);
     }
 
-    session.register(wamp_prefix+'service.support.createDetailCookie.'+uid, createCookieDetail).then(
+    session.subscribe(wamp_prefix+'service.support.createDetailCookie.'+uid, createCookieDetail).then(
       function (res) {
-        console.log("registered to service.support.createDetailCookie'");
+        console.log("subscribe to service.support.createDetailCookie'");
       },
       function (err) {
-        console.log("failed to registered: ");
+        console.log("failed to subscribe: service.support.createDetailCookie");
       }
     );
 
-    session.register(wamp_prefix+'service.support.heartbeat.'+uid, heartbeat).then(
+    session.subscribe(wamp_prefix+'service.support.heartbeat.'+uid, heartbeat).then(
       function (res) {
-        console.log("registered to service.support.heartbeat'");
+        console.log("subscribe to service.support.heartbeat'");
       },
       function (err) {
-        console.log("failed to registered: " + err);
+        console.log("failed to subscribe: service.support.heartbeat" + err);
       }
     );
 
-    session.register(wamp_prefix+'service.support.chat.' + uid, supportChat).then(
+    session.subscribe(wamp_prefix+'service.support.chat.' + uid, supportChat).then(
       function (sub) {
         subs=sub
-        console.log("subscribed to topic 'service.support.chat'" , uid );
+        console.log("subscribe to topic 'service.support.chat'" , uid );
         enableTextArea()
       },
       function (err) {
-        console.log("failed to subscribed: " + err);
+        console.log("failed to subscribe: service.support.chat" + err);
         disableTextArea()
       }
     );
@@ -812,7 +841,6 @@ function createChatDiv() {
               '<span id="onlineStatus" class="chatBox_status">Online</span>'+
             '</div>'+
             '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
-            // '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
             '<i class="exitBtn SyrowFont font-SyrowVideoCall" style="display:none" id="videoBtn"></i>'+
             '<i class="closeIcon SyrowFont font-SyrowX" id="closeIcon"></i>'+
             '<i class="exitBtn SyrowFont font-SyrowLog-out" id="exitBtn"></i>'+
@@ -836,7 +864,6 @@ function createChatDiv() {
               '<i id="paperClip"  class="paperClip SyrowFont font-SyrowPaperclip" aria-hidden="true"></i>'+
               '<i id="paperPlane" class="paperClip SyrowFont font-SyrowNavigation" aria-hidden="true"></i>'+
               '</div>'+
-
 
               '<div class="startNewChatBtn flex_container" id="startNewChatBtn" class="flex_container">'+
                 '<span>Start New Conversation </span>'+
@@ -947,7 +974,7 @@ function createChatDiv() {
    xhttp1.onreadystatechange = function() {
      if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText)
-        console.log(data);
+        // console.log(data);
      }
    };
     xhttp1.open('GET', '{{serverAddress}}/api/support/customerProfile/' + custID + '/' , true);
@@ -983,24 +1010,26 @@ function createChatDiv() {
   inputText.addEventListener('keydown',function(e){
 
     if(window.innerWidth <= 600) {
-      console.log('mobile');
+      // console.log('its a mobile');
      return
    } else {
-     console.log('desktop');
+     // console.log('its a desktop');
      if (e.keyCode == 13 && !e.shiftKey)
          {
              // prevent default behavior
              e.preventDefault();
-             console.log('both');
+             // console.log('both');
              sendMessage(inputText.value);
          }
          if (e.keyCode == 13&&e.shiftKey)
          {
-           console.log('here');
+           // console.log('here');
          }
    }
 
   })
+
+
 
   var chatCircleText =   document.getElementById('chatCircleText')
   var callCircleText =   document.getElementById('callCircleText')
@@ -1016,46 +1045,38 @@ function createChatDiv() {
     modal.style.display = "block";
   }
 
-function activeVideoCall(){
-  winCol = windowColor.split('#')[1]
-  urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
-  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
-  console.log(urlforConference);
-  if (device=='sm') {
-    urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
-    urlforConference = urlforConference + '&userMob=true'
+  function activeVideoCall(){
+    winCol = windowColor.split('#')[1]
+    urlforConferenceForAgent= webRtcAddress +'/'+uid+'?audio_video=video&windowColor='+winCol+'&agent=true';
+    urlforConference =  webRtcAddress +'/' +uid+'?audio_video=video&windowColor='+winCol+'&agent=false';
+    console.log('URL for activating video call is '+urlforConference);
+    if (device=='sm') {
+      urlforConferenceForAgent = urlforConferenceForAgent + '&userMob=true'
+      urlforConference = urlforConference + '&userMob=true'
+    }
+   openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
   }
- openVideoAudioIframe(urlforConference , urlforConferenceForAgent,'video')
-}
-function activeAudioCall(){
-  winCol = windowColor.split('#')[1]
-  urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
-  urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
-  openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
-}
+  function activeAudioCall(){
+    winCol = windowColor.split('#')[1]
+    urlforConferenceForAgent= webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=true';
+    urlforConference =  webRtcAddress +'/' +uid+'?audio_video=audio&windowColor='+winCol+'&agent=false';
+    console.log('URL for activating audio call is '+urlforConference);
+    openVideoAudioIframe(urlforConference , urlforConferenceForAgent , 'audio')
+  }
 
-  videoCircle.addEventListener('click',function () {
-    activeVideoCall()
-    openChat();
-    hideAudioAndVidoeBtn();
-  })
 
   function reachChatBoxForInfo(){
-    connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CustmorClosedTheChat' ] , {}, {
+    connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CustmorClosedTheChat' ] , {}, {
       acknowledge: true
     }).
     then(function(publication) {
-      console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+      console.log("call sent to "+agentPk +" for closing the chat by customer");
+    },function(){
+      console.log('failed to call '+agentPk+' for closing the chat by customer');
     });
   }
 
-  audioCircle.addEventListener('click',function () {
-    // activeAudioCall();
-    openChat();
-    // hideAudioAndVidoeBtn();
-    audioBtn.click()
 
-  })
 
   var videoOpened = false
   var audioOpened = false
@@ -1083,7 +1104,6 @@ function activeAudioCall(){
       dataToSend.logs = 'audio call started'
     }
 
-
     // console.log(agentPk);
     if (agentPk) {
       console.log('agent pk is pnline',isAgentOnline);
@@ -1097,7 +1117,6 @@ function activeAudioCall(){
     }
     // var message = dataToSend
     dataToSend = JSON.stringify(dataToSend)
-
 
     var xhttp = new XMLHttpRequest();
      xhttp.onreadystatechange = function() {
@@ -1113,7 +1132,7 @@ function activeAudioCall(){
         dataToPublish = [uid, callType, [] , custID]
         details = getCookie("uidDetails");
         if (details != "") {
-          console.log(details);
+          // console.log(details);
            dataToPublish.push(JSON.parse(details))
         } else {
           dataToPublish.push(false)
@@ -1129,21 +1148,20 @@ function activeAudioCall(){
              chatThreadPk = data.pk
              dataToPublish.push(chatThreadPk)
              dataToPublish.push(urlforConferenceForAgent)
-             connection.session.call(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+             connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
                acknowledge: true
              }).
              then(function(publication) {
-               console.log("Published");
-             }).catch(function(){
-               // alert('disconnected');
-             });
+               console.log("Published to all");
+             },function(){
+               console.log('unable to publish to all');
+             })
            }
          };
          xhttp.open('POST', '{{serverAddress}}/api/support/chatThread/', true);
          xhttp.setRequestHeader("Content-type", "application/json");
          xhttp.send(dataToSend);
       }else {
-
 
         var xhttp = new XMLHttpRequest();
          xhttp.onreadystatechange = function() {
@@ -1155,29 +1173,26 @@ function activeAudioCall(){
          xhttp.setRequestHeader("Content-type", "application/json");
          xhttp.send(JSON.stringify({typ:streamTyp}));
 
-
-
         dataToPublish = [uid, callType, [] , custID, urlforConferenceForAgent]
         if (isAgentOnline) {
           console.log('ONLINE' , agentPk);
-          connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
+          connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
             acknowledge: true
           }).
           then(function(publication) {
-            console.log("Published service.support.agent."+agentPk);
+            console.log("called service.support.agent."+agentPk);
           },function(err){
-            console.log(err);
+            console.log("failed to call "+agentPk);
           });
         }else {
           console.log('offline send to all');
-          connection.session.call(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+          connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
             acknowledge: true
           }).
           then(function(publication) {
             console.log("Published");
           });
         }
-
       }
 
       if (streamTyp=='video') {
@@ -1211,7 +1226,7 @@ function activeAudioCall(){
           audioSection.appendChild(iFrame)
           audioSection.style.display = "block";
           chatBox_content.style.marginTop = "40px";
-          console.log(messageBox.style,'messageBoxmessageBoxmessageBoxmessageBox');
+          // console.log(messageBox.style,'messageBoxmessageBoxmessageBoxmessageBox');
         }else {
 
           if (device=='sm') {
@@ -1249,7 +1264,7 @@ function activeAudioCall(){
     }
     if (supportOptions[i].name=='audioCircle') {
 
-      console.log('************************');
+      // console.log('************************');
       if(videoSupport){
           videoContains=true;
       }
@@ -1268,7 +1283,7 @@ function activeAudioCall(){
     }
   }
 
-  console.log(supportOptions,'so');
+  // console.log(supportOptions,'so');
     serviceCount = 0
     setTimeout(function () {
       for (var i = 0 , rD = 0 , mB = 0 , mR=0 ; i < supportOptions.length; i++) {
@@ -1421,6 +1436,9 @@ function activeAudioCall(){
             }\
             .font-SyrowPhone1:before {\
                 content: '\\e93c';\
+              }\
+            .font-SyrowVideo-off:before {\
+                content: '\\e972';\
               }\
               .font-SyrowPhone-call:before {\
                 content: '\\e93d';\
@@ -1951,7 +1969,7 @@ function activeAudioCall(){
     console.log('inside end chattttttttttt');
     chatClosed = true
 
-    console.log(feedbackFormOpened);
+    // console.log(feedbackFormOpened);
 
     if (feedbackFormOpened) {
       return
@@ -1967,11 +1985,13 @@ function activeAudioCall(){
 
          var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
-         connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
+         connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CL' , dataToSend ] , {}, {
            acknowledge: true
          }).
          then(function(publication) {
-           console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+           console.log("Published to "+agentPk+" to end chat");
+         },function(){
+           console.log('failed to call '+agentPk+" to end chat");
          });
        }
      };
@@ -1982,13 +2002,25 @@ function activeAudioCall(){
     openFeedback()
   }
 
+  // setTimeout(function () {
+  //   alert('sending now');
+  //   connection.session.call('service.self', 'balram', {}, {
+  //     acknowledge: true
+  //   }).
+  //   then(function(publication) {
+  //     console.log("Published to "+agentPk+" to end chat");
+  //   },function(){
+  //     console.log('failed to call '+agentPk+" to end chat");
+  //   });
+  // }, 5000);
+
   feedbackFormOpened = false
   feedbackFormSubmitted = false
 
   function openFeedback(id) {
     hideAudioAndVidoeBtn();
 
-    console.log(feedbackFormOpened , 'feedbackFormOpened');
+    // console.log(feedbackFormOpened , 'feedbackFormOpened');
 
     if (feedbackFormOpened) {
       return
@@ -2119,7 +2151,7 @@ var myformrating;
         ratingForm.customerRating = 5
       }
       myformrating=ratingForm.customerRating
-    console.log(ratingForm);
+    // console.log(ratingForm);
     ratingFormObject = ratingForm
     ratingForm = JSON.stringify(ratingForm)
       var xhttp = new XMLHttpRequest();
@@ -2132,15 +2164,17 @@ var myformrating;
            thankYouMessage()
            feedbackFormSubmitted = true
 
-           console.log(ratingFormObject);
+           // console.log(ratingFormObject);
 
             var dataToSend = {uid:uid , usersFeedback:ratingFormObject.customerFeedback  , rating:ratingFormObject.customerRating , sentByAgent:false };
 
-             connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
+             connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'FB' , dataToSend ] , {}, {
                acknowledge: true
              }).
              then(function(publication) {
-               console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+               console.log("Published to "+agentPk+" for feedback");
+             },function(){
+                console.log("failed to publish "+agentPk+" for feedback");
              });
          }
        };
@@ -2173,7 +2207,7 @@ var myformrating;
       document.getElementById('iFrame1').src = '';
     }
 
-    console.log('Came here ... chat ');
+    // console.log('Came here ... chat ');
     messageComposer.style.display = "";
     startNewChatBtn.style.display = "none";
     audioSection.style.display = "none";
@@ -2218,24 +2252,27 @@ var myformrating;
     if (event.data=='loadMyOrders') {
       var url = 'https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk'
        window.open(url);
-
     }
     if (event.data=='calledToHideVideo') {
       setIframeRotated()
-      connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
-        console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+        console.log("Published to "+agentPk+" for calledToHideVideo");
+      },function(){
+        console.log("Fialed to publish "+agentPk+" for calledToHideVideo");
       });
     }
     if (event.data=='calledToShowVideo') {
       setIframeToNormal()
-      connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
-        console.log("Published daaaaaaaaaaaaaaaaaaaaaa");
+        console.log("Published to "+agentPk+" for calledToShowVideo");
+      },function(){
+        console.log("Fialed to publish "+agentPk+" for calledToShowVideo");
       });
     }
     if (event.data=='hideTheMainFrame') {
@@ -2244,22 +2281,23 @@ var myformrating;
       document.getElementById('iframeDiv').style.display = "block";
     }
     if (event.data== 'replyToUseruserleft'){
-      setTimeout(endOfConversation, 5000);
+      setTimeout(endOfConversation, 3000);
     }
     if (event.data== 'dintPickTheCall'){
       if(isAudioClicked){
-        hideTheIframeOnAgentSide()
         audioBtn.click()
       }else if(isVideoClicked){
-        // isVideoClicked=false
         videoBtn.click()
       }
     }
   }
 
 function endOfConversation() {
+  // alert(videoOpened+' '+audioOpened)
     if (videoOpened) {
-
+      // alert(document.getElementById('iFrame1'))
+      var iFrame = document.getElementById('iFrame1')
+      iFrame.src = '';
       if (device=='sm') {
         videoSection.innerHTML = "";
         videoSection.style.display = "none";
@@ -2270,10 +2308,9 @@ function endOfConversation() {
         var iframeDiv = document.getElementById('iframeDiv')
         iframeDiv.parentNode.removeChild(iframeDiv);
       }
-      var iFrame = document.getElementById('iFrame1')
-      iFrame.src = '';
       videoOpened = false
-    }else if (audioOpened) {
+    }else if(audioOpened){
+      // alert('in here')
       var iFrame = document.getElementById('iFrame1')
       iFrame.src = '';
       audioSection.innerHTML = "";
@@ -2283,93 +2320,131 @@ function endOfConversation() {
     }
   }
 
-function deactivateAudioFrame(){
-  if(getFrameContent!=undefined){
-    getFrameContent.postMessage('userleft',webRtcAddress );
+  function deactivateAudioFrame(){
+    if(getFrameContent!=undefined){
+      getFrameContent.postMessage('userleft',webRtcAddress );
+    }
+    audioSection.style.display = "none";
+    chatBox_content.style.marginTop = "0";
   }
-  audioSection.style.display = "none";
-  chatBox_content.style.marginTop = "0";
-}
+  function deactivateVideoFrame(){
+    if(getFrameContent!=undefined){
+      getFrameContent.postMessage('userleft',webRtcAddress );
+    }
+    // alert('deactivating audio frame')
+    document.getElementById('iframeDiv').style.display="none"
+    videoSection.style.display = "none";
+    chatBox_content.style.marginTop = "0";
+  }
 
-function togglingActive(element,value){
-  if(value){
-    element.classList.add('changeOpacity')
-    element.classList.remove('font-SyrowPhone1')
-    element.classList.add('font-SyrowPhone-call')
+function togglingActive(element,value,type){
+  if(type=='video'){
+    if(value){
+      element.classList.add('changeOpacity')
+      element.classList.remove('font-SyrowVideoCall')
+      element.classList.add('font-SyrowVideo-off')
+    }else{
+      element.classList.remove('changeOpacity')
+      element.classList.add('font-SyrowVideoCall')
+      element.classList.remove('font-SyrowVideo-off')
+    }
   }else{
-    element.classList.remove('changeOpacity')
-    element.classList.add('font-SyrowPhone1')
-    element.classList.remove('font-SyrowPhone-call')
+    if(value){
+      element.classList.add('changeOpacity')
+      element.classList.remove('font-SyrowPhone1')
+      element.classList.add('font-SyrowPhone-call')
+    }else{
+      element.classList.remove('changeOpacity')
+      element.classList.add('font-SyrowPhone1')
+      element.classList.remove('font-SyrowPhone-call')
+    }
   }
 
 }
-var videoBtn=document.getElementById('videoBtn')
-var audioBtn=document.getElementById('audioBtn')
-var isVideoClicked=false;
-var isAudioClicked=false;
+    var videoBtn=document.getElementById('videoBtn')
+    var audioBtn=document.getElementById('audioBtn')
+    var isVideoClicked=false;
+    var isAudioClicked=false;
 
-function setAudioVideoBtn(){
-  setTimeout(function () {
-    if(videoContains){
-      videoBtn.style.display='block'
+    function setAudioVideoBtn(){
+      setTimeout(function () {
+        if(videoContains){
+          videoBtn.style.display='block'
+        }
+        if(audioContains){
+          audioBtn.style.display='block'
+        }
+      }, 1000);
     }
-    if(audioContains){
-      console.log('comgggggggggggggggggg');
-      audioBtn.style.display='block'
-    }
-  }, 1000);
-}
-setAudioVideoBtn();
-videoBtn.addEventListener("click",function(){
-  if(isAudioClicked){
-    alert('Audio call is Active')
-    return
-  }
-  audioBtn.style.display='none'
-  isVideoClicked=!isVideoClicked
-  if(isVideoClicked){
-    videoOpened=false;
-    countForFrameContent++;
-    if(countForFrameContent>1){
-      getFrameContent.postMessage('refreshIT',webRtcAddress);
-    }
-  }
-  togglingActive(videoBtn,isVideoClicked)
-  activeVideoCall()
-})
+
+    setAudioVideoBtn();
+
+    videoBtn.addEventListener("click",function(){
+      if(isAudioClicked){
+        alert('Audio call is Active')
+        return
+      }
+      audioBtn.style.display='none'
+      isVideoClicked=!isVideoClicked
+      if(isVideoClicked){
+        videoOpened=false;
+        countForFrameContent++;
+        activeVideoCall();
+        if(countForFrameContent>1){
+          getFrameContent.postMessage('refreshIframeVistorSide',webRtcAddress);
+        }
+      }else{
+        // alert(document.getElementById('iFrame1'))
+        deactivateVideoFrame()
+        hideTheIframeOnAgentSide()
+      }
+      togglingActive(videoBtn,isVideoClicked,'video')
+    })
+
+    videoCircle.addEventListener('click',function () {
+      openChat();
+      videoBtn.click()
+    })
+
+    audioCircle.addEventListener('click',function () {
+      openChat();
+      audioBtn.click()
+    })
 
 var countForFrameContent=0;
 
-audioBtn.addEventListener("click",function(){
-  videoBtn.style.display='none';
-  isAudioClicked=!isAudioClicked
-  if(isVideoClicked){
-    alert('Video call is Active')
-    return
-  }
-  // alert(isAudioClicked);
-  if(isAudioClicked){
-    countForFrameContent++;
-    activeAudioCall()
-    audioOpened = false
-    if(countForFrameContent>1){
-      getFrameContent.postMessage('refreshIT',webRtcAddress);
+  audioBtn.addEventListener("click",function(){
+    videoBtn.style.display='none';
+    isAudioClicked=!isAudioClicked
+    if(isVideoClicked){
+      alert('Video call is Active')
+      return
     }
-  }else{
-    deactivateAudioFrame()
-    hideTheIframeOnAgentSide()
-  }
-  togglingActive(audioBtn,isAudioClicked)
-})
+    if(isAudioClicked){
+      countForFrameContent++;
+      activeAudioCall()
+      // audioOpened = false
+      if(countForFrameContent>1){
+        getFrameContent.postMessage('refreshIframeVistorSide',webRtcAddress);
+      }
+    }else{
+      deactivateAudioFrame()
+      hideTheIframeOnAgentSide()
+    }
+    togglingActive(audioBtn,isAudioClicked,'audio')
+  })
 
 function hideTheIframeOnAgentSide(){
-  connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'hideTheIframe' ] , {}, {
+  connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'hideTheIframe' ] , {}, {
     acknowledge: true
   }).
   then(function(publication) {
-    // alert('maine to bol diya chhupane ko')
+    console.log("called service.supoort.agent with "+agentPk+" to hide the Iframe on agent side" );
+  },function(err){
+    console.log("unable to call service.supoort.agent with "+agentPk+" to hide the Iframe on agent side" );
   });
 }
+
 function hideAudioAndVidoeBtn(){
   videoBtn.style.display='none'
   audioBtn.style.display='none'
@@ -2486,9 +2561,6 @@ var isConfirmedToEnd=false;
         var msgDiv =attachedFile
       }else {
         if (message.attachment==null) {
-          // console.log(message.message.replace(/\n/g,'<br>') , 'FFF');
-          // console.log(message.message,'GGGGGGGGGGGGGGGGGGGGGGGGGGGG');
-          // alert(typeof(message.message))
           var str= message.message
           var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
           var regex = new RegExp(expression);
@@ -2536,30 +2608,32 @@ var isConfirmedToEnd=false;
     }
   }
 
-  let currentUrl=window.location.href;
-setTimeout(function () {
-  connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
-    acknowledge: true
-  }).
-  then(function(publication) {
-    console.log("Published" + "service.support.agent."+agentPk);
-  });
-}, 4000);
-
-setInterval(function () {
-  if(currentUrl!==window.location.href){
-    // console.log('changed url $$$$$$$$$$$$$$$$$$$$$$$$$$$4');
-
-    currentUrl=window.location.href;
-    connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'UC' , currentUrl] , {}, {
-      acknowledge: true
-    }).
-    then(function(publication) {
-      console.log("Published" + "service.support.agent."+agentPk);
-    });
-
-  }
-}, 5000);
+//   let currentUrl=window.location.href;
+// setTimeout(function () {
+//   connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
+//     acknowledge: true
+//   }).
+//   then(function(publication) {
+//     console.log("Published" + "service.support.agent."+agentPk);
+//   },function(err){
+//     console.log("unavle to call service.supoort.agent with "+agentPk+" to hide the Iframe on agent side" );
+//   }););
+// }, 4000);
+//
+// setInterval(function () {
+//   if(currentUrl!==window.location.href){
+//     // console.log('changed url $$$$$$$$$$$$$$$$$$$$$$$$$$$4');
+//
+//     currentUrl=window.location.href;
+//     connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
+//       acknowledge: true
+//     }).
+//     then(function(publication) {
+//       console.log("Published" + "service.support.agent."+agentPk);
+//     });
+//
+//   }
+// }, 5000);
 
 
   function pushMessages() {
@@ -2567,7 +2641,6 @@ setInterval(function () {
       var div = document.createElement("div");
       div.setAttribute("id", "herere")
       if (chat.messages[i].message=="first") {
-        // console.log(firstMessage);
         firstMessage = firstMessage.replaceAll("&lt;",'<')
         firstMessage = firstMessage.replaceAll("&gt;",">")
         firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
@@ -2577,9 +2650,6 @@ setInterval(function () {
                      firstMessage+
                   '</div> '+
                 '</div> '
-// console.log(firstMessage);
-        // console.log(div);
-        // console.log('firstttttttt' , typeof firstMessage);
       }else {
         div.innerHTML = messageDiv(chat.messages[i])
       }
@@ -2602,7 +2672,9 @@ setInterval(function () {
   function onlineAgent() {
     // console.log('in onlineAgent######333333333' , agentPk);
     if (agentPk) {
-        connection.session.call(wamp_prefix+'service.support.heartbeat.' + agentPk, []).then(
+        connection.session.publish(wamp_prefix+'service.support.heartbeat.' + agentPk, [],{},{
+          acknowledge: true
+        }).then(
           function (res) {
            isAgentOnline = true;
            onlineStatus.innerHTML = 'Online';
@@ -2628,12 +2700,14 @@ setInterval(function () {
 
   function spying(inputVal) {
     countOnchange = 0;
-    console.log('values' , inputVal);
-      connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
+    // console.log('values' , inputVal);
+      connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'T' , inputVal] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
-        console.log("Published" + "service.support.agent."+agentPk);
+        console.log("Published to service.support.agent. "+agentPk+" for spying");
+      },function(){
+        console.log('failed to call service.suuport.agent '+agentPk+' for spying');
       });
   }
 
@@ -2659,11 +2733,10 @@ setInterval(function () {
         status = "ML";
         link = "https://www.youtube.com/embed/" + inptText.split("v=")[1];
         var dataToSend = {uid: uid , message: link, attachmentType:'youtubeLink' , sentByAgent:false , created: new Date() };
+        console.log('is Agent online ',isAgentOnline);
         if (agentPk) {
-          console.log('agent pk is pnline',isAgentOnline);
           dataToSend.user = agentPk
           if (!isAgentOnline) {
-            console.log('agetn oflineee');
             dataToSend.user = null
           }else {
             dataToSend.user = agentPk
@@ -2674,12 +2747,12 @@ setInterval(function () {
       }else {
         status = "M";
         var dataToSend = {uid: uid , message: inptText , sentByAgent:false , created: new Date() };
-        console.log(agentPk);
+        console.log('is Agent online ',isAgentOnline);
         if (agentPk) {
-          console.log('agent pk is pnline',isAgentOnline);
+
           dataToSend.user = agentPk
           if (!isAgentOnline) {
-            console.log('agetn oflineee');
+
             dataToSend.user = null
           }else {
             dataToSend.user = agentPk
@@ -2697,7 +2770,7 @@ setInterval(function () {
       chat.messages.push(message);
       inputText.value ='';
       setTimeout(function() {
-        console.log(isAgentOnline, ' is agent online..........');
+        // console.log(isAgentOnline, ' is agent online..........');
 
         if (!isAgentOnline) {
           agentName.innerHTML = nameSupport
@@ -2734,7 +2807,7 @@ setInterval(function () {
         var dataToPublish = [uid , status , message , custID ];
         details = getCookie("uidDetails");
         if (details != "") {
-          console.log(details);
+          // console.log(details);
            dataToPublish.push(JSON.parse(details))
         } else {
           dataToPublish.push(false)
@@ -2746,7 +2819,7 @@ setInterval(function () {
               console.log('posted successfully');
               var data = JSON.parse(this.responseText)
               threadExist=true
-              console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+              // console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
               chatThreadPk = data.pk
               dataToPublish.push(chatThreadPk)
               publishMessageToAll(dataToPublish);
@@ -2809,14 +2882,14 @@ setInterval(function () {
     else{
       failedMessages.push(dataToPublish)
       for (var i = 0; i < failedMessages.length; i++) {
-        connection.session.call(wamp_prefix+'service.support.agent', failedMessages[i] , {}, {
+        connection.session.publish(wamp_prefix+'service.support.agent', failedMessages[i] , {}, {
           acknowledge: true
         }).
         then(function(publication) {
-          console.log("Published service.support.agent."+agentPk);
+          console.log("Published to all service.support.agent");
         },function (error) {
           failedMessages.push(dataToPublish)
-          console.log('failed to send');
+          console.log('failed to send message to all');
        })
       }
       failedMessages=[]
@@ -2839,14 +2912,14 @@ setInterval(function () {
 
       failedMessages.push(dataToPublish)
       for (var i = 0; i < failedMessages.length; i++) {
-        connection.session.call(wamp_prefix+'service.support.agent.'+MyPk, failedMessages[i] , {}, {
+        connection.session.publish(wamp_prefix+'service.support.agent.'+MyPk, failedMessages[i] , {}, {
           acknowledge: true
         }).
         then(function(publication) {
           console.log("Published service.support.agent."+agentPk);
         },function (error) {
           failedMessages.push(dataToPublish)
-          console.log('failed to send');
+          console.log('failed to send message to '+agentPk);
        })
       }
       failedMessages=[]
@@ -2856,7 +2929,7 @@ setInterval(function () {
   function disableTextArea(){
     // connection._transport.close()
     inputText.disabled = true;
-    inputText.placeholder = "Re connectiong....";
+    inputText.placeholder = "Please Wait. Connecting.. ";
     paperClip.style.display = "none";
     paperPlane.style.display = "none";
   }
@@ -2888,12 +2961,12 @@ setInterval(function () {
 
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 201) {
-          console.log(this.responseText);
+          // console.log(this.responseText);
           var data = JSON.parse(this.responseText)
           filePk = data.pk
 
           var typ = file.files[0].type.split('/')[0]
-          console.log(typ);
+          // console.log(typ);
 
           var fileData = {
             filePk : data.pk,
@@ -2902,10 +2975,10 @@ setInterval(function () {
 
 
           if (agentPk) {
-            console.log('agent pk is pnline',isAgentOnline);
+            // console.log('agent pk is pnline',isAgentOnline);
             fileData.user = agentPk;
             if (!isAgentOnline) {
-              console.log('agetn oflineee');
+              // console.log('agetn oflineee');
               fileData.user = null
             }else {
               fileData.user = agentPk;
@@ -2923,7 +2996,7 @@ setInterval(function () {
             var dataToPublish = [uid , status , fileData , custID ];
             details = getCookie("uidDetails");
             if (details != "") {
-              console.log(details);
+              // console.log(details);
                dataToPublish.push(JSON.parse(details))
             } else {
               dataToPublish.push(false)
@@ -2934,15 +3007,16 @@ setInterval(function () {
                if (this.readyState == 4 && this.status == 201) {
                  console.log('posted successfully');
                  threadExist=true
-                 console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
+                 // console.log(data , 'data$$$$$$$$$$$$$$$$$$$');
                  chatThreadPk = data.pk
                  dataToPublish.push(chatThreadPk)
-
-                 connection.session.call(wamp_prefix+'service.support.agent', dataToPublish, {}, {
+                 connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish, {}, {
                    acknowledge: true
                  }).
                  then(function(publication) {
-                   console.log("Published");
+                   console.log("Published the media file to all");
+                 },function(){
+                   console.log('failed to send media file to all');
                  });
                }
              };
@@ -2953,19 +3027,21 @@ setInterval(function () {
             console.log('chat threAD EXIST');
             if (isAgentOnline) {
               console.log('ONLINE' , agentPk);
-              connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
+              connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {
-                console.log("Published");
+                console.log("Published the media file to "+agentPk);
+              },function(){
+                console.log('failed to send media file to '+agentPk);
               });
             }else {
               console.log('offline send to all');
-              connection.session.call(wamp_prefix+'service.support.agent', dataToPublish , {}, {
+              connection.session.publish(wamp_prefix+'service.support.agent', dataToPublish , {}, {
                 acknowledge: true
               }).
               then(function(publication) {
-                console.log("Published");
+                console.log("Published the media file to all");
               });
             }
             console.log('chat thread exist');
@@ -2986,16 +3062,16 @@ setInterval(function () {
 
   chatCircle.addEventListener("click", openChat , false);
 
-var chathasOpenedOnce=false;
+  var chathasOpenedOnce=false;
 
-setTimeout(function () {
-  if(!chathasOpenedOnce){
-    chatSuggestionBar.style.display="block"
-  }
-}, 10000);
+  setTimeout(function () {
+    if(!chathasOpenedOnce){
+      chatSuggestionBar.style.display="block"
+    }
+  }, 10000);
 
-var chatSuggestionBar= document.getElementById('chatSuggestionBar')
-chatSuggestionBar.style.display="none"
+  var chatSuggestionBar= document.getElementById('chatSuggestionBar')
+  chatSuggestionBar.style.display="none"
 
   function openChat() {
     chathasOpenedOnce=true;
@@ -3007,7 +3083,7 @@ chatSuggestionBar.style.display="none"
       supportCircle.style.display = "none";
 
       if (serviceCount==1) {
-        console.log('coming heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+        // console.log('coming heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
         singleService.style.display = "none";
       }
 
@@ -3016,7 +3092,7 @@ chatSuggestionBar.style.display="none"
         messageComposer.style.display = "none";
       }
 
-      console.log('oddddd' , device);
+      // console.log('oddddd' , device);
 
       if (device=='sm') {
         document.getElementsByTagName("BODY")[0].style.overflowY = "hidden";
@@ -3051,7 +3127,7 @@ chatSuggestionBar.style.display="none"
     if (chatOpen) {
       chatOpen = !chatOpen
       setCookie("chatOpenCookie", chatOpen, 365);
-      console.log('coming here.');
+      // console.log('coming here.');
       messageBox.style.animation = ""
       if (serviceCount==1) {
         supportCircle.style.display = "none";
@@ -3074,7 +3150,7 @@ chatSuggestionBar.style.display="none"
     if (chatOpen) {
       chatOpen = !chatOpen
       setCookie("chatOpenCookie", chatOpen, 365);
-      console.log('coming here.');
+      // console.log('coming here.');
       messageBox.style.animation = ""
       if (serviceCount==1) {
         supportCircle.style.display = "none";

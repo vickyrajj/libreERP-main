@@ -245,9 +245,8 @@ var hasAccesss=true;
           }
           else if(args[1]=='CustmorClosedTheChat'){
             scope.myUsers[i].AudioVideoOn = true
-          }else if(args[1]=='UC'){
+          }else if(args[1]=='CU'){
             scope.myUsers[i].currentUrl = args[2]
-            // alert(args[2]);
           }
           console.log('scroll');
           setTimeout(function() {
@@ -339,6 +338,8 @@ var hasAccesss=true;
         spying:{value :'' , isTyping : false},
         video:false,
         videoUrl:'',
+        audio:false,
+        audioUrl:'',
         isVideoShowing:true,
         AudioVideoOn:true,
         alreadyDone:false,
@@ -402,7 +403,9 @@ var hasAccesss=true;
       console.log(scope.myUsers);
       for (var i = 0; i < scope.myUsers.length; i++) {
         console.log(scope.myUsers[i].uid , 'call');
-        session.call(wamp_prefix+'service.support.heartbeat.' + scope.myUsers[i].uid, []).
+        session.publish(wamp_prefix+'service.support.heartbeat.' + scope.myUsers[i].uid, [],{},{
+          acknowledge:true
+        }).
         then((function(i) {
           return function (res) {
             console.log(res,'res');
@@ -418,7 +421,9 @@ var hasAccesss=true;
 
       for (var i = 0; i < scope.newUsers.length; i++) {
         console.log(scope.newUsers[i].uid , 'newwww');
-        session.call(wamp_prefix+'service.support.heartbeat.' + scope.newUsers[i].uid, []).
+        session.publish(wamp_prefix+'service.support.heartbeat.' + scope.newUsers[i].uid, [],{},{
+          acknowledge:true
+        }).
         then((function(i) {
           return function (res) {
             scope.newUsers[i].isOnline = true;
@@ -442,7 +447,7 @@ var hasAccesss=true;
           console.log(args[2]);
           alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
           scope.myUsers.push(args[2]);
-          connection.session.call(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
+          connection.session.publish(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -468,7 +473,7 @@ var hasAccesss=true;
       }
       console.log(scope.me.pk+'heeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
-      session.register(wamp_prefix+'service.support.heartbeat.'+scope.me.pk, heartbeat).then(
+      session.subscribe(wamp_prefix+'service.support.heartbeat.'+scope.me.pk, heartbeat).then(
           function (res) {
             console.log("registered to service.support.heartbeat with "+scope.me.pk);
           },
@@ -491,7 +496,7 @@ var hasAccesss=true;
     checkOnline();
   }, 10000)
 
-  session.register(wamp_prefix+'service.support.agent', supportChatResponse).then(
+  session.subscribe(wamp_prefix+'service.support.agent', supportChatResponse).then(
     function(sub) {
       console.log("registered to topic 'supportChatResponse'");
     },
@@ -502,7 +507,7 @@ var hasAccesss=true;
 
 setTimeout(function () {
   var scope = angular.element(document.getElementById('main')).scope();
-  session.register(wamp_prefix+'service.support.agent.'+scope.me.pk, supportChatResponse).then(
+  session.subscribe(wamp_prefix+'service.support.agent.'+scope.me.pk, supportChatResponse).then(
     function(sub) {
       console.log("registered to topic 'supportChatResponse'");
     },

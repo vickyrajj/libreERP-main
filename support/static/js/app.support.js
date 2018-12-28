@@ -72,12 +72,14 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
             },
             video: false,
             videoUrl: '',
+            audio:false,
+            audioUrl:'',
             isVideoShowing: true,
             alreadyDone: false,
             closeIframe:false
           })
 
-          connection.session.call(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
+          connection.session.publish(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
             acknowledge: true
           }).
           then(function(publication) {
@@ -119,7 +121,12 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
                 isTyping: false
               },
               video: false,
-              videoUrl: ''
+              videoUrl: '',
+              audio:false,
+              audioUrl:'',
+              isVideoShowing: true,
+              alreadyDone: false,
+              closeIframe:false
             })
           }
         }
@@ -132,7 +139,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
           activeTime: myActiveTime
         }
       }
-      connection.session.register(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
+      connection.session.subscribe(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
         function(res) {
           console.log("registered to service.support.hhhh ");
         },
@@ -338,7 +345,7 @@ $scope.count=0;
     });
 
     $scope.status = 'AP';
-    connection.session.call(wamp_prefix+'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
+    connection.session.publish(wamp_prefix+'service.support.chat.' + uid, [$scope.status, $scope.me.pk], {}, {
       acknowledge: true
     }).
     then(function(publication) {
@@ -347,7 +354,7 @@ $scope.count=0;
 
 
     $scope.status = 'R';
-    connection.session.call(wamp_prefix+'service.support.agent', [uid, $scope.status], {}, {
+    connection.session.publish(wamp_prefix+'service.support.agent', [uid, $scope.status], {}, {
       acknowledge: true
     }).
     then(function(publication) {
