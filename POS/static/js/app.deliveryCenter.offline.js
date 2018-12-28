@@ -24,7 +24,7 @@ app.controller('businessManagement.deliveryCenter.offline', function($scope, $st
     name: 'list',
     icon: 'fa-th-large',
     template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.POS.invoice.item.html',
+    itemTemplate: '/static/ngTemplates/app.deliveryCenter.offline.orders.item.html',
   }, ];
 
   $scope.processConfig = {
