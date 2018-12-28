@@ -181,30 +181,32 @@
 
 
           </div> -->
-        <div class="row" style="padding-top:10px">
+        <div class="row text-center" style="padding-top:10px">
           <div class="btn-group">
             <div class="row">
               <div class="col-md-12">
                 <div class="row">
-                  <div class="col-md-6 text-center">
-                    <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF"><i
+                  <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF" style="min-width:50px"><i
                           class="fa fa-download"></i> Download PO in CHF </a></span>
                   </div>
-                  <div class="col-md-6 text-center">
-                    <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR"><i
+                </div><br>
+                <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                  <div class="col-md-12 text-center">
+                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR" style="min-width:50px"><i
                           class="fa fa-download"></i> Download landing Details </a></span>
                   </div>
                 </div><br>
                 <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
-                <div class="row">
+                <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                   <div class="col-md-12 text-center">
-                    <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF"><i class="fa fa-download"></i>
-                        Download Quotation In CHF </a></span><br><br>
+                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF" style="min-width:50px"><i class="fa fa-download" ></i>
+                        Download Quotation In CHF </a></span>
                   </div>
-                </div>
-                <div class="row">
+                </div><br>
+                <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                   <div class="col-md-12 text-center">
-                    <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR"><i class="fa fa-download"></i>
+                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR" style="min-width:50px"><i class="fa fa-download"></i>
                         Download Quotation In INR </a> </span>
                   </div>
                 </div>
@@ -646,35 +648,39 @@
           <span> {{form.profitMargin}}</span>
         </div>
       </div>
-      <div class="row" style="padding-top:10px">
+      <div class="row text-center" style="padding-top:10px">
         <div class="btn-group">
           <div class="row">
             <div class="col-md-12">
               <div class="row">
-                <div class="col-md-6 text-center">
-                  <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF"><i
+                <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF" style="min-width:50px"><i
                         class="fa fa-download"></i> Download PO in CHF </a></span>
                 </div>
-                <div class="col-md-6 text-center">
-                  <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR"><i
+              </div><br>
+              <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                <div class="col-md-12 text-center">
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR" style="min-width:50px"><i
                         class="fa fa-download"></i> Download landing Details </a></span>
                 </div>
               </div><br>
-              <div class="row">
+              <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
+              <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
-                  <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF"><i class="fa fa-download"></i>
-                      Download Quotation In CHF </a></span><br><br>
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF" style="min-width:50px"><i class="fa fa-download" ></i>
+                      Download Quotation In CHF </a></span>
                 </div>
-              </div>
-              <div class="row">
+              </div><br>
+              <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
-                  <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR"><i class="fa fa-download"></i>
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR" style="min-width:50px"><i class="fa fa-download"></i>
                       Download Quotation In INR </a> </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
 
     </div>
@@ -758,7 +764,7 @@
 
         </div>
         <div class="col-md-2 text-center">
-          <span>{{form.assessableValue}}</span>
+          <span>{{form.assessableValue}} %</span>
         </div>
       </div>
       <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
@@ -854,7 +860,7 @@
               <td>{{v.freight}}</td>
               <td>{{v.cif}}</td>
               <td>{{(v.cif*v.quantity1).toFixed(2)}}</td>
-              <td>{{v.custom}}%</td>
+              <td>{{v.custom}}</td>
               <td>{{v.customVal}} </td>
               <td>{{v.socialVal}}</td>
               <td>{{v.gst}} </td>
@@ -1048,40 +1054,39 @@
           <input type="number" class="form-control text-center" ng-model="form.profitMargin" ng-change="profitmarginChange()">
         </div>
       </div>
-      <div class="row" style="padding-top:10px">
+      <div class="row text-center" style="padding-top:10px">
         <div class="btn-group">
           <div class="row">
             <div class="col-md-12">
               <div class="row">
-                <div class="col-md-6 text-center">
-                  <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF"><i
+                <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF" style="min-width:50px"><i
                         class="fa fa-download"></i> Download PO in CHF </a></span>
                 </div>
-                <div class="col-md-6 text-center">
-                  <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR"><i
+              </div><br>
+              <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                <div class="col-md-12 text-center">
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR" style="min-width:50px"><i
                         class="fa fa-download"></i> Download landing Details </a></span>
                 </div>
               </div><br>
-              <div class="row">
+              <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
+              <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
-                  <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF"><i class="fa fa-download"></i>
-                      Download Quotation In CHF </a></span><br><br>
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF" style="min-width:50px"><i class="fa fa-download" ></i>
+                      Download Quotation In CHF </a></span>
                 </div>
-              </div>
-              <div class="row">
+              </div><br>
+              <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
-                  <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR"><i class="fa fa-download"></i>
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR" style="min-width:50px"><i class="fa fa-download"></i>
                       Download Quotation In INR </a> </span>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12 text-center" style="padding-top:20px">
-                  <span ng-if="form.savedStatus"><a class="btn btn-primary" target="_blank" href="/api/support/grn/?project={{form.pk}}"> GRN<i class="fa fa-download"></i></a></span>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
     <div class="col-md-9">
@@ -1260,7 +1265,7 @@
           <td>{{v.freight}}</td>
           <td>{{v.cif}}</td>
           <td>{{(v.cif*v.quantity1).toFixed(2)}}</td>
-          <td>{{v.custom}}%</td>
+          <td>{{v.custom}}</td>
           <td>{{v.customVal}} </td>
           <td>{{v.socialVal}}</td>
           <td>{{v.gst}} </td>
@@ -1442,45 +1447,49 @@
               <span> {{form.profitMargin}}</span>
             </div>
           </div>
-          <div class="row" style="padding-top:10px">
+          <div class="row text-center" style="padding-top:10px">
             <div class="btn-group">
               <div class="row">
                 <div class="col-md-12">
                   <div class="row">
-                    <div class="col-md-6 text-center">
-                      <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF"><i
+                    <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF" style="min-width:50px"><i
                             class="fa fa-download"></i> Download PO in CHF </a></span>
                     </div>
-                    <div class="col-md-6 text-center">
-                      <span ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR"><i
+                  </div><br>
+                  <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                    <div class="col-md-12 text-center">
+                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR" style="min-width:50px"><i
                             class="fa fa-download"></i> Download landing Details </a></span>
                     </div>
                   </div><br>
-                  <div class="row">
+                  <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
+                  <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                     <div class="col-md-12 text-center">
-                      <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF"><i class="fa fa-download"></i>
-                          Download Quotation In CHF </a></span><br><br>
+                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF" style="min-width:50px"><i class="fa fa-download" ></i>
+                          Download Quotation In CHF </a></span>
                     </div>
-                  </div>
-                  <div class="row">
+                  </div><br>
+                  <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                     <div class="col-md-12 text-center">
-                      <span ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0"><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR"><i class="fa fa-download"></i>
+                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=INR" style="min-width:50px"><i class="fa fa-download"></i>
                           Download Quotation In INR </a> </span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12 text-center" style="padding-top:20px">
-                      <span><a class="btn btn-primary" target="_blank" href="/api/support/grn/?project={{form.pk}}"> GRN <i class="fa fa-download"></i></a></span>
+                      <span><a class="btn btn-primary" target="_blank" href="/api/support/grn/?project={{form.pk}}"> <i class="fa fa-download"></i> Goods Received Note </a></span>
                     </div>
                   </div>
                   <div class="row" ng-if="materialIssue.length>0">
                     <div class="col-md-12 text-center" style="padding-top:20px">
-                      <span><a class="btn btn-primary" style="cursor:pointer;" target="_blank" href="/api/support/materialIssued/?projectPk={{form.pk}}"> Material Issue  <i class="fa fa-download" style="font-size:1;margin-left:1em"></i></a></span>
+                      <span><a class="btn btn-primary" style="cursor:pointer;" target="_blank" href="/api/support/materialIssued/?projectPk={{form.pk}}"> <i class="fa fa-download" style="font-size:1;margin-left:1em"></i> Material Issued Note  </a></span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -1636,7 +1645,7 @@
                   <span>{{(form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100).toFixed(2)}}</span>
                 </div>
                 <div class="col-md-2 text-center">
-                  <span>{{form.assessableValue}}</span>
+                  <span>{{form.assessableValue}} %</span>
                 </div>
               </div>
               <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
