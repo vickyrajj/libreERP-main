@@ -73,7 +73,7 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length = 100 , null = False)
     unit = models.CharField(choices = UNIT_CHOICES , max_length = 10 , null = True)
-    productMeta = models.ForeignKey(ProductMeta , related_name="POSProducts" , null = True, blank = True)
+    # productMeta = models.ForeignKey(ProductMeta , related_name="POSProducts" , null = True, blank = True)
     price = models.FloatField(null=False)
     displayPicture = models.ImageField(upload_to=getPOSProductUploadPath,null=True, blank = True)
     serialNo = models.CharField(max_length = 30, null=True, blank = True)
