@@ -13,7 +13,7 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $interval, $uibModal) {
+app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $interval, $uibModal,ngAudio) {
 
 
   $scope.newUsers = [];
@@ -42,6 +42,13 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     }
     return "";
   }
+
+  $scope.sound = ngAudio.load("static/audio/notification.ogg");
+
+  setInterval(function () {
+    if($scope.newUsers.length>0)
+    $scope.sound.play();
+  }, 5000);
 
   $scope.myCompanies = [];
 
