@@ -36,7 +36,9 @@ app.controller("businessManagement.activeAdvisors", function($scope, $state, $us
     $scope.onlineAgents = []
     $scope.offlineAgents = []
     for (var i = 0; i < $scope.allAgents.length; i++) {
-      connection.session.publish(wamp_prefix+'service.support.hhhhh.' + $scope.allAgents[i], []).
+      connection.session.publish(wamp_prefix+'service.support.hhhhh.' + $scope.allAgents[i], [],{},{
+        acknowledge:true
+      }).
       then((function(i) {
         return function(res) {
           console.log(res);

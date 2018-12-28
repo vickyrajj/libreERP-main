@@ -46,7 +46,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   $scope.myCompanies = [];
 
   function fetchUsers() {
-    console.log('in fetch user');
+    // console.log('in fetch user');
     if (connectionOpened) {
       console.log('iffffffffffffffffff');
       $http({
@@ -149,7 +149,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       return
     }else {
       setTimeout(function () {
-        console.log('elseeeeeeeeeeeeeeeeee');
+        // console.log('elseeeeeeeeeeeeeeeeee');
         fetchUsers()
       }, 500);
     }
