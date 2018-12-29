@@ -3465,6 +3465,28 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, $interval, Flash) {
 
 
+  $rootScope.device;
+  function smDevice(x) {
+    if (x.matches) {
+      $rootScope.device = 'small'
+    }
+  }
+
+  function lgDevice(x) {
+    if (x.matches) {
+      $rootScope.device = 'large'
+    }
+  }
+
+  var sm = window.matchMedia("(max-width:767px)")
+  smDevice(sm)
+  sm.addListener(smDevice)
+
+  var lg = window.matchMedia("(min-width:767px)")
+  lgDevice(lg)
+  lg.addListener(lgDevice)
+
+
   $scope.$watch('slide.active', function(newValue, oldValue) {
     if (newValue == undefined) {
       return;

@@ -107,15 +107,30 @@
 
           </div>
           <div class="col-md-3 pull-right" ng-if="order.status!='failed' && order.orderQtyMap[0].courierName!=null && order.orderQtyMap[0].courierAWBNo!=null">
-            <span ng-if="checkConditions.thirdParty">
-            <a href="/api/ecommerce/downloadManifest/?trackingId={{order.orderQtyMap[0].courierAWBNo}}" target="_blank">
-             <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
-             </span>
-             <span ng-if="!checkConditions.thirdParty">
-             <a href="/api/ecommerce/downloadManifest/?allData={{order.pk}}&printerDeviceId={{connectData.deviceID}}" target="_blank">
-              <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
-              </span>
+            <row ng-if="checkConditions.thirdParty">
+              <div class="row">
+                <a href="/api/ecommerce/downloadManifest/?trackingId={{order.orderQtyMap[0].courierAWBNo}}" target="_blank">
+                 <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
+              </div>
+              <div class="row" style="margin-top:15px;">
+                <a href="/api/ecommerce/downloadManifest/?trackingId={{order.orderQtyMap[0].courierAWBNo}}&packingSlip" target="_blank">
+                  <button type="button" class="btn btn-default">Download PackingSlip <i class="fa fa-download"></i></button> </a>
+              </div>
 
+
+             </row>
+             <row ng-if="!checkConditions.thirdParty">
+               <div class="row">
+                 <a href="/api/ecommerce/downloadManifest/?allData={{order.pk}}&printerDeviceId={{connectData.deviceID}}" target="_blank">
+                  <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
+               </div>
+               <div class="row" style="margin-top:15px;">
+                 <a href="/api/ecommerce/downloadManifest/?allData={{order.pk}}&printerDeviceId={{connectData.deviceID}}}&packingSlip" target="_blank">
+                   <button  type="button" class="btn btn-default">Download Packing Slip<i class="fa fa-download"></i></button> </a>
+               </div>
+
+
+              </row>
           </div>
         </div>
       </div>
@@ -158,6 +173,9 @@
                     <span ng-if="checkConditions.splitOrder">
                       <a href="/api/ecommerce/downloadManifest/?qPk={{pData.pk}}&printerDeviceId={{connectData.deviceID}}" target="_blank">
                         <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
+
+                      <a href="/api/ecommerce/downloadManifest/?qPk={{pData.pk}}&printerDeviceId={{connectData.deviceID}}&packingSlip" target="_blank">
+                        <button type="button" class="btn btn-default">Download PackingSlip <i class="fa fa-download"></i></button> </a>
                       </span>
 
 
