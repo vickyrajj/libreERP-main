@@ -155,7 +155,7 @@ class serviceLiteSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)
     class Meta:
         model = service
-        fields = ('pk'  ,'name' , 'address' , 'mobile' ,)
+        fields = ('pk' , 'created' ,'name' , 'customerName' ,'user' , 'email', 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson')
 
 class deviceSerializer(serializers.ModelSerializer):
     class Meta:

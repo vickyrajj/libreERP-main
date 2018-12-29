@@ -27,6 +27,7 @@
               <div class="col-md-7 text-center">
                 <span> {{form.date}}</span>
               </div>
+            </div>
               <div class="row" style="padding-top:10px">
                 <div class="col-md-5 text-center">
                     <label> Machine Model : </label>
@@ -45,15 +46,23 @@
               </div>
               <div class="row" style="padding-top:10px">
                 <div class="col-md-5 text-center">
-                    <label> Customer Ref : </label>
+                    <label> Quote Ref : </label>
                 </div>
                 <div class="col-md-7 text-center">
-                <span>  {{form.customer_ref}}</span>
+                <span>  {{form.quote_ref}}</span>
+                </div>
+              </div>
+              <div class="row" style="padding-top:10px">
+                <div class="col-md-5 text-center">
+                    <label> Enquiry Ref : </label>
+                </div>
+                <div class="col-md-7 text-center">
+                <span>  {{form.enquiry_ref}}</span>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+
         <div class="row">
           <div class="col-md-12 text-center">
             <label> Responsible Persons : </label>
@@ -84,20 +93,21 @@
         </div>
         <div class="row" style="padding-top:10px">
           <div class="col-md-12 text-center">
-            <label> Quotation ref Number : </label>
-          </div>
-          <div class="col-md-12">
-            <input type="text" class="form-control text-center" ng-model="form.quoteRefNumber" placeholder="Quotation Ref Number" ng-change="quoteChange()">
-          </div>
-        </div>
-        <div class="row" style="padding-top:10px">
-          <div class="col-md-12 text-center">
             <label> PO Number : </label>
           </div>
           <div class="col-md-12">
             <input type="text" class="form-control text-center" ng-model="form.poNumber" placeholder="PO Number" ng-change="poChange()">
           </div>
         </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
+            <label> Quotation ref Number : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.quoteRefNumber" placeholder="Quotation Ref Number" ng-change="quoteChange()">
+          </div>
+        </div>
+
         <div class="row" style="padding-top:10px">
           <div class="col-md-12 text-center">
             <label> Invoice Number : </label>
@@ -475,7 +485,7 @@
         </table>
         <div class="row" ng-if="showbutton||projects.length>0">
           <div class="col-md-11">
-            <button type="button" class="btn btn-success pull-right" mwl-confirm title="Confirm" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="sendForApproval()"
+            <button type="button" class="btn btn-success pull-right" mwl-confirm title="Confirm" message="Are you sure?" data-placement="top" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="sendForApproval()"
               confirm-button-type="default" cancel-button-type="default"> Send For Approval</button>
           </div>
         </div>
@@ -531,10 +541,18 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
-                <label> Customer Ref : </label>
+                <label> Quote Ref : </label>
             </div>
             <div class="col-md-7 text-center">
-            <span>  {{form.customer_ref}}</span>
+            <span>  {{form.quote_ref}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+                <label> Enquiry Ref : </label>
+            </div>
+            <div class="col-md-7 text-center">
+            <span>  {{form.enquiry_ref}}</span>
             </div>
           </div>
         </div>
@@ -564,15 +582,6 @@
         <div class="col-md-7 text-center">
           <span> {{form.revision}}</span>
         </div>
-
-      </div>
-      <div class="row" style="padding-top:10px">
-        <div class="col-md-5 text-center">
-          <label> Quotation ref Number : </label>
-        </div>
-        <div class="col-md-7 text-center">
-          <span> {{form.quoteRefNumber}}</span>
-        </div>
       </div>
       <div class="row" style="padding-top:10px">
         <div class="col-md-5 text-center">
@@ -580,6 +589,14 @@
         </div>
         <div class="col-md-7 text-center">
           <span> {{form.poNumber}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
+          <label> Quotation ref Number : </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.quoteRefNumber}}</span>
         </div>
       </div>
       <div class="row" style="padding-top:10px">
@@ -873,9 +890,9 @@
         </table>
         <div class="row">
           <div class="col-md-12" ng-if="form.status!='created'&& form.status!='approved'">
-            <button type="button" class="btn btn-danger pull-right" mwl-confirm title="Reject" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="reject();" confirm-button-type="default"
+            <button type="button" class="btn btn-danger pull-right" mwl-confirm title="Reject" message="Are you sure?" data-placement="top" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="reject();" confirm-button-type="default"
               cancel-button-type="default" style="margin:10px;"> Reject</button>
-            <button type="button" class="btn btn-success pull-right" mwl-confirm title="Accept" message="Are you sure?" data-placement="bottom" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="accept();"
+            <button type="button" class="btn btn-success pull-right" mwl-confirm title="Accept" message="Are you sure?" data-placement="top" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="accept();"
               confirm-button-type="default" cancel-button-type="default" style="margin:10px;"> Approve</button>
           </div>
         </div>
@@ -931,10 +948,18 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
-                <label> Customer Ref : </label>
+                <label> Quote Ref : </label>
             </div>
             <div class="col-md-7 text-center">
-            <span>  {{form.customer_ref}}</span>
+            <span>  {{form.quote_ref}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+                <label> Enquiry Ref : </label>
+            </div>
+            <div class="col-md-7 text-center">
+            <span>  {{form.enquiry_ref}}</span>
             </div>
           </div>
         </div>
@@ -966,20 +991,21 @@
         </div>
 
       </div>
-      <div class="row" style="padding-top:10px">
-        <div class="col-md-12 text-center">
-          <label> Quotation ref Number : </label>
-        </div>
-        <div class="col-md-12">
-          <input type="text" class="form-control text-center" ng-model="form.quoteRefNumber" placeholder="Quotation Ref Number" ng-change="quoteChange()">
-        </div>
-      </div>
+
       <div class="row" style="padding-top:10px">
         <div class="col-md-12 text-center">
           <label> PO Number : </label>
         </div>
         <div class="col-md-12">
           <input type="text" class="form-control text-center" ng-model="form.poNumber" placeholder="PO Number" ng-change="poChange()">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-12 text-center">
+          <label> Quotation ref Number : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.quoteRefNumber" placeholder="Quotation Ref Number" ng-change="quoteChange()">
         </div>
       </div>
       <div class="row" style="padding-top:10px">
@@ -1332,10 +1358,18 @@
               </div>
               <div class="row" style="padding-top:10px">
                 <div class="col-md-5 text-center">
-                    <label> Customer Ref : </label>
+                    <label> Quote Ref : </label>
                 </div>
                 <div class="col-md-7 text-center">
-                <span>  {{form.customer_ref}}</span>
+                <span>  {{form.quote_ref}}</span>
+                </div>
+              </div>
+              <div class="row" style="padding-top:10px">
+                <div class="col-md-5 text-center">
+                    <label> Enquiry Ref : </label>
+                </div>
+                <div class="col-md-7 text-center">
+                <span>  {{form.enquiry_ref}}</span>
                 </div>
               </div>
             </div>
@@ -1369,20 +1403,21 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
-              <label> Quotation ref Number : </label>
-            </div>
-            <div class="col-md-7 text-center">
-              <span> {{form.quoteRefNumber}}</span>
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-5 text-center">
               <label> PO Number : </label>
             </div>
             <div class="col-md-7 text-center">
               <span> {{form.poNumber}}</span>
             </div>
           </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+              <label> Quotation ref Number : </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.quoteRefNumber}}</span>
+            </div>
+          </div>
+
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
               <label> Invoice Number : </label>
@@ -1642,7 +1677,7 @@
                 <div class="col-md-3 text-center">
                 </div>
                 <div class="col-md-3 text-center">
-                  <span>{{(form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100).toFixed(2)}}</span>
+                  <!-- <span>{{(form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100).toFixed(2)}}</span> -->
                 </div>
                 <div class="col-md-2 text-center">
                   <span>{{form.assessableValue}} %</span>

@@ -88,6 +88,7 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
 app.controller("businessManagement.vendor.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
   $scope.form = {
     name: '',
+    personName : '',
     mobile: '',
     email: '',
     gst: '',
@@ -100,6 +101,7 @@ app.controller("businessManagement.vendor.form", function($scope, $state, $users
   $scope.resetForm = function() {
     $scope.form = {
       name: '',
+      personName : '',
       mobile: '',
       email: '',
       gst: '',
@@ -125,6 +127,7 @@ app.controller("businessManagement.vendor.form", function($scope, $state, $users
     var Url = 'api/support/vendor/'
     var dataTosend = {
       name: $scope.form.name,
+      personName : $scope.form.personName,
       mobile: $scope.form.mobile,
       email: $scope.form.email,
       gst: $scope.form.gst,

@@ -51,6 +51,7 @@ class Test(models.Model):
 class Vendor(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length = 100 , null = True,)
+    personName = models.CharField(max_length = 100 , null = True,)
     city = models.CharField(max_length = 100 , null = True,blank =True)
     street = models.CharField(max_length = 100 , null = True,blank =True)
     state = models.CharField(max_length = 100 , null = True,blank =True)
@@ -68,7 +69,8 @@ class Projects(models.Model):
     date = models.DateField(null = True)
     machinemodel = models.CharField(max_length = 20 , null = True , blank =True)
     comm_nr = models.CharField(max_length = 20 , null = True , blank =True)
-    customer_ref = models.CharField(max_length = 20 , null = True , blank =True)
+    quote_ref = models.CharField(max_length = 50 , null = True , blank =True)
+    enquiry_ref = models.CharField(max_length = 50 , null = True , blank =True)
     responsible = models.ManyToManyField(User , related_name = 'managingService' , blank = True)
     approved1 = models.BooleanField(default = False)
     approved2 = models.BooleanField(default = False)

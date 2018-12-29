@@ -373,7 +373,8 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
 
   });
 
-  $scope.openCreateService = function() {
+  $scope.openCreateService = function(mode) {
+    console.log(mode);
     // console.log($scope.form.service, '-----------------');
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.projects.service.create.html',
@@ -386,38 +387,28 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
       },
       controller: function($scope, data, $uibModalInstance) {
         // console.log(data);
-        $scope.form = {
-          service: data,
-          mobile: null,
-          about: null,
-          telephone: null,
-          cin: null,
-          tin: null,
-          logo: null,
-          web: null,
-          address: {
-            street: null,
-            city: null,
-            state: null,
-            country: null,
-            pincode: null
-          }
-        }
-
+        $scope.form = {}
+        console.log( data,'aaaaaaaaaaaaaaa');
         if (typeof data == 'object') {
-          $scope.form.service = data.name
-          $scope.form.mobile = data.mobile
-          $scope.form.telephone = data.telephone
-          $scope.form.tin = data.tin
-          $scope.form.cin = data.cin
-          $scope.form.address = data.address
-          $scope.form.logo = data.logo
-          $scope.form.web = data.web
-          $scope.form.about = data.about
+          console.log("here");
+          $scope.form = data
+
+          // $scope.form.service = data.name
+          // $scope.form.mobile = data.mobile
+          // $scope.form.telephone = data.telephone
+          // $scope.form.tin = data.tin
+          // $scope.form.cin = data.cin
+          // $scope.form.address = data.address
+          // $scope.form.logo = data.logo
+          // $scope.form.web = data.web
+          // $scope.form.about = data.about
+          // $scope.form.email = data.email
+          // $scope.form.email = data.email
 
         } else {
-          $scope.form.service = data
+          $scope.form.name = data
         }
+        console.log($scope.form);
         //------------------------------------------------------------------------
         $scope.createCompany = function() {
           var method = 'POST'
@@ -435,7 +426,7 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
           }).
           then(function(response) {
             var dataToSend = {
-              name: $scope.form.service,
+              name: $scope.form.name,
               customerName: $scope.form.customerName,
               email: $scope.form.email,
               mobile: $scope.form.mobile,
@@ -510,7 +501,8 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
       date: $scope.form.date,
       machinemodel: $scope.form.machinemodel,
       comm_nr: $scope.form.comm_nr,
-      customer_ref: $scope.form.customer_ref
+      quote_ref: $scope.form.quote_ref,
+      enquiry_ref: $scope.form.enquiry_ref
 
     };
 
@@ -665,13 +657,13 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
 
   function sum(data) {
-    if (data == $scope.form.materialIssue) {
+    if (data == $scope.materialIssue) {
       return data.map(function(m) {
         return m.qty * m.price
       }).reduce(function(a, b) {
         return a + b
       }, 0)
-    } else if (data == $scope.purchase) {
+    } else if (data == $scope.projects) {
       return data.map(function(m) {
         return m.quantity1 * m.price
       }).reduce(function(a, b) {
@@ -710,6 +702,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     then(function(response) {
       $scope.projects = response.data
       $scope.purchaseSum = sum($scope.projects)
+      console.log($scope.purchaseSum,'kkkkkkkkkkkkkkkkkk');
       for (var i = 0; i < $scope.projects.length; i++) {
         var totalprice = $scope.projects[i].price * $scope.projects[i].quantity1
         $scope.form.invoiceValue += totalprice
@@ -993,14 +986,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   }
 
   $scope.sendForApproval = function() {
-    if($scope.form.poNumber==''||$scope.form.poNumber==undefined||$scope.form.poNumber==null){
-      Flash.create('warning','Add PO Number')
-      return
-    }
-    if($scope.form.quoteRefNumber==''||$scope.form.quoteRefNumber==undefined||$scope.form.quoteRefNumber==null){
-      Flash.create('warning','Add Quotation Number')
-      return
-    }
+
 
     var date = new Date().toJSON().split('T')[0]
     var sendStatus = {

@@ -199,8 +199,8 @@ class ProductsUploadAPIView(APIView):
         return Response(status=status.HTTP_200_OK)
 from reportlab.lib.styles import getSampleStyleSheet
 from svglib.svglib import svg2rlg
-def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, request):
 
+def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, request):
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
@@ -215,39 +215,28 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
 
 
     drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'anchor_icon.svg'))
-    if currencyTyp == 'INR':
-        summryHeader = Paragraph("""
-        <para >
-        <font size='14'>
-        LANDING DETAILS
-        <br/>
-        <br/>
-        </font>
-        </para>
-        """ %(),styles['Normal'])
-        tdheader=[[summryHeader]]
-    else:
-        summryHeader = Paragraph("""
-        <para >
-        <font size='14'>
-        PURCHASE ORDER
-        <br/>
-        <br/>
-        </font>
-        </para>
-        """ %(),styles['Normal'])
+
+    summryHeader = Paragraph("""
+    <para >
+    <font size='14'>
+    PURCHASE ORDER
+    <br/>
+    <br/>
+    </font>
+    </para>
+    """ %(),styles['Normal'])
 
 
-        summryHeader1 = Paragraph("""
-        <para leftIndent = 10>
-        <font size ='10'>
-        <b>Purchase Order Ref No :</b> %s <br/>
-        <b>Purchase Order Ref Date :</b> %s <br/>
-        </font></para>
-        """ %(project.poNumber , project.date),styles['Normal'])
+    summryHeader1 = Paragraph("""
+    <para leftIndent = 10>
+    <font size ='10'>
+    <b>Purchase Order Ref No :</b> %s <br/>
+    <b>Purchase Order Ref Date :</b> %s <br/>
+    </font></para>
+    """ %(project.poNumber , project.date),styles['Normal'])
 
 
-        tdheader=[[summryHeader,' ',summryHeader1]]
+    tdheader=[[summryHeader,' ',summryHeader1]]
     theader=Table(tdheader,colWidths=[3*inch , 1*inch , 3*inch])
     theader.hAlign = 'LEFT'
     elements.append(theader)
@@ -270,11 +259,9 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     <para leftIndent = 10>
     <font size ='10'>
     <b>Kind attn :</b> %s <br/>
-    <b>Contact no :</b> %s <br/>
-    <b>E-Mail ID :</b> %s <br/>
-    <b>Your Enquiry Ref :</b> %s <br/><br/>
+    <b>Your Quote Ref :</b> %s <br/><br/><br/><br/>
     </font></para>
-    """ %(project.service.customerName , project.service.mobile , project.service.email,project.customer_ref),styles['Normal'])
+    """ %(project.vendor.personName,project.quote_ref),styles['Normal'])
 
 
     td=[[summryParaSrc,' ',summryParaSrc1]]
@@ -282,105 +269,198 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     t.hAlign = 'LEFT'
     elements.append(t)
 
+    details = Paragraph("""
+    <para >
+    <font size='10'>
+    <b>BILL TO AND SHIP TO : </b> <br/>
+    <b>BRUDERER PRESSES INDIA PRIVATE LTD </b> <br/>
+    #17P Sadaramangala Industrial Area, <br/>
+    Whitefield Road, Kadugodi. <br/>
+    <b>GST Number :  AABCB6326Q1Z6 </b> <br/>
+    Contact no. : +91 9999999999 <br/>
+    E-Mail id:
+    </font>
+    </para>
+    """ %(),styles['Normal'])
 
-
-    summrymachineDetails = Paragraph("""
+    details1 = Paragraph("""
     <para >
     <font size='10'>
     <b>Machine Type :</b> %s <br/>
     <b>Comm Nr :</b> %s<br/>
-    <b>Customer Ref :</b> %s
+     <br/><br/><br/><br/><br/>
     </font>
     </para>
-    """ %(project.machinemodel, project.comm_nr,project.customer_ref),styles['Normal'])
-
-    summrymachineDetails1 = Paragraph("""
-    <para leftIndent = 10>
-    <font size ='10'>
-    <b>Quote Ref No :</b> %s <br/>
-    <b>Quote Ref Date :</b> %s <br/><br/>
-    </font></para>
-    """ %(project.quoteRefNumber , project.date),styles['Normal'])
+    """ %(project.machinemodel, project.comm_nr),styles['Normal'])
 
 
+    td1=[[details,'',details1]]
+    t=Table(td1,colWidths=[3.2*inch , 1*inch , 3*inch])
+    t.hAlign = 'LEFT'
+    elements.append(t)
 
+    elements.append(Spacer(1,16))
 
-    tmachine=[[summrymachineDetails,' ',summrymachineDetails1]]
-    tdmachine=Table(tmachine,colWidths=[3*inch , 1*inch , 3*inch])
-    tdmachine.hAlign = 'LEFT'
-    elements.append(tdmachine)
-    elements.append(Spacer(1,10))
-    elements.append(Paragraph("<para fontSize=8>Dear Sir,</para>",styles['Normal']))
-    elements.append(Spacer(1,10))
-    elements.append(Paragraph("<para fontSize=8>We are pleased to order the following items:</para>",styles['Normal']))
+    p14_02 =Paragraph("<para fontSize=8>INCO TERMS</para>",styles['Normal'])
+    p14_03 =Paragraph("<para fontSize=8>SPECIAL INSTRUCTIONS</para>",styles['Normal'])
+    p14_04 =Paragraph("<para fontSize=8>PAYMENT TERMS</para>",styles['Normal'])
+    data6=[[p14_02,p14_03,p14_04]]
+    # t6=Table(data6)
+    # t6.hAlign = 'LEFT'
+    # t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    # elements.append(t6)
 
-    if currencyTyp == 'CHF':
-        priceFormat = 'Unit price in CHF'
-        amountFormat = 'Amount in CHF'
-    elif currencyTyp == 'INR':
-        priceFormat = 'Unit price in INR'
-        amountFormat = 'Amount in INR'
+    if currencyTyp=='CHF':
+        paymentterms1 = "50% advance along with order"
+        paymentterms2 = "30% within 1 week from the date of invoice"
+        special2 = "Shipment mode - Road"
+        special3 = "Freight forwarder - "
     else:
-        priceFormat = 'Unit price'
-        amountFormat = 'Amount'
+        paymentterms1 = "50% advance along with order"
+        paymentterms2 = "30% within 1 week from the date of invoice"
+        special2 = "Shipment mode - Air"
+        special3 = "Freight forwarder - NATCO"
+    paymentterms3 = "Balance plus GST within 1 month from date of receipt of goods"
+    special1 = project.date
+    special2 = "Shipment mode - Road"
+    special3 = "Freight forwarder - "
+    p15_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.terms),styles['Normal'])
+    p15_03 =Paragraph("<para fontSize=8>{0}<br/>{1}<br/>{2}</para>".format(special1,special2,special3),styles['Normal'])
+    p15_04 =Paragraph("<para fontSize=8>{0}<br/>{1}<br/>{2}</para>".format(paymentterms1,paymentterms2,paymentterms3),styles['Normal'])
+    data6+=[[p15_02,p15_03,p15_04]]
+    t6=Table(data6)
+    t6.hAlign = 'LEFT'
+    t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t6)
 
-    p101_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
-    p101_02 =Paragraph("<para fontSize=8>Part Number</para>",styles['Normal'])
-    p101_03 =Paragraph("<para fontSize=8>Part Desc</para>",styles['Normal'])
-    p101_04 =Paragraph("<para fontSize=8>Qty</para>",styles['Normal'])
-    p101_05 =Paragraph("<para fontSize=8>{0}</para>".format(priceFormat),styles['Normal'])
-    p101_06 =Paragraph("<para fontSize=8>{0}</para>".format(amountFormat),styles['Normal'])
+
+    elements.append(Spacer(1,10))
 
 
-    data5=[[p101_01,p101_02,p101_03,p101_04,p101_05,p101_06]]
-    t5=Table(data5,6*[1.4*inch],1*[0.2*inch])
-    t5.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-    grandTotal = 0
-    data2 = []
-    id=0
-    for i in purchaselist:
-        id+=1
-        part_no = i.products.part_no
-        desc = i.products.description_1
-        if currencyTyp == 'INR':
-            price = i.landed_price
-        else:
+
+    if currencyTyp=='CHF':
+        p101_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
+        p101_02 =Paragraph("<para fontSize=8>Part Number</para>",styles['Normal'])
+        p101_03 =Paragraph("<para fontSize=8>Part Desc</para>",styles['Normal'])
+        p101_07 =Paragraph("<para fontSize=8>HS Code</para>",styles['Normal'])
+        p101_04 =Paragraph("<para fontSize=8>Qty</para>",styles['Normal'])
+        p101_05 =Paragraph("<para fontSize=8>Unit price in CHF</para>",styles['Normal'])
+        p101_06 =Paragraph("<para fontSize=8>Amount in CHF</para>",styles['Normal'])
+
+
+        data5=[[p101_01,p101_02,p101_03,p101_07,p101_04,p101_05,p101_06]]
+
+        grandTotal = 0
+        data2 = []
+        id=0
+        for i in purchaselist:
+            id+=1
+            part_no = i.products.part_no
+            desc = i.products.description_1
+            hs = i.products.customs_no
             price = i.price
-        qty = i.quantity1
-        amnt = price * qty
-        grandTotal +=amnt
+            qty = i.quantity1
+            amnt = round((price * qty),2)
+            grandTotal +=amnt
 
 
-        p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
-        p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
-        p12_03 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(desc)),styles['Normal'])
-        p12_04 =Paragraph("<para fontSize=8>{0}</para>".format(qty),styles['Normal'])
-        p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(price),styles['Normal'])
-        p12_06 =Paragraph("<para fontSize=8>{0}</para>".format(amnt),styles['Normal'])
-        data2.append([p12_01,p12_02,p12_03,p12_04,p12_05,p12_06])
+            p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
+            p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
+            p12_03 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(desc)),styles['Normal'])
+            p12_07 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(hs)),styles['Normal'])
+            p12_04 =Paragraph("<para fontSize=8>{0}</para>".format(qty),styles['Normal'])
+            p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(price),styles['Normal'])
+            p12_06 =Paragraph("<para fontSize=8>{0}</para>".format(amnt),styles['Normal'])
+            data5.append([p12_01,p12_02,p12_03,p12_07,p12_04,p12_05,p12_06])
 
 
-    t2=Table(data2,6*[1.4*inch],id*[0.4*inch])
-    t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        grandTotal = round(grandTotal,2)
+        p13_01 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_02 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_05 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+        p13_06 =Paragraph("<para fontSize=8>Total</para>",styles['Normal'])
+        p13_07 =Paragraph(str(grandTotal),styles['Normal'])
 
-    p13_01 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    p13_02 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    p13_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    p13_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    p13_05 =Paragraph("<para fontSize=8>Total</para>",styles['Normal'])
-    p13_06 =Paragraph(str(grandTotal),styles['Normal'])
+        data5+=[[p13_01,p13_02,p13_03,p13_04,p13_05,p13_06,p13_07]]
+        t3=Table(data5)
+        t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
 
-    data3=[[p13_01,p13_02,p13_03,p13_04,p13_05,p13_06]]
-    t3=Table(data3,6*[1.4*inch],1*[0.2*inch])
-    t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-    elements.append(t5)
-    elements.append(t2)
-    elements.append(t3)
+        elements.append(t3)
+    else:
+        p101_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
+        p101_02 =Paragraph("<para fontSize=8>Part Number</para>",styles['Normal'])
+        p101_03 =Paragraph("<para fontSize=8>Part Desc</para>",styles['Normal'])
+        p101_07 =Paragraph("<para fontSize=8>HS Code</para>",styles['Normal'])
+        p101_04 =Paragraph("<para fontSize=8>Qty</para>",styles['Normal'])
+        p101_05 =Paragraph("<para fontSize=8>Unit price in INR</para>",styles['Normal'])
+        p101_06 =Paragraph("<para fontSize=8>Amount in INR</para>",styles['Normal'])
+        p101_08 =Paragraph("<para fontSize=8>GST</para>",styles['Normal'])
+        p101_09 =Paragraph("<para fontSize=8>Total with GST</para>",styles['Normal'])
+
+
+        data2=[[p101_01,p101_02,p101_03,p101_07,p101_04,p101_05,p101_06,p101_08,p101_09]]
+        grandTotal = 0
+        id=0
+        amnt =0
+        gstValTotal=0
+        for i in purchaselist:
+            id+=1
+            part_no = i.products.part_no
+            desc = i.products.description_1
+            hs = i.customs_no
+            price = i.landed_price
+            qty = i.quantity1
+            amnt = round((price * qty),2)
+            print amnt,'kkkkkk'
+            grandTotal +=amnt
+            gst = i.gst
+            gstVal = round(((((amnt *gst)/100)+amnt)),2)
+            gstValTotal += gstVal
+
+
+            p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
+            p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
+            p12_03 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(desc)),styles['Normal'])
+            p12_07 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(hs)),styles['Normal'])
+            p12_04 =Paragraph("<para fontSize=8>{0}</para>".format(qty),styles['Normal'])
+            p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(price),styles['Normal'])
+            p12_06 =Paragraph("<para fontSize=8>{0}</para>".format(amnt),styles['Normal'])
+            p12_08 =Paragraph("<para fontSize=8>{0}%</para>".format(gst),styles['Normal'])
+            p12_09 =Paragraph("<para fontSize=8>{0}</para>".format(gstVal),styles['Normal'])
+            data2.append([p12_01,p12_02,p12_03,p12_07,p12_04,p12_05,p12_06,p12_08,p12_09])
+
+
+        grandTotal = round(grandTotal,2)
+        gstValTotal = round(gstValTotal,2)
+        p13_01 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_02 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_05 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+        p13_06 =Paragraph("<para fontSize=8>Total</para>",styles['Normal'])
+        p13_07 =Paragraph("<para fontSize=8>{0}</para>".format(grandTotal),styles['Normal'])
+        p13_08 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_09 =Paragraph("<para fontSize=8>{0}</para>".format(gstValTotal),styles['Normal'])
+
+        data2+=[[p13_01,p13_02,p13_03,p13_04,p13_05,p13_06,p13_07,p13_08,p13_09]]
+        t3=Table(data2)
+        t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+
+        elements.append(t3)
     elements.append(Spacer(1,8))
+
     elements.append(Paragraph("<para fontSize=8>Notes:</para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=8> 1. Indicate your GST number, HS Code , SAC Code, and PAN number in your Invoice. </para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=8> 2. Indicate our PO number on all order related documents. </para>",styles['Normal']))
+    elements.append(Paragraph("<para fontSize=8> 3. Send us your order confirmation within 3 days from the date of receipt of our PO. </para>",styles['Normal']))
     elements.append(Spacer(1,8))
-    elements.append(Paragraph("<para fontSize=8>Yours faithfully <br/> BRUDERER PRESSES INDIA PVT LTD.,</para>",styles['Normal']))
-
+    elements.append(Paragraph("<para fontSize=8>With Best Regards </para>",styles['Normal']))
+    elements.append(Spacer(1,8))
+    elements.append(Paragraph("<para fontSize=8>For BRUDERER PRESSES INDIA PVT LTD.,</para>",styles['Normal']))
+    elements.append(Spacer(1,8))
+    elements.append(Paragraph("<para fontSize=8>Authorised Signatory.</para>",styles['Normal']))
     doc.build(elements)
 
 
@@ -423,7 +503,7 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
     theader.hAlign = 'LEFT'
     elements.append(theader)
 
-
+    print project.service.address
     summryParaSrc = Paragraph("""
     <para >
     <font size='10'>
@@ -434,7 +514,7 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
     %s<br/>
     </font>
     </para>
-    """ %(project.vendor.name,project.vendor.street ,project.vendor.city,project.vendor.pincode,project.vendor.state , project.vendor.country),styles['Normal'])
+    """ %(project.service.name,project.service.address.street ,project.service.address.city,project.service.address.pincode,project.service.address.state , project.service.address.country),styles['Normal'])
 
 
     summryParaSrc1 = Paragraph("""
@@ -445,7 +525,7 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
     <b>E-Mail ID :</b> %s <br/>
     <b>Your Enquiry Ref :</b> %s <br/><br/>
     </font></para>
-    """ %(project.service.customerName , project.service.mobile , project.service.email,project.customer_ref),styles['Normal'])
+    """ %(project.service.customerName , project.service.mobile , project.service.email,project.enquiry_ref),styles['Normal'])
 
 
     td=[[summryParaSrc,' ',summryParaSrc1]]
@@ -478,116 +558,232 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
     if typ == 'CHF':
         priceFormat = 'Unit price in CHF'
         amountFormat = 'Amount in CHF'
-    elif typ == 'INR':
+
+        p101_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
+        p101_02 =Paragraph("<para fontSize=8>Part Number</para>",styles['Normal'])
+        p101_03 =Paragraph("<para fontSize=8>Part Desc</para>",styles['Normal'])
+        p101_04 =Paragraph("<para fontSize=8>Qty</para>",styles['Normal'])
+        p101_05 =Paragraph("<para fontSize=8>{0}</para>".format(priceFormat),styles['Normal'])
+        p101_06 =Paragraph("<para fontSize=8>{0}</para>".format(amountFormat),styles['Normal'])
+
+        data5=[[p101_01,p101_02,p101_03,p101_04,p101_05,p101_06]]
+        t5=Table(data5)
+        t5.hAlign = 'LEFT'
+        t5.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t5)
+        grandTotal = 0
+        data2 = []
+        id=0
+        for i in purchaselist:
+            id+=1
+            part_no = i.products.part_no
+            desc = i.products.description_1
+            basicprice = i.price
+            pricesum = round((((i.price*project.profitMargin)/100)+i.price),2)
+            price = round((pricesum * multNumber),2)
+            qty = i.quantity1
+            amnt = round((price * qty),2)
+            grandTotal +=amnt
+
+            p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
+            p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
+            p12_03 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(desc)),styles['Normal'])
+            p12_04 =Paragraph("<para fontSize=8>{0}</para>".format(qty),styles['Normal'])
+            p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(price),styles['Normal'])
+            p12_06 =Paragraph("<para fontSize=8>{0}</para>".format(amnt),styles['Normal'])
+            data2.append([p12_01,p12_02,p12_03,p12_04,p12_05,p12_06])
+        t2=Table(data2)
+        t2.hAlign = 'LEFT'
+        t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        grandTotal = round(grandTotal,2)
+        p13_01 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_02 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_05 =Paragraph("<para fontSize=8>Total</para>",styles['Normal'])
+        p13_06 =Paragraph(str(grandTotal),styles['Normal'])
+
+        data3=[[p13_01,p13_02,p13_03,p13_04,p13_05,p13_06]]
+        t3=Table(data3)
+        t3.hAlign = 'LEFT'
+        t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+
+        elements.append(t2)
+        elements.append(t3)
+
+    else:
+        print "aaaaaaaaaaaaaaaaaa"
         priceFormat = 'Unit price in INR'
         amountFormat = 'Amount in INR'
-    else:
-        priceFormat = 'Unit price'
-        amountFormat = 'Amount'
+        p101_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
+        p101_02 =Paragraph("<para fontSize=8>Part Number</para>",styles['Normal'])
+        p101_03 =Paragraph("<para fontSize=8>Part Desc</para>",styles['Normal'])
+        p101_04 =Paragraph("<para fontSize=8>Qty</para>",styles['Normal'])
+        p101_05 =Paragraph("<para fontSize=8>{0}</para>".format(priceFormat),styles['Normal'])
+        p101_06 =Paragraph("<para fontSize=8>{0}</para>".format(amountFormat),styles['Normal'])
+        p101_07 =Paragraph("<para fontSize=8>GST</para>",styles['Normal'])
+        p101_08 =Paragraph("<para fontSize=8>Total With GST</para>",styles['Normal'])
 
-    p101_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
-    p101_02 =Paragraph("<para fontSize=8>Part Number</para>",styles['Normal'])
-    p101_03 =Paragraph("<para fontSize=8>Part Desc</para>",styles['Normal'])
-    p101_04 =Paragraph("<para fontSize=8>Qty</para>",styles['Normal'])
-    p101_05 =Paragraph("<para fontSize=8>{0}</para>".format(priceFormat),styles['Normal'])
-    p101_06 =Paragraph("<para fontSize=8>{0}</para>".format(amountFormat),styles['Normal'])
+        data5=[[p101_01,p101_02,p101_03,p101_04,p101_05,p101_06,p101_07,p101_08]]
+        cwidths = 8*[1*inch]
+        t5=Table(data5)
+        t5.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        # t5.hAlign = 'LEFT'
+        # t5.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t5)
+        gstValTotal = 0
+        grandTotal = 0
+        data2 = []
+        id=0
+        for i in purchaselist:
+            id+=1
+            part_no = i.products.part_no
+            desc = i.products.description_1
+            basicprice = i.price
+            pricesum =round((((i.price*project.profitMargin)/100)+i.price),2)
+            price = round((pricesum * multNumber),2)
+            qty = i.quantity1
+            amnt = round((price * qty),2)
+            grandTotal +=amnt
+            gst = i.gst
+            gstVal = round((((amnt *gst)/100)+amnt),2)
+            gstValTotal += gstVal
 
-    data5=[[p101_01,p101_02,p101_03,p101_04,p101_05,p101_06]]
-    t5=Table(data5,6*[1.4*inch],1*[0.2*inch])
-    t5.hAlign = 'LEFT'
-    t5.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-    grandTotal = 0
-    data2 = []
-    id=0
-    for i in purchaselist:
+            p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
+            p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
+            p12_03 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(desc)),styles['Normal'])
+            p12_04 =Paragraph("<para fontSize=8>{0}</para>".format(qty),styles['Normal'])
+            p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(price),styles['Normal'])
+            p12_06 =Paragraph("<para fontSize=8>{0}</para>".format(amnt),styles['Normal'])
+            p12_07 =Paragraph("<para fontSize=8>{0}%</para>".format(gst),styles['Normal'])
+            p12_08 =Paragraph("<para fontSize=8>{0}</para>".format(gstVal),styles['Normal'])
+            data2.append([p12_01,p12_02,p12_03,p12_04,p12_05,p12_06,p12_07,p12_08])
+        # rheights = 6*[1.4*inch],1*[0.4*inch]
+        cwidths = 8*[1*inch]
+        t2=Table(data2)
 
-        id+=1
-        part_no = i.products.part_no
-        desc = i.products.description_1
-        price = i.price * multNumber
-        qty = i.quantity1
-        amnt = price * qty
-        grandTotal +=amnt
+        # t2.hAlign = 'LEFT'
+        t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        grandTotal = round(grandTotal,2)
+        gstValTotal = round(gstValTotal,2)
+        p13_01 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_02 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
+        p13_05 =Paragraph("<para fontSize=8>Total</para>",styles['Normal'])
+        p13_06 =Paragraph(str(grandTotal),styles['Normal'])
+        p13_07 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+        p13_08 =Paragraph(str(gstValTotal),styles['Normal'])
 
-        p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
-        p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
-        p12_03 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(desc)),styles['Normal'])
-        p12_04 =Paragraph("<para fontSize=8>{0}</para>".format(qty),styles['Normal'])
-        p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(price),styles['Normal'])
-        p12_06 =Paragraph("<para fontSize=8>{0}</para>".format(amnt),styles['Normal'])
-        data2.append([p12_01,p12_02,p12_03,p12_04,p12_05,p12_06])
+        data3=[[p13_01,p13_02,p13_03,p13_04,p13_05,p13_06,p13_07,p13_08]]
+
+        cwidths = 8*[1*inch]
+        t3=Table(data3)
+        t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+
+        elements.append(t2)
+        elements.append(t3)
 
 
-
-
-    t2=Table(data2,6*[1.4*inch],id*[0.4*inch])
-    t2.hAlign = 'LEFT'
-    t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-
-    p13_01 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    p13_02 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    p13_03 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    p13_04 =Paragraph("<para fontSize=8>{0}</para>".format(''),styles['Normal'])
-    p13_05 =Paragraph("<para fontSize=8>Total</para>",styles['Normal'])
-    p13_06 =Paragraph(str(grandTotal),styles['Normal'])
-
-    data3=[[p13_01,p13_02,p13_03,p13_04,p13_05,p13_06]]
-    t3=Table(data3,6*[1.4*inch],1*[0.2*inch])
-    t3.hAlign = 'LEFT'
-    t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-    elements.append(t5)
-    elements.append(t2)
-    elements.append(t3)
     # elements.append(t3)
     elements.append(Spacer(1,16))
     p14_01 =Paragraph("<para fontSize=8>QUOTATION VALIDITY</para>",styles['Normal'])
     p14_02 =Paragraph("<para fontSize=8>INCO TERMS</para>",styles['Normal'])
     p14_03 =Paragraph("<para fontSize=8>DELIVERY</para>",styles['Normal'])
-    p14_04 =Paragraph("<para fontSize=8>PAYMENT ITEMS</para>",styles['Normal'])
+    p14_04 =Paragraph("<para fontSize=8>PAYMENT TERMS</para>",styles['Normal'])
     data6=[[p14_01,p14_02,p14_03,p14_04]]
-    t6=Table(data6,6*[1.4*inch],1*[0.2*inch])
+    # t6=Table(data6)
+    # t6.hAlign = 'LEFT'
+    # t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    # elements.append(t6)
+
+    if typ == 'CHF':
+        incodetails = format(project.terms)
+        paymentterms1 = str(project.paymentTerms)
+        paymentterms2 = ""
+        paymentterms3 = ""
+    else:
+        incodetails = "EX-WORKS, BRUDERER India"
+        paymentterms1 =  "30% advance along with order"
+        paymentterms2 = "50% prior to dispatch"
+        paymentterms3 = "10% plus GST within 1 week from date of receipt of material"
+    p15_01 =Paragraph("<para fontSize=8>{0}</para>".format(project.quoteValidity),styles['Normal'])
+    p15_02 =Paragraph("<para fontSize=8>{0}</para>".format(incodetails),styles['Normal'])
+    p15_03 =Paragraph("<para fontSize=8>{0}</para>".format(project.delivery),styles['Normal'])
+    p15_04 =Paragraph("<para fontSize=8>{0}<br/>{1}<br/>{2}</para>".format(paymentterms1,paymentterms2,paymentterms3),styles['Normal'])
+    data6+=[[p15_01,p15_02,p15_03,p15_04]]
+    t6=Table(data6)
     t6.hAlign = 'LEFT'
     t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t6)
 
-    p15_01 =Paragraph("<para fontSize=8>{0}</para>".format(project.quoteValidity),styles['Normal'])
-    p15_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.terms),styles['Normal'])
-    p15_03 =Paragraph("<para fontSize=8>{0}</para>".format(project.delivery),styles['Normal'])
-    p15_04 =Paragraph("<para fontSize=8>{0}</para>".format(project.paymentTerms),styles['Normal'])
-    data7=[[p15_01,p15_02,p15_03,p15_04]]
-    t7=Table(data7,6*[1.4*inch],1*[0.5*inch])
-    t7.hAlign = 'LEFT'
-    t7.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-    elements.append(t7)
+    elements.append(Spacer(1,8))
+    if typ == 'CHF':
+        p16_01 =Paragraph("<para fontSize=8>PO to raised on</para>",styles['Normal'])
+        p16_02 =Paragraph("<para fontSize=8>BANK DETAILS</para>",styles['Normal'])
+        data8=[[p16_01,p16_02]]
+        t8=Table(data8,6*[1.4*inch],1*[0.2*inch])
+        t8.hAlign = 'LEFT'
+        t8.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t8)
 
-    elements.append(Spacer(1,8))
-    p16_01 =Paragraph("<para fontSize=8>PO to raised on</para>",styles['Normal'])
-    p16_02 =Paragraph("<para fontSize=8>BANK DETAILS</para>",styles['Normal'])
-    data8=[[p16_01,p16_02]]
-    t8=Table(data8,6*[1.4*inch],1*[0.2*inch])
-    t8.hAlign = 'LEFT'
-    t8.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-    elements.append(t8)
+        p17_01 =Paragraph("<para fontSize=8><b>BRUDERER AG</b><br/>Stanzautomaten<br/>Egnacherstrasse<br/>9320 FRASNACHT <br/>SWITZERLAND</para>",styles['Normal'])
+        p17_02 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+        data9=[[p17_01,p17_02]]
+        t9=Table(data9,6*[1.4*inch],1*[0.9*inch])
+        t9.hAlign = 'LEFT'
+        t9.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t9)
 
-    p17_01 =Paragraph("<para fontSize=8><b>BRUDERER AG</b><br/>Stanzautomaten<br/>Egnacherstrasse<br/>9320 FRASNACHT <br/>SWITZERLAND</para>",styles['Normal'])
-    p17_02 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    data9=[[p17_01,p17_02]]
-    t9=Table(data9,6*[1.4*inch],1*[0.9*inch])
-    t9.hAlign = 'LEFT'
-    t9.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
-    elements.append(t9)
+        elements.append(Spacer(1,8))
 
-    elements.append(Spacer(1,8))
-    elements.append(Paragraph("<para fontSize=8>Notes:</para>",styles['Normal']))
-    elements.append(Paragraph("<para fontSize=8> 1. Freight & Insurance  : To be organised by buyer </para>",styles['Normal']))
-    elements.append(Paragraph("<para fontSize=8> 2. P & F  : Extra </para>",styles['Normal']))
-    elements.append(Paragraph("<para fontSize=8> 3.Warranty :Twelve months - Only on spares fixed by Burderer India engineer</para>",styles['Normal']))
-    elements.append(Spacer(1,8))
-    elements.append(Paragraph("<para fontSize=8>We hope that this quotation will meet your requirement and would be glad to receive your firm order. For further information please do not hesitate to cotnact us any time. </para>",styles['Normal']))
-    elements.append(Spacer(1,8))
-    elements.append(Paragraph("<para fontSize=8>For BRUDERER PRESSES INDIA PVT LTD.,</para>",styles['Normal']))
-    elements.append(Spacer(1,8))
-    elements.append(Paragraph("<para fontSize=8>Authorised Signatory.</para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8>Notes:</para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8> 1. Freight & Insurance  : To be organised by buyer </para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8> 2. P & F  : Extra </para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8> 3.Warranty :Twelve months - Only on spares fixed by Burderer India engineer</para>",styles['Normal']))
+        elements.append(Spacer(1,8))
+        elements.append(Paragraph("<para fontSize=8>We hope that this quotation will meet your requirement and would be glad to receive your firm order. For further information please do not hesitate to cotnact us any time. </para>",styles['Normal']))
+        elements.append(Spacer(1,8))
+        elements.append(Paragraph("<para fontSize=8>For BRUDERER PRESSES INDIA PVT LTD.,</para>",styles['Normal']))
+        elements.append(Spacer(1,8))
+        elements.append(Paragraph("<para fontSize=8>Authorised Signatory.</para>",styles['Normal']))
+    else:
+        p16_02 =Paragraph("<para fontSize=8>BANK DETAILS</para>",styles['Normal'])
+        data8=[[p16_02]]
+        p17_01 =Paragraph("<para fontSize=8>IDBI Bank Ltd<br/>Whitefield Branch<br/>Bangalore 560 066, Karnataka<br/>Account No. 1545102000003858 <br/>IFSC Code : IBKL0001545</para>",styles['Normal'])
+        data8 +=[[p17_01]]
+        t9=Table(data8,6*[3*inch])
+        t9.hAlign = 'LEFT'
+        t9.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t9)
+        elements.append(Spacer(1,8))
+        p77_01 =Paragraph("<para fontSize=8>PAN NO. </para>",styles['Normal'])
+        p77_02 =Paragraph("<para fontSize=8>GST NO. </para>",styles['Normal'])
+
+        data8=[[p77_01,p77_02]]
+        p78_01 =Paragraph("<para fontSize=8>AABCB6326Q</para>",styles['Normal'])
+        p78_01 =Paragraph("<para fontSize=8>AABCB6326Q</para>",styles['Normal'])
+        data8 +=[[p78_01,p78_01]]
+        t9=Table(data8,6*[1.5*inch])
+        t9.hAlign = 'LEFT'
+        t9.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+        elements.append(t9)
+
+        elements.append(Spacer(1,8))
+
+        elements.append(Paragraph("<para fontSize=8>Notes:</para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8> 1. Indicate your GST number, HSN Code and PAN number in your PO. </para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8> 2. Indicate our Quote ref in your PO. </para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8> 3. Freight & Insurance  : To be organised by buyer </para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8> 4. Freight & Insurance  : To be organised by buyer </para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8> 5. P & F  : Extra </para>",styles['Normal']))
+        elements.append(Paragraph("<para fontSize=8> 6.Warranty :Twelve months - Only on spares fixed by Burderer India engineer</para>",styles['Normal']))
+        elements.append(Spacer(1,8))
+        elements.append(Paragraph("<para fontSize=8>We hope that this quotation will meet your requirement and would be glad to receive your firm order. For further information please do not hesitate to cotnact us any time. </para>",styles['Normal']))
+        elements.append(Spacer(1,8))
+        elements.append(Paragraph("<para fontSize=8>For BRUDERER PRESSES INDIA PVT LTD.,</para>",styles['Normal']))
+        elements.append(Spacer(1,8))
+        elements.append(Paragraph("<para fontSize=8>Authorised Signatory.</para>",styles['Normal']))
     doc.build(elements)
 
 def grn(response , project , purchaselist , request):
@@ -925,12 +1121,12 @@ class ProductInventoryAPIView(APIView):
                 if k['qty']:
                     qt = k['qty']
                 else:
-                    qt = k['qty']
-
-                totalVal = rt * qt
-                totalprice += rt
-                totalqty += qt
-                totalSum+=totalVal
+                    qt = 0
+                if qt>0:
+                    totalVal = rt * qt
+                    totalprice += rt
+                    totalqty += qt
+                    totalSum+=totalVal
             toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty,'totalVal':totalSum})
             total+=totalSum
         if 'offset' in request.GET:
