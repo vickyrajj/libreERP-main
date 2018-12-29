@@ -1121,28 +1121,34 @@ class DownloadManifestAPI(APIView):
             if 'allData' in request.GET:
                 item = Order.objects.get(pk=request.GET['allData'])
                 typ='all'
+                barCVal = item.orderQtyMap.all()[0].courierAWBNo
             elif 'qPk' in request.GET:
                 item = OrderQtyMap.objects.get(pk = request.GET['qPk'])
                 typ='one'
+                barCVal = item.courierAWBNo
             else:
                 return Response({}, status = status.HTTP_200_OK)
 
             ab = appSettingsField.objects.filter(name='posPrinting')
             if len(ab)>0:
                 if ab[0].flag:
-                    # print 'printing in printerrrrrrrrrr'
-                    # requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
-                    #         json={
-                    #           'topic': 'service.POS.Printer.{0}'.format('123'),
-                    #           'args': [{'data':resData,'manifest':'Yes'}]
-                    #         }
-                    #     )
+                    print 'printing manifest in printerrrrrrrrrr'
                     response = HttpResponse(content_type='text/plain')
                     response['Content-Disposition'] = 'attachment;filename="manifest.txt"'
                     dt = manifest(response,item,typ,'txtFile')
                     response.content = ''
                     resData = '\n'.join(dt)
                     response.write(resData)
+                    if len(request.GET['printerDeviceId'])>0:
+                        print 'valid printerrrrrrrrrrrr idddddddddd'
+                        requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
+                                json={
+                                  'topic': 'service.POS.Printer.{0}'.format(request.GET['printerDeviceId']),
+                                  'args': [{'data':resData,'manifest':'Yes','barCVal':barCVal}]
+                                }
+                            )
+                    else:
+                        print 'invalid printerrrrrrrrrrrr id'
                     return response
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'

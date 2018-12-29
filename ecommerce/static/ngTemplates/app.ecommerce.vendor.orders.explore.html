@@ -42,7 +42,24 @@
     </div>
     <div class="col-md-9" ng-if="order.orderQtyMap.length>0">
       <div class="row">
-        <div class="col-md-4 col-md-offset-4">
+        <div class="col-md-4">
+          <div class="col-md-12" ng-if="checkConditions.posPrinting">
+            <div class="input-group" ng-if="!connected">
+              <input type="text" class="form-control" placeholder="Please enter device ID" ng-model="connectData.deviceID">
+              <!-- <p class="help-block" style="font-size:12px">Please Connect The Device First</p> -->
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-success" ng-click="connectDevice()">Connect</button>
+              </span>
+            </div>
+            <div class="input-group" ng-if="connected">
+              <input type="text" class="form-control" value="{{connectData.deviceID}}" disabled>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-danger" ng-click="disconnectDevice()">Disconnect</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
           <div class="text-center" ng-if="order.approved">
             <h3>Approved <i class='fa fa-check' style="color:green"></i></h3>
           </div>
@@ -89,13 +106,13 @@
             </div>
 
           </div>
-          <div class="col-md-3 text-right" style="position:absolute;right:5px" ng-if="order.status!='failed' && order.orderQtyMap[0].courierName!=null && order.orderQtyMap[0].courierAWBNo!=null">
+          <div class="col-md-3 pull-right" ng-if="order.status!='failed' && order.orderQtyMap[0].courierName!=null && order.orderQtyMap[0].courierAWBNo!=null">
             <span ng-if="checkConditions.thirdParty">
             <a href="/api/ecommerce/downloadManifest/?trackingId={{order.orderQtyMap[0].courierAWBNo}}" target="_blank">
              <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
              </span>
              <span ng-if="!checkConditions.thirdParty">
-             <a href="/api/ecommerce/downloadManifest/?allData={{order.pk}}" target="_blank">
+             <a href="/api/ecommerce/downloadManifest/?allData={{order.pk}}&printerDeviceId={{connectData.deviceID}}" target="_blank">
               <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
               </span>
 
@@ -139,7 +156,7 @@
                     <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a> -->
 
                     <span ng-if="checkConditions.splitOrder">
-                      <a href="/api/ecommerce/downloadManifest/?qPk={{pData.pk}}" target="_blank">
+                      <a href="/api/ecommerce/downloadManifest/?qPk={{pData.pk}}&printerDeviceId={{connectData.deviceID}}" target="_blank">
                         <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
                       </span>
 
