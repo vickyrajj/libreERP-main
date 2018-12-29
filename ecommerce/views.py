@@ -948,7 +948,8 @@ class PincodeViewSet(viewsets.ModelViewSet):
 
 
 
-def manifest(response,item,typ,filTyp):
+def manifest(response,item,typ,filTyp,packingSlip):
+    print packingSlip ,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
     settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
     print settingsFields.get(name = 'address').value
 
@@ -976,14 +977,15 @@ def manifest(response,item,typ,filTyp):
 
 
     elements.append(HRFlowable(width="100%", thickness=1, color=black,spaceAfter=10))
-    if order.paymentMode == 'card':
-        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>PREPAID - DO NOT COLLECT CASH</b></para>'
-        txtData.append('PREPAID - DO NOT COLLECT CASH')
-    else:
-        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(total)
-        txtData.append('CASH ON DELIVERY {0} INR'.format(total))
-    elements.append(Paragraph(txt1, styles['Normal']))
-    elements.append(Spacer(1, 8))
+    if not packingSlip:
+        if order.paymentMode == 'card':
+            txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>PREPAID - DO NOT COLLECT CASH</b></para>'
+            txtData.append('PREPAID - DO NOT COLLECT CASH')
+        else:
+            txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(total)
+            txtData.append('CASH ON DELIVERY {0} INR'.format(total))
+        elements.append(Paragraph(txt1, styles['Normal']))
+        elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
     elements.append(Paragraph(txt2, styles['Normal']))
     txtData.append('DELIVERY ADDRESS : {0}'.format(order.landMark))
@@ -1012,7 +1014,7 @@ def manifest(response,item,typ,filTyp):
     elements.append(Paragraph(txt6, styles['Normal']))
     txtData.append('Invoice No. : {0}'.format(invNo))
     elements.append(Spacer(1, 30))
-
+    tableDataPackingSlip = [['SKU','Product','Qty']]
     tableData=[['Product','Price','Qty','Discount','Final Price']]
     txtData.append('Product , Price , Qty , Discount , Final Price')
     for item in orderQtsObj:
@@ -1060,22 +1062,29 @@ def manifest(response,item,typ,filTyp):
             desc =""
 
         name = str(item.product.product.name)+ ' ' + str(qtyValue)+ ' ' +str(desc)
+        sku = str(item.product.product.serialNo)+ ''
+        skuP =  Paragraph("<para fontSize=8>{0}</para>".format(sku),styles['Normal'])
         pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(name),styles['Normal'])
         tableData.append([pd,item.totalAmount,item.qty,item.discountAmount,(item.totalAmount-item.discountAmount) * item.qty])
+        tableDataPackingSlip.append([sku,pd,item.qty])
         txtData.append('{0} , {1} , {2} , {3} , {4}'.format(name,item.totalAmount,item.qty,item.discountAmount,(item.totalAmount-item.discountAmount) * item.qty))
+    if not packingSlip:
+        tableData.append(['TOTAL','','','',total])
+        txtData.append('TOTAL , ' ' , ' ' , ' ' , {0}'.format(total))
+        t1=Table(tableData,colWidths=[1.7*inch , 0.5*inch , 0.5*inch, 0.7*inch , 0.7*inch])
+    else:
+        t1=Table(tableDataPackingSlip,colWidths=[2*inch , 3.2*inch , 0.5*inch])
 
-    tableData.append(['TOTAL','','','',total])
-    txtData.append('TOTAL , ' ' , ' ' , ' ' , {0}'.format(total))
-
-    t1=Table(tableData,colWidths=[1.7*inch , 0.5*inch , 0.5*inch, 0.7*inch , 0.7*inch])
+    # t1=Table(tableData,colWidths=[1.7*inch , 0.5*inch , 0.5*inch, 0.7*inch , 0.7*inch])
     t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),('BOX', (0,0), (-1,-1), 0.25, colors.black),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
     elements.append(t1)
     elements.append(Spacer(1, 10))
-    if order.paymentMode != 'card':
-        txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(total)
-        elements.append(Paragraph(txt7, styles['Normal']))
-        txtData.append('CASH TO BE COLLECT {0} INR'.format(total))
-    elements.append(Spacer(1, 20))
+    if not packingSlip:
+        if order.paymentMode != 'card':
+            txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(total)
+            elements.append(Paragraph(txt7, styles['Normal']))
+            txtData.append('CASH TO BE COLLECT {0} INR'.format(total))
+        elements.append(Spacer(1, 20))
 
     txt8 = '<para size=10 leftIndent=150 rightIndent=150><b>Tracking ID. : </b>{0} </para>'.format(courierAWBNo)
     elements.append(Paragraph(txt8, styles['Normal']))
@@ -1128,25 +1137,29 @@ class DownloadManifestAPI(APIView):
                 return Response({}, status = status.HTTP_200_OK)
 
             ab = appSettingsField.objects.filter(name='posPrinting')
+            if 'packingSlip' in request.GET:
+                packingSlip = True
+            else:
+                packingSlip = False
             if len(ab)>0:
                 if ab[0].flag:
-                    # print 'printing in printerrrrrrrrrr'
+                    print 'printing manifest in printerrrrrrrrrr'
                     # requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
                     #         json={
-                    #           'topic': 'service.POS.Printer.{0}'.format('123'),
+                    #           'topic': 'service.POS.Printer.{0}'.format((self.context['request'].data['printerDeviceId']),
                     #           'args': [{'data':resData,'manifest':'Yes'}]
                     #         }
                     #     )
                     response = HttpResponse(content_type='text/plain')
                     response['Content-Disposition'] = 'attachment;filename="manifest.txt"'
-                    dt = manifest(response,item,typ,'txtFile')
+                    dt = manifest(response,item,typ,'txtFile',packingSlip)
                     response.content = ''
                     resData = '\n'.join(dt)
                     response.write(resData)
                     return response
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
-            manifest(response,item,typ,'pdfFile')
+            manifest(response,item,typ,'pdfFile',packingSlip)
             return response
 
 class PostBarcodeAPI(APIView):
@@ -1391,7 +1404,7 @@ class SendFeedBackAPI(APIView):
         return Response({}, status = status.HTTP_200_OK)
 
 
-themeColor = colors.HexColor('#227daa')
+themeColor = colors.HexColor(globalSettings.ECOMMERCE_THEME)
 
 styles=getSampleStyleSheet()
 styleN = styles['Normal']
@@ -1601,6 +1614,12 @@ def genInvoice(response, contract, request):
 # ecommerceSetting.get(name = 'gstEnabled').flag
     # totalQuant = 0
     # totalTax = 0
+
+
+    if contract.billingState == contract.state:
+        interState = True
+    else:
+        interState = False
     totaldiscount = 0
     total = 0
     totalprice = 0
@@ -1635,7 +1654,10 @@ def genInvoice(response, contract, request):
         if ab[0].flag:
             isStoreGlobal = True
     if not isStoreGlobal:
-        tableData=[['Product','Quantity','Price' + currency,'GST (%)','Total Price'+currency]]
+        if interState:
+            tableData=[['Product','HSN','Quantity','Price' + currency,'SGST (%)','CGST (%)','Total GST'+currency,'Total Price'+currency]] #here
+        else:
+            tableData=[['Product','HSN','Quantity','Price' + currency,'IGST (%)','IGST'+currency,'Total Price'+currency]] #here
     for i in contract.orderQtyMap.all():
         print i.desc,'ssssssssssssss'
         if str(i.status)!='cancelled':
@@ -1681,10 +1703,18 @@ def genInvoice(response, contract, request):
                 name = str(i.product.product.name) + ' '  + str(qtyValue) + ' ' +str(desc)
                 if not isStoreGlobal:
                     if i.product.product.productMeta is None:
-                        tableData.append([name,i.qty,price,'',totalprice])
+                        if interState:
+                            tableData.append([name,'',i.qty,price,'','','',totalprice]) #herre
+                        else:
+                            tableData.append([name,'',i.qty,price,'','',totalprice]) #herre
                     else:
                         totalprice = totalprice + (i.product.product.productMeta.taxRate * totalprice)/100
-                        tableData.append([name,i.qty,price,i.product.product.productMeta.taxRate,totalprice])
+                        gstval = (i.product.product.productMeta.taxRate * price )/100
+                        if interState:
+                            tableData.append([name,i.product.product.productMeta.code,i.qty,price,i.product.product.productMeta.taxRate/2,i.product.product.productMeta.taxRate/2,gstval,totalprice])
+                        else:
+                            tableData.append([name,i.product.product.productMeta.code,i.qty,price,i.product.product.productMeta.taxRate,gstval,totalprice])
+
                 else:
                     tableData.append([name,i.qty,price,totalprice])
                 total+=totalprice
@@ -1731,35 +1761,39 @@ def genInvoice(response, contract, request):
 
                 name = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' +str(desc)
 
-                if not isStoreGlobal:
-                    if i.product.product.productMeta is None:
-                        tableData.append([name,i.qty,price,'',totalprice])
+                if i.product.product.productMeta is None:
+                    if interState:
+                        tableData.append([name,'',i.qty,price,'','','',totalprice]) #herre
                     else:
-                        print 'i.qty,price,i.product.product.productMeta.taxRate',i.qty,price,i.product.product.productMeta.taxRate
-                        totalprice = totalprice + (i.product.product.productMeta.taxRate * totalprice)/100
-                        tableData.append([name,i.qty,price,i.product.product.productMeta.taxRate,totalprice])
-                    tableData.append([name,i.qty,price,'',totalprice])
+                        tableData.append([name,'',i.qty,price,'','',totalprice]) #herre
                 else:
-                    tableData.append([name,i.qty,price,totalprice])
+                    totalprice = totalprice + (i.product.product.productMeta.taxRate * totalprice)/100
+                    gstval = (i.product.product.productMeta.taxRate * price )/100
+                    if interState:
+                        tableData.append([name,i.product.product.productMeta.code,i.qty,price,i.product.product.productMeta.taxRate/2,i.product.product.productMeta.taxRate/2,gstval,totalprice])
+                    else:
+                        tableData.append([name,i.product.product.productMeta.code,i.qty,price,i.product.product.productMeta.taxRate,gstval,totalprice])
                 total+=totalprice
     shippingCharges = contract.shippingCharges
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal + shippingCharges, 2)
     if not isStoreGlobal:
-        tableData.append(['','','TOTAL' + currency,'',total])
-        tableData.append(['','','COUPON APPLIED(%)',promoCode,promoAmount])
-        tableData.append(['','','SHIPPING CHARGES' + currency,'',shippingCharges])
-        tableData.append(['','','GRAND TOTAL'+ currency,'',grandTotal])
-        t1=Table(tableData,colWidths=[2.8*inch , 0.8*inch , 1.5*inch, 0.8*inch , 1.5*inch])
-
+        tableData.append(['','','','TOTAL' + currency,'','',total])
+        tableData.append(['','','','COUPON APPLIED(%)','',promoCode,promoAmount])
+        tableData.append(['','','','SHIPPING CHARGES' + currency,'','',shippingCharges])
+        tableData.append(['','','','GRAND TOTAL'+ currency,'','',grandTotal])
+        if interState:
+            t1=Table(tableData,colWidths=[3.2*inch , 0.5*inch , 0.6*inch, 0.7*inch,0.6*inch,0.6*inch,1*inch , 1*inch]) #herre
+        else:
+            t1=Table(tableData,colWidths=[3.2*inch , 0.6*inch , 0.7*inch, 0.7*inch,0.7*inch,1*inch , 1*inch]) #herre
     else:
-        tableData.append(['','','TOTAL'+currency,total])
+        tableData.append(['','TOTAL'+currency,'',total])
         tableData.append(['','COUPON APPLIED(%)',promoCode,promoAmount])
         tableData.append(['','SHIPPING CHARGES','',shippingCharges])
         tableData.append(['','','GRAND TOTAL'+currency,grandTotal])
-        t1=Table(tableData,colWidths=[3*inch , 1.5*inch , 1.5*inch, 0.8*inch , 1.5*inch])
+        t1=Table(tableData,colWidths=[3.2*inch , 1.5*inch , 1.5*inch, 0.8*inch , 1.5*inch])
 
-    t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#f0f0f0')) ]))
+    t1.setStyle(TableStyle([('FONTSIZE', (0, 0), (-1, -1), 8),('INNERGRID', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('INNERGRID', (0,-4), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-3), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-2), (-1,-1), 0.25, colors.white),('INNERGRID', (0,-1), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-1), (-1,-1), 0.25, colors.black),('INNERGRID', (0,-3), (-1,-1), 0.25, colors.white),('LINEABOVE', (0,-2), (-1,-1), 0.25, colors.HexColor('#bdd3f4')),('BOX', (0,0), (-1,-1), 0.25,  colors.HexColor('#bdd3f4')),('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND', (0, 0), (-1, 0),colors.HexColor('#f0f0f0')) ]))
     if ecommerceSetting.get(name = 'gstEnabled').flag == True:
         gst = """
         <font size='6'><strong>GST : </strong></font>
@@ -2459,9 +2493,10 @@ class CreateShipmentAPI(APIView):
 #             try:
 #                 img = open(os.path.join(globalSettings.BASE_DIR, 'media_root/Flags/'+name +'.png'))
 #                 print File(img)
-#                 # i.flag.save(name+'.png', File(img))
+#                 i.flag.save(name+'.png', File(img))
 #             except Exception as e:
-#                 pass
+#                 img = open(os.path.join(globalSettings.BASE_DIR, 'media_root/Flags/noImage.png'))
+#                 i.flag.save(name+'.png', File(img))
 #         return Response({'awbPath':12}, status = status.HTTP_200_OK)
 
 class CountryViewSet(viewsets.ModelViewSet):
