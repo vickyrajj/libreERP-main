@@ -137,6 +137,66 @@ app.controller('businessManagement.deliveryCenter.orders.item', function($scope,
 
 
 app.controller('businessManagement.deliveryCenter.orders.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $sce ,$uibModal) {
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    console.log(decodedCookie);
+    var ca = decodedCookie.split(';');
+    console.log(ca);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  function setCookie(cname, cvalue, exdays) {
+    console.log('set cookie');
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function createCookieDevice(deviceNo) {
+    console.log('create cookieeeeeeeee', deviceNo);
+    detail = getCookie("orderInvoicePrinterId");
+    if (detail != "") {
+      console.log('already there');
+      document.cookie = encodeURIComponent("orderInvoicePrinterId") + "=deleted; expires=" + new Date(0).toUTCString()
+    }
+    setCookie("orderInvoicePrinterId", deviceNo, 365);
+  }
+
+  $scope.connectData = {
+    deviceID: '123'
+  }
+  orderInvoicePrinterId = getCookie("orderInvoicePrinterId");
+  console.log('devvvvvvvvvvvvvvvvvvvvv', orderInvoicePrinterId);
+  if (orderInvoicePrinterId != "") {
+    $scope.connectData.deviceID = orderInvoicePrinterId
+  }
+  $scope.connected = true
+  $scope.connectDevice = function() {
+    console.log('connect Deviceeeeeeeeeeeeee');
+    if ($scope.connectData.deviceID.length == 0) {
+      Flash.create('danger', 'Please Enter Device Id')
+      return
+    }
+    console.log($scope.connectData.deviceID);
+    createCookieDevice($scope.connectData.deviceID)
+    $scope.connected = true
+
+  }
+
+  $scope.disconnectDevice = function() {
+    $scope.connected = false
+  }
 
   console.log('KKKKKKKKKKKKKKKK', $scope.tab.data.order);
   $scope.order = $scope.tab.data.order
@@ -155,7 +215,7 @@ app.controller('businessManagement.deliveryCenter.orders.explore', function($sco
         $scope.currency =response.data[0].value
       }
     })
-    $scope.checkConditions = {splitOrder:false,thirdParty:false,changeStatus:false}
+    $scope.checkConditions = {splitOrder:false,thirdParty:false,changeStatus:false,posPrinting:false}
     $http.get('/api/ERP/appSettings/?app=25&name__iexact=splitOrderManagement').
     then(function(response) {
       console.log('ratingggggggggggggggggggg', response.data);
@@ -180,6 +240,15 @@ app.controller('businessManagement.deliveryCenter.orders.explore', function($sco
       if (response.data[0] != null) {
         if (response.data[0].flag) {
           $scope.checkConditions.changeStatus = true
+        }
+      }
+    })
+    $http.get('/api/ERP/appSettings/?app=25&name__iexact=posPrinting').
+    then(function(response) {
+      console.log('ratingggggggggggggggggggg', response.data);
+      if (response.data[0] != null) {
+        if (response.data[0].flag) {
+          $scope.checkConditions.posPrinting = true
         }
       }
     })
