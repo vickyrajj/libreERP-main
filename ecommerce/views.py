@@ -908,7 +908,7 @@ class OrderQtyMapViewSet(viewsets.ModelViewSet):
     queryset = OrderQtyMap.objects.all()
     serializer_class = OrderQtyMapSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['courierAWBNo']
+    filter_fields = ['courierAWBNo','orderBy']
 
 class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -950,7 +950,7 @@ class PincodeViewSet(viewsets.ModelViewSet):
 
 def manifest(response,item,typ,filTyp):
     settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
-    print settingsFields.get(name = 'address').value
+    print settingsFields.get(name = 'companyAddress').value
 
     now = datetime.datetime.now()
     print now.year,now.month,now.day
@@ -974,14 +974,22 @@ def manifest(response,item,typ,filTyp):
         courierAWBNo = item.courierAWBNo
         total = (item.totalAmount-item.discountAmount) * item.qty
 
+    currencySymbol = appSettingsField.objects.filter(name='currencySymbol')
+    if len(currencySymbol)>0:
+        if currencySymbol[0].value == 'fa-usd':
+            currency = '(USD)'
+        else:
+            currency = '(INR)'
+    else:
+        currency = '(USD)'
 
     elements.append(HRFlowable(width="100%", thickness=1, color=black,spaceAfter=10))
     if order.paymentMode == 'card':
         txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>PREPAID - DO NOT COLLECT CASH</b></para>'
         txtData.append('PREPAID - DO NOT COLLECT CASH')
     else:
-        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(total)
-        txtData.append('CASH ON DELIVERY {0} INR'.format(total))
+        txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} {1}</b></para>'.format(total,currencySymbol)
+        txtData.append('CASH ON DELIVERY {0} {1}'.format(total,currencySymbol))
     elements.append(Paragraph(txt1, styles['Normal']))
     elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
@@ -998,9 +1006,9 @@ def manifest(response,item,typ,filTyp):
     txtData.append('COURIER AWB No. : {0}'.format(courierAWBNo))
     elements.append(Spacer(1, 10))
 
-    txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'address').value)
+    txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'companyAddress').value)
     elements.append(Paragraph(txt4, styles['Normal']))
-    txtData.append('SOLD BY : {0}'.format(settingsFields.get(name = 'address').value))
+    txtData.append('SOLD BY : {0}'.format(settingsFields.get(name = 'companyAddress').value))
     elements.append(Spacer(1, 3))
     txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat_tinNo').value,settingsFields.get(name = 'cstNo').value)
     elements.append(Paragraph(txt5, styles['Normal']))
@@ -1072,9 +1080,9 @@ def manifest(response,item,typ,filTyp):
     elements.append(t1)
     elements.append(Spacer(1, 10))
     if order.paymentMode != 'card':
-        txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(total)
+        txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} {1}</b></para>'.format(total,currencySymbol)
         elements.append(Paragraph(txt7, styles['Normal']))
-        txtData.append('CASH TO BE COLLECT {0} INR'.format(total))
+        txtData.append('CASH TO BE COLLECT {0} {1}'.format(total,currencySymbol))
     elements.append(Spacer(1, 20))
 
     txt8 = '<para size=10 leftIndent=150 rightIndent=150><b>Tracking ID. : </b>{0} </para>'.format(courierAWBNo)
