@@ -55,7 +55,7 @@ class MakeEBSPayment(APIView):
                     'address': order.street,
                     'city':order.city,
                     'state':order.state,
-                    'country' : order.country,
+                    'country' : 'IN',
                     'postal_code':order.pincode,
                     'phone': order.user.profile.mobile,
                     'email': globalSettings.G_ADMIN[0],
