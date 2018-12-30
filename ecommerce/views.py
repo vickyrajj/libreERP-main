@@ -2340,7 +2340,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 
 def updateAndProcessOrder(orderID , amnt):
-    orderObj = Order.objects.get(paymentRefId = orderID)
+    orderObj = Order.objects.get(id = orderID)
     orderObj.paidAmount = amnt
     orderObj.approved = True
     orderObj.paymentStatus = True
