@@ -45,9 +45,9 @@ class MakeEBSPayment(APIView):
         data_dict = {
                     'channel':'0',
                     'account_id':'19591',
-                    'reference_no': order_id,
+                    'reference_no': request.GET['orderid'],
                     'amount': order.totalAmount,
-                    'mode':'TEST',
+                    'mode': globalSettings.EBS_PAYMENT_MODE,
                     'currency': 'INR',
                     'description':'BNI India products ',
                     'return_url': globalSettings.SITE_ADDRESS + '/ebsPaymanetResponse/',
