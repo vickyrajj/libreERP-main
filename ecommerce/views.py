@@ -439,7 +439,8 @@ class CreateOrderAPI(APIView):
                 orderObj.orderQtyMap.add(i)
             orderObj.save()
             msg = 'Sucess'
-            userCart.delete()
+            if str(request.data['modeOfPayment']) == 'COD':
+                userCart.delete()
             # response = HttpResponse(content_type='application/pdf')
             # response['Content-Disposition'] = 'attachment; filename="order_invoice%s_%s_%s.pdf"' % (
             # orderObj.totalAmount, datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, orderObj.pk)
@@ -2378,7 +2379,7 @@ def updateAndProcessOrder(orderID , amnt):
             value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal, 2)
-    request.user.cartItems.all().delete()
+    orderObj.user.cartItems.all().delete()
     if orderObj.user.email:
         ctx = {
             'heading' : "Invoice Details",
