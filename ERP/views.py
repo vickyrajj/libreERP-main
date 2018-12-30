@@ -50,7 +50,7 @@ class MakeEBSPayment(APIView):
                     'mode': globalSettings.EBS_PAYMENT_MODE,
                     'currency': 'INR',
                     'description':'BNI India products ',
-                    'return_url': globalSettings.SITE_ADDRESS + '/ebsPaymanetResponse/',
+                    'return_url': globalSettings.SITE_ADDRESS + '/ebsPaymentResponse/',
                     'name': request.user.first_name,
                     'address': order.street,
                     'city':order.city,
