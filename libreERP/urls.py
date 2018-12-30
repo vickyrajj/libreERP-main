@@ -35,8 +35,8 @@ urlpatterns = [
     url(r'makeOnlinePayment/$' , makeOnlinePayment , name = "makeOnlinePayment" ),
     url(r'payuPaymentInitiate/$' , payuPaymentInitiate , name = "paypalPaymentInitiate" ),
     url(r'payUPaymentResponse/$' , payUPaymentResponse , name = "paypalPaymentInitiate" ),
-    url(r'^socialMobileLogin', socialMobileView , name ='socialMobileLogin'),
-    url(r'^ebsPaymentResponse', ebsPaymentResponse , name ='ebsPaymentResponse'),
+    url(r'^socialMobileLogin/$', socialMobileView , name ='socialMobileLogin'),
+    url(r'^ebsPaymentResponse/', ebsPaymentResponse , name ='ebsPaymentResponse'),
 ]
 
 if settings.DEBUG:
