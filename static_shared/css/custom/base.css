@@ -30,6 +30,10 @@
 	}
 }
 
+.onHoverli{
+	background-color: #eee;
+	border:1px solid blac;
+}
 
 
 .toplevelmenuOption:hover{
@@ -677,6 +681,15 @@ body {
     color: #ffffff;
     background-color: var(--headerNavbarHighlight);
   }
+
+	.pagination > li > a {
+		padding: 0px 7px !important;
+	}
+
+	.pagination > li > .input-group{
+		display: none !important;
+	}
+
 }
 
 

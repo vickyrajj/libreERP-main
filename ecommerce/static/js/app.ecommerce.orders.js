@@ -145,6 +145,67 @@
 
 app.controller('businessManagement.ecommerce.orders.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $sce ,$uibModal) {
 
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    console.log(decodedCookie);
+    var ca = decodedCookie.split(';');
+    console.log(ca);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  function setCookie(cname, cvalue, exdays) {
+    console.log('set cookie');
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  function createCookieDevice(deviceNo) {
+    console.log('create cookieeeeeeeee', deviceNo);
+    detail = getCookie("orderInvoicePrinterId");
+    if (detail != "") {
+      console.log('already there');
+      document.cookie = encodeURIComponent("orderInvoicePrinterId") + "=deleted; expires=" + new Date(0).toUTCString()
+    }
+    setCookie("orderInvoicePrinterId", deviceNo, 365);
+  }
+
+  $scope.connectData = {
+    deviceID: '123'
+  }
+  orderInvoicePrinterId = getCookie("orderInvoicePrinterId");
+  console.log('devvvvvvvvvvvvvvvvvvvvv', orderInvoicePrinterId);
+  if (orderInvoicePrinterId != "") {
+    $scope.connectData.deviceID = orderInvoicePrinterId
+  }
+  $scope.connected = true
+  $scope.connectDevice = function() {
+    console.log('connect Deviceeeeeeeeeeeeee');
+    if ($scope.connectData.deviceID.length == 0) {
+      Flash.create('danger', 'Please Enter Device Id')
+      return
+    }
+    console.log($scope.connectData.deviceID);
+    createCookieDevice($scope.connectData.deviceID)
+    $scope.connected = true
+
+  }
+
+  $scope.disconnectDevice = function() {
+    $scope.connected = false
+  }
+
   console.log('KKKKKKKKKKKKKKKK', $scope.tab.data.order);
   $scope.order = $scope.tab.data.order
   $scope.expanded = false;
@@ -162,7 +223,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         $scope.currency =response.data[0].value
       }
     })
-    $scope.checkConditions = {splitOrder:false,thirdParty:false}
+    $scope.checkConditions = {splitOrder:false,thirdParty:false,changeStatus:false,posPrinting:false}
     $http.get('/api/ERP/appSettings/?app=25&name__iexact=splitOrderManagement').
     then(function(response) {
       console.log('ratingggggggggggggggggggg', response.data);
@@ -178,6 +239,24 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       if (response.data[0] != null) {
         if (response.data[0].flag) {
           $scope.checkConditions.thirdParty = true
+        }
+      }
+    })
+    $http.get('/api/ERP/appSettings/?app=25&name__iexact=changeOrderStatusManually').
+    then(function(response) {
+      console.log('ratingggggggggggggggggggg', response.data);
+      if (response.data[0] != null) {
+        if (response.data[0].flag) {
+          $scope.checkConditions.changeStatus = true
+        }
+      }
+    })
+    $http.get('/api/ERP/appSettings/?app=25&name__iexact=posPrinting').
+    then(function(response) {
+      console.log('ratingggggggggggggggggggg', response.data);
+      if (response.data[0] != null) {
+        if (response.data[0].flag) {
+          $scope.checkConditions.posPrinting = true
         }
       }
     })
@@ -385,28 +464,28 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     })(idx, sts))
   }
 
-  $scope.selectAll = {
-    toWatch:false
-  }
-  $scope.$watch('selectAll.toWatch',function (newValue, oldValue) {
-    if (newValue !=undefined && newValue!=null) {
-      if (newValue) {
-        for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
-          $scope.tab.data.order.orderQtyMap[i].selected = true;
-        }
-      }else {
-        for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
-          $scope.tab.data.order.orderQtyMap[i].selected = false;
-        }
-      }
-    }
-  })
+  // $scope.selectAll = {
+  //   toWatch:false
+  // }
+  // $scope.$watch('selectAll.toWatch',function (newValue, oldValue) {
+  //   if (newValue !=undefined && newValue!=null) {
+  //     if (newValue) {
+  //       for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
+  //         $scope.tab.data.order.orderQtyMap[i].selected = true;
+  //       }
+  //     }else {
+  //       for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
+  //         $scope.tab.data.order.orderQtyMap[i].selected = false;
+  //       }
+  //     }
+  //   }
+  // })
   $scope.changeStatusForAll = function(status){
     for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
       $scope.changeStatus(i,status)
     }
   }
-  $scope.generateManfestForAll = function () {
+  $scope.generateManifestForAll = function () {
     console.log($scope.order);
     if (!$scope.checkConditions.thirdParty) {
       console.log('self courierrrrrrrrr');
@@ -428,7 +507,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
             return function(response){
               $scope.order.orderQtyMap[i].courierName = response.data.courierName
               $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
-              console.log(response.data,$scope.item);
+              console.log(response.data);
               if (i == $scope.order.orderQtyMap.length-1) {
                 Flash.create('success', 'Saved');
               }
@@ -438,17 +517,17 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       }
     }else {
 
-      $scope.items = []
-      for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
-        console.log($scope.order.orderQtyMap[i].selected);
-        if ($scope.order.orderQtyMap[i].selected) {
-          $scope.items.push($scope.order.orderQtyMap[i])
-        }
-      }
-      if ($scope.items.length==0) {
-        Flash.create('warning', 'please select order')
-        return
-      }
+      // $scope.items = []
+      // for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
+      //   console.log($scope.order.orderQtyMap[i].selected);
+      //   if ($scope.order.orderQtyMap[i].selected) {
+      //     $scope.items.push($scope.order.orderQtyMap[i])
+      //   }
+      // }
+      // if ($scope.items.length==0) {
+      //   Flash.create('warning', 'please select order')
+      //   return
+      // }
 
       $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
       $http({
@@ -460,7 +539,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         $scope.courierForm.courierAWBNo = response.data.trackingID
 
         for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
-          if ($scope.order.orderQtyMap[i].selected) {
+          // if ($scope.order.orderQtyMap[i].selected) {
             if ($scope.courierForm.courierName.length==0||$scope.courierForm.courierAWBNo.length==0) {
               Flash.create('warning','All Fields Are Required')
               return
@@ -477,11 +556,13 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
               return function(response){
                 $scope.order.orderQtyMap[i].courierName = response.data.courierName
                 $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
-                console.log(response.data,$scope.item);
-                Flash.create('success', 'Saved');
+                console.log(response.data);
+                if (i == $scope.order.orderQtyMap.length-1) {
+                  Flash.create('success', 'Saved');
+                }
               }
             })(i))
-          }
+          // }
         }
 
         // for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
@@ -490,7 +571,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         //     $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
         //   }
         // }
-        $scope.selectAll.toWatch = false
+        // $scope.selectAll.toWatch = false
 
       })
     }

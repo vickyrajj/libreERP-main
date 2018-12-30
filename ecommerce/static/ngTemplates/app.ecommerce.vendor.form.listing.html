@@ -11,8 +11,8 @@
       <div class="row">
         <div class="col-md-12" style="padding:0px">
 
-          <label  ng-if=data.form.product.pk>Category</label>
-          <div  ng-if=data.form.product.pk>
+          <label  ng-if=data.form.pk>Category</label>
+          <div  ng-if=data.form.pk>
             <input uib-typeahead="c as c.name for c in genericProductSearch($viewValue)" class="form-control" type="text" ng-model = "data.genericProduct" placeholder="Search By Category Name">
           </div>
 

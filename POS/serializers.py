@@ -344,11 +344,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
                 # toSend.pop('invoicedate', None)
                 # toSend.pop('duedate', None)
                 # toSend.pop('receivedDate', None)
+                td = datetime.now()
+                barCVal = str(td.day)+str(td.month)+str(td.year)[2:]+str(inv.pk)
                 for tim in range(billTimes):
                     requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
                             json={
                               'topic': 'service.POS.Printer.{0}'.format(self.context['request'].data['connectedDevice']),
-                              'args': [{'data':toSend}]
+                              'args': [{'data':toSend,'barCVal':barCVal}]
                             }
                         )
             except:

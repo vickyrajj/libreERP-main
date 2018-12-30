@@ -293,11 +293,10 @@
               <span style="color: {{msg=='Success'?'green':'red'}};"> {{msg}}</span>
               <!-- <span  ng-if="promo=='notApplied'" style="color: red;" > This Promocode is invalid! </span> -->
             </div>
-
           </div>
 
-          <div class="row" style="margin-top:30px;padding:10px;">
-            <div class="col-md-6 col-xs-6">
+          <div class="row hidden-sm hidden-xs" style="margin-top:30px;padding:10px;">
+            <div class="col-md-6">
               <div class="row">
                 <span style="font-size:20px;">Total </span>
                 <br>
@@ -305,7 +304,24 @@
                 <span style="font-size:20px;"> {{totalAfterDiscount.toFixed(2)}} </span>
               </div>
             </div>
-            <div class="col-md-6 col-xs-6" >
+            <div class="col-md-6" >
+              <!-- {{item}} {{cartItems.length}} -->
+              <button ng-if="item || cartItems.length>0 " type="button" class="btn btn-success pull-right" ng-click="next()">
+                Next
+              </button>
+            </div>
+          </div>
+
+          <div class="row hidden-md hidden-lg" style="margin-top:30px;padding:10px;">
+            <div class="col-xs-6">
+              <div class="row">
+                <span style="font-size:14px;">Total </span>
+                <br>
+                <i class="fa {{currency}}"></i> <span ng-if="total!=totalAfterDiscount" style="font-size:14px;"> <strike> {{total.toFixed(2)}}  </strike> </span>
+                <span style="font-size:14px;"> {{totalAfterDiscount.toFixed(2)}} </span>
+              </div>
+            </div>
+            <div class="col-xs-6" >
               <!-- {{item}} {{cartItems.length}} -->
               <button ng-if="item || cartItems.length>0 " type="button" class="btn btn-success pull-right" ng-click="next()">
                 Next
@@ -775,7 +791,10 @@
               <button type="button" class="btn btn-default pull-left" ng-click="prev()">
                 Go back
               </button>
-              <button type="button" class="btn btn-success btn-lg pull-right" ng-click="data.modeOfPayment=='COD'? order(): pay()">
+              <button type="button" class="btn btn-success btn-lg pull-right hidden-sm hidden-xs" ng-click="data.modeOfPayment=='COD'? order(): pay()">
+                {{data.modeOfPayment=='COD'? 'Order': 'Pay'}}
+              </button>
+              <button type="button" class="btn btn-success pull-right hidden-lg hidden-md" ng-click="data.modeOfPayment=='COD'? order(): pay()">
                 {{data.modeOfPayment=='COD'? 'Order': 'Pay'}}
               </button>
             </div>
@@ -783,11 +802,14 @@
           <div ng-if="!getShippingCharges" class="text-center" style="padding-top:60px">
             <img src="static/images/lg.dual-ring-loader.gif" alt="">
           </div>
-          <div class="row" ng-if="getShippingCharges" style="margin-left:15px;">
-            <div class="row">
+          <div class="row" ng-if="getShippingCharges" style="margin-left:15px; ">
+            <div class="row" style="padding-top:20px;">
               <span style="font-size:20px;">Order Summary<span >
             </div>
-             <span style="font-size:15px; padding-left:35px;">  Shipping Details </span>: <span style="font-size:14px;">  {{username}} ,{{data.address.mobileNo}} {{data.address.landMark}} {{data.address.street}}, {{data.address.city}}, {{data.address.state}}, {{data.address.country}} - {{data.address.pincode}} </span>
+            <div style="margin:0px; padding:0px 0px 0px 35px">
+               <span style="font-size:15px;">  Shipping Details </span>: <span style="font-size:14px;">  {{username}} ,{{data.address.mobileNo}} {{data.address.landMark}} {{data.address.street}}, {{data.address.city}}, {{data.address.state}}, {{data.address.country}} - {{data.address.pincode}} </span>
+            </div>
+
           </div>
           <div class="row" ng-if="getShippingCharges">
             <div class="col-xs-12" style="margin-left:30px;">

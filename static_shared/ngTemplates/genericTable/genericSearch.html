@@ -1,13 +1,13 @@
 
 <nav>
-  <ul class="pagination pull-right">
+  <ul class="pagination pull-right" ng-if="itemsNumPerView.length>0">
     <li ng-repeat="num in itemsNumPerView" ng-class="{'active' : itemsNumPerView[$index] == itemsPerView}" ng-click="changeNumView(itemsNumPerView[$index])"><a href="">{{num}}</a></li>
     <li ng-if="searchShow" ng-click="fetchData()"><a href=""><i class="fa fa-refresh"></i></a></li>
   </ul>
-  <ul class="pagination pull-right" style="margin-right: 10px;">
+  <ul class="pagination pull-right" style="margin-right: 10px;" ng-if="multiselectOptions.length>0">
     <li ng-repeat = "option in multiselectOptions" ng-click = "multiSelectAction(option.text)"><a href="" style="color: #6f6f6f;"><i class = "{{option.icon}}">  {{option.text | humanize}}</i></a></li>
   </ul>
-  <ul class="pagination pull-right" style="margin-right: 10px;">
+  <ul class="pagination pull-right" style="margin-right: 10px;" ng-if="filters.length>0">
     <li  class="dropdown" ng-repeat="f in filters">
       <div class="btn-group">
         <button type="button" ng-if="f.orderable" class="btn btn-primary" ng-click="f.ascend = !f.ascend">{{f.ascend ? 'Ascending' : 'Descending'}}</button>
@@ -20,7 +20,7 @@
       </div>
     </li>
   </ul>
-  <ul class="pagination pull-right" style="margin-right: 10px;">
+  <ul class="pagination pull-right" style="margin-right: 10px;" ng-if="drills.length>0">
     <li class="dropdown" ng-repeat="d in drills">
         <button class="btn btn-{{d.btnClass}} dropdown-toggle" style="min-width:200px;" type="button" data-toggle="dropdown" ><i class="{{d.icon}}"></i> {{d.name | humanize}}
           <span class="caret"></span>
@@ -33,9 +33,9 @@
   <ul class="pagination pull-right" style="margin-right: 10px;" ng-if="canCreate">
     <li ng-click = "create()"><a href="" style="color: #6f6f6f;">New  <i class = "fa fa-plus"></i></a></li>
   </ul>
-  <ul class="pagination" id="genericTableSearch" style="margin-left: 40px;max-width:900px;">
+  <ul class="pagination hidden-xs hidden-sm" id="genericTableSearch" style="margin-left: 40px;max-width:900px;">
     <li>
-      <div class="input-group" style="width:100%;" >
+      <div class="input-group hidden-xs hidden-sm" style="width:100%;" >
         <input ng-show="{{searchShow}}" type="text" class="form-control" placeholder="Search by {{searchField}}" ng-model = "searchText" ng-enter="updateData()" style="wisth:100%;{{views.length==1 ? 'width:100%;' : ''}}">
         <div class="input-group-btn"  ng-if="views.length > 1">
           <a ng-repeat = "view in views" class='btn btn-default ' ng-click = "changeView($index)"><i class="fa {{view.icon}}"></i></a>
@@ -50,7 +50,7 @@
         </div>
       </div>
     </li>
-  </ul >
+  </ul>
   <ul class="pagination pull-left">
     <li ng-click="loadPrevSetPages()" class="{{pageList.indexOf(1) != -1 ? 'disabled' : ''}}">
       <a href="" aria-label="Previous">

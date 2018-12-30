@@ -453,7 +453,7 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
     trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc','orderBy')
 
     def create(self , validated_data):
         print '******************' , self.context['request'].data
@@ -613,3 +613,8 @@ class genericImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenericImage
         fields = ( 'pk' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage','topBanner','topMobileBanner')
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Countries
+        fields = ( 'pk' , 'uniqueId' ,'sortname' , 'name','phonecode','flag')
