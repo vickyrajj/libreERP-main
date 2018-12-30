@@ -58,8 +58,8 @@ class MakeEBSPayment(APIView):
                     'country' : 'IN',
                     'postal_code':order.pincode,
                     'phone': order.user.profile.mobile,
-                    'email': globalSettings.G_ADMIN[0],
-                    'cust_email': order.user.email
+                    'email': order.user.email,
+                    'cust_email': globalSettings.G_ADMIN[0]
                 }
         param_dict = data_dict
 
