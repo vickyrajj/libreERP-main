@@ -308,7 +308,6 @@ class CategorySortListAPI(APIView):
         return Response(gpList, status = status.HTTP_200_OK)
 
 
-
 class CreateOrderAPI(APIView):
     renderer_classes = (JSONRenderer,)
     # permission_classes = (permissions.IsAuthenticated ,)
@@ -2211,75 +2210,86 @@ def payuPaymentInitiate(request):
 
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
+
+def updateAndProcessOrder(orderID , amnt):
+    orderObj = Order.objects.get(paymentRefId = orderID)
+    orderObj.paidAmount = amnt
+    orderObj.approved = True
+    orderObj.paymentStatus = True
+    orderObj.save()
+    value = []
+    totalPrice = 0
+    promoAmount = 0
+    total=0
+    price = 0
+    grandTotal = 0
+    promoObj = Promocode.objects.all()
+    for p in promoObj:
+        if str(p.name)==str(orderObj.promoCode):
+            promoAmount = p.discount
+    print promoAmount
+    a = '#'
+    docID = str(a) + str(orderObj.pk)
+    for i in orderObj.orderQtyMap.all():
+        if i.prodSku == i.product.product.serialNo:
+            price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+            price=round(price, 2)
+            totalPrice=i.qty*price
+            totalPrice=round(totalPrice, 2)
+            total+=totalPrice
+            total=round(total, 2)
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+        else:
+            prodData = ProductVerient.objects.get(sku = i.prodSku)
+            price = prodData.discountedPrice
+            price=round(price, 2)
+            totalPrice=i.qty*price
+            totalPrice=round(totalPrice, 2)
+            total+=totalPrice
+            total=round(total, 2)
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+    grandTotal=total-(promoAmount * total)/100
+    grandTotal=round(grandTotal, 2)
+    request.user.cartItems.all().delete()
+    if orderObj.user.email:
+        ctx = {
+            'heading' : "Invoice Details",
+            'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+            'linkUrl': globalSettings.BRAND_NAME,
+            'sendersAddress' : globalSettings.SEO_TITLE,
+            # 'sendersPhone' : '122004',
+            'grandTotal':grandTotal,
+            'total': total,
+            'value':value,
+            'docID':docID,
+            'data':orderObj,
+            'promoAmount':promoAmount,
+            'linkedinUrl' : lkLink,
+            'fbUrl' : fbLink,
+            'twitterUrl' : twtLink,
+        }
+        print ctx
+        contactData = []
+        email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+        contactData.append(str(orderObj.user.email))
+        msg = EmailMessage("Order Details" , email_body, to= contactData  )
+        msg.content_subtype = 'html'
+        msg.send()
+    return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
+
+
 @csrf_exempt
 def payUPaymentResponse(request):
-
     if request.method == 'POST' and request.POST['status'] == 'success':
-        orderObj = Order.objects.get(paymentRefId = request.POST['txnid'] )
-        orderObj.approved = True
-        orderObj.paymentStatus = True
-        orderObj.paidAmount = request.POST['amount']
-        orderObj.save()
-        value = []
-        totalPrice = 0
-        promoAmount = 0
-        total=0
-        price = 0
-        grandTotal = 0
-        promoObj = Promocode.objects.all()
-        for p in promoObj:
-            if str(p.name)==str(orderObj.promoCode):
-                promoAmount = p.discount
-        print promoAmount
-        a = '#'
-        docID = str(a) + str(orderObj.pk)
-        for i in orderObj.orderQtyMap.all():
-            if i.prodSku == i.product.product.serialNo:
-                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
-                price=round(price, 2)
-                totalPrice=i.qty*price
-                totalPrice=round(totalPrice, 2)
-                total+=totalPrice
-                total=round(total, 2)
-                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
-            else:
-                prodData = ProductVerient.objects.get(sku = i.prodSku)
-                price = prodData.discountedPrice
-                price=round(price, 2)
-                totalPrice=i.qty*price
-                totalPrice=round(totalPrice, 2)
-                total+=totalPrice
-                total=round(total, 2)
-                value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
-        grandTotal=total-(promoAmount * total)/100
-        grandTotal=round(grandTotal, 2)
-        request.user.cartItems.all().delete()
-        if orderObj.user.email:
-            ctx = {
-                'heading' : "Invoice Details",
-                'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
-                'linkUrl': globalSettings.BRAND_NAME,
-                'sendersAddress' : globalSettings.SEO_TITLE,
-                # 'sendersPhone' : '122004',
-                'grandTotal':grandTotal,
-                'total': total,
-                'value':value,
-                'docID':docID,
-                'data':orderObj,
-                'promoAmount':promoAmount,
-                'linkedinUrl' : lkLink,
-                'fbUrl' : fbLink,
-                'twitterUrl' : twtLink,
-            }
-            print ctx
-            contactData = []
-            email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-            contactData.append(str(orderObj.user.email))
-            msg = EmailMessage("Order Details" , email_body, to= contactData  )
-            msg.content_subtype = 'html'
-            msg.send()
-        return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
+        updateAndProcessOrder(request.POST['txnid'] ,  request.POST['amount'])
+    else:
+        return redirect("/checkout/cart?action=retry")
 
+@csrf_exempt
+def ebsPaymentResponse(request):
+    if request.method == 'POST' and request.POST['ResponseMessage'] == 'Transaction+Successful':
+        #ResponseCode=0&ResponseMessage=Transaction+Successful&DateCreated=2018-12-30+12%3A03%3A28&PaymentID=118878521&MerchantRefNo=40&Amount=2.00&Mode=LIVE&BillingName=Admin&BillingAddress=ABC+%2C+kudlu&BillingCity=Bengaluru&BillingState=Karnataka&BillingPostalCode=560068&BillingCountry=IND&BillingPhone=9702438730&BillingEmail=pkyisky%40gmail.com&DeliveryName=&DeliveryAddress=&DeliveryCity=&DeliveryState=&DeliveryPostalCode=&DeliveryCountry=&DeliveryPhone=&Description=test+&IsFlagged=NO&TransactionID=355107915&PaymentMethod=1161&RequestID=84015197&SecureHash=1F417B260A360D23DE7B7F3C9E054296
+        updateAndProcessOrder(request.POST['MerchantRefNo'] , request.POST['Amount'])
     else:
         return redirect("/checkout/cart?action=retry")
 

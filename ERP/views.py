@@ -41,25 +41,25 @@ class MakeEBSPayment(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
     def get(self , request , format = None):
         MERCHANT_KEY = globalSettings.PAYTM_MERCHANT_KEY
-        order_id = request.GET['orderid']
+        order = Order.objects.get(pk = request.GET['orderid'])
         data_dict = {
                     'channel':'0',
                     'account_id':'19591',
                     'reference_no': order_id,
-                    'amount': Order.objects.get(pk = order_id).totalAmount,
+                    'amount': order.totalAmount,
                     'mode':'TEST',
                     'currency': 'INR',
-                    'description':'test ',
-                    'return_url': 'http://localhost:8000/ebsPaymanetResponse/',
+                    'description':'BNI India products ',
+                    'return_url': globalSettings.SITE_ADDRESS + '/ebsPaymanetResponse/',
                     'name': request.user.first_name,
-                    'address':'ABC , kudlu',
-                    'city':'Bengaluru',
-                    'state':'Karnataka',
-                    'country' : 'IND',
-                    'postal_code':'560068',
-                    'phone':'9702438730',
-                    'email':'pkyisky@gmail.com',
-                    'cust_email':'pkyisky@gmail.com'
+                    'address': order.street,
+                    'city':order.city,
+                    'state':order.state,
+                    'country' : order.country,
+                    'postal_code':order.pincode,
+                    'phone': order.user.profile.mobile,
+                    'email': globalSettings.G_ADMIN[0],
+                    'cust_email': order.user.email
                 }
         param_dict = data_dict
 
