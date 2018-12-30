@@ -138,12 +138,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
                     # u.is_active = True
                     u.save()
+
                     if 'email' in d:
                         sendMail(d)
                     print u.profile.pk ,'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG'
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
                         pobj.details = d
+                        pobj.mobile = instance.mobile
                     except:
                         pass
                     pobj.save()
@@ -232,6 +234,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                     pobj = profile.objects.get(pk=u.profile.pk)
                     try:
                         pobj.details = d
+                        pobj.mobile = instance.mobile
                     except:
                         pass
                     pobj.save()
