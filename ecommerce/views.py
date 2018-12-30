@@ -2410,7 +2410,7 @@ def updateAndProcessOrder(orderID , amnt):
 @csrf_exempt
 def payUPaymentResponse(request):
     if request.method == 'POST' and request.POST['status'] == 'success':
-        updateAndProcessOrder(request.POST['txnid'] ,  request.POST['amount'])
+        return updateAndProcessOrder(request.POST['txnid'] ,  request.POST['amount'])
     else:
         return redirect("/checkout/cart?action=retry")
 
@@ -2418,7 +2418,7 @@ def payUPaymentResponse(request):
 def ebsPaymentResponse(request):
     if request.method == 'POST' and 'Successful' in request.POST['ResponseMessage']:
         #ResponseCode=0&ResponseMessage=Transaction+Successful&DateCreated=2018-12-30+12%3A03%3A28&PaymentID=118878521&MerchantRefNo=40&Amount=2.00&Mode=LIVE&BillingName=Admin&BillingAddress=ABC+%2C+kudlu&BillingCity=Bengaluru&BillingState=Karnataka&BillingPostalCode=560068&BillingCountry=IND&BillingPhone=9702438730&BillingEmail=pkyisky%40gmail.com&DeliveryName=&DeliveryAddress=&DeliveryCity=&DeliveryState=&DeliveryPostalCode=&DeliveryCountry=&DeliveryPhone=&Description=test+&IsFlagged=NO&TransactionID=355107915&PaymentMethod=1161&RequestID=84015197&SecureHash=1F417B260A360D23DE7B7F3C9E054296
-        updateAndProcessOrder(request.POST['MerchantRefNo'] , request.POST['Amount'])
+        return updateAndProcessOrder(request.POST['MerchantRefNo'] , request.POST['Amount'])
     else:
         return redirect("/checkout/cart?action=retry")
 
