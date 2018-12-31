@@ -1364,7 +1364,7 @@ class GetMaterialAPIView(APIView):
                     totalVal+=total
                     lisData.append(m)
                 tot=totalVal
-            toReturn.append({'projectPk':i['project__pk'],'productTittle':i['project__title'],'projectPk':i['project__comm_nr'],'data':lisData,'totalprice':tot})
+            toReturn.append({'projectPk':i['project__pk'],'productTittle':i['project__title'],'projectComm':i['project__comm_nr'],'data':lisData,'totalprice':tot})
 
         if 'offset' in request.GET:
             offset = int(request.GET['offset'])
