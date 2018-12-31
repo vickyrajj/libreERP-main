@@ -3597,6 +3597,9 @@ figure {
   right: 0;
   z-index: -1;
 }
+.topmargin{
+  margin-top:10em;
+}
 
 .custom-btn {
   border-top-left-radius: 2em;
@@ -3643,12 +3646,14 @@ figure {
 .cards {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
-  width: 100%;
+  width: 90%;
   border-radius: 5px;
+  min-height:41vh;
 }
 
 .cards:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  cursor:pointer;
 }
 
 .img-radius {
@@ -3657,6 +3662,7 @@ figure {
 
 .body {
   padding: 2px 16px;
+  margin-bottom: 3em;
 }
 
 .table-align td {
@@ -3681,6 +3687,7 @@ figure {
   background-size: cover;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   border-radius: 25px;
+  cursor:pointer;
 }
 
 .courses ul li {
@@ -3724,14 +3731,96 @@ figure {
 .hover-circle:hover .overlay {
   opacity: 1;
 }
-
-.btn-style1 {
-  border-top-left-radius: 2em;
-  padding: 12px 18px;
-  text-align: center;
-  margin-bottom: 2em;
+.btn-style1{
   margin-top: 2em;
-  background-image: linear-gradient(90deg, #0AE1AB, #3DBECB, #6087EA);
+  margin-bottom: 1em;
+  /* display: block; */
+  -webkit-appearance: none;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-radius: 7px;
+  border-top-left-radius: 25px;
+  padding: 1em 2em;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-clip: padding-box;
+  position: relative;
+  color: #FFF;
+  background-image: linear-gradient(90deg, #02EBA3, #6A7EF1, #873be7);
+  font-size: 14px;
+  font-weight: bolder;
+  font-family: sans-serif;
+  transition: all .200s ease-in-out;
+  moz-transition: all .4s ease-in-out;
+  -webkit-transition: all .9s ease-in-out;
+}
+.btn-style1:hover {
+  background-image: linear-gradient(to right, #873be7, #6A7EF1, #02EBA3);
+  transition: all .200s ease-in-out;
+  background-position: 100% 0;
+  moz-transition: all .4s ease-in-out;
+  -webkit-transition: all .9s ease-in-out;
+}
+.owl-item.active.center  {
+  transform: scale(1.1);
 }
 
 /* ------------------ */
+@media only screen and (max-width:768px) {
+  .cards {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    text-align: center;
+    margin-left:15px;
+    width:90%;
+    border-radius: 5px;
+    min-height:41vh;
+  }
+  .likecard {
+    background-color: #FAFAFA;
+    min-height: 10vh;
+    width: 93%;
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+  }
+  .top {
+    position: relative;
+    min-height: 80vh;
+  }
+
+  .top h1 {
+    color: #fff;
+    padding-top: 2em;
+    font-weight: bold;
+    line-height: 30px;
+    font-size: 25px;
+  }
+
+  .top h1::after {
+    width: 3em;
+    height: 1em;
+    content: '';
+    bottom: 0px;
+    position: absolute;
+    display: block;
+    border-bottom: 2px solid #00EDA3;
+
+  }
+  .top h2{
+    font-size: 20px;
+  }
+  .topmargin{
+    margin-top:6em;
+    text-align: left;
+  }
+  .dropdown , .leftalign{
+    text-align: left;
+  }
+  .top::before{
+    height:80vh;
+  }
+  .dropdown-menu {
+    left: 0;
+
+  }
+
+}

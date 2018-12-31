@@ -183,6 +183,55 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
       document.getElementById('drop' + $scope.list[i]).classList.remove("filter");
     }
   });
+  $scope.properties = {
+    lazyLoad: true,
+    dots: true,
+    URLhashListener: true,
+    autoplayHoverPause: true,
+    startPosition: 'URLHash',
+    center: true,
+    loop: true,
+    // margin:10,
+    responsive: {
+      0: {
+        items: 1,
+
+      },
+      768: {
+        items: 1,
+
+      },
+      1000: {
+        items: 3,
+
+      }
+    }
+  };
+  $scope.cardss = [{
+      img1: '/static/images/24tut/img1.jpeg',
+      title: 'Kids Complementary Maths',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
+      img2: '/static/images/24tut/author1.png',
+      name: 'Penny Tailor',
+      price: '15.00 ',
+    },
+    {
+      img1: '/static/images/24tut/img1.jpeg',
+      title: 'Language Learning Crash Course ',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
+      img2: '/static/images/24tut/author1.png',
+      name: 'Penny Tailor',
+      price: '15.00 ',
+    },
+    {
+      img1: '/static/images/24tut/img1.jpeg',
+      title: 'General Logical Analysis',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
+      img2: '/static/images/24tut/author1.png',
+      name: 'Penny Tailor',
+      price: '15.00 ',
+    },
+  ]
 })
 
 
