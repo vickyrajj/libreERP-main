@@ -223,7 +223,16 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         $scope.currency =response.data[0].value
       }
     })
-    $scope.checkConditions = {splitOrder:false,thirdParty:false,changeStatus:false,posPrinting:false}
+    $scope.checkConditions = {splitOrder:false,thirdParty:false,changeStatus:false,posPrinting:false,showGst:true}
+    $http.get('/api/ERP/appSettings/?app=25&name__iexact=isStoreGlobal').
+    then(function(response) {
+      console.log('ratingggggggggggggggggggg', response.data);
+      if (response.data[0] != null) {
+        if (response.data[0].flag) {
+          $scope.checkConditions.showGst = false
+        }
+      }
+    })
     $http.get('/api/ERP/appSettings/?app=25&name__iexact=splitOrderManagement').
     then(function(response) {
       console.log('ratingggggggggggggggggggg', response.data);

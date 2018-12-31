@@ -233,6 +233,8 @@ class OrderQtyMap(models.Model):
     prodSku = models.CharField(max_length = 50, null = True, blank = True)
     desc = models.CharField(max_length = 50, null = True, blank = True)
     orderBy =  models.ForeignKey(User, null = True , related_name = 'orderedUser')
+    gstAmount = models.PositiveIntegerField( default = 0)
+    paidAmount = models.PositiveIntegerField( default = 0)
 
 
 class Order(models.Model):
@@ -264,6 +266,7 @@ class Order(models.Model):
     billingCountry = models.CharField(max_length = 50 , null = True , blank = True)
     mobileNo = models.CharField(max_length=15 ,null = True , blank = True)
     shippingCharges =  models.IntegerField(default = 0)
+    totalGst = models.PositiveIntegerField( default = 0)
 
 
 class Promocode(models.Model):

@@ -336,35 +336,59 @@ class CreateOrderAPI(APIView):
         if type(request.data['products']) == unicode:
             prod = ast.literal_eval(request.data['products'])
         print 'ssssssssssssssss',prod,type(prod)
+        orderGst = 0
+        pdAmount = 0
         for i in prod:
-            # if type(i['pk']) == 'string':
-            #     int(i['pk'])
-            print i,'77777777777777',request.data['promoCodeDiscount'],type(request.data['promoCodeDiscount'])
-            print i['prodSku'], 'prodSku'
             pObj = listing.objects.get(pk = i['pk'])
+            qtyGst = 0
+            taxAmount = 0
+            addGst = True
+            globalStoreObj = appSettingsField.objects.filter(name='isStoreGlobal')
+            if len(globalStoreObj)>0:
+                if globalStoreObj[0].flag:
+                    addGst = False
+
+
+
             if pObj.product.serialNo == i['prodSku']:
                 pp = pObj.product.price
+                if pObj.product.productMeta:
+                    ptaxRate = pObj.product.productMeta.taxRate
+                    taxAmount = int(round((pp * ptaxRate)/100))
                 if pp > 0:
                     a = pp - (pObj.product.discount*pp)/100
                     print a ,type(a)
                     b = a - (int(request.data['promoCodeDiscount'])*a)/100
+                    finalTaxAmount = taxAmount - (int(request.data['promoCodeDiscount'])*taxAmount)/100
                 else:
                     b=0
+                    finalTaxAmount = 0
             else:
                 prodVar = ProductVerient.objects.get(sku = i['prodSku'])
                 pp = prodVar.discountedPrice
+                if prodVar.parent.productMeta:
+                    ptaxRate = prodVar.parent.productMeta.taxRate
+                    taxAmount = int(round((pp * ptaxRate)/100))
                 if pp > 0:
-                    # a = pp - (pObj.product.discount*pp)/100
-                    # print a ,type(a)
                     b = pp - (int(request.data['promoCodeDiscount'])*pp)/100
+                    finalTaxAmount = taxAmount - (int(request.data['promoCodeDiscount'])*taxAmount)/100
                 else:
                     b=0
+                    finalTaxAmount = 0
 
-            totalAmount += b * i['qty']
-            print pObj , '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
-            # print totalAmount , 'totalAmounttotalAmounttotalAmounttotalAmount'
-            # print {'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp))*i['qty'],'discountAmount':int(round(pp-b))*i['qty']}
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(pp)),'discountAmount':int(round(pp-b)),'prodSku':i['prodSku'],'desc':i['desc']})
+            pDiscAmount = int(round(pp-b))
+            if addGst:
+                pDiscAmount += int(round(taxAmount-finalTaxAmount))
+                b += finalTaxAmount
+
+            pDiscAmount = pDiscAmount * i['qty']
+            qtyGst = finalTaxAmount * i['qty']
+            orderGst += qtyGst
+
+            qtyTotal = b * i['qty']
+            totalAmount += qtyTotal
+
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(qtyTotal)),'discountAmount':pDiscAmount,'prodSku':i['prodSku'],'desc':i['desc'],'gstAmount':qtyGst})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:
@@ -415,7 +439,7 @@ class CreateOrderAPI(APIView):
             'totalAmount' : round(totalAmount,2),
             'paymentMode' : str(request.data['modeOfPayment']),
             'modeOfShopping' : str(request.data['modeOfShopping']),
-            'paidAmount' : str(request.data['paidAmount']),
+            'totalGst' : orderGst,
             'landMark' : str(request.data['address']['landMark']),
             'street' : str(request.data['address']['street']),
             'city' : str(request.data['address']['city']),
@@ -434,7 +458,9 @@ class CreateOrderAPI(APIView):
                 data['promoCode'] = str(request.data['promoCode'])
             print data
             if 'shippingCharges' in request.data:
+                print 'thereeeeeeeee',data['totalAmount'],request.data['shippingCharges']
                 data['shippingCharges'] = request.data['shippingCharges']
+                data['totalAmount'] += request.data['shippingCharges']
             orderObj = Order.objects.create(**data)
             for i in oQMp:
                 orderObj.orderQtyMap.add(i)
@@ -2362,6 +2388,8 @@ def payUPaymentResponse(request):
         a = '#'
         docID = str(a) + str(orderObj.pk)
         for i in orderObj.orderQtyMap.all():
+            i.paidAmount = i.totalAmount
+            i.save()
             if i.prodSku == i.product.product.serialNo:
                 price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
                 price=round(price, 2)

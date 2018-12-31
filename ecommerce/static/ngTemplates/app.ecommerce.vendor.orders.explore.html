@@ -9,8 +9,9 @@
       </div>
       <div class="row" style="margin-top:20px;font-size:18px;padding:5px 15px">
         <span><strong>Shoping : </strong>{{order.modeOfShopping}} <br></span>
+        <span><strong>Shippinp Charges : </strong><i class="fa {{currency}}"></i> {{order.shippingCharges}} <br></span>
         <span><strong>Payment Mode : </strong>{{order.paymentMode}} <br></span>
-        <span><strong>Paid Amount : </strong>{{order.paidAmount}} <br></span>
+        <span><strong>Paid Amount : </strong><i class="fa {{currency}}"></i> {{order.paidAmount}} <br></span>
         <span><strong>Payment Status : </strong>{{order.paymentStatus}} <br></span>
         <span><strong>Payment RefId : </strong>{{order.paymentRefId}} <br></span>
         <span><strong>Payment Channel : </strong>{{order.paymentChannel}} <br></span>
@@ -197,20 +198,26 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-2">
-                <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.productPrice}}</span>
+              <div class="col-md-4" >
+                <div class="col-md-8" style="padding:0px" ng-if="checkConditions.showGst&&pData.product.product_taxAmount>0">
+                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.productPrice}} ( <b>+</b> {{pData.product.product_taxAmount}} )</span>
+                </div>
+                <div class="col-md-8" style="padding:0px" ng-if="!checkConditions.showGst||pData.product.product_taxAmount==0">
+                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.productPrice}}</span>
+                </div>
+                <div class="col-md-4" style="padding:0px">
+                  <span style="font-size:15px;">Quantity : {{pData.qty}}</span>
+                </div>
               </div>
+
               <div class="col-md-2">
-                <span style="font-size:15px;">Quantity : {{pData.qty}}</span>
+                <span style="font-size:15px;">Discount : <i class="fa {{currency}}"></i> {{pData.discountAmount}} </span>
               </div>
               <div class="col-md-3">
-                <span style="font-size:15px;">Total Price : <i class="fa {{currency}}"></i> {{pData.totalAmount * pData.qty}}</span>
-              </div>
-              <div class="col-md-2">
-                <span style="font-size:15px;">Discount : <i class="fa {{currency}}"></i> {{pData.discountAmount * pData.qty}} </span>
+                <span style="font-size:15px;">Total Price : <i class="fa {{currency}}"></i> {{pData.totalAmount}}</span>
               </div>
               <div class="col-md-3">
-                <span style="font-size:15px;">Paid Amount : <i class="fa {{currency}}"></i> {{(pData.totalAmount - pData.discountAmount) * pData.qty}} </span>
+                <span style="font-size:15px;">Paid Amount : <i class="fa {{currency}}"></i> {{pData.paidAmount}} </span>
               </div>
             </div>
             <hr>
