@@ -260,7 +260,7 @@
 }
 
 .detailLeft {
-  background: url('/static/images/stories-bg.jpg');
+  background: url('/static/images/24tut/stories-bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -311,7 +311,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 100px;
-  background-image: linear-gradient(rgba(11, 29, 92, 0.82), rgba(18, 24, 97, 0.6)), url('/static/images/left.jpg');
+  background-image: linear-gradient(rgba(11, 29, 92, 0.82), rgba(18, 24, 97, 0.6)), url('/static/images/24tut/left.jpg');
   color: #fff;
   padding: 10px;
 }
@@ -363,7 +363,7 @@
 
 .laptop_bg {
   margin: 0px;
-  background-image: url('/static/images/lapmob.jpg');
+  background-image: url('/static/images/24tut/lapmob.jpg');
   min-height: 600px;
 }
 
@@ -384,7 +384,7 @@
 .demo_row {
   margin: 0px;
   padding: 10px;
-  background: url('/static/images/andro.jpg');
+  background: url('/static/images/24tut/andro.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 500px;
@@ -398,7 +398,7 @@
 }
 
 .bgrnd {
-  background-image: linear-gradient(to right, rgba(5, 20, 43, 0.85), rgba(5, 20, 43, 0.14)), url('/static/images/hero1.png');
+  background-image: linear-gradient(to right, rgba(5, 20, 43, 0.85), rgba(5, 20, 43, 0.14)), url('/static/images/24tut/hero1.png');
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 500px;
@@ -430,7 +430,7 @@
 
 .impliment_header {
   margin: 0px;
-  background-image: url('/static/images/blue_waves.jpg');
+  background-image: url('/static/images/24tut/blue_waves.jpg');
   color: #fff;
   background-repeat: no-repeat;
   background-size: cover;
@@ -438,7 +438,7 @@
 }
 
 .connect_bg {
-  background-image: url('/static/images/connect-2018.png');
+  background-image: url('/static/images/24tut/connect-2018.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-color: #1a1a1f;
@@ -480,11 +480,11 @@
   cursor: pointer;
   width: 105px;
   height: 105px;
-  background: url("/static/images/red.svg") no-repeat center center;
+  background: url("/static/images/24tut/red.svg") no-repeat center center;
 }
 
 .arrow_btn:hover {
-  background: url('/static/images/white.svg') no-repeat center center;
+  background: url('/static/images/24tut/white.svg') no-repeat center center;
   width: 105px;
   height: 105px;
 }
@@ -644,7 +644,7 @@
 }
 
 .bg_secondary {
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.85)), url('/static/images/building_hero.jpg');
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.85)), url('/static/images/24tut/building_hero.jpg');
   background-repeat: no-repeat;
   float: left;
   display: block;
@@ -786,7 +786,7 @@
 }
 
 .hero_right {
-  background-image: url('/static/images/robots.jpg');
+  background-image: url('/static/images/24tut/robots.jpg');
   background-size: cover;
   width: 50%;
   height: 50vh;
@@ -883,7 +883,7 @@
   float: left;
   width: 22vw;
   position: absolute;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.9)), url('/static/images/neurons.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.9)), url('/static/images/24tut/neurons.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   left: 39.6%;
@@ -3451,7 +3451,11 @@ figure {
 .cent:hover .pro_hov {
   display: block;
 }
-
+.pro_over_img{
+  position: absolute;
+  top: 28%;
+  left: 29%;
+}
 
 /* ------------ */
 .top {
@@ -3486,7 +3490,7 @@ figure {
   position: absolute;
   width: 100%;
   height: 60vh;
-  background-image: url('/static/images/studentimg.jpg');
+  background-image: url('/static/images/24tut/studentimg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   filter: brightness(0.20);
@@ -3576,7 +3580,7 @@ figure {
 }
 
 .hoverimg:hover {
-  background-image: url('/static/images/6.png');
+  background-image: url('/static/images/24tut/6.png');
   background-repeat: no-repeat;
   background-size: cover;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
@@ -3617,7 +3621,7 @@ figure {
   width: 100%;
   opacity: 0;
   transition: .5s ease;
-  background-image: url('/static/images/profile_overlay.png ');
+  background-image: url('/static/images/24tut/profile_overlay.png ');
 }
 
 .hover-circle:hover .overlay {

@@ -141,9 +141,13 @@ app.controller('controller.home', function($scope, $state, $http, $timeout, $int
       d(val, 1, 0, 3)
     } else {
       d(val, 1, 0, 2)
-    }
 
+    }
+    // $scope.clasname = document.getElementsByClassName('collapse');
   }
+
+
+
 
 
 
@@ -161,9 +165,6 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
       $scope.list.splice(val - 1, 1)
       for (var i = 0; i < $scope.list.length; i++) {
         document.getElementById('drop' + $scope.list[i]).classList.add("filter");
-
-
-
 
       }
     }
