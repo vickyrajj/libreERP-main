@@ -1,13 +1,13 @@
 
 <nav>
-  <ul class="pagination pull-right" ng-if="itemsNumPerView.length>0">
+  <ul class="pagination pull-right">
     <li ng-repeat="num in itemsNumPerView" ng-class="{'active' : itemsNumPerView[$index] == itemsPerView}" ng-click="changeNumView(itemsNumPerView[$index])"><a href="">{{num}}</a></li>
     <li ng-if="searchShow" ng-click="fetchData()"><a href=""><i class="fa fa-refresh"></i></a></li>
   </ul>
-  <ul class="pagination pull-right" style="margin-right: 10px;" ng-if="multiselectOptions.length>0">
+  <ul class="pagination pull-right" style="margin-right: 10px;" >
     <li ng-repeat = "option in multiselectOptions" ng-click = "multiSelectAction(option.text)"><a href="" style="color: #6f6f6f;"><i class = "{{option.icon}}">  {{option.text | humanize}}</i></a></li>
   </ul>
-  <ul class="pagination pull-right" style="margin-right: 10px;" ng-if="filters.length>0">
+  <ul class="pagination pull-right" style="margin-right: 10px;">
     <li  class="dropdown" ng-repeat="f in filters">
       <div class="btn-group">
         <button type="button" ng-if="f.orderable" class="btn btn-primary" ng-click="f.ascend = !f.ascend">{{f.ascend ? 'Ascending' : 'Descending'}}</button>
@@ -20,7 +20,7 @@
       </div>
     </li>
   </ul>
-  <ul class="pagination pull-right" style="margin-right: 10px;" ng-if="drills.length>0">
+  <ul class="pagination pull-right" style="margin-right: 10px;">
     <li class="dropdown" ng-repeat="d in drills">
         <button class="btn btn-{{d.btnClass}} dropdown-toggle" style="min-width:200px;" type="button" data-toggle="dropdown" ><i class="{{d.icon}}"></i> {{d.name | humanize}}
           <span class="caret"></span>

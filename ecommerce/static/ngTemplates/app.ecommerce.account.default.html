@@ -1,9 +1,74 @@
+<div class="row" ng-controller="controller.ecommerce.account.default">
+  <div class="col-md-7 col-xs-12">
+    <div ng-if="editMode">
+      <div class="form-group">
+        <div class="col-xs-6" style="padding:0 5px 0 0">
+          <label for="" style="margin:0px"><strong>First Name</strong></label>
+          <input ng-model="detailsForm.firstName" type="text" class="form-control" id="" placeholder="">
+        </div>
+        <div class="col-xs-6" style="padding:0 0 0 5px">
+          <label for="" style="margin:0px"><strong>Last Name</strong></label>
+          <input ng-model="detailsForm.lastName" type="text" class="form-control" id="" placeholder="">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="" style="margin:0px"><strong>Email Id</strong></label>
+        <input ng-model="detailsForm.email" type="text" class="form-control" id="" placeholder="">
+      </div>
+      <div class="form-group">
+        <label for="" style="margin:0px"><strong>Phone No.</strong></label>
+        <input ng-model="detailsForm.mobile" type="text" class="form-control" id="" placeholder="">
+      </div>
+      <div class="form-group">
+        <label for="" style="margin:0px"><strong>GST</strong></label>
+        <input ng-model="detailsForm.gst" type="text" class="form-control" id="" placeholder="">
+      </div>
+      <div class="form-group">
+        <button type="button" class="btn btn-primary" ng-click="save()">
+            Save
+          </button>
+      </div>
+    </div>
+    <div ng-if="!editMode">
+      <div class="form-group">
+        <div class="col-xs-6" style="padding:0 5px 0 0">
+          <label for="" style="margin:0px"><strong>First Name</strong></label>
+          <p style="font-size:16px">{{detailsForm.firstName}}</p>
+        </div>
+        <div class="col-xs-6" style="padding:0 0 0 5px">
+          <label for="" style="margin:0px"><strong>Last Name</strong></label>
+          <p style="font-size:16px">{{detailsForm.lastName}}</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="" style="margin:0px"><strong>Email Id</strong></label>
+        <p style="font-size:16px">{{detailsForm.email}}</p>
+      </div>
+      <div class="form-group">
+        <label for="" style="margin:0px"><strong>Phone No.</strong></label>
+        <p>{{detailsForm.mobile}}</p>
+      </div>
+      <div class="form-group">
+        <label for="" style="margin:0px"><strong>GST</strong></label>
+        <p style="font-size:16px">{{detailsForm.gst}}</p>
+      </div>
+      <div class="form-group">
+        <button type="button" class="btn btn-primary" ng-click="edit()">
+            Edit
+          </button>
+      </div>
+    </div>
+  </div>
 
-<p style="text-align:center;padding-top:200px;">
+</div>
+
+
+</div>
+<p style="text-align:center;">
   <div class="row">
     <div class="col-md-4">
       <h1 style="text-align:center;"> {{inCart.length}}</h1>
-        <h2 style="text-align:center;"> In Cart</h2>
+      <h2 style="text-align:center;"> In Cart</h2>
     </div>
     <div class="col-md-4">
       <h1 style="text-align:center;">{{inFavourite.length}} </h1>

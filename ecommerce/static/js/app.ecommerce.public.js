@@ -235,6 +235,10 @@ app.config(function($stateProvider) {
 
 });
 
+
+
+
+
 app.controller('controller.ecommerce.blog', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash, $window) {
   // console.log('bloggggggggggggggggggggggggggggggggggg', BRAND_TITLE);
   $window.scrollTo(0, 0)
@@ -1781,8 +1785,62 @@ app.controller('controller.ecommerce.categories', function($scope, $rootScope, $
 
 
 
-app.controller('controller.ecommerce.account', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash) {
+app.controller('controller.ecommerce.account.default', function($scope, $rootScope, $state, $http, $timeout, $uibModal, $users, Flash) {
   // for the dashboard of the account tab
+  // alert('hello')
+  $http({
+    methof:'GET',
+    url:'/api/ecommerce/userProfileSetting/?user='+$scope.me.pk
+  }).then(function (response) {
+    console.log(response.data);
+
+    $scope.detailsForm = {
+      firstName:response.data.firstName,
+      lastName:response.data.lastName,
+      email:response.data.email,
+      mobile:response.data.mobile,
+      gst:response.data.gst
+    }
+
+  })
+  $scope.editMode = false
+
+  $scope.edit = function () {
+    $scope.editMode = true
+  }
+
+  $scope.save = function () {
+
+    $scope.detailsForm.user = $scope.me.pk
+
+    $http({
+      method:'POST',
+      url:'/api/ecommerce/userProfileSetting/',
+      data:$scope.detailsForm
+    }).then(function (response) {
+      $scope.detailsForm = {
+        firstName:response.data.firstName,
+        lastName:response.data.lastName,
+        email:response.data.email,
+        mobile:response.data.mobile,
+        gst:response.data.gst
+      }
+      $scope.editMode = false
+    })
+    // $http({
+    //   method:'PATCH',
+    //   url:''
+    //   data:{}
+    // }).then(function (response) {
+    //   console.log(response);
+    // })
+  }
+
+  console.log($scope.me);
+
+
+
+
 });
 
 
@@ -2043,6 +2101,8 @@ app.controller('controller.ecommerce.account.orders.item', function($scope, $roo
 
     })
   }
+
+  $scope.isStoreGlobal = settings_isStoreGlobal;
 
   $scope.currency = settings_currencySymbol;
 
@@ -3084,8 +3144,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           price = $scope.cartItems[i].prodVarPrice
           discountedPrice = $scope.cartItems[i].prod_var.discountedPrice
         }
-        $scope.total = $scope.total + (price * $scope.cartItems[i].qty)
-        $scope.totalAfterDiscount = $scope.totalAfterDiscount + (discountedPrice * $scope.cartItems[i].qty)
+        $scope.gstTotal =  ($scope.cartItems[i].gst * discountedPrice )/100 * $scope.cartItems[i].qty
+        $scope.total = $scope.total + (price * $scope.cartItems[i].qty) + ($scope.cartItems[i].gst * price )/100 * $scope.cartItems[i].qty
+        $scope.totalAfterDiscount = $scope.totalAfterDiscount + (discountedPrice * $scope.cartItems[i].qty) + ($scope.cartItems[i].gst * discountedPrice )/100 * $scope.cartItems[i].qty
       }
     } else {
       $scope.total = $scope.item.product.price * $scope.item.qty
