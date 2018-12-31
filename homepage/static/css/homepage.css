@@ -3455,6 +3455,13 @@ figure {
   position: absolute;
   top: 28%;
   left: 29%;
+  display: none;
+}
+.cent:hover .pro_img{
+  display:none;
+}
+.cent:hover .pro_over_img{
+  display:block;
 }
 
 /* ------------ */
