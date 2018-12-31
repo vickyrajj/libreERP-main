@@ -1259,7 +1259,7 @@ app.directive('chatBox', function() {
           console.log(response.data.allAgents, '@@@@@@@@@@@@@@@@@@@@@');
           $scope.allAgents = response.data.allAgents
           for (var i = 0; i < $scope.allAgents.length; i++) {
-            connection.session.publish(wamp_prefix+'service.support.heartbeat.' + $scope.allAgents[i], []).
+            connection.session.call(wamp_prefix+'service.support.hhhhh.' + $scope.allAgents[i], []).
             then((function(i) {
               return function(res) {
                 console.log('online', i);
@@ -1307,10 +1307,11 @@ app.directive('chatBox', function() {
             }
 
             $scope.transferChat = function() {
-              console.log('in traaaaa');
-              connection.session.publish(wamp_prefix+'service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
+              // console.log('in traaaaa');
+
+              connection.session.call(wamp_prefix+'service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
                 function(res) {
-                  console.log(userData.chatThreadPk, $scope.agentForm.pk);
+                  // console.log(userData.chatThreadPk, $scope.agentForm.pk);
                   $http({
                     method: 'PATCH',
                     url: '/api/support/chatThread/' + userData.chatThreadPk + '/',

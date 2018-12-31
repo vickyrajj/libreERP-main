@@ -13,7 +13,6 @@ app.config(function($stateProvider) {
 app.controller("businessManagement.sessionHistory.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
 
   $scope.commentPerm = false;
-
   $timeout(function () {
     $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
   }, 500);
@@ -21,18 +20,11 @@ app.controller("businessManagement.sessionHistory.explore", function($scope, $st
 
   // console.log($scope.commentPerm);
   $scope.me = $users.get('mySelf');
-
-  console.log($scope.commentPerm);
-
   $scope.msgData = $scope.tab.data
-  console.log($scope.tab.data);
   $scope.reviewCommentData = [];
-
-
 
   $http({
     method: 'GET',
-    // url: '/api/support/reviewComment/?user='+$scope.msgData[0].user_id+'&uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
     url: '/api/support/reviewComment/?uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
 
   }).
@@ -370,19 +362,20 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   $scope.form = {date:new Date(),user:'',email:'',client:''}
   $scope.reviewData = []
   $scope.archivedData=[]
+  $scope.chatTypes=['All','audio','video','Audio & Video']
+  $scope.form.selectedChatType="All";
+  $scope.sortOptions=['Created','Agent Name','UID','Rating','Company']
+  $scope.selectedSortOption={value:"Created"}
+  $scope.tableUpdated=false
+  $scope.archTableUpdated=false
+  $scope.browseTab = true;
+  $scope.archiveTab = false;
 
-function archived(){
-  console.log('called');
-}
-
-$scope.browseTab = true;
-$scope.archiveTab = false;
-$scope.offsett=0;
-$scope.Archoffsett=0;
-
-  $scope.getArchData = function(date,user,email,client,download){
-    console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
-    var url = '/api/support/reviewHomeCal/?status=archived&limit=15&offset='+$scope.Archoffsett
+  $scope.getArchData = function(date,user,email,client,download,audio,video){
+    $scope.archivedData=[];
+    $scope.loadingDataForArc=true;
+    $scope.archTableUpdated=false
+    var url = '/api/support/reviewHomeCal/?status=archived'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -394,6 +387,12 @@ $scope.Archoffsett=0;
     }
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
+    }
+    if (audio) {
+      url += '&audio'
+    }
+    if (video) {
+      url += '&video'
     }
     if (download) {
       $window.open(url+'&download','_blank');
@@ -406,6 +405,8 @@ $scope.Archoffsett=0;
         // $scope.custDetails = response.data[0]
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.archivedData =response.data
+        $scope.loadingDataForArc=false;
+        $scope.archTableUpdated=true;
         if(response.data.length<1){
           $scope.archievedMyDialouge=true;
         }else{
@@ -416,26 +417,73 @@ $scope.Archoffsett=0;
   }
 // innerHTML=$scope.reviewData.statusChat+'By'
   // $scope.filterParams=[];
+  $scope.isTableView=true
+  $scope.setMyView=function(){
+    $scope.isTableView=!$scope.isTableView
+  }
+  $scope.filterByUid=function(){
+      $scope.reviewData.sort(function(a, b){return a[0].uid - b[0].uid});
+  }
+  $scope.filterByCompany=function(){
+      $scope.reviewData.sort(function(a, b){return a[0].company > b[0].company});
+  }
+  $scope.filterByRating=function(){
+      $scope.reviewData.sort(function(a, b){return a[0].rating > b[0].rating});
+  }
+  $scope.filterByStatus=function(){
+      $scope.reviewData.sort(function(a, b){return a[0].statusChat > b[0].statusChat});
+  }
+  $scope.filterByUser=function(){
+      $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
+  }
+  $scope.filterByCreated=function(){
+      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") < $filter('date')(b[0].created, "dd/MM/yyyy");});
+  }
 
-  $scope.getData = function(date,user,email,client,download){
-    console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
+  $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
+    switch (newValue) {
+        case 'Created':
+          $scope.filterByCreated();
+          break;
+        case 'Agent Name':
+          $scope.filterByUser();
+          break;
+        case 'UID':
+           $scope.filterByUid();
+          break;
+        case 'Rating':
+          $scope.filterByRating();
+          break;
+        case 'Company':
+          $scope.filterByCompany();
+          break;
+      }
+  })
+
+
+  $scope.getData = function(date,user,email,client,download,audio,video){
+    $scope.reviewData=[]
+    $scope.loadingData=true;
+    $scope.tableUpdated=false
     var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.Archoffsett
     url += '&getMyReviews=1'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
-      // $scope.filterParams.push({key : 'date' , value :date.toJSON().split('T')[0]})
     }
     if (typeof user == 'object') {
       url += '&user=' + user.pk
-      // $scope.filterParams.push({key : 'user' , value :user.pk})
     }
     if (typeof client == 'object') {
       url += '&client=' + client.pk
-      // $scope.filterParams.push({key : 'client' , value :client.pk})
     }
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
-      // $scope.filterParams.push({key : 'email' , value :email})
+    }
+    if (audio) {
+      url += '&audio'
+    }
+    if (video) {
+      url += '&video'
     }
     if (download) {
       $window.open(url+'&download','_blank');
@@ -448,6 +496,8 @@ $scope.Archoffsett=0;
         // $scope.custDetails = response.data[0]
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.reviewData =response.data
+        $scope.loadingData=false;
+        $scope.tableUpdated=true
         if(response.data.length<1){
           $scope.myDialouge=true;
         }else{
@@ -457,37 +507,8 @@ $scope.Archoffsett=0;
     }
   }
 
-  $scope.loadMore=function(){
-    $scope.onceClicked=true
-      $scope.offsett+=15
-        $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
-
-  }
-  $scope.loadMoreArchived=function(){
-    $scope.archievedOnceClicked=true
-    $scope.Archoffsett+=15
-      $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
-  }
-  $scope.goBack=function(){
-    if($scope.offsett>=15){
-      $scope.offsett-=15
-        $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
-    }else{
-      $scope.isFirstSetOfData=true
-    }
-
-  }
-  $scope.goBackArchived=function(){
-
-    if($scope.Archoffsett>=15){
-      $scope.Archoffsett-=15
-          $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
-    }else{
-
-    }
-  }
-  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
-  $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client)
+  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.audio,$scope.form.video)
+  $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.audio,$scope.form.video)
 
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
@@ -535,7 +556,21 @@ $scope.Archoffsett=0;
       Flash.create('warning','Please Select Valid Email')
       return
     }
-    console.log($scope.form);
+    if ($scope.form.selectedChatType=='audio') {
+      var audio=true
+    }else{
+      var audio=false
+    }
+    if ($scope.form.selectedChatType=='video') {
+      var video=true
+    }else{
+      var video=false
+    }
+    if ($scope.form.selectedChatType=='Audio & Video') {
+      var audio=true
+      var video=true
+    }
+
     if ($scope.changeDateType&&$scope.form.date!=null) {
       console.log('update');
       res = new Date($scope.form.date)
@@ -544,9 +579,9 @@ $scope.Archoffsett=0;
       console.log('no changeeeeeee');
       var date = $scope.form.date
     }
-    console.log(date);
-    $scope.getData(date,user,$scope.form.email,client,download)
-    $scope.getArchData(date,user,$scope.form.email,client,download)
+
+    $scope.getData(date,user,$scope.form.email,client,download,audio,video)
+    $scope.getArchData(date,user,$scope.form.email,client,download,audio,video)
   }
 
   $scope.download = function(){
@@ -571,8 +606,11 @@ $scope.Archoffsett=0;
   // }
 
 
-  $scope.tableAction = function(target) {
+  $scope.tableAction = function(target,table) {
     // console.log(target, action, mode);
+    if(table){
+      target=$scope.reviewData.indexOf(target)
+    }
     console.log($scope.reviewData[target]);
     var appType = 'Info';
     $scope.addTab({
@@ -603,7 +641,10 @@ $scope.Archoffsett=0;
     //   }
     // }
   }
-  $scope.tableArchAction = function(target) {
+  $scope.tableArchAction = function(target,table) {
+    if(table){
+      target=$scope.archivedData.indexOf(target)
+    }
     // console.log(target, action, mode);
     console.log($scope.archivedData[target]);
     var appType = 'Info';

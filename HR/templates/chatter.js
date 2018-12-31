@@ -765,8 +765,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     function heartbeat() {
-      console.log('coming in hearbeat');
-      var isOnline = true
+      console.log("coming hrere and im sending "+uid);
+      // var isOnline = true
       return uid
     }
 
@@ -795,12 +795,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
     );
 
-    session.subscribe(wamp_prefix+'service.support.heartbeat.'+uid, heartbeat).then(
+    session.register(wamp_prefix+'service.support.heartbeat.'+uid, heartbeat).then(
       function (res) {
-        console.log("subscribe to service.support.heartbeat'");
+        console.log("register to service.support.heartbeat'");
       },
       function (err) {
-        console.log("failed to subscribe: service.support.heartbeat" + err);
+        console.log("failed to register: service.support.heartbeat" + err);
       }
     );
 
@@ -2685,9 +2685,7 @@ var isConfirmedToEnd=false;
   function onlineAgent() {
     // console.log('in onlineAgent######333333333' , agentPk);
     if (agentPk) {
-        connection.session.publish(wamp_prefix+'service.support.heartbeat.' + agentPk, [],{},{
-          acknowledge: true
-        }).then(
+        connection.session.call(wamp_prefix+'service.support.heartbeat.' + agentPk, []).then(
           function (res) {
            isAgentOnline = true;
            onlineStatus.innerHTML = 'Online';

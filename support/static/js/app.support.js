@@ -49,11 +49,8 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     if($scope.newUsers.length>0)
     $scope.sound.play();
   }, 5000);
-
   $scope.myCompanies = [];
-
   function fetchUsers() {
-    // console.log('in fetch user');
     if (connectionOpened) {
       console.log('iffffffffffffffffff');
       $http({

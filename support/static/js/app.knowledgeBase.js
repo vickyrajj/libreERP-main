@@ -43,6 +43,8 @@ app.controller("businessManagement.customerKnowledgeBase", function($scope, $sta
     });
   });
 
+
+
   $scope.addDoc = function(idx) {
     if (idx == -1) {
       $scope.docForm = {
@@ -59,6 +61,15 @@ app.controller("businessManagement.customerKnowledgeBase", function($scope, $sta
       $scope.fetchVersions($scope.docForm.pk)
     }
     console.log($scope.docForm);
+  }
+  $scope.addDoc(-1);
+  $scope.showDesc=[]
+
+  $scope.titleDesc=function(index){
+      $scope.showDesc[index]=true
+  }
+  $scope.hidetitleDesc=function(index){
+      $scope.showDesc[index]=false
   }
 
   $scope.saveDoc = function() {

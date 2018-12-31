@@ -403,9 +403,7 @@ var hasAccesss=true;
       console.log(scope.myUsers);
       for (var i = 0; i < scope.myUsers.length; i++) {
         console.log(scope.myUsers[i].uid , 'call');
-        session.publish(wamp_prefix+'service.support.heartbeat.' + scope.myUsers[i].uid, [],{},{
-          acknowledge:true
-        }).
+        session.call(wamp_prefix+'service.support.heartbeat.' + scope.myUsers[i].uid, []).
         then((function(i) {
           return function (res) {
             console.log(res,'res');
@@ -421,9 +419,7 @@ var hasAccesss=true;
 
       for (var i = 0; i < scope.newUsers.length; i++) {
         console.log(scope.newUsers[i].uid , 'newwww');
-        session.publish(wamp_prefix+'service.support.heartbeat.' + scope.newUsers[i].uid, [],{},{
-          acknowledge:true
-        }).
+        session.call(wamp_prefix+'service.support.heartbeat.' + scope.newUsers[i].uid, []).
         then((function(i) {
           return function (res) {
             scope.newUsers[i].isOnline = true;
@@ -437,6 +433,15 @@ var hasAccesss=true;
       }
     }
   }
+
+
+  // connection.session.register(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
+  //   function(res) {
+  //     console.log("registered to service.support.hhhh ");
+  //   },
+  //   function(err) {
+  //     console.log("failed to registered: ");
+  // });
 
 
   function sendBackHeartBeat() {
@@ -467,13 +472,12 @@ var hasAccesss=true;
           return
         }
         else {
-          console.log('onlieeeeeeeeeeeeeeeeeeeeeeeee');
           return true
         }
       }
-      console.log(scope.me.pk+'heeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
-      session.subscribe(wamp_prefix+'service.support.heartbeat.'+scope.me.pk, heartbeat).then(
+
+      session.register(wamp_prefix+'service.support.heartbeat.'+scope.me.pk, heartbeat).then(
           function (res) {
             console.log("registered to service.support.heartbeat with "+scope.me.pk);
           },
@@ -518,20 +522,20 @@ setTimeout(function () {
 
 }, 100);
 
+//
+// function myNew(args){
+//   console.log(args);
+// }
 
-function myNew(args){
-  console.log(args);
-}
 
-
-session.subscribe('com.myapp.hello', myNew).then(
-    function (res) {
-      console.log("registered to service.support.heartbeat ")
-    },
-    function (err) {
-      console.log("failed to registered: ");
-    }
-  );
+// session.subscribe('com.myapp.hello', myNew).then(
+//     function (res) {
+//       console.log("registered to service.support.heartbeat ")
+//     },
+//     function (err) {
+//       console.log("failed to registered: ");
+//     }
+//   );
 
   // setTimeout(function () {
   //   alert('sending')

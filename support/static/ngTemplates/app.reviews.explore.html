@@ -1,28 +1,69 @@
-<div ng-controller="app.customerReviews.explore">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-6" style="border-right:1px solid #eeeeee;">
-        <div class="row">
-          <div class="col-md-6">
-            <h4><strong>Date : </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</h4>
-            <span > <h4><strong>Agent Name :  </strong>{{msgData[0].user_id | getName}}</h4></span>
-              <span ng-if="msgData[0].chatDuration>0.0"> <h4><strong>Chat Duration : </strong>{{msgData[0].chatDuration}} Min </h4></span>
-              <span ng-if="msgData[0].customerFeedback"> <h4><strong>Feedback : </strong>{{msgData[0].customerFeedback}}</h4></span>
-          </div>
-          <div class="col-md-5">
-            <span ng-if="msgData[0].company"> <h4><strong>Client : </strong>{{msgData[0].company}}</h4></span>
-            <span ng-if="msgData[0].email"> <h4><strong>Visitor's Email : </strong>  {{msgData[0].email}}</h4></span>
-            <span ng-if="msgData[0].customerRating"> <h4><strong>Rating : </strong>{{msgData[0].customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></h4></span>
+<div ng-controller="app.customerReviews.explore" >
+  <div class="row">
 
+    <div class="col-sm-9" style="padding:25px;">   <!-- main section -->
+
+        <div class="row">
+          <div ng-if="video_chat.agent">
+            <div class="col-md-4">
+              <video id="vid_agent{{chatThreadData.uid}}" style="width:100%" height="240">
+                    <source ng-src="{{video_chat.visitor}}" type="video/webm">
+              </video>
+            </div>
+            <canvas id="canvas_agent" style="display:none"></canvas>
+            <canvas id="canvas_visitor" style="display:none"></canvas>
+            <video id="vid_visitor{{chatThreadData.uid}}" class="col-md-4"height="240">
+                <source ng-src="{{video_chat.agent}}" type="video/webm">
+            </video>
+            <video id="" class="col-md-4" height="240" controls>
+                <source ng-src="{{screen_video}}" type="video/webm">
+            </video>
+         </div>
+
+            <div ng-if="audio_chat.agent">
+              <audio id="aud_agent" >
+                  <source ng-src="{{audio_chat.agent}}" type="audio/mp3">
+              </audio>
+              <audio id="aud_visitor" >
+                  <source ng-src="{{audio_chat.visitor}}" type="audio/mp3">
+              </audio>
+            </div>
+
+         <!-- control bar *********************** -->
+          <div ng-show="video_chat.agent||audio_chat.agent" class="col-md-12" style="background-color:grey;margin:10px -15px">
+            <div class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
+              <i ng-if="!play_pause" ng-click="play_video()" class="fa fa-play" aria-hidden="true"></i>
+              <i ng-if="play_pause" ng-click="pause_video()" class="fa fa-pause" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-5" style="font-size:150%;padding:0px;color:white;text-align:center;">
+              <rzslider rz-slider-model="slider.value"
+              rz-slider-options="slider.options"></rzslider>
+            </div>
+            <div class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
+              <i class="fa fa-volume-up" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-2" style="font-size:150%;padding:0px;color:white;text-align:center;">
+              <rzslider rz-slider-model="vol_slider.value"
+              rz-slider-options="vol_slider.options"></rzslider>
+            </div>
+            <div ng-if="typ=='video'" class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
+              <i ng-click="snap()" class="fa fa-camera" aria-hidden="true"></i>
+            </div>
+            <div ng-if="typ=='video'" class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
+              <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+            </div>
           </div>
+
+
         </div>
-        <span ng-if="chatThreadData.uid!=none"><h3><strong>Status : </strong>{{chatThreadData.status}} <span class="pull-right"><div class="btn btn-primary" ng-click="showChart()">Change Status</div></span></h3></span><hr>
-        <div class="row" ng-repeat="msg in data">
-          <!-- <h3>{{msg.message}}</h3> -->
-          <div ng-if="!msg.logs" class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-            <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;">
-              <h4>{{msg.message}}</h4></p>
-            <img ng-if="msg.attachmentType == 'image'" ng-src="{{msg.file}}" style="width:250px;">
+
+      <!-- message section -->
+      <div class="" style="max-height:700px;margin-bottom:20px;overflow:scroll;display:block">
+        <div class="row col-md-12" ng-repeat="msg in msgData">
+          <div ng-if="!msg.logs" class="container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:5px 10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+            <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;font-size:16px">
+              {{msg.message}}</p>
+            <img ng-if="msg.attachmentType == 'image' || msg.attachmentType == 'instructionImage'" ng-src="{{msg.file}}" style="width:250px;">
             <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.file}}" controls></video>
             <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.file}}" controls></audio>
             <p class="text-center" ng-if="msg.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{msg.file}}" target="_blank"><i class="fa {{msg.file.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.file.split('chat/')[1]}} </p>
@@ -31,39 +72,74 @@
             </div>
           </div>
           <div ng-if="!msg.logs" class="row container-fluid" style="{{msg.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
-            <span ng-if="msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" ng-init="cal = calculateTime(data[$index-1].created , msg.created)">{{msg.created | date : 'hh:mm:a' }} , {{cal}}</span>
+            <span ng-if="msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" ng-init="cal = calculateTime(msgData[$index-1].created , msg.created)">{{msg.created | date : 'hh:mm:a' }} , {{cal}}</span>
             <span ng-if="!msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted">{{msg.created | date : 'hh:mm:a' }}</span>
           </div>
         </div>
+      </div>
 
-      </div>
-      <div class="col-md-6" style="padding:20px;">
-        <div class="row" ng-repeat="comment in reviewCommentData" style="padding-bottom:15px;">
-          <!-- <div class="col-md-10">
-            <div style="float:right; background-color:#286EFA; color:#fff; border-radius:15px 50px 50px 15px; padding:10px 10px 10px 15px;word-break: break-all !important;">
-              <p> {{comment.message}} </p>
+        <!-- comment section************* -->
+
+        <div class="" style="margin-top:20px;">
+          <div ng-if="commentPerm" class="row" style="padding-top:20px;">
+            <div class="col-md-12">
+              <div class="form-group">
+                <textarea class="form-control" rows="2" id="comment" placeholder="Comments... " ng-model="reviewForm.message" style="resize:none;"></textarea>
+              </div>
             </div>
-          </div> -->
-          <div class="col-md-9">
-            <div style="background-color:{{comment.user==data[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; border-radius:15px 50px 50px 15px; padding:10px 10px 10px 15px;word-break: break-all !important;">
-              <p> {{comment.message}} </p>
+            <div class="col-md-2 pull-right" style="">
+              <button type="button" class="btn btn-primary" name="button" ng-click="postComment()"> Add Comment  </button>
             </div>
           </div>
-          <div class="col-md-2">
-            <img ng-src="{{comment.user | getDP }}" style="border-radius:50%; width:45px;" alt="User Image">
+
+          <div class="" ng-repeat="comment in reviewCommentData" style="margin-top:25px;">
+            <div class="col-md-10">
+              <div style="background-color:{{comment.user==msgData[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; margin-top:5px ;border-radius:15px 50px 50px 15px; padding:8px 10px 0px 15px;word-break: break-all !important;">
+                <p> {{comment.message}} </p>
+              </div>
+              <div ng-if="comment.agent_capture">
+                <img ng-src="{{comment.agent_capture}}" alt="">
+                <img ng-src="{{comment.visitor_capture}}" alt="">
+              </div>
+            </div>
+
+              <!-- <img ng-src="{{comment.user | getDP}}" style="border-radius:50%; width:45px;" alt="User Image"> -->
+              <img style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+              <p style="font-size:15px;display:inline-block;">{{msgData[0].user_id | getName}}</p>
+
           </div>
+
         </div>
-        <div class="row" style="padding-top:20px;" ng-if="commentPerm">
-          <div class="col-md-10">
-            <div class="form-group">
-              <textarea class="form-control" rows="3" id="comment" placeholder="Comments... " ng-model="reviewForm.message" style="resize:none;"></textarea>
-            </div>
-          </div>
-          <div class="col-md-2" style="padding-top:20px;">
-            <button type="button" class="btn btn-primary" name="button" ng-click="postComment()"> Save  </button>
-          </div>
-        </div>
-      </div>
+
     </div>
+
+
+    <div class="col-sm-3">
+      <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;width:20%;padding:20px 30px;box-shadow:-1px -1px 1px #f6f6f6;height:100vh">
+        <h4 style="display:inline-block">Agent Info:</h4>
+        <span class="pull-right btn btn-primary" ng-click="showChart()" style="font-size:15px">Change Status</span>
+        <div style="margin:15px 0px">
+          <img style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+          <div class="" style="display:inline-block">
+            <p style="font-size:16px;font-weight:700">{{msgData[0].user_id | getName}}</p>
+          </div>
+        </div>
+        <p style="font-size:15px"><strong>Created : </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</p>
+        <p style="font-size:15px" ng-if="msgData[0].chatDuration>0.0"><strong>Chat Duration : </strong>{{msgData[0].chatDuration}} Min</p>
+        <p style="font-size:15px" ng-if="msgData[0].company"><strong>Client : </strong>{{msgData[0].company}}</p>
+        <p style="font-size:15px" ng-if="msgData[0].email"><strong>Visitor's Email : </strong>{{msgData[0].email}}</p>
+        <p style="font-size:15px" ng-if="msgData[0].customerRating"><strong>Rating : </strong>{{msgData[0].customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></p>
+        <p style="font-size:15px" ng-if="msgData[0].customerFeedback"><strong>Feedback : </strong>{{msgData[0].customerFeedback}}</p>
+        <p style="font-size:15px" ng-if="chatThreadData.uid!=none"><strong>Status : </strong>{{chatThreadData.status}}
+          <span ng-if="msgData[0].statusChat!='started'">
+            <span ng-if="msgData[0][msgData[0].statusChat+'By']&&msgData[0][msgData[0].statusChat+'On']">by {{msgData[0][msgData[0].statusChat+'By']}}</span>
+            <span ng-if="msgData[0][msgData[0].statusChat+'On']&&!msgData[0][msgData[0].statusChat+'By']"> by Visitor</span>
+            <span ng-if="msgData[0][msgData[0].statusChat+'On']">on {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[1]}}</span>
+         </span>
+        </p>
+      </div>
+  </div>
+
+
   </div>
 </div>

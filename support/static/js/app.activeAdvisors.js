@@ -13,7 +13,6 @@ app.config(function($stateProvider) {
 
 app.controller("businessManagement.activeAdvisors", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
 
-  console.log($scope.data, 'entireeeeeeeeeeeeee');
   $http({
     method: 'GET',
     url: '/api/support/getMyUser/?allAgents',

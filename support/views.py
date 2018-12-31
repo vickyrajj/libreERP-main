@@ -217,6 +217,8 @@ class ReviewFilterCalAPIView(APIView):
             sobj = sobj.filter(created__startswith = date)
         if 'user' in self.request.GET:
             sobj = sobj.filter(user = int(self.request.GET['user']))
+        # if 'type' in self.request.GET:
+        #     sobj = sobj.filter(user = int(self.request.GET['type']))
         if 'client' in self.request.GET:
             userCustProfile = list(CustomerProfile.objects.filter(service=self.request.GET['client']).values_list('pk',flat=True).distinct())
             userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
@@ -230,18 +232,32 @@ class ReviewFilterCalAPIView(APIView):
         else:
             agentsList = list(ChatThread.objects.filter(~Q(status='archived'),uid__in=uidL).values_list('user',flat=True).distinct())
         # print agentsList
+        if 'audio' in self.request.GET:
+            agentsList = list(ChatThread.objects.filter(typ='audio').values_list('user',flat=True).distinct())
+            # print agentsList,'audiooooooooooooooooooooooooooo'
+        if 'video' in self.request.GET:
+            agentsList = list(ChatThread.objects.filter(typ='video').values_list('user',flat=True).distinct())
+            # print agentsList,'videooooooooooooooooooooooooooo'
+
         for i in agentsList:
             if 'status' in self.request.GET:
                 if self.request.GET['status']=='archived':
                     agentuidList = list(ChatThread.objects.filter(status='archived',user=i).values_list('uid',flat=True).distinct())
             else:
                 agentuidList = list(ChatThread.objects.filter(~Q(status='archived'),user=i).values_list('uid',flat=True).distinct())
+            if 'audio' in self.request.GET:
+                agentuidList = list(ChatThread.objects.filter(typ='audio').values_list('uid',flat=True).distinct())
+                # print agentsList,'audiooooooooooooooooooooooooooo'
+            if 'video' in self.request.GET:
+                agentuidList = list(ChatThread.objects.filter(typ='video').values_list('uid',flat=True).distinct())
+                # print agentsList,'videooooooooooooooooooooooooooo'
             agSobj = sobj.filter(uid__in = agentuidList)
             if 'email' in self.request.GET:
                 uidl = list(Visitor.objects.filter(email=self.request.GET['email']).values_list('uid',flat=True).distinct())
                 agUid = list(agSobj.filter(uid__in=uidl).values_list('uid',flat=True).distinct())
             else:
                 agUid = list(agSobj.values_list('uid',flat=True).distinct())
+
             # print agUid
             for j in agUid:
                 cmntDate =  sobj.filter(uid = j)[0].created

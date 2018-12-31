@@ -218,12 +218,14 @@ app.filter('decorateCount' , function(){
   }
 })
 
+
 app.filter('getDP' , function($users){
   return function(input){
     if (typeof input == 'undefined' || input == -1 ) {
       return '/static/images/userIcon.png';
     }
-    user = $users.get(input);
+    var user = $users.get(input);
+    // console.log(user.profile.displayPicture);
     if (user.profile.displayPicture == null) {
       return '/static/images/userIcon.png';
     }else{
@@ -239,7 +241,7 @@ app.filter('getName' , function($users){
     if (typeof userUrl == 'undefined') {
       return '';
     }
-    user = $users.get(userUrl);
+    var user = $users.get(userUrl);
     if (mode == 'short') {
       return user.first_name;
     }
@@ -322,3 +324,8 @@ app.filter('trusted', ['$sce', function ($sce) {
         return $sce.trustAsResourceUrl(url);
     };
 }]);
+app.filter('sortByAlpha', function () {
+    return function(input) {
+        return
+    };
+});
