@@ -624,32 +624,32 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     for (var i = 0; i < $scope.projects.length; i++) {
       $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.projects[i].price) / 100 + $scope.projects[i].price).toFixed(2))
       $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].quotePrice * $scope.form.exRate).toFixed(2))
-      $scope.projects[i].packing = parseFloat((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].insurance = parseFloat((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
-      $scope.projects[i].freight = parseFloat((($scope.form.freight / $scope.form.invoiceValue) * $scope.projects[i].inrPrice).toFixed(2))
+      $scope.projects[i].packing = parseFloat(((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice)/100).toFixed(2))
+      $scope.projects[i].insurance = parseFloat(((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.projects[i].inrPrice)/100).toFixed(2))
+      $scope.projects[i].freight = parseFloat(((($scope.form.freight / $scope.form.invoiceValue) * $scope.projects[i].inrPrice)/100).toFixed(2))
       $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
       $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
       $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif +(($scope.projects[i].cif * $scope.form.assessableValue)/100))*($scope.projects[i].custom)/100).toFixed(2))
       $scope.projects[i].socialVal = parseFloat(($scope.projects[i].customVal *0.1).toFixed(2))
-      $scope.projects[i].gstVal = parseFloat(($scope.projects[i].cif+$scope.projects[i].customVal+$scope.projects[i].socialVal)*($scope.projects[i].gst/100)).toFixed(2)
-      $scope.projects[i].charge1 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
-      $scope.projects[i].charge2 = parseFloat(($scope.projects[i].cif * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
+      $scope.projects[i].gstVal = parseFloat(($scope.projects[i].cif+$scope.projects[i].customVal+$scope.projects[i].socialVal)*($scope.projects[i].gst)/100).toFixed(2)
+      $scope.projects[i].charge1 = parseFloat(($scope.projects[i].inrPrice * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate))/100).toFixed(2))
+      $scope.projects[i].charge2 = parseFloat(($scope.projects[i].inrPrice * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate))/100).toFixed(2))
       $scope.projects[i].landed_price = (($scope.projects[i].cif + $scope.projects[i].customVal + $scope.projects[i].socialVal + $scope.projects[i].charge1 + $scope.projects[i].charge2).toFixed(2))
     }
     if( $scope.data.length>0){
       for (var i = 0; i < $scope.data.length; i++) {
         $scope.data[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.data[i].price) / 100 + $scope.data[i].price).toFixed(2))
         $scope.data[i].inrPrice = parseFloat(($scope.data[i].quotePrice * $scope.form.exRate).toFixed(2))
-        $scope.data[i].packing = parseFloat((($scope.form.packing/ $scope.form.invoiceValue) * $scope.data[i].inrPrice).toFixed(2))
-        $scope.data[i].insurance = parseFloat((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.data[i].inrPrice).toFixed(2))
-        $scope.data[i].freight = parseFloat((($scope.form.freight / $scope.form.invoiceValue) * $scope.data[i].inrPrice).toFixed(2))
+        $scope.data[i].packing = parseFloat(((($scope.form.packing/ $scope.form.invoiceValue) * $scope.data[i].inrPrice)/100).toFixed(2))
+        $scope.data[i].insurance = parseFloat(((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.data[i].inrPrice)/100).toFixed(2))
+        $scope.data[i].freight = parseFloat(((($scope.form.freight / $scope.form.invoiceValue) * $scope.data[i].inrPrice)/100).toFixed(2))
         $scope.data[i].cif = parseFloat(($scope.data[i].inrPrice + $scope.data[i].packing + $scope.data[i].insurance + $scope.data[i].freight).toFixed(2))
         $scope.data[i].cif = parseFloat(($scope.data[i].inrPrice + $scope.data[i].packing + $scope.data[i].insurance + $scope.data[i].freight).toFixed(2))
         $scope.data[i].customVal = parseFloat((($scope.data[i].cif +(($scope.data[i].cif * $scope.form.assessableValue)/100))*($scope.data[i].custom)/100).toFixed(2))
         $scope.data[i].socialVal = parseFloat(($scope.data[i].customVal *0.1).toFixed(2))
-        $scope.data[i].gstVal = parseFloat(($scope.data[i].cif+$scope.data[i].customVal+$scope.data[i].socialVal)*($scope.data[i].gst/100)).toFixed(2)
-        $scope.data[i].charge1 = parseFloat(($scope.data[i].cif * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
-        $scope.data[i].charge2 = parseFloat(($scope.data[i].cif * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate)) / 100).toFixed(2))
+        $scope.data[i].gstVal = parseFloat(($scope.data[i].cif+$scope.data[i].customVal+$scope.data[i].socialVal)*($scope.data[i].gst)/100).toFixed(2)
+        $scope.data[i].charge1 = parseFloat(($scope.data[i].inrPrice * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate))/100).toFixed(2))
+        $scope.data[i].charge2 = parseFloat(($scope.data[i].inrPrice * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate))/100).toFixed(2))
         $scope.data[i].landed_price = (($scope.data[i].cif + $scope.data[i].customVal + $scope.data[i].socialVal + $scope.data[i].charge1 + $scope.data[i].charge2).toFixed(2))
       }
     }
@@ -702,51 +702,51 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     then(function(response) {
       $scope.projects = response.data
       $scope.purchaseSum = sum($scope.projects)
+      var tot = 0
       console.log($scope.purchaseSum,'kkkkkkkkkkkkkkkkkk');
+      $scope.form.invoiceValue = 0
       for (var i = 0; i < $scope.projects.length; i++) {
         var totalprice = $scope.projects[i].price * $scope.projects[i].quantity1
-        $scope.form.invoiceValue += totalprice
-        $scope.updateAll()
+        tot += totalprice
       }
+      $scope.form.invoiceValue = tot
+      $scope.updateAll()
       // $rootScope.allData =  $scope.projects
 
     })
   }
 
-  $scope.deleteTable = function(val, index) {
-    if ($scope.data[index].listPk != undefined) {
-          if (val === $scope.data[index].listPk) {
-            $http({
-              method: 'DELETE',
-              url: '/api/support/bom/' +$scope.data[index].listPk + '/'
-            }).
-            then((function(index) {
-              return function(response) {
-                var price = $scope.data[index].price * $scope.data[index].quantity1
-                $scope.form.invoiceValue -= price
-                $scope.data.splice(index, 1);
-                Flash.create('success', 'Deleted');
-                $scope.updateAll()
-                return
-              }
-            })(index))
-          }
-    } else {
-      $scope.data.splice(index, 1);
-      $scope.updateAll()
-      return
-    }
-  };
+
 
   $scope.productpk = []
   $scope.fetchData()
   $scope.$watch('projects', function(newValue, oldValue) {
-
     var cost = 0
+    var cost = $scope.form.invoiceValue
     for (var i = 0; i < newValue.length; i++) {
-      var totalprice = newValue[i].price * newValue[i].quantity1
-      cost += totalprice
       if (typeof oldValue[i] == "undefined") {} else if (newValue[i].price != oldValue[i].price || newValue[i].quantity1 != oldValue[i].quantity1||newValue[i].custom != oldValue[i].custom||newValue[i].gst != oldValue[i].gst||newValue[i].quantity2!= oldValue[i].quantity2) {
+        // console.log( newValue[i],'aaaaaaaaaaaaaa');
+        // if(newValue[i].quantity1==''){
+        //   var newQty = 0
+        // }
+        // else{
+        //   var newQty = newValue[i].quantity1
+        // }
+        // if(oldValue[i].quantity1==''){
+        //   var oldQty = 0
+        // }
+        // else{
+        //   var oldQty = oldValue[i].quantity1
+        // }
+        // console.log(oldValue[i].quantity1, newValue[i].quantity1);
+        // var oldtotalprice = oldValue[i].price * oldQty
+        // console.log(oldtotalprice);
+        // cost -= oldtotalprice
+        // console.log(cost);
+        // var totalprice = newValue[i].price * newQty
+        // console.log(totalprice);
+        // cost += totalprice
+        // console.log(cost);
         var dataSend = {
           quantity1: newValue[i].quantity1,
           price: newValue[i].price,
@@ -760,11 +760,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
           data: dataSend
         }).
         then(function(response) {
-
+          $scope.fetchData()
         })
       }
+      $scope.form.invoiceValue = cost
     }
-    $scope.form.invoiceValue = cost
     $scope.updateAll()
   }, true)
 
@@ -838,15 +838,40 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         return
       })
     } else {
-      var cost = 0
-      cost = $scope.form.invoiceValue
+      var cost = $scope.form.invoiceValue
+      // cost = $scope.form.invoiceValue
       for (var i = 0; i < newValue.length; i++) {
         if (newValue[i].listPk) {
+          if(newValue[i].quantity1==''){
+            var newQty = 0
+          }
+          else{
+            var newQty = newValue[i].quantity1
+          }
+          if(oldValue[i].quantity1==''){
+            var oldQty = 0
+          }
+          else{
+            var oldQty = oldValue[i].quantity1
+          }
+
+
+
+          console.log(oldValue[i].quantity1, newValue[i].quantity1);
+          var oldtotalprice = oldValue[i].price * oldQty
+          console.log(oldtotalprice);
+          cost -= oldtotalprice
+          console.log(cost);
+          var totalprice = newValue[i].price * newQty
+          console.log(totalprice);
+          cost += totalprice
+          console.log(cost);
           if (newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].landed_price != oldValue[i].landed_price||newValue[i].custom != oldValue[i].custom||newValue[i].gst != oldValue[i].gst) {
-            var oldtotalprice = oldValue[i].price * oldValue[i].quantity1
-            var totalprice = newValue[i].price * newValue[i].quantity1
-            cost -= oldtotalprice
-            cost += totalprice
+
+            // var oldtotalprice = oldValue[i].price * oldValue[i].quantity1
+            // var totalprice = newValue[i].price * newValue[i].quantity1
+            // cost -= oldtotalprice
+            // cost += totalprice
             var dataSend = {
               quantity1: newValue[i].quantity1,
               price: newValue[i].price,
@@ -868,24 +893,84 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
           }
         }
       }
+      $scope.form.invoiceValue = cost
       return
     }
   }, true)
 
-  $scope.deleteData = function(pk, index) {
+  $scope.deleteTable = function(val, index) {
+    if ($scope.data[index].listPk != undefined) {
+          if (val === $scope.data[index].listPk) {
+            $http({
+              method: 'DELETE',
+              url: '/api/support/bom/' +$scope.data[index].listPk + '/'
+            }).
+            then((function(index) {
+              return function(response) {
+                var price = $scope.data[index].price * $scope.data[index].quantity1
+                $scope.form.invoiceValue = $scope.form.invoiceValue - price
+                $scope.data.splice(index, 1);
+                Flash.create('success', 'Deleted');
+                $scope.updateAll()
+                return
+              }
+            })(index))
+          }
+    } else {
+      $scope.data.splice(index, 1);
+      $scope.updateAll()
+      return
+    }
+  };
+
+  $scope.deleteData = function(pk, index,price,qty) {
+    // var priceVal = price * qty
+    // $scope.form.invoiceValue =$scope.form.invoiceValue - priceVal
+    // $scope.pricee = price
+    // $scope.qty = qty
+    // console.log($scope.pricee,$scope.qty);
+    // var price = $scope.pricee * $scope.qty
+    // console.log($scope.form.invoiceValue,'aaaaaaaaaaa');
+    // $scope.form.invoiceValue =$scope.form.invoiceValue - price
     $http({
       method: 'DELETE',
-      url: '/api/support/bom/' + pk + '/'
+      url: '/api/support/bom/' +  pk + '/'
     }).
-    then((function(index) {
-      return function(response) {
-        var price = $scope.projects[index].price * $scope.projects[index].quantity1
-        $scope.form.invoiceValue -= price
-        $scope.projects.splice(index, 1);
-        Flash.create('success', 'Deleted');
-        $scope.updateAll()
-      }
-    })(index))
+    then(function(response) {
+          // var pricee = $scope.projects[index].price
+          // var qty = $scope.projects[index].quantity1
+
+          $scope.data=[]
+          $scope.fetchData()
+          Flash.create('success', 'Deleted');
+          // $scope.form.invoiceValue = 0
+          // $scope.updateAll()
+          // $scope.projects.splice(index, 1);
+          return
+
+    })
+
+
+
+
+
+    // then((function(index) {
+    //   return function(response) {
+    //     var pricee = $scope.projects[index].price
+    //     var qty = $scope.projects[index].quantity1
+    //     var price = pricee * qty
+    //     console.log($scope.form.invoiceValue,'aaaaaaaaaaa');
+    //     $scope.form.invoiceValue =$scope.form.invoiceValue - price
+    //     // $scope.data=[]
+    //     // $scope.fetchData()
+    //     Flash.create('success', 'Deleted');
+    //     $scope.updateAll()
+    //     $scope.projects.splice(index, 1);
+    //     return
+    //   }
+    // })(index))
+
+
   }
 
   $scope.save = function() {

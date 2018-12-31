@@ -28,5 +28,6 @@ urlpatterns = [
     url(r'grn/$' , GrnAPIView.as_view() ),
     url(r'sendEmail/$' , EmailApi.as_view() ),
     url(r'calculate/$' , CalculateAPIView.as_view() ),
+    url(r'getMaterial/$' , GetMaterialAPIView.as_view() ),
     # url(r'stock/$' , StockAPIView.as_view() ),
 ]

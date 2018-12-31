@@ -424,7 +424,7 @@
               <td>{{v.products.part_no}}</td>
               <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp;({{v.products.description_2}})</span></td>
               <td>{{v.price}}</td>
-              <td><input type="text" class="form-control-pos text-center" ng-model="v.quantity1"></td>
+              <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="v.quantity1" style="background-color : #8fe298;padding:0px"></td>
               <td>{{v.customs_no}}</td>
               <td>{{v.quotePrice}}</td>
               <td>{{v.inrPrice}}</td>
@@ -435,26 +435,26 @@
               <td>{{(v.cif*v.quantity1).toFixed(2)}}</td>
               <!-- <td><select ng-model ="v.custom"><option value="7.5">7.5</option></select></td> -->
 
-              <td><input type="text" class="form-control-pos text-center" ng-model="v.custom"></td>
+              <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="v.custom" style="background-color : #8fe298;padding:0px"></td>
               <td>{{v.customVal}} </td>
               <td>{{v.socialVal}}</td>
-              <td><input type="text" class="form-control-pos text-center" ng-model="v.gst"></td>
+              <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="v.gst" style="background-color : #8fe298;padding:0px"></td>
               <td>{{v.gstVal}} </td>
               <td>{{v.charge1}} </td>
               <td>{{v.charge2}} </td>
               <td>{{v.landed_price}}</td>
-              <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
+              <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index,v.price,v.quantity1)"> <i class="fa fa-trash"></i> </button></td>
             </tr>
             <tr ng-repeat="item in data track by $index">
               <td>{{$index + 1 + projects.length}}</td>
-              <td><input ng-model="item.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></td>
+              <td ><input ng-model="item.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></td>
               <td>
                 {{item.description_1}}<span ng-if="item.description_2"> &nbsp;({{item.description_2}})</span>
               </td>
               <td class="text-center">
                 {{item.price}}
-              <td>
-                <input type="text" class="form-control-pos text-center" ng-model="item.quantity1">
+              <td style="background-color : #8fe298;padding:0px">
+                <input type="text" class="form-control-pos text-center" ng-model="item.quantity1" style="background-color : #8fe298;padding:0px">
               </td>
               <td>{{item.customs_no}}</td>
               <td>{{item.quotePrice}}</td>
@@ -465,17 +465,17 @@
               <td>{{item.cif}}</td>
               <td>{{(item.cif*item.quantity1).toFixed(2)}}</td>
               <!-- <td><select ng-model ="v.custom"><option value="7.5">7.5</option></select></td> -->
-              <td><input type="text" class="form-control-pos text-center" ng-model="item.custom"></td>
+              <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="item.custom" style="background-color : #8fe298;padding:0px"></td>
               <!-- <td>{{item.custom}}%</td> -->
               <td>{{item.customVal}} </td>
               <td>{{item.socialVal}}</td>
-              <td><input type="text" class="form-control-pos text-center" ng-model="item.gst"></td>
+              <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="item.gst" style="background-color : #8fe298;padding:0px"></td>
               <td>{{item.gstVal}} </td>
               <td>{{item.charge1}} </td>
               <td>{{item.charge2}} </td>
               <td>{{item.landed_price}}</td>
               <td>
-                <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable(item.listPk,$index)"> <i class="fa fa-trash"></i> </button>
+                <button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(item.listPk,$index)"> <i class="fa fa-trash"></i> </button>
               </td>
             </tr>
             <tr>
@@ -877,10 +877,10 @@
               <td>{{v.freight}}</td>
               <td>{{v.cif}}</td>
               <td>{{(v.cif*v.quantity1).toFixed(2)}}</td>
-              <td>{{v.custom}}</td>
-              <td>{{v.customVal}} </td>
+              <td style="background-color : #8fe298;padding:0px">{{v.custom}}</td>
+              <td >{{v.customVal}} </td>
               <td>{{v.socialVal}}</td>
-              <td>{{v.gst}} </td>
+              <td style="background-color : #8fe298;padding:0px">{{v.gst}} </td>
               <td>{{v.gstVal}} </td>
               <td>{{v.charge1}} </td>
               <td>{{v.charge2}} </td>
@@ -1191,7 +1191,7 @@
         <div class="col-md-3 text-center">
         </div>
         <div class="col-md-3 text-center">
-          <span>{{(form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100).toFixed(2)}}</span>
+          <!-- <span>{{(form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100).toFixed(2)}}</span> -->
         </div>
         <div class="col-md-2 text-center">
           <input type="number" class="form-control text-center" ng-model="form.assessableValue" ng-change="assemblyValChange()">
@@ -1283,7 +1283,7 @@
           <td>{{v.quantity1}}</td>
           <td>{{v.customs_no}}</td>
           <td>{{v.price.toFixed(2)}}</td>
-          <td><input step=1 class="form-control-pos" ng-model="v.quantity2"></td>
+          <td style="background-color : #8fe298;padding:0px" class="text-center"><input step=1 class="form-control-pos text-center" ng-model="v.quantity2" style="background-color : #8fe298;padding:0px"></td>
           <td>{{v.quotePrice}}</td>
           <td>{{v.inrPrice}}</td>
           <td>{{v.packing}}</td>

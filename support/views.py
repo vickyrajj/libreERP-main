@@ -1104,7 +1104,7 @@ class ProductInventoryAPIView(APIView):
             productlist = Inventory.objects.filter( Q(product__part_no__icontains=request.GET['search']) | Q(product__description_1__icontains=request.GET['search']))
         else:
             productlist = Inventory.objects.all()
-        productsList = list(productlist.values('product').distinct().values('product__pk','product__description_1','product__part_no','product__description_2','product__weight','product__price'))
+        productsList = list(productlist.values('product').distinct().values('product__pk','product__description_1','product__part_no','product__description_2','product__weight','product__price','product__bar_code'))
         for i in productsList:
             totalprice = 0
             totalqty = 0
@@ -1127,7 +1127,7 @@ class ProductInventoryAPIView(APIView):
                     totalprice += rt
                     totalqty += qt
                     totalSum+=totalVal
-            toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty,'totalVal':totalSum})
+            toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'productBarCode':i['product__bar_code'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty,'totalVal':totalSum})
             total+=totalSum
         if 'offset' in request.GET:
             offset = int(request.GET['offset'])
@@ -1136,6 +1136,7 @@ class ProductInventoryAPIView(APIView):
             returnData ={'data' :toReturn[offset : limit],'total':total }
         else:
             returnData ={'data' :toReturn,'total':total }
+            print returnData,'aaaaaaaaa'
         return Response(returnData,status=status.HTTP_200_OK)
 
 import json, ast
@@ -1336,3 +1337,58 @@ class CalculateAPIView(APIView):
             i.save()
             print i.landed_price,'ggggggggggggggggg'
         return Response(status = status.HTTP_200_OK)
+
+class GetMaterialAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        toReturn = []
+        print  request.GET
+        if 'search' in request.GET:
+            materialList = MaterialIssueMain.objects.filter( Q(project__title__icontains=request.GET['search']))
+        else:
+            materialList = MaterialIssueMain.objects.all()
+        materialsList = list(materialList.values('project').distinct().values('project__pk','project__title','project__comm_nr'))
+
+        for i in materialsList:
+            datamaterial = list(materialList.filter(project=i['project__pk']))
+            totalVal = 0
+            total = 0
+            lisData = []
+            for k in datamaterial:
+                data = list(k.materialIssue.values())
+                print data,'aaaaaaaaaa'
+                for m in data:
+                    price=m['price']
+                    qty=m['qty']
+                    total=price*qty
+                    totalVal+=total
+                    lisData.append(m)
+                tot=totalVal
+            toReturn.append({'projectPk':i['project__pk'],'productTittle':i['project__title'],'projectPk':i['project__comm_nr'],'data':lisData,'totalprice':tot})
+
+        if 'offset' in request.GET:
+            offset = int(request.GET['offset'])
+            limit = offset + int(request.GET['limit'])
+            print offset,limit
+            returnData =toReturn[offset : limit]
+        else:
+            returnData =toReturn
+            print returnData,'aaaaaaaaa'
+        return Response(returnData,status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+        return Response(status=status.HTTP_200_OK)
+        #     toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty,'totalVal':totalSum})
+        #     total+=totalSum
+        # if 'offset' in request.GET:
+        #     offset = int(request.GET['offset'])
+        #     limit = offset + int(request.GET['limit'])
+        #     print offset,limit
+        #     returnData ={'data' :toReturn[offset : limit],'total':total }
+        # else:
+        #     returnData ={'data' :toReturn,'total':total }
