@@ -120,7 +120,7 @@ app.config(function($stateProvider) {
     .state('bpo', {
       url: "/bpo",
       templateUrl: '/static/ngTemplates/app.homepage.bpo.html',
-      // controller: 'controller.bpo'
+      controller: 'controller.bpo'
     })
 
   $stateProvider
@@ -260,6 +260,40 @@ app.config(function($stateProvider) {
 
 
 });
+
+
+app.controller('controller.bpo', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+  $scope.onHover = function(val) {
+    document.getElementById('owltext' + val).classList.add('changingFont')
+    document.getElementById('owlpoint' + val).classList.add('changingColor')
+  }
+  $scope.offHover = function(val) {
+    document.getElementById('owltext' + val).classList.remove('changingFont')
+    document.getElementById('owlpoint' + val).classList.remove('changingColor')
+  }
+  var d = function(num1, num2, num3, num4) {
+    document.getElementById('drop' + num1).classList.add('divcolor')
+    document.getElementById('drop' + num2).classList.remove('divcolor')
+    document.getElementById('drop' + num3).classList.remove('divcolor')
+    document.getElementById('drop' + num4).classList.remove('divcolor')
+  }
+  $scope.drop = function(val) {
+    if (val == 0) {
+      d(val, 1, 2, 3)
+    } else if (val == 1) {
+      d(val, 0, 2, 3)
+    } else if (val == 2) {
+      d(val, 1, 0, 3)
+    }else{
+      d(val, 1, 0, 2)
+    }
+
+  }
+
+  
+
+})
+
 
 app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
@@ -1123,22 +1157,22 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     }
   }
 
-    var cookieAccepted = $rootScope.getCookie("accepted");
-    if (cookieAccepted !="") {
-      cookieAccepted = JSON.parse(cookieAccepted)
-      if (cookieAccepted.accepted) {
-        $scope.show_cokie_agree = false;
-      } else {
-        $scope.show_cokie_agree = true;
-      }
-    }else {
+  var cookieAccepted = $rootScope.getCookie("accepted");
+  if (cookieAccepted != "") {
+    cookieAccepted = JSON.parse(cookieAccepted)
+    if (cookieAccepted.accepted) {
+      $scope.show_cokie_agree = false;
+    } else {
       $scope.show_cokie_agree = true;
     }
+  } else {
+    $scope.show_cokie_agree = true;
+  }
 
   var visitorDetails = $rootScope.getCookie("visitorDetails");
   $rootScope.cookie = function(val) {
     $scope.show_cokie_agree = false;
-    if (visitorDetails !="") {
+    if (visitorDetails != "") {
       var uid = JSON.parse(visitorDetails).uid
       $rootScope.setCookie("accepted", JSON.stringify({
         'accepted': true,
