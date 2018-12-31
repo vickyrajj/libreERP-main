@@ -3736,7 +3736,7 @@ figure {
   margin-bottom: 1em;
   /* display: block; */
   -webkit-appearance: none;
-  border: 2px solid rgba(255, 255, 255, 0.45);
+  border: 0px solid rgba(255, 255, 255, 0.45);
   border-radius: 7px;
   border-top-left-radius: 25px;
   padding: 1em 2em;
@@ -3762,6 +3762,17 @@ figure {
 }
 .owl-item.active.center  {
   transform: scale(1.1);
+}
+.rightcls{
+  text-align:right;
+}
+.flex-container {
+  display: flex;
+  flex-direction: column;
+
+}
+.flex-item{
+    margin-top:1em;
 }
 
 /* ------------------ */
@@ -3821,6 +3832,12 @@ figure {
   .dropdown-menu {
     left: 0;
 
+  }
+  .size h4{
+    font-size:15px;
+  }
+  .rightcls{
+    text-align:center;
   }
 
 }
