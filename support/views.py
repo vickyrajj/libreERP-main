@@ -640,10 +640,11 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
             part_no = i.products.part_no
             desc = i.products.description_1
             basicprice = i.price
-            pricesum =round((((i.price*project.profitMargin)/100)+i.price),2)
-            price = round((pricesum * multNumber),2)
+            landingPrice = i.landed_price
+            pricesum =round((i.landed_price+(i.price*multNumber*project.profitMargin)/100),2)
+            # price = round((pricesum * multNumber),2)
             qty = i.quantity1
-            amnt = round((price * qty),2)
+            amnt = round((pricesum * qty),2)
             grandTotal +=amnt
             gst = i.gst
             gstVal = round((((amnt *gst)/100)+amnt),2)
@@ -653,7 +654,7 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
             p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
             p12_03 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(desc)),styles['Normal'])
             p12_04 =Paragraph("<para fontSize=8>{0}</para>".format(qty),styles['Normal'])
-            p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(price),styles['Normal'])
+            p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(pricesum),styles['Normal'])
             p12_06 =Paragraph("<para fontSize=8>{0}</para>".format(amnt),styles['Normal'])
             p12_07 =Paragraph("<para fontSize=8>{0}%</para>".format(gst),styles['Normal'])
             p12_08 =Paragraph("<para fontSize=8>{0}</para>".format(gstVal),styles['Normal'])
