@@ -53,6 +53,7 @@ LOGIN_TEMPLATE = 'login.html'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'apfwdssalfeag7)cp4jve5gfb%l8wbn4cyvym(tez^m@z1o#3f'
+MOBILE_SECRET_KEY = '1234'
 
 GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git operations are
 # computationaly heavy and can be used to overload with git operations. So the server will have
@@ -61,7 +62,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['1192.168.0.17','192.168.1.124', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.110' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.123','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10','192.168.1.111','192.168.1.102']
+ALLOWED_HOSTS = ['1192.168.0.17','192.168.1.153', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.110' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.123','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10','192.168.1.111','192.168.1.102','192.168.0.112']
 
 
 LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
@@ -74,17 +75,16 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 BRAND_NAME = 'sterlingselect.com'
 SERVICE_NAME = 'Inventory, Sales and Ecommerce'
-BRAND_LOGO = '/static/images/logo1.png'
+BRAND_LOGO = '/static/images/bni-2.svg'
 BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
 SMART_REGISTRATION = True
 AUTO_ACTIVE_ON_REGISTER = False
 
-SEO_TITLE = 'Sterling Select'
+SEO_TITLE = 'BNI'
 SEO_DESCRIPTION = 'Sterling Select Online Shopping'
 SEO_IMG = '/static/images/company_icon.png'
 SEO_IMG_WIDTH = 1024
 SEO_IMG_HEIGHT = 719
-
 
 SEO_AUTHOR = 'sterlingselect.com'
 SEO_TWITTER_CREATOR = '@sterlingselect'
@@ -95,12 +95,15 @@ SEO_PUBLISHER = 'https://plus.google.com/b/105723801328437605094/'
 
 
 ECOMMERCE_THEME = '#631516' ##631516
-INVENTORY_ENABLED = True
+INVENTORY_ENABLED = False
 
 LITE_REGISTRATION = False
 AUTH_PASSWORD = 'titan@1'
 
-
+FEDEX_AUTH_KEY = 'abOhatnikLWCa8Hj'
+FEDEX_PASSWORD = 'Yk1agUkfxS1P3ABNemVGYJFOB'
+FEDEX_ACCOUNT_NUMBER = '870648022'
+FEDEX_METER_NUMBER = '113921415'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -144,9 +147,9 @@ PAYU_MERCHANT_KEY = "gtKFFx"
 PAYU_MERCHANT_SALT = "eCwWELxi"
 # And add the PAYU_MODE to 'TEST' for testing and 'LIVE' for production.
 PAYU_MODE = "TEST"
+EBS_PAYMENT_MODE = "TEST"
 
-
-PAYMENT_MODE = 'PAYU' # options are EBS , paypal , paytm , PAYU
+PAYMENT_MODE = 'EBS' # options are EBS , paypal , paytm , PAYU
 
 
 # paypal payment gateway details
@@ -190,7 +193,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username'
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = False
-VERIFY_MOBILE = False
+VERIFY_MOBILE = True
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -284,13 +287,21 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+
+EMAIL_API=True
+G_FROM='onlinestore@bni-india.in'
+G_KEY='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'
+G_ADMIN=["vikky.motla@gmail.com"]
+
+
+
 DEFAULT_FROM_EMAIL = 'do_not_reply@24tutors.com'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_HEADERS = (
     'x-requested-with',

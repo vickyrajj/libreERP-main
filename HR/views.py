@@ -27,8 +27,17 @@ from rest_framework.views import APIView
 from ecommerce.models import GenericImage
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+
 from openpyxl import load_workbook
 from io import BytesIO
+
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
+
 
 def documentView(request):
     docID = None
@@ -114,10 +123,8 @@ def generateOTP(request):
 def loginView(request):
 
     # print request.META['HTTP_USER_AGENT']
-    print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    print 'cameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',request
 
-
-    print 'loginnnnnnnnnnnnnnnnn',request.POST
     backgroundImage = globalSettings.LOGIN_PAGE_IMAGE
     genericImg = GenericImage.objects.all()
     try:
@@ -137,8 +144,8 @@ def loginView(request):
         else:
             return redirect(reverse(globalSettings.LOGIN_REDIRECT))
     if request.method == 'POST':
-        print request.POST,'lllllllllllllddddddddddddd'
     	usernameOrEmail = request.POST['username']
+        print usernameOrEmail ,'usernameOrEmail'
         otpMode = False
         if 'otp' in request.POST:
             print "otp"
@@ -357,21 +364,50 @@ class SendActivatedStatus(APIView):
             'twitterUrl' : 'twitter.com',
             'brandName' : globalSettings.BRAND_NAME,
         }
-
         email_body = get_template('app.HR.userActivated.html').render(ctx)
         print email_body
         email_subject = 'Registration Successfull!!!!!'
-        sentEmail=[]
-        sentEmail.append(str(request.data['email']))
-        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-        msg = EmailMessage(email_subject, email_body, to= sentEmail)
-        msg.content_subtype = 'html'
-        msg.send()
+        if globalSettings.EMAIL_API:
+            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            data = {
+              "personalizations": [
+                {
+                  "to": [
+                    {
+                      "email": str(request.data['email'])
+                      # str(orderObj.user.email)
+                    }
+                  ],
+                  "subject": email_subject
+                }
+              ],
+              "from": {
+                "email": globalSettings.G_FROM,
+                "name":"BNI India"
+              },
+              "content": [
+                {
+                  "type": "text/html",
+                  "value": email_body
+                }
+              ]
+            }
+            response = sg.client.mail.send.post(request_body=data)
+            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        else:
+            sentEmail=[]
+            sentEmail.append(str(request.data['email']))
+            # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+            msg = EmailMessage(email_subject, email_body, to= sentEmail)
+            msg.content_subtype = 'html'
+            msg.send()
         return Response({}, status = status.HTTP_200_OK)
+
 
 from django.core.mail import send_mail , EmailMessage
 from django.core.mail import EmailMultiAlternatives
-
+import sendgrid
 class BulkUserCreationAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated , isAdmin)
     def post(self, request, format=None):
@@ -430,19 +466,6 @@ class BulkUserCreationAPIView(APIView):
                 'link' : url + '/accounts/password/reset/',
                 'recieverName' : first_name + ' ' + last_name,
                 'brandName' : globalSettings.BRAND_NAME,
-                # 'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
-                # 'linkUrl': globalSettings.BRAND_NAME,
-                # 'sendersAddress' : globalSettings.SEO_TITLE,
-                # # 'sendersPhone' : '122004',
-                # 'grandTotal':grandTotal,
-                # 'total': total,
-                # 'value':value,
-                # 'docID':docID,
-                # 'data':orderObj,
-                # 'promoAmount':promoAmount,
-                # 'linkedinUrl' : lkLink,
-                # 'fbUrl' : fbLink,
-                # 'twitterUrl' : twtLink,
             }
             print ctx
             sendAddr = []
@@ -454,3 +477,24 @@ class BulkUserCreationAPIView(APIView):
 
 
         return Response(status = status.HTTP_200_OK)
+
+@csrf_exempt
+def socialMobileView(request):
+    print request.POST,'ddddddddddddddddd'
+    if request.POST['secretKey'] == globalSettings.MOBILE_SECRET_KEY:
+        u = User.objects.filter(username = request.POST['username'])
+        if len(u)>0:
+            print 'already exist'
+        else:
+            print 'create new'
+            u = User(username = request.POST['username'])
+            u.email = request.POST['email']
+            fname = request.POST['email'].split('@')[0]
+            u.first_name = fname
+            u.is_active = True
+            u.set_password(request.POST['password'])
+            u.save()
+        loginView(request)
+    else:
+        raise PermissionDenied()
+    return render(request,"ngEcommerce.html")

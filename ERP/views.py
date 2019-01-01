@@ -20,6 +20,8 @@ import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 import urllib
 import hashlib
+import sendgrid
+import os
 
 
 def makeOnlinePayment(request):
@@ -39,25 +41,25 @@ class MakeEBSPayment(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
     def get(self , request , format = None):
         MERCHANT_KEY = globalSettings.PAYTM_MERCHANT_KEY
-        order_id = request.GET['orderid']
+        order = Order.objects.get(pk = request.GET['orderid'])
         data_dict = {
                     'channel':'0',
                     'account_id':'19591',
-                    'reference_no': order_id,
-                    'amount': Order.objects.get(pk = order_id).totalAmount,
-                    'mode':'TEST',
+                    'reference_no': request.GET['orderid'],
+                    'amount': order.totalAmount,
+                    'mode': globalSettings.EBS_PAYMENT_MODE,
                     'currency': 'INR',
-                    'description':'test ',
-                    'return_url': 'http://localhost:8000/ebsPaymanetResponse/',
+                    'description':'BNI India products ',
+                    'return_url': globalSettings.SITE_ADDRESS + '/ebsPaymentResponse/',
                     'name': request.user.first_name,
-                    'address':'ABC , kudlu',
-                    'city':'Bengaluru',
-                    'state':'Karnataka',
-                    'country' : 'IND',
-                    'postal_code':'560068',
-                    'phone':'9702438730',
-                    'email':'pkyisky@gmail.com',
-                    'cust_email':'pkyisky@gmail.com'
+                    'address': order.street,
+                    'city':order.city,
+                    'state':order.state,
+                    'country' : 'IN',
+                    'postal_code':order.pincode,
+                    'phone': order.user.profile.mobile,
+                    'email': order.user.email,
+                    'cust_email': globalSettings.G_ADMIN[0]
                 }
         param_dict = data_dict
 
@@ -190,10 +192,38 @@ class serviceRegistrationApi(APIView):
             # Send email with activation key
             email_subject = 'Account confirmation'
             email_body = get_template('app.ecommerce.email.html').render(ctx)
-
-            msg = EmailMessage(email_subject, email_body, to= [email] , from_email= 'pkyisky@gmail.com' )
-            msg.content_subtype = 'html'
-            msg.send()
+            if globalSettings.EMAIL_API:
+                sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                data = {
+                  "personalizations": [
+                    {
+                      "to": [
+                        {
+                          "email": email
+                          # str(orderObj.user.email)
+                        }
+                      ],
+                      "subject": email_subject
+                    }
+                  ],
+                  "from": {
+                    "email": globalSettings.G_FROM,
+                    "name":"BNI India"
+                  },
+                  "content": [
+                    {
+                      "type": "text/html",
+                      "value": email_body
+                    }
+                  ]
+                }
+                response = sg.client.mail.send.post(request_body=data)
+                print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+            else:
+                msg = EmailMessage(email_subject, email_body, to= [email] , from_email= 'pkyisky@gmail.com' )
+                msg.content_subtype = 'html'
+                msg.send()
             content = {'pk' : user.pk , 'username' : user.username , 'email' : user.email}
             ak.save()
             return Response(content , status = status.HTTP_200_OK)
@@ -266,7 +296,6 @@ class moduleViewSet(viewsets.ModelViewSet):
         return getModules(u , includeAll)
 
 def getApps(user):
-    print 'appssssssssssssssssssssssss',appSettingsField.objects.get(app=25,name='multipleStore')
     aa = []
     for a in user.accessibleApps.all().values('app'):
         aa.append(a['app'])
@@ -299,7 +328,6 @@ class applicationViewSet(viewsets.ModelViewSet):
         else:
             if 'user' in self.request.GET:
                 return getApps(User.objects.get(username = self.request.GET['user']))
-            print 'cameeeeeeeeeeeeeeeeee',appSettingsField.objects.get(app=25,name='multipleStore').flag
             try:
                 if appSettingsField.objects.get(app=25,name='multipleStore').flag:
                     return application.objects.filter()

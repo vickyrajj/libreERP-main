@@ -10,5 +10,7 @@ router.register(r'enquireOrContact' , EnquiryAndContactsViewSet , base_name = 'e
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'updateInfo/$' , UpdateInfoAPI.as_view()),
+    url(r'resendOtp/$' , ReSendOtpAPI.as_view()),
+
     # url(r'register/$' , DownloadQuesPaper.as_view() ),
 ]

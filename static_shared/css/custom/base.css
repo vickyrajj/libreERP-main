@@ -30,6 +30,10 @@
 	}
 }
 
+.onHoverli{
+	background-color: #eee;
+	border:1px solid blac;
+}
 
 
 .toplevelmenuOption:hover{
@@ -666,6 +670,7 @@ body {
   color: #ffffff;
 }
 
+
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #ffffff;
@@ -677,6 +682,18 @@ body {
     color: #ffffff;
     background-color: var(--headerNavbarHighlight);
   }
+
+	.pagination > li > a {
+		padding: 0px 7px !important;
+	}
+
+	.pagination > li > .input-group{
+		display: none !important;
+	}
+	generic-table > div{
+		clear: both
+	}
+
 }
 
 

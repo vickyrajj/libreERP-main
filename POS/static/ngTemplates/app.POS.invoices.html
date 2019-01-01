@@ -1,9 +1,19 @@
 
 <div class="row" ng-if="!posShowAll" style="font-size:35px">
-  <div class="col-md-5">
+  <div class="col-md-4">
     <label>Invoice Serial Number</label> - {{form.serialNumber}}
   </div>
-  <div class="col-md-7">
+  <div class="col-md-3">
+    <div class="input-group">
+      <input type="text" ng-model="form.cMobileNumber" class="form-control" placeholder="Enter Customer Mobile Number">
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-success" ng-click="customerSeacrh()">Search</button>
+      </span>
+    </div>
+    <p class="help-block" style="color:green;font-size:15px" ng-if="form.customer.pk">Our Customer ....</p>
+
+  </div>
+  <div class="col-md-5">
     <div class="col-md-7">
       <span ng-if="multiStore" style="font-size:21px">
         <div class="col-md-3 text-right">
@@ -33,6 +43,12 @@
   </div>
 
 
+</div>
+<div class="row text-center" ng-if="!posShowAll && form.customer.pk" style="font-size:25px">
+  <hr>
+  <div class="col-md-12">
+      <strong>Name : </strong>{{form.customer.name}} &nbsp; <strong>Address : </strong>{{form.customer.street}} , {{form.customer.city}} , {{form.customer.pincode}} , {{form.customer.state}} , {{form.customer.country}}
+  </div>
 </div>
 <div class="row" ng-if="posShowAll">
   <div class="col-md-4">
@@ -97,6 +113,7 @@
             <option value="netBanking">Net Banking</option>
             <option value="card">Card</option>
             <option value="cheque">Cheque</option>
+            <option value="cashOnDelivery">Cash On Delivery</option>
           </select>
         </div>
       </div>

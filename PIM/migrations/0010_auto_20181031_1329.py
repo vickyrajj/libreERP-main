@@ -38,9 +38,4 @@ class Migration(migrations.Migration):
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='contactsuser', to=settings.AUTH_USER_MODEL)),
             ],
         ),
-        migrations.AlterField(
-            model_name='calendar',
-            name='clients',
-            field=models.ManyToManyField(blank=True, related_name='calendarEntries', to='PIM.Contact'),
-        ),
     ]

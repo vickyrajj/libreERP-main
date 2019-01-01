@@ -27,6 +27,7 @@ app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
                   name : response.data.first_name};
      $http({method : 'POST' , url : '/api/HR/sendActivatedStatus/' , data : toSend}).
      then(function(response) {
+        Flash.create('success','User Activated Successfully');
        console.log(response.data);
      })
    });

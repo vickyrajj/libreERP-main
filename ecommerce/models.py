@@ -18,6 +18,8 @@ def getEcommerceGenericProductBannerUploadPath(instance , filename ):
     return 'ecommerce/GenericProductBanner/%s_%s' % (str(time()).replace('.', '_'), filename)
 def getEcommerceCenericImageUploadPath(instance , filename ):
     return 'ecommerce/GenericProductBanner/%s_%s' % (str(time()).replace('.', '_'), filename)
+def getEcommerceCountryUploadPath(instance , filename ):
+    return 'ecommerce/CountryFlag/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 FIELD_TYPE_CHOCIE = (
     ('char' , 'char'),
@@ -230,6 +232,9 @@ class OrderQtyMap(models.Model):
     notes =  models.CharField(max_length=500 ,null = True , blank = True)
     prodSku = models.CharField(max_length = 50, null = True, blank = True)
     desc = models.CharField(max_length = 50, null = True, blank = True)
+    orderBy =  models.ForeignKey(User, null = True , related_name = 'orderedUser')
+    gstAmount = models.PositiveIntegerField( default = 0)
+    paidAmount = models.PositiveIntegerField( default = 0)
 
 
 class Order(models.Model):
@@ -242,7 +247,7 @@ class Order(models.Model):
     paymentRefId =  models.CharField(max_length=100 ,null = True , blank = True)
     paymentChannel = models.CharField(max_length=100 ,null = True , blank = True)
     modeOfShopping = models.CharField(choices = SHOPPINGMODE_CHOICES , max_length = 10)
-    paidAmount = models.PositiveIntegerField( default = 0)
+    paidAmount = models.FloatField( default = 0)
     paymentStatus = models.BooleanField(default = False)
     promoCode = models.CharField(max_length=100 ,null = True , blank = True)
     approved = models.NullBooleanField()
@@ -261,6 +266,7 @@ class Order(models.Model):
     billingCountry = models.CharField(max_length = 50 , null = True , blank = True)
     mobileNo = models.CharField(max_length=15 ,null = True , blank = True)
     shippingCharges =  models.IntegerField(default = 0)
+    totalGst = models.PositiveIntegerField( default = 0)
 
 
 class Promocode(models.Model):
@@ -321,3 +327,20 @@ class GenericImage(models.Model):
     blogPageImage = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     topBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
     topMobileBanner = models.ImageField(null = True , upload_to = getEcommerceCenericImageUploadPath)
+
+class Countries(models.Model):
+    uniqueId = models.PositiveIntegerField(default=0)
+    sortname = models.CharField( max_length = 10, null = True)
+    name = models.CharField( max_length = 50, null = True)
+    phonecode =  models.PositiveIntegerField(default=0)
+    flag = models.ImageField(null = True , upload_to = getEcommerceCountryUploadPath)
+
+class States(models.Model):
+    uniqueId = models.PositiveIntegerField(default=0)
+    name = models.CharField( max_length = 50, null = True)
+    country = models.ForeignKey(Countries , related_name = 'state' , null = False)
+
+class Cities(models.Model):
+    uniqueId = models.PositiveIntegerField(default=0)
+    name = models.CharField( max_length = 50, null = True)
+    state = models.ForeignKey(States , related_name = 'city' , null = False)

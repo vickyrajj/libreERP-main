@@ -24,7 +24,9 @@ from rest_framework.views import APIView
 from PIM.models import blogPost
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-
+import sendgrid
+import os
+from ERP.models import appSettingsField
 
 def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
@@ -106,13 +108,19 @@ def desclaimer(request):
 def registration(request):
 
     if not globalSettings.LITE_REGISTRATION:
-        return render(request,"registration.html" , {"home" : False ,"brand_title":globalSettings.SEO_TITLE, "brandLogo" : globalSettings.BRAND_LOGO ,'icon_logo':globalSettings.ICON_LOGO, "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'regextra':globalSettings.REGISTRATION_EXTRA_FIELD,'verifyMobile':globalSettings.VERIFY_MOBILE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
-
+        data = {"home" : False ,"brand_title":globalSettings.SEO_TITLE,"autoActiveReg":globalSettings.AUTO_ACTIVE_ON_REGISTER , "brandLogo" : globalSettings.BRAND_LOGO ,'icon_logo':globalSettings.ICON_LOGO, "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'regextra':globalSettings.REGISTRATION_EXTRA_FIELD,'verifyMobile':globalSettings.VERIFY_MOBILE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}}
+        objIsGlobal = appSettingsField.objects.filter(name='isStoreGlobal')
+        isStoreGlobal = False
+        if len(objIsGlobal)>0:
+            if objIsGlobal[0].flag:
+                isStoreGlobal = True
+        data['isStoreGlobal'] = isStoreGlobal
+        return render(request,"registration.html" , data)
     else:
         mobile = ''
         if 'mobile' in request.POST:
             mobile = request.POST['mobile']
-        return render(request,"registration.lite.html" , {'mobile':mobile,"home" : False , "brand_title":globalSettings.SEO_TITLE,"brandLogo" : globalSettings.BRAND_LOGO , 'icon_logo':globalSettings.ICON_LOGO, "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'regextra':globalSettings.REGISTRATION_EXTRA_FIELD,'verifyMobile':globalSettings.VERIFY_MOBILE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
+        return render(request,"registration.lite.html" , {'mobile':mobile,"home" : False ,"autoActiveReg":globalSettings.AUTO_ACTIVE_ON_REGISTER, "brand_title":globalSettings.SEO_TITLE,"brandLogo" : globalSettings.BRAND_LOGO , 'icon_logo':globalSettings.ICON_LOGO, "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'regextra':globalSettings.REGISTRATION_EXTRA_FIELD,'verifyMobile':globalSettings.VERIFY_MOBILE,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
 
 
 class RegistrationViewSet(viewsets.ModelViewSet):
@@ -138,5 +146,136 @@ class UpdateInfoAPI(APIView):
         u.set_password(d['password'])
         u.backend = 'django.contrib.auth.backends.ModelBackend'
         u.save()
+
+        try:
+            pobj = profile.objects.get(pk=u.profile.pk)
+            z  = merge_two_dicts(pObj.details, d)
+            pObj.details = z
+            print z,'***************************************************'
+            pObj.save()
+        except :
+            pass
+
+
+
+        # ctx = {
+        #     'userData':d
+        # }
+        #
+        # # Send email with activation key
+        # email=d['email']
+        # email_subject = 'New account'
+        # email_body = get_template('app.ecommerce.newUserEmail.html').render(ctx)
+        # if globalSettings.EMAIL_API:
+        #     sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+        #     # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+        #     data = {
+        #       "personalizations": [
+        #         {
+        #           "to": [
+        #             {
+        #               "email": "bhanubalram5@gmail.com"
+        #               # str(orderObj.user.email)
+        #             }
+        #           ],
+        #           "subject": email_subject
+        #         }
+        #       ],
+        #       "from": {
+        #         "email": globalSettings.G_FROM,
+        #         "name":"BNI India"
+        #       },
+        #       "content": [
+        #         {
+        #           "type": "text/html",
+        #           "value": email_body
+        #         }
+        #       ]
+        #     }
+        #     response = sg.client.mail.send.post(request_body=data)
+        #     print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        # else:
+        # msg = EmailMessage(email_subject, email_body, to= [email] , from_email= 'pkyisky@gmail.com' )
+        # msg.content_subtype = 'html'
+        # msg.send()
         login(request , u)
+        return Response( status = status.HTTP_200_OK)
+
+
+class ReSendOtpAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        print "herererere", request.data
+        reg = Registration.objects.get(pk=request.data['id'])
+        username = reg.email.split('@')[0]
+        if request.data['otpType'] == 'emailOtp':
+            reg.emailOTP = generateOTPCode()
+            print reg.emailOTP,'email'
+            msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP)]
+
+            ctx = {
+                'heading' : 'Welcome to Ecommerce',
+                'recieverName' : 'Customer',
+                'message': msgBody,
+                'linkUrl': 'sterlingselect.com',
+                'linkText' : 'View Online',
+                'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+                'sendersPhone' : '841101',
+                'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
+                'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
+                'twitterUrl' : 'twitter.com',
+                'brandName' : globalSettings.BRAND_NAME,
+                'username':username
+            }
+
+            email_body = get_template('app.homepage.emailOTP.html').render(ctx)
+            email_subject = 'Regisration OTP'
+            if globalSettings.EMAIL_API:
+                sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                data = {
+                  "personalizations": [
+                    {
+                      "to": [
+                        {
+                          # "email": 'bhanubalram5@gmail.com'
+                          "email": str(reg.email)
+                          # str(orderObj.user.email)
+                        }
+                      ],
+                      "subject": email_subject
+                    }
+                  ],
+                  "from": {
+                    "email": globalSettings.G_FROM,
+                    "name":"BNI India"
+                  },
+                  "content": [
+                    {
+                      "type": "text/html",
+                      "value": email_body
+                    }
+                  ]
+                }
+                response = sg.client.mail.send.post(request_body=data)
+                print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+            else:
+                sentEmail=[]
+                sentEmail.append(str(reg.email))
+                # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                msg.content_subtype = 'html'
+                msg.send()
+        elif request.data['otpType'] == 'mobileOtp':
+            reg.mobileOTP = generateOTPCode()
+            print reg.mobileOTP,'mobile'
+            mobile = reg.mobile
+            if 'phoneCode' in request.data:
+                phoneCode = request.data['phoneCode']
+                mobile = phoneCode +''+ reg.mobile
+            url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+            requests.get(url)
+        reg.save()
+
         return Response( status = status.HTTP_200_OK)

@@ -6,7 +6,7 @@
     <div class="container-fluid" ng-if="mode == 'home'">
       <div class="row">
         <div class="col-md-8">
-          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
+
           <div class="row" style="padding:20px">
             <uib-tabset style="margin-left: 15px;">
               <uib-tab>
@@ -29,6 +29,8 @@
               </uib-tab>
             </uib-tabset>
           </div>
+
+          <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
 
         </div>
         <div class="col-md-4">

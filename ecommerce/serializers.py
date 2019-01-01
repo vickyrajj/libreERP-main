@@ -13,7 +13,16 @@ from POS.serializers import ProductSerializer
 import json
 from HR.models import *
 from HR.serializers import *
+from ERP.models import appSettingsField
 
+try:
+    checkGet = True
+    globalStoreObj = appSettingsField.objects.filter(name='isStoreGlobal')
+    if len(globalStoreObj)>0:
+        if globalStoreObj[0].flag:
+            checkGet = False
+except:
+    checkGet = True
 
 class fieldSerializer(serializers.ModelSerializer):
     class Meta:
@@ -143,11 +152,12 @@ class listingSerializer(serializers.ModelSerializer):
     in_stock = serializers.SerializerMethodField()
     variantsInStoreQty = serializers.SerializerMethodField()
     product_variants = serializers.SerializerMethodField()
+    product_taxAmount = serializers.SerializerMethodField()
     # parentType = genericProductSerializer(many = False , read_only = True)
 
     class Meta:
         model = listing
-        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock','variantsInStoreQty','product_variants','productIndex')
+        fields = ('pk' , 'user' , 'product'  , 'approved' ,  'specifications' , 'files' , 'parentType' , 'source','dfs','added_cart','added_saved','in_stock','variantsInStoreQty','product_variants','productIndex','product_taxAmount')
         read_only_fields = ('user',)
     def create(self ,  validated_data):
         u = self.context['request'].user
@@ -237,6 +247,12 @@ class listingSerializer(serializers.ModelSerializer):
     def get_product_variants(self , obj):
         prodVar = ProductVerient.objects.filter(parent = obj.product)
         return prodVar.values()
+    def get_product_taxAmount(self , obj):
+        taxAmount = 0
+        if obj.product.productMeta and checkGet:
+            ptaxRate = obj.product.productMeta.taxRate
+            taxAmount = int(round((obj.product.price * ptaxRate)/100))
+        return taxAmount
 
 
 from django.db.models import Avg, Value, CharField
@@ -252,9 +268,10 @@ class listingLiteSerializer(serializers.ModelSerializer):
     in_stock = serializers.SerializerMethodField()
     variantsInStoreQty = serializers.SerializerMethodField()
     product_variants = serializers.SerializerMethodField()
+    product_taxAmount = serializers.SerializerMethodField()
     class Meta:
         model = listing
-        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock','product_variants','variantsInStoreQty','productIndex')
+        fields = ('pk' ,  'approved' ,  'files' , 'parentType'  ,'specifications', 'product','source', 'rating', 'rating_count','added_cart','added_saved','in_stock','product_variants','variantsInStoreQty','productIndex','product_taxAmount')
     def get_rating(self , obj):
         return obj.ratings.all().aggregate(Avg('rating'))
 
@@ -298,6 +315,12 @@ class listingLiteSerializer(serializers.ModelSerializer):
     def get_product_variants(self , obj):
         prodVar = ProductVerient.objects.filter(parent = obj.product)
         return prodVar.values()
+    def get_product_taxAmount(self , obj):
+        taxAmount = 0
+        if obj.product.productMeta:
+            ptaxRate = obj.product.productMeta.taxRate
+            taxAmount = int(round((obj.product.price * ptaxRate)/100))
+        return taxAmount
 
 
 
@@ -341,9 +364,10 @@ class offerBannerSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     product = listingSerializer(many = False , read_only = True)
     prod_howMuch = serializers.SerializerMethodField()
+    gst = serializers.SerializerMethodField()
     class Meta:
         model = Cart
-        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice','prod_howMuch','desc')
+        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice','prod_howMuch','desc','gst')
     def create(self , validated_data):
     	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 
@@ -385,6 +409,15 @@ class CartSerializer(serializers.ModelSerializer):
                 return prod[0].howMuch
         else:
             return None
+    def get_gst(self , obj):
+            prod = Product.objects.filter(pk = obj.pk)
+            isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')
+            gst = 0
+            if len(isStoreGlobal)>0:
+                if not isStoreGlobal[0].flag:
+                    if obj.product.product.productMeta is not None:
+                        gst = obj.product.product.productMeta.taxRate
+            return gst
 
 
 class ActivitiesSerializer(serializers.ModelSerializer):
@@ -453,7 +486,16 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
     trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc','orderBy','gstAmount','paidAmount')
+
+    def create(self , validated_data):
+        print '******************' , self.context['request'].data
+        l = OrderQtyMap(**validated_data)
+        if 'product' in self.context['request'].data:
+            lstObj = listing.objects.get(pk = int(self.context['request'].data['product']))
+            l.product = lstObj
+        l.save()
+        return l
 
     def update(self ,instance, validated_data):
         print 'updateeeeeeeeeeeeeeeeeee'
@@ -519,8 +561,22 @@ class OrderSerializer(serializers.ModelSerializer):
     promoDiscount = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges')
+        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges','totalGst')
         read_only_fields = ('user',)
+
+    def update(self ,instance, validated_data):
+        print 'updateeeeeeeeeeeeeeeeeee Orderrrrrrr'
+        for key in ['totalAmount' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        if 'addingNewQty' in self.context['request'].data:
+            instance.orderQtyMap.add(OrderQtyMap.objects.get(pk = int(self.context['request'].data['orderQtyMap'])))
+            instance.save()
+        return instance
+
     def get_promoDiscount(self, obj):
         pD = Promocode.objects.filter(name = obj.promoCode)
         promoDiscount = 0
@@ -590,3 +646,8 @@ class genericImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenericImage
         fields = ( 'pk' , 'paymentImage' ,'paymentPortrait' , 'cartImage','searchBgImage','blogPageImage','topBanner','topMobileBanner')
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Countries
+        fields = ( 'pk' , 'uniqueId' ,'sortname' , 'name','phonecode','flag')

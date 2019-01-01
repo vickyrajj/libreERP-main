@@ -790,13 +790,13 @@ app.directive('productCard', function() {
               }
 
             } else {
-              console.log('child', newValue.sku);
+              // console.log('child', newValue.sku);
 
               for (var i = 0; i < $scope.list.variantsInStoreQty.length; i++) {
-                console.log($scope.list.variantsInStoreQty[i].productVariant, $scope.selectedObj);
+                // console.log($scope.list.variantsInStoreQty[i].productVariant, $scope.selectedObj);
                 if ($scope.list.variantsInStoreQty[i].productVariant == $scope.selectedObj.pk && $scope.list.variantsInStoreQty[i].store == $scope.storePK) {
                   $scope.selectedObj.inStock = $scope.list.variantsInStoreQty[i].quantity
-                  console.log('yes');
+                  // console.log('yes');
                   break;
                 } else {
                   $scope.selectedObj.inStock = 0
@@ -837,7 +837,7 @@ app.directive('productCard', function() {
 
             index = $scope.prodVarList.findIndex(x => x.str == str);
             if (index >= 0) {
-              console.log('already there');
+              // console.log('already there');
             } else {
               $scope.prodVarList.push(toPush)
             }
@@ -854,7 +854,7 @@ app.directive('productCard', function() {
               }
             }
             if ($scope.prodVarListColors.length >= 0) {
-              console.log('herer');
+              // console.log('herer');
               $scope.selectedColor.toWatch = $scope.prodVarListColors[0];
             }
           }
@@ -876,7 +876,7 @@ app.directive('productCard', function() {
               $scope.selectedObj.prodDesc = newValue.prodDesc
             }
 
-            console.log($scope.selectedObj);
+            // console.log($scope.selectedObj);
 
             if ($scope.me) {
               for (var i = 0; i < $rootScope.inCart.length; i++) {

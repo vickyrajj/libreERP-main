@@ -99,7 +99,8 @@ PAYMENT_CHOICES = (
     ('netBanking' , 'netBanking'),
     ('cash' , 'cash'),
     ('cheque' , 'cheque'),
-    ('wallet' , 'wallet')
+    ('wallet' , 'wallet'),
+    ('cashOnDelivery' , 'cashOnDelivery')
 )
 
 MONTH_CHOICES = (
@@ -143,6 +144,7 @@ class Invoice(models.Model):
     totalTax = models.FloatField(null=False)
     paymentRefNum = models.CharField(max_length=10000,null=True)
     receivedDate = models.DateField(null=True)
+    status = models.CharField(max_length = 20 , null = True , default = 'Created')
 
 class ProductVerient(models.Model):
     created = models.DateTimeField(auto_now_add = True)

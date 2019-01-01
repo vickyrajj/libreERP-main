@@ -87,7 +87,6 @@ class Migration(migrations.Migration):
                 ('attachment', models.FileField(null=True, upload_to=PIM.models.getCalendarAttachment)),
                 ('myNotes', models.CharField(blank=True, max_length=100)),
                 ('data', models.CharField(max_length=200, null=True)),
-                ('clients', models.ManyToManyField(blank=True, related_name='calendarEntries', to='clientRelationships.Contact')),
                 ('followers', models.ManyToManyField(blank=True, related_name='calendarItemsFollowing', to=settings.AUTH_USER_MODEL)),
             ],
         ),
