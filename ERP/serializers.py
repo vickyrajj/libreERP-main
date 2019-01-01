@@ -13,64 +13,8 @@ from django.conf import settings as globalSettings
 
 class WebErrorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = WebErrors
+        model = WebError
         fields = ('pk' , 'created' , 'data')
-
-class addressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = address
-        fields = ('pk' , 'street' , 'city' , 'state' , 'pincode', 'lat' , 'lon', 'country')
-
-class serviceSerializer(serializers.ModelSerializer):
-    user = userSearchSerializer(many = False , read_only = True)
-    address = addressSerializer(many = False, read_only = True)
-    contactPerson = userSearchSerializer(many = False , read_only = True)
-    class Meta:
-        model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','vendor')
-
-    def assignValues(self , instance , validated_data):
-        if 'cin' in validated_data:
-            instance.cin = validated_data['cin']
-        if 'tin' in validated_data:
-            instance.tin = validated_data['tin']
-        if 'mobile' in validated_data:
-            instance.mobile = validated_data['mobile']
-        if 'telephone' in validated_data:
-            instance.telephone = validated_data['telephone']
-        if 'logo' in validated_data:
-            instance.logo = validated_data['logo']
-        if 'about' in validated_data:
-            instance.about = validated_data['about']
-        if 'doc' in validated_data:
-            instance.doc = validated_data['doc']
-        if 'web' in validated_data:
-            instance.web = validated_data['web']
-        if 'address' in self.context['request'].data and self.context['request'].data['address'] is not None:
-            instance.address_id = int(self.context['request'].data['address'])
-        if 'contactPerson' in self.context['request'].data and self.context['request'].data['contactPerson'] is not None:
-            instance.contactPerson_id = int(self.context['request'].data['contactPerson'])
-        instance.save()
-
-    def create(self , validated_data):
-        print validated_data
-        s = service(name = validated_data['name'] )
-        s.user = self.context['request'].user
-        self.assignValues(s, validated_data)
-        return s
-    def update(self , instance , validated_data):
-        instance.name = self.context['request'].data['name']
-        # instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
-        instance.save()
-        self.assignValues(instance , validated_data)
-        return instance
-
-class serviceLiteSerializer(serializers.ModelSerializer):
-    address = addressSerializer(many = False, read_only = True)
-    class Meta:
-        model = service
-        fields = ('pk'  ,'name' , 'address' , 'mobile' )
-
 
 class deviceSerializer(serializers.ModelSerializer):
     class Meta:
