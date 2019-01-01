@@ -100,7 +100,7 @@
               </div>
 
 
-              <div ng-if="mode == 'main'">
+              <div ng-if="mode == 'verify'">
                 <div class="row" style="margin-bottom:15px;">
                   <div class="col-md-6">
                     <div class="row">
@@ -282,35 +282,41 @@
               </div>
 
 
-              <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
+              <div class="row" style="margin-bottom:15px;" ng-if="mode=='main'">
                 <div ng-if="!showActiveMsg">
                   {% endverbatim %} {% if verifyMobile != False %}
-                  <div class="col-md-6">
+                  <div class="col-md-8 col-md-offset-2">
                     <div class="row">
-                      <div class="col-md-2 col-sm-2 col-xs-2">
+                      <div class="col-md-1 col-sm-1 col-xs-1">
                         <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                       </div>
-                      <div class="col-md-10 col-sm-10 col-xs-10">
+                      <div class="col-md-9 col-sm-9 col-xs-9">
                         <div class="form-group">
                           <input ng-model="form.mobileOTP" type="password" class="form-control floatInput" required/>
                           <span class="floating-label">Mobile OTP *</span>
                         </div>
                       </div>
+                      <div class="col-md-2 col-sm-2 col-xs-2" style="margin-top:42px;cursor:pointer">
+                        <span style="opacity: 0.7;background: #e0e0e0;padding: 5px;">Resend</span>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-8 col-md-offset-2">
                     {% else %}
                     <div class="col-md-offset-2 col-md-8">
                       {% endif %} {% verbatim %}
                       <div class="row">
-                        <div class="col-md-2 col-sm-2 col-xs-2">
+                        <div class="col-md-1 col-sm-1 col-xs-1">
                           <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
                         </div>
-                        <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="col-md-9 col-sm-9 col-xs-9">
                           <div class="form-group">
                             <input ng-model="form.emailOTP" type="password" class="form-control floatInput" required/>
                             <span class="floating-label">Email OTP *</span>
                           </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-2" style="margin-top:42px;cursor:pointer">
+                          <span style="opacity: 0.7;background: #e0e0e0;padding: 5px;" >Resend</span>
                         </div>
                       </div>
                     </div>

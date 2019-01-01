@@ -95,6 +95,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       if ($scope.autoActiveReg=='True') {
         $scope.showActiveMsg = false
         window.location.href = "/";
+
       }else{
         $scope.showActiveMsg = true
 
@@ -108,7 +109,6 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
   }
 
   $scope.loading = true;
-
   $scope.$watch('form' , function(newValue , oldValue) {
 
     if ($scope.loading) {
