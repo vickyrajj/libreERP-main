@@ -670,6 +670,7 @@ body {
   color: #ffffff;
 }
 
+
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #ffffff;
@@ -688,6 +689,9 @@ body {
 
 	.pagination > li > .input-group{
 		display: none !important;
+	}
+	generic-table > div{
+		clear: both
 	}
 
 }

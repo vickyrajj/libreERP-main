@@ -261,8 +261,13 @@
                 Quantity
               </th>
               <th width="100" align="center">
-                Price
+                Price {{isStoreGlobal}}
               </th>
+              {% if isStoreGlobal == False %}
+              <th width="100" align="center">
+                GST
+              </th>
+              {% endif %}
               <th width="100" align="center">
                 Total Price
               </th>
@@ -278,6 +283,11 @@
               <td width="100" align="center" style="border:1px solid rgb(189, 211, 244);">
                 {{u.price}}
               </td>
+              {% if isStoreGlobal == False %}
+              <td width="100" align="center" style="border:1px solid rgb(189, 211, 244);">
+                {{u.gst}}
+              </td>
+              {% endif %}
               <td width="100" align="center" style="border:1px solid rgb(189, 211, 244);">
                 {{u.amount}}
               </td>

@@ -147,9 +147,9 @@ PAYU_MERCHANT_KEY = "gtKFFx"
 PAYU_MERCHANT_SALT = "eCwWELxi"
 # And add the PAYU_MODE to 'TEST' for testing and 'LIVE' for production.
 PAYU_MODE = "TEST"
+EBS_PAYMENT_MODE = "TEST"
 
-
-PAYMENT_MODE = 'PAYU' # options are EBS , paypal , paytm , PAYU
+PAYMENT_MODE = 'EBS' # options are EBS , paypal , paytm , PAYU
 
 
 # paypal payment gateway details
@@ -288,10 +288,10 @@ EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-EMAIL_API=True
+EMAIL_API=False
 G_FROM='onlinestore@bni-india.in'
 G_KEY='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'
-G_ADMIN=[ "vikas.m@cioc.in","vikas.motla@gmail.com"]
+G_ADMIN=["vikky.motla@gmail.com"]
 
 
 

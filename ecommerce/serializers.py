@@ -13,6 +13,7 @@ from POS.serializers import ProductSerializer
 import json
 from HR.models import *
 from HR.serializers import *
+from ERP.models import appSettingsField
 
 try:
     checkGet = True
@@ -363,9 +364,10 @@ class offerBannerSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     product = listingSerializer(many = False , read_only = True)
     prod_howMuch = serializers.SerializerMethodField()
+    gst = serializers.SerializerMethodField()
     class Meta:
         model = Cart
-        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice','prod_howMuch','desc')
+        fields = ( 'pk', 'product' , 'user' ,'qty' , 'typ' , 'prodSku', 'prodVarPrice','prod_howMuch','desc','gst')
     def create(self , validated_data):
     	print self.context['request'].data,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 
@@ -407,6 +409,15 @@ class CartSerializer(serializers.ModelSerializer):
                 return prod[0].howMuch
         else:
             return None
+    def get_gst(self , obj):
+            prod = Product.objects.filter(pk = obj.pk)
+            isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')
+            gst = 0
+            if len(isStoreGlobal)>0:
+                if not isStoreGlobal[0].flag:
+                    if obj.product.product.productMeta is not None:
+                        gst = obj.product.product.productMeta.taxRate
+            return gst
 
 
 class ActivitiesSerializer(serializers.ModelSerializer):

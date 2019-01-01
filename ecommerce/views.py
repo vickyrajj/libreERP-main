@@ -2367,6 +2367,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 
 def updateAndProcessOrder(orderID , amnt):
+    print 'in updateAndProcessOrderupdateAndProcessOrder'
     orderObj = Order.objects.get(id = orderID)
     orderObj.paidAmount = amnt
     orderObj.approved = True
@@ -2385,6 +2386,10 @@ def updateAndProcessOrder(orderID , amnt):
     print promoAmount
     a = '#'
     docID = str(a) + str(orderObj.pk)
+    try:
+        isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
+    except:
+        isStoreGlobal = False
     for i in orderObj.orderQtyMap.all():
         i.paidAmount = i.totalAmount
         i.save()
@@ -2393,21 +2398,44 @@ def updateAndProcessOrder(orderID , amnt):
             price=round(price, 2)
             totalPrice=i.qty*price
             totalPrice=round(totalPrice, 2)
-            total+=totalPrice
+
             total=round(total, 2)
-            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+            if not isStoreGlobal:
+                if i.product.product.productMeta is not None:
+                    gst = (i.product.product.productMeta.taxRate * price) /100
+                    totalPrice =totalPrice + gst
+                else:
+                    gst = 0
+                    totalPrice = totalPrice + gst
+            else:
+                gst = 0
+            total+=totalPrice
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : round(totalPrice,2),"price":price,'gst':round(gst,1)})
         else:
             prodData = ProductVerient.objects.get(sku = i.prodSku)
             price = prodData.discountedPrice
             price=round(price, 2)
             totalPrice=i.qty*price
             totalPrice=round(totalPrice, 2)
-            total+=totalPrice
             total=round(total, 2)
-            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+            if not isStoreGlobal:
+                if i.product.product.productMeta is not None:
+                    gst = (i.product.product.productMeta.taxRate * price) /100
+                    totalPrice =totalPrice + gst
+                else:
+                    gst = 0
+                    totalPrice = totalPrice + gst
+            else:
+                gst = 0
+            total+=totalPrice
+            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : round(totalPrice,2),"price":price,'gst':round(gst,1)})
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal, 2)
     orderObj.user.cartItems.all().delete()
+    print orderObj.user.email, 'email'
+    print 'semndddddddddddddddd emaillllllllll'
+
+
     if orderObj.user.email:
         ctx = {
             'heading' : "Invoice Details",
@@ -2424,14 +2452,44 @@ def updateAndProcessOrder(orderID , amnt):
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
+            'isStoreGlobal':isStoreGlobal
         }
         print ctx
         contactData = []
         email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+        email_subject = 'Order Placed'
+        emails = []
+        emails.append({"email":str(orderObj.user.email)})
         contactData.append(str(orderObj.user.email))
-        msg = EmailMessage("Order Details" , email_body, to= contactData  )
-        msg.content_subtype = 'html'
-        msg.send()
+        if globalSettings.EMAIL_API:
+            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            for i in globalSettings.G_ADMIN:
+                emails.append({"email":i})
+            print emails,"**************&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+            data = {
+              "personalizations": [
+                {
+                  "to": emails,
+                  "subject": email_subject
+                }
+              ],
+              "from": {
+                "email": globalSettings.G_FROM,
+                "name":"BNI India"
+              },
+              "content": [
+                {
+                  "type": "text/html",
+                  "value": email_body
+                }
+              ]
+            }
+            response = sg.client.mail.send.post(request_body=data)
+        else:
+            msg = EmailMessage("Order Details" , email_body, to= contactData  )
+            msg.content_subtype = 'html'
+            msg.send()
     return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
 
 
@@ -2444,6 +2502,7 @@ def payUPaymentResponse(request):
 
 @csrf_exempt
 def ebsPaymentResponse(request):
+    # return updateAndProcessOrder(213 ,  800)
     if request.method == 'POST' and 'Successful' in request.POST['ResponseMessage']:
         #ResponseCode=0&ResponseMessage=Transaction+Successful&DateCreated=2018-12-30+12%3A03%3A28&PaymentID=118878521&MerchantRefNo=40&Amount=2.00&Mode=LIVE&BillingName=Admin&BillingAddress=ABC+%2C+kudlu&BillingCity=Bengaluru&BillingState=Karnataka&BillingPostalCode=560068&BillingCountry=IND&BillingPhone=9702438730&BillingEmail=pkyisky%40gmail.com&DeliveryName=&DeliveryAddress=&DeliveryCity=&DeliveryState=&DeliveryPostalCode=&DeliveryCountry=&DeliveryPhone=&Description=test+&IsFlagged=NO&TransactionID=355107915&PaymentMethod=1161&RequestID=84015197&SecureHash=1F417B260A360D23DE7B7F3C9E054296
         return updateAndProcessOrder(request.POST['MerchantRefNo'] , request.POST['Amount'])
@@ -2566,3 +2625,38 @@ class CountryViewSet(viewsets.ModelViewSet):
     serializer_class = CountrySerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['name']
+
+class UserProfileSettingAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print request.GET ,'gggggggggggggggggggggggggg'
+        if 'user' in request.GET:
+            user = User.objects.get(pk=request.GET['user'])
+            prof = profile.objects.get(user = user)
+            firstName = user.first_name
+            lastName = user.last_name
+            email = user.email
+            gst = 'ABCDFDG'
+            try:
+                mobile = prof.mobile
+            except:
+                mobile =''
+            if prof.details is not None:
+                details = prof.details
+            else:
+                details = ''
+            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst}, status = status.HTTP_200_OK)
+    def post(self , request , format = None):
+        if 'user' in request.data:
+            user = User.objects.get(pk=request.data['user'])
+            firstName = request.data['firstName']
+            lastName = request.data['lastName']
+            email = request.data['email']
+            gst = request.data['gst']
+            mobile = request.data['mobile']
+            # user.firstName = firstName
+            # user.lastName = lastName
+            # user.email = email
+            # user.save()
+            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst}, status = status.HTTP_200_OK)
