@@ -10,6 +10,12 @@ from fabric.api import *
 import os
 from django.conf import settings as globalSettings
 
+
+class WebErrorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WebErrors
+        fields = ('pk' , 'created' , 'data')
+
 class addressSerializer(serializers.ModelSerializer):
     class Meta:
         model = address

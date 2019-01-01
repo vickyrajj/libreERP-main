@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='schedule',
             name='name',
-            field=models.CharField(default=django.utils.timezone.now, max_length=30),
+            field=models.CharField(default='', max_length=30),
             preserve_default=False,
         ),
     ]

@@ -149,3 +149,7 @@ class CompanyHolidays(models.Model):
     date = models.DateField(null=True)
     typ = models.CharField(choices = HOLIDAY_TYPE_CHOICES , max_length = 20 , default = 'national')
     name = models.CharField(max_length = 50 , null = True)
+
+class WebError(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    data = models.TextField(max_length=99999 , null = False)

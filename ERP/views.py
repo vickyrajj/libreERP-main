@@ -23,6 +23,12 @@ from HR.models import payroll
 from rest_framework import filters
 from django.utils import translation
 
+class WebErrorViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    serializer_class = WebErrorSerializer
+    def get_queryset(self):
+        return WebError.objects.all()
+
 
 def renderedStatic(request , filename):
 
