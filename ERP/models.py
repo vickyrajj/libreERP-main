@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User, Group
 from time import time
 from django.db import models
+from django.contrib import admin
 
 # Create your models here.
 
@@ -113,3 +114,6 @@ class Activity(models.Model):
 class WebError(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     data = models.TextField(max_length=99999 , null = False)
+
+
+admin.site.register(WebError)
