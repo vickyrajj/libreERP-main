@@ -691,8 +691,8 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
           if ($scope.form.firstName == '' || $scope.form.emailId == '' || $scope.form.requirements == '' || $scope.form.comapny == '' || $scope.form.mobileNumber == '') {
             return;
           }
-          var toSend = { ...$scope.form
-          };
+          var toSend = {};
+
           toSend.name = $scope.form.firstName + ' ' + $scope.form.lastName;
           delete toSend.firstName;
           delete toSend.lastName;
