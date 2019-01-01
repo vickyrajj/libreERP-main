@@ -1,81 +1,58 @@
-app.controller("controller.home", function($scope , $state) {
+app.controller("controller.home", function($scope, $state, $http) {
 
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  $scope.series = ['Series A', 'Series B'];
-  $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
-  ];
-  $scope.onClick = function (points, evt) {
-    console.log(points, evt);
-  };
+  $scope.selectedUnit = ['Monthly','Weekly']
 
-  $scope.labels2 = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
-  $scope.data2 = [300, 500, 100];
+  $scope.selected = {
+    toWatch:'Weekly'
+  }
 
-  // var datascource = {
-  //         'name': 'Liabilities',
-  //         'children': [
-  //           { 'name': 'LTL',
-  // 			'children':[
-  // 			   { 'name':'Share Capitals' },
-  // 			   {'name':'Loans'},
-  // 			]
-  // 		  },
-  //           { 'name': 'STL',
-  // 		  'children':[
-  // 		  { 'name':'creditors' }
-  // 		  ]
-  // 		  },
-  //         ]
-  //       };
-  //
-  //     $('#chart-container1').orgchart({
-  //       'data' : datascource,
-  //       'nodeContent': 'title',
-  //       'direction': 'r2l'
-  //     });
-  //
-  //   var datascource = {
-  //       'name': 'Assets',
-  //       'children': [
-  //         { 'name': "PA'S",'title':'60%'},
-  //         { 'name': "NPA'S",'title':'40%'},
-  //       ]
-  //     };
-  //
-  //   $('#chart-container2').orgchart({
-  //     'data' : datascource,
-  //     'nodeContent': 'title',
-  //     'direction': 'b2t'
-  //   });
-  //
-  //   var datascource = {
-  //     'name': 'Incomes',
-  //     'children': [
-  //       { 'name': 'Sales' },
-  //       { 'name': 'Other Incomes' },
-  //     ]
-  //   };
-  //
-  //   $('#chart-container3').orgchart({
-  //     'data' : datascource,
-  //     'nodeContent': 'title',
-  //     'direction': 'l2r'
-  //   });
-  //   var datascource = {
-  //       'name': 'Expenses',
-  //       'children': [
-  //         { 'name':'VC'},
-  //         { 'name': 'FC'},
-  //       ]
-  //     };
-  //
-  //   $('#chart-container4').orgchart({
-  //     'data' : datascource,
-  //     'nodeContent': 'title',
-  //     'direction': 't2b'
-  //   });
+  $scope.$watch('selected.toWatch', function(newValue, oldValue) {
+    console.log(newValue,'dddddddd');
+    if (newValue!=='') {
+      $scope.fetchGraphData(newValue)
+    }
+  })
+
+
+$scope.fetchGraphData = function (typ) {
+  $http({
+    method: 'GET',
+    url: '/api/ERP/graphData/?'+typ
+  }).then(function(response) {
+    console.log(response.data);
+    $scope.labels = response.data.graphLabels;
+    $scope.totalVisitors = response.data.totalVisitors
+    $scope.totalApiGent = response.data.totalApiGent
+    $scope.totalBlogSubs = response.data.totalBlogSubs
+    $scope.totalContacts = response.data.totalContacts
+
+    $scope.stat = [];
+    $scope.stat1 = [];
+    for (var j = 0; j < response.data.graphData.length; j++) {
+      $scope.stat = [];
+      for (let char in response.data.graphData[j]) {
+        $scope.stat.push(response.data.graphData[j][char])
+      }
+      $scope.stat1.push($scope.stat)
+    }
+    $scope.mainArr = [];
+
+    for (var i = 0; i < $scope.stat1[0].length; i++) {
+      $scope.mainArr1 =  []
+      for (var j = 0; j < $scope.stat1.length; j++) {
+        $scope.mainArr1.push($scope.stat1[j][i])
+      }
+      $scope.mainArr.push($scope.mainArr1)
+    }
+    console.log($scope.mainArr);
+    $scope.mainData = $scope.mainArr
+    $scope.series = ['API Generated','Blog Subscribed','Demo Requested','Contacts'];
+  })
+}
+
+$scope.fetchGraphData('Weekly')
+
+
 
 
 })

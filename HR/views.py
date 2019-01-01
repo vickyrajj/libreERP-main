@@ -14,7 +14,7 @@ from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
-from ERP.models import application, permission , module , CompanyHolidays
+from ERP.models import application, permission , module
 from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
@@ -237,11 +237,6 @@ class userProfileAdminModeViewSet(viewsets.ModelViewSet):
     serializer_class = userProfileAdminModeSerializer
     queryset = profile.objects.all()
 
-class userDesignationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = designation.objects.all()
-    serializer_class = userDesignationSerializer
-    filter_fields = ['user']
 
 class userAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (isAdmin ,)
@@ -287,160 +282,3 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Group.objects.all()
     serializer_class = groupSerializer
-
-class rankViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = rank.objects.all()
-    serializer_class = rankSerializer
-
-class payrollViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = payroll.objects.all()
-    serializer_class = payrollSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['user' ]
-
-
-class leaveViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = leaveSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['user' , 'status','fromDate']
-    def get_queryset(self):
-        if self.request.user.is_superuser:
-            return Leave.objects.all()
-        desigs = self.request.user.managing.all()
-        reportees = []
-        for d in desigs:
-            reportees.append(d.user)
-        return Leave.objects.filter(user__in = reportees )
-
-
-class LeavesCalAPI(APIView):
-    def get(self , request , format = None):
-        payrollObj = payroll.objects.get(user = self.request.user.pk)
-        print payrollObj,payrollObj.off
-        fromDate = self.request.GET['fromDate'].split('-')
-        toDate = self.request.GET['toDate'].split('-')
-        fd = date(int(fromDate[0]), int(fromDate[1]), int(fromDate[2]))
-        td = date(int(toDate[0]), int(toDate[1]), int(toDate[2]))
-        fromDate = fd + relativedelta(days=1)
-        toDate = td + relativedelta(days=1)
-        chObj = CompanyHolidays.objects.filter(date__range=(str(fromDate),str(toDate)))
-        print fromDate,toDate
-        total = (toDate-fromDate).days + 1
-        if toDate<fromDate:
-            total = 0
-        holidays = []
-        sundays = []
-        saturdays = []
-        leaves = 0
-
-        if total > 0:
-            daysList = [fromDate + relativedelta(days=i) for i in range(total)]
-            print daysList
-            for i in daysList:
-                print i,i.weekday()
-                if i.weekday() < 5:
-                    print 'holidays',holidays
-                    for j in chObj:
-                        if j.date == i:
-                            holidays.append({'date':i,'name':j.name})
-                elif payrollObj.off and i.weekday() == 5:
-                    print 'saturday'
-                    saturdays.append(i)
-                elif i.weekday() == 6:
-                    print 'sunday'
-                    sundays.append(i)
-            leaves = total - (len(holidays) + len(sundays) + len(saturdays))
-        print total
-        print holidays
-        print sundays
-        print saturdays
-        print leaves
-        toSend = {'total':total,'holidays':holidays,'sundays':sundays,'saturdays':saturdays,'leaves':leaves,'fromDate':fromDate,'toDate':toDate}
-        return Response({'data':toSend}, status = status.HTTP_200_OK)
-
-# class ProfileOrgChartsViewSet(viewsets.ModelViewSet):
-#     permission_classes = (permissions.IsAuthenticated,)
-#     queryset = designation.objects.all()
-#     serializer_class = ProfileOrgChartsSerializer
-
-def findChild(d, pk = None):
-    toReturn = []
-    sameLevel = False
-    for des in  d.user.managing.all():
-        try:
-            dp = des.user.profile.displayPicture.url
-            if dp == None:
-                dp = '/static/images/userIcon.png'
-        except:
-            dp = '/static/images/userIcon.png'
-
-        if des.role:
-            role = des.role.name
-        else:
-            role = ''
-
-        if str(des.user.pk) == pk:
-            for tr in toReturn:
-                tr['className'] = 'rd-dept'
-
-            clsName = 'middle-level'
-            sameLevel = True
-        else:
-            clsName = 'product-dept'
-            if sameLevel:
-                clsName = 'rd-dept'
-
-        print des.user , clsName
-
-        toReturn.append({
-            "id" : des.user.pk,
-            "name" : des.user.first_name + ' ' +  des.user.last_name,
-            "dp" : dp,
-            "children" : findChild(des),
-            "role" : role,
-            "className" :  clsName
-        })
-
-    return toReturn
-
-
-
-class OrgChartAPI(APIView):
-    def get(self , request , format = None):
-        d = User.objects.get(pk = request.GET['user']).designation
-        print d.role,d.reportingTo
-        if d.reportingTo is not None:
-            d = d.reportingTo.designation
-        try:
-            dp = d.user.profile.displayPicture.url
-            if dp == None:
-                dp = '/static/images/userIcon.png'
-
-        except:
-            dp = '/static/images/userIcon.png'
-
-        if d.role:
-            role = d.role.name
-        else:
-            role = ''
-
-
-        if str(d.user.pk) == request.GET['user']:
-            clsName = 'middle-level'
-        else:
-            clsName = 'product-dept'
-
-
-        toReturn = {
-            "id" : d.user.pk,
-            "name" : d.user.first_name + ' ' +  d.user.last_name,
-            "dp" : dp,
-            "children" : findChild(d , pk = request.GET['user']),
-            "role" : role,
-            "className" :  clsName
-        }
-
-        return Response(toReturn )

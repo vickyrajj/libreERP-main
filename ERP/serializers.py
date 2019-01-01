@@ -71,6 +71,7 @@ class serviceLiteSerializer(serializers.ModelSerializer):
         model = service
         fields = ('pk'  ,'name' , 'address' , 'mobile' )
 
+
 class deviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = device
@@ -206,7 +207,23 @@ class groupPermissionSerializer(serializers.ModelSerializer):
         model = groupPermission
         fields = ( 'pk' , 'app' , 'group' )
 
-class CompanyHolidaySerializer(serializers.ModelSerializer):
+class visitorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CompanyHolidays
-        fields = ('pk','created','date','typ','name')
+        model = Visitor
+        fields = ( 'pk','created' ,'uid', 'demoRequested','email' , 'enterpriseContact','apiGenerated','blogsSubscribed','isAgent','ipAddress')
+    def create(self, validated_data):
+        v = Visitor(**validated_data)
+        if self.context['request'].META.get('REMOTE_ADDR'):
+            v.ipAddress = self.context['request'].META.get('REMOTE_ADDR')
+        v.save()
+        return v
+
+class activitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activity
+        fields = ( 'pk' ,'visitor', 'page' , 'timeDuration')
+    def create(self , validated_data):
+         a = Activity(**validated_data)
+         a.visitor = Visitor.objects.filter(pk = self.context['request'].data['visitor'])[0]
+         a.save()
+         return a

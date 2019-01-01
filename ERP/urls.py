@@ -17,6 +17,9 @@ router.register(r'address' , addressViewSet , base_name = 'address')
 router.register(r'service' , serviceViewSet , base_name = 'service')
 router.register(r'companyHoliday' , CompanyHolidayViewSet , base_name = 'companyHoliday')
 router.register(r'webError' , WebErrorViewSet , base_name = 'webError')
+router.register(r'visitor' , visitorViewSet , base_name = 'visitor')
+router.register(r'activity' , activityViewSet , base_name = 'activity')
+
 
 urlpatterns = [
     url(r'^', include(router.urls)),
@@ -24,5 +27,5 @@ urlpatterns = [
     url(r'serviceRegistration/$' , serviceRegistrationApi.as_view() ),
     url(r'sendSMS/$' , SendSMSApi.as_view()),
     url(r'locationTracker/$' , LocationTrackerAPI.as_view()),
-
+    url(r'graphData/$' , GraphData.as_view()),
 ]

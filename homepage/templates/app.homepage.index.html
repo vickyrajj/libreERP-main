@@ -8,13 +8,12 @@
 </div>
 
 <div class="hidden-md hidden-lg">
-  <div class="row " style=" background:url('/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg') no-repeat ;height:20vh;margin:0px;background-size: cover;margin-top:40px;">
+  <div class="row " style=" background:url('/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg') no-repeat ;height:20vh;margin:0px;background-size: cover;margin-top:30px;">
   </div>
   <div class="row" style="margin:0px; background-color:#0f4b8d;">
     <h3 style="color:white; text-align:center; padding:15px 0px">{% trans 'WelcomeHeading' %} </h3>
   </div>
 </div>
-
 
 <!-- <div style="background-color:#0f4b8d; height:60vh; width:100%;">
   <img style="clip-path:polygon(100% 60vh, 50% 60vh, 40% 50px, 100% 50px); width:100%;height:100%" src="/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg" alt="">
@@ -24,8 +23,6 @@
 </div> -->
 
 {% verbatim %}
-
-
 <div class="flex_section">
   <div style="flex:45%; margin-top: 80px; order:1;">
     <div class="content">
@@ -157,36 +154,36 @@
 </div>
 
 
-<div class="blog_section shaddowed" style="min-height:560px; border-radius:10px;">
+<div class="blog_section shaddowed">
   <div class="col-md-6 col-sm-12" style="padding:0px;">
     <div class="blogimg">
       <div id="date">
-        <span style="font-size:24px;font-weight:500;color:#fff;">27 November 2018</span><br><br>
-        <span style="font-size:34px;font-weight:700;color:#fff">RPA Adoption: Top-down or Bottom-up?</span>
+        <span style="font-size:24px;font-weight:500;color:#fff;">{{articles[0].created | getDateNum}} {{articles[0].created | getMonth}} {{articles[0].created | getYear}}</span><br><br>
+        <span style="font-size:34px;font-weight:700;color:#fff">{{articles[0].title}}</span>
       </div>
     </div>
     <div style="padding:20px;">
-      <p style="color:#002855;font-size: 15px;line-height: 1.7;">It has been a fascinating journey so far to watch the adoption of RPA technology among client organizations. We have observed several different paths to adoption while everyone is still wondering if there is one template for the best approach.
+      <p style="color:#002855;font-size: 15px;line-height: 1.7;"  ng-bind-html="articles[0].header" >
       </p>
-      <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name=""><b>Read Article</b> </button>
+      <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name="" ng-click="openBlog(articles[0].shortUrl,articles[0].pk)"><b>Read Article</b> </button>
     </div>
   </div>
-  <div class="col-md-6  col-sm-12" style="background-color:rgba(245,248,250,.5);padding:0px;padding-top:10px;">
-    <div class="row" ng-repeat="i in articles" style="margin:0px;margin-left:10px;margin-bottom:10px;{{$odd ? 'background:#fff;':''}};">
-      <div class="col-xs-3 articleImg col-md-1">
+  <div class="col-md-6  col-sm-12" style="background-color:rgba(244, 244, 247, 0.5);padding:0px;padding-top:10px;">
+    <div class="row blog_title_row" ng-repeat="i in articles | limitTo: (1 - articles.length)" style="{{$odd ? 'background:#fff;':''}};">
+      <div class="col-xs-3 col-md-2" style="background-image:linear-gradient(rgba(11, 29, 92, 0.65), rgba(18, 24, 97, 0.52)), url({{i.ogimage}}); background-size: cover;background-repeat: no-repeat;padding: 5px;border-radius: 4px;">
         <div class="text-center" style="">
-          <span style="font-size:1.875em;color:#fff;"> <strong>21</strong></span><br>
-          <span style="font-size:0.875em;color:#fff;">Nov</span>
+          <span style="font-size:1.875em;color:#fff;"> <strong>{{i.created | getDateNum }}</strong></span><br>
+          <span style="font-size:0.875em;color:#fff;">{{i.created | getMonth:3}}</span>
         </div>
       </div>
-      <div class="col-xs-9 col-md-11" style="">
+      <div class="col-xs-9 col-md-10" style="padding-right:25px;">
         <div id="articleHead">
-          <span style="font-size:1.2em;color:#09075c"> RPA technology among client organizations cool text here. Great yeaa...</span><br>
-          <span class="text-primary"><strong>Read More...</strong></span>
+          <span style="font-size:1.3em;color:#09075c"> <b>{{i.title}}</b> </span><br>
+          <span class="text-primary"><strong> <a href="#" style="color:none;" ng-click="openBlog(i.shortUrl,i.pk)">Read More...</a> </strong></span>
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-primary" style="margin-bottom:15px;margin-left:10px;">See More Articles</button>
+    <button type="button" class="btn btn-primary" style="margin-bottom:15px;margin-left:10px;margin-top:17px;">See More Articles</button>
   </div>
 </div>
 
@@ -214,7 +211,7 @@
             <img src="/static/images/fast-roi.svg" alt="Rapid Results">
           </div>
           <h3 class="Title">Rapid Results</h3>
-          <p class="Desc"><span>Tested and proven to deliver 40%+ faster automation design and deployment than competitors, UiPath offers worldwide implementation support, certified training.</span></p>
+          <p class="Desc"><span>Tested and proven to deliver 40%+ faster automation design and deployment than competitors, EpsilonAI offers worldwide implementation support, certified training.</span></p>
         </div>
       </div>
     </div>
@@ -248,7 +245,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> 
 
 <div class="row" style="margin:0px;">
   <div class="col-md-8 col-md-offset-2">
@@ -275,9 +272,9 @@
   </div>
   <div class="col-md-3">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Email ID">
+      <input type="text" class="form-control" placeholder="Email ID" ng-model="subscribeForm.email">
       <span class="input-group-btn">
-        <button type="button" class="btn btn-warning">Subscribe</button>
+        <button type="button" class="btn btn-warning" ng-click="subscribeToBlogs()">Subscribe</button>
       </span>
     </div>
   </div>
@@ -287,7 +284,7 @@
   <div class="col-md-8 col-md-offset-2 text-center" style="color:#fff;padding:130px 0px;">
     <h1> <strong>Ready to take the lead?</strong></h1> <br>
     <h4>Choose open, extensible, secure automations</h4> <br>
-    <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name=""><b>Get Started with Go!</b> </button>
+    <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" ng-click="schedule()"><b>Get Started with Go!</b> </button>
     <!-- <button type="button" class="btn btn-warning btn-lg text-center big-xl" style="margin-top:10px;">
       <strong>Get Started with Go!</strong>
     </button> -->

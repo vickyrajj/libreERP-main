@@ -91,64 +91,24 @@ class groupPermission(models.Model):
     def __unicode__(self):
         return self.app
 
-MEDIA_TYPE_CHOICES = (
-    ('onlineVideo' , 'onlineVideo'),
-    ('video' , 'video'),
-    ('image' , 'image'),
-    ('onlineImage' , 'onlineImage'),
-    ('doc' , 'doc'),
-)
-
-class media(models.Model):
-    user = models.ForeignKey(User , related_name = 'serviceDocsUploaded' , null = False)
+class Visitor(models.Model):
     created = models.DateTimeField(auto_now_add = True)
-    link = models.TextField(null = True , max_length = 300) # can be youtube link or an image link
-    attachment = models.FileField(upload_to = getERPPictureUploadPath , null = True ) # can be image , video or document
-    mediaType = models.CharField(choices = MEDIA_TYPE_CHOICES , max_length = 10 , default = 'image')
-
-class address(models.Model):
-    street = models.CharField(max_length=300 , null = True)
-    city = models.CharField(max_length=100 , null = True)
-    state = models.CharField(max_length=50 , null = True)
-    pincode = models.PositiveIntegerField(null = True)
-    lat = models.CharField(max_length=15 ,null = True)
-    lon = models.CharField(max_length=15 ,null = True)
-    country = models.CharField(max_length = 50 , null = True)
-
-    def __unicode__(self):
-        return '< street :%s>,<city :%s>,<state :%s>' %(self.street ,self.city, self.state)
-
-class service(models.Model): # contains other companies datails
-    created = models.DateTimeField(auto_now_add = True)
-    name = models.CharField(max_length = 100 , null = False, unique = True)
-    user = models.ForeignKey(User , related_name = 'servicesCreated' , null = False) # the responsible person for this service
-    address = models.ForeignKey(address , null = True ,blank=True)
-    mobile = models.CharField(max_length = 20 , null = True,blank=True)
-    telephone = models.CharField(max_length = 20 , null = True,blank=True)
-    about = models.TextField(max_length = 2000 , null = True,blank=True)
-    cin = models.CharField(max_length = 100 , null = True,blank=True) # company identification number
-    tin = models.CharField(max_length = 100 , null = True,blank=True) # tax identification number
-    logo = models.CharField(max_length = 200 , null = True,blank=True) # image/svg link to the logo
-    web = models.TextField(max_length = 100 , null = True,blank=True) # image/svg link to the logo
-    doc  = models.ForeignKey(media , related_name = 'services' , null = True,blank=True)
-    contactPerson = models.ForeignKey(User , related_name = 'servicesContactPerson' , null = True,blank=True)
-    vendor = models.BooleanField(default = False)
-
-
-    def __unicode__(self):
-        return '< name :%s>,<user :%s>,<address :%s>' %(self.name ,self.user.username, self.address)
-
-HOLIDAY_TYPE_CHOICES = (
-    ('national' , 'national'),
-    ('state' , 'state'),
-    ('restricted' , 'restricted'),
-)
-
-class CompanyHolidays(models.Model):
-    created = models.DateTimeField(auto_now_add = True)
-    date = models.DateField(null=True)
-    typ = models.CharField(choices = HOLIDAY_TYPE_CHOICES , max_length = 20 , default = 'national')
+    uid =  models.CharField(max_length = 50 , null = False)
     name = models.CharField(max_length = 50 , null = True)
+    email = models.CharField(max_length = 35 , null = True)
+    demoRequested = models.BooleanField(default = False)
+    enterpriseContact = models.BooleanField(default = False)
+    blogsSubscribed = models.BooleanField(default = False)
+    apiGenerated = models.BooleanField(default = False)
+    isAgent = models.BooleanField(default = False)
+    ipAddress = models.CharField(max_length = 20 , null = True)
+
+class Activity(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    visitor = models.ForeignKey(Visitor , related_name = "visitorActivity" , null=False)
+    page = models.CharField(max_length = 50 , null = False)
+    timeDuration = models.FloatField(default = 0.0)
+
 
 class WebError(models.Model):
     created = models.DateTimeField(auto_now_add = True)

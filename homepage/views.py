@@ -14,7 +14,7 @@ from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
-from ERP.models import application, permission , module ,service
+from ERP.models import application, permission , module
 from ERP.views import getApps, getModules
 from django.db.models import Q
 from django.http import JsonResponse
@@ -34,7 +34,7 @@ def index(request):
 
     translation.activate(language )
     request.LANGUAGE_CODE = translation.get_language()
-    return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,"erpUrl": globalSettings.ERP_URL_PREFIX})
+    return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT,"erpUrl": globalSettings.ERP_URL_PREFIX,'apiManagerUrl':globalSettings.APIMANAGER_URL_PREFIX})
 
 def crmHome(request):
     return render(request, 'crm.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})

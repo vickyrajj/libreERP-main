@@ -9,15 +9,78 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
   $httpProvider.defaults.withCredentials = true;
   $locationProvider.html5Mode(true);
 
-
-
 });
 
-app.run(['$rootScope', '$state', '$stateParams', function($rootScope, $state, $stateParams) {
+app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $state, $stateParams, $http) {
   $rootScope.$state = $state;
   $rootScope.$stateParams = $stateParams;
   $rootScope.$on("$stateChangeError", console.log.bind(console));
+
+  $rootScope.$on("$stateChangeSuccess", function(params, to, toParams, from, fromParams) {
+
+    window.scrollTo(0, 0);
+
+
+    var visitorDetails = $rootScope.getCookie("visitorDetails");
+    if (visitorDetails != "") {
+      var uid = JSON.parse(visitorDetails).uid
+      $rootScope.visitorPk = JSON.parse(visitorDetails).visitorPk
+      createActivity()
+    } else {
+      var uid = new Date().getTime()
+      $rootScope.visitorPk;
+      $http({
+        method: 'POST',
+        url: '/api/ERP/visitor/',
+        data: {
+          uid: uid
+        }
+      }).
+      then(function(response) {
+        $rootScope.visitorPk = response.data.pk;
+        createActivity()
+        $rootScope.setCookie("visitorDetails", JSON.stringify({
+          uid: response.data.uid,
+          name: "",
+          email: "",
+          visitorPk: $rootScope.visitorPk,
+          blogSubscribed: false
+        }), 365);
+      })
+
+    }
+
+    function createActivity() {
+      if ($rootScope.newTime) {
+        $rootScope.timeSpentInSec = (new Date().getTime() - $rootScope.newTime) / 1000;
+        console.log(from.name, $rootScope.timeSpentInSec, uid);
+        toSend = {
+          visitor: $rootScope.visitorPk,
+          page: from.name,
+          timeDuration: $rootScope.timeSpentInSec
+        }
+        console.log(toSend);
+        $http({
+          method: 'POST',
+          url: '/api/ERP/activity/',
+          data: toSend
+        }).
+        then(function(response) {
+          console.log(response.data);
+        })
+
+        $rootScope.newTime = new Date().getTime();
+      } else {
+        $rootScope.newTime = new Date().getTime();
+      }
+    }
+
+
+
+  });
 }]);
+
+
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 
@@ -41,7 +104,7 @@ app.config(function($stateProvider) {
 
   $stateProvider
     .state('blogDetails', {
-      url: "/blogs/:pk",
+      url: "/blogs/:name",
       templateUrl: '/static/ngTemplates/app.homepage.blogDetails.html',
       controller: 'controller.blogDetails'
     })
@@ -83,13 +146,117 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
+    .state('contact_us', {
+      url: "/contact_us",
+      templateUrl: '/static/ngTemplates/app.homepage.contact_us.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+
+  $stateProvider
+    .state('remote', {
+      url: "/remote",
+      templateUrl: '/static/ngTemplates/app.homepage.remote.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+
+  $stateProvider
+    .state('training', {
+      url: "/training",
+      templateUrl: '/static/ngTemplates/app.homepage.training.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+  $stateProvider
+    .state('impliment', {
+      url: "/impliment",
+      templateUrl: '/static/ngTemplates/app.homepage.impliment.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+  $stateProvider
+    .state('rpa', {
+      url: "/rpa",
+      templateUrl: '/static/ngTemplates/app.homepage.rpa.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+  $stateProvider
+    .state('finance', {
+      url: "/finance",
+      templateUrl: '/static/ngTemplates/app.homepage.finance.html',
+      // controller: 'controller.index'
+    })
+  $stateProvider
+    .state('rpa_2019', {
+      url: "/rpa_2019",
+      templateUrl: '/static/ngTemplates/app.homepage.rpa_2019.html',
+      // controller: 'controller.index'
+    })
+  $stateProvider
+    .state('resources', {
+      url: "/resources",
+      templateUrl: '/static/ngTemplates/app.homepage.resources.html',
+      controller: 'controller.resource'
+    })
+
+
+  $stateProvider
+    .state('watchVideo', {
+      url: "/watch/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.play.html',
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('resource_explore', {
+      url: "/resources/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.guide.html',
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('custom', {
+      url: "/custom_item/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.custom_items.html',
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('custom_detail', {
+      url: "/custom_detail/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.custom_details.html',
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('doc', {
+      url: "/docs/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.documentation.html',
+      controller: 'controller.resource'
+    })
+  $stateProvider
+    .state('chatbot', {
+      url: "/chatbot",
+      templateUrl: '/static/ngTemplates/app.homepage.chatbot.html',
+      // controller: 'controller.ecommerce.PagesDetails'
+    })
+  $stateProvider
+    .state('pdf_process', {
+      url: "/pdf_process",
+      templateUrl: '/static/ngTemplates/app.homepage.pdf_process.html',
+      controller: 'controller.pdfprocess'
+    })
+  $stateProvider
+    .state('nlp', {
+      url: "/nlp",
+      templateUrl: '/static/ngTemplates/app.homepage.nlp.html',
+      controller: 'controller.nlp'
+    })
+  $stateProvider
+    .state('excel_automation', {
+      url: "/excel_automation",
+      templateUrl: '/static/ngTemplates/app.homepage.excel_automation.html',
+      controller: 'controller.excelautomation'
+    })
+  $stateProvider
     .state('pages', {
       url: "/:title",
       templateUrl: '/static/ngTemplates/app.homepage.page.html',
       // controller: 'controller.ecommerce.PagesDetails'
     })
-
-
 
 
 });
@@ -98,7 +265,7 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
 
   console.log($stateParams);
 
-  $scope.blogPk = $stateParams.pk
+  $scope.blogPk = $stateParams.name.split('&')[1]
 
   $http.get('/api/PIM/blog/' + $scope.blogPk + '/').
   then(function(response) {
@@ -119,6 +286,298 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
   $scope.fetchRecentPosts()
 
 
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
+  }
+
+});
+
+app.controller('controller.excelautomation', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  $scope.excel1 = "Excel is a powerful, efficient and user - friendly application for data storing, calculating, organizing and report generation purposes.No doubt this application became very popular from small - scale industry to corporate organizations as there is a continuous need to access, analyze, retrieve, calculate, manipulate and report real - time data on a daily basis.However, sometimes integrating excel with other application becomes tedious.Even for many repetitive tasks like Data retrieval, extraction, migration, Import and Export, etc.automation is required to avoid this repetitiveness in any activities."
+
+  $scope.excel2 = "With AutomationEdge, Excel automation has become very simple, it reduces manual errors; eliminates repetitive and time-consuming work. Moreover, it is ten times faster than other tools and does not require a screen. AutomationEdge executes at backend without any software. It is a flexible tool which works with any spreadsheet format with different header styles and positions of columns."
+
+
+  $scope.images1 = [{
+      img: '/static/images/usecase1.png',
+      text: ' Import and export the data'
+    },
+    {
+      img: '/static/images/usecase2.png',
+      text: ' Data extraction and migration'
+    },
+    {
+      img: '/static/images/usecase3.png',
+      text: ' Comparing columns and deciding on outcom'
+    }, {
+      img: '/static/images/usecase4.png',
+      text: ' Reading and writing data in Excel'
+    },
+    {
+      img: '/static/images/usecase5.png',
+      text: ' Remove duplicate rows from Excel'
+    },
+  ]
+
+
+  $scope.images2 = [{
+      img: '/static/images/usecase6.png',
+      text: ' Excel integration with other applications'
+    },
+    {
+      img: '/static/images/usecase7.png',
+      text: ' Data Retrieving and creating own spreadsheet'
+    },
+    {
+      img: '/static/images/usecase8.png',
+      text: ' Auto filling the data in web forms from Excel'
+    }, {
+      img: '/static/images/usecase9.png',
+      text: ' Creating and running reports'
+    },
+    {
+      img: '/static/images/usecase10.png',
+      text: ' Report generation from big data'
+    },
+  ]
+
+});
+app.controller('controller.pdfprocess', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+  $scope.properties = {
+    // autoHeight:true,
+    // animateIn: 'fadeIn',
+    lazyLoad: true,
+    items: 1,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 3000,
+    dots: false,
+    URLhashListener: true,
+    autoplayHoverPause: true,
+    startPosition: 'URLHash',
+  };
+  $scope.images = [{
+      img: '/static/images/visual1.jpg',
+      title: 'ABBYY Solutions',
+      head: 'Content Intelligence for Robotic Process Automation (RPA)',
+      para: 'Make robots smarter by turning unstructured content into structured, actionable information.',
+      headcol: '#9AECFF',
+      paracol: '#fff',
+      btn1: 'LEARN MORE',
+      btn2: 'DOWNLOAD  PAPER',
+
+    },
+    {
+      img: '/static/images/visual2.jpg',
+      title: 'ABBYY FineReader Engine',
+      head: 'The most comprehensive OCR SDK for developers',
+      para: 'Add text extraction, document conversion and classification to your software by integrating premium OCR technology.',
+      headcol: '#9AECFF',
+      paracol: '#fff',
+      btn1: 'LEARN MORE',
+      btn2: 'REQUEST TRAIL',
+    },
+    {
+      img: '/static/images/visual3.jpg',
+      title: 'ABBYY FineReader 14',
+      head: 'Your documents in action',
+      para: 'Edit, convert, and compare PDFs and scans ',
+      headcol: '#fff',
+      paracol: '#fff',
+      btn1: 'LEARN MORE',
+      btn2: 'DOWNLOAD TRAIL',
+    },
+    {
+      img: '/static/images/visual4.jpg',
+      title: 'ABBYY Real-Time Recognition SDK',
+      head: 'Point and capture',
+      para: 'New developer toolkit: texts viewed through smartphones instantly extracted and used in your app',
+      headcol: '#fff',
+      paracol: '#fff',
+      btn1: 'MORE INFO',
+      btn2: 'REQUEST TRAIL',
+    },
+    {
+      img: '/static/images/visual5.jpeg',
+      title: '',
+      head: 'Accounts payablewhite pape',
+      para: 'The Value of Intelligent Capture in Accounts Payable Automation',
+      headcol: '#416678',
+      paracol: '#000',
+      btn1: 'REQUEST WITH PAPER',
+    },
+  ]
+  $scope.property = {
+    // autoHeight:true,
+    // animateIn: 'fadeIn',
+    lazyLoad: true,
+    loop: true,
+    autoplay: true,
+    autoplayTimeout: 3000,
+    dots: false,
+    URLhashListener: true,
+    autoplayHoverPause: true,
+    startPosition: 'URLHash',
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 1.5,
+
+      },
+      768: {
+        items: 3,
+
+      },
+      1000: {
+        items: 4,
+
+      }
+    }
+  };
+
+  $scope.navimg = [{
+      img: '/static/images/nav1.jpg',
+      text: 'Banking and Finance'
+    },
+    {
+      img: '/static/images/nav2.jpg',
+      text: 'Legal'
+    },
+    {
+      img: '/static/images/nav3.jpg',
+      text: 'Healthcare'
+    },
+    {
+      img: '/static/images/nav4.jpg',
+      text: 'Government'
+    },
+    {
+      img: '/static/images/nav5.jpg',
+      text: 'Insurance'
+    },
+    {
+      img: '/static/images/nav6.jpg',
+      text: 'Transportation'
+    },
+    {
+      img: '/static/images/nav7.jpg',
+      text: 'BPO'
+    },
+    {
+      img: '/static/images/nav8.jpg',
+      text: 'Education'
+    },
+  ]
+});
+
+app.controller('controller.resource', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  $scope.openResource = function(name) {
+    $state.go('resource_explore', {
+      name: name
+    })
+  }
+  $scope.watchVideo = function(name, idx) {
+    console.log(name + ' ' + idx);
+    $state.transitionTo('watchVideo', {
+      name: name + '&' + idx
+    })
+    // $state.transitionTo('watchVideo', {
+    //   name: name + '&' + idx
+    // }, {
+    //   location: true,
+    //   inherit: true,
+    //   relative: $state.$current,
+    //   notify: false
+    // })
+  }
+  $scope.openCustom = function(name) {
+    $state.go('custom', {
+      name: name
+    })
+  }
+  $scope.custom_detail = function(name, idx) {
+    $state.go('custom_detail', {
+      name: name + '&pk=' + idx
+    })
+  }
+
+  $scope.openDoc = function(name) {
+    $state.go('doc', {
+      name: name
+    })
+  }
+
+  $scope.show_benefit = true;
+  $scope.show_dependencies = false;
+  $scope.show_compatibility = false;
+  $scope.l1 = "the background automation is very fast and the automation is safe because it’s totally independent from your web browsers and the salesforce layout";
+  $scope.l2 = "implementation time is 5 to 10 times faster compared to traditional Ui-Automation. The speed of the activities are due to the wizards, which allow you to test everything during the design time. This significantly minimizes the testing time to almost no time at all. In a normal implementation, testing time is huge and lasts much longer than the design time.";
+  $scope.l3 = "interactions between the robot and the software are greatly reduced, leading to a reduction in the number of errors. For example, in a normal Ui-Automation on Salesforce, a simple process takes two minutes and 40 seconds. This means it interacts with the web page approximately 85 times. The component, on the other hand takes about 11 seconds and interacts with the webpage only eight times, greatly minimizing the risk of error.";
+  $scope.dependencies_content = "Salesforce REST API enabled.";
+  $scope.compatibility_content = "Component is compatible with any Salseforce systems with version higher that V.42 (Spring 2018) .UiPath Studio 2017.1";
+
+  $scope.changeview = function(val) {
+    if (val == 'benefit') {
+      $scope.show_benefit = true;
+      $scope.show_dependencies = false;
+      $scope.show_compatibility = false;
+    } else if (val == 'dependencies') {
+      $scope.show_benefit = false;
+      $scope.show_dependencies = true;
+      $scope.show_compatibility = false;
+    } else if (val == 'compatibility') {
+      $scope.show_benefit = false;
+      $scope.show_dependencies = false;
+      $scope.show_compatibility = true;
+    }
+
+  }
+});
+app.controller('controller.nlp', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+
+  $scope.show_c1 = true;
+  $scope.show_c2 = false;
+  $scope.show_c3 = false;
+  $scope.status_c1 = "active"
+  $scope.c1 = "NL API has shown it can accelerate our offering in the natural language understanding area and is a viable alternative to a custom model we had built for our initial use case.";
+  $scope.c2 = "Classifying Opinion and Editorials can be time-consuming and difficult work for any data science team, but Cloud Natural Language was able to instantly identify clear topics with a high-level of confidence. This tool has saved me weeks, if not months, of work to achieve a level of accuracy that may not have been possible with our in-house resources.";
+  $scope.c3 = "In the newsroom, precision and speed are critical to engaging our readers. Google Cloud Natural Language is unmatched in its accuracyfor content classification.AtHearst, we publish several thousand articles a day across 30 + properties and, withnatural language processing, we 're able to quickly gain insight into what content isbeing published and how it resonates with our audiences.";
+  $scope.q1 = "Dan Nelson, Head of Data, Ocado Technology"
+  $scope.q2 = "Jonathan Brooks-Bartlett, Data Scientist, News UK"
+  $scope.q3 = "Naveed Ahmad, Senior Director of Data, Hearst"
+
+  $scope.carousel = function(val) {
+    if (val == '0') {
+      $scope.show_c1 = true;
+      $scope.show_c2 = false;
+      $scope.show_c3 = false;
+      $scope.status_c1 = "active"
+      $scope.status_c2 = ""
+      $scope.status_c3 = ""
+    } else if (val == '1') {
+      $scope.show_c1 = false;
+      $scope.show_c2 = true;
+      $scope.show_c3 = false;
+      $scope.status_c2 = "active"
+      $scope.status_c1 = ""
+      $scope.status_c3 = ""
+    } else if (val == '2') {
+      $scope.show_c1 = false;
+      $scope.show_c2 = false;
+      $scope.show_c3 = true;
+      $scope.status_c3 = "active"
+      $scope.status_c1 = ""
+      $scope.status_c2 = ""
+
+    }
+
+  }
+
+
 });
 
 
@@ -129,17 +588,14 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
   $scope.emailAddress = '';
 
   $scope.fetchBlogs = function() {
+    $scope.blogs = [];
     $http.get('/api/PIM/blog/?limit=14&offset=' + $scope.offset).
     then(function(response) {
       $scope.blogs = response.data.results;
-
-      console.log($scope.blogs);
-
       $scope.firstSection = $scope.blogs.slice(0, 4)
       $scope.second_sec1 = $scope.blogs.slice(4, 7)
       $scope.second_sec2 = $scope.blogs.slice(7, 10)
       $scope.thirdSection = $scope.blogs.slice(10, 14)
-
     })
   }
 
@@ -154,9 +610,9 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
   $scope.fetchRecentPosts()
   $scope.fetchBlogs()
 
-  $scope.openBlog = function(pk) {
+  $scope.openBlog = function(name, pk) {
     $state.go('blogDetails', {
-      pk: pk
+      name: name + '&' + pk
     })
   }
 
@@ -183,7 +639,15 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
 });
 
 
-app.controller('controller.pricing', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $aside) {
+app.controller('controller.pricing', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $aside, $rootScope) {
+
+
+  $http({
+    method: 'GET',
+    url: erpUrl + '/api/marketing/leads/'
+  }).then(function(response) {
+    console.log(response.data);
+  })
 
   $scope.contactSales = function() {
     $uibModal.open({
@@ -198,39 +662,50 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
             firstName: '',
             lastName: '',
             emailId: '',
-            mobileNumber:'',
-            requirements:'',
+            mobileNumber: '',
+            requirements: '',
             jobLevel: '',
-            comapny:'',
-            companyCategory:'',
-            companyExpertise:'',
-            country:''
+            company: '',
+            companyCategory: '',
+            companyExpertise: '',
+            country: ''
           }
 
-          $scope.companyCategory = ['Automative','Banking', 'Biotechnology','Construction','Chemicals','Consulting','Education','Electroncics','Entertainment','Finance','Food & Bevarage','Government','Healthcare','IT','Insurance','Machinery','Manufacturing','Pharmaceuticals','Retail','Public Sector','Telecommunications','Transport','Other']
-          $scope.jobLevel = ['Individual Contributor','Manager','Director','Vice President','Executive','Other'];
-          $scope.companyExpertise = ['Administrative','Analyst/Consultancy/Advisor','Account & Financing','Product','HR','Marketing','IT/Developer/Engineer','Legal','Purchasing','Sales','Other']
-          $scope.country = ['India','Other']
-
+          $scope.companyCategory = ['Please Select', 'Automative', 'Banking', 'Biotechnology', 'Construction', 'Chemicals', 'Consulting', 'Education', 'Electroncics', 'Entertainment', 'Finance', 'Food & Bevarage', 'Government', 'Healthcare', 'IT', 'Insurance', 'Machinery', 'Manufacturing', 'Pharmaceuticals', 'Retail', 'Public Sector', 'Telecommunications', 'Transport', 'Other']
+          $scope.jobLevel = ['Please Select', 'Individual Contributor', 'Manager', 'Director', 'Vice President', 'Executive', 'Other'];
+          $scope.companyExpertise = ['Please Select', 'Administrative', 'Analyst/Consultancy/Advisor', 'Account & Financing', 'Product', 'HR', 'Marketing', 'IT/Developer/Engineer', 'Legal', 'Purchasing', 'Sales', 'Other']
+          $scope.country = ['Please Select', 'India', 'Other']
 
         }
         $scope.refresh()
 
+        $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+        if ($scope.visitorDetails != "") {
+          $scope.form.firstName = JSON.parse($scope.visitorDetails).name || ''
+          $scope.form.emailId = JSON.parse($scope.visitorDetails).email || ''
+        }
+
+
+
         $scope.connect = function() {
-          if ($scope.form.firstName=='' || $scope.form.emailId=='' || $scope.form.comapny=='' || $scope.form.companyCategory=='' || $scope.form.companyExpertise=='' || $scope.form.country=='') {
+          if ($scope.form.firstName == '' || $scope.form.emailId == '' || $scope.form.requirements == '' || $scope.form.comapny == '' || $scope.form.mobileNumber == '') {
             return;
           }
-          var toSend = {
-            name: $scope.form.firstName + $scope.form.lastName,
-            emailId: $scope.form.emailId,
-            requirments: $scope.form.requirments,
-            role: $scope.form.role
-          }
+          var toSend = { ...$scope.form
+          };
+          toSend.name = $scope.form.firstName + ' ' + $scope.form.lastName;
+          delete toSend.firstName;
+          delete toSend.lastName;
+          toSend.source = $rootScope.source;
+
+          console.log(toSend);
+
+
           $http({
             method: 'POST',
             url: erpUrl + '/api/marketing/leads/',
             data: toSend
-          }).then(function(data) {
+          }).then(function(response) {
             console.log(response.data);
             $scope.refresh();
             $scope.thankYou = true;
@@ -260,28 +735,124 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
       templateUrl: '/static/ngTemplates/app.homepage.generateApiKey.modal.html',
       size: 'md',
       backdrop: true,
-      controller: function($scope, Flash, $uibModalInstance) {
-        $scope.thankYou = false;
+      controller: function($scope, Flash, $uibModalInstance, $timeout) {
+
+        // $scope.otpSent = false;
+        // $scope.invalidEmail = false;
+        // $scope.apiKeyAlreadySent = false;
+        // $scope.loading = false;
         $scope.refresh = function() {
           $scope.form = {
-            email: ''
+            email: '',
+            otp: '',
+            apiKey: ''
           }
+        }
+        $scope.booleanForm = {
+          apiKey: '',
+          otpSent: false,
+          invalidEmail: false,
+          apiKeyAlreadySent: false,
+          loading: false,
+          copied: false,
+          correctOtp: true
         }
 
         $scope.refresh()
+        $scope.$watch('form.email', function(newValue, oldValue) {
+          if ($scope.booleanForm.invalidEmail) {
+            $scope.booleanForm.invalidEmail = false;
+          }
+          if ($scope.booleanForm.apiKeyAlreadySent) {
+            $scope.booleanForm.apiKeyAlreadySent = false;
+          }
+
+          if ($scope.booleanForm.loading) {
+            $scope.booleanForm.loading = false;
+          }
+        })
+
+        $scope.$watch('form.otp', function(newValue, oldValue) {
+          if (!$scope.booleanForm.correctOtp) {
+            $scope.booleanForm.correctOtp = true;
+          }
+        })
 
         $scope.sendOtp = function() {
           if ($scope.form.email == '') {
             return;
           }
-          $scope.thankYou = true;
-          // $http({
-          //   method:'POST',
-          //   url:'',
-          //   data:{}
-          // }).then(function (data) {
-          //   console.log(response.data);
-          // })
+          if ($scope.form.email.includes('gmail') || $scope.form.email.includes('outlook') || $scope.form.email.includes('yahoo')) {
+            $scope.booleanForm.invalidEmail = true;
+            return;
+          }
+          $scope.booleanForm.loading = true;
+          $http({
+            method: 'POST',
+            url: apiManagerUrl + '/api/tools/generateAPIKEY/',
+            data: {
+              email: $scope.form.email
+            }
+          }).then(function(response) {
+            $scope.booleanForm.loading = false;
+            if (response.data.msg == 'Invalid Email') {
+              //invlaide emailId
+              console.log(response.data.msg);
+              $scope.booleanForm.invalidEmail = true;
+            } else if (response.data.msg == 'apiKey_exists') {
+              //already sent
+              // $scope.otpSent = true;
+              $scope.booleanForm.apiKeyAlreadySent = true;
+              console.log('already sent');
+            } else if (response.data.msg == 'otp') {
+              $scope.booleanForm.otpSent = true;
+              //otp
+            }
+          })
+        }
+        $scope.submitOtp = function() {
+          if ($scope.form.otp.length != 4) {
+            $scope.booleanForm.correctOtp = false;
+            return
+          }
+          $scope.booleanForm.loading = true;
+          $http({
+            method: 'POST',
+            url: apiManagerUrl + '/api/tools/generateAPIKEY/',
+            data: {
+              email: $scope.form.email,
+              otp: $scope.form.otp
+            }
+          }).then(function(response) {
+            $scope.booleanForm.loading = false;
+            if (response.data.msg == 'otpError') {
+              //ot error
+              console.log(response.data.msg);
+              $scope.booleanForm.correctOtp = false;
+            } else {
+              //api key
+              console.log(response.data.msg);
+              $scope.booleanForm.correctOtp = true;
+              $scope.booleanForm.apiKey = response.data.msg;
+              document.getElementById('otp').classList.remove("till");
+              document.getElementById('confirm').classList.add("till");
+            }
+
+          })
+        }
+
+        $scope.copyAPI = function(id) {
+          var from = document.getElementById(id);
+          var range = document.createRange();
+          window.getSelection().removeAllRanges();
+          range.selectNode(from);
+          window.getSelection().addRange(range);
+          document.execCommand('copy');
+          window.getSelection().removeAllRanges();
+          $scope.booleanForm.copied = true;
+          $timeout(function() {
+            $scope.booleanForm.copied = false;
+          }, 1000);
         }
 
         $scope.closeModal = function() {
@@ -295,7 +866,7 @@ app.controller('controller.pricing', function($scope, $state, $http, $timeout, $
 
 });
 
-app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope, $sce) {
   $scope.properties = {
     // autoHeight:true,
     // animateIn: 'fadeIn',
@@ -304,47 +875,74 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
     loop: true,
     autoplay: true,
     autoplayTimeout: 3000,
-    dots: false
+    dots: false,
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 2,
+
+      },
+      768: {
+        items: 3,
+
+      },
+      1000: {
+        items: 6,
+
+      }
+    }
   };
+  // $scope.articles = [{
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  //   {
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  //   {
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  //   {
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  //   {
+  //     date: new Date(),
+  //     title: 'das',
+  //     description: "",
+  //     link: '/',
+  //     image: '/static/images/some.jpg'
+  //   },
+  // ]
 
+  $scope.fetchBlogs = function() {
+    $http.get('/api/PIM/blog/?limit=6').
+    then(function(response) {
+      $scope.articles = response.data.results;
+      $scope.articles[0].header = $sce.trustAsHtml($scope.articles[0].header);
+    })
+  }
+  $scope.fetchBlogs();
 
-  $scope.articles = [{
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    {
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    {
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    {
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    {
-      date: new Date(),
-      title: 'das',
-      description: "",
-      link: '/',
-      image: '/static/images/some.jpg'
-    },
-    // {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
-  ]
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
+  }
 
 
   $scope.friends = [{
@@ -375,35 +973,80 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
   ];
 
 
+  $scope.brands = [{
+      name: 'apache',
+      age: 0,
+      dp: '/static/images/apache.png'
+    },
+    {
+      name: 'blender',
+      age: 1,
+      dp: '/static/images/blender.png'
+    },
+    {
+      name: 'dis',
+      age: 2,
+      dp: '/static/images/dis.png'
+    },
+    {
+      name: 'dropbox',
+      age: 3,
+      dp: '/static/images/dropbox.jpg'
+    },
+    {
+      name: 'ima',
+      age: 4,
+      dp: '/static/images/ima.png'
+    },
+    {
+      name: 'noname',
+      age: 5,
+      dp: '/static/images/noname.png'
+    },
+    {
+      name: 'skill',
+      age: 6,
+      dp: '/static/images/skill.png'
+    },
+    {
+      name: 'zendesk',
+      age: 7,
+      dp: '/static/images/zendesk.png'
+    },
+  ];
 
 })
 
 
-app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope) {
 
-  $scope.device = {
-    smallDevice: false
+
+  $rootScope.getCookie = function(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
   }
 
 
-  $scope.elementInViewport = function(el) {
-    var top = el.offsetTop;
-    var left = el.offsetLeft;
-    var width = el.offsetWidth;
-    var height = el.offsetHeight;
+  $rootScope.setCookie = function(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
 
-    while (el.offsetParent) {
-      el = el.offsetParent;
-      top += el.offsetTop;
-      left += el.offsetLeft;
-    }
-
-    return (
-      top >= window.pageYOffset &&
-      left >= window.pageXOffset &&
-      (top + height) <= (window.pageYOffset + window.innerHeight) &&
-      (left + width) <= (window.pageXOffset + window.innerWidth)
-    );
+  $scope.device = {
+    smallDevice: false
   }
 
   $scope.smDevice = function(x) {
@@ -430,6 +1073,9 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
 
 
   $scope.toggleNavbar = false;
+
+  $rootScope.source = 'EpsilonAI'
+
 
   $scope.langOptions = [{
       flag: '/static/images/flags/USA-1.svg',
@@ -477,6 +1123,29 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     }
   }
 
+    var cookieAccepted = $rootScope.getCookie("accepted");
+    if (cookieAccepted !="") {
+      cookieAccepted = JSON.parse(cookieAccepted)
+      if (cookieAccepted.accepted) {
+        $scope.show_cokie_agree = false;
+      } else {
+        $scope.show_cokie_agree = true;
+      }
+    }else {
+      $scope.show_cokie_agree = true;
+    }
+
+  var visitorDetails = $rootScope.getCookie("visitorDetails");
+  $rootScope.cookie = function(val) {
+    $scope.show_cokie_agree = false;
+    if (visitorDetails !="") {
+      var uid = JSON.parse(visitorDetails).uid
+      $rootScope.setCookie("accepted", JSON.stringify({
+        'accepted': true,
+        'uid': uid
+      }), 365)
+    }
+  }
 
   $scope.schedule = function(idx) {
     $uibModal.open({
@@ -486,6 +1155,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
       controller: function($scope, Flash) {
         $scope.calendar = true
         $scope.thankYou = false
+
         $scope.refresh = function() {
           $scope.form = {
             dated: new Date(),
@@ -495,6 +1165,14 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
           }
         }
         $scope.refresh()
+
+        $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+        if ($scope.visitorDetails != "") {
+          $scope.form.name = JSON.parse($scope.visitorDetails).name || ''
+          $scope.form.emailId = JSON.parse($scope.visitorDetails).email || ''
+        }
+
+
         $scope.timeSlot = [{
             'time': '8 - 9'
           },
@@ -525,28 +1203,37 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
 
 
         $scope.scheduleMeeting = function() {
-          // if($scope.form.dated == null || $scope.form.dated == undefined){
-          //   Flash.create("warning","PLease Select Date")
-          //   return;
-          // }
-          // if($scope.form.emailId == '' || $scope.form.emailId == undefined){
-          //   console.log("dddffffffffffff");
-          //   Flash.create('danger', 'Please fill Email Id')
-          //   return;
-          // }
+          if ($scope.form.emailId == '' || $scope.form.name == '') {
+            return;
+          }
+
+          $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+          if ($scope.visitorDetails != "") {
+            $rootScope.setCookie("visitorDetails", JSON.stringify({
+              uid: JSON.parse($scope.visitorDetails).uid,
+              name: $scope.form.name,
+              email: $scope.form.emailId,
+              visitorPk: $rootScope.visitorPk,
+              blogSubscribed: JSON.parse($scope.visitorDetails).blogSubscribed
+            }), 365);
+          }
+
 
           var dataToSend = {
             dated: $scope.form.dated.toJSON().split('T')[0],
             slot: $scope.form.slot,
             emailId: $scope.form.emailId,
             name: $scope.form.name,
+            source: $rootScope.source
           }
+
           $http({
             method: 'POST',
             url: erpUrl + '/api/marketing/schedule/',
             data: dataToSend
           }).
           then(function(response) {
+
             Flash.create('success', 'Saved');
             $scope.calendar = false
             $scope.thankYou = true
@@ -558,8 +1245,22 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
               }
             }).
             then(function(response) {
-              $scope.refresh()
+              // $scope.refresh()
             });
+
+            $http({
+              method: 'PATCH',
+              url: '/api/ERP/visitor/' + $rootScope.visitorPk + '/',
+              data: {
+                demoRequested: true,
+                email: $scope.form.emailId,
+                name: $scope.form.name
+              }
+            }).then(function(response) {
+              console.log(response.data);
+            })
+
+
           });
 
         }
@@ -600,6 +1301,56 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   console.log('here');
   $scope.show = [false, false, false, false]
   $scope.keepshow = false;
+
+
+  $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+  if ($scope.visitorDetails != "") {
+    $scope.subscribeForm = {}
+    $scope.subscribeForm.email = JSON.parse($scope.visitorDetails).email || ''
+    $scope.subscribeForm.blogSubscribed = JSON.parse($scope.visitorDetails).blogSubscribed || false
+  } else {
+    $scope.subscribeForm = {
+      email: '',
+      blogSubscribed: false
+    }
+  }
+
+  $scope.subscribeToBlogs = function() {
+    if ($scope.subscribeForm.email == '') {
+      return;
+    }
+    $http({
+      method: 'POST',
+      url: erpUrl + '/api/marketing/conatacts/',
+      data: {
+        email: $scope.subscribeForm.email,
+        source: $rootScope.source
+      }
+    }).then(function(response) {
+      Flash.create('success', 'Subscribed');
+    })
+
+    $scope.subscribeForm.blogSubscribed = true
+
+    $rootScope.setCookie("visitorDetails", JSON.stringify({
+      uid: JSON.parse($scope.visitorDetails).uid,
+      name: JSON.parse($scope.visitorDetails).name,
+      email: $scope.subscribeForm.email,
+      visitorPk: $rootScope.visitorPk,
+      blogSubscribed: $scope.subscribeForm.blogSubscribed
+    }), 365);
+
+    $http({
+      method: 'PATCH',
+      url: '/api/ERP/visitor/' + $rootScope.visitorPk + '/',
+      data: {
+        blogsSubscribed: true,
+        email: $scope.subscribeForm.email
+      }
+    }).then(function(response) {
+      console.log(response.data);
+    })
+  }
 
 });
 
