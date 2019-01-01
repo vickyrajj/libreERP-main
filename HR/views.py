@@ -454,15 +454,18 @@ class BulkUserCreationAPIView(APIView):
                     is_staff = False
             except:
                 designation =""
-            send = User(username=username, email= email, first_name=first_name, last_name=last_name,is_staff=is_staff)
-            send.save()
+            try:
+                send = User(username=username, email= email, first_name=first_name, last_name=last_name,is_staff=is_staff)
+                send.save()
+            except:
+                continue
             pobj = profile.objects.get(pk=send.profile.pk)
             pobj.email = email
             pobj.mobile = mobile
             pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile}
             pobj.save()
             ctx = {
-                'heading' : "Reset Your Password",
+                'heading' : "Welcome to BNIStore.in",
                 'link' : url + '/accounts/password/reset/',
                 'recieverName' : first_name + ' ' + last_name,
                 'brandName' : globalSettings.BRAND_NAME,
@@ -471,9 +474,40 @@ class BulkUserCreationAPIView(APIView):
             sendAddr = []
             email_body = get_template('app.user.resetPassword.html').render(ctx)
             sendAddr.append(str(email))
-            msg = EmailMessage("Reset Password" , email_body, to= sendAddr)
-            msg.content_subtype = 'html'
-            msg.send()
+
+            if globalSettings.EMAIL_API:
+                sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                data = {
+                  "personalizations": [
+                    {
+                      "to": [
+                        {
+                          "email": str(email)
+                          # str(orderObj.user.email)
+                        }
+                      ],
+                      "subject": "Welcome to BNIStore.in"
+                    }
+                  ],
+                  "from": {
+                    "email": globalSettings.G_FROM,
+                    "name":"BNI India"
+                  },
+                  "content": [
+                    {
+                      "type": "text/html",
+                      "value": email_body
+                    }
+                  ]
+                }
+                response = sg.client.mail.send.post(request_body=data)
+                print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+
+            else:
+                msg = EmailMessage("Welcome to BNIStore.in" , email_body, to= sendAddr)
+                msg.content_subtype = 'html'
+                msg.send()
 
 
         return Response(status = status.HTTP_200_OK)

@@ -2643,7 +2643,7 @@ class UserProfileSettingAPI(APIView):
             else:
                 details = prof.details
             print details,'aaaaaaaaaa'
-            if details['GST']:
+            if 'GST' in details:
                 gst= details['GST']
             else:
                 gst = ''
