@@ -17,4 +17,5 @@ router.register(r'payroll' , payrollViewSet , base_name = 'payroll')
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'sendActivatedStatus/$' , SendActivatedStatus.as_view()),
+    url(r'bulkUserCreation/$' , BulkUserCreationAPIView.as_view() ),
 ]

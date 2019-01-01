@@ -27,6 +27,8 @@ from rest_framework.views import APIView
 from ecommerce.models import GenericImage
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+from openpyxl import load_workbook
+from io import BytesIO
 
 def documentView(request):
     docID = None
@@ -366,3 +368,89 @@ class SendActivatedStatus(APIView):
         msg.content_subtype = 'html'
         msg.send()
         return Response({}, status = status.HTTP_200_OK)
+
+from django.core.mail import send_mail , EmailMessage
+from django.core.mail import EmailMultiAlternatives
+
+class BulkUserCreationAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated , isAdmin)
+    def post(self, request, format=None):
+        print request.data,'aaaaaaaa'
+        location = request.data["locationData"]
+        url = location.split('/ERP')[0]
+        wb = load_workbook(filename = BytesIO(request.FILES['xl'].read()))
+        ws = wb.worksheets[0]
+        row_count = ws.max_row+1
+        column_count = ws.max_column
+
+        for i in range(2, row_count):
+            try:
+                username = ws['A' + str(i)].value
+            except:
+                username =""
+            try:
+                email = ws['B' + str(i)].value
+            except:
+                email =""
+            try:
+                first_name = ws['C' + str(i)].value
+            except:
+                first_name =" "
+            print first_name,'aaaaa'
+            try:
+                last_name = ws['D' + str(i)].value
+                if last_name == None:
+                    last_name = first_name
+                else:
+                    last_name = last_name
+            except:
+                last_name = first_name
+
+            try:
+                mobile = ws['E' + str(i)].value
+            except:
+                mobile =""
+            try:
+                designation = ws['F' + str(i)].value
+                if designation == 'manager' or 'admin' or 'director':
+                    is_staff = True
+                else:
+                    is_staff = False
+            except:
+                designation =""
+            send = User(username=username, email= email, first_name=first_name, last_name=last_name,is_staff=is_staff)
+            send.save()
+            pobj = profile.objects.get(pk=send.profile.pk)
+            pobj.email = email
+            pobj.mobile = mobile
+            pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile}
+            pobj.save()
+            ctx = {
+                'heading' : "Reset Your Password",
+                'link' : url + '/accounts/password/reset/',
+                'recieverName' : first_name + ' ' + last_name,
+                'brandName' : globalSettings.BRAND_NAME,
+                # 'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+                # 'linkUrl': globalSettings.BRAND_NAME,
+                # 'sendersAddress' : globalSettings.SEO_TITLE,
+                # # 'sendersPhone' : '122004',
+                # 'grandTotal':grandTotal,
+                # 'total': total,
+                # 'value':value,
+                # 'docID':docID,
+                # 'data':orderObj,
+                # 'promoAmount':promoAmount,
+                # 'linkedinUrl' : lkLink,
+                # 'fbUrl' : fbLink,
+                # 'twitterUrl' : twtLink,
+            }
+            print ctx
+            sendAddr = []
+            email_body = get_template('app.user.resetPassword.html').render(ctx)
+            sendAddr.append(str(email))
+            msg = EmailMessage("Reset Password" , email_body, to= sendAddr)
+            msg.content_subtype = 'html'
+            msg.send()
+
+
+        return Response(status = status.HTTP_200_OK)
