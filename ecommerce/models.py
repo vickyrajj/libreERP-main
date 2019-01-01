@@ -247,7 +247,7 @@ class Order(models.Model):
     paymentRefId =  models.CharField(max_length=100 ,null = True , blank = True)
     paymentChannel = models.CharField(max_length=100 ,null = True , blank = True)
     modeOfShopping = models.CharField(choices = SHOPPINGMODE_CHOICES , max_length = 10)
-    paidAmount = models.PositiveIntegerField( default = 0)
+    paidAmount = models.FloatField( default = 0)
     paymentStatus = models.BooleanField(default = False)
     promoCode = models.CharField(max_length=100 ,null = True , blank = True)
     approved = models.NullBooleanField()
