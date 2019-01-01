@@ -408,6 +408,15 @@ class SendActivatedStatus(APIView):
 from django.core.mail import send_mail , EmailMessage
 from django.core.mail import EmailMultiAlternatives
 import sendgrid
+
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
+token_generator = PasswordResetTokenGenerator()
+print "token : " , token_generator.make_token(User.objects.get(pk = 1))
+
+# path = reverse("account_reset_password_from_key", kwargs=dict(uidb36=user_pk_to_url_str(user),                                      key=temp_key))
+
+
 class BulkUserCreationAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated , isAdmin)
     def post(self, request, format=None):
@@ -462,7 +471,7 @@ class BulkUserCreationAPIView(APIView):
             pobj = profile.objects.get(pk=send.profile.pk)
             pobj.email = email
             pobj.mobile = mobile
-            pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile}
+            pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile,"GST":""}
             pobj.save()
             ctx = {
                 'heading' : "Welcome to BNIStore.in",
