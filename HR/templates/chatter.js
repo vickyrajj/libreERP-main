@@ -2392,11 +2392,23 @@ function togglingActive(element,value,type){
 
     setAudioVideoBtn();
 
+    var audioSet=false;
+    var videoSet=false;
+
     videoBtn.addEventListener("click",function(){
       if(isAudioClicked){
         alert('Audio call is Active')
         return
       }
+      if(audioSet){
+        alert('you have made audio call')
+        return
+      }
+      if(isConfirmedToEnd){
+        alert('start new chat')
+        return
+      }
+      videoSet=true
       audioBtn.style.display='none'
       isVideoClicked=!isVideoClicked
       if(isVideoClicked){
@@ -2427,12 +2439,21 @@ function togglingActive(element,value,type){
 var countForFrameContent=0;
 
   audioBtn.addEventListener("click",function(){
-    videoBtn.style.display='none';
-    isAudioClicked=!isAudioClicked
+    audioSet=true
+    if(isConfirmedToEnd){
+      alert('start new chat')
+      return
+    }
+    if(videoSet){
+      alert('you have made video call')
+      return
+    }
     if(isVideoClicked){
       alert('Video call is Active')
       return
     }
+    isAudioClicked=!isAudioClicked
+    videoBtn.style.display='none';
     if(isAudioClicked){
       countForFrameContent++;
       activeAudioCall()
@@ -2621,32 +2642,22 @@ var isConfirmedToEnd=false;
     }
   }
 
-//   let currentUrl=window.location.href;
-// setTimeout(function () {
-//   connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
-//     acknowledge: true
-//   }).
-//   then(function(publication) {
-//     console.log("Published" + "service.support.agent."+agentPk);
-//   },function(err){
-//     console.log("unavle to call service.supoort.agent with "+agentPk+" to hide the Iframe on agent side" );
-//   }););
-// }, 4000);
-//
-// setInterval(function () {
-//   if(currentUrl!==window.location.href){
-//     // console.log('changed url $$$$$$$$$$$$$$$$$$$$$$$$$$$4');
-//
-//     currentUrl=window.location.href;
-//     connection.session.call(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
-//       acknowledge: true
-//     }).
-//     then(function(publication) {
-//       console.log("Published" + "service.support.agent."+agentPk);
-//     });
-//
-//   }
-// }, 5000);
+let currentUrl=window.location.href;
+setTimeout(function () {
+  connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
+    acknowledge: true
+  })
+}, 4000);
+
+setInterval(function () {
+  // alert(currentUrl)
+  if(currentUrl!==window.location.href){
+    currentUrl=window.location.href;
+    connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'CU' , currentUrl] , {}, {
+      acknowledge: true
+    })
+  }
+}, 5000);
 
 
   function pushMessages() {

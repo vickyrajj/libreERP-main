@@ -371,6 +371,10 @@ app.directive('chatBox', function() {
             }
       }
 
+      setInterval(function () {
+        // alert($scope.data.currentUrl)
+      }, 10000);
+
 
       // $scope.closeIframe1=$scope.data.closeIframe
 
