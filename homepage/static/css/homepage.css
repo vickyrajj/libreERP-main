@@ -1011,88 +1011,283 @@
   margin-left: 1em;
 }
 
-/* ------------------ */
 @media only screen and (max-width:768px) {
-  .cards {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    transition: 0.3s;
-    text-align: center;
-    margin-left: 15px;
-    width: 90%;
-    border-radius: 5px;
-    min-height: 41vh;
+
+  /* mobile display size starts here.... */
+
+/*  enrollpage*/
+.cards {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  text-align: center;
+  margin-left: 15px;
+  width: 90%;
+  border-radius: 5px;
+  min-height: 41vh;
+}
+
+.likecard {
+  background-color: #FAFAFA;
+  min-height: 10vh;
+  width: 93%;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+}
+
+.top {
+  position: relative;
+  min-height: 80vh;
+}
+
+.top h1 {
+  color: #fff;
+  padding-top: 2em;
+  font-weight: bold;
+  line-height: 30px;
+  font-size: 25px;
+}
+
+.top h1::after {
+  width: 3em;
+  height: 1em;
+  content: '';
+  bottom: 0px;
+  position: absolute;
+  display: block;
+  border-bottom: 2px solid #00EDA3;
+}
+
+.top h2 {
+  font-size: 20px;
+}
+
+.topmargin {
+  margin-top: 6em;
+  text-align: left;
+}
+
+.dropdown, .leftalign {
+  text-align: left;
+}
+
+.top::before {
+  height: 80vh;
+}
+
+.dropdown-menu {
+  left: 0;
+}
+
+.size h4 {
+  font-size: 15px;
+}
+
+.rightcls {
+  text-align: center;
+}
+
+.imghide {
+  display: none;
+}
+
+.container-align {
+  text-align: left;
+}
+
+.alignment {
+  float: left;
+  margin-left:0;
+}
+  /*  enroll page ends*/
+  .container_box {
+    font-size: 12px !important;
+    top: 10px !important;
+    left: 130px !important;
+    width: 100% !important;
   }
 
-  .likecard {
-    background-color: #FAFAFA;
-    min-height: 10vh;
-    width: 93%;
-    margin-bottom: 2em;
-    padding-bottom: 1em;
+  .container_box>li {
+    padding: 6px !important;
   }
 
-  .top {
-    position: relative;
+  .home_header {
     min-height: 80vh;
+    background-size: cover;
+    background-repeat: no-repeat;
   }
 
-  .top h1 {
+  .home_content {
     color: #fff;
-    padding-top: 2em;
-    font-weight: bold;
-    line-height: 30px;
-    font-size: 25px;
+    padding-top: 3rem;
   }
 
-  .top h1::after {
-    width: 3em;
-    height: 1em;
-    content: '';
-    bottom: 0px;
-    position: absolute;
-    display: block;
-    border-bottom: 2px solid #00EDA3;
+  .owl_div {
+    min-height: 35vh;
   }
 
-  .top h2 {
-    font-size: 20px;
+  .owl_container {
+    max-width: 100%;
   }
 
-  .topmargin {
-    margin-top: 6em;
-    text-align: left;
+  .owl-start {
+    width: 25vw;
   }
 
-  .dropdown, .leftalign {
-    text-align: left;
+  .owl-center {
+    width: 25vw;
+    left: 36.6%;
   }
 
-  .top::before {
-    height: 80vh;
+  .owl-end {
+    width: 25vw;
+    right: 0%;
   }
 
-  .dropdown-menu {
-    left: 0;
+  .owl_line_left {
+    min-width: 25vw;
+    left: 68%;
+    bottom: 13%;
   }
 
-  .size h4 {
-    font-size: 15px;
+  .owl_line_right {
+    min-width: 25vw;
+    right: 67%;
+    bottom: 13%;
   }
 
-  .rightcls {
-    text-align: center;
+  .img {
+    width: 100%;
+    padding-top: 0px;
   }
 
-  .imghide {
-    display: none;
+  .card_div {
+    padding-top: 1.5em;
   }
 
-  .container-align {
-    text-align: left;
+  .card_div:last-child {
+    padding-bottom: 1.5em;
   }
 
-  .alignment {
-    float: left;
-    margin-left:0;
+  .card_container {
+    height: 40vh;
   }
+
+  .course_card {
+    height: 52vh;
+    margin-bottom: 1.5em;
+  }
+
+  .course_contain_bg {
+    background-size: cover;
+    min-height: 90vh;
+    background-image: linear-gradient(rgba(233, 233, 233, 0.6), rgba(233, 233, 233, 0.6)), url('/static/images/24tut/tablet_stu.png');
+  }
+
+  .course_contain_gradient {
+    background-image: none;
+  }
+
+  .list_container {
+    max-width: 100%;
+    margin-left: 12%;
+    position: relative;
+  }
+
+  .list_head {
+    max-width: 100%;
+  }
+
+  .list {
+    max-height:9vh;
+    width:93vw;
+  }
+  .list_body {
+    max-width: 100%;
+  }
+
+
+  /* mobile screen size ends here.... */
+}
+
+@media only screen and (device-width : 414px) and (device-height : 736px) and (-webkit-device-pixel-ratio : 3) {
+
+  /* for iphones.... */
+  .home_header {
+    min-height: 60vh;
+  }
+
+  .owl-start {
+    width: 30vw;
+  }
+
+  .owl-center {
+    width: 30vw;
+    left: 33.6%;
+  }
+
+  .owl-end {
+    width: 30vw;
+    right: 0%;
+  }
+
+  .owl_line_left {
+    min-width: 30vw;
+    left: 62%;
+  }
+
+  .owl_line_right {
+    right: 61%;
+  }
+
+  .course_card {
+    height: 49vh;
+    margin-bottom: 1.5em;
+  }
+
+  /* iphone screen size ends here */
+}
+
+@media screen and (device-width : 411px) and (device-height : 823px) {
+
+  /* for google pixel devices starts here */
+  .home_header {
+    min-height: 55vh;
+  }
+
+  .owl-start {
+    width: 30vw;
+    left: -1%;
+  }
+
+  .owl-center {
+    width: 30vw;
+    left: 32.6%;
+  }
+
+  .owl-end {
+    width: 30vw;
+    right: -1%;
+  }
+
+  .owl_line_left {
+    min-width: 25vw;
+    left: 62%;
+  }
+
+  .owl_line_right {
+    min-width: 26.3vw;
+    right: 62%;
+  }
+
+  .course_card {
+    height: 49vh;
+    margin-bottom: 1.5em;
+  }
+
+  .course_card {
+    height: 45vh;
+    margin-bottom: 1.5em;
+  }
+
+  /* for google pixel devices ends here */
 }
