@@ -1807,6 +1807,7 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
 
   $scope.edit = function () {
     $scope.editMode = true
+    document.getElementById('firstName').focus();
   }
 
   $scope.save = function () {

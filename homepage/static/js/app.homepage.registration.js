@@ -95,6 +95,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       if ($scope.autoActiveReg=='True') {
         $scope.showActiveMsg = false
         window.location.href = "/";
+
       }else{
         $scope.showActiveMsg = true
 
@@ -107,8 +108,24 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
     })
   }
 
-  $scope.loading = true;
+  $scope.sendOtp = function(requestType) {
+    console.log(requestType,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    var dataToSend={
+      otpType : requestType,
+      id : $scope.form.reg
+    }
+    $http({method : 'POST' , url : '/api/homepage/resendOtp/' , data : dataToSend }).
+    then(function(response) {
+    }, function(err) {
+      console.log(err);
+      if (err.status == 400) {
+        // $scope.validityChecked2 = true;
+      }
+    })
 
+  }
+
+  $scope.loading = true;
   $scope.$watch('form' , function(newValue , oldValue) {
 
     if ($scope.loading) {

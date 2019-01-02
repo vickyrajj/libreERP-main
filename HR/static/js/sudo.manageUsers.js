@@ -27,6 +27,7 @@ app.controller('admin.manageUsers.mailAccount' , function($scope , $http){
                   name : response.data.first_name};
      $http({method : 'POST' , url : '/api/HR/sendActivatedStatus/' , data : toSend}).
      then(function(response) {
+        Flash.create('success','User Activated Successfully');
        console.log(response.data);
      })
    });
@@ -50,7 +51,7 @@ app.controller('sudo.manageUsers.explore', function($scope, $http, $aside, $stat
     $scope.payroll = response.data[0];
     console.log($scope.payroll);
   })
-  console.log('((((((((((((((()))))))))))))))', $scope.data.userPK);
+
   $http({
     method: 'GET',
     url: '/api/HR/designation/?user=' + $scope.data.userPK
@@ -203,7 +204,7 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
 });
 
 
-app.controller('admin.manageUsers' , function($scope , $http , $aside , $state , Flash , $users , $filter,$timeout){
+app.controller('admin.manageUsers' , function($scope , $http , $aside , $state , Flash , $users , $filter,$timeout,$uibModal){
 
   // var views = [{name : 'table' , icon : 'fa-bars' , template : '/static/ngTemplates/genericTable/tableDefault.html'},
   //     {name : 'thumbnail' , icon : 'fa-th-large' , template : '/static/ngTemplates/empSearch/tableThumbnail.html'},
@@ -324,17 +325,22 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
       ]
     };
 
-    var multiselectOptions = [{
-        icon: 'fa fa-book',
-        text: 'Learning'
-      },
+    var multiselectOptions = [
+      // {
+      //   icon: 'fa fa-book',
+      //   text: 'Learning'
+      // },
+      // {
+      //   icon: 'fa fa-bar-chart-o',
+      //   text: 'Performance'
+      // },
+      // {
+      //   icon: 'fa fa-envelope-o',
+      //   text: 'message'
+      // },
       {
-        icon: 'fa fa-bar-chart-o',
-        text: 'Performance'
-      },
-      {
-        icon: 'fa fa-envelope-o',
-        text: 'message'
+        icon: 'fa fa-plus',
+        text: 'bulkUpload'
       },
     ];
 
@@ -343,7 +349,7 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
       views: views,
       options: options,
       itemsNumPerView: [12, 24, 48],
-      // multiselectOptions: multiselectOptions,
+      multiselectOptions: multiselectOptions,
       searchField: 'username',
     };
 
@@ -393,6 +399,7 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
 
   $scope.tableAction = function(target, action, mode) {
   // target is the url of the object
+
   if (typeof mode == 'undefined') {
     if (action == 'im') {
       $scope.$parent.$parent.addIMWindow(target);
@@ -546,7 +553,21 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
     if (mode == 'multi') {
       console.log(target);
       console.log(action);
-    }
+
+        console.log("aaaaaaaaaaaaa");
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.user.upload.html',
+          size: 'md',
+          backdrop: true,
+          resolve: {
+          },
+          controller: 'controller.user.upload',
+        }).result.then(function() {
+        }, function() {
+
+        });
+      }
+
   }
 }
 
@@ -821,5 +842,42 @@ app.controller('admin.manageUsers' , function($scope , $http , $aside , $state ,
   //   });
   // }
 
+
+});
+
+app.controller('controller.user.upload' , function($scope , $http , $aside , $state , Flash , $users , $filter,$timeout,$uibModal){
+
+  $scope.bulkForm = {
+    xlFile: emptyFile,
+    success: false,
+    usrCount: 0
+  }
+  $scope.upload = function() {
+    if ($scope.bulkForm.xlFile == emptyFile) {
+      Flash.create('warning', 'No file selected')
+      return
+    }
+    $scope.locationData = window.location
+    console.log($scope.bulkForm.xlFile);
+    var fd = new FormData()
+    fd.append('xl', $scope.bulkForm.xlFile);
+    fd.append('locationData',$scope.locationData);
+    console.log('*************', fd);
+    $http({
+      method: 'POST',
+      url: '/api/HR/bulkUserCreation/',
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+      Flash.create('success', 'Created');
+      // $scope.bulkForm.usrCount = response.data.count;
+      // $scope.bulkForm.success = true;
+    })
+
+  }
 
 });

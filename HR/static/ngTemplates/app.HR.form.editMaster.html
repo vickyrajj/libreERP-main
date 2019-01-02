@@ -20,12 +20,12 @@
 <div class="col-md-6">
   <div class="row">
   <div class="col-md-2">
-  <div class="form-group">
+  <div class="form-group" >
     <label >Active ?</label>
     <input type="checkbox" ng-model="data.is_active" >
   </div>
 </div>
-<div class="col-md-6">
+<div class="col-md-6" ng-if="!data.is_active">
   <!-- <button class="btn btn-primary" ng-click = 'activate(data.pk)'>Activate</button> -->
     <button type="button" class="btn btn-primary" ng-click="addActive()">Activate</button>
 </div>

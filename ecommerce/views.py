@@ -2637,26 +2637,53 @@ class UserProfileSettingAPI(APIView):
             firstName = user.first_name
             lastName = user.last_name
             email = user.email
-            gst = 'ABCDFDG'
+            # pobj = profile.objects.get(pk=user.profile.pk)
+            if prof.details is not None:
+                if type(prof.details)==unicode:
+                    details = ast.literal_eval(prof.details)
+                else:
+                    details = prof.details
+            else:
+                details = ''
+            if 'GST' in details:
+                gst= details['GST']
+            else:
+                gst = ''
             try:
                 mobile = prof.mobile
             except:
                 mobile =''
-            if prof.details is not None:
-                details = prof.details
-            else:
-                details = ''
             return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst}, status = status.HTTP_200_OK)
     def post(self , request , format = None):
         if 'user' in request.data:
             user = User.objects.get(pk=request.data['user'])
-            firstName = request.data['firstName']
-            lastName = request.data['lastName']
-            email = request.data['email']
-            gst = request.data['gst']
-            mobile = request.data['mobile']
+            user.first_name = request.data['firstName']
+            user.last_name = request.data['lastName']
+            user.email = request.data['email']
+            user.save()
+            pobj = profile.objects.get(pk=user.profile.pk)
+            # pobj.email = email
+            pobj.mobile = request.data['mobile']
+            if pobj.details is not None:
+                details = ast.literal_eval(pobj.details)
+                if 'GST' in details:
+                    details['GST'] = request.data['gst']
+                else:
+                    details['GST'] = request.data['gst']
+                pobj.details = details
+                pobj.save()
+            else:
+                details = {}
+                details['GST'] = request.data['gst']
+                pobj.details = str(details)
+                pobj.save()
+
+            # pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile}
+            # gst = request.data['gst']
+            # mobile = request.data['mobile']
             # user.firstName = firstName
             # user.lastName = lastName
             # user.email = email
             # user.save()
-            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst}, status = status.HTTP_200_OK)
+            # {'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst},
+            return Response({'firstName':user.first_name,'lastName':user.last_name,'email':user.email,'mobile':pobj.mobile,'gst':request.data['gst']}, status = status.HTTP_200_OK)

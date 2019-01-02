@@ -200,3 +200,82 @@ class UpdateInfoAPI(APIView):
         # msg.send()
         login(request , u)
         return Response( status = status.HTTP_200_OK)
+
+
+class ReSendOtpAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        print "herererere", request.data
+        reg = Registration.objects.get(pk=request.data['id'])
+        username = reg.email.split('@')[0]
+        if request.data['otpType'] == 'emailOtp':
+            reg.emailOTP = generateOTPCode()
+            print reg.emailOTP,'email'
+            msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP)]
+
+            ctx = {
+                'heading' : 'Welcome to Ecommerce',
+                'recieverName' : 'Customer',
+                'message': msgBody,
+                'linkUrl': 'sterlingselect.com',
+                'linkText' : 'View Online',
+                'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+                'sendersPhone' : '841101',
+                'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
+                'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
+                'twitterUrl' : 'twitter.com',
+                'brandName' : globalSettings.BRAND_NAME,
+                'username':username
+            }
+
+            email_body = get_template('app.homepage.emailOTP.html').render(ctx)
+            email_subject = 'Regisration OTP'
+            if globalSettings.EMAIL_API:
+                sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                data = {
+                  "personalizations": [
+                    {
+                      "to": [
+                        {
+                          # "email": 'bhanubalram5@gmail.com'
+                          "email": str(reg.email)
+                          # str(orderObj.user.email)
+                        }
+                      ],
+                      "subject": email_subject
+                    }
+                  ],
+                  "from": {
+                    "email": globalSettings.G_FROM,
+                    "name":"BNI India"
+                  },
+                  "content": [
+                    {
+                      "type": "text/html",
+                      "value": email_body
+                    }
+                  ]
+                }
+                response = sg.client.mail.send.post(request_body=data)
+                print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+            else:
+                sentEmail=[]
+                sentEmail.append(str(reg.email))
+                # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                msg.content_subtype = 'html'
+                msg.send()
+        elif request.data['otpType'] == 'mobileOtp':
+            reg.mobileOTP = generateOTPCode()
+            print reg.mobileOTP,'mobile'
+            mobile = reg.mobile
+            if 'phoneCode' in request.data:
+                phoneCode = request.data['phoneCode']
+                mobile = phoneCode +''+ reg.mobile
+            url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
+            requests.get(url)
+        reg.save()
+
+        return Response( status = status.HTTP_200_OK)

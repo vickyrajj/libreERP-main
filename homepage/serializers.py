@@ -194,7 +194,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                                 {
                                   "to": [
                                     {
-                                      "email": str(reg.email)
+                                      "email": str(globalSettings.G_ADMIN[0])
                                       # str(orderObj.user.email)
                                     }
                                   ],
