@@ -186,6 +186,8 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
   $scope.properties = {
     lazyLoad: true,
     dots: true,
+    autoplay:true,
+    autoplayTimeout:3000,
     URLhashListener: true,
     autoplayHoverPause: true,
     startPosition: 'URLHash',
