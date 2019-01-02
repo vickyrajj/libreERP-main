@@ -84,7 +84,7 @@ class ProjectsViewSet(viewsets.ModelViewSet):
     queryset = Projects.objects.all().order_by('-created')
     serializer_class = ProjectsSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['status','title']
+    filter_fields = ['status','title','savedStatus']
 
 class VendorViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
