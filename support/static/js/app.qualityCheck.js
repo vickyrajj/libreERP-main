@@ -432,6 +432,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       then(function(response) {
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.archivedData =response.data
+
         $scope.loadingDataForArc=false;
         $scope.archTableUpdated=true;
         if(response.data.length<1){
@@ -444,6 +445,8 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   }
 
   var counttt=0;
+
+
 
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
     counttt++;

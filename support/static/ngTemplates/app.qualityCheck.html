@@ -83,6 +83,9 @@
                              </div>
                              <div class="">
                                <span style="font-size: 13px;opacity: 0.8;">Created : {{data[0].created|  date : 'dd-MMM-yyyy'}}</span>
+                               <span ng-if="data[0].statusChat=='started'" style="font-size: 14px;opacity: 0.8;color:green;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
+                               <span ng-if="data[0].statusChat=='closed'" style="font-size: 14px;opacity: 0.8;color:#A40B0B;background:#e0e0e0;padding:0px 5px"  ><b>{{data[0].statusChat|humanize}}</b></span>
+                               <span ng-if="data[0].statusChat=='reviewed'" style="font-size: 14px;opacity: 0.8;color:brown;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
                              </div>
                            </span>
                            <div class="" style="margin:5px 10px;float:right;font-size:20px;padding:12px;opacity:0.6;">
@@ -234,6 +237,10 @@
                              </div>
                              <div class="">
                                <span style="font-size: 13px;opacity: 0.8;">Created : {{data[0].created|  date : 'dd-MMM-yyyy'}}</span>
+                               <span ng-if="data[0].status=='started'" style="font-size: 13px;color:green" >Status : {{data[0].status}}</span>
+                               <span ng-if="data[0].status=='closed'"style="font-size: 13px;color:red" >Status : {{data[0].status}}</span>
+                               <span ng-if="data[0].status=='reviewed'" style="font-size: 13px;color:brown" >Status : {{data[0].status}}</span>
+                               <!-- <span style="font-size: 13px;color:{{statusColor}}" >Status : {{data[0].status}}</span> -->
                              </div>
                            </span>
                            <div class="" style="margin:5px 10px;float:right;font-size:20px;padding:12px;opacity:0.6;">
