@@ -40,10 +40,10 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     // searchField: 'title',
     deletable: true,
     itemsNumPerView: [12, 21, 30],
-    // getParams: [{
-    //   key: 'status',
-    //   value: 'created'
-    // }],
+    getParams: [{
+      key: 'savedStatus',
+      value: false
+    }],
     searchField: 'title',
   }
 
@@ -63,9 +63,14 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     deletable: true,
     itemsNumPerView: [12, 21, 30],
     getParams: [{
+      key: 'savedStatus',
+      value: true
+    },
+    {
       key: 'status',
-      value: 'archieve'
-    }],
+      value: 'ongoing'
+    },
+  ],
     searchField: 'title',
   }
   $scope.data1 = {
@@ -535,7 +540,7 @@ app.controller("businessManagement.projects.service.item", function($scope, $sta
 
 })
 
-app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash,$rootScope) {
+app.controller("businessManagement.projects.service.view", function($scope, $state, $users, $stateParams, $http, Flash,$rootScope,$uibModal) {
 
   $scope.projectSteps = {
     steps: projectsStepsData
@@ -1269,9 +1274,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       data: send,
     }).
     then(function(response) {
-      if (newValue != null) {
+      // if (newValue != null) {
         $scope.updateAll()
-      }
+      // }
     })
   }
   $scope.profitmarginChange = function() {
@@ -1347,13 +1352,11 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
             method: 'PATCH',
             url: '/api/support/projects/' + $scope.form.pk + '/',
             data: {
-              savedStatus: true,
               status: 'ongoing'
             },
           }).
           then(function(response) {
             Flash.create('success', 'Saved');
-            $scope.form.savedStatus = response.data.savedStatus
             $scope.form.status = response.data.status
             $scope.updateStatus()
             $scope.fetchMaterial()
@@ -1363,7 +1366,45 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }
   }
 
+$scope.archieve=function(){
+  var sendStatus = {
+    savedStatus: true,
 
+  }
+  $http({
+    method: 'PATCH',
+    url: '/api/support/projects/' + $scope.form.pk + '/',
+    data: sendStatus,
+  }).
+  then(function(response) {
+    Flash.create('success', 'Saved');
+    // $scope.form.status = response.data.status
+  })
+
+}
+
+//   $uibModal.open({
+//     templateUrl: '/static/ngTemplates/app.projects.send.archieve.modal.html',
+//     size: 'lg',
+//     backdrop: true,
+//     resolve: {
+//       data: function() {
+//         return $scope.form;
+//       }
+//     },
+//     controller: function($scope, data, $uibModalInstance) {
+//       console.log(data,'aaaaaaaaaaaaaa');
+//
+//   // $uibModalInstance.dismiss(response.data);
+//     }, //----controller ends
+//   // }).result.then(function(f) {
+//   //   // $scope.fetchData();
+//   // }, function(f) {
+//   //   if (typeof f == 'object') {
+//   //     // $scope.form.service = f
+//   //   }
+//   });
+// }
 
 
 })
@@ -1990,6 +2031,91 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
 app.controller("businessManagement.projects.invoice", function($scope, $state, $users, $stateParams, $http, Flash) {
 
+
+})
+
+app.controller("businessManagement.projects.archieve.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+  $scope.form = $scope.data.archieveData[$scope.tab.data.index]
+  $scope.projects = []
+  $scope.materialIssue = []
+
+
+  // $scope.updateAll = function() {
+  //   for (var i = 0; i < $scope.projects.length; i++) {
+  //     $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.projects[i].price) / 100 + $scope.projects[i].price).toFixed(2))
+  //     $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].price * $scope.form.exRate).toFixed(2))
+  //     $scope.projects[i].packing = parseFloat(((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice)).toFixed(2))
+  //     $scope.projects[i].insurance = parseFloat(((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.projects[i].inrPrice)).toFixed(2))
+  //     $scope.projects[i].freight = parseFloat(((($scope.form.freight / $scope.form.invoiceValue) * $scope.projects[i].inrPrice)).toFixed(2))
+  //     $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+  //     $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+  //     $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif +(($scope.projects[i].cif * $scope.form.assessableValue)/100))*($scope.projects[i].custom)/100).toFixed(2))
+  //     $scope.projects[i].socialVal = parseFloat(($scope.projects[i].customVal *0.1).toFixed(2))
+  //     $scope.projects[i].gstVal = parseFloat(($scope.projects[i].cif+$scope.projects[i].customVal+$scope.projects[i].socialVal)*($scope.projects[i].gst)/100).toFixed(2)
+  //     $scope.projects[i].charge1 = parseFloat(($scope.projects[i].inrPrice * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate))).toFixed(2))
+  //     $scope.projects[i].charge2 = parseFloat(($scope.projects[i].inrPrice * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate))).toFixed(2))
+  //     $scope.projects[i].landed_price = (($scope.projects[i].cif + $scope.projects[i].customVal + $scope.projects[i].socialVal + $scope.projects[i].charge1 + $scope.projects[i].charge2).toFixed(2))
+  //   }
+  //
+  // }
+
+  function sum(data) {
+    if (data == $scope.materialIssue) {
+      return data.map(function(m) {
+        return m.qty * m.price
+      }).reduce(function(a, b) {
+        return a + b
+      }, 0)
+    } else if (data == $scope.projects) {
+      return data.map(function(m) {
+        return m.quantity1 * m.price
+      }).reduce(function(a, b) {
+        return a + b
+      }, 0)
+    }
+  }
+  $scope.fetchData = function() {
+    $http({
+      method: 'GET',
+      url: '/api/support/bom/?project=' + $scope.form.pk
+    }).
+    then(function(response) {
+      $scope.projects = response.data
+      $scope.purchaseSum = sum($scope.projects)
+      var tot = 0
+      console.log($scope.purchaseSum,'kkkkkkkkkkkkkkkkkk');
+      $scope.form.invoiceValue = 0
+      for (var i = 0; i < $scope.projects.length; i++) {
+        var totalprice = $scope.projects[i].price * $scope.projects[i].quantity1
+        tot += totalprice
+      }
+      $scope.form.invoiceValue = tot
+      // $scope.updateAll()
+      // $rootScope.allData =  $scope.projects
+
+    })
+  }
+
+    $scope.fetchMaterial = function(){
+      $http({
+        method: 'GET',
+        url: '/api/support/material/?project=' + $scope.form.pk,
+      }).
+      then(function(response) {
+        for (var i = 0; i < response.data.length; i++) {
+          console.log(response.data,'jjjjjjjjjjjjj');
+          for (var j = 0; j < response.data[i].materialIssue.length; j++) {
+            $scope.materialIssue.push(response.data[i].materialIssue[j])
+            $scope.materialSum = sum($scope.materialIssue)
+          }
+        }
+      })
+    }
+
+
+
+  $scope.fetchData()
+  $scope.fetchMaterial()
 
 })
 // app.controller("businessManagement.projects.invoice.view", function($scope, $state, $users, $stateParams, $http, Flash) {

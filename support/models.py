@@ -149,7 +149,7 @@ class StockCheckLog(models.Model):
 
 class StockSummaryReport(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    dated = models.DateField(null = True)
+    dated = models.DateField(null = True,unique=True)
     stockValue = models.FloatField(null = True,default=0)
 
 class ProjectStockSummary(models.Model):

@@ -273,7 +273,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
         },
         controller: function($scope, $uibModalInstance, cartData) {
           $scope.projectSearch = function(query) {
-            return $http.get('/api/support/projects/?title__contains=' + query).
+            return $http.get('/api/support/projects/?title__contains=' + query+'&status__in=approved,ongoing&savedStatus=false').
             then(function(response) {
               return response.data;
             })
