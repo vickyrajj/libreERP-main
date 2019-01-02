@@ -598,9 +598,6 @@
   min-height: 60vh;
   background-size: cover;
 }
-.dash_container{
-
-}
 
 .dash {
   border-radius: 4em;
@@ -725,6 +722,9 @@
 .footer .folist {
   list-style: none;
   /* Remove default bullets */
+}
+.foo_heading{
+  margin-top: 7%;
 }
 
 .footer .folist li::before {
@@ -1327,20 +1327,55 @@
   .cent::after {
     display: none;
   }
+
   .cent_div {
     min-height: 60vh;
     background-size: 190% 100%;
   }
+
+  .dash_container {
+    padding-bottom: 10em;
+  }
+
   .dash {
-    margin-left: 4em;
+    margin-bottom: 5em;
+    margin-right: 3em;
     width: 7em;
     height: 7em;
   }
+
   .pro_hov {
     top: -149px;
-    left: -24px;
-    width:12em;
+    left: -11px;
+    width: 12em;
   }
+
+  .dashlast {
+    margin-left: 8em;
+    width: 7em;
+    height: 7em;
+  }
+
+  .pro_title {
+    left: -28px;
+  }
+
+  .pro_descrp {
+    width: 310px;
+    bottom: -50px;
+    left: -58%;
+  }
+
+  .tell_card {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+
+  .tell_abt_overlay {
+    left: 49px;
+    top: 24px;
+  }
+
   /* mobile screen size ends here.... */
 }
 
@@ -1377,6 +1412,42 @@
   .course_card {
     height: 49vh;
     margin-bottom: 1.5em;
+  }
+
+  .dash {
+    margin-left: 9em;
+  }
+
+  .pro_hov {
+    top: -149px;
+    left: -11px;
+    width: 12em;
+  }
+
+  .dashlast {
+    margin-left: 9em;
+  }
+
+  .pro_descrp {
+    width: 350px;
+    bottom: -50px;
+    left: -58%;
+  }
+
+  .tell_abt_overlay {
+    left: 66px;
+    top: 20px;
+  }
+  .foot_btn{
+    margin-left:23%;
+  }
+
+  .foo_heading{
+    margin-top: 12%;
+  }
+  .foo_bar{
+    min-height: 11vh;
+    padding-bottom:2em;
   }
 
   /* iphone screen size ends here */
@@ -1427,6 +1498,43 @@
   .course_contain_bg {
     min-height: 70vh;
   }
+
+  .dash {
+    margin-left: 9em;
+  }
+
+  .pro_hov {
+    top: -149px;
+    left: -11px;
+    width: 12em;
+  }
+
+  .dashlast {
+    margin-left: 9em;
+  }
+
+  .pro_descrp {
+    width: 350px;
+    bottom: -50px;
+    left: -58%;
+  }
+
+  .tell_abt_overlay {
+    left: 65px;
+    top: 21px;
+  }
+  .foot_btn{
+    margin-left:23%;
+  }
+
+  .foo_heading{
+    margin-top: 15%;
+  }
+  .foo_bar{
+    min-height: 11vh;
+    padding-bottom:2em;
+  }
+
 
   /* for google pixel devices ends here */
 }
