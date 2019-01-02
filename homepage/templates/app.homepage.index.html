@@ -1,292 +1,455 @@
-{% load i18n %} {% get_current_language as LANGUAGE_CODE %}
-
-<div class="row hidden-xs hidden-md" style=" background:url('/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg') no-repeat right bottom;height:60vh;margin:0px;background-size: auto 100%;">
-  <img src="/static/images/image10.png" style="width:100%;height:100%" alt="">
-  <div style="position:absolute;top:200px;left:100px;width:30vw;">
-    <h3 style="color:white;">{% trans 'WelcomeHeading' %} </h3>
-  </div>
-</div>
-
-<div class="hidden-md hidden-lg">
-  <div class="row " style=" background:url('/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg') no-repeat ;height:20vh;margin:0px;background-size: cover;margin-top:30px;">
-  </div>
-  <div class="row" style="margin:0px; background-color:#0f4b8d;">
-    <h3 style="color:white; text-align:center; padding:15px 0px">{% trans 'WelcomeHeading' %} </h3>
-  </div>
-</div>
-
-<!-- <div style="background-color:#0f4b8d; height:60vh; width:100%;">
-  <img style="clip-path:polygon(100% 60vh, 50% 60vh, 40% 50px, 100% 50px); width:100%;height:100%" src="/static/images/mainBanner.{{LANGUAGE_CODE}}.jpg" alt="">
-  <div style="position:absolute;top:200px;left:100px;width:30vw;">
-    <h3 style="color:white;">{% trans 'WelcomeHeading' %} </h3>
-  </div>
-</div> -->
-
 {% verbatim %}
-<div class="flex_section">
-  <div style="flex:45%; margin-top: 80px; order:1;">
-    <div class="content">
-      <h3>True digital innovation starts with your employees and teams</h3>
-      <p>They’re the people most passionate about your brand, campaigns and products. Enable their every idea for a true culture of innovation. Capture, govern and manage digital innovation across the enterprise. Dramatically improve the ROI of campaigns,
-        landing pages, checkouts and overall conversion.</p>
-      <div style="padding-top:15px;">
-        <a href="/products/program-management/" class="btn btn-primary btn-rounded">Learn More</a>
-      </div>
-    </div>
+<!-- <div class="container-fluid home_header">
+  <div class="col-md-4 col-md-offset-2 home_content">
+    <h1 style="font-size:4em;font-weight:bold;"> Learn Anything </h1>
+    <h3 style="font-size:2.4em;font-weight:lighter;font-family:sans-serif;line-height:1.2;">Get Access for Award Winning Online Courses</h3>
   </div>
-  <div class="lineSvg" style="flex:10%; order:2; margin-top:50px; position:relative;">
-    <div style="position:absolute; top:0px; height:20px; left:6px;">
-      <div class="scroll-point"></div>
-      <span class="point-text">Ideate</span>
-    </div>
-    <div style="border-left:2px solid #818194; height:100px; position:absolute; top:20px; left:16px;"></div>
-    <div style="position:absolute; top:120px; left:0px; height:300px">
-      <img src="/static/images/Stroke.svg" alt="">
-    </div>
-    <div style="border-left:2px solid #818194;height:100px ; position:absolute; top:410px; left:16px;"></div>
-    <div style="position:absolute; top:510px; height:20px; left:6px;">
-      <div class="scroll-point"></div>
-      <span class="point-text">Experiment</span>
-    </div>
-  </div>
-  <ul class="personInfo" style="order:3;">
-    <li id="one">
-      <div style="flex:20%">
-        <div style="margin-top:25px;">
-          <img class="img-circle dp" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/4lIxw6tMc8m80iAUsUEEWy/6d931e81bcb1fdd47a5bf6c87d10e34a/role-mkt-1.jpg" alt="">
-        </div>
-      </div>
-      <div style="flex:80%">
-        <div class="media-body">
-          <h5 class="text-uppercase">Product Manager</h5>
-          <blockquote>
-            <h6>How can we lower mobile cart abandonment?</h6>
-            <p>What if we try push notification reminders?</p>
-          </blockquote>
-        </div>
-      </div>
-    </li>
-    <li id="two">
-      <div style="flex:20%">
-        <div style="margin-top:25px;">
-          <img class="img-circle dp" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/1IrhRRmzKsoY6oU8co8SYW/2b3272d0fa15c464a33f5ff2fc5535fb/role-mkt-2.jpg" alt="">
-        </div>
-      </div>
-      <div style="flex:80%">
-        <div class="media-body">
-          <h5 class="text-uppercase">Team Leader</h5>
-          <blockquote>
-            <h6>How can we lower mobile cart abandonment?</h6>
-            <p>What if we try push notification reminders?</p>
-          </blockquote>
-        </div>
-      </div>
-    </li>
-    <li id="three">
-      <div style="flex:20%">
-        <div style="margin-top:25px;">
-          <img class="img-circle dp" src="https://res.cloudinary.com/dy8i0qezub/image/fetch/f_auto/https://images.ctfassets.net/zw48pl1isxmc/qU5pQ44MxwuGKG84USqui/d5cd6e616c5fab97ba243b046046abb6/role-mkt-3.jpg" alt="">
-        </div>
-      </div>
-      <div style="flex:80%">
-        <div class="media-body">
-          <h5 class="text-uppercase">Developer</h5>
-          <blockquote>
-            <h6>How can we lower mobile cart abandonment?</h6>
-            <p>What if we try push notification reminders?</p>
-          </blockquote>
-        </div>
-      </div>
-    </li>
-  </ul>
 </div>
-
-
-<div class="flex_section" style="min-height:800px;">
-  <div class="circleDiv">
-    <ul class="circles" id="circles">
-      <li>
-        <div class="text-center" style="position:absolute; top:50%;transform:translateY(-50%); padding-left:20px;">
-          <figure style="font-size: 50px; color:#080738">$21M</figure>
-          <span style="letter-spacing:4px;">Incremental Revenue Impact</span><br>
-          <a style="font-size:13px;" href="#">Learn how HP did it</a>
-        </div>
-      </li>
-      <li>
-        <div class="text-center" style="color:#fff;;position:absolute; top:50%;transform:translateY(-50%); padding-left:50px;">
-          <figure style="font-size: 30px;">+300%</figure>
-          <span>Click-through uplift</span><br>
-          <a style="font-size:13px; color:#fff" href="#">Read the Missguided case study</a>
-        </div>
-      </li>
-      <li>
-        <div class="text-center" style="color:#080738;;position:absolute; top:50%;transform:translateY(-50%); padding-left:75px;">
-          <figure style="font-size: 50px;">-80%</figure>
-          <span>Decrease in return rate</span><br>
-          <a style="font-size:13px; color:blue" href="#">Read the Brooks case study</a>
-        </div>
-      </li>
-    </ul>
+</div>
+<div class="container-fluid" style="min-height:30vh;">
+  <div class="col-md-12 text-center min_padd">
+    <span class="heading_big">Know why we are best</span><br>
+    <span class="heading_small">LEARNING VIA APP NEVER GETS EASIER</span>
   </div>
-  <div class="lineSvg" style="flex:10%; order:2;position:relative;">
-    <div style="position:absolute; top:0px; height:20px; left:6px;">
-      <div class="scroll-point"></div>
-      <span class="point-text">Impliment</span>
-    </div>
-    <div style="position:absolute; top:16px; left:-13px;">
-      <img src="https://images.ctfassets.net/zw48pl1isxmc/32U70oRSM8MWEWcEEyg6uS/2fd45782ccbbdd906e2f07d73ff8618e/curvy-2.svg" height="800px" width: "100%" alt="">
-    </div>
-    <div style="position:absolute; top:800px; height:20px; left:6px;">
-      <div class="scroll-point"></div>
-      <span class="point-text">Repeat</span>
-    </div>
-  </div>
-  <div class="content_box" style="">
-    <div class="content">
-      <h3>Let the data determine your baseline, your winning ideas and the losers</h3>
-      <p>Know the future impact of new offers, copy, CTA’s, performance improvements and more. Armed with the accuracy of Stats Engine, never again guess at which offers will work and which won’t. Just try them all.Accelerate campaign throughput while massively
-        improving marketing ROI. </p>
-      <div style="padding-top:15px;">
-        <a href="/products/program-management/" class="btn btn-primary btn-rounded">Learn More</a>
+  <div class="owl_div">
+    <div class="owl_container">
+      <div class="owl owl-start">
+        <h5 class="text-muted" id="owltext0" ng-mouseover="onHover(0)" ng-mouseleave="offHover(0)"> <b>Creating a better Future for you</b> </h5>
+        <div class=" owl_point" id="owlpoint0" ng-mouseover="onHover(0)" ng-mouseleave="offHover(0)"></div>
+        <div class="owl_line_left"></div>
+      </div>
+      <div class="owl owl-center">
+        <h5 class="text-muted" id="owltext1" ng-mouseover="onHover(1)" ng-mouseleave="offHover(1)"> <b>Learn why elearny is best</b> </h5>
+        <div class="owl_point" id="owlpoint1" ng-mouseover="onHover(1)" ng-mouseleave="offHover(1)"></div>
+      </div>
+
+      <div class="owl owl-end">
+        <h5 class="text-muted" id="owltext2" ng-mouseover="onHover(2)" ng-mouseleave="offHover(2)"> <b>Our simple & Effective Process</b> </h5>
+        <div class="owl_point" id="owlpoint2" ng-mouseover="onHover(2)" ng-mouseleave="offHover(2)"></div>
+        <div class="owl_line_right"></div>
       </div>
     </div>
   </div>
 </div>
-
-
-<div class="blog_section shaddowed">
-  <div class="col-md-6 col-sm-12" style="padding:0px;">
-    <div class="blogimg">
-      <div id="date">
-        <span style="font-size:24px;font-weight:500;color:#fff;">{{articles[0].created | getDateNum}} {{articles[0].created | getMonth}} {{articles[0].created | getYear}}</span><br><br>
-        <span style="font-size:34px;font-weight:700;color:#fff">{{articles[0].title}}</span>
+<div class="container-fluid" style="min-height:40vh;">
+  <div class="col-md-11 col-md-offset-1">
+    <div class="col-md-3 col-md-offset-1"style="padding:20px 0px">
+      <h1 class="heading_medium">The Prodigious eLearning Courses for you</h1>
+      <span class="u_line"></span>
+      <div class="text-muted min_padd ">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua,eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+      <div class="text-muted" style="margin:30px 10px;">
+        <span> <img src="/static/images/24tut/light-bulb.svg" width="8%"> </span> &emsp;<span>Creative Study Pattern</span><br><br>
+        <span> <img src="/static/images/24tut/paper-plane.svg" width="8%"> </span> &emsp;<span>Quick crash Coursess</span><br><br>
+        <span> <img src="/static/images/24tut/compass.svg" width="8%"> </span> &emsp;<span>Provided with Experimental Examples</span><br><br>
+        <span> <img src="/static/images/24tut/certificate.svg" width="8%"> </span>&emsp; <span>Certification Awarded</span>
+      </div>
+      <div class="">
+        <button type="button" class="btn_gradient">Discover new Courses</button>
       </div>
     </div>
-    <div style="padding:20px;">
-      <p style="color:#002855;font-size: 15px;line-height: 1.7;"  ng-bind-html="articles[0].header" >
-      </p>
-      <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" name="" ng-click="openBlog(articles[0].shortUrl,articles[0].pk)"><b>Read Article</b> </button>
-    </div>
-  </div>
-  <div class="col-md-6  col-sm-12" style="background-color:rgba(244, 244, 247, 0.5);padding:0px;padding-top:10px;">
-    <div class="row blog_title_row" ng-repeat="i in articles | limitTo: (1 - articles.length)" style="{{$odd ? 'background:#fff;':''}};">
-      <div class="col-xs-3 col-md-2" style="background-image:linear-gradient(rgba(11, 29, 92, 0.65), rgba(18, 24, 97, 0.52)), url({{i.ogimage}}); background-size: cover;background-repeat: no-repeat;padding: 5px;border-radius: 4px;">
-        <div class="text-center" style="">
-          <span style="font-size:1.875em;color:#fff;"> <strong>{{i.created | getDateNum }}</strong></span><br>
-          <span style="font-size:0.875em;color:#fff;">{{i.created | getMonth:3}}</span>
-        </div>
-      </div>
-      <div class="col-xs-9 col-md-10" style="padding-right:25px;">
-        <div id="articleHead">
-          <span style="font-size:1.3em;color:#09075c"> <b>{{i.title}}</b> </span><br>
-          <span class="text-primary"><strong> <a href="#" style="color:none;" ng-click="openBlog(i.shortUrl,i.pk)">Read More...</a> </strong></span>
-        </div>
-      </div>
-    </div>
-    <button type="button" class="btn btn-primary" style="margin-bottom:15px;margin-left:10px;margin-top:17px;">See More Articles</button>
-  </div>
-</div>
-
-
-<div class="blog_section" style="background-color:#fff;">
-  <div class="col-md-12">
-    <div class="row">
-      <div class="col-md-4">
-        <div style=" min-height: 320px;border: 0px solid blue;">
-          <h3 style="font-size:36px;color:#002855;font-weight:600;"> <br> <span>Why you’ll love the EpsilonAI Enterprise RPA Platform</span></h3>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class=" item">
-          <div>
-            <img src="/static/images/ecosystem.svg" width="70px" alt="Open Platform">
-          </div>
-          <h3 class="Title">Open Platform</h3>
-          <p class="Desc"><span>Our open and extensible platform features hundreds of built-in, customizable, shareable activities, and deep integrations with ERP, BPM and AI technologies.</span></p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="item">
-          <div>
-            <img src="/static/images/fast-roi.svg" alt="Rapid Results">
-          </div>
-          <h3 class="Title">Rapid Results</h3>
-          <p class="Desc"><span>Tested and proven to deliver 40%+ faster automation design and deployment than competitors, EpsilonAI offers worldwide implementation support, certified training.</span></p>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="item">
-          <div>
-            <img src="/static/images/ai-enabled.svg" alt="Path to AI">
-          </div>
-          <h3 class="Title">Path to AI</h3>
-          <p class="Desc"><span style="">Built-in intelligent OCR, integrated NLP services from Google, Watson and Microsoft, and deep learning to reduce maintenance.</span></p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="item">
-          <div>
-            <img src="/static/images/flexibility.svg" alt="Scalability">
-          </div>
-          <h3 class="Title">Scalability</h3>
-          <p class="Desc"><span>Deploy RPA at enterprise scale. Manage any variety and any number of processes from front to back-office regardless of complexity.</span></p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="item">
-          <div>
-            <img src="/static/images/security.svg" width="70px" alt="Security">
-          </div>
-          <h3 class="Title">Security</h3>
-          <p class="Desc"><span>Defense-grade security and auditing includes RBAC, encryption everywhere, and Veracode certified Code. Our technology is trusted as secure by 40+ agencies.</span></p>
-        </div>
-      </div>
+    <div class="col-md-7 col-md-offset-1 col-xs-12 col-sm-12 ">
+      <img src="/static/images/24tut/pic.png" class="img">
     </div>
   </div>
 </div>
-
-<div class="row" style="margin:0px;">
+<div class="container-fluid" style="min-height:38vh;background-color:rgba(238, 238, 238, 0.46);margin:20px auto;position:relative;">
+  <img src="/static/images/24tut/bg_left.png" class="bg on_left hidden-xs hidden-sm" >
+  <img src="/static/images/24tut/bg_right.png" class="bg on_right hidden-xs hidden-sm">
   <div class="col-md-8 col-md-offset-2">
-    <div class="col-md-12">
-      <ng-owl-carousel class="owl-theme" owl-items="friends" owl-properties="properties" owl-ready="ready($api)">
-        <div ng-repeat="a in friends" style="padding:10px;">
-          <div class="anim-in-out anim-zoom-out">
-            <div style="padding:20px;">
-              <img class="img" ng-src="{{a.dp}}" />
+    <div class="col-md-3 text-center card_div">
+      <div class="card_container">
+        <div class="min_padd">
+          <img src="/static/images/24tut/mon.png" width="20%">
+        </div>
+        <span class="card_title"> 1600+ Topics </span><br>
+        <span class="card_breif">LEARN ANYTHING</span>
+      </div>
+    </div>
+    <div class="col-md-3 text-center card_div">
+      <div class="card_container">
+        <div class="min_padd">
+          <img src="/static/images/24tut/graduate.png" width="20%">
+        </div>
+        <span class="card_title">1900+ Students</span><br>
+        <span class="card_breif">FUTURE GENIUS</span>
+      </div>
+    </div>
+    <div class="col-md-3 text-center card_div">
+      <div class="card_container">
+        <div class="min_padd">
+          <img src="/static/images/24tut/note.png" width="20%">
+        </div>
+        <span class="card_title">15900 Tests Taken</span><br>
+        <span class="card_breif">THATS A LOT</span>
+      </div>
+    </div>
+    <div class="col-md-3 text-center card_div">
+      <div class="card_container">
+        <div class="min_padd">
+          <img src="/static/images/24tut/apple.png" width="20%">
+        </div>
+        <span class="card_title">250+ Instructors</span><br>
+        <span class="card_breif">ALL TRAINED PROFESSIONALS</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid" style="min-height:40vh;margin:20px auto;">
+  <div class="col-md-12 text-center min_padd">
+    <h2 class="heading_big"> <b>Courses you might like</b> </h2>
+    <h5 class="text-muted heading_small">LEARNING VIA APP NEVER GETS EASIER</h5>
+  </div>
+  <div class="col-md-8 col-md-offset-2 min_padd">
+    <div class="col-md-4">
+      <div class="container-fluid course_card">
+        <div class="course_card_img" style="background-image:url('/static/images/24tut/img1.jpeg')"></div>
+        <div class="col-md-10 text-center">
+          <h4>Linda Carrey</h4>
+          <h3>Modern Computing Technology(v1.2)</h3>
+          <div class="row">
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <span class="text-muted">(45 Reviews)</span>
+          </div>
+          <div class="row min_padd">
+            <div class="col-md-5 col-xs-6">
+              <i class="fa fa-clock-o" aria-hidden="true" style="color:#02EBA3"></i> <span> 12 Mins</span>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-3 col-xs-6 pull-right">
+              <span class="badge badge-pills">$15.00/hr</span>
             </div>
           </div>
         </div>
-      </ng-owl-carousel>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="container-fluid course_card">
+        <div class="course_card_img" style="background-image:url('/static/images/24tut/img2.jpg')"></div>
+        <div class="col-md-10 text-center">
+          <h4>James Stewart</h4>
+          <h3>Language Learning (15Day) Crash Course</h3>
+          <div class="row">
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <span class="text-muted">(45 Reviews)</span>
+          </div>
+          <div class="row min_padd">
+            <div class="col-md-5 col-xs-6">
+              <i class="fa fa-clock-o" aria-hidden="true" style="color:#02EBA3"></i> <span> 12 Mins</span>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-3 col-xs-6 pull-right">
+              <span class="badge badge-pills">$15.00/hr</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="container-fluid course_card">
+        <div class="course_card_img" style="background-image:url('/static/images/24tut/img3.jpg')"></div>
+        <div class="col-md-10 text-center">
+          <h4>Penny Tiler</h4>
+          <h3>Bio Cool Labs (Plants Research)</h3>
+          <div class="row">
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <i class="fa fa-star starf" aria-hidden="true"></i>
+            <span class="text-muted">(45 Reviews)</span>
+          </div>
+          <div class="row min_padd">
+            <div class="col-md-5 col-xs-6">
+              <i class="fa fa-clock-o" aria-hidden="true" style="color:#02EBA3"></i> <span> 12 Mins</span>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-3 col-xs-6 pull-right">
+              <span class="badge badge-pills">$15.00/hr</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="container-fluid no_padding" style="margin:20px auto;padding-bottom:5rem;">
+  <div class="row"style="margin:0px;">
+    <div class="col-md-12 no_padding course_contain_bg">
+      <div class="col-md-12 course_contain_gradient">
+        <div class="list_div row">
+          <div class="list_container">
+            <div class="list_head col-md-12">
+              <span class="heading_medium">Learn with these award winning courses</span>
+            </div>
+            <div class="col-md-10">
+              <div class="list row" id="drop0" data-toggle="collapse" ng-click="drop(0)"data-target="#col0">
+                <div class="col-md-10 col-xs-10">
+                  <h4> 01. Great Online Instructors</h4>
+                </div>
+                <div class="col-md-2 col-xs-2">
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+              </div>
+
+              <div id="col0" class=" list_body collapse">
+                <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                  labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+              </div>
+              <div class="list row" id="drop1" data-toggle="collapse" ng-click="drop(1)"data-target="#col1">
+                <div class="col-md-10 col-xs-10">
+                  <h4> 02. Get Learny Certified Awards</h4>
+                </div>
+                <div class="col-md-2 col-xs-2">
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+              </div>
+
+              <div id="col1" class="list_body collapse">
+                <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                  labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+              </div>
+
+              <div class="list row" id="drop2" data-toggle="collapse" ng-click="drop(2)"data-target="#col2">
+                <div class="col-md-10 col-xs-10">
+                  <h4> 03.Exclusive Course Materials</h4>
+                </div>
+                <div class="col-md-2 col-xs-2">
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div id="col2" class="list_body collapse">
+                <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                  labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+              </div>
+
+              <div class="list row" id="drop3" data-toggle="collapse" ng-click="drop(3)"data-target="#col3">
+                <div class="col-md-10 col-xs-10">
+                  <h4> 04. In - depth Course Analysis</h4>
+                </div>
+                <div class="col-md-2 col-xs-2">
+                  <i class="fa fa-plus" aria-hidden="true"style=""></i>
+                </div>
+              </div>
+              <div id="col3" class="list_body collapse">
+                <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                  labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="row" style="margin:0px;padding:20px;background: url('/static/images/footer-bg-v1.png');color:white;">
-  <div class="col-md-5 hidden-xs hidden-sm text-right">
-    <h4>Get Regular Blog Updates</h4>
-  </div>
-  <div class="col-xs-12 hidden-md hidden-lg text-center">
-    <h4>Get Regular Blog Updates</h4>
-  </div>
-  <div class="col-md-3">
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="Email ID" ng-model="subscribeForm.email">
-      <span class="input-group-btn">
-        <button type="button" class="btn btn-warning" ng-click="subscribeToBlogs()">Subscribe</button>
-      </span>
+<div class="container-fluid no_padding" style="min-height:50vh;margin:20px auto;">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-5 min_padd">
+      <h4 class="text-muted">Know Your Author</h4>
+      <h3 class="heading_medium">Each course you unsertake are designed by ther authors</h3>
+      <span class="u_line"></span>
+      <div class="min_padd">
+        <p class="min_padd">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p class="min_padd">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      </div>
+      <div class="">
+        <button type="button" class="btn_gradient">How to Become an Author?</button>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <div class="authors_div showhim">
+            <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+            <div class="ok"><img src="/static/images/24tut/author1.png" class="round_img" width="70%"></div>
+          </div>
+          <h4> <b>Lauren Ralph</b> </h4>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="authors_div showhim">
+            <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+            <div class="ok"><img src="/static/images/24tut/author2.jpeg" class="round_img" width="70%"></div>
+          </div>
+          <h4> <b>Stan Lee</b> </h4>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="authors_div showhim">
+            <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+            <div class="ok"><img src="/static/images/24tut/author3.jpg" class="round_img" width="70%"></div>
+          </div>
+          <h4> <b>Jason Stateman</b> </h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <div class="authors_div showhim">
+            <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+            <div class="ok"><img src="/static/images/24tut/author4.jpeg" class="round_img" width="70%"></div>
+          </div>
+          <h4> <b> Steve Matt</b></h4>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="authors_div showhim">
+            <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+            <div class="ok"><img src="/static/images/24tut/author5.jpeg" class="round_img" width="70%"></div>
+          </div>
+          <h4> <b>Jenny Smith</b> </h4>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="authors_div showhim">
+            <div class="showme"><img src="/static/images/24tut/layover.png" width="100%"></div>
+            <div class="ok"><img src="/static/images/24tut/join.png" class="round_img" width="70%"></div>
+          </div>
+          <h4 class="text-muted"> <b> Is this you?</b></h4>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="row" style="margin:0px;background: url('/static/images/footer-bg.jpg');background-repeat: no-repeat;background-size: cover;">
-  <div class="col-md-8 col-md-offset-2 text-center" style="color:#fff;padding:130px 0px;">
-    <h1> <strong>Ready to take the lead?</strong></h1> <br>
-    <h4>Choose open, extensible, secure automations</h4> <br>
-    <button type="button" style="background-color:#ff6900;border:none;" class="btn btn-warning bigbtn" ng-click="schedule()"><b>Get Started with Go!</b> </button>
-    <!-- <button type="button" class="btn btn-warning btn-lg text-center big-xl" style="margin-top:10px;">
-      <strong>Get Started with Go!</strong>
-    </button> -->
+
+<div class="container-fluid no_padding" style="position:relative;">
+  <div class="container-fluid no_padding" style="min-height:50vh;background-image:linear-gradient(rgba(27, 27, 27, 0.8),rgba(27, 27, 27, 0.8)),url('/static/images/24tut/tutbg.jpg');background-repeat:no-repeat;background-size:cover;">
+    <div class="col-md-12 text-center" style="margin-top:5rem;">
+      <span class="heading_big" style="color:#fff;">Become a Pro with these Course</span><br>
+      <span class="heading_small" style="color:#fff;">JUST PICK WHAT YOU NEED TO LEARN</span>
+    </div>
+  </div>
+  <div class="container-fluid" style="min-height:40vh;position:absolute;top:247px;width:100%;left:auto;">
+    <div class="col-md-8 col-md-offset-2 min_padd">
+      <div class="col-md-4">
+        <div class="container-fluid pro_card">
+          <div class="course_card_img" style="background-image:url('/static/images/24tut/stu4.png')"></div>
+          <div class="col-md-10 text-center min_padd col-md-offset-1">
+            <span class="pro_num">01</span>
+            <span class="pro_head"> GREAT FOR HIGH SCHOOL</span>
+            <div class="text-center min_padd">
+              <h5 class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="container-fluid pro_card">
+          <div class="course_card_img" style="background-image:url('/static/images/24tut/group.jpg')"></div>
+          <div class="col-md-10 text-center min_padd col-md-offset-1">
+            <span class="pro_num">02</span>
+            <span class="pro_head"> GROUP TRAINING </span>
+            <div class="text-center min_padd">
+              <h5 class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="container-fluid pro_card">
+          <div class="course_card_img" style="background-image:url('/static/images/24tut/grp.jpg')"></div>
+          <div class="col-md-10 text-center min_padd col-md-offset-1">
+            <span class="pro_num">03</span>
+            <span class="pro_head"> BETTER FOR GROUP STUDES</span>
+            <div class="text-center min_padd">
+              <h5 class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid" style="min-height:55vh;position:relative;background-color:#FAFAFA;z-index:-88;">
+    <img src="/static/images/24tut/4.png" class="bg on_left" width="15%">
+    <img src="/static/images/24tut/3.png" class="bg on_right" width="15%">
+    <div class="col-md-8 col-md-offset-2" style="margin-top:12%;">
+      <div class="text-center">
+        <h1 class="heading_big"> Start Learning Online</h1>
+        <h5 class="heading_small">FOR FREE. How TO ELEARN</h5>
+      </div>
+      <div class="col-md-6 col-md-offset-3 text-center min_padd">
+        <h5 style="line-height:2;font-size:1.2em;color:#888888;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+          exercitation ullamco laboris nisi ut aliquip</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid no_padding" style="min-height:20vh;margin:20px auto;">
+  <div class="col-md-12 no_padding">
+    <div class="col-md-6 text-center" style="background-color:#6A7EF1;color:#fff;min-height:13vh;padding-top:40px;">
+      <span class="title">Get to Know what is best for you</span><br>
+      <a href="#" class="links">View Categories</a>
+    </div>
+    <div class="col-md-6 text-center" style="background-color:#02EBA3;color:#fff;min-height:13vh;padding-top:40px;">
+      <span class="title">Take a look at Popular Courses</span><br>
+      <a href="#" class="links">View Collections</a>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="container-fluid no_padding" style="min-height:50vh;margin:20px auto;">
+  <div class="col-md-12 text-center">
+    <h1 class="heading_big">A New Era in Online Education</h1>
+    <h4 class="heading_small"> CASE STUDIES FOR YOU</h4>
+  </div>
+  <div class="col-md-7 col-md-offset-3 min_padd">
+    <div class="col-md-6 min_padd">
+      <div class="container-fluid " style="position:relative;">
+        <img src="/static/images/24tut/blue.png" style="position:absolute;top:75px;left:-35px;">
+        <img src="/static/images/24tut/liblue.png" style="position:absolute;top:-23px;right:24px;">
+        <div class="onplay" style="background-image: url('/static/images/24tut/tutbg.jpg');">
+          <div class="onplay_overlay" ng-click="">
+            <span class="playerbtn"><img src="/static/images/24tut/play.svg" width="30%"> </span>
+          </div>
+        </div>
+        <div class="min_padd">
+          <span>
+            <strong>eEducation as Interpretation</strong>
+          </span><br>
+          <span style="color:#02EBA3;">View Case Study</span><br>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 min_padd">
+      <div class="container-fluid" style="position:relative;">
+        <img src="/static/images/24tut/green.png" style="position:absolute;top:70px;left:-35px;">
+        <img src="/static/images/24tut/orange.png" style="position:absolute;bottom:99px;right:-10px;">
+        <div class="onplay" style="background-image: url('/static/images/24tut/img1.jpeg');">
+          <div class="onplay_overlay" ng-click="">
+            <span class="playerbtn"> <img src="/static/images/24tut/play.svg" width="30%"> </span>
+          </div>
+        </div>
+        <div class="min_padd">
+          <span>
+            <strong>Creating a Better study Environment</strong>
+          </span><br>
+          <span style="color:#02EBA3;">View Case Study</span><br>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
 
 {% endverbatim %}
