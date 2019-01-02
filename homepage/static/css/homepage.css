@@ -1119,6 +1119,7 @@
     width: 100%;
     padding: 12px 18px;
     text-align: left;
+     border-style:none;
   }
   .custom-btn .caret {
     right: 3em;
