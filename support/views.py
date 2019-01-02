@@ -1356,25 +1356,27 @@ class GetMaterialAPIView(APIView):
             total = 0
             lisData = []
             for k in datamaterial:
+                print k.project.title
                 data = list(k.materialIssue.values())
-                print data,'aaaaaaaaaa'
                 for m in data:
                     price=m['price']
+                    print price,'priccceee'
                     qty=m['qty']
+                    print qty,'qtttyyyyy'
                     total=price*qty
+                    print total,'ttoootttaaalll'
                     totalVal+=total
                     lisData.append(m)
-                tot=totalVal
-            toReturn.append({'projectPk':i['project__pk'],'productTittle':i['project__title'],'projectComm':i['project__comm_nr'],'data':lisData,'totalprice':tot})
+                tot=round(totalVal,2)
+                print tot,'grrandtoott'
+            toReturn.append({'projectPk':i['project__pk'],'projectTittle':i['project__title'],'projectComm':i['project__comm_nr'],'data':lisData,'totalprice':tot})
 
         if 'offset' in request.GET:
             offset = int(request.GET['offset'])
             limit = offset + int(request.GET['limit'])
-            print offset,limit
             returnData =toReturn[offset : limit]
         else:
             returnData =toReturn
-            print returnData,'aaaaaaaaa'
         return Response(returnData,status=status.HTTP_200_OK)
 
 

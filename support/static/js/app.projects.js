@@ -1269,9 +1269,9 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       data: send,
     }).
     then(function(response) {
-      if (newValue != null) {
+      // if (newValue != null) {
         $scope.updateAll()
-      }
+      // }
     })
   }
   $scope.profitmarginChange = function() {
