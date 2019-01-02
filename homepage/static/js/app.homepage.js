@@ -99,12 +99,12 @@ app.config(function($stateProvider) {
       controller: 'controller.enroll'
     })
 
-  // $stateProvider
-  //   .state('home', {
-  //     url: "/home",
-  //     templateUrl: '/static/ngTemplates/app.homepage.home.html',
-  //     controller: 'controller.home'
-  //   })
+  $stateProvider
+    .state('contact', {
+      url: "/contact",
+      templateUrl: '/static/ngTemplates/app.homepage.contact.html',
+      controller: 'controller.contact'
+    })
 
   $stateProvider
     .state('about', {
@@ -116,7 +116,7 @@ app.config(function($stateProvider) {
 
 
 app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
-  
+
   $scope.onHover = function(val) {
     document.getElementById('owltext' + val).classList.add('changingFont')
     document.getElementById('owlpoint' + val).classList.add('changingColor')
@@ -221,7 +221,7 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
       title: 'Language Learning Crash Course ',
       content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
       img2: '/static/images/24tut/author1.png',
-      name: 'Penny Tailor',
+      name: 'Penny Tailor nathasa',
       price: '15.00 ',
     },
     {

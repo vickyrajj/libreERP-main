@@ -723,7 +723,8 @@
   list-style: none;
   /* Remove default bullets */
 }
-.foo_heading{
+
+.foo_heading {
   margin-top: 7%;
 }
 
@@ -836,6 +837,78 @@
   color: #02eba3 !important;
 }
 
+.stu_img {
+  border-radius: 2.4em;
+  width: 100%;
+  padding: 20px;
+}
+
+.tq_list {
+  list-style: none;
+}
+
+.tq_list li::before {
+  content: "\2022";
+  color: #6A7EF1;
+  font-weight: bolder;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+  font-size: 20px;
+}
+
+.feature_imgs {
+  border: 1px solid #f2f2f2;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: grid;
+  align-items: center;
+}
+
+.min_space {
+  margin-bottom: 15px;
+}
+
+.service_items {
+  background-color: #f2f2f2;
+  margin-bottom: 15px;
+  min-height: 38vh;
+  padding: 3em;
+  border-radius: 10px;
+  width: 90%;
+}
+.topleft {
+  position: absolute;
+  top: 0px;
+  left: 14px;
+  width: 35%;
+  display: none;
+}
+
+.btmright {
+  position: absolute;
+  bottom: 15px;
+  right: 50px;
+  display: none;
+}
+.service_items:hover {
+  background-color: #fff;
+  border-top-left-radius: 44px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
+.service_items:hover .topleft{
+  display: block;
+}
+.service_items:hover .btmright{
+  display: block;
+}
+.serv_row{
+  padding-left: 22px;
+  padding-top:15px;
+}
+
+
 /* ------------ */
 .top {
   position: relative;
@@ -927,11 +1000,12 @@
   border-bottom: 1px solid grey;
 } */
 .cards {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
   transition: 0.3s;
-  width: 90%;
+  width: 85%;
   border-radius: 5px;
-  min-height: 41vh;
+  /* min-height: 45vh; */
+  margin-left: 1em;
 }
 
 .cards:hover {
@@ -948,8 +1022,16 @@
   margin-bottom: 3em;
 }
 
-.table-align td {
+.table-align {
+  margin-bottom: 2em;
+}
+
+.tablealign1 {
   width: 20%;
+}
+
+.tablealign2 {
+  width: 60%;
 }
 
 .hoverimg {
@@ -973,10 +1055,25 @@
   cursor: pointer;
 }
 
+.courses ul {
+  margin-top: 2em;
+  list-style-type: none;
+}
+
 .courses ul li {
-  list-style-type: disc;
-  font-size: 30px;
+  font-size: 20px;
+  color: #fff;
+  margin-left: -2em;
+}
+
+.courses ul li::before {
+  font-size: 20px;
   color: yellow;
+  content: "\2022";
+  font-weight: bolder;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
 }
 
 .courses ul li span {
@@ -1072,16 +1169,51 @@
   margin-left: 1em;
 }
 
+.imgcontainer {
+  margin-top: 4em;
+}
+
+.borderstyle1 {
+  border-bottom: 1px solid #fff;
+  border-right: 1px solid #fff;
+}
+
+.borderstyle2 {
+  border-bottom: 1px solid #fff;
+}
+
+.borderstyle3 {
+  border-right: 1px solid #fff;
+}
+
 @media only screen and (max-width:768px) {
 
   /* mobile display size starts here.... */
   /*  enrollpage*/
+  .custom-btn {
+    border-top-left-radius: 2em;
+    width: 100%;
+    padding: 12px 18px;
+    text-align: left;
+    border-style: none;
+  }
+
+  .custom-btn .caret {
+    right: 3em;
+    position: absolute;
+    border-top: 8px dashed;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    margin-top: 0.5em;
+  }
+
   .cards {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     text-align: center;
-    margin-left: 15px;
-    width: 90%;
+    margin-left: 1.8em;
+    ;
+    width: 85%;
     border-radius: 5px;
     min-height: 41vh;
   }
@@ -1101,7 +1233,7 @@
 
   .top h1 {
     color: #fff;
-    padding-top: 2em;
+    padding-top: 1em;
     font-weight: bold;
     line-height: 30px;
     font-size: 25px;
@@ -1136,6 +1268,7 @@
 
   .dropdown-menu {
     left: 0;
+    width: 100%;
   }
 
   .size h4 {
@@ -1157,6 +1290,26 @@
   .alignment {
     float: left;
     margin-left: 0;
+  }
+
+  .imgcontainer {
+    margin-top: 2em;
+  }
+
+  .borderstyle1, .borderstyle3, .borderstyle2, .borderstyle4 {
+    border: none;
+  }
+
+  .table-align {
+    margin-bottom: 2em;
+  }
+
+  .tablealign1 {
+    width: 30%;
+  }
+
+  .tablealign2 {
+    width: 50%;
   }
 
   /*  enroll page ends*/
@@ -1375,7 +1528,10 @@
     left: 49px;
     top: 24px;
   }
-
+  .btmright {
+    bottom: 0px;
+    right: 46px;
+  }
   /* mobile screen size ends here.... */
 }
 
@@ -1438,18 +1594,23 @@
     left: 66px;
     top: 20px;
   }
-  .foot_btn{
-    margin-left:23%;
+
+  .foot_btn {
+    margin-left: 23%;
   }
 
-  .foo_heading{
+  .foo_heading {
     margin-top: 12%;
   }
-  .foo_bar{
+
+  .foo_bar {
     min-height: 11vh;
-    padding-bottom:2em;
+    padding-bottom: 2em;
   }
 
+  .btmright {
+    right: 51px;
+  }
   /* iphone screen size ends here */
 }
 
@@ -1523,18 +1684,23 @@
     left: 65px;
     top: 21px;
   }
-  .foot_btn{
-    margin-left:23%;
+
+  .foot_btn {
+    margin-left: 23%;
   }
 
-  .foo_heading{
+  .foo_heading {
     margin-top: 15%;
   }
-  .foo_bar{
+
+  .foo_bar {
     min-height: 11vh;
-    padding-bottom:2em;
+    padding-bottom: 2em;
   }
 
+  .btmright {
+    right: 51px;
+  }
 
   /* for google pixel devices ends here */
 }
