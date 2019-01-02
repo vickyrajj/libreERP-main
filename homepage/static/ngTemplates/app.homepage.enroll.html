@@ -128,7 +128,7 @@
     <div class="container" style=" margin-bottom: 2em;text-align: center;">
       <h1><b>Popular Courses</b></h1>
       <span>THE BEST COURSES</span>
-      <div class="row" style="min-height:50vh;">
+      <div class="row" >
         <ng-owl-carousel class="owl-theme" owl-items="cardss" owl-properties="properties" owl-ready="ready($api)">
           <div ng-repeat="a in cardss">
             <div class="anim-in-out anim-zoom-out">
@@ -139,9 +139,9 @@
                     <h4><b>{{a.title}}</b></h4>
                     <p>{{a.content}}</p>
                     <table class="table-align">
-                      <td><span><img src="{{a.img2}}" class="img-responsive img-circle" style="height:80px;width: 80px;"></span></td>
-                      <td>{{a.name}}</td>
-                      <td><span class="badge-pills">&#8377;{{a.price}}/hr</span></td>
+                      <td class="tablealign1"><span style="text-align: center"><img src="{{a.img2}}" class="img-responsive img-circle" style="height:50px;width:50px;"></span></td>
+                      <td class="tablealign2"><b>{{a.name}}</b></td>
+                      <td><span class="badge badge-pills">&#8377;{{a.price}}/hr</span></td>
                     </table>
                   </div>
                 </div>
@@ -192,10 +192,10 @@
       <h3 style="padding-top: 2em;color:#fff;margin:0;"><b>Over 1300+ Topics</b></h3>
       <span style="color:#fff;">BEST COURSE TO LEARN</span>
       <ul>
-        <li><span>Animation courses</span></li>
-        <li><span>Animation courses</span></li>
-        <li><span>Animation courses</span></li>
-        <li><span>Animation courses</span></li>
+        <li>Animation courses</li>
+        <li>Animation courses</li>
+        <li>Animation courses</li>
+        <li>Animation courses</li>
       </ul>
       <button class="btn-style1" type="button">Know More</button>
     </div>
@@ -300,7 +300,6 @@
               <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
               <div class="ok"><img src="/static/images/24tut/author3.jpg" class="round_img" width="70%"></div>
             </div>
-            <!-- <img src="/static/images/24tut/author3.jpg " class="img-circle hover-circle" style="height:130px;" /> -->
             <h4><b>Jenny Smith</b></h4>
             <span>Consultant</span><br />
             <span><i class="fa fa-facebook" aria-hidden="true"></i><i style="margin-left:5px;" class=" fa fa-twitter" aria-hidden="true"> in</i><i style="margin-left:5px;" class="fa fa-google-plus" aria-hidden="true"></i></span>
@@ -501,29 +500,29 @@
 
   <div class="container-fluid" style=" margin-top: 2em;padding: 0;background-color: #5365D1;color:white;">
     <div class="row" style="margin:0;">
-      <div class="col-md-6" style="padding: 0;margin: 4em 0 0 0;">
+      <div class="col-md-6 col-xs-10 imgcontainer" style="padding: 0;" >
         <img src="/static/images/24tut/tablechair.png" height='650px' width='700px' class="img-responsive" />
       </div>
-      <div class="col-md-6" style="margin-top: 12em;">
+      <div class="col-md-6" style="margin-top: 12em;margin-bottom: 3em;">
         <div class="row text-right">
-          <div class="col-md-4 text-center" style="padding: 0;border-bottom:1px solid #fff;border-right:1px solid #fff;padding-bottom: 1em;">
+          <div class="col-md-4 col-xs-6 col-sm-6 text-center borderstyle1" style="padding-bottom: 1em;">
             <img src='/static/images/24tut/apple.png' height='60px' />
             <h4><b>1600+ Topics</b></h4>
             <span>LEARN ANYTHING</span>
           </div>
-          <div class=" col-md-4  text-center" style="padding: 0;border-bottom:1px solid #fff;padding-bottom: 1em;">
+          <div class=" col-md-4 col-xs-6 col-sm-6 text-center borderstyle2" style="padding-bottom: 1em;">
             <img src='/static/images/24tut/apple.png' height='60px' />
             <h4><b>1900+ Students</b></h4>
             <span>FUTURE GENIUS</span>
           </div>
         </div>
         <div class="row text-right">
-          <div class="col-md-4 text-center" style="border-right:1px solid #fff;padding-top: 1em;">
+          <div class="col-md-4 col-xs-6 col-sm-6 text-center borderstyle3" style="padding-top: 1em;">
             <img src='/static/images/24tut/apple.png' height='60px' />
             <h4><b>14900+ Tests Taken</b></h4>
             <span>THATS A LOT</span>
           </div>
-          <div class="col-md-4 text-center" style="padding-top: 1em;">
+          <div class="col-md-4 col-xs-6 col-sm-6 text-center borderstyle4" style="padding-top: 1em;">
             <img src='/static/images/24tut/apple.png' height='60px' />
             <h4><b>250+ Instructors</b></h4>
             <span>ALL TRAINED PROFESSIONALS</span>

@@ -866,11 +866,12 @@
   border-bottom: 1px solid grey;
 } */
 .cards {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
   transition: 0.3s;
-  width: 90%;
+  width: 85%;
   border-radius: 5px;
-  min-height: 41vh;
+  /* min-height: 45vh; */
+  margin-left:1em;
 }
 
 .cards:hover {
@@ -887,9 +888,16 @@
   margin-bottom: 3em;
 }
 
-.table-align td {
+.table-align  {
+  margin-bottom: 2em;
+}
+.tablealign1{
   width: 20%;
 }
+.tablealign2{
+  width: 60%;
+}
+
 
 .hoverimg {
   margin-top: 2em;
@@ -912,10 +920,23 @@
   cursor: pointer;
 }
 
-.courses ul li {
-  list-style-type: disc;
-  font-size: 30px;
+.courses ul {
+  margin-top: 2em;
+  list-style-type: none;
+}
+.courses ul li{
+  font-size: 20px;
+  color: #fff;
+  margin-left:-2em;
+}
+.courses ul li::before {
+  font-size: 20px;
   color: yellow;
+  content: "\2022";
+  font-weight: bolder;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
 }
 
 .courses ul li span {
@@ -1011,14 +1032,47 @@
   margin-left: 1em;
 }
 
-/* ------------------ */
+.imgcontainer {
+  margin-top: 4em;
+}
+
+.borderstyle1 {
+  border-bottom: 1px solid #fff;
+  border-right: 1px solid #fff;
+}
+
+.borderstyle2 {
+  border-bottom: 1px solid #fff;
+}
+
+.borderstyle3 {
+  border-right: 1px solid #fff;
+}
+
 @media only screen and (max-width:768px) {
+
+  /* mobile display size starts here.... */
+  /*  enrollpage*/
+  .custom-btn {
+    border-top-left-radius: 2em;
+    width: 100%;
+    padding: 12px 18px;
+    text-align: left;
+  }
+  .custom-btn .caret {
+    right: 3em;
+    position: absolute;
+    border-top: 8px dashed;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    margin-top: 0.5em;
+  }
   .cards {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     text-align: center;
-    margin-left: 15px;
-    width: 90%;
+    margin-left: 1.8em;;
+    width: 85%;
     border-radius: 5px;
     min-height: 41vh;
   }
@@ -1072,7 +1126,8 @@
   }
 
   .dropdown-menu {
-    left: 0;
+    left:0;
+    width:100%;
   }
 
   .size h4 {
@@ -1093,6 +1148,219 @@
 
   .alignment {
     float: left;
-    margin-left:0;
+    margin-left: 0;
   }
+
+  .imgcontainer {
+    margin-top: 2em;
+  }
+
+  .borderstyle1, .borderstyle3, .borderstyle2, .borderstyle4 {
+    border: none;
+  }
+  .table-align  {
+    margin-bottom: 2em;
+  }
+
+  .tablealign1{
+    width: 30%;
+  }
+  .tablealign2{
+    width: 50%;
+  }
+
+
+
+  /*  enroll page ends*/
+  .container_box {
+    font-size: 12px !important;
+    top: 10px !important;
+    left: 130px !important;
+    width: 100% !important;
+  }
+
+  .container_box>li {
+    padding: 6px !important;
+  }
+
+  .home_header {
+    min-height: 80vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .home_content {
+    color: #fff;
+    padding-top: 3rem;
+  }
+
+  .owl_div {
+    min-height: 35vh;
+  }
+
+  .owl_container {
+    max-width: 100%;
+  }
+
+  .owl-start {
+    width: 25vw;
+  }
+
+  .owl-center {
+    width: 25vw;
+    left: 36.6%;
+  }
+
+  .owl-end {
+    width: 25vw;
+    right: 0%;
+  }
+
+  .owl_line_left {
+    min-width: 25vw;
+    left: 68%;
+    bottom: 13%;
+  }
+
+  .owl_line_right {
+    min-width: 25vw;
+    right: 67%;
+    bottom: 13%;
+  }
+
+  .img {
+    width: 100%;
+    padding-top: 0px;
+  }
+
+  .card_div {
+    padding-top: 1.5em;
+  }
+
+  .card_div:last-child {
+    padding-bottom: 1.5em;
+  }
+
+  .card_container {
+    height: 40vh;
+  }
+
+  .course_card {
+    height: 52vh;
+    margin-bottom: 1.5em;
+  }
+
+  .course_contain_bg {
+    background-size: cover;
+    min-height: 90vh;
+    background-image: linear-gradient(rgba(233, 233, 233, 0.6), rgba(233, 233, 233, 0.6)), url('/static/images/24tut/tablet_stu.png');
+  }
+
+  .course_contain_gradient {
+    background-image: none;
+  }
+
+  .list_container {
+    max-width: 100%;
+    margin-left: 12%;
+    position: relative;
+  }
+
+  .list_head {
+    max-width: 100%;
+  }
+
+  .list {
+    max-height: 9vh;
+    width: 93vw;
+  }
+
+  .list_body {
+    max-width: 100%;
+  }
+
+  /* mobile screen size ends here.... */
+}
+
+@media only screen and (device-width : 414px) and (device-height : 736px) and (-webkit-device-pixel-ratio : 3) {
+
+  /* for iphones.... */
+  .home_header {
+    min-height: 60vh;
+  }
+
+  .owl-start {
+    width: 30vw;
+  }
+
+  .owl-center {
+    width: 30vw;
+    left: 33.6%;
+  }
+
+  .owl-end {
+    width: 30vw;
+    right: 0%;
+  }
+
+  .owl_line_left {
+    min-width: 30vw;
+    left: 62%;
+  }
+
+  .owl_line_right {
+    right: 61%;
+  }
+
+  .course_card {
+    height: 49vh;
+    margin-bottom: 1.5em;
+  }
+
+  /* iphone screen size ends here */
+}
+
+@media screen and (device-width : 411px) and (device-height : 823px) {
+
+  /* for google pixel devices starts here */
+  .home_header {
+    min-height: 55vh;
+  }
+
+  .owl-start {
+    width: 30vw;
+    left: -1%;
+  }
+
+  .owl-center {
+    width: 30vw;
+    left: 32.6%;
+  }
+
+  .owl-end {
+    width: 30vw;
+    right: -1%;
+  }
+
+  .owl_line_left {
+    min-width: 25vw;
+    left: 62%;
+  }
+
+  .owl_line_right {
+    min-width: 26.3vw;
+    right: 62%;
+  }
+
+  .course_card {
+    height: 49vh;
+    margin-bottom: 1.5em;
+  }
+
+  .course_card {
+    height: 45vh;
+    margin-bottom: 1.5em;
+  }
+
+  /* for google pixel devices ends here */
 }
