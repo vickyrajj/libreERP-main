@@ -267,6 +267,8 @@ class Order(models.Model):
     mobileNo = models.CharField(max_length=15 ,null = True , blank = True)
     shippingCharges =  models.IntegerField(default = 0)
     totalGst = models.PositiveIntegerField( default = 0)
+    stateCode = models.CharField(null = False , default = 'KA' , max_length = 10)
+    countryCode = models.CharField(null = False , default = 'IN' , max_length = 10)
 
 
 class Promocode(models.Model):
