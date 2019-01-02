@@ -19,21 +19,21 @@ def createShipment(recipientName , recipientCompany , recipientPhone , recipient
     customer_transaction_id = "*** ShipService Request v17 using Python ***"  # Optional transaction_id
     shipment = FedexProcessShipmentRequest(CONFIG_OBJ, customer_transaction_id=customer_transaction_id)
     shipment.RequestedShipment.DropoffType = 'BUSINESS_SERVICE_CENTER'
-    shipment.RequestedShipment.ServiceType = 'PRIORITY_OVERNIGHT'
+    shipment.RequestedShipment.ServiceType = 'FEDEX_FREIGHT_ECONOMY'
     shipment.RequestedShipment.PackagingType = 'FEDEX_PAK'
 
 
     # Shipper address.
-    shipment.RequestedShipment.Shipper.Contact.PersonName = 'Sender Name'
-    shipment.RequestedShipment.Shipper.Contact.CompanyName = 'Some Company'
-    shipment.RequestedShipment.Shipper.Contact.PhoneNumber = '9012638716'
+    shipment.RequestedShipment.Shipper.Contact.PersonName = 'PAWAN KUMAR'
+    shipment.RequestedShipment.Shipper.Contact.CompanyName = 'PAPERED SOLUTION'
+    shipment.RequestedShipment.Shipper.Contact.PhoneNumber = '41171959'
 
-    shipment.RequestedShipment.Shipper.Address.StreetLines = ['Address Line 1']
-    shipment.RequestedShipment.Shipper.Address.City = 'Herndon'
-    shipment.RequestedShipment.Shipper.Address.StateOrProvinceCode = 'VA'
-    shipment.RequestedShipment.Shipper.Address.PostalCode = '20171'
-    shipment.RequestedShipment.Shipper.Address.CountryCode = 'US'
-    shipment.RequestedShipment.Shipper.Address.Residential = True
+    shipment.RequestedShipment.Shipper.Address.StreetLines = ['# 18, 6TH CROSS', 'SUDHAM NAGAR']
+    shipment.RequestedShipment.Shipper.Address.City = 'BANGALORE'
+    shipment.RequestedShipment.Shipper.Address.StateOrProvinceCode = 'KA'
+    shipment.RequestedShipment.Shipper.Address.PostalCode = '560027'
+    shipment.RequestedShipment.Shipper.Address.CountryCode = 'IN'
+    shipment.RequestedShipment.Shipper.Address.Residential = False
 
     # Recipient contact info.
     shipment.RequestedShipment.Recipient.Contact.PersonName =recipientName
