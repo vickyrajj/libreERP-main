@@ -176,17 +176,33 @@
   max-width: 80%;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 10px;
 }
 
 .list {
-  margin-left: auto;
-  margin-right: auto;
   display: block;
-  max-height: 60px;
   background-color: #222222;
   color: #fff;
   border-radius: 7px;
   border-top-left-radius: 35px;
+  min-height: 60px;
+  margin-bottom: 8px;
+  padding-top: 1.2em;
+  position: relative;
+}
+
+.list_title {
+  font-size: 1.5em;
+  padding: 1em;
+}
+
+.sym_plus {
+  text-align: right;
+  margin-left: 30%;
+  position: absolute;
+  right: 40px;
+  top: 18px;
+  font-size: 20px;
 }
 
 .img {
@@ -367,6 +383,21 @@
   background-size: cover;
   padding: 0px;
   margin: 0px;
+}
+
+.pro_card_div {
+  min-height: 40vh;
+  position: absolute;
+  top: 247px;
+  width: 100%;
+  left: auto;
+}
+
+.pro_card_container {
+  min-height: 55vh;
+  position: relative;
+  background-color: #FAFAFA;
+  z-index: -88;
 }
 
 .pro_card:hover {
@@ -563,6 +594,14 @@
   color: #000;
 }
 
+.cent_div {
+  min-height: 60vh;
+  background-size: cover;
+}
+.dash_container{
+
+}
+
 .dash {
   border-radius: 4em;
   float: left;
@@ -672,6 +711,10 @@
   display: block;
 }
 
+.foot_btn {
+  margin-left: 40%;
+}
+
 .footer h4 {
   color: #000000;
   font-weight: bold;
@@ -698,9 +741,27 @@
   display: none;
 }
 
+.social_div {
+  width: 50%;
+}
+
+.foo_bar {
+  background-color: #02EBA3;
+  color: #fff;
+  min-height: 13vh;
+  padding-top: 40px;
+}
+
 .contact {
   line-height: 2.3;
   list-style-type: none;
+}
+
+.about_head {
+  min-height: 60vh;
+  margin: 20px auto;
+  background-size: 100%;
+  background-repeat: no-repeat;
 }
 
 .partners:first-child {
@@ -1014,90 +1075,90 @@
 @media only screen and (max-width:768px) {
 
   /* mobile display size starts here.... */
+  /*  enrollpage*/
+  .cards {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    text-align: center;
+    margin-left: 15px;
+    width: 90%;
+    border-radius: 5px;
+    min-height: 41vh;
+  }
 
-/*  enrollpage*/
-.cards {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
-  text-align: center;
-  margin-left: 15px;
-  width: 90%;
-  border-radius: 5px;
-  min-height: 41vh;
-}
+  .likecard {
+    background-color: #FAFAFA;
+    min-height: 10vh;
+    width: 93%;
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+  }
 
-.likecard {
-  background-color: #FAFAFA;
-  min-height: 10vh;
-  width: 93%;
-  margin-bottom: 2em;
-  padding-bottom: 1em;
-}
+  .top {
+    position: relative;
+    min-height: 80vh;
+  }
 
-.top {
-  position: relative;
-  min-height: 80vh;
-}
+  .top h1 {
+    color: #fff;
+    padding-top: 2em;
+    font-weight: bold;
+    line-height: 30px;
+    font-size: 25px;
+  }
 
-.top h1 {
-  color: #fff;
-  padding-top: 2em;
-  font-weight: bold;
-  line-height: 30px;
-  font-size: 25px;
-}
+  .top h1::after {
+    width: 3em;
+    height: 1em;
+    content: '';
+    bottom: 0px;
+    position: absolute;
+    display: block;
+    border-bottom: 2px solid #00EDA3;
+  }
 
-.top h1::after {
-  width: 3em;
-  height: 1em;
-  content: '';
-  bottom: 0px;
-  position: absolute;
-  display: block;
-  border-bottom: 2px solid #00EDA3;
-}
+  .top h2 {
+    font-size: 20px;
+  }
 
-.top h2 {
-  font-size: 20px;
-}
+  .topmargin {
+    margin-top: 6em;
+    text-align: left;
+  }
 
-.topmargin {
-  margin-top: 6em;
-  text-align: left;
-}
+  .dropdown, .leftalign {
+    text-align: left;
+  }
 
-.dropdown, .leftalign {
-  text-align: left;
-}
+  .top::before {
+    height: 80vh;
+  }
 
-.top::before {
-  height: 80vh;
-}
+  .dropdown-menu {
+    left: 0;
+  }
 
-.dropdown-menu {
-  left: 0;
-}
+  .size h4 {
+    font-size: 15px;
+  }
 
-.size h4 {
-  font-size: 15px;
-}
+  .rightcls {
+    text-align: center;
+  }
 
-.rightcls {
-  text-align: center;
-}
+  .imghide {
+    display: none;
+  }
 
-.imghide {
-  display: none;
-}
+  .container-align {
+    text-align: left;
+  }
 
-.container-align {
-  text-align: left;
-}
+  .alignment {
+    float: left;
+    margin-left: 0;
+  }
 
-.alignment {
-  float: left;
-  margin-left:0;
-}
   /*  enroll page ends*/
   .container_box {
     font-size: 12px !important;
@@ -1178,13 +1239,16 @@
   }
 
   .course_contain_bg {
-    background-size: cover;
-    min-height: 90vh;
+    background-size: 150% 100%;
+    min-height: 93vh;
     background-image: linear-gradient(rgba(233, 233, 233, 0.6), rgba(233, 233, 233, 0.6)), url('/static/images/24tut/tablet_stu.png');
   }
 
   .course_contain_gradient {
     background-image: none;
+    margin: 0px;
+    padding: 15px;
+    position: relative;
   }
 
   .list_container {
@@ -1198,14 +1262,85 @@
   }
 
   .list {
-    max-height:9vh;
-    width:93vw;
+    max-height: 9vh;
+    width: 93vw;
   }
+
+  .list_title {
+    font-size: 1.2em;
+    padding: 1em;
+  }
+
   .list_body {
     max-width: 100%;
+    margin-left: 25px;
   }
 
+  .pro_card_div {
+    min-height: 40vh;
+    position: relative;
+    top: 0px;
+  }
 
+  .pro_card_container {
+    min-height: 55vh;
+    z-index: 0;
+  }
+
+  .pro_card {
+    margin-bottom: 10px;
+    height: 49vh;
+  }
+
+  .onplay {
+    background-size: 120% 100%;
+    width: 300px;
+    background-repeat: no-repeat;
+  }
+
+  .onplay_overlay {
+    width: 300px;
+  }
+
+  .foot_btn {
+    margin-left: 18%;
+  }
+
+  .social_div {
+    width: 100%;
+  }
+
+  .foo_bar {
+    min-height: 22vh;
+  }
+
+  .about_head {
+    background-size: cover;
+    min-height: 34vh;
+  }
+
+  .hero_card {
+    height: 48vh;
+    margin-bottom: 15px;
+  }
+
+  .cent::after {
+    display: none;
+  }
+  .cent_div {
+    min-height: 60vh;
+    background-size: 190% 100%;
+  }
+  .dash {
+    margin-left: 4em;
+    width: 7em;
+    height: 7em;
+  }
+  .pro_hov {
+    top: -149px;
+    left: -24px;
+    width:12em;
+  }
   /* mobile screen size ends here.... */
 }
 
@@ -1287,6 +1422,10 @@
   .course_card {
     height: 45vh;
     margin-bottom: 1.5em;
+  }
+
+  .course_contain_bg {
+    min-height: 70vh;
   }
 
   /* for google pixel devices ends here */
