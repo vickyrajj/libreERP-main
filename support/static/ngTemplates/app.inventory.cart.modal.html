@@ -6,7 +6,7 @@
   <div class="row" style="padding-bottom:15px">
     <div class="col-md-3">
       Project
-      <input uib-typeahead="p as p.title for p in projectSearch($viewValue)" ng-model="form.project" type="text" class="form-control">
+      <input uib-typeahead="p as getFullProjectName(p) for p in projectSearch($viewValue)" ng-model="form.project" type="text" class="form-control">
     </div>
     <div class="col-md-3">
       Engineer

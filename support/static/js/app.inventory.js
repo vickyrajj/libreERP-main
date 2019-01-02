@@ -190,7 +190,18 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
 
-
+  $scope.createReportData = function(){
+    $http({
+      method: 'GET',
+      url: '/api/support/createStockReportData/'
+    }).
+    then(function(response) {
+      console.log(response.data);
+      Flash.create('success', response.data.status);
+    },function(err){
+      Flash.create('warning', err.status + ' : ' + err.statusText);
+    })
+  }
   $scope.delete = function(pk, index) {
     $http({
       method: 'DELETE',
@@ -289,6 +300,15 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           }
         },
         controller: function($scope, $uibModalInstance, cartData) {
+          $scope.getFullProjectName = function(p){
+            if (p) {
+              var fn = p.title +' ( ' + p.comm_nr + ' )'
+              console.log(fn);
+              return fn
+            }else {
+              return
+            }
+          }
           $scope.projectSearch = function(query) {
             return $http.get('/api/support/projects/?title__contains=' + query+'&status__in=approved,ongoing&savedStatus=false').
             then(function(response) {

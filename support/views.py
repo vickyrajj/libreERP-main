@@ -488,16 +488,28 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
     logo.scale(sx,sy)
     elements.append(logo)
     elements.append(Spacer(1,10))
-
-    summryHeader = Paragraph("""
-    <para >
-    <font size='14'>
-    QUOTATION
-    <br/>
-    <br/>
-    </font>
-    </para>
-    """ %(),styles['Normal'])
+    print 'aaaaaaaaaaaaaaaa',typ
+    if typ == 'INR' or typ =='CHF':
+        print 'aaaaaaaaaaaaaaaa'
+        summryHeader = Paragraph("""
+        <para >
+        <font size='14'>
+        QUOTATION
+        <br/>
+        <br/>
+        </font>
+        </para>
+        """ %(),styles['Normal'])
+    else :
+        summryHeader = Paragraph("""
+        <para >
+        <font size='14'>
+        INVOICE
+        <br/>
+        <br/>
+        </font>
+        </para>
+        """ %(),styles['Normal'])
 
 
     summryHeader1 = Paragraph("""
@@ -1441,44 +1453,43 @@ class CreateStockReportDataAPIView(APIView):
     def get(self , request , format = None):
         print  request.GET
         toRet = {'status':'Invalid Data'}
-        if 'date' in request.GET:
-            print request.GET
-            dtime = datetime.datetime.strptime(str(request.GET['date']),'%d-%m-%Y')
-            dt = dtime.date()
-            print dtime,dt
-            if StockSummaryReport.objects.filter(dated=dt).exists():
-                return Response({'status':'Data Has Already Created'},status=status.HTTP_200_OK)
-            prodObj = Products.objects.filter(created__lte=dtime)
-            print 'total {0} Productsssssssss'.format(prodObj.count())
-            stockTotal = 0
-            for i in prodObj:
-                invtObjs = Inventory.objects.filter(product=i,created__lte=dtime)
-                if invtObjs.count()>0:
-                    total = invtObjs.aggregate(total=Sum(F('qty') * F('rate')))['total']
-                    stockTotal += total
-            print 'total valueeeeeeeeeee',stockTotal
-            if stockTotal>0:
-                ssReportObj = StockSummaryReport.objects.create(dated=dt,stockValue=stockTotal)
-                projectsObjs=Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,created__lte=dtime)
-                print projectsObjs.count()
-                projStackSummary = []
-                for i in projectsObjs:
-                    matIssMainObjs = MaterialIssueMain.objects.filter(project=i,created__lte=dtime)
-                    if matIssMainObjs.count()>0:
-                        vl = 0
-                        for j in matIssMainObjs:
-                            matIssueObjs = j.materialIssue.all()
-                            tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price')))['total']
-                            vl += tot
-                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=vl,title=i.title))
-                    else:
-                        pass
-                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=0,title=i.title))
-                print len(projStackSummary)
-                ProjectStockSummary.objects.bulk_create(projStackSummary)
-                toRet['status'] = 'Successfully Saved'
-            else:
-                toRet['status'] = 'No Data Exists'
+        dtime = datetime.datetime.now()
+        dt = dtime.date()
+        print dtime,dt
+        if StockSummaryReport.objects.filter(dated=dt).exists():
+            print 'already createddddddddd'
+            return Response({'status':'Data Has Already Created'},status=status.HTTP_200_OK)
+        prodObj = Products.objects.filter(created__lte=dtime)
+        print 'total {0} Productsssssssss'.format(prodObj.count())
+        stockTotal = 0
+        for i in prodObj:
+            invtObjs = Inventory.objects.filter(product=i,created__lte=dtime)
+            if invtObjs.count()>0:
+                total = invtObjs.aggregate(total=Sum(F('qty') * F('rate')))['total']
+                stockTotal += total
+        print 'total valueeeeeeeeeee',stockTotal
+        if stockTotal>0:
+            ssReportObj = StockSummaryReport.objects.create(dated=dt,stockValue=stockTotal)
+            projectsObjs=Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,created__lte=dtime)
+            print projectsObjs.count()
+            projStackSummary = []
+            for i in projectsObjs:
+                matIssMainObjs = MaterialIssueMain.objects.filter(project=i,created__lte=dtime)
+                if matIssMainObjs.count()>0:
+                    vl = 0
+                    for j in matIssMainObjs:
+                        matIssueObjs = j.materialIssue.all()
+                        tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price')))['total']
+                        vl += tot
+                    projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=vl,title=i.title))
+                else:
+                    pass
+                    projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=0,title=i.title))
+            print len(projStackSummary)
+            ProjectStockSummary.objects.bulk_create(projStackSummary)
+            toRet['status'] = 'Successfully Saved'
+        else:
+            toRet['status'] = 'No Data Exists'
         return Response(toRet,status=status.HTTP_200_OK)
 
 class DownloadStockReportAPIView(APIView):
