@@ -1523,3 +1523,17 @@ class DownloadStockReportAPIView(APIView):
         print toReturn
 
         return ExcelResponse(toReturn, 'Stock_Summary' , 'Stock Summary')
+
+class DownloadInvoiceReportAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False)
+        toReturn = [['Purchase Order Ref','Supplier','Invoice No.','BOE']]
+        for p in projectObj:
+            sam = []
+            sam.append(p.poNumber)
+            sam.append(p.vendor.name)
+            sam.append(p.invoiceNumber)
+            sam.append(p.boeRefNumber)
+            toReturn.append(sam)
+        return ExcelResponse(toReturn, 'Invoice_BOE' , 'Invoice BOE')
