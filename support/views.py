@@ -1080,15 +1080,15 @@ class MaterialIssueViewSet(viewsets.ModelViewSet):
 
 class MaterialIssueMainViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )
-    # queryset = MaterialIssueMain.objects.all()
+    queryset = MaterialIssueMain.objects.all()
     serializer_class = MaterialIssueMainSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['project']
-    def get_queryset(self):
-        if 'search' in self.request.GET:
-            return MaterialIssueMain.objects.filter(project__title__icontains=self.request.GET['search'])
-        else:
-            return MaterialIssueMain.objects.all()
+    filter_fields = ['project','created']
+    # def get_queryset(self):
+    #     if 'search' in self.request.GET:
+    #         return MaterialIssueMain.objects.filter(project__title__icontains=self.request.GET['search'])
+    #     else:
+    #         return MaterialIssueMain.objects.all()
 
 
 class MaterialIssuedNoteAPIView(APIView):

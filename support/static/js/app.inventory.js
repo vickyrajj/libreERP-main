@@ -64,24 +64,41 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
   $scope.searchmaterial = {
-    search : ""
+    search : "",
+    dt:new Date()
   }
 
 
-
+  $scope.showPagint = true
   $scope.getMaterialIssue = function(offset){
+    if ($scope.searchmaterial.search.length==0) {
+      $scope.showPagint = true
+      var url = '/api/support/material/?created__lte='+$scope.searchmaterial.dt.toJSON().split('T')[0]+'&limit=7&offset=' + offset+ '&project__title__icontains=' + $scope.searchmaterial.search
+    }else {
+      $scope.showPagint = false
+      var url = '/api/support/material/?created__lte='+$scope.searchmaterial.dt.toJSON().split('T')[0]+'&project__title__icontains=' + $scope.searchmaterial.search
+    }
     $http({
       method: 'GET',
-      url: '/api/support/material/?limit=7&offset=' + offset+ '&search=' + $scope.searchmaterial.search
+      url: url
     }).
     then(function(response) {
-      $scope.materialIssue = response.data.results
+      if ($scope.searchmaterial.search.length==0) {
+        $scope.materialIssue = response.data.results
+      }else {
+        $scope.materialIssue = response.data
+      }
+      $scope.totSum = 0
+
       $scope.sum = []
       for (var i = 0; i < $scope.materialIssue.length; i++) {
         $scope.issue = $scope.materialIssue[i].materialIssue
-        $scope.sum.push($scope.issue.map(function(m){
+        var tot = $scope.issue.map(function(m){
           return m.qty*m.price
-        }).reduce(function(a,b){return a+b},0))
+        }).reduce(function(a,b){return a+b},0)
+        $scope.sum.push(tot)
+        console.log(tot);
+        $scope.totSum += tot
 
       }
     })
