@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'sendEmail/$' , EmailApi.as_view() ),
     url(r'calculate/$' , CalculateAPIView.as_view() ),
     url(r'getMaterial/$' , GetMaterialAPIView.as_view() ),
+    url(r'projectStockConsumption/$' , DownloadProjectSCExcelReponse.as_view() ),
     # url(r'stock/$' , StockAPIView.as_view() ),
 ]

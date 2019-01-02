@@ -62,6 +62,7 @@ from reportlab.lib.colors import *
 from reportlab.lib.units import inch, cm
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+from excel_response import ExcelResponse
 
 class ProductsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -1380,18 +1381,44 @@ class GetMaterialAPIView(APIView):
         return Response(returnData,status=status.HTTP_200_OK)
 
 
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
+class DownloadProjectSCExcelReponse(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self , request , format = None):
+        workbook = Workbook()
 
 
+        # ... worksheet.append(...) all of your data ...
 
+        projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False)
+        projectsObj = list(projectObj.values('comm_nr').distinct().values())
+        sendData =[]
+        for idx,p in enumerate(projectsObj):
+            if idx==0:
+                Sheet1 = workbook.active
+                Sheet1.title = p['comm_nr']
+            if idx>0:
+                Sheet1 = workbook.create_sheet(p['comm_nr'])
+            Sheet1.append(["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed'])
+            projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
+            print projData
+            for i in projData:
+                toReturn =[]
+                bomObj=BoM.objects.filter(project__id=i.pk)
+                materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
+                for j in bomObj:
+                    stockConsumed=0
+                    for k in materialObj:
+                        materialdata= k.materialIssue.all()
+                        for m in materialdata:
+                                if m.product_id==j.products.pk:
+                                    stockConsumed += i.qty
+                    Sheet1.append([i.vendor.name, j.products.part_no,j.products.description_1,j.quantity1,j.landed_price,stockConsumed])
 
-
-        return Response(status=status.HTTP_200_OK)
-        #     toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'weight':i['product__weight'],'price':i['product__price'],'data':data,'totalprice':totalprice,'totalqty':totalqty,'totalVal':totalSum})
-        #     total+=totalSum
-        # if 'offset' in request.GET:
-        #     offset = int(request.GET['offset'])
-        #     limit = offset + int(request.GET['limit'])
-        #     print offset,limit
-        #     returnData ={'data' :toReturn[offset : limit],'total':total }
-        # else:
-        #     returnData ={'data' :toReturn,'total':total }
+            # wb.save('ex.xls')
+        #         return ExcelResponse(toReturn)
+        response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
+        return response
