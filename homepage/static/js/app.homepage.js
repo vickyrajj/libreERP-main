@@ -81,18 +81,16 @@ app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $
 }]);
 
 
-
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
-
 
 app.config(function($stateProvider) {
 
-  // $stateProvider
-  //   .state('home', {
-  //     url: "/",
-  //     templateUrl: '/ngTemplates/app.homepage.index.html',
-  //     controller: 'controller.index'
-  //   })
+  $stateProvider
+    .state('home', {
+      url: "/",
+      templateUrl: '/ngTemplates/app.homepage.index.html',
+      controller: 'controller.index'
+    })
 
   $stateProvider
     .state('enroll', {
@@ -101,12 +99,12 @@ app.config(function($stateProvider) {
       controller: 'controller.enroll'
     })
 
-  $stateProvider
-    .state('home', {
-      url: "/home",
-      templateUrl: '/static/ngTemplates/app.homepage.home.html',
-      controller: 'controller.home'
-    })
+  // $stateProvider
+  //   .state('home', {
+  //     url: "/home",
+  //     templateUrl: '/static/ngTemplates/app.homepage.home.html',
+  //     controller: 'controller.home'
+  //   })
 
   $stateProvider
     .state('about', {
@@ -117,7 +115,8 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller('controller.home', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+  
   $scope.onHover = function(val) {
     document.getElementById('owltext' + val).classList.add('changingFont')
     document.getElementById('owlpoint' + val).classList.add('changingColor')
