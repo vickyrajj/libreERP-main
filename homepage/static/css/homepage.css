@@ -598,9 +598,8 @@
   min-height: 60vh;
   background-size: cover;
 }
-.dash_container{
 
-}
+.dash_container {}
 
 .dash {
   border-radius: 4em;
@@ -932,7 +931,7 @@
   width: 85%;
   border-radius: 5px;
   /* min-height: 45vh; */
-  margin-left:1em;
+  margin-left: 1em;
 }
 
 .cards:hover {
@@ -949,16 +948,17 @@
   margin-bottom: 3em;
 }
 
-.table-align  {
+.table-align {
   margin-bottom: 2em;
 }
-.tablealign1{
+
+.tablealign1 {
   width: 20%;
 }
-.tablealign2{
+
+.tablealign2 {
   width: 60%;
 }
-
 
 .hoverimg {
   margin-top: 2em;
@@ -985,11 +985,13 @@
   margin-top: 2em;
   list-style-type: none;
 }
-.courses ul li{
+
+.courses ul li {
   font-size: 20px;
   color: #fff;
-  margin-left:-2em;
+  margin-left: -2em;
 }
+
 .courses ul li::before {
   font-size: 20px;
   color: yellow;
@@ -1110,17 +1112,137 @@
   border-right: 1px solid #fff;
 }
 
+.studentsmain {
+  position: relative;
+  min-height: 30vh;
+}
+
+.studentsmain {
+  position: relative;
+  min-height: 30vh;
+}
+
+.studentsmain h1 {
+  color: #fff;
+  padding-top: 3em;
+  font-weight: bold;
+  line-height: 50px;
+}
+
+.studentsmain h1::after {
+  width: 3em;
+  height: 1em;
+  content: '';
+  bottom: 0px;
+  position: absolute;
+  display: block;
+  border-bottom: 2px solid #00EDA3;
+}
+
+.studentsmain h2 {
+  color: #fff;
+  position: absolute;
+}
+
+.studentsmain::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 60vh;
+  background-image: url('/static/images/24tut/students24.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: brightness(0.20);
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+}
+
+.movie-card {
+  margin-top:2em;
+  width: 95%;
+  min-height: 300px;
+  border-radius: 20px;
+  -webkit-box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.25);
+}
+
+#circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 64px;
+  border: 2px solid #A9A9A9;
+  background-color: #fff;
+  position: absolute;
+  top: 0%;
+  left: 35%;
+  color: #A9A9A9;
+}
+
+#circle div {
+  position: relative;
+  top: 30%;
+  left: -25%;
+  width: 90px;
+  height: 90px;
+  font-size:18px;
+  text-align: center;
+}
+
+.movie-card:hover #circle{
+  background-color: #01EDA5;
+  border: 2px solid #fff;
+  color:#fff;
+}
+
+
+.studentcard {
+  border-radius: 20px 0 0 20px;
+}
+
+.stucardtext {
+  margin-top: 8em;
+}
+
 @media only screen and (max-width:768px) {
 
   /* mobile display size starts here.... */
+  /* students */
+  #circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 64px;
+    border: 2px solid #A9A9A9;
+    background-color: #fff;
+    position: absolute;
+    top: 51%;
+    left: 40%;
+  }
+
+  .studentcard {
+    border-radius: 20px 20px 0 0;
+  }
+
+  .movie-card {
+    width: 100%;
+  }
+
+  .stucardtext {
+    margin-top: 4em;
+  }
+
+  /*  */
   /*  enrollpage*/
   .custom-btn {
     border-top-left-radius: 2em;
     width: 100%;
     padding: 12px 18px;
     text-align: left;
-     border-style:none;
+    border-style: none;
   }
+
   .custom-btn .caret {
     right: 3em;
     position: absolute;
@@ -1129,11 +1251,12 @@
     border-left: 8px solid transparent;
     margin-top: 0.5em;
   }
+
   .cards {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     text-align: center;
-    margin-left: 1.8em;;
+    margin-left: 1.8em;
     width: 85%;
     border-radius: 5px;
     min-height: 41vh;
@@ -1188,8 +1311,8 @@
   }
 
   .dropdown-menu {
-    left:0;
-    width:100%;
+    left: 0;
+    width: 100%;
   }
 
   .size h4 {
@@ -1220,18 +1343,18 @@
   .borderstyle1, .borderstyle3, .borderstyle2, .borderstyle4 {
     border: none;
   }
-  .table-align  {
+
+  .table-align {
     margin-bottom: 2em;
   }
 
-  .tablealign1{
+  .tablealign1 {
     width: 30%;
   }
-  .tablealign2{
+
+  .tablealign2 {
     width: 50%;
   }
-
-
 
   /*  enroll page ends*/
   .container_box {
@@ -1401,20 +1524,24 @@
   .cent::after {
     display: none;
   }
+
   .cent_div {
     min-height: 60vh;
     background-size: 190% 100%;
   }
+
   .dash {
     margin-left: 4em;
     width: 7em;
     height: 7em;
   }
+
   .pro_hov {
     top: -149px;
     left: -24px;
-    width:12em;
+    width: 12em;
   }
+
   /* mobile screen size ends here.... */
 }
 

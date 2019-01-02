@@ -112,8 +112,19 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.homepage.about.html',
       // controller: 'controller.about'
     })
+
+  $stateProvider
+    .state('students', {
+      url: "/students",
+      templateUrl: '/static/ngTemplates/app.homepage.students.html',
+      controller: 'controller.students'
+    })
 });
 
+app.controller('controller.students', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+
+});
 
 app.controller('controller.index', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
