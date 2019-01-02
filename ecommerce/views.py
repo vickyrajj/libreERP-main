@@ -2561,41 +2561,20 @@ class SearchCountryAPI(APIView):
             return Response(list(countries.values())[:10], status = status.HTTP_200_OK)
 
 from create_shipment import createShipment
+
 class CreateShipmentAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny , )
     def get(self , request , format = None):
         print request.GET ,'ddddddddd'
         order = Order.objects.get(pk = int(request.GET['orderPk']))
-        recipientCompany = 'company'
-        try:
-            recipientName =  order.user
-        except:
-            recipientName = 'recipientName'
-        try:
-            recipientPhone = int(order.mobileNo)
-        except:
-            recipientPhone = 9999999999
-        try:
-            recipientAddress = str(order.landMark) +" "+ str(order.street)
-        except:
-            recipientAddress = 'recipientAddress'
-        try:
-            city = order.city
-        except:
-            city = 'city'
-        try:
-            state = 'VA'
-        except:
-            state = 'state'
-        try:
-            country = 'US'
-        except:
-            country = 'US'
-        try:
-            pincode = 20171
-        except:
-            pincode = 20171
+        recipientName =  order.user.first_name + ' ' + order.user.last_name
+        recipientPhone = str(order.mobileNo)
+        recipientAddress = str(order.landMark) +" "+ str(order.street)
+        city = order.city
+        state = order.stateCode
+        country = order.countryCode
+        pincode = str(order.pincode)
         weight = 1.0
         awbPath , trackingID = createShipment(recipientName , recipientCompany , recipientPhone , [recipientAddress] ,  city, state , pincode , country,  weight)
         return Response({'awbPath':awbPath,'trackingID':trackingID,'courierName':'Fedex'}, status = status.HTTP_200_OK)
