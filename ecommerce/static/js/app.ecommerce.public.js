@@ -1798,16 +1798,24 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
       firstName:response.data.firstName,
       lastName:response.data.lastName,
       email:response.data.email,
-      mobile:response.data.mobile,
-      gst:response.data.gst
+      mobile:response.data.mobile
     }
+
+    if (response.data.isGST == 'True') {
+      $scope.isGst = true
+    }else {
+      $scope.isGst = false
+    }
+    // alert($scope.isGst)
 
   })
   $scope.editMode = false
 
   $scope.edit = function () {
     $scope.editMode = true
-    document.getElementById('firstName').focus();
+    setTimeout(function () {
+      document.getElementById('firstName').focus()
+    }, 500);
   }
 
   $scope.save = function () {
@@ -1827,6 +1835,7 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
         gst:response.data.gst
       }
       $scope.editMode = false
+      Flash.create('success','Saved Successfully')
     })
     // $http({
     //   method:'PATCH',

@@ -237,6 +237,9 @@
                         <div class="form-group">
                           <input ng-model="form.{{fields.name}}" type="text" class="form-control floatInput" required/><br/>
                           <span class="floating-label">{{fields.placeholder}}*</span>
+
+                          <p style="margin:0px" class="help-text text-danger" ng-if="validityChecked == true && (form.{{fields.name}}.length ==0 || form.{{fields.name}} == null || form.{{fields.name}} == undefined)"> {{fields.name}} is required</p>
+
                         </div>
                       </div>
                       {% endif %} {% if fields.type == 'choice' %}
@@ -250,6 +253,7 @@
                                   <option value={{des}}>{{des}}</option>
                                   {% endfor %}
                                 </select>
+                        <p style="margin:0px" class="help-text text-danger" ng-if="validityChecked == true && (form.{{fields.name}} == '{{fields.placeholder}}')"> {{fields.name}} is required</p>
                       </div>
                       {% endif %}
                     </div>
@@ -322,13 +326,14 @@
                     </div>
                   </div>
 
-                  <div class="row text-center text-danger" ng-if="validityChecked2">
+                  <div class="col-md-12 text-center text-danger" ng-if="validityChecked2">
                     <span>Invalid OTP , please check both the OTPs and verify again</span>
                   </div>
                 </div>
                 <div class="col-lg-12 text-center" style="margin-top:20px;" ng-if="!showActiveMsg">
                   <button ng-if="mode=='main'" class="btn btn-primary" ng-click="getOTP()">Submit</button>
                   <button ng-if="mode=='verify'" ng-click="verify()" class="btn btn-primary">Verify and Login</button>
+                    <img ng-if="mode=='verify' && verifyingOTP" src="static/images/loading1.gif" style="height:20px; width:20px">
                 </div>
                 <div class="col-lg-12 text-center" ng-if="showActiveMsg">
                   <p> Your account is not activated yet ! We will inform you once it is done! </p>

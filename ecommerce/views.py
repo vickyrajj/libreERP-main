@@ -2647,13 +2647,15 @@ class UserProfileSettingAPI(APIView):
                 details = ''
             if 'GST' in details:
                 gst= details['GST']
+                isGST = True
             else:
                 gst = ''
+                isGST = False
             try:
                 mobile = prof.mobile
             except:
                 mobile =''
-            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst}, status = status.HTTP_200_OK)
+            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst,'isGST':isGST}, status = status.HTTP_200_OK)
     def post(self , request , format = None):
         if 'user' in request.data:
             user = User.objects.get(pk=request.data['user'])
