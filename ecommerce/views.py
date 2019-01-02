@@ -2638,24 +2638,24 @@ class UserProfileSettingAPI(APIView):
             lastName = user.last_name
             email = user.email
             # pobj = profile.objects.get(pk=user.profile.pk)
-            if type(prof.details)==unicode:
-                details = ast.literal_eval(prof.details)
+            if prof.details is not None:
+                if type(prof.details)==unicode:
+                    details = ast.literal_eval(prof.details)
+                else:
+                    details = prof.details
             else:
-                details = prof.details
-            print details,'aaaaaaaaaa'
+                details = ''
             if 'GST' in details:
                 gst= details['GST']
+                isGST = True
             else:
                 gst = ''
+                isGST = False
             try:
                 mobile = prof.mobile
             except:
                 mobile =''
-            if prof.details is not None:
-                details = prof.details
-            else:
-                details = ''
-            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst}, status = status.HTTP_200_OK)
+            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst,'isGST':isGST}, status = status.HTTP_200_OK)
     def post(self , request , format = None):
         if 'user' in request.data:
             user = User.objects.get(pk=request.data['user'])
@@ -2666,13 +2666,19 @@ class UserProfileSettingAPI(APIView):
             pobj = profile.objects.get(pk=user.profile.pk)
             # pobj.email = email
             pobj.mobile = request.data['mobile']
-            details = ast.literal_eval(pobj.details)
-            if details['GST']:
-                details['GST'] = request.data['gst']
+            if pobj.details is not None:
+                details = ast.literal_eval(pobj.details)
+                if 'GST' in details:
+                    details['GST'] = request.data['gst']
+                else:
+                    details['GST'] = request.data['gst']
+                pobj.details = details
+                pobj.save()
             else:
+                details = {}
                 details['GST'] = request.data['gst']
-            pobj.details = details
-            pobj.save()
+                pobj.details = str(details)
+                pobj.save()
 
             # pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile}
             # gst = request.data['gst']

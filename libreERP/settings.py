@@ -285,7 +285,7 @@ EMAIL_HOST_USER = 'do_not_reply@24tutors.com'
 EMAIL_HOST_PASSWORD = '51GX4]N1_0uw'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.Sendgrid'
 
 
 EMAIL_API=True
