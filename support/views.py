@@ -228,29 +228,31 @@ class ReviewFilterCalAPIView(APIView):
         uidL = list(sobj.values_list('uid',flat=True).distinct())
         if 'status' in self.request.GET:
             if self.request.GET['status']=='archived':
-                agentsList = list(ChatThread.objects.filter(status='archived',uid__in=uidL).values_list('user',flat=True).distinct())
+                chObj1 = ChatThread.objects.filter(status='archived',uid__in=uidL)
+                # agentsList = list(chObj).values_list('user',flat=True).distinct())
         else:
-            agentsList = list(ChatThread.objects.filter(~Q(status='archived'),uid__in=uidL).values_list('user',flat=True).distinct())
-        # print agentsList
+            chObj1 = ChatThread.objects.filter(~Q(status='archived'),uid__in=uidL)
         if 'audio' in self.request.GET:
-            agentsList = list(ChatThread.objects.filter(typ='audio').values_list('user',flat=True).distinct())
-            # print agentsList,'audiooooooooooooooooooooooooooo'
+            chObj1=chObj1.filter(Q(typ='audio'))
+        if 'both' in self.request.GET:
+            chObj1=chObj1.filter(Q(typ='audio')|Q(typ='video'))
         if 'video' in self.request.GET:
-            agentsList = list(ChatThread.objects.filter(typ='video').values_list('user',flat=True).distinct())
-            # print agentsList,'videooooooooooooooooooooooooooo'
+            chObj1=chObj1.filter(Q(typ='video'))
 
+        agentsList=list(chObj1.values_list('user',flat=True).distinct())
         for i in agentsList:
             if 'status' in self.request.GET:
                 if self.request.GET['status']=='archived':
-                    agentuidList = list(ChatThread.objects.filter(status='archived',user=i).values_list('uid',flat=True).distinct())
+                    chObj = ChatThread.objects.filter(status='archived',uid__in=uidL)
             else:
-                agentuidList = list(ChatThread.objects.filter(~Q(status='archived'),user=i).values_list('uid',flat=True).distinct())
+                chObj = ChatThread.objects.filter(~Q(status='archived'),user=i)
             if 'audio' in self.request.GET:
-                agentuidList = list(ChatThread.objects.filter(typ='audio').values_list('uid',flat=True).distinct())
-                # print agentsList,'audiooooooooooooooooooooooooooo'
+                chObj=chObj.filter(Q(typ='audio'))
+            if 'both' in self.request.GET:
+                chObj=chObj.filter(Q(typ='audio')|Q(typ='video'))
             if 'video' in self.request.GET:
-                agentuidList = list(ChatThread.objects.filter(typ='video').values_list('uid',flat=True).distinct())
-                # print agentsList,'videooooooooooooooooooooooooooo'
+                chObj=chObj.filter(Q(typ='video'))
+            agentuidList=list(chObj.values_list('uid',flat=True).distinct())
             agSobj = sobj.filter(uid__in = agentuidList)
             if 'email' in self.request.GET:
                 uidl = list(Visitor.objects.filter(email=self.request.GET['email']).values_list('uid',flat=True).distinct())

@@ -25,7 +25,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   then(function(response) {
     $scope.reviewData = response.data
     $scope.loadingData=false;
-    $scope.filterByCreated();
+    // $scope.filterByCreated();
   });
 
   $scope.tableAction = function(target,table) {
@@ -99,6 +99,10 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   $scope.loadingData=true;
 
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
+    $scope.tableUpdated=false
+    setTimeout(function () {
+      $scope.tableUpdated=true
+    }, 300);
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated();
@@ -118,7 +122,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
       }
   },true)
 
-  $scope.getData = function(date,email,download,audio,video,status){
+  $scope.getData = function(date,email,download,typOfCall){
 
    $scope.reviewData=[]
    $scope.loadingData=true;
@@ -130,12 +134,17 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
     }
-    if (audio) {
+
+    if (typOfCall=='audio') {
       url += '&audio'
     }
-    if (video) {
+    if (typOfCall=='video') {
       url += '&video'
     }
+    if (typOfCall=='both') {
+      url += '&both'
+    }
+
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
@@ -167,6 +176,8 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
     })
     $scope.filterData = function(download){
 
+      var typOfCall=''
+
         if (typeof $scope.form.date =='undefined') {
           Flash.create('warning','Please Select Proper Date')
           return
@@ -176,18 +187,13 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
           return
         }
         if ($scope.form.selectedChatType=='audio') {
-          var audio=true
-        }else{
-          var audio=false
+          typOfCall='audio'
         }
-        if ($scope.form.selectedChatType=='video') {
-          var video=true
-        }else{
-          var video=false
+        else if ($scope.form.selectedChatType=='video') {
+          typOfCall='video'
         }
-        if ($scope.form.selectedChatType=='Audio & Video') {
-          var audio=true
-          var video=true
+        else if ($scope.form.selectedChatType=='Audio & Video') {
+          typOfCall='both'
         }
         if ($scope.changeDateType&&$scope.form.date!=null) {
           res = new Date($scope.form.date)
@@ -196,7 +202,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
           console.log('no changeeeeeee');
           var date = $scope.form.date
         }
-        $scope.getData(date,$scope.form.email,download,audio,video,$scope.form.selectedStatus)
+        $scope.getData(date,$scope.form.email,download,typOfCall)
     }
 
     $scope.download = function(){

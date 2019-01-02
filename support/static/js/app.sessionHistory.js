@@ -371,7 +371,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   $scope.browseTab = true;
   $scope.archiveTab = false;
 
-  $scope.getArchData = function(date,user,email,client,download,audio,video){
+  $scope.getArchData = function(date,user,email,client,download,typOfCall){
     $scope.archivedData=[];
     $scope.loadingDataForArc=true;
     $scope.archTableUpdated=false
@@ -388,11 +388,14 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
     }
-    if (audio) {
+    if (typOfCall=='audio') {
       url += '&audio'
     }
-    if (video) {
+    if (typOfCall=='video') {
       url += '&video'
+    }
+    if (typOfCall=='both') {
+      url += '&both'
     }
     if (download) {
       $window.open(url+'&download','_blank');
@@ -441,6 +444,10 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   }
 
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
+    $scope.tableUpdated=false
+    setTimeout(function () {
+      $scope.tableUpdated=true
+    }, 300);
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated();
@@ -461,7 +468,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   })
 
 
-  $scope.getData = function(date,user,email,client,download,audio,video){
+  $scope.getData = function(date,user,email,client,download,typOfCall){
     $scope.reviewData=[]
     $scope.loadingData=true;
     $scope.tableUpdated=false
@@ -479,11 +486,14 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
     }
-    if (audio) {
+    if (typOfCall=='audio') {
       url += '&audio'
     }
-    if (video) {
+    if (typOfCall=='video') {
       url += '&video'
+    }
+    if (typOfCall=='both') {
+      url += '&both'
     }
     if (download) {
       $window.open(url+'&download','_blank');
@@ -493,7 +503,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
         url: url,
       }).
       then(function(response) {
-        // $scope.custDetails = response.data[0]
+
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.reviewData =response.data
         $scope.loadingData=false;
@@ -507,8 +517,8 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     }
   }
 
-  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.audio,$scope.form.video)
-  $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.audio,$scope.form.video)
+  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
+  $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
 
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
@@ -530,7 +540,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     }
   })
   $scope.filterData = function(download){
-
+    var typOfCall=''
     console.log($scope.form.date,typeof($scope.form.date),$scope.oldDateValue);
     if (typeof $scope.form.date =='undefined') {
       Flash.create('warning','Please Select Proper Date')
@@ -557,18 +567,13 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       return
     }
     if ($scope.form.selectedChatType=='audio') {
-      var audio=true
-    }else{
-      var audio=false
+      typOfCall='audio'
     }
-    if ($scope.form.selectedChatType=='video') {
-      var video=true
-    }else{
-      var video=false
+    else if ($scope.form.selectedChatType=='video') {
+      typOfCall='video'
     }
-    if ($scope.form.selectedChatType=='Audio & Video') {
-      var audio=true
-      var video=true
+    else if ($scope.form.selectedChatType=='Audio & Video') {
+      typOfCall='both'
     }
 
     if ($scope.changeDateType&&$scope.form.date!=null) {
@@ -580,8 +585,8 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       var date = $scope.form.date
     }
 
-    $scope.getData(date,user,$scope.form.email,client,download,audio,video)
-    $scope.getArchData(date,user,$scope.form.email,client,download,audio,video)
+    $scope.getData(date,user,$scope.form.email,client,download,typOfCall)
+    $scope.getArchData(date,user,$scope.form.email,client,download,typOfCall)
   }
 
   $scope.download = function(){
