@@ -444,7 +444,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     $scope.tableUpdated=false
     setTimeout(function () {
       $scope.tableUpdated=true
-    }, 150);
+    }, 300);
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated();
