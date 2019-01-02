@@ -577,6 +577,10 @@ class CreateOrderAPI(APIView):
                     value.append({ "productName" : productName,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
             grandTotal=round(grandTotal, 2)
+            try:
+                isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
+            except:
+                isStoreGlobal = False
             if orderObj.user.email and orderObj.paymentMode == 'COD':
                 ctx = {
                     'heading' : "Invoice Details",
@@ -593,6 +597,7 @@ class CreateOrderAPI(APIView):
                     'linkedinUrl' : lkLink,
                     'fbUrl' : fbLink,
                     'twitterUrl' : twtLink,
+                    'isStoreGlobal':isStoreGlobal
                 }
                 print ctx
                 email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
@@ -2259,6 +2264,10 @@ def paypal_return_view(request):
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal, 2)
     request.user.cartItems.all().delete()
+    try:
+        isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
+    except:
+        isStoreGlobal = False
     if orderObj.user.email:
         ctx = {
             'heading' : "Invoice Details",
@@ -2275,6 +2284,7 @@ def paypal_return_view(request):
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
+            'isStoreGlobal':isStoreGlobal
         }
         print ctx
         contactData = []
@@ -2645,10 +2655,13 @@ class UserProfileSettingAPI(APIView):
                     details = prof.details
             else:
                 details = ''
+            print details
             if 'GST' in details:
+                print 'true'
                 gst= details['GST']
                 isGST = True
             else:
+                print 'false'
                 gst = ''
                 isGST = False
             try:
@@ -2666,20 +2679,22 @@ class UserProfileSettingAPI(APIView):
             pobj = profile.objects.get(pk=user.profile.pk)
             # pobj.email = email
             pobj.mobile = request.data['mobile']
-            if pobj.details is not None:
-                details = ast.literal_eval(pobj.details)
-                if 'GST' in details:
-                    details['GST'] = request.data['gst']
+            toReturn = {'firstName':user.first_name,'lastName':user.last_name,'email':user.email,'mobile':pobj.mobile}
+            if 'gst' in request.data:
+                toReturn['gst'] = request.data['gst']
+                if pobj.details is not None:
+                    details = ast.literal_eval(pobj.details)
+                    if 'GST' in details:
+                        details['GST'] = request.data['gst']
+                    else:
+                        details['GST'] = request.data['gst']
+                    pobj.details = details
+                    pobj.save()
                 else:
+                    details = {}
                     details['GST'] = request.data['gst']
-                pobj.details = details
-                pobj.save()
-            else:
-                details = {}
-                details['GST'] = request.data['gst']
-                pobj.details = str(details)
-                pobj.save()
-
+                    pobj.details = str(details)
+                    pobj.save()
             # pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile}
             # gst = request.data['gst']
             # mobile = request.data['mobile']
@@ -2688,4 +2703,4 @@ class UserProfileSettingAPI(APIView):
             # user.email = email
             # user.save()
             # {'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst},
-            return Response({'firstName':user.first_name,'lastName':user.last_name,'email':user.email,'mobile':pobj.mobile,'gst':request.data['gst']}, status = status.HTTP_200_OK)
+            return Response(toReturn, status = status.HTTP_200_OK)
