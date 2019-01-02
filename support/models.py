@@ -121,7 +121,7 @@ class BoM(models.Model):
 
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    product = models.ForeignKey( Products , null = True)
+    product = models.ForeignKey(Products , null = True)
     qty = models.PositiveIntegerField(null=True , default=0)
     rate = models.FloatField(null = True)
 
@@ -146,3 +146,14 @@ class StockCheck(models.Model):
 
 class StockCheckLog(models.Model):
     product =  models.ForeignKey( StockCheck , null = True)
+
+class StockSummaryReport(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    dated = models.DateField(null = True,unique=True)
+    stockValue = models.FloatField(null = True,default=0)
+
+class ProjectStockSummary(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    stockReport = models.ForeignKey(StockSummaryReport , related_name='projectStockReport' , null = True)
+    value = models.FloatField(null = True,default=0)
+    title = models.CharField(max_length = 100 , null = True)

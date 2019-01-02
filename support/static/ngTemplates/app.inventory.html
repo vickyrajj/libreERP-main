@@ -61,10 +61,24 @@ style="padding:10px;">
        </div>
      </div>
    </div> -->
+   <!-- <div class="row">
+     <div class="col-md-12" style="margin:15px">
+       <div class="btn-group">
+         <span><a class="btn btn-primary" target="_blank" href="/api/support/downloadStockReport/"> Download Stock Summary </a></span>
+        <span><a class="btn btn-primary" target="_blank" href="/api/support/projectStockConsumption/"> Product Stock Consumed </a></span>
+       </div>
+     </div>
+   </div> -->
 
   <div class="row" style="margin-top:20px;" ng-if="!modeToggle">
-    <div class="col-md-10 col-md-offset-1  text-right" style="padding-right:20px;">
-      <h2> Total : {{total.toFixed(2)}} </h2>
+    <div class="col-md-6 " style="padding-left:30px">
+      <div class="btn-group">
+        <span><a class="btn btn-primary" target="_blank" href="/api/support/downloadStockReport/"> Download Stock Summary </a></span>
+       <span><a class="btn btn-primary" target="_blank" href="/api/support/projectStockConsumption/"> Product Stock Consumed </a></span>
+      </div>
+    </div>
+    <div class="col-md-6  text-right" style="padding-right:30px;">
+      <h2 style="margin:0px"> Total : {{total.toFixed(2)}} </h2>
     </div>
     <div class="col-md-12">
       <div class="container-fluid" style="margin-top:15px;" ng-repeat="p in products">

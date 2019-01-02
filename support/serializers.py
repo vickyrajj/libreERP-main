@@ -189,5 +189,12 @@ class StockCheckLogSerializer(serializers.ModelSerializer):
         model = StockCheckLog
         fields = ('pk','product')
 
+class StockSummaryReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockSummaryReport
+        fields = ('pk','created','dated','stockValue')
 
-        #     return s
+class ProjectStockSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectStockSummary
+        fields = ('pk','created','stockReport','value','title')

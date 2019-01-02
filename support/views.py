@@ -17,7 +17,7 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from .models import *
 from .serializers import *
 from API.permissions import *
-from django.db.models import Q,Count ,F
+from django.db.models import Q,Count ,F,Sum
 from django.http import JsonResponse
 from rest_framework.renderers import JSONRenderer
 import random, string
@@ -114,6 +114,16 @@ class StockCheckLogViewSet(viewsets.ModelViewSet):
     serializer_class = StockCheckLogSerializer
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['products','project']
+
+class StockSummaryReportViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = StockSummaryReport.objects.all()
+    serializer_class = StockSummaryReportSerializer
+
+class ProjectStockSummaryViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = ProjectStockSummary.objects.all()
+    serializer_class = ProjectStockSummarySerializer
 
 class ProductsUploadAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
@@ -1058,8 +1068,8 @@ class InventoryViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['products','project']
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['product',]
 
 class MaterialIssueViewSet(viewsets.ModelViewSet):
     permissions_classes  = (permissions.AllowAny , )
@@ -1381,6 +1391,7 @@ class GetMaterialAPIView(APIView):
         return Response(returnData,status=status.HTTP_200_OK)
 
 
+
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
@@ -1422,3 +1433,93 @@ class DownloadProjectSCExcelReponse(APIView):
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
         return response
+
+
+
+class CreateStockReportDataAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print  request.GET
+        toRet = {'status':'Invalid Data'}
+        if 'date' in request.GET:
+            print request.GET
+            dtime = datetime.datetime.strptime(str(request.GET['date']),'%d-%m-%Y')
+            dt = dtime.date()
+            print dtime,dt
+            if StockSummaryReport.objects.filter(dated=dt).exists():
+                return Response({'status':'Data Has Already Created'},status=status.HTTP_200_OK)
+            prodObj = Products.objects.filter(created__lte=dtime)
+            print 'total {0} Productsssssssss'.format(prodObj.count())
+            stockTotal = 0
+            for i in prodObj:
+                invtObjs = Inventory.objects.filter(product=i,created__lte=dtime)
+                if invtObjs.count()>0:
+                    total = invtObjs.aggregate(total=Sum(F('qty') * F('rate')))['total']
+                    stockTotal += total
+            print 'total valueeeeeeeeeee',stockTotal
+            if stockTotal>0:
+                ssReportObj = StockSummaryReport.objects.create(dated=dt,stockValue=stockTotal)
+                projectsObjs=Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,created__lte=dtime)
+                print projectsObjs.count()
+                projStackSummary = []
+                for i in projectsObjs:
+                    matIssMainObjs = MaterialIssueMain.objects.filter(project=i,created__lte=dtime)
+                    if matIssMainObjs.count()>0:
+                        vl = 0
+                        for j in matIssMainObjs:
+                            matIssueObjs = j.materialIssue.all()
+                            tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price')))['total']
+                            vl += tot
+                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=vl,title=i.title))
+                    else:
+                        pass
+                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=0,title=i.title))
+                print len(projStackSummary)
+                ProjectStockSummary.objects.bulk_create(projStackSummary)
+                toRet['status'] = 'Successfully Saved'
+            else:
+                toRet['status'] = 'No Data Exists'
+        return Response(toRet,status=status.HTTP_200_OK)
+
+class DownloadStockReportAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print  request.GET
+        dtObj = datetime.datetime.now()
+        if dtObj.month > 3:
+            fstDate = date(dtObj.year,4,1)
+            lstDate = fstDate + relativedelta(years=1)
+        else:
+            fstDate = date(dtObj.year-1,4,1)
+            lstDate = fstDate + relativedelta(years=1)
+        print fstDate , lstDate
+
+        reportsObj = StockSummaryReport.objects.filter(dated__range=[fstDate,lstDate]).order_by('dated')
+        print reportsObj.count()
+
+        rptPkList = list(reportsObj.values_list('pk',flat=True))
+        projStokObjs = ProjectStockSummary.objects.filter(stockReport__in=rptPkList)
+        unqTitles = list(projStokObjs.values_list('title',flat=True).distinct())
+
+        toReturn = []
+        hd = ['Date','Stock value at ware house']
+        hd += unqTitles
+        # for i in unqTitles:
+        #     hd.append('Consumption Of Stock - '+i)
+        toReturn.append(hd)
+
+        for i in reportsObj:
+            sam = []
+            sam.append(str(i.dated))
+            sam.append(i.stockValue)
+            for j in unqTitles:
+                try:
+                    p = projStokObjs.get(stockReport=i,title=j)
+                    sam.append(p.value)
+                except:
+                    print 'project errorrr'
+                    sam.append(0)
+            toReturn.append(sam)
+        print toReturn
+
+        return ExcelResponse(toReturn, 'Stock_Summary' , 'Stock Summary')
