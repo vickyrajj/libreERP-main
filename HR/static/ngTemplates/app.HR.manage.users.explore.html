@@ -15,7 +15,8 @@
   <div class="col-md-8">
     <div class="container-fluid">
       <div class="row">
-        <h2 style="">Details of {{data.userPK | getName }}</h2><br>
+        <h2 style="">Details of <span ng-if="data.prefix&&data.prefix!='NA'"> {{data.prefix}}</span> {{data.userPK | getName }}</h2><br>
+        <h3 style="">Email : {{data.userPK | getEmail }}</h3><br>
       </div>
     </div>
   </div>

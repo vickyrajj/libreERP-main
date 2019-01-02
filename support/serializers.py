@@ -21,7 +21,7 @@ from django.core.exceptions import SuspiciousOperation
 class ProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
-        fields = ('pk', 'created', 'part_no','description_1','description_2','parent','weight','price','customs_no','sheet','bar_code')
+        fields = ('pk', 'created', 'part_no','description_1','description_2','customs_no','parent','weight','price','sheet','bar_code','gst','custom')
 
 
 
@@ -35,7 +35,7 @@ class VendorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vendor
-        fields = ('pk','created','name' , 'city','street','state','pincode','country','mobile','gst','email')
+        fields = ('pk','created','name' ,'personName' , 'city','street','state','pincode','country','mobile','gst','email')
 
 class ProjectsSerializer(serializers.ModelSerializer):
     # responsible = userSearchSerializer(many = True , read_only = True)
@@ -44,7 +44,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Projects
-        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','customer_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus','invoiceValue','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','packing','vendor','exRate','poNumber')
+        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','quote_ref','enquiry_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus','invoiceValue','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','packing','vendor','exRate','poNumber','invoiceNumber','boeRefNumber','profitMargin','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms')
 
     def create(self , validated_data):
         p = Projects()
@@ -56,8 +56,10 @@ class ProjectsSerializer(serializers.ModelSerializer):
             p.machinemodel = self.context['request'].data['machinemodel']
         if 'comm_nr' in self.context['request'].data:
             p.comm_nr = self.context['request'].data['comm_nr']
-        if 'customer_ref' in self.context['request'].data:
-            p.customer_ref = self.context['request'].data['customer_ref']
+        if 'quote_ref' in self.context['request'].data:
+            p.customer_ref = self.context['request'].data['quote_ref']
+        if 'enquiry_ref' in self.context['request'].data:
+            p.customer_ref = self.context['request'].data['enquiry_ref']
         if 'date' in self.context['request'].data:
             p.date = self.context['request'].data['date']
         if 'revision' in self.context['request'].data:
@@ -72,7 +74,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
         return p
 
     def update (self, instance, validated_data):
-        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','customer_ref','machinemodel','approved1','approved1_user','approved1_date','revision','savedStatus','invoiceValue','packing','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','exRate']:
+        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','quote_ref','enquiry_ref','machinemodel','approved1','approved1_user','approved1_date','revision','savedStatus','invoiceValue','packing','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','exRate','profitMargin','invoiceNumber','boeRefNumber','poNumber','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -100,7 +102,7 @@ class BoMSerializer(serializers.ModelSerializer):
     project =  ProjectsSerializer(many = True  , read_only =True)
     class Meta:
         model = BoM
-        fields = ('pk','created','user' , 'products','project','quantity1','quantity2','price','landed_price','invoice_price','customer_price')
+        fields = ('pk','created','user' , 'products','project','quantity1','quantity2','price','landed_price','invoice_price','customer_price','gst','custom','customs_no')
 
     def create(self, validated_data):
 
@@ -115,7 +117,7 @@ class BoMSerializer(serializers.ModelSerializer):
         b.save()
         return b
         def update (self, instance, validated_data):
-            for key in ['pk','created','user' , 'products','project','quantity1','quantity2','price','landed_price','invoice_price','customer_price']:
+            for key in ['pk','created','user' , 'products','project','quantity1','quantity2','price','landed_price','invoice_price','customer_price','gst','custom','customs_no']:
                 try:
                     setattr(instance , key , validated_data[key])
                 except:
@@ -187,5 +189,12 @@ class StockCheckLogSerializer(serializers.ModelSerializer):
         model = StockCheckLog
         fields = ('pk','product')
 
+class StockSummaryReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockSummaryReport
+        fields = ('pk','created','dated','stockValue')
 
-        #     return s
+class ProjectStockSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectStockSummary
+        fields = ('pk','created','stockReport','value','title')

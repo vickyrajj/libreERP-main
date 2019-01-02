@@ -1,11 +1,11 @@
 app.config(function($stateProvider) {
 
-  $stateProvider.state('businessManagement.settings', {
-    url: "/settings",
+  $stateProvider.state('businessManagement.masterSheet', {
+    url: "/masterSheet",
     views: {
       "": {
-        templateUrl: '/static/ngTemplates/app.settings.html',
-        controller: 'businessManagement.settings',
+        templateUrl: '/static/ngTemplates/app.masterSheet.html',
+        controller: 'businessManagement.masterSheet',
       }
     }
   })
@@ -41,7 +41,7 @@ app.config(function($stateProvider) {
 //   }
 // })
 
-app.controller("businessManagement.settings", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
+app.controller("businessManagement.masterSheet", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
 
   $scope.data = {
     tableData: []
@@ -58,7 +58,7 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
   var multiselectOptions = [{
     icon: 'fa fa-plus',
     text: 'upload'
-  }, ];
+  } ];
 
 
 
@@ -66,23 +66,59 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
     views: views,
     url: '/api/support/products/',
     searchField: 'part_no',
-    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1'],
+    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1', 'gst','customs_no','custom'],
     checkbox: false,
+    deletable:true,
+    canCreate : true,
     multiselectOptions: multiselectOptions,
+    editorTemplate:'/static/ngTemplates/app.masterSheet.newProduct.html',
     itemsNumPerView: [16, 32, 48],
   }
 
 
-  $scope.tableAction = function(target, action, mode) {
-    if (action == 'upload') {
 
+  $scope.tableAction = function(target, action, data) {
+    if (action == 'upload') {
       $scope.uploadProduct()
     }
-  }
+    else if(action == 'submitForm'){
+          var method = 'PATCH'
+          var url = '/api/support/products/'+data.pk +'/'
+        var send = data
+        $http({
+          method: method,
+          url: url,
+          data: send,
+        }).
+        then(function(response){
+            $scope.$broadcast('forceGenericTableRowRefresh',  response.data);
+          Flash.create('success', response.status + ' : ' + response.statusText );
+        }, function(response){
+          Flash.create('danger', response.status + ' : ' + response.statusText );
+        })
+    }
+    else{
+        var method = 'POST'
+        var url = '/api/support/products/'
+        var send = data
+        $http({
+          method: method,
+          url: url,
+          data: send,
+        }).
+        then(function(response){
+          $scope.$broadcast('forceInsetTableData', response.data);
+          Flash.create('success', response.status + ' : ' + response.statusText );
+        }, function(response){
+          Flash.create('danger', response.status + ' : ' + response.statusText );
+        })
+      }
+    }
+
 
   $scope.uploadProduct = function() {
     $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.settings.products.html',
+      templateUrl: '/static/ngTemplates/app.masterSheet.products.html',
       size: 'lg',
 
       controller: function($scope, $uibModalInstance) {
@@ -121,6 +157,27 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
     });
   }
 
+  // $scope.reset=function(){
+  //   $scope.data={
+  //     part_no : '',
+  //     description_1:'',
+  //     description_2:'',
+  //     weight:0,
+  //     price:0,
+  //     customs_no:'',
+  //     gst:18,
+  //     custom:7.5
+  //   }
+  // }
+
+  // $scope.newProduct = function() {
+  //   $uibModal.open({
+  //     templateUrl: '/static/ngTemplates/app.settings.newProduct.html',
+  //     size: 'lg',
+  //     controller:'businessManagement.settings.newProduct'
+  //   });
+  // }
+
   // $scope.tabs = [];
   // $scope.searchTabActive = true;
   //
@@ -148,6 +205,48 @@ app.controller("businessManagement.settings", function($scope, $state, $users, $
 
 })
 
+
+app.controller('businessManagement.masterSheet.newProduct', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
+
+  $scope.mode = 'new'
+  $scope.reset=function(){
+    $scope.data={
+      part_no : '',
+      description_1:'',
+      description_2:'',
+      weight:0,
+      price:0,
+      customs_no:'',
+      gst:18,
+      custom:7.5
+    }
+  }
+  $scope.reset()
+  $scope.save = function() {
+    if($scope.mode=="new"){
+      var method = 'POST'
+      var url='/api/support/products/'
+    }
+    else{
+      var method = 'PATCH'
+      var url = '/api/support/products/'+$scope.data.pk +'/'
+    }
+    var send = $scope.data
+    $http({
+      method: method,
+      url: url,
+      data: send,
+    }).
+    then(function(response) {
+      if($scope.mode=="new"){
+        $scope.reset()
+      }
+    })
+  }
+
+
+})
+
 app.controller('businessManagement.seettings.mcgGeneralise', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
 
   $scope.generaliseMsg = function() {
@@ -156,7 +255,6 @@ app.controller('businessManagement.seettings.mcgGeneralise', function($scope, $h
       url: '/api/HR/smsClassifier/'
     }).
     then(function(response) {
-      console.log(response.data);
       Flash.create('success', 'Generalised Sucessfully');
     })
   }
@@ -171,15 +269,12 @@ app.controller('businessManagement.seettings.negativeKeywords.form', function($s
   $scope.mode = 'new'
   $scope.msg = 'Create'
   $scope.$on('keyWordUpdate', function(event, input) {
-    console.log("recieved");
-    console.log(input.data);
     $scope.msg = 'Update'
     $scope.wordForm = input.data
     $scope.mode = 'edit'
 
   });
   $scope.saveKeyWord = function() {
-    console.log('7777777777777777777', $scope.wordForm);
     if ($scope.wordForm.name == null || $scope.wordForm.name.length == 0) {
       Flash.create('warning', 'Please Mention The Keyword')
       return;
@@ -221,15 +316,13 @@ app.controller('businessManagement.seettings.bankId.form', function($scope, $htt
   $scope.mode = 'new'
   $scope.msg = 'Create'
   $scope.$on('GEmailUpdate', function(event, input) {
-    console.log("recieved");
-    console.log(input.data);
+
     $scope.msg = 'Update'
     $scope.gEmailForm = input.data
     $scope.mode = 'edit'
 
   });
   $scope.saveGEmail = function() {
-    console.log('7777777777777777777', $scope.gEmailForm);
     if ($scope.gEmailForm.name == null || $scope.gEmailForm.name.length == 0) {
       Flash.create('warning', 'Please Mention The Email')
       return;
@@ -271,15 +364,12 @@ app.controller('businessManagement.seettings.socialId.form', function($scope, $h
   $scope.mode = 'new'
   $scope.msg = 'Create'
   $scope.$on('SEmailUpdate', function(event, input) {
-    console.log("recieved");
-    console.log(input.data);
     $scope.msg = 'Update'
     $scope.sEmailForm = input.data
     $scope.mode = 'edit'
 
   });
   $scope.saveSEmail = function() {
-    console.log('7777777777777777777', $scope.sEmailForm);
     if ($scope.sEmailForm.name == null || $scope.sEmailForm.name.length == 0) {
       Flash.create('warning', 'Please Mention The Email')
       return;

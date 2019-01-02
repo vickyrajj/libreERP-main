@@ -32,14 +32,14 @@ class userProfileLiteSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     class Meta:
         model = profile
-        fields = ('displayPicture' , 'prefix' ,'pk' ,'mobile' , 'gmailAge')
+        fields = ('displayPicture' , 'prefix' ,'pk' ,'mobile' , 'gmailAge' , 'email')
 
 class userSearchSerializer(serializers.ModelSerializer):
     # to be used in the typehead tag search input, only a small set of fields is responded to reduce the bandwidth requirements
     profile = userProfileLiteSerializer(many=False , read_only=True)
     class Meta:
         model = User
-        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' )
+        fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' , 'email' )
         # fields = ( 'pk', 'username' , 'first_name' , 'last_name' , 'profile' , 'social' , 'designation' )
 
 
@@ -70,7 +70,7 @@ class userProfileSerializer(serializers.ModelSerializer):
     totalBankAccounts = serializers.SerializerMethodField()
     class Meta:
         model = profile
-        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'email', 'gmailAge','totalBankAccounts')
+        fields = ( 'pk' , 'mobile' , 'displayPicture' , 'website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,'email', 'gmailAge','totalBankAccounts' , 'email')
         read_only_fields = ('website' , 'prefix' , 'almaMater', 'pgUniversity' , 'docUniversity' ,)
 
     def get_totalBankAccounts(self , obj):

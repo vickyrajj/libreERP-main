@@ -32,14 +32,17 @@ class ProductSheet(models.Model):
 class Products(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     part_no = models.CharField(max_length=20, unique=True , null=True)
-    description_1 = models.CharField(max_length=100, null=True)
-    description_2 = models.CharField(max_length=100, null=True)
-    weight = models.FloatField(null=True)
-    price = models.FloatField(null=True)
+    description_1 = models.CharField(max_length=100, null=True,blank =True)
+    description_2 = models.CharField(max_length=100, null=True,blank =True)
+    weight = models.FloatField(null=True,blank =True)
+    price = models.FloatField(null=True,blank =True)
     parent = models.ForeignKey('self', related_name='parentProduct', null=True)
     sheet = models.ForeignKey(ProductSheet, related_name='productsSheet', null=True)
-    customs_no = models.CharField(max_length=15, null=True)
-    bar_code = models.CharField(max_length=50, null=True)
+    customs_no = models.PositiveIntegerField( null=True,blank =True,default=0)
+    bar_code = models.CharField(max_length=50, null=True,blank =True)
+    gst = models.FloatField(default = 18.0)
+    custom = models.FloatField(default = 7.5)
+
 
 class Test(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -48,14 +51,15 @@ class Test(models.Model):
 class Vendor(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length = 100 , null = True,)
+    personName = models.CharField(max_length = 100 , null = True,)
     city = models.CharField(max_length = 100 , null = True,blank =True)
     street = models.CharField(max_length = 100 , null = True,blank =True)
     state = models.CharField(max_length = 100 , null = True,blank =True)
     pincode = models.CharField(max_length = 20 , null = True,blank =True)
     country = models.CharField(max_length = 20 , null = True,blank =True)
     mobile = models.CharField(max_length = 12 , null = True,blank =True)
-    gst = models.CharField(max_length = 20 , null = True,)
-    email = models.EmailField(null = True,)
+    gst = models.CharField(max_length = 20 , null = True)
+    email = models.EmailField(null = True)
 
 
 class Projects(models.Model):
@@ -65,7 +69,8 @@ class Projects(models.Model):
     date = models.DateField(null = True)
     machinemodel = models.CharField(max_length = 20 , null = True , blank =True)
     comm_nr = models.CharField(max_length = 20 , null = True , blank =True)
-    customer_ref = models.CharField(max_length = 20 , null = True , blank =True)
+    quote_ref = models.CharField(max_length = 50 , null = True , blank =True)
+    enquiry_ref = models.CharField(max_length = 50 , null = True , blank =True)
     responsible = models.ManyToManyField(User , related_name = 'managingService' , blank = True)
     approved1 = models.BooleanField(default = False)
     approved2 = models.BooleanField(default = False)
@@ -86,8 +91,16 @@ class Projects(models.Model):
     clearingCharges1 = models.FloatField(default = 0)
     clearingCharges2 = models.FloatField(default = 0)
     exRate = models.FloatField( default = 75)
+    profitMargin =  models.FloatField( default = 0)
     poNumber =  models.CharField( max_length = 20 , null=True,blank=True)
+    invoiceNumber = models.CharField( max_length = 20 , null=True,blank=True)
+    boeRefNumber =  models.CharField( max_length = 20 , null=True,blank=True)
+    quoteRefNumber = models.CharField( max_length = 20 , null=True,blank=True)
     vendor = models.ForeignKey(Vendor , related_name='vendor' , null = True)
+    quoteValidity = models.CharField(max_length = 200, default = "30 days from quote date")
+    terms = models.CharField(max_length = 200, default = "EX-WORKS, BRUDERER AG, Switzerland")
+    delivery = models.CharField(max_length = 200, default = "6 weeks from the date of receipt of PO and advance")
+    paymentTerms = models.CharField(max_length = 200, default = "100% advance along with order")
 
 
 
@@ -102,10 +115,13 @@ class BoM(models.Model):
     landed_price = models.FloatField(null=True , default=0)
     invoice_price = models.FloatField(null=True , default=0)
     customer_price = models.FloatField(null=True , default=0)
+    gst =  models.FloatField(null=True , default=0)
+    custom = models.FloatField(null=True , default=0)
+    customs_no = models.PositiveIntegerField(null=True , default=0)
 
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    product = models.ForeignKey( Products , null = True)
+    product = models.ForeignKey(Products , null = True)
     qty = models.PositiveIntegerField(null=True , default=0)
     rate = models.FloatField(null = True)
 
@@ -130,3 +146,14 @@ class StockCheck(models.Model):
 
 class StockCheckLog(models.Model):
     product =  models.ForeignKey( StockCheck , null = True)
+
+class StockSummaryReport(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    dated = models.DateField(null = True)
+    stockValue = models.FloatField(null = True,default=0)
+
+class ProjectStockSummary(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    stockReport = models.ForeignKey(StockSummaryReport , related_name='projectStockReport' , null = True)
+    value = models.FloatField(null = True,default=0)
+    title = models.CharField(max_length = 100 , null = True)

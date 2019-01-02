@@ -75,14 +75,23 @@ class accountsKey(models.Model):
 
 class profile(models.Model):
     user = models.OneToOneField(User)
+    # PREFIX_CHOICES = (
+    #     ('NA' , 'NA'),
+    #     ('Kumar' , 'Kumar'),
+    #     ('Kumari' , 'Kumari'),
+    #     ('Smt' , 'Smt'),
+    #     ('Shri' ,'Shri'),
+    #     ('Dr' ,'Dr'),
+    # )
+
     PREFIX_CHOICES = (
         ('NA' , 'NA'),
-        ('Kumar' , 'Kumar'),
-        ('Kumari' , 'Kumari'),
-        ('Smt' , 'Smt'),
-        ('Shri' ,'Shri'),
+        ('Miss.' , 'Miss.'),
+        ('Mr.' ,'Mr.'),
         ('Dr' ,'Dr'),
     )
+
+
     GENDER_CHOICES = (
         ('M' , 'Male'),
         ('F' , 'Female'),

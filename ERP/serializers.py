@@ -25,9 +25,14 @@ class serviceSerializer(serializers.ModelSerializer):
     contactPerson = userSearchSerializer(many = True , read_only = True)
     class Meta:
         model = service
-        fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson')
+        fields = ('pk' , 'created' ,'name' , 'customerName' ,'user' , 'email', 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson')
+        read_only_fields = ('user',)
 
     def assignValues(self , instance , validated_data):
+        if 'customerName' in validated_data:
+            instance.customerName = validated_data['customerName']
+        if 'email' in validated_data:
+            instance.email = validated_data['email']
         if 'cin' in validated_data:
             instance.cin = validated_data['cin']
         if 'tin' in validated_data:
@@ -48,6 +53,7 @@ class serviceSerializer(serializers.ModelSerializer):
             instance.address_id = int(self.context['request'].data['address'])
         if 'contactPerson' in self.context['request'].data and self.context['request'].data['contactPerson'] is not None:
             instance.contactPerson_id = int(self.context['request'].data['contactPerson'])
+        # instance.user=User.objects.get(pk = self.context['request'].user.pk)
         instance.save()
 
     def create(self , validated_data):
@@ -57,8 +63,9 @@ class serviceSerializer(serializers.ModelSerializer):
         self.assignValues(s, validated_data)
         return s
     def update(self , instance , validated_data):
+        print self.context['request'].user,'aaaaaaaaaaaaaa'
         instance.name = self.context['request'].data['name']
-        # instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
+        # instance.user=User.objects.get(pk = self.context['request'].user.pk)
         instance.save()
         self.assignValues(instance , validated_data)
         return instance
@@ -148,7 +155,7 @@ class serviceLiteSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)
     class Meta:
         model = service
-        fields = ('pk'  ,'name' , 'address' , 'mobile' )
+        fields = ('pk' , 'created' ,'name' , 'customerName' ,'user' , 'email', 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson')
 
 class deviceSerializer(serializers.ModelSerializer):
     class Meta:

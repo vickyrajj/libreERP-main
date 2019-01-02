@@ -8,12 +8,12 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
     name: 'list',
     icon: 'fa-th-large',
     template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.vendor.explore.html',
+    itemTemplate: '/static/ngTemplates/app.vendor.item.html',
   }, ];
 
   $scope.config = {
     views: views,
-    url: 'api/support/vendor/',
+    url: '/api/support/vendor/',
     filterSearch: true,
     searchField: 'name',
     deletable: true,
@@ -26,27 +26,24 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
 
 
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableData);
-
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'edit') {
           var title = 'Edit Vendor :';
           var appType = 'vendorEditor';
         }
+        else if (action == 'delete') {
+          $http({
+            method: 'DELETE',
+            url: '/api/support/vendor/' + $scope.data.tableData[i].pk + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Item Deleted');
+          })
+          $scope.data.tableData.splice(i, 1)
+          return;
+        }
 
-
-        console.log({
-          title: title + $scope.data.tableData[i].name,
-          cancel: true,
-          app: appType,
-          data: {
-            pk: target,
-            index: i
-          },
-          active: true
-        });
 
 
         $scope.addTab({
@@ -72,7 +69,6 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -92,6 +88,7 @@ app.controller("businessManagement.vendor", function($scope, $state, $users, $st
 app.controller("businessManagement.vendor.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
   $scope.form = {
     name: '',
+    personName : '',
     mobile: '',
     email: '',
     gst: '',
@@ -104,6 +101,7 @@ app.controller("businessManagement.vendor.form", function($scope, $state, $users
   $scope.resetForm = function() {
     $scope.form = {
       name: '',
+      personName : '',
       mobile: '',
       email: '',
       gst: '',
@@ -117,7 +115,6 @@ app.controller("businessManagement.vendor.form", function($scope, $state, $users
   if (typeof $scope.tab == 'undefined') {
     $scope.mode = 'new';
     $scope.resetForm()
-    console.log($scope.form ,'jjjjjjjjjjjj');
   } else {
     $scope.mode = 'edit';
     $scope.form = $scope.data.tableData[$scope.tab.data.index]
@@ -130,6 +127,7 @@ app.controller("businessManagement.vendor.form", function($scope, $state, $users
     var Url = 'api/support/vendor/'
     var dataTosend = {
       name: $scope.form.name,
+      personName : $scope.form.personName,
       mobile: $scope.form.mobile,
       email: $scope.form.email,
       gst: $scope.form.gst,
@@ -149,7 +147,6 @@ app.controller("businessManagement.vendor.form", function($scope, $state, $users
       data: dataTosend
     }).
     then(function(response) {
-      console.log('hhhhhhhhhhh');
       Flash.create('success', 'Saved');
       if ($scope.mode == 'edit') {
         return

@@ -1,67 +1,4 @@
-app.controller("businessManagement.inventory", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
-  $scope.offset = 0
-  $scope.text = {searchText:''}
-  $scope.fetchProdInventory = function(offset) {
-    if ($scope.text.searchText.length>0) {
-      var url = '/api/support/inventoryData/?limit=7&offset=' + offset + '&search=' + $scope.text.searchText
-    }else {
-      var url = '/api/support/inventoryData/?limit=7&offset=' + offset
-    }
-    $http({
-      method: 'GET',
-      url: url
-    }).
-    then(function(response) {
-      $scope.products = response.data.data
-      $scope.total = response.data.total
-      if($rootScope.cart.length){
-        for (var i = 0; i < $rootScope.cart.length; i++) {
-          for (var j = 0; j < $scope.products.length; j++) {
-            if($rootScope.cart[i]==$scope.products[j].productPk){
-              $scope.products[j].addedCart = true
-            }
-          }
-        }
-      }
-    })
-  }
-  $scope.fetchProdInventory($scope.offset)
-
-  $scope.enterFun = function() {
-    $scope.fetchProdInventory($scope.offset)
-  }
-
-  $scope.refresh = function() {
-    $scope.fetchProdInventory($scope.offset)
-  }
-
-  $scope.next = function() {
-    $scope.offset = $scope.offset + 7
-    $scope.fetchProdInventory($scope.offset)
-    if ($scope.products.length == 0) {
-      $scope.offset = $scope.offset - 7
-      $scope.fetchProdInventory($scope.offset)
-    }
-  }
-
-  $scope.prev = function() {
-    if ($scope.offset == 0) {
-      return
-    }
-    $scope.offset = $scope.offset - 7
-    $scope.fetchProdInventory($scope.offset)
-  }
-
-  $scope.reset = function() {
-    $rootScope.cart = []
-    $scope.fetchProdInventory($scope.offset)
-  }
-  $scope.reset()
-  $scope.addToCart = function(product,indx) {
-    $rootScope.cart.push(product)
-    $scope.products[indx].addedCart = true
-  }
-
+app.controller("businessManagement.report", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope, $permissions, $timeout, ) {
 
   $scope.searchmaterial = {
     search : ""
@@ -70,20 +7,18 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
   $scope.getMaterialIssue = function(offset){
+    console.log(offset,'aaaaaaaaaaaa');
     $http({
       method: 'GET',
-      url: '/api/support/material/?limit=7&offset=' + offset+ '&search=' + $scope.searchmaterial.search
+      url: '/api/support/getMaterial/?limit=7&offset' + offset+ '&search=' + $scope.searchmaterial.search
     }).
     then(function(response) {
-      $scope.materialIssue = response.data.results
-      $scope.sum = []
-      for (var i = 0; i < $scope.materialIssue.length; i++) {
-        $scope.issue = $scope.materialIssue[i].materialIssue
-        $scope.sum.push($scope.issue.map(function(m){
-          return m.qty*m.price
-        }).reduce(function(a,b){return a+b},0))
-
-      }
+      console.log(response.data,'aaaaaaa');
+      $scope.materialIssue = response.data
+      // $scope.sum = []
+      // for (var i = 0; i < $scope.materialIssue.length; i++) {
+      //   console.log($scope.materialIssue[i],'aaaaaaaaaaa');
+      // }
     })
   }
 
@@ -91,9 +26,9 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
 
-  $scope.refreshmaterial = function() {
-    $scope.getMaterialIssue($scope.offset)
-  }
+
+    $scope.getMaterialIssue($scope.offsetmaterial)
+
 
   $scope.nextmaterial = function() {
     if ($scope.materialIssue.length == 0) {
@@ -119,11 +54,11 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
 
-  $scope.$watch('modeToggle', function(newValue, oldValue) {
-    if (newValue == true) {
-      $scope.getMaterialIssue($scope.offsetmaterial)
-    }
-  });
+  // $scope.$watch('modeToggle', function(newValue, oldValue) {
+  //   if (newValue == true) {
+  //     $scope.getMaterialIssue($scope.offsetmaterial)
+  //   }
+  // });
 
 
 
@@ -173,18 +108,18 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
 
-
-  $scope.delete = function(pk, index) {
-    $http({
-      method: 'DELETE',
-      url: '/api/support/material/' + pk + '/'
-    }).
-    then(function(response) {
-      Flash.create('success', 'Deleted');
-      $scope.materialIssue.splice(index, 1)
-      $scope.sum.splice(index, 1)
-    })
-  }
+  //
+  // $scope.delete = function(pk, index) {
+  //   $http({
+  //     method: 'DELETE',
+  //     url: '/api/support/material/' + pk + '/'
+  //   }).
+  //   then(function(response) {
+  //     Flash.create('success', 'Deleted');
+  //     $scope.materialIssue.splice(index, 1)
+  //     $scope.sum.splice(index, 1)
+  //   })
+  // }
   $scope.toggleMaterial = function(pk, indx) {
     // $scope.prodInventories[indx].open = !$scope.prodInventories[indx].open
     for (var i = 0; i < $scope.materialIssue.length; i++) {

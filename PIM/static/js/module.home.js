@@ -123,10 +123,10 @@ app.config(function($stateProvider) {
       }
     })
 
-    .state('home.settings', {
-      url: "/settings",
-      templateUrl: '/static/ngTemplates/app.settings.html',
-      controller: 'businessManagement.settings'
+    .state('home.masterSheet', {
+      url: "/masterSheet",
+      templateUrl: '/static/ngTemplates/app.masterSheet.html',
+      controller: 'businessManagement.masterSheet'
     })
 
     .state('home.projects', {
@@ -139,6 +139,11 @@ app.config(function($stateProvider) {
       url: "/inventory",
       templateUrl: '/static/ngTemplates/app.inventory.html',
       controller: 'businessManagement.inventory'
+    })
+    .state('home.report', {
+      url: "/report",
+      templateUrl: '/static/ngTemplates/app.report.html',
+      controller: 'businessManagement.report'
     })
 
     .state('home.vendor', {

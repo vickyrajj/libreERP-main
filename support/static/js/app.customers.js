@@ -46,9 +46,6 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
 
 
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableData);
-
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'edit') {
@@ -81,7 +78,6 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -146,7 +142,6 @@ app.controller("customer.location.details", function($scope, $state, $users, $st
 app.controller("customer.bankStatement.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$aside) {
 
   $scope.form = {xlFile : emptyFile , success : false}
-  console.log('uploadddddddddd',$scope.$parent.$parent.getParams[0].value);
   $scope.upload = function() {
     if ($scope.form.xlFile == emptyFile) {
       Flash.create('warning' , 'Please Select Proper Excel File')
@@ -219,7 +214,6 @@ app.controller("customer.explore.location", function($scope, $state, $users, $st
   }
 
   $scope.seeLocation = function(dat){
-    console.log(dat);
     $scope.openLocationInfo(dat);
   }
 })
@@ -250,7 +244,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
       data: toSend,
     }).
     then(function(response) {
-      console.log(response.data,'aaaaaaaaaaaaaa');
       $scope.data.profile.mobile = response.data.mobile
       $scope.form.mobile=''
       $scope.status = false
@@ -385,18 +378,14 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   }
 
   $scope.emailtableAction = function(target, action, mode) {
-    console.log(target, action, mode);
     if (mode == 'multi') {
       if (action == 'fetchNew') {
-        console.log('fetch new messagessss');
         $scope.getToken('new')
       }else if (action == 'fetchOld') {
-        console.log('fetch old messagessssssssss');
         $scope.getToken('old')
       }
     }else {
       if (action == 'Info') {
-        console.log("email infooooooo");
         for (var i = 0; i < $scope.dataVal.emailData.length; i++) {
           if ($scope.dataVal.emailData[i].pk == parseInt(target)) {
             $scope.openEmailInfo($scope.dataVal.emailData[i]);
@@ -407,9 +396,7 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   }
 
   $scope.banktableAction = function(target, action, mode) {
-    console.log(target, action, mode);
     if (action == 'Info') {
-      console.log("bank infooooooo");
       for (var i = 0; i < $scope.dataVal.bankStatementsData.length; i++) {
         if ($scope.dataVal.bankStatementsData[i].pk == parseInt(target)) {
           $scope.openbankStatementInfo($scope.dataVal.bankStatementsData[i]);
@@ -418,7 +405,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     }else if (action == 'bankGraph') {
       for (var i = 0; i < $scope.dataVal.bankStatementsData.length; i++) {
         if ($scope.dataVal.bankStatementsData[i].pk == parseInt(target)) {
-          console.log($scope.dataVal.bankStatementsData[i]);
           $scope.dataVal.bankStatementsData[i].showInfo = !$scope.dataVal.bankStatementsData[i].showInfo
         }
       }
@@ -431,7 +417,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
       url: '/api/HR/rawData/?bankstatement=' + dt.pk
     }).
     then(function(response) {
-      console.log(response.data);
       $aside.open({
         templateUrl : '/static/ngTemplates/app.customer.bankStatement.info.html',
         placement: 'right',
@@ -466,19 +451,17 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   }
 
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableData);
 
     if (action == 'fetchLocation') {
 
-      console.log("will fetch location");
+
 
 
       connection.session.publish('service.tracker.7840850111', [] , {}, {
         acknowledge: true
       }).
       then(function(publication) {
-        console.log("Published");
+
       });
 
     }
@@ -500,7 +483,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -552,7 +534,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   // ];
   $scope.chartData = [[],[]];
   $scope.onClick = function (points, evt) {
-    console.log(points, evt);
   };
   $scope.debtVsSavingsChartoptions = {
     scales: {
@@ -574,13 +555,11 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
   $scope.msdCount = [];
 
   $scope.fetchGraphDetils = function(idx){
-    console.log('fetchingggggg on ',$scope.bankRawYearsList[idx]);
     $http({
       method: 'GET',
       url: '/api/HR/fetchGraphData/?year=' + $scope.bankRawYearsList[idx] + '&user=' +  $scope.data.pk
     }).
     then(function(response) {
-      console.log(response.data);
       $scope.chartData = [response.data.debList,response.data.cdtList];
     })
   }
@@ -595,7 +574,6 @@ app.controller("businessManagement.customers.explore", function($scope, $state, 
     url: '/api/HR/userCallHistoryGraph/?user=' + $scope.data.pk
   }).
   then(function(response) {
-    console.log(response.data);
     $scope.incNumber = response.data.incNumber
     $scope.incCount = response.data.incCount
     $scope.outNumber = response.data.outNumber

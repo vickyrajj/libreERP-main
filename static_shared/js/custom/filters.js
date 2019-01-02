@@ -245,6 +245,26 @@ app.filter('getName' , function($users){
   }
 })
 
+app.filter('getEmail' , function($users){
+
+  return function(userUrl , mode){
+    if (typeof userUrl == 'undefined') {
+      return '';
+    }
+    user = $users.get(userUrl);
+    if (mode == 'short') {
+      console.log(user.email,'aaaaaaaa');
+      return user.email;
+    }
+    if (typeof user != 'undefined' && typeof user.email != 'undefined') {
+      console.log(user.email,'hhhhhhhhhhhhh');
+      return user.email;
+    } else {
+      return "";
+    }
+  }
+})
+
 app.filter('newlines', function () {
     return function(text) {
         return text.replace(/\n/g, '<br/>');
