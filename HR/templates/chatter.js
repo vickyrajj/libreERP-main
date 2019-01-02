@@ -2023,7 +2023,6 @@ var myformrating;
 
       var emailId = document.getElementById('emailId').value
 
-
       if (!emailRecieved) {
         ratingForm.email = emailId
       }
@@ -2033,7 +2032,6 @@ var myformrating;
       var star3 = document.getElementById('star-3')
       var star4 = document.getElementById('star-4')
       var star5 = document.getElementById('star-5')
-
 
       // var rating;
       if (star1.checked) {
@@ -2088,7 +2086,6 @@ var myformrating;
   }
 
   closeSupport.style.display = "none";
-
   var chatClosed = false
 
   startNewChatBtn.addEventListener("click" , function () {

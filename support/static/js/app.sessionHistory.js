@@ -437,7 +437,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
   }
   $scope.filterByCreated=function(){
-      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") < $filter('date')(b[0].created, "dd/MM/yyyy");});
+      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") < $filter('date')(b[0].created, "dd/MM/yyyy")});
   }
 
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){

@@ -390,7 +390,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
   }
   $scope.filterByCreated=function(){
-      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") < $filter('date')(b[0].created, "dd/MM/yyyy");});
+      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, 'dd/MM/yyyy') > $filter('date')(b[0].created, 'dd/MM/yyyy')});
   }
 
 
@@ -441,6 +441,10 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   }
 
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
+    $scope.tableUpdated=false
+    setTimeout(function () {
+      $scope.tableUpdated=true
+    }, 150);
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated();
@@ -495,6 +499,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       then(function(response) {
         console.log(response.data,'dddddddddddd',typeof response.data);
         $scope.reviewData=response.data
+        $scope.filterByCreated()
         $scope.loadingData=false;
         $scope.tableUpdated=true
         if(response.data.length<1){
