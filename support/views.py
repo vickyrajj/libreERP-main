@@ -206,9 +206,7 @@ class ReviewFilterCalAPIView(APIView):
                 # print 'a###############',userCustProfile
                 return Response(userCustProfile, status=status.HTTP_200_OK)
             userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
-            # print userCompany
-            # print userCustProfile
-            # print userCompanyUidList
+        
             sobj = SupportChat.objects.filter(uid__in=userCompanyUidList)
         if 'getMyReviews' in self.request.GET:
             sobj = sobj.filter(user = self.request.user)

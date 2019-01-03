@@ -74,7 +74,8 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 
 BRAND_NAME = 'Syrow'
-BRAND_LOGO = '/static/images/cioc_icon.svg'
+BRAND_LOGO = '/static/images/favicon-syrow.png'
+SYROW_LOGO = '/static/images/favicon-syrow.png'
 BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"

@@ -11,6 +11,15 @@ app.config(function($stateProvider,anTinyconProvider) {
         }
       }
     })
+
+    anTinyconProvider.setOptions({
+         width: 7,
+         height: 9,
+         font: "10px arial",
+         colour: "#ffffff",
+         background: "#549A2F",
+         fallback: true
+     });
 });
 
 app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $interval, $uibModal,ngAudio,anTinycon) {
@@ -43,11 +52,26 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     return "";
   }
 
+
+  Tinycon.setOptions({
+  	width: 7,
+  	height: 9,
+  	font: '11px arial',
+  	color: '#ffffff',
+  	background: '#00008B',
+  	fallback: true
+  });
+
   $scope.sound = ngAudio.load("static/audio/notification.ogg");
 
   setInterval(function () {
-    if($scope.newUsers.length>0)
-    $scope.sound.play();
+    if($scope.newUsers.length>0){
+      Tinycon.setBubble($scope.newUsers.length);
+      $scope.sound.play();
+    }else{
+      Tinycon.reset();
+    }
+
   }, 5000);
   $scope.myCompanies = [];
   function fetchUsers() {

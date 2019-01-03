@@ -62,7 +62,7 @@
       <iframe id="iframeChat{{data.uid}}" ng-src="{{data.audioUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
     </div>
 
-    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:5px;padding-top: 5px; height:{{msgDivHeight}}vh; overflow-y:auto; overflow-x:hidden;display:inline-block">
+    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:5px;padding-top: 5px; height:{{msgDivHeight}}vh; overflow-y:auto; overflow-x:hidden;display:inline-block;width:100%">
       <div class="row" ng-if="data.currentUrl" style="background:#f6f6f6;padding:5px;">
         <span>Active : {{data.currentUrl}}</span>
       </div>

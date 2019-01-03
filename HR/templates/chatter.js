@@ -1885,8 +1885,7 @@ function createChatDiv() {
        if (this.readyState == 4 && this.status == 200) {
          console.log('posted successfully');
 
-          setCookie("chatOpenCookie", false, 365);
-
+         setCookie("chatOpenCookie", false, 365);
 
          var dataToSend = {uid:uid , userEndedChat: 'CHAT CLOSED BY USER' , sentByAgent:false };
 
@@ -1897,6 +1896,7 @@ function createChatDiv() {
            console.log("Published to "+agentPk+" to end chat");
          },function(){
            console.log('failed to call '+agentPk+" to end chat");
+           // alert('failed to publish chat close')
          });
        }
      };
@@ -2078,6 +2078,7 @@ var myformrating;
                console.log("Published to "+agentPk+" for feedback");
              },function(){
                 console.log("failed to publish "+agentPk+" for feedback");
+                alert('failed to publish feedback')
              });
          }
        };
@@ -2604,9 +2605,9 @@ var isConfirmedToEnd=false;
           res.forEach((r)=>{
             if (r.match(regex)) {
               str=str.replace(r,'<a href="'+r+'" target="_blank">'+r+'</a>')
-                pTag='<p style="word-break: break-all !important; font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
+                pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
             }else{
-                 pTag='<p style="word-break: break-all !important; font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
+                 pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
             }
           })
           msgDiv = pTag
