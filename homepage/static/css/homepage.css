@@ -766,6 +766,9 @@
   border-top-left-radius: 44px;
   border-top-right-radius: 10px;
 }
+.copy_rights a{
+  color:#222222;
+}
 
 .c_div {
   min-width:75%;

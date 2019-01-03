@@ -112,29 +112,52 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.homepage.about.html',
       // controller: 'controller.about'
     })
-
+  $stateProvider
+    .state('career', {
+      url: "/career",
+      templateUrl: '/ngTemplates/career.html',
+      // controller: 'controller.about'
+    })
   $stateProvider
     .state('testimonials', {
       url: "/testimonials",
       templateUrl: '/static/ngTemplates/app.homepage.testimonials.html',
       controller: 'controller.testimonials'
     })
-    $stateProvider
-      .state('ncert', {
-        url: "/ncert",
-        templateUrl: '/static/ngTemplates/app.homepage.ncert.html',
-        controller: 'controller.ncert'
-      })
+  $stateProvider
+    .state('ncert', {
+      url: "/ncert",
+      templateUrl: '/static/ngTemplates/app.homepage.ncert.html',
+      // controller: 'controller.ncert'
+    })
+  $stateProvider
+    .state('policy', {
+      url: "/policy",
+      templateUrl: '/templates/policy.html',
+      // controller: 'controller.policy'
+    })
+  $stateProvider
+    .state('refund', {
+      url: "/refund",
+      templateUrl: '/templates/refund.html',
+      // controller: 'controller.refund'
+    })
+  $stateProvider
+    .state('terms', {
+      url: "/terms",
+      templateUrl: '/templates/terms.html',
+      // controller: 'controller.terms'
+    })
 });
 
 app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
-    $scope.myObj = {
-       "background-color" : "#DDF6FB",
-    }
-    $scope.myObjcolor = {
-       "background-color" : "#E5E7FC",
-    }
+  $scope.myObj = {
+    "background-color": "#DDF6FB",
+  }
+  $scope.myObjcolor = {
+    "background-color": "#E5E7FC",
+  }
 
 });
 
@@ -208,8 +231,8 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
   $scope.properties = {
     lazyLoad: true,
     dots: true,
-    autoplay:true,
-    autoplayTimeout:3000,
+    autoplay: true,
+    autoplayTimeout: 3000,
     URLhashListener: true,
     autoplayHoverPause: true,
     startPosition: 'URLHash',
