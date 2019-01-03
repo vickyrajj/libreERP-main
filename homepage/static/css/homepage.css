@@ -1,10 +1,8 @@
 /*properties for normal screen size starts here  */
-/* for normal screens ends here.... */
-@media only screen and (min-width:1500px) {
-  /* for hd screens starts here.... */
-  /* for hd screens ends here.... */
+.fa-fw{
+  padding-right:1.55em !important;
+  font-size: 1.13em;
 }
-
 .header_element {
   position: relative;
 }
@@ -14,7 +12,7 @@
   top: 43px;
   left: 10px;
   padding: 0px;
-  background-color: #0e0e0e;
+  background-color: #222222;
   box-shadow: 1px 1px 8px 0 rgba(70, 70, 70, 0.25);
   margin: 2px;
   display: flex;
@@ -63,8 +61,6 @@
   box-shadow: 0px 1px 4px rgba(26, 24, 20, 0.2);
 }
 
-/*8888888888888888888888888888888888****************************************************************************************  */
-/*  */
 /* for 24 tutututututu */
 /*  */
 .home_header {
@@ -275,7 +271,7 @@
 }
 
 .on_right {
-  bottom: 0;
+  bottom: -5px;
   right: 0;
   width: 10%;
 }
@@ -740,6 +736,9 @@
   font-size: 20px;
 }
 
+.nc_links{
+  line-height: 2;
+}
 .footer:last-child li::before {
   display: none;
 }
@@ -787,8 +786,8 @@
 .tell_abt_overlay {
   display: none;
   position: absolute;
-  left: 64px;
-  top: 23px;
+  left: 65px;
+  top: 24px;
 }
 
 .tell_card {
@@ -879,6 +878,8 @@
   padding: 3em;
   border-radius: 10px;
   width: 90%;
+  border-top-left-radius: 44px;
+
 }
 
 .topleft {
@@ -1400,6 +1401,18 @@
 
 .stucardtext {
   margin-top: 5em;
+}
+/* for normal screens ends here.... */
+
+
+
+@media only screen and (min-width:1500px) {
+  /* for hd screens starts here.... */
+  .tell_abt_overlay {
+    left: 65px;
+    top: 25px;
+  }
+  /* for hd screens ends here.... */
 }
 
 .stucardtext1 {

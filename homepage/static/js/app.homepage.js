@@ -119,6 +119,12 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.homepage.testimonials.html',
       controller: 'controller.testimonials'
     })
+    $stateProvider
+      .state('ncert', {
+        url: "/ncert",
+        templateUrl: '/static/ngTemplates/app.homepage.ncert.html',
+        controller: 'controller.ncert'
+      })
 });
 
 app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {

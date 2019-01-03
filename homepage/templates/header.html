@@ -1,11 +1,24 @@
 {% load i18n %}
 
-<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#0e0e0e;border:0px solid black;padding-top:7px;min-height:65px;">
+<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#222222;border:0px solid #222222;padding:10px;">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     {% verbatim %}
-    <div class="navbar-header">
-      <a class="navbar-brand" href="/" style="padding:0px;"> <img src="/static/images/24tut/icon_grad.svg" alt="" style="height:100%;"> </a>
+    <div class="col-md-12" style="border-bottom:1px solid #656565;padding:3px;">
+      <div class=""style="color:#656565">
+        <i class="fa fa-facebook-square fa-fw" aria-hidden="true"></i>
+        <i class="fa fa-youtube-play fa-fw" aria-hidden="true"></i>
+        <!-- <i class="fa fa-twitter fa-fw" aria-hidden="true"></i>
+        <i class="fa fa-google fa-fw" aria-hidden="true"></i> -->
+        <div class="pull-right">
+          <span><i class="fa fa-key fa-fw" aria-hidden="true"></i>Sign in</span>&emsp;
+          <span><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i>Register</span>
+         </div>
+      </div>
+
+    </div>
+    <div class="navbar-header" style="padding-top:7px;">
+      <a class="navbar-brand" href="/" style="padding:0px;"> <img src="/static/images/24tut/icon_grad.svg" height="75%"> </a>
 
       <div class="navbar-toggle toggleBtn" data-toggle="collapse" data-target="#myNavbar" ng-click="toggleNavbar = !toggleNavbar" style="border:none;">
         <span class="icon-bar"></span>
@@ -14,9 +27,7 @@
       </div>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar" uib-collapse="!toggleNavbar">
-
       <ul class="nav navbar-nav header_nav {{device.smallDevice?'pull-left':'pull-right'}}">
-
         <li class="header_element">
           <a href="" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true" class="nav_ele"> Courses</a>
           <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box">
@@ -33,7 +44,7 @@
         <li class="header_element">
           <a href="" ng-mouseleave="show[2]=false" ng-mouseover="show[2]=true" class="nav_ele"> Study Material</a>
           <ul ng-mouseleave="keepshow[2]=false" ng-click="keepshow[2] = false; toggleNavbar = false;" ng-mouseover="keepshow[2]=true" ng-show="show[2]||keepshow[2]" class="container_box">
-            <li><a href="">NCERT Solutions</a></li>
+            <li><a href="/ncert">NCERT Solutions</a></li>
             <li><a href="">Previous Year Papers</a></li>
             <li><a href="">Mock Tests</a></li>
             <li><a href="">Sample Papers</a></li>
