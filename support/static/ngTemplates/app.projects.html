@@ -28,6 +28,15 @@
             <generic-Table data="data.archieveData" config-Obj="{{archieveConfig}}" callback-Fn="tableActionArchieve"></generic-Table>
           </div>
         </uib-tab>
+        <uib-tab>
+          <uib-tab-heading>
+            Junk
+            <i class="fa fa-list-ul"></i>
+          </uib-tab-heading>
+          <div class="container-fluid">
+            <generic-Table data="data.junkData" config-Obj="{{junkConfig}}" callback-Fn="tableActionJunk"></generic-Table>
+          </div>
+        </uib-tab>
         <!-- <uib-tab >
           <uib-tab-heading>
             Pending Approval
@@ -66,10 +75,13 @@
           <div ng-if="tab.app == 'projectarchieveDetails'">
             <div ng-include="'/static/ngTemplates/app.projects.archieve.explore.html'"></div>
           </div>
+          <div ng-if="tab.app == 'projectjunkDetails'">
+            <div ng-include="'/static/ngTemplates/app.projects.junk.explore.html'"></div>
+          </div>
           <div ng-if="tab.app == 'projectDetails'">
             <div ng-include="'/static/ngTemplates/app.projects.service.view.html'"></div>
           </div>
-          <div ng-if="tab.app == 'bomDetails'">
+          <!-- <div ng-if="tab.app == 'bomDetails'">
             <div ng-include="'/static/ngTemplates/app.projects.approval.view.html'"></div>
           </div>
           <div ng-if="tab.app == 'bomApproved'">
@@ -77,7 +89,7 @@
           </div>
           <div ng-if="tab.app == 'invoiceDetails'">
             <div ng-include="'/static/ngTemplates/app.projects.invoice.view.html'"></div>
-          </div>
+          </div> -->
         </uib-tab>
 
       </uib-tabset>

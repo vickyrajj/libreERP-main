@@ -94,7 +94,7 @@ class ProjectsViewSet(viewsets.ModelViewSet):
     queryset = Projects.objects.all().order_by('-created')
     serializer_class = ProjectsSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['status','title','savedStatus']
+    filter_fields = ['status','title','savedStatus','junkStatus']
 
 class VendorViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -1425,11 +1425,7 @@ class DownloadProjectSCExcelReponse(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def get(self , request , format = None):
         workbook = Workbook()
-
-
-        # ... worksheet.append(...) all of your data ...
-
-        projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False)
+        projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,junkStatus=False)
         projectsObj = list(projectObj.values('comm_nr').distinct().values())
         sendData =[]
         for idx,p in enumerate(projectsObj):
@@ -1458,10 +1454,10 @@ class DownloadProjectSCExcelReponse(APIView):
                                     qtyOrdered=0
                                     stockConsumed=m.qty
                             Sheet1.append([i.vendor.name, m.product.part_no,m.product.description_1,qtyOrdered,m.price,stockConsumed])
-
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
         return response
+
 
 
 
@@ -1487,7 +1483,7 @@ class CreateStockReportDataAPIView(APIView):
         print 'total valueeeeeeeeeee',stockTotal
         if stockTotal>0:
             ssReportObj = StockSummaryReport.objects.create(dated=dt,stockValue=stockTotal)
-            projectsObjs=Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,created__lte=dtime)
+            projectsObjs=Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,junkStatus=False,created__lte=dtime)
             print projectsObjs.count()
             projStackSummary = []
             for i in projectsObjs:
@@ -1555,7 +1551,7 @@ class DownloadStockReportAPIView(APIView):
 class DownloadInvoiceReportAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False)
+        projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),junkStatus=False,savedStatus=False)
         toReturn = [['Purchase Order Ref','Supplier','Invoice No.','BOE']]
         for p in projectObj:
             sam = []

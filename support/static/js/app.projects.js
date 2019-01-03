@@ -23,7 +23,8 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
   $scope.data = {
     tableData: [],
-    archieveData: []
+    archieveData: [],
+    junkData:[]
   };
 
   views = [{
@@ -43,12 +44,16 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     getParams: [{
       key: 'savedStatus',
       value: false
+    },
+    {
+      key: 'junkStatus',
+      value: false
     }],
     searchField: 'title',
   }
 
 
-  views = [{
+  archieveviews = [{
     name: 'list',
     icon: 'fa-th-large',
     template: '/static/ngTemplates/genericTable/genericSearchList.html',
@@ -56,7 +61,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
   }, ];
 
   $scope.archieveConfig = {
-    views: views,
+    views: archieveviews,
     url: '/api/support/projects/',
     // filterSearch: true,
     // searchField: 'title',
@@ -73,6 +78,32 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
   ],
     searchField: 'title',
   }
+
+  junkveviews = [{
+    name: 'list',
+    icon: 'fa-th-large',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.projects.junk.item.html',
+  }, ];
+
+  $scope.junkConfig = {
+    views: junkveviews,
+    url: '/api/support/projects/',
+    // filterSearch: true,
+    // searchField: 'title',
+    deletable: true,
+    itemsNumPerView: [12, 21, 30],
+    getParams: [{
+      key: 'junkStatus',
+      value: true
+    }
+  ],
+    searchField: 'title',
+  }
+
+
+
+
   $scope.data1 = {
     tableData: []
   };
@@ -164,8 +195,12 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
           var title = 'Project Details : ';
           var appType = 'projectDetails';
         } else if (action == 'delete') {
+          var dataSend={
+            junkStatus:true
+          }
           $http({
-            method: 'DELETE',
+            method: 'PATCH',
+            data:dataSend,
             url: '/api/support/projects/' + $scope.data.tableData[i].pk + '/'
           }).
           then(function(response) {
@@ -202,6 +237,29 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
         $scope.addTab({
           title: title + $scope.data.archieveData[i].title,
+          cancel: true,
+          app: appType,
+          data: {
+            pk: target,
+            index: i
+          },
+          active: true
+        })
+      }
+    }
+
+  }
+  $scope.tableActionJunk = function(target, action, mode) {
+    console.log("heeeeeeeerrrrrrrrrrrreeeeeeeee");
+    for (var i = 0; i < $scope.data.junkData.length; i++) {
+      if ($scope.data.junkData[i].pk == parseInt(target)) {
+        if (action == 'details') {
+          var title = 'Details :';
+          var appType = 'projectjunkDetails';
+        }
+
+        $scope.addTab({
+          title: title + $scope.data.junkData[i].title,
           cancel: true,
           app: appType,
           data: {
@@ -577,7 +635,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   })
 
   $scope.data = []
-
+  $scope.showButton = true
   $scope.addTableRow = function(indx) {
     $scope.data.push({
       part_no: '',
@@ -601,6 +659,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       landed_price: 0,
       customs_no:0
     });
+    $scope.showButton = false
   }
   $scope.options = false
   $scope.showOption = function() {
@@ -717,6 +776,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }
       $scope.form.invoiceValue = tot
       $scope.updateAll()
+      $scope.showButton=true
       // $rootScope.allData =  $scope.projects
 
     })
@@ -727,6 +787,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   $scope.productpk = []
   $scope.fetchData()
   $scope.$watch('projects', function(newValue, oldValue) {
+
     var cost = 0
     var cost = $scope.form.invoiceValue
     for (var i = 0; i < newValue.length; i++) {
@@ -780,6 +841,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     if (typeof newValue[0] == 'undefined') {
 
     } else if (typeof newValue[0].part_no == 'object') {
+      $scope.showButton = true
       $scope.data[$scope.data.length - 1] = newValue[0].part_no
       $scope.data[$scope.data.length - 1].quantity1 = 1
       var totalprice = $scope.data[$scope.data.length - 1].price * $scope.data[$scope.data.length - 1].quantity1
@@ -811,6 +873,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         return
       })
     } else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
+      $scope.showButton = true
       var cost = 0
       cost = $scope.form.invoiceValue
 
@@ -2091,6 +2154,7 @@ app.controller("businessManagement.projects.archieve.explore", function($scope, 
     }
   }
   $scope.fetchData = function() {
+
     $http({
       method: 'GET',
       url: '/api/support/bom/?project=' + $scope.form.pk
@@ -2106,6 +2170,7 @@ app.controller("businessManagement.projects.archieve.explore", function($scope, 
         tot += totalprice
       }
       $scope.form.invoiceValue = tot
+
       // $scope.updateAll()
       // $rootScope.allData =  $scope.projects
 
@@ -2210,3 +2275,90 @@ app.controller("businessManagement.projects.archieve.explore", function($scope, 
 //     }
 //   }
 // })
+
+app.controller("businessManagement.projects.junk.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+  $scope.form = $scope.data.junkData[$scope.tab.data.index]
+  $scope.projects = []
+  $scope.materialIssue = []
+
+
+  // $scope.updateAll = function() {
+  //   for (var i = 0; i < $scope.projects.length; i++) {
+  //     $scope.projects[i].quotePrice = parseFloat((($scope.form.profitMargin * $scope.projects[i].price) / 100 + $scope.projects[i].price).toFixed(2))
+  //     $scope.projects[i].inrPrice = parseFloat(($scope.projects[i].price * $scope.form.exRate).toFixed(2))
+  //     $scope.projects[i].packing = parseFloat(((($scope.form.packing/ $scope.form.invoiceValue) * $scope.projects[i].inrPrice)).toFixed(2))
+  //     $scope.projects[i].insurance = parseFloat(((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.projects[i].inrPrice)).toFixed(2))
+  //     $scope.projects[i].freight = parseFloat(((($scope.form.freight / $scope.form.invoiceValue) * $scope.projects[i].inrPrice)).toFixed(2))
+  //     $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+  //     $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
+  //     $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif +(($scope.projects[i].cif * $scope.form.assessableValue)/100))*($scope.projects[i].custom)/100).toFixed(2))
+  //     $scope.projects[i].socialVal = parseFloat(($scope.projects[i].customVal *0.1).toFixed(2))
+  //     $scope.projects[i].gstVal = parseFloat(($scope.projects[i].cif+$scope.projects[i].customVal+$scope.projects[i].socialVal)*($scope.projects[i].gst)/100).toFixed(2)
+  //     $scope.projects[i].charge1 = parseFloat(($scope.projects[i].inrPrice * ($scope.form.clearingCharges1 / ($scope.form.invoiceValue * $scope.form.exRate))).toFixed(2))
+  //     $scope.projects[i].charge2 = parseFloat(($scope.projects[i].inrPrice * ($scope.form.clearingCharges2 / ($scope.form.invoiceValue * $scope.form.exRate))).toFixed(2))
+  //     $scope.projects[i].landed_price = (($scope.projects[i].cif + $scope.projects[i].customVal + $scope.projects[i].socialVal + $scope.projects[i].charge1 + $scope.projects[i].charge2).toFixed(2))
+  //   }
+  //
+  // }
+
+  function sum(data) {
+    if (data == $scope.materialIssue) {
+      return data.map(function(m) {
+        return m.qty * m.price
+      }).reduce(function(a, b) {
+        return a + b
+      }, 0)
+    } else if (data == $scope.projects) {
+      return data.map(function(m) {
+        return m.quantity1 * m.price
+      }).reduce(function(a, b) {
+        return a + b
+      }, 0)
+    }
+  }
+  $scope.fetchData = function() {
+
+    $http({
+      method: 'GET',
+      url: '/api/support/bom/?project=' + $scope.form.pk
+    }).
+    then(function(response) {
+      $scope.projects = response.data
+      $scope.purchaseSum = sum($scope.projects)
+      var tot = 0
+      console.log($scope.purchaseSum,'kkkkkkkkkkkkkkkkkk');
+      $scope.form.invoiceValue = 0
+      for (var i = 0; i < $scope.projects.length; i++) {
+        var totalprice = $scope.projects[i].price * $scope.projects[i].quantity1
+        tot += totalprice
+      }
+      $scope.form.invoiceValue = tot
+
+      // $scope.updateAll()
+      // $rootScope.allData =  $scope.projects
+
+    })
+  }
+
+    $scope.fetchMaterial = function(){
+      $http({
+        method: 'GET',
+        url: '/api/support/material/?project=' + $scope.form.pk,
+      }).
+      then(function(response) {
+        for (var i = 0; i < response.data.length; i++) {
+          console.log(response.data,'jjjjjjjjjjjjj');
+          for (var j = 0; j < response.data[i].materialIssue.length; j++) {
+            $scope.materialIssue.push(response.data[i].materialIssue[j])
+            $scope.materialSum = sum($scope.materialIssue)
+          }
+        }
+      })
+    }
+
+
+
+  $scope.fetchData()
+  $scope.fetchMaterial()
+
+})
