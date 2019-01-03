@@ -1801,12 +1801,12 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
       mobile:response.data.mobile
     }
 
-    if (response.data.isGST == 'True') {
+    if (response.data.isGST) {
       $scope.isGst = true
+      $scope.detailsForm.gst = response.data.gst
     }else {
       $scope.isGst = false
     }
-    // alert($scope.isGst)
 
   })
   $scope.editMode = false
@@ -1831,9 +1831,14 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
         firstName:response.data.firstName,
         lastName:response.data.lastName,
         email:response.data.email,
-        mobile:response.data.mobile,
-        gst:response.data.gst
+        mobile:response.data.mobile
       }
+
+      if ($scope.isGst) {
+        $scope.detailsForm.gst = response.data.gst
+      }
+
+
       $scope.editMode = false
       Flash.create('success','Saved Successfully')
     })
@@ -2200,9 +2205,10 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
                 $scope.state = 'cancel';
                 $scope.items = items;
                 $scope.amtToBeRefunded = 0;
+                $scope.currency = settings_currencySymbol
 
                 for (var i = 0; i < $scope.items.length; i++) {
-                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + ($scope.items[i].ppAfterDiscount.toFixed(2) * $scope.items[i].qty)
+                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + $scope.items[i].paidAmount
                 }
 
                 $scope.cancel = function() {
@@ -2275,9 +2281,10 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
                 $scope.state = 'return';
                 $scope.items = items;
                 $scope.amtToBeRefunded = 0;
+                $scope.currency = settings_currencySymbol
 
                 for (var i = 0; i < $scope.items.length; i++) {
-                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + (($scope.items[i].totalAmount - $scope.items[i].discountAmount) * $scope.items[i].qty)
+                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + $scope.items[i].paidAmount
                 }
 
                 $scope.return = function() {

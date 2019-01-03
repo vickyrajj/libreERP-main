@@ -700,6 +700,15 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
             return response.data.results;
           })
         }
+        $scope.isStoreGlobal = false;
+        $http.get('/api/ERP/appSettings/?app=25&name__iexact=isStoreGlobal').
+        then(function(response) {
+          if (response.data[0] != null) {
+              $scope.isStoreGlobal =response.data[0].value
+            }
+          })
+
+        console.log($scope.newForm);
         $scope.saveNewOrder = function(){
           console.log($scope.newForm);
           var np = $scope.newForm
@@ -707,13 +716,20 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
             Flash.create('warning','Please Select Suggested Product')
             return
           }
+          var totalAmnt;
+          if (!$scope.isStoreGlobal) {
+             totalAmnt = np.product.product.price + np.product.product_taxAmount
+          }else {
+             totalAmnt = np.product.product.price
+          }
+
           $http({
             method: 'POST',
             url: '  /api/ecommerce/orderQtyMap/',
             data: {
               product: np.product.pk,
               qty: np.qty,
-              totalAmount: np.product.product.price,
+              totalAmount: totalAmnt,
               prodSku: np.product.product.serialNo,
               discountAmount: 0,
             }

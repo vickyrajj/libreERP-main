@@ -149,7 +149,7 @@
     <img src={{genericImage.topBanner}} style="width:100%" alt="">
   </div>
   <div ng-if="topStaticBanner" class="col-md-12 hidden-lg hidden-md" style="padding:20vh 0 0 0;position:relative; width:100%; text-align:center">
-    <img src="{{genericImage.topMobileBanner}}" style="width:50%;" alt="">
+    <img src="{{genericImage.topMobileBanner}}" style="width:100%;" alt="">
   </div>
 <div ng-if="$state.is('ecommerce') && bannerText && bannerImage" style="position:relative;height:70vh;padding-top:9.4vh;;margin-bottom:20px;width:100%;display:border-box;overflow:hidden;background-size:cover;" class="card hidden-xs hidden-sm">
   <img style="width:100%;cursor:pointer;height:57vh;background-attachment: fixed;background-position: center;" ng-repeat="b in slide.banners" ng-if="$index == slide.active" ng-src="{{b.image}}" ng-click="$state.go('pages' , {title : b.title.split(' ').join('-').toLowerCase()})"/>
