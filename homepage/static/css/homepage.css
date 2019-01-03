@@ -1,10 +1,8 @@
 /*properties for normal screen size starts here  */
-/* for normal screens ends here.... */
-@media only screen and (min-width:1500px) {
-  /* for hd screens starts here.... */
-  /* for hd screens ends here.... */
+.fa-fw{
+  padding-right:1.55em !important;
+  font-size: 1.13em;
 }
-
 .header_element {
   position: relative;
 }
@@ -14,7 +12,7 @@
   top: 43px;
   left: 10px;
   padding: 0px;
-  background-color: #0e0e0e;
+  background-color: #222222;
   box-shadow: 1px 1px 8px 0 rgba(70, 70, 70, 0.25);
   margin: 2px;
   display: flex;
@@ -275,7 +273,7 @@
 }
 
 .on_right {
-  bottom: 0;
+  bottom: -5px;
   right: 0;
   width: 10%;
 }
@@ -785,8 +783,8 @@
 .tell_abt_overlay {
   display: none;
   position: absolute;
-  left: 64px;
-  top: 23px;
+  left: 65px;
+  top: 24px;
 }
 
 .tell_card {
@@ -1185,7 +1183,17 @@
 .borderstyle3 {
   border-right: 1px solid #fff;
 }
+/* for normal screens ends here.... */
 
+
+@media only screen and (min-width:1500px) {
+  /* for hd screens starts here.... */
+  .tell_abt_overlay {
+    left: 65px;
+    top: 25px;
+  }
+  /* for hd screens ends here.... */
+}
 @media only screen and (max-width:768px) {
 
   /* mobile display size starts here.... */
