@@ -61,8 +61,6 @@
   box-shadow: 0px 1px 4px rgba(26, 24, 20, 0.2);
 }
 
-/*8888888888888888888888888888888888****************************************************************************************  */
-/*  */
 /* for 24 tutututututu */
 /*  */
 .home_header {
@@ -738,6 +736,9 @@
   font-size: 20px;
 }
 
+.nc_links{
+  line-height: 2;
+}
 .footer:last-child li::before {
   display: none;
 }
@@ -877,6 +878,8 @@
   padding: 3em;
   border-radius: 10px;
   width: 90%;
+  border-top-left-radius: 44px;
+
 }
 .topleft {
   position: absolute;
