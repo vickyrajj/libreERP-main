@@ -99,6 +99,8 @@ from io import BytesIO
 import sendgrid
 import os
 from svglib.svglib import svg2rlg
+import re
+
 
 # from sendgrid.helpers.mail import *
 
@@ -362,9 +364,11 @@ class CreateOrderAPI(APIView):
                 else:
                     b=0
                     finalTaxAmount = 0
+                priceDuringOrder = pp
             else:
                 prodVar = ProductVerient.objects.get(sku = i['prodSku'])
                 pp = prodVar.discountedPrice
+                priceDuringOrder = pp
                 if prodVar.parent.productMeta:
                     ptaxRate = prodVar.parent.productMeta.taxRate
                     taxAmount = int(round((pp * ptaxRate)/100))
@@ -383,11 +387,10 @@ class CreateOrderAPI(APIView):
             pDiscAmount = pDiscAmount * i['qty']
             qtyGst = finalTaxAmount * i['qty']
             orderGst += qtyGst
-
             qtyTotal = b * i['qty']
             totalAmount += qtyTotal
 
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(qtyTotal)),'discountAmount':pDiscAmount,'prodSku':i['prodSku'],'desc':i['desc'],'gstAmount':qtyGst})
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(qtyTotal)),'discountAmount':pDiscAmount,'prodSku':i['prodSku'],'desc':i['desc'],'gstAmount':qtyGst,'priceDuringOrder':priceDuringOrder})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:
@@ -453,6 +456,13 @@ class CreateOrderAPI(APIView):
             'billingPincode' : str(request.data['billingAddress']['pincode']),
             'billingCountry' : str(request.data['billingAddress']['country']),
             }
+
+            try:
+                countryCode = Countries.objects.filter(name__iexact = str(request.data['address']['country']))
+                data['countryCode'] = countryCode.sortname
+            except :
+                pass
+
             if len(str(request.data['promoCode'])) > 0:
                 data['promoCode'] = str(request.data['promoCode'])
             print data
@@ -581,6 +591,18 @@ class CreateOrderAPI(APIView):
                 isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
             except:
                 isStoreGlobal = False
+            try:
+                companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+                cleanr = re.compile('<.*?>')
+                companyAddress = re.sub(cleanr, '', companyAddress)
+                print companyAddress ,'&****************************************************'
+            except:
+                companyAddress = ''
+                print companyAddress ,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2'
+            try:
+                gstValue = appSettingsField.objects.filter(name='gst')[0].value
+            except:
+                gstValue = ''
             if orderObj.user.email and orderObj.paymentMode == 'COD':
                 ctx = {
                     'heading' : "Invoice Details",
@@ -597,7 +619,9 @@ class CreateOrderAPI(APIView):
                     'linkedinUrl' : lkLink,
                     'fbUrl' : fbLink,
                     'twitterUrl' : twtLink,
-                    'isStoreGlobal':isStoreGlobal
+                    'isStoreGlobal':isStoreGlobal,
+                    'companyAddress':companyAddress,
+                    'gstValue':gstValue
                 }
                 print ctx
                 email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
@@ -1105,9 +1129,9 @@ def manifest(response,item,typ,filTyp,packingSlip):
         sku = str(item.product.product.serialNo)+ ''
         skuP =  Paragraph("<para fontSize=8>{0}</para>".format(sku),styles['Normal'])
         pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(name),styles['Normal'])
-        tableData.append([pd,item.totalAmount,item.qty,item.discountAmount,(item.totalAmount-item.discountAmount) * item.qty])
+        tableData.append([pd,item.priceDuringOrder,item.qty,item.discountAmount,(item.priceDuringOrder-item.discountAmount) * item.qty])
         tableDataPackingSlip.append([sku,pd,item.qty])
-        txtData.append('{0} , {1} , {2} , {3} , {4}'.format(name,item.totalAmount,item.qty,item.discountAmount,(item.totalAmount-item.discountAmount) * item.qty))
+        txtData.append('{0} , {1} , {2} , {3} , {4}'.format(name,item.priceDuringOrder,item.qty,item.discountAmount,(item.priceDuringOrder-item.discountAmount) * item.qty))
     if not packingSlip:
         tableData.append(['TOTAL','','','',total])
         txtData.append('TOTAL , ' ' , ' ' , ' ' , {0}'.format(total))
@@ -1346,6 +1370,16 @@ class SendDeliveredStatus(APIView):
         grandTotal=round(grandTotal, 2)
         attachment =  oq.product.files.values_list('attachment', flat=True)
         print '**************************'
+        try:
+            companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+            cleanr = re.compile('<.*?>')
+            companyAddress = re.sub(cleanr, '', companyAddress)
+        except:
+            companyAddress = ''
+        try:
+            gstValue = appSettingsField.objects.filter(name='gst')[0].value
+        except:
+            gstValue = ''
         ctx = {
             'heading' : "Invoice Details",
             'linkUrl': globalSettings.BRAND_NAME,
@@ -1360,6 +1394,8 @@ class SendDeliveredStatus(APIView):
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
+            'companyAddress':companyAddress,
+            'gstValue':gstValue
         }
         print ctx
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
@@ -1715,8 +1751,8 @@ def genInvoice(response, contract, request):
         print i.desc,'ssssssssssssss'
         if str(i.status)!='cancelled':
             if i.prodSku == i.product.product.serialNo:
-                print i.product.product.name, i.product.product.discount, i.product.product.price
-                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                print i.product.product.name, i.product.product.discount, i.priceDuringOrder
+                price = i.priceDuringOrder - (i.product.product.discount * i.priceDuringOrder)/100
                 price=round(price, 2)
                 totalprice = i.qty*price
                 totalprice=round(totalprice, 2)
@@ -2268,6 +2304,18 @@ def paypal_return_view(request):
         isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
     except:
         isStoreGlobal = False
+    try:
+        companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+        cleanr = re.compile('<.*?>')
+        companyAddress = re.sub(cleanr, '', companyAddress)
+    except:
+        companyAddress = ''
+
+    try:
+        gstValue = appSettingsField.objects.filter(name='gst')[0].value
+    except:
+        gstValue = ''
+
     if orderObj.user.email:
         ctx = {
             'heading' : "Invoice Details",
@@ -2284,7 +2332,9 @@ def paypal_return_view(request):
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
-            'isStoreGlobal':isStoreGlobal
+            'isStoreGlobal':isStoreGlobal,
+            'companyAddress':companyAddress,
+            'gstValue':gstValue
         }
         print ctx
         contactData = []
@@ -2444,7 +2494,14 @@ def updateAndProcessOrder(orderID , amnt):
     orderObj.user.cartItems.all().delete()
     print orderObj.user.email, 'email'
     print 'semndddddddddddddddd emaillllllllll'
-
+    try:
+        companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+    except:
+        companyAddress = ''
+    try:
+        gstValue = appSettingsField.objects.filter(name='gst')[0].value
+    except:
+        gstValue = ''
 
     if orderObj.user.email:
         ctx = {
@@ -2462,7 +2519,9 @@ def updateAndProcessOrder(orderID , amnt):
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
-            'isStoreGlobal':isStoreGlobal
+            'isStoreGlobal':isStoreGlobal,
+            'companyAddress':companyAddress,
+            'gstValue':gstValue
         }
         print ctx
         contactData = []
@@ -2579,7 +2638,11 @@ class CreateShipmentAPI(APIView):
         print request.GET ,'ddddddddd'
         order = Order.objects.get(pk = int(request.GET['orderPk']))
         recipientName =  order.user.first_name + ' ' + order.user.last_name
-        recipientPhone = str(order.mobileNo)
+        print type(order.mobileNo) ,'hhhhhhhhhhhh'
+        try:
+            recipientPhone = int(order.mobileNo)
+        except :
+            recipientPhone = 9999
         recipientAddress = str(order.landMark) +" "+ str(order.street)
         city = order.city
         state = order.stateCode
@@ -2674,12 +2737,12 @@ class UserProfileSettingAPI(APIView):
                     details['GST'] = request.data['gst']
                     pobj.details = str(details)
                     pobj.save()
-            # pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile}
-            # gst = request.data['gst']
-            # mobile = request.data['mobile']
-            # user.firstName = firstName
-            # user.lastName = lastName
-            # user.email = email
-            # user.save()
-            # {'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst},
+            toReturn['passwordChanged'] = False
+            if 'oldPassword' in request.data:
+                if authenticate(username = user.username , password = request.data['oldPassword']) is not None:
+                    user.set_password(request.data['newPassword'])
+                    user.save()
+                    toReturn['passwordChanged'] = True
+                else:
+                    raise PermissionDenied(detail={'PARAMS':'Password missmatch'})
             return Response(toReturn, status = status.HTTP_200_OK)

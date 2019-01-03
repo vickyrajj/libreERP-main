@@ -154,8 +154,12 @@ def loginView(request):
         else:
             password = request.POST['password']
         if '@' in usernameOrEmail and '.' in usernameOrEmail:
-            u = User.objects.get(email = usernameOrEmail)
-            username = u.username
+            try:
+                u = User.objects.get(email = usernameOrEmail)
+                username = u.username
+            except:
+                statusCode = 404
+                username = usernameOrEmail
         else:
             username = usernameOrEmail
             try:

@@ -93,6 +93,7 @@
               <p class="help-block">Generate Manifest for selected orders</p>
             </div>
           </div>
+
           <div class="col-md-5" style="font-size:19px" ng-if="checkConditions.changeStatus && order.status!='failed'">
             <span class="text-muted ">Change Status To </span> &nbsp;
             <div class="btn btn-warning">
@@ -105,8 +106,8 @@
               <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatusForAll('returnToOrigin')" confirm-button-type="default" cancel-button-type="default" ng-if="order.orderQtyMap[0].status=='delivered'">ReturnToOrigin</span>
               <span mwl-confirm title="Change Status" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatusForAll('returned')" confirm-button-type="default" cancel-button-type="default" ng-if="order.orderQtyMap[0].status=='returnToOrigin'">Returned</span>
             </div>
-
           </div>
+
           <div class="col-md-3 pull-right" ng-if="order.status!='failed' && order.orderQtyMap[0].courierName!=null && order.orderQtyMap[0].courierAWBNo!=null">
             <row ng-if="checkConditions.thirdParty">
               <div class="row">
@@ -200,10 +201,10 @@
             <div class="row">
               <div class="col-md-4" >
                 <div class="col-md-8" style="padding:0px" ng-if="checkConditions.showGst&&pData.product.product_taxAmount>0">
-                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.productPrice}} ( <b>+</b> {{pData.product.product_taxAmount}} )</span>
+                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.priceDuringOrder}} ( <b>+</b> {{pData.product.product_taxAmount}} )</span>
                 </div>
                 <div class="col-md-8" style="padding:0px" ng-if="!checkConditions.showGst||pData.product.product_taxAmount==0">
-                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.productPrice}}</span>
+                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.priceDuringOrder}}</span>
                 </div>
                 <div class="col-md-4" style="padding:0px">
                   <span style="font-size:15px;">Quantity : {{pData.qty}}</span>

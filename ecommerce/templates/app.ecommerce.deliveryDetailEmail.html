@@ -327,6 +327,10 @@
               <hr>
               <p>Kind Regards,</p>
               <h3>Team {{sendersAddress}}</h3>
+              {% if isStoreGlobal == False %}
+              <p>GSTIN: {{gstValue}}</p>
+              {% endif %}
+              <p> {{companyAddress}} </p>
             </th>
           </tr>
         </table>
