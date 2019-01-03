@@ -443,11 +443,16 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") < $filter('date')(b[0].created, "dd/MM/yyyy")});
   }
 
+
+  var counttt=0
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
-    $scope.tableUpdated=false
-    setTimeout(function () {
-      $scope.tableUpdated=true
-    }, 300);
+    counttt++;
+    if(counttt>1){
+      $scope.tableUpdated=false
+      setTimeout(function () {
+        $scope.tableUpdated=true
+      }, 100);
+    }
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated();

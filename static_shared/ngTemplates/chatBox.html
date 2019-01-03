@@ -62,7 +62,7 @@
       <iframe id="iframeChat{{data.uid}}" ng-src="{{data.audioUrl | trusted}}" scrolling="no" style="height:100%; width:100%; border:1px solid #e0e0e0;"></iframe>
     </div>
 
-    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:10px;padding-top: 5px; height:{{msgDivHeight}}vh; overflow-y:auto; overflow-x:hidden;">
+    <div class="container-fluid" id="scrollArea{{data.uid}}" style="margin-left:5px;padding-top: 5px; height:{{msgDivHeight}}vh; overflow-y:auto; overflow-x:hidden;display:inline-block">
       <div class="row" ng-if="data.currentUrl" style="background:#f6f6f6;padding:5px;">
         <span>Active : {{data.currentUrl}}</span>
       </div>
@@ -77,7 +77,7 @@
         <div class="row container-fluid">
           <div ng-if="!message.logs" style="float:{{message.sentByAgent ? 'right; background-color:#E4E5E9; ':'left; background-color:#DDF7C8;'}} padding:10px;margin:8px;border-radius:{{message.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
             <p ng-if="message.message.length>0 && message.attachmentType!='youtubeLink'" style="word-wrap: break-word; !important; white-space: pre-wrap; "> <span ng-bind-html="(message.message | linkInText)"></span></p>
-            <img ng-if="message.attachmentType == 'image' ||message.attachmentType == 'instructionImage'" ng-src="{{message.attachment}}" ng-click="imageClicked(message.attachment)" style="width:250px;">
+            <img ng-if="message.attachmentType == 'image' ||message.attachmentType == 'instructionImage'" ng-src="{{message.attachment}}" ng-click="imageClicked(message.attachment)" style="width:100%;">
             <video ng-if="message.attachmentType == 'video'" width="280" height="240" ng-src="{{message.attachment}}" controls></video>
             <audio ng-if="message.attachmentType == 'audio'" ng-src="{{message.attachment}}" controls></audio>
 

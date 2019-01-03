@@ -1,11 +1,10 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngAside', 'ngDraggable', 'flash', 'chart.js', 'ngTagsInput', 'ui.tinymce', 'hljs', 'mwl.confirm', 'ngAudio', 'uiSwitch', 'rzModule','angular-web-notification','datatables']);
+var app = angular.module('app', ['ui.router','ui.bootstrap', 'ngSanitize', 'ngAside', 'ngDraggable', 'flash', 'chart.js', 'ngTagsInput', 'ui.tinymce', 'hljs', 'mwl.confirm', 'ngAudio', 'uiSwitch', 'rzModule','angular-web-notification','datatables','angularTinycon']);
 
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, hljsServiceProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, hljsServiceProvider,anTinyconProvider) {
   hljsServiceProvider.setOptions({
     // replace tab with 4 spaces
     tabReplace: '    '
   });
-
   // $urlRouterProvider.otherwise('/businessManagement');
   $urlRouterProvider.otherwise('/home');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -23,7 +22,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootS
 
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
-app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio ,$sce) {
+app.controller('main', function($scope, $state, $users, $aside, $http, $timeout, $uibModal, $permissions, ngAudio ,$sce,anTinycon) {
   $scope.me = $users.get('mySelf');
   $scope.headerUrl = '/static/ngTemplates/header.html',
     $scope.sideMenu = '/static/ngTemplates/sideMenu.html',
@@ -31,6 +30,7 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       main: '#1E88E5',
       highlight: '#04414f'
     };
+
     $scope.showw=false;
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;

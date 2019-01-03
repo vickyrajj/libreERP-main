@@ -97,12 +97,16 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   }
   $scope.tableUpdated=false
   $scope.loadingData=true;
+  var counttt=0;
 
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
-    $scope.tableUpdated=false
-    setTimeout(function () {
-      $scope.tableUpdated=true
-    }, 300);
+    counttt++;
+    if(counttt>1){
+      $scope.tableUpdated=false
+      setTimeout(function () {
+        $scope.tableUpdated=true
+      }, 100);
+    }
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated();

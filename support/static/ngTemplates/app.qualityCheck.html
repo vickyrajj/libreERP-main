@@ -10,7 +10,7 @@
               <i class="fa fa-list-ul"></i>
             </uib-tab-heading>
                 <div class="col-sm-9" style="margin-top:15px">
-                  <div style="position: absolute;top:400px;left:35%;" ng-if="loadingData">
+                  <div style="position: absolute;top:250px;left:35%;" ng-if="loadingData">
                     <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
                   </div>
                   <div ng-if="!isTableView" class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData" ng-click="tableAction($index)">
@@ -70,8 +70,8 @@
                        <tr ng-repeat="data in reviewData" style="" ng-click="tableAction(data,true)">
                          <td>
                            <div class="" style="border-radius:50%;width:50px;height:50px;margin:5px 10px;float:left">
-                             <!-- <img style="width:50px" src="{{data[0].user_id| getDP}}" alt=""> -->
-                             <img style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+                             <img style="width:50px" src="{{data[0].user_id | getDP}}" alt="">
+                             <img ng-if="!data[0].user_id" style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
                            </div>
                            <span style="display:inline-block">
                              <div class="">
@@ -79,13 +79,13 @@
                                <span style="font-size: 13px;font-weight: 400;">{{data[0].company? data[0].company:'-'}}</span>
                              </div>
                              <div class="">
-                               <span style="font-size: 14px;">{{data[0].uid}}</span>
+                               <span style="font-size: 13px;">{{data[0].uid}}</span>
                              </div>
                              <div class="">
                                <span style="font-size: 13px;opacity: 0.8;">Created : {{data[0].created|  date : 'dd-MMM-yyyy'}}</span>
-                               <span ng-if="data[0].statusChat=='started'" style="font-size: 14px;opacity: 0.8;color:green;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
-                               <span ng-if="data[0].statusChat=='closed'" style="font-size: 14px;opacity: 0.8;color:#A40B0B;background:#e0e0e0;padding:0px 5px"  ><b>{{data[0].statusChat|humanize}}</b></span>
-                               <span ng-if="data[0].statusChat=='reviewed'" style="font-size: 14px;opacity: 0.8;color:brown;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
+                               <span ng-if="data[0].statusChat=='started'" style="font-size: 13px;opacity: 0.8;color:green;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
+                               <span ng-if="data[0].statusChat=='closed'" style="font-size: 13px;opacity: 0.8;color:#A40B0B;background:#e0e0e0;padding:0px 5px"  ><b>{{data[0].statusChat|humanize}}</b></span>
+                               <span ng-if="data[0].statusChat=='reviewed'" style="font-size: 13px;opacity: 0.8;color:brown;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
                              </div>
                            </span>
                            <div class="" style="margin:5px 10px;float:right;font-size:20px;padding:12px;opacity:0.6;">
@@ -224,8 +224,8 @@
                        <tr ng-repeat="data in archivedData" style="" ng-click="tableArchAction(data,true)">
                          <td>
                            <div class="" style="border-radius:50%;width:50px;height:50px;margin:5px 10px;float:left">
-                             <!-- <img style="width:50px" src="{{data[0].user_id| getDP}}" alt=""> -->
-                             <img style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+                             <img style="width:50px" src="{{data[0].user_id| getDP}}" alt="">
+                             <!-- <img ng-if="data[0].user_id" style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt=""> -->
                            </div>
                            <span style="display:inline-block">
                              <div class="">
@@ -237,9 +237,9 @@
                              </div>
                              <div class="">
                                <span style="font-size: 13px;opacity: 0.8;">Created : {{data[0].created|  date : 'dd-MMM-yyyy'}}</span>
-                               <span ng-if="data[0].status=='started'" style="font-size: 13px;color:green" >Status : {{data[0].status}}</span>
-                               <span ng-if="data[0].status=='closed'"style="font-size: 13px;color:red" >Status : {{data[0].status}}</span>
-                               <span ng-if="data[0].status=='reviewed'" style="font-size: 13px;color:brown" >Status : {{data[0].status}}</span>
+                               <span ng-if="data[0].statusChat=='started'" style="font-size: 14px;opacity: 0.8;color:green;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
+                               <span ng-if="data[0].statusChat=='closed'" style="font-size: 14px;opacity: 0.8;color:#A40B0B;background:#e0e0e0;padding:0px 5px"  ><b>{{data[0].statusChat|humanize}}</b></span>
+                               <span ng-if="data[0].statusChat=='reviewed'" style="font-size: 14px;opacity: 0.8;color:brown;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
                                <!-- <span style="font-size: 13px;color:{{statusColor}}" >Status : {{data[0].status}}</span> -->
                              </div>
                            </span>

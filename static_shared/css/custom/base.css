@@ -44,7 +44,7 @@ cursor: pointer
 }
 #myQATable td{
   border: 1px solid #f0f0f0;
-  padding: 7px 5px;
+  padding: 1px 5px;
 }
 #myQATable tr:nth-child(even){
   background-color: #f0f0f0;

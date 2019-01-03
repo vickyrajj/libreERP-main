@@ -316,6 +316,10 @@ var supportBubbleColor = '{{supportBubbleColor}}'
 var firstMessage = `{{firstMessage}}`;
 var iconColor = '{{iconColor}}'
 var fontAndIconColor='{{fontColor}}'
+firstMessage = firstMessage.replaceAll("&lt;",'<')
+firstMessage = firstMessage.replaceAll("&gt;",">")
+firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
+firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
 
 
 // window.onbeforeunload = function() {
@@ -883,7 +887,7 @@ function createChatDiv() {
         '<div id="supportCircle">'+
     			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation" onclick="" id="sy-main-icon">'+
     				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
-    				'<span id="chatSuggestionBar" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">We are here to help you</span>'+
+    				'<span id="chatSuggestionBar" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">'+firstMessage+'</span>'+
     				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
     				'<div  id="sy-sub-icons">'+
     					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
@@ -912,6 +916,7 @@ function createChatDiv() {
 
         '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation">'+
           '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ; right:105px; display:none; transition: .5s" class="sy-text">Chat</span>'+
+          '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">'+firstMessage+'</span>'+
 
           '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
         '</div>'+
@@ -1419,13 +1424,12 @@ function createChatDiv() {
               .sy-text-Suggested {\
               position: fixed;\
               right: 100px;\
-              margin-top: 15px;\
+              margin-top: 12px;\
               border-radius: 15px;\
               padding: 4px 8px;\
               font-family: Verdana, Arial, sans-serif;\
-              font-size: 18px;\
+              font-size: 14px;\
               white-space: nowrap;\
-              max-width: 250px;\
               overflow: hidden;\
               animation:chatSuggestionBar 1s\
             }\
@@ -3086,15 +3090,19 @@ setInterval(function () {
   setTimeout(function () {
     if(!chathasOpenedOnce){
       chatSuggestionBar.style.display="block"
+      chatSuggestionBar1.style.display="block"
     }
   }, 10000);
 
   var chatSuggestionBar= document.getElementById('chatSuggestionBar')
+  var chatSuggestionBar= document.getElementById('chatSuggestionBar1')
   chatSuggestionBar.style.display="none"
+  chatSuggestionBar1.style.display="none"
 
   function openChat() {
     chathasOpenedOnce=true;
     chatSuggestionBar.style.display="none"
+    chatSuggestionBar1.style.display="none"
     chatOpen = !chatOpen
     setCookie("chatOpenCookie", chatOpen, 365);
 

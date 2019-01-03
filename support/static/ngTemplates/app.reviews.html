@@ -73,7 +73,7 @@
                          <td>
                              <div class="" style="border-radius:50%;width:50px;height:50px;margin:5px 10px;float:left">
                                <img ng-if="data[0].user_id" style="width:50px" src="{{data[0].user_id | getDP}}" alt="">
-                               <img ng-if="!data[0].user_id" style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+                               <!-- <img ng-if="!data[0].user_id" style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt=""> -->
                              </div>
                            <span style="display:inline-block">
                              <div class="">
@@ -85,6 +85,9 @@
                              </div>
                              <div class="">
                                <span style="font-size: 13px;opacity: 0.8;">Created : {{data[0].created|  date : 'dd-MMM-yyyy'}}</span>
+                               <span ng-if="data[0].statusChat=='started'" style="font-size: 14px;opacity: 0.8;color:green;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
+                               <span ng-if="data[0].statusChat=='closed'" style="font-size: 14px;opacity: 0.8;color:#A40B0B;background:#e0e0e0;padding:0px 5px"  ><b>{{data[0].statusChat|humanize}}</b></span>
+                               <span ng-if="data[0].statusChat=='reviewed'" style="font-size: 14px;opacity: 0.8;color:brown;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
                              </div>
 
                            </span>

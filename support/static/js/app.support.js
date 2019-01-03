@@ -1,5 +1,5 @@
 // you need to first configure the stapp.config(function($stateProvider){
-app.config(function($stateProvider) {
+app.config(function($stateProvider,anTinyconProvider) {
 
   $stateProvider
     .state('businessManagement.support', {
@@ -13,7 +13,7 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $interval, $uibModal,ngAudio) {
+app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $interval, $uibModal,ngAudio,anTinycon) {
 
 
   $scope.newUsers = [];
@@ -227,6 +227,17 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
   var openedUsers = []
+
+  // anTinycon.setBubble(6);
+  // anTinycon.setOptions({
+  //     width: 7,
+  //     height: 9,
+  //     font: '10px arial',
+  //     colour: '#ffffff',
+  //     background: '#549A2F',
+  //     fallback: true
+  // });
+
 
   function addToCookie(uid, indx) {
     openedUsers.push({

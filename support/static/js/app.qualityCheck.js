@@ -456,7 +456,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
         $scope.tableUpdated=true
       }, 100);
     }
-
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated();
