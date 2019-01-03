@@ -1321,7 +1321,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     }
     $http({
       method: 'POST',
-      url: erpUrl + '/api/marketing/conatacts/',
+      url: erpUrl + '/api/marketing/contacts/',
       data: {
         email: $scope.subscribeForm.email,
         source: $rootScope.source
