@@ -129,6 +129,12 @@ app.config(function($stateProvider) {
 
 app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
+    $scope.myObj = {
+       "background-color" : "#DDF6FB",
+    }
+    $scope.myObjcolor = {
+       "background-color" : "#E5E7FC",
+    }
 
 });
 
