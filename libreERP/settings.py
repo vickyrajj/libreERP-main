@@ -104,6 +104,7 @@ FEDEX_AUTH_KEY = 'abOhatnikLWCa8Hj'
 FEDEX_PASSWORD = 'Yk1agUkfxS1P3ABNemVGYJFOB'
 FEDEX_ACCOUNT_NUMBER = '870648022'
 FEDEX_METER_NUMBER = '113921415'
+FEDEX_TEST_MODE = False
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 

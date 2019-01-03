@@ -2575,8 +2575,8 @@ class CreateShipmentAPI(APIView):
         state = order.stateCode
         country = order.countryCode
         pincode = str(order.pincode)
-        weight = 1.0
-        awbPath , trackingID = createShipment(recipientName , recipientCompany , recipientPhone , [recipientAddress] ,  city, state , pincode , country,  weight)
+        weight = float(request.GET['totalWeight']) * 2.20462
+        awbPath , trackingID = createShipment(recipientName , recipientName , recipientPhone , [recipientAddress] ,  city, state , pincode , country,  weight)
         return Response({'awbPath':awbPath,'trackingID':trackingID,'courierName':'Fedex'}, status = status.HTTP_200_OK)
 
 # from django.core.files import File

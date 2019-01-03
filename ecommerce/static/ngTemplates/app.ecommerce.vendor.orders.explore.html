@@ -83,7 +83,7 @@
           </div> -->
           <div class="col-md-4" ng-if="checkConditions.thirdParty && order.status!='failed' && order.orderQtyMap[0].courierName==null && order.orderQtyMap[0].courierAWBNo==null">
             <div class="form-group">
-              <button type="button" class="btn btn-primary" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="generateManifestForAll()" confirm-button-type="default" cancel-button-type="default">Generate Manifest </button>
+              <button type="button" class="btn btn-primary" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="openWeightPopup()" confirm-button-type="default" cancel-button-type="default">Generate Manifest </button>
               <p class="help-block">Generate Manifest for selected orders</p>
             </div>
           </div>
@@ -114,7 +114,7 @@
                  <button type="button" class="btn btn-default">Download Manifest <i class="fa fa-download"></i></button> </a>
               </div>
               <div class="row" style="margin-top:15px;">
-                <a href="/api/ecommerce/downloadManifest/?trackingId={{order.orderQtyMap[0].courierAWBNo}}&packingSlip" target="_blank">
+                <a href="/api/ecommerce/downloadManifest/?allData={{order.pk}}&printerDeviceId={{connectData.deviceID}}}&packingSlip" target="_blank">
                   <button type="button" class="btn btn-default">Download PackingSlip <i class="fa fa-download"></i></button> </a>
               </div>
 

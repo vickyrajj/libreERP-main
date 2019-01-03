@@ -494,7 +494,34 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       $scope.changeStatus(i,status)
     }
   }
-  $scope.generateManifestForAll = function () {
+  $scope.openWeightPopup = function(){
+
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.courierWeight.html',
+          size: 'md',
+          backdrop: true,
+          controller: function($scope,$uibModalInstance) {
+            $scope.orderForm = {weight:''}
+            $scope.saveWeight = function(){
+              if ($scope.orderForm.weight.length==0) {
+                Flash.create('warning','Please Mention Order Weight')
+                return
+              }else {
+                $uibModalInstance.dismiss({weight:$scope.orderForm.weight});
+              }
+            }
+          },
+        }).result.then(function() {
+
+        }, function(res) {
+          console.log(res);
+          if (typeof res == 'object' && res.weight) {
+            console.log(res);
+            $scope.generateManifestForAll(res.weight)
+          }
+        });
+  }
+  $scope.generateManifestForAll = function (orderWeight) {
     console.log($scope.order);
     if (!$scope.checkConditions.thirdParty) {
       console.log('self courierrrrrrrrr');
@@ -539,9 +566,10 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       // }
 
       $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
+      console.log('order Weighttttttttttttt',orderWeight);
       $http({
         method:'GET',
-        url:'/api/ecommerce/createShipment/?country=US&orderPk='+$scope.order.pk
+        url:'/api/ecommerce/createShipment/?country=US&orderPk='+$scope.order.pk+'&totalWeight='+orderWeight
       }).then(function (response) {
         console.log(response.data);
         $scope.courierForm.courierName = response.data.courierName
