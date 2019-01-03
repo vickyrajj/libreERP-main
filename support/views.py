@@ -66,10 +66,18 @@ from excel_response import ExcelResponse
 
 class ProductsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
-    queryset = Products.objects.all()
+    # queryset = Products.objects.all()
     serializer_class = ProductsSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['part_no','parent','created' , 'bar_code']
+    def get_queryset(self):
+        if 'search' in self.request.GET:
+            objs = Products.objects.all()
+            product = objs.filter(part_no__contains=str(self.request.GET['search']))
+            product1  = objs.filter(replaced__icontains=str(self.request.GET['search']))
+            return product | product1
+        else:
+            return Products.objects.all()
 
 
 
@@ -143,14 +151,13 @@ class ProductsUploadAPIView(APIView):
 
             for i in range(3,ws.max_row+1):
                 try:
+                    print 'aaaaaaaaaaa'
                     try:
                         part_no = ws['B' + str(i)].value
                     except:
                         part_no = None
 
 
-
-                    print part_no,'vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv'
 
                     try:
                         description_1 = ws['C' + str(i)].value
@@ -166,7 +173,6 @@ class ProductsUploadAPIView(APIView):
 
                     try:
                         weight = ws['E' + str(i)].value
-                        print weight,'vvvvvvvvvvvvvvvvvvv'
                     except:
                         weight = None
 
@@ -177,15 +183,20 @@ class ProductsUploadAPIView(APIView):
                         price = None
 
 
+                    # try:
+                    #     parent_no = ws['G' + str(i)].value
+                    #     parent = None
+                    #     if parent_no:
+                    #         par = Products.objects.get(part_no=parent_no)
+                    #         print par ,'rrrrrrrrrrrrrr'
+                    #         parent = par
+                    # except:
+                    #     parent = None
+
                     try:
-                        parent_no = ws['G' + str(i)].value
-                        parent = None
-                        if parent_no:
-                            par = Products.objects.get(part_no=parent_no)
-                            print par ,'rrrrrrrrrrrrrr'
-                            parent = par
+                        replaced = ws['G' + str(i)].value
                     except:
-                        parent = None
+                        replaced = None
 
 
                     try:
@@ -203,8 +214,8 @@ class ProductsUploadAPIView(APIView):
                     except:
                         gst = 18
 
-                    print parent
-                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,weight=weight,parent=parent, price=price,customs_no=customs_no,custom=custom,gst=gst)
+
+                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst)
                 except:
                     pass
         return Response(status=status.HTTP_200_OK)
@@ -1431,17 +1442,20 @@ class DownloadProjectSCExcelReponse(APIView):
                 toReturn =[]
                 bomObj=BoM.objects.filter(project__id=i.pk)
                 materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
-                for j in bomObj:
-                    stockConsumed=0
-                    for k in materialObj:
+                for k in materialObj:
                         materialdata= k.materialIssue.all()
                         for m in materialdata:
+                            qtyOrdered = 0
+                            stockConsumed=0
+                            for j in bomObj:
                                 if m.product_id==j.products.pk:
-                                    stockConsumed += i.qty
-                    Sheet1.append([i.vendor.name, j.products.part_no,j.products.description_1,j.quantity1,j.landed_price,stockConsumed])
+                                    qtyOrdered += j.quantity1
+                                    stockConsumed=m.qty
+                                else:
+                                    qtyOrdered=0
+                                    stockConsumed=m.qty
+                            Sheet1.append([i.vendor.name, m.product.part_no,m.product.description_1,qtyOrdered,m.price,stockConsumed])
 
-            # wb.save('ex.xls')
-        #         return ExcelResponse(toReturn)
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
         return response

@@ -21,7 +21,7 @@ from django.core.exceptions import SuspiciousOperation
 class ProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
-        fields = ('pk', 'created', 'part_no','description_1','description_2','customs_no','parent','weight','price','sheet','bar_code','gst','custom')
+        fields = ('pk', 'created', 'part_no','description_1','description_2','replaced','customs_no','parent','weight','price','sheet','bar_code','gst','custom')
 
 
 
@@ -57,9 +57,9 @@ class ProjectsSerializer(serializers.ModelSerializer):
         if 'comm_nr' in self.context['request'].data:
             p.comm_nr = self.context['request'].data['comm_nr']
         if 'quote_ref' in self.context['request'].data:
-            p.customer_ref = self.context['request'].data['quote_ref']
+            p.quote_ref = self.context['request'].data['quote_ref']
         if 'enquiry_ref' in self.context['request'].data:
-            p.customer_ref = self.context['request'].data['enquiry_ref']
+            p.enquiry_ref = self.context['request'].data['enquiry_ref']
         if 'date' in self.context['request'].data:
             p.date = self.context['request'].data['date']
         if 'revision' in self.context['request'].data:

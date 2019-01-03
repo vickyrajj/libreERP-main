@@ -478,10 +478,10 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
   //   $scope.date = $scope.form.date.toJSON().split('T')[0]
   // }
   $scope.createProjects = function() {
-    if ($scope.form.responsible == null || $scope.form.responsible.length == 0) {
-      Flash.create('warning', 'Please Mention Responsible Person Name')
-      return
-    }
+    // if ($scope.form.responsible == null || $scope.form.responsible.length == 0) {
+    //   Flash.create('warning', 'Please Mention Responsible Person Name')
+    //   return
+    // }
 
     if (typeof $scope.form.date == 'object') {
       $scope.form.date = $scope.form.date.toJSON().split('T')[0]
@@ -612,7 +612,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
 
   $scope.change = function(query) {
-    return $http.get('/api/support/products/?limit=10&part_no__contains=' + query).
+    return $http.get('/api/support/products/?limit=10&search=' + query).
     then(function(response) {
       return response.data.results;
     })

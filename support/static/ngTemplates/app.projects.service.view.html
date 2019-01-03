@@ -63,7 +63,7 @@
             </div>
           </div>
 
-        <div class="row">
+        <div class="row" ng-if="form.responsible.length>0">
           <div class="col-md-12 text-center">
             <label> Responsible Persons : </label>
           </div>
@@ -397,7 +397,7 @@
           <tbody>
             <tr style="background-color: #eeeeee;height: 96px;">
               <th>S.No</th>
-              <th>Part No</th>
+              <th ><div style="width: 150px;">Part No</div></th>
               <th>Products</th>
               <th>Price (CHF)</th>
               <th>Quantity</th>
@@ -421,7 +421,7 @@
             </tr>
             <tr ng-repeat="v in projects track by $index">
               <td>{{$index + 1}}</td>
-              <td>{{v.products.part_no}}</td>
+              <td><div style="width: 150px;">{{v.products.part_no}}</div></td>
               <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp;({{v.products.description_2}})</span></td>
               <td>{{v.price}}</td>
               <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="v.quantity1" style="background-color : #8fe298;padding:0px"></td>
@@ -447,7 +447,7 @@
             </tr>
             <tr ng-repeat="item in data track by $index">
               <td>{{$index + 1 + projects.length}}</td>
-              <td ><input ng-model="item.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></td>
+              <td ><div style="width: 150px;"><input ng-model="item.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></div></td>
               <td>
                 {{item.description_1}}<span ng-if="item.description_2"> &nbsp;({{item.description_2}})</span>
               </td>
@@ -557,7 +557,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" ng-if="form.responsible.length>0">
         <div class="col-md-12 text-center">
           <label> Responsible Persons : </label>
         </div>
@@ -866,7 +866,7 @@
             <tr ng-repeat="v in projects track by $index">
               <td>{{$index + 1}}</td>
               <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
-              <td>{{v.products.part_no}}</td>
+              <td><div style="width: 120px;">{{v.products.part_no}}</div></td>
               <td>{{v.quantity1}}</td>
               <td>{{v.customs_no}}</td>
               <td>{{v.price}}</td>
@@ -964,7 +964,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" ng-if="form.responsible.length>0">
         <div class="col-md-12 text-center">
           <label> Responsible Persons : </label>
         </div>
@@ -1279,7 +1279,7 @@
         <tr ng-repeat="v in projects track by $index">
           <td>{{$index + 1}}</td>
           <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
-          <td>{{v.products.part_no}}</td>
+          <td><div style="width: 120px;">{{v.products.part_no}}</div></td>
           <td>{{v.quantity1}}</td>
           <td>{{v.customs_no}}</td>
           <td>{{v.price.toFixed(2)}}</td>
@@ -1374,7 +1374,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row" ng-if="form.responsible.length>0">
             <div class="col-md-12 text-center">
               <label> Responsible Persons : </label>
             </div>

@@ -36,6 +36,7 @@ class Products(models.Model):
     description_2 = models.CharField(max_length=100, null=True,blank =True)
     weight = models.FloatField(null=True,blank =True)
     price = models.FloatField(null=True,blank =True)
+    replaced = models.CharField(max_length=200, null=True)
     parent = models.ForeignKey('self', related_name='parentProduct', null=True)
     sheet = models.ForeignKey(ProductSheet, related_name='productsSheet', null=True)
     customs_no = models.PositiveIntegerField( null=True,blank =True,default=0)
