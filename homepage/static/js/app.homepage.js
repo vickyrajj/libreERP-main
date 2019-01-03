@@ -148,7 +148,14 @@ app.config(function($stateProvider) {
       templateUrl: '/templates/terms.html',
       // controller: 'controller.terms'
     })
+  $stateProvider
+    .state('disclaimer', {
+      url: "/disclaimer",
+      templateUrl: 'ngTemplates/disclaimer.html',
+      controller: 'controller.disclaimer'
+    })
 });
+app.controller('controller.disclaimer', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {})
 
 app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
