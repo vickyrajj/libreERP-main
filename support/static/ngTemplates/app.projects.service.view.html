@@ -399,6 +399,7 @@
               <th>S.No</th>
               <th ><div style="width: 150px;">Part No</div></th>
               <th>Products</th>
+              <th>Weight</th>
               <th>Price (CHF)</th>
               <th>Quantity</th>
               <th>HSN</th>
@@ -423,6 +424,7 @@
               <td>{{$index + 1}}</td>
               <td><div style="width: 150px;">{{v.products.part_no}}</div></td>
               <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp;({{v.products.description_2}})</span></td>
+              <td>{{v.products.weight}}</td>
               <td>{{v.price}}</td>
               <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="v.quantity1" style="background-color : #8fe298;padding:0px"></td>
               <td>{{v.customs_no}}</td>
@@ -451,6 +453,7 @@
               <td>
                 {{item.description_1}}<span ng-if="item.description_2"> &nbsp;({{item.description_2}})</span>
               </td>
+              <td>{{item.weight}}</td>
               <td class="text-center">
                 {{item.price}}
               <td style="background-color : #8fe298;padding:0px">
@@ -475,7 +478,8 @@
               <td>{{item.charge2}} </td>
               <td>{{item.landed_price}}</td>
               <td>
-                <button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(item.listPk,$index)"> <i class="fa fa-trash"></i> </button>
+
+                <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable(item.listPk,$index)"> <i class="fa fa-trash"></i> </button>
               </td>
             </tr>
             <tr>
@@ -843,6 +847,7 @@
               <th>Si.No</th>
               <th>Product</th>
               <th>Part No</th>
+              <th>Weight</th>
               <th> Quantity</th>
               <th>HSN</th>
               <th>Price</th>
@@ -867,6 +872,7 @@
               <td>{{$index + 1}}</td>
               <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
               <td><div style="width: 120px;">{{v.products.part_no}}</div></td>
+              <td>{{v.products.weight}}</td>
               <td>{{v.quantity1}}</td>
               <td>{{v.customs_no}}</td>
               <td>{{v.price}}</td>
@@ -1256,6 +1262,7 @@
           <th>Si.No</th>
           <th>Product</th>
           <th>Part No</th>
+          <th>Weight</th>
           <th>Quantity</th>
           <th>HSN</th>
           <th>Price</th>
@@ -1280,6 +1287,7 @@
           <td>{{$index + 1}}</td>
           <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
           <td><div style="width: 120px;">{{v.products.part_no}}</div></td>
+          <td>{{v.products.weight}}</td>
           <td>{{v.quantity1}}</td>
           <td>{{v.customs_no}}</td>
           <td>{{v.price.toFixed(2)}}</td>

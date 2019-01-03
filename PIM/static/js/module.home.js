@@ -140,11 +140,11 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.inventory.html',
       controller: 'businessManagement.inventory'
     })
-    .state('home.report', {
-      url: "/report",
-      templateUrl: '/static/ngTemplates/app.report.html',
-      controller: 'businessManagement.report'
-    })
+    // .state('home.report', {
+    //   url: "/report",
+    //   templateUrl: '/static/ngTemplates/app.report.html',
+    //   controller: 'businessManagement.report'
+    // })
 
     .state('home.vendor', {
       url: "/vendor",

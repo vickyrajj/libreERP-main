@@ -583,6 +583,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       part_no: '',
       description_1: '',
       price: '',
+      weight:0,
       quantity1: 1,
       quotePrice: 0,
       inrPrice: 0,
@@ -903,27 +904,42 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }
   }, true)
 
+
+
   $scope.deleteTable = function(val, index) {
-    if ($scope.data[index].listPk != undefined) {
-          if (val === $scope.data[index].listPk) {
+    if (val != undefined) {
+          // if (val === $scope.data[index].listPk) {
             $http({
               method: 'DELETE',
-              url: '/api/support/bom/' +$scope.data[index].listPk + '/'
+              url: '/api/support/bom/' +val + '/'
             }).
-            then((function(index) {
-              return function(response) {
-                var price = $scope.data[index].price * $scope.data[index].quantity1
-                $scope.form.invoiceValue = $scope.form.invoiceValue - price
-                $scope.data.splice(index, 1);
-                Flash.create('success', 'Deleted');
-                $scope.updateAll()
-                return
-              }
-            })(index))
-          }
+            then(function(response) {
+                  // var pricee = $scope.projects[index].price
+                  // var qty = $scope.projects[index].quantity1
+                  $scope.data=[]
+                  $scope.fetchData()
+                  Flash.create('success', 'Deleted');
+                  // $scope.form.invoiceValue = 0
+                  // $scope.updateAll()
+                  // $scope.projects.splice(index, 1);
+                  return
+            })
+            // then((function(index) {
+            //   return function(response) {
+            //     var price = $scope.data[index].price * $scope.data[index].quantity1
+            //     $scope.form.invoiceValue = $scope.form.invoiceValue - price
+            //     $scope.data.splice(index, 1);
+            //     Flash.create('success', 'Deleted');
+            //     $scope.updateAll()
+            //     return
+            //   }
+            // })(index))
+          // }
     } else {
-      $scope.data.splice(index, 1);
-      $scope.updateAll()
+      $scope.data=[]
+      $scope.fetchData()
+      // $scope.data.splice(index, 1);
+      // $scope.updateAll()
       return
     }
   };

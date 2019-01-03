@@ -72,6 +72,7 @@ class ProductsViewSet(viewsets.ModelViewSet):
     filter_fields = ['part_no','parent','created' , 'bar_code']
     def get_queryset(self):
         if 'search' in self.request.GET:
+            print 'herrrrrrrrrrreeeee'
             objs = Products.objects.all()
             product = objs.filter(part_no__contains=str(self.request.GET['search']))
             product1  = objs.filter(replaced__icontains=str(self.request.GET['search']))
@@ -183,15 +184,15 @@ class ProductsUploadAPIView(APIView):
                         price = None
 
 
-                    # try:
-                    #     parent_no = ws['G' + str(i)].value
-                    #     parent = None
-                    #     if parent_no:
-                    #         par = Products.objects.get(part_no=parent_no)
-                    #         print par ,'rrrrrrrrrrrrrr'
-                    #         parent = par
-                    # except:
-                    #     parent = None
+                    try:
+                        parent_no = ws['G' + str(i)].value
+                        parent = None
+                        if parent_no:
+                            par = Products.objects.get(part_no=parent_no)
+                            print par ,'rrrrrrrrrrrrrr'
+                            parent = par
+                    except:
+                        parent = None
 
                     try:
                         replaced = ws['G' + str(i)].value
@@ -215,7 +216,7 @@ class ProductsUploadAPIView(APIView):
                         gst = 18
 
 
-                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst)
+                    Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,parent=parent,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst)
                 except:
                     pass
         return Response(status=status.HTTP_200_OK)
@@ -584,9 +585,10 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
     tdmachine.hAlign = 'LEFT'
     elements.append(tdmachine)
     elements.append(Spacer(1,10))
-    elements.append(Paragraph("<para fontSize=8>Dear Sir,</para>",styles['Normal']))
-    elements.append(Spacer(1,10))
-    elements.append(Paragraph("<para fontSize=8>We thank you for your enquiry and take pleasure in quoting as follows:</para>",styles['Normal']))
+    if typ != 'Invoice':
+        elements.append(Paragraph("<para fontSize=8>Dear Sir,</para>",styles['Normal']))
+        elements.append(Spacer(1,10))
+        elements.append(Paragraph("<para fontSize=8>We thank you for your enquiry and take pleasure in quoting as follows:</para>",styles['Normal']))
 
 
     if typ == 'CHF':
@@ -814,8 +816,9 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
         elements.append(Paragraph("<para fontSize=8> 5. P & F  : Extra </para>",styles['Normal']))
         elements.append(Paragraph("<para fontSize=8> 6.Warranty :Twelve months - Only on spares fixed by Burderer India engineer</para>",styles['Normal']))
         elements.append(Spacer(1,8))
-        elements.append(Paragraph("<para fontSize=8>We hope that this quotation will meet your requirement and would be glad to receive your firm order. For further information please do not hesitate to cotnact us any time. </para>",styles['Normal']))
-        elements.append(Spacer(1,8))
+        if typ != 'Invoice':
+            elements.append(Paragraph("<para fontSize=8>We hope that this quotation will meet your requirement and would be glad to receive your firm order. For further information please do not hesitate to cotnact us any time. </para>",styles['Normal']))
+            elements.append(Spacer(1,8))
         elements.append(Paragraph("<para fontSize=8>For BRUDERER PRESSES INDIA PVT LTD.,</para>",styles['Normal']))
         elements.append(Spacer(1,8))
         elements.append(Paragraph("<para fontSize=8>Authorised Signatory.</para>",styles['Normal']))
