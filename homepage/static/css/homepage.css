@@ -1,8 +1,9 @@
 /*properties for normal screen size starts here  */
-.fa-fw{
-  padding-right:1.55em !important;
+.fa-fw {
+  padding-right: 1.55em !important;
   font-size: 1.13em;
 }
+
 .header_element {
   position: relative;
 }
@@ -27,7 +28,7 @@
   list-style: none;
   padding: 10px;
   text-decoration: none;
-  border-left: 4px solid #171717;
+  border-left: 4px solid #222222;
   cursor: pointer;
 }
 
@@ -384,7 +385,7 @@
 .pro_card_div {
   min-height: 40vh;
   position: absolute;
-  top: 247px;
+  top: 232px;
   width: 100%;
   left: auto;
 }
@@ -736,9 +737,97 @@
   font-size: 20px;
 }
 
-.nc_links{
+.nc_links {
   line-height: 2;
 }
+
+.nc_links h4 {
+  color: #3FD3EE;
+  padding-bottom: 50px;
+}
+
+.nc_links li a {
+  color: #fff;
+}
+
+.ncrt_cards {
+  background-color: #fafafa;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border-top-left-radius: 44px;
+  border: 1px solid #f5f5f5;
+  padding: 0px;
+  min-height: 30vh;
+  text-align: center;
+}
+
+.nc_head_img {
+  width: 100%;
+  border-top-left-radius: 44px;
+  border-top-right-radius: 10px;
+}
+
+.c_div {
+  min-width:75%;
+  min-height: 25vh;
+  border-top-left-radius: 44px;
+  border-top-right-radius: 10px;
+  margin-bottom: 25px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  position: relative;
+}
+
+.c_text{
+  position: absolute;
+  font-size:2em;
+  color:#fff;
+  font-weight: bolder;
+  top:16%;
+  right: 8%;
+}
+.c_num{
+  position: absolute;
+  font-size:7em;
+  color:#fff;
+  font-weight: bolder;
+  top:32%;
+  right: 8%;
+}
+
+.ncrt_cards:hover {
+  background-color: #fff;
+  box-shadow: 0px 0px 1px #ddd, 0 4px 20px #ccc;
+  border-top-left-radius: 44px;
+}
+.ncrt_cards:hover .c_div {
+background-image: linear-gradient(rgba(26, 24, 24, 1), rgba(32, 32, 32, 1));
+}
+
+.sub_list {
+  line-height: 3.5;
+  text-align: center;
+}
+
+.sub_list li a {
+  font-size: 16px;
+  color: #393939;
+  margin-left: 10px;
+}
+
+.sub_list li:last-child img {
+  margin-left: 16px;
+}
+
+.sub_list li:last-child a {
+  margin-left: 11px;
+}
+
+hr {
+  background-color: #fff;
+  height: 1px;
+}
+
 .footer:last-child li::before {
   display: none;
 }
@@ -838,6 +927,10 @@
   color: #02eba3 !important;
 }
 
+.navbar-brand {
+  height: 42px !important;
+}
+
 .stu_img {
   border-radius: 2.4em;
   width: 100%;
@@ -879,7 +972,6 @@
   border-radius: 10px;
   width: 90%;
   border-top-left-radius: 44px;
-
 }
 
 .topleft {
@@ -1402,16 +1494,36 @@
 .stucardtext {
   margin-top: 5em;
 }
+
+.orng_img {
+  position: absolute;
+  bottom: 99px;
+  right: -15px;
+}
+
 /* for normal screens ends here.... */
+@media screen and (min-width: 1850px) {
 
-
-
-@media only screen and (min-width:1500px) {
   /* for hd screens starts here.... */
   .tell_abt_overlay {
     left: 65px;
     top: 25px;
   }
+
+  .ncrt_cards {
+    width: 80%;
+  }
+
+  .pro_card_div {
+    top: 254px;
+  }
+
+  .orng_img {
+    position: absolute;
+    bottom: 99px;
+    right: 70px;
+  }
+
   /* for hd screens ends here.... */
 }
 
@@ -1901,6 +2013,10 @@
   .btmright {
     bottom: 0px;
     right: 46px;
+  }
+
+  .sub_list li a {
+    font-size: 12px;
   }
 
   /* mobile screen size ends here.... */
