@@ -726,6 +726,10 @@
   /* Remove default bullets */
 }
 
+.foo_heading {
+  margin-top: 7%;
+}
+
 .footer .folist li::before {
   content: "\2022";
   color: #02EBA3;
@@ -834,6 +838,78 @@
 .nav_ele:hover {
   color: #02eba3 !important;
 }
+
+.stu_img {
+  border-radius: 2.4em;
+  width: 100%;
+  padding: 20px;
+}
+
+.tq_list {
+  list-style: none;
+}
+
+.tq_list li::before {
+  content: "\2022";
+  color: #6A7EF1;
+  font-weight: bolder;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+  font-size: 20px;
+}
+
+.feature_imgs {
+  border: 1px solid #f2f2f2;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: grid;
+  align-items: center;
+}
+
+.min_space {
+  margin-bottom: 15px;
+}
+
+.service_items {
+  background-color: #f2f2f2;
+  margin-bottom: 15px;
+  min-height: 38vh;
+  padding: 3em;
+  border-radius: 10px;
+  width: 90%;
+}
+.topleft {
+  position: absolute;
+  top: 0px;
+  left: 14px;
+  width: 35%;
+  display: none;
+}
+
+.btmright {
+  position: absolute;
+  bottom: 15px;
+  right: 50px;
+  display: none;
+}
+.service_items:hover {
+  background-color: #fff;
+  border-top-left-radius: 44px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
+.service_items:hover .topleft{
+  display: block;
+}
+.service_items:hover .btmright{
+  display: block;
+}
+.serv_row{
+  padding-left: 22px;
+  padding-top:15px;
+}
+
 
 /* ------------ */
 .top {
@@ -1530,16 +1606,51 @@
     background-size: 190% 100%;
   }
 
+  .dash_container {
+    padding-bottom: 10em;
+  }
+
   .dash {
-    margin-left: 4em;
+    margin-bottom: 5em;
+    margin-right: 3em;
     width: 7em;
     height: 7em;
   }
 
   .pro_hov {
     top: -149px;
-    left: -24px;
+    left: -11px;
     width: 12em;
+  }
+
+  .dashlast {
+    margin-left: 8em;
+    width: 7em;
+    height: 7em;
+  }
+
+  .pro_title {
+    left: -28px;
+  }
+
+  .pro_descrp {
+    width: 310px;
+    bottom: -50px;
+    left: -58%;
+  }
+
+  .tell_card {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+
+  .tell_abt_overlay {
+    left: 49px;
+    top: 24px;
+  }
+  .btmright {
+    bottom: 0px;
+    right: 46px;
   }
 
   /* mobile screen size ends here.... */
@@ -1580,6 +1691,47 @@
     margin-bottom: 1.5em;
   }
 
+  .dash {
+    margin-left: 9em;
+  }
+
+  .pro_hov {
+    top: -149px;
+    left: -11px;
+    width: 12em;
+  }
+
+  .dashlast {
+    margin-left: 9em;
+  }
+
+  .pro_descrp {
+    width: 350px;
+    bottom: -50px;
+    left: -58%;
+  }
+
+  .tell_abt_overlay {
+    left: 66px;
+    top: 20px;
+  }
+
+  .foot_btn {
+    margin-left: 23%;
+  }
+
+  .foo_heading {
+    margin-top: 12%;
+  }
+
+  .foo_bar {
+    min-height: 11vh;
+    padding-bottom: 2em;
+  }
+
+  .btmright {
+    right: 51px;
+  }
   /* iphone screen size ends here */
 }
 
@@ -1627,6 +1779,48 @@
 
   .course_contain_bg {
     min-height: 70vh;
+  }
+
+  .dash {
+    margin-left: 9em;
+  }
+
+  .pro_hov {
+    top: -149px;
+    left: -11px;
+    width: 12em;
+  }
+
+  .dashlast {
+    margin-left: 9em;
+  }
+
+  .pro_descrp {
+    width: 350px;
+    bottom: -50px;
+    left: -58%;
+  }
+
+  .tell_abt_overlay {
+    left: 65px;
+    top: 21px;
+  }
+
+  .foot_btn {
+    margin-left: 23%;
+  }
+
+  .foo_heading {
+    margin-top: 15%;
+  }
+
+  .foo_bar {
+    min-height: 11vh;
+    padding-bottom: 2em;
+  }
+
+  .btmright {
+    right: 51px;
   }
 
   /* for google pixel devices ends here */

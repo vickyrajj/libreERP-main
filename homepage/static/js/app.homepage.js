@@ -99,12 +99,12 @@ app.config(function($stateProvider) {
       controller: 'controller.enroll'
     })
 
-  // $stateProvider
-  //   .state('home', {
-  //     url: "/home",
-  //     templateUrl: '/static/ngTemplates/app.homepage.home.html',
-  //     controller: 'controller.home'
-  //   })
+  $stateProvider
+    .state('contact', {
+      url: "/contact",
+      templateUrl: '/static/ngTemplates/app.homepage.contact.html',
+      controller: 'controller.contact'
+    })
 
   $stateProvider
     .state('about', {
@@ -114,14 +114,14 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
-    .state('students', {
-      url: "/students",
-      templateUrl: '/static/ngTemplates/app.homepage.students.html',
-      controller: 'controller.students'
+    .state('testimonials', {
+      url: "/testimonials",
+      templateUrl: '/static/ngTemplates/app.homepage.testimonials.html',
+      controller: 'controller.testimonials'
     })
 });
 
-app.controller('controller.students', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
 
 });
