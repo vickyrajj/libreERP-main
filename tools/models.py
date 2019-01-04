@@ -20,6 +20,13 @@ API_ACCOUNT_TYPES = (
     ('commercial', 'commercial')
 )
 
+class ApiKeyRegistration(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    email = models.EmailField(null = True , blank = True , unique=True)
+    email_otp = models.CharField(max_length = 6 , null = True)
+    verified = models.BooleanField(default=False)
+    emailApiKey = models.CharField(max_length = 50 , null = True)
+    
 class ApiAccount(models.Model):
     user = models.ForeignKey(User , related_name='apiAccountsCreatedOrOwned' , null = False)
     created = models.DateTimeField(auto_now_add=True)

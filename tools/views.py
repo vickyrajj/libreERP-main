@@ -48,6 +48,8 @@ import os
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import StringIO
+from django.core.exceptions import PermissionDenied,SuspiciousOperation
+import random, string
 
 # from scripts.knnocr.captchaSolver import main as toolFn
 # from scripts.pdfReader.main import processDoc as toolFn
@@ -58,6 +60,7 @@ import StringIO
 # from scripts.PDFReader.reader2 import getBasicDetails
 
 from shutil import copyfile
+
 
 class COIAPI(APIView):
     renderer_classes = (JSONRenderer,)
@@ -72,6 +75,97 @@ class COIAPI(APIView):
 
 
         return Response({"data" : toReturn}, status=status.HTTP_200_OK)
+
+def generateOTPCode():
+    length = 4
+    chars = string.digits
+    rnd = random.SystemRandom()
+    return ''.join(rnd.choice(chars) for i in range(length))
+
+def sendApiKeyEmail(apiKeyObj,typ):
+    print apiKeyObj,'apkobjjjjjjjjj'
+    try:
+        if typ == 'otp':
+            email_subject = "Your OTP For API Secret Key Activation"
+            email_body = "Hi , Your API Secret Key Activation OTP Is : {0}".format(apiKeyObj.email_otp)
+        else:
+            email_subject = "Yor API Secret Key"
+            email_body = "Hi , This Is Your API SecretKey \n{0}".format(apiKeyObj.emailApiKey)
+        print email_subject,email_body
+        msg = EmailMessage(email_subject , email_body, to= [apiKeyObj.email])
+        msg.send()
+        return True
+    except:
+        return False
+
+class generateAPIKEYAPI(APIView):
+    permission_classes = (permissions.AllowAny ,)
+    def post(self , request , format = None):
+        print request.data,'dataaaaaaaaa'
+        if 'email' in request.data:
+            if 'otp' in request.data:
+                try:
+                    apiKeyObj = ApiKeyRegistration.objects.get(email=request.data['email'],email_otp=request.data['otp'])
+                    apiKeyObj.verified = True
+                    try:
+                        apiKeyValue = str(make_password(datetime.datetime.now()).split('sha256$')[1]).replace('+','')
+                    except:
+                        apiKeyValue = str(make_password(datetime.datetime.now())).replace('+','')
+                    apiKeyObj.emailApiKey = apiKeyValue
+                    apiKeyObj.save()
+                    try:
+                        superUserObj = User.objects.filter(is_superuser=True)[0]
+                        print 'super user existsssss'
+                    except:
+                        superUserObj = User.objects.all()[0]
+                    try:
+                        apObj = ApiAccount.objects.get(email=apiKeyObj.email)
+                        apObj.apiKey = apiKeyObj.emailApiKey
+                        apObj.save()
+                        print 'api account already Exists'
+                    except:
+                        apObj = ApiAccount(email=apiKeyObj.email,apiKey=apiKeyObj.emailApiKey,active=True,remaining=1000,user=superUserObj)
+                        apObj.save()
+                    emailSendMsg = sendApiKeyEmail(apiKeyObj,'apiKey')
+                    if emailSendMsg:
+                        return Response({'msg':apiKeyObj.emailApiKey}, status=status.HTTP_200_OK)
+                    else:
+                        return Response({'msg':'Invalid Email'}, status=status.HTTP_200_OK)
+                except:
+                    return Response({'msg':'otpError'}, status=status.HTTP_200_OK)
+            else:
+                try:
+                    apiKeyObj = ApiKeyRegistration.objects.get(email=request.data['email'])
+                    if apiKeyObj.verified:
+                        emailSendMsg = sendApiKeyEmail(apiKeyObj,'apiKey')
+                        if emailSendMsg:
+                            return Response({'msg':'apiKey_exists'}, status=status.HTTP_200_OK)
+                        else:
+                            return Response({'msg':'Invalid Email'}, status=status.HTTP_200_OK)
+                    else:
+                        otp = generateOTPCode()
+                        print otp
+                        apiKeyObj.email_otp = otp
+                        apiKeyObj.save()
+                        emailSendMsg = sendApiKeyEmail(apiKeyObj,'otp')
+                        if emailSendMsg:
+                            return Response({'msg':'otp'}, status=status.HTTP_200_OK)
+                        else:
+                            return Response({'msg':'Invalid Email'}, status=status.HTTP_200_OK)
+                except:
+                    pass
+                otp = generateOTPCode()
+                print otp
+                apiKeyObj = ApiKeyRegistration(email=request.data['email'],email_otp=otp)
+                apiKeyObj.save()
+                emailSendMsg = sendApiKeyEmail(apiKeyObj,'otp')
+                if emailSendMsg:
+                    return Response({'msg':'otp'}, status=status.HTTP_200_OK)
+                else:
+                    apiKeyObj.delete()
+                    return Response({'msg':'Invalid Email'}, status=status.HTTP_200_OK)
+        else:
+            raise SuspiciousOperation('Invalid Data')
 
 
 class ApiAccountPublicApi(APIView):
