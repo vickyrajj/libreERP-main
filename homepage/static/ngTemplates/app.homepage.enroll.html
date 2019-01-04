@@ -7,7 +7,7 @@
       </div>
       <div class="col-md-6 col-xs-12 text-center">
         <div class="dropdown" id="open">
-          <button ng-disabled="false" class="btn dropdown-toggle custom-btn text-left topmargin" type="button" id="drop1" data-toggle="dropdown" ng-click=dropdown(1)>Keyword
+          <button ng-disabled="" class="btn dropdown-toggle custom-btn text-left topmargin " ng-model="active1" type="button" id="drop1" data-toggle="dropdown" ng-click=dropdown(1)>Keyword
             <span class="caret text-right"></span></button>
           <ul class="dropdown-menu" aria-labelledby="drop1">
             <li><a href="#">Html</a></li>
@@ -16,7 +16,7 @@
           </ul>
         </div>
         <div class="dropdown">
-          <button ng-disabled="false" class="btn dropdown-toggle custom-btn text-left" type="button" id="drop2" data-toggle="dropdown" style="  margin-top:2em;" ng-click=dropdown(2)>Catagories
+          <button ng-disabled="" class="btn dropdown-toggle custom-btn text-left" ng-model="active2"  type="button" id="drop2" data-toggle="dropdown" style="  margin-top:2em;" ng-click=dropdown(2)>Catagories
             <span class="caret text-right"></span></button>
           <ul class="dropdown-menu" aria-labelledby="drop2">
             <li><a href="#">Html</a></li>
@@ -25,7 +25,7 @@
           </ul>
         </div>
         <div class="dropdown">
-          <button ng-disabled="false" class="btn dropdown-toggle custom-btn text-left" type="button" id="drop3" data-toggle="dropdown" style="  margin-top:2em;" ng-click=dropdown(3)>Instructors
+          <button ng-disabled="" class="btn dropdown-toggle custom-btn text-left" ng-model="active3" type="button" id="drop3" data-toggle="dropdown" style="  margin-top:2em;" ng-click=dropdown(3)>Instructors
             <span class="caret text-right"></span></button>
           <ul class="dropdown-menu" aria-labelledby="drop3">
             <li><a href="#">Html</a></li>
@@ -34,7 +34,7 @@
           </ul>
         </div>
         <div class="leftalign">
-          <button ng-disabled="false" class="btn  custom-btn " type="button" id="drop4" style="text-align: center;margin-top:2em;background-color:#FFCC21;font-weight:bold;margin-bottom:5em;" ng-click=dropdown(4)>Search Courses</button>
+          <button ng-disabled="" class="btn  custom-btn " ng-model="active4" type="button" id="drop4" style="text-align: center;margin-top:2em;background-color:#FFCC21;font-weight:bold;margin-bottom:5em;" ng-click=dropdown(4)>Search Courses</button>
         </div>
       </div>
     </div>
@@ -539,56 +539,56 @@
     <div class="col-md-3 col-xs-12 text-center">
       <span class="heading_medium">We Create The Best Environment To Learn</span>
 
-      <div class="list row" id="drop0" data-toggle="collapse" ng-click="drop(0)" data-target="#col0">
+      <div class="list row {{active==0?'divcolor':''}}" id="drop0" data-toggle="collapse" ng-click="drop(0)" data-target="#col0">
         <div class="col-md-10 col-xs-10 size">
           <h4> 01. Great Online Instructors</h4>
         </div>
         <div class="col-md-2 col-xs-2">
-          <i class="fa fa-plus" aria-hidden="true"></i>
+          <i class="fa fa-{{active==0?'minus':'plus'}}" aria-hidden="true"></i>
         </div>
       </div>
 
 
-      <div id="col0" class=" list_body collapse">
+      <div id="col0" class=" list_body collapse {{active==0?'coll12':'coll11'}}">
         <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
           labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
       </div>
-      <div class="list row" id="drop1" data-toggle="collapse" ng-click="drop(1)" data-target="#col1">
+      <div class="list row {{active==1?'divcolor':''}}" id="drop1" data-toggle="collapse" ng-click="drop(1)" data-target="#col1">
         <div class="col-md-10 col-xs-10 size">
           <h4> 02. Get Certified Awards</h4>
         </div>
         <div class="col-md-2 col-xs-2 ">
-          <i class="fa fa-plus" aria-hidden="true"></i>
+          <i class="fa fa-{{active==1?'minus':'plus'}}" aria-hidden="true"></i>
         </div>
       </div>
 
-      <div id="col1" class="list_body collapse">
+      <div id="col1" class="list_body collapse {{active==1?'coll12':'coll11'}}">
         <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
           labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
       </div>
 
-      <div class="list row" id="drop2" data-toggle="collapse" ng-click="drop(2)" data-target="#col2">
+      <div class="list row {{active==2?'divcolor':''}}" id="drop2" data-toggle="collapse" ng-click="drop(2)" data-target="#col2">
         <div class="col-md-10 col-xs-10 size">
           <h4> 03.Exclusive Course Materials</h4>
         </div>
         <div class="col-md-2 col-xs-2">
-          <i class="fa fa-plus" aria-hidden="true"></i>
+          <i class="fa fa-{{active==2?'minus':'plus'}}" aria-hidden="true"></i>
         </div>
       </div>
-      <div id="col2" class="list_body collapse">
+      <div id="col2" class="list_body collapse {{active==2?'coll12':'coll11'}}">
         <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
           labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
       </div>
 
-      <div class="list row" id="drop3" data-toggle="collapse" ng-click="drop(3)" data-target="#col3">
+      <div class="list row {{active==3?'divcolor':''}}" id="drop3" data-toggle="collapse" ng-click="drop(3)" data-target="#col3">
         <div class="col-md-10 col-xs-10 size">
           <h4> 04. In - depth Course Analysis</h4>
         </div>
         <div class="col-md-2 col-xs-2">
-          <i class="fa fa-plus" aria-hidden="true" style=""></i>
+          <i class="fa fa-{{active==3?'minus':'plus'}}" aria-hidden="true" style=""></i>
         </div>
       </div>
-      <div id="col3" class="list_body collapse">
+      <div id="col3" class="list_body collapse {{active==3?'coll12':'coll11'}}">
         <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
           labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
       </div>

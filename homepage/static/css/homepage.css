@@ -766,12 +766,13 @@
   border-top-left-radius: 44px;
   border-top-right-radius: 10px;
 }
-.copy_rights a{
-  color:#222222;
+
+.copy_rights a {
+  color: #222222;
 }
 
 .c_div {
-  min-width:75%;
+  min-width: 75%;
   min-height: 25vh;
   border-top-left-radius: 44px;
   border-top-right-radius: 10px;
@@ -781,20 +782,21 @@
   position: relative;
 }
 
-.c_text{
+.c_text {
   position: absolute;
-  font-size:2em;
-  color:#fff;
+  font-size: 2em;
+  color: #fff;
   font-weight: bolder;
-  top:16%;
+  top: 16%;
   right: 8%;
 }
-.c_num{
+
+.c_num {
   position: absolute;
-  font-size:7em;
-  color:#fff;
+  font-size: 7em;
+  color: #fff;
   font-weight: bolder;
-  top:32%;
+  top: 32%;
   right: 8%;
 }
 
@@ -803,8 +805,9 @@
   box-shadow: 0px 0px 1px #ddd, 0 4px 20px #ccc;
   border-top-left-radius: 44px;
 }
+
 .ncrt_cards:hover .c_div {
-background-image: linear-gradient(rgba(26, 24, 24, 1), rgba(32, 32, 32, 1));
+  background-image: linear-gradient(rgba(26, 24, 24, 1), rgba(32, 32, 32, 1));
 }
 
 .sub_list {
@@ -854,7 +857,7 @@ hr {
 .about_head {
   min-height: 44vh;
   margin: 20px auto;
-  background-size: 100% 100%;
+  background-size: cover;
   background-repeat: no-repeat;
 }
 
@@ -1177,6 +1180,7 @@ hr {
   width: 1em;
   margin-left: -1em;
 }
+
 .courses1 ul {
   margin-top: 2em;
   list-style-type: none;
@@ -1504,6 +1508,14 @@ hr {
   right: -15px;
 }
 
+.badge-pillss {
+  background-color: #02EBA3;
+  padding: 0.6em 1em;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
 /* for normal screens ends here.... */
 @media screen and (min-width: 1850px) {
 
@@ -1571,6 +1583,60 @@ hr {
   position: relative;
 }
 
+.imgstyle {
+  width: 219.683px;
+  height: 300px;
+  margin-left: -15px;
+}
+
+.alignintable tr td {
+  width: 3%;
+}
+
+.clickchange {
+  border-right: 1px solid #fff;
+  text-align: center;
+  margin-top: 2.5em;
+  color: #fff
+}
+
+.clickchange span {
+  font-size: 20px;
+  ;
+}
+
+.clickchange1 {
+  text-align: center;
+  margin-top: 2.5em;
+  color: #fff;
+}
+
+.clickchange1 span {
+  font-size: 20px;
+}
+
+.clickchange:hover {
+  color: #000;
+  cursor:pointer;
+}
+
+.clickchange1:hover {
+  color: #000;
+  cursor:pointer;
+}
+
+.triangle-hover {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 30px solid #fff;
+  position: absolute;
+  top: 43px;
+  left: 140px;
+  ;
+}
+
 /* .video-border {
   display: flex;
   width: 100px;
@@ -1603,6 +1669,7 @@ hr {
     width: 1em;
     margin-left: -1em;
   }
+
   .video-border {
     margin-left: 33%;
   }
@@ -1634,7 +1701,7 @@ hr {
     border: 2px solid #A9A9A9;
     background-color: #fff;
     position: absolute;
-    top: 54%;
+    top: 52%;
     left: 40%;
   }
 
@@ -1876,7 +1943,7 @@ hr {
   }
 
   .course_contain_bg {
-    background-size:cover;
+    background-size: cover;
     min-height: 93vh;
     background-image: linear-gradient(rgba(233, 233, 233, 0.6), rgba(233, 233, 233, 0.6)), url('/static/images/24tut/tablet_stu.png');
   }
@@ -1893,7 +1960,6 @@ hr {
     margin-left: 12%;
     position: relative;
   }
-
 
   .list_head {
     max-width: 100%;
@@ -1953,7 +2019,6 @@ hr {
   }
 
   .about_head {
-    background-size: cover;
     min-height: 34vh;
   }
 
@@ -2193,11 +2258,14 @@ hr {
   .btmright {
     right: 51px;
   }
+
   .onplay {
-      width: 350px;
+    width: 350px;
   }
+
   .onplay_overlay {
-      width: 350px;
+    width: 350px;
   }
+
   /* for google pixel devices ends here */
 }
