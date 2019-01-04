@@ -287,8 +287,8 @@ USE_TZ = True
 EMAIL_HOST_SUFFIX = '24tutors.com'
 
 EMAIL_HOST = 'email.cioc.in'
-EMAIL_HOST_USER = 'do_not_reply@24tutors.com'
-EMAIL_HOST_PASSWORD = '51GX4]N1_0uw'
+EMAIL_HOST_USER = 'testmail@cioc.in'
+EMAIL_HOST_PASSWORD = 'Titan@1234'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_BACKEND = 'django.core.mail.backends.console.Sendgrid'

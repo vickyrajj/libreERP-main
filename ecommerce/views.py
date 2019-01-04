@@ -100,6 +100,7 @@ import sendgrid
 import os
 from svglib.svglib import svg2rlg
 import re
+from email_config import send_email
 
 
 # from sendgrid.helpers.mail import *
@@ -600,7 +601,7 @@ class CreateOrderAPI(APIView):
                 companyAddress = ''
                 print companyAddress ,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2'
             try:
-                gstValue = appSettingsField.objects.filter(name='gst')[0].value
+                gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
             except:
                 gstValue = ''
             if orderObj.user.email and orderObj.paymentMode == 'COD':
@@ -623,48 +624,13 @@ class CreateOrderAPI(APIView):
                     'companyAddress':companyAddress,
                     'gstValue':gstValue
                 }
-                print ctx
                 email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-                if globalSettings.EMAIL_API:
-                    sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-                    # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-                    data = {
-                      "personalizations": [
-                        {
-                          "to": [
-                            {
-                              "email": orderObj.user.email
-                              # str(orderObj.user.email)
-                            }
-                          ],
-                          "subject": "Invoice Details"
-                        }
-                      ],
-                      "from": {
-                        "email": globalSettings.G_FROM,
-                        "name":"BNI India"
-                      },
-                      "content": [
-                        {
-                          "type": "text/html",
-                          "value": email_body
-                        }
-                      ]
-                    }
-                    response = sg.client.mail.send.post(request_body=data)
-                    print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-
-                else:
-                    # email_subject = "Order Details:"
-                    # msgBody = " Your Order has been placed and details are been attached"
-                    contactData.append(str(orderObj.user.email))
-                    print 'aaaaaaaaaaaaaaa'
-                    msg = EmailMessage("Order Details" , email_body, to= contactData  )
-                    msg.content_subtype = 'html'
-                    # a = str(f).split('media_root/')[1]
-                    # b = str(a).split("', mode")[0]
-                    # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
-                    msg.send()
+                email_subject = "Order Details"
+                email_to = []
+                email_to.append(str(orderObj.user.email))
+                email_cc = ['vikky.motla@gmail.com']
+                email_bcc = ['bhrthkshr@gmail.com']
+                send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
             return Response({'paymentMode':orderObj.paymentMode,'dt':orderObj.created,'odnumber':orderObj.pk}, status = status.HTTP_200_OK)
 
 
@@ -1313,38 +1279,13 @@ class SendStatusAPI(APIView):
             msgBody ="Product has been returned"
 
         print emailAddr[0],'ffffffffffff'
+        email_body = msgBody
+        email_subject = "Order Status"
+        email_to = [emailAddr[0]]
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'text')
 
-        if globalSettings.EMAIL_API:
-            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-            data = {
-              "personalizations": [
-                {
-                  "to": [
-                    {
-                      "email": emailAddr[0]
-                      # str(orderObj.user.email)
-                    }
-                  ],
-                  "subject": "Invoice Details"
-                }
-              ],
-              "from": {
-                "email": globalSettings.G_FROM,
-                "name":"BNI India"
-              },
-              "content": [
-                {
-                  "type": "text/html",
-                  "value": msgBody
-                }
-              ]
-            }
-            response = sg.client.mail.send.post(request_body=data)
-            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-        else:
-            msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
-            msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
 class SendDeliveredStatus(APIView):
@@ -1377,7 +1318,7 @@ class SendDeliveredStatus(APIView):
         except:
             companyAddress = ''
         try:
-            gstValue = appSettingsField.objects.filter(name='gst')[0].value
+            gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
         except:
             gstValue = ''
         ctx = {
@@ -1397,42 +1338,13 @@ class SendDeliveredStatus(APIView):
             'companyAddress':companyAddress,
             'gstValue':gstValue
         }
-        print ctx
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
-        if globalSettings.EMAIL_API:
-            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-            data = {
-              "personalizations": [
-                {
-                  "to": [
-                    {
-                      "email": o.user.email
-                      # str(orderObj.user.email)
-                    }
-                  ],
-                  "subject": "Invoice Details"
-                }
-              ],
-              "from": {
-                "email": globalSettings.G_FROM,
-                "name":"BNI India"
-              },
-              "content": [
-                {
-                  "type": "text/html",
-                  "value": email_body
-                }
-              ]
-            }
-            response = sg.client.mail.send.post(request_body=data)
-            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-
-        else:
-            msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
-            msg.content_subtype = 'html'
-            # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
-            msg.send()
+        email_subject = "Delivered"
+        email_to = []
+        email_to.append(str(o.user.email))
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
         return Response({}, status = status.HTTP_200_OK)
 
 
@@ -1458,38 +1370,10 @@ class SendFeedBackAPI(APIView):
         }
         print ctx
         email_body = get_template('app.ecommerce.support.email.html').render(ctx)
-        if globalSettings.EMAIL_API:
-            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-            data = {
-              "personalizations": [
-                {
-                  "to": [
-                    {
-                      "email": supportObj.email
-                      # str(orderObj.user.email)
-                    }
-                  ],
-                  "subject": "On response to your Feed Back"
-                }
-              ],
-              "from": {
-                "email": globalSettings.G_FROM,
-                "name":"BNI India"
-              },
-              "content": [
-                {
-                  "type": "text/html",
-                  "value": email_body
-                }
-              ]
-            }
-            response = sg.client.mail.send.post(request_body=data)
-            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-        else:
-            msg = EmailMessage("Response" , email_body, to= emailAddr)
-            msg.content_subtype = 'html'
-            msg.send()
+        email_subject = "Response"
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,emailAddr,email_subject,email_cc,email_bcc,'hmtl')
         return Response({}, status = status.HTTP_200_OK)
 
 
@@ -1655,12 +1539,11 @@ class PageNumCanvas(canvas.Canvas):
         p2.wrapOn(self , 200*mm , 10*mm)
         p2.drawOn(self , 40*mm  , 1*mm)
 
-        ab = appSettingsField.objects.filter(name='GST')
+        ab = appSettingsField.objects.filter(name='cstNo')
         try:
             gstin = ab[0].value
         except :
             gstin = ''
-
         p4 = Paragraph(gstin , compNameStyle)
         p4.wrapOn(self , 200*mm , 10*mm)
         p4.drawOn(self , 85*mm  , 5*mm)
@@ -2312,7 +2195,7 @@ def paypal_return_view(request):
         companyAddress = ''
 
     try:
-        gstValue = appSettingsField.objects.filter(name='gst')[0].value
+        gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
     except:
         gstValue = ''
 
@@ -2339,10 +2222,12 @@ def paypal_return_view(request):
         print ctx
         contactData = []
         email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-        contactData.append(str(orderObj.user.email))
-        msg = EmailMessage("Order Details" , email_body, to= contactData  )
-        msg.content_subtype = 'html'
-        msg.send()
+        email_subject = "Order Details"
+        email_to = []
+        email_to.append(str(orderObj.user.email))
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'hmtl')
     return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
 
 
@@ -2499,7 +2384,7 @@ def updateAndProcessOrder(orderID , amnt):
     except:
         companyAddress = ''
     try:
-        gstValue = appSettingsField.objects.filter(name='gst')[0].value
+        gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
     except:
         gstValue = ''
 
@@ -2523,42 +2408,13 @@ def updateAndProcessOrder(orderID , amnt):
             'companyAddress':companyAddress,
             'gstValue':gstValue
         }
-        print ctx
-        contactData = []
         email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
         email_subject = 'Order Placed'
-        emails = []
-        emails.append({"email":str(orderObj.user.email)})
-        contactData.append(str(orderObj.user.email))
-        if globalSettings.EMAIL_API:
-            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-            for i in globalSettings.G_ADMIN:
-                emails.append({"email":i})
-            print emails,"**************&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-            data = {
-              "personalizations": [
-                {
-                  "to": emails,
-                  "subject": email_subject
-                }
-              ],
-              "from": {
-                "email": globalSettings.G_FROM,
-                "name":"BNI India"
-              },
-              "content": [
-                {
-                  "type": "text/html",
-                  "value": email_body
-                }
-              ]
-            }
-            response = sg.client.mail.send.post(request_body=data)
-        else:
-            msg = EmailMessage("Order Details" , email_body, to= contactData  )
-            msg.content_subtype = 'html'
-            msg.send()
+        email_to = []
+        email_to.append(str(orderObj.user.email))
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
     return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
 
 

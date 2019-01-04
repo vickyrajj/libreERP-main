@@ -2442,7 +2442,8 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
       state: '',
       pincode: null,
       country: 'India',
-      primary: false
+      primary: false,
+      mobileNo:''
     }
     if (settings_isStoreGlobal) {
       $scope.form.country = ''
