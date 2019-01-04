@@ -133,7 +133,7 @@ app.config(function($stateProvider) {
   $stateProvider
     .state('policy', {
       url: "/policy",
-      templateUrl: '/templates/policy.html',
+      templateUrl: '/ngTemplates/policy.html',
       // controller: 'controller.policy'
     })
   $stateProvider
@@ -151,7 +151,7 @@ app.config(function($stateProvider) {
   $stateProvider
     .state('disclaimer', {
       url: "/disclaimer",
-      templateUrl: 'ngTemplates/disclaimer.html',
+      templateUrl: '/ngTemplates/disclaimer.html',
       controller: 'controller.disclaimer'
     })
 });
