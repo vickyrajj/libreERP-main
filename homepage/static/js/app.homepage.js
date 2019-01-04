@@ -139,13 +139,19 @@ app.config(function($stateProvider) {
   $stateProvider
     .state('refund', {
       url: "/refund",
-      templateUrl: '/templates/refund.html',
+      templateUrl: '/ngTemplates/refund.html',
       // controller: 'controller.refund'
     })
   $stateProvider
     .state('terms', {
       url: "/terms",
-      templateUrl: '/templates/terms.html',
+      templateUrl: '/ngTemplates/terms.html',
+      // controller: 'controller.terms'
+    })
+  $stateProvider
+    .state('desclaimer', {
+      url: "/desclaimer",
+      templateUrl: '/ngTemplates/desclaimer.html',
       // controller: 'controller.terms'
     })
   $stateProvider
