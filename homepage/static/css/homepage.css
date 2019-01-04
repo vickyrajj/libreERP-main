@@ -852,9 +852,9 @@ hr {
 }
 
 .about_head {
-  min-height: 60vh;
+  min-height: 44vh;
   margin: 20px auto;
-  background-size: 100%;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
@@ -878,7 +878,7 @@ hr {
 .tell_abt_overlay {
   display: none;
   position: absolute;
-  left: 65px;
+  left: 46px;
   top: 24px;
 }
 
@@ -1876,7 +1876,7 @@ hr {
   }
 
   .course_contain_bg {
-    background-size: 150% 100%;
+    background-size:cover;
     min-height: 93vh;
     background-image: linear-gradient(rgba(233, 233, 233, 0.6), rgba(233, 233, 233, 0.6)), url('/static/images/24tut/tablet_stu.png');
   }
@@ -1893,6 +1893,7 @@ hr {
     margin-left: 12%;
     position: relative;
   }
+
 
   .list_head {
     max-width: 100%;
@@ -2192,6 +2193,11 @@ hr {
   .btmright {
     right: 51px;
   }
-
+  .onplay {
+      width: 350px;
+  }
+  .onplay_overlay {
+      width: 350px;
+  }
   /* for google pixel devices ends here */
 }
