@@ -854,7 +854,7 @@ hr {
 .about_head {
   min-height: 44vh;
   margin: 20px auto;
-  background-size: 100% 100%;
+  background-size:cover;
   background-repeat: no-repeat;
 }
 
@@ -1953,7 +1953,6 @@ hr {
   }
 
   .about_head {
-    background-size: cover;
     min-height: 34vh;
   }
 
