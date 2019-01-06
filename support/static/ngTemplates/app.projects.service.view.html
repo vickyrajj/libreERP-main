@@ -101,10 +101,36 @@
         </div>
         <div class="row" style="padding-top:10px">
           <div class="col-md-12 text-center">
+            <label> PO Ref Date : </label>
+          </div>
+          <div class="col-md-12">
+            <div class="input-group text-center">
+              <input type="text" class="form-control text-center" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.poDate"  is-open="statusPo.opened" ng-init="today" ng-change="poDateChange()"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="statusPo.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
             <label> Quotation ref Number : </label>
           </div>
           <div class="col-md-12">
             <input type="text" class="form-control text-center" ng-model="form.quoteRefNumber" placeholder="Quotation Ref Number" ng-change="quoteChange()">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
+            <label> Quotation Ref Date : </label>
+          </div>
+          <div class="col-md-12">
+            <div class="input-group text-center">
+              <input type="text" class="form-control text-center" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.quoteDate"  is-open="statusQuote.opened" ng-init="today" ng-change="quoteDateChange()"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="statusQuote.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
           </div>
         </div>
 
@@ -159,9 +185,34 @@
             <input type="text" class="form-control text-center" ng-model="form.paymentTerms" placeholder="Payment Terms" ng-change="paymentSave()">
           </div>
         </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> Shipment mode : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.shipmentMode" placeholder="Shipment mode" ng-change="shipmentModeSave()">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label>  Other Special Instruction : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.shipmentDetails" placeholder="Other Shipment Details" ng-change="shipmentDetails()">
+          </div>
+        </div>
         <div class="row text-right" style="padding-top:10px" ng-if="options">
           <a class="btn" href="" ng-click="showOption()"> <i class="fa fa-arrow-up"></i> View Less Options </a>
         </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-4 text-center">
+            <label> Net Weight : </label>
+          </div>
+          <div class="col-md-6 text-center">
+            <span> {{form.weightValue.toFixed(2)}}</span>
+          </div>
+        </div>
+
 
         <div class="row" style="padding-top:10px">
           <div class="col-md-4 text-center">
@@ -265,7 +316,7 @@
             <input type="number" class="form-control text-center" ng-model="form.packing" ng-change="packingChange()">
           </div>
           <div class="col-md-3 text-center">
-            <span> {{(form.packing * form.exRate).toFixed(2)}}</span>
+            <span> {{(form.packing * form.exRate).toFixed(2) | number}}</span>
           </div>
           <div class="col-md-2 text-center">
             <span> {{(form.packing*100 / form.invoiceValue).toFixed(2)}} %</span>
@@ -279,7 +330,7 @@
             <input type="number" class="form-control text-center" ng-model="form.insurance" ng-change="insuranceChange()">
           </div>
           <div class="col-md-3 text-center">
-            <span> {{(form.insurance * form.exRate).toFixed(2)}}</span>
+            <span> {{(form.insurance * form.exRate).toFixed(2)| number}}</span>
             <!-- <input type="number" class="form-control text-center" ng-model="form.insuranceINR"> -->
           </div>
           <div class="col-md-2 text-center">
@@ -295,7 +346,7 @@
             <input type="number" class="form-control text-center" ng-model="form.freight" ng-change="freightChange()">
           </div>
           <div class="col-md-3 text-center">
-            <span> {{(form.freight * form.exRate).toFixed(2)}}</span>
+            <span> {{(form.freight * form.exRate).toFixed(2)| number}}</span>
             <!-- <input type="number" class="form-control text-center" ng-model="form.freightINR"> -->
           </div>
           <div class="col-md-2 text-center">
@@ -398,10 +449,10 @@
             <tr style="background-color: #eeeeee;height: 96px;">
               <th>S.No</th>
               <th ><div style="width: 150px;">Part No</div></th>
-              <th>Products</th>
+              <th><div style="width: 200px;">Products</div></th>
               <th>Weight</th>
               <th>Price (CHF)</th>
-              <th>Quantity</th>
+              <th>Qty</th>
               <th>HSN</th>
               <th>Quote Price (CHF)</th>
               <th>Ex-Work Price (INR)</th>
@@ -410,9 +461,9 @@
               <th>Freight</th>
               <th>CIF/Pc</th>
               <th>Total CIF</th>
-              <th>Customs Duty (%)</th>
-              <th>Customs Duty value</th>
-              <th>Social Welfare Exchange</th>
+              <th>CD (%)</th>
+              <th>CD value</th>
+              <th>SWE</th>
               <th>GST (%)</th>
               <th>GST </th>
               <th>Claering Charges 1 </th>
@@ -423,60 +474,60 @@
             <tr ng-repeat="v in projects track by $index">
               <td>{{$index + 1}}</td>
               <td><div style="width: 150px;">{{v.products.part_no}}</div></td>
-              <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp;({{v.products.description_2}})</span></td>
+              <td><div style="width: 200px;">{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp;({{v.products.description_2}})</span></div></td>
               <td>{{v.products.weight}}</td>
-              <td>{{v.price}}</td>
+              <td style="text-align:right">{{v.price| number}}</td>
               <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="v.quantity1" style="background-color : #8fe298;padding:0px"></td>
               <td>{{v.customs_no}}</td>
-              <td>{{v.quotePrice}}</td>
-              <td>{{v.inrPrice}}</td>
-              <td>{{v.packing}}</td>
-              <td>{{v.insurance}}</td>
-              <td>{{v.freight}}</td>
-              <td>{{v.cif}}</td>
-              <td>{{(v.cif*v.quantity1).toFixed(2)}}</td>
+              <td>{{v.quotePrice| number}}</td>
+              <td>{{v.inrPrice | number}}</td>
+              <td>{{v.packing | number}}</td>
+              <td>{{v.insurance | number}}</td>
+              <td>{{v.freight | number}}</td>
+              <td>{{v.cif | number}}</td>
+              <td>{{(v.cif*v.quantity1).toFixed(2) | number}}</td>
               <!-- <td><select ng-model ="v.custom"><option value="7.5">7.5</option></select></td> -->
 
               <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="v.custom" style="background-color : #8fe298;padding:0px"></td>
-              <td>{{v.customVal}} </td>
-              <td>{{v.socialVal}}</td>
+              <td>{{v.customVal | number}} </td>
+              <td>{{v.socialVal | number}}</td>
               <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="v.gst" style="background-color : #8fe298;padding:0px"></td>
-              <td>{{v.gstVal}} </td>
-              <td>{{v.charge1}} </td>
-              <td>{{v.charge2}} </td>
-              <td>{{v.landed_price}}</td>
+              <td>{{v.gstVal | number}} </td>
+              <td>{{v.charge1 | number}} </td>
+              <td>{{v.charge2 | number}} </td>
+              <td>{{v.landed_price | number}}</td>
               <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index,v.price,v.quantity1)"> <i class="fa fa-trash"></i> </button></td>
             </tr>
             <tr ng-repeat="item in data track by $index">
               <td>{{$index + 1 + projects.length}}</td>
               <td ><div style="width: 150px;"><input ng-model="item.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></div></td>
-              <td>
-                {{item.description_1}}<span ng-if="item.description_2"> &nbsp;({{item.description_2}})</span>
+              <td><div style="width: 200px;">
+                {{item.description_1}}<span ng-if="item.description_2"> &nbsp;({{item.description_2}})</span></div>
               </td>
               <td>{{item.weight}}</td>
-              <td class="text-center">
-                {{item.price}}
-              <td style="background-color : #8fe298;padding:0px">
+              <td style="text-align:right">
+                {{item.price}}</td>
+              <td text-center style="background-color : #8fe298;padding:0px">
                 <input type="text" class="form-control-pos text-center" ng-model="item.quantity1" style="background-color : #8fe298;padding:0px">
               </td>
               <td>{{item.customs_no}}</td>
-              <td>{{item.quotePrice}}</td>
-              <td>{{item.inrPrice}}</td>
-              <td>{{item.packing}}</td>
-              <td>{{item.insurance}}</td>
-              <td>{{item.freight}}</td>
-              <td>{{item.cif}}</td>
-              <td>{{(item.cif*item.quantity1).toFixed(2)}}</td>
+              <td>{{item.quotePrice| number}}</td>
+              <td>{{item.inrPrice| number}}</td>
+              <td>{{item.packing| number}}</td>
+              <td>{{item.insurance| number}}</td>
+              <td>{{item.freight| number}}</td>
+              <td>{{item.cif| number}}</td>
+              <td>{{(item.cif*item.quantity1).toFixed(2)| number}}</td>
               <!-- <td><select ng-model ="v.custom"><option value="7.5">7.5</option></select></td> -->
               <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="item.custom" style="background-color : #8fe298;padding:0px"></td>
               <!-- <td>{{item.custom}}%</td> -->
-              <td>{{item.customVal}} </td>
-              <td>{{item.socialVal}}</td>
+              <td>{{item.customVal| number}} </td>
+              <td>{{item.socialVal| number}}</td>
               <td style="background-color : #8fe298;padding:0px"><input type="text" class="form-control-pos text-center" ng-model="item.gst" style="background-color : #8fe298;padding:0px"></td>
-              <td>{{item.gstVal}} </td>
-              <td>{{item.charge1}} </td>
-              <td>{{item.charge2}} </td>
-              <td>{{item.landed_price}}</td>
+              <td>{{item.gstVal| number}} </td>
+              <td>{{item.charge1| number}} </td>
+              <td>{{item.charge2| number}} </td>
+              <td>{{item.landed_price| number}}</td>
               <td>
 
                 <button type="button" class="btn btn-danger btn-sm" ng-click="deleteTable(item.listPk,$index)"> <i class="fa fa-trash"></i> </button>
@@ -595,12 +646,29 @@
           <span> {{form.poNumber}}</span>
         </div>
       </div>
+
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
+          <label>  PO Ref Date : </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.poDate}}</span>
+        </div>
+      </div>
       <div class="row" style="padding-top:10px">
         <div class="col-md-5 text-center">
           <label> Quotation ref Number : </label>
         </div>
         <div class="col-md-7 text-center">
           <span> {{form.quoteRefNumber}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
+          <label> Quotation Ref Date : </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.quoteDate}}</span>
         </div>
       </div>
       <div class="row" style="padding-top:10px">
@@ -649,6 +717,30 @@
         </div>
         <div class="col-md-7 text-center">
           <span> {{form.paymentTerms}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
+          <label> Shipment mode : </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.shipmentMode}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
+          <label> Other Special Instruction : </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.shipmentDetails}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
+          <label> Net Weight : </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.weightValue.toFixed(2)}}</span>
         </div>
       </div>
 
@@ -726,7 +818,7 @@
           <label> Ex Work Price: </label>
         </div>
         <div class="col-md-3 text-center">
-          <span>{{(form.invoiceValue).toFixed(2)}}</span>
+          <span>{{(form.invoiceValue).toFixed(2)| number}}</span>
         </div>
         <div class="col-md-3 text-center">
           <span> {{((form.invoiceValue * form.exRate)).toFixed(2) | number}}</span>
@@ -741,10 +833,10 @@
           <span>{{form.packing}}</span>
         </div>
         <div class="col-md-3 text-center">
-          <span> {{(form.packing * form.exRate).toFixed(2)}}</span>
+          <span> {{(form.packing * form.exRate).toFixed(2)| number}}</span>
         </div>
         <div class="col-md-2 text-center">
-          <span> {{(form.packing *100 / form.invoiceValue).toFixed(2)}} %</span>
+          <span> {{(form.packing *100 / form.invoiceValue).toFixed(2)| number}} %</span>
         </div>
       </div>
       <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
@@ -752,10 +844,10 @@
           <label> Insurance: </label>
         </div>
         <div class="col-md-3 text-center">
-          <span>{{form.insurance}}</span>
+          <span>{{form.insurance| number}}</span>
         </div>
         <div class="col-md-3 text-center">
-          <span> {{(form.insurance * form.exRate).toFixed(2)}}</span>
+          <span> {{(form.insurance * form.exRate).toFixed(2)| number}}</span>
         </div>
         <div class="col-md-2 text-center">
           <span> {{(form.insurance*100/ form.invoiceValue).toFixed(2)}}% </span>
@@ -766,13 +858,13 @@
           <label> Freight: </label>
         </div>
         <div class="col-md-3 text-center">
-          <span>{{form.freight}}</span>
+          <span>{{form.freight| number}}</span>
         </div>
         <div class="col-md-3 text-center">
-          <span> {{(form.freight * form.exRate).toFixed(2)}}</span>
+          <span> {{(form.freight * form.exRate).toFixed(2)| number}}</span>
         </div>
         <div class="col-md-2 text-center">
-          <span> {{(form.freight*100/ form.invoiceValue).toFixed(2)}} %</span>
+          <span> {{(form.freight*100/ form.invoiceValue).toFixed(2)| number}} %</span>
         </div>
       </div>
       <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
@@ -819,7 +911,7 @@
         <div class="col-md-3 text-center">
         </div>
         <div class="col-md-3 text-center">
-          <span>{{form.clearingCharges1}}</span>
+          <span>{{form.clearingCharges1| number}}</span>
         </div>
         <div class="col-md-2 text-center">
           <span> {{(form.clearingCharges1*100/(form.invoiceValue* form.exRate)).toFixed(2)}} %</span>
@@ -832,7 +924,7 @@
         <div class="col-md-3 text-center">
         </div>
         <div class="col-md-3 text-center">
-          <span>{{form.clearingCharges2}}</span>
+          <span>{{form.clearingCharges2| number}}</span>
         </div>
         <div class="col-md-2 text-center">
           <span> {{(form.clearingCharges2*100/(form.invoiceValue * form.exRate)).toFixed(2)}} %</span>
@@ -845,10 +937,10 @@
           <tbody>
             <tr style="background-color: #eeeeee;height: 96px;">
               <th>Si.No</th>
-              <th>Product</th>
-              <th>Part No</th>
+              <th><div style="width: 200px;">Product</div></th>
+              <th><div style="width: 120px;">Part No</div></th>
               <th>Weight</th>
-              <th> Quantity</th>
+              <th> Qty</th>
               <th>HSN</th>
               <th>Price</th>
               <th>Quote Price (CHF)</th>
@@ -858,9 +950,9 @@
               <th>Freight</th>
               <th>CIF/Pc</th>
               <th>Total CIF</th>
-              <th>Customs Duty (%)</th>
-              <th>Customs Duty value</th>
-              <th>Social Welfare Exchange</th>
+              <th>CD (%)</th>
+              <th>CD value</th>
+              <th>SWE</th>
               <th>GST (%)</th>
               <th>GST </th>
               <th>Claering Charges 1 </th>
@@ -870,27 +962,27 @@
             </tr>
             <tr ng-repeat="v in projects track by $index">
               <td>{{$index + 1}}</td>
-              <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
+              <td> <div style="width: 200px;">{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></div></td>
               <td><div style="width: 120px;">{{v.products.part_no}}</div></td>
               <td>{{v.products.weight}}</td>
               <td>{{v.quantity1}}</td>
               <td>{{v.customs_no}}</td>
-              <td>{{v.price}}</td>
-              <td>{{v.quotePrice}}</td>
-              <td>{{v.inrPrice}}</td>
-              <td>{{v.packing}}</td>
-              <td>{{v.insurance}}</td>
-              <td>{{v.freight}}</td>
-              <td>{{v.cif}}</td>
-              <td>{{(v.cif*v.quantity1).toFixed(2)}}</td>
+              <td style="text-align:right">{{v.price| number}}</td>
+              <td>{{v.quotePrice| number}}</td>
+              <td>{{v.inrPrice| number}}</td>
+              <td>{{v.packing| number}}</td>
+              <td>{{v.insurance| number}}</td>
+              <td>{{v.freight| number}}</td>
+              <td>{{v.cif| number}}</td>
+              <td>{{(v.cif*v.quantity1).toFixed(2)| number}}</td>
               <td style="background-color : #8fe298;padding:0px">{{v.custom}}</td>
-              <td >{{v.customVal}} </td>
-              <td>{{v.socialVal}}</td>
+              <td >{{v.customVal| number}} </td>
+              <td>{{v.socialVal| number}}</td>
               <td style="background-color : #8fe298;padding:0px">{{v.gst}} </td>
-              <td>{{v.gstVal}} </td>
-              <td>{{v.charge1}} </td>
-              <td>{{v.charge2}} </td>
-              <td>{{v.landed_price}}</td>
+              <td>{{v.gstVal| number}} </td>
+              <td>{{v.charge1| number}} </td>
+              <td>{{v.charge2| number}} </td>
+              <td>{{v.landed_price| number}}</td>
             </tr>
           </tbody>
         </table>
@@ -1008,10 +1100,36 @@
       </div>
       <div class="row" style="padding-top:10px">
         <div class="col-md-12 text-center">
+          <label> PO Ref Date : </label>
+        </div>
+        <div class="col-md-12">
+          <div class="input-group text-center">
+            <input type="text" class="form-control text-center" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.poDate"  is-open="statusPo.opened" ng-init="today" ng-change="poDateChange()"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="statusPo.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-12 text-center">
           <label> Quotation ref Number : </label>
         </div>
         <div class="col-md-12">
           <input type="text" class="form-control text-center" ng-model="form.quoteRefNumber" placeholder="Quotation Ref Number" ng-change="quoteChange()">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-12 text-center">
+          <label> Quotation Ref Date : </label>
+        </div>
+        <div class="col-md-12">
+          <div class="input-group text-center">
+            <input type="text" class="form-control text-center" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.quoteDate"  is-open="statusQuote.opened" ng-init="today" ng-change="quoteDateChange()"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="statusQuote.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </div>
         </div>
       </div>
       <div class="row" style="padding-top:10px">
@@ -1065,10 +1183,33 @@
           <input type="text" class="form-control text-center" ng-model="form.paymentTerms" placeholder="Payment Terms" ng-change="paymentSave()">
         </div>
       </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label> Shipment mode : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.shipmentMode" placeholder="Shipment mode" ng-change="shipmentModeSave()">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label>  Other Special Instruction : </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.shipmentDetails" placeholder="Other Shipment Details" ng-change="shipmentDetails()">
+        </div>
+      </div>
       <div class="row text-right" style="padding-top:10px" ng-if="options">
         <a class="btn" href="" ng-click="showOption()"> <i class="fa fa-arrow-up"></i> View Less Options </a>
       </div>
-
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-4 text-center">
+          <label> Net Weight : </label>
+        </div>
+        <div class="col-md-6 text-center">
+          <span> {{form.weightValue.toFixed(2)}}</span>
+        </div>
+      </div>
       <div class="row" style="padding-top:10px">
         <div class="col-md-4 text-center">
           <label> Ex Rate : </label>
@@ -1078,6 +1219,7 @@
         </div>
 
       </div>
+
       <div class="row" style="padding-top:10px">
         <div class="col-md-4 text-center">
           <label> Profit Margin : </label>
@@ -1156,7 +1298,7 @@
           <input type="number" class="form-control text-center" ng-model="form.packing" ng-change="packingChange()">
         </div>
         <div class="col-md-3 text-center">
-          <span> {{(form.packing * form.exRate).toFixed(2)}}</span>
+          <span> {{(form.packing * form.exRate).toFixed(2)| number}}</span>
         </div>
         <div class="col-md-2 text-center">
           <span> {{(form.packing *100/ form.invoiceValue).toFixed(2)}} %</span>
@@ -1170,7 +1312,7 @@
           <input type="number" class="form-control text-center" ng-model="form.insurance" ng-change="insuranceChange()">
         </div>
         <div class="col-md-3 text-center">
-          <span> {{(form.insurance * form.exRate).toFixed(2)}}</span>
+          <span> {{(form.insurance * form.exRate).toFixed(2)| number}}</span>
         </div>
         <div class="col-md-2 text-center">
           <span> {{(form.insurance*100/ form.invoiceValue).toFixed(2)}}% </span>
@@ -1184,7 +1326,7 @@
           <input type="number" class="form-control text-center" ng-model="form.freight" ng-change="freightChange()">
         </div>
         <div class="col-md-3 text-center">
-          <span> {{(form.freight * form.exRate).toFixed(2)}}</span>
+          <span> {{(form.freight * form.exRate).toFixed(2)| number}}</span>
         </div>
         <div class="col-md-2 text-center">
           <span> {{(form.freight*100/ form.invoiceValue).toFixed(2)}} %</span>
@@ -1260,13 +1402,13 @@
       <tbody>
         <tr style="background-color: #eeeeee;height: 96px;">
           <th>Si.No</th>
-          <th>Product</th>
-          <th>Part No</th>
+          <th><div style="width: 200px;">Product</div></th>
+          <th><div style="width: 120px;">Part No</div></th>
           <th>Weight</th>
           <th>Quantity</th>
           <th>HSN</th>
           <th>Price</th>
-          <th>Quantity Received</th>
+          <th>Qty Received</th>
           <th>Quote Price (CHF)</th>
           <th>Ex-Work Price (INR)</th>
           <th>Packing Cost</th>
@@ -1274,9 +1416,9 @@
           <th>Freight</th>
           <th>CIF/Pc</th>
           <th>Total CIF</th>
-          <th>Customs Duty (%)</th>
-          <th>Customs Duty value</th>
-          <th>Social Welfare Exchange</th>
+          <th>CD (%)</th>
+          <th>CD value</th>
+          <th>SWE</th>
           <th>GST (%)</th>
           <th>GST </th>
           <th>Claering Charges 1 </th>
@@ -1285,28 +1427,28 @@
         </tr>
         <tr ng-repeat="v in projects track by $index">
           <td>{{$index + 1}}</td>
-          <td>{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></td>
+          <td><div style="width: 200px;">{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></div></td>
           <td><div style="width: 120px;">{{v.products.part_no}}</div></td>
           <td>{{v.products.weight}}</td>
           <td>{{v.quantity1}}</td>
           <td>{{v.customs_no}}</td>
-          <td>{{v.price.toFixed(2)}}</td>
+          <td style="text-align:right">{{v.price.toFixed(2)| number}}</td>
           <td style="background-color : #8fe298;padding:0px" class="text-center"><input step=1 class="form-control-pos text-center" ng-model="v.quantity2" style="background-color : #8fe298;padding:0px"></td>
-          <td>{{v.quotePrice}}</td>
-          <td>{{v.inrPrice}}</td>
-          <td>{{v.packing}}</td>
-          <td>{{v.insurance}}</td>
-          <td>{{v.freight}}</td>
-          <td>{{v.cif}}</td>
-          <td>{{(v.cif*v.quantity1).toFixed(2)}}</td>
+          <td>{{v.quotePrice| number}}</td>
+          <td>{{v.inrPrice| number}}</td>
+          <td>{{v.packing| number}}</td>
+          <td>{{v.insurance| number}}</td>
+          <td>{{v.freight| number}}</td>
+          <td>{{v.cif| number}}</td>
+          <td>{{(v.cif*v.quantity1).toFixed(2)| number}}</td>
           <td>{{v.custom}}</td>
-          <td>{{v.customVal}} </td>
-          <td>{{v.socialVal}}</td>
+          <td>{{v.customVal| number}} </td>
+          <td>{{v.socialVal| number}}</td>
           <td>{{v.gst}} </td>
-          <td>{{v.gstVal}} </td>
-          <td>{{v.charge1}} </td>
-          <td>{{v.charge2}} </td>
-          <td>{{v.landed_price}}</td>
+          <td>{{v.gstVal| number}} </td>
+          <td>{{v.charge1| number}} </td>
+          <td>{{v.charge2| number}} </td>
+          <td>{{v.landed_price| number}}</td>
         </tr>
       </tbody>
     </table>
@@ -1419,13 +1561,28 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
-              <label> Quotation ref Number : </label>
+              <label>  PO Ref Date : </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.poDate}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+              <label>  Quotation Ref Number : </label>
             </div>
             <div class="col-md-7 text-center">
               <span> {{form.quoteRefNumber}}</span>
             </div>
           </div>
-
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+              <label> Quotation Ref Date  : </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.quoteDate}}</span>
+            </div>
+          </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
               <label> Invoice Number : </label>
@@ -1476,12 +1633,37 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
+              <label> Shipment mode : </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.shipmentMode}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+              <label> Other Special Instruction : </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.shipmentDetails}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+              <label> Net Weight : </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.weightValue.toFixed(2)}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
               <label> Ex Rate : </label>
             </div>
             <div class="col-md-7 text-center">
               <span> {{form.exRate}}</span>
             </div>
           </div>
+
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
               <label> Profit Margin : </label>
@@ -1545,7 +1727,7 @@
     </div>
     <div class="col-md-9">
       <wizard steps="projectSteps.steps" editable="false" active="form.selectedStatus" error="false"></wizard>
-      <hr>
+      <!-- <hr>
       <table class="invoiceTable" style=" width: 100%;">
         <thead>
           <b>Purchase Order Details</b>
@@ -1556,7 +1738,7 @@
             <th>Part No</th>
             <th>Products</th>
             <th>HSN</th>
-            <th> Quantity</th>
+            <th>Quantity</th>
             <th>Price</th>
             <th>Total</th>
           </tr>
@@ -1579,43 +1761,8 @@
             <td><b>{{purchaseSum.toFixed(2)}}</b></td>
           </tr>
         </tbody>
-      </table>
-         <div class="row" style='margin-top:5em' ng-if="materialIssue.length>0">
-            <hr />
-            <div class="col-md-12">
-              <table class="invoiceTable" style=" width: 100%;">
-                <thead>
-                  <b>Material Issue Details</b>
-                </thead>
-                <tbody>
-                  <tr style="background-color: #eeeeee;height: 50px;">
-                    <th>Si.No</th>
-                    <th>Product</th>
-                    <th>Part No</th>
-                    <th>Quantity</th>
-                    <th>Stock value/unit</th>
-                    <th>Stock value Consumed</th>
-                  </tr>
-                  <tr ng-repeat="m in materialIssue track by $index">
-                    <td>{{$index + 1}}</td>
-                    <td>{{m.product.description_1}}<span ng-if="m.product.description_2"> ({{m.product.description_2}})</span></td>
-                    <td>{{m.product.part_no}}</td>
-                    <td>{{m.qty}}</td>
-                    <td>{{m.price.toFixed(2)}}</td>
-                    <td>{{(m.qty*m.price).toFixed(2)}}</td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>Total</td>
-                    <td><b>{{materialSum.toFixed(2)}}</b></td>
-                  </tr>
-                </tbody>
-               </table>
-             </div>
-            </div>
+      </table> -->
+
             <hr />
             <div class="col-md-12">
               <div class="row" style="padding-top:20px">
@@ -1650,7 +1797,7 @@
                   <span>{{form.packing}}</span>
                 </div>
                 <div class="col-md-3 text-center">
-                  <span> {{(form.packing * form.exRate).toFixed(2)}}</span>
+                  <span> {{(form.packing * form.exRate).toFixed(2)| number}}</span>
                 </div>
                 <div class="col-md-2 text-center">
                   <span> {{(form.packing *100/ form.invoiceValue).toFixed(2)}} %</span>
@@ -1664,7 +1811,7 @@
                   <span>{{form.insurance}}</span>
                 </div>
                 <div class="col-md-3 text-center">
-                  <span> {{(form.insurance * form.exRate).toFixed(2)}}</span>
+                  <span> {{(form.insurance * form.exRate).toFixed(2)| number}}</span>
                 </div>
                 <div class="col-md-2 text-center">
                   <span> {{(form.insurance*100/ form.invoiceValue).toFixed(2)}}% </span>
@@ -1678,7 +1825,7 @@
                   <span>{{form.freight}}</span>
                 </div>
                 <div class="col-md-3 text-center">
-                  <span> {{(form.freight * form.exRate).toFixed(2)}}</span>
+                  <span> {{(form.freight * form.exRate).toFixed(2)| number}}</span>
                 </div>
                 <div class="col-md-2 text-center">
                   <span> {{(form.freight*100/ form.invoiceValue).toFixed(2)}} %</span>
@@ -1728,7 +1875,7 @@
                 <div class="col-md-3 text-center">
                 </div>
                 <div class="col-md-3 text-center">
-                  <span>{{form.clearingCharges1}}</span>
+                  <span>{{form.clearingCharges1| number}}</span>
                 </div>
                 <div class="col-md-2 text-center">
                   <span> {{(form.clearingCharges1*100/(form.invoiceValue* form.exRate)).toFixed(2)}} %</span>
@@ -1741,15 +1888,112 @@
                 <div class="col-md-3 text-center">
                 </div>
                 <div class="col-md-3 text-center">
-                  <span>{{form.clearingCharges2}}</span>
+                  <span>{{form.clearingCharges2| number}}</span>
                 </div>
                 <div class="col-md-2 text-center">
                   <span> {{(form.clearingCharges2*100/(form.invoiceValue * form.exRate)).toFixed(2)}} %</span>
                 </div>
               </div>
             </div>
+            <div class="row" ng-if="materialIssue.length>0">
+               <hr />
+               <div class="col-md-12"  style='padding-top:20px'>
+                 <table class="invoiceTable" style=" width: 100%;">
+                   <thead>
+                     <b>Material Issue Details</b>
+                   </thead>
+                   <tbody>
+                     <tr style="background-color: #eeeeee;height: 50px;">
+                       <th>Si.No</th>
+                       <th>Product</th>
+                       <th>Part No</th>
+                       <th>Quantity</th>
+                       <th>Stock value/unit</th>
+                       <th>Stock value Consumed</th>
+                     </tr>
+                     <tr ng-repeat="m in materialIssue track by $index">
+                       <td>{{$index + 1}}</td>
+                       <td>{{m.product.description_1}}<span ng-if="m.product.description_2"> ({{m.product.description_2}})</span></td>
+                       <td>{{m.product.part_no}}</td>
+                       <td>{{m.qty}}</td>
+                       <td>{{m.price.toFixed(2)| number}}</td>
+                       <td>{{(m.qty*m.price).toFixed(2)| number}}</td>
+                     </tr>
+                     <tr>
+                       <td></td>
+                       <td></td>
+                       <td></td>
+                       <td></td>
+                       <td>Total</td>
+                       <td><b>{{materialSum.toFixed(2)| number}}</b></td>
+                     </tr>
+                   </tbody>
+                  </table>
+                </div>
+               </div>
         </div>
         <div class="row">
+          <div class="col-md-12" style="padding-top:20px">
+            <table class="invoiceTable" style=" width: 100%;">
+              <thead>
+                <b>Purchase Order Details</b>
+              </thead>
+              <tbody>
+                <tr style="background-color: #eeeeee;height: 96px;">
+                  <th>Si.No</th>
+                  <th><div style="width: 200px;">Product</div></th>
+                  <th><div style="width: 120px;">Part No</div></th>
+                  <th>Weight</th>
+                  <th> Qty</th>
+                  <th>HSN</th>
+                  <th>Price</th>
+                  <th>Quote Price (CHF)</th>
+                  <th>Ex-Work Price (INR)</th>
+                  <th>Packing Cost</th>
+                  <th>Insurance</th>
+                  <th>Freight</th>
+                  <th>CIF/Pc</th>
+                  <th>Total CIF</th>
+                  <th>CD (%)</th>
+                  <th>CD value</th>
+                  <th>SWE</th>
+                  <th>GST (%)</th>
+                  <th>GST </th>
+                  <th>Claering Charges 1 </th>
+                  <th>Claering Charges 2 </th>
+                  <th>Landing Cost/pc </th>
+
+                </tr>
+                <tr ng-repeat="v in projects track by $index">
+                  <td>{{$index + 1}}</td>
+                  <td> <div style="width: 200px;">{{v.products.description_1}}<span ng-if="v.products.description_2"> &nbsp({{v.products.description_2}})</span></div></td>
+                  <td><div style="width: 120px;">{{v.products.part_no}}</div></td>
+                  <td>{{v.products.weight}}</td>
+                  <td>{{v.quantity1}}</td>
+                  <td>{{v.customs_no}}</td>
+                  <td style="text-align:right">{{v.price| number}}</td>
+                  <td>{{v.quotePrice| number}}</td>
+                  <td>{{v.inrPrice| number}}</td>
+                  <td>{{v.packing| number}}</td>
+                  <td>{{v.insurance| number}}</td>
+                  <td>{{v.freight| number}}</td>
+                  <td>{{v.cif| number}}</td>
+                  <td>{{(v.cif*v.quantity1).toFixed(2)| number}}</td>
+                  <td>{{v.custom}}</td>
+                  <td >{{v.customVal| number}} </td>
+                  <td>{{v.socialVal| number}}</td>
+                  <td>{{v.gst}} </td>
+                  <td>{{v.gstVal| number}} </td>
+                  <td>{{v.charge1| number}} </td>
+                  <td>{{v.charge2| number}} </td>
+                  <td>{{v.landed_price| number}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+        <div class="row" style="padding-top:15px">
           <div class="col-md-12 text-left">
             <button type="button" class="btn btn-success pull-right" mwl-confirm title="Confirm" message="Are you sure?" data-placement="top" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="archieve()"
               confirm-button-type="default" cancel-button-type="default" > Archieve </button>
