@@ -630,7 +630,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       openChat()
       ChatWithUs.style.display="none"
     })
-  }, 5000);
+  }, 2000);
 
 
   connection.onopen = function (session) {
@@ -3240,6 +3240,11 @@ setInterval(function () {
       document.getElementsByTagName("BODY")[0].style.overflowY = "";
     }
   }
+
+  ChatWithUs.style.display="none"
+  setTimeout(function () {
+      ChatWithUs.style.display="block"
+  }, 2000);
 
   closeSupport.addEventListener("click", function() {
     // if(isConfirmedToEnd){

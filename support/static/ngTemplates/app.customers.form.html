@@ -220,13 +220,13 @@
 
         <div class="form-group">
           <span class="col-md-12"><i class="fa fa-object-group" aria-hidden="true"></i> &nbsp; <label>Desktop Button Position</label> &nbsp;
-          <input type="radio" ng-model="cpForm.chatIconPosition" value="left-center">&nbsp;
+          <input ng-if="cpForm.chatIconType=='Box'" type="radio" ng-model="cpForm.chatIconPosition" value="left-center">&nbsp;
             <span style="display:inline-block;margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
               <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
                 <span style="position: absolute;top:40%;background:black;border-radius:50%;width:7px;height:7px"></span>
               </div>
             </span> &nbsp;
-            <input type="radio" ng-model="cpForm.chatIconPosition" value="right-center">&nbsp;
+            <input type="radio" ng-model="cpForm.chatIconPosition" value="right-center" ng-if="cpForm.chatIconType=='Box'">&nbsp;
             <span style="display:inline-block; margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
               <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
                 <span style="position: absolute;top:40%;right:0px;background:black;border-radius:50%;width:7px;height:7px"></span>
