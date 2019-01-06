@@ -24,6 +24,8 @@ class serviceSerializer(serializers.ModelSerializer):
         fields = ('pk' , 'created' ,'name' , 'user' , 'cin' , 'tin' , 'address' , 'mobile' , 'telephone' , 'logo' , 'about', 'doc', 'web','contactPerson','vendor')
 
     def assignValues(self , instance , validated_data):
+        if 'name' in validated_data:
+            instance.name = validated_data['name']
         if 'cin' in validated_data:
             instance.cin = validated_data['cin']
         if 'tin' in validated_data:
@@ -53,17 +55,17 @@ class serviceSerializer(serializers.ModelSerializer):
         self.assignValues(s, validated_data)
         return s
     def update(self , instance , validated_data):
-        instance.name = self.context['request'].data['name']
+        # instance.name = self.context['request'].data['name']
         # instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
-        instance.save()
         self.assignValues(instance , validated_data)
+        instance.save()
         return instance
 
 class serviceLiteSerializer(serializers.ModelSerializer):
     address = addressSerializer(many = False, read_only = True)
     class Meta:
         model = service
-        fields = ('pk'  ,'name' , 'address' , 'mobile' )
+        fields = ('pk'  ,'name' , 'address' , 'mobile', 'cin' , 'tin','logo','web','telephone')
 
 class deviceSerializer(serializers.ModelSerializer):
     class Meta:

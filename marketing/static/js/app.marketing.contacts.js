@@ -14,14 +14,21 @@ app.controller("businessManagement.marketing.contacts", function($scope, $state,
     itemTemplate: '/static/ngTemplates/app.marketing.contacts.item.html',
   }, ];
 
+  drillsOption = [{icon : 'fa fa-bars' , name : 'Source Options' , btnClass : 'default' , options : []}]
+  for (var i = 0; i < SOURCE_LIST.length; i++) {
+    drillsOption[0].options.push({key : SOURCE_LIST[i], value : true})
+  }
+  console.log(SOURCE_LIST,drillsOption);
+
   $scope.Config = {
     url: '/api/marketing/contacts/',
     views: views,
     itemsNumPerView: [12, 24, 48],
     filterSearch: true,
-    searchField: 'Search..',
+    searchField: 'email',
     canCreate: true,
     editorTemplate: '/static/ngTemplates/app.marketing.bulkContacts.form.html',
+    drills : drillsOption
   };
 
   $scope.tableAction = function(target, action, mode) {

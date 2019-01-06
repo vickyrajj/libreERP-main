@@ -12,7 +12,6 @@ urlpatterns = [
     url(r'^taskBoard/', include('taskBoard.urls')),
     url(r'^virtualWorkforce/', include('virtualWorkforce.urls')),
     url(r'^finance/', include('finance.urls')),
-    url(r'^tools/', include('tools.urls')),
     url(r'^clientRelationships/', include('clientRelationships.urls')),
     url(r'^organization/', include('organization.urls')),
     url(r'^recruitment/', include('recruitment.urls')),
@@ -21,5 +20,6 @@ urlpatterns = [
     url(r'^performance/', include('performance.urls')),
     url(r'^marketing/', include('marketing.urls')),
     url(r'^employees/', include('employees.urls')),
+    # url(r'^tools/', include('tools.urls')),
 
 ]

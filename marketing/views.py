@@ -25,6 +25,15 @@ import json
 import operator
 from excel_response import ExcelResponse
 from .serializers import campaigncontactsList
+from ics import Calendar, Event
+from email.MIMEBase import MIMEBase
+import datetime
+from dateutil import parser
+from django.views.decorators.csrf import csrf_exempt
+from django.template.loader import render_to_string, get_template
+from django.core.mail import send_mail, EmailMessage
+from clientRelationships.models import Contact
+from ERP.models import service
 # Create your views here.
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -53,40 +62,58 @@ class CampaignLogsViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user', 'contact' , 'campaign']
 
+class ScheduleViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    serializer_class = SheduleSerializer
+    queryset = Schedule.objects.all()
+
 class LeadsViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticated ,)
-    serializer_class = LeadsSerializer    
-    def get_queryset(self):
-        print self.request.GET
-        leadsList = CampaignLogs.objects.filter(typ = 'converted').values_list('contact',flat=True)
-        print leadsList
-        print Contacts.objects.filter(pk__in = list(leadsList))
-        return Contacts.objects.filter(pk__in = list(leadsList))
+    permission_classes = (permissions.AllowAny , )
+    serializer_class = LeadsSerializer
+    queryset = Leads.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['mobileNumber',]
+
+# class LeadsViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticated ,)
+#     serializer_class = LeadsSerializer
+#     def get_queryset(self):
+#         print self.request.GET
+#         leadsList = CampaignLogs.objects.filter(typ = 'converted').values_list('contact',flat=True)
+#         print leadsList
+#         print Contacts.objects.filter(pk__in = list(leadsList))
+#         return Contacts.objects.filter(pk__in = list(leadsList))
 
 class ContactsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated ,)
     serializer_class = ContactsSerializer
-    queryset = Contacts.objects.all()
+    # queryset = Contacts.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name','source']
+    filter_fields = ['name','source','email']
 
-    # def get_queryset(self):
-    #     if 'fd' in self.request.GET:
-    #         if len(self.request.GET['fd']) > 0:
-    #             print self.request.GET,'777777777'
-    #             fromDate = self.request.GET['fd'].split('-')
-    #             toDate = self.request.GET['td'].split('-')
-    #             fd = date(int(fromDate[0]), int(fromDate[1]), int(fromDate[2]))
-    #             td = date(int(toDate[0]), int(toDate[1]), int(toDate[2]))
-    #             fromDate = fd + relativedelta(days=1)
-    #             toDate = td + relativedelta(days=1)
-    #             print Contacts.objects.filter(created__range=(str(fromDate),str(toDate)),source__contains = str(self.request.GET['source__contains']))
-    #             return Contacts.objects.filter(created__range=(str(fromDate),str(toDate)),source__contains = str(self.request.GET['source__contains']))
-    #         else:
-    #             print Contacts.objects.filter(source__contains = str(self.request.GET['source__contains'])).values_list('source', flat=True).distinct()
-    #             return Contacts.objects.filter(source__contains = str(self.request.GET['source__contains']))
-    #     else:
-    #         return Contacts.objects.all()
+    def get_queryset(self):
+        toReturn = Contacts.objects.all()
+        for i in globalSettings.SOURCE_LIST:
+            if i in self.request.GET and int(self.request.GET[i]) == 0:
+                toReturn = toReturn.exclude(source=i)
+        return toReturn
+
+        # if 'fd' in self.request.GET:
+        #     if len(self.request.GET['fd']) > 0:
+        #         print self.request.GET,'777777777'
+        #         fromDate = self.request.GET['fd'].split('-')
+        #         toDate = self.request.GET['td'].split('-')
+        #         fd = date(int(fromDate[0]), int(fromDate[1]), int(fromDate[2]))
+        #         td = date(int(toDate[0]), int(toDate[1]), int(toDate[2]))
+        #         fromDate = fd + relativedelta(days=1)
+        #         toDate = td + relativedelta(days=1)
+        #         print Contacts.objects.filter(created__range=(str(fromDate),str(toDate)),source__contains = str(self.request.GET['source__contains']))
+        #         return Contacts.objects.filter(created__range=(str(fromDate),str(toDate)),source__contains = str(self.request.GET['source__contains']))
+        #     else:
+        #         print Contacts.objects.filter(source__contains = str(self.request.GET['source__contains'])).values_list('source', flat=True).distinct()
+        #         return Contacts.objects.filter(source__contains = str(self.request.GET['source__contains']))
+        # else:
+        #     return Contacts.objects.all()
 
 
 
@@ -94,12 +121,8 @@ class ContactsViewSet(viewsets.ModelViewSet):
 class BulkContactsAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated , isAdmin)
     def post(self, request, format=None):
-
         print 'ttttttttttt',request.FILES['fil'],request.POST['source'],
-        if 'tags' in request.POST:
-            print request.POST['tags']
-            for i in request.POST['tags'].split(','):
-                print i
+
         fil = StringIO(request.FILES['fil'].read().decode('utf-8'))
         reader = csv.reader(fil, delimiter=':')
         count = 0
@@ -107,18 +130,28 @@ class BulkContactsAPIView(APIView):
             dat = row[0].split(',')
             print 'aaaaaaaaaaaaa',dat
             try:
-                check = Contacts.objects.filter(Q(email=dat[2]) | Q(mobile=dat[3]))
+                check = Contacts.objects.get(email=dat[2],source=str(request.POST['source']))
             except:
-                check = Contacts.objects.filter(Q(email=dat[2]))
+                check = None
+            if check:
+                try:
+                    check.name = dat[1]
+                    check.referenceId = dat[0]
+                    if len(dat)>3:
+                        check.mobile = dat[3]
 
-            if len(check)>0:
-                continue
+                    if len(dat) >4:
+                        check.pinCode = dat[4]
+                    check.save()
+                    if 'tags' in request.POST:
+                        for i in request.POST['tags'].split(','):
+                            check.tags.add(Tag.objects.get(pk = int(i)))
+                except:
+                    pass
             else:
                 contactData = {"name" : dat[1] ,  "email" : dat[2] ,"referenceId" : dat[0] , "source" : str(request.POST['source'])}
-
                 if len(dat)>3:
                     contactData['mobile'] = dat[3]
-
                 if len(dat) >4:
                     contactData['pinCode'] = dat[4]
                 cObj = Contacts.objects.create(**contactData)
@@ -126,7 +159,6 @@ class BulkContactsAPIView(APIView):
                     for i in request.POST['tags'].split(','):
                         cObj.tags.add(Tag.objects.get(pk = int(i)))
                 count += 1
-
 
         return Response({"count" : count}, status = status.HTTP_200_OK)
 
@@ -149,6 +181,25 @@ class ContactsScrapedAPIView(APIView):
         print count
 
         return Response({"count" : count}, status = status.HTTP_200_OK)
+
+class ConvertLeadApi(APIView):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request, format=None):
+        print 'ttttttttttt',request.data,request.user
+        leadObj = Leads.objects.get(pk=int(request.data['leadPk']))
+        contactData = {'user':request.user,'name':leadObj.name,'email':leadObj.emailId,'mobile':leadObj.mobileNumber}
+        if leadObj.jobLevel:
+            contactData['designation'] = leadObj.jobLevel
+        if leadObj.company:
+            try:
+                companyObj = service.objects.filter(name__iexact=leadObj.company)[0]
+            except:
+                companyObj = service(name=leadObj.company,user=request.user)
+                companyObj.save()
+            contactData['company'] = companyObj
+        contactObj = Contact.objects.create(**contactData)
+        leadObj.delete()
+        return Response({}, status = status.HTTP_200_OK)
 
 class SourceSuggestAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -197,3 +248,74 @@ class CampaignDetailsAPIView(APIView):
             return ExcelResponse(excelData)
         else:
             return Response(sendData)
+from bson import json_util
+class SchedulesDataApi(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self, request, format=None):
+        toReturn = {}
+        DaysData = request.data['data']
+        curDate = request.data['curDate']
+        splitDates = curDate.split('-')
+        # print DaysData,curDate
+        print datetime.date(int(splitDates[0]),int(splitDates[1]),int(splitDates[2]))
+        for idx,d in enumerate(DaysData['days']):
+            if DaysData['flags'][idx]=='Cur':
+                dt = datetime.date(int(splitDates[0]),int(splitDates[1]),int(d))
+                scheduleObj = Schedule.objects.filter(dated=dt)
+                sd = SheduleSerializer(scheduleObj,many=True)
+                toReturn[d] = sd.data
+
+        return Response(toReturn, status=status.HTTP_200_OK)
+
+class InvitationMailApi(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny , )
+    def post(self, request, format=None):
+        emailid=[]
+        cc = ['ankita.k@cioc.in']
+        print  request.data,'aaaaaaaaaa'
+        schedule =  Schedule.objects.get(pk = request.data['value'])
+        time = schedule.slot.split(' - ')
+        strttime = int(time[0])
+        endtime = int(time[1])
+        newDate =  datetime.datetime.strptime(str(schedule.dated), '%Y-%m-%d').strftime('%Y%m%d %H:%M:%S')
+        yourDate = parser.parse(newDate)
+
+        begindate = yourDate.replace(hour=strttime, minute=00)
+        enddate = yourDate.replace(hour=endtime, minute=00)
+        emailid.append(schedule.emailId)
+        email_subject ="Meeting as per your request"
+        c = Calendar()
+        e = Event()
+        e.name = "Meeting"
+        e.begin = begindate
+        e.end = enddate
+        e.organizer = 'ankita.k@cioc.in'
+        c.events.add(e)
+        c.attendee =  schedule.emailId
+        with open('my.ics', 'w') as f:
+             f.writelines(c)
+        ctx = {
+            # 'message': msgBody,
+            'dated': schedule.dated,
+            'slot' :  schedule.slot,
+            'linkUrl': 'cioc.co.in',
+            'linkText' : 'View Online',
+            'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
+            'sendersPhone' : '841101',
+            'linkedinUrl' : 'https://www.linkedin.com/company/13440221/',
+            'fbUrl' : 'facebook.com',
+            'twitterUrl' : 'twitter.com',
+        }
+
+        icspart = MIMEBase('text', 'calendar', **{'method' : 'REQUEST', 'name' : 'my.ics'})
+        icspart.set_payload( open("my.ics","rb").read() )
+        icspart.add_header('Content-Transfer-Encoding', '8bit')
+        icspart.add_header('Content-class', 'urn:content-classes:calendarmessage')
+        email_body = get_template('app.homepage.inviteemail.html').render(ctx)
+        msg = EmailMessage(email_subject, email_body,  to= emailid, cc= cc )
+        msg.attach(icspart)
+        msg.content_subtype = 'html'
+        msg.send()
+
+        return Response({}, status = status.HTTP_200_OK)

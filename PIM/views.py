@@ -84,13 +84,13 @@ class chatMessageBetweenViewSet(viewsets.ModelViewSet):
         return qs.order_by('created')[:150]
 
 class blogViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, permissions.AllowAny)
     serializer_class = blogSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['title' , 'state']
     def get_queryset(self):
         if 'state' not in self.request.GET and 'tags' not in self.request.GET and 'user' not in self.request.GET:
-            return blogPost.objects.filter( users__in=[self.request.user,])
+            return blogPost.objects.all()
         if 'state' in self.request.GET:
             st = self.request.GET['state']
             if st != 'published':

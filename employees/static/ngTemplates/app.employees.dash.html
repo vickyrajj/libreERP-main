@@ -1,10 +1,173 @@
 <div class="" style="min-height:93vh;position:relative;">
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
-  <p style="text-align:center;padding-top:200px;">
-    <i class="fa fa-search-plus fa-5x"></i>
-    <i class="fa fa-wrench fa-5x "></i>
-    <br>
-  </p>
-</div>
+
+    <div class="row">
+      <div class="col-md-3" style="position: relative;">
+        <h4 class="text-center">Total Head Count</h4>
+        <div style="position: absolute;left: 0;right: 0;bottom: 36%;text-align: center;font-size: 2em;">
+          300
+        </div>
+        <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels">
+        </canvas>
+      </div>
+      <div class="col-md-3">
+        <h4 class="text-center">Age Distribution</h4>
+        <canvas id="line" class="chart chart-line" chart-data="linedata" chart-labels="linelabels" chart-series="lineseries" chart-options="lineoptions" chart-dataset-override="linedatasetOverride" chart-click="lineonClick">
+        </canvas>
+      </div>
+      <div class="col-md-3 " style="position: relative;">
+        <h4 class="text-center">Most Costly Role</h4>
+        <div style="position: absolute;left: 0;right: 0;bottom: 36%;text-align: center;font-size: 2em;">
+          300
+        </div>
+        <canvas id="doughnut " class="chart chart-doughnut" chart-data="data1" chart-labels="labels1">
+        </canvas>
+      </div>
+      <div class="col-md-3 " style="position: relative;">
+        <h4 class="text-center">Employee Attrition</h4>
+        <div style="position: absolute;left: 0;right: 0;bottom: 36%;text-align: center;font-size: 2em;">
+          300
+        </div>
+        <canvas id="doughnut" class="chart chart-doughnut" chart-data="data2" chart-labels="labels2">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="row" style="margin: 0 2em 0  2em;">
+      <h4 style="margin-left: 2em;">Attrition share by Time Dimensions</h4>
+      <div class="col-md-4">
+        <canvas id="bar" class="chart chart-bar" chart-data="bardata" chart-labels="barlabels" chart-series="barseries" style="height:220px">
+        </canvas>
+        <p class="text-center">Years with Company</p>
+      </div>
+      <div class="col-md-4">
+        <canvas id="bar" class="chart chart-bar" chart-data="bardata1" chart-labels="barlabels1" chart-series="barseries1" style="height:220px">
+        </canvas>
+        <p class="text-center">Years in Current Role</p>
+      </div>
+      <div class="col-md-4">
+        <canvas id="bar" class="chart chart-bar" chart-data="bardata2" chart-labels="barlabels2" chart-series="barseries2" style="height:220px">
+        </canvas>
+        <p class="text-center">Years with Current Manager</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-7">
+        <h4 style="margin-left: 2em;">Attrition Age distribution by Gender</h4>
+        <div class="col-md-5">
+          <p class="text-center" style="border-bottom: 1px solid rgb(194, 188, 194)">Female</p>
+          <canvas id="line" class="chart chart-line" chart-data="linedata1" chart-labels="linelabels1" chart-series="lineseries1" chart-options="lineoptions1" chart-dataset-override="linedatasetOverride1" chart-click="lineonClick1">
+          </canvas>
+        </div>
+        <div class="col-md-5">
+          <p class="text-center" style="border-bottom: 1px solid rgb(194, 188, 194)">Male</p>
+          <canvas id="line" class="chart chart-line" chart-data="linedata2" chart-labels="linelabels2" chart-series="lineseries2" chart-options="lineoptions2" chart-dataset-override="linedatasetOverride2" chart-click="lineonClick2">
+          </canvas>
+        </div>
+        <div class="col-md-2">
+          <div class="row">
+            <div class="col-md-1" style="width:4em;height:4em;border:1px solid rgb(194, 188, 194);border-radius:30px;position:relative;">
+              <span style="position: absolute;left: 0;right: 0;bottom: 16%;text-align: center;font-size: 2em;"><i class="fa fa-male" style="font-size:24px;color:rgb(194,188,194);"></i></span>
+            </div>
+            <div class="col-md-1">
+              <span>Total</span>
+              <h2 style="margin-top:0 ">883</h2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-1" style="width:4em;height:4em;border:1px solid rgb(194, 188, 194);border-radius:30px;position:relative;margin-top:1em;">
+              <span style="position: absolute;left: 0;right: 0;bottom: 16%;text-align: center;font-size: 2em;"><i class="fa fa-female" style="font-size:24px;color:rgb(194,188,194);"></i></span>
+            </div>
+            <div class="col-md-1" style="margin-top:1em;">
+              <span>Total</span>
+              <h2 style="margin-top:0 ">883</h2>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-md-4" style="line-height: 0;">
+        <h4 style="margin-left: 2em;">Attrition by Job Role</h4>
+        <table class="table ">
+          <tr style="font-size: 10px;line-height: 0;">
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">Sales Executive</td>
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">
+              <div class="progress" style="border-radius: 0;height:0.8em;">
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+          <tr style="font-size: 10px;line-height: 0;">
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">Sales Representative</td>
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">
+              <div class="progress" style="border-radius: 0;height:0.8em;">
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+          <tr style="font-size: 10px;line-height: 0;">
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">laboratory Technician</td>
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">
+              <div class="progress" style="border-radius: 0;height:0.8em;">
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+          <tr style="font-size: 10px;line-height: 0;">
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">Research Scientist</td>
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">
+              <div class="progress" style="border-radius: 0;height:0.8em;">
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+          <tr style="font-size: 10px;line-height: 0;">
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">Manufacturing Director</td>
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">
+              <div class="progress" style="border-radius: 0;height:0.8em;">
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+          <tr style="font-size: 10px;line-height: 0;">
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">Healthcare Representative</td>
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">
+              <div class="progress" style="border-radius: 0;height:0.8em;">
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+          <tr style="font-size: 10px;line-height: 0;">
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">Manager</td>
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">
+              <div class="progress" style="border-radius: 0;height:0.8em;">
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+          <tr style="font-size: 10px;line-height: 0;">
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">Research Director</td>
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">
+              <div class="progress" style="border-radius: 0;height:0.8em;">
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+          <tr style="font-size: 10px;line-height: 0;">
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">Human Resources</td>
+            <td style="width:30%;padding: 0;border-top: 0;line-height: 0;">
+              <div class="progress" style="border-radius: 0;height:0.8em;">
+                <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+
+  </div>
 </div>

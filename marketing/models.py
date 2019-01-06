@@ -15,12 +15,15 @@ class Contacts(models.Model):
     updated = models.DateTimeField(auto_now=True)
     referenceId = models.CharField(max_length = 20 , null = True , blank = True)
     name = models.CharField(max_length = 100 , null = True , blank = True)
-    email = models.EmailField(null = True , blank = True , unique=True)
-    mobile = models.CharField(max_length = 12 , null = True , blank = True , unique=True)
+    email = models.EmailField(null = True , blank = True)
+    mobile = models.CharField(max_length = 12 , null = True , blank = True)
     source = models.CharField(max_length = 20 , null = True , blank = True)
     notes = models.TextField(max_length=500 , null=True , blank = True)
     tags = models.ManyToManyField(Tag)
     pinCode = models.CharField(max_length = 10 , null = True)
+    subscribe = models.BooleanField(default=False)
+    class Meta:
+        unique_together = ('email', 'source')
 
 CAMPAIGN_STATUS = (
     ('created' , 'created'),
@@ -69,3 +72,25 @@ class CampaignLogs(models.Model):
     followupDate = models.DateTimeField(null = True , blank = True)
     data = models.CharField(max_length = 1000 , null = True , blank = True)
     typ = models.CharField(choices = LOG_TYP , max_length = 20 , null=True)
+
+class Schedule(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    dated =  models.DateField( null= False )
+    slot = models.CharField(max_length = 15 , null= False)
+    name  = models.CharField(max_length = 50 , null= False)
+    emailId = models.EmailField(null= False)
+    organizer = models.ForeignKey(User , related_name="scheduleOrganizer",null=True)
+    participants = models.ManyToManyField(User , related_name="scheduleParticipants",blank = True)
+    status = models.CharField(max_length = 15 , null= True , default='Created')
+
+class Leads(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    name  = models.CharField(max_length = 50 , null= False)
+    emailId = models.EmailField(null= False)
+    requirements = models.CharField(max_length = 500 , null= True)
+    jobLevel  = models.CharField(max_length = 50 , null= True)
+    company  = models.CharField(max_length = 50 , null= True)
+    companyCategory  = models.CharField(max_length = 50 , null= True)
+    companyExpertise  = models.CharField(max_length = 50 , null= True)
+    country  = models.CharField(max_length = 50 , null= True)
+    mobileNumber  = models.CharField(max_length = 20 , null= True)

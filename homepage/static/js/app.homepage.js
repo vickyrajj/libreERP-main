@@ -1,7 +1,7 @@
-var app = angular.module('app',  ['ui.router', 'ui.bootstrap','angular-owl-carousel-2','ui.bootstrap.datetimepicker','flash']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash']);
 
 
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide ,  $locationProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider) {
 
   $urlRouterProvider.otherwise('/');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -13,12 +13,11 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide 
 
 });
 
-app.run([ '$rootScope', '$state', '$stateParams', function ($rootScope,   $state,   $stateParams) {
-    $rootScope.$state = $state;
-    $rootScope.$stateParams = $stateParams;
-    $rootScope.$on("$stateChangeError", console.log.bind(console));
-  }
-]);
+app.run(['$rootScope', '$state', '$stateParams', function($rootScope, $state, $stateParams) {
+  $rootScope.$state = $state;
+  $rootScope.$stateParams = $stateParams;
+  $rootScope.$on("$stateChangeError", console.log.bind(console));
+}]);
 
 // Main controller is mainly for the Navbar and also contains some common components such as clipboad etc
 
@@ -33,10 +32,39 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
-    .state('blog', {
-      url: "/blog",
+    .state('blogs', {
+      url: "/blogs",
       templateUrl: '/static/ngTemplates/app.homepage.blogs.html',
-      // controller: 'controller.blogs'
+      controller: 'controller.blogs'
+    })
+
+
+  $stateProvider
+    .state('blogDetails', {
+      url: "/blogs/:pk",
+      templateUrl: '/static/ngTemplates/app.homepage.blogDetails.html',
+      controller: 'controller.blogDetails'
+    })
+
+  $stateProvider
+    .state('industry', {
+      url: "/industry",
+      templateUrl: '/static/ngTemplates/app.homepage.industry.html',
+      // controller: 'controller.industry'
+    })
+
+  $stateProvider
+    .state('bpo', {
+      url: "/bpo",
+      templateUrl: '/static/ngTemplates/app.homepage.bpo.html',
+      // controller: 'controller.bpo'
+    })
+
+  $stateProvider
+    .state('about', {
+      url: "/about",
+      templateUrl: '/static/ngTemplates/app.homepage.about.html',
+      // controller: 'controller.about'
     })
 
   $stateProvider
@@ -48,6 +76,95 @@ app.config(function($stateProvider) {
 
 
 
+
+});
+
+app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  console.log($stateParams);
+
+  $scope.blogPk = $stateParams.pk
+
+  $http.get('/api/PIM/blog/' + $scope.blogPk + '/').
+  then(function(response) {
+    $scope.blogDetail = response.data
+    console.log($scope.blogDetail);
+
+    $scope.blogDetail.source = $sce.trustAsHtml($scope.blogDetail.source);
+  })
+
+  $scope.fetchRecentPosts = function() {
+    $http.get('/api/PIM/blog/?limit=5').
+    then(function(response) {
+      console.log(response);
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
+
+
+});
+
+app.controller('controller.blogs', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+
+
+
+
+  $scope.offset = 0;
+  $scope.emailAddress = '';
+
+  $scope.fetchBlogs = function() {
+    $http.get('/api/PIM/blog/?limit=14&offset=' + $scope.offset).
+    then(function(response) {
+      $scope.blogs = response.data.results;
+
+      console.log($scope.blogs);
+
+      $scope.firstSection = $scope.blogs.slice(0, 4)
+      $scope.second_sec1 = $scope.blogs.slice(4, 7)
+      $scope.second_sec2 = $scope.blogs.slice(7, 10)
+      $scope.thirdSection = $scope.blogs.slice(10, 14)
+
+    })
+  }
+
+
+  $scope.fetchRecentPosts = function() {
+    $http.get('/api/PIM/blog/?limit=5').
+    then(function(response) {
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
+  $scope.fetchBlogs()
+
+  $scope.openBlog = function(pk) {
+    $state.go('blogDetails', {
+      pk: pk
+    })
+  }
+
+
+  $scope.sendUpdates = function() {
+    console.log($scope.emailAddress);
+  }
+
+
+
+
+  $scope.nextBtn = function() {
+    $scope.offset = $scope.offset + 14
+    $scope.fetchBlogs()
+  }
+
+  $scope.prevBtn = function() {
+    if ($scope.offset >= 14) {
+      $scope.offset = $scope.offset - 14
+      $scope.fetchBlogs()
+    }
+  }
 
 });
 
@@ -64,22 +181,64 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
   };
 
 
-  $scope.articles = [
-    {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
-    {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
-    {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
-    {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
+  $scope.articles = [{
+      date: new Date(),
+      title: 'das',
+      description: "",
+      link: '/',
+      image: '/static/images/some.jpg'
+    },
+    {
+      date: new Date(),
+      title: 'das',
+      description: "",
+      link: '/',
+      image: '/static/images/some.jpg'
+    },
+    {
+      date: new Date(),
+      title: 'das',
+      description: "",
+      link: '/',
+      image: '/static/images/some.jpg'
+    },
+    {
+      date: new Date(),
+      title: 'das',
+      description: "",
+      link: '/',
+      image: '/static/images/some.jpg'
+    },
     // {date : new Date() , title : 'das' , description : "" , link : '/' , image : '/static/images/some.jpg'},
   ]
 
 
-  $scope.friends = [
-   {name:'John', age:25,dp:'/static/images/airbus-logo.png'},
-   {name:'Mary', age:40,dp:'/static/images/amad.png'},
-   {name:'Peter', age:85,dp:'/static/images/autodesk-logo.png'},
-   {name:'Peter', age:85,dp:'/static/images/benchmark.png'},
-   {name:'Peter', age:85,dp:'/static/images/direct-line-group-logo.png'},
-];
+  $scope.friends = [{
+      name: 'John',
+      age: 25,
+      dp: '/static/images/airbus-logo.png'
+    },
+    {
+      name: 'Mary',
+      age: 40,
+      dp: '/static/images/amad.png'
+    },
+    {
+      name: 'Peter',
+      age: 85,
+      dp: '/static/images/autodesk-logo.png'
+    },
+    {
+      name: 'Peter',
+      age: 85,
+      dp: '/static/images/benchmark.png'
+    },
+    {
+      name: 'Peter',
+      age: 85,
+      dp: '/static/images/direct-line-group-logo.png'
+    },
+  ];
 
 
 
@@ -89,15 +248,112 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal) {
 
 
-  $scope.langOptions = [
-    {flag : '/static/images/flags/USA-1.svg' , code : 'en' , lang : 'EN'},
-    {flag : '/static/images/flags/Japan.svg' , code : 'jp' , lang : 'JP'},
-    {flag : '/static/images/flags/Germany.svg' , code : 'de' , lang : 'DE'},
-    {flag : '/static/images/flags/France.svg' , code : 'fr' , lang : 'FR'},
-    {flag : '/static/images/flags/flag-Spain.svg' , code : 'es' , lang : 'ES'},
+  $scope.device = {
+    smallDevice: false
+  }
+
+
+  $scope.elementInViewport = function(el) {
+    var top = el.offsetTop;
+    var left = el.offsetLeft;
+    var width = el.offsetWidth;
+    var height = el.offsetHeight;
+
+    while (el.offsetParent) {
+      el = el.offsetParent;
+      top += el.offsetTop;
+      left += el.offsetLeft;
+    }
+
+    return (
+      top >= window.pageYOffset &&
+      left >= window.pageXOffset &&
+      (top + height) <= (window.pageYOffset + window.innerHeight) &&
+      (left + width) <= (window.pageXOffset + window.innerWidth)
+    );
+  }
+
+  setTimeout(function() {
+    $scope.one = document.getElementById('one')
+    $scope.two = document.getElementById('two')
+    $scope.three = document.getElementById('three')
+    $scope.circles = document.getElementById('circles')
+
+    window.addEventListener("scroll", function() {
+      if ($scope.elementInViewport($scope.one)) {
+        $scope.one.classList.add('toMoveUp')
+      }
+
+      if ($scope.elementInViewport($scope.two)) {
+        $scope.two.classList.add('toMoveUp')
+      }
+
+      if ($scope.elementInViewport($scope.three)) {
+        $scope.three.classList.add('toMoveUp')
+      }
+
+    });
+  }, 500);
+
+
+
+
+
+  $scope.smDevice = function(x) {
+    if (x.matches) {
+      console.log('trueeeeeeee');
+      $scope.device.smallDevice = true;
+    }
+  }
+
+  $scope.lgDevice = function(x) {
+    if (x.matches) {
+      console.log('false');
+      $scope.device.smallDevice = false;
+    }
+  }
+
+  $scope.sm = window.matchMedia("(max-width: 768px)")
+  $scope.smDevice($scope.sm)
+  $scope.sm.addListener($scope.smDevice)
+
+  $scope.lg = window.matchMedia("(min-width: 768px)")
+  $scope.lgDevice($scope.lg)
+  $scope.lg.addListener($scope.lgDevice)
+
+
+  $scope.toggleNavbar = false;
+
+  $scope.langOptions = [{
+      flag: '/static/images/flags/USA-1.svg',
+      code: 'en',
+      lang: 'EN'
+    },
+    {
+      flag: '/static/images/flags/Japan.svg',
+      code: 'jp',
+      lang: 'JP'
+    },
+    {
+      flag: '/static/images/flags/Germany.svg',
+      code: 'de',
+      lang: 'DE'
+    },
+    {
+      flag: '/static/images/flags/France.svg',
+      code: 'fr',
+      lang: 'FR'
+    },
+    {
+      flag: '/static/images/flags/flag-Spain.svg',
+      code: 'es',
+      lang: 'ES'
+    },
   ]
 
-  $scope.data = {currentLang : $scope.langOptions[0]}
+  $scope.data = {
+    currentLang: $scope.langOptions[0]
+  }
 
   $scope.changeLan = function(lang) {
     $scope.data.currentLang = lang;
@@ -107,7 +363,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
 
   if (Cookies.get('lang') != undefined) {
     for (var i = 0; i < $scope.langOptions.length; i++) {
-      if ( $scope.langOptions[i].code == Cookies.get('lang') ) {
+      if ($scope.langOptions[i].code == Cookies.get('lang')) {
         $scope.data.currentLang = $scope.langOptions[i];
         break;
       }
@@ -120,30 +376,45 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
       templateUrl: '/static/ngTemplates/app.homepage.schedule.modal.html',
       size: 'lg',
       backdrop: true,
-      controller: function( $scope,Flash ) {
-      $scope.calendar = true
+      controller: function($scope, Flash) {
+        $scope.calendar = true
         $scope.thankYou = false
-      $scope.refresh = function(){
-        $scope.form = {
-          dated : new Date(),
-          slot : '8 - 9',
-          emailId : '',
-          name:''
+        $scope.refresh = function() {
+          $scope.form = {
+            dated: new Date(),
+            slot: '8 - 9',
+            emailId: '',
+            name: ''
+          }
         }
-      }
-      $scope.refresh()
-          $scope.timeSlot = [
-          {'time' : '8 - 9'},
-          {'time' : '9 - 10'},
-          {'time' : '10 - 11'},
-          {'time' : '11 - 12'},
-          {'time' : '13 - 14'},
-          {'time' : '14 - 15'},
-          {'time' : '15 - 16'},
-          {'time' : '16 - 17'},
-          ]
+        $scope.refresh()
+        $scope.timeSlot = [{
+            'time': '8 - 9'
+          },
+          {
+            'time': '9 - 10'
+          },
+          {
+            'time': '10 - 11'
+          },
+          {
+            'time': '11 - 12'
+          },
+          {
+            'time': '13 - 14'
+          },
+          {
+            'time': '14 - 15'
+          },
+          {
+            'time': '15 - 16'
+          },
+          {
+            'time': '16 - 17'
+          },
+        ]
 
-        $scope.scheduleMeeting = function(){
+        $scope.scheduleMeeting = function() {
           // if($scope.form.dated == null || $scope.form.dated == undefined){
           //   Flash.create("warning","PLease Select Date")
           //   return;
@@ -155,10 +426,10 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
           // }
 
           var dataToSend = {
-            dated : $scope.form.dated.toJSON().split('T')[0],
-            slot : $scope.form.slot,
-            emailId : $scope.form.emailId,
-            name : $scope.form.name,
+            dated: $scope.form.dated.toJSON().split('T')[0],
+            slot: $scope.form.slot,
+            emailId: $scope.form.emailId,
+            name: $scope.form.name,
           }
           $http({
             method: 'POST',
@@ -173,7 +444,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
               method: 'POST',
               url: '/api/homepage/inviteMail/',
               data: {
-                value : response.data.pk
+                value: response.data.pk
               }
             }).
             then(function(response) {
@@ -217,8 +488,8 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   //   });
   // }
   console.log('here');
-  $scope.show=[false,false,false,false]
-  $scope.keepshow=false;
+  $scope.show = [false, false, false, false]
+  $scope.keepshow = false;
 
 });
 
@@ -316,10 +587,10 @@ app.controller('careers.modal.apply', function($scope, $state, $http, $timeout, 
     if (f.aggree) {
       fd.append('aggree', f.aggree);
     }
-    if (f.coverletter.length>0) {
+    if (f.coverletter.length > 0) {
       fd.append('coverletter', f.coverletter);
     }
-    if (f.lastname.length>0) {
+    if (f.lastname.length > 0) {
       fd.append('lastname', f.lastname);
     }
 
@@ -340,10 +611,10 @@ app.controller('careers.modal.apply', function($scope, $state, $http, $timeout, 
       if (response.data.res == 'Sucess') {
         $scope.resetForm();
         $scope.msg = 'Applied Sucessfully'
-        $timeout(function () {
+        $timeout(function() {
           $uibModalInstance.dismiss();
         }, 3000);
-      }else {
+      } else {
         $scope.msg = 'Errors In The Form'
       }
     })
