@@ -119,69 +119,167 @@
     </div>
     <button type="button" class="btn btn-primary pull-right col-md-3 pull-right" ng-click="saveCompanyDetails()" ng-if="form.pk==none">Save Company Details</button>
   </div>
-  <div class="col-md-6" style="padding-left:50px;font-size:18px" ng-if="form.pk">
+  <div class="col-md-6" style="padding-left:50px;font-size:15px;line-height:2;opacity:0.9" ng-if="form.pk">
     <span class="text-center"><h3>Supports</h3><br></span>
     <div class="row">
-      <div class="form-group">
-        <i class="fa fa-comment-o"></i> &nbsp; <label>Chat</label> &nbsp;<input type="checkbox" ng-model="cpForm.chat">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-phone"></i> &nbsp; <label>Call</label> &nbsp;<input type="checkbox" ng-model="cpForm.call">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-envelope"></i> &nbsp; <label>Email</label> &nbsp;<input type="checkbox" ng-model="cpForm.email">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-video-camera"></i> &nbsp; <label>Video</label> &nbsp;<input type="checkbox" ng-model="cpForm.video">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-headphones"></i> &nbsp; <label>Audio</label> &nbsp;<input type="checkbox" ng-model="cpForm.audio">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-bar-chart-o"></i> &nbsp; <label>VR</label> &nbsp;<input type="checkbox" ng-model="cpForm.vr">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input type="color" ng-model="cpForm.windowColor">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-desktop"></i> &nbsp; <label>Font Colour</label> &nbsp;<input type="color" ng-model="cpForm.fontColor">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-phone"></i> &nbsp; <label>Call Back</label> &nbsp;<input type="checkbox" ng-model="cpForm.callBack">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label> &nbsp;<input type="checkbox" ng-model="cpForm.ticket">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-gg-circle"></i> &nbsp; <label>SupportBubble Colour</label> &nbsp;<input type="color" ng-model="cpForm.supportBubbleColor">
-      </div>
-      <div class="form-group">
-        <i class="fa fa-info-circle"></i> &nbsp; <label>Icon Colour</label> &nbsp;<input type="color" ng-model="cpForm.iconColor">
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-2">
-            <i class="fa fa-user"></i> &nbsp; <label>Name</label>
-          </div>
-          <div class="col-md-4">
-            <input class="form-control" type="text" ng-model="cpForm.name">
-          </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-comment-o"></i> &nbsp; <label>Chat</label>&nbsp;</span>
+           <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.chat"><span class="bal_slider round"></span></label>
         </div>
       </div>
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-2">
-            <i class="fa  fa-picture-o"></i> &nbsp; <label>Picture</label>
-          </div>
-          <div class="col-md-4">
-            <input type="file" file-model="cpForm.dp">
-          </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-phone"></i> &nbsp; <label>Call</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.call"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-phone"></i> &nbsp; <label>Call</label> &nbsp;<input type="checkbox" ng-model="cpForm.call"> -->
         </div>
       </div>
-      <div class="form-group">
-        <label>First Message</label>
-        <textarea ui-tinymce="tinymceOptions" ng-model="cpForm.firstMessage"></textarea>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-envelope"></i> &nbsp; <label>Email</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.email"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-envelope"></i> &nbsp; <label>Email</label> &nbsp;<input type="checkbox" ng-model="cpForm.email"> -->
+        </div>
       </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-video-camera"></i> &nbsp; <label>Video</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.video"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-video-camera"></i> &nbsp; <label>Video</label> &nbsp;<input type="checkbox" ng-model="cpForm.video"> -->
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-headphones"></i> &nbsp; <label>Audio</label>&nbsp; &nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.audio"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-headphones"></i> &nbsp; <label>Audio</label> &nbsp;<input type="checkbox" ng-model="cpForm.audio"> -->
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-bar-chart-o"></i> &nbsp; <label>VR</label></span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.vr"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-bar-chart-o"></i> &nbsp; <label>VR</label> &nbsp;<input type="checkbox" ng-model="cpForm.vr"> -->
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-phone"></i> &nbsp; <label>Call Back</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.callBack"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-phone"></i> &nbsp; <label>Call Back</label> &nbsp;<input type="checkbox" ng-model="cpForm.callBack"> -->
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-5"><i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label>&nbsp;</span>
+          <label class="bal_switch"> <input type="checkbox" ng-model="cpForm.ticket"><span class="bal_slider round"></span></label>
+          <!-- <i class="fa fa-ticket"></i> &nbsp; <label>Ticket</label> &nbsp;<input type="checkbox" ng-model="cpForm.ticket"> -->
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-desktop"></i> &nbsp; <label>Window Colour</label> &nbsp;<input type="color" ng-model="cpForm.windowColor"></span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-desktop"></i> &nbsp; <label>Font Colour</label> &nbsp;<input type="color" ng-model="cpForm.fontColor"></span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-gg-circle"></i> &nbsp; <label>SupportBubble Colour</label> &nbsp;<input type="color" ng-model="cpForm.supportBubbleColor"</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-info-circle"></i> &nbsp; <label>Icon Colour</label> &nbsp;<input type="color" ng-model="cpForm.iconColor"></span>
+        </div>
+      </div>
+      <br>
+      <div class="col-md-12" style="margin:7px 0px">
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-compass" aria-hidden="true"></i>&nbsp; <label>Select Button Type</label> &nbsp;
+          <input type="radio" ng-model="cpForm.chatIconType" value="Circle">
+            <span>
+              <span style="border:2px solid #e0e0e0;padding:2px 3px 2px 7px;border-radius:50%;background:{{cpForm.supportBubbleColor}};color:{{cpForm.fontColor}}">
+                <i class="fa fa-whatsapp" aria-hidden="true"></i>
+              </span>
+            </span> &nbsp;
+          <input type="radio" ng-model="cpForm.chatIconType" value="Box">
+          <span>
+            <span style="border:2px solid #e0e0e0;padding:2px 5px;background:{{cpForm.supportBubbleColor}};color:{{cpForm.fontColor}}">
+              Chat With Us <i class="fa fa-whatsapp" aria-hidden="true"></i>
+            </span>
+          </span></span>
+        </div>
+      </div>
+      <br>
+      <div class="col-md-12" style="margin:7px 0px">
+
+        <div class="form-group">
+          <span class="col-md-12"><i class="fa fa-object-group" aria-hidden="true"></i> &nbsp; <label>Desktop Button Position</label> &nbsp;
+          <input type="radio" ng-model="cpForm.chatIconPosition" value="left-center">&nbsp;
+            <span style="display:inline-block;margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;top:40%;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span> &nbsp;
+            <input type="radio" ng-model="cpForm.chatIconPosition" value="right-center">&nbsp;
+            <span style="display:inline-block; margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;top:40%;right:0px;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span> &nbsp;
+            <input type="radio" ng-model="cpForm.chatIconPosition" value="left-bottom">&nbsp;
+            <span style="display:inline-block ;margin-bottom:-7px">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;bottom:0%;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span> &nbsp;
+              <input type="radio" ng-model="cpForm.chatIconPosition" value="right-bottom">&nbsp;
+            <span style="display:inline-block;margin-bottom:-7px">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;bottom:0%;right: 0px;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span></span>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <span class="col-md-12"><div class="form-group">
+          <div class="row">
+            <div class="col-md-2">
+              <i class="fa fa-user"></i> &nbsp; <label>Name</label>
+            </div>
+            <div class="col-md-4">
+              <input class="form-control" type="text" ng-model="cpForm.name">
+            </div>
+          </div>
+        </div></span>
+      </div>
+      <br>
+      <div class="col-md-12">
+        <span class="col-md-12"><div class="form-group">
+          <div class="row">
+            <div class="col-md-3">
+              <i class="fa  fa-picture-o"></i> &nbsp; <label>Picture</label>
+            </div>
+            <div class="col-md-6">
+              <input type="file" file-model="cpForm.dp">
+            </div>
+          </div>
+        </div></span>
+      </div>
+      <br>
+      <div class="col-md-12">
+        <span class="col-md-12"><div class="form-group">
+          <label>First Message</label>
+          <textarea ui-tinymce="tinymceOptions" ng-model="cpForm.firstMessage"></textarea>
+        </div></span>
+      </div>
+
     </div><br>
     <button type="button" class="btn btn-primary btn-lg col-md-2 col-md-offset-5" ng-click="saveCustomerProfile()">Save</button>
   </div>

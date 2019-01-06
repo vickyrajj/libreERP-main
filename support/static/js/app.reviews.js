@@ -12,7 +12,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller("businessManagement.customerReviews", function($scope, $state, $http, $rootScope,$filter) {
+app.controller("businessManagement.customerReviews", function($scope, $state, $http, $rootScope,$filter,$uibModal) {
   $rootScope.state = 'Reviews';
   $scope.reviewData = []
   $scope.form = {date:new Date(),email:''}
@@ -217,7 +217,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
 
 
 
-app.controller("app.customerReviews.explore", function($scope, $http, $permissions, $timeout) {
+app.controller("app.customerReviews.explore", function($scope, $http, $permissions, $timeout, $uibModal) {
   console.log($scope.tab.data);
   $scope.data = $scope.tab.data
 
@@ -256,6 +256,15 @@ app.controller("app.customerReviews.explore", function($scope, $http, $permissio
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
     $scope.reviewCommentData =response.data
+  });
+
+  $http({
+    method: 'GET',
+    url: '/api/support/chatThread/?uid='+$scope.msgData[0].uid
+  }).
+  then(function(response) {
+    console.log(response.data,'dddddddddddd',typeof response.data);
+    $scope.chatThreadData =response.data[0]
   });
 
 
@@ -381,6 +390,85 @@ app.controller("app.customerReviews.explore", function($scope, $http, $permissio
           }
   }
 }, 1500);
+
+$scope.showChart = function(){
+  console.log('modalllllllllllllllll');
+  $uibModal.open({
+    templateUrl: '/static/ngTemplates/app.support.review.fullChat.modal.html',
+    size: 'lg',
+    backdrop: true,
+    resolve: {
+      chatThreadData: function() {
+        return $scope.chatThreadData;
+      }
+    },
+    controller: function($scope, chatThreadData , $users , $uibModalInstance, Flash) {
+
+      $scope.chatThreadData = chatThreadData
+      $scope.calculateTime = function (user , agent) {
+        if (user!=undefined) {
+          var usertime = new Date(user);
+          var agenttime = new Date(agent);
+          var diff = Math.floor((agenttime - usertime)/60000)
+          if (diff<60) {
+            return diff+' Mins';
+          }else if (diff>=60 && diff<60*24) {
+            return Math.floor(diff/60)+' Hrs';
+          }else if (diff>=60*24) {
+            return Math.floor(diff/(60*24))+' Days';
+          }
+        }else {
+          return
+        }
+      }
+      $http({
+          method: 'GET',
+          url: '/api/support/supportChat/?uid='+chatThreadData.uid,
+        }).
+        then(function(response) {
+          console.log(response.data,typeof response.data,response.data.length);
+          $scope.fullChatData = response.data
+        });
+
+
+      checkEmail = function(){
+        console.log($scope.form.email);
+        $http({
+            method: 'GET',
+            url: '/api/support/visitor/?email='+$scope.form.email+'&uid='+uid,
+          }).
+          then(function(response) {
+            console.log(response.data,typeof response.data,response.data.length);
+            if (response.data.length ==1 && response.data[0].email == $scope.form.email) {
+              $scope.form = response.data[0]
+            }
+          });
+      }
+      $scope.changeStatus = function(status){
+        $http({
+          method: 'PATCH',
+          url: '/api/support/chatThread/' + $scope.chatThreadData.pk + '/',
+          data: {status:status}
+        }).
+        then(function(response) {
+          // dataName = response.data.name
+          Flash.create('success', 'Updated')
+          $uibModalInstance.dismiss(response.data.status)
+        });
+      }
+
+    },
+  }).result.then(function () {
+
+  }, function (status) {
+    console.log(status);
+    console.log($scope.chatThreadData);
+    if (status != 'backdrop click' && status != 'escape key press') {
+      $scope.chatThreadData.status = status
+    }
+  });
+
+}
 $scope.snap=function() {
     ctx_agent.fillRect(0, 0, w, h);
     ctx_agent.drawImage(stream_agent, 0, 0, w, h);

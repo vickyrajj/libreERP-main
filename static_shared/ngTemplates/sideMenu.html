@@ -1,9 +1,9 @@
-<div class="" ng-controller="sideMenu" style="background: linear-gradient(245deg, #e5e5e6 0%, #fff 51%, #fff 75%);height:100vh">
+<div class="" ng-controller="sideMenu" style="background:var(--themeMain);height:100vh;color:#fff;width:101%">
   <div ng-if="sideMenuVisibility" class="row" style="margin:0px;">
     <div class="container-fluid" style="background-image: url('https://png.pngtree.com/thumb_back/fw800/back_pic/03/95/04/5757eb8d28d1012.jpg');background-size: cover;padding:20px;padding-bottom:30px;padding-left:40px;">
       <div class="row" style="display:flex;flex-direction:column;justify-content:center;align-items:center">
         <img ng-src="{{user.pk | getDP}}" class="img img-circle pull-left" style="width:100px;"><br>
-        <h3 style="color:var(--themeMain)">{{user.pk | getName}}</h3>
+        <h3 style="color:#fff">{{user.pk | getName}}</h3>
       </div>
     </div>
   </div>

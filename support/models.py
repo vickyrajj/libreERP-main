@@ -38,6 +38,8 @@ class CustomerProfile(models.Model):
     iconColor = models.CharField(max_length = 20 , null = True ,default='#FFFFFF')
     userApiKey = models.CharField(max_length = 500 , null = True )
     firstMessage = models.CharField(max_length = 20000 , null = True ,blank=True)
+    chatIconPosition = models.CharField(max_length = 20000 , null = True ,blank=True)
+    chatIconType = models.CharField(max_length = 20000 , null = True ,blank=True)
 
 
 class SupportChat(models.Model):

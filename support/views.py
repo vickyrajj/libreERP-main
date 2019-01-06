@@ -206,7 +206,7 @@ class ReviewFilterCalAPIView(APIView):
                 # print 'a###############',userCustProfile
                 return Response(userCustProfile, status=status.HTTP_200_OK)
             userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
-        
+
             sobj = SupportChat.objects.filter(uid__in=userCompanyUidList)
         if 'getMyReviews' in self.request.GET:
             sobj = sobj.filter(user = self.request.user)
@@ -441,7 +441,11 @@ def getChatterScript(request , fileName):
     print globalSettings.SITE_ADDRESS
     print request.get_host()
     print request.META.get('REMOTE_ADDR')
-    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor ,'iconColor':obj.iconColor, "windowColor" : obj.windowColor ,"fontColor":obj.fontColor, "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "video":obj.video ,"audio":obj.audio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS , "wampServer" : globalSettings.WAMP_SERVER ,"webrtcAddress": globalSettings.WEBRTC_ADDRESS,"wamp_prefix":globalSettings.WAMP_PREFIX}
+    dataToSend = {"pk" : obj.pk ,'supportBubbleColor':obj.supportBubbleColor ,'iconColor':obj.iconColor, "windowColor" : obj.windowColor ,"fontColor":obj.fontColor,
+        "custName" : obj.service.name , "chat":obj.chat , "callBack":obj.callBack , "video":obj.video ,
+        "audio":obj.audio , "ticket":obj.ticket , "serverAddress" : globalSettings.SITE_ADDRESS ,
+        "wampServer" : globalSettings.WAMP_SERVER ,"webrtcAddress": globalSettings.WEBRTC_ADDRESS,"wamp_prefix":globalSettings.WAMP_PREFIX,
+        "chatIconPosition":obj.chatIconPosition,'chatIconType':obj.chatIconType}
     if obj.dp:
         dataToSend["dp"] =  obj.dp.url
     if obj.name:

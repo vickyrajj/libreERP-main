@@ -242,6 +242,12 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     if ($scope.cpForm.firstMessage != '') {
       fd.append('firstMessage', $scope.cpForm.firstMessage);
     }
+    if ($scope.cpForm.chatIconPosition != '') {
+      fd.append('chatIconPosition', $scope.cpForm.chatIconPosition);
+    }
+    if ($scope.cpForm.chatIconType != '') {
+      fd.append('isCircleType', $scope.cpForm.chatIconType);
+    }
     if ($scope.cpForm.dp && typeof $scope.cpForm.dp != 'string') {
       fd.append('dp', $scope.cpForm.dp);
     }

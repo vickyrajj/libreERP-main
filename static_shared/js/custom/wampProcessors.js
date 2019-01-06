@@ -123,7 +123,7 @@ var hasAccesss=true;
             var xhttp = new XMLHttpRequest();
 
             xhttp.onreadystatechange = function() {
-              console.log(this.readyState, this.status, 'onreadyyyyyyyyyyyyyyyyyy');
+              console.log(this.readyState, this.status, 'onreadyyyyyyyyyyy');
               if (this.readyState == 4 && this.status == 200) {
                 console.log(this.responseText);
                 var data = JSON.parse(this.responseText)

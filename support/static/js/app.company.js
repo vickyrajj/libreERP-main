@@ -555,7 +555,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     name: '',
     supportBubbleColor: '#286EFA',
     iconColor: '#FFFFFF',
-    firstMessage: ''
+    firstMessage: '',
+    chatIconPosition:'right-bottom',
+    chatIconType:'Box'
   }
   $scope.fetCustomerProfile = function(pk) {
     $scope.cpForm.service = pk
@@ -838,6 +840,12 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     if (cpF.fontColor == '') {
       delete cpF.fontColor
     }
+    if (cpF.chatIconType == '') {
+      delete cpF.chatIconType
+    }
+    if (cpF.chatIconPosition == '') {
+      delete cpF.chatIconPosition
+    }
     if (cpF.firstMessage == null || cpF.firstMessage == '') {
       delete cpF.firstMessage
       console.log('thereee', cpF.firstMessage);
@@ -856,15 +864,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       method = 'PATCH'
       url += $scope.cpForm.pk + '/'
     }
-    //
-    // $http({
-    //   method: method,
-    //   url: url,
-    //   data: cpF
-    // }).
-    // then(function(response) {
-    //   $scope.cpForm = response.data;
-    // });
+
 
     fd.append('call', cpF.call);
     fd.append('email', cpF.email);
@@ -890,6 +890,12 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     }
     if (cpF.fontColor != '') {
       fd.append('fontColor', cpF.fontColor);
+    }
+    if (cpF.chatIconPosition != '') {
+      fd.append('chatIconPosition', cpF.chatIconPosition);
+    }
+    if (cpF.chatIconType != '') {
+      fd.append('chatIconType', cpF.chatIconType);
     }
 
     // if (cpF.firstMessage != '') {

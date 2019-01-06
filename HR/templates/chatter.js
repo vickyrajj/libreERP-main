@@ -316,6 +316,24 @@ var supportBubbleColor = '{{supportBubbleColor}}'
 var firstMessage = `{{firstMessage}}`;
 var iconColor = '{{iconColor}}'
 var fontAndIconColor='{{fontColor}}'
+var position_of_chat="{{chatIconPosition}}";
+var type_of_icon='{{chatIconType}}'
+
+console.log(position_of_chat ,type_of_icon );
+//chat box position -- .chat_div_right , .chat_div_left
+
+// type of box
+
+ // left_center , right_center , left_bottom , right_bottom
+
+
+// type of circle
+//typingBox-right
+var sy_circle_class="sy-circle-"+position_of_chat.split('-')[0] //sy-circle-right , sy-circle-left
+var sy_text_class=" sy-text-"+position_of_chat.split('-')[0] // sy-text-right , sy-text-left
+var sy_firsttext_class="sy-firsttext-"+position_of_chat.split('-')[0]
+var chat_div_class="chatdiv-"+position_of_chat.split('-')[0];
+
 firstMessage = firstMessage.replaceAll("&lt;",'<')
 firstMessage = firstMessage.replaceAll("&gt;",">")
 firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';text-decoration:none')
@@ -581,6 +599,7 @@ function setIframeToNormal(){
 // var connectionIsOff=true
 document.addEventListener("DOMContentLoaded", function(event) {
 
+
   window.onbeforeunload=function(){
   // alert('winodw refreshed');
   if(isAudioClicked||isVideoClicked){
@@ -605,6 +624,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // function myfun(){
   //   console.log('thererer');
   // }
+  setTimeout(function () {
+    var ChatWithUs=document.getElementById('ChatWithUs')
+    ChatWithUs.addEventListener('click',function(){
+      openChat()
+      ChatWithUs.style.display="none"
+    })
+  }, 5000);
+
 
   connection.onopen = function (session) {
      console.log("session established!");
@@ -838,94 +865,104 @@ function createChatDiv() {
   var mainDiv = document.createElement("mainDiv");
   mainDiv.id="mainDiv"
 
-  mainDiv.innerHTML = '<div id="chatBox" class="ChatBoxDiv">'+
-          '<div id="chatBox_header" class="chatBox_header flex_container">'+
-            '<img class="logo_image" id="logo_ji" src="'+dpSupport+'" alt="">'+
-            '<div class="chatBox_info">'+
-              '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
-              '<span id="onlineStatus" class="chatBox_status">Online</span>'+
+  mainDiv.innerHTML =
+                '<div id="chatBox" class="ChatBoxDiv '+chat_div_class+'">'+
+                    '<div id="chatBox_header" class="chatBox_header flex_container">'+
+                        '<img class="logo_image" id="logo_ji" src="'+dpSupport+'" alt="">'+
+                        '<div class="chatBox_info">'+
+                            '<span id="agentName" class="chatBox_name">'+ nameSupport +'</span>'+
+                            '<span id="onlineStatus" class="chatBox_status">Online</span>'+
+                        '</div>'+
+                        '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
+                        '<i class="exitBtn SyrowFont font-SyrowVideoCall" style="display:none" id="videoBtn"></i>'+
+                        '<i class="closeIcon SyrowFont font-SyrowX" id="closeIcon"></i>'+
+                        '<i class="exitBtn SyrowFont font-SyrowLog-out" id="exitBtn"></i>'+
+                    '</div>'+
+                    '<div id="audioSection" class="audio_section">'+
+                    '</div>'+
+                    '<div id="videoSection" class="video_section">'+
+                    '</div>'+
+                    '<div id="chatBox_content" class="chatBox_content">'+
+                        '<div id="messageBox" class="content_section">'+
+                            '<p id="TypingBox" class="typingBox typingBox-right">Typing....</p>'+
+                        '</div>'+
+                    '</div>'+
+                    '<div id="chatBox_footer" class="chatBox_footer">'+
+                          '<div class="chatbox_branding">'+
+                            '<a style="color:'+fontAndIconColor+' ;text-decoration:none" href="https://www.syrow.com/" target="_blank">We run on Syrow</a>'+
+                          '</div>'+
+                          '<div id="messageComposer" class="flex_container">'+
+                            '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
+                            '<input id="filePicker" type="file" style="display:none;"/>'+
+                            '<i id="paperClip"  class="paperClip SyrowFont font-SyrowPaperclip" aria-hidden="true"></i>'+
+                            '<i id="paperPlane" class="paperClip SyrowFont font-SyrowNavigation" aria-hidden="true"></i>'+
+                          '</div>'+
+                          '<div class="startNewChatBtn flex_container" id="startNewChatBtn" class="flex_container">'+
+                            '<span>Start New Conversation </span>'+
+                          '</div>'+
+                    '</div>'+
+              '</div>'+
+
+
+
+              '<div id="closeSupport" class="close-support '+sy_circle_class+'" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; z-index:997654321; cursor:pointer;">'+
+                '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
+                   '<path id="closeChatSvg" style="fill:'+iconColor+';" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
+                 '</svg>'+
+              '</div>'+
+
+              '<div id="circleStyle">'+
+                  '<div id="supportCircle">'+
+                      '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'" id="sy-main-icon">'+
+                          '<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_firsttext_class+'">24 Hours Support</span>'+
+                          '<span id="chatSuggestionBar" style="display:none;background:'+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">'+firstMessage+'</span>'+
+                          '<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
+                          '<div  id="sy-sub-icons">'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Callback</span>'+
+                                '<span class="SyrowFont font-SyrowCallBack sy-md-1 sy-ops"></span></a>'+
+                              '</div>'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Chat</span>'+
+                                '<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
+                              '</div>'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Audio Call</span>'+
+                                '<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
+                              '</div>'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle '+sy_circle_class+'" >'+
+                                '<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Video Call</span>'+
+                                '<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
+                              '</div>'+
+                              '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle '+sy_circle_class+'">'+
+                                '<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_text_class+'">Ticket</span>'+
+                                '<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
+                              '</div>'+
+                          '</div>'+
+                      '</div>'+
+                  '</div>'+
+
+                  '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
+                    '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s" class="sy-text '+sy_text_class+'  ">Chat</span>'+
+                    '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">'+firstMessage+'</span>'+
+                    '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
+                  '</div>'+
+              '</div>'+
+
+          '<div id="boxStyle">'+
+            '<div id="ChatWithUs" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer;" class="chat_with_us '+position_of_chat+'">'+
+              '<span style="margin-right:10px;font-size:17px;">Chat With Us</span>'+
+              '<span style="font-size:16px;" class="SyrowFont font-SyrowChat"></span>'+
             '</div>'+
-            '<i class="exitBtn SyrowFont font-SyrowPhone1" style="display:none" id="audioBtn"></i>'+
-            '<i class="exitBtn SyrowFont font-SyrowVideoCall" style="display:none" id="videoBtn"></i>'+
-            '<i class="closeIcon SyrowFont font-SyrowX" id="closeIcon"></i>'+
-            '<i class="exitBtn SyrowFont font-SyrowLog-out" id="exitBtn"></i>'+
           '</div>'+
-          '<div id="audioSection" class="audio_section">'+
-          '</div>'+
-          '<div id="videoSection" class="video_section">'+
-          '</div>'+
-          '<div id="chatBox_content" class="chatBox_content">'+
-            '<div id="messageBox" class="content_section">'+
-              '<p id="TypingBox" style="display:none;position:fixed;bottom:190px;right:330px;font-size:16px;padding:5px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;">Typing....</p>'+
-            '</div>'+
-          '</div>'+
-          '<div id="chatBox_footer" class="chatBox_footer">'+
-              '<div class="chatbox_branding">'+
-                '<a style="color:'+fontAndIconColor+' ;text-decoration:none" href="https://www.syrow.com/" target="_blank">We run on Syrow</a>'+
-              '</div>'+
-              '<div id="messageComposer" class="flex_container">'+
-                '<textarea id="inputText" placeholder="Message..." name="name" rows="2" style="background-color:#fff;outline:none;font-size:14px" ></textarea>'+
-                '<input id="filePicker" type="file" style="display:none;"/>'+
-              '<i id="paperClip"  class="paperClip SyrowFont font-SyrowPaperclip" aria-hidden="true"></i>'+
-              '<i id="paperPlane" class="paperClip SyrowFont font-SyrowNavigation" aria-hidden="true"></i>'+
-              '</div>'+
-
-              '<div class="startNewChatBtn flex_container" id="startNewChatBtn" class="flex_container">'+
-                '<span>Start New Conversation </span>'+
-              '</div>'+
-          '</div>'+
-        '</div>'+
 
 
-
-        '<div id="closeSupport" class="close-support" style="height:60px; width:60px; background-color: '+supportBubbleColor+'; border-radius:50%; position:fixed ; bottom:20px; right:40px; z-index:997654321; cursor:pointer;">'+
-          '<svg style="position:absolute; top:20px; left:19px; height:51px;" viewBox="0 0 28 32">'+
-             '<path id="closeChatSvg" style="fill:'+iconColor+';" d="M13.978 12.637l-1.341 1.341L6.989 8.33l-5.648 5.648L0 12.637l5.648-5.648L0 1.341 1.341 0l5.648 5.648L12.637 0l1.341 1.341L8.33 6.989l5.648 5.648z" fill-rule="evenodd"></path>'+
-           '</svg>'+
-        '</div>'+
-
-        '<div id="supportCircle">'+
-    			'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation" onclick="" id="sy-main-icon">'+
-    				'<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">24 Hours Support</span>'+
-    				'<span id="chatSuggestionBar" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">'+firstMessage+'</span>'+
-    				'<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
-    				'<div  id="sy-sub-icons">'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle">'+
-    						'<span id="callCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Callback</span>'+
-    						'<span class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="chatCircle" class="sy-circle">'+
-    						'<span id="chatCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Chat</span>'+
-    						'<span class="SyrowFont font-SyrowChat sy-md-2 sy-ops"></span>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="audioCircle" class="sy-circle">'+
-    						'<span id="audioCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Audio Call</span>'+
-    						'<span class="SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"></span>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="videoCircle" class="sy-circle" >'+
-    						'<span id="videoCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Video Call</span>'+
-    						'<span class="SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"></span>'+
-    					'</div>'+
-    					'<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="ticketCircle" class="sy-circle">'+
-    						'<span id="ticketCircleText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text">Ticket</span>'+
-    						'<span class="SyrowFont font-SyrowTicket sy-md-1 sy-ops"></span>'+
-    					'</div>'+
-    				'</div>'+
-    			'</div>'+
-    		'</div>'+
-
-        '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation">'+
-          '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ; right:105px; display:none; transition: .5s" class="sy-text">Chat</span>'+
-          '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">'+firstMessage+'</span>'+
-
-          '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
-        '</div>'+
-          '</div>'+
-        '</div>'+
         '<div id="myModal" class="modal">'+
           '<div id="modalContent" class="modal-content">'+
           '</div>'+
         '</div>'
+
+
         '<div id="myModal" class="modal">'+
           '<div id="modalContent" class="modal-content">'+
           '</div>'+
@@ -939,6 +976,14 @@ function createChatDiv() {
 }
 
   createChatDiv()
+    // document.getElementById('boxStyle').style.display='none';
+    if(type_of_icon=="Box"){
+      document.getElementById('circleStyle').style.display='none';
+      document.getElementById('boxStyle').style.display='';
+    }else{
+      document.getElementById('circleStyle').style.display='';
+      document.getElementById('boxStyle').style.display='none';
+    }
 
   //variables
   var device;
@@ -1358,8 +1403,6 @@ function createChatDiv() {
               .sy-circle {\
               z-index: 987654321!important;\
               position: fixed!important;\
-              bottom: 20px;\
-              right: 40px;\
               width: 60px!important;\
               height: 60px!important;\
               border-radius: 50%!important;\
@@ -1410,7 +1453,6 @@ function createChatDiv() {
             }\
               .sy-text {\
               position: fixed;\
-              right: 70px;\
               margin-top: 15px;\
               border-radius: 15px;\
               padding: 4px 8px;\
@@ -1421,17 +1463,28 @@ function createChatDiv() {
               max-width: 250px;\
               overflow: hidden;\
             }\
+              .sy-text-left {\
+              left: 70px;\
+            }\
+              .sy-text-right {\
+              right: 70px;\
+            }\
+              .sy-firsttext-left {\
+              left: 105px;\
+            }\
+              .sy-firsttext-right {\
+              right: 105px;\
+            }\
               .sy-text-Suggested {\
               position: fixed;\
               right: 100px;\
-              margin-top: 12px;\
+              margin-top: 10px;\
               border-radius: 15px;\
               padding: 4px 8px;\
               font-family: Verdana, Arial, sans-serif;\
               font-size: 14px;\
-              white-space: nowrap;\
-              overflow: hidden;\
-              animation:chatSuggestionBar 1s\
+              width:20%;\
+              animation:chatSuggestionBar 3s\
             }\
               .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
               text-decoration: none;\
@@ -1441,7 +1494,6 @@ function createChatDiv() {
             }\
               #sy-main-icon:hover > .sy-text {\
               display: inline-block;\
-              right: 110px;\
             }\
               #sy-main-icon:hover > .sy-text-Suggested {\
               display: none !important;\
@@ -1550,6 +1602,42 @@ function createChatDiv() {
               .first_animation {\
               animation:  first_animation 1s;\
           }\
+              .left-center {\
+                    left: -55px;\
+                    bottom: 45%;\
+                    transform: rotate(90deg);\
+          }\
+              .right-center {\
+                    right: -55px;\
+                    bottom: 45%;\
+                    transform: rotate(-90deg);\
+          }\
+              .left-bottom {\
+                    left: 30px;\
+                    bottom: 0%;\
+          }\
+              .right-bottom {\
+                    right: 30px;\
+                    bottom: 0%;\
+          }\
+              .chat_with_us {\
+              background-color: "+windowColor+";\
+              color:"+fontAndIconColor+"\
+              cursor:  pointer;\
+              display:  inline-block;\
+              position: fixed;\
+              padding:  10px 15px;\
+              border-radius: 5px;\
+              animation:changingOpacity 1s;\
+          }\
+              .sy-circle-right {\
+                bottom: 20px;\
+                right: 40px;\
+          }\
+              .sy-circle-left {\
+                bottom: 20px;\
+                left: 40px;\
+          }\
           @keyframes modalBox{\
         	0%{\
               transform:translateY(-200px);\
@@ -1562,15 +1650,6 @@ function createChatDiv() {
           	}\
           }\
           @keyframes first_animation{\
-        	0%{\
-              transform:translateY(400px);\
-          	}\
-            50%{\
-              transform:translateY(-100px);\
-          	}\
-            100%{\
-              	transform:translateY(0px);\
-          	}\
           }\
           @keyframes changingOpacity{\
         	0%{\
@@ -1582,16 +1661,24 @@ function createChatDiv() {
           }\
           @keyframes chatSuggestionBar{\
         	0%{\
-              transform:translateY(100px);\
+              transform:scale(0px);\
+              opacity:0;\
           	}\
-            50%{\
-              transform:translateY(-10px);\
-            }\
             100%{\
-              	transform:translateY(0px);\
+              	transform:scale(1);\
+                opacity:1;\
           	}\
           }\
+          .typingBox{\
+            display:none;position:absolute;bottom:10px;font-size:16px;padding:5px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;left:0px;\
+          }\
             @media only screen and (max-width: 600px) {\
+              .chatdiv-right {\
+                    right: 0px;\
+                }\
+              .chatdiv-left {\
+                    left: 0px;\
+                }\
               .ChatBoxDiv{\
                 padding:0px;\
                 margin:0px;\
@@ -1622,13 +1709,18 @@ function createChatDiv() {
               }\
             }\
             @media only screen and (min-width: 600px) {\
+              .chatdiv-right {\
+                    right: 30px;\
+                }\
+              .chatdiv-left {\
+                    left: 30px;\
+              }\
               .ChatBoxDiv{\
                 padding:0px;\
                 margin:0px;\
                 height: 70vh;\
                 position: fixed;\
-                bottom: 100px;\
-                right: 40px;\
+                bottom: 85px;\
                 font-family: 'Muli', sans-serif;\
                 min-width: 370px;\
                 border-radius:10px;\
@@ -1819,9 +1911,13 @@ function createChatDiv() {
                 opacity:1;\
                 transform:translateY(0px);\
               }\
+              50%{\
+                opacity:0;\
+                transform:translateY(10px);\
+              }\
               100%{\
                 opacity:0;\
-                transform:translateY(10px) scale(0.0);\
+                transform:translateY(10px);\
               }\
             }\
             @keyframes rotateAnti{\
@@ -2496,6 +2592,10 @@ var isConfirmedToEnd=false;
         return
       }
     }else{
+      if(chat.messages.length<2){
+        closeSupport.click()
+        return
+      }
       if (confirm("Are you sure you want to end this chat ?")) {
         isConfirmedToEnd=true
           if(getFrameContent!=undefined){
@@ -2614,7 +2714,6 @@ var isConfirmedToEnd=false;
         }else {
           msgDiv = attachedFile
         }
-
       }
     }else {
     }
@@ -3087,17 +3186,21 @@ setInterval(function () {
   chatCircle.addEventListener("click", openChat , false);
 
   var chathasOpenedOnce=false;
+  // chatSuggestionBar.style.display="none"
+  var chatSuggestionBar= document.getElementById('chatSuggestionBar')
+  var chatSuggestionBar= document.getElementById('chatSuggestionBar1')
 
   setTimeout(function () {
+    // alert(chathasOpenedOnce)
     if(!chathasOpenedOnce){
       chatSuggestionBar.style.display="block"
       chatSuggestionBar1.style.display="block"
     }
   }, 10000);
 
-  var chatSuggestionBar= document.getElementById('chatSuggestionBar')
-  var chatSuggestionBar= document.getElementById('chatSuggestionBar1')
+
   chatSuggestionBar.style.display="none"
+  // console.log(chatSuggestionBar,"&&***************");
   chatSuggestionBar1.style.display="none"
 
   function openChat() {
@@ -3149,6 +3252,7 @@ setInterval(function () {
     //     }
     //   );
     // }
+    ChatWithUs.style.display=""
 
     endOfConversation();
 

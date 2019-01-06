@@ -34,6 +34,62 @@ body {
   cursor: pointer
 }
 
+.bal_switch{
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+}
+.bal_switch input{
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.bal_slider{
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.bal_slider:before{
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+input:checked + .bal_slider {
+  background-color: var(--themeMain);
+}
+
+input:focus + .bal_slider {
+  box-shadow: 0 0 1px var(--themeMain);
+}
+
+input:checked + .bal_slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.bal_slider.round {
+  border-radius: 34px;
+}
+
+.bal_slider.round:before {
+  border-radius: 50%;
+}
+
 #myQATable{
   border-collapse: collapse;
   width: 100%;
@@ -411,14 +467,14 @@ body {
     margin: 0px;
 }
 .nav-horizontal > li a{
-    color:  var(--themeMain);
+    color:  #fff;
 }
 
 .nav-horizontal> li > a:hover, .nav-horizontal > li >a:focus ,
 .nav-horizontal> .active, .nav-horizontal> .active a ,
 .nav-horizontal> li:hover a, .nav-horizontal > li:focus a,
 .nav-horizontal> li:hover, .nav-horizontal > li:focus{
-	background-color: var(--themeMain);
+	background-color: var(--headerNavbarHighlight);
 	color: #fff;
 }
 
@@ -428,11 +484,11 @@ body {
     box-shadow: 0 5px 6px -6px #999;
 }
 .nav-sidebar> li > a {
-  color:var(--themeMain);
+  color:#fff;
 }
 
 .nav-sidebar> li > a:hover, .nav-sidebar > li >a:focus , .nav-sidebar> .active > a , .sidebarList> li > a:focus , .sidebarList> li > a:active{
-	background-color: var(--themeMain);
+	background-color: var(--headerNavbarHighlight);
 	color: #fff;
 }
 
