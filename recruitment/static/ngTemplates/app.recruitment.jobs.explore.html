@@ -71,9 +71,15 @@
     </div>
   </div><br/>
 
-    <div class="row" ng-if="jobApplied.length>0">
-      <div class="col-md-12 text-right">
+    <div class="row" >
+      <div class="col-md-6" >
+        <div class="btn-group" ng-if="jobDetails.status=='Active'">
+        <button class="btn btn-default" ng-click="newApplicant()"><i class="fa fa-plus"> Add Candidate</i></button>
+      </div>
+      </div>
+      <div class="col-md-6 text-right" ng-if="jobApplied.length>0">
         <div class="btn-group">
+          <button class="btn btn-default" ng-click="listData()"><i class="fa fa-refresh"></i></button>
         <button class="btn btn-danger" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"
           cancel-text="No" on-confirm="rejected()" confirm-button-type="danger" cancel-button-type="default"><i class="fa fa-tick">Reject</i></button>
         <button class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>"

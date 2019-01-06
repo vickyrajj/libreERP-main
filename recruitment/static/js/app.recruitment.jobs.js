@@ -238,8 +238,9 @@ app.controller("workforceManagement.recruitment.jobs.explore", function($scope, 
     });
   }
   $scope.listData();
-
+  $scope.form={checkAll:''}
   $scope.$watch('form.checkAll', function(newValue, oldValue) {
+    console.log("heeeeeeerrrrrr");
     for (var i = 0; i < $scope.jobApplied.length; i++) {
       $scope.jobApplied[i].select = newValue;
     }
@@ -320,6 +321,118 @@ app.controller("workforceManagement.recruitment.jobs.explore", function($scope, 
     })
   }
 
+  $scope.newApplicant = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.recruitment.application.form.html',
+      size: 'l',
+      backdrop: false,
+      resolve: {
+        jobDetails: function() {
+          return $scope.jobDetails;
+        },
+      },
+      controller: 'recruitment.application.form'
+    })
+
+  }
+
+
+});
+
+app.controller("recruitment.application.form", function($scope, $state, $users, $stateParams, $http, Flash, $uibModalInstance, jobDetails,  $timeout) {
+  $scope.resetForm = function() {
+   $scope.job =  jobDetails
+    $scope.form = {
+      'firstname': '',
+      'lastname': '',
+      'email': '',
+      'mobile': '',
+      'coverletter': '',
+      'resume': emptyFile,
+      'aggree': true
+    }
+  }
+
+  $scope.resetForm();
+  $scope.rsD = ''
+  $scope.msg = ''
+  $scope.save = function() {
+    console.log($scope.form, 'aaaaaaaaaaa');
+    var f = $scope.form;
+    if (f.firstname.length == 0) {
+      return
+    }
+    if (f.email.length == 0) {
+      return
+    }
+    if (f.aggree == false) {
+      return
+    }
+    if (f.mobile.length == 0) {
+      return
+    }
+    $scope.rsD = ''
+    if (f.resume == emptyFile) {
+      $scope.rsD = 'Please Upload Resume In PDF Formate'
+      return
+    }
+    var r = f.resume.name.split('.')[1]
+    console.log(r);
+    if (r != 'pdf') {
+      $scope.rsD = 'Please Upload Resume In PDF Formate'
+      return
+    }
+    var url = '/api/recruitment/jobsList/';
+    var fd = new FormData();
+    console.log(f.resume, 'aaaaaaaa');
+    // if (f.resume != null && f.resume != emptyFile) {
+    //   console.log("aaaaaaaaaa");
+    // }
+    fd.append('resume', f.resume)
+    fd.append('firstname', f.firstname);
+    fd.append('email', f.email);
+    fd.append('mobile', f.mobile);
+    fd.append('job', $scope.job.pk);
+    if (f.aggree) {
+      fd.append('aggree', f.aggree);
+    }
+    if (f.coverletter.length>0) {
+      fd.append('coverletter', f.coverletter);
+    }
+    if (f.lastname.length>0) {
+      fd.append('lastname', f.lastname);
+    }
+
+    console.log(fd, 'aaaaaaaaaaaaaa');
+    var method = 'POST';
+
+    $http({
+      method: method,
+      url: url,
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
+    then(function(response) {
+      console.log(response.data);
+      if (response.data.res == 'Sucess') {
+        $scope.resetForm();
+        $scope.msg = 'Applied Sucessfully'
+        $timeout(function () {
+          $uibModalInstance.dismiss();
+        }, 3000);
+      }else {
+        $scope.msg = 'Errors In The Form'
+      }
+    })
+  }
+
+
+  $scope.cancel = function() {
+    $uibModalInstance.dismiss();
+  };
 
 });
 
