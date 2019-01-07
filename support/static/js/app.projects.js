@@ -873,6 +873,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       var totalprice = $scope.data[$scope.data.length - 1].price * $scope.data[$scope.data.length - 1].quantity1
       cost += totalprice
       $scope.form.invoiceValue += cost
+      $scope.invoceSave()
       var weight = $scope.data[$scope.data.length - 1].weight* $scope.data[$scope.data.length - 1].quantity1
       totweight += weight
       $scope.form.weightValue += totweight
@@ -899,6 +900,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         $scope.data[$scope.data.length - 1].listPk = response.data.pk
         $scope.productpk.push(response.data);
         $scope.showbutton = true
+
         return
       })
     } else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
@@ -913,6 +915,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       var totalprice = $scope.data[$scope.data.length - 1].price * $scope.data[$scope.data.length - 1].quantity1
       cost += totalprice
       $scope.form.invoiceValue = cost
+      $scope.invoceSave()
       var weight = $scope.data[$scope.data.length - 1].weight * $scope.data[$scope.data.length - 1].quantity1
       console.log(weight,'aaaaaaa');
       totweight += weight
@@ -1008,6 +1011,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }
       $scope.form.invoiceValue = cost
       $scope.form.weightValue  = totweight
+      $scope.invoceSave()
       return
     }
   }, true)
