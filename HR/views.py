@@ -368,44 +368,13 @@ class SendActivatedStatus(APIView):
             'twitterUrl' : 'twitter.com',
             'brandName' : globalSettings.BRAND_NAME,
         }
+        emailAddr = []
+        emailAddr.append(str(request.data['email']))
         email_body = get_template('app.HR.userActivated.html').render(ctx)
-        print email_body
         email_subject = 'Registration Successfull!!!!!'
-        if globalSettings.EMAIL_API:
-            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-            data = {
-              "personalizations": [
-                {
-                  "to": [
-                    {
-                      "email": str(request.data['email'])
-                      # str(orderObj.user.email)
-                    }
-                  ],
-                  "subject": email_subject
-                }
-              ],
-              "from": {
-                "email": globalSettings.G_FROM,
-                "name":"BNI India"
-              },
-              "content": [
-                {
-                  "type": "text/html",
-                  "value": email_body
-                }
-              ]
-            }
-            response = sg.client.mail.send.post(request_body=data)
-            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-        else:
-            sentEmail=[]
-            sentEmail.append(str(request.data['email']))
-            # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-            msg = EmailMessage(email_subject, email_body, to= sentEmail)
-            msg.content_subtype = 'html'
-            msg.send()
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,emailAddr,email_subject,email_cc,email_bcc,'html')
         return Response({}, status = status.HTTP_200_OK)
 
 
@@ -484,45 +453,13 @@ class BulkUserCreationAPIView(APIView):
                 'brandName' : globalSettings.BRAND_NAME,
                 'siteAddress' : globalSettings.SITE_ADDRESS
             }
-            print ctx
             sendAddr = []
-            email_body = get_template('app.user.resetPassword.html').render(ctx)
             sendAddr.append(str(email))
-
-            if globalSettings.EMAIL_API:
-                sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-                # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-                data = {
-                  "personalizations": [
-                    {
-                      "to": [
-                        {
-                          "email": str(email)
-                          # str(orderObj.user.email)
-                        }
-                      ],
-                      "subject": "Welcome to BNIStore.in"
-                    }
-                  ],
-                  "from": {
-                    "email": globalSettings.G_FROM,
-                    "name": globalSettings.G_FROM_NAME
-                  },
-                  "content": [
-                    {
-                      "type": "text/html",
-                      "value": email_body
-                    }
-                  ]
-                }
-                response = sg.client.mail.send.post(request_body=data)
-                print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-
-            else:
-                msg = EmailMessage("Welcome to BNIStore.in" , email_body, to= sendAddr)
-                msg.content_subtype = 'html'
-                msg.send()
-
+            email_body = get_template('app.user.resetPassword.html').render(ctx)
+            email_subject = "Welcome to " + globalSettings.SITE_ADDRESS
+            email_cc = []
+            email_bcc = []
+            send_email(email_body,sendAddr,email_subject,email_cc,email_bcc,'html')
 
         return Response(status = status.HTTP_200_OK)
 
