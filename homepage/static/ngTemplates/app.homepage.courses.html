@@ -93,13 +93,13 @@
             <div ng-class="!$last ? 'roundcircle' : 'roundcirclelast'"> </div>
           </div>
           <div ng-show="a.view">
-            <div ng-repeat="b in a.chapter " ng-show="$index < 5">
+            <div ng-repeat="b in a.chapter " ng-show="limit">
               <div class="row   " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
                 <div class="col-md-10">{{b.content}}</div>
                 <div class="col-md-2">{{b.page}}</div>
               </div>
-
-              <!-- <div class="row " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
+            </div>
+            <!-- <div class="row " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
               <div class="col-md-10">{{a.chapter.two}}</div>
               <div class="col-md-2">2</div>
             </div>
@@ -125,10 +125,10 @@
                 <div class="col-md-2">15</div>
               </div>
             </div> -->
-              <div class="text-center">
-                <button class="btn-style1" ng-click="loadcontent($index)">{{a.viewbtn}}</button>
-              </div>
+            <div class="text-center">
+              <button class="btn-style1" ng-click="loadcontent($index)" ng-model="limit">{{a.viewbtn}}</button>
             </div>
+
           </div>
         </div>
       </div>

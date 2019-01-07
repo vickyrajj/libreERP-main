@@ -174,26 +174,68 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       'class': 'head1',
       'title': '01. Ncert Maths',
       'chapter': {
-        'one': {'page':'1','content':'1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'two': {'page':'3','content':'1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'three': {'page':'5','content':'1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'four': {'page':'8','content':'1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'five': {'page':'11','content':'1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'six': {'page':'13','content':'1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'seven': {'page':'15','content':'1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'}
+        'one': {
+          'page': '1',
+          'content': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'two': {
+          'page': '3',
+          'content': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'three': {
+          'page': '5',
+          'content': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'four': {
+          'page': '8',
+          'content': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'five': {
+          'page': '11',
+          'content': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'six': {
+          'page': '13',
+          'content': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'seven': {
+          'page': '15',
+          'content': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        }
       }
     },
     {
       'class': 'head2',
       'title': '02. Ncert Science',
       'chapter': {
-        'one': {'page':'1','content':'2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'two': {'page':'3','content':'2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'three': {'page':'5','content':'2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'four': {'page':'8','content':'2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'five': {'page':'11','content':'2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'six': {'page':'13','content':'2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
-        'seven': {'page':'18','content':'2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'}
+        'one': {
+          'page': '1',
+          'content': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'two': {
+          'page': '3',
+          'content': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'three': {
+          'page': '5',
+          'content': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'four': {
+          'page': '8',
+          'content': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'five': {
+          'page': '11',
+          'content': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'six': {
+          'page': '13',
+          'content': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        },
+        'seven': {
+          'page': '18',
+          'content': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+        }
       }
     },
   ];
@@ -277,7 +319,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
 
     $scope.bookscontent[val].view = !$scope.bookscontent[val].view;
   }
-
+  $scope.limit = 5;
   $scope.loadcontent = function(val) {
     // $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
     // if ($scope.bookscontent[val].view1 == false) {
@@ -285,7 +327,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
     // } else {
     //   $scope.bookscontent[val].viewbtn = 'Load Less';
     // }
-  
+    $scope.limit = val;
   }
 
   $scope.cardss = [{
