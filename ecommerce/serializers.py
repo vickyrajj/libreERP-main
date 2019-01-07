@@ -133,7 +133,7 @@ class POSProductSerializer(serializers.ModelSerializer):
     storeQty=StoreQtySerializer(many=True,read_only=True)
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name' , 'price' , 'discount','discountedPrice' ,'serialNo' ,'description','inStock','storeQty','howMuch','unit')
+        fields = ('pk' , 'user' ,'name' , 'price' , 'discount','discountedPrice' ,'serialNo' ,'description','inStock','storeQty','howMuch','unit','grossWeight')
     def get_discountedPrice(self, obj):
         if obj.discount>0:
             # discountedPrice = obj.price - ((obj.discount / obj.price )* 100)

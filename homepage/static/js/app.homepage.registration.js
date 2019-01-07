@@ -43,7 +43,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       return;
     }
 
-    if ($scope.form.GST == undefined || $scope.form.GST.length==0 || $scope.form.pincode== undefined || $scope.form.pincode.length==0 ||$scope.form.statecode == undefined || $scope.form.statecode== 'Please select your State code' ||  $scope.form.designation == undefined || $scope.form.designation == 'Please select your role') {
+    if (isStoreGlobal != 'True' && ($scope.form.GST == undefined || $scope.form.GST.length==0 || $scope.form.pincode== undefined || $scope.form.pincode.length==0 ||$scope.form.statecode == undefined || $scope.form.statecode== 'Please select your State code' ||  $scope.form.designation == undefined || $scope.form.designation == 'Please select your role')) {
       console.log("form not valid , returning2222");
       return;
     }
@@ -52,9 +52,9 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       mobile : $scope.form.mobile,
       email : $scope.form.email,
     }
-    if ($scope.isStoreGlobal) {
-      toSend.phoneCode = $scope.selected.phonecode
-    }
+    // if ($scope.isStoreGlobal) {
+    //   toSend.mobileWithCode = $scope.form.mobile
+    // }
     console.log(toSend);
     $scope.mode = 'sendingOTP';
     $http({method : 'POST' , url : '/api/homepage/registration/' , data : toSend}).

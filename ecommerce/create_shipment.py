@@ -19,12 +19,21 @@ def createShipment(recipientName , recipientCompany , recipientPhone , recipient
     customer_transaction_id = "*** ShipService Request v17 using Python ***"  # Optional transaction_id
     shipment = FedexProcessShipmentRequest(CONFIG_OBJ, customer_transaction_id=customer_transaction_id)
     shipment.RequestedShipment.DropoffType = 'REGULAR_PICKUP'
-    shipment.RequestedShipment.ServiceType = 'FEDEX_EXPRESS_SAVER'
+    shipment.RequestedShipment.ServiceType = globalSettings.FEDEX_SERVICE_TYPE
     shipment.RequestedShipment.PackagingType = 'YOUR_PACKAGING'
 
     print dir(shipment.RequestedShipment.CustomsClearanceDetail)
     shipment.RequestedShipment.CustomsClearanceDetail.CustomsValue.Currency = "INR"
     shipment.RequestedShipment.CustomsClearanceDetail.CustomsValue.Amount = goodsValue
+
+    if country != 'IN':
+        payr = shipment.create_wsdl_object_of_type('Payor')
+        payr.AccountNumber = globalSettings.FEDEX_ACCOUNT_NUMBER
+        dp = shipment.create_wsdl_object_of_type('Payment')
+        dp.PaymentType = 'RECIPIENT'
+        shipment.RequestedShipment.CustomsClearanceDetail.DutiesPayment = dp
+        shipment.RequestedShipment.CustomsClearanceDetail.DocumentContent = 'NON_DOCUMENTS'
+
 
     print dir(shipment.RequestedShipment.CustomsClearanceDetail.Commodities)
 
