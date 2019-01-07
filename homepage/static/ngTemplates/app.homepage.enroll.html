@@ -1,0 +1,599 @@
+<div class="row" style="margin:0px;">
+  <div class="container-fluid top">
+    <div class="container">
+      <div class="col-md-6 col-xs-12">
+        <h1>Enroll Now and Learn</h1>
+        <h2>Get Acesss for Award Winning Online Courses</h2>
+      </div>
+      <div class="col-md-6 col-xs-12 text-center">
+        <div class="dropdown" id="open">
+          <button ng-disabled="false" class="btn dropdown-toggle custom-btn text-left topmargin" type="button" id="drop1" data-toggle="dropdown" ng-click=dropdown(1)>Keyword
+            <span class="caret text-right"></span></button>
+          <ul class="dropdown-menu" aria-labelledby="drop1">
+            <li><a href="#">Html</a></li>
+            <li><a href="#">CSS</a></li>
+            <li><a href="#">JavaScript</a></li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button ng-disabled="false" class="btn dropdown-toggle custom-btn text-left" type="button" id="drop2" data-toggle="dropdown" style="  margin-top:2em;" ng-click=dropdown(2)>Catagories
+            <span class="caret text-right"></span></button>
+          <ul class="dropdown-menu" aria-labelledby="drop2">
+            <li><a href="#">Html</a></li>
+            <li><a href="#">CSS</a></li>
+            <li><a href="#">JavaScript</a></li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button ng-disabled="false" class="btn dropdown-toggle custom-btn text-left" type="button" id="drop3" data-toggle="dropdown" style="  margin-top:2em;" ng-click=dropdown(3)>Instructors
+            <span class="caret text-right"></span></button>
+          <ul class="dropdown-menu" aria-labelledby="drop3">
+            <li><a href="#">Html</a></li>
+            <li><a href="#">CSS</a></li>
+            <li><a href="#">JavaScript</a></li>
+          </ul>
+        </div>
+        <div class="leftalign">
+          <button ng-disabled="false" class="btn  custom-btn " type="button" id="drop4" style="text-align: center;margin-top:2em;background-color:#FFCC21;font-weight:bold;margin-bottom:5em;" ng-click=dropdown(4)>Search Courses</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid text-center" style="background-color:#fff;min-height:30vh;">
+    <h1 style="font-weight:bold;text-align:center;padding-top:1em;">Learn The Easy Way</h1>
+    <span>NO HASSLE JUST LEARN NOW & BECOME A PRO. WHY THE WAIT?</span>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 likecard">
+          <div class="row">
+            <div class="col-md-3">
+              <img src="/static/images/24tut/interview(1).png" style="height:5em;margin-top:2em;" />
+            </div>
+            <div class="col-md-9">
+              <h3>Certified Courses</h3>
+              <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                consequat.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 likecard">
+          <div class="row">
+            <div class="col-md-3">
+              <img src="/static/images/24tut/headhunting.png" style="height:5em;margin-top:2em;" />
+            </div>
+            <div class="col-md-9">
+              <h3>Video Coachings</h3>
+              <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                consequat.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 likecard">
+          <div class="row">
+            <div class="col-md-3">
+              <img src="/static/images/24tut/internet.png" style="height:5em;margin-top:2em;" />
+            </div>
+            <div class="col-md-9">
+              <h3>Search for Your Course</h3>
+              <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                consequat.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 likecard">
+          <div class="row">
+            <div class="col-md-3">
+              <img src="/static/images/24tut/portfolio.png" style="height:5em;margin-top:2em;" />
+            </div>
+            <div class="col-md-9">
+              <h3>Learn Instantly</h3>
+              <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                consequat.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 likecard">
+          <div class="row">
+            <div class="col-md-3">
+              <img src="/static/images/24tut/business.png" style="height:5em;margin-top:2em;" />
+            </div>
+            <div class="col-md-9">
+              <h3>Quizs and Tests</h3>
+              <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                consequat.</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 likecard">
+          <div class="row">
+            <div class="col-md-3">
+              <img src="/static/images/24tut/best-seller.png" style="height:5em;margin-top:2em;" />
+            </div>
+            <div class="col-md-9">
+              <h3>Cloud Storage</h3>
+              <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                consequat.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container-fluid" style="background-color: #FAFAFA">
+    <div class="container" style=" margin-bottom: 2em;text-align: center;">
+      <h1><b>Popular Courses</b></h1>
+      <span>THE BEST COURSES</span>
+      <div class="row" >
+        <ng-owl-carousel class="owl-theme" owl-items="cardss" owl-properties="properties" owl-ready="ready($api)">
+          <div ng-repeat="a in cardss">
+            <div class="anim-in-out anim-zoom-out">
+              <div style="margin-top: 2em;">
+                <div class="cards">
+                  <img src="{{a.img1}}" class="img-radius" alt="Avatar" style="width:100%">
+                  <div class="body">
+                    <h4><b>{{a.title}}</b></h4>
+                    <p>{{a.content}}</p>
+                    <table class="table-align">
+                      <td class="tablealign1"><span style="text-align: center"><img src="{{a.img2}}" class="img-responsive img-circle" style="height:50px;width:50px;"></span></td>
+                      <td class="tablealign2"><b>{{a.name}}</b></td>
+                      <td><span class="badge badge-pills">&#8377;{{a.price}}/hr</span></td>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-owl-carousel>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style=" margin-bottom: 2em;text-align: center;">
+    <h1><b>Get Started Easily</b></h1>
+    <span>EASY TO ENROLL NOW</span>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 hoverimg">
+          <img src="/static/images/24tut/search.png" width='128px' height='128px' />
+          <h4><span style='color:#D2D2D2;'>01</span>Search for Courses</h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span>
+        </div>
+        <div class="col-md-3 hoverimg">
+          <img src="/static/images/24tut/laptopwork.png" width='128px' height='128px' />
+          <h4><span style='color:#D2D2D2;'>02</span>Connect With Us</h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span>
+        </div>
+        <div class="col-md-3 hoverimg">
+          <img src="/static/images/24tut/lamp.png" width='128px' height='128px' />
+          <h4><span style='color:#D2D2D2;'>03</span>Learn Anything</h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span>
+        </div>
+        <div class="col-md-3 hoverimg">
+          <img src="/static/images/24tut/books.png" width='128px' height='128px' />
+          <h4><span style='color:#D2D2D2;'>04</span>Get Certified</h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid" style="padding: 0;">
+    <div class="col-md-3 text-center" style="background-color: #00E69E;min-height: 42vh;">
+      <h4 style="padding-top: 2em;color:#ooo;"><b>A Variety of Courses for Everyone</b></h4>
+      <span style="color:#fff;">LEARN ANYWHERE, LEARN ANYTHING</span>
+      <img src="/static/images/24tut/books(1).png" width="200" height="200" style="margin: 20px 0 20px 0;" />
+    </div>
+    <div class="col-md-3 text-center courses" style="background-color: #835EF9;min-height: 42vh;">
+      <h3 style="padding-top: 2em;color:#fff;margin:0;"><b>Over 1300+ Topics</b></h3>
+      <span style="color:#fff;">BEST COURSE TO LEARN</span>
+      <ul>
+        <li>Animation courses</li>
+        <li>Animation courses</li>
+        <li>Animation courses</li>
+        <li>Animation courses</li>
+      </ul>
+      <button class="btn-style1" type="button">Know More</button>
+    </div>
+    <div class="col-md-3 text-center" style="background-image: url('/static/images/24tut/img1.jpeg');min-height: 42vh;">
+    </div>
+    <div class="col-md-3 text-center courses" style="background-color: #F36138;min-height: 42vh;">
+      <img src="/static/images/24tut/mon.png" style="padding-top:4em;" />
+      <h3 style="color:#fff;"><b>A Digital Learning Era</b></h3>
+      <span style="color:#fff;margin-bottom: 1em;">LEARN ANYWHERE, LEARN ANYTHING</span><br />
+      <button class="btn-style1" type="button">Know More</button>
+    </div>
+  </div>
+
+  <div class="container" style=" margin-bottom: 2em;text-align: center;">
+    <h1 style="padding-top: 2em;color:#ooo;"><b>Choose Your Category</b></h1>
+    <span>JUST PICK WHAT YOU NEED TO LEARN</span>
+    <div class="row">
+      <div class="col-md-4 text-center " style="margin-top:1em;">
+        <div style="background-color: #FAFAFA;" class="hoverimg">
+          <img src="/static/images/24tut/booksearch.png " style="height:60px;margin-top: 10px;margin-top: 10px;" />
+          <h4><b>Quantum Physics</b></h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span><br />
+          <button class="btn-style1" type="button"><b>14 Classes</b></button>
+        </div>
+      </div>
+      <div class="col-md-4 text-center " style="margin-top:1em;">
+        <div style="background-color: #FAFAFA;" class="hoverimg">
+          <img src="/static/images/24tut/chemistry.png " style="height:60px;margin-top: 10px;" />
+          <h4><b>Applied Science</b></h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span><br />
+          <button class="btn-style1" type="button"><b>14 Classes</b></button>
+        </div>
+      </div>
+      <div class="col-md-4 text-center " style="margin-top:1em;">
+        <div style="background-color: #FAFAFA;" class="hoverimg">
+          <img src="/static/images/24tut/student-hat.png" style="height:60px;margin-top: 10px;" />
+          <h4><b>Law Order</b></h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span><br />
+          <button class="btn-style1" type="button"><b>14 Classes</b></button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-center " style="margin-top:1em;">
+        <div style="background-color: #FAFAFA;" class="hoverimg">
+          <img src="/static/images/24tut/light-bulb.svg " style="height:60px;margin-top: 10px;" />
+          <h4><b>Quantum Physics</b></h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span><br />
+          <button class="btn-style1" type="button"><b>14 Classes</b></button>
+        </div>
+      </div>
+      <div class="col-md-4 text-center " style="margin-top:1em;">
+        <div style="background-color: #FAFAFA;" class="hoverimg">
+          <img src="/static/images/24tut/set-square.png " style="height:60px;margin-top: 10px;" />
+          <h4><b>Applied Science</b></h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span><br />
+          <button class="btn-style1" type="button"><b>14 Classes</b></button>
+        </div>
+      </div>
+      <div class="col-md-4 text-center " style="margin-top:1em;">
+        <div style="background-color: #FAFAFA;" class="hoverimg">
+          <img src="/static/images/24tut/atom.png " style="height:60px;margin-top: 10px;" />
+          <h4><b>Law Order</b></h4>
+          <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut .</span><br />
+          <button class="btn-style1" type="button"><b>14 Classes</b></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container-fluid">
+    <div class="container text-center" style=" margin-bottom: 2em;">
+      <h1 style="padding-top: 2em;color:#ooo;"><b>Authors of eLMS</b></h1>
+      <span>JUST PICK WHAT YOU NEED TO LEARN</span>
+      <div class="row">
+        <div class="col-md-3">
+          <div style="margin-top: 1em;">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author1.png" class="round_img" width="70%"></div>
+            </div>
+            <h4><b>Jenny Smith</b></h4>
+            <span>Consultant</span><br />
+            <span><i class="fa fa-facebook" aria-hidden="true"></i><i style="margin-left:5px;" class=" fa fa-twitter" aria-hidden="true"> in</i><i style="margin-left:5px;" class="fa fa-google-plus" aria-hidden="true"></i></span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div style="margin-top: 1em;">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author2.jpeg" class="round_img" width="70%"></div>
+            </div>
+            <h4><b>Jenny Smith</b></h4>
+            <span>Consultant</span><br />
+            <span><i class="fa fa-facebook" aria-hidden="true"></i><i style="margin-left:5px;" class=" fa fa-twitter" aria-hidden="true"> in</i><i style="margin-left:5px;" class="fa fa-google-plus" aria-hidden="true"></i></span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div style="margin-top: 1em;">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author3.jpg" class="round_img" width="70%"></div>
+            </div>
+            <h4><b>Jenny Smith</b></h4>
+            <span>Consultant</span><br />
+            <span><i class="fa fa-facebook" aria-hidden="true"></i><i style="margin-left:5px;" class=" fa fa-twitter" aria-hidden="true"> in</i><i style="margin-left:5px;" class="fa fa-google-plus" aria-hidden="true"></i></span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div style="margin-top: 1em;">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author5.jpeg" class="round_img" width="70%"></div>
+            </div>
+            <h4><b>Jenny Smith</b></h4>
+            <span>Consultant</span><br />
+            <span><i class="fa fa-facebook" aria-hidden="true"></i><i style="margin-left:5px;" class=" fa fa-twitter" aria-hidden="true"> in</i><i style="margin-left:5px;" class="fa fa-google-plus" aria-hidden="true"></i></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div style="margin-top: 1em;">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author4.jpeg" class="round_img" width="70%"></div>
+            </div>
+            <h4><b>Jenny Smith</b></h4>
+            <span>Consultant</span><br />
+            <span><i class="fa fa-facebook" aria-hidden="true"></i><i style="margin-left:5px;" class=" fa fa-twitter" aria-hidden="true"> in</i><i style="margin-left:5px;" class="fa fa-google-plus" aria-hidden="true"></i></span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div style="margin-top: 1em;">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author3.jpg" class="round_img" width="70%"></div>
+            </div>
+            <h4><b>Jenny Smith</b></h4>
+            <span>Consultant</span><br />
+            <span><i class="fa fa-facebook" aria-hidden="true"></i><i style="margin-left:5px;" class=" fa fa-twitter" aria-hidden="true"> in</i><i style="margin-left:5px;" class="fa fa-google-plus" aria-hidden="true"></i></span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div style="margin-top: 1em;">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author1.png" class="round_img" width="70%"></div>
+            </div>
+            <h4><b>Jenny Smith</b></h4>
+            <span>Consultant</span><br />
+            <span><i class="fa fa-facebook" aria-hidden="true"></i><i style="margin-left:5px;" class=" fa fa-twitter" aria-hidden="true"> in</i><i style="margin-left:5px;" class="fa fa-google-plus" aria-hidden="true"></i></span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div style="margin-top: 1em;position:relative;">
+            <div class="authors_div showhim">
+              <div class="showme"><img src="/static/images/24tut/profile_overlay.png" width="100%"></div>
+              <div class="ok"><img src="/static/images/24tut/author1.png" class="round_img" width="70%"></div>
+            </div>
+            <div class="overlay">
+            </div>
+            <h4><b>Jenny Smith</b></h4>
+            <span>Consultant</span><br />
+            <span><i class="fa fa-facebook" aria-hidden="true"></i><i style="margin-left:5px;" class=" fa fa-twitter" aria-hidden="true"> in</i><i style="margin-left:5px;" class="fa fa-google-plus" aria-hidden="true"></i></span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <button class="btn-style1"><b>View All Authors</b></button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container-fluid" style="background-color:#FAFAFA ;">
+    <div class="container text-center">
+      <h1 style="padding-top: 2em;color:#ooo;"><b>Latest News</b></h1>
+      <span>JUST PICK WHAT YOU NEED TO LEARN</span>
+      <div class="row">
+        <div class="col-md-4" style="margin-top: 2em;">
+          <div class="cards" style="min-height:35vh;margin-bottom: 2em;">
+            <img src="/static/images/24tut/img1.jpeg" class="img-radius" alt="Avatar" style="width:100%">
+            <div class="body" style="text-align:left;padding-top: 20px;">
+              <h4><b>How e-learning Wins Competion in World</b></h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" style="margin-top: 2em;">
+          <div class="cards" style="min-height:35vh;margin-bottom: 2em;">
+            <img src="/static/images/24tut/img1.jpeg" class="img-radius" alt="Avatar" style="width:100%">
+            <div class="body" style="text-align:left;padding-top: 20px;">
+              <h4><b>How e-learning Wins Competion in World</b></h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" style="margin-top: 2em;">
+          <div class="cards" style="min-height:35vh;margin-bottom: 2em;">
+            <img src="/static/images/24tut/img1.jpeg" class="img-radius" alt="Avatar" style="width:100%">
+            <div class="body" style="text-align:left;padding-top: 20px;">
+              <h4 style="padding-top: 10px;"><b>How e-learning Wins Competion in World</b></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container text-center ">
+    <h1 style="padding-top: 2em;color:#ooo;"><b>New App Features</b></h1>
+    <span>LEARNING VIA APP NEVER GET EASIER</span>
+    <div class="row" style="margin: 2em 0;">
+      <div class="col-md-4 col-xs-12">
+        <div class="flex-container text-left" style="float:left;">
+          <div class="flex-item">
+            <div style="float:left;border:1px solid #000;border-radius: 50px;height:100px;width:100px;position: relative;">
+              <img src='/static/images/24tut/graduate.png' height='60px' style="position:absolute;top:20%;left:20%;" />
+            </div>
+            <div style="float:left;margin:1em 0 0 1em;">
+              <h4><b>Bookmark Courses</b></h4>
+              <span style="margin-top:-10px;">Get the Clear Picture</span>
+            </div>
+          </div>
+          <div class="flex-item">
+            <div style="float:left;border:1px solid #000;border-radius: 50px;height:100px;width:100px;position: relative;">
+              <img src='/static/images/24tut/note.png' height='60px' style="position:absolute;top:20%;left:20%;" />
+            </div>
+            <div style="float:left;margin:1em 0 0 1em;">
+              <h4><b>Video Demonstration</b></h4>
+              <span style="margin-top:-10px;">Get the Clear Picture</span>
+            </div>
+          </div>
+          <div class="flex-item">
+            <div style="float:left;border:1px solid #000;border-radius: 50px;height:100px;width:100px;position: relative;">
+              <img src='/static/images/24tut/apple.png' height='60px' style="position:absolute;top:20%;left:20%;" />
+            </div>
+            <div style="float:left;margin:1em 0 0 1em;">
+              <h4><b>Live Chats</b></h4>
+              <span style="margin-top:-10px;">Get the Clear Picture</span>
+            </div>
+          </div>
+          <div class="flex-item">
+            <div style="float:left;border:1px solid #000;border-radius: 50px;height:100px;width:100px;position: relative;">
+              <img src='/static/images/24tut/mon.png' height='60px' style="position:absolute;top:20%;left:20%;" />
+            </div>
+            <div style="float:left;margin:1em 0 0 1em;">
+              <h4><b>Varied Syllabus</b></h4>
+              <span style="margin-top:-10px;">Get the Clear Picture</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 imghide">
+        <div class="text-left" style="float:left;">
+          <img src="/static/images/24tut/iphone.png" width='380px' height='480px' />
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12">
+        <div class="flex-container container-align">
+          <div class="flex-item">
+            <div class='alignment' style="border:1px solid #000;border-radius: 50px;height:100px;width:100px;position: relative;">
+              <img src='/static/images/24tut/graduate.png' height='60px' style="position:absolute;top:20%;left:20%;" />
+            </div>
+            <div class='alignment' style="margin-top:1em;margin-left: 1em; ">
+              <h4><b>App Access</b></h4>
+              <span style="margin-top:-10px;">Get the Clear Picture</span>
+            </div>
+          </div>
+          <div class="flex-item">
+            <div class='alignment' style="border:1px solid #000;border-radius: 50px;height:100px;width:100px;position: relative;">
+              <img src='/static/images/24tut/mon.png' height='60px' style="position:absolute;top:20%;left:20%;" />
+            </div>
+            <div class='alignment' style="margin-top:1em;margin-left: 1em; ">
+              <h4><b>Permananent Assets</b></h4>
+              <span style="margin-top:-10px;">Get the Clear Picture</span>
+            </div>
+          </div>
+          <div class="flex-item">
+            <div class='alignment' style="border:1px solid #000;border-radius: 50px;height:100px;width:100px;position: relative;">
+              <img src='/static/images/24tut/note.png' height='60px' style="position:absolute;top:20%;left:20%;" />
+            </div>
+            <div class='alignment' style="margin-top:1em;margin-left: 1em; ">
+              <h4><b>Book Quality</b></h4>
+              <span style="margin-top:-10px;">Get the Clear Picture</span>
+            </div>
+          </div>
+          <div class="flex-item">
+            <div class='alignment' style="border:1px solid #000;border-radius: 50px;height:100px;width:100px;position: relative;">
+              <img src='/static/images/24tut/apple.png' height='60px' style="position:absolute;top:20%;left:20%;" />
+            </div>
+            <div class='alignment' style="margin-top:1em;margin-left: 1em;">
+              <h4><b>Course for All Ages</b></h4>
+              <span style="margin-top:-10px;">Get the Clear Picture</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container-fluid" style=" margin-top: 2em;padding: 0;background-color: #5365D1;color:white;">
+    <div class="row" style="margin:0;">
+      <div class="col-md-6 col-xs-10 imgcontainer" style="padding: 0;" >
+        <img src="/static/images/24tut/tablechair.png" height='650px' width='700px' class="img-responsive" />
+      </div>
+      <div class="col-md-6" style="margin-top: 12em;margin-bottom: 3em;">
+        <div class="row text-right">
+          <div class="col-md-4 col-xs-6 col-sm-6 text-center borderstyle1" style="padding-bottom: 1em;">
+            <img src='/static/images/24tut/apple.png' height='60px' />
+            <h4><b>1600+ Topics</b></h4>
+            <span>LEARN ANYTHING</span>
+          </div>
+          <div class=" col-md-4 col-xs-6 col-sm-6 text-center borderstyle2" style="padding-bottom: 1em;">
+            <img src='/static/images/24tut/apple.png' height='60px' />
+            <h4><b>1900+ Students</b></h4>
+            <span>FUTURE GENIUS</span>
+          </div>
+        </div>
+        <div class="row text-right">
+          <div class="col-md-4 col-xs-6 col-sm-6 text-center borderstyle3" style="padding-top: 1em;">
+            <img src='/static/images/24tut/apple.png' height='60px' />
+            <h4><b>14900+ Tests Taken</b></h4>
+            <span>THATS A LOT</span>
+          </div>
+          <div class="col-md-4 col-xs-6 col-sm-6 text-center borderstyle4" style="padding-top: 1em;">
+            <img src='/static/images/24tut/apple.png' height='60px' />
+            <h4><b>250+ Instructors</b></h4>
+            <span>ALL TRAINED PROFESSIONALS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid" style="margin:2em 0;">
+    <div class="col-md-6 rightcls">
+      <img src="/static/images/24tut/pic.png" width="70%">
+    </div>
+    <div class="col-md-3 col-xs-12 text-center">
+      <span class="heading_medium">We Create The Best Environment To Learn</span>
+
+      <div class="list row" id="drop0" data-toggle="collapse" ng-click="drop(0)" data-target="#col0">
+        <div class="col-md-10 col-xs-10 size">
+          <h4> 01. Great Online Instructors</h4>
+        </div>
+        <div class="col-md-2 col-xs-2">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </div>
+      </div>
+
+
+      <div id="col0" class=" list_body collapse">
+        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+      </div>
+      <div class="list row" id="drop1" data-toggle="collapse" ng-click="drop(1)" data-target="#col1">
+        <div class="col-md-10 col-xs-10 size">
+          <h4> 02. Get Certified Awards</h4>
+        </div>
+        <div class="col-md-2 col-xs-2 ">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <div id="col1" class="list_body collapse">
+        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+      </div>
+
+      <div class="list row" id="drop2" data-toggle="collapse" ng-click="drop(2)" data-target="#col2">
+        <div class="col-md-10 col-xs-10 size">
+          <h4> 03.Exclusive Course Materials</h4>
+        </div>
+        <div class="col-md-2 col-xs-2">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div id="col2" class="list_body collapse">
+        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+      </div>
+
+      <div class="list row" id="drop3" data-toggle="collapse" ng-click="drop(3)" data-target="#col3">
+        <div class="col-md-10 col-xs-10 size">
+          <h4> 04. In - depth Course Analysis</h4>
+        </div>
+        <div class="col-md-2 col-xs-2">
+          <i class="fa fa-plus" aria-hidden="true" style=""></i>
+        </div>
+      </div>
+      <div id="col3" class="list_body collapse">
+        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
+      </div>
+
+    </div>
+
+  </div>
+</div>
