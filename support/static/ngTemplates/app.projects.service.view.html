@@ -254,7 +254,7 @@
                 </div><br>
                 <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
                   <div class="col-md-12 text-center">
-                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR" style="min-width:50px"><i
+                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/landingDetail/?project={{form.pk}}" style="min-width:50px"><i
                           class="fa fa-download"></i> Download landing Details </a></span>
                   </div>
                 </div><br>
@@ -300,7 +300,7 @@
             <label> Ex Work Price: </label>
           </div>
           <div class="col-md-3 text-center">
-            <input type="number" class="form-control text-center" ng-model="form.invoiceValue">
+            <input type="number" class="form-control text-center" ng-model="form.invoiceValue" ng-change="invoceSave()">
           </div>
           <div class="col-md-3 text-center">
             <span> {{((form.invoiceValue * form.exRate)).toFixed(2) | number}}</span>
@@ -773,7 +773,7 @@
               </div><br>
               <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
-                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR" style="min-width:50px"><i
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/landingDetail/?project={{form.pk}}" style="min-width:50px"><i
                         class="fa fa-download"></i> Download landing Details </a></span>
                 </div>
               </div><br>
@@ -1240,7 +1240,7 @@
               </div><br>
               <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
-                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR" style="min-width:50px"><i
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/landingDetail/?project={{form.pk}}" style="min-width:50px"><i
                         class="fa fa-download"></i> Download landing Details </a></span>
                 </div>
               </div><br>
@@ -1284,7 +1284,7 @@
           <label> Ex Work Price: </label>
         </div>
         <div class="col-md-3 text-center">
-          <input type="number" class="form-control text-center" ng-model="form.invoiceValue">
+          <input type="number" class="form-control text-center" ng-model="form.invoiceValue" ng-change="invoceSave()">
         </div>
         <div class="col-md-3 text-center">
           <span> {{((form.invoiceValue * form.exRate)).toFixed(2) | number}}</span>
@@ -1684,7 +1684,7 @@
                   </div><br>
                   <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
                     <div class="col-md-12 text-center">
-                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}&typ=INR" style="min-width:50px"><i
+                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/landingDetail/?project={{form.pk}}" style="min-width:50px"><i
                             class="fa fa-download"></i> Download landing Details </a></span>
                     </div>
                   </div><br>
@@ -1962,6 +1962,7 @@
                   <th>Claering Charges 1 </th>
                   <th>Claering Charges 2 </th>
                   <th>Landing Cost/pc </th>
+                  <th> Qty Received</th>
 
                 </tr>
                 <tr ng-repeat="v in projects track by $index">
@@ -1987,6 +1988,7 @@
                   <td>{{v.charge1| number}} </td>
                   <td>{{v.charge2| number}} </td>
                   <td>{{v.landed_price| number}}</td>
+                  <td>{{v.quantity2}}</td>
                 </tr>
               </tbody>
             </table>

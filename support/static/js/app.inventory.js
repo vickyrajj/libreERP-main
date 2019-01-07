@@ -412,6 +412,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             }).
             then(function(response) {
               $scope.stockdata = response.data.data
+              console.log($scope.stockdata ,'aaaaaaaaaaaaaa');
 
             })
         }

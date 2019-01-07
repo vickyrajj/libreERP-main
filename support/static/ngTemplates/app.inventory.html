@@ -6,7 +6,8 @@
     <div class="col-md-3" style="padding-top:20px">
       <strong style="margin:0 13px 0 20px">Inventory</strong><switch ng-model="modeToggle" class="neutral "></switch>
       <strong style="margin-left:13px">Material Issued</strong>
-      <span><button type="button" class="btn btn-success  pull-right" ng-click="download()">Download</button></span>
+
+      <span><button type="button" class="btn btn-success  pull-right" ng-click="download()">Stock Check</button></span>
     </div>
     <div class="col-md-8  text-left" ng-if="!modeToggle" style="padding-top:20px">
       <div class="container-fluid">
@@ -20,6 +21,7 @@
           <span class="input-group-addon" ng-click="reset()" style="cursor:pointer; background-color:#fff;">Reset</span>
           <span class="input-group-addon" ng-click="getList();" style="cursor:pointer; background-color:#fff;border:1px solid #fff;color:#286090"> <i class="fa fa-shopping-cart fa-2x"></i>
             {{cart.length}}</span>
+
         </div>
       </div>
 
@@ -104,6 +106,7 @@ style="padding:10px;">
         <span><a class="btn btn-primary" target="_blank" href="/api/support/downloadStockReport/"> Download Stock Summary </a></span>
        <span><a class="btn btn-primary" target="_blank" href="/api/support/projectStockConsumption/"> Product Stock Consumed </a></span>
        <span><a class="btn btn-primary" target="_blank" href="/api/support/downloadInvoiceReport/"> Invoice BOE </a></span>
+        <span><a class="btn btn-primary" target="_blank" href="/api/support/stockDetial/"> Stock Detail</a></span>
       </div>
     </div>
     <div class="col-md-4  text-right" style="padding-right:30px;">

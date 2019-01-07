@@ -696,7 +696,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         $scope.projects[i].insurance = parseFloat(((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.projects[i].inrPrice)).toFixed(2))
         $scope.projects[i].freight = parseFloat(((($scope.form.freight / $scope.form.invoiceValue) * $scope.projects[i].inrPrice)).toFixed(2))
         $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
-        $scope.projects[i].cif = parseFloat(($scope.projects[i].inrPrice + $scope.projects[i].packing + $scope.projects[i].insurance + $scope.projects[i].freight).toFixed(2))
         $scope.projects[i].customVal = parseFloat((($scope.projects[i].cif +(($scope.projects[i].cif * $scope.form.assessableValue)/100))*($scope.projects[i].custom)/100).toFixed(2))
         $scope.projects[i].socialVal = parseFloat(($scope.projects[i].customVal *0.1).toFixed(2))
         $scope.projects[i].gstVal = parseFloat(($scope.projects[i].cif+$scope.projects[i].customVal+$scope.projects[i].socialVal)*($scope.projects[i].gst)/100).toFixed(2)
@@ -714,7 +713,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         $scope.data[i].insurance = parseFloat(((($scope.form.insurance  / $scope.form.invoiceValue) * $scope.data[i].inrPrice)).toFixed(2))
         $scope.data[i].freight = parseFloat(((($scope.form.freight / $scope.form.invoiceValue) * $scope.data[i].inrPrice)).toFixed(2))
         $scope.data[i].cif = parseFloat(($scope.data[i].inrPrice + $scope.data[i].packing + $scope.data[i].insurance + $scope.data[i].freight).toFixed(2))
-        $scope.data[i].cif = parseFloat(($scope.data[i].inrPrice + $scope.data[i].packing + $scope.data[i].insurance + $scope.data[i].freight).toFixed(2))
         $scope.data[i].customVal = parseFloat((($scope.data[i].cif +(($scope.data[i].cif * $scope.form.assessableValue)/100))*($scope.data[i].custom)/100).toFixed(2))
         $scope.data[i].socialVal = parseFloat(($scope.data[i].customVal *0.1).toFixed(2))
         $scope.data[i].gstVal = parseFloat(($scope.data[i].cif+$scope.data[i].customVal+$scope.data[i].socialVal)*($scope.data[i].gst)/100).toFixed(2)
@@ -724,7 +722,18 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }
     }
   }
-
+  $scope.invoceSave = function() {
+    console.log("aaaaaa");
+    var send = {
+      invoiceValue: $scope.form.invoiceValue,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
 
   function sum(data) {
     if (data == $scope.materialIssue) {
@@ -785,6 +794,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         console.log(totweight,'aaaaaaaa');
       }
       $scope.form.invoiceValue = tot
+      $scope.invoceSave()
       $scope.form.weightValue = totweight
       $scope.updateAll()
       $scope.showButton=true
@@ -1175,6 +1185,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     }).
     then(function(response) {})
   }
+
 
 
   $scope.paymentSave = function() {
@@ -1626,6 +1637,19 @@ app.controller("businessManagement.projects.archieve.explore", function($scope, 
       }, 0)
     }
   }
+  $scope.invoceSave = function() {
+    console.log("aaaaaa");
+    var send = {
+      invoiceValue: $scope.form.invoiceValue,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
+
   $scope.fetchData = function() {
 
     $http({
@@ -1646,6 +1670,7 @@ app.controller("businessManagement.projects.archieve.explore", function($scope, 
         totweight += weight
       }
       $scope.form.invoiceValue = tot
+      $scope.invoceSave()
       $scope.form.weightValue = totweight.toFixed(2)
       console.log($scope.form.weightValue,'aaaaaaaaaaaaaa');
 
@@ -1794,6 +1819,19 @@ app.controller("businessManagement.projects.junk.explore", function($scope, $sta
       }, 0)
     }
   }
+
+  $scope.invoceSave = function() {
+    console.log("aaaaaa");
+    var send = {
+      invoiceValue: $scope.form.invoiceValue,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
   $scope.fetchData = function() {
 
     $http({
@@ -1814,6 +1852,7 @@ app.controller("businessManagement.projects.junk.explore", function($scope, $sta
         totweight += weight
       }
       $scope.form.invoiceValue = tot
+      $scope.invoceSave()
       $scope.form.weightValue = totweight.toFixed(2)
 
       // $scope.updateAll()
