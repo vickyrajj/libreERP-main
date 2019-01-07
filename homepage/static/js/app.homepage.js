@@ -1,13 +1,14 @@
 var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside']);
 
 
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider, $urlMatcherFactoryProvider) {
 
   $urlRouterProvider.otherwise('/');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
   $locationProvider.html5Mode(true);
+  $urlMatcherFactoryProvider.strictMode(false);
 
 });
 
@@ -19,7 +20,6 @@ app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $
   $rootScope.$on("$stateChangeSuccess", function(params, to, toParams, from, fromParams) {
 
     window.scrollTo(0, 0);
-
 
     var visitorDetails = $rootScope.getCookie("visitorDetails");
     if (visitorDetails != "") {
