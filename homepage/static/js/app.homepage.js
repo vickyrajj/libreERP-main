@@ -168,7 +168,153 @@ app.config(function($stateProvider) {
     })
 
 });
-app.controller('controller.courses', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {})
+app.controller('controller.courses', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  $scope.bookscontent = [{
+      'class': 'head1',
+      'title': '01. Ncert Maths',
+      'chapter': {
+        'one': {'page':'1','content':'1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'two': {'page':'3','content':'1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'three': {'page':'5','content':'1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'four': {'page':'8','content':'1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'five': {'page':'11','content':'1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'six': {'page':'13','content':'1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'seven': {'page':'15','content':'1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'}
+      }
+    },
+    {
+      'class': 'head2',
+      'title': '02. Ncert Science',
+      'chapter': {
+        'one': {'page':'1','content':'2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'two': {'page':'3','content':'2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'three': {'page':'5','content':'2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'four': {'page':'8','content':'2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'five': {'page':'11','content':'2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'six': {'page':'13','content':'2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'},
+        'seven': {'page':'18','content':'2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'}
+      }
+    },
+  ];
+
+
+  $scope.videos = false;
+  $scope.books = false;
+  $scope.testseries = false;
+  $scope.forum = false;
+  $scope.refbook = false;
+  $scope.click = null;
+
+
+
+  $scope.clicks = function(val) {
+    if (val == 1) {
+      if ($scope.click == 'click1') {
+        $scope.books = !$scope.books;
+      } else {
+        $scope.class1 = "triangle-hover";
+        $scope.class4 = "";
+        $scope.class2 = "";
+        $scope.class3 = "";
+        $scope.class5 = "";
+        $scope.books = true;
+        $scope.testseries = false;
+        $scope.forum = false;
+        $scope.videos = false;
+        $scope.refbook = false;
+      }
+
+    } else if (val == 2) {
+      $scope.class2 = "triangle-hover";
+      $scope.class4 = "";
+      $scope.class1 = "";
+      $scope.class3 = "";
+      $scope.class5 = "";
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.models = false;
+      $scope.videos = true;
+      $scope.refbook = false;
+    } else if (val == 3) {
+      $scope.class3 = "triangle-hover";
+      $scope.class1 = "";
+      $scope.class4 = "";
+      $scope.class2 = "";
+      $scope.class5 = "";
+      $scope.books = false;
+      $scope.testseries = true;
+      $scope.models = false;
+      $scope.videos = false;
+      $scope.refbook = false;
+    } else if (val == 4) {
+      $scope.class4 = "triangle-hover";
+      $scope.class1 = "";
+      $scope.class2 = "";
+      $scope.class3 = "";
+      $scope.class5 = "";
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.models = true;
+      $scope.videos = false;
+      $scope.refbook = false;
+    } else {
+      $scope.class5 = "triangle-hover";
+      $scope.class1 = "";
+      $scope.class2 = "";
+      $scope.class3 = "";
+      $scope.class4 = "";
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.models = false;
+      $scope.videos = false;
+      $scope.refbook = true;
+    }
+  }
+
+
+  $scope.headclick = function(val) {
+
+    $scope.bookscontent[val].view = !$scope.bookscontent[val].view;
+  }
+
+  $scope.loadcontent = function(val) {
+    // $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
+    // if ($scope.bookscontent[val].view1 == false) {
+    //   $scope.bookscontent[val].viewbtn = 'Load More';
+    // } else {
+    //   $scope.bookscontent[val].viewbtn = 'Load Less';
+    // }
+  
+  }
+
+  $scope.cardss = [{
+      img1: '/static/images/24tut/img1.jpeg',
+      title: 'Kids Complementary Maths',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
+      img2: '/static/images/24tut/author1.png',
+      name: 'Penny Tailor',
+      price: '15.00 ',
+    },
+    {
+      img1: '/static/images/24tut/img1.jpeg',
+      title: 'Language Learning Crash Course ',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
+      img2: '/static/images/24tut/author1.png',
+      name: 'Penny Tailor nathasa',
+      price: '15.00 ',
+    },
+    {
+      img1: '/static/images/24tut/img1.jpeg',
+      title: 'General Logical Analysis',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
+      img2: '/static/images/24tut/author1.png',
+      name: 'Penny Tailor',
+      price: '15.00 ',
+    },
+  ]
+
+})
 app.controller('controller.disclaimer', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {})
 
 app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
@@ -225,74 +371,71 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
   $scope.active2 = false;
   $scope.active3 = false;
   $scope.active4 = false;
-  var addfilter = function(val1,val2,val3){
-      document.getElementById('drop' + val1).classList.add("filter");
-      document.getElementById('drop' + val2).classList.add("filter");
-      document.getElementById('drop' + val3).classList.add("filter");
+  var addfilter = function(val1, val2, val3) {
+    document.getElementById('drop' + val1).classList.add("filter");
+    document.getElementById('drop' + val2).classList.add("filter");
+    document.getElementById('drop' + val3).classList.add("filter");
   }
-  var removefilter = function(val1,val2,val3,val4){
-      document.getElementById('drop' + val1).classList.remove("filter");
-      document.getElementById('drop' + val2).classList.remove("filter");
-      document.getElementById('drop' + val3).classList.remove("filter");
-      document.getElementById('drop' + val4).classList.remove("filter");
+  var removefilter = function(val1, val2, val3, val4) {
+    document.getElementById('drop' + val1).classList.remove("filter");
+    document.getElementById('drop' + val2).classList.remove("filter");
+    document.getElementById('drop' + val3).classList.remove("filter");
+    document.getElementById('drop' + val4).classList.remove("filter");
   }
 
   $scope.dropdown = function(val) {
-    if(val == 1){
-      if($scope.active1 == false){
+    if (val == 1) {
+      if ($scope.active1 == false) {
         console.log('hhh');
-        addfilter(2,3,4);
+        addfilter(2, 3, 4);
         $scope.active2 = false;
         $scope.active3 = false;
         $scope.active4 = false;
-         $scope.active1=true;
-      }else{
+        $scope.active1 = true;
+      } else {
         console.log('lll');
-        removefilter(1,2,3,4)
-         $scope.active1=false;
+        removefilter(1, 2, 3, 4)
+        $scope.active1 = false;
       }
 
-    }
-    else if(val == 2){
-      if($scope.active2 == false){
-        addfilter(4,3,1);
+    } else if (val == 2) {
+      if ($scope.active2 == false) {
+        addfilter(4, 3, 1);
         $scope.active1 = false;
         $scope.active3 = false;
         $scope.active4 = false;
-         $scope.active2=true;
-      }else{
-        removefilter(1,2,3,4)
-         $scope.active2=false;
+        $scope.active2 = true;
+      } else {
+        removefilter(1, 2, 3, 4)
+        $scope.active2 = false;
       }
 
-    }
-    else if(val == 3){
-      if($scope.active3 == false){
-        addfilter(2,1,4);
+    } else if (val == 3) {
+      if ($scope.active3 == false) {
+        addfilter(2, 1, 4);
         $scope.active2 = false;
         $scope.active1 = false;
         $scope.active4 = false;
-         $scope.active3=true;
-      }else{
-        removefilter(1,2,3,4)
-         $scope.active3=false;
+        $scope.active3 = true;
+      } else {
+        removefilter(1, 2, 3, 4)
+        $scope.active3 = false;
       }
 
-    }
-    else if(val == 4){
-      if($scope.active4 == false){
-        addfilter(2,3,1);
+    } else if (val == 4) {
+      if ($scope.active4 == false) {
+        addfilter(2, 3, 1);
         $scope.active2 = false;
         $scope.active3 = false;
         $scope.active1 = false;
-         $scope.active4=true;
-      }else{
-        removefilter(1,2,3,4)
-         $scope.active4=false;
+        $scope.active4 = true;
+      } else {
+        removefilter(1, 2, 3, 4)
+        $scope.active4 = false;
       }
 
     }
-     // for (var i = 0; i < $scope.list.length; i++) {
+    // for (var i = 0; i < $scope.list.length; i++) {
     //   document.getElementById('drop' + $scope.list[i]).classList.remove("filter");
     // }
     // $scope.clasname = document.getElementsByClassName('open');
@@ -329,10 +472,10 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
     //   document.getElementById('drop' + $scope.list[i]).classList.remove("filter");
     // }
 
-    }
+  }
 
   $(window).click(function(e) {
-    removefilter(1,2,3,4);
+    removefilter(1, 2, 3, 4);
     $scope.active1 = false;
     $scope.active2 = false;
     $scope.active3 = false;
@@ -392,28 +535,28 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
   $scope.active = null
   $scope.drop = function(val) {
     if (val == 0) {
-      if ($scope.active==0) {
-          $scope.active = null
-      }else {
+      if ($scope.active == 0) {
+        $scope.active = null
+      } else {
         $scope.active = 0
       }
     } else if (val == 1) {
-      if ($scope.active==1) {
-          $scope.active = null
-      }else {
+      if ($scope.active == 1) {
+        $scope.active = null
+      } else {
         $scope.active = 1
       }
     } else if (val == 2) {
-      if ($scope.active==2) {
-          $scope.active = null
-      }else {
+      if ($scope.active == 2) {
+        $scope.active = null
+      } else {
         $scope.active = 2
       }
 
     } else {
-      if ($scope.active==3) {
-          $scope.active = null
-      }else {
+      if ($scope.active == 3) {
+        $scope.active = null
+      } else {
         $scope.active = 3
       }
     }
