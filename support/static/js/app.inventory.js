@@ -300,6 +300,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           }
         },
         controller: function($scope, $uibModalInstance, cartData) {
+          $scope.showSave = true
           $scope.getFullProjectName = function(p){
             if (p) {
               var fn = p.title +' ( ' + p.comm_nr + ' )'
@@ -357,6 +358,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
           $scope.form = {}
           $scope.save = function() {
+            $scope.showSave = false
             if ($scope.form.responsible == undefined) {
               Flash.create('warning', 'Select Responsible person');
               return
