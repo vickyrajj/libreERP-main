@@ -75,7 +75,7 @@
           <span ng-if="data.promoCode">   <strong>Coupon Applied:</strong>  {{data.promoCode}} - {{data.promoDiscount}}% </span>
         </div>
       </div>
-      <div class="col-md-3 col-xs-12 col-sm-12 text-center">
+      <div class="col-md-3 col-xs-12 col-sm-12 text-center" ng-hide=" data.hideCancelBtn || data.hideReturnBtn">
         <div class="row">
           <div class="btn-group">
             <button type="button" name="button" class="btn btn-danger" ng-click="rowActionClicked('cancel')"> Cancel </button>
@@ -124,7 +124,7 @@
             {{i.qty}}
           </div>
           <div ng-if="!isStoreGlobal" class="col-md-2 col-sm-2 ">
-            <i class="fa {{currency}}"></i> {{(i.ppAfterDiscount * i.qty).toFixed(2)}} <span class="text-muted"> + {{(i.gstAmount).toFixed(2)}}</span>
+            <i class="fa {{currency}}"></i> {{((i.priceDuringOrder - i.discountAmount) * i.qty).toFixed(2)}} <span class="text-muted"> + {{(i.gstAmount).toFixed(2)}}</span>
           </div>
           <div class="col-md-2 col-sm-2 ">
             <i class="fa {{currency}}"></i> {{(i.totalAmount).toFixed(2)}}
@@ -151,7 +151,7 @@
                 {{i.qty}}
               </div>
               <div class="col-xs-5" style="cursor:pointer;">
-                <i class="fa {{currency}}"></i> {{(i.ppAfterDiscount * i.qty).toFixed(2)}}
+                <i class="fa {{currency}}"></i> {{((i.priceDuringOrder - i.discountAmount) * i.qty).toFixed(2)}}
               </div>
               <div class="col-xs-4 ">
                 {{i.status}}

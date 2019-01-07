@@ -6,7 +6,7 @@
   </div>
   <div class="row hidden-xs hidden-sm" ng-if="data.tableData.length>0" style="padding-top:50px; padding-left:50px;" >
     <div class="col-md-6 col-xs-7 col-sm-6 ">
-       <span style="font-size:20px;" >Total: <i class="fa fa-inr"></i>{{calcTotal().toFixed(2)}}</span>
+       <span style="font-size:20px;" >Total: <i class="fa {{currency}}"></i>{{calcTotal().toFixed(2)}}</span>
     </div>
     <div class="col-md-6 col-xs-4 col-sm-6">
       <span class="pull-right"> <button type="button" name="button" class="btn btn-success" ng-click="checkout()" >Checkout</button> </span>
@@ -15,12 +15,10 @@
 
   <div class="row hidden-lg hidden-md" ng-if="data.tableData.length>0" style="padding-top:10px; padding-left:15px;" >
     <div class="col-md-6 col-xs-7 col-sm-6 ">
-       <span style="font-size:17px;" >Total: <i class="fa fa-inr"></i>{{calcTotal().toFixed(2)}}</span>
+       <span style="font-size:17px;" >Total: <i class="fa {{currency}}"></i>{{calcTotal().toFixed(2)}}</span>
     </div>
     <div class="col-md-6 col-xs-4 col-sm-6">
       <span class="pull-right"> <button type="button" name="button" class="btn btn-success" ng-click="checkout()" >Checkout</button> </span>
     </div>
   </div>
-
-
 </div>

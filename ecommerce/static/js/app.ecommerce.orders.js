@@ -569,7 +569,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       console.log('order Weighttttttttttttt',orderWeight);
       $http({
         method:'GET',
-        url:'/api/ecommerce/createShipment/?country=US&orderPk='+$scope.order.pk+'&totalWeight='+orderWeight
+        url:'/api/ecommerce/createShipment/?country='+$scope.order.countryCode+'&orderPk='+$scope.order.pk+'&totalWeight='+orderWeight
       }).then(function (response) {
         console.log(response.data);
         $scope.courierForm.courierName = response.data.courierName

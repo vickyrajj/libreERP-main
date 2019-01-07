@@ -67,8 +67,8 @@
 
   <div class="col-md-2 text-center dropdown hidden-xs hidden-sm" style="padding-top:10px;">
     <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;font-size:17px;color:var(--themeColor)" ng-if="me.pk"> {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 20px;" alt=""></span>
-    <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px;">
-      <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
+    <ul class="dropdown-menu ddrop" style="margin-right:0px;padding-top:0px; left:25%">
+      <li style="text-align:center"> <img ng-src="{{me.pk | getDP}}" style="width: 105px; padding:7px;" alt=""> </li>
       <li><a ui-sref="account.orders" style="color:var(--themeColor)">Orders</a></li>
       <li><a ui-sref="account" style="color:var(--themeColor)">Account</a></li>
       <li><a href="" ng-click="logoutPage()" style="color:var(--themeColor)">Logout</a></li>
@@ -126,7 +126,7 @@
   <div class="col-xs-4 text-center dropdown hidden-lg hidden-md " style="padding-top: 12px;padding-left:0px;padding-right: 0px;" ng-if="me.pk">
     <span class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;color:var(--themeColor);"> {{me.first_name}} <img ng-src="{{me.pk | getDP}}" style="width: 15px;" alt=""></span>
     <ul class="dropdown-menu " style="margin-right:0px;padding-top:0px; left:-80px;">
-      <li> <img ng-src="{{me.pk | getDP}}" style="width: 170px;" alt=""> </li>
+      <li style="text-align:center"> <img ng-src="{{me.pk | getDP}}" style="width: 105px; padding:7px;" alt=""> </li>
       <li><a ui-sref="account.orders" style="color:var(--themeColor)">Orders</a></li>
       <li><a ui-sref="account" style="color:var(--themeColor)">Account</a></li>
       <li><a href="" ng-click="logoutPage()" style="color:var(--themeColor)">Logout</a></li>

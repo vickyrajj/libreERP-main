@@ -235,6 +235,7 @@ class OrderQtyMap(models.Model):
     orderBy =  models.ForeignKey(User, null = True , related_name = 'orderedUser')
     gstAmount = models.PositiveIntegerField( default = 0)
     paidAmount = models.PositiveIntegerField( default = 0)
+    priceDuringOrder = models.PositiveIntegerField(null = True , blank = True)
 
 
 class Order(models.Model):
