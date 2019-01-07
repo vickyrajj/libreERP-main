@@ -302,7 +302,7 @@ G_FROM='onlinestore@bni-india.in'
 G_KEY='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'
 #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
 G_ADMIN=["vikas.motla@gmail.com"]
-
+G_FROM_NAME = 'BNI Global Store'
 
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@24tutors.com'

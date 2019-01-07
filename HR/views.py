@@ -506,7 +506,7 @@ class BulkUserCreationAPIView(APIView):
                   ],
                   "from": {
                     "email": globalSettings.G_FROM,
-                    "name":"BNI India"
+                    "name": globalSettings.G_FROM_NAME
                   },
                   "content": [
                     {
