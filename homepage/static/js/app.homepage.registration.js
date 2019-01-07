@@ -53,7 +53,7 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       email : $scope.form.email,
     }
     if ($scope.isStoreGlobal) {
-      toSend.phoneCode = $scope.selected.phonecode
+      toSend.mobileWithCode = $scope.form.mobile
     }
     console.log(toSend);
     $scope.mode = 'sendingOTP';

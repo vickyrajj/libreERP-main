@@ -25,8 +25,14 @@
 <meta property="article:author" content="{{seoDetails.author}}" />
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16"> {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/intlTelInput.css' %}" charset="utf-8"> {% endblock %} {% block header %}
 
+<style media="screen">
+  .intl-tel-input{
+    width:100%;
+  }
+</style>
 
 
 <div class="row" style="background-color:white;border-bottom:solid 2px #eeeeee;padding:10px;">
@@ -153,29 +159,10 @@
                         <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                       </div>
                       <div ng-if="isStoreGlobal">
-                        <div class="col-md-2 col-sm-2 col-xs-2" style="padding:0px;">
-                          <!-- <select class="form-control" style="margin-top: 30px; padding:0px;" ng-model="form.phoneCode">
-                            <option value="{{x.phonecode}}" ng-repeat="x in countryList">
-                              {{x.phonecode}} - {{x.name}} - {{x.sortname}}
-                             </option>
-                          </select> -->
-
-                          <div class="dropdown" style="margin-top:37px;">
-                           <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" style="padding: 4px; background:none; border:1px solid #eee;">
-                            <span style="min-width:30px; height:22px"> <img ng-src="{{selected.flag}}" alt="flag" style="width:24px; height:18px"></span>
-                           <span class="caret" style="color:black;"></span></button>
-                           <ul class="dropdown-menu" style="height: 200px;overflow-y: scroll;width: 304px;">
-                             <li class="onHoverli" style="padding: 5px 15px; cursor:pointer;" ng-repeat="c in countryList" ng-click="setSelected(c)">
-                               <span style="min-width:30px; height:22px"> <img ng-src="{{c.flag}}" alt="flag" style="width:26px; height:20px"></span>
-                               {{c.name.slice(0,26)}} <span class="text-muted"> +{{c.phonecode}}</span></li>
-                           </ul>
-                          </div>
-
-                        </div>
-                        <div class="col-md-8 col-sm-8 col-xs-8" style="padding-left:0px;">
-                          <div class="form-group">
-                            <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)' ng-model="form.mobile" type="text" class="form-control floatInput" required/>
-                            <span class="floating-label">Phone *</span>
+                        <div class="col-md-10 col-sm-10 col-xs-10" style="padding-left:0px;">
+                          <div class="form-group" style="margin-top:30px;">
+                            <!-- <span class="floating-label">Phone *</span> -->
+                            <input  class="form-control floatInput" style="width:100%;" type="text" name="tel" ng-model="form.mobile" ng-intl-tel-input>
                             <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
                           </div>
                         </div>
@@ -347,7 +334,9 @@
 
       </section>
 
+
       {% endblock %} {% block footer %} {% include "footer.html" %}
+
 
       </div>
     </div>
@@ -364,8 +353,11 @@
   <script src="{% static 'js/classie.js' %}"></script>
   <!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
 
+  <script src="{% static 'js/intlTelInput.js' %}"></script>
+  <script src="{% static 'js/utils.js' %}"></script>
   <script src="{% static 'js/agency.js' %}"></script>
   <script src="{% static 'js/angular.min.js' %}"></script>
+  <!-- <script src="{% static 'js/ng-intl-tel-input.directive.js' %}"></script> -->
   <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
   <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
   <script src="{% static 'js/angular-sanitize.min.js' %}"></script>
