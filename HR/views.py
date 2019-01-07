@@ -30,7 +30,7 @@ from django.core.mail import send_mail, EmailMessage
 
 from openpyxl import load_workbook
 from io import BytesIO
-
+from ERP.send_email import send_email
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
