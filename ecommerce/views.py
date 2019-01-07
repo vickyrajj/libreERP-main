@@ -2241,7 +2241,7 @@ def paypalPaymentInitiate(request):
     paypal_dict = {
         "business": globalSettings.PAYPAL_RECEIVER_EMAIL,
         "amount": orderObj.totalAmount,
-        "item_name": "name of the item",
+        "item_name": "BNI marchandise",
         "invoice": orderObj.pk,
         "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
         "return": request.build_absolute_uri(reverse('paypal_return_view')),
