@@ -478,10 +478,11 @@ class BulkUserCreationAPIView(APIView):
             pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile,"GST":""}
             pobj.save()
             ctx = {
-                'heading' : "Welcome to BNIStore.in",
+                'heading' : "Welcome to " + globalSettings.SITE_ADDRESS ,
                 'link' : url + '/accounts/password/reset/',
                 'recieverName' : first_name + ' ' + last_name,
                 'brandName' : globalSettings.BRAND_NAME,
+                'siteAddress' : globalSettings.SITE_ADDRESS
             }
             print ctx
             sendAddr = []

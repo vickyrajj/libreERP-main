@@ -2240,13 +2240,12 @@ def paypalPaymentInitiate(request):
     orderObj = Order.objects.get(pk=orderid)
     paypal_dict = {
         "business": globalSettings.PAYPAL_RECEIVER_EMAIL,
-        "amount": 2,
+        "amount": '200',
         "item_name": "BNI marchandise",
         "invoice": orderObj.pk,
-        'currency_code': 'INR',
+        'currency_code': 'USD',
         "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
         "return": request.build_absolute_uri(reverse('paypal_return_view')),
-        # "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
         "cancel_return": request.build_absolute_uri(reverse('paypal_cancel_view')),
         "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
     }

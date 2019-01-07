@@ -156,12 +156,13 @@ PAYU_MERCHANT_SALT = "eCwWELxi"
 PAYU_MODE = "TEST"
 EBS_PAYMENT_MODE = "TEST"
 
-PAYMENT_MODE = 'EBS' # options are EBS , paypal , paytm , PAYU
+PAYMENT_MODE = 'paypal' # options are EBS , paypal , paytm , PAYU
 
 
 # paypal payment gateway details
 PAYPAL_RECEIVER_EMAIL = 'online@papered.in'
-PAYPAL_TEST = True
+# PAYPAL_RECEIVER_EMAIL = 'pradeep@cioc.in'
+PAYPAL_TEST = False
 
 SITE_ID = 1
 
@@ -297,7 +298,9 @@ EMAIL_USE_TLS = True
 
 EMAIL_API=True
 G_FROM='onlinestore@bni-india.in'
+#onlinestore@bniglobalstore.com
 G_KEY='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'
+#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
 G_ADMIN=["vikas.motla@gmail.com"]
 
 
