@@ -3435,11 +3435,17 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
             // }else {
             //     prodSku = $scope.cartItems[i].prodSku
             // }
+            var weight =$scope.cartItems[i].product.product.grossWeight
+            if(weight == undefined || weight == null){
+              weight = 0
+            }
+            console.log($scope.cartItems[i].product.product.grossWeight,'hereee');
             $scope.cartProducts.push({
               pk: $scope.cartItems[i].product.pk,
               qty: $scope.cartItems[i].qty,
               prodSku: $scope.cartItems[i].prodSku,
-              desc: $scope.cartItems[i].desc
+              desc: $scope.cartItems[i].desc,
+              grossWeight:weight
             })
           }
         }
@@ -3492,6 +3498,15 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       }
       $scope.data.stage = 'payment';
       $scope.getShippingCharges = false
+      // grossWeight
+      $scope.totalWeight = 0;
+      console.log( $scope.cartProducts);
+      for (var i = 0; i < $scope.cartProducts.length; i++) {
+        $scope.totalWeight+= $scope.cartProducts[i].grossWeight
+      }
+      $scope.totalWeight = 2.204 * $scope.totalWeight
+
+      console.log($scope.totalWeight,'hello');
       if (settings_isShipmentPrice) {
         $http({
           method: 'GET',
@@ -3505,7 +3520,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           }
           $http({
             method: 'GET',
-            url: '/api/ecommerce/shipmentCharge/?country=' + $scope.country + '&pincode=' + $scope.data.address.pincode + '&weight=1'
+            url: '/api/ecommerce/shipmentCharge/?country=' + $scope.country + '&pincode=' + $scope.data.address.pincode + '&weight=' +   $scope.totalWeight
           }).then(function(response) {
             $scope.shippingCharges = response.data
             $scope.getShippingCharges = true
