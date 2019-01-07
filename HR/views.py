@@ -414,7 +414,7 @@ class BulkUserCreationAPIView(APIView):
                 first_name = ws['C' + str(i)].value
             except:
                 first_name =" "
-            print first_name,'aaaaa'
+            # print first_name,'aaaaa'
             try:
                 last_name = ws['D' + str(i)].value
                 if last_name == None:

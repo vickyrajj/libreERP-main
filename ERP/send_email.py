@@ -24,9 +24,9 @@ def send_email(email_body, email_to, email_subject,email_cc,email_bcc, email_typ
             bccIds.append({"email":i})
         for i in email_cc:
             ccIds.append({"email":i})
-        print emailIDs ,'emailIDs'
-        print bccIds ,'bccIds'
-        print ccIds ,'ccIds'
+        # print emailIDs ,'emailIDs'
+        # print bccIds ,'bccIds'
+        # print ccIds ,'ccIds'
         data = {
           "personalizations": [
             {
@@ -45,6 +45,9 @@ def send_email(email_body, email_to, email_subject,email_cc,email_bcc, email_typ
             }
           ]
         }
+
+        # print data
+
         response = sg.client.mail.send.post(request_body=data)
     else:
         for i in globalSettings.G_ADMIN:
@@ -57,5 +60,5 @@ def send_email(email_body, email_to, email_subject,email_cc,email_bcc, email_typ
         msg.send()
     return {'EmailSent':True}
 
-# if __name__ == '__main__':
-#     res = send_email('Hello Hi' , ['vikas.motla@gmail.com'] , 'This is just subject' ,' ', '',['vikky.motla@gmail.com'],['bhrthkshr@gmail.com'])
+if __name__ == '__main__':
+    res = send_email('Hello Hi' , ['pradeep@cioc.in'] , 'This is just subject' ,' ', '','html')
