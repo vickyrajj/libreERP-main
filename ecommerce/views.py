@@ -100,7 +100,7 @@ import sendgrid
 import os
 from svglib.svglib import svg2rlg
 import re
-from email_config import send_email
+from ERP.send_email import send_email
 
 
 # from sendgrid.helpers.mail import *
@@ -1373,7 +1373,7 @@ class SendFeedBackAPI(APIView):
         email_subject = "Response"
         email_cc = []
         email_bcc = []
-        send_email(email_body,emailAddr,email_subject,email_cc,email_bcc,'hmtl')
+        send_email(email_body,emailAddr,email_subject,email_cc,email_bcc,'html')
         return Response({}, status = status.HTTP_200_OK)
 
 
@@ -1542,6 +1542,10 @@ class PageNumCanvas(canvas.Canvas):
         ab = appSettingsField.objects.filter(name='cstNo')
         try:
             gstin = ab[0].value
+            ab = appSettingsField.objects.filter(name='isStoreGlobal')
+            if len(ab)>0:
+                if ab[0].flag:
+                    gstin = ''
         except :
             gstin = ''
         p4 = Paragraph(gstin , compNameStyle)
@@ -2227,7 +2231,7 @@ def paypal_return_view(request):
         email_to.append(str(orderObj.user.email))
         email_cc = []
         email_bcc = []
-        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'hmtl')
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
     return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
 
 
