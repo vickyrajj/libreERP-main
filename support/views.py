@@ -795,7 +795,8 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
             grandTotal +=amnt
             gst = i.gst
             gstVal = round((((amnt *gst)/100)+amnt),2)
-            totweight = round((i.products.weight * qty),2)
+            if weight is not None:
+                totweight = round((i.products.weight * qty),2)
             grandtotWeight+=totweight
             gstValTotal += gstVal
 
@@ -864,7 +865,8 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
             price = round((pricesum * multNumber),2)
             qty = i.quantity1
             amnt = round((price * qty),2)
-            totweight = round((i.products.weight * qty),2)
+            if weight is not None:
+                totweight = round((i.products.weight * qty),2)
             grandtotWeight+=totweight
             grandTotal +=amnt
 
