@@ -410,8 +410,9 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               return
             }
             for (var i = 0; i < $scope.productsOrdered.length; i++) {
-              if($scope.productsOrdered[i].total_quantity<=0){
-                Flash.create('warning', 'Remove the products marked in red');
+              console.log($scope.productsOrdered[i].pk);
+              if($scope.productsOrdered[i].total_quantity<=0||!$scope.productsOrdered[i].pk){
+                Flash.create('warning', 'Remove the products marked in red or with empty value');
                 return
               }
             }
