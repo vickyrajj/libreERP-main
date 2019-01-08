@@ -312,7 +312,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             }
           }
           $scope.close = function() {
-            console.log("hhhheeerrreee");
             $uibModalInstance.dismiss();
           };
 
@@ -504,9 +503,9 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             //   })
           });
 
-          $scope.save = function (){
-
-          }
+          // $scope.save = function (){
+          //
+          // }
 
         },
       })
