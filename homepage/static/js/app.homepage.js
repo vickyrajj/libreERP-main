@@ -98,26 +98,12 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.homepage.enroll.html',
       controller: 'controller.enroll'
     })
-  $stateProvider
-    .state('blogs', {
-      url: "/blogs",
-      templateUrl: '/static/ngTemplates/app.homepage.blog.html',
-      controller: 'controller.blogs'
-    })
-
 
   $stateProvider
-    .state('blogexplore', {
-      url: "/blogs/:name",
-      templateUrl: '/static/ngTemplates/app.homepage.blog.explore.html',
-      controller: 'controller.blogExplore'
-    })
-
-  $stateProvider
-    .state('contact', {
-      url: "/contact",
-      templateUrl: '/static/ngTemplates/app.homepage.contact.html',
-      controller: 'controller.contact'
+    .state('services', {
+      url: "/services",
+      templateUrl: '/static/ngTemplates/app.homepage.services.html',
+      controller: 'controller.services'
     })
 
   $stateProvider
