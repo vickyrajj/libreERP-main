@@ -249,7 +249,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.inventory.modal.html',
       size: 'lg',
-      backdrop: false,
       controller: function($scope, $uibModalInstance) {
         $scope.productSearch = function(query) {
           return $http.get('/api/support/products/?part_no__contains=' + query).
@@ -295,6 +294,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
       $uibModal.open({
         templateUrl: '/static/ngTemplates/app.inventory.cart.modal.html',
         size: 'lg',
+        backdrop:false,
         resolve: {
           cartData: function() {
             return $rootScope.cart;
@@ -311,6 +311,11 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               return
             }
           }
+          $scope.close = function() {
+            console.log("hhhheeerrreee");
+            $uibModalInstance.dismiss();
+          };
+
 
           $scope.addTableRow = function(indx) {
             $scope.productsOrdered.push({

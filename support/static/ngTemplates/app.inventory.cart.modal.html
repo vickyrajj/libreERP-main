@@ -1,6 +1,6 @@
-<div class="modal-header">
+<!-- <div class="modal-header">
 
-</div>
+</div> -->
 <div class="modal-body">
 
   <div class="row" style="padding-bottom:15px">
@@ -11,6 +11,9 @@
     <div class="col-md-3">
       Engineer
       <input uib-typeahead="p as p.first_name for p in userSearch($viewValue)" ng-model="form.responsible" type="text" class="form-control">
+    </div>
+    <div class="col-md-6 text-right">
+      <span class="btn btn-default" ng-click="close()"><i class="fa fa-close"></i></span>
     </div>
   </div>
   <div class="row">
