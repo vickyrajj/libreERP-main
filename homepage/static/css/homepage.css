@@ -1611,6 +1611,9 @@ hr {
 .clickchange span {
   font-size: 20px;
 }
+.clickchange span img{
+  color:#fff;
+}
 
 .clickchange1 {
   text-align: center;
@@ -1622,7 +1625,7 @@ hr {
   font-size: 20px;
 }
 
-.clickchange:hover, .clickchange .triangle-hover, .clickchange .triangle-hover1 {
+.clickchange:hover, .clickchange .triangle-hover, .clickchange .triangle-hover1,.clickchange span img {
   color: #000;
   cursor: pointer;
 }

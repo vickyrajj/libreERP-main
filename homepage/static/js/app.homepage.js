@@ -100,13 +100,6 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
-    .state('contact', {
-      url: "/contact",
-      templateUrl: '/static/ngTemplates/app.homepage.contact.html',
-      controller: 'controller.contact'
-    })
-
-  $stateProvider
     .state('services', {
       url: "/services",
       templateUrl: '/static/ngTemplates/app.homepage.services.html',
@@ -271,50 +264,59 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           'page': '19',
           'content': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
         },
+        {
+          'page': '20',
+          'content': '2h. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
 
 
       ]
     },
   ];
-  // $scope.items = [
-  //   {
-  //     "class1":"click1",
-  //     "class2":"class1",
-  //     "click":"clicks(1)",
-  //     "head":'Books',
-  //
-  //   },
-  //   {
-  //     "class1":"click2",
-  //     "class2":"class2",
-  //     "click":"clicks(2)",
-  //     "head":'Videos',
-  //
-  //   },
-  //   {
-  //     "class1":"click3",
-  //     "class2":"class3",
-  //     "click":"clicks(3)",
-  //     "head":'Test Series',
-  //
-  //   },
-  //   {
-  //     "class1":"click4",
-  //     "class2":"class4",
-  //     "click":"clicks(4)",
-  //     "head":'Forums',
-  //
-  //   },
-  //   {
-  //     "class1":"click5",
-  //     "class2":"class5",
-  //     "click":"clicks(5)",
-  //     "head":'Lecture Notes',
-  //
-  //   }
-  // ]
+  $scope.items = [
+    {
+      "class1":"click1",
+      "class2":"class1",
+      "click":"clicks(1)",
+      "head":'Books',
 
+    },
+    {
+      "class1":"click2",
+      "class2":"class2",
+      "click":"clicks(2)",
+      "head":'Videos',
 
+    },
+    {
+      "class1":"click3",
+      "class2":"class3",
+      "click":"clicks(3)",
+      "head":'Test Series',
+
+    },
+    {
+      "class1":"click4",
+      "class2":"class4",
+      "click":"clicks(4)",
+      "head":'Forums',
+
+    },
+    {
+      "class1":"click5",
+      "class2":"class5",
+      "click":"clicks(5)",
+      "head":'Lecture Notes',
+
+    }
+  ]
+
+  $scope.properties = {
+    URLhashListener: true,
+    startPosition: 'URLHash',
+    loop: false,
+    items: 1,
+  };
 
   $scope.videos = false;
   $scope.books = false;
@@ -334,6 +336,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
 
   $scope.clicks = function(val) {
     if (val == 1) {
+      console.log('llllll');
       $scope.books = !$scope.books;
       $scope.testseries = false;
       $scope.forum = false;
@@ -470,10 +473,15 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
 
 
   $scope.headclick = function(val) {
+;
     $scope.bookscontent[val].view = !$scope.bookscontent[val].view;
   }
-  $scope.loadcontent = function(val) {
+  $scope.loadcontent = function(val,length) {
+    console.log(length);
     $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
+    $scope.len = length;
+
+
 
   }
 
@@ -504,11 +512,6 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
   ]
 
 })
-
-app.controller('controller.contact', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
-  $scope.display
-})
-
 app.controller('controller.disclaimer', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {})
 
 app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
@@ -660,10 +663,7 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
       size: 'md',
       backdrop: true,
 
-      controller: function($scope,$uibModalInstance ) {
-        $scope.close = function() {
-          $uibModalInstance.dismiss('cancel');
-        }
+      controller: function($scope, ) {
         $scope.pauseOrPlay = function(ele) {
           var video = angular.element(ele.srcElement);
           video[0].pause(); // video.play()
@@ -878,19 +878,6 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
 
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope) {
 
-  $scope.signin = function() {
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.homepage.signin.html',
-      size: 'lg',
-      backdrop: false,
-      controller: function($scope, $uibModalInstance) {
-        $scope.close = function() {
-          $uibModalInstance.dismiss('cancel');
-        }
-
-      },
-    })
-  }
 
   $rootScope.getCookie = function(cname) {
     var name = cname + "=";
@@ -1018,7 +1005,128 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     }
   }
 
+  $scope.schedule = function(idx) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.schedule.modal.html',
+      size: 'lg',
+      backdrop: true,
+      controller: function($scope, Flash) {
+        $scope.calendar = true
+        $scope.thankYou = false
 
+        $scope.refresh = function() {
+          $scope.form = {
+            dated: new Date(),
+            slot: '8 - 9',
+            emailId: '',
+            name: ''
+          }
+        }
+        $scope.refresh()
+
+        $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+        if ($scope.visitorDetails != "") {
+          $scope.form.name = JSON.parse($scope.visitorDetails).name || ''
+          $scope.form.emailId = JSON.parse($scope.visitorDetails).email || ''
+        }
+
+
+        $scope.timeSlot = [{
+            'time': '8 - 9'
+          },
+          {
+            'time': '9 - 10'
+          },
+          {
+            'time': '10 - 11'
+          },
+          {
+            'time': '11 - 12'
+          },
+          {
+            'time': '13 - 14'
+          },
+          {
+            'time': '14 - 15'
+          },
+          {
+            'time': '15 - 16'
+          },
+          {
+            'time': '16 - 17'
+          },
+        ]
+
+
+
+
+        $scope.scheduleMeeting = function() {
+          if ($scope.form.emailId == '' || $scope.form.name == '') {
+            return;
+          }
+
+          $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
+          if ($scope.visitorDetails != "") {
+            $rootScope.setCookie("visitorDetails", JSON.stringify({
+              uid: JSON.parse($scope.visitorDetails).uid,
+              name: $scope.form.name,
+              email: $scope.form.emailId,
+              visitorPk: $rootScope.visitorPk,
+              blogSubscribed: JSON.parse($scope.visitorDetails).blogSubscribed
+            }), 365);
+          }
+
+
+          var dataToSend = {
+            dated: $scope.form.dated.toJSON().split('T')[0],
+            slot: $scope.form.slot,
+            emailId: $scope.form.emailId,
+            name: $scope.form.name,
+            source: $rootScope.source
+          }
+
+          $http({
+            method: 'POST',
+            url: erpUrl + '/api/marketing/schedule/',
+            data: dataToSend
+          }).
+          then(function(response) {
+
+            Flash.create('success', 'Saved');
+            $scope.calendar = false
+            $scope.thankYou = true
+            $http({
+              method: 'POST',
+              url: erpUrl + '/api/marketing/inviteMail/',
+              data: {
+                value: response.data.pk
+              }
+            }).
+            then(function(response) {
+              // $scope.refresh()
+            });
+
+            $http({
+              method: 'PATCH',
+              url: '/api/ERP/visitor/' + $rootScope.visitorPk + '/',
+              data: {
+                demoRequested: true,
+                email: $scope.form.emailId,
+                name: $scope.form.name
+              }
+            }).then(function(response) {
+              console.log(response.data);
+            })
+
+
+          });
+
+        }
+
+
+      },
+    })
+  }
 
 
 
