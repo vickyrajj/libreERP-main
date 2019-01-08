@@ -1,6 +1,6 @@
 {% verbatim %}
 <div class="container-fluid home_header">
-  <div class="col-md-4 col-md-offset-2 home_content">
+  <div class="col-md-4 col-md-offset-1 home_content">
     <h1 style="font-size:4em;font-weight:bold;"> Learn Anything </h1>
     <h3 style="font-size:2.4em;font-weight:lighter;font-family:sans-serif;line-height:1.2;">Get Access for Award Winning Online Courses</h3>
   </div>
@@ -33,7 +33,7 @@
 <div class="container-fluid" style="min-height:38vh;background-color:rgba(238, 238, 238, 0.46);margin:20px auto;position:relative;">
   <img src="/static/images/24tut/bg_left.png" class="bg on_left hidden-xs hidden-sm">
   <img src="/static/images/24tut/bg_right.png" class="bg on_right hidden-xs hidden-sm">
-  <div class="col-md-8 col-md-offset-2">
+  <div class="col-md-10 col-md-offset-1 hd_screen">
     <div class="col-md-3 text-center card_div">
       <div class="card_container">
         <div class="min_padd">
@@ -77,7 +77,7 @@
     <h2 class="heading_big"> <b>Courses you might like</b> </h2>
     <h5 class="text-muted heading_small">LEARNING VIA APP NEVER GETS EASIER</h5>
   </div>
-  <div class="col-md-8 col-md-offset-2 min_padd">
+  <div class="col-md-10 col-md-offset-1 min_padd hd_screen">
     <div class="col-md-4">
       <div class="container-fluid course_card">
         <div class="course_card_img" style="background-image:url('/static/images/24tut/img1.jpeg')"></div>
@@ -171,35 +171,35 @@
       <div class="col-md-12 course_contain_gradient">
         <div class="list_div row">
           <div class="list_container">
-            <div class="list_head col-md-12">
+            <div class="list_head col-md-12 min_padd">
               <span class="heading_medium">Learn with these award winning courses</span>
             </div>
-            <div class="col-md-10">
-              <div class="list container-fluid" id="drop0" data-toggle="collapse" ng-click="drop(0)" data-target="#col0">
-                <span class="list_title"> 01. Great Online Instructors</span><i class="fa fa-plus sym_plus"></i>
+            <div class="col-md-10" id="myGroup">
+              <div class="list container-fluid {{active==0?'divcolor':''}}" id="drop0" ng-click="drop(0)" data-target="#col0" data-parent="#myGroup">
+                <span class="list_title"> 01. Great Online Instructors</span><i class="fa fa-{{active==0?'minus':'plus'}} sym_plus"></i>
               </div>
-              <div id="col0" class=" list_body collapse">
+              <div id="col0" class="list_body {{active==0?'coll12':'coll11'}}">
                 <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
                   labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
               </div>
-              <div class="list container-fluid" id="drop1" data-toggle="collapse" ng-click="drop(1)" data-target="#col1">
-                <span class="list_title"> 02. Get Learny Certified Awards</span><i class="fa fa-plus sym_plus"></i>
+              <div class="list container-fluid {{active==1?'divcolor':''}}" id="drop1" ng-click="drop(1)" data-target="#col1" data-parent="#myGroup">
+                <span class="list_title"> 02. Get Learny Certified Awards</span><i class="fa fa-{{active==1?'minus':'plus'}} sym_plus"></i>
               </div>
-              <div id="col1" class="list_body collapse">
+              <div id="col1" class="list_body {{active==1?'coll12':'coll11'}}">
                 <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
                   labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
               </div>
-              <div class="list container-fluid" id="drop2" data-toggle="collapse" ng-click="drop(2)" data-target="#col2">
-                <span class="list_title"> 03.Exclusive Course Materials</span><i class="fa fa-plus sym_plus"></i>
+              <div class="list container-fluid {{active==2?'divcolor':''}}" id="drop2" ng-click="drop(2)" data-target="#col2" data-parent="#myGroup">
+                <span class="list_title"> 03.Exclusive Course Materials</span><i class="fa fa-{{active==2?'minus':'plus'}} sym_plus"></i>
               </div>
-              <div id="col2" class="list_body collapse">
+              <div id="col2" class="list_body {{active==2?'coll12':'coll11'}}">
                 <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
                   labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
               </div>
-              <div class="list container-fluid" id="drop3" data-toggle="collapse" ng-click="drop(3)" data-target="#col3">
-                <span class="list_title"> 04. In - depth Course Analysis</span><i class="fa fa-plus sym_plus"></i>
+              <div class="list container-fluid {{active==3?'divcolor':''}}" id="drop3" ng-click="drop(3)" data-target="#col3" data-parent="#myGroup">
+                <span class="list_title"> 04. In - depth Course Analysis</span><i class="fa fa-{{active==3?'minus':'plus'}} sym_plus"></i>
               </div>
-              <div id="col3" class="list_body collapse">
+              <div id="col3" class="list_body {{active==3?'coll12':'coll11'}} ">
                 <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
                   labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</span>
               </div>
@@ -212,7 +212,7 @@
 </div>
 
 <div class="container-fluid no_padding" style="min-height:50vh;margin:20px auto;">
-  <div class="col-md-8 col-md-offset-2">
+  <div class="col-md-10 col-md-offset-1">
     <div class="col-md-5 min_padd">
       <h4 class="text-muted">Know Your Author</h4>
       <h3 class="heading_medium">Each course you unsertake are designed by ther authors</h3>
@@ -288,7 +288,7 @@
     </div>
   </div>
   <div class="container-fluid pro_card_div">
-    <div class="col-md-8 col-md-offset-2 min_padd">
+    <div class="col-md-10 col-md-offset-1 min_padd hd_screen">
       <div class="col-md-4">
         <div class="container-fluid pro_card">
           <div class="course_card_img" style="background-image:url('/static/images/24tut/stu4.png')"></div>
@@ -333,7 +333,7 @@
   <div class="container-fluid  pro_card_container">
     <img src="/static/images/24tut/4.png" class="bg on_left" width="15%">
     <img src="/static/images/24tut/3.png" class="bg on_right" width="15%">
-    <div class="col-md-8 col-md-offset-2" style="margin-top:12%;">
+    <div class="col-md-10 col-md-offset-1" style="margin-top:17%;">
       <div class="text-center">
         <h1 class="heading_big"> Start Learning Online</h1>
         <h5 class="heading_small">FOR FREE. How TO ELEARN</h5>
@@ -366,37 +366,37 @@
     <h1 class="heading_big">A New Era in Online Education</h1>
     <h4 class="heading_small"> CASE STUDIES FOR YOU</h4>
   </div>
-  <div class="col-md-8 col-md-offset-2 min_padd">
+  <div class="col-md-10 col-md-offset-1 min_padd hd_screen">
     <div class="col-md-6 min_padd">
       <div class="container-fluid no_padding" style="position:relative;">
         <img src="/static/images/24tut/blue.png" style="position:absolute;top:75px;left:-35px;" class="hidden-xs hidden-sm">
-        <img src="/static/images/24tut/liblue.png" style="position:absolute;top:-23px;right:24px;">
+        <img src="/static/images/24tut/liblue.png" style="position:absolute;top:-23px;right:59px;">
         <div class="onplay" style="background-image: url('/static/images/24tut/tutbg.jpg');">
-          <div class="onplay_overlay" ng-click="">
+          <div class="onplay_overlay" ng-click="playVideo()">
             <span class="playerbtn">
-                <svg x="0" y="0" width="60px" height="60px" viewBox="0 0 200 200" class="play play--ripple">
-                  <circle fill="transparent" stroke="#02EBA3" stroke-width="0" cx="100" cy="100" r="96"></circle>
-                  <circle clip-path="url(#clipper)" fill="url(#ripple)" cx="100" cy="100" r="130"></circle>
-                  <polygon fill="#02EBA3" points="70.993,60.347 153.398,102.384 70.993,144.42   "></polygon>
-                </svg>
-                <svg x="0" y="0" width="0" height="0">
-                  <defs>
-                    <clipPath id="clipper">
-                      <circle cx="100" cy="100" r="93"></circle>
-                    </clipPath>
-                    <radialGradient id="ripple">
-                      <stop offset="0.681994" stop-color="#000" stop-opacity="0.45">
-                        <animate attributeName="offset" values="0;0.70" begin="0.2s" dur="2.1s" repeatCount="indefinite"></animate>
-                      </stop>
-                      <stop offset="0.0986606" stop-color="#02EBA3" stop-opacity="0.55">
-                        <animate attributeName="offset" values="0.05;0.75" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
-                      </stop>
-                      <stop offset="0.162564" stop-color="#000" stop-opacity="0.45">
-                        <animate attributeName="offset" values="0.10;1" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
-                      </stop>
-                    </radialGradient>
-                  </defs>
-                </svg>
+              <svg x="0" y="0" width="60px" height="60px" viewBox="0 0 200 200" class="play play--ripple">
+                <circle fill="transparent" stroke="#02EBA3" stroke-width="0" cx="100" cy="100" r="96"></circle>
+                <circle clip-path="url(#clipper)" fill="url(#ripple)" cx="100" cy="100" r="130"></circle>
+                <polygon fill="#02EBA3" points="70.993,60.347 153.398,102.384 70.993,144.42   "></polygon>
+              </svg>
+              <svg x="0" y="0" width="0" height="0">
+                <defs>
+                  <clipPath id="clipper">
+                    <circle cx="100" cy="100" r="93"></circle>
+                  </clipPath>
+                  <radialGradient id="ripple">
+                    <stop offset="0.681994" stop-color="#000" stop-opacity="0.45">
+                      <animate attributeName="offset" values="0;0.70" begin="0.2s" dur="2.1s" repeatCount="indefinite"></animate>
+                    </stop>
+                    <stop offset="0.0986606" stop-color="#02EBA3" stop-opacity="0.55">
+                      <animate attributeName="offset" values="0.05;0.75" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
+                    </stop>
+                    <stop offset="0.162564" stop-color="#000" stop-opacity="0.45">
+                      <animate attributeName="offset" values="0.10;1" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
+                    </stop>
+                  </radialGradient>
+                </defs>
+              </svg>
             </span>
           </div>
         </div>
@@ -413,31 +413,31 @@
         <img src="/static/images/24tut/green.png" style="position:absolute;top:70px;left:-35px;" class="hidden-xs hidden-sm">
         <img src="/static/images/24tut/orange.png" class="orng_img">
         <div class="onplay" style="background-image: url('/static/images/24tut/img1.jpeg');">
-          <div class="onplay_overlay" ng-click="">
+          <div class="onplay_overlay" ng-click="playVideo()">
             <span class="playerbtn">
-                <svg x="0" y="0" width="60px" height="60px" viewBox="0 0 200 200" class="play play--ripple">
-                  <circle fill="transparent" stroke="#02EBA3" stroke-width="0" cx="100" cy="100" r="96"></circle>
-                  <circle clip-path="url(#clipper)" fill="url(#ripple)" cx="100" cy="100" r="130"></circle>
-                  <polygon fill="#02EBA3" points="70.993,60.347 153.398,102.384 70.993,144.42   "></polygon>
-                </svg>
-                <svg x="0" y="0" width="0" height="0">
-                  <defs>
-                    <clipPath id="clipper">
-                      <circle cx="100" cy="100" r="93"></circle>
-                    </clipPath>
-                    <radialGradient id="ripple">
-                      <stop offset="0.681994" stop-color="#000" stop-opacity="0.45">
-                        <animate attributeName="offset" values="0;0.70" begin="0.2s" dur="2.1s" repeatCount="indefinite"></animate>
-                      </stop>
-                      <stop offset="0.0986606" stop-color="#02EBA3" stop-opacity="0.55">
-                        <animate attributeName="offset" values="0.05;0.75" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
-                      </stop>
-                      <stop offset="0.162564" stop-color="#000" stop-opacity="0.45">
-                        <animate attributeName="offset" values="0.10;1" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
-                      </stop>
-                    </radialGradient>
-                  </defs>
-                </svg>
+              <svg x="0" y="0" width="60px" height="60px" viewBox="0 0 200 200" class="play play--ripple">
+                <circle fill="transparent" stroke="#02EBA3" stroke-width="0" cx="100" cy="100" r="96"></circle>
+                <circle clip-path="url(#clipper)" fill="url(#ripple)" cx="100" cy="100" r="130"></circle>
+                <polygon fill="#02EBA3" points="70.993,60.347 153.398,102.384 70.993,144.42   "></polygon>
+              </svg>
+              <svg x="0" y="0" width="0" height="0">
+                <defs>
+                  <clipPath id="clipper">
+                    <circle cx="100" cy="100" r="93"></circle>
+                  </clipPath>
+                  <radialGradient id="ripple">
+                    <stop offset="0.681994" stop-color="#000" stop-opacity="0.45">
+                      <animate attributeName="offset" values="0;0.70" begin="0.2s" dur="2.1s" repeatCount="indefinite"></animate>
+                    </stop>
+                    <stop offset="0.0986606" stop-color="#02EBA3" stop-opacity="0.55">
+                      <animate attributeName="offset" values="0.05;0.75" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
+                    </stop>
+                    <stop offset="0.162564" stop-color="#000" stop-opacity="0.45">
+                      <animate attributeName="offset" values="0.10;1" begin="0" dur="2.1s" repeatCount="indefinite"></animate>
+                    </stop>
+                  </radialGradient>
+                </defs>
+              </svg>
             </span>
           </div>
         </div>

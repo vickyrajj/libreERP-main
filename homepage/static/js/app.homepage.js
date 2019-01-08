@@ -1,13 +1,14 @@
 var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside']);
 
 
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider, $urlMatcherFactoryProvider) {
 
   $urlRouterProvider.otherwise('/');
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
   $locationProvider.html5Mode(true);
+  $urlMatcherFactoryProvider.strictMode(false);
 
 });
 
@@ -19,7 +20,6 @@ app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $
   $rootScope.$on("$stateChangeSuccess", function(params, to, toParams, from, fromParams) {
 
     window.scrollTo(0, 0);
-
 
     var visitorDetails = $rootScope.getCookie("visitorDetails");
     if (visitorDetails != "") {
@@ -380,29 +380,53 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
     document.getElementById('owltext' + val).classList.remove('changingFont')
     document.getElementById('owlpoint' + val).classList.remove('changingColor')
   }
-  var d = function(num1, num2, num3, num4) {
-    document.getElementById('drop' + num1).classList.add('divcolor')
-    document.getElementById('drop' + num2).classList.remove('divcolor')
-    document.getElementById('drop' + num3).classList.remove('divcolor')
-    document.getElementById('drop' + num4).classList.remove('divcolor')
-  }
+
+  $scope.active = null
   $scope.drop = function(val) {
     if (val == 0) {
-      d(val, 1, 2, 3)
+      if ($scope.active == 0) {
+        $scope.active = null
+      } else {
+        $scope.active = 0
+      }
     } else if (val == 1) {
-      d(val, 0, 2, 3)
+      if ($scope.active == 1) {
+        $scope.active = null
+      } else {
+        $scope.active = 1
+      }
     } else if (val == 2) {
-      d(val, 1, 0, 3)
-    } else {
-      d(val, 1, 0, 2)
+      if ($scope.active == 2) {
+        $scope.active = null
+      } else {
+        $scope.active = 2
+      }
 
+    } else {
+      if ($scope.active == 3) {
+        $scope.active = null
+      } else {
+        $scope.active = 3
+      }
     }
-    // $scope.clasname = document.getElementsByClassName('collapse');
   }
 
+  $scope.playVideo = function() {
 
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.player.html',
+      size: 'md',
+      backdrop: true,
 
+      controller: function($scope, ) {
+        $scope.pauseOrPlay = function(ele) {
+          var video = angular.element(ele.srcElement);
+          video[0].pause(); // video.play()
+        }
+      },
+    })
 
+  }
 
 
 })
