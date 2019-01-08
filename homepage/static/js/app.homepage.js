@@ -181,68 +181,27 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       'class': 'head1',
       'title': '01. Ncert Maths',
       'chapter': {
-        'one': {
-          'page': '1',
-          'content': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'two': {
-          'page': '3',
-          'content': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'three': {
-          'page': '5',
-          'content': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'four': {
-          'page': '8',
-          'content': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'five': {
-          'page': '11',
-          'content': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'six': {
-          'page': '13',
-          'content': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'seven': {
-          'page': '15',
-          'content': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        }
+        'one': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'two': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'three': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'four': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'five': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'six': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'seven': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+
       }
     },
     {
-      'class': 'head2',
+      'class': 'head1',
       'title': '02. Ncert Science',
       'chapter': {
-        'one': {
-          'page': '1',
-          'content': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'two': {
-          'page': '3',
-          'content': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'three': {
-          'page': '5',
-          'content': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'four': {
-          'page': '8',
-          'content': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'five': {
-          'page': '11',
-          'content': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'six': {
-          'page': '13',
-          'content': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'seven': {
-          'page': '18',
-          'content': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        }
+        'one': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'two': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'three': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'four': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'five': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'six': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'seven': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
       }
     },
   ];
@@ -255,86 +214,160 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
   $scope.refbook = false;
   $scope.click = null;
 
-
-
-  $scope.clicks = function(val) {
-    if (val == 1) {
-      if ($scope.click == 'click1') {
-        $scope.books = !$scope.books;
-      } else {
-        $scope.class1 = "triangle-hover";
-        $scope.class4 = "";
-        $scope.class2 = "";
-        $scope.class3 = "";
-        $scope.class5 = "";
-        $scope.books = true;
-        $scope.testseries = false;
-        $scope.forum = false;
-        $scope.videos = false;
-        $scope.refbook = false;
-      }
-
-    } else if (val == 2) {
-      $scope.class2 = "triangle-hover";
-      $scope.class4 = "";
-      $scope.class1 = "";
-      $scope.class3 = "";
-      $scope.class5 = "";
-      $scope.books = false;
-      $scope.testseries = false;
-      $scope.models = false;
-      $scope.videos = true;
-      $scope.refbook = false;
-    } else if (val == 3) {
-      $scope.class3 = "triangle-hover";
-      $scope.class1 = "";
-      $scope.class4 = "";
-      $scope.class2 = "";
-      $scope.class5 = "";
-      $scope.books = false;
-      $scope.testseries = true;
-      $scope.models = false;
-      $scope.videos = false;
-      $scope.refbook = false;
-    } else if (val == 4) {
-      $scope.class4 = "triangle-hover";
-      $scope.class1 = "";
-      $scope.class2 = "";
-      $scope.class3 = "";
-      $scope.class5 = "";
-      $scope.books = false;
-      $scope.testseries = false;
-      $scope.models = true;
-      $scope.videos = false;
-      $scope.refbook = false;
-    } else {
-      $scope.class5 = "triangle-hover";
-      $scope.class1 = "";
-      $scope.class2 = "";
-      $scope.class3 = "";
-      $scope.class4 = "";
-      $scope.books = false;
-      $scope.testseries = false;
-      $scope.models = false;
-      $scope.videos = false;
-      $scope.refbook = true;
+  $scope.smDevice = function(x) {
+    if (x.matches) {
+      console.log('trueeeeeeee');
+      $scope.device.smallDevice = true;
     }
   }
 
 
-  $scope.headclick = function(val) {
+  $scope.sm = window.matchMedia("(max-width: 768px)")
+  $scope.smDevice($scope.sm)
+  $scope.sm.addListener($scope.smDevice)
 
+  $scope.clicks = function(val) {
+    if (val == 1) {
+      $scope.books = !$scope.books;
+      $scope.testseries = false;
+      $scope.forum = false;
+      $scope.videos = false;
+      $scope.refbook = false;
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+        if ($scope.books == true) {
+          $scope.class1 = "triangle-hover";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        } else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+
+      }
+
+
+
+    } else if (val == 2) {
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.forum = false;
+      $scope.videos = !$scope.videos;
+      $scope.refbook = false;
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+        if ($scope.videos == true) {
+          $scope.class2 = "triangle-hover";
+          $scope.class4 = "";
+          $scope.class1 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+
+      }
+
+    } else if (val == 3) {
+      $scope.books = false;
+      $scope.testseries = !$scope.testseries;
+      $scope.forum = false;
+      $scope.videos = false;
+      $scope.refbook = false;
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+
+        if ($scope.testseries == true) {
+          $scope.class3 = "triangle-hover";
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class5 = "";
+        }else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+
+      }
+    } else if (val == 4) {
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.forum = !$scope.forum;
+      $scope.videos = false;
+      $scope.refbook = false;
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+        if ($scope.forum == true) {
+          $scope.class4 = "triangle-hover";
+          $scope.class1 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+
+      }
+    } else {
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.forum = false;
+      $scope.videos = false;
+      $scope.refbook = !$scope.refbook
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+        if ($scope.refbook == true) {
+          $scope.class5 = "triangle-hover1";
+          $scope.class1 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class4 = "";
+        }else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+        
+      }
+    }
+  }
+
+
+
+
+  $scope.headclick = function(val) {
     $scope.bookscontent[val].view = !$scope.bookscontent[val].view;
   }
-  $scope.limit = 5;
   $scope.loadcontent = function(val) {
-    // $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
-    // if ($scope.bookscontent[val].view1 == false) {
-    //   $scope.bookscontent[val].viewbtn = 'Load More';
-    // } else {
-    //   $scope.bookscontent[val].viewbtn = 'Load Less';
-    // }
-    $scope.limit = val;
+    $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
   }
 
   $scope.cardss = [{
