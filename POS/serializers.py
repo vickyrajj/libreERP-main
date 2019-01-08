@@ -274,16 +274,21 @@ class InvoiceSerializer(serializers.ModelSerializer):
     customer=CustomerSerializer(many=False,read_only=True)
     class Meta:
         model = Invoice
-        fields = ('pk' , 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'customer' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate','status')
+        fields = ('pk' ,'created', 'serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'customer' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate','status','barCVal','orderBy')
         read_only_fields = ( 'user' , 'customer')
 
     def create(self , validated_data):
         print validated_data,'**************'
         print '****************************'
         print self.context['request'].data
+
         inv = Invoice(**validated_data)
         if 'customer' in self.context['request'].data:
             inv.customer = Customer.objects.get(pk=int(self.context['request'].data['customer']))
+        inv.save()
+        td = datetime.now()
+        bcVal = 'BCOFF'+str(td.day)+str(td.month)+str(td.year)[2:]+str(inv.pk)
+        inv.barCVal = bcVal
         inv.save()
         if 'products' in validated_data:
             productList = json.loads(validated_data['products'])
@@ -295,66 +300,59 @@ class InvoiceSerializer(serializers.ModelSerializer):
                 # data = {'user':self.context['request'].user,'product':pObj,'typ':'system','after':i['quantity'],'internalInvoice':inv}
                 # InventoryLog.objects.create(**data)
         if 'connectedDevice' in self.context['request'].data:
-            try:
-                doubleCopyObj = appSettingsField.objects.get(name='doubleInvoiceCopy')
-                if doubleCopyObj.flag:
-                    billTimes = 2
-                else:
-                    billTimes = 1
-            except:
-                billTimes = 1
-            try:
-                companyName = appSettingsField.objects.get(app__id=69,name='companyName').value
-                companyAddress = appSettingsField.objects.get(app__id=69,name='companyAddress').value
-                soup1 = BeautifulSoup(companyName)
-                companyName = str(soup1.text)
-                soup2 = BeautifulSoup(companyAddress)
-                companyAddress = str(soup2.text)
+            if inv.status == 'Completed':
+                # try:
+                #     doubleCopyObj = appSettingsField.objects.get(name='doubleInvoiceCopy')
+                #     if doubleCopyObj.flag:
+                #         billTimes = 2
+                #     else:
+                #         billTimes = 1
+                # except:
+                #     billTimes = 1
+                try:
+                    companyName = appSettingsField.objects.get(app__id=25,name='companyName').value
+                    companyAddress = appSettingsField.objects.get(app__id=25,name='companyAddress').value
+                    soup1 = BeautifulSoup(companyName)
+                    companyName = str(soup1.text)
+                    soup2 = BeautifulSoup(companyAddress)
+                    companyAddress = str(soup2.text)
 
-            except:
-                companyName = ''
-                companyAddress = ''
+                except:
+                    companyName = ''
+                    companyAddress = ''
 
-            try:
-                toSend = model_to_dict(inv)
-                if 'storepk' in self.context['request'].data:
-                    storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
-                    storeName = ''
-                    storeAddress = ''
-                    if storeObj.name:
-                        storeName = storeObj.name
-                    if storeObj.address:
-                        storeAddress = storeObj.address
-                        if storeObj.pincode:
-                            storeAddress += ' ' + str(storeObj.pincode)
+                try:
+                    toSend = model_to_dict(inv)
+                    if 'storepk' in self.context['request'].data:
+                        storeObj = Store.objects.get(pk=int(self.context['request'].data['storepk']))
+                        storeName = ''
+                        storeAddress = ''
+                        if storeObj.name:
+                            storeName = storeObj.name
+                        if storeObj.address:
+                            storeAddress = storeObj.address
+                            if storeObj.pincode:
+                                storeAddress += ' ' + str(storeObj.pincode)
 
-                else:
-                    storeName = ''
-                    storeAddress = ''
-                date_obj = datetime.now()
-                c_date = date_obj.strftime('%d/%m/%Y')
-                c_time = date_obj.strftime('%H:%M:%S')
-                toSend['date'] = c_date
-                toSend['time'] = c_time
-                toSend['companyName'] = companyName
-                toSend['companyAddress'] = companyAddress
-                toSend['storeName'] = storeName
-                toSend['storeAddress'] = storeAddress
-                print 'postinggggggggggggggggg',date_obj
-                # toSend.pop('invoicedate', None)
-                # toSend.pop('duedate', None)
-                # toSend.pop('receivedDate', None)
-                td = datetime.now()
-                barCVal = str(td.day)+str(td.month)+str(td.year)[2:]+str(inv.pk)
-                for tim in range(billTimes):
-                    requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
-                            json={
-                              'topic': 'service.POS.Printer.{0}'.format(self.context['request'].data['connectedDevice']),
-                              'args': [{'data':toSend,'barCVal':barCVal}]
-                            }
-                        )
-            except:
-                print 'Server Has Not Connected'
+                    else:
+                        storeName = ''
+                        storeAddress = ''
+                    date_obj = datetime.now()
+                    c_date = date_obj.strftime('%d/%m/%Y')
+                    c_time = date_obj.strftime('%H:%M:%S')
+                    toSend['date'] = c_date
+                    toSend['time'] = c_time
+                    toSend['companyName'] = companyName
+                    toSend['companyAddress'] = companyAddress
+                    toSend['storeName'] = storeName
+                    toSend['storeAddress'] = storeAddress
+                    print 'postinggggggggggggggggg',date_obj
+
+                    # for tim in range(billTimes):
+                    if inv.modeOfPayment != 'cashOnDelivery':
+                        requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",json={'topic': 'service.POS.Printer.{0}'.format(self.context['request'].data['connectedDevice']),'args': [{'data':toSend}]})
+                except:
+                    print 'Server Has Not Connected'
         return inv
 
 
@@ -442,6 +440,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
         for key in ['serialNumber', 'invoicedate' ,'reference' ,'duedate' ,'returnquater' ,'products', 'amountRecieved','modeOfPayment','received','grandTotal','totalTax','paymentRefNum','receivedDate','status']:
             try:
                 setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'userId' in self.context['request'].data:
+            try:
+                userObj = User.objects.get(pk=int(self.context['request'].data['userId']))
+                instance.orderBy = userObj
+                instance.save()
             except:
                 pass
         if 'customer' in self.context['request'].data:

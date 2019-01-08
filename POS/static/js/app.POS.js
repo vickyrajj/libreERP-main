@@ -583,6 +583,8 @@ app.controller("controller.POS.invoicesinfo.form", function($scope, invoice, $ht
     console.log(inv);
     if (inv.status == 'Created') {
       var toSend = {status:'In Progress'}
+    }else if (inv.status == 'In Progress') {
+      var toSend = {status:'outForDelivery'}
     }else {
       var toSend = {status:'Completed'}
     }
@@ -1491,6 +1493,7 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
 
 
   $scope.resetForm = function() {
+    console.log('form resetting');
     var dummyDate = new Date();
 
     var onlyDate = new Date(dummyDate.getFullYear(), dummyDate.getMonth(), dummyDate.getDate()); // 2013-07-30 23:59:59
@@ -1514,6 +1517,16 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
     $scope.productsPks = []
 
     $scope.getInvoiceID();
+    $scope.form.cMobileRequired = false
+    $http.get('/api/ERP/appSettings/?app=25&name__iexact=customerAddress').
+    then(function(response) {
+      console.log('ratingggggggggggggggggggg', response.data);
+      if (response.data[0] != null) {
+        if (response.data[0].flag) {
+          $scope.form.cMobileRequired = true
+        }
+      }
+    })
 
   }
 
@@ -1669,16 +1682,16 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
       return response.data;
     })
   }
-  $scope.form.cMobileRequired = false
-  $http.get('/api/ERP/appSettings/?app=25&name__iexact=customerAddress').
-  then(function(response) {
-    console.log('ratingggggggggggggggggggg', response.data);
-    if (response.data[0] != null) {
-      if (response.data[0].flag) {
-        $scope.form.cMobileRequired = true
-      }
-    }
-  })
+  // $scope.form.cMobileRequired = false
+  // $http.get('/api/ERP/appSettings/?app=25&name__iexact=customerAddress').
+  // then(function(response) {
+  //   console.log('ratingggggggggggggggggggg', response.data);
+  //   if (response.data[0] != null) {
+  //     if (response.data[0].flag) {
+  //       $scope.form.cMobileRequired = true
+  //     }
+  //   }
+  // })
   $scope.openInvoiceCustomerForm = function(){
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.POS.Invoice.newCustomer.form.html',
@@ -2545,11 +2558,15 @@ app.controller("businessManagement.POS.default", function($scope, $state, $users
         toSend.modeOfPayment = 'cashOnDelivery'
       }else {
         toSend.modeOfPayment = a.payMode
+        toSend.status = 'Completed'
 
         if (a.payMode == 'cash') {
           toSend.amountRecieved = a.amountRecieved
         } else if (a.payMode == 'card') {
           toSend.paymentRefNum = a.paymentRefNum
+          toSend.amountRecieved = toSend.grandTotal
+        }else {
+          toSend.amountRecieved = toSend.grandTotal
         }
 
       }

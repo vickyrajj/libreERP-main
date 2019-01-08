@@ -137,9 +137,7 @@ class POSProductSerializer(serializers.ModelSerializer):
     def get_discountedPrice(self, obj):
         if obj.discount>0:
             # discountedPrice = obj.price - ((obj.discount / obj.price )* 100)
-            print obj.discount , obj.price
             discountedPrice =  obj.price - (obj.discount / 100.00 ) *  obj.price
-            print 'gggggggggggg',discountedPrice
             return discountedPrice
         else:
             return obj.price
@@ -486,7 +484,7 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
     trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc','orderBy','gstAmount','paidAmount')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc','orderBy','gstAmount','paidAmount','modeOfPayment')
 
     def create(self , validated_data):
         print '******************' , self.context['request'].data
@@ -505,6 +503,13 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
             except:
                 pass
         instance.save()
+        if 'userId' in self.context['request'].data:
+            try:
+                userObj = User.objects.get(pk=int(self.context['request'].data['userId']))
+                instance.orderBy = userObj
+                instance.save()
+            except:
+                pass
         if instance.status == 'cancelled' or instance.status == 'returnToOrigin':
             instance.refundAmount = instance.totalAmount - instance.discountAmount
             instance.refundStatus = True

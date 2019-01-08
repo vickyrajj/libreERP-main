@@ -2,7 +2,7 @@
   Invoice Info
 
   <a class="btn btn-default pull-right" target="_blank" href="/api/POS/invoicePrint/?invoice={{form.pk}}"><i class="fa fa-print" ></i></a>
-  <span class="btn btn-primary pull-right" ng-click="changeInvoiceStatus(invoice)" ng-if="invoice.status!='Completed'" style="margin-right:15px">{{invoice.status=='Created'?'In Progress':'Completed'}}</span>
+  <span class="btn btn-primary pull-right" ng-click="changeInvoiceStatus(invoice)" ng-if="invoice.status!='Completed'" style="margin-right:15px">{{invoice.status=='Created'?'In Progress':(invoice.status=='In Progress'?'Out For Delivery':'Completed')}}</span>
 
 </div>
 <div class="modal-body">

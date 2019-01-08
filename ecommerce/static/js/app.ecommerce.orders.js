@@ -212,6 +212,15 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
   // $scope.sts = 'aaa'
   $scope.currency =''
   // $scope.currency = settings_currencySymbol;
+  console.log(ORDERS_STATUS_LIST);
+  $scope.orderStatusList = ORDERS_STATUS_LIST
+  $scope.lastStatus = $scope.orderStatusList.slice(-1)[0]
+  $scope.succIdx = -1
+  for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
+    if ($scope.tab.data.order.orderQtyMap[i].status!='cancelled') {
+      $scope.succIdx = i
+    }
+  }
 
   for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
     $scope.tab.data.order.orderQtyMap[i].selected = false;
@@ -489,11 +498,53 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
   //     }
   //   }
   // })
+
+  $scope.downloadManifestPrinter = function(){
+    if ($scope.checkConditions.posPrinting && !$scope.connected) {
+      Flash.create('danger', 'Please Connect The Device With Id')
+      return
+    }
+    console.log('print manifest in printer');
+    var url = '/api/ecommerce/downloadManifest/?allData='+$scope.order.pk
+    if ($scope.connected) {
+      url += '&printerDeviceId=' + $scope.connectData.deviceID
+    }
+    $http({
+      method: 'GET',
+      url: url
+    }).then(function(response) {
+      console.log(response.data);
+    })
+  }
+
   $scope.changeStatusForAll = function(status){
     for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
       $scope.changeStatus(i,status)
     }
   }
+  $scope.resetManifest = function(){
+    console.log('resettinggggggggggggg');
+    for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
+      $http({
+        method: 'PATCH',
+        url: '  /api/ecommerce/orderQtyMap/' + $scope.order.orderQtyMap[i].pk + '/',
+        data: {
+          courierName: null,
+          courierAWBNo: null,
+          notes: null,
+        }
+      }).then((function(i) {
+        return function(response) {
+          $scope.order.orderQtyMap[i].courierName = response.data.courierName
+          $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
+          if (i == $scope.order.orderQtyMap.length - 1) {
+            Flash.create('success', 'Reset Successfully');
+          }
+        }
+      })(i))
+    }
+  }
+
   $scope.generateManifestForAll = function () {
     console.log($scope.order);
     if (!$scope.checkConditions.thirdParty) {

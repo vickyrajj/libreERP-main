@@ -93,6 +93,7 @@ SEO_SITE_NAME = 'STERLING SELECT'
 SEO_URL = 'https://sterlingselect.com/'
 SEO_PUBLISHER = 'https://plus.google.com/b/105723801328437605094/'
 
+ORDERS_STATUS_LIST = ['created','packed','outForDelivery','delivered']
 
 ECOMMERCE_THEME = '#631516' ##631516
 INVENTORY_ENABLED = False
@@ -331,7 +332,8 @@ REST_FRAMEWORK = {
 }
 
 # WAMP_SERVER = 'pradeepyadav.net'
-WAMP_SERVER = 'wamp.cioc.in'
+# WAMP_SERVER = 'wamp.cioc.in'
+WAMP_SERVER = 'ws.syrow.com'
 
 PAYMENT_SUCCESS_REDIRECT ='http://24tutors.com/ERP/#/studentHome?mode=success'
 

@@ -145,6 +145,8 @@ class Invoice(models.Model):
     paymentRefNum = models.CharField(max_length=10000,null=True)
     receivedDate = models.DateField(null=True)
     status = models.CharField(max_length = 20 , null = True , default = 'Created')
+    barCVal = models.CharField(max_length = 20 , null = True)
+    orderBy =  models.ForeignKey(User, null = True , related_name = 'ordereDeliveredUser')
 
 class ProductVerient(models.Model):
     created = models.DateTimeField(auto_now_add = True)

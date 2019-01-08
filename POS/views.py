@@ -165,7 +165,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = InvoiceSerializer
     # queryset = Invoice.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['customer' , 'id' , 'status']
+    filter_fields = ['customer' , 'id' , 'status','barCVal']
     def get_queryset(self):
         return Invoice.objects.all().order_by('-status')
 
@@ -300,7 +300,11 @@ def addPageNumber(canvas, doc):
     passKey = '%s%s'%(str(doc.request.user.date_joined.year) , doc.request.user.pk) # also the user ID
     docID = '%s%s' %( now.year , doc.invoice.pk)
 
-    qrw = QrCodeWidget('http://cioc.co.in/documents?id=%s&passkey=%s&app=crmInvoice' %(docID , passKey))
+    # qrw = QrCodeWidget('http://cioc.co.in/documents?id=%s&passkey=%s&app=crmInvoice' %(docID , passKey))
+    if doc.invoice.barCVal:
+        qrw = QrCodeWidget(doc.invoice.barCVal)
+    else:
+        qrw = QrCodeWidget('NoBarcode')
     b = qrw.getBounds()
 
     w=b[2]-b[0]
@@ -1440,3 +1444,46 @@ class AddProductSKU(APIView):
                     p.serialNo="PRO"+str(p.pk)
                     p.save()
         return Response(p.serialNo,status = status.HTTP_200_OK)
+
+class PosInvoicePrinter(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.AllowAny ,)
+    def get(self , request , format = None):
+        print request.GET,'get dataaaaaaaaaaaaa'
+        if 'orderId' in request.GET and 'deviceId' in request.GET:
+            try:
+                deviceId = request.GET['deviceId']
+                orderObj = Invoice.objects.get(pk=int(request.GET['orderId']))
+                toSend = model_to_dict(orderObj)
+                try:
+                    companyName = appSettingsField.objects.get(app__id=25,name='companyName').value
+                    companyAddress = appSettingsField.objects.get(app__id=25,name='companyAddress').value
+                    soup1 = BeautifulSoup(companyName)
+                    companyName = str(soup1.text)
+                    soup2 = BeautifulSoup(companyAddress)
+                    companyAddress = str(soup2.text)
+                except:
+                    companyName = ''
+                    companyAddress = ''
+                try:
+                    toSend['companyName'] = companyName
+                    toSend['companyAddress'] = companyAddress
+                    toSend['storeName'] = ''
+                    toSend['storeAddress'] = ''
+                    print 'postinggggggggggggggggg'
+                    requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",json={'topic': 'service.POS.Printer.{0}'.format(deviceId),'args': [{'data':toSend}]})
+                    try:
+                        doubleCopyObj = appSettingsField.objects.get(name='doubleInvoiceCopy')
+                        if doubleCopyObj.flag:
+                            print 'small slipppppppppp'
+                            productsData = json.loads(orderObj.products)
+                            for i in productsData:
+                                print 'product data'
+                                requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",json={'topic': 'service.POS.Printer.{0}'.format(deviceId),'args': [{'id':orderObj.pk,'name':i['data']['name'],'qty':i['quantity'],'smallBill':'yes'}]})
+                    except:
+                        pass
+                except:
+                    print 'Server Has Not Connected'
+            except:
+                print 'Invalid Request Data'
+        return Response({},status=status.HTTP_200_OK)

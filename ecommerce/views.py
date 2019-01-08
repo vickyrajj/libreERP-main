@@ -99,6 +99,7 @@ from io import BytesIO
 import sendgrid
 import os
 from svglib.svglib import svg2rlg
+from excel_response import ExcelResponse
 
 # from sendgrid.helpers.mail import *
 
@@ -944,12 +945,14 @@ class OrderViewSet(viewsets.ModelViewSet):
     filter_fields = ['status','id','orderQtyMap']
     def get_queryset(self):
         # return Order.objects.filter( ~Q(status = 'failed')).order_by('-created')
+        toRet = Order.objects.all().order_by('-created')
+        if 'deliveryCenter_filter' in self.request.GET:
+            sts = str(self.request.GET['deliveryCenter_filter'])
+            toRet = toRet.filter(orderQtyMap__status=sts).distinct()
         if 'user' in self.request.GET:
-            print 'userrrrrrrrrrrr wise Orders',self.request.user
-            return Order.objects.filter(user=self.request.user).order_by('-created')
+            return toRet.filter(user=self.request.user)
         else:
-            print 'adminnnnnnnnnnn wise Orders'
-            return Order.objects.all().order_by('-created')
+            return toRet
 
 class PromocodeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -974,7 +977,7 @@ class PincodeViewSet(viewsets.ModelViewSet):
 
 
 
-def manifest(response,item,typ,filTyp,packingSlip):
+def manifest(response,item,typ,packingSlip):
     print packingSlip ,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
     settingsFields = application.objects.get(name = 'app.public.ecommerce').settings.all()
     print settingsFields.get(name = 'companyAddress').value
@@ -985,7 +988,6 @@ def manifest(response,item,typ,filTyp,packingSlip):
     styles = getSampleStyleSheet()
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=1*cm,leftMargin=0.2*cm,rightMargin=0.2*cm)
     elements = []
-    txtData = []
     if typ == 'all':
         order = item
         orderQtsObj = item.orderQtyMap.all()
@@ -1015,43 +1017,30 @@ def manifest(response,item,typ,filTyp,packingSlip):
     if not packingSlip:
         if order.paymentMode == 'card':
             txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>PREPAID - DO NOT COLLECT CASH</b></para>'
-            txtData.append('PREPAID - DO NOT COLLECT CASH')
         else:
             txt1 = '<para size=13 leftIndent=150 rightIndent=150><b>CASH ON DELIVERY &nbsp; {0} INR</b></para>'.format(total)
-            txtData.append('CASH ON DELIVERY {0} INR'.format(total))
         elements.append(Paragraph(txt1, styles['Normal']))
         elements.append(Spacer(1, 8))
     txt2 = '<para size=10 leftIndent=150 rightIndent=150><b>DELIVERY ADDRESS :</b> {0},<br/>{1},<br/>{2} - {3},<br/>{4} , {5}.</para>'.format(order.landMark,order.street,order.city,order.pincode,order.state,order.country)
     elements.append(Paragraph(txt2, styles['Normal']))
-    txtData.append('DELIVERY ADDRESS : {0}'.format(order.landMark))
-    txtData.append(str(order.street))
-    txtData.append(str(order.city) + ' - ' + str(order.pincode))
-    txtData.append(str(order.state)+' , ' + str(order.country))
     elements.append(Spacer(1, 30))
 
     txt3 = '<para size=10 leftIndent=150 rightIndent=150><b>COURIER NAME : </b>{0}<br/><b>COURIER AWB No. : </b>{1}</para>'.format(courierName,courierAWBNo)
     elements.append(Paragraph(txt3, styles['Normal']))
-    txtData.append('COURIER NAME : {0}'.format(courierName))
-    txtData.append('COURIER AWB No. : {0}'.format(courierAWBNo))
     elements.append(Spacer(1, 10))
 
     txt4 = '<para size=10 leftIndent=150 rightIndent=150><b>SOLD BY : </b>{0}</para>'.format(settingsFields.get(name = 'companyAddress').value)
     elements.append(Paragraph(txt4, styles['Normal']))
-    txtData.append('SOLD BY : {0}'.format(settingsFields.get(name = 'companyAddress').value))
     elements.append(Spacer(1, 3))
     txt5 = '<para size=10 leftIndent=150 rightIndent=150><b>VAT/TIN No. : </b>{0} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/><b>CST No. : </b>{1}</para>'.format(settingsFields.get(name = 'vat_tinNo').value,settingsFields.get(name = 'cstNo').value)
     elements.append(Paragraph(txt5, styles['Normal']))
-    txtData.append('VAT/TIN No. : {0}'.format(settingsFields.get(name = 'vat_tinNo').value))
-    txtData.append('CST No. : {0}'.format(settingsFields.get(name = 'cstNo').value))
     elements.append(Spacer(1, 10))
     invNo = str(now.year)+str(now.month)+str(now.day)+str(order.pk)
     txt6 = '<para size=10 leftIndent=150 rightIndent=150><b>Invoice No. : </b>{0} </para>'.format(invNo)
     elements.append(Paragraph(txt6, styles['Normal']))
-    txtData.append('Invoice No. : {0}'.format(invNo))
     elements.append(Spacer(1, 30))
     tableDataPackingSlip = [['SKU','Product','Qty']]
     tableData=[['Product','Price','Qty','Discount','Final Price']]
-    txtData.append('Product , Price , Qty , Discount , Final Price')
     for item in orderQtsObj:
         print item,item.status,'rrrrrrrrrrrrrrrrrrrrrrrr'
         if item.status == 'created':
@@ -1102,10 +1091,8 @@ def manifest(response,item,typ,filTyp,packingSlip):
         pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(name),styles['Normal'])
         tableData.append([pd,item.totalAmount,item.qty,item.discountAmount,(item.totalAmount-item.discountAmount) * item.qty])
         tableDataPackingSlip.append([sku,pd,item.qty])
-        txtData.append('{0} , {1} , {2} , {3} , {4}'.format(name,item.totalAmount,item.qty,item.discountAmount,(item.totalAmount-item.discountAmount) * item.qty))
     if not packingSlip:
         tableData.append(['TOTAL','','','',total])
-        txtData.append('TOTAL , ' ' , ' ' , ' ' , {0}'.format(total))
         t1=Table(tableData,colWidths=[1.7*inch , 0.5*inch , 0.5*inch, 0.7*inch , 0.7*inch])
     else:
         t1=Table(tableDataPackingSlip,colWidths=[2*inch , 3.2*inch , 0.5*inch])
@@ -1119,12 +1106,10 @@ def manifest(response,item,typ,filTyp,packingSlip):
         if order.paymentMode != 'card':
             txt7 = '<para size=15 leftIndent=150 rightIndent=150><b>CASH TO BE COLLECT &nbsp; {0} INR</b></para>'.format(total)
             elements.append(Paragraph(txt7, styles['Normal']))
-            txtData.append('CASH TO BE COLLECT {0} INR'.format(total))
         elements.append(Spacer(1, 20))
 
     txt8 = '<para size=10 leftIndent=150 rightIndent=150><b>Tracking ID. : </b>{0} </para>'.format(courierAWBNo)
     elements.append(Paragraph(txt8, styles['Normal']))
-    txtData.append('Tracking ID. : {0}'.format(courierAWBNo))
     elements.append(Spacer(1, 10))
     barVal = str(courierAWBNo)
     print barVal,'bar vallllllllllllllllllllllll'
@@ -1135,13 +1120,110 @@ def manifest(response,item,typ,filTyp,packingSlip):
     elements.append(Spacer(1, 10))
     txt9 = '<para size=10 leftIndent=150 rightIndent=150><b>Order ID. : </b>{0} </para>'.format(invNo)
     elements.append(Paragraph(txt9, styles['Normal']))
-    txtData.append('Order ID. : {0}'.format(invNo))
     elements.append(Spacer(1, 5))
 
 
     doc.build(elements)
-    if filTyp=='txtFile':
-        return txtData
+
+def generateBillData(orderData):
+    toSend = {}
+    try:
+        companyName = appSettingsField.objects.get(app__id=25,name='companyName').value
+        companyAddress = appSettingsField.objects.get(app__id=25,name='companyAddress').value
+        soup1 = BeautifulSoup(companyName)
+        companyName = str(soup1.text)
+        soup2 = BeautifulSoup(companyAddress)
+        companyAddress = str(soup2.text)
+    except:
+        companyName = ''
+        companyAddress = ''
+    try:
+        toSend['companyName'] = companyName
+        toSend['companyAddress'] = companyAddress
+        toSend['storeName'] = ''
+        toSend['storeAddress'] = ''
+        toSend['storeAddress'] = ''
+        toSend['products'] = []
+        toSend['doubleCopyData'] = []
+        grandTotal = 0
+        modeOfPayment = ''
+        barCVal = ''
+        for item in orderData.orderQtyMap.all():
+            if item.status != 'cancelled':
+                grandTotal += item.totalAmount
+                modeOfPayment = item.modeOfPayment
+                barCVal = item.courierAWBNo
+
+                if item.prodSku != item.product.product.serialNo:
+                    product = ProductVerient.objects.get(sku=item.prodSku)
+                    qtyData = product.unitPerpack * item.product.product.howMuch
+                else:
+                    qtyData =  item.product.product.howMuch
+
+                if str(item.product.product.unit)=='Gram' or str(item.product.product.unit)=='gm':
+                    if qtyData >1000:
+                        qtyValue = str(qtyData/1000) + ' Kg'
+                    else:
+                        qtyValue = str(qtyData) + ' gm'
+                elif str(item.product.product.unit)=='Millilitre' or str(item.product.product.unit)=='ml':
+                    if qtyData>1000:
+                        qtyValue = str(qtyData/1000) + ' lt'
+                    else:
+                        qtyValue = str(qtyData) + ' ml'
+                elif str(item.product.product.unit)=='Size and Color' or str(item.product.product.unit)=='Size':
+                    if int(qtyData)==1:
+                        qtyValue = 'XS'
+                    elif int(qtyData)==2:
+                        qtyValue = 'S'
+                    elif int(qtyData)==2:
+                        qtyValue = 'M'
+                    elif int(qtyData)==4:
+                        qtyValue = 'L'
+                    elif int(qtyData)==5:
+                        qtyValue = 'XL'
+                    elif int(qtyData)==6:
+                        qtyValue = 'XL'
+                    else:
+                        qtyValue = qtyData
+                else:
+                  qtyValue = qtyData
+
+                if item.desc:
+                     desc = item.desc
+                else:
+                    desc =""
+
+                name = str(item.product.product.name)+ ' ' + str(qtyValue)+ ' ' +str(desc)
+
+                if item.prodSku is not None:
+                    if item.prodSku == item.product.product.serialNo:
+                        price = item.product.product.price
+                    else:
+                        prod = ProductVerient.objects.filter(sku = item.prodSku)
+                        if len(prod)>0:
+                            price = prod[0].price
+                        else:
+                            price = item.product.product.price
+                else:
+                    price = item.product.product.price
+
+                if item.product.product.productMeta:
+                    pm = item.product.product.productMeta
+                    productMeta = {'typ':pm.typ,'code':pm.code,'taxRate':pm.taxRate}
+                else:
+                    productMeta = None
+                qty = item.qty
+                toSend['products'].append({"data":{"product":{"productMeta":productMeta,"price":price},"name":name},"quantity":qty})
+                toSend['doubleCopyData'].append({"name":name,"qty":qty})
+
+        toSend['barCVal'] = barCVal
+        toSend['modeOfPayment'] = modeOfPayment
+        toSend['grandTotal'] = grandTotal
+        toSend['amountRecieved'] = grandTotal
+        toSend['products'] = json.dumps(toSend['products'])
+    except:
+        print 'errorrrrrrrrrrr'
+    return toSend
 
 class DownloadManifestAPI(APIView):
     renderer_classes = (JSONRenderer,)
@@ -1166,7 +1248,10 @@ class DownloadManifestAPI(APIView):
             if 'allData' in request.GET:
                 item = Order.objects.get(pk=request.GET['allData'])
                 typ='all'
-                barCVal = item.orderQtyMap.all()[0].courierAWBNo
+                barCVal = ''
+                for i in item.orderQtyMap.all():
+                    if i.courierAWBNo:
+                        barCVal = i.courierAWBNo
             elif 'qPk' in request.GET:
                 item = OrderQtyMap.objects.get(pk = request.GET['qPk'])
                 typ='one'
@@ -1179,35 +1264,30 @@ class DownloadManifestAPI(APIView):
                 packingSlip = True
             else:
                 packingSlip = False
-            if len(ab)>0:
+
+            if 'printerDeviceId' in request.GET and len(ab)>0:
                 if ab[0].flag:
-                    print 'printing manifest in printerrrrrrrrrr'
-                    # requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
-                    #         json={
-                    #           'topic': 'service.POS.Printer.{0}'.format((self.context['request'].data['printerDeviceId']),
-                    #           'args': [{'data':resData,'manifest':'Yes'}]
-                    #         }
-                    #     )
-                    response = HttpResponse(content_type='text/plain')
-                    response['Content-Disposition'] = 'attachment;filename="manifest.txt"'
-                    dt = manifest(response,item,typ,'txtFile',packingSlip)
-                    response.content = ''
-                    resData = '\n'.join(dt)
-                    response.write(resData)
-                    if len(request.GET['printerDeviceId'])>0:
-                        print 'valid printerrrrrrrrrrrr idddddddddd'
-                        requests.post("http://"+globalSettings.WAMP_SERVER+":8090/notify",
-                                json={
-                                  'topic': 'service.POS.Printer.{0}'.format(request.GET['printerDeviceId']),
-                                  'args': [{'data':resData,'manifest':'Yes','barCVal':barCVal}]
-                                }
-                            )
-                    else:
-                        print 'invalid printerrrrrrrrrrrr id'
-                    return response
+                    print 'valid printerrrrrrrrrrrr idddddddddd'
+                    resData = generateBillData(item)
+                    resData['id'] = item.pk
+                    requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",json={'topic': 'service.POS.Printer.{0}'.format(request.GET['printerDeviceId']),'args': [{'data':resData}]})
+                    try:
+                        doubleCopyObj = appSettingsField.objects.get(name='doubleInvoiceCopy')
+                        if doubleCopyObj.flag:
+                            print 'small slipppppppppp'
+                            doubleCopyData = resData['doubleCopyData']
+                            for i in doubleCopyData:
+                                print 'product data',i
+                                requests.post("http://"+globalSettings.WAMP_SERVER+":8080/notify",json={'topic': 'service.POS.Printer.{0}'.format(request.GET['printerDeviceId']),'args': [{'id':item.pk,'name':i['name'],'qty':i['qty'],'smallBill':'yes'}]})
+                    except:
+                        pass
+
+
+                    return Response({},status=status.HTTP_200_OK)
+
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment;filename="manifest.pdf"'
-            manifest(response,item,typ,'pdfFile',packingSlip)
+            manifest(response,item,typ,packingSlip)
             return response
 
 class PostBarcodeAPI(APIView):
@@ -1215,36 +1295,94 @@ class PostBarcodeAPI(APIView):
     permission_classes = (permissions.AllowAny ,)
     def post(self , request , format = None):
         print request.data
-        if 'barcode' in request.data and 'userId' in request.data:
-            qtyObjs = OrderQtyMap.objects.filter(courierAWBNo=request.data['barcode'])
-            print qtyObjs.count()
-            if qtyObjs.count()>0:
+        if 'barcode' in request.data and 'userId' in request.data and 'typ' in request.data:
+            if request.data['typ'] == 'online':
+                qtyObjs = OrderQtyMap.objects.filter(courierAWBNo=request.data['barcode'])
+                print qtyObjs.count()
+                if qtyObjs.count()>0:
+                    try:
+                        userObj = User.objects.get(pk=int(request.data['userId']))
+                        for i in qtyObjs:
+                            i.status = 'delivered'
+                            i.orderBy = userObj
+                            if 'modeOfPayment' in request.data:
+                                i.modeOfPayment = request.data['modeOfPayment']
+                                i.paidAmount = i.totalAmount
+                            i.save()
+                    except:
+                        return Response({'statusText':'Invalid UserId'}, status = status.HTTP_200_OK)
+                    parentObj = qtyObjs[0].order.get()
+                    childObjs = parentObj.orderQtyMap.all()
+                    print childObjs.count(),'child countttttt'
+                    for i in childObjs:
+                        if i.status != 'delivered':
+                            print 'not all products are delivered yet'
+                            break
+                    else:
+                        print 'all products are delivered  so changing order status to completed'
+                        parentObj.status = 'completed'
+                        parentObj.save()
+                else:
+                    return Response({'statusText':'Invalid Barcode'}, status = status.HTTP_200_OK)
+            elif request.data['typ'] == 'offline':
                 try:
-                    userObj = User.objects.get(pk=int(request.data['userId']))
-                    for i in qtyObjs:
-                        i.status = 'delivered'
-                        i.orderBy = userObj
-                        i.save()
+                    invObj = Invoice.objects.get(barCVal=request.data['barcode'])
+                    try:
+                        userObj = User.objects.get(pk=int(request.data['userId']))
+                        invObj.orderBy = userObj
+                        invObj.status = 'Completed'
+                        if 'modeOfPayment' in request.data:
+                            invObj.modeOfPayment = request.data['modeOfPayment']
+                            invObj.amountRecieved = invObj.grandTotal
+                        invObj.save()
+                    except:
+                        return Response({'statusText':'Invalid UserId'}, status = status.HTTP_200_OK)
                 except:
                     return Response({'statusText':'Invalid UserId'}, status = status.HTTP_200_OK)
-
-                parentObj = qtyObjs[0].order.get()
-                childObjs = parentObj.orderQtyMap.all()
-                print childObjs.count(),'child countttttt'
-                for i in childObjs:
-                    if i.status != 'delivered':
-                        print 'not all products are delivered yet'
-                        break
-                else:
-                    print 'all products are delivered  so changing order status to completed'
-                    parentObj.status = 'completed'
-                    parentObj.save()
-
             else:
-                return Response({'statusText':'Invalid Barcode'}, status = status.HTTP_200_OK)
+                return Response({'statusText':'Invalid Data'}, status = status.HTTP_200_OK)
         else:
             return Response({'statusText':'Invalid Data'}, status = status.HTTP_200_OK)
         return Response({'statusText':'Status Updated'}, status = status.HTTP_200_OK)
+
+class GetDeliveredOrderDetailsAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self, request, format=None):
+        print request.GET
+        if 'userId' in request.GET and 'dated' in request.GET:
+            toRet = {'statusText':'Success'}
+            dts = request.GET['dated']
+            # dt = datetime.datetime.strptime(dts,'%Y-%m-%d').date()
+            userObj = User.objects.get(pk=int(request.GET['userId']))
+            qtyObjs = OrderQtyMap.objects.filter(orderBy=userObj,updated__icontains=dts)
+            invObjs = Invoice.objects.filter(orderBy=userObj,updated__icontains=dts)
+
+            deliveredCount = qtyObjs.filter(status='delivered').count() + invObjs.filter(status='Completed').count()
+            ongoingCount = qtyObjs.filter(status='outForDelivery').count() + invObjs.filter(status='outForDelivery').count()
+            toRet['deliveredCount'] = deliveredCount
+            toRet['ongoingCount'] = ongoingCount
+
+            qtyMCodAmount = qtyObjs.filter(modeOfPayment='cash').aggregate(tot=Sum('paidAmount'))['tot']
+            qtyMCodAmount = qtyMCodAmount if qtyMCodAmount else 0
+            qtyMCardAmount = qtyObjs.filter(modeOfPayment='card').aggregate(tot=Sum('paidAmount'))['tot']
+            qtyMCardAmount = qtyMCardAmount if qtyMCardAmount else 0
+
+            invMCodAmount = invObjs.filter(modeOfPayment='cash').aggregate(tot=Sum('amountRecieved'))['tot']
+            invMCodAmount = invMCodAmount if invMCodAmount else 0
+            invMCardAmount = invObjs.filter(modeOfPayment='card').aggregate(tot=Sum('amountRecieved'))['tot']
+            invMCardAmount = invMCardAmount if invMCardAmount else 0
+
+            cod = qtyMCodAmount + invMCodAmount
+            card = qtyMCardAmount + invMCardAmount
+            total = cod + card
+
+            toRet['cod'] = cod
+            toRet['card'] = card
+            toRet['total'] = total
+        else:
+            return Response({'statusText':'Invalid Data'}, status = status.HTTP_200_OK)
+
+        return Response(toRet,status = status.HTTP_200_OK)
 
 class SendStatusAPI(APIView):
     renderer_classes = (JSONRenderer,)
@@ -2660,3 +2798,105 @@ class UserProfileSettingAPI(APIView):
             # user.email = email
             # user.save()
             return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst}, status = status.HTTP_200_OK)
+
+class ReportsDataAPI(APIView):
+    def get(self, request, format=None):
+        print request.GET
+        toRet = {}
+        if 'typ' in request.GET:
+            if request.GET['typ'] == 'sales':
+                salesDownloadData = [['Name','Amount Received','GST Collected']]
+                toReturn = []
+                fdt = datetime.datetime.strptime(str(request.GET['fdt']),'%Y-%m-%d').date()
+                sdt = datetime.datetime.strptime(str(request.GET['sdt']),'%Y-%m-%d').date()
+                sdt = sdt+timedelta(days=1)
+                print fdt,sdt,'dttttttttttttttt'
+                qtyObjs = Order.objects.filter(orderQtyMap__updated__range=(fdt,sdt)).distinct()
+                print qtyObjs
+                for i in qtyObjs:
+                    data = {}
+                    tGst = 0
+                    tAR = 0
+                    data['name'] = 'ECOM_' + str(i.pk)
+                    objs = i.orderQtyMap.filter(updated__range=(fdt,sdt))
+                    for j in objs:
+                        tAR += j.paidAmount
+                        tGst += j.gstAmount
+                    data['receivedAmount'] = tAR
+                    data['gstCollected'] = tGst
+                    toReturn.append(data)
+                    salesDownloadData.append(['ECOM_'+str(i.pk),tAR,tGst])
+
+                invObjs = Invoice.objects.filter(updated__range=(fdt,sdt))
+                print invObjs
+                for i in invObjs:
+                    data = {}
+                    data['name'] = 'POS_' + str(i.pk)
+                    data['receivedAmount'] = i.amountRecieved
+                    tGst = 0
+                    productsData = json.loads(i.products)
+                    for j in productsData:
+                        pp = j['data']['product']['price']
+                        print j['data']['product']['productMeta']
+                        if j['data']['product']['productMeta']:
+                            print j['data']['product']['productMeta']
+                            tx = j['data']['product']['productMeta']['taxRate']
+                            gst = round(((pp*tx)/100)*i['quantity'])
+                            tGst += gst
+                    data['gstCollected'] = tGst
+                    toReturn.append(data)
+                    salesDownloadData.append(['POS_'+str(i.pk),i.amountRecieved,tGst])
+
+                if 'download' in request.GET:
+                    return ExcelResponse(salesDownloadData, 'SalesReport','Sales Details')
+
+                return Response(toReturn,status = status.HTTP_200_OK)
+            else:
+                deliveryDownloadData = [['Name','Completed','Ongoing','COD','CARD','Total']]
+                dt = datetime.datetime.strptime(str(request.GET['fdt']),'%Y-%m-%d').date()
+                print dt,'dttttttttttttttt'
+                qtyObjs = OrderQtyMap.objects.filter(updated__icontains=dt)
+                invObjs = Invoice.objects.filter(updated__icontains=dt)
+                qtyObjsUsersPks = list(qtyObjs.filter(orderBy__isnull=False).values_list('orderBy',flat=True).distinct())
+                invObjsUsersPks = list(invObjs.filter(orderBy__isnull=False).values_list('orderBy',flat=True).distinct())
+                unqUserPks = list(set(qtyObjsUsersPks+invObjsUsersPks))
+                print unqUserPks
+                for i in unqUserPks:
+                    userObj = User.objects.get(pk=int(i))
+                    flName = userObj.first_name + '_' + str(userObj.pk)
+                    toRet[flName] = {'deliveredCount':0,'ongoingCount':0,'cod':0,'card':0,'total':0}
+
+                    userqtyObjs = qtyObjs.filter(orderBy=userObj)
+                    userinvObjs = invObjs.filter(orderBy=userObj)
+
+                    deliveredCount = userqtyObjs.filter(status='delivered').count() + userinvObjs.filter(status='Completed').count()
+                    ongoingCount = userqtyObjs.filter(status='outForDelivery').count() + userinvObjs.filter(status='outForDelivery').count()
+
+                    toRet[flName]['deliveredCount'] = deliveredCount
+                    toRet[flName]['ongoingCount'] = ongoingCount
+
+                    qtyMCodAmount = userqtyObjs.filter(modeOfPayment='cash').aggregate(tot=Sum('paidAmount'))['tot']
+                    qtyMCodAmount = qtyMCodAmount if qtyMCodAmount else 0
+                    qtyMCardAmount = userqtyObjs.filter(modeOfPayment='card').aggregate(tot=Sum('paidAmount'))['tot']
+                    qtyMCardAmount = qtyMCardAmount if qtyMCardAmount else 0
+
+                    invMCodAmount = userinvObjs.filter(modeOfPayment='cash').aggregate(tot=Sum('amountRecieved'))['tot']
+                    invMCodAmount = invMCodAmount if invMCodAmount else 0
+                    invMCardAmount = userinvObjs.filter(modeOfPayment='card').aggregate(tot=Sum('amountRecieved'))['tot']
+                    invMCardAmount = invMCardAmount if invMCardAmount else 0
+
+                    cod = qtyMCodAmount + invMCodAmount
+                    card = qtyMCardAmount + invMCardAmount
+                    total = cod + card
+                    if total == 0 and ongoingCount == 0:
+                        del toRet[flName]
+                    else:
+                        toRet[flName]['cod'] = cod
+                        toRet[flName]['card'] = card
+                        toRet[flName]['total'] = total
+                        toRet[flName]['name'] = flName
+                        deliveryDownloadData.append([flName,deliveredCount,ongoingCount,cod,card,total])
+                if 'download' in request.GET:
+                    return ExcelResponse(deliveryDownloadData, 'deliveryReport_'+str(dt),'Delivery Details')
+
+        return Response(toRet,status = status.HTTP_200_OK)
