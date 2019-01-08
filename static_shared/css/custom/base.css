@@ -25,14 +25,11 @@ html {
 }
 
 body {
-    font-family:"Open Sans", "Noto Sans", Tahoma, sans-serif;
+    /* font-family:"Open Sans", "Noto Sans", Tahoma, sans-serif; */
     font-size: 0.8rem;
+    font-family: 'Lato','Open Sans', sans-serif;
 }
-#myQATableHeader th{
-  text-align: center;
-  padding: 10px;
-  cursor: pointer
-}
+
 
 .bal_switch{
   position: relative;
@@ -102,9 +99,15 @@ cursor: pointer
   border: 1px solid #f0f0f0;
   padding: 1px 5px;
 }
-#myQATable tr:nth-child(even){
+/* #myQATable tr:nth-child(even){
   background-color: #f0f0f0;
+} */
+#myQATableHeader th{
+  text-align: center;
+  padding: 10px;
+  cursor: pointer
 }
+
 /* @media only screen and (max-width:600px) {
   html {
       font-size: 10px;
@@ -218,6 +221,8 @@ cursor: pointer
   /*color: white;*/
   background: white;
 }
+
+
 
 .boardHeader{
   padding:20px;
@@ -1030,3 +1035,35 @@ body {
 		.versions button:hover{
 		  background-color:   #ffb22b;
 		}
+
+
+
+.bal_fadding_In{
+  animation:my_fade 1s;
+}
+.bal_slide_In{
+  animation:my_slide .5s forward;
+}
+
+
+@keyframes my_fade {
+  0%{
+    transform: translateX(5%);
+    opacity: 0;
+  }
+  100%{
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes my_slide {
+  0%{
+    transform: translateY(5%);
+    opacity: 0;
+  }
+  100%{
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}

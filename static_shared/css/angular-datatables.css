@@ -51,19 +51,20 @@ table.dataTable tbody th, table.dataTable tbody td {
     color: #585858;
 }
 .dataTables_wrapper .dataTables_info {
-    margin-left: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
 #myQATable_filter{
   display: none
 }
 #myQATable_length{
-  text-align: right;
-  font-size:15px;
+  text-align: center;
+  font-size:13px;
 }
 
 #myQATable_paginate{
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
 }
 /* #myQATable_paginate span>a{

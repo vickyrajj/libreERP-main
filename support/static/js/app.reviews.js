@@ -24,7 +24,17 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   }).
   then(function(response) {
     $scope.reviewData = response.data
+
+    console.log($scope.reviewData);
+    $scope.myData=$scope.reviewData[0]
     $scope.loadingData=false;
+    $scope.valueee=true
+    $scope.tableUpdated=true;
+    if(response.data.length<1){
+      $scope.myDialouge=true;
+    }else{
+      $scope.myDialouge=false;
+    }
     // $scope.filterByCreated();
   });
 
@@ -41,6 +51,24 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
       active: true
     })
 
+  }
+
+var countt=0
+  $scope.doing=function(data){
+
+    var index=$scope.reviewData.indexOf(data)
+
+    // if(countt>0){
+    //   document.getElementById('id'+$scope.last).style.backgroundColor='#fff'
+    // }
+    // countt++;
+    // document.getElementById('id'+a).style.backgroundColor='#f0f0f0'
+    $scope.valueee=false
+    $scope.myData=data
+    setTimeout(function () {
+      $scope.valueee=true
+    }, 30);
+    // $scope.last=a
   }
 
   $scope.tabs = [];
@@ -86,7 +114,9 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
       $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
   }
   $scope.filterByCreated=function(){
-      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") < $filter('date')(b[0].created, "dd/MM/yyyy");});
+      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") < $filter('date')(b[0].created, "dd/MM/yyyy");})
+      // $scope.myData=$scope.reviewData[0]
+      // $scope.doing(0)
   }
 
   $scope.chatTypes=['All','audio','video','Audio & Video']
@@ -123,6 +153,8 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
         case 'Company':
           $scope.filterByCompany();
           break;
+        case ' ':
+          break
       }
   },true)
 
@@ -178,6 +210,8 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
         $scope.changeDateType = true
       }
     })
+
+
     $scope.filterData = function(download){
 
       var typOfCall=''

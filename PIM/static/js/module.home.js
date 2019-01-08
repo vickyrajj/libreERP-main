@@ -662,6 +662,27 @@ app.controller("controller.home", function($scope, $state, $http) {
 app.controller("controller.home.main", function($scope, $state, $http , $permissions , $timeout) {
   $scope.sai = 'kiran'
 
+
+  $scope.noOfChatLabels = [];
+  // $scope.series = ['Series A', 'Series B'];
+  $scope.noOfChatData = [];
+  $scope.onClick1 = function (points, evt) {
+    console.log(points, evt);
+  };
+  $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }];
+  $scope.noOfChatOptions = {
+    scales: {
+      yAxes: [
+        {
+          id: 'y-axis-1',
+          type: 'linear',
+          display: true,
+          position: 'left'
+        }
+      ]
+    }
+  };
+
   $scope.barlabels = [];
   $scope.series = ['Series A', 'Series B'];
 
@@ -686,6 +707,9 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
     borderColor: "white"
   }];
 
+  $scope.isCustomerLoaded=false
+  $scope.isAdminLoaded=false
+
   $scope.fetchGraphData = function () {
     if ($scope.isCustomer) {
       $http({
@@ -694,6 +718,7 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
       }).
       then(function(response) {
         console.log(response.data);
+
         if (response.data.length > 0) {
           id = response.data[0]
         } else {
@@ -714,11 +739,12 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
         }).
         then(function(response) {
           console.log(response.data,'ffffffffff');
+          $scope.isCustomerLoaded=true
           $scope.totalChats = response.data.totalChats
           $scope.missedChats = response.data.missedChats
           $scope.agentChatCount = response.data.agentChatCount
-          $scope.barData = response.data.graphData
-          $scope.barlabels = response.data.graphLabels
+          $scope.noOfChatData = response.data.graphData
+          $scope.noOfChatLabels = response.data.graphLabels
           $scope.avgChatDuration = response.data.avgChatDuration
           $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
           $scope.avgRatingAll = response.data.avgRatingAll
@@ -728,6 +754,7 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
           $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
           $scope.changeInFrtAvg = response.data.changeInData.changeInFrtAvg
           $scope.changeInRespTimeAvg = response.data.changeInData.changeInRespTimeAvg
+          $scope.changeInAverageRating = response.data.changeInData.changeInAverageRating
 
         });
       });
@@ -740,11 +767,12 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
       then(function(response) {
         console.log('adminnnnnnnnnnnnnnn');
         console.log(response.data);
+        $scope.isAdminLoaded=true
         $scope.totalChats = response.data.totalChats
         $scope.missedChats = response.data.missedChats
         $scope.agentChatCount = response.data.agentChatCount
-        $scope.barData = response.data.graphData
-        $scope.barlabels = response.data.graphLabels
+        $scope.noOfChatData = response.data.graphData
+        $scope.noOfChatLabels = response.data.graphLabels
         $scope.avgChatDuration = response.data.avgChatDuration
         $scope.agentLeaderBoard = response.data.agentLeaderBoard
         $scope.avgRatingAll = response.data.avgRatingAll
@@ -755,6 +783,7 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
         $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
         $scope.chaneInAvgResponseTime=response.data.changeInData.changeInRespTimeAvg
         $scope.chaneInAvgFTResponseTime=response.data.changeInData.changeInFrtAvg
+        $scope.changeInAverageRating=response.data.changeInData.changeInAverageRating
 
       });
     }

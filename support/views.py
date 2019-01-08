@@ -623,8 +623,10 @@ class GethomeCal(APIView):
         avgRatingAll=0
         avgRespTimeAll=0
         avgRespTimeAllLtweek = 0
+        avgRatingAllLastWeek=0
         firstResTimeAvgAll =0
         firstResTimeAvgAllLtweek = 0
+        # artAllLtWeek=0;
         if 'perticularUser' in self.request.GET:
             if int(self.request.GET['perticularUser'])>0:
                 avgChatDuration = 0
@@ -636,13 +638,12 @@ class GethomeCal(APIView):
                 avgChatDuration = a['chatDuration__avg'] if a['chatDuration__avg'] else 0
                 alastToLastWeek = ChatThread.objects.filter(~Q(chatDuration=0) , created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) ,company = int(self.request.GET['perticularUser'])).aggregate(Avg('chatDuration'))
                 avgChatDurationLtweek = alastToLastWeek['chatDuration__avg'] if alastToLastWeek['chatDuration__avg'] else 0
-                # avgRatingAllLastWeek = alastToLastWeek['chatDuration__avg'] if alastToLastWeek['chatDuration__avg'] else 0
+
                 frt = chatThreadObj.filter(firstResponseTime__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('firstResponseTime'))
                 firstResTimeAvgAll =  frt['firstResponseTime__avg'] if frt['firstResponseTime__avg'] else 0
                 frtLastToLastWeek = ChatThread.objects.filter(firstResponseTime__isnull=False, created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('firstResponseTime'))
                 firstResTimeAvgAllLtweek = frtLastToLastWeek['firstResponseTime__avg'] if frtLastToLastWeek['firstResponseTime__avg'] else 0
-                arAll = chatThreadObj.filter(customerRating__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('customerRating'))
-                avgRatingAll = arAll['customerRating__avg'] if arAll['customerRating__avg'] else 0
+
                 totalChats = chatThreadObj.filter(company=int(self.request.GET['perticularUser'])).count()
                 lastToLastWeekChatCount = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)),company=int(self.request.GET['perticularUser'])).count()
                 usr = chatThreadObj.filter(company = int(self.request.GET['perticularUser']))[0].user
@@ -652,6 +653,12 @@ class GethomeCal(APIView):
 
                 artAllLtWeek = SupportChat.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) , user=usr , responseTime__isnull=False).aggregate(Avg('responseTime'))
                 avgRespTimeAllLtweek = artAllLtWeek['responseTime__avg'] if artAllLtWeek['responseTime__avg'] else 0
+
+                arAll = chatThreadObj.filter(customerRating__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('customerRating'))
+                avgRatingAll = arAll['customerRating__avg'] if arAll['customerRating__avg'] else 0
+
+                arAllLtWeek=chatThreadObj.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)) , customerRating__isnull=False ,company=int(self.request.GET['perticularUser'])).aggregate(Avg('customerRating'))
+                avgRatingAllLastWeek = arAllLtWeek['customerRating__avg'] if arAllLtWeek['customerRating__avg'] else 0
 
         else:
             a = chatThreadObj.filter(~Q(chatDuration=0)).aggregate(Avg('chatDuration'))
@@ -673,7 +680,7 @@ class GethomeCal(APIView):
         changeInFrtAvg = {'percentage':0 , 'increase' : False}
         changeInRespTimeAvg = {'percentage':0 , 'increase' : False}
         changeInMissedChat = {'percentage':0 , 'increase' : False}
-        # changeInAverageRating = {'percentage':0 , 'increase' : False}
+        changeInAverageRating = {'percentage':0 , 'increase' : False}
         if lastToLastWeekChatCount<totalChats:
             changeInChat['percentage'] = (float(totalChats - lastToLastWeekChatCount)/totalChats)*100
             changeInChat['increase'] = True
@@ -724,12 +731,23 @@ class GethomeCal(APIView):
             changeInRespTimeAvg['percentage'] = 0.0
             changeInRespTimeAvg['increase'] = False
 
+        if avgRatingAllLastWeek<avgRatingAll:
+            changeInAverageRating['percentage'] = (float(avgRatingAll - avgRatingAllLastWeek)/avgRatingAll)*100
+            changeInAverageRating['increase'] = True
+        elif avgRatingAll<avgRespTimeAllLtweek:
+            changeInAverageRating['percentage'] = (float(avgRatingAllLastWeek - avgRatingAll)/avgRatingAllLastWeek)*100
+            changeInAverageRating['increase'] = False
+        else:
+            changeInAverageRating['percentage'] = 0.0
+            changeInAverageRating['increase'] = False
+
 
         changeInData['changeInChat'] = changeInChat
         changeInData['changeInMissedChat'] = changeInMissedChat
         changeInData['changeInAvgChatDur'] =changeInAvgChatDur
         changeInData['changeInFrtAvg'] = changeInFrtAvg
         changeInData['changeInRespTimeAvg'] = changeInRespTimeAvg
+        changeInData['changeInAverageRating'] = changeInAverageRating
         print changeInData , 'Change in Dataaaaaaaaaaaaaaaaaaa####################'
         graphData = [[],[]]
         graphLabels = []
