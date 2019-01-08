@@ -19,9 +19,20 @@ from django.core.exceptions import SuspiciousOperation
 
 
 class ProductsSerializer(serializers.ModelSerializer):
+    total_quantity = serializers.SerializerMethodField()
     class Meta:
         model = Products
-        fields = ('pk', 'created', 'part_no','description_1','description_2','replaced','customs_no','parent','weight','price','sheet','bar_code','gst','custom')
+        fields = ('pk', 'created', 'part_no','description_1','description_2','replaced','customs_no','parent','weight','price','sheet','bar_code','gst','custom','total_quantity')
+    def get_total_quantity(self , obj):
+        inventory = Inventory.objects.filter(product=obj.pk)
+        qty = 0
+        for i in inventory:
+            qty+= i.qty
+        if qty>0:
+            return qty
+        else:
+            return 0
+
 
 
 

@@ -249,6 +249,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.inventory.modal.html',
       size: 'lg',
+      backdrop: false,
       controller: function($scope, $uibModalInstance) {
         $scope.productSearch = function(query) {
           return $http.get('/api/support/products/?part_no__contains=' + query).
@@ -318,156 +319,25 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               price: '',
               weight:0,
               prodQty: 1,
+              total_quantity : 1,
             });
+            $scope.showButton = false
           }
 
           $scope.change = function(query) {
-            return $http.get('/api/support/products/?limit=10&search=' + query).
+            return $http.get('/api/support/products/?limit=10&searchContains=' + query).
             then(function(response) {
               return response.data.results;
             })
           };
+          $scope.showButton = true
 
           $scope.$watch('productsOrdered', function(newValue, oldValue) {
-            console.log(newValue);
              if (typeof newValue[newValue.length-1].part_no == 'object') {
+               $scope.showButton = true
               $scope.productsOrdered[$scope.productsOrdered.length-1] = newValue[newValue.length-1].part_no
               $scope.productsOrdered[$scope.productsOrdered.length-1].prodQty = 1
-              // var dataSend = {
-              //   user: $scope.me.pk,
-              //   products: $scope.data[$scope.data.length - 1].pk,
-              //   project: $scope.projectlist,
-              //   quantity1: 1,
-              //   price: $scope.data[$scope.data.length - 1].price,
-              //   landed_price: $scope.data[$scope.data.length - 1].landed_price,
-              //   custom:$scope.data[$scope.data.length - 1].custom,
-              //   gst:$scope.data[$scope.data.length - 1].gst,
-              //   customs_no : $scope.data[$scope.data.length - 1].customs_no,
-              // }
-              // $http({
-              //   method: 'POST',
-              //   url: '/api/support/bom/',
-              //   data: dataSend
-              // }).
-              // then(function(response) {
-              //   $scope.data[$scope.data.length - 1].listPk = response.data.pk
-              //   $scope.productpk.push(response.data);
-              //   $scope.showbutton = true
-              //
-              //   return
-              // })
             }
-             // else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
-            //   console.log('BBBBBBBBBBBBBBBBBBBBB');
-            //   $scope.showButton = true
-            //   var cost = 0
-            //   var totweight = 0
-            //   cost = $scope.form.invoiceValue
-            //   totweight = $scope.form.weightValue
-            //   $scope.data[$scope.data.length - 1] = $scope.data[$scope.data.length - 1].part_no
-            //   $scope.data[$scope.data.length - 1].quantity1 = 1
-            //   var totalprice = $scope.data[$scope.data.length - 1].price * $scope.data[$scope.data.length - 1].quantity1
-            //   cost += totalprice
-            //   $scope.form.invoiceValue = cost
-            //   $scope.invoceSave()
-            //   var weight = $scope.data[$scope.data.length - 1].weight * $scope.data[$scope.data.length - 1].quantity1
-            //   console.log(weight,'aaaaaaa');
-            //   totweight += weight
-            //   $scope.form.weightValue = totweight
-            //   $scope.updateAll()
-            //   $scope.projectlist = []
-            //   $scope.projectlist.push($scope.form.pk)
-            //   var dataSend = {
-            //     user: $scope.me.pk,
-            //     products: $scope.data[$scope.data.length - 1].pk,
-            //     project: $scope.projectlist,
-            //     quantity1: 1,
-            //     price: $scope.data[$scope.data.length - 1].price,
-            //     landed_price: $scope.data[$scope.data.length - 1].landed_price,
-            //     custom:$scope.data[$scope.data.length - 1].custom,
-            //     gst:$scope.data[$scope.data.length - 1].gst,
-            //     customs_no : $scope.data[$scope.data.length - 1].customs_no,
-            //   }
-            //   $http({
-            //     method: 'POST',
-            //     url: '/api/support/bom/',
-            //     data: dataSend
-            //   }).
-            //   then(function(response) {
-            //     $scope.data[$scope.data.length - 1].listPk = response.data.pk
-            //     $scope.productpk.push(response.data);
-            //     return
-            //   })
-            // } else {
-            //       console.log('CCCCCCCCCCCCCCCC');
-            //   var cost = $scope.form.invoiceValue
-            //   var totweight = $scope.form.weightValue
-            //   // cost = $scope.form.invoiceValue
-            //   for (var i = 0; i < newValue.length; i++) {
-            //     if (newValue[i].listPk) {
-            //       if(newValue[i].quantity1==''){
-            //         var newQty = 0
-            //       }
-            //       else{
-            //         var newQty = newValue[i].quantity1
-            //       }
-            //       if(oldValue[i].quantity1==''){
-            //         var oldQty = 0
-            //       }
-            //       else{
-            //         var oldQty = oldValue[i].quantity1
-            //       }
-            //
-            //       var oldtotalprice = oldValue[i].price * oldQty
-            //       cost -= oldtotalprice
-            //       var totalprice = newValue[i].price * newQty
-            //       cost += totalprice
-            //
-            //
-            //
-            //       console.log(totweight,'kkkkkkkkkkkkkk');
-            //       var oldtotalweight = oldValue[i].weight * oldQty
-            //       totweight -= oldtotalweight
-            //       console.log(totweight,'aaaaaaaaaaaa');
-            //       var newtotweight = newValue[i].weight * newQty
-            //       totweight += newtotweight
-            //       console.log(totweight,'jjjjjjjjjjjj');
-            //
-            //
-            //
-            //       if (newValue[i].quantity1 != oldValue[i].quantity1 || newValue[i].landed_price != oldValue[i].landed_price||newValue[i].custom != oldValue[i].custom||newValue[i].gst != oldValue[i].gst) {
-            //
-            //         // var oldtotalprice = oldValue[i].price * oldValue[i].quantity1
-            //         // var totalprice = newValue[i].price * newValue[i].quantity1
-            //         // cost -= oldtotalprice
-            //         // cost += totalprice
-            //         $scope.updateAll()
-            //         var dataSend = {
-            //           quantity1: newValue[i].quantity1,
-            //           price: newValue[i].price,
-            //           landed_price: newValue[i].landed_price,
-            //           custom : newValue[i].custom,
-            //           gst : newValue[i].gst,
-            //           customs_no : newValue[i].customs_no,
-            //         }
-            //         $http({
-            //           method: 'PATCH',
-            //           url: '/api/support/bom/' + newValue[i].listPk + '/',
-            //           data: dataSend
-            //         }).
-            //         then(function(response) {
-            //           $scope.form.invoiceValue = cost
-            //           $scope.form.weightValue  = totweight
-            //
-            //         })
-            //       }
-            //     }
-            //   }
-            //   $scope.form.invoiceValue = cost
-            //   $scope.form.weightValue  = totweight
-            //   $scope.invoceSave()
-            //   return
-            // }
           }, true)
 
           $scope.projectSearch = function(query) {
@@ -504,7 +374,12 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           }
 
           $scope.delete = function(index){
-            $scope.productsOrdered.splice(index,1);
+            if(index== $scope.productsOrdered.length-1){
+              $scope.showButton = true
+              $scope.productsOrdered.splice(index,1);
+            }
+              $scope.productsOrdered.splice(index,1);
+
           }
           // $scope.delete = function(pk,index){
           //   $http({method : 'DELETE' , url : '/api/support/products/' + pk + '/' }).
@@ -518,7 +393,6 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
           $scope.form = {}
           $scope.save = function() {
-            $scope.showSave = false
             if ($scope.form.responsible == undefined) {
               Flash.create('warning', 'Select Responsible person');
               return
@@ -527,12 +401,15 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               Flash.create('warning', 'Select Project');
               return
             }
-
-
             if ($scope.productsOrdered.length<=0) {
-
               Flash.create('warning', 'Add Products');
               return
+            }
+            for (var i = 0; i < $scope.productsOrdered.length; i++) {
+              if($scope.productsOrdered[i].total_quantity<=0){
+                Flash.create('warning', 'Remove the products marked in red');
+                return
+              }
             }
 
             var dataToSend = {
@@ -546,6 +423,8 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               data: dataToSend
             }).
             then(function(response) {
+              $scope.showButton = false
+              $scope.showSave = false
               $scope.values = response.data
             })
           }
@@ -565,8 +444,9 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
       $uibModal.open({
         templateUrl: '/static/ngTemplates/app.inventory.stockcheck.modal.html',
         size: 'lg',
+
         controller: function($scope, $uibModalInstance) {
-          $scope.off = 0;
+        $scope.off = 0;
         $scope.fectchStock = function(){
           $http({
               method: 'GET',

@@ -24,21 +24,27 @@
           <th></th>
         </tr>
         <tr ng-repeat="v in productsOrdered track by $index">
-          <td>{{$index + 1}}</td>
+
+          <td style="background-color:{{v.total_quantity>0?'':'#d94738'}}">{{$index + 1}}</td>
             <td><input ng-model="v.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></div></td>
           <!-- <td>{{v.part_no}}</td> -->
           <td>{{v.description_1}}</td>
-          <td><input type="number" step=1 class="form-control-pos" ng-model="v.prodQty" ng-init="v.prodQty=1"></td>
+          <td ><input type="number" step=1 class="form-control-pos" ng-model="v.prodQty" ng-init="v.prodQty=1"></td>
           <td>
             <button type="button" class="btn btn-danger btn-sm" ng-click="delete($index)"> <i class="fa fa-trash"></i> </button>
           </td>
         </tr>
-        <tr  >
+        <tr ng-if="showButton">
           <td><button style="background-color:white;border:none;" ng-click="addTableRow($index)" ><i class="fa fa-plus" style="cursor:pointer"></i></button></td>
         </tr>
 
       </tbody>
     </table>
+  </div>
+  <div class="row" ng-if="productsOrdered.length>0&&showSave">
+    <div class="col-md-12" style="padding-top:20px">
+      <span style="font-size:20px;color:#71d97b">If any product marked as red is not in stock and cannot be ordered, please delete it before ordering </span>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-9">

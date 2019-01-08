@@ -78,6 +78,9 @@ class ProductsViewSet(viewsets.ModelViewSet):
             product = objs.filter(part_no__contains=str(self.request.GET['search']))
             product1  = objs.filter(replaced__icontains=str(self.request.GET['search']))
             return product | product1
+        elif 'searchContains' in self.request.GET:
+            productList = list(Inventory.objects.filter(product__part_no__icontains = self.request.GET['searchContains']).distinct().values_list('product',flat=True))
+            return Products.objects.filter(pk__in=productList)
         else:
             return Products.objects.all()
 
