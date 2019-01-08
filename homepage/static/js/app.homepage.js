@@ -98,6 +98,20 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.homepage.enroll.html',
       controller: 'controller.enroll'
     })
+  $stateProvider
+    .state('blogs', {
+      url: "/blogs",
+      templateUrl: '/static/ngTemplates/app.homepage.blog.html',
+      controller: 'controller.blogs'
+    })
+
+
+  $stateProvider
+    .state('blogexplore', {
+      url: "/blogs/:name",
+      templateUrl: '/static/ngTemplates/app.homepage.blog.explore.html',
+      controller: 'controller.blogExplore'
+    })
 
   $stateProvider
     .state('contact', {
@@ -163,6 +177,96 @@ app.controller('controller.testimonials', function($scope, $state, $http, $timeo
   }
   $scope.myObjcolor = {
     "background-color": "#E5E7FC",
+  }
+
+});
+
+app.controller('controller.blogs', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+
+
+  $scope.offset = 0;
+  $scope.emailAddress = '';
+
+  $scope.fetchBlogs = function() {
+    $scope.blogs = [];
+    $http.get('/api/PIM/blog/?limit=14&offset=' + $scope.offset).
+    then(function(response) {
+      $scope.blogs = response.data.results;
+      $scope.firstSection = $scope.blogs.slice(0, 4)
+      $scope.second_sec1 = $scope.blogs.slice(4, 7)
+      $scope.second_sec2 = $scope.blogs.slice(7, 10)
+      $scope.thirdSection = $scope.blogs.slice(10, 14)
+    })
+  }
+
+
+  $scope.fetchRecentPosts = function() {
+    $http.get('/api/PIM/blog/?limit=5').
+    then(function(response) {
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
+  $scope.fetchBlogs()
+
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
+  }
+
+
+  $scope.sendUpdates = function() {
+    console.log($scope.emailAddress);
+  }
+
+
+
+
+  $scope.nextBtn = function() {
+    $scope.offset = $scope.offset + 14
+    $scope.fetchBlogs()
+  }
+
+  $scope.prevBtn = function() {
+    if ($scope.offset >= 14) {
+      $scope.offset = $scope.offset - 14
+      $scope.fetchBlogs()
+    }
+  }
+
+});
+
+app.controller('controller.blogExplore', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  console.log($stateParams);
+
+  $scope.blogPk = $stateParams.name.split('&')[1]
+
+  $http.get('/api/PIM/blog/' + $scope.blogPk + '/').
+  then(function(response) {
+    $scope.blogDetail = response.data
+    console.log($scope.blogDetail);
+
+    $scope.blogDetail.source = $sce.trustAsHtml($scope.blogDetail.source);
+  })
+
+  $scope.fetchRecentPosts = function() {
+    $http.get('/api/PIM/blog/?limit=5').
+    then(function(response) {
+      console.log(response);
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
+
+
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
   }
 
 });
