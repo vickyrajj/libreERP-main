@@ -1,4 +1,38 @@
 /*properties for normal screen size starts here  */
+.navbar-toggle:hover {
+  background-color: #3b3a3a !important;
+}
+
+.signup_modal {
+  padding-left: 0px !important;
+}
+
+.ph_div {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.log_img {
+  width: 100%;
+  position: absolute;
+  bottom: -20%;
+}
+
+.close {
+  color: #454242;
+  font-size: 1.6em;
+}
+
+.close:hover {
+  color: #e91f1f;
+}
+
+.sign_img {
+  width: 10%;
+  padding-top: 2px;
+  margin-left: -22px
+}
+
 .fa-fw {
   padding-right: 1.55em !important;
   font-size: 1.13em;
@@ -767,7 +801,8 @@
 .nc_links li a {
   color: #fff;
 }
-.nc_links:nth-child(2){
+
+.nc_links:nth-child(2) {
   margin-top: 89px;
 }
 
@@ -1548,6 +1583,7 @@ hr {
   font-size: 16px;
   font-weight: bold;
 }
+
 .alignintable tr td {
   width: 3%;
 }
@@ -1573,7 +1609,7 @@ hr {
   font-size: 20px;
 }
 
-.clickchange:hover ,.clickchange .triangle-hover {
+.clickchange:hover, .clickchange .triangle-hover {
   color: #000;
   cursor: pointer;
 }
@@ -1600,20 +1636,22 @@ hr {
   background-color: #01EDA5;
   color: #fff;
   border-radius: 10px;
-  position:relative;
+  position: relative;
 }
+
 .headblocklast {
   margin-top: 2em;
   padding: 1em 1em 1em 1em;
   background-color: #FAFAFA;
   color: #C9C9C9;
   border-radius: 10px;
-  position:relative;
+  position: relative;
 }
 
 .contentblock {
   margin: 1em 1em;
 }
+
 .contentblocklast {
   margin: 1em 1em;
 }
@@ -1622,39 +1660,42 @@ hr {
   border-bottom: 1px solid #ddd;
   padding: 0.5em 0 1.5em 0;
 }
+
 .contentblocklast div {
   border-bottom: 1px solid #ddd;
   padding: 0.5em 0 1.5em 0;
 }
-.contentborder::before{
-  content:'';
-  border-left:1px solid #CACACA;
-  position:absolute;
-  top:3em;
-  left:-2em;
-  height:102%;
 
-
+.contentborder::before {
+  content: '';
+  border-left: 1px solid #CACACA;
+  position: absolute;
+  top: 3em;
+  left: -2em;
+  height: 102%;
 }
-.roundcircle{
-  position:absolute;
+
+.roundcircle {
+  position: absolute;
   top: 1.6em;
   left: -2.7em;
-  width:20px;
-  height:20px;
-  border-radius:10px;
-  border:4px solid #01EDA5;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: 4px solid #01EDA5;
 }
-.roundcirclelast{
-  position:absolute;
+
+.roundcirclelast {
+  position: absolute;
   top: 1.6em;
   left: -2.7em;
-  width:20px;
-  height:20px;
-  border-radius:10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
   background-color: #C9C9C9;
-  border:4px solid #C9C9C9;
+  border: 4px solid #C9C9C9;
 }
+
 .cardstype {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   /* transition: 0.3s; */
@@ -1665,48 +1706,90 @@ hr {
   min-height: 41vh;
   background-color: #fff;
 }
+
 .img-radiuss {
-    border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
 }
+
 /* .cardstype:hover .img-radiuss{
   border-top-left-radius:  50px;
 
 } */
-.cardstype:hover{
-  border-top-left-radius:  50px;
+.cardstype:hover {
+  border-top-left-radius: 50px;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   transform: scale(1.1);
   transition: 0.2s;
 }
 
-/*  blogs css starts here*/
-.blog_container {
-  display: flex;
-  display: -webkit-flex;
-  width: 100%;
+.iform {
+  border-radius: 7px;
+  border-top-left-radius: 20px;
+  margin-bottom: 10px;
+  min-height: 44px;
 }
 
-
-.genericHeading {
-  text-align: center;
-  color: #452d54;
-  font-weight: bold;
+.login_div {
+  margin-left: 30px;
 }
 
-.flex_50Perc {
-  flex: 50%;
-  height: 50vh;
-  font-size: 20px;
-  position: relative;
+.login_btn {
+  border-radius: 30px;
+  margin-bottom: 15px;
+  width: 280px;
+  height: 50px;
+  box-shadow: 0 2px 2px 0 rgba(167, 167, 167, 0.45);
+  color: #fff;
   cursor: pointer;
-  background-color: #000;
+  padding-top: 10px;
 }
-/*  blogs css ends here*/
+
+.goo {
+  background-color: #ff3c3c;
+}
+
+.fac {
+  background-color: #4b56eb;
+}
+
+.log_txt {
+  font-size: 13px;
+  font-weight: 300;
+  text-transform: uppercase;
+  margin-left: 20px;
+  padding-top: 0px;
+}
+
+.login-input-group input {
+  position: relative;
+  width: 100%;
+  border-top-left-radius: 30px !important;
+}
+
+.min_height {
+  min-height: 50vh;
+}
+
+.lo_marg {
+  margin-left: 22%;
+}
+
+.modal_logo {
+  width: 70%;
+}
 
 /* for normal screens ends here.... */
 @media only screen and (device-width : 1352px) and (device-height : 641px) {
 
   /* non hd screens starts here */
+  .log_img {
+    bottom: 0%;
+  }
+
+  .min_height {
+    min-height: 90vh;
+  }
+
   .home_content {
     padding-top: 6rem;
   }
@@ -1783,6 +1866,10 @@ hr {
 @media screen and (min-width: 1850px) {
 
   /* for hd screens starts here.... */
+  .log_img {
+    bottom: -4%;
+  }
+
   .hd_screen {
     max-width: 70vw;
     margin-left: 14%;
@@ -1875,8 +1962,6 @@ hr {
   height: 300px;
   margin-left: -15px;
 }
-
-
 
 /* .video-border {
   display: flex;
@@ -2010,7 +2095,6 @@ hr {
     min-height: 41vh;
     background-color: #fff;
   }
-
 
   .likecard {
     background-color: #FAFAFA;
@@ -2360,12 +2444,81 @@ hr {
     margin-bottom: 10px;
   }
 
+  .lo_marg {
+    margin-left: -6%;
+  }
+
+  .ph_div {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .login_btn {
+    width: 100%;
+  }
+
+.modal-dialog {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    left: 0;
+    top: 0;
+    margin: 0px;
+    background-color: #fff;
+    padding: 0px;
+  }
+
+  .only_mob {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    min-height: 35px;
+    padding: 10px;
+    padding-bottom: 0px;
+    color: #fff;
+    font-size: 1em;
+    font-weight: bold;
+    background-color: #fe4545;
+    cursor: pointer;
+  }
+
+  .signup_modal {
+    padding: 0px;
+  }
+
+  .for_mob h1 {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+ .modal-content {
+    border: 0 solid #000;
+    box-shadow: none;
+  }
+
   /* mobile screen size ends here.... */
 }
 
 @media only screen and (device-width : 414px) and (device-height : 736px) and (-webkit-device-pixel-ratio : 3) {
 
   /* for iphones.... */
+  .signup_modal {
+    padding-top: 20px;
+  }
+
+  .lo_marg {
+    margin-left: -4%;
+  }
+
+  .login_btn {
+    width: 100%;
+  }
+
+  .for_mob h1 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
   .home_header {
     min-height: 60vh;
   }
@@ -2446,6 +2599,33 @@ hr {
 @media screen and (device-width : 411px) and (device-height : 823px) {
 
   /* for google pixel devices starts here */
+  .only_mob {
+    width: 100%;
+    min-height: 35px;
+    padding: 10px;
+    padding-bottom: 10px;
+    font-size: 1.3em;
+  }
+
+  .signup_modal {
+    padding-top: 20px;
+  }
+
+  .login_btn {
+    width: 100%;
+    padding-bottom: 50px;
+    margin-bottom: 22px;
+  }
+
+  .for_mob h1 {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .lo_marg {
+    margin-left: -3%;
+  }
+
   .home_header {
     min-height: 55vh;
   }
