@@ -1657,9 +1657,9 @@ hr {
   content:'';
   border-left:1px solid #CACACA;
   position:absolute;
-  top:3em;
+  top:3.3em;
   left:-2em;
-  height:102%;
+  height:100%;
 
 
 }
@@ -1716,7 +1716,9 @@ hr {
   top:1em;
   right:5em;
 }
-
+.right_on{
+  text-align: center;
+}
 /*  blogs css starts here*/
 .blog_container {
   display: flex;
@@ -1934,6 +1936,36 @@ hr {
   /* mobile display size starts here.... */
 
  /* courses */
+ .right_on{
+   text-align: right;
+ }
+ .roundcircle{
+   position:absolute;
+   top: 1.6em;
+   left: -2.7em;
+   width:0px;
+   height:0px;
+   border-radius:10px;
+   border:0;
+ }
+ .roundcirclelast{
+   position:absolute;
+   top: 1.6em;
+   left: -2.7em;
+   width:0px;
+   height:00px;
+   border-radius:10px;
+   background-color: #C9C9C9;
+   border:4px solid #C9C9C9;
+ }
+ .contentborder::before{
+   content:'';
+   border-left:0;
+ }
+ .contentborderlast::before{
+   content:'';
+   border-left:0;
+ }
  .titleicon{
    position:absolute;
    top:1em;
@@ -1966,7 +1998,7 @@ hr {
    margin-top:2em;
  }
  .alignintable tr .tablehead{
-   width:30%;
+   width:25%;
  }
  /*  */
 
