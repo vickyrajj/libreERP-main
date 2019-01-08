@@ -355,7 +355,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class5 = "";
         }
 
-        
+
       }
     }
   }
@@ -779,6 +779,14 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
       controller: function($scope, $uibModalInstance) {
         $scope.close = function() {
           $uibModalInstance.dismiss('cancel');
+        }
+
+        $scope.slideDown = function() {
+          $timeout(function() {
+            console.log("sliding down");
+            var element = document.getElementsByClassName('signup_modal');
+            element[0].scrollIntoView({block: "end"});
+          },1000)
         }
 
       },

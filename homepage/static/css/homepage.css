@@ -1813,11 +1813,11 @@ hr {
 .login-input-group input {
   position: relative;
   width: 100%;
-  border-top-left-radius: 30px !important;
+  border-top-left-radius: 15px !important;
 }
 
 .min_height {
-  min-height: 50vh;
+  min-height: 40vh;
 }
 
 .lo_marg {
