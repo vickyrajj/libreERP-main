@@ -798,14 +798,18 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
             grandTotal +=amnt
             gst = i.gst
             gstVal = round((((amnt *gst)/100)+amnt),2)
-            totweight = round((i.products.weight * qty),2)
-            grandtotWeight+=totweight
+            if weight is not None:
+                totweight = round((i.products.weight * qty),2)
+                grandtotWeight+=totweight
             gstValTotal += gstVal
 
             p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
             p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
             p12_03 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(desc)),styles['Normal'])
-            p12_09 =Paragraph("<para fontSize=8>{0}</para>".format(round(weight,2)),styles['Normal'])
+            if weight is not None:
+                p12_09 =Paragraph("<para fontSize=8>{0}</para>".format(round(weight,2)),styles['Normal'])
+            else:
+                p12_09 =Paragraph("<para fontSize=8>{0}</para>".format(weight),styles['Normal'])
             p12_04 =Paragraph("<para fontSize=8>{0}</para>".format(qty),styles['Normal'])
             p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(round(pricesum,2)),styles['Normal'])
             p12_06 =Paragraph("<para fontSize=8>{0}</para>".format(round(amnt,2)),styles['Normal'])
@@ -867,14 +871,19 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
             price = round((pricesum * multNumber),2)
             qty = i.quantity1
             amnt = round((price * qty),2)
-            totweight = round((i.products.weight * qty),2)
-            grandtotWeight+=totweight
+            if weight is not None:
+                totweight = round((i.products.weight * qty),2)
+                grandtotWeight+=totweight
             grandTotal +=amnt
 
             p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
             p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
             p12_03 =Paragraph("<para fontSize=8>{0}</para>".format(smart_str(desc)),styles['Normal'])
-            p12_07 =Paragraph("<para fontSize=8>{0}</para>".format(round(weight,2)),styles['Normal'])
+            if weight is not None:
+                p12_07 =Paragraph("<para fontSize=8>{0}</para>".format(round(weight,2)),styles['Normal'])
+            else:
+                p12_07 =Paragraph("<para fontSize=8>{0}</para>".format(weight),styles['Normal'])
+            # p12_07 =Paragraph("<para fontSize=8>{0}</para>".format(round(weight,2)),styles['Normal'])
             p12_04 =Paragraph("<para fontSize=8>{0}</para>".format(qty),styles['Normal'])
             p12_05 =Paragraph("<para fontSize=8>{0}</para>".format(round(price,2)),styles['Normal'])
             p12_06 =Paragraph("<para fontSize=8>{0}</para>".format(amnt),styles['Normal'])
