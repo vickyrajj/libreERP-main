@@ -170,34 +170,143 @@ app.config(function($stateProvider) {
 });
 app.controller('controller.courses', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
+  // $scope.bookscontent = [{
+  //     'class': 'head1',
+  //     'title': '01. Ncert Maths',
+  //     'chapter': {
+  //       'one': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'two': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'three': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'four': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'five': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'six': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'seven': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+  //
+  //     }
+  //   },
+  //   {
+  //     'class': 'head1',
+  //     'title': '02. Ncert Science',
+  //     'chapter': {
+  //       'one': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'two': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'three': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'four': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'five': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'six': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+  //       'seven': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+  //     }
+  //   },
+  // ];
   $scope.bookscontent = [{
       'class': 'head1',
       'title': '01. Ncert Maths',
-      'chapter': {
-        'one': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'two': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'three': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'four': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'five': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'six': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'seven': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+      'chapter': [{
+          'page': '1',
+          'content': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '3',
+          'content': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '5',
+          'content': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '8',
+          'content': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '12',
+          'content': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '14',
+          'content': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '17',
+          'content': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
 
-      }
+
+      ]
     },
     {
       'class': 'head1',
       'title': '02. Ncert Science',
-      'chapter': {
-        'one': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'two': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'three': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'four': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'five': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'six': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'seven': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-      }
+      'chapter': [{
+          'page': '1',
+          'content': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '3',
+          'content': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '5',
+          'content': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '8',
+          'content': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '12',
+          'content': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '14',
+          'content': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '19',
+          'content': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+
+
+      ]
     },
   ];
+  // $scope.items = [
+  //   {
+  //     "class1":"click1",
+  //     "class2":"class1",
+  //     "click":"clicks(1)",
+  //     "head":'Books',
+  //
+  //   },
+  //   {
+  //     "class1":"click2",
+  //     "class2":"class2",
+  //     "click":"clicks(2)",
+  //     "head":'Videos',
+  //
+  //   },
+  //   {
+  //     "class1":"click3",
+  //     "class2":"class3",
+  //     "click":"clicks(3)",
+  //     "head":'Test Series',
+  //
+  //   },
+  //   {
+  //     "class1":"click4",
+  //     "class2":"class4",
+  //     "click":"clicks(4)",
+  //     "head":'Forums',
+  //
+  //   },
+  //   {
+  //     "class1":"click5",
+  //     "class2":"class5",
+  //     "click":"clicks(5)",
+  //     "head":'Lecture Notes',
+  //
+  //   }
+  // ]
+
 
 
   $scope.videos = false;
@@ -215,9 +324,6 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
   }
 
 
-  $scope.sm = window.matchMedia("(max-width: 768px)")
-  $scope.smDevice($scope.sm)
-  $scope.sm.addListener($scope.smDevice)
 
   $scope.clicks = function(val) {
     if (val == 1) {
@@ -263,7 +369,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class1 = "";
           $scope.class3 = "";
           $scope.class5 = "";
-        }else {
+        } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
@@ -290,7 +396,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class4 = "";
           $scope.class2 = "";
           $scope.class5 = "";
-        }else {
+        } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
@@ -315,7 +421,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
-        }else {
+        } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
@@ -340,7 +446,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class4 = "";
-        }else {
+        } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
@@ -348,7 +454,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class5 = "";
         }
 
-        
+
       }
     }
   }
@@ -361,6 +467,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
   }
   $scope.loadcontent = function(val) {
     $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
+
   }
 
   $scope.cardss = [{
