@@ -1541,6 +1541,144 @@ hr {
   margin-left: 8%;
 }
 
+.badge-pillss {
+  background-color: #02EBA3;
+  padding: 0.6em 1em;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.alignintable tr td {
+  width: 3%;
+}
+
+.clickchange {
+  border-right: 1px solid #fff;
+  text-align: center;
+  margin-top: 2.5em;
+  color: #fff
+}
+
+.clickchange span {
+  font-size: 20px;
+}
+
+.clickchange1 {
+  text-align: center;
+  margin-top: 2.5em;
+  color: #fff;
+}
+
+.clickchange1 span {
+  font-size: 20px;
+}
+
+.clickchange:hover ,.clickchange .triangle-hover {
+  color: #000;
+  cursor: pointer;
+}
+
+.clickchange1:hover {
+  color: #000;
+  cursor: pointer;
+}
+
+.triangle-hover {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 20px solid #fff;
+  position: absolute;
+  top: 43px;
+  left: 80px;
+}
+
+.headblock {
+  margin-top: 2em;
+  padding: 1em 1em 1em 1em;
+  background-color: #01EDA5;
+  color: #fff;
+  border-radius: 10px;
+  position:relative;
+}
+.headblocklast {
+  margin-top: 2em;
+  padding: 1em 1em 1em 1em;
+  background-color: #FAFAFA;
+  color: #C9C9C9;
+  border-radius: 10px;
+  position:relative;
+}
+
+.contentblock {
+  margin: 1em 1em;
+}
+.contentblocklast {
+  margin: 1em 1em;
+}
+
+.contentblock div {
+  border-bottom: 1px solid #ddd;
+  padding: 0.5em 0 1.5em 0;
+}
+.contentblocklast div {
+  border-bottom: 1px solid #ddd;
+  padding: 0.5em 0 1.5em 0;
+}
+.contentborder::before{
+  content:'';
+  border-left:1px solid #CACACA;
+  position:absolute;
+  top:3em;
+  left:-2em;
+  height:102%;
+
+
+}
+.roundcircle{
+  position:absolute;
+  top: 1.6em;
+  left: -2.7em;
+  width:20px;
+  height:20px;
+  border-radius:10px;
+  border:4px solid #01EDA5;
+}
+.roundcirclelast{
+  position:absolute;
+  top: 1.6em;
+  left: -2.7em;
+  width:20px;
+  height:20px;
+  border-radius:10px;
+  background-color: #C9C9C9;
+  border:4px solid #C9C9C9;
+}
+.cardstype {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  /* transition: 0.3s; */
+  text-align: center;
+  margin-left: 1.8em;
+  width: 90%;
+  border-radius: 5px;
+  min-height: 41vh;
+  background-color: #fff;
+}
+.img-radiuss {
+    border-radius: 5px 5px 0 0;
+}
+/* .cardstype:hover .img-radiuss{
+  border-top-left-radius:  50px;
+
+} */
+.cardstype:hover{
+  border-top-left-radius:  50px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+  transition: 0.2s;
+}
+
 /* for normal screens ends here.... */
 @media only screen and (device-width : 1352px) and (device-height : 641px) {
 
@@ -1708,6 +1846,14 @@ hr {
   position: relative;
 }
 
+.imgstyle {
+  width: 219.683px;
+  height: 300px;
+  margin-left: -15px;
+}
+
+
+
 /* .video-border {
   display: flex;
   width: 100px;
@@ -1772,7 +1918,7 @@ hr {
     border: 2px solid #A9A9A9;
     background-color: #fff;
     position: absolute;
-    top: 54%;
+    top: 52%;
     left: 40%;
   }
 
@@ -1838,7 +1984,9 @@ hr {
     width: 85%;
     border-radius: 5px;
     min-height: 41vh;
+    background-color: #fff;
   }
+
 
   .likecard {
     background-color: #FAFAFA;
