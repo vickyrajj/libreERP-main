@@ -154,42 +154,42 @@ class ProductsUploadAPIView(APIView):
             sheetObj = ProductSheet(file_name = excelFile.name,sheet=wsTitle)
             sheetObj.save()
 
-            for i in range(3,ws.max_row+1):
+            for i in range(2,ws.max_row+1):
                 try:
                     print 'aaaaaaaaaaa'
                     try:
-                        part_no = ws['B' + str(i)].value
+                        part_no = ws['A' + str(i)].value
                     except:
                         part_no = None
 
 
 
                     try:
-                        description_1 = ws['C' + str(i)].value
+                        description_1 = ws['B' + str(i)].value
                     except:
                         description_1 = None
 
 
                     try:
-                        description_2 = ws['D' + str(i)].value
+                        description_2 = ws['C' + str(i)].value
                     except:
                         description_2 = None
 
 
                     try:
-                        weight = ws['E' + str(i)].value
+                        weight = ws['D' + str(i)].value
                     except:
                         weight = None
 
 
                     try:
-                        price = ws['F' + str(i)].value
+                        price = ws['E' + str(i)].value
                     except:
                         price = None
 
 
                     try:
-                        parent_no = ws['G' + str(i)].value
+                        parent_no = ws['F' + str(i)].value
                         parent = None
                         if parent_no:
                             par = Products.objects.get(part_no=parent_no)
@@ -199,23 +199,23 @@ class ProductsUploadAPIView(APIView):
                         parent = None
 
                     try:
-                        replaced = ws['G' + str(i)].value
+                        replaced = ws['F' + str(i)].value
                     except:
                         replaced = None
 
 
                     try:
-                        customs_no = ws['H' + str(i)].value
+                        customs_no = ws['G' + str(i)].value
 
                     except:
                         customs_no = None
 
                     try:
-                        custom = ws['I' + str(i)].value
+                        custom = ws['H' + str(i)].value
                     except:
                         custom = 7.5
                     try:
-                        gst = ws['J' + str(i)].value
+                        gst = ws['I' + str(i)].value
                     except:
                         gst = 18
 

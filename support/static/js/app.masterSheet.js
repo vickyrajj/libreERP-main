@@ -130,6 +130,9 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
             Flash.create('warning', 'Please Select File');
             return
           }
+          else{
+              Flash.create('success', 'Sheet is Uploading, Please Wait');
+          }
 
           var fd = new FormData();
           fd.append('excelFile', $scope.form.sheet);
