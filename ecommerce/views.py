@@ -2244,7 +2244,7 @@ def paypalPaymentInitiate(request):
     orderObj = Order.objects.get(pk=orderid)
     paypal_dict = {
         "business": globalSettings.PAYPAL_RECEIVER_EMAIL,
-        "amount": '200',
+        "amount": str(orderObj.totalAmount),
         "item_name": "BNI marchandise",
         "invoice": orderObj.pk,
         'currency_code': 'USD',
