@@ -71,6 +71,8 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
   $scope.showPagint = true
   $scope.getMaterialIssue = function(offset){
+
+
     if ($scope.searchmaterial.search.length==0) {
       $scope.showPagint = true
       var url = '/api/support/material/?created__lte='+$scope.searchmaterial.dt.toJSON().split('T')[0]+'&limit=7&offset=' + offset+ '&project__title__icontains=' + $scope.searchmaterial.search
