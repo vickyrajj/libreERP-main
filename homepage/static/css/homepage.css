@@ -1189,12 +1189,14 @@ hr {
   padding: 2px 16px;
   margin-bottom: 3em;
 }
+
 .body1 {
   padding: 2px 16px;
   margin-bottom: 3em;
 }
-.cardstype:hover .body1 h4{
-  color:#02EBA3;
+
+.cardstype:hover .body1 h4 {
+  color: #02EBA3;
 }
 
 .table-align {
@@ -1594,8 +1596,9 @@ hr {
 .alignintable tr td {
   width: 3%;
 }
-.alignintable tr .tablehead{
-  width:12%;
+
+.alignintable tr .tablehead {
+  width: 12%;
 }
 
 .clickchange {
@@ -1619,7 +1622,7 @@ hr {
   font-size: 20px;
 }
 
-.clickchange:hover ,.clickchange .triangle-hover,.clickchange .triangle-hover1 {
+.clickchange:hover, .clickchange .triangle-hover, .clickchange .triangle-hover1 {
   color: #000;
   cursor: pointer;
 }
@@ -1639,6 +1642,7 @@ hr {
   top: 43px;
   left: 80px;
 }
+
 .triangle-hover1 {
   width: 0;
   height: 0;
@@ -1676,29 +1680,31 @@ hr {
   margin: 1em 1em;
 }
 
-
 .contentblock div {
   border-top: 1px solid #ddd;
   padding: 1em 0 0.5em 0;
 }
+
 .contentblock .firstchild {
-  border-top:0;
+  border-top: 0;
 }
+
 .contentblocklast .firstchild {
-  border-top:0;
+  border-top: 0;
 }
 
 .contentblocklast div {
   border-top: 1px solid #ddd;
   padding: 1em 0 0.5em 0;
 }
-.contentborder::before{
-  content:'';
-  border-left:1px solid #CACACA;
-  position:absolute;
-  top:3.3em;
-  left:-2em;
-  height:100%;
+
+.contentborder::before {
+  content: '';
+  border-left: 1px solid #CACACA;
+  position: absolute;
+  top: 3.3em;
+  left: -2em;
+  height: 100%;
 }
 
 .roundcircle {
@@ -1747,18 +1753,22 @@ hr {
   transform: scale(1.1);
   transition: 0.2s;
 }
-.rightborder{
-  border-right:1px solid #9E9E9E;
+
+.rightborder {
+  border-right: 1px solid #9E9E9E;
 }
-.titlesize{
-  font-size:25px;
+
+.titlesize {
+  font-size: 25px;
 }
-.titleicon{
-  position:absolute;
-  top:1em;
-  right:5em;
+
+.titleicon {
+  position: absolute;
+  top: 1em;
+  right: 5em;
 }
-.right_on{
+
+.right_on {
   text-align: center;
 }
 
@@ -1767,6 +1777,7 @@ hr {
   border-top-left-radius: 20px;
   margin-bottom: 10px;
   min-height: 44px;
+}
 
 .login_div {
   margin-left: 30px;
@@ -2018,78 +2029,84 @@ hr {
 @media only screen and (max-width:768px) {
 
   /* mobile display size starts here.... */
+  /* courses */
+  .right_on {
+    text-align: right;
+  }
 
- /* courses */
- .right_on{
-   text-align: right;
- }
- .roundcircle{
-   position:absolute;
-   top: 1.6em;
-   left: -2.7em;
-   width:0px;
-   height:0px;
-   border-radius:10px;
-   border:0;
- }
- .roundcirclelast{
-   position:absolute;
-   top: 1.6em;
-   left: -2.7em;
-   width:0px;
-   height:00px;
-   border-radius:10px;
-   background-color: #C9C9C9;
-   border:4px solid #C9C9C9;
- }
- .contentborder::before{
-   content:'';
-   border-left:0;
- }
- .contentborderlast::before{
-   content:'';
-   border-left:0;
- }
- .titleicon{
-   position:absolute;
-   top:1em;
-   right:1em;
- }
- .titlesize{
-   font-size:20px;
- }
- .rightborder{
-   border-right:0;
- }
- .clickchange {
-   border-right:0;
-   text-align: center;
-   margin-top: 2.5em;
-   color: #fff
- }
+  .roundcircle {
+    position: absolute;
+    top: 1.6em;
+    left: -2.7em;
+    width: 0px;
+    height: 0px;
+    border-radius: 10px;
+    border: 0;
+  }
 
- .cardstype {
-   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-   /* transition: 0.3s; */
-   text-align: center;
-   margin-left: 0;
-   width: 100%;
-   border-radius: 5px;
-   min-height: 41vh;
-   background-color: #fff;
- }
- .smdevice{
-   margin-top:2em;
- }
- .alignintable tr .tablehead{
-   width:25%;
- }
- /*  */
+  .roundcirclelast {
+    position: absolute;
+    top: 1.6em;
+    left: -2.7em;
+    width: 0px;
+    height: 00px;
+    border-radius: 10px;
+    background-color: #C9C9C9;
+    border: 4px solid #C9C9C9;
+  }
 
+  .contentborder::before {
+    content: '';
+    border-left: 0;
+  }
 
+  .contentborderlast::before {
+    content: '';
+    border-left: 0;
+  }
 
+  .titleicon {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+  }
+
+  .titlesize {
+    font-size: 20px;
+  }
+
+  .rightborder {
+    border-right: 0;
+  }
+
+  .clickchange {
+    border-right: 0;
+    text-align: center;
+    margin-top: 2.5em;
+    color: #fff
+  }
+
+  .cardstype {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    /* transition: 0.3s; */
+    text-align: center;
+    margin-left: 0;
+    width: 100%;
+    border-radius: 5px;
+    min-height: 41vh;
+    background-color: #fff;
+  }
+
+  .smdevice {
+    margin-top: 2em;
+  }
+
+  .alignintable tr .tablehead {
+    width: 25%;
+  }
+
+  /*  */
   /* students */
-
   .courses1 ul li {
     font-size: 17px;
     color: #fff;
@@ -2567,7 +2584,7 @@ hr {
     width: 100%;
   }
 
-.modal-dialog {
+  .modal-dialog {
     position: absolute !important;
     width: 100% !important;
     height: 100% !important;
@@ -2601,7 +2618,7 @@ hr {
     padding-bottom: 0px;
   }
 
- .modal-content {
+  .modal-content {
     border: 0 solid #000;
     box-shadow: none;
   }
