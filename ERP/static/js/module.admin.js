@@ -18,57 +18,7 @@ app.config(function($stateProvider){
     }
   })
 
-  .state('admin.manageUsers', {
-    url: "/manageUsers",
-    templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
-    controller: 'admin.manageUsers'
-  })
-  .state('admin.blog', {
-    url: "/blog/:id?action",
-    templateUrl: '/static/ngTemplates/app.home.blog.html',
-    controller: 'controller.home.blog'
-  })
-
-  // .state('admin.files', {
-  //   url: "/files/:id?action",
-  //   templateUrl: '/static/ngTemplates/app.ERP.files.html',
-  //   controller: 'controller.ERP.files'
-  // })
-
-
-  .state('admin.files', {
-    url: "/files/:id?action",
-    templateUrl: '/static/ngTemplates/app.home.files.html',
-    controller: 'controller.home.files'
-  })
-
-
-  .state('admin.settings', {
-    url: "/settings",
-    views: {
-       "": {
-          templateUrl: '/static/ngTemplates/app.ERP.settings.html',
-       },
-       "menu@admin.settings": {
-          templateUrl: '/static/ngTemplates/app.ERP.settings.menu.html',
-          controller : 'admin.settings.menu'
-        },
-        "@admin.settings": {
-          templateUrl: '/static/ngTemplates/app.ERP.settings.default.html',
-        }
-    }
-  })
-
-  .state('admin.settings.modulesAndApplications', {
-    url: "/modulesAndApplications",
-    templateUrl: '/static/ngTemplates/app.ERP.settings.modulesAndApps.html',
-    controller: 'admin.settings.modulesAndApps'
-  })
-  .state('admin.settings.configure', {
-    url: "/configure?app&canConfigure",
-    templateUrl: '/static/ngTemplates/app.ERP.settings.configure.html',
-    controller: 'admin.settings.configure'
-  })
+  
 
 
 

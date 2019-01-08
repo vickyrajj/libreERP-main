@@ -92,12 +92,12 @@ app.controller('admin.settings.menu' , function($scope , $http , $aside , $state
   // settings main page controller
 
   var getState = function(input){
-    parts = input.name.split('.');
+    var parts = input.name.split('.');
     // console.log(parts);
     if (parts[0] == 'configure') {
-      return  'admin.settings.configure ({canConfigure :' + input.canConfigure + ', app :"' + parts[2] + '"})'; ;
+      return  'businessManagement.settings.configure ({canConfigure :' + input.canConfigure + ', app :"' + parts[2] + '"})'; ;
     } else {
-      return input.name.replace('sudo' , 'admin')
+      return input.name.replace('sudo' , 'businessManagement')
     }
   }
 
@@ -106,8 +106,8 @@ app.controller('admin.settings.menu' , function($scope , $http , $aside , $state
   $scope.buildMenu = function(apps){
     for (var i = 0; i < apps.length; i++) {
       a = apps[i];
-      parts = a.name.split('.');
-      if (a.module != 2 || parts.length != 3) {
+      var parts = a.name.split('.');
+      if (a.module != 3 || parts.length != 3 || (parts[0] != 'configure' && parts[0] != 'sudo')) {
         continue;
       }
       a.state = getState(a)
