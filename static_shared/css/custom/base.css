@@ -37,8 +37,8 @@ body {
 .bal_switch{
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 30px;
+  width: 55px;
+  height: 25px;
 }
 .bal_switch input{
   opacity: 0;
@@ -59,8 +59,8 @@ body {
 .bal_slider:before{
   position: absolute;
   content: "";
-  height: 22px;
-  width: 22px;
+  height: 17px;
+  width: 17px;
   left: 4px;
   bottom: 4px;
   background-color: white;
@@ -652,64 +652,6 @@ body {
 /*Nav bar*/
 
 
-
-.navbar-default {
-  background-color: var(--themeMain);
-  border-color:var(--headerNavbarHighlight);
-}
-.navbar-default .navbar-brand {
-  color: #ffffff;
-}
-.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-  color: #ffffff;
-}
-.navbar-default .navbar-text {
-  color: #ffffff;
-}
-.navbar-default .navbar-nav > li > a {
-  color: #ffffff;
-}
-
-.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
-  color: #ffffff;
-  background-color: var(--headerNavbarHighlight);
-}
-.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-  color: #ffffff;
-  background-color: var(--headerNavbarHighlight);
-}
-.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
-  color: #ffffff;
-  background-color: var(--headerNavbarHighlight);
-}
-.navbar-default .navbar-toggle {
-  border-color: var(--headerNavbarHighlight);
-}
-.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
-  background-color: var(--headerNavbarHighlight);
-}
-.navbar-default .navbar-toggle .icon-bar {
-  background-color: #ffffff;
-}
-.navbar-default .navbar-link {
-  color: #ffffff;
-}
-.navbar-default .navbar-link:hover {
-  color: #ffffff;
-}
-
-@media (max-width: 767px) {
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: #ffffff;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #ffffff;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #ffffff;
-    background-color: var(--headerNavbarHighlight);
-  }
-}
 
 
 .bs-callout {

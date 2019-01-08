@@ -38,8 +38,8 @@ app.controller("businessManagement.activeAdvisors", function($scope, $state, $us
       connection.session.call(wamp_prefix+'service.support.hhhhh.' + $scope.allAgents[i], []).
       then((function(i) {
         return function(res) {
-          console.log(res);
-          console.log('online', i);
+          // console.log(res);
+          // console.log('online', i);
           let pushData={
             pk:res.pk,
             activeUsers:res.ActiveUsers.length,
@@ -50,7 +50,7 @@ app.controller("businessManagement.activeAdvisors", function($scope, $state, $us
         }
       })(i), (function(i) {
         return function(err) {
-          console.log(err, 'offline agents');
+          // console.log(err, 'offline agents');
           $scope.offlineAgents.push($scope.allAgents[i])
         }
       })(i))

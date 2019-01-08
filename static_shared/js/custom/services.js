@@ -61,6 +61,7 @@ app.factory('$permissions', function($http){
     $http({method : 'GET' , url : '/api/ERP/application/'}).
     then(function(response){
       apps = response.data;
+      // apps=[]
     })
   }
 

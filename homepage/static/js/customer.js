@@ -191,7 +191,9 @@ app.controller("app.customer.settings", function($scope, $state, $http, $rootSco
     skin: 'lightgray',
     theme: 'modern',
     height: 100,
-    toolbar: 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
+    toolbar: false,
+    menubar : false
+
   };
 
 

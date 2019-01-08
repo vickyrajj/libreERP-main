@@ -1,6 +1,6 @@
 <div ng-controller="businessManagement.customers.explore" style="padding-top:20px;">
   <div class="col-md-12">
-    <div class="col-md-8" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;">
+    <div class="col-md-8" style="border-right:solid 2px #eeeeee;min-height:82vh;position:relative;overflow-x:hidden">
       <div class="row text-center">
         <h2><i class="fa fa-building-o"></i> &nbsp;{{compDetails.name}}</h2>
         <h4 ng-if="compDetails.web.length>0"><i class="fa fa-globe"></i> &nbsp;<a href="{{compDetails.web}}" target="_blank">{{compDetails.web}}</a></h4>
@@ -78,7 +78,7 @@
 
     </div>
     <div class="col-md-4">
-      <span class="text-center"><h3>Supports</h3></span>
+      <!-- <span class="text-center"><h3>Supports</h3></span> -->
       <div class="row" ng-if="custDetails.supportBubbleColor.length>0" style="padding-left:10px">
         <div class="col-md-6">
           <h4><i class="fa fa-gg-circle"></i> &nbsp; SupportBubble Colour</h4>
@@ -116,20 +116,16 @@
         </div>
         <br>
       </div>
-      <div class="row" style="padding-bottom:10px;">
-        <input type="radio" name="" value=""><span>Here</span>
-        <input type="radio" name="" value=""><span>there</span>
-      </div>
 
       <div class="row" style="padding-left:25px">
-        <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i>&nbsp;&nbsp;&nbsp;&nbsp;</h4><br>
-        <h4><i class="fa fa-phone"></i> &nbsp; Call &nbsp;<i class="fa {{custDetails.call?'fa-check':'fa-times'}}" style="color:{{custDetails.call?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-envelope"></i> &nbsp; Email &nbsp;<i class="fa {{custDetails.email?'fa-check':'fa-times'}}" style="color:{{custDetails.email?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-video-camera"></i> &nbsp; Video &nbsp;<i class="fa {{custDetails.video?'fa-check':'fa-times'}}" style="color:{{custDetails.video?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-headphones"></i> &nbsp; Audio &nbsp;<i class="fa {{custDetails.audio?'fa-check':'fa-times'}}" style="color:{{custDetails.audio?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-bar-chart-o"></i> &nbsp; VR &nbsp;<i class="fa {{custDetails.vr?'fa-check':'fa-times'}}" style="color:{{custDetails.vr?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-phone"></i> &nbsp; Call Back &nbsp;<i class="fa {{custDetails.callBack?'fa-check':'fa-times'}}" style="color:{{custDetails.callBack?'green':'red'}}"></i></i></h4><br>
-        <h4><i class="fa fa-ticket"></i> &nbsp; Ticket &nbsp;<i class="fa {{custDetails.ticket?'fa-check':'fa-times'}}" style="color:{{custDetails.ticket?'green':'red'}}"></i></i></h4><br>
+        <h4><i class="fa fa-comment-o"></i> &nbsp; Chat &nbsp;<i class="fa {{custDetails.chat?'fa-check':'fa-times'}}" style="color:{{custDetails.chat?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-phone"></i> &nbsp; Call &nbsp;<i class="fa {{custDetails.call?'fa-check':'fa-times'}}" style="color:{{custDetails.call?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-envelope"></i> &nbsp; Email &nbsp;<i class="fa {{custDetails.email?'fa-check':'fa-times'}}" style="color:{{custDetails.email?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-video-camera"></i> &nbsp; Video &nbsp;<i class="fa {{custDetails.video?'fa-check':'fa-times'}}" style="color:{{custDetails.video?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-headphones"></i> &nbsp; Audio &nbsp;<i class="fa {{custDetails.audio?'fa-check':'fa-times'}}" style="color:{{custDetails.audio?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-bar-chart-o"></i> &nbsp; VR &nbsp;<i class="fa {{custDetails.vr?'fa-check':'fa-times'}}" style="color:{{custDetails.vr?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-phone"></i> &nbsp; Call Back &nbsp;<i class="fa {{custDetails.callBack?'fa-check':'fa-times'}}" style="color:{{custDetails.callBack?'green':'red'}}"></i></h4><br>
+        <h4><i class="fa fa-ticket"></i> &nbsp; Ticket &nbsp;<i class="fa {{custDetails.ticket?'fa-check':'fa-times'}}" style="color:{{custDetails.ticket?'green':'red'}}"></i></h4><br>
         <div class="row" ng-if="custDetails.name.length>0" style="padding-left:10px">
           <div class="col-md-4">
             <h4><i class="fa fa-desktop"></i> &nbsp; Name </h4>

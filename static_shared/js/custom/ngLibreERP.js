@@ -631,6 +631,7 @@ console.log($scope.onHover);
 
 app.controller('controller.generic.menu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   // settings main page controller
+  alert('in')
 
   var parts = $state.current.name.split('.');
   $scope.moduleName = parts[0];
@@ -641,7 +642,7 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
     // console.log(parts);
     return input.name.replace('app', $scope.moduleName)
   }
-
+  alert('jkj')
   $scope.apps = [];
   $scope.rawApps = [];
 
@@ -709,11 +710,23 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
   ]
 
   var parts = $state.current.name.split('.');
-
+  $scope.applicationsArray=[]
+  $scope.modulesArray=[]
   $scope.moduleName = parts[0];
   $scope.appName = parts[1];
-  $scope.rawApps = $permissions.apps();
-  $scope.modules = $permissions.module();
+
+  for (var i = 0; i < MY_APPS.length; i++) {
+    $scope.applicationsArray.push(MY_APPS[i].fields)
+  }
+  for (var i = 0; i < MY_MODULES.length; i++) {
+    $scope.modulesArray.push(MY_MODULES[i].fields)
+  }
+
+  $scope.rawApps = $scope.applicationsArray;
+  // $scope.modules = $permissions.module();
+  // $scope.rawApps = $permissions.apps();
+  $scope.modules =$scope.modulesArray
+
 
   if (typeof $scope.modules.success != 'undefined') {
     $scope.modules.success(function(response) {
