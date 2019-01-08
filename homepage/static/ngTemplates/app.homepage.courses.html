@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="row" style="margin-top:2em;">
-      <div class="col-md-3" style="border-right:1px solid #9E9E9E">
+      <div class="col-md-3 col-xs-12 rightborder" >
         <table>
           <tr>
             <td style="width:35%;"><img src="/static/images/24tut/author1.png" class="img-responsive img-circle" style="height:50px;width:50px;" /></td>
@@ -20,7 +20,7 @@
           </tr>
         </table>
       </div>
-      <div class="col-md-2" style="border-right:1px solid #9E9E9E">
+      <div class="col-md-2 col-xs-5 smdevice" style="border-right:1px solid #9E9E9E">
         <table>
           <tr>
             <td style="width:25%;"><i class="fa fa-book"></i></td>
@@ -28,7 +28,7 @@
           </tr>
         </table>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 col-xs-7 smdevice">
         <table>
           <tr>
             <td style="width:50%"> <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
@@ -45,7 +45,7 @@
       <div class="col-md-6">
         <table class="alignintable">
           <tr>
-            <td style="width:12%;"><span> Share this course:</span></td>
+            <td class="tablehead" ><span> Share this course:</span></td>
             <td><i class="fa fa-facebook" aria-hidden="true"></i></td>
             <td><i class="fa fa-twitter" aria-hidden="true"></i></td>
             <td><i class="fa fa-linkedin" aria-hidden="true"></i></td>
@@ -59,26 +59,26 @@
     </div>
   </div>
 
-  <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;">
+  <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
     <div class="container">
       <div class="col-md-2 clickchange" ng-model='books' ng-class="click1" ng-click="clicks(1)">
-        <span><b>Books</b></span>
+        <span><b>Books</b><i ng-if="device.smallDevice " class="fa {{books==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
         <div ng-class="class1"></div>
       </div>
       <div class="col-md-2 clickchange" ng-model='videos' ng-class="click2" ng-click="clicks(2)">
-        <span><b>Video Course</span>
+        <span><b>Video Course</b><i ng-if="device.smallDevice " class="fa {{videos==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
         <div ng-class="class2"></div>
       </div>
       <div class="col-md-2 clickchange" ng-model='testseries' ng-class="click3" ng-click="clicks(3)">
-        <span><b>Test Series</b></span>
+        <span><b>Test Series</b><i ng-if="device.smallDevice " class="fa {{testseries==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
         <div ng-class="class3"></div>
       </div>
       <div class="col-md-2 clickchange" ng-model='forum' ng-class="click4" ng-click="clicks(4)">
-        <span><b>Forum</b></span>
+        <span><b>Forum</b><i ng-if="device.smallDevice " class="fa {{forum==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
         <div ng-class="class4"></div>
       </div>
       <div class="col-md-3 clickchange1" ng-model='refbook' ng-class="click5" ng-click="clicks(5)">
-        <span><b>Refernce Books</b></span>
+        <span><b>Refernce Books</b><i ng-if="device.smallDevice " class="fa {{refbook==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
         <div ng-class="class5"></div>
       </div>
     </div>
@@ -88,41 +88,41 @@
       <div ng-repeat="a in bookscontent">
         <div class="row " ng-class="!$last ? 'contentborder' : 'contentborderlast'" style="position:relative;">
           <div ng-click="headclick($index)" ng-class="!$last ? 'headblock' : 'headblocklast'">
-            <span style="font-size:25px;"><b>{{a.title}}<span style="font-size:15px;margin-left:1em;"> (6 Lessons)</span></b></span>
-            <span style="position:absolute;top:1em;right:5em;"><i class="fa fa-angle-{{a.view==0?'down':'up'}}" style="font-size:30px;"></i></span>
+            <span class="titlesize" ><b>{{a.title}}<span style="font-size:15px;margin-left:1em;"> (6 Lessons)</span></b></span>
+            <span class="titleicon" ><i class="fa fa-angle-{{a.view==true?'up':'down'}}" style="font-size:30px;"></i></span>
             <div ng-class="!$last ? 'roundcircle' : 'roundcirclelast'"> </div>
           </div>
           <div ng-show="a.view">
             <div>
-              <div class="row   " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
-                <div class="col-md-10">{{a.chapter.one}}</div>
-                <div class="col-md-2">1</div>
+              <div class="row " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
+                <div class="col-md-10 col-xs-11  firstchild ">{{a.chapter.one}}</div>
+                <div class="col-md-2 col-xs-1  firstchild text-right">1</div>
               </div>
             </div>
             <div class="row " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
-              <div class="col-md-10">{{a.chapter.two}}</div>
-              <div class="col-md-2">2</div>
+              <div class="col-md-10 col-xs-11">{{a.chapter.two}}</div>
+              <div class="col-md-2 col-xs-1  text-right">2</div>
             </div>
             <div class="row  " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
-              <div class="col-md-10">{{a.chapter.three}}</div>
-              <div class="col-md-2">5</div>
+              <div class="col-md-10 col-xs-11">{{a.chapter.three}}</div>
+              <div class="col-md-2 col-xs-1 text-right">5</div>
             </div>
             <div class="row  " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
-              <div class="col-md-10">{{a.chapter.four}}</div>
-              <div class="col-md-2">7</div>
+              <div class="col-md-10 col-xs-11">{{a.chapter.four}}</div>
+              <div class="col-md-2 col-xs-1 text-right">7</div>
             </div>
             <div class="row  " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
-              <div class="col-md-10">{{a.chapter.five}}</div>
-              <div class="col-md-2">10</div>
+              <div class="col-md-10 col-xs-11">{{a.chapter.five}}</div>
+              <div class="col-md-2 col-xs-1 text-right">10</div>
             </div>
             <div ng-show="a.view1">
               <div class="row  " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
-                <div class="col-md-10">{{a.chapter.six}}</div>
-                <div class="col-md-2">13</div>
+                <div class="col-md-10 col-xs-11">{{a.chapter.six}}</div>
+                <div class="col-md-2 col-xs-1 text-right">13</div>
               </div>
               <div class="row  " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
-                <div class="col-md-10">{{a.chapter.seven}}</div>
-                <div class="col-md-2">15</div>
+                <div class="col-md-10 col-xs-11">{{a.chapter.seven}}</div>
+                <div class="col-md-2 col-xs-1 text-right">15</div>
               </div>
             </div>
             <div class="text-center">
@@ -135,10 +135,10 @@
     </div>
   </div>
 
-  <div class="container-fluid" style="background-color: #01EDA5;">
+  <div class="container-fluid" style="background-color: #fff;">
     <div class="container" style=" margin-bottom: 2em;text-align: center;">
       <h1 style="margin-top:2em;"><b>Related Courses</b></h1>
-      <span style="color:#fff">COURSES YOU MIGHT BE INTERESTED IN</span>
+      <span class="heading_small">COURSES YOU MIGHT BE INTERESTED IN</span>
       <div class="row" style="margin-bottom:2em;">
         <div ng-repeat="a in cardss">
           <div class="anim-in-out anim-zoom-out">
@@ -146,7 +146,7 @@
               <div class="col-md-4">
                 <div class="cardstype">
                   <img src="{{a.img1}}" class="img-radiuss" alt="Avatar" style="width:100%">
-                  <div class="body" style="background-color: #fff;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                  <div class="body1" style="background-color: #fff;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
                     <h4 style="border-bottom:1px solid #C9C9C9;padding-bottom:1em;"><b>{{a.title}}</b></h4>
                     <p style="padding-top:1em;">{{a.content}}</p>
                     <table class="table-align">
@@ -164,7 +164,7 @@
     </div>
   </div>
 
-  <div class="container-fluid" style="min-height:60vh;">
+  <div class="container-fluid" style="min-height:60vh;background-color:#F9F9F9;">
     <div class="col-md-12 min_padd text-center">
       <h1 class="heading_big">eLearny's Testimonials</h1>
       <h5 class="heading_small">WHAT STUDENTS THINK OF US</h5>

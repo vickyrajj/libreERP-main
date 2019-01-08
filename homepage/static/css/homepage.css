@@ -1154,6 +1154,13 @@ hr {
   padding: 2px 16px;
   margin-bottom: 3em;
 }
+.body1 {
+  padding: 2px 16px;
+  margin-bottom: 3em;
+}
+.cardstype:hover .body1 h4{
+  color:#02EBA3;
+}
 
 .table-align {
   margin-bottom: 2em;
@@ -1551,6 +1558,9 @@ hr {
 .alignintable tr td {
   width: 3%;
 }
+.alignintable tr .tablehead{
+  width:12%;
+}
 
 .clickchange {
   border-right: 1px solid #fff;
@@ -1573,7 +1583,7 @@ hr {
   font-size: 20px;
 }
 
-.clickchange:hover ,.clickchange .triangle-hover {
+.clickchange:hover ,.clickchange .triangle-hover,.clickchange .triangle-hover1 {
   color: #000;
   cursor: pointer;
 }
@@ -1592,6 +1602,16 @@ hr {
   position: absolute;
   top: 43px;
   left: 80px;
+}
+.triangle-hover1 {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 20px solid #fff;
+  position: absolute;
+  top: 43px;
+  left: 130px;
 }
 
 .headblock {
@@ -1618,13 +1638,20 @@ hr {
   margin: 1em 1em;
 }
 
+
 .contentblock div {
-  border-bottom: 1px solid #ddd;
-  padding: 0.5em 0 1.5em 0;
+  border-top: 1px solid #ddd;
+  padding: 1em 0 0.5em 0;
+}
+.contentblock .firstchild {
+  border-top:0;
+}
+.contentblocklast .firstchild {
+  border-top:0;
 }
 .contentblocklast div {
-  border-bottom: 1px solid #ddd;
-  padding: 0.5em 0 1.5em 0;
+  border-top: 1px solid #ddd;
+  padding: 1em 0 0.5em 0;
 }
 .contentborder::before{
   content:'';
@@ -1677,6 +1704,17 @@ hr {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   transform: scale(1.1);
   transition: 0.2s;
+}
+.rightborder{
+  border-right:1px solid #9E9E9E;
+}
+.titlesize{
+  font-size:25px;
+}
+.titleicon{
+  position:absolute;
+  top:1em;
+  right:5em;
 }
 
 /*  blogs css starts here*/
@@ -1894,7 +1932,48 @@ hr {
 @media only screen and (max-width:768px) {
 
   /* mobile display size starts here.... */
+
+ /* courses */
+ .titleicon{
+   position:absolute;
+   top:1em;
+   right:1em;
+ }
+ .titlesize{
+   font-size:20px;
+ }
+ .rightborder{
+   border-right:0;
+ }
+ .clickchange {
+   border-right:0;
+   text-align: center;
+   margin-top: 2.5em;
+   color: #fff
+ }
+
+ .cardstype {
+   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+   /* transition: 0.3s; */
+   text-align: center;
+   margin-left: 0;
+   width: 100%;
+   border-radius: 5px;
+   min-height: 41vh;
+   background-color: #fff;
+ }
+ .smdevice{
+   margin-top:2em;
+ }
+ .alignintable tr .tablehead{
+   width:30%;
+ }
+ /*  */
+
+
+
   /* students */
+
   .courses1 ul li {
     font-size: 17px;
     color: #fff;
