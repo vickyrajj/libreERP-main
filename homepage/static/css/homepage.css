@@ -1679,6 +1679,30 @@ hr {
   transition: 0.2s;
 }
 
+/*  blogs css starts here*/
+.blog_container {
+  display: flex;
+  display: -webkit-flex;
+  width: 100%;
+}
+
+
+.genericHeading {
+  text-align: center;
+  color: #452d54;
+  font-weight: bold;
+}
+
+.flex_50Perc {
+  flex: 50%;
+  height: 50vh;
+  font-size: 20px;
+  position: relative;
+  cursor: pointer;
+  background-color: #000;
+}
+/*  blogs css ends here*/
+
 /* for normal screens ends here.... */
 @media only screen and (device-width : 1352px) and (device-height : 641px) {
 

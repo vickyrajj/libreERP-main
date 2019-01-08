@@ -62,23 +62,23 @@
   <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;">
     <div class="container">
       <div class="col-md-2 clickchange" ng-model='books' ng-class="click1" ng-click="clicks(1)">
-        <span><b>01 Books</b></span>
+        <span><b>Books</b></span>
         <div ng-class="class1"></div>
       </div>
       <div class="col-md-2 clickchange" ng-model='videos' ng-class="click2" ng-click="clicks(2)">
-        <span><b>02 Video Course</span>
+        <span><b>Video Course</span>
         <div ng-class="class2"></div>
       </div>
       <div class="col-md-2 clickchange" ng-model='testseries' ng-class="click3" ng-click="clicks(3)">
-        <span><b>03 Test Series</b></span>
+        <span><b>Test Series</b></span>
         <div ng-class="class3"></div>
       </div>
       <div class="col-md-2 clickchange" ng-model='forum' ng-class="click4" ng-click="clicks(4)">
-        <span><b>04 Forum</b></span>
+        <span><b>Forum</b></span>
         <div ng-class="class4"></div>
       </div>
       <div class="col-md-3 clickchange1" ng-model='refbook' ng-class="click5" ng-click="clicks(5)">
-        <span><b>05 Refernce Books</b></span>
+        <span><b>Refernce Books</b></span>
         <div ng-class="class5"></div>
       </div>
     </div>
@@ -89,17 +89,17 @@
         <div class="row " ng-class="!$last ? 'contentborder' : 'contentborderlast'" style="position:relative;">
           <div ng-click="headclick($index)" ng-class="!$last ? 'headblock' : 'headblocklast'">
             <span style="font-size:25px;"><b>{{a.title}}<span style="font-size:15px;margin-left:1em;"> (6 Lessons)</span></b></span>
-            <span style="position:absolute;top:1em;right:5em;"><i class="fa fa-angle-{{head1==0?'down':'up'}}" style="font-size:30px;"></i></span>
+            <span style="position:absolute;top:1em;right:5em;"><i class="fa fa-angle-{{a.view==0?'down':'up'}}" style="font-size:30px;"></i></span>
             <div ng-class="!$last ? 'roundcircle' : 'roundcirclelast'"> </div>
           </div>
           <div ng-show="a.view">
-            <div ng-repeat="b in a.chapter " ng-show="limit">
+            <div>
               <div class="row   " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
-                <div class="col-md-10">{{b.content}}</div>
-                <div class="col-md-2">{{b.page}}</div>
+                <div class="col-md-10">{{a.chapter.one}}</div>
+                <div class="col-md-2">1</div>
               </div>
             </div>
-            <!-- <div class="row " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
+            <div class="row " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
               <div class="col-md-10">{{a.chapter.two}}</div>
               <div class="col-md-2">2</div>
             </div>
@@ -124,9 +124,9 @@
                 <div class="col-md-10">{{a.chapter.seven}}</div>
                 <div class="col-md-2">15</div>
               </div>
-            </div> -->
+            </div>
             <div class="text-center">
-              <button class="btn-style1" ng-click="loadcontent($index)" ng-model="limit">{{a.viewbtn}}</button>
+              <button class="btn-style1" ng-click="loadcontent($index)" >{{a.view1 == true?'Load Less':'Load More'}}</button>
             </div>
 
           </div>

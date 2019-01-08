@@ -100,10 +100,10 @@ app.config(function($stateProvider) {
     })
 
   $stateProvider
-    .state('contact', {
-      url: "/contact",
-      templateUrl: '/static/ngTemplates/app.homepage.contact.html',
-      controller: 'controller.contact'
+    .state('services', {
+      url: "/services",
+      templateUrl: '/static/ngTemplates/app.homepage.services.html',
+      controller: 'controller.services'
     })
 
   $stateProvider
@@ -174,68 +174,27 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       'class': 'head1',
       'title': '01. Ncert Maths',
       'chapter': {
-        'one': {
-          'page': '1',
-          'content': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'two': {
-          'page': '3',
-          'content': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'three': {
-          'page': '5',
-          'content': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'four': {
-          'page': '8',
-          'content': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'five': {
-          'page': '11',
-          'content': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'six': {
-          'page': '13',
-          'content': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'seven': {
-          'page': '15',
-          'content': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        }
+        'one': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'two': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'three': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'four': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'five': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'six': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'seven': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+
       }
     },
     {
-      'class': 'head2',
+      'class': 'head1',
       'title': '02. Ncert Science',
       'chapter': {
-        'one': {
-          'page': '1',
-          'content': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'two': {
-          'page': '3',
-          'content': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'three': {
-          'page': '5',
-          'content': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'four': {
-          'page': '8',
-          'content': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'five': {
-          'page': '11',
-          'content': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'six': {
-          'page': '13',
-          'content': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        },
-        'seven': {
-          'page': '18',
-          'content': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-        }
+        'one': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'two': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'three': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'four': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'five': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'six': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'seven': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
       }
     },
   ];
@@ -318,16 +277,14 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
   $scope.headclick = function(val) {
 
     $scope.bookscontent[val].view = !$scope.bookscontent[val].view;
+
+
   }
-  $scope.limit = 5;
+  $scope.btnview = "Load More";
+  $scope.btnview1 = "Load Less";
   $scope.loadcontent = function(val) {
-    // $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
-    // if ($scope.bookscontent[val].view1 == false) {
-    //   $scope.bookscontent[val].viewbtn = 'Load More';
-    // } else {
-    //   $scope.bookscontent[val].viewbtn = 'Load Less';
-    // }
-    $scope.limit = val;
+    $scope.bookscontent[val].viewbtn = 'Load More';
+    $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
   }
 
   $scope.cardss = [{
@@ -366,6 +323,96 @@ app.controller('controller.testimonials', function($scope, $state, $http, $timeo
   }
   $scope.myObjcolor = {
     "background-color": "#E5E7FC",
+  }
+
+});
+
+app.controller('controller.blogs', function($scope, $state, $http, $timeout, $interval, $uibModal) {
+
+
+  $scope.offset = 0;
+  $scope.emailAddress = '';
+
+  $scope.fetchBlogs = function() {
+    $scope.blogs = [];
+    $http.get('/api/PIM/blog/?limit=14&offset=' + $scope.offset).
+    then(function(response) {
+      $scope.blogs = response.data.results;
+      $scope.firstSection = $scope.blogs.slice(0, 4)
+      $scope.second_sec1 = $scope.blogs.slice(4, 7)
+      $scope.second_sec2 = $scope.blogs.slice(7, 10)
+      $scope.thirdSection = $scope.blogs.slice(10, 14)
+    })
+  }
+
+
+  $scope.fetchRecentPosts = function() {
+    $http.get('/api/PIM/blog/?limit=5').
+    then(function(response) {
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
+  $scope.fetchBlogs()
+
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
+  }
+
+
+  $scope.sendUpdates = function() {
+    console.log($scope.emailAddress);
+  }
+
+
+
+
+  $scope.nextBtn = function() {
+    $scope.offset = $scope.offset + 14
+    $scope.fetchBlogs()
+  }
+
+  $scope.prevBtn = function() {
+    if ($scope.offset >= 14) {
+      $scope.offset = $scope.offset - 14
+      $scope.fetchBlogs()
+    }
+  }
+
+});
+
+app.controller('controller.blogExplore', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  console.log($stateParams);
+
+  $scope.blogPk = $stateParams.name.split('&')[1]
+
+  $http.get('/api/PIM/blog/' + $scope.blogPk + '/').
+  then(function(response) {
+    $scope.blogDetail = response.data
+    console.log($scope.blogDetail);
+
+    $scope.blogDetail.source = $sce.trustAsHtml($scope.blogDetail.source);
+  })
+
+  $scope.fetchRecentPosts = function() {
+    $http.get('/api/PIM/blog/?limit=5').
+    then(function(response) {
+      console.log(response);
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
+
+
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
   }
 
 });
