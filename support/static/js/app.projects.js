@@ -774,6 +774,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
 
   $scope.fetchData = function() {
+    $scope.data = []
     $http({
       method: 'GET',
       url: '/api/support/bom/?project=' + $scope.form.pk
@@ -852,7 +853,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
           data: dataSend
         }).
         then(function(response) {
-          $scope.fetchData()
+          // $scope.fetchData()
         })
       }
       // $scope.form.invoiceValue = cost
