@@ -959,8 +959,25 @@ class ProductInventoryAPIView(APIView):
         productsList = list(storeQtyObj.values('product').distinct().values('product__pk','product__name','product__displayPicture','product__unit','product__serialId','product__price','product__discount'))
 
         for i in productsList:
+            if i['product__displayPicture']:
+                dp = '/media/'+i['product__displayPicture'].url
+            else:
+                try:
+                    lsObj = listing.objects.filter(product=int(i['product__pk']))
+                    if len(lsObj)>0:
+                        fs = lsObj[0].files.all()
+                        if len(fs)>0:
+                            d = fs[0].attachment
+                            dp = d.url
+                        else:
+                            dp = None
+                    else:
+                        dp = None
+                except:
+                    dp = None
+            print dp,'dpppppppppp'
             data = list(storeQtyObj.filter(product=i['product__pk']).values('pk','product','product__price','product__howMuch','productVariant','productVariant__sku','productVariant__unitPerpack','product__serialNo','product__unit','quantity','productVariant__price' ,'productVariant__serialId' ))
-            toReturn.append({'productPk':i['product__pk'],'productName':i['product__name'],'productUnit':i['product__unit'],'productSerialId':i['product__serialId'],'productdp':i['product__displayPicture'],'productPrice':i['product__price'],'productDiscount':i['product__discount'],'data':data})
+            toReturn.append({'productPk':i['product__pk'],'productName':i['product__name'],'productUnit':i['product__unit'],'productSerialId':i['product__serialId'],'productdp':dp,'productPrice':i['product__price'],'productDiscount':i['product__discount'],'data':data})
 
         print toReturn[offset : limit]
         return Response(toReturn[offset : limit],status=status.HTTP_200_OK)

@@ -194,7 +194,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                                 {
                                   "to": [
                                     {
-                                      "email": str(reg.email)
+                                      "email": str(globalSettings.G_ADMIN[0])
                                       # str(orderObj.user.email)
                                     }
                                   ],
@@ -365,16 +365,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         if not globalSettings.LITE_REGISTRATION:
             if globalSettings.VERIFY_MOBILE:
                 mobile = reg.mobile
-                if 'phoneCode' in self.context['request'].data:
-                    phoneCode = self.context['request'].data['phoneCode']
-                    mobile = phoneCode +''+ reg.mobile
                 url = globalSettings.SMS_API_PREFIX.format(mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
                 requests.get(url)
         else:
             mobile = reg.mobile
-            if 'phoneCode' in self.context['request'].data:
-                phoneCode = self.context['request'].data['phoneCode']
-                mobile = phoneCode +''+ reg.mobile
             url = globalSettings.SMS_API_PREFIX.format(reg.mobile , 'Dear Customer,\nPlease use OTP : %s to verify your mobile number' %(reg.mobileOTP))
             requests.get(url)
         reg.save()

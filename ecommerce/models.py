@@ -81,7 +81,7 @@ class listing(models.Model):
     user = models.ForeignKey(User , related_name = 'ecommerceListings' , null = False)
     created = models.DateTimeField(auto_now_add = True)
     updated = models.DateTimeField(auto_now=True)
-    product = models.ForeignKey(Product)
+    product = models.ForeignKey(Product,related_name='listing')
     approved = models.BooleanField(default = False)
     specifications = models.TextField(max_length = 2000 , null = False) # JSON data with key from one of the spec and value as the value for this perticular item
     files = models.ManyToManyField(media , related_name='listings' ,blank=True)
@@ -236,6 +236,7 @@ class OrderQtyMap(models.Model):
     gstAmount = models.PositiveIntegerField( default = 0)
     paidAmount = models.PositiveIntegerField( default = 0)
     modeOfPayment = models.CharField(max_length = 20 , null = True)
+    priceDuringOrder = models.PositiveIntegerField(null = True , blank = True)
 
 
 class Order(models.Model):
@@ -268,6 +269,8 @@ class Order(models.Model):
     mobileNo = models.CharField(max_length=15 ,null = True , blank = True)
     shippingCharges =  models.IntegerField(default = 0)
     totalGst = models.PositiveIntegerField( default = 0)
+    stateCode = models.CharField(null = False , default = 'KA' , max_length = 10)
+    countryCode = models.CharField(null = False , default = 'IN' , max_length = 10)
 
 
 class Promocode(models.Model):

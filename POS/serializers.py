@@ -72,13 +72,13 @@ class ProductSerializer(serializers.ModelSerializer):
     compositions=ProductLiteSerializer(many=True,read_only=True)
     skuUnitpack = serializers.SerializerMethodField()
     productOption = serializers.SerializerMethodField()
-    # masterStock = serializers.SerializerMethodField()
+    dp = serializers.SerializerMethodField()
     # StoreStock = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','alias','howMuch','productOption','grossWeight')
+        fields = ('pk' , 'user' ,'name', 'productMeta', 'price', 'displayPicture', 'serialNo', 'description','discount', 'inStock','cost','logistics','serialId','reorderTrashold' , 'haveComposition' , 'compositions' , 'compositionQtyMap','unit','skuUnitpack','alias','howMuch','productOption','grossWeight','dp')
 
-        read_only_fields = ( 'user' , 'productMeta', 'compositions')
+        read_only_fields = ( 'user' , 'productMeta', 'compositions','dp')
     def create(self , validated_data):
         print self.context['request'].data
         print 'entered','***************'
@@ -163,8 +163,19 @@ class ProductSerializer(serializers.ModelSerializer):
             return settingObj[0].flag
         except:
             return None
-    # def get_masterStock(self, obj):
-    #     return obj.inStock
+    def get_dp(self, obj):
+        if obj.displayPicture:
+            return obj.displayPicture.url
+        else:
+            try:
+                a = obj.listing.get()
+                fs = a.files.all()
+                if len(fs)>0:
+                    d = fs[0].attachment
+                    return d.url
+            except:
+                pass
+        return
     # def get_StoreStock(self, obj):
     #     try:
     #         val = obj.storeQty.all().aggregate(Sum('quantity'))['quantity__sum']

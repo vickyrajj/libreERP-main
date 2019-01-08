@@ -12,9 +12,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='calendar',
-            name='clients',
-            field=models.ManyToManyField(blank=True, related_name='calendarEntries', to='PIM.Contact'),
-        ),
+        # migrations.AddField(
+        #     # model_name='calendar',
+        #     # # name='clients',
+        #     # field=models.ManyToManyField(blank=True, related_name='calendarEntries', to='PIM.Contact'),
+        # ),
     ]

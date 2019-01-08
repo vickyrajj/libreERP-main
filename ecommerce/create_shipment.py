@@ -15,25 +15,68 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 
-def createShipment(recipientName , recipientCompany , recipientPhone , recipientAddress , city , state , pincode , country , weight):
+def createShipment(recipientName , recipientCompany , recipientPhone , recipientAddress , city , state , pincode , country , weight , goodsValue = 100):
     customer_transaction_id = "*** ShipService Request v17 using Python ***"  # Optional transaction_id
     shipment = FedexProcessShipmentRequest(CONFIG_OBJ, customer_transaction_id=customer_transaction_id)
-    shipment.RequestedShipment.DropoffType = 'BUSINESS_SERVICE_CENTER'
-    shipment.RequestedShipment.ServiceType = 'PRIORITY_OVERNIGHT'
-    shipment.RequestedShipment.PackagingType = 'FEDEX_PAK'
+    shipment.RequestedShipment.DropoffType = 'REGULAR_PICKUP'
+    shipment.RequestedShipment.ServiceType = globalSettings.FEDEX_SERVICE_TYPE
+    shipment.RequestedShipment.PackagingType = 'YOUR_PACKAGING'
+
+    print dir(shipment.RequestedShipment.CustomsClearanceDetail)
+    shipment.RequestedShipment.CustomsClearanceDetail.CustomsValue.Currency = "INR"
+    shipment.RequestedShipment.CustomsClearanceDetail.CustomsValue.Amount = goodsValue
+
+    if country != 'IN':
+        payr = shipment.create_wsdl_object_of_type('Payor')
+        payr.AccountNumber = globalSettings.FEDEX_ACCOUNT_NUMBER
+        dp = shipment.create_wsdl_object_of_type('Payment')
+        dp.PaymentType = 'RECIPIENT'
+        shipment.RequestedShipment.CustomsClearanceDetail.DutiesPayment = dp
+        shipment.RequestedShipment.CustomsClearanceDetail.DocumentContent = 'NON_DOCUMENTS'
+
+
+    print dir(shipment.RequestedShipment.CustomsClearanceDetail.Commodities)
+
+    # shipment.RequestedShipment.Purpose = 'GIFT'
+
+    comodity = shipment.create_wsdl_object_of_type('Commodity')
+    comodity.Name = 'Books'
+    comodity.NumberOfPieces = 1
+    comodity.Description = 'BNI marchandise'
+    comodity.CountryOfManufacture = 'IN'
+    comodity.HarmonizedCode = '49011010'
+    comodity.Weight.Units = 'LB'
+    comodity.Weight.Value = weight
+    comodity.CustomsValue.Amount = goodsValue
+    comodity.CustomsValue.Currency = 'INR'
+    comodity.Quantity = 1
+    comodity.QuantityUnits = 'Number'
+    comodity.UnitPrice.Amount = goodsValue
+    comodity.UnitPrice.Currency = 'INR'
+
+
+    invce = shipment.create_wsdl_object_of_type('CommercialInvoice')
+    invce.Purpose = 'SOLD'
+
+    shipment.RequestedShipment.CustomsClearanceDetail.CommercialInvoice = invce
+
+
+
+
+    shipment.RequestedShipment.CustomsClearanceDetail.Commodities.append(comodity)
 
 
     # Shipper address.
-    shipment.RequestedShipment.Shipper.Contact.PersonName = 'Sender Name'
-    shipment.RequestedShipment.Shipper.Contact.CompanyName = 'Some Company'
-    shipment.RequestedShipment.Shipper.Contact.PhoneNumber = '9012638716'
+    shipment.RequestedShipment.Shipper.Contact.PersonName = 'PAWAN KUMAR'
+    shipment.RequestedShipment.Shipper.Contact.CompanyName = 'PAPERED SOLUTION'
+    shipment.RequestedShipment.Shipper.Contact.PhoneNumber = '41171959'
 
-    shipment.RequestedShipment.Shipper.Address.StreetLines = ['Address Line 1']
-    shipment.RequestedShipment.Shipper.Address.City = 'Herndon'
-    shipment.RequestedShipment.Shipper.Address.StateOrProvinceCode = 'VA'
-    shipment.RequestedShipment.Shipper.Address.PostalCode = '20171'
-    shipment.RequestedShipment.Shipper.Address.CountryCode = 'US'
-    shipment.RequestedShipment.Shipper.Address.Residential = True
+    shipment.RequestedShipment.Shipper.Address.StreetLines = ['# 18, 6TH CROSS', 'SUDHAM NAGAR']
+    shipment.RequestedShipment.Shipper.Address.City = 'BANGALORE'
+    shipment.RequestedShipment.Shipper.Address.StateOrProvinceCode = 'KA'
+    shipment.RequestedShipment.Shipper.Address.PostalCode = '560027'
+    shipment.RequestedShipment.Shipper.Address.CountryCode = 'IN'
+    shipment.RequestedShipment.Shipper.Address.Residential = False
 
     # Recipient contact info.
     shipment.RequestedShipment.Recipient.Contact.PersonName =recipientName
@@ -99,7 +142,7 @@ def createShipment(recipientName , recipientCompany , recipientPhone , recipient
     return filepath , trackingId
 
 if __name__ == '__main__':
-    awbPath , trackingID = createShipment('name' , 'company' , '99999999' , ['Address Line 1'] ,  'Herndon', 'VA' , '20171' , 'US',  1.0)
+    awbPath , trackingID = createShipment('name' , 'company' , '99999999' , ['Address Line 1'] ,  'Bengalore', 'KA' , '560068' , 'IN',  1.0)
 
     print "AWB : " , awbPath
     print "Tracking ID : " , trackingID

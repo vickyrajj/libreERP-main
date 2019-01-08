@@ -100,6 +100,9 @@ import sendgrid
 import os
 from svglib.svglib import svg2rlg
 from excel_response import ExcelResponse
+import re
+from ERP.send_email import send_email
+
 
 # from sendgrid.helpers.mail import *
 
@@ -363,9 +366,11 @@ class CreateOrderAPI(APIView):
                 else:
                     b=0
                     finalTaxAmount = 0
+                priceDuringOrder = pp
             else:
                 prodVar = ProductVerient.objects.get(sku = i['prodSku'])
                 pp = prodVar.discountedPrice
+                priceDuringOrder = pp
                 if prodVar.parent.productMeta:
                     ptaxRate = prodVar.parent.productMeta.taxRate
                     taxAmount = int(round((pp * ptaxRate)/100))
@@ -384,11 +389,10 @@ class CreateOrderAPI(APIView):
             pDiscAmount = pDiscAmount * i['qty']
             qtyGst = finalTaxAmount * i['qty']
             orderGst += qtyGst
-
             qtyTotal = b * i['qty']
             totalAmount += qtyTotal
 
-            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(qtyTotal)),'discountAmount':pDiscAmount,'prodSku':i['prodSku'],'desc':i['desc'],'gstAmount':qtyGst})
+            oQMObj = OrderQtyMap.objects.create(**{'product':pObj,'qty':i['qty'],'totalAmount':int(round(qtyTotal)),'discountAmount':pDiscAmount,'prodSku':i['prodSku'],'desc':i['desc'],'gstAmount':qtyGst,'priceDuringOrder':priceDuringOrder})
             oQMp.append(oQMObj)
             obj = pObj.product
             if 'storepk' in request.data:
@@ -454,6 +458,13 @@ class CreateOrderAPI(APIView):
             'billingPincode' : str(request.data['billingAddress']['pincode']),
             'billingCountry' : str(request.data['billingAddress']['country']),
             }
+
+            try:
+                countryCode = Countries.objects.filter(name__iexact = str(request.data['address']['country']))
+                data['countryCode'] = countryCode.sortname
+            except :
+                pass
+
             if len(str(request.data['promoCode'])) > 0:
                 data['promoCode'] = str(request.data['promoCode'])
             print data
@@ -578,6 +589,22 @@ class CreateOrderAPI(APIView):
                     value.append({ "productName" : productName,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
             grandTotal=round(grandTotal, 2)
+            try:
+                isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
+            except:
+                isStoreGlobal = False
+            try:
+                companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+                cleanr = re.compile('<.*?>')
+                companyAddress = re.sub(cleanr, '', companyAddress)
+                print companyAddress ,'&****************************************************'
+            except:
+                companyAddress = ''
+                print companyAddress ,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2'
+            try:
+                gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
+            except:
+                gstValue = ''
             if orderObj.user.email and orderObj.paymentMode == 'COD':
                 ctx = {
                     'heading' : "Invoice Details",
@@ -594,49 +621,17 @@ class CreateOrderAPI(APIView):
                     'linkedinUrl' : lkLink,
                     'fbUrl' : fbLink,
                     'twitterUrl' : twtLink,
+                    'isStoreGlobal':isStoreGlobal,
+                    'companyAddress':companyAddress,
+                    'gstValue':gstValue
                 }
-                print ctx
                 email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-                if globalSettings.EMAIL_API:
-                    sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-                    # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-                    data = {
-                      "personalizations": [
-                        {
-                          "to": [
-                            {
-                              "email": orderObj.user.email
-                              # str(orderObj.user.email)
-                            }
-                          ],
-                          "subject": "Invoice Details"
-                        }
-                      ],
-                      "from": {
-                        "email": globalSettings.G_FROM,
-                        "name":"BNI India"
-                      },
-                      "content": [
-                        {
-                          "type": "text/html",
-                          "value": email_body
-                        }
-                      ]
-                    }
-                    response = sg.client.mail.send.post(request_body=data)
-                    print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-
-                else:
-                    # email_subject = "Order Details:"
-                    # msgBody = " Your Order has been placed and details are been attached"
-                    contactData.append(str(orderObj.user.email))
-                    print 'aaaaaaaaaaaaaaa'
-                    msg = EmailMessage("Order Details" , email_body, to= contactData  )
-                    msg.content_subtype = 'html'
-                    # a = str(f).split('media_root/')[1]
-                    # b = str(a).split("', mode")[0]
-                    # msg.attach_file(os.path.join(globalSettings.MEDIA_ROOT,str(b)))
-                    msg.send()
+                email_subject = "Order Details"
+                email_to = []
+                email_to.append(str(orderObj.user.email))
+                email_cc = ['vikky.motla@gmail.com']
+                email_bcc = ['bhrthkshr@gmail.com']
+                send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
             return Response({'paymentMode':orderObj.paymentMode,'dt':orderObj.created,'odnumber':orderObj.pk}, status = status.HTTP_200_OK)
 
 
@@ -1089,8 +1084,9 @@ def manifest(response,item,typ,packingSlip):
         sku = str(item.product.product.serialNo)+ ''
         skuP =  Paragraph("<para fontSize=8>{0}</para>".format(sku),styles['Normal'])
         pd= Paragraph("<para fontSize=10><b>{0}</b></para>".format(name),styles['Normal'])
-        tableData.append([pd,item.totalAmount,item.qty,item.discountAmount,(item.totalAmount-item.discountAmount) * item.qty])
+        tableData.append([pd,item.priceDuringOrder,item.qty,item.discountAmount,(item.priceDuringOrder-item.discountAmount) * item.qty])
         tableDataPackingSlip.append([sku,pd,item.qty])
+
     if not packingSlip:
         tableData.append(['TOTAL','','','',total])
         t1=Table(tableData,colWidths=[1.7*inch , 0.5*inch , 0.5*inch, 0.7*inch , 0.7*inch])
@@ -1422,38 +1418,13 @@ class SendStatusAPI(APIView):
             msgBody ="Product has been returned"
 
         print emailAddr[0],'ffffffffffff'
+        email_body = msgBody
+        email_subject = "Order Status"
+        email_to = [emailAddr[0]]
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'text')
 
-        if globalSettings.EMAIL_API:
-            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-            data = {
-              "personalizations": [
-                {
-                  "to": [
-                    {
-                      "email": emailAddr[0]
-                      # str(orderObj.user.email)
-                    }
-                  ],
-                  "subject": "Invoice Details"
-                }
-              ],
-              "from": {
-                "email": globalSettings.G_FROM,
-                "name":"BNI India"
-              },
-              "content": [
-                {
-                  "type": "text/html",
-                  "value": msgBody
-                }
-              ]
-            }
-            response = sg.client.mail.send.post(request_body=data)
-            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-        else:
-            msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
-            msg.send()
         return Response({}, status = status.HTTP_200_OK)
 
 class SendDeliveredStatus(APIView):
@@ -1479,6 +1450,16 @@ class SendDeliveredStatus(APIView):
         grandTotal=round(grandTotal, 2)
         attachment =  oq.product.files.values_list('attachment', flat=True)
         print '**************************'
+        try:
+            companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+            cleanr = re.compile('<.*?>')
+            companyAddress = re.sub(cleanr, '', companyAddress)
+        except:
+            companyAddress = ''
+        try:
+            gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
+        except:
+            gstValue = ''
         ctx = {
             'heading' : "Invoice Details",
             'linkUrl': globalSettings.BRAND_NAME,
@@ -1493,43 +1474,16 @@ class SendDeliveredStatus(APIView):
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
+            'companyAddress':companyAddress,
+            'gstValue':gstValue
         }
-        print ctx
         email_body = get_template('app.ecommerce.deliveryDetailEmail.html').render(ctx)
-        if globalSettings.EMAIL_API:
-            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-            data = {
-              "personalizations": [
-                {
-                  "to": [
-                    {
-                      "email": o.user.email
-                      # str(orderObj.user.email)
-                    }
-                  ],
-                  "subject": "Invoice Details"
-                }
-              ],
-              "from": {
-                "email": globalSettings.G_FROM,
-                "name":"BNI India"
-              },
-              "content": [
-                {
-                  "type": "text/html",
-                  "value": email_body
-                }
-              ]
-            }
-            response = sg.client.mail.send.post(request_body=data)
-            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-
-        else:
-            msg = EmailMessage("Order Details" , email_body, to= emailAddr  )
-            msg.content_subtype = 'html'
-            # msg = EmailMessage(email_subject, msgBody,  to= emailAddr )
-            msg.send()
+        email_subject = "Delivered"
+        email_to = []
+        email_to.append(str(o.user.email))
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
         return Response({}, status = status.HTTP_200_OK)
 
 
@@ -1555,38 +1509,10 @@ class SendFeedBackAPI(APIView):
         }
         print ctx
         email_body = get_template('app.ecommerce.support.email.html').render(ctx)
-        if globalSettings.EMAIL_API:
-            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-            data = {
-              "personalizations": [
-                {
-                  "to": [
-                    {
-                      "email": supportObj.email
-                      # str(orderObj.user.email)
-                    }
-                  ],
-                  "subject": "On response to your Feed Back"
-                }
-              ],
-              "from": {
-                "email": globalSettings.G_FROM,
-                "name":"BNI India"
-              },
-              "content": [
-                {
-                  "type": "text/html",
-                  "value": email_body
-                }
-              ]
-            }
-            response = sg.client.mail.send.post(request_body=data)
-            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-        else:
-            msg = EmailMessage("Response" , email_body, to= emailAddr)
-            msg.content_subtype = 'html'
-            msg.send()
+        email_subject = "Response"
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,emailAddr,email_subject,email_cc,email_bcc,'html')
         return Response({}, status = status.HTTP_200_OK)
 
 
@@ -1752,12 +1678,15 @@ class PageNumCanvas(canvas.Canvas):
         p2.wrapOn(self , 200*mm , 10*mm)
         p2.drawOn(self , 40*mm  , 1*mm)
 
-        ab = appSettingsField.objects.filter(name='GST')
+        ab = appSettingsField.objects.filter(name='cstNo')
         try:
             gstin = ab[0].value
+            ab = appSettingsField.objects.filter(name='isStoreGlobal')
+            if len(ab)>0:
+                if ab[0].flag:
+                    gstin = ''
         except :
             gstin = ''
-
         p4 = Paragraph(gstin , compNameStyle)
         p4.wrapOn(self , 200*mm , 10*mm)
         p4.drawOn(self , 85*mm  , 5*mm)
@@ -1848,8 +1777,8 @@ def genInvoice(response, contract, request):
         print i.desc,'ssssssssssssss'
         if str(i.status)!='cancelled':
             if i.prodSku == i.product.product.serialNo:
-                print i.product.product.name, i.product.product.discount, i.product.product.price
-                price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+                print i.product.product.name, i.product.product.discount, i.priceDuringOrder
+                price = i.priceDuringOrder - (i.product.product.discount * i.priceDuringOrder)/100
                 price=round(price, 2)
                 totalprice = i.qty*price
                 totalprice=round(totalprice, 2)
@@ -2397,6 +2326,22 @@ def paypal_return_view(request):
     grandTotal=total-(promoAmount * total)/100
     grandTotal=round(grandTotal, 2)
     request.user.cartItems.all().delete()
+    try:
+        isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
+    except:
+        isStoreGlobal = False
+    try:
+        companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+        cleanr = re.compile('<.*?>')
+        companyAddress = re.sub(cleanr, '', companyAddress)
+    except:
+        companyAddress = ''
+
+    try:
+        gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
+    except:
+        gstValue = ''
+
     if orderObj.user.email:
         ctx = {
             'heading' : "Invoice Details",
@@ -2413,14 +2358,19 @@ def paypal_return_view(request):
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
+            'isStoreGlobal':isStoreGlobal,
+            'companyAddress':companyAddress,
+            'gstValue':gstValue
         }
         print ctx
         contactData = []
         email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-        contactData.append(str(orderObj.user.email))
-        msg = EmailMessage("Order Details" , email_body, to= contactData  )
-        msg.content_subtype = 'html'
-        msg.send()
+        email_subject = "Order Details"
+        email_to = []
+        email_to.append(str(orderObj.user.email))
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
     return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
 
 
@@ -2433,12 +2383,12 @@ def paypalPaymentInitiate(request):
     orderObj = Order.objects.get(pk=orderid)
     paypal_dict = {
         "business": globalSettings.PAYPAL_RECEIVER_EMAIL,
-        "amount": orderObj.totalAmount,
-        "item_name": "name of the item",
+        "amount": str(orderObj.totalAmount),
+        "item_name": "BNI marchandise",
         "invoice": orderObj.pk,
+        'currency_code': 'USD',
         "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
         "return": request.build_absolute_uri(reverse('paypal_return_view')),
-        # "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
         "cancel_return": request.build_absolute_uri(reverse('paypal_cancel_view')),
         "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
     }
@@ -2572,7 +2522,14 @@ def updateAndProcessOrder(orderID , amnt):
     orderObj.user.cartItems.all().delete()
     print orderObj.user.email, 'email'
     print 'semndddddddddddddddd emaillllllllll'
-
+    try:
+        companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+    except:
+        companyAddress = ''
+    try:
+        gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
+    except:
+        gstValue = ''
 
     if orderObj.user.email:
         ctx = {
@@ -2590,44 +2547,17 @@ def updateAndProcessOrder(orderID , amnt):
             'linkedinUrl' : lkLink,
             'fbUrl' : fbLink,
             'twitterUrl' : twtLink,
-            'isStoreGlobal':isStoreGlobal
+            'isStoreGlobal':isStoreGlobal,
+            'companyAddress':companyAddress,
+            'gstValue':gstValue
         }
-        print ctx
-        contactData = []
         email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
         email_subject = 'Order Placed'
-        emails = []
-        emails.append({"email":str(orderObj.user.email)})
-        contactData.append(str(orderObj.user.email))
-        if globalSettings.EMAIL_API:
-            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
-            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-            for i in globalSettings.G_ADMIN:
-                emails.append({"email":i})
-            print emails,"**************&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-            data = {
-              "personalizations": [
-                {
-                  "to": emails,
-                  "subject": email_subject
-                }
-              ],
-              "from": {
-                "email": globalSettings.G_FROM,
-                "name":"BNI India"
-              },
-              "content": [
-                {
-                  "type": "text/html",
-                  "value": email_body
-                }
-              ]
-            }
-            response = sg.client.mail.send.post(request_body=data)
-        else:
-            msg = EmailMessage("Order Details" , email_body, to= contactData  )
-            msg.content_subtype = 'html'
-            msg.send()
+        email_to = []
+        email_to.append(str(orderObj.user.email))
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
     return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
 
 
@@ -2699,43 +2629,26 @@ class SearchCountryAPI(APIView):
             return Response(list(countries.values())[:10], status = status.HTTP_200_OK)
 
 from create_shipment import createShipment
+
 class CreateShipmentAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.AllowAny , )
     def get(self , request , format = None):
         print request.GET ,'ddddddddd'
         order = Order.objects.get(pk = int(request.GET['orderPk']))
-        recipientCompany = 'company'
-        try:
-            recipientName =  order.user
-        except:
-            recipientName = 'recipientName'
+        recipientName =  order.user.first_name + ' ' + order.user.last_name
+        print type(order.mobileNo) ,'hhhhhhhhhhhh'
         try:
             recipientPhone = int(order.mobileNo)
-        except:
-            recipientPhone = 9999999999
-        try:
-            recipientAddress = str(order.landMark) +" "+ str(order.street)
-        except:
-            recipientAddress = 'recipientAddress'
-        try:
-            city = order.city
-        except:
-            city = 'city'
-        try:
-            state = 'VA'
-        except:
-            state = 'state'
-        try:
-            country = 'US'
-        except:
-            country = 'US'
-        try:
-            pincode = 20171
-        except:
-            pincode = 20171
-        weight = 1.0
-        awbPath , trackingID = createShipment(recipientName , recipientCompany , recipientPhone , [recipientAddress] ,  city, state , pincode , country,  weight)
+        except :
+            recipientPhone = 9999
+        recipientAddress = str(order.landMark) +" "+ str(order.street)
+        city = order.city
+        state = order.stateCode
+        country = order.countryCode
+        pincode = str(order.pincode)
+        weight = float(request.GET['totalWeight']) * 2.20462
+        awbPath , trackingID = createShipment(recipientName , recipientName , recipientPhone , [recipientAddress] ,  city, state , pincode , country,  weight)
         return Response({'awbPath':awbPath,'trackingID':trackingID,'courierName':'Fedex'}, status = status.HTTP_200_OK)
 
 # from django.core.files import File
@@ -2775,29 +2688,64 @@ class UserProfileSettingAPI(APIView):
             firstName = user.first_name
             lastName = user.last_name
             email = user.email
-            gst = 'ABCDFDG'
+            # pobj = profile.objects.get(pk=user.profile.pk)
+            if prof.details is not None:
+                if type(prof.details)==unicode:
+                    details = ast.literal_eval(prof.details)
+                else:
+                    details = prof.details
+            else:
+                details = ''
+            print details
+            if 'GST' in details:
+                print 'true'
+                gst= details['GST']
+                isGST = True
+            else:
+                print 'false'
+                gst = ''
+                isGST = False
             try:
                 mobile = prof.mobile
             except:
                 mobile =''
-            if prof.details is not None:
-                details = prof.details
-            else:
-                details = ''
-            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst}, status = status.HTTP_200_OK)
+            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst,'isGST':isGST}, status = status.HTTP_200_OK)
     def post(self , request , format = None):
         if 'user' in request.data:
             user = User.objects.get(pk=request.data['user'])
-            firstName = request.data['firstName']
-            lastName = request.data['lastName']
-            email = request.data['email']
-            gst = request.data['gst']
-            mobile = request.data['mobile']
-            # user.firstName = firstName
-            # user.lastName = lastName
-            # user.email = email
-            # user.save()
-            return Response({'firstName':firstName,'lastName':lastName,'email':email,'mobile':mobile,'gst':gst}, status = status.HTTP_200_OK)
+
+            user.first_name = request.data['firstName']
+            user.last_name = request.data['lastName']
+            user.email = request.data['email']
+            user.save()
+            pobj = profile.objects.get(pk=user.profile.pk)
+            # pobj.email = email
+            pobj.mobile = request.data['mobile']
+            toReturn = {'firstName':user.first_name,'lastName':user.last_name,'email':user.email,'mobile':pobj.mobile}
+            if 'gst' in request.data:
+                toReturn['gst'] = request.data['gst']
+                if pobj.details is not None:
+                    details = ast.literal_eval(pobj.details)
+                    if 'GST' in details:
+                        details['GST'] = request.data['gst']
+                    else:
+                        details['GST'] = request.data['gst']
+                    pobj.details = details
+                    pobj.save()
+                else:
+                    details = {}
+                    details['GST'] = request.data['gst']
+                    pobj.details = str(details)
+                    pobj.save()
+            toReturn['passwordChanged'] = False
+            if 'oldPassword' in request.data:
+                if authenticate(username = user.username , password = request.data['oldPassword']) is not None:
+                    user.set_password(request.data['newPassword'])
+                    user.save()
+                    toReturn['passwordChanged'] = True
+                else:
+                    raise PermissionDenied(detail={'PARAMS':'Password missmatch'})
+            return Response(toReturn, status = status.HTTP_200_OK)
 
 class ReportsDataAPI(APIView):
     def get(self, request, format=None):

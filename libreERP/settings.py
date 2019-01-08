@@ -62,7 +62,7 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['1192.168.0.17','192.168.1.153', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.110' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.123','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10','192.168.1.111','192.168.1.102','192.168.0.112']
+ALLOWED_HOSTS = ['192.168.1.151','192.168.1.153', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.1.114', '192.168.0.105' ,'172.20.10.8' , 'skinstore.monomerce.com', '192.168.1.110' , '192.168.1.104', '192.168.43.183','192.168.43.9 ','192.168.1.114','192.168.1.123','192.168.1.123','192.168.1.119','192.168.43.9','sterlingselect.in' , '192.168.0.15', '192.168.1.101','192.168.0.10','192.168.1.111','192.168.1.102','192.168.0.112']
 
 
 LOGIN_REDIRECT = 'ecommerce' # the url to which the user will be redirected once successfully loggedin
@@ -101,10 +101,17 @@ INVENTORY_ENABLED = False
 LITE_REGISTRATION = False
 AUTH_PASSWORD = 'titan@1'
 
-FEDEX_AUTH_KEY = 'abOhatnikLWCa8Hj'
-FEDEX_PASSWORD = 'Yk1agUkfxS1P3ABNemVGYJFOB'
-FEDEX_ACCOUNT_NUMBER = '870648022'
-FEDEX_METER_NUMBER = '113921415'
+# FEDEX_AUTH_KEY = 'abOhatnikLWCa8Hj'
+# FEDEX_PASSWORD = 'Yk1agUkfxS1P3ABNemVGYJFOB'
+# FEDEX_ACCOUNT_NUMBER = '870648022'
+# FEDEX_METER_NUMBER = '113921415'
+
+FEDEX_AUTH_KEY = 'evapBCfpthNdZKxr'
+FEDEX_PASSWORD = '0ljLYVGXHm321N9RGewp1enVp'
+FEDEX_ACCOUNT_NUMBER = '870123965'
+FEDEX_METER_NUMBER = '113921425'
+FEDEX_TEST_MODE = False
+FEDEX_SERVICE_TYPE = 'INTERNATIONAL_ECONOMY' # INTERNATIONAL_ECONOMY OR FEDEX_EXPRESS_SAVER
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
 
@@ -150,12 +157,13 @@ PAYU_MERCHANT_SALT = "eCwWELxi"
 PAYU_MODE = "TEST"
 EBS_PAYMENT_MODE = "TEST"
 
-PAYMENT_MODE = 'EBS' # options are EBS , paypal , paytm , PAYU
+PAYMENT_MODE = 'paypal' # options are EBS , paypal , paytm , PAYU
 
 
 # paypal payment gateway details
 PAYPAL_RECEIVER_EMAIL = 'online@papered.in'
-PAYPAL_TEST = True
+# PAYPAL_RECEIVER_EMAIL = 'pradeep@cioc.in'
+PAYPAL_TEST = False
 
 SITE_ID = 1
 
@@ -282,18 +290,19 @@ USE_TZ = True
 EMAIL_HOST_SUFFIX = '24tutors.com'
 
 EMAIL_HOST = 'email.cioc.in'
-EMAIL_HOST_USER = 'do_not_reply@24tutors.com'
-EMAIL_HOST_PASSWORD = '51GX4]N1_0uw'
+EMAIL_HOST_USER = 'testmail@cioc.in'
+EMAIL_HOST_PASSWORD = 'Titan@1234'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.Sendgrid'
 
 
-EMAIL_API=False
-G_FROM='onlinestore@bni-india.in'
-G_KEY='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'
-G_ADMIN=["vikky.motla@gmail.com"]
-
+EMAIL_API=True
+G_FROM='onlinestore@bniglobalstore.com'
+#onlinestore@bniglobalstore.com
+G_KEY='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'
+#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
+G_ADMIN=["pkyisky@gmail.com"]
 
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@24tutors.com'

@@ -23,15 +23,15 @@ def getShipmentCharges( pincode , countryCode , weight):
     customer_transaction_id = "BNISTORE"  # Optional transaction_id
     rate_request = FedexRateServiceRequest(CONFIG_OBJ, customer_transaction_id=customer_transaction_id)
     rate_request.RequestedShipment.DropoffType = 'REGULAR_PICKUP'
-    rate_request.RequestedShipment.ServiceType = 'FEDEX_GROUND'
+    # rate_request.RequestedShipment.ServiceType = 'FEDEX_EXPRESS_SAVER'
     rate_request.RequestedShipment.PackagingType = 'YOUR_PACKAGING'
     rate_request.RequestedShipment.EdtRequestType = 'NONE'
     rate_request.RequestedShipment.ShippingChargesPayment.PaymentType = 'SENDER'
 
 
     # Shipper's address
-    rate_request.RequestedShipment.Shipper.Address.PostalCode = '27577'
-    rate_request.RequestedShipment.Shipper.Address.CountryCode = 'US'
+    rate_request.RequestedShipment.Shipper.Address.PostalCode = '560068'
+    rate_request.RequestedShipment.Shipper.Address.CountryCode = 'IN'
     rate_request.RequestedShipment.Shipper.Address.Residential = False
 
     # Recipient address
@@ -40,10 +40,10 @@ def getShipmentCharges( pincode , countryCode , weight):
 
     package1_weight = rate_request.create_wsdl_object_of_type('Weight')
     package1_weight.Value = weight
-    package1_weight.Units = "KG"
+    package1_weight.Units = "LB"
     package1 = rate_request.create_wsdl_object_of_type('RequestedPackageLineItem')
     package1.Weight = package1_weight
-    package1.PhysicalPackaging = 'BOX'
+    package1.PhysicalPackaging = 'ENVELOPE'
     package1.GroupPackageCount = 1
     rate_request.add_package(package1)
     rate_request.send_request()
@@ -67,7 +67,7 @@ def getShipmentCharges( pincode , countryCode , weight):
             if notification.Severity == 'NOTE':
                 print(sobject_to_dict(notification))
 
-    return rate_detail.ShipmentRateDetail.TotalNetFedExCharge.Amount
+    return rate_detail.ShipmentRateDetail.TotalNetFedExCharge.Amount/70
 
 
 if __name__ == '__main__':

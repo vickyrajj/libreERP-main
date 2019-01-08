@@ -35,12 +35,16 @@
 
 
       <label for="username" class="sr-only">Mobile Number</label>
-      <input id="username" name="username" type="text" maxlength="10" class="form-control" placeholder="Mobile Number/Username" required autofocus>
+      <input id="username" name="username" type="text" class="form-control" placeholder="Email Id/Username" required autofocus>
       <label for="password" class="sr-only">Password</label>
       <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
       <button id="signIn" style="margin-bottom:20px; margin-top:10px;" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-
+      <div class="col-md-6">
       <a style="color:black;" href="registerPage">New User?</a>
+    </div>
+    <div class="col-md-6 text-right">
+      <a  style="color:black;" href="/accounts/password/reset/">Forgot password?</a>
+    </div>
       <!-- <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top:10px">
       <a title="Google" class="btn btn-danger btn-block" href="{% provider_login_url "google" method="oauth2" %}">
         <i class="fa fa-google-plus pull-left"></i>Login with Google

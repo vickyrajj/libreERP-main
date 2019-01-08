@@ -25,8 +25,14 @@
 <meta property="article:author" content="{{seoDetails.author}}" />
 <link rel="icon" href="/static/images/tutor.ico" type="image/gif" sizes="16x16"> {% endblock %} {% block specific_css %}
 <link href="{% static 'css/agency.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8"> {% endblock %} {% block header %}
+<link rel="stylesheet" href="{% static 'css/animate.css' %}" charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/intlTelInput.css' %}" charset="utf-8"> {% endblock %} {% block header %}
 
+<style media="screen">
+  .intl-tel-input{
+    width:100%;
+  }
+</style>
 
 
 <div class="row" style="background-color:white;border-bottom:solid 2px #eeeeee;padding:10px;">
@@ -153,29 +159,10 @@
                         <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                       </div>
                       <div ng-if="isStoreGlobal">
-                        <div class="col-md-2 col-sm-2 col-xs-2" style="padding:0px;">
-                          <!-- <select class="form-control" style="margin-top: 30px; padding:0px;" ng-model="form.phoneCode">
-                            <option value="{{x.phonecode}}" ng-repeat="x in countryList">
-                              {{x.phonecode}} - {{x.name}} - {{x.sortname}}
-                             </option>
-                          </select> -->
-
-                          <div class="dropdown" style="margin-top:37px;">
-                           <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" style="padding: 4px; background:none; border:1px solid #eee;">
-                            <span style="min-width:30px; height:22px"> <img ng-src="{{selected.flag}}" alt="flag" style="width:24px; height:18px"></span>
-                           <span class="caret" style="color:black;"></span></button>
-                           <ul class="dropdown-menu" style="height: 200px;overflow-y: scroll;width: 304px;">
-                             <li class="onHoverli" style="padding: 5px 15px; cursor:pointer;" ng-repeat="c in countryList" ng-click="setSelected(c)">
-                               <span style="min-width:30px; height:22px"> <img ng-src="{{c.flag}}" alt="flag" style="width:26px; height:20px"></span>
-                               {{c.name.slice(0,26)}} <span class="text-muted"> +{{c.phonecode}}</span></li>
-                           </ul>
-                          </div>
-
-                        </div>
-                        <div class="col-md-8 col-sm-8 col-xs-8" style="padding-left:0px;">
-                          <div class="form-group">
-                            <input onkeydown='return (event.which >= 48 && event.which <= 57) || event.which == 8 || event.which == 46 || event.which == 9 ||( event.which > 94 && event.which <106)' ng-model="form.mobile" type="text" class="form-control floatInput" required/>
-                            <span class="floating-label">Phone *</span>
+                        <div class="col-md-10 col-sm-10 col-xs-10" style="padding-left:0px;">
+                          <div class="form-group" style="margin-top:30px;">
+                            <!-- <span class="floating-label">Phone *</span> -->
+                            <input  class="form-control floatInput" style="width:100%;" type="text" name="tel" ng-model="form.mobile" ng-intl-tel-input>
                             <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
                           </div>
                         </div>
@@ -237,6 +224,9 @@
                         <div class="form-group">
                           <input ng-model="form.{{fields.name}}" type="text" class="form-control floatInput" required/><br/>
                           <span class="floating-label">{{fields.placeholder}}*</span>
+
+                          <p style="margin:0px" class="help-text text-danger" ng-if="validityChecked == true && (form.{{fields.name}}.length ==0 || form.{{fields.name}} == null || form.{{fields.name}} == undefined)"> {{fields.name}} is required</p>
+
                         </div>
                       </div>
                       {% endif %} {% if fields.type == 'choice' %}
@@ -250,6 +240,7 @@
                                   <option value={{des}}>{{des}}</option>
                                   {% endfor %}
                                 </select>
+                        <p style="margin:0px" class="help-text text-danger" ng-if="validityChecked == true && (form.{{fields.name}} == '{{fields.placeholder}}')"> {{fields.name}} is required</p>
                       </div>
                       {% endif %}
                     </div>
@@ -285,44 +276,51 @@
               <div class="row" style="margin-bottom:15px;" ng-if="mode=='verify'">
                 <div ng-if="!showActiveMsg">
                   {% endverbatim %} {% if verifyMobile != False %}
-                  <div class="col-md-6">
+                  <div class="col-md-8 col-md-offset-2">
                     <div class="row">
-                      <div class="col-md-2 col-sm-2 col-xs-2">
+                      <div class="col-md-1 col-sm-1 col-xs-1">
                         <span><i class="fa fa-phone" style="margin-top: 45px;font-size: 20px;color:#147fcc"></i></span>
                       </div>
-                      <div class="col-md-10 col-sm-10 col-xs-10">
+                      <div class="col-md-9 col-sm-9 col-xs-9">
                         <div class="form-group">
                           <input ng-model="form.mobileOTP" type="password" class="form-control floatInput" required/>
                           <span class="floating-label">Mobile OTP *</span>
                         </div>
                       </div>
+                      <div class="col-md-2 col-sm-2 col-xs-2" style="margin-top:42px;cursor:pointer">
+                        <span style="opacity: 0.7;background: #e0e0e0;padding: 5px;" class="btn" ng-click="sendOtp('mobileOtp')">Resend</span>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-8 col-md-offset-2">
                     {% else %}
                     <div class="col-md-offset-2 col-md-8">
                       {% endif %} {% verbatim %}
                       <div class="row">
-                        <div class="col-md-2 col-sm-2 col-xs-2">
+                        <div class="col-md-1 col-sm-1 col-xs-1">
                           <span><i class="fa fa-envelope" style="margin-top: 45px;font-size: 17px;color:#147fcc"></i></span>
                         </div>
-                        <div class="col-md-10 col-sm-10 col-xs-10">
+                        <div class="col-md-9 col-sm-9 col-xs-9">
                           <div class="form-group">
                             <input ng-model="form.emailOTP" type="password" class="form-control floatInput" required/>
                             <span class="floating-label">Email OTP *</span>
                           </div>
                         </div>
+                        <div class="col-md-2 col-sm-2 col-xs-2" style="margin-top:42px;cursor:pointer">
+                          <span style="opacity: 0.7;background: #e0e0e0;padding: 5px;" class="btn" ng-click="sendOtp('emailOtp')">Resend</span>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="row text-center text-danger" ng-if="validityChecked2">
+                  <div class="col-md-12 text-center text-danger" ng-if="validityChecked2">
                     <span>Invalid OTP , please check both the OTPs and verify again</span>
                   </div>
                 </div>
                 <div class="col-lg-12 text-center" style="margin-top:20px;" ng-if="!showActiveMsg">
                   <button ng-if="mode=='main'" class="btn btn-primary" ng-click="getOTP()">Submit</button>
                   <button ng-if="mode=='verify'" ng-click="verify()" class="btn btn-primary">Verify and Login</button>
+                    <img ng-if="mode=='verify' && verifyingOTP" src="static/images/loading1.gif" style="height:20px; width:20px">
                 </div>
                 <div class="col-lg-12 text-center" ng-if="showActiveMsg">
                   <p> Your account is not activated yet ! We will inform you once it is done! </p>
@@ -336,7 +334,9 @@
 
       </section>
 
+
       {% endblock %} {% block footer %} {% include "footer.html" %}
+
 
       </div>
     </div>
@@ -353,8 +353,11 @@
   <script src="{% static 'js/classie.js' %}"></script>
   <!-- <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script> -->
 
+  <script src="{% static 'js/intlTelInput.js' %}"></script>
+  <script src="{% static 'js/utils.js' %}"></script>
   <script src="{% static 'js/agency.js' %}"></script>
   <script src="{% static 'js/angular.min.js' %}"></script>
+  <!-- <script src="{% static 'js/ng-intl-tel-input.directive.js' %}"></script> -->
   <script src="{% static 'js/ui-bootstrap-tpls-0.14.3.min.js' %}"></script>
   <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
   <script src="{% static 'js/angular-sanitize.min.js' %}"></script>

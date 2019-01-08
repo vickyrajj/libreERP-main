@@ -31,9 +31,11 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
   $scope.form = {firstName :null ,lastName : null , email : null ,mobile : null , password : null, rePassword : null , emailOTP : null , mobileOTP: null , token: null , reg : null , agree : false, phoneCode:''};
   $scope.validityChecked = false;
   $scope.validityChecked2 = false;
+  $scope.verifyingOTP = false
   $scope.usernameExist = false;
 
   $scope.getOTP = function() {
+    console.log($scope.form);
     $scope.validityChecked = true;
     console.log($scope.form);
     if (!$scope.form.agree || $scope.form.firstName == undefined || $scope.form.firstName == null || $scope.form.firstName.length ==0 || $scope.form.lastName == undefined || $scope.form.lastName == null || $scope.form.lastName.length ==0 || $scope.form.email == undefined || $scope.form.email == null || $scope.form.email.length ==0 || $scope.form.mobile == undefined || $scope.form.mobile == null || $scope.form.mobile.length ==0 || $scope.form.password == undefined || $scope.form.password == null || $scope.form.password.length <3 || $scope.form.email.indexOf('@') == -1) {
@@ -41,13 +43,18 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       return;
     }
 
+    if (isStoreGlobal != 'True' && ($scope.form.GST == undefined || $scope.form.GST.length==0 || $scope.form.pincode== undefined || $scope.form.pincode.length==0 ||$scope.form.statecode == undefined || $scope.form.statecode== 'Please select your State code' ||  $scope.form.designation == undefined || $scope.form.designation == 'Please select your role')) {
+      console.log("form not valid , returning2222");
+      return;
+    }
+
     var toSend= {
       mobile : $scope.form.mobile,
       email : $scope.form.email,
     }
-    if ($scope.isStoreGlobal) {
-      toSend.phoneCode = $scope.selected.phonecode
-    }
+    // if ($scope.isStoreGlobal) {
+    //   toSend.mobileWithCode = $scope.form.mobile
+    // }
     console.log(toSend);
     $scope.mode = 'sendingOTP';
     $http({method : 'POST' , url : '/api/homepage/registration/' , data : toSend}).
@@ -89,26 +96,50 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
   }
 
   $scope.verify = function() {
+    $scope.verifyingOTP = true
+    if ($scope.validityChecked2) {
+      $scope.validityChecked2 = false
+    }
     console.log($scope.form,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     $http({method : 'PATCH' , url : '/api/homepage/registration/' + $scope.form.reg + '/', data : $scope.form }).
     then(function(response) {
+      $scope.verifyingOTP = false;
+      $scope.validityChecked2 = false;
       if ($scope.autoActiveReg=='True') {
         $scope.showActiveMsg = false
         window.location.href = "/";
+
       }else{
         $scope.showActiveMsg = true
 
       }
     }, function(err) {
       console.log(err);
+      $scope.verifyingOTP = false;
       if (err.status == 400) {
         $scope.validityChecked2 = true;
       }
     })
   }
 
-  $scope.loading = true;
+  $scope.sendOtp = function(requestType) {
+    console.log(requestType,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    var dataToSend={
+      otpType : requestType,
+      id : $scope.form.reg
+    }
+    $http({method : 'POST' , url : '/api/homepage/resendOtp/' , data : dataToSend }).
+    then(function(response) {
+    }, function(err) {
+      console.log(err);
+      if (err.status == 400) {
+        // $scope.validityChecked2 = true;
+      }
+    })
 
+  }
+
+  $scope.loading = true;
   $scope.$watch('form' , function(newValue , oldValue) {
 
     if ($scope.loading) {
@@ -130,6 +161,12 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
     }
     if (newValue.lastName == undefined) {
       $scope.validity.lastName = false;
+    }
+
+    if ($scope.usernameExist) {
+      if (newValue.email.length != oldValue.email.length) {
+        $scope.usernameExist = false
+      }
     }
 
   }, true)

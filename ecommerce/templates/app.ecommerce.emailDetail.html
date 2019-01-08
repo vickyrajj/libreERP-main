@@ -261,7 +261,7 @@
                 Quantity
               </th>
               <th width="100" align="center">
-                Price {{isStoreGlobal}}
+                Price
               </th>
               {% if isStoreGlobal == False %}
               <th width="100" align="center">
@@ -300,6 +300,11 @@
               <td width="100" align="left">
 
               </td>
+              {% if isStoreGlobal == False %}
+              <td width="100" align="left">
+
+              </td>
+              {% endif %}
               <td width="100" align="center">
                  Total:
               </td>
@@ -311,6 +316,11 @@
               <td width="100" align="left">
 
               </td>
+              {% if isStoreGlobal == False %}
+              <td width="100" align="left">
+
+              </td>
+              {% endif %}
               <td width="200" align="left">
 
                 Coupon Applied:
@@ -329,6 +339,11 @@
               <td width="100" align="left">
 
               </td>
+              {% if isStoreGlobal == False %}
+              <td width="100" align="left">
+
+              </td>
+              {% endif %}
               <td width="100" align="center">
                  Grand Total:
               </td>
@@ -344,6 +359,10 @@
                   <hr>
                   <p>Kind Regards,</p>
                   <h3>Team {{sendersAddress}}</h3>
+                  {% if isStoreGlobal == False %}
+                  <p>GSTIN: {{gstValue}}</p>
+                  {% endif %}
+                  <p> {{companyAddress}} </p>
               </th>
             </tr>
           </table>

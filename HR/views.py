@@ -27,12 +27,17 @@ from rest_framework.views import APIView
 from ecommerce.models import GenericImage
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
+
+from openpyxl import load_workbook
+from io import BytesIO
+from ERP.send_email import send_email
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
 
     def enforce_csrf(self, request):
         return  # To not perform the csrf check previously happening
+
 
 def documentView(request):
     docID = None
@@ -149,8 +154,12 @@ def loginView(request):
         else:
             password = request.POST['password']
         if '@' in usernameOrEmail and '.' in usernameOrEmail:
-            u = User.objects.get(email = usernameOrEmail)
-            username = u.username
+            try:
+                u = User.objects.get(email = usernameOrEmail)
+                username = u.username
+            except:
+                statusCode = 404
+                username = usernameOrEmail
         else:
             username = usernameOrEmail
             try:
@@ -359,17 +368,100 @@ class SendActivatedStatus(APIView):
             'twitterUrl' : 'twitter.com',
             'brandName' : globalSettings.BRAND_NAME,
         }
-
+        emailAddr = []
+        emailAddr.append(str(request.data['email']))
         email_body = get_template('app.HR.userActivated.html').render(ctx)
-        print email_body
         email_subject = 'Registration Successfull!!!!!'
-        sentEmail=[]
-        sentEmail.append(str(request.data['email']))
-        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-        msg = EmailMessage(email_subject, email_body, to= sentEmail)
-        msg.content_subtype = 'html'
-        msg.send()
+        email_cc = []
+        email_bcc = []
+        send_email(email_body,emailAddr,email_subject,email_cc,email_bcc,'html')
         return Response({}, status = status.HTTP_200_OK)
+
+
+from django.core.mail import send_mail , EmailMessage
+from django.core.mail import EmailMultiAlternatives
+import sendgrid
+
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
+token_generator = PasswordResetTokenGenerator()
+print "token : " , token_generator.make_token(User.objects.get(pk = 1))
+
+# path = reverse("account_reset_password_from_key", kwargs=dict(uidb36=user_pk_to_url_str(user),                                      key=temp_key))
+
+
+class BulkUserCreationAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated , isAdmin)
+    def post(self, request, format=None):
+        print request.data,'aaaaaaaa'
+        location = request.data["locationData"]
+        url = location.split('/ERP')[0]
+        wb = load_workbook(filename = BytesIO(request.FILES['xl'].read()))
+        ws = wb.worksheets[0]
+        row_count = ws.max_row+1
+        column_count = ws.max_column
+
+        for i in range(2, row_count):
+            try:
+                username = ws['A' + str(i)].value
+            except:
+                username =""
+            try:
+                email = ws['B' + str(i)].value
+            except:
+                email =""
+            try:
+                first_name = ws['C' + str(i)].value
+            except:
+                first_name =" "
+            # print first_name,'aaaaa'
+            try:
+                last_name = ws['D' + str(i)].value
+                if last_name == None:
+                    last_name = first_name
+                else:
+                    last_name = last_name
+            except:
+                last_name = first_name
+
+            try:
+                mobile = ws['E' + str(i)].value
+            except:
+                mobile =""
+            try:
+                designation = ws['F' + str(i)].value
+                if designation == 'manager' or 'admin' or 'director':
+                    is_staff = True
+                else:
+                    is_staff = False
+            except:
+                designation =""
+            try:
+                send = User(username=username, email= email, first_name=first_name, last_name=last_name,is_staff=is_staff)
+                send.save()
+            except:
+                continue
+            pobj = profile.objects.get(pk=send.profile.pk)
+            pobj.email = email
+            pobj.mobile = mobile
+            pobj.details = {"username":username,"email":email,"first_name":first_name,"last_name":last_name,"designation":designation,"mobile":mobile,"GST":""}
+            pobj.save()
+            ctx = {
+                'heading' : "Welcome to " + globalSettings.SITE_ADDRESS ,
+                'link' : url + '/accounts/password/reset/',
+                'recieverName' : first_name + ' ' + last_name,
+                'brandName' : globalSettings.BRAND_NAME,
+                'siteAddress' : globalSettings.SITE_ADDRESS
+            }
+            sendAddr = []
+            sendAddr.append(str(email))
+            email_body = get_template('app.user.resetPassword.html').render(ctx)
+            email_subject = "Welcome to " + globalSettings.SITE_ADDRESS
+            email_cc = []
+            email_bcc = []
+            send_email(email_body,sendAddr,email_subject,email_cc,email_bcc,'html')
+
+        return Response(status = status.HTTP_200_OK)
 
 @csrf_exempt
 def socialMobileView(request):

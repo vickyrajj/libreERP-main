@@ -1789,43 +1789,81 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
   // for the dashboard of the account tab
   // alert('hello')
   $http({
-    methof:'GET',
-    url:'/api/ecommerce/userProfileSetting/?user='+$scope.me.pk
-  }).then(function (response) {
+    methof: 'GET',
+    url: '/api/ecommerce/userProfileSetting/?user=' + $scope.me.pk
+  }).then(function(response) {
     console.log(response.data);
 
     $scope.detailsForm = {
-      firstName:response.data.firstName,
-      lastName:response.data.lastName,
-      email:response.data.email,
-      mobile:response.data.mobile,
-      gst:response.data.gst
+      firstName: response.data.firstName,
+      lastName: response.data.lastName,
+      email: response.data.email,
+      mobile: response.data.mobile,
+      oldPassword: '',
+      newPassword: ''
+    }
+
+    if (response.data.isGST) {
+      $scope.isGst = true
+      $scope.detailsForm.gst = response.data.gst
+    } else {
+      $scope.isGst = false
     }
 
   })
   $scope.editMode = false
 
-  $scope.edit = function () {
+  $scope.edit = function() {
     $scope.editMode = true
+    setTimeout(function() {
+      document.getElementById('firstName').focus()
+    }, 500);
   }
 
-  $scope.save = function () {
+  $scope.save = function() {
 
     $scope.detailsForm.user = $scope.me.pk
 
+    if ($scope.detailsForm.oldPassword.length==0 && $scope.detailsForm.newPassword.length>0) {
+      Flash.create('warning', 'Enter old password')
+      return
+    }
+
+    if ($scope.detailsForm.oldPassword.length==0 && $scope.detailsForm.newPassword.length>0) {
+      Flash.create('warning', 'Enter new password')
+      return
+    }
+
+    if ($scope.detailsForm.oldPassword.length==0 && $scope.detailsForm.newPassword.length==0) {
+      delete $scope.detailsForm.oldPassword
+      delete $scope.detailsForm.newPassword
+    }
+
     $http({
-      method:'POST',
-      url:'/api/ecommerce/userProfileSetting/',
-      data:$scope.detailsForm
-    }).then(function (response) {
+      method: 'POST',
+      url: '/api/ecommerce/userProfileSetting/',
+      data: $scope.detailsForm
+    }).then(function(response) {
       $scope.detailsForm = {
-        firstName:response.data.firstName,
-        lastName:response.data.lastName,
-        email:response.data.email,
-        mobile:response.data.mobile,
-        gst:response.data.gst
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+        email: response.data.email,
+        mobile: response.data.mobile
       }
+
+      if ($scope.isGst) {
+        $scope.detailsForm.gst = response.data.gst
+      }
+
+      if (response.data.passwordChanged) {
+        window.location.href = "/";
+      }
+
+
       $scope.editMode = false
+      Flash.create('success', 'Saved Successfully')
+    }, function(error) {
+      Flash.create('danger', 'Permission Denied')
     })
     // $http({
     //   method:'PATCH',
@@ -1965,7 +2003,7 @@ app.controller('controller.ecommerce.account.cart', function($scope, $rootScope,
 
 
 
-
+  $scope.currency = settings_currencySymbol
   $scope.calcTotal = function() {
     $scope.total = 0;
     var price = 0;
@@ -2140,11 +2178,31 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
   $timeout(function() {
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       $scope.data.tableData[i].showInfo = false;
+      $scope.data.tableData[i].hideCancelBtn = false
+      $scope.data.tableData[i].hideReturnBtn = false
+      $scope.data.tableData[i].cancelCount = 0;
+      $scope.data.tableData[i].returnCount = 0;
+
       for (var j = 0; j < $scope.data.tableData[i].orderQtyMap.length; j++) {
         $scope.data.tableData[i].orderQtyMap[j].selected = false;
+        if ($scope.data.tableData[i].orderQtyMap[j].status == 'cancelled') {
+          $scope.data.tableData[i].cancelCount++
+        }
+        if ($scope.data.tableData[i].orderQtyMap[j].status == 'returned') {
+          $scope.data.tableData[i].returnCount++;
+        }
       }
+      if ($scope.data.tableData[i].cancelCount == $scope.data.tableData[i].orderQtyMap.length) {
+        $scope.data.tableData[i].hideCancelBtn = true
+      }
+      if ($scope.data.tableData[i].returnCount == $scope.data.tableData[i].orderQtyMap.length) {
+        $scope.data.tableData[i].hideReturnBtn = true
+      }
+
+
     }
-  }, 1500);
+
+  }, 2000);
 
 
   document.title = BRAND_TITLE + ' | My Orders'
@@ -2176,6 +2234,7 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
 
 
           if ($scope.itemsToBeDeleted.length > 0) {
+            $scope.indexofthis = i
             $uibModal.open({
               templateUrl: '/static/ngTemplates/app.ecommerce.orders.cancelModalWindow.html',
               size: 'md',
@@ -2190,9 +2249,10 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
                 $scope.state = 'cancel';
                 $scope.items = items;
                 $scope.amtToBeRefunded = 0;
+                $scope.currency = settings_currencySymbol
 
                 for (var i = 0; i < $scope.items.length; i++) {
-                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + ($scope.items[i].ppAfterDiscount.toFixed(2) * $scope.items[i].qty)
+                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + $scope.items[i].paidAmount
                 }
 
                 $scope.cancel = function() {
@@ -2217,7 +2277,7 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
                       then(function(response) {})
                       $rootScope.$broadcast('forceRefetch', {});
                       Flash.create('success', 'selected items cancelled')
-                      $uibModalInstance.close();
+                      $uibModalInstance.dismiss();
                     })
                   }
                 }
@@ -2225,7 +2285,31 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
               },
             }).result.then(function() {
 
-            }, function() {
+            }, function(res) {
+
+              $timeout(function() {
+                console.log('coming herer', $scope.data.tableData, $scope.indexofthis);
+                $scope.data.tableData[$scope.indexofthis].cancelCount = 0
+                $scope.data.tableData[$scope.indexofthis].returnCount = 0
+                for (var j = 0; j < $scope.data.tableData[$scope.indexofthis].orderQtyMap.length; j++) {
+                  $scope.data.tableData[$scope.indexofthis].orderQtyMap[j].selected = false;
+                  if ($scope.data.tableData[$scope.indexofthis].orderQtyMap[j].status == 'cancelled') {
+                    $scope.data.tableData[$scope.indexofthis].cancelCount++
+                  }
+                  if ($scope.data.tableData[$scope.indexofthis].orderQtyMap[j].status == 'returned') {
+                    $scope.data.tableData[$scope.indexofthis].returnCount++;
+                  }
+                }
+                console.log($scope.data.tableData[$scope.indexofthis].cancelCount, $scope.data.tableData[$scope.indexofthis].orderQtyMap.length);
+                console.log($scope.data.tableData[$scope.indexofthis].returnCount, $scope.data.tableData[$scope.indexofthis].orderQtyMap.length);
+
+                if ($scope.data.tableData[$scope.indexofthis].cancelCount == $scope.data.tableData[$scope.indexofthis].orderQtyMap.length) {
+                  $scope.data.tableData[$scope.indexofthis].hideCancelBtn = true
+                }
+                if ($scope.data.tableData[$scope.indexofthis].returnCount == $scope.data.tableData[$scope.indexofthis].orderQtyMap.length) {
+                  $scope.data.tableData[$scope.indexofthis].hideReturnBtn = true
+                }
+              }, 2000);
 
             });
           } else {
@@ -2261,13 +2345,13 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
                 }
               },
               controller: function($scope, items, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance) {
-                console.log('in modal windddddddd', items);
                 $scope.state = 'return';
                 $scope.items = items;
                 $scope.amtToBeRefunded = 0;
+                $scope.currency = settings_currencySymbol
 
                 for (var i = 0; i < $scope.items.length; i++) {
-                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + (($scope.items[i].totalAmount - $scope.items[i].discountAmount) * $scope.items[i].qty)
+                  $scope.amtToBeRefunded = $scope.amtToBeRefunded + $scope.items[i].paidAmount
                 }
 
                 $scope.return = function() {
@@ -2293,7 +2377,7 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
                       then(function(response) {})
                       $rootScope.$broadcast('forceRefetch', {});
                       Flash.create('success', 'selected items returned')
-                      $uibModalInstance.close();
+                      $uibModalInstance.dismiss();
                     })
                   }
 
@@ -2303,6 +2387,26 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
             }).result.then(function() {
 
             }, function() {
+
+              $timeout(function() {
+                $scope.data.tableData[$scope.indexofthis].cancelCount = 0
+                $scope.data.tableData[$scope.indexofthis].returnCount = 0
+                for (var j = 0; j < $scope.data.tableData[$scope.indexofthis].orderQtyMap.length; j++) {
+                  $scope.data.tableData[$scope.indexofthis].orderQtyMap[j].selected = false;
+                  if ($scope.data.tableData[$scope.indexofthis].orderQtyMap[j].status == 'cancelled') {
+                    $scope.data.tableData[$scope.indexofthis].cancelCount++
+                  }
+                  if ($scope.data.tableData[$scope.indexofthis].orderQtyMap[j].status == 'returned') {
+                    $scope.data.tableData[$scope.indexofthis].returnCount++;
+                  }
+                }
+                if ($scope.data.tableData[$scope.indexofthis].cancelCount == $scope.data.tableData[$scope.indexofthis].orderQtyMap.length) {
+                  $scope.data.tableData[$scope.indexofthis].hideCancelBtn = true
+                }
+                if ($scope.data.tableData[$scope.indexofthis].returnCount == $scope.data.tableData[$scope.indexofthis].orderQtyMap.length) {
+                  $scope.data.tableData[$scope.indexofthis].hideReturnBtn = true
+                }
+              }, 2000);
 
             });
           } else {
@@ -2338,7 +2442,8 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
       state: '',
       pincode: null,
       country: 'India',
-      primary: false
+      primary: false,
+      mobileNo:''
     }
     if (settings_isStoreGlobal) {
       $scope.form.country = ''
@@ -3144,9 +3249,9 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           price = $scope.cartItems[i].prodVarPrice
           discountedPrice = $scope.cartItems[i].prod_var.discountedPrice
         }
-        $scope.gstTotal =  ($scope.cartItems[i].gst * discountedPrice )/100 * $scope.cartItems[i].qty
-        $scope.total = $scope.total + (price * $scope.cartItems[i].qty) + ($scope.cartItems[i].gst * price )/100 * $scope.cartItems[i].qty
-        $scope.totalAfterDiscount = $scope.totalAfterDiscount + (discountedPrice * $scope.cartItems[i].qty) + ($scope.cartItems[i].gst * discountedPrice )/100 * $scope.cartItems[i].qty
+        $scope.gstTotal = ($scope.cartItems[i].gst * discountedPrice) / 100 * $scope.cartItems[i].qty
+        $scope.total = $scope.total + (price * $scope.cartItems[i].qty) + ($scope.cartItems[i].gst * price) / 100 * $scope.cartItems[i].qty
+        $scope.totalAfterDiscount = $scope.totalAfterDiscount + (discountedPrice * $scope.cartItems[i].qty) + ($scope.cartItems[i].gst * discountedPrice) / 100 * $scope.cartItems[i].qty
       }
     } else {
       $scope.total = $scope.item.product.price * $scope.item.qty
@@ -3330,11 +3435,17 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
             // }else {
             //     prodSku = $scope.cartItems[i].prodSku
             // }
+            var weight =$scope.cartItems[i].product.product.grossWeight
+            if(weight == undefined || weight == null){
+              weight = 0
+            }
+            console.log($scope.cartItems[i].product.product.grossWeight,'hereee');
             $scope.cartProducts.push({
               pk: $scope.cartItems[i].product.pk,
               qty: $scope.cartItems[i].qty,
               prodSku: $scope.cartItems[i].prodSku,
-              desc: $scope.cartItems[i].desc
+              desc: $scope.cartItems[i].desc,
+              grossWeight:weight
             })
           }
         }
@@ -3387,6 +3498,15 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       }
       $scope.data.stage = 'payment';
       $scope.getShippingCharges = false
+      // grossWeight
+      $scope.totalWeight = 0;
+      console.log( $scope.cartProducts);
+      for (var i = 0; i < $scope.cartProducts.length; i++) {
+        $scope.totalWeight+= $scope.cartProducts[i].grossWeight
+      }
+      $scope.totalWeight = 2.204 * $scope.totalWeight
+
+      console.log($scope.totalWeight,'hello');
       if (settings_isShipmentPrice) {
         $http({
           method: 'GET',
@@ -3400,7 +3520,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           }
           $http({
             method: 'GET',
-            url: '/api/ecommerce/shipmentCharge/?country=' + $scope.country + '&pincode=' + $scope.data.address.pincode + '&weight=1'
+            url: '/api/ecommerce/shipmentCharge/?country=' + $scope.country + '&pincode=' + $scope.data.address.pincode + '&weight=' +   $scope.totalWeight
           }).then(function(response) {
             $scope.shippingCharges = response.data
             $scope.getShippingCharges = true
@@ -3527,6 +3647,7 @@ app.controller('ecommerce.main', function($scope, $rootScope, $state, $http, $ti
 
 
   $rootScope.device;
+
   function smDevice(x) {
     if (x.matches) {
       $rootScope.device = 'small'

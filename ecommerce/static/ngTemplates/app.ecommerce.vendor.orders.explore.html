@@ -83,7 +83,7 @@
           </div> -->
           <div class="col-md-4" ng-if="checkConditions.thirdParty && order.status!='failed' && order.orderQtyMap[succIdx].courierName==null && order.orderQtyMap[succIdx].courierAWBNo==null">
             <div class="form-group">
-              <button type="button" class="btn btn-primary" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="generateManifestForAll()" confirm-button-type="default" cancel-button-type="default">Generate Manifest </button>
+              <button type="button" class="btn btn-primary" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="openWeightPopup()" confirm-button-type="default" cancel-button-type="default">Generate Manifest </button>
               <p class="help-block">Generate Manifest for selected orders</p>
             </div>
           </div>
@@ -111,6 +111,7 @@
 
           </div>
           <div class="col-md-3 pull-right" ng-if="order.status!='failed' && order.orderQtyMap[succIdx].courierName!=null && order.orderQtyMap[succIdx].courierAWBNo!=null">
+
             <row ng-if="checkConditions.thirdParty">
               <div class="row">
                 <a href="/api/ecommerce/downloadManifest/?trackingId={{order.orderQtyMap[succIdx].courierAWBNo}}" target="_blank">
@@ -118,8 +119,8 @@
                  <span class="btn btn-default" mwl-confirm title="Reset Manifest" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="resetManifest()" confirm-button-type="default" cancel-button-type="default">Reset Manifest <i class="fa fa-refresh"></i></span>
               </div>
               <div class="row" style="margin-top:15px;">
-                <a href="/api/ecommerce/downloadManifest/?trackingId={{order.orderQtyMap[succIdx].courierAWBNo}}&packingSlip" target="_blank">
-                  <button type="button" class="btn btn-default">Download PackingSlip <i class="fa fa-download"></i></button> </a>
+                <a href="/api/ecommerce/downloadManifest/?allData={{order.pk}}&packingSlip" target="_blank">
+                <button type="button" class="btn btn-default">Download PackingSlip <i class="fa fa-download"></i></button> </a>
               </div>
 
 
@@ -210,10 +211,10 @@
             <div class="row">
               <div class="col-md-4" >
                 <div class="col-md-8" style="padding:0px" ng-if="checkConditions.showGst&&pData.product.product_taxAmount>0">
-                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.productPrice}} ( <b>+</b> {{pData.product.product_taxAmount}} )</span>
+                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.priceDuringOrder}} ( <b>+</b> {{pData.product.product_taxAmount}} )</span>
                 </div>
                 <div class="col-md-8" style="padding:0px" ng-if="!checkConditions.showGst||pData.product.product_taxAmount==0">
-                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.productPrice}}</span>
+                  <span style="font-size:15px;">Price : <i class="fa {{currency}}"></i> {{pData.priceDuringOrder}}</span>
                 </div>
                 <div class="col-md-4" style="padding:0px">
                   <span style="font-size:15px;">Quantity : {{pData.qty}}</span>

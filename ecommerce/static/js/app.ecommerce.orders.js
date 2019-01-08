@@ -545,7 +545,34 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     }
   }
 
-  $scope.generateManifestForAll = function () {
+  $scope.openWeightPopup = function(){
+
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.courierWeight.html',
+          size: 'md',
+          backdrop: true,
+          controller: function($scope,$uibModalInstance) {
+            $scope.orderForm = {weight:''}
+            $scope.saveWeight = function(){
+              if ($scope.orderForm.weight.length==0) {
+                Flash.create('warning','Please Mention Order Weight')
+                return
+              }else {
+                $uibModalInstance.dismiss({weight:$scope.orderForm.weight});
+              }
+            }
+          },
+        }).result.then(function() {
+
+        }, function(res) {
+          console.log(res);
+          if (typeof res == 'object' && res.weight) {
+            console.log(res);
+            $scope.generateManifestForAll(res.weight)
+          }
+        });
+  }
+  $scope.generateManifestForAll = function (orderWeight) {
     console.log($scope.order);
     if (!$scope.checkConditions.thirdParty) {
       console.log('self courierrrrrrrrr');
@@ -590,9 +617,10 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       // }
 
       $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
+      console.log('order Weighttttttttttttt',orderWeight);
       $http({
         method:'GET',
-        url:'/api/ecommerce/createShipment/?country=US&orderPk='+$scope.order.pk
+        url:'/api/ecommerce/createShipment/?country='+$scope.order.countryCode+'&orderPk='+$scope.order.pk+'&totalWeight='+orderWeight
       }).then(function (response) {
         console.log(response.data);
         $scope.courierForm.courierName = response.data.courierName
@@ -723,6 +751,15 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
             return response.data.results;
           })
         }
+        $scope.isStoreGlobal = false;
+        $http.get('/api/ERP/appSettings/?app=25&name__iexact=isStoreGlobal').
+        then(function(response) {
+          if (response.data[0] != null) {
+              $scope.isStoreGlobal =response.data[0].value
+            }
+          })
+
+        console.log($scope.newForm);
         $scope.saveNewOrder = function(){
           console.log($scope.newForm);
           var np = $scope.newForm
@@ -730,13 +767,20 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
             Flash.create('warning','Please Select Suggested Product')
             return
           }
+          var totalAmnt;
+          if (!$scope.isStoreGlobal) {
+             totalAmnt = np.product.product.price + np.product.product_taxAmount
+          }else {
+             totalAmnt = np.product.product.price
+          }
+
           $http({
             method: 'POST',
             url: '  /api/ecommerce/orderQtyMap/',
             data: {
               product: np.product.pk,
               qty: np.qty,
-              totalAmount: np.product.product.price,
+              totalAmount: totalAmnt,
               prodSku: np.product.product.serialNo,
               discountAmount: 0,
             }

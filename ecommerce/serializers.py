@@ -133,7 +133,7 @@ class POSProductSerializer(serializers.ModelSerializer):
     storeQty=StoreQtySerializer(many=True,read_only=True)
     class Meta:
         model = Product
-        fields = ('pk' , 'user' ,'name' , 'price' , 'discount','discountedPrice' ,'serialNo' ,'description','inStock','storeQty','howMuch','unit')
+        fields = ('pk' , 'user' ,'name' , 'price' , 'discount','discountedPrice' ,'serialNo' ,'description','inStock','storeQty','howMuch','unit','grossWeight')
     def get_discountedPrice(self, obj):
         if obj.discount>0:
             # discountedPrice = obj.price - ((obj.discount / obj.price )* 100)
@@ -484,7 +484,8 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
     trackingLog = TrackingLogSerializer(many = True , read_only = True)
     class Meta:
         model = OrderQtyMap
-        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc','orderBy','gstAmount','paidAmount','modeOfPayment')
+        fields = ( 'pk', 'trackingLog' , 'product', 'qty' ,'totalAmount' , 'status' , 'updated' ,'refundAmount' ,'discountAmount' , 'refundStatus' , 'cancellable','courierName','courierAWBNo','notes','productName','productPrice','ppAfterDiscount','prodSku','prodVar','desc','orderBy','gstAmount','paidAmount','modeOfPayment','priceDuringOrder')
+
 
     def create(self , validated_data):
         print '******************' , self.context['request'].data
@@ -492,6 +493,20 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
         if 'product' in self.context['request'].data:
             lstObj = listing.objects.get(pk = int(self.context['request'].data['product']))
             l.product = lstObj
+        l.save()
+
+        if l.prodSku is not None:
+            if l.prodSku == l.product.product.serialNo:
+                priceDuringOrder = l.product.product.price
+            else:
+                prod = ProductVerient.objects.filter(sku = l.prodSku)
+                if len(prod)>0:
+                    priceDuringOrder = prod[0].price
+                else:
+                    priceDuringOrder = l.product.product.price
+        else:
+            priceDuringOrder = l.product.product.price
+        l.priceDuringOrder = priceDuringOrder
         l.save()
         return l
 
@@ -511,7 +526,7 @@ class OrderQtyMapSerializer(serializers.ModelSerializer):
             except:
                 pass
         if instance.status == 'cancelled' or instance.status == 'returnToOrigin':
-            instance.refundAmount = instance.totalAmount - instance.discountAmount
+            instance.refundAmount = instance.paidAmount
             instance.refundStatus = True
             instance.save()
         return instance
@@ -566,7 +581,7 @@ class OrderSerializer(serializers.ModelSerializer):
     promoDiscount = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges','totalGst')
+        fields = ( 'pk', 'created' , 'updated', 'totalAmount' ,'orderQtyMap' , 'paymentMode' , 'paymentRefId','paymentChannel', 'modeOfShopping' , 'paidAmount', 'paymentStatus' ,'promoCode' , 'approved' , 'status','landMark', 'street' , 'city', 'state' ,'pincode' , 'country' , 'mobileNo','promoDiscount','billingLandMark','billingStreet','billingCity','billingState','billingPincode','billingCountry','shippingCharges','totalGst','stateCode','countryCode')
         read_only_fields = ('user',)
 
     def update(self ,instance, validated_data):
