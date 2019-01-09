@@ -153,7 +153,7 @@ class ProductsUploadAPIView(APIView):
             wsTitle = ws.title
             sheetObj = ProductSheet(file_name = excelFile.name,sheet=wsTitle)
             sheetObj.save()
-
+            unSaved = []
             for i in range(2,ws.max_row+1):
                 try:
                     print 'aaaaaaaaaaa'
@@ -222,8 +222,9 @@ class ProductsUploadAPIView(APIView):
 
                     Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,parent=parent,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst)
                 except:
-                    pass
-        return Response(status=status.HTTP_200_OK)
+                    unSaved.append(part_no)
+            print part_no
+        return Response(part_no,status=status.HTTP_200_OK)
 from reportlab.lib.styles import getSampleStyleSheet
 from svglib.svglib import svg2rlg
 
@@ -1522,17 +1523,17 @@ class OrderAPIView(APIView):
                 for p in invlist:
                     if p.qty>0:
                             if prodListQty>p.qty:
-                                stockList.append({'part_no':p.product.part_no,'qty': p.qty})
+                                stockList.append({'part_no':p.product.part_no,'qty': p.qty,'inventory':p.pk,'project':p.project.pk,'savedqty':p.addedqty,'product':p.product.pk,'addedqty':p.qty,'comm_nr':p.project.comm_nr})
                                 prodListQty = prodListQty - p.qty
                                 p.qty = 0
                                 p.save()
                             elif prodListQty<p.qty:
-                                stockList.append({'part_no':p.product.part_no,'qty': p.qty})
+                                stockList.append({'part_no':p.product.part_no,'qty': p.qty,'inventory':p.pk,'project':p.project.pk,'savedqty':p.addedqty,'product':p.product.pk,'addedqty':prodListQty,'comm_nr':p.project.comm_nr})
                                 p.qty = p.qty - prodListQty
                                 prodListQty = 0
                                 p.save()
                             elif prodListQty==p.qty:
-                                stockList.append({'part_no':p.product.part_no,'qty': p.qty})
+                                stockList.append({'part_no':p.product.part_no,'qty': p.qty,'inventory':p.pk,'project':p.project.pk,'savedqty':p.addedqty,'product':p.product.pk,'addedqty':prodListQty,'comm_nr':p.project.comm_nr})
                                 prodListQty = prodListQty - p.qty
                                 print prodListQty
                                 prodListQty = 0
@@ -1769,7 +1770,8 @@ from openpyxl.writer.excel import save_virtual_workbook
 #         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 #         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
 #         return response
-
+import ast
+import json
 class DownloadProjectSCExcelReponse(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def get(self , request , format = None):
@@ -1783,26 +1785,51 @@ class DownloadProjectSCExcelReponse(APIView):
                 Sheet1.title = p['comm_nr']
             if idx>0:
                 Sheet1 = workbook.create_sheet(p['comm_nr'])
-            Sheet1.append(["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed'])
+            Sheet1.append(["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed by others'])
             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
             print projData
             for i in projData:
                 bomObj=BoM.objects.filter(project__id=i.pk)
                 materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
+
                 for j in bomObj:
-                    mat = []
+
+                    listVal = 0
+                    val = []
+                    stockConsumed=0
                     for k in materialObj:
-                        stockConsumed=0
+                        mat = []
                         materialdata= list(k.materialIssue.all().values())
                         for g in materialdata:
                             mat.append(g)
+                        # stockConsumed=0
                         for m in mat:
-                            print m,'kkkkkkk'
+                            # print m['product_id'],'lllll',j.products.pk
                             if m['product_id']==j.products.pk:
+                                print m['qty']
                                 stockConsumed += m['qty']
-                            else:
-                                stockConsumed = 0
-                    Sheet1.append([i.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed])
+                            # else:
+                            #     stockConsumed = 0
+                    inv = Inventory.objects.all()
+                    for v in inv:
+                        # listVal =[]
+                        if j.project.pk == v.project.pk and j.products.pk == v.product.pk:
+                            materialObjs=MaterialIssueMain.objects.all()
+                            for h in materialObjs:
+                                matdata = h.materialIssue.all()
+                                for e in matdata:
+                                    stock =  ast.literal_eval(e.stock)
+                                    for s in stock:
+                                        if s['addedqty']>0:
+                                            if v.pk==s['inventory']:
+                                                if v.project.pk!=h.project.pk:
+                                                # listVal += s['addedqty']
+                                                    # value = ''
+                                                    value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + s['comm_nr'] + ')'
+                                                    val.append(value)
+
+                            val = json.dumps(val)
+                    Sheet1.append([i.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,val])
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
         return response

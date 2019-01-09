@@ -115,7 +115,7 @@ class Projects(models.Model):
 class BoM(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User , related_name='usersBoM' , null = False)
-    project = models.ManyToManyField(Projects)
+    project = models.ForeignKey(Projects , null = True)
     products = models.ForeignKey( Products , null = True)
     quantity1 = models.PositiveIntegerField(null=True , default=0)
     quantity2 = models.PositiveIntegerField(null=True , default=0)
@@ -129,8 +129,10 @@ class BoM(models.Model):
 
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
+    project =  models.ForeignKey(Projects , null = True)
     product = models.ForeignKey(Products , null = True)
     qty = models.PositiveIntegerField(null=True , default=0)
+    addedqty = models.PositiveIntegerField(null=True , default=0)
     rate = models.FloatField(null = True)
 
 class MaterialIssue(models.Model):

@@ -902,7 +902,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       var dataSend = {
         user: $scope.me.pk,
         products: $scope.data[$scope.data.length - 1].pk,
-        project: $scope.projectlist,
+        project: $scope.form.pk,
         quantity1: 1,
         price: $scope.data[$scope.data.length - 1].price,
         landed_price: $scope.data[$scope.data.length - 1].landed_price,
@@ -962,7 +962,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       var dataSend = {
         user: $scope.me.pk,
         products: $scope.data[$scope.data.length - 1].pk,
-        project: $scope.projectlist,
+        project: $scope.form.pk,
         quantity1: 1,
         price: $scope.data[$scope.data.length - 1].price,
         landed_price: $scope.data[$scope.data.length - 1].landed_price,
@@ -1570,10 +1570,13 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         $scope.qty = $scope.projects[i].quantity2;
         $scope.rate = $scope.projects[i].landed_price
         $scope.pkforProduct = $scope.projects[i].products.pk
+        $scope.project = $scope.form.pk
         $scope.inventory = {
           product: $scope.pkforProduct,
           qty: $scope.qty,
+          addedqty:$scope.qty,
           rate: $scope.rate,
+          project:$scope.project
         }
         $http({
           method: 'POST',

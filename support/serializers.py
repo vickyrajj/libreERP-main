@@ -110,7 +110,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
 class BoMSerializer(serializers.ModelSerializer):
     products = ProductsSerializer(many = False , read_only = True)
-    project =  ProjectsSerializer(many = True  , read_only =True)
+    project =  ProjectsSerializer(many = False  , read_only =True)
     class Meta:
         model = BoM
         fields = ('pk','created','user' , 'products','project','quantity1','quantity2','price','landed_price','invoice_price','customer_price','gst','custom','customs_no')
@@ -123,8 +123,9 @@ class BoMSerializer(serializers.ModelSerializer):
             print b.products,'bbbbbbbbb'
         b.save()
         if 'project' in self.context['request'].data:
-            for i in self.context['request'].data['project']:
-                b.project.add(Projects.objects.get(pk = i))
+            b.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
+            # for i in self.context['request'].data['project']:
+            #     b.project.add(Projects.objects.get(pk = i))
         b.save()
         return b
         def update (self, instance, validated_data):
@@ -139,13 +140,16 @@ class BoMSerializer(serializers.ModelSerializer):
 
 class InventorySerializer(serializers.ModelSerializer):
     product = ProductsSerializer(many = False , read_only = True)
+    project =  ProjectsSerializer(many = False  , read_only =True)
     class Meta:
         model = Inventory
-        fields = ('pk','created','product','qty','rate')
+        fields = ('pk','created','product','qty','rate','project','addedqty')
     def create(self, validated_data):
         b = Inventory(**validated_data)
         if 'product' in self.context['request'].data:
             b.product = Products.objects.get(pk=int(self.context['request'].data['product']))
+        if 'project' in self.context['request'].data:
+            b.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
         b.save()
         return b
 
