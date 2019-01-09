@@ -265,7 +265,8 @@
                 <h4>Average Rating &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
               </div>
               <div class="col-sm-3 text-right">
-                <h4><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;2.94%</h4>
+                <h4><i class="fa fa-sort-{{changeInAverageRating.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInAverageRating.percentage.toFixed(2)}}%</h4>
+                <!-- <h4><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;changeInAverageRating %</h4> -->
               </div>
             <!-- </div> -->
             <!-- <div class="row"> -->
@@ -320,12 +321,6 @@
       </div>
     </div>
   </div>
-
-
-
-
-
-
 
 
 

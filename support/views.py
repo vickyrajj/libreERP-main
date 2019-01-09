@@ -943,7 +943,7 @@ class GethomeCal2(APIView):
         graphLabels = []
         for i in range(7):
             dt = lastWeek + relativedelta(days=i)
-            dateChat = ChatThread.objects.filter(created__startswith=dt)
+            dateChat = chatThreadObj.filter(created__startswith=dt)
             if 'perticularUser' in self.request.GET:
                 if int(self.request.GET['perticularUser'])>0:
                     dateChat = dateChat.filter(company=int(self.request.GET['perticularUser']))
