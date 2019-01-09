@@ -92,68 +92,83 @@ app.config(function($stateProvider) {
       controller: 'controller.index'
     })
 
-  $stateProvider
-    .state('enroll', {
-      url: "/enroll",
-      templateUrl: '/static/ngTemplates/app.homepage.enroll.html',
-      controller: 'controller.enroll'
-    })
+    $stateProvider
+      .state('enroll', {
+        url: "/enroll",
+        templateUrl: '/static/ngTemplates/app.homepage.enroll.html',
+        controller: 'controller.enroll'
+      })
 
-  $stateProvider
-    .state('contact', {
-      url: "/contact",
-      templateUrl: '/static/ngTemplates/app.homepage.contact.html',
-      controller: 'controller.contact'
-    })
+    $stateProvider
+      .state('contact', {
+        url: "/contact",
+        templateUrl: '/static/ngTemplates/app.homepage.contact.html',
+        controller: 'controller.contact'
+      })
 
-  $stateProvider
-    .state('about', {
-      url: "/about",
-      templateUrl: '/static/ngTemplates/app.homepage.about.html',
-      // controller: 'controller.about'
-    })
-  $stateProvider
-    .state('career', {
-      url: "/career",
-      templateUrl: '/ngTemplates/career.html',
-      // controller: 'controller.about'
-    })
-  $stateProvider
-    .state('testimonials', {
-      url: "/testimonials",
-      templateUrl: '/static/ngTemplates/app.homepage.testimonials.html',
-      controller: 'controller.testimonials'
-    })
-  $stateProvider
-    .state('ncert', {
-      url: "/ncert",
-      templateUrl: '/static/ngTemplates/app.homepage.ncert.html',
-      // controller: 'controller.ncert'
-    })
-  $stateProvider
-    .state('policy', {
-      url: "/policy",
-      templateUrl: '/static//ngTemplates/policy.html',
-      // controller: 'controller.policy'
-    })
-  $stateProvider
-    .state('refund', {
-      url: "/refund",
-      templateUrl: '/static//ngTemplates/refund.html',
-      // controller: 'controller.refund'
-    })
-  $stateProvider
-    .state('terms', {
-      url: "/terms",
-      templateUrl: '/static//ngTemplates/terms.html',
-      // controller: 'controller.terms'
-    })
-  $stateProvider
-    .state('desclaimer', {
-      url: "/desclaimer",
-      templateUrl: '/static//ngTemplates/desclaimer.html',
-      // controller: 'controller.terms'
-    })
+    $stateProvider
+      .state('services', {
+        url: "/services",
+        templateUrl: '/static/ngTemplates/app.homepage.services.html',
+        controller: 'controller.services'
+      })
+
+    $stateProvider
+      .state('about', {
+        url: "/about",
+        templateUrl: '/static/ngTemplates/app.homepage.about.html',
+        // controller: 'controller.about'
+      })
+    $stateProvider
+      .state('career', {
+        url: "/career",
+        templateUrl: '/ngTemplates/tutorsCareer.html',
+        // controller: 'controller.about'
+      })
+    $stateProvider
+      .state('testimonials', {
+        url: "/testimonials",
+        templateUrl: '/static/ngTemplates/app.homepage.testimonials.html',
+        controller: 'controller.testimonials'
+      })
+    $stateProvider
+      .state('courses', {
+        url: "/courses",
+        templateUrl: '/static/ngTemplates/app.homepage.courses.html',
+        controller: 'controller.courses'
+      })
+    $stateProvider
+      .state('ncert', {
+        url: "/ncert",
+        templateUrl: '/static/ngTemplates/app.homepage.ncert.html',
+        // controller: 'controller.ncert'
+      })
+    $stateProvider
+      .state('policy', {
+        url: "/policy",
+        templateUrl: '/ngTemplates/tutorsPolicy.html',
+        // controller: 'controller.policy'
+      })
+    $stateProvider
+      .state('refund', {
+        url: "/refund",
+        templateUrl: '/ngTemplates/tutorsRefund.html',
+        // controller: 'controller.refund'
+      })
+    $stateProvider
+      .state('terms', {
+        url: "/terms",
+        templateUrl: '/ngTemplates/tutorsTerms.html',
+        // controller: 'controller.terms'
+      })
+    $stateProvider
+      .state('desclaimer', {
+        url: "/desclaimer",
+        templateUrl: '/ngTemplates/tutorsDisclaimer.html',
+        // controller: 'controller.terms'
+      })
+
+
   $stateProvider
     .state('blogs', {
       url: "/blogs",
@@ -168,8 +183,317 @@ app.config(function($stateProvider) {
       controller: 'controller.blogDetails'
     })
 
+    $stateProvider
+    .state('book', {
+      url: "/book",
+      templateUrl: 'static/ngTemplates/app.homepage.book.html',
+      // controller: 'controller.book'
+    })
+  $stateProvider
+    .state('chapter', {
+      url: "/chapter",
+      templateUrl: 'static/ngTemplates/app.homepage.chapter.html',
+      controller: 'controller.chapter'
+    })
+
 });
 
+app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  console.log($stateParams);
+
+  $scope.blogPk = $stateParams.name.split('&')[1]
+
+  $http.get('/api/PIM/blog/' + $scope.blogPk + '/').
+  then(function(response) {
+    $scope.blogDetail = response.data
+    console.log($scope.blogDetail);
+
+    $scope.blogDetail.source = $sce.trustAsHtml($scope.blogDetail.source);
+  })
+
+  $scope.fetchRecentPosts = function() {
+    $http.get('/api/PIM/blog/?limit=5').
+    then(function(response) {
+      console.log(response);
+      $scope.recentPosts = response.data.results
+    });
+  }
+
+  $scope.fetchRecentPosts()
+
+
+  $scope.openBlog = function(name, pk) {
+    $state.go('blogDetails', {
+      name: name + '&' + pk
+    })
+  }
+
+});
+
+
+app.controller('controller.chapter', function($scope,$rootScope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $document) {
+
+
+  $scope.signin = function(){
+    $rootScope.$broadcast('opensignInPopup', {});
+  }
+
+  $scope.displ = false;
+  $scope.load_q = function(idx) {
+    $scope.displ = true;
+    $scope.idx = idx
+  }
+  $scope.toTheTop = function() {
+    $document.scrollTopAnimated(0, 5000).then(function() {
+      console && console.log('You just scrolled to the top!');
+    });
+  }
+  var section3 = angular.element(document.getElementById('section-3'));
+  $scope.toSection3 = function() {
+    $document.scrollToElementAnimated(section3);
+  }
+
+})
+app.controller('controller.courses', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  $scope.bookscontent = [{
+      'class': 'head1',
+      'title': '01. Ncert Maths',
+      'chapter': {
+        'one': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'two': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'three': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'four': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'five': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'six': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'seven': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+
+      }
+    },
+    {
+      'class': 'head1',
+      'title': '02. Ncert Science',
+      'chapter': {
+        'one': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'two': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'three': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'four': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'five': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'six': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        'seven': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+      }
+    },
+  ];
+
+
+  $scope.videos = false;
+  $scope.books = false;
+  $scope.testseries = false;
+  $scope.forum = false;
+  $scope.refbook = false;
+  $scope.click = null;
+
+  $scope.smDevice = function(x) {
+    if (x.matches) {
+      console.log('trueeeeeeee');
+      $scope.device.smallDevice = true;
+    }
+  }
+
+
+  $scope.sm = window.matchMedia("(max-width: 768px)")
+  $scope.smDevice($scope.sm)
+  $scope.sm.addListener($scope.smDevice)
+
+  $scope.clicks = function(val) {
+    if (val == 1) {
+      $scope.books = !$scope.books;
+      $scope.testseries = false;
+      $scope.forum = false;
+      $scope.videos = false;
+      $scope.refbook = false;
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+        if ($scope.books == true) {
+          $scope.class1 = "triangle-hover";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        } else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+
+      }
+
+
+
+    } else if (val == 2) {
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.forum = false;
+      $scope.videos = !$scope.videos;
+      $scope.refbook = false;
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+        if ($scope.videos == true) {
+          $scope.class2 = "triangle-hover";
+          $scope.class4 = "";
+          $scope.class1 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        } else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+
+      }
+
+    } else if (val == 3) {
+      $scope.books = false;
+      $scope.testseries = !$scope.testseries;
+      $scope.forum = false;
+      $scope.videos = false;
+      $scope.refbook = false;
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+
+        if ($scope.testseries == true) {
+          $scope.class3 = "triangle-hover";
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class5 = "";
+        } else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+
+      }
+    } else if (val == 4) {
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.forum = !$scope.forum;
+      $scope.videos = false;
+      $scope.refbook = false;
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+        if ($scope.forum == true) {
+          $scope.class4 = "triangle-hover";
+          $scope.class1 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        } else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+
+      }
+    } else {
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.forum = false;
+      $scope.videos = false;
+      $scope.refbook = !$scope.refbook
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+        if ($scope.refbook == true) {
+          $scope.class5 = "triangle-hover1";
+          $scope.class1 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class4 = "";
+        } else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+        }
+
+
+      }
+    }
+  }
+
+
+
+
+  $scope.headclick = function(val) {
+    $scope.bookscontent[val].view = !$scope.bookscontent[val].view;
+  }
+  $scope.loadcontent = function(val) {
+    $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
+  }
+
+  $scope.cardss = [{
+      img1: '/static/images/24tut/img1.jpeg',
+      title: 'Kids Complementary Maths',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
+      img2: '/static/images/24tut/author1.png',
+      name: 'Penny Tailor',
+      price: '15.00 ',
+    },
+    {
+      img1: '/static/images/24tut/img1.jpeg',
+      title: 'Language Learning Crash Course ',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
+      img2: '/static/images/24tut/author1.png',
+      name: 'Penny Tailor nathasa',
+      price: '15.00 ',
+    },
+    {
+      img1: '/static/images/24tut/img1.jpeg',
+      title: 'General Logical Analysis',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ',
+      img2: '/static/images/24tut/author1.png',
+      name: 'Penny Tailor',
+      price: '15.00 ',
+    },
+  ]
+
+})
+
+app.controller('controller.contact', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+  $scope.display
+})
+
+app.controller('controller.disclaimer', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {})
+
+app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  $scope.myObj = {
+    "background-color": "#DDF6FB",
+  }
+  $scope.myObjcolor = {
+    "background-color": "#E5E7FC",
+  }
+
+});
 
 app.controller('controller.blogs', function($scope, $state, $http, $timeout, $interval, $uibModal) {
 
@@ -228,10 +552,7 @@ app.controller('controller.blogs', function($scope, $state, $http, $timeout, $in
 
 });
 
-
-
-
-app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+app.controller('controller.blogExplore', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
   console.log($stateParams);
 
@@ -260,17 +581,6 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
     $state.go('blogDetails', {
       name: name + '&' + pk
     })
-  }
-
-});
-
-app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
-
-  $scope.myObj = {
-    "background-color": "#DDF6FB",
-  }
-  $scope.myObjcolor = {
-    "background-color": "#E5E7FC",
   }
 
 });
@@ -323,7 +633,10 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
       size: 'md',
       backdrop: true,
 
-      controller: function($scope, ) {
+      controller: function($scope, $uibModalInstance) {
+        $scope.close = function() {
+          $uibModalInstance.dismiss('cancel');
+        }
         $scope.pauseOrPlay = function(ele) {
           var video = angular.element(ele.srcElement);
           video[0].pause(); // video.play()
@@ -337,34 +650,120 @@ app.controller('controller.index', function($scope, $state, $http, $timeout, $in
 })
 
 app.controller('controller.enroll', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
-  $scope.list = [1, 2, 3, 4]
-  $scope.isDisabled = false;
+
+  $scope.active1 = false;
+  $scope.active2 = false;
+  $scope.active3 = false;
+  $scope.active4 = false;
+  var addfilter = function(val1, val2, val3) {
+    document.getElementById('drop' + val1).classList.add("filter");
+    document.getElementById('drop' + val2).classList.add("filter");
+    document.getElementById('drop' + val3).classList.add("filter");
+  }
+  var removefilter = function(val1, val2, val3, val4) {
+    document.getElementById('drop' + val1).classList.remove("filter");
+    document.getElementById('drop' + val2).classList.remove("filter");
+    document.getElementById('drop' + val3).classList.remove("filter");
+    document.getElementById('drop' + val4).classList.remove("filter");
+  }
 
   $scope.dropdown = function(val) {
-    for (var i = 0; i < $scope.list.length; i++) {
-      document.getElementById('drop' + $scope.list[i]).classList.remove("filter");
-    }
-    if ($scope.list.includes(val)) {
-      $scope.list.splice(val - 1, 1)
-      for (var i = 0; i < $scope.list.length; i++) {
-        document.getElementById('drop' + $scope.list[i]).classList.add("filter");
-
+    if (val == 1) {
+      if ($scope.active1 == false) {
+        console.log('hhh');
+        addfilter(2, 3, 4);
+        $scope.active2 = false;
+        $scope.active3 = false;
+        $scope.active4 = false;
+        $scope.active1 = true;
+      } else {
+        console.log('lll');
+        removefilter(1, 2, 3, 4)
+        $scope.active1 = false;
       }
-    }
 
-    $scope.clasname = document.getElementsByClassName('open');
-    if ($scope.clasname.length > 0) {
-      for (var i = 0; i < $scope.list.length; i++) {
-        document.getElementById('drop' + $scope.list[i]).classList.remove("filter");
+    } else if (val == 2) {
+      if ($scope.active2 == false) {
+        addfilter(4, 3, 1);
+        $scope.active1 = false;
+        $scope.active3 = false;
+        $scope.active4 = false;
+        $scope.active2 = true;
+      } else {
+        removefilter(1, 2, 3, 4)
+        $scope.active2 = false;
       }
+
+    } else if (val == 3) {
+      if ($scope.active3 == false) {
+        addfilter(2, 1, 4);
+        $scope.active2 = false;
+        $scope.active1 = false;
+        $scope.active4 = false;
+        $scope.active3 = true;
+      } else {
+        removefilter(1, 2, 3, 4)
+        $scope.active3 = false;
+      }
+
+    } else if (val == 4) {
+      if ($scope.active4 == false) {
+        addfilter(2, 3, 1);
+        $scope.active2 = false;
+        $scope.active3 = false;
+        $scope.active1 = false;
+        $scope.active4 = true;
+      } else {
+        removefilter(1, 2, 3, 4)
+        $scope.active4 = false;
+      }
+
     }
-    $scope.list = [1, 2, 3, 4]
+    // for (var i = 0; i < $scope.list.length; i++) {
+    //   document.getElementById('drop' + $scope.list[i]).classList.remove("filter");
+    // }
+    // $scope.clasname = document.getElementsByClassName('open');
+    // if ($scope.clasname.length > 0) {
+    //   console.log($scope.mainid,'kkk');
+    //     for (var i = 0; i < $scope.list.length; i++) {
+    //       $scope.mainid = document.querySelector('.open').id
+    //       if($scope.mainid == 'open'){
+    //       document.getElementById('drop' + $scope.list[i]).classList.remove("filter");
+    //
+    //     }else{
+    //       if ($scope.list.includes(val)) {
+    //         $scope.list.splice(val - 1, 1)
+    //         for (var i = 0; i < $scope.list.length; i++) {
+    //           document.getElementById('drop' + $scope.list[i]).classList.add("filter");
+    //
+    //         }
+    //     }
+    //
+    //     }
+    //   }
+    //
+    // } else {
+    //   console.log('hhhh');
+    //   if ($scope.list.includes(val)) {
+    //     $scope.list.splice(val - 1, 1)
+    //     for (var i = 0; i < $scope.list.length; i++) {
+    //       document.getElementById('drop' + $scope.list[i]).classList.add("filter");
+    //
+    //     }
+    //   }
+    // }
+    // for (var i = 0; i < $scope.list.length; i++) {
+    //   document.getElementById('drop' + $scope.list[i]).classList.remove("filter");
+    // }
 
   }
+
   $(window).click(function(e) {
-    for (var i = 0; i < $scope.list.length; i++) {
-      document.getElementById('drop' + $scope.list[i]).classList.remove("filter");
-    }
+    removefilter(1, 2, 3, 4);
+    $scope.active1 = false;
+    $scope.active2 = false;
+    $scope.active3 = false;
+    $scope.active4 = false;
   });
   $scope.properties = {
     lazyLoad: true,
@@ -417,12 +816,72 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
       price: '15.00 ',
     },
   ]
+  $scope.active = null
+  $scope.drop = function(val) {
+    if (val == 0) {
+      if ($scope.active == 0) {
+        $scope.active = null
+      } else {
+        $scope.active = 0
+      }
+    } else if (val == 1) {
+      if ($scope.active == 1) {
+        $scope.active = null
+      } else {
+        $scope.active = 1
+      }
+    } else if (val == 2) {
+      if ($scope.active == 2) {
+        $scope.active = null
+      } else {
+        $scope.active = 2
+      }
+
+    } else {
+      if ($scope.active == 3) {
+        $scope.active = null
+      } else {
+        $scope.active = 3
+      }
+    }
+  }
 })
 
 
 
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope) {
 
+  $rootScope.$state = $state;
+
+
+  $rootScope.$on('opensignInPopup', function() {
+    $scope.signin()
+  });
+
+
+  $scope.signin = function(){
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.signin.html',
+      size: 'lg',
+      backdrop: false,
+      controller: function($scope, $uibModalInstance) {
+        $scope.close = function() {
+          $uibModalInstance.dismiss('cancel');
+        }
+
+        $scope.slideDown = function() {
+          $timeout(function() {
+            console.log("sliding down");
+            var element = document.getElementsByClassName('signup_modal');
+            element[0].scrollIntoView({
+              block: "end"
+            });
+          }, 1000)
+        }
+
+      },
+    })
+  }
 
   $rootScope.getCookie = function(cname) {
     var name = cname + "=";
@@ -550,128 +1009,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
     }
   }
 
-  $scope.schedule = function(idx) {
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.homepage.schedule.modal.html',
-      size: 'lg',
-      backdrop: true,
-      controller: function($scope, Flash) {
-        $scope.calendar = true
-        $scope.thankYou = false
 
-        $scope.refresh = function() {
-          $scope.form = {
-            dated: new Date(),
-            slot: '8 - 9',
-            emailId: '',
-            name: ''
-          }
-        }
-        $scope.refresh()
-
-        $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
-        if ($scope.visitorDetails != "") {
-          $scope.form.name = JSON.parse($scope.visitorDetails).name || ''
-          $scope.form.emailId = JSON.parse($scope.visitorDetails).email || ''
-        }
-
-
-        $scope.timeSlot = [{
-            'time': '8 - 9'
-          },
-          {
-            'time': '9 - 10'
-          },
-          {
-            'time': '10 - 11'
-          },
-          {
-            'time': '11 - 12'
-          },
-          {
-            'time': '13 - 14'
-          },
-          {
-            'time': '14 - 15'
-          },
-          {
-            'time': '15 - 16'
-          },
-          {
-            'time': '16 - 17'
-          },
-        ]
-
-
-
-
-        $scope.scheduleMeeting = function() {
-          if ($scope.form.emailId == '' || $scope.form.name == '') {
-            return;
-          }
-
-          $scope.visitorDetails = $rootScope.getCookie("visitorDetails");
-          if ($scope.visitorDetails != "") {
-            $rootScope.setCookie("visitorDetails", JSON.stringify({
-              uid: JSON.parse($scope.visitorDetails).uid,
-              name: $scope.form.name,
-              email: $scope.form.emailId,
-              visitorPk: $rootScope.visitorPk,
-              blogSubscribed: JSON.parse($scope.visitorDetails).blogSubscribed
-            }), 365);
-          }
-
-
-          var dataToSend = {
-            dated: $scope.form.dated.toJSON().split('T')[0],
-            slot: $scope.form.slot,
-            emailId: $scope.form.emailId,
-            name: $scope.form.name,
-            source: $rootScope.source
-          }
-
-          $http({
-            method: 'POST',
-            url: erpUrl + '/api/marketing/schedule/',
-            data: dataToSend
-          }).
-          then(function(response) {
-
-            Flash.create('success', 'Saved');
-            $scope.calendar = false
-            $scope.thankYou = true
-            $http({
-              method: 'POST',
-              url: erpUrl + '/api/marketing/inviteMail/',
-              data: {
-                value: response.data.pk
-              }
-            }).
-            then(function(response) {
-              // $scope.refresh()
-            });
-
-            $http({
-              method: 'PATCH',
-              url: '/api/ERP/visitor/' + $rootScope.visitorPk + '/',
-              data: {
-                demoRequested: true,
-                email: $scope.form.emailId,
-                name: $scope.form.name
-              }
-            }).then(function(response) {
-              console.log(response.data);
-            })
-
-
-          });
-
-        }
-
-
-      },
-    })
-  }
 
 
 

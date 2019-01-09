@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#222222;border:0px solid #222222;min-height:40px;">
+<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#222222;border:0px solid #222222;min-height:40px;" ng-hide="$state.includes('chapter')">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     {% verbatim %}
@@ -28,14 +28,11 @@
         <li class="header_element">
           <a href="" ng-mouseleave="show[0]=false" ng-mouseover="show[0]=true" class="nav_ele"> Courses</a>
           <ul ng-mouseleave="keepshow[0]=false" ng-click="keepshow[0] = false; toggleNavbar = false;" ng-mouseover="keepshow[0]=true" ng-show="show[0]||keepshow[0]" class="container_box">
-            <li><a href="">class 12th</a></li>
+            <li><a href="/courses">class 12th</a></li>
             <li><a href="">class 11th</a></li>
             <li><a href="">class 10th</a></li>
             <li><a href="">class 9th</a></li>
-            <li><a href="">class 8th</a></li>
-            <li><a href="">class 7th</a></li>
-            <li><a href="">class 6th</a></li>
-            <li><a href="">class 13th (Droppers)</a></li>
+
           </ul>
         </li>
         <li class="header_element">
@@ -46,7 +43,6 @@
             <li><a href="">Mock Tests</a></li>
             <li><a href="">Sample Papers</a></li>
             <li><a href="">Reference Book Solutions</a></li>
-            <li><a href="">ICSE Solutions</a></li>
             <li><a href="">School Syllabus</a></li>
             <li><a href="">Revision Notes</a></li>
             <li><a href="">Important Questions</a></li>
@@ -66,8 +62,9 @@
           </ul>
         </li> -->
         <li class="header_element">
-          <a href="/login" ng-mouseleave="show[4]=false" ng-mouseover="show[4]=true" style="color:#fff;"><i class="fa fa-key fa-fw" aria-hidden="true"></i>Sign in</a>
+          <a ng-click="signin()" href="" ng-mouseleave="show[4]=false" ng-mouseover="show[4]=true" class="nav_ele"><i class="fa fa-key fa-fw" aria-hidden="true"></i>Sign in</a>
         </li>
+
       </ul>
     </div>
   </div>

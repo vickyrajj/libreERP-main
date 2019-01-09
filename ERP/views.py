@@ -18,7 +18,24 @@ from rest_framework.renderers import JSONRenderer
 import requests
 import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import translation
 import urllib
+
+
+
+def renderedStatic(request , filename):
+
+    if request.COOKIES.get('lang') == None:
+        language = translation.get_language_from_request(request)
+    else:
+        language = request.COOKIES.get('lang')
+
+    translation.activate(language )
+    request.LANGUAGE_CODE = translation.get_language()
+    return render(request , filename , {"lang" : request.LANGUAGE_CODE})
+
+
+
 
 
 class MakePaytmPayment(APIView):

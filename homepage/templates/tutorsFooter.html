@@ -1,5 +1,5 @@
-<footer>
-  <div class="container-fluid no_padding" style="min-height:40vh;margin:20px auto 0px auto;position:relative;">
+<footer ng-hide="$state.includes('chapter')">
+  <div class="container-fluid no_padding" style="min-height:40vh;position:relative;">
     <img src="/static/images/24tut/7.png" class="bg on_left" width="10%">
     <img src="/static/images/24tut/r_side.png" class="bg on_right" width="10%">
 
@@ -84,9 +84,9 @@
       <div class="col-md-4 col-sm-6 footer">
         <ul class="folist">
           <h4 class="text-muted">Links</h4>
-          <li><a href="/enroll">Courses</a></li>
-          <li><a href="">Tutors</a></li>
-          <li><a href="">Quiz & Tests </a></li>
+          <li><a href="/enroll">Enroll</a></li>
+          <!-- <li><a href="">Tutors</a></li> -->
+          <!-- <li><a href="">Quiz & Tests </a></li> -->
           <li><a href="/testimonials">Our Testimonials </a></li>
         </ul>
       </div>
@@ -95,9 +95,10 @@
           <h4 class="text-muted">Company</h4>
           <li><a href="/about">About US</a></li>
           <!-- <li><a href="">Talk To Us</a></li> -->
-          <li><a href="">Help</a></li>
+          <li><a href="/contact">Contact Us </a></li>
+          <!-- <li><a href="">Help</a></li> -->
           <li><a href="/career">Careers</a></li>
-          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/services">Services </a></li>
         </ul>
       </div>
       <div class="col-md-4 col-sm-6 footer">

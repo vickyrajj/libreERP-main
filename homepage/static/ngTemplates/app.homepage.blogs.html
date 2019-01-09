@@ -1,5 +1,6 @@
 <div style="margin-top:80px;" style="width:100%;">
-  <h2 class="genericHeading" style="margin:25px;">24Tutor's Blogs</h2>
+  <h1 class="heading_big" style="text-align:center">24Tutor's Blogs</h1>
+  <!-- <h2 class="genericHeading" style="margin:25px;">24Tutor's Blogs</h2> -->
 
   <div ng-if="firstSection.length>0" class="blog_container">
     <div class="flex_50Perc" ng-click="openBlog(firstSection[0].shortUrl,firstSection[0].pk)" >
@@ -48,7 +49,7 @@
     </div>
 
     <div class="sec2Right">
-      <div class="socialIcons" style="background-color: rgba(0, 0, 0, 0.2);">
+      <!-- <div class="socialIcons" style="background-color: rgba(0, 0, 0, 0.2);">
         <div>
           <i class="fa fa-linkedin" aria-hidden="true"></i>
         </div>
@@ -61,16 +62,16 @@
         <div>
           <i class="fa fa-youtube" aria-hidden="true"></i>
         </div>
-      </div>
+      </div> -->
 
       <div class="bottomLine" style="padding:0 15px;">
         <div class="textHeading">
           <h4>Get Regular Blog Updates</h4>
         </div>
-        <div class="inputEmail">
-          <input type="text" name="" value="" ng-model="emailAddress" placeholder="email address">
+        <div class="">
+          <input class="form-control" type="text" name="" value="" ng-model="emailAddress" placeholder="email address">
         </div>
-        <div class="sendUpdates" ng-click=sendUpdates()>
+        <div class="sendUpdates btn_gradient" ng-click=sendUpdates()>
           Send Updates!
         </div>
       </div>
@@ -92,15 +93,8 @@
 
 
   <div class="prevNextBtn">
-
-    <div ng-click="prevBtn()">
-      Previous
-    </div>
-
-    <div ng-click="nextBtn()">
-      Next
-    </div>
-
+    <button type="button" class="btn_gradient " ng-click="prevBtn()" >Previous</button>
+    <button type="button" class="btn_gradient " ng-click="nextBtn()">Next</button>
   </div>
 
 

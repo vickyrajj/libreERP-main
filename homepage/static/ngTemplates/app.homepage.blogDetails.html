@@ -16,7 +16,7 @@
         <p style="font-size:16px;" ng-bind-html="blogDetail.source"></p>
       </div>
       <div class="col-md-4 blogUpdates">
-        <div class="socialIcons">
+        <!-- <div class="socialIcons">
           <div>
             <i class="fa fa-linkedin" aria-hidden="true"></i>
           </div>
@@ -29,13 +29,13 @@
           <div>
             <i class="fa fa-youtube" aria-hidden="true"></i>
           </div>
-        </div>
+        </div> -->
         <div class="bottomLine" style="padding:0 15px;">
           <div class="textHeading">
             <h4>Get Regular Blog Updates</h4>
           </div>
-          <div class="inputEmail">
-            <input type="text" name="" value="" ng-model="emailAddress" placeholder="email address">
+          <div >
+            <input class="form-control" type="text" name="" value="" ng-model="emailAddress" placeholder="email address">
           </div>
           <div class="sendUpdates" ng-click=sendUpdates()>
             Send Updates!
