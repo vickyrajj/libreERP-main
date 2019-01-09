@@ -1,7 +1,7 @@
 <div class="" style="min-height:93vh;position:relative;background-color:#f8f8f8;">
 
   <breadcrumb></breadcrumb>
-  <div ng-if="!isCustomer&&isAdminLoaded" class="container-fluid bal_fadding_In" style="color:#2B2B2B">
+  <div ng-if="!isAgent&&isAdminLoaded" class="container-fluid bal_fadding_In" style="color:#2B2B2B">
 
     <div class="row">
       <div class="col-md-12">
@@ -55,9 +55,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="agent in agentChatCount" ng-if="agent.user != none">
-                    <td style="border: 0;">{{agent.user | getName}}</td>
-                    <td style="border: 0;">{{agent.count_val}}</td>
+
+                  <tr ng-repeat="alb in agentLeaderBoard" ng-if="alb.agentPk != none">
+                    <td style="border: 0;">{{alb.agentPk | getName}}</td>
+                    <td style="border: 0;">{{alb.noOfChats}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -120,7 +121,7 @@
         <div class="col-md-12" style="background-color:#fff;margin-top:20px;box-shadow:0px 1px .5px var(--themeMain)">
           <div class="row" style="background-color:#f6f6f6;padding:5px 10px;font-size:15px">
             <p style="display:inline-block">Average Response Time(ART) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></p>
-            <p style="display:inline-block;float:right"><i class="fa fa-arrow-{{chaneInAvgResponseTime.increase?'up':'down' }}" style="color:{{chaneInAvgResponseTime.increase?'#bcd46e':'#c43f3f'}} "></i> &nbsp;{{chaneInAvgResponseTime.percentage}}%</p>
+            <p style="display:inline-block;float:right"><i class="fa fa-arrow-{{changeInRespTimeAvg.increase?'up':'down' }}" style="color:{{changeInRespTimeAvg.increase?'#bcd46e':'#c43f3f'}} "></i> &nbsp;{{changeInRespTimeAvg.percentage}}%</p>
           </div>
             <div class="col-md-12" style="text-align:center;font-size:23px;font-weight:400;opacity:0.8">
             <p>{{avgRespTimeAll.toFixed(2)}} Min</p>
@@ -129,7 +130,8 @@
         <div class="col-md-12" style="background-color:#fff;margin-top:20px;box-shadow:0px 1px .5px var(--themeMain)">
             <div class="row" style="background-color:#f6f6f6;padding:5px 10px;font-size:15px">
               <p style="display:inline-block">Average First Response Time(AFRT) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></p>
-              <p style="display:inline-block;float:right"><i class="fa fa-arrow-{{chaneInAvgFTResponseTime.increase?'up':'down' }}" style="color:{{chaneInAvgFTResponseTime.increase?'#bcd46e':'#c43f3f'}} "></i> &nbsp;{{chaneInAvgFTResponseTime.percentage}}%</p>
+              <p style="display:inline-block;float:right"><i class="fa fa-arrow-{{changeInFrtAvg.increase?'up':'down' }}" style="color:{{changeInFrtAvg.increase?'#bcd46e':'#c43f3f'}} "></i> &nbsp;{{changeInFrtAvg.percentage}}%</p>
+
             </div>
             <div class="col-md-12" style="text-align:center;font-size:23px;font-weight:400;opacity:0.8">
             <p>{{firstResTimeAvgAll.toFixed(2)}} Min</p>
@@ -155,10 +157,10 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="alb in agentLeaderBoard">
-                    <td style="border: 0;">{{alb.agentName}}</td>
+                    <td style="border: 0;">{{alb.agentPk | getName }}</td>
                     <td style="border: 0;">{{alb.respTimeAvg.toFixed(2)}}</td>
                     <td style="border: 0;">{{alb.firstResTimeAvg.toFixed(2)}}</td>
-                    <td style="border: 0;">{{alb.rating.toFixed(2)}}</td>
+                    <td style="border: 0;">{{alb.ratingAvg.toFixed(2)}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -169,7 +171,7 @@
     </div>
 </div>
 
-  <div ng-if="isCustomer&&isCustomerLoaded" class="container-fluid bal_fadding_In" style="color:#525459">
+  <div ng-if="isAgent&&isAgentLoaded" class="container-fluid bal_fadding_In" style="color:#525459">
     <div class="row">
       <div class="col-sm-12">
         <h3 style="margin-top:0px">Activity <span>Past 7 Days</span></h3>
@@ -263,7 +265,8 @@
                 <h4>Average Rating &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
               </div>
               <div class="col-sm-3 text-right">
-                <h4><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;2.94%</h4>
+                <h4><i class="fa fa-sort-{{changeInAverageRating.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInAverageRating.percentage.toFixed(2)}}%</h4>
+                <!-- <h4><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;changeInAverageRating %</h4> -->
               </div>
             <!-- </div> -->
             <!-- <div class="row"> -->
@@ -318,12 +321,6 @@
       </div>
     </div>
   </div>
-
-
-
-
-
-
 
 
 

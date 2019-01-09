@@ -203,7 +203,12 @@ class ReviewFilterCalAPIView(APIView):
             userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
             userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
             if 'customerProfilePkList' in self.request.GET:
-                # print 'a###############',userCustProfile
+                print 'a################################################',userCustProfile
+                return Response(userCustProfile, status=status.HTTP_200_OK)
+            if 'agentComapnyPk' in self.request.GET:
+                userCompany = list(service.objects.filter(advisors=self.request.user).values_list('pk',flat=True).distinct())
+                userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
+
                 return Response(userCustProfile, status=status.HTTP_200_OK)
             userCompanyUidList = list(ChatThread.objects.filter(company__in=userCustProfile).values_list('uid',flat=True).distinct())
 
@@ -464,7 +469,7 @@ def getChatterScript(request , fileName):
     else:
         # pass
         return HttpResponse(request,'')
-        # return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+        return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
 
 
 
@@ -772,6 +777,185 @@ class GethomeCal(APIView):
 
         return Response({'totalChats':totalChats,'missedChats':missedChats,'agentChatCount':agentChatCount,'graphData':graphData,'graphLabels':graphLabels,'avgChatDuration':avgChatDuration,'agentLeaderBoard':agentLeaderBoard,'avgRatingAll':avgRatingAll,'avgRespTimeAll':avgRespTimeAll,'firstResTimeAvgAll':firstResTimeAvgAll,'changeInData':changeInData}, status = status.HTTP_200_OK)
 
+
+class GethomeCal2(APIView):
+    def get(self , request , format = None):
+        today = datetime.datetime.now().date()
+        tomorrow = today + relativedelta(days=1)
+        lastWeek = today - relativedelta(days=6)
+        lastToLastWeek =  lastWeek - relativedelta(days=7)
+        chatThreadObj = ChatThread.objects.filter(created__range=(lastWeek,tomorrow))
+        chatThreadObjOld = ChatThread.objects.filter(created__range=(lastToLastWeek,lastWeek - relativedelta(days=1)))
+
+        changeInData = {}
+        changeInChat = {'percentage':0 , 'increase' : False}
+        changeInAvgChatDur = {'percentage':0 , 'increase' : False}
+        changeInFrtAvg = {'percentage':0 , 'increase' : False}
+        changeInRespTimeAvg = {'percentage':0 , 'increase' : False}
+        changeInMissedChat = {'percentage':0 , 'increase' : False}
+        changeInAverageRating = {'percentage':0 , 'increase' : False}
+
+        if 'client' in self.request.GET:
+            if int(self.request.GET['company'])>0:
+                print 'clientclientclient',int(self.request.GET['company'])
+                chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['company']))
+                print chatThreadObj,'chatttt'
+        else:
+            print 'not client'
+
+        if 'agent' in self.request.GET:
+            if int(self.request.GET['company'])>0:
+                print 'agentagentagent',int(self.request.GET['company'])
+                user = User.objects.get(pk = int(self.request.GET['user']))
+                chatThreadObj = chatThreadObj.filter(company=int(self.request.GET['company']), user = user)
+                print chatThreadObj
+        else:
+            print 'not agent'
+
+        totalChatCount = chatThreadObj.count()
+        totalChatCountOld = chatThreadObjOld.count()
+        missedChatCount = chatThreadObj.filter(user__isnull=True).count()
+        missedChatCountOld = chatThreadObjOld.filter(user__isnull=True).count()
+
+        arAll = chatThreadObj.filter(customerRating__isnull=False).aggregate(Avg('customerRating'))
+        avgRatingAll = arAll['customerRating__avg'] if arAll['customerRating__avg'] else 0
+
+        arAllOld = chatThreadObjOld.filter(customerRating__isnull=False).aggregate(Avg('customerRating'))
+        avgRatingAllOld = arAllOld['customerRating__avg'] if arAllOld['customerRating__avg'] else 0
+
+
+        frtAll = chatThreadObj.filter(firstResponseTime__isnull=False).aggregate(Avg('firstResponseTime'))
+        firstResTimeAvgAll = frtAll['firstResponseTime__avg'] if frtAll['firstResponseTime__avg'] else 0
+
+        frtAllOld  = chatThreadObjOld.filter(firstResponseTime__isnull=False).aggregate(Avg('firstResponseTime'))
+        firstResTimeAvgAllOld = frtAllOld['firstResponseTime__avg'] if frtAllOld['firstResponseTime__avg'] else 0
+
+        uidL = list(chatThreadObj.values_list('uid', flat = True).distinct())
+        supportChats = SupportChat.objects.filter(uid__in = uidL)
+
+        uidLOld = list(chatThreadObjOld.values_list('uid', flat = True).distinct())
+        supportChatsOld = SupportChat.objects.filter(uid__in = uidLOld)
+
+        avgResTAll = supportChats.filter(responseTime__isnull=False).aggregate(Avg('responseTime'))
+        avgRespTimeAll = avgResTAll['responseTime__avg'] if avgResTAll['responseTime__avg'] else 0
+
+        avgResTOldAll = supportChatsOld.filter(responseTime__isnull=False).aggregate(Avg('responseTime'))
+        avgRespTimeAllOld = avgResTOldAll['responseTime__avg'] if avgResTOldAll['responseTime__avg'] else 0
+
+        achatDur = chatThreadObj.filter(chatDuration__isnull=False).aggregate(Avg('chatDuration'))
+        avgChatDuration = achatDur['chatDuration__avg'] if achatDur['chatDuration__avg'] else 0
+
+        achatDurOld = chatThreadObjOld.filter(chatDuration__isnull=False).aggregate(Avg('chatDuration'))
+        avgChatDurationOld = achatDurOld['chatDuration__avg'] if achatDurOld['chatDuration__avg'] else 0
+
+        if totalChatCountOld<totalChatCount:
+            changeInChat['percentage'] = (float(totalChatCount - totalChatCountOld)/totalChatCount)*100
+            changeInChat['increase'] = True
+        elif totalChatCount<totalChatCountOld:
+            changeInChat['percentage'] = (float(totalChatCountOld - totalChatCount)/totalChatCountOld)*100
+            changeInChat['increase'] = False
+        else:
+            changeInChat['percentage'] = 0.0
+            changeInChat['increase'] = False
+
+        if missedChatCountOld<missedChatCount:
+            changeInMissedChat['percentage'] = (float(missedChatCount - missedChatCountOld)/missedChatCount)*100
+            changeInMissedChat['increase'] = True
+        elif missedChatCount< missedChatCountOld:
+            changeInMissedChat['percentage'] = (float(missedChatCountOld - missedChatCount)/missedChatCountOld)*100
+            changeInMissedChat['increase'] = False
+        else:
+            changeInMissedChat['percentage'] = 0.0
+            changeInMissedChat['increase'] = False
+
+        print avgRatingAllOld, avgRatingAll ,'avgRatingAllOld'
+        if avgRatingAllOld<avgRatingAll:
+            changeInAverageRating['percentage'] = (float(avgRatingAll - avgRatingAllOld)/avgRatingAll)*100
+            changeInAverageRating['increase'] = True
+        elif avgRatingAll<avgRatingAllOld:
+            changeInAverageRating['percentage'] = (float(avgRatingAllOld - avgRatingAll)/avgRatingAllOld)*100
+            changeInAverageRating['increase'] = False
+        else:
+            changeInAverageRating['percentage'] = 0.0
+            changeInAverageRating['increase'] = False
+
+        if firstResTimeAvgAllOld<firstResTimeAvgAll:
+            changeInFrtAvg['percentage'] = (float(firstResTimeAvgAll - firstResTimeAvgAllOld)/firstResTimeAvgAll)*100
+            changeInFrtAvg['increase'] = True
+        elif firstResTimeAvgAll<firstResTimeAvgAllOld:
+            changeInFrtAvg['percentage'] = (float(firstResTimeAvgAllOld - firstResTimeAvgAll)/firstResTimeAvgAllOld)*100
+            changeInFrtAvg['increase'] = False
+        else:
+            changeInFrtAvg['percentage'] = 0.0
+            changeInFrtAvg['increase'] = False
+
+        if avgRespTimeAllOld<avgRespTimeAll:
+            changeInRespTimeAvg['percentage'] = (float(avgRespTimeAll - avgRespTimeAllOld)/avgRespTimeAll)*100
+            changeInRespTimeAvg['increase'] = True
+        elif avgRespTimeAll<avgRespTimeAllOld:
+            changeInRespTimeAvg['percentage'] = (float(avgRespTimeAllOld - avgRespTimeAll)/avgRespTimeAllOld)*100
+            changeInRespTimeAvg['increase'] = False
+        else:
+            changeInRespTimeAvg['percentage'] = 0.0
+            changeInRespTimeAvg['increase'] = False
+
+        if avgChatDurationOld<avgChatDuration:
+            changeInAvgChatDur['percentage'] = (float(avgChatDuration - avgChatDurationOld)/avgChatDuration)*100
+            changeInAvgChatDur['increase'] = True
+        elif avgChatDuration<avgChatDurationOld:
+            changeInAvgChatDur['percentage'] = (float(avgChatDurationOld - avgChatDuration)/avgChatDurationOld)*100
+            changeInAvgChatDur['increase'] = False
+        else:
+            changeInAvgChatDur['percentage'] = 0.0
+            changeInAvgChatDur['increase'] = False
+
+        changeInData['changeInChat'] = changeInChat
+        changeInData['changeInMissedChat'] = changeInMissedChat
+        changeInData['changeInAverageRating'] = changeInAverageRating
+        changeInData['changeInFrtAvg'] = changeInFrtAvg
+        changeInData['changeInRespTimeAvg'] = changeInRespTimeAvg
+        changeInData['changeInAvgChatDur'] =changeInAvgChatDur
+
+
+        agentLeaderBoard = []
+        agL = list(chatThreadObj.filter(user__isnull=False).values_list('user',flat=True).distinct())
+        print agL,'aglllllllllll'
+        for i in agL:
+            oneAgentChatThreadObj = chatThreadObj.filter(user=i)
+            rA = oneAgentChatThreadObj.filter(customerRating__isnull=False).aggregate(Avg('customerRating'))
+            ratingAvg = rA['customerRating__avg'] if rA['customerRating__avg'] else 0
+
+            uidL = list(oneAgentChatThreadObj.values_list('uid', flat = True).distinct())
+            supportChats = SupportChat.objects.filter(uid__in = uidL)
+            rtA = supportChats.filter(responseTime__isnull=False).aggregate(Avg('responseTime'))
+            respTimeAvg = rtA['responseTime__avg'] if rtA['responseTime__avg'] else 0
+            frtA = oneAgentChatThreadObj.filter(firstResponseTime__isnull=False).aggregate(Avg('firstResponseTime'))
+            firstResTimeAvg = frtA['firstResponseTime__avg'] if frtA['firstResponseTime__avg'] else 0
+            noOfChats = oneAgentChatThreadObj.count()
+            cdA = oneAgentChatThreadObj.filter(chatDuration__isnull=False).aggregate(Avg('chatDuration'))
+            chatDurationAvg = cdA['chatDuration__avg'] if cdA['chatDuration__avg'] else 0
+            toAppend = {'agentPk':i,'ratingAvg':ratingAvg ,'respTimeAvg':respTimeAvg ,'firstResTimeAvg':firstResTimeAvg,'noOfChats':noOfChats,'chatDurationAvg':chatDurationAvg}
+            print toAppend,'ABCD'
+            agentLeaderBoard.append(toAppend)
+
+
+        graphData = [[],[]]
+        graphLabels = []
+        for i in range(7):
+            dt = lastWeek + relativedelta(days=i)
+            dateChat = chatThreadObj.filter(created__startswith=dt)
+            if 'perticularUser' in self.request.GET:
+                if int(self.request.GET['perticularUser'])>0:
+                    dateChat = dateChat.filter(company=int(self.request.GET['perticularUser']))
+            missed = dateChat.filter(user__isnull=True).count()
+            received = dateChat.filter(user__isnull=False).count()
+            graphData[0].append(received)
+            graphData[1].append(missed)
+            graphLabels.append(datetime.datetime.combine(dt, datetime.datetime.min.time()).strftime('%b %d'))
+        toSend = {'totalChatCount':totalChatCount,'missedChatCount':missedChatCount,'changeInData':changeInData,'avgRatingAll':avgRatingAll,'avgRespTimeAll':avgRespTimeAll,'firstResTimeAvgAll':firstResTimeAvgAll,'avgChatDuration':avgChatDuration,'graphData':graphData,'graphLabels':graphLabels,'agentLeaderBoard':agentLeaderBoard}
+        print toSend ,'toSendtoSendtoSendtoSendtoSend'
+        print type(toSend)
+        return Response(toSend, status = status.HTTP_200_OK)
 
 class DocumentVersionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)

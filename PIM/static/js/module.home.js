@@ -710,15 +710,38 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
   $scope.isCustomerLoaded=false
   $scope.isAdminLoaded=false
 
+
+  $scope.graphDataLoaded = function (response) {
+    $scope.totalChats = response.data.totalChatCount
+    $scope.missedChats = response.data.missedChatCount
+    $scope.agentChatCount = []
+    $scope.noOfChatData = response.data.graphData
+    $scope.noOfChatLabels = response.data.graphLabels
+
+
+    $scope.avgChatDuration = response.data.avgChatDuration
+    $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
+    $scope.avgRatingAll = response.data.avgRatingAll
+    $scope.avgRespTimeAll = response.data.avgRespTimeAll
+    $scope.agentLeaderBoard = response.data.agentLeaderBoard
+
+
+    $scope.changeInChat = response.data.changeInData.changeInChat
+    $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
+    $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
+    $scope.changeInFrtAvg = response.data.changeInData.changeInFrtAvg
+    $scope.changeInRespTimeAvg = response.data.changeInData.changeInRespTimeAvg
+    $scope.changeInAverageRating = response.data.changeInData.changeInAverageRating
+  }
+
   $scope.fetchGraphData = function () {
-    if ($scope.isCustomer) {
+    if ($scope.isAgent) {
       $http({
         method: 'GET',
-        url: '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+        url: '/api/support/reviewHomeCal/?customer&agentComapnyPk',
       }).
       then(function(response) {
         console.log(response.data);
-
         if (response.data.length > 0) {
           id = response.data[0]
         } else {
@@ -735,73 +758,78 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
         console.log(id, 'customer');
         $http({
           method: 'GET',
-          url: '/api/support/gethomeCal/?perticularUser=' + id,
+          url: '/api/support/gethomeCal/?agent&company=' + id+'&user='+ $scope.me.pk,
         }).
         then(function(response) {
+          $scope.isAgentLoaded=true
           console.log(response.data,'ffffffffff');
-          $scope.isCustomerLoaded=true
-          $scope.totalChats = response.data.totalChats
-          $scope.missedChats = response.data.missedChats
-          $scope.agentChatCount = response.data.agentChatCount
-          $scope.noOfChatData = response.data.graphData
-          $scope.noOfChatLabels = response.data.graphLabels
-          $scope.avgChatDuration = response.data.avgChatDuration
-          $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
-          $scope.avgRatingAll = response.data.avgRatingAll
-          $scope.avgRespTimeAll = response.data.avgRespTimeAll
-          $scope.changeInChat = response.data.changeInData.changeInChat
-          $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
-          $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
-          $scope.changeInFrtAvg = response.data.changeInData.changeInFrtAvg
-          $scope.changeInRespTimeAvg = response.data.changeInData.changeInRespTimeAvg
-          $scope.changeInAverageRating = response.data.changeInData.changeInAverageRating
+          $scope.graphDataLoaded(response)
 
         });
       });
 
     }else {
-      $http({
-        method: 'GET',
-        url: '/api/support/gethomeCal/',
-      }).
-      then(function(response) {
-        console.log('adminnnnnnnnnnnnnnn');
-        console.log(response.data);
-        $scope.isAdminLoaded=true
-        $scope.totalChats = response.data.totalChats
-        $scope.missedChats = response.data.missedChats
-        $scope.agentChatCount = response.data.agentChatCount
-        $scope.noOfChatData = response.data.graphData
-        $scope.noOfChatLabels = response.data.graphLabels
-        $scope.avgChatDuration = response.data.avgChatDuration
-        $scope.agentLeaderBoard = response.data.agentLeaderBoard
-        $scope.avgRatingAll = response.data.avgRatingAll
-        $scope.avgRespTimeAll = response.data.avgRespTimeAll
-        $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
-        $scope.changeInChat = response.data.changeInData.changeInChat
-        $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
-        $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
-        $scope.chaneInAvgResponseTime=response.data.changeInData.changeInRespTimeAvg
-        $scope.chaneInAvgFTResponseTime=response.data.changeInData.changeInFrtAvg
-        $scope.changeInAverageRating=response.data.changeInData.changeInAverageRating
+      if ($scope.isCustomer) {
+        $http({
+          method: 'GET',
+          url: '/api/support/reviewHomeCal/?customer&customerProfilePkList',
+        }).
+        then(function(response) {
+          console.log(response.data);
+          if (response.data.length > 0) {
+            id = response.data[0]
+          } else {
+            id = 0
+          }
+          console.log(id, 'customer');
+          $http({
+            method: 'GET',
+            url: '/api/support/gethomeCal/?client&company=' + id+'&user='+ $scope.me.pk,
+          }).
+          then(function(response) {
+            $scope.isAdminLoaded=true
+            console.log(response.data,'ffffffffff');
+            $scope.graphDataLoaded(response)
+          });
+        });
 
-      });
+
+
+      }else {
+        $http({
+          method: 'GET',
+          url: '/api/support/gethomeCal/',
+        }).
+        then(function(response) {
+          console.log('adminnnnnnnnnnnnnnn');
+          console.log(response.data);
+          $scope.isAdminLoaded=true
+          $scope.graphDataLoaded(response)
+        });
+      }
+
+
     }
   }
 
+  $scope.isAgent = false;
   $scope.isCustomer = false;
-
-
   $timeout(function() {
     $scope.isCustomer = $permissions.myPerms('app.customer.access')
+    if ($scope.isCustomer) {
+      $scope.isAgent = false;
+      console.log('client');
+    }else {
+      if ($scope.me.pk == 1) {
+        $scope.isAgent = false;
+        console.log('admin');
+      }else {
+        $scope.isAgent = true;
+        console.log('agent');
+      }
+    }
     $scope.fetchGraphData();
   },2500)
-
-
-
-
-
-
 
 
 
