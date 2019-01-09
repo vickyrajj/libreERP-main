@@ -1,141 +1,140 @@
-<div class="row">
 
 
-    <div class="container-fluid" style="padding:0px 30px;box-shadow:0px 2px 1px #eee;font-size:14px;position:fixed;width:45%">
-      <!-- <h4 style="display:inline-block">Agent Info:</h4> -->
+<div class="Middle_container">
 
-      <div style="margin:15px 0px">
-        <img style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
-        <div class="" style="display:inline-block">
-          <p style="font-size:16px;font-weight:700">{{msgData[0].user_id | getName}}</p>
-        </div>
-      </div>
-      <span class="pull-right btn btn-primary" ng-click="showChart()" style="font-size:15px">Change Status</span>
-      <p><strong>Created : </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</p>
-      <p ng-if="msgData[0].chatDuration>0.0"><strong>Chat Duration : </strong>{{msgData[0].chatDuration}} Min</p>
-      <p ng-if="msgData[0].company"><strong>Client : </strong>{{msgData[0].company}}</p>
-      <p ng-if="msgData[0].email"><strong>Visitor's Email : </strong>{{msgData[0].email}}</p>
-      <p ng-if="msgData[0].customerRating"><strong>Rating : </strong>{{msgData[0].customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></p>
-      <p ng-if="msgData[0].customerFeedback"><strong>Feedback : </strong>{{msgData[0].customerFeedback}}</p>
-      <p ng-if="chatThreadData.uid!=none"><strong>Status : </strong>{{chatThreadData.status}}
-        <span ng-if="msgData[0].statusChat!='started'">
-          <span ng-if="msgData[0][msgData[0].statusChat+'By']&&msgData[0][msgData[0].statusChat+'On']">by {{msgData[0][msgData[0].statusChat+'By']}}</span>
-          <span ng-if="msgData[0][msgData[0].statusChat+'On']&&!msgData[0][msgData[0].statusChat+'By']"> by Visitor</span>
-          <span ng-if="msgData[0][msgData[0].statusChat+'On']">on {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[1]}}</span>
-       </span>
-      </p>
-    </div>
-  <div class="col-sm-12" style="padding:25px;position:fixed;margin-top:250px;width:45%">   <!-- main section -->
+  <div class="Top_container" style="">
+    <!-- <h4 style="display:inline-block">Agent Info:</h4> -->
 
-      <div class="row">
-        <div ng-if="video_chat.agent">
-          <div class="col-md-4">
-            <video id="vid_agent{{chatThreadData.uid}}" style="width:100%" height="240">
-                  <source ng-src="{{video_chat.visitor}}" type="video/webm">
-            </video>
-          </div>
-          <canvas id="canvas_agent" style="display:none"></canvas>
-          <canvas id="canvas_visitor" style="display:none"></canvas>
-          <video id="vid_visitor{{chatThreadData.uid}}" class="col-md-4"height="240">
-              <source ng-src="{{video_chat.agent}}" type="video/webm">
-          </video>
-          <video id="" class="col-md-4" height="240" controls>
-              <source ng-src="{{screen_video}}" type="video/webm">
-          </video>
-       </div>
-
-          <div ng-if="audio_chat.agent">
-            <audio id="aud_agent" >
-                <source ng-src="{{audio_chat.agent}}" type="audio/mp3">
-            </audio>
-            <audio id="aud_visitor" >
-                <source ng-src="{{audio_chat.visitor}}" type="audio/mp3">
-            </audio>
-          </div>
-
-       <!-- control bar *********************** -->
-        <div ng-show="video_chat.agent||audio_chat.agent" class="col-md-12" style="background-color:grey;margin:10px -15px">
-          <div class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
-            <i ng-if="!play_pause" ng-click="play_video()" class="fa fa-play" aria-hidden="true"></i>
-            <i ng-if="play_pause" ng-click="pause_video()" class="fa fa-pause" aria-hidden="true"></i>
-          </div>
-          <div class="col-md-5" style="font-size:150%;padding:0px;color:white;text-align:center;">
-            <rzslider rz-slider-model="slider.value"
-            rz-slider-options="slider.options"></rzslider>
-          </div>
-          <div class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
-            <i class="fa fa-volume-up" aria-hidden="true"></i>
-          </div>
-          <div class="col-md-2" style="font-size:150%;padding:0px;color:white;text-align:center;">
-            <rzslider rz-slider-model="vol_slider.value"
-            rz-slider-options="vol_slider.options"></rzslider>
-          </div>
-          <div ng-if="typ=='video'" class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
-            <i ng-click="snap()" class="fa fa-camera" aria-hidden="true"></i>
-          </div>
-          <div ng-if="typ=='video'" class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
-            <i class="fa fa-arrows-alt" aria-hidden="true"></i>
-          </div>
-        </div>
-
-
-      </div>
-
-    <!-- message section -->
-    <div class="" style="max-height:700px;margin-bottom:20px;overflow:scroll;display:block">
-      <div class="row col-md-12" ng-repeat="msg in msgData">
-        <div ng-if="!msg.logs" class="container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:5px 10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-          <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;font-size:16px">
-            {{msg.message}}</p>
-          <img ng-if="msg.attachmentType == 'image' || msg.attachmentType == 'instructionImage'" ng-src="{{msg.file}}" style="width:250px;">
-          <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.file}}" controls></video>
-          <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.file}}" controls></audio>
-          <p class="text-center" ng-if="msg.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{msg.file}}" target="_blank"><i class="fa {{msg.file.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.file.split('chat/')[1]}} </p>
-          <div ng-if="msg.attachmentType == 'youtubeLink'">
-            <iframe width="100%" height="215" ng-src="{{msg.message | trusted}}" frameborder="0" allowfullscreen></iframe>
-          </div>
-        </div>
-        <div ng-if="!msg.logs" class="row container-fluid" style="{{msg.sentByAgent ? 'padding-right:30px' : 'padding-left:30px'}};">
-          <span ng-if="msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted" ng-init="cal = calculateTime(msgData[$index-1].created , msg.created)">{{msg.created | date : 'hh:mm:a' }} , {{cal}}</span>
-          <span ng-if="!msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:11px; " class="text-muted">{{msg.created | date : 'hh:mm:a' }}</span>
-        </div>
+    <div style="margin:15px 0px">
+      <img style="width:5rem" class="table_image" ng-if="msgData[0].user_id" src="{{data[0].user_id | getDP}}" alt="">
+      <img style="width:5rem" ng-if="!msgData[0].user_id" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+      <div class="" style="display:inline-block">
+        <!-- <p style="font-size:16px;font-weight:700">{{msgData[0].user_id | getName}}</p> -->
       </div>
     </div>
-
-      <!-- comment section************* -->
-
-      <div class="" style="margin-top:20px;">
-        <div ng-if="commentPerm" class="row" style="padding-top:20px;">
-          <div class="col-md-12">
-            <div class="form-group">
-              <textarea class="form-control" rows="2" id="comment" placeholder="Comments... " ng-model="reviewForm.message" style="resize:none;"></textarea>
-            </div>
-          </div>
-          <div class="col-md-2" style="margin-right:5%">
-            <button type="button" class="btn btn-primary" name="button" ng-click="postComment()"> Add Comment  </button>
-          </div>
-        </div>
-
-        <div class="" ng-repeat="comment in reviewCommentData" style="margin-top:25px;">
-          <div class="col-md-9">
-            <div style="background-color:{{comment.user==msgData[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; margin-top:5px ;border-radius:15px 50px 50px 15px; padding:8px 10px 0px 15px;word-break: break-all !important;">
-              <p> {{comment.message}} </p>
-            </div>
-            <div ng-if="comment.agent_capture">
-              <img ng-src="{{comment.agent_capture}}" alt="">
-              <img ng-src="{{comment.visitor_capture}}" alt="">
-            </div>
-          </div>
-
-            <!-- <img ng-src="{{comment.user | getDP}}" style="border-radius:50%; width:45px;" alt="User Image"> -->
-            <img style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
-            <p style="font-size:15px;display:inline-block;">{{msgData[0].user_id | getName}}</p>
-
-        </div>
-
-      </div>
-
+    <span class="btn btn_gradient" ng-click="showChart()" style="float:right">Change Status</span>
+    <p><strong><i class="fa fa-calendar-o" aria-hidden="true"></i> </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</p>
+    <p ng-if="msgData[0].chatDuration>0.0"><strong><i class="fa fa-clock-o" aria-hidden="true"></i> </strong>{{msgData[0].chatDuration}} Min</p>
+    <!-- <p ng-if="msgData[0].company"><strong>Client : </strong>{{msgData[0].company}}</p> -->
+    <p ng-if="msgData[0].email"><strong>Visitor's Email : </strong>{{msgData[0].email}}</p>
+    <p ng-if="msgData[0].customerRating"><strong><i class="fa fa-star fa-md" aria-hidden="true"></i> </strong>{{msgData[0].customerRating}} </p>
+    <p ng-if="msgData[0].customerFeedback"><strong>Feedback : </strong>{{msgData[0].customerFeedback}}</p>
+    <p ng-if="chatThreadData.uid!=none"><strong>Status : </strong>{{chatThreadData.status}}
+      <span ng-if="msgData[0].statusChat!='started'">
+        <span ng-if="msgData[0][msgData[0].statusChat+'By']&&msgData[0][msgData[0].statusChat+'On']">by {{msgData[0][msgData[0].statusChat+'By']}}</span>
+        <span ng-if="msgData[0][msgData[0].statusChat+'On']&&!msgData[0][msgData[0].statusChat+'By']"> by Visitor</span>
+        <span ng-if="msgData[0][msgData[0].statusChat+'On']">on {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[1]}}</span>
+     </span>
+    </p>
   </div>
+<div class="center_container" style="padding:2.5rem;">   <!-- main section -->
+
+    <div class="row">
+      <div ng-if="video_chat.agent">
+        <div class="col-md-4">
+          <video id="vid_agent{{chatThreadData.uid}}" style="width:100%" height="240">
+                <source ng-src="{{video_chat.visitor}}" type="video/webm">
+          </video>
+        </div>
+        <canvas id="canvas_agent" style="display:none"></canvas>
+        <canvas id="canvas_visitor" style="display:none"></canvas>
+        <video id="vid_visitor{{chatThreadData.uid}}" class="col-md-4"height="240">
+            <source ng-src="{{video_chat.agent}}" type="video/webm">
+        </video>
+        <video id="" class="col-md-4" height="240" controls>
+            <source ng-src="{{screen_video}}" type="video/webm">
+        </video>
+     </div>
+
+        <div ng-if="audio_chat.agent">
+          <audio id="aud_agent" >
+              <source ng-src="{{audio_chat.agent}}" type="audio/mp3">
+          </audio>
+          <audio id="aud_visitor" >
+              <source ng-src="{{audio_chat.visitor}}" type="audio/mp3">
+          </audio>
+        </div>
+
+     <!-- control bar *********************** -->
+      <div ng-show="video_chat.agent||audio_chat.agent" class="col-md-12" style="background-color:grey;margin:10px -15px">
+        <div class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
+          <i ng-if="!play_pause" ng-click="play_video()" class="fa fa-play" aria-hidden="true"></i>
+          <i ng-if="play_pause" ng-click="pause_video()" class="fa fa-pause" aria-hidden="true"></i>
+        </div>
+        <div class="col-md-5" style="font-size:150%;padding:0px;color:white;text-align:center;">
+          <rzslider rz-slider-model="slider.value"
+          rz-slider-options="slider.options"></rzslider>
+        </div>
+        <div class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
+          <i class="fa fa-volume-up" aria-hidden="true"></i>
+        </div>
+        <div class="col-md-2" style="font-size:150%;padding:0px;color:white;text-align:center;">
+          <rzslider rz-slider-model="vol_slider.value"
+          rz-slider-options="vol_slider.options"></rzslider>
+        </div>
+        <div ng-if="typ=='video'" class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
+          <i ng-click="snap()" class="fa fa-camera" aria-hidden="true"></i>
+        </div>
+        <div ng-if="typ=='video'" class="col-md-1" style="font-size:150%;padding:0px;color:white;text-align:center;margin-top:7px">
+          <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+        </div>
+      </div>
+
+
+    </div>
+
+  <!-- message section -->
+  <div class="" style="margin-bottom:20px;display:block">
+    <div class="row col-md-12" ng-repeat="msg in msgData">
+      <div ng-if="!msg.logs" class="container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#fff;border:2px solid #eee;':'left; background-color:#175aa5;'}} padding:5px 10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
+        <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="white-space:pre-wrap;color: {{msg.sentByAgent ? 'black':'white'}}" >
+          {{msg.message}}</p>
+        <img ng-if="msg.attachmentType == 'image' || msg.attachmentType == 'instructionImage'" ng-src="{{msg.file}}" style="width:25rem;">
+        <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.file}}" controls></video>
+        <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.file}}" controls></audio>
+        <p class="text-center" ng-if="msg.attachmentType == 'application'" style="word-wrap: break-word;"><a ng-href="{{msg.file}}" target="_blank"><i class="fa {{msg.file.split('chat/')[1] | fileTypeIcon }} fa-2x" ></i></a> <br> {{msg.file.split('chat/')[1]}} </p>
+        <div ng-if="msg.attachmentType == 'youtubeLink'">
+          <iframe width="100%" height="215" ng-src="{{msg.message | trusted}}" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div ng-if="!msg.logs" class="row container-fluid" style="{{msg.sentByAgent ? 'padding-right:3rem' : 'padding-left:3rem'}};">
+        <span ng-if="msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:70%; " class="text-muted" ng-init="cal = calculateTime(msgData[$index-1].created , msg.created)">{{msg.created | date : 'hh:mm:a' }} , {{cal}}</span>
+        <span ng-if="!msg.sentByAgent" style="clear:both;float:{{msg.sentByAgent ? 'right':'left'}};  font-size:70%; " class="text-muted">{{msg.created | date : 'hh:mm:a' }}</span>
+      </div>
+    </div>
+  </div>
+
+    <!-- comment section************* -->
+
+    <div class="" style="margin-top:20px;">
+      <div ng-if="commentPerm" class="row" style="padding-top:20px;">
+        <div class="col-md-12">
+          <div class="form-group">
+            <textarea class="form-control" rows="2" id="comment" placeholder="Comments... " ng-model="reviewForm.message" style="resize:none;"></textarea>
+          </div>
+        </div>
+        <div class="col-md-2" style="margin-right:5%">
+          <button type="button" class="btn btn_gradient" name="button" ng-click="postComment()"> Add Comment  </button>
+        </div>
+      </div>
+
+      <div class="" ng-repeat="comment in reviewCommentData" style="margin-top:25px;">
+        <div class="col-md-9">
+          <div style="background-color:{{comment.user==msgData[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; margin-top:5px ;border-radius:15px 50px 50px 15px; padding:8px 10px 0px 15px;word-break: break-all !important;">
+            <p> {{comment.message}} </p>
+          </div>
+          <div ng-if="comment.agent_capture">
+            <img ng-src="{{comment.agent_capture}}" alt="">
+            <img ng-src="{{comment.visitor_capture}}" alt="">
+          </div>
+        </div>
+          <!-- <img ng-src="{{comment.user | getDP}}" style="border-radius:50%; width:45px;" alt="User Image"> -->
+          <img style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+          <p style="font-size:15px;display:inline-block;">{{msgData[0].user_id | getName}}</p>
+      </div>
+    </div>
+
+</div>
 
 
 </div>

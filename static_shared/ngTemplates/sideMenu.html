@@ -24,11 +24,11 @@
     <div class="container-fluid">
       <ul class="nav nav-sidebar" style="width:100%;">
         <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
-          <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:250%;border-radius:0 30px 30px 0' : ''}}">
+          <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:20rem;border-radius:0 3rem 3rem 0' : ''}}">
             <div ng-if="sideMenuVisibility" align="left">
               <div class="row container-fluid" >
                 <div style="display:flex;padding-left:1rem">
-                  <i style="padding:4px 0px;font-size:1.333333em" class="fa {{a.icon}} fa-lg"></i>
+                  <i style="padding:4px 0px;font-size:1.333333rem" class="fa {{a.icon}} fa-lg"></i>
                   <span style="padding-left:5px">{{a.dispName | humanize}}</span>
                 </div>
               </div>

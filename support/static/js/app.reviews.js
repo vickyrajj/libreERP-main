@@ -12,7 +12,7 @@ app.config(function($stateProvider) {
 });
 
 
-app.controller("businessManagement.customerReviews", function($scope, $state, $http, $rootScope,$filter,$uibModal) {
+app.controller("businessManagement.customerReviews", function($scope, $state, $http, $rootScope,$filter,$uibModal,DTOptionsBuilder, DTColumnDefBuilder) {
   $rootScope.state = 'Reviews';
   $scope.reviewData = []
   $scope.form = {date:new Date(),email:''}
@@ -27,6 +27,8 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
 
     console.log($scope.reviewData);
     $scope.myData=$scope.reviewData[0]
+    $scope.last=0;
+    // alert('kk')
     $scope.loadingData=false;
     $scope.valueee=true
     $scope.tableUpdated=true;
@@ -56,19 +58,20 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
 var countt=0
   $scope.doing=function(data){
 
-    var index=$scope.reviewData.indexOf(data)
+    $scope.last=$scope.reviewData.indexOf(data)
 
     // if(countt>0){
+    //   console.log(index , $scope.last);
     //   document.getElementById('id'+$scope.last).style.backgroundColor='#fff'
     // }
     // countt++;
-    // document.getElementById('id'+a).style.backgroundColor='#f0f0f0'
+    // document.getElementById('id'+index).style.backgroundColor='#f0f0f0'
     $scope.valueee=false
     $scope.myData=data
+    // $scope.last=index
     setTimeout(function () {
       $scope.valueee=true
-    }, 30);
-    // $scope.last=a
+    }, 100);
   }
 
   $scope.tabs = [];
@@ -93,9 +96,11 @@ var countt=0
     }
   }
 
-  $scope.functionn=function(){
 
-  }
+
+  $scope.dtOptions = DTOptionsBuilder.newOptions()
+      .withOption('order', [])
+
 
   $scope.isTableView=true
 
@@ -110,16 +115,23 @@ var countt=0
   }
   $scope.filterByRating=function(){
       $scope.reviewData.sort(function(a, b){return a[0].rating > b[0].rating});
+      $scope.myData=$scope.reviewData[0]
+      $scope.last=0;
   }
   $scope.filterByStatus=function(){
       $scope.reviewData.sort(function(a, b){return a[0].statusChat > b[0].statusChat});
+      $scope.myData=$scope.reviewData[0]
+      $scope.last=0;
   }
   $scope.filterByUser=function(){
       $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
+      $scope.myData=$scope.reviewData[0]
+      $scope.last=0;
   }
   $scope.filterByCreated=function(){
-      // $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") < $filter('date')(b[0].created, "dd/MM/yyyy");})
-      // // $scope.myData=$scope.reviewData[0]
+      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") > $filter('date')(b[0].created, "dd/MM/yyyy");})
+      $scope.myData=$scope.reviewData[0]
+      $scope.last=0;
       // // $scope.doing(0)
       // $scope.functionn()
   }
@@ -135,6 +147,8 @@ var countt=0
   var counttt=0;
 
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
+    if(newValue==undefined)
+    return
     counttt++;
     if(counttt>1){
       $scope.tableUpdated=false

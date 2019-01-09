@@ -16,7 +16,7 @@ from .serializers import *
 from API.permissions import *
 from ERP.models import application, permission , module , CompanyHolidays , service
 from ERP.views import getApps, getModules
-from ERP.serializers import *
+# from ERP.serializers import *
 from django.db.models import Q
 from django.http import JsonResponse
 import random, string
@@ -242,7 +242,6 @@ def home(request):
         modules = module.objects.filter(~Q(name='public'))
     else:
         apps = getApps(u)
-
         modules = getModules(u)
         if len(permission.objects.filter(user=u,app__name='app.customer.access'))>0:
             if len(service.objects.filter(contactPerson=u))>0:

@@ -53,6 +53,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 .dataTables_wrapper .dataTables_info {
     margin-bottom: 1rem;
     text-align: center;
+    font-size: 80%;
 }
 
 #myQATable_filter{
@@ -64,7 +65,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 #myQATable_paginate{
-  font-size: 14px;
+  font-size: 90%;
   text-align: center;
 }
 /* #myQATable_paginate span>a{

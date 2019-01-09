@@ -21,13 +21,21 @@ ul.tools li {
 
 /* The whole thing */
 html {
-    font-size: 16px;
+    font-size: 62.33%;
 }
+
+* {
+    box-sizing: border-box;
+}
+
 
 body {
     /* font-family:"Open Sans", "Noto Sans", Tahoma, sans-serif; */
-    font-size: 0.8rem;
+    /* font-size: 0.8rem; */
     font-family: 'Lato','Open Sans', sans-serif;
+    overflow-x: hidden;
+    padding: 0;
+   margin: 0;
 }
 
 
@@ -87,26 +95,7 @@ input:checked + .bal_slider:before {
   border-radius: 50%;
 }
 
-#myQATable{
-  border-collapse: collapse;
-  width: 100%;
 
-}
-#myQATable tr{
-cursor: pointer
-}
-#myQATable td{
-  border: 1px solid #f0f0f0;
-  padding: 1px 5px;
-}
-/* #myQATable tr:nth-child(even){
-  background-color: #f0f0f0;
-} */
-#myQATableHeader th{
-  text-align: center;
-  padding: 10px;
-  cursor: pointer
-}
 
 /* @media only screen and (max-width:600px) {
   html {
@@ -1044,6 +1033,167 @@ body {
 .bal_slide_In{
   animation:my_slide .5s forward;
 }
+
+
+@media screen and (max-width:800px) {
+  html{
+    font-size: 40%;
+  }
+}
+@media screen and (max-width:900px) {
+  html{
+    font-size: 50%;
+  }
+}
+
+
+/* ------------------------------app.reviews.html-------------------------------------------------------------------------------- */
+
+
+.Top_container {
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+    /* height: 35rem; */
+    padding: 1rem;
+}
+
+
+.My_container{
+    display: flex;
+    overflow: hidden;
+    height: 93vh;
+    position: relative;
+    /* width: 100%; */
+
+    backface-visibility: hidden;
+    will-change: overflow;
+    font-size: 1.5rem;
+}
+
+.Left_container
+ {
+    overflow: auto;
+    height: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+}
+.Middle_container
+ {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+    backface-visibility: hidden;
+    will-change: overflow;
+}
+
+.center_container{
+  overflow: auto;
+  height: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  flex: 1;
+}
+
+.Left_container::-webkit-scrollbar,
+.Middle_container::-webkit-scrollbar,
+.Right_container::-webkit-scrollbar {
+    display: none;
+}
+
+.Left_container {
+    width: 35rem;
+    display: flex;
+    margin-top:2rem;
+}
+
+.Middle_container {
+    flex: 1;
+}
+
+.Right_container {
+    width: 35rem;
+}
+.Right_container label {
+    font-size: 85% !important;
+}
+
+.My_container #myQATable{
+  border-collapse: collapse;
+  width: 100%;
+
+}
+.My_container #myQATable tr{
+cursor: pointer
+}
+.My_container #myQATable td{
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1px 5px;
+}
+
+.My_container .myQATableHeader th{
+  text-align: center;
+  padding: 10px;
+  cursor: pointer
+}
+
+.My_container .tabel_data img{
+  width:4rem;
+  border-radius:50%;
+  margin:.5rem 1rem;
+  float:left
+}
+.My_container .tabel_data .tabel_dataStatus span{
+  /* background:#e0e0e0; */
+  opacity:0.8
+}
+
+.btn_gradient {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  display: block;
+  -webkit-appearance: none;
+  border: 0px solid rgba(255, 255, 255, 0.45);
+  border-radius: 7px;
+  border-top-left-radius: 25px;
+  /* padding: 1em 2em; */
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-clip: padding-box;
+  position: relative;
+  color: #FFF;
+  background-image: linear-gradient(90deg, #02EBA3, #6A7EF1, #873be7);
+  font-size: 14px;
+  font-weight: bolder;
+  font-family: sans-serif;
+  transition: all .200s ease-in-out;
+  moz-transition: all .4s ease-in-out;
+  -webkit-transition: all .9s ease-in-out;
+}
+
+.btn_gradient:hover {
+  background-image: linear-gradient(to right, #873be7, #6A7EF1, #02EBA3);
+  transition: all .200s ease-in-out;
+  background-position: 100% 0;
+  moz-transition: all .4s ease-in-out;
+  -webkit-transition: all .9s ease-in-out;
+  color:#FFF
+}
+
+.login-input-group input {
+  position: relative;
+  width: 100%;
+  border-top-left-radius: 15px !important;
+  border:none
+}
+
+
+
+
+/* ********************************************************************************************************************************  */
 
 
 @keyframes my_fade {

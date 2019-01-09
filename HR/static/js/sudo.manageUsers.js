@@ -957,6 +957,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       if (action == 'im') {
         $scope.$parent.$parent.addIMWindow(target);
       } else if (action == 'editProfile') {
+        // alert('gere')
         for (var i = 0; i < $scope.data.tableData.length; i++) {
           if ($scope.data.tableData[i].pk == target) {
             u = $users.get(target)
@@ -965,7 +966,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
               return function(response) {
                 u = $users.get(target)
                 console.log("will add tab profile : ");
-                console.log(response);
+                // console.log(response);
                 $scope.addTab({
                   title: 'Edit Profile for ' + u.first_name + ' ' + u.last_name,
                   cancel: true,
