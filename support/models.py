@@ -104,6 +104,7 @@ class Projects(models.Model):
     terms = models.CharField(max_length = 200, default = "EX-WORKS, BRUDERER AG, Switzerland")
     delivery = models.CharField(max_length = 200, default = "6 weeks from the date of receipt of PO and advance")
     paymentTerms = models.CharField(max_length = 200, default = "100% advance along with order")
+    paymentTerms1  = models.CharField(max_length = 200, default = "100% advance along with order")
     junkStatus =  models.BooleanField(default = False)
     shipmentMode =  models.CharField(max_length = 200, default = "Road")
     shipmentDetails = models.CharField(max_length = 200, default = "Freight forwarder -")

@@ -869,6 +869,24 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
     } else if (typeof newValue[0].part_no == 'object') {
       $scope.showButton = true
+      if($scope.data.length>1){
+        for (var i = 0; i < $scope.data.length; i++) {
+          console.log($scope.data[i].products,'aaaaaaaaa');
+          if($scope.data[i].pk==newValue[0].part_no.pk){
+            Flash.create('danger', 'Product already added');
+            return
+          }
+        }
+      }
+    if($scope.projects.length>0){
+      for (var i = 0; i < $scope.projects.length; i++) {
+        if($scope.projects[i].products.pk==newValue[0].part_no.pk){
+          Flash.create('danger', 'Product already added');
+          return
+        }
+      }
+    }
+      if(newValue[0].part_no.pk)
       $scope.data[$scope.data.length - 1] = newValue[0].part_no
       $scope.data[$scope.data.length - 1].quantity1 = 1
       var totalprice = $scope.data[$scope.data.length - 1].price * $scope.data[$scope.data.length - 1].quantity1
@@ -905,6 +923,23 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         return
       })
     } else if (typeof $scope.data[$scope.data.length - 1].part_no == 'object') {
+      if($scope.data.length>1){
+        for (var i = 0; i < $scope.data.length; i++) {
+          console.log($scope.data[i],'aaaaaaaaa');
+          if($scope.data[i].pk==$scope.data[$scope.data.length - 1].part_no.pk){
+            Flash.create('danger', 'Product already added');
+            return
+          }
+        }
+      }
+    if($scope.projects.length>0){
+      for (var i = 0; i < $scope.projects.length; i++) {
+        if($scope.projects[i].products.pk==$scope.data[$scope.data.length - 1].part_no.pk){
+          Flash.create('danger', 'Product already added');
+          return
+        }
+      }
+    }
       console.log('BBBBBBBBBBBBBBBBBBBBB');
       $scope.showButton = true
       var cost = 0
@@ -1205,6 +1240,17 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     then(function(response) {})
   }
 
+  $scope.paymentSavePO = function() {
+    var send = {
+      paymentTerms1: $scope.form.paymentTerms1,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
   $scope.shipmentModeSave = function() {
     var send = {
       shipmentMode: $scope.form.shipmentMode,

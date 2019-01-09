@@ -348,12 +348,12 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     #     special2 = "Shipment mode - Air"
     #     special3 = "Freight forwarder - NATCO"
     # paymentterms3 = "Balance plus GST within 1 month from date of receipt of goods"
-    special1 = project.date
+    special1 = "Delivery - " + str(project.date)
     special2 = "Shipment mode - " + project.shipmentMode
     special3 = project.shipmentDetails
     p15_02 =Paragraph("<para fontSize=8>{0}</para>".format(project.terms),styles['Normal'])
     p15_03 =Paragraph("<para fontSize=8>{0}<br/>{1}<br/>{2}</para>".format(special1,special2,special3),styles['Normal'])
-    p15_04 =Paragraph("<para fontSize=8>{0}</para>".format(project.paymentTerms),styles['Normal'])
+    p15_04 =Paragraph("<para fontSize=8>{0}</para>".format(project.paymentTerms1),styles['Normal'])
     data6+=[[p15_02,p15_03,p15_04]]
     t6=Table(data6)
     t6.hAlign = 'LEFT'
@@ -1734,12 +1734,48 @@ class GetMaterialAPIView(APIView):
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
+# class DownloadProjectSCExcelReponse(APIView):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     def get(self , request , format = None):
+#         workbook = Workbook()
+#         projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,junkStatus=False)
+#         projectsObj = list(projectObj.values('comm_nr').distinct())
+#         sendData =[]
+#         for idx,p in enumerate(projectsObj):
+#             if idx==0:
+#                 Sheet1 = workbook.active
+#                 Sheet1.title = p['comm_nr']
+#             if idx>0:
+#                 Sheet1 = workbook.create_sheet(p['comm_nr'])
+#             Sheet1.append(["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed'])
+#             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
+#             print projData
+#             for i in projData:
+#                 toReturn =[]
+#                 bomObj=BoM.objects.filter(project__id=i.pk)
+#                 materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
+#                 for k in materialObj:
+#                         materialdata= k.materialIssue.all()
+#                         for m in materialdata:
+#                             qtyOrdered = 0
+#                             stockConsumed=0
+#                             for j in bomObj:
+#                                 if m.product_id==j.products.pk:
+#                                     qtyOrdered = j.quantity1
+#                                     stockConsumed =m.qty
+#                                 else:
+#                                     stockConsumed=m.qty
+#                             Sheet1.append([i.vendor.name, m.product.part_no,m.product.description_1,qtyOrdered,m.price,stockConsumed])
+#         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+#         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
+#         return response
+
 class DownloadProjectSCExcelReponse(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def get(self , request , format = None):
         workbook = Workbook()
         projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,junkStatus=False)
-        projectsObj = list(projectObj.values('comm_nr').distinct().values())
+        projectsObj = list(projectObj.values('comm_nr').distinct())
         sendData =[]
         for idx,p in enumerate(projectsObj):
             if idx==0:
@@ -1751,27 +1787,25 @@ class DownloadProjectSCExcelReponse(APIView):
             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
             print projData
             for i in projData:
-                toReturn =[]
                 bomObj=BoM.objects.filter(project__id=i.pk)
                 materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
-                for k in materialObj:
-                        materialdata= k.materialIssue.all()
-                        for m in materialdata:
-                            qtyOrdered = 0
-                            stockConsumed=0
-                            for j in bomObj:
-                                if m.product_id==j.products.pk:
-                                    qtyOrdered += j.quantity1
-                                    stockConsumed=m.qty
-                                else:
-                                    qtyOrdered=0
-                                    stockConsumed=m.qty
-                            Sheet1.append([i.vendor.name, m.product.part_no,m.product.description_1,qtyOrdered,m.price,stockConsumed])
+                for j in bomObj:
+                    mat = []
+                    for k in materialObj:
+                        stockConsumed=0
+                        materialdata= list(k.materialIssue.all().values())
+                        for g in materialdata:
+                            mat.append(g)
+                        for m in mat:
+                            print m,'kkkkkkk'
+                            if m['product_id']==j.products.pk:
+                                stockConsumed += m['qty']
+                            else:
+                                stockConsumed = 0
+                    Sheet1.append([i.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed])
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
         return response
-
-
 
 
 class CreateStockReportDataAPIView(APIView):

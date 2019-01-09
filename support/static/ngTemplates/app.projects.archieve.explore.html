@@ -99,7 +99,7 @@
         </div>
         <div class="row" style="padding-top:10px">
           <div class="col-md-5 text-center">
-            <label>  PO Ref Date : </label>
+            <label>  PO Date : </label>
           </div>
           <div class="col-md-7 text-center">
             <span> {{form.poDate}}</span>
@@ -107,7 +107,7 @@
         </div>
         <div class="row" style="padding-top:10px">
           <div class="col-md-5 text-center">
-            <label> Quotation ref Number : </label>
+            <label> Quotation Number : </label>
           </div>
           <div class="col-md-7 text-center">
             <span> {{form.quoteRefNumber}}</span>
@@ -115,7 +115,7 @@
         </div>
         <div class="row" style="padding-top:10px">
           <div class="col-md-5 text-center">
-            <label> Quotation Ref Date  : </label>
+            <label> Quotation Date  : </label>
           </div>
           <div class="col-md-7 text-center">
             <span> {{form.quoteDate}}</span>
@@ -131,7 +131,7 @@
         </div>
         <div class="row" style="padding-top:10px">
           <div class="col-md-5 text-center">
-            <label> BOE ref Number : </label>
+            <label> BOE Number : </label>
           </div>
           <div class="col-md-7 text-center">
             <span> {{form.boeRefNumber}}</span>
@@ -161,12 +161,20 @@
             <span> {{form.delivery}}</span>
           </div>
         </div>
-        <div class="row" style="padding-top:10px">
-          <div class="col-md-5 text-center">
-            <label> Payment Terms : </label>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> Payment Terms (Quotation) : </label>
           </div>
-          <div class="col-md-7 text-center">
-            <span> {{form.paymentTerms}}</span>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.paymentTerms" placeholder="Payment Terms (Quotation)" ng-change="paymentSave()">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> Payment Terms (PO) : </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.paymentTerms1" placeholder="Payment Terms (PO)" ng-change="paymentSavePO()">
           </div>
         </div>
         <div class="row" style="padding-top:10px">

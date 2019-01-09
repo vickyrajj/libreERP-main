@@ -340,6 +340,14 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
           $scope.$watch('productsOrdered', function(newValue, oldValue) {
              if (typeof newValue[newValue.length-1].part_no == 'object') {
+               if($scope.productsOrdered.length>1){
+                 for (var i = 0; i < $scope.productsOrdered.length; i++) {
+                   if($scope.productsOrdered[i].pk ==newValue[newValue.length-1].part_no.pk ){
+                     Flash.create('warning', 'Product Already Added');
+                     return
+                   }
+               }
+               }
                $scope.showButton = true
               $scope.productsOrdered[$scope.productsOrdered.length-1] = newValue[newValue.length-1].part_no
               $scope.productsOrdered[$scope.productsOrdered.length-1].prodQty = 1
