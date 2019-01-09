@@ -943,7 +943,7 @@ function createChatDiv() {
                   '</div>'+
 
                   '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
-                    '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s" class="sy-text '+sy_text_class+'  ">Chat</span>'+
+                    '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
                     '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">'+firstMessage+'</span>'+
                     '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
                   '</div>'+
@@ -1478,12 +1478,12 @@ function createChatDiv() {
               .sy-text-Suggested {\
               position: fixed;\
               right: 100px;\
-              margin-top: 10px;\
+              margin-top: 13px;\
               border-radius: 15px;\
               padding: 4px 8px;\
               font-family: Verdana, Arial, sans-serif;\
               font-size: 14px;\
-              width:20%;\
+              width:300px;\
               animation:chatSuggestionBar 3s\
             }\
               .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
@@ -1492,6 +1492,7 @@ function createChatDiv() {
               #sy-sub-icons .sy-circle, #sy-main-icon > .sy-text {\
               display: none;\
             }\
+            #singleService:hover > .sy-text-Suggested{ display:none !important}\
               #sy-main-icon:hover > .sy-text {\
               display: inline-block;\
             }\
@@ -1692,6 +1693,17 @@ function createChatDiv() {
                 z-index:9999999999999999999;\
                 border-radius:0px\
               }\
+              .sy-text-Suggested {\
+              position: fixed;\
+              right: 100px;\
+              margin-top: 13px;\
+              border-radius: 15px;\
+              padding: 4px 8px;\
+              font-family: Verdana, Arial, sans-serif;\
+              font-size: 10px;\
+              width:215px;\
+              animation:chatSuggestionBar 3s\
+            }\
               .chatBox_header{\
                 border-radius:0px !important;\
               }\
@@ -3188,7 +3200,7 @@ setInterval(function () {
   var chathasOpenedOnce=false;
   // chatSuggestionBar.style.display="none"
   var chatSuggestionBar= document.getElementById('chatSuggestionBar')
-  var chatSuggestionBar= document.getElementById('chatSuggestionBar1')
+  var chatSuggestionBar1= document.getElementById('chatSuggestionBar1')
 
   setTimeout(function () {
     // alert(chathasOpenedOnce)
