@@ -15,7 +15,7 @@
       <div class="col-md-2 col-xs-5 smdevice" style="border-right:1px solid #9E9E9E">
         <table>
           <tr>
-            <td style="width:25%;"><i  class="fa fa-book"></i></td>
+            <td style="width:25%;"><i class="fa fa-book"></i></td>
             <td><span style="font-size:20px;"><b>3 Books</b></span></td>
           </tr>
         </table>
@@ -61,10 +61,10 @@
         <span><b>Video Course</b></span>
         <div ng-class="class2"></div>
       </div>
-      <div class="col-md-2 clickchange" ng-class="click3" ng-click="clicks(3)">
+      <a href="/exam"><div class="col-md-2 clickchange" ng-class="click3" ng-click="clicks(3)">
         <span><b>Test Series</b></span>
         <div ng-class="class3"></div>
-      </div>
+      </div></a>
       <div class="col-md-2 clickchange" ng-class="click4" ng-click="clicks(4)">
         <span><b>Forum</b></span>
         <div ng-class="class4"></div>
@@ -104,10 +104,6 @@
                 <div class="col-md-2 col-xs-1  right_on" style="{{$last && !a.view1 ? 'color:#a3a3a3;':''}}">{{b.page}}</div>
               </div>
             </div>
-            <!-- <div class="row  contentblock" >
-              <div class="col-md-10 col-xs-11">{{a.chapter.five}}</div>
-              <div class="col-md-2 col-xs-1 right_on">10</div>
-            </div> -->
             <div ng-show="a.view1">
               <div ng-repeat="b in a.chapter | limitTo:len:5">
                 <div class="row  contentblock">
@@ -125,6 +121,8 @@
       </div>
     </div>
   </div>
+
+
 
   <div class="container-fluid" style="background-color: #fff;">
     <div class="container" style=" margin-bottom: 2em;text-align: center;">

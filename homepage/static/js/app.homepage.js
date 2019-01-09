@@ -166,38 +166,155 @@ app.config(function($stateProvider) {
       templateUrl: '/ngTemplates/disclaimer.html',
       controller: 'controller.disclaimer'
     })
+  $stateProvider
+    .state('exam', {
+      url: "/exam",
+      templateUrl: 'static/ngTemplates/app.homepage.exam.html',
+      controller: 'controller.exam'
+    })
 
 });
+
+app.controller('controller.exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce,Flash) {
+  $scope.questionList = [{
+
+      Question: 'Nunc gravida neque nec neque rutrum elementum.',
+      Options: [
+        'vitae',
+        'turpis',
+        'egestas',
+        'elementum'
+      ],
+      savedIndex:null
+    },
+    {
+      Question: 'Fusce euismod nisi vitae magna faucibus dignissim vitae in lectus.',
+      Options: [
+        'blap',
+        'bluri',
+        'bleep',
+        'bramp'
+      ],
+      savedIndex:null
+    },
+    {
+      Question: 'Curabitur bibendum velit in magna scelerisque, ac sodales nisl ornare.',
+      Options: [
+        'Nullam',
+        'mollis',
+        'lacus',
+        'scelerisque'
+      ],
+      savedIndex:null
+    },
+    {
+      Question: 'Vestibulum porta neque vitae turpis egestas elementum.',
+      Options: [
+        'Integer',
+        'sodales',
+        'finibus',
+        'ultricies'
+      ],
+      savedIndex:null
+    },
+    {
+      Question: 'Nam tempus ante pellentesque, molestie mi id, fringilla velit.',
+      Options: [
+        'Suspendisse',
+        'hendrerit',
+        'volutpat',
+        'scelerisque'
+      ],
+      savedIndex:null
+    },
+    {
+      Question: 'Nullam non risus in nisi sollicitudin consequat.',
+      Options: [
+        'Quisque',
+        'porttitor',
+        'tempor',
+        'vulputate'
+      ],
+      savedIndex:null
+    },
+    {
+      Question: 'Etiam ultricies sem ac ipsum venenatis molestie.',
+      Options: [
+        'Etiam',
+        'blandit',
+        'porttitor',
+        'sollicitudin'
+      ],
+        savedIndex:null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex:null
+    }
+
+
+  ];
+  $scope.count = 0
+  // $scope.answered = "answered";
+  // $scope.notanswered = "notanswered";
+  // $scope.reviewed = "reviewed";
+  // $scope.attemptreview = "attemptreview";
+  // $scope.notview = "notview";
+
+  $scope.selections = []
+  for (var i = 0; i < $scope.questionList.length; i++) {
+    $scope.selections.push(null)
+  }
+  $scope.selection = function(questionno, answerno) {
+    $scope.selections[questionno]= answerno;
+    $scope.questionList[questionno].savedIndex= answerno;
+    console.log(questionno, answerno);
+    console.log($scope.selections, );
+  }
+  $scope.clicked = function(val) {
+    console.log($scope.questionList[val].savedIndex,'aaaaaaaaa');
+    if ($scope.questionList[val].savedIndex!=null) {
+      $scope.count = $scope.count + 1;
+      $scope.questionList[val].status = 'answered'
+    }else {
+      console.log('nooooooo');
+      // Flash.create('danger','Please Select One Option')
+      Flash.create('warning', 'Please Mention The Name' );
+      return
+    }
+    // for (var i = 0; i < $scope.selections.length; i++) {
+    //   if(i == val){
+    //     if($scope.selections[i] == null){
+    //       $scope.answered = "notanswered";
+    //     }else if($scope.selections[i] != null){
+    //       $scope.answered = "answered";
+    //     }
+    //   }
+    //
+    // }
+
+  }
+  $scope.queclick = function(val) {
+
+    $scope.count = val;
+    if ($scope.questionList[val].status!='answered') {
+      $scope.questionList[val].status = 'notanswered'
+    }
+
+  }
+
+});
+
+
 app.controller('controller.courses', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 
-  // $scope.bookscontent = [{
-  //     'class': 'head1',
-  //     'title': '01. Ncert Maths',
-  //     'chapter': {
-  //       'one': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'two': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'three': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'four': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'five': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'six': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'seven': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-  //
-  //     }
-  //   },
-  //   {
-  //     'class': 'head1',
-  //     'title': '02. Ncert Science',
-  //     'chapter': {
-  //       'one': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'two': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'three': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'four': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'five': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'six': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-  //       'seven': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-  //     }
-  //   },
-  // ];
+
   $scope.bookscontent = [{
       'class': 'head1',
       'title': '01. Ncert Maths',
@@ -273,43 +390,43 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       ]
     },
   ];
-  $scope.items = [
-    {
-      "class1":"click1",
-      "class2":"class1",
-      "click":"clicks(1)",
-      "head":'Books',
+  $scope.items = [{
+      "class1": "click1",
+      "class2": "class1",
+      "click": "clicks(1)",
+      "head": 'Books',
 
     },
     {
-      "class1":"click2",
-      "class2":"class2",
-      "click":"clicks(2)",
-      "head":'Videos',
+      "class1": "click2",
+      "class2": "class2",
+      "click": "clicks(2)",
+      "head": 'Videos',
 
     },
     {
-      "class1":"click3",
-      "class2":"class3",
-      "click":"clicks(3)",
-      "head":'Test Series',
+      "class1": "click3",
+      "class2": "class3",
+      "click": "clicks(3)",
+      "head": 'Test Series',
 
     },
     {
-      "class1":"click4",
-      "class2":"class4",
-      "click":"clicks(4)",
-      "head":'Forums',
+      "class1": "click4",
+      "class2": "class4",
+      "click": "clicks(4)",
+      "head": 'Forums',
 
     },
     {
-      "class1":"click5",
-      "class2":"class5",
-      "click":"clicks(5)",
-      "head":'Lecture Notes',
+      "class1": "click5",
+      "class2": "class5",
+      "click": "clicks(5)",
+      "head": 'Lecture Notes',
 
     }
-  ]
+  ];
+
 
   $scope.properties = {
     URLhashListener: true,
@@ -472,11 +589,10 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
 
 
 
-  $scope.headclick = function(val) {
-;
+  $scope.headclick = function(val) {;
     $scope.bookscontent[val].view = !$scope.bookscontent[val].view;
   }
-  $scope.loadcontent = function(val,length) {
+  $scope.loadcontent = function(val, length) {
     console.log(length);
     $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
     $scope.len = length;
@@ -876,7 +992,7 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
 
 
 
-app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope) {
+app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope,Flash) {
 
 
   $rootScope.getCookie = function(cname) {

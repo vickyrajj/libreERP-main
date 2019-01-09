@@ -1800,7 +1800,59 @@ hr {
 .cardforstu:hover .viewstudent1 {
   display: block;
 }
+.selected{
+  background-color:#D6F1FB;
 
+}
+.notview{
+  width:30px;
+  height:30px;
+  background-color:#D2D2D2;
+  border-radius:15px;
+  float:left;margin:1em 1em 1em 0;
+  position: relative;
+}
+.notview .numberalign{
+  color:#fff;
+  text-align:center;
+  font-size:15px;
+  position:absolute;
+  left: 35%;
+  top: 10%;
+}
+.answered{
+  width: 35px;
+  height: 35px;
+  border-radius:0;
+  margin-top:1em;
+  background: #29B999;
+  clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
+}
+.answered .numberalign{
+  color:#fff;
+  text-align:center;
+  font-size:15px;
+  position:absolute;
+  left: 35%;
+  top: 40%;
+}
+.notanswered{
+  width: 35px;
+  height: 35px;
+  border-radius:0;
+  margin-top:1em;
+  background: #ED6060;
+  clip-path: polygon(52% 100%, 100% 68%, 100% 0, 0 0, 0 72%);
+
+}
+.notanswered .numberalign{
+  color:#fff;
+  text-align:center;
+  font-size:15px;
+  position:absolute;
+  left: 35%;
+  top: 40%;
+}
 /*  blogs css starts here*/
 .blog_container {
   display: flex;
