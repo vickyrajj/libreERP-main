@@ -27,17 +27,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     $rootScope.tabIdx = idx
   }
   $scope.filteredData = {}
-
-  function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-
-
+  
   $http({
     method: 'GET',
     url: '/api/support/getCmrList/',
@@ -46,7 +36,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     console.log(response.data);
     $scope.cmnrList = response.data
     for (var i = 0; i < $scope.cmnrList.length; i++) {
-      $scope.filteredData[$scope.cmnrList[i]] = {}
+      $scope.filteredData[$scope.cmnrList[i]] = {'totalPo':0,'totalOrdered':0,'totalConsumed':0}
       $http({
         method: 'GET',
         url: '/api/support/productTable/?comm=' + $scope.cmnrList[i],
@@ -55,8 +45,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
         return function(response) {
           console.log(response.data);
           $scope.filteredData[$scope.cmnrList[i]].cmrTableData = response.data
-
-
           $http({
             method: 'GET',
             url: '/api/support/projects/?savedStatus=false&junkStatus=false&comm_nr=' + $scope.cmnrList[i],
@@ -66,21 +54,19 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
               console.log(response.data);
               for (var j = 0; j < response.data.length; j++) {
                 var clr = "hsl(" + 360 * Math.random() + ',' +(25 + 70 * Math.random()) + '%,' +(85 + 10 * Math.random()) + '%)';
-                console.log(clr,'colorrrrrrrrrr');
                 response.data[j].colorCode = clr
-                console.log($scope.filteredData[$scope.cmnrList[i]]);
+                $scope.filteredData[$scope.cmnrList[i]].totalOrdered += response.data[j].total_po
+                $scope.filteredData[$scope.cmnrList[i]].totalConsumed += response.data[j].total_material
                 if (response.data[j].pk in $scope.filteredData[$scope.cmnrList[i]].cmrTableData) {
                   for (var k = 0; k < $scope.filteredData[$scope.cmnrList[i]].cmrTableData[response.data[j].pk].length; k++) {
                     $scope.filteredData[$scope.cmnrList[i]].cmrTableData[response.data[j].pk][k].colorCode = clr
+                    $scope.filteredData[$scope.cmnrList[i]].totalPo += $scope.filteredData[$scope.cmnrList[i]].cmrTableData[response.data[j].pk][k].landingCost
                   }
                 }
               }
               $scope.filteredData[$scope.cmnrList[i]].serializerData = response.data
             }
           })(i));
-
-
-
         }
       })(i));
 
@@ -247,14 +233,17 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
 
   $scope.tabs = [];
-  $scope.searchTabActive = true;
+  $scope.searchTabActive = {'active':true};
 
   $scope.closeTab = function(index) {
     $scope.tabs.splice(index, 1)
+    if ($scope.tabs.length==0) {
+      $scope.searchTabActive.active = true;
+    }
   }
 
   $scope.addTab = function(input) {
-    $scope.searchTabActive = false;
+    $scope.searchTabActive.active = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
       if ($scope.tabs[i].data.pk == input.data.pk && $scope.tabs[i].app == input.app) {

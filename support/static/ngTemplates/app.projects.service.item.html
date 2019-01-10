@@ -1,5 +1,8 @@
 <div class="row" style="margin-top:30px">
-  <div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-click="cmrTableAction($index,'details');$event.stopPropagation();" ng-repeat="cdt in cmrData.serializerData">
+  <div class="col-md-12 text-left" ng-if="cmrData.totalOrdered>0" style="margin-bottom:35px">
+    <canvas id="pie" class="chart chart-pie" chart-data="[cmrData.totalOrdered,cmrData.totalConsumed]" chart-labels="['Total Ordered','Total Consumed']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" height="50vh"></canvas>
+  </div>
+  <div class="col-md-6" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-click="cmrTableAction($index,'details');$event.stopPropagation();" ng-repeat="cdt in cmrData.serializerData">
     <div class="container-fluid card" style="border: 3px solid {{cdt.status=='created'?'#b8b5b3':''}}{{cdt.status=='sent_for_approval'?'#F08080':''}}{{cdt.status=='approved'?'#449d44':''}}{{cdt.status=='ongoing'?'#337ab7':''}};cursor:pointer;background-color:{{cdt.colorCode}}">
       <div class="row text-center" style="height:6vh;">
 
@@ -10,7 +13,7 @@
         </div>
       </div>
       <div class="row container-fluid" style="padding-top:20px;height:12vh;">
-        <div class="col-md-10" style="z-index: 1;">
+        <div class="col-md-5" style="z-index: 1;">
           <div class="row">
             <div class="col-md-5">
               <span style="font-size:15px;"><strong> Customer </strong>:</span>
@@ -44,8 +47,11 @@
             </div>
           </div>
         </div>
+        <div class="col-md-6">
+          <canvas id="pie" class="chart chart-pie" chart-data="[cdt.total_po,cdt.total_material]" chart-labels="['Ordered','Consumed']" chart-labels="['Ordered','Consumed']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" ng-if="cdt.total_po>0"></canvas>
+        </div>
 
-        <div class="col-md-2">
+        <div class="col-md-1">
           <div style="padding-right:20px;">
             <div class="row">
               <span class="pull-right" style="cursor:pointer;" ng-click="cmrTableAction($index,'edit');$event.stopPropagation();">
@@ -65,7 +71,10 @@
     </div>
   </div>
 
-  <div class="col-md-12">
+  <div class="col-md-12" style="margin-top:30px">
+    <div class="col-md-12 text-right" style="font-size:26px">
+      <strong>Total PO : </strong>{{cmrData.totalPo}}
+    </div>
     <table class="invoiceTable" style=" width: 100%;">
       <thead>
         <tr style="background-color: #eeeeee;height: 96px;">
