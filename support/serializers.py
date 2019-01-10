@@ -24,10 +24,9 @@ class ProductsSerializer(serializers.ModelSerializer):
         model = Products
         fields = ('pk', 'created', 'part_no','description_1','description_2','replaced','customs_no','parent','weight','price','sheet','bar_code','gst','custom','total_quantity')
     def get_total_quantity(self , obj):
-        inventory = Inventory.objects.filter(product=obj.pk)
         qty = 0
-        for i in inventory:
-            qty+= i.qty
+        inventory = Inventory.objects.filter(product=obj.pk)
+        qty = sum(i.qty for i in inventory)
         if qty>0:
             return qty
         else:

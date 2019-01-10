@@ -27,7 +27,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     $rootScope.tabIdx = idx
   }
   $scope.filteredData = {}
-  
+
   $http({
     method: 'GET',
     url: '/api/support/getCmrList/',
@@ -53,7 +53,8 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
             return function(response) {
               console.log(response.data);
               for (var j = 0; j < response.data.length; j++) {
-                var clr = "hsl(" + 360 * Math.random() + ',' +(25 + 70 * Math.random()) + '%,' +(85 + 10 * Math.random()) + '%)';
+                var clr = "hsl(" + 360 * Math.random() + ',' +(25 + 70 * Math.random()) + '%,' +(85 + 10 * Math.random()) + '%,0.2)';
+                console.log(clr,'colorrrrrrrrrr');
                 response.data[j].colorCode = clr
                 $scope.filteredData[$scope.cmnrList[i]].totalOrdered += response.data[j].total_po
                 $scope.filteredData[$scope.cmnrList[i]].totalConsumed += response.data[j].total_material

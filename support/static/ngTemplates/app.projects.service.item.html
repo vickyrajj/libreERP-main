@@ -24,6 +24,14 @@
           </div>
           <div class="row">
             <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Vendor </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>  {{cdt.vendor.name}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
               <span style="font-size:15px;"><strong> Stage </strong>:</span>
             </div>
             <div class="col-md-7">
@@ -32,10 +40,26 @@
           </div>
           <div class="row">
             <div class="col-md-5">
-              <span style="font-size:15px;"><strong>Mobile </strong>:</span>
+              <span style="font-size:15px;"><strong>Customer Mobile </strong>:</span>
             </div>
             <div class="col-md-7">
               <span>{{cdt.service.mobile}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Customer Email </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>  {{cdt.service.email}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Enquiry Ref  </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>  {{cdt.enquiry_ref}}</span>
             </div>
           </div>
           <div class="row">
@@ -71,10 +95,11 @@
     </div>
   </div>
 
-  <div class="col-md-12" style="margin-top:30px">
+  <div class="col-md-12" style="margin-top:30px" ng-if="cmrData.totalPo>0">
     <div class="col-md-12 text-right" style="font-size:26px">
       <strong>Total PO : </strong>{{cmrData.totalPo}}
     </div>
+
     <table class="invoiceTable" style=" width: 100%;">
       <thead>
         <tr style="background-color: #eeeeee;height: 96px;">
