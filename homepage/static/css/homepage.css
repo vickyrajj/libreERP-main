@@ -1804,27 +1804,28 @@ hr {
   background-color:#D6F1FB;
 
 }
+
 .notview{
-  width:30px;
-  height:30px;
+  width:35px;
+  height:35px;
   background-color:#D2D2D2;
-  border-radius:15px;
+  border-radius:18px;
   float:left;margin:1em 1em 1em 0;
   position: relative;
 }
-.notview .numberalign{
+.notview .numberalign,.reviewed .numberalign,.attemptreviewed .numberalign{
   color:#fff;
   text-align:center;
   font-size:15px;
   position:absolute;
   left: 35%;
-  top: 10%;
+  top: 20%;
 }
 .answered{
   width: 35px;
-  height: 35px;
+  height: 45px;
   border-radius:0;
-  margin-top:1em;
+  margin-top:0.3em;
   background: #29B999;
   clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
 }
@@ -1838,7 +1839,7 @@ hr {
 }
 .notanswered{
   width: 35px;
-  height: 35px;
+  height: 45px;
   border-radius:0;
   margin-top:1em;
   background: #ED6060;
@@ -1853,6 +1854,108 @@ hr {
   left: 35%;
   top: 40%;
 }
+.reviewed{
+  width:35px;
+  height:35px;
+  background-color:#565FB8;
+  border-radius:18px;
+  float:left;margin:1em 1em 1em 0;
+  position: relative;
+}
+.attemptreviewed{
+  width:35px;
+  height:35px;
+  background-color:#565FB8;
+  border-radius:18px;
+  float:left;margin:1em 1em 1em 0;
+  position: relative;
+}
+.attemptreviewed::after {
+  content:'\2713';
+  position:absolute;
+  width:20px;
+  height:20px;
+  top:75%;
+  right:0;
+  background-color:#86D37C;
+  color:#fff;
+  border-radius: 10px;
+  border:1px solid #fff;
+  text-align: center;
+}
+.btns{
+  color:#38322A;
+  border:1px solid #D2D2D2;
+  padding:0.5em 3em;
+  width:70%;
+  background-color: #fff;
+  margin-top:1em;
+  border-radius: 2px;
+  font-size:17px;
+}
+.btnaction{
+  color:#38322A;
+  border:2px solid #25B5E9;
+  padding:0.5em 2em;
+  background-color: #fff;
+  margin-top:1em;
+  font-size:17px;
+  width:15%;
+  margin-left:0.5em;
+}
+.btnaction:hover{
+    background-color: #25B5E9;
+    color:#fff;
+}
+.headbtn{
+  color:#fff;
+  padding:0.5em 2em;
+  border:0;
+  background-color: #25B5E9;
+  margin-top:1em;
+  font-size:17px;
+  width:15%;
+  margin-left:0.5em;
+}
+.savebtn{
+  color:#fff;
+  padding:0.5em 2em;
+  border:0;
+  background-color: #25B5E9;
+  margin-top:1em;
+  font-size:17px;
+  width:15%;
+  margin-left:0.5em;
+}
+.maindiv{
+  padding: 2em 2em 2em 2em;
+}
+.queanswer{
+  padding-top:2em;
+  border-bottom:1px solid #D2D2D2;
+  padding-bottom:4em;
+}
+.btn-section{
+  margin-top:20em;
+  border-top:1px solid #D2D2D2;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+.answers{
+  padding: 1em;
+}
+/* .answers li::before{
+  content:'';
+  width:30px;
+  height:30px;
+  text-align: center;
+  position:absolute;
+  top:1;
+  left:-2em;
+  border-radius: 15px;
+  border:1px solid #6C6464;
+} */
 /*  blogs css starts here*/
 .blog_container {
   display: flex;
@@ -2125,6 +2228,54 @@ hr {
 
   /* mobile display size starts here.... */
   /* courses */
+  .answers{
+    padding: 0 0 0 1em;
+  }
+  .queanswer{
+    padding-top:1em;
+    border-bottom:0;
+    padding-bottom:4em;
+  }
+  .maindiv{
+    padding:2em 0.5em 1em 0.5em;
+  }
+  .subtext{
+    font-size:15px;
+  }
+  .btn-section{
+    position:fixed;
+    bottom:0;
+    right:0;
+    padding: 0;
+    margin:0;
+    text-align: center;
+    border-top:1px solid #D2D2D2;
+    display: inline-block;
+    width:100%;
+    box-sizing: border-box;
+
+  }
+  .savebtn{
+    padding:0.5em 0;
+    border:1px solid #25B5E9;
+    margin:1em 0.1em 1em 0.1em;
+    font-size:14px;
+    width:20%;
+  }
+  .btnaction{
+    padding:0.5em 0;
+    margin:1em 0.1em 1em 0.1em;
+    font-size:14px;
+    width:35%;
+  }
+  .headbtn{
+    padding:0.5em 0;
+    border:1px solid #25B5E9;
+    margin:1em 0.1em 1em 0.1em;
+    font-size:14px;
+    min-width:40%;
+
+  }
   .viewstudent1 {
     position: absolute;
     top: -2em;

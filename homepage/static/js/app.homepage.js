@@ -175,7 +175,7 @@ app.config(function($stateProvider) {
 
 });
 
-app.controller('controller.exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce,Flash) {
+app.controller('controller.exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
   $scope.questionList = [{
 
       Question: 'Nunc gravida neque nec neque rutrum elementum.',
@@ -185,7 +185,7 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
         'egestas',
         'elementum'
       ],
-      savedIndex:null
+      savedIndex: null
     },
     {
       Question: 'Fusce euismod nisi vitae magna faucibus dignissim vitae in lectus.',
@@ -195,7 +195,7 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
         'bleep',
         'bramp'
       ],
-      savedIndex:null
+      savedIndex: null
     },
     {
       Question: 'Curabitur bibendum velit in magna scelerisque, ac sodales nisl ornare.',
@@ -205,7 +205,7 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
         'lacus',
         'scelerisque'
       ],
-      savedIndex:null
+      savedIndex: null
     },
     {
       Question: 'Vestibulum porta neque vitae turpis egestas elementum.',
@@ -215,7 +215,7 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
         'finibus',
         'ultricies'
       ],
-      savedIndex:null
+      savedIndex: null
     },
     {
       Question: 'Nam tempus ante pellentesque, molestie mi id, fringilla velit.',
@@ -225,7 +225,7 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
         'volutpat',
         'scelerisque'
       ],
-      savedIndex:null
+      savedIndex: null
     },
     {
       Question: 'Nullam non risus in nisi sollicitudin consequat.',
@@ -235,7 +235,7 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
         'tempor',
         'vulputate'
       ],
-      savedIndex:null
+      savedIndex: null
     },
     {
       Question: 'Etiam ultricies sem ac ipsum venenatis molestie.',
@@ -245,7 +245,7 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
         'porttitor',
         'sollicitudin'
       ],
-        savedIndex:null
+      savedIndex: null
     },
     {
       Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
@@ -255,11 +255,12 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
         'elementum',
         'Nullam'
       ],
-      savedIndex:null
+      savedIndex: null
     }
 
 
   ];
+  $scope.options
   $scope.count = 0
   // $scope.answered = "answered";
   // $scope.notanswered = "notanswered";
@@ -272,20 +273,21 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
     $scope.selections.push(null)
   }
   $scope.selection = function(questionno, answerno) {
-    $scope.selections[questionno]= answerno;
-    $scope.questionList[questionno].savedIndex= answerno;
+    $scope.selections[questionno] = answerno;
+    $scope.questionList[questionno].savedIndex = answerno;
     console.log(questionno, answerno);
     console.log($scope.selections, );
   }
-  $scope.clicked = function(val) {
-    console.log($scope.questionList[val].savedIndex,'aaaaaaaaa');
-    if ($scope.questionList[val].savedIndex!=null) {
+  $scope.save = function(val) {
+    console.log($scope.questionList[val].savedIndex, 'aaaaaaaaa');
+    if ($scope.questionList[val].savedIndex != null) {
       $scope.count = $scope.count + 1;
-      $scope.questionList[val].status = 'answered'
-    }else {
+      $scope.questionList[val].status = 'answered';
+      $scope.questionList[$scope.count].status = 'notanswered';
+    } else {
       console.log('nooooooo');
       // Flash.create('danger','Please Select One Option')
-      Flash.create('warning', 'Please Mention The Name' );
+      Flash.create('warning', 'Please Mention The Name');
       return
     }
     // for (var i = 0; i < $scope.selections.length; i++) {
@@ -300,10 +302,30 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
     // }
 
   }
+  $scope.review = function(val) {
+    if ($scope.questionList[val].savedIndex != null) {
+      $scope.count = $scope.count + 1;
+      $scope.questionList[val].status = 'attemptreviewed';
+      $scope.questionList[$scope.count].status = 'notanswered';
+    } else {
+      console.log('nooooooo');
+      $scope.count = $scope.count + 1;
+      $scope.questionList[val].status = 'reviewed';
+      $scope.questionList[$scope.count].status = 'notanswered';
+      // Flash.create('danger','Please Select One Option')
+      Flash.create('warning', 'Please Mention The Name');
+      return
+    }
+  }
+  $scope.clearselection = function(val) {
+    $scope.selections[val] = null;
+    $scope.questionList[val].status = 'notanswered';
+    $scope.questionList[val].savedIndex =null;
+  }
   $scope.queclick = function(val) {
 
     $scope.count = val;
-    if ($scope.questionList[val].status!='answered') {
+    if ($scope.questionList[val].status != 'answered' && $scope.questionList[val].status != 'reviewed' && $scope.questionList[val].status != 'attemptreviewed') {
       $scope.questionList[val].status = 'notanswered'
     }
 
@@ -992,7 +1014,7 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
 
 
 
-app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope,Flash) {
+app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope, Flash) {
 
 
   $rootScope.getCookie = function(cname) {

@@ -2,28 +2,28 @@
 
   <div class="row">
 
-    <div class="col-md-9" style="padding:2em;min-height:100vh;">
-      <div class="text-center">
-        <div class="text-center" style="background-color:#25B5E9;color:#fff;min-height:40px;max-width:300px;margin-left: 40%;">
-          <h3 style="padding: .5em 1em .5em 1em;"><b>Maths</b></h3>
+    <div class="col-md-9" style="min-height:100vh;padding:0;">
+      <div class="maindiv">
+        <div class="text-center">
+          <button class="headbtn" style="cursor: context-menu;">Maths</button>
+        </div>
+        <div style="border-bottom:1px solid  #25B5E9;height:40px;">
+          <h4 style="float:left;" class="subtext"><b>Question No {{count+1}}</b></h4>
+          <h4 class="text-right subtext" style="float:right;"><b>Single Choice Type Question</b></h4>
+        </div>
+        <div  class="queanswer">
+          <div ng-repeat="a in questionList">
+            <h4 style="margin-left:1em;" ng-show="$index === count">{{a.Question}}</h4>
+            <ol style="margin-left:2em;font-size:20px;color:#6C6464;" type='A' class="answers" ng-show="$index === count">
+              <li ng-repeat="b in a.Options" class="optionhover" style="padding:0.5em;position:relative;" ng-click="selection($parent.$index,$index)" ng-class="{'selected' : selections[$parent.$index] == $index}">{{b}}</li>
+            </ol>
+          </div>
         </div>
       </div>
-      <div style="border-bottom:1px solid  #25B5E9;height:40px;">
-        <h4 style="float:left;">Question No {{count+1}}</h4>
-        <h4 class="text-right" style="float:right;">Single Choice Type Question</h4>
-      </div>
-      <div style="padding-top:2em;">
-        <div ng-repeat="a in questionList">
-          <h4 style="margin-left:1em;" ng-show="$index === count">{{a.Question}}</h4>
-          <ul style="margin-left:2em;font-size:20px;" ng-show="$index === count">
-            <li ng-repeat="b in a.Options" ng-click="selection($parent.$index,$index)" ng-class="{'selected' : selections[$parent.$index] == $index}">{{b}}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="text-center" style="margin-top:30em;">
-        <button class="btn" style="background-color:#25B5E9;color:#fff;padding: .5em 1em .5em 1em; " ng-click="clicked(count)"><b>Save</b></button>
-        <button class="btn" style="background-color:#25B5E9;color:#fff;padding: .5em 1em .5em 1em;margin-left:1em; " ng-click="clicked(count)"><b>Review Later</b></button>
-        <button class="btn" style="background-color:#25B5E9;color:#fff;padding: .5em 1em .5em 1em;margin-left:1em; " ng-click="clicked(count)"><b>Clear Selection</b></button>
+      <div class="text-center btn-section">
+        <button class="savebtn" ng-click="save(count)">Save</button>
+        <button class="btnaction" ng-click="review(count)">Review Later</button>
+        <button class="btnaction" ng-click="clearselection(count)">Clear Selection</button>
       </div>
     </div>
     <div class="col-md-3" style="padding-top:2em;background-color: #F5F5F5;min-height:100vh;">
@@ -31,8 +31,8 @@
       <div>
         <div ng-repeat="a in questionList  | limitTo:9" class="text-center">
           <div class="col-md-2" ng-init="$first?a.status='notanswered':'default'">
-            <div   ng-class="a.status=='answered'?'answered':(a.status=='notanswered'?'notanswered':'notview')" ng-click="queclick($index)">
-              <span class="numberalign" ><b>{{$index+1}}</b></span>
+            <div ng-class="a.status=='answered'?'answered':(a.status=='notanswered'?'notanswered':(a.status=='reviewed'?'reviewed':(a.status=='attemptreviewed'?'attemptreviewed':'notview')))" ng-click="queclick($index)">
+              <span class="numberalign"><b>{{$index+1}}</b></span>
             </div>
 
           </div>
@@ -52,7 +52,7 @@
               <td>
                 <div class="answered"></div>
               </td>
-              <td style="padding: 2em 0 0 1em;"><span style="font-size: 17px;"> Attempted</span> </td>
+              <td style="padding: 2em 0 0 1em;"><span style="font-size: 17px;margin-left: 0.5em;"> Attempted</span> </td>
             </tr>
           </table>
         </div>
@@ -62,7 +62,7 @@
               <td>
                 <div class="notanswered"></div>
               </td>
-              <td style="padding: 2em 0 0 1em;"><span style="font-size: 17px;">Not Attempted</span> </td>
+              <td style="padding: 2em 0 0 1em;"><span style="font-size: 17px;margin-left: 0.5em;">Not Attempted</span> </td>
             </tr>
           </table>
         </div>
@@ -76,16 +76,35 @@
             </tr>
           </table>
         </div>
-        <!-- <div class="answered" style="float:left;"></div><span style="float:right;margin-top:2em;">Attempted</span> -->
-        <!-- <div class="col-md-6">
-          <div class="notanswered"></div><span>Not Attempted</span>
+        <div class="col-md-6 text-center">
+          <table>
+            <tr>
+              <td>
+                <div class="reviewed"></div>
+              </td>
+              <td style="padding: 0.5em 0 0 0.5em;"><span style="font-size: 17px;">To be Reviewed</span> </td>
+            </tr>
+          </table>
         </div>
-        <div class="col-md-6">
-          <div class="notview"></div><span>Not Viewed yet</span>
+        <div class="col-md-12 text-left" style="margin-top:-1em;">
+          <table>
+            <tr>
+              <td>
+                <div class="attemptreviewed"></div>
+              </td>
+              <td style="padding: 0.5em 0 0 0.5em;"><span style="font-size: 17px;">Attempted and Marked for Review</span> </td>
+            </tr>
+          </table>
         </div>
-        <div class="col-md-6">
-          <div class="answered"></div><span>Attempted</span>
-        </div> -->
+        <div class="col-md-12 text-center" style="margin-top:5em;">
+          <button class="btns">Instructions</button>
+        </div>
+        <div class="col-md-12 text-center">
+          <button class="btns">Questions</button>
+        </div>
+        <div class="col-md-12 text-center">
+          <button class="btns">Finish</button>
+        </div>
 
       </div>
     </div>
