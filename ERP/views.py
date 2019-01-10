@@ -24,7 +24,7 @@ import urllib
 
 
 def renderedStatic(request , filename):
-
+    print 'filename', filename
     if request.COOKIES.get('lang') == None:
         language = translation.get_language_from_request(request)
     else:

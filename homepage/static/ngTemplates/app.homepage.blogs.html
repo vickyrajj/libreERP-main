@@ -31,7 +31,7 @@
         <p class="blog_text">{{blog.title}}</p>
       </div>
 
-      <div class="sec1Right">
+      <div class="sec1Right" style="{{thirdSection[0]==undefined&&thirdSection.length==0?'height:25vh !important':''}}">
         <div ng-if="thirdSection[0]" class="sec1RightBox1" ng-click="openBlog(thirdSection[0].shortUrl,thirdSection[0].pk)">
           <img class="blog_image" ng-src="{{thirdSection[0].ogimage}}" alt="">
           <p class="blog_text">{{thirdSection[0].title}}</p>
@@ -68,7 +68,7 @@
         <div class="textHeading">
           <h4>Get Regular Blog Updates</h4>
         </div>
-        <div class="">
+        <div>
           <input class="form-control" type="text" name="" value="" ng-model="emailAddress" placeholder="email address">
         </div>
         <div class="sendUpdates btn_gradient" ng-click=sendUpdates()>

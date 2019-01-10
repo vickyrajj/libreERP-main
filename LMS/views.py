@@ -10,7 +10,7 @@ from rest_framework import viewsets , permissions , serializers
 from rest_framework.exceptions import *
 from url_filter.integrations.drf import DjangoFilterBackend
 from API.permissions import *
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import HttpResponse
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework.views import APIView
@@ -327,3 +327,19 @@ class QuestionsAutoCreate(APIView):
 
         # print questionsData
         return Response([] , status = status.HTTP_200_OK)
+
+
+class GetLevelsAndBooks(APIView):
+    permission_classes = (permissions.AllowAny, )
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        print 'hereeeeeeee'
+        LevelsAndBooks = []
+        allLevels =  list(Subject.objects.filter().values_list('level',flat = True).distinct())
+        for i in allLevels:
+            book = list(Book.objects.filter(subject__level = i).values('title',subjectName = F('subject__title')))
+            # print book,'bookbookbookbook'
+            toAppend = {'level': i, 'book': book}
+            LevelsAndBooks.append(toAppend)
+            print toAppend
+        return Response({'LevelsAndBooks':LevelsAndBooks} , status = status.HTTP_200_OK)

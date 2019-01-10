@@ -66,7 +66,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$http', function($rootScope, $
           data: toSend
         }).
         then(function(response) {
-          console.log(response.data);
+          // console.log(response.data);
         })
 
         $rootScope.newTime = new Date().getTime();
@@ -141,7 +141,7 @@ app.config(function($stateProvider) {
       .state('ncert', {
         url: "/ncert",
         templateUrl: '/static/ngTemplates/app.homepage.ncert.html',
-        // controller: 'controller.ncert'
+        controller: 'controller.ncert'
       })
     $stateProvider
       .state('policy', {
@@ -184,19 +184,39 @@ app.config(function($stateProvider) {
     })
 
     $stateProvider
-    .state('book', {
-      url: "/book",
+    .state('solutions', {
+      url: "/hc-verma-solutions",
       templateUrl: 'static/ngTemplates/app.homepage.book.html',
-      // controller: 'controller.book'
+      // controller: 'controller.solutions'
     })
   $stateProvider
     .state('chapter', {
-      url: "/chapter",
+      url: "/hc-verma-solutions/:chapterName",
       templateUrl: 'static/ngTemplates/app.homepage.chapter.html',
       controller: 'controller.chapter'
     })
 
 });
+
+app.controller('controller.ncert', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+
+  $http({
+    method:'GET',
+    url:'/api/LMS/getLevelsAndBooks/'
+  }).then(function (response) {
+    console.log(response);
+
+    $scope.levelsAndBooks = response.data.LevelsAndBooks
+  }, function(error) {
+    console.log(error);
+  })
+
+});
+
+
+
+
 
 app.controller('controller.blogDetails', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 

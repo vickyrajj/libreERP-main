@@ -28,4 +28,6 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'generateQuesPaper/$' , DownloadQuesPaper.as_view() ),
     url(r'questionsAutoCreate/$' , QuestionsAutoCreate.as_view() ),
+    url(r'getLevelsAndBooks/$' , GetLevelsAndBooks.as_view() ),
+
 ]
