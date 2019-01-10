@@ -6,8 +6,7 @@
     <!-- <h4 style="display:inline-block">Agent Info:</h4> -->
 
     <div style="margin:15px 0px">
-      <img style="width:5rem" class="table_image" ng-if="msgData[0].user_id" src="{{data[0].user_id | getDP}}" alt="">
-      <img style="width:5rem" ng-if="!msgData[0].user_id" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+      <img style="width:5rem" ng-if="msgData[0].user_id" src="{{msgData[0].user_id | getDP}}" alt="">
       <div class="" style="display:inline-block">
         <!-- <p style="font-size:16px;font-weight:700">{{msgData[0].user_id | getName}}</p> -->
           <p ng-if="msgData[0].name"><strong>{{msgData[0].name}}</strong></p>
@@ -129,8 +128,7 @@
             <img ng-src="{{comment.visitor_capture}}" alt="">
           </div>
         </div>
-          <!-- <img ng-src="{{comment.user | getDP}}" style="border-radius:50%; width:45px;" alt="User Image"> -->
-          <img style="width:50px" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+          <img style="width:5rem" ng-if="msgData[0].user_id" src="{{msgData[0].user_id | getDP}}" alt="">
           <p style="font-size:15px;display:inline-block;">{{msgData[0].user_id | getName}}</p>
       </div>
     </div>

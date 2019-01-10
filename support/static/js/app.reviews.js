@@ -58,14 +58,24 @@ $scope.viewby = 14;
    $scope.setPage($scope.currentPage.page)
  }
 
+var today_date = new Date();
+var today_day = today_date.getDate();
+var today_month = today_date.getMonth() + 1;
+var today_year = today_date.getFullYear();
+if (today_day < 10) {
+  today_day = '0' + today_day;
+}
+if (today_month < 10) {
+  today_month = '0' + today_month;
+}
+var today_date = today_year + '-' + today_month + '-' + today_day;
 
   $http({
     method: 'GET',
-    url:'/api/support/reviewHomeCal/?customer&chatedDate='+new Date()
+    url:'/api/support/reviewHomeCal/?customer&date='+today_date
   }).
   then(function(response) {
     $scope.reviewData = response.data
-
     $scope.myData=$scope.reviewData[0]
     $scope.last=0;
     $scope.myValues()

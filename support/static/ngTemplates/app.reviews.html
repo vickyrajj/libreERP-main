@@ -1,12 +1,11 @@
 
-<div style="text-align:center" ng-if="loadingData">
-  <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
+<div style="text-align:center;position:fixed;top:40%;right:40%" ng-if="loadingData">
+  <img ng-src="/static/images/spinner.gif" alt="">
 </div>
 
 <div class="bg-white My_container" style="" ng-if="tableUpdated&&isTableView">
 
   <!-- <breadcrumb></breadcrumb> -->
-
 
           <div class="Left_container">
 
@@ -20,7 +19,7 @@
              <tr id="id{{$index}}" ng-repeat="data in tableDataAvail" ng-click="doing(data)" style="background-color: {{$index==last?'#f0f0f0':' '}}">
                <td class="tabel_data">
                   <img class="table_image" ng-if="data[0].user_id" src="{{data[0].user_id | getDP}}" alt="">
-                  <img class="table_image" ng-if="!data[0].user_id" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
+                  <img class="table_image" ng-if="!data[0].user_id" ng-src="/static/images/avatar04.png" alt="">
                   <span style="display:inline-block">
                      <div ng-if="data[0].name">
                        <span style="font-weight: 500;font-size:90%">{{data[0].name}}</span>
@@ -165,7 +164,7 @@
                 <i class="fa fa-list-ul"></i>
               </uib-tab-heading>
                     <div style="text-align:center" ng-if="loadingData">
-                      <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
+                      <img ng-src="/static/images/spinner.gif" alt="">
                     </div>
                     <div class="col-md-9">
                       <div class="col-md-4" ng-repeat="r in reviewData">

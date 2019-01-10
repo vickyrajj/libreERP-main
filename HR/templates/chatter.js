@@ -1477,13 +1477,14 @@ function createChatDiv() {
             }\
               .sy-text-Suggested {\
               position: fixed;\
-              right: 100px;\
+              right: 110px;\
               margin-top: 13px;\
               border-radius: 15px;\
               padding: 4px 8px;\
               font-family: Verdana, Arial, sans-serif;\
               font-size: 14px;\
-              width:300px;\
+              max-width:300px;\
+              bottom:20px;\
               animation:chatSuggestionBar 3s\
             }\
               .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
