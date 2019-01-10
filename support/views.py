@@ -1941,3 +1941,23 @@ class GetCmrListAPIView(APIView):
     def get(self , request , format = None):
         cmrList = list(Projects.objects.filter(savedStatus=False,junkStatus=False).values_list('comm_nr',flat=True).distinct())
         return Response(cmrList,status=status.HTTP_200_OK)
+
+class ProjectProductAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self , request , format = None):
+        projectObj = Projects.objects.filter(savedStatus=False,junkStatus=False,comm_nr=request.GET['comm'])
+        projectsObj = list(projectObj.values('comm_nr').distinct())
+        toReturn = []
+        # for p in projectsObj:
+        #     projDetail = []
+        proData = projectObj.filter(comm_nr=projectsObj[0]['comm_nr'])
+        print proData
+        for i in proData:
+            print i.pk
+            bomlist = []
+            bomObj = list(BoM.objects.filter(project__id=i.pk).values('products__pk','products__description_1','products__description_2','products__weight','products__part_no','products__customs_no','custom','user_id','gst','project__pk','quantity1','quantity2','price','landed_price',''))
+            for b in bomObj:
+                bomlist.append(b)
+            toReturn.append({'projectPk':i.pk,'bomdata':bomlist})
+        # toReturn.append({'project':projDetail})
+        return Response(toReturn,status=status.HTTP_200_OK)
