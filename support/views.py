@@ -39,7 +39,7 @@ from django.db.models.functions import Extract , ExtractDay, ExtractMonth, Extra
 from django.db.models import Sum , Avg
 import json
 import os
-from django.db.models import CharField, Value , Func
+from django.db.models import CharField,FloatField, Value , Func
 import csv
 import pandas as pd
 from django.http import HttpResponse
@@ -1850,7 +1850,8 @@ class CreateStockReportDataAPIView(APIView):
         for i in prodObj:
             invtObjs = Inventory.objects.filter(product=i,created__lte=dtime)
             if invtObjs.count()>0:
-                total = invtObjs.aggregate(total=Sum(F('qty') * F('rate'))).get('total',0)
+                total = invtObjs.aggregate(total=Sum(F('qty') * F('rate'),output_field=FloatField())).get('total',0)
+                # print total
                 stockTotal += total
         print 'total valueeeeeeeeeee',stockTotal
         if stockTotal>0:
@@ -1870,7 +1871,8 @@ class CreateStockReportDataAPIView(APIView):
                     for j in matIssMainObjs:
                         tot = 0
                         matIssueObjs = j.materialIssue.all()
-                        tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price'))).get('total',0)
+                        tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price'),output_field=FloatField())).get('total',0)
+                        # print tot
                         vl += tot
                     try:
                         pObj=ProjectStockSummary.objects.get(stockReport=ssReportObj,title=i.title)
