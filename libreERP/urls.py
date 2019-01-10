@@ -6,7 +6,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from homepage.views import index
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
 from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration , desclaimer
-from ERP.views import serviceRegistration
+from ERP.views import serviceRegistration , dynamicTemplates
 from tutor.views import studentHome , tutorHome
 from ERP.views import PaymentResponse, renderedStatic
 from django.contrib.sitemaps.views import sitemap
@@ -51,6 +51,7 @@ urlpatterns = [
     url(r'^paymentResponse', PaymentResponse , name ='paymentResponse'),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^ngTemplates/(?P<filename>[\w|\W]+)', renderedStatic , name ='renderedStatic'),
+    url(r'^dynamicTemplates/(?P<filename>[\w|\W]+).html', dynamicTemplates , name ='dynamicTemplates'),
 ]
 
 if settings.DEBUG:

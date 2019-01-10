@@ -186,7 +186,7 @@ app.config(function($stateProvider) {
     $stateProvider
     .state('solutions', {
       url: "/hc-verma-solutions",
-      templateUrl: 'static/ngTemplates/app.homepage.book.html',
+      templateUrl: '/dynamicTemplates/hc-verma-solutions.html',
       // controller: 'controller.solutions'
     })
   $stateProvider

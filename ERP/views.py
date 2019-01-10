@@ -20,7 +20,7 @@ import libreERP.Checksum as Checksum
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import translation
 import urllib
-
+from LMS.models import *
 
 
 def renderedStatic(request , filename):
@@ -32,7 +32,21 @@ def renderedStatic(request , filename):
 
     translation.activate(language )
     request.LANGUAGE_CODE = translation.get_language()
+
     return render(request , filename , {"lang" : request.LANGUAGE_CODE})
+
+
+def dynamicTemplates(request , filename):
+    print 'filename', filename
+
+    blogobj = blogPost.objects.get(shortUrl=filename)
+
+    if blogobj.contentType == 'book':
+        book = Book.objects.get(pk=blogobj.header)
+        sectionobj = Section.objects.filter(book = book.pk)
+        return render(request, 'bookDetails.html', {"home": False, "tagsCSV" :  blogobj.tagsCSV.split(','), 'book' : book ,'sectionobj':sectionobj,'blogobj' : blogobj, "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT})
+
+    # return render(request , filename , {"lang" : request.LANGUAGE_CODE})
 
 
 
