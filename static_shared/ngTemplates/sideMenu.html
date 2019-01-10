@@ -24,7 +24,7 @@
     <div class="container-fluid">
       <ul class="nav nav-sidebar" style="width:100%;">
         <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
-          <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:20rem;border-radius:0 3rem 3rem 0' : ''}}">
+          <a ui-sref="{{a.state}}" style="padding:15px;{{ onHover&&!sideMenuVisibility ? 'width:20rem;border-radius:0 3rem 3rem 0' : ''}}">
             <div ng-if="sideMenuVisibility" align="left">
               <div class="row container-fluid" >
                 <div style="display:flex;padding-left:1rem">
@@ -33,7 +33,7 @@
                 </div>
               </div>
             </div>
-            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:15px;overflow-x:visible;"><i class="fa {{a.icon}} fa-lg pull-left zoomOnHover" style="margin-left:15px;padding-top:4px"></i>
+            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:15px;overflow-x:visible;"><i class="fa {{a.icon}} fa-lg pull-left zoomOnHover" style="margin-left:15px;"></i>
               <span ng-if="onHover" class="pull-right">{{a.dispName | humanize}}</span>
             </div>
           </a>

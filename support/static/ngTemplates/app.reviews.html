@@ -1,24 +1,31 @@
+
+<div style="text-align:center" ng-if="loadingData">
+  <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
+</div>
+
 <div class="bg-white My_container" style="" ng-if="tableUpdated&&isTableView">
 
   <!-- <breadcrumb></breadcrumb> -->
 
+
           <div class="Left_container">
-            <table id="myQATable" style="width:100%;" datatable="" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="row-border hover">
+
+            <table id="myQATable" style="width:100%;">
               <thead>
                 <tr class="">
                   <th style="text-align:center;display:none">Chat Start</th>
                 </tr>
               </thead>
              <tbody>
-             <tr id="id{{$index}}" ng-repeat="data in reviewData" ng-click="doing(data)" style="background-color: {{$index==last?'#f0f0f0':' '}}">
+             <tr id="id{{$index}}" ng-repeat="data in tableDataAvail" ng-click="doing(data)" style="background-color: {{$index==last?'#f0f0f0':' '}}">
                <td class="tabel_data">
                   <img class="table_image" ng-if="data[0].user_id" src="{{data[0].user_id | getDP}}" alt="">
                   <img class="table_image" ng-if="!data[0].user_id" src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/256/Administrator-icon.png" alt="">
                   <span style="display:inline-block">
-                     <!-- <div>
-                       <span style="font-weight: 700;font-size:90%">{{data[0].user_id | getName}}</span>
-                       <span style="font-weight: 400;font-size:75%">{{data[0].company? data[0].company:'-'}}</span>
-                     </div> -->
+                     <div ng-if="data[0].name">
+                       <span style="font-weight: 500;font-size:90%">{{data[0].name}}</span>
+                       <!-- <span style="font-weight: 400;font-size:75%">{{data[0].company? data[0].company:'-'}}</span> -->
+                     </div>
 
                        <span style="font-size:83%">{{data[0].uid}}</span>
                        <!-- <span ng-if="data[0].chatDuration>0.0" style="font-size:80%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data[0].chatDuration}} Min</span>
@@ -50,8 +57,37 @@
                 </td>
               </tr>
             </tbody>
+
           </table>
+
+          <div style="position:fixed;bottom:0px;padding: 2.5rem;background:#fff" >
+
+            <span>
+              <select ng-model="viewby" ng-change="setItemsPerPage(viewby)">
+              <option>15</option>
+              <option>30</option>
+              <option>45</option>
+              <option>60</option>
+            </select></span>
+            <span><pagination
+              style="margin:-10px 0px"
+               total-items="totalItems"
+               ng-model="currentPage.page"
+               ng-change="pageChanged()"
+               class="pagination-sm"
+               items-per-page="itemsPerPage"
+               previous-text="&lsaquo;"
+               next-text="&rsaquo;"
+               first-text="&laquo;"
+               last-text="&raquo;"
+               max-size="maxSize"
+               force-ellipses="true"
+               boundary-links="true">
+          </pagination></span>
+
+
           </div>
+        </div>
 
           <!-- <div class="Middle_container">
               <div class="Top_container">
@@ -60,7 +96,7 @@
               </div>
           </div> -->
 
-        <review-info ng-if="valueee"  data ="myData"></review-info>
+        <review-info ng-if="valueee&&myData"  data ="myData"></review-info>
 
 
 
@@ -96,7 +132,7 @@
                   </select>
               </div>
               <div class="btn-group-vertical">
-                <button type="button" class="btn btn_gradient" ng-click="filterData()">
+                <button type="button" class="btn" ng-click="filterData()">
                   <strong>Filter</strong>
                 </button>
              </div>
@@ -123,7 +159,7 @@
 
       <div class="" >
           <uib-tabset>
-            <uib-tab active="searchTabActive">
+            <uib-tab active="true">
               <uib-tab-heading>
                 Browse
                 <i class="fa fa-list-ul"></i>
@@ -132,7 +168,7 @@
                       <img src="https://media1.tenor.com/images/db85ba00c6073b451a8f05156a66524e/tenor.gif?itemid=9856796" alt="">
                     </div>
                     <div class="col-md-9">
-                      <div ng-if="!isTableView" class="col-md-4" ng-repeat="r in reviewData">
+                      <div class="col-md-4" ng-repeat="r in reviewData">
                         <div class="row" style="margin-bottom:30px; margin-right:15px;">
                             <div class="card" style="margin-bottom:-2px; border-radius:4px 4px 0px 0px; padding:15px;">
                                 <div class="row" style="padding:0px 10px; min-height:130px;">

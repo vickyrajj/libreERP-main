@@ -17,6 +17,47 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   $scope.reviewData = []
   $scope.form = {date:new Date(),email:''}
   $scope.loadingData=true;
+  $scope.valueee=false
+  $scope.currentPage = {
+    page:1
+  }
+
+
+$scope.viewby = 14;
+
+  $scope.myValues=function(){
+    $scope.totalItems = $scope.reviewData.length;
+    $scope.itemsPerPage = $scope.viewby;
+    $scope.maxSize = 4;
+    $scope.setPage(1)
+  }
+
+   $scope.setPage = function (pageNo) {
+     $scope.currentPage.page = pageNo;
+     $scope.setPagingData($scope.currentPage.page)
+   };
+
+   $scope.setPagingData= function (page) {
+     console.log(page);
+    var pagedData = $scope.reviewData.slice(
+      (page - 1) * $scope.itemsPerPage,
+      page * $scope.itemsPerPage
+    );
+    $scope.tableDataAvail = pagedData;
+    console.log($scope.tableDataAvail);
+  }
+
+
+ $scope.pageChanged = function() {
+   $scope.setPage($scope.currentPage.page)
+ };
+
+ $scope.setItemsPerPage = function(num) {
+   $scope.itemsPerPage = num;
+   $scope.currentPage.page = 1;
+   $scope.setPage($scope.currentPage.page)
+ }
+
 
   $http({
     method: 'GET',
@@ -25,10 +66,9 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   then(function(response) {
     $scope.reviewData = response.data
 
-    console.log($scope.reviewData);
     $scope.myData=$scope.reviewData[0]
     $scope.last=0;
-    // alert('kk')
+    $scope.myValues()
     $scope.loadingData=false;
     $scope.valueee=true
     $scope.tableUpdated=true;
@@ -97,43 +137,40 @@ var countt=0
   }
 
 
-
-  $scope.dtOptions = DTOptionsBuilder.newOptions()
-      .withOption('order', [])
-
-
   $scope.isTableView=true
+
+  $scope.setDataAfterFilter=function(){
+    $scope.myData=$scope.reviewData[0]
+    $scope.last=0;
+    $scope.myValues()
+  }
 
   $scope.setMyView=function(){
     $scope.isTableView=!$scope.isTableView
   }
   $scope.filterByUid=function(){
       $scope.reviewData.sort(function(a, b){return a[0].uid - b[0].uid});
+      $scope.setDataAfterFilter()
   }
   $scope.filterByCompany=function(){
       $scope.reviewData.sort(function(a, b){return a[0].company > b[0].company});
+      $scope.setDataAfterFilter()
   }
   $scope.filterByRating=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].rating > b[0].rating});
-      $scope.myData=$scope.reviewData[0]
-      $scope.last=0;
+      $scope.reviewData.sort(function(a, b){return a[0].rating < b[0].rating});
+      $scope.setDataAfterFilter()
   }
   $scope.filterByStatus=function(){
       $scope.reviewData.sort(function(a, b){return a[0].statusChat > b[0].statusChat});
-      $scope.myData=$scope.reviewData[0]
-      $scope.last=0;
+
   }
   $scope.filterByUser=function(){
       $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
-      $scope.myData=$scope.reviewData[0]
-      $scope.last=0;
+      $scope.setDataAfterFilter()
   }
   $scope.filterByCreated=function(){
       $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") > $filter('date')(b[0].created, "dd/MM/yyyy");})
-      $scope.myData=$scope.reviewData[0]
-      $scope.last=0;
-      // // $scope.doing(0)
-      // $scope.functionn()
+      $scope.setDataAfterFilter()
   }
 
   $scope.chatTypes=['All','audio','video','Audio & Video']
@@ -149,13 +186,6 @@ var countt=0
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
     if(newValue==undefined)
     return
-    counttt++;
-    if(counttt>1){
-      $scope.tableUpdated=false
-      setTimeout(function () {
-        $scope.tableUpdated=true
-      }, 100);
-    }
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated();
@@ -177,19 +207,66 @@ var countt=0
       }
   },true)
 
-  $scope.getData = function(date,email,download,typOfCall){
+  // $scope.getData = function(date,email,download,typOfCall){
+  //
+  //  $scope.reviewData=[]
+  //  $scope.loadingData=true;
+  //  $scope.tableUpdated=false
+  //   var url = '/api/support/reviewHomeCal/?customer'
+  //   if (date!=null&&typeof date == 'object') {
+  //     url += '&date=' + date.toJSON().split('T')[0]
+  //   }
+  //   if (email.length > 0 && email.indexOf('@') > 0) {
+  //     url += '&email=' + email
+  //   }
+  //
+  //   if (typOfCall=='audio') {
+  //     url += '&audio'
+  //   }
+  //   if (typOfCall=='video') {
+  //     url += '&video'
+  //   }
+  //   if (typOfCall=='both') {
+  //     url += '&both'
+  //   }
+  //
+  //   if (download) {
+  //     $window.open(url+'&download','_blank');
+  //   }else {
+  //     $http({
+  //       method: 'GET',
+  //       url: url,
+  //     }).
+  //     then(function(response) {
+  //       console.log(response.data,'dddddddddddd',typeof response.data);
+  //       $scope.reviewData =response.data
+  //       $scope.loadingData=false;
+  //       $scope.tableUpdated=true;
+  //       if(response.data.length<1){
+  //         $scope.myDialouge=true;
+  //       }else{
+  //         $scope.myDialouge=false;
+  //       }
+  //     });
+  //   }
+  //
+  // }
 
+
+
+
+
+
+  $scope.getData = function(date,email,download,typOfCall){
+    // alert('herer')
    $scope.reviewData=[]
-   $scope.loadingData=true;
    $scope.tableUpdated=false
+   $scope.loadingData=true;
     var url = '/api/support/reviewHomeCal/?customer'
+    // '/api/support/reviewHomeCal/?customer&chatedDate='+new Date()
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
-    if (email.length > 0 && email.indexOf('@') > 0) {
-      url += '&email=' + email
-    }
-
     if (typOfCall=='audio') {
       url += '&audio'
     }
@@ -199,18 +276,25 @@ var countt=0
     if (typOfCall=='both') {
       url += '&both'
     }
-
+    if (email.length > 0 && email.indexOf('@') > 0) {
+      url += '&email=' + email
+    }
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
+
       $http({
         method: 'GET',
         url: url,
       }).
       then(function(response) {
-        console.log(response.data,'dddddddddddd',typeof response.data);
-        $scope.reviewData =response.data
+        $scope.reviewData = response.data
+
+        $scope.myData=$scope.reviewData[0]
+        $scope.last=0;
+        $scope.myValues()
         $scope.loadingData=false;
+        $scope.valueee=true
         $scope.tableUpdated=true;
         if(response.data.length<1){
           $scope.myDialouge=true;
@@ -219,8 +303,8 @@ var countt=0
         }
       });
     }
-
   }
+
 
     $scope.changeDateType = false
     $scope.$watch('form.date', function(newValue, oldValue) {

@@ -324,8 +324,10 @@ app.directive('reviewInfo', function() {
       data: '=',
     },
     controller: function($scope, $state, $http, $permissions, $timeout, $uibModal) {
+    if($scope.data){
       console.log($scope.data);
       // $scope.data = $scope.tab.data
+      $scope.msgData=[]
       $scope.msgData = $scope.data
       // console.log($scope.tab.data);
       console.log($scope.msgData);
@@ -698,6 +700,7 @@ app.directive('reviewInfo', function() {
       //     Flash.create('danger', err.data.detail);
       //   });
       // }
+    }
 
     },
   };

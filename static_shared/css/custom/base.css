@@ -472,11 +472,11 @@ body {
 	color: #fff;
 }
 
-.navbar {
+/* .navbar {
     -webkit-box-shadow: 0 5px 6px -6px #999;
     -moz-box-shadow: 0 5px 6px -6px #999;
     box-shadow: 0 5px 6px -6px #999;
-}
+} */
 .nav-sidebar> li > a {
   color:#fff;
 }
@@ -484,6 +484,10 @@ body {
 .nav-sidebar> li > a:hover, .nav-sidebar > li >a:focus , .nav-sidebar> .active > a , .sidebarList> li > a:focus , .sidebarList> li > a:active{
 	background-color: var(--headerNavbarHighlight);
 	color: #fff;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover{
+  border-top: solid 2px red;
 }
 
 /* (1920x1080) Full HD Display */
@@ -1106,7 +1110,7 @@ body {
 
 .Left_container {
     width: 35rem;
-    display: flex;
+    /* display: flex; */
     margin-top:2rem;
 }
 
@@ -1151,9 +1155,11 @@ cursor: pointer
   opacity:0.8
 }
 
-.btn_gradient {
-  margin-top: 2em;
-  margin-bottom: 1em;
+
+
+/* ********************************************************************************************************************************  */
+
+.btn{
   display: block;
   -webkit-appearance: none;
   border: 0px solid rgba(255, 255, 255, 0.45);
@@ -1174,7 +1180,7 @@ cursor: pointer
   -webkit-transition: all .9s ease-in-out;
 }
 
-.btn_gradient:hover {
+.btn:hover{
   background-image: linear-gradient(to right, #873be7, #6A7EF1, #02EBA3);
   transition: all .200s ease-in-out;
   background-position: 100% 0;
@@ -1183,17 +1189,15 @@ cursor: pointer
   color:#FFF
 }
 
-.login-input-group input {
+
+.form-control{
   position: relative;
   width: 100%;
   border-top-left-radius: 15px !important;
-  border:none
+  border:1px solid #eee
 }
 
 
-
-
-/* ********************************************************************************************************************************  */
 
 
 @keyframes my_fade {

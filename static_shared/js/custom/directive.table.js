@@ -13,10 +13,9 @@ app.directive('genericTable' , function(){
   };
 });
 
-app.controller('genericTable' , function($scope , $http, $templateCache, $timeout , $users , Flash , $uibModal) {
+app.controller('genericTable' , function($scope , $http, $templateCache, $timeout , $users , Flash , $uibModal , $timeout) {
 
   $scope.config = JSON.parse($scope.configObj);
-  console.log($scope.configObj);
 
   $scope.data = [];
   $scope.searchText = '';
@@ -37,6 +36,10 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
   $scope.editorTemplate = angular.isDefined($scope.config.editorTemplate) ? $scope.config.editorTemplate:'';
 
   $scope.haveOptions = angular.isDefined($scope.config.options) ? true:false;
+  $scope.multiSelect = angular.isDefined($scope.config.multiSelect) ? true:false;
+
+  $scope.selectable = $scope.multiSelect;
+
   $scope.canCreate = angular.isDefined($scope.config.canCreate) ? $scope.config.canCreate:false;
   $scope.url = $scope.config.url;
   $scope.searchField = angular.isDefined($scope.config.searchField) ? $scope.config.searchField:'';
@@ -62,6 +65,18 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
       }
     }
   });
+
+  $timeout(function() {
+    var searchInpt = $('#genericTableSearch');
+
+    console.log(searchInpt);
+    bbx1 = searchInpt.next()[0].getBoundingClientRect();
+    bbx2 = searchInpt.prev()[0].getBoundingClientRect();
+
+    searchInpt.width(bbx2.x - bbx1.x - bbx1.width - 100)
+
+
+  },1500)
 
   $scope.$on('forceInsetdata', function(event, input) {
     // console.log($scope.data);
@@ -170,7 +185,6 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
   }
 
   $scope.$on('forceRefetch' , function(evt , input) {
-    console.log('re-fetching');
     $scope.fetchData();
   });
 
@@ -178,7 +192,6 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
     console.log("came");
     var fetch = {method : '' , url : ''};
     // getting the data from the server based on the state of the filter params
-
     if (typeof $scope.getStr == 'undefined' && $scope.searchField!='') {
       return;
     }
@@ -215,7 +228,7 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
 
     $http({method: fetch.method, url: fetch.url , params : paramToSend }).
       then(function(response) {
-        console.log(response);
+        // console.log(response);
         $scope.pageCount = Math.floor(response.data.count/$scope.itemsPerView)+(response.data.count%$scope.itemsPerView == 0 ? 0 : 1);
         if ($scope.pageCount<$scope.pageList[0]) {
           $scope.pageList = [1];
@@ -237,10 +250,10 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
           $scope.tableHeading.push(key);
           $scope.sortFlag.push(0);  // by default no sort is applied , 1 for accending and -1 for descending
         }
-        if ($scope.isSelectable) {
-          $scope.tableHeading.unshift('Select');
-          $scope.sortFlag.unshift(-2); // no sort can be applied on this column
-        }
+        // if ($scope.isSelectable ) {
+        //   $scope.tableHeading.unshift('Select');
+        //   $scope.sortFlag.unshift(-2); // no sort can be applied on this column
+        // }
 
         if ($scope.haveOptions || $scope.editable || $scope.deletable) {
           $scope.tableHeading.push('Options')

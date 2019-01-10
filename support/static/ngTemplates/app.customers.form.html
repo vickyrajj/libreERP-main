@@ -1,24 +1,48 @@
 <div class="container-fluid" ng-controller="businessManagement.customers.form" style="overflow-x:hidden">
   <div class="col-md-6">
-    <div class="row" style="padding-left:25px;padding-bottom:10px;">
-      <h3>{{mode=='new'?'Create':'Edit'}} Client</h3>
+    <div class="row">
+
+      <div class="col-md-6" style="padding-left:25px;padding-bottom:10px;">
+        <h3>{{mode=='new'?'Create':'Edit'}} Client</h3>
+      </div>
+      <div class="col-sm-4" ng-if="form.pk" style="padding: 15px;margin: 10px;float: right;">
+        <span class="btn btn-primary pull-right" ng-if="custDetails.chat" ng-click="openChartPopoup(compDetails)">Generate Script</span>
+      </div>
+
+    </div>
+    <div class="" ng-if="form.pk">
+      <label>Processes</label> <br>
+      <div class="input-group">
+      <input type="text" class="form-control" placeholder="Process" ng-model="process_text">
+      <span class="input-group-addon" ng-click="add_process1()" style="cursor:pointer">Add</span>
+      </div>
+      <div class="row" style="padding-top:15px;">
+      <div class="col-md-6" ng-repeat="pl in process_list" style="margin:10px 0px;">
+      <div class="container-fluid card">
+        <i class="fa fa-times fa-lg pull-right" style="padding-top:10px;cursor:pointer" ng-click="close_process($index)"></i>
+        <div class="row container-fluid" style="">
+          <h4>{{pl.text}}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
     </div>
     <div class="form-group">
       <label>Name</label>
-      <input type="text " class="form-control" ng-model="form.name">
+      <input type="text " class="form-control input_style" ng-model="form.name">
     </div>
     <div class="form-group">
       <label>Telephone</label>
-      <input type="text " class="form-control" ng-model="form.telephone">
+      <input type="text " class="form-control input_style" ng-model="form.telephone">
     </div>
     <div class="form-group">
       <label>About</label>
-      <textarea class="form-control" rows="5" ng-model="form.about"></textarea>
+      <textarea class="form-control input_style" rows="5" ng-model="form.about"></textarea>
     </div>
     <div class="form-group">
       <label>Contact Person</label>
       <div class="input-group">
-        <input type="text " class="form-control" ng-model="form.cpName" uib-typeahead="u as u.username for u in userSearch($viewValue)" placeholder="Search by username">
+        <input type="text " class="form-control input_style" ng-model="form.cpName" uib-typeahead="u as u.username for u in userSearch($viewValue)" placeholder="Search by username">
         <span class="input-group-btn">
         <button type="button" class="btn btn-success" ng-click="addPerson(form.cpName)">Add <i class="fa fa-plus"></i></button>
       </span>
@@ -45,7 +69,7 @@
 
     <div class="form-group">
       <label>Mobile</label>
-      <input type="text " class="form-control" ng-model="form.mobile">
+      <input type="text " class="form-control input_style" ng-model="form.mobile">
     </div>
 
     <!-- <div style="" class="col-md-12" style="padding:0px">
@@ -55,7 +79,7 @@
     <div class="form-group">
       <label>Advisors</label>
       <div class="input-group">
-        <input type="text " class="form-control" ng-model="form.adName" uib-typeahead="u as u.username for u in advisorSearch($viewValue)" placeholder="Search by username">
+        <input type="text " class="form-control input_style" ng-model="form.adName" uib-typeahead="u as u.username for u in advisorSearch($viewValue)" placeholder="Search by username">
         <span class="input-group-btn">
         <button type="button" class="btn btn-success" ng-click="addAdvisor(form.adName)">Add <i class="fa fa-plus"></i></button>
       </span>
@@ -81,39 +105,39 @@
     <div ng-if="companyAdvanceOptions" class="animated fadeIn">
       <div class="form-group">
         <label>Address</label>
-        <input placeholder="Street" type="text " class="form-control" ng-model="form.address.street">
+        <input placeholder="Street" type="text " class="form-control input_style" ng-model="form.address.street">
         <div class="row" style="margin-top:5px;">
           <div class=" col-md-6">
-            <input placeholder="City" type="text " class="form-control" ng-model="form.address.city">
+            <input placeholder="City" type="text " class="form-control input_style" ng-model="form.address.city">
           </div>
           <div class="col-md-6">
-            <input placeholder="State" type="text " class="form-control" ng-model="form.address.state">
+            <input placeholder="State" type="text " class="form-control input_style" ng-model="form.address.state">
           </div>
         </div>
         <div class="row" style="margin-top:5px;">
           <div class=" col-md-6">
-            <input placeholder="pincode" type="text " class="form-control" ng-model="form.address.pincode">
+            <input placeholder="pincode" type="text " class="form-control input_style" ng-model="form.address.pincode">
           </div>
           <div class="col-md-6">
-            <input placeholder="Country" type="text " class="form-control" ng-model="form.address.country">
+            <input placeholder="Country" type="text " class="form-control input_style" ng-model="form.address.country">
           </div>
         </div>
       </div>
       <div class="form-group">
         <label>CIN</label>
-        <input type="text " class="form-control" ng-model="form.cin">
+        <input type="text " class="form-control input_style" ng-model="form.cin">
       </div>
       <div class="form-group">
         <label>TIN</label>
-        <input type="text " class="form-control" ng-model="form.tin">
+        <input type="text " class="form-control input_style" ng-model="form.tin">
       </div>
       <div class="form-group">
         <label>Logo</label>
-        <input type="text " class="form-control" ng-model="form.logo">
+        <input type="text " class="form-control input_style" ng-model="form.logo">
       </div>
       <div class="form-group">
         <label>web</label>
-        <input type="text " class="form-control" ng-model="form.web">
+        <input type="text " class="form-control input_style" ng-model="form.web">
       </div>
     </div>
     <button type="button" class="btn btn-primary pull-right col-md-3 pull-right" ng-click="saveCompanyDetails()" ng-if="form.pk==none">Save Company Details</button>
