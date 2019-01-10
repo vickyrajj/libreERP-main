@@ -59,7 +59,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
 
   $scope.data = {
-    tableData: [],
     archieveData: [],
     junkData:[],
   };

@@ -10,7 +10,7 @@
           <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.projects.form.html'">
           </div>
         </uib-tab>
-        <uib-tab active="searchTabActive">
+        <!-- <uib-tab active="searchTabActive">
           <uib-tab-heading>
             Browse
             <i class="fa fa-list-ul"></i>
@@ -18,7 +18,7 @@
           <div class="container-fluid">
             <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
           </div>
-        </uib-tab>
+        </uib-tab> -->
         <uib-tab>
           <uib-tab-heading>
             Archieve
@@ -41,7 +41,7 @@
           <uib-tab-heading>
             {{cmr}} <i class="fa fa-list-ul"></i>
           </uib-tab-heading>
-          <div class="container-fluid">            
+          <div class="container-fluid">
             <div ng-include="'/static/ngTemplates/app.projects.service.item.html'"></div>
           </div>
         </uib-tab>
