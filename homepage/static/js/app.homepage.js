@@ -430,15 +430,21 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
   }
   $scope.save = function(val) {
     console.log($scope.questionList[val].savedIndex, 'aaaaaaaaa');
-    if ($scope.questionList[val].savedIndex != null) {
-      $scope.count = $scope.count + 1;
+
+    if($scope.count==$scope.questionList.length-1){
+      $scope.count = $scope.count;
       $scope.questionList[val].status = 'answered';
-      $scope.questionList[$scope.count].status = 'notanswered';
-    } else {
-      console.log('nooooooo');
-      // Flash.create('danger','Please Select One Option')
-      Flash.create('warning', 'Please Mention The Name');
-      return
+    }else{
+      if ($scope.questionList[val].savedIndex != null) {
+        $scope.count = $scope.count + 1;
+        $scope.questionList[val].status = 'answered';
+        $scope.questionList[$scope.count].status = 'notanswered';
+      } else {
+        console.log('nooooooo');
+        // Flash.create('danger','Please Select One Option')
+        Flash.create('warning', 'Please Mention The Name');
+        return
+      }
     }
     // for (var i = 0; i < $scope.selections.length; i++) {
     //   if(i == val){
@@ -453,19 +459,29 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
 
   }
   $scope.review = function(val) {
-    if ($scope.questionList[val].savedIndex != null) {
-      $scope.count = $scope.count + 1;
-      $scope.questionList[val].status = 'attemptreviewed';
-      $scope.questionList[$scope.count].status = 'notanswered';
-    } else {
-      console.log('nooooooo');
-      $scope.count = $scope.count + 1;
-      $scope.questionList[val].status = 'reviewed';
-      $scope.questionList[$scope.count].status = 'notanswered';
-      // Flash.create('danger','Please Select One Option')
-      Flash.create('warning', 'Please Mention The Name');
-      return
+    if($scope.count==$scope.questionList.length-1){
+      $scope.count = $scope.count;
+      if ($scope.questionList[val].savedIndex != null){
+        $scope.questionList[val].status = 'attemptreviewed';
+      }else{
+          $scope.questionList[val].status = 'reviewed';
+      }
+    }else{
+      if ($scope.questionList[val].savedIndex != null) {
+        $scope.count = $scope.count + 1;
+        $scope.questionList[val].status = 'attemptreviewed';
+        $scope.questionList[$scope.count].status = 'notanswered';
+      } else {
+        console.log('nooooooo');
+        $scope.count = $scope.count + 1;
+        $scope.questionList[val].status = 'reviewed';
+        $scope.questionList[$scope.count].status = 'notanswered';
+        // Flash.create('danger','Please Select One Option')
+        Flash.create('warning', 'Please Mention The Name');
+        return
+      }
     }
+
   }
   $scope.clearselection = function(val) {
     $scope.selections[val] = null;
