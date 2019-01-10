@@ -96,36 +96,11 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
 
   $scope.data = {
-    tableData: [],
     archieveData: [],
     junkData: [],
   };
 
-  views = [{
-    name: 'list',
-    icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.projects.service.item.html',
-  }, ];
 
-  $scope.config = {
-    views: views,
-    url: '/api/support/projects/',
-    // filterSearch: true,
-    // searchField: 'title',
-    deletable: true,
-    itemsNumPerView: [12, 21, 30],
-    getParams: [{
-        key: 'savedStatus',
-        value: false
-      },
-      {
-        key: 'junkStatus',
-        value: false
-      }
-    ],
-    searchField: 'title',
-  }
 
 
   archieveviews = [{
@@ -177,84 +152,6 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
 
 
-
-  $scope.data1 = {
-    tableData: []
-  };
-
-
-  views1 = [{
-    name: 'list',
-    icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.projects.approval.html',
-  }, ];
-
-
-
-  $scope.config1 = {
-    views: views1,
-    url: '/api/support/projects/',
-    // filterSearch: true,
-    // searchField: 'title',
-    deletable: true,
-    itemsNumPerView: [9, 15, 21],
-    getParams: [{
-      key: 'status',
-      value: 'sent_for_approval'
-    }],
-    searchField: 'title',
-  }
-
-  $scope.data2 = {
-    tableData: []
-  };
-
-  views2 = [{
-    name: 'list',
-    icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.projects.approval.success.html',
-  }, ];
-
-  $scope.config2 = {
-    views: views2,
-    url: '/api/support/projects/',
-    // filterSearch: true,
-    // searchField: 'title',
-    deletable: true,
-    itemsNumPerView: [9, 15, 21],
-    getParams: [{
-      key: 'status',
-      value: 'approved'
-    }],
-    searchField: 'title',
-  }
-
-  $scope.data3 = {
-    tableData: []
-  };
-
-  views3 = [{
-    name: 'list',
-    icon: 'fa-th-large',
-    template: '/static/ngTemplates/genericTable/genericSearchList.html',
-    itemTemplate: '/static/ngTemplates/app.projects.invoice.html',
-  }, ];
-
-  $scope.config3 = {
-    views: views3,
-    url: '/api/support/material/',
-    // filterSearch: true,
-    // searchField: 'title',
-    deletable: true,
-    itemsNumPerView: [9, 15, 21],
-    // getParams: [{
-    //   key: '',
-    //   value: 'approved'
-    // }],
-    searchField: 'project__title',
-  }
 
 
 
@@ -348,74 +245,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
 
   }
 
-  $scope.tableAction1 = function(target, action, mode) {
 
-
-    for (var i = 0; i < $scope.data1.tableData.length; i++) {
-      if ($scope.data1.tableData[i].pk == parseInt(target)) {
-        if (action == 'bom') {
-          var title = 'Pending :';
-          var appType = 'bomDetails';
-        }
-
-        $scope.addTab({
-          title: title + $scope.data1.tableData[i].title,
-          cancel: true,
-          app: appType,
-          data: {
-            pk: target,
-            index: i
-          },
-          active: true
-        })
-
-      }
-    }
-  }
-  $scope.tableAction2 = function(target, action, mode) {
-    for (var i = 0; i < $scope.data2.tableData.length; i++) {
-      if ($scope.data2.tableData[i].pk == parseInt(target)) {
-        if (action == 'success') {
-          var title = 'GRN :';
-          var appType = 'bomApproved';
-        }
-
-        $scope.addTab({
-          title: title + $scope.data2.tableData[i].title,
-          cancel: true,
-          app: appType,
-          data: {
-            pk: target,
-            index: i
-          },
-          active: true
-        })
-      }
-
-    }
-  }
-  $scope.tableAction3 = function(target, action, mode) {
-    for (var i = 0; i < $scope.data3.tableData.length; i++) {
-      if ($scope.data3.tableData[i].pk == parseInt(target)) {
-        if (action == 'invoice') {
-          var title = 'On Going Details:';
-          var appType = 'invoiceDetails';
-        }
-
-        $scope.addTab({
-          title: title + $scope.data3.tableData[i].project.title,
-          cancel: true,
-          app: appType,
-          data: {
-            pk: target,
-            index: i
-          },
-          active: true
-        })
-      }
-
-    }
-  }
   $scope.tabs = [];
   $scope.searchTabActive = true;
 

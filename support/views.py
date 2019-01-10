@@ -1945,12 +1945,10 @@ class GetCmrListAPIView(APIView):
 class ProjectProductAPIView(APIView):
     # renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        print request.GET
         projectObj = Projects.objects.filter(savedStatus=False,junkStatus=False,comm_nr=request.GET['comm'])
         print projectObj,'projjjjjjjjjjjjj'
         toReturn = {}
         for i in projectObj:
-            print i.pk
             bomlist = []
             bomObj = BoM.objects.filter(project=i)
             for j in bomObj:
@@ -1983,7 +1981,6 @@ class ProjectProductAPIView(APIView):
                     cc2 = 0
 
                 bomlist.append({'productDesc1':j.products.description_1,'productDesc2':j.products.description_2,'partNo':j.products.part_no,'weight':j.products.weight,'qty1':j.quantity1,'hsn':j.products.customs_no,'price':j.price,'qty2':j.quantity2,'qtPrice':qtPrice,'wkPrice':wkPrice,'packingCost':packingCost,'insurance':insurance,'freight':freight,'cifPc':cifPc,'totcif':totcif,'cdperc':j.custom,'cdVal':cdVal,'swe':swe,'gst':j.gst,'gstVal':gstVal,'cc1':cc1,'cc2':cc2,'landingCost':j.landed_price,})
-                print bomlist
 
             toReturn[i.pk]=bomlist
         return Response(toReturn,status=status.HTTP_200_OK)

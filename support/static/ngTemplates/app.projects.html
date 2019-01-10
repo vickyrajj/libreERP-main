@@ -10,7 +10,7 @@
           <div style="margin-top:20px;" ng-include="'/static/ngTemplates/app.projects.form.html'">
           </div>
         </uib-tab>
-        <uib-tab active="searchTabActive">
+        <!-- <uib-tab active="searchTabActive">
           <uib-tab-heading>
             Browse
             <i class="fa fa-list-ul"></i>
@@ -18,7 +18,7 @@
           <div class="container-fluid">
             <generic-Table data="data.tableData" config-Obj="{{config}}" callback-Fn="tableAction"></generic-Table>
           </div>
-        </uib-tab>
+        </uib-tab> -->
         <uib-tab>
           <uib-tab-heading>
             Archieve
@@ -41,37 +41,10 @@
           <uib-tab-heading>
             {{cmr}} <i class="fa fa-list-ul"></i>
           </uib-tab-heading>
-          <div class="container-fluid">            
+          <div class="container-fluid">
             <div ng-include="'/static/ngTemplates/app.projects.service.item.html'"></div>
           </div>
         </uib-tab>
-        <!-- <uib-tab >
-          <uib-tab-heading>
-            Pending Approval
-            <i class="fa fa-list-ul"></i>
-          </uib-tab-heading>
-          <div class="container-fluid" >
-            <generic-Table data="data1.tableData" config-Obj="{{config1}}" callback-Fn="tableAction1"></generic-Table>
-          </div>
-        </uib-tab>
-        <uib-tab >
-          <uib-tab-heading>
-            Goods Received Note
-            <i class="fa fa-list-ul"></i>
-          </uib-tab-heading>
-          <div class="container-fluid" >
-            <generic-Table data="data2.tableData" config-Obj="{{config2}}" callback-Fn="tableAction2"></generic-Table>
-          </div>
-        </uib-tab>
-        <uib-tab >
-          <uib-tab-heading>
-            On Going
-            <i class="fa fa-list-ul"></i>
-          </uib-tab-heading>
-          <div class="container-fluid" >
-            <generic-Table data="data3.tableData" config-Obj="{{config3}}" callback-Fn="tableAction3"></generic-Table>
-          </div>
-        </uib-tab> -->
         <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
           <uib-tab-heading>
             {{tab.title}}
@@ -89,15 +62,6 @@
           <div ng-if="tab.app == 'projectDetails'">
             <div ng-include="'/static/ngTemplates/app.projects.service.view.html'"></div>
           </div>
-          <!-- <div ng-if="tab.app == 'bomDetails'">
-            <div ng-include="'/static/ngTemplates/app.projects.approval.view.html'"></div>
-          </div>
-          <div ng-if="tab.app == 'bomApproved'">
-            <div ng-include="'/static/ngTemplates/app.projects.success.view.html'"></div>
-          </div>
-          <div ng-if="tab.app == 'invoiceDetails'">
-            <div ng-include="'/static/ngTemplates/app.projects.invoice.view.html'"></div>
-          </div> -->
         </uib-tab>
 
       </uib-tabset>
