@@ -1,17 +1,25 @@
 <div class="container-fluid ">
-
+  <!-- <div class="row ">
+    <div class="headsection">
+      <div class="navbar-toggle " data-toggle="collapse" data-target="#questionlist" ng-click="toggleNavbar = !toggleNavbar" style="border:none;">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </div>
+    </div>
+  </div> -->
   <div class="row">
 
     <div class="col-md-9" style="min-height:100vh;padding:0;">
       <div class="maindiv">
         <div class="text-center">
-          <button class="headbtn" style="cursor: context-menu;">Maths</button>
+          <h2 style="color:#000;"><b>Maths</b></h2>
         </div>
         <div style="border-bottom:1px solid  #25B5E9;height:40px;">
           <h4 style="float:left;" class="subtext"><b>Question No {{count+1}}</b></h4>
           <h4 class="text-right subtext" style="float:right;"><b>Single Choice Type Question</b></h4>
         </div>
-        <div  class="queanswer">
+        <div class="queanswer">
           <div ng-repeat="a in questionList">
             <h4 style="margin-left:1em;" ng-show="$index === count">{{a.Question}}</h4>
             <ol style="margin-left:2em;font-size:20px;color:#6C6464;" type='A' class="answers" ng-show="$index === count">
@@ -21,78 +29,81 @@
         </div>
       </div>
       <div class="text-center btn-section">
-        <button class="savebtn" ng-click="save(count)">Save</button>
-        <button class="btnaction" ng-click="review(count)">Review Later</button>
-        <button class="btnaction" ng-click="clearselection(count)">Clear Selection</button>
+        <button class="savebtn" ng-click="save(count)"><b>Save</b></button>
+        <button class="btnaction1" ng-click="review(count)"><b>Review Later</b></button>
+        <button class="btnaction" ng-click="clearselection(count)"><b>Clear Selection</b></button>
       </div>
     </div>
-    <div class="col-md-3" style="padding-top:2em;background-color: #F5F5F5;min-height:100vh;">
+    <div class="col-md-3 " style="padding-top:2em;background-color: #F5F5F5;min-height:100vh;" id="questionlist">
+      <!-- <div class="col-md-3 .visible-md collapse navbar-collapse" id="questionlist" uib-collapse="!toggleNavbar" style="padding-top:2em;background-color: #F5F5F5;min-height:100vh;" > -->
       <h4 style="margin-left:0.2em;">Question Overview</h4>
       <div>
         <div ng-repeat="a in questionList  | limitTo:9" class="text-center">
-          <div class="col-md-2" ng-init="$first?a.status='notanswered':'default'">
-            <div ng-class="a.status=='answered'?'answered':(a.status=='notanswered'?'notanswered':(a.status=='reviewed'?'reviewed':(a.status=='attemptreviewed'?'attemptreviewed':'notview')))" ng-click="queclick($index)">
-              <span class="numberalign"><b>{{$index+1}}</b></span>
+          <!-- <div class="row" style="flex-wrap: wrap" ng-if="col-md-12"> -->
+            <div class="col-md-2 col-xs-2" ng-init="$first?a.status='notanswered':'default'"  >
+              <div ng-class="a.status=='answered'?'answered':(a.status=='notanswered'?'notanswered':(a.status=='reviewed'?'reviewed':(a.status=='attemptreviewed'?'attemptreviewed':'notview')))" ng-click="queclick($index)">
+                <span class="numberalign"><b>{{$index+1}}</b></span>
+              </div>
             </div>
+          <!-- </div> -->
 
-          </div>
         </div>
         <div ng-repeat="a in questionList  | limitTo:questionList.length:9" class="text-center">
-          <div class="col-md-2">
-            <div class="question">
-              <span style="color:#fff;text-align:center;font-size:15px;position:absolute;left: 23%;top: 10%;"><b>{{$index+1}}</b></span>
+          <div class="col-md-2 col-xs-2" ng-init="a.status='default'" >
+            <div ng-class="a.status=='answered'?'answered':(a.status=='notanswered'?'notanswered':(a.status=='reviewed'?'reviewed':(a.status=='attemptreviewed'?'attemptreviewed':'notview')))" ng-click="queclick($index+9)">
+              <span class="numberalign1"><b>{{9+$index+1}}</b></span>
             </div>
           </div>
         </div>
       </div>
-      <div style="margin-top:30em;">
-        <div class="col-md-6 text-center">
+      <div class="fromtop">
+        <div class="col-md-6 col-xs-6 text-center">
           <table>
             <tr>
               <td>
                 <div class="answered"></div>
               </td>
-              <td style="padding: 2em 0 0 1em;"><span style="font-size: 17px;margin-left: 0.5em;"> Attempted</span> </td>
+              <td style="padding: 2em 0 0 1em;"><span class="aligntotext"> Attempted</span> </td>
             </tr>
           </table>
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 col-xs-6 text-center">
           <table>
             <tr>
               <td>
                 <div class="notanswered"></div>
               </td>
-              <td style="padding: 2em 0 0 1em;"><span style="font-size: 17px;margin-left: 0.5em;">Not Attempted</span> </td>
+              <td style="padding: 2em 0 0 1em;"><span class="aligntotext">Not Attempted</span> </td>
             </tr>
           </table>
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 col-xs-6 text-center">
           <table>
             <tr>
               <td>
                 <div class="notview"></div>
               </td>
-              <td style="padding: 0.5em 0 0 0.5em;"><span style="font-size: 17px;">Not Viewed yet</span> </td>
+              <td style="padding: 0.5em 0 0 0.5em;"><span class="aligntotext1">Not Viewed yet</span> </td>
             </tr>
           </table>
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 col-xs-6 text-center">
           <table>
             <tr>
               <td>
                 <div class="reviewed"></div>
               </td>
-              <td style="padding: 0.5em 0 0 0.5em;"><span style="font-size: 17px;">To be Reviewed</span> </td>
+              <td style="padding: 0.5em 0 0 0.5em;"><span ; class="aligntotext1">To be Reviewed</span> </td>
             </tr>
           </table>
         </div>
-        <div class="col-md-12 text-left" style="margin-top:-1em;">
+        <div class="col-md-12 col-xs-12 text-left" style="margin-top:-1em;">
           <table>
             <tr>
               <td>
                 <div class="attemptreviewed"></div>
               </td>
-              <td style="padding: 0.5em 0 0 0.5em;"><span style="font-size: 17px;">Attempted and Marked for Review</span> </td>
+              <td style="padding: 0.5em 0 0 0.5em;"><span class="aligntotext1">Attempted and Marked for Review</span> </td>
             </tr>
           </table>
         </div>
