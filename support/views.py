@@ -1828,7 +1828,7 @@ class DownloadProjectSCExcelReponse(APIView):
                                                     value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + s['comm_nr'] + ')'
                                                     val.append(value)
 
-                            val = json.dumps(val)
+                    val = json.dumps(val)
                     Sheet1.append([i.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,val])
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
@@ -1842,21 +1842,24 @@ class CreateStockReportDataAPIView(APIView):
         toRet = {'status':'Invalid Data'}
         dtime = datetime.datetime.now()
         dt = dtime.date()
-        print dtime,dt
-        if StockSummaryReport.objects.filter(dated=dt).exists():
-            print 'already createddddddddd'
-            return Response({'status':'Data Has Already Created'},status=status.HTTP_200_OK)
+        # if StockSummaryReport.objects.filter(dated=dt).exists():
+        #     print 'already createddddddddd'
+        #     return Response({'status':'Data Has Already Created'},status=status.HTTP_200_OK)
         prodObj = Products.objects.filter(created__lte=dtime)
-        print 'total {0} Productsssssssss'.format(prodObj.count())
         stockTotal = 0
         for i in prodObj:
             invtObjs = Inventory.objects.filter(product=i,created__lte=dtime)
             if invtObjs.count()>0:
-                total = invtObjs.aggregate(total=Sum(F('qty') * F('rate')))['total']
+                total = invtObjs.aggregate(total=Sum(F('qty') * F('rate'))).get('total',0)
                 stockTotal += total
         print 'total valueeeeeeeeeee',stockTotal
         if stockTotal>0:
-            ssReportObj = StockSummaryReport.objects.create(dated=dt,stockValue=stockTotal)
+            try:
+                ssReportObj = StockSummaryReport.objects.get(dated=dt)
+                ssReportObj.stockValue = stockTotal
+                ssReportObj.save()
+            except:
+                ssReportObj = StockSummaryReport.objects.create(dated=dt,stockValue=stockTotal)
             projectsObjs=Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,junkStatus=False,created__lte=dtime)
             print projectsObjs.count()
             projStackSummary = []
@@ -1865,13 +1868,22 @@ class CreateStockReportDataAPIView(APIView):
                 if matIssMainObjs.count()>0:
                     vl = 0
                     for j in matIssMainObjs:
+                        tot = 0
                         matIssueObjs = j.materialIssue.all()
-                        tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price')))['total']
+                        tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price'))).get('total',0)
                         vl += tot
-                    projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=vl,title=i.title))
+                    try:
+                        pObj=ProjectStockSummary.objects.get(stockReport=ssReportObj,title=i.title)
+                        pObj.value=vl
+                        pObj.save()
+                    except:
+                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=vl,title=i.title))
                 else:
-                    pass
-                    projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=0,title=i.title))
+                    try:
+                        pObj=ProjectStockSummary.objects.get(stockReport=ssReportObj)
+                    except:
+                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=0,title=i.title))
+
             print len(projStackSummary)
             ProjectStockSummary.objects.bulk_create(projStackSummary)
             toRet['status'] = 'Successfully Saved'

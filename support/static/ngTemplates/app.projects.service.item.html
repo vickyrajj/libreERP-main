@@ -1,6 +1,12 @@
 <div class="row" style="margin-top:30px">
   <div class="col-md-12 text-left" ng-if="cmrData.totalOrdered>0" style="margin-bottom:35px">
-    <canvas id="pie" class="chart chart-pie" chart-data="[cmrData.totalOrdered,cmrData.totalConsumed]" chart-labels="['Total Ordered','Total Consumed']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" height="50vh"></canvas>
+    <div class="col-md-3" style="font-size:25px">
+      <strong>Total Ordered : </strong>{{cmrData.totalOrdered}}<br>
+      <strong>Total Consumed : </strong>{{cmrData.totalConsumed}}<br>
+    </div>
+    <div class="col-md-9">
+      <canvas id="pie" class="chart chart-pie" chart-data="[cmrData.totalOrdered,cmrData.totalConsumed]" chart-labels="['Total Ordered','Total Consumed']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" height="50vh"></canvas>
+    </div>
   </div>
   <div class="col-md-6" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-click="cmrTableAction($index,'details');$event.stopPropagation();" ng-repeat="cdt in cmrData.serializerData">
     <div class="container-fluid card" style="border: 3px solid {{cdt.status=='created'?'#b8b5b3':''}}{{cdt.status=='sent_for_approval'?'#F08080':''}}{{cdt.status=='approved'?'#449d44':''}}{{cdt.status=='ongoing'?'#337ab7':''}};cursor:pointer;background-color:{{cdt.colorCode}}">
@@ -24,6 +30,22 @@
           </div>
           <div class="row">
             <div class="col-md-5">
+              <span style="font-size:15px;"><strong>Number  </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>{{cdt.service.mobile}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Email </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>  {{cdt.service.email}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
               <span style="font-size:15px;"><strong> Vendor </strong>:</span>
             </div>
             <div class="col-md-7">
@@ -38,22 +60,7 @@
               <span>  {{cdt.status}}</span>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-5">
-              <span style="font-size:15px;"><strong>Customer Mobile </strong>:</span>
-            </div>
-            <div class="col-md-7">
-              <span>{{cdt.service.mobile}}</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-5">
-              <span style="font-size:15px;"><strong> Customer Email </strong>:</span>
-            </div>
-            <div class="col-md-7">
-              <span>  {{cdt.service.email}}</span>
-            </div>
-          </div>
+
           <div class="row">
             <div class="col-md-5">
               <span style="font-size:15px;"><strong> Enquiry Ref  </strong>:</span>
