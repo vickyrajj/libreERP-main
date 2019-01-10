@@ -74,7 +74,7 @@ USE_CDN = False # when turned on the application will use the cndjs.com and othe
 # Application definition
 
 BRAND_NAME = 'Syrow'
-BRAND_LOGO = '/static/images/favicon-syrow.png'
+BRAND_LOGO = '/static/images/Syrow_brand.png'
 SYROW_LOGO = '/static/images/favicon-syrow.png'
 BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 
