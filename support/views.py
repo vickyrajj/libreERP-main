@@ -1946,18 +1946,26 @@ class ProjectProductAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
         projectObj = Projects.objects.filter(savedStatus=False,junkStatus=False,comm_nr=request.GET['comm'])
-        projectsObj = list(projectObj.values('comm_nr').distinct())
         toReturn = []
-        # for p in projectsObj:
-        #     projDetail = []
-        proData = projectObj.filter(comm_nr=projectsObj[0]['comm_nr'])
-        print proData
-        for i in proData:
+        for i in projectObj:
             print i.pk
             bomlist = []
-            bomObj = list(BoM.objects.filter(project__id=i.pk).values('products__pk','products__description_1','products__description_2','products__weight','products__part_no','products__customs_no','custom','user_id','gst','project__pk','quantity1','quantity2','price','landed_price',''))
-            for b in bomObj:
-                bomlist.append(b)
-            toReturn.append({'projectPk':i.pk,'bomdata':bomlist})
-        # toReturn.append({'project':projDetail})
+            bomObj = BoM.objects.filter(project=i)
+            # bomObj = list(BoM.objects.filter(project=i).values('products__pk','products__description_1','products__description_2','products__weight','products__part_no','products__customs_no','custom','user_id','gst','project__pk','quantity1','quantity2','price','landed_price',''))
+            # for b in bomObj:
+            #     bomlist.append(b)
+            for i in bomObj:
+                packingTotal = round((float(i.invoice_price)*packingPer)/100, 2)
+                insuranceTotal = round((float(i.invoice_price)*insurancePer)/100, 2)
+                freightTotal = round((float(i.invoice_price)*freightPer)/100, 2)
+                assessableValueTotal = round((float(i.invoice_price)*assessableValuePer)/100, 2)
+                gst1Total = round((float(i.invoice_price)*gst1Per)/100, 2)
+                gst2Total = round((float(i.invoice_price)*gst2Per)/100, 2)
+                clearingCharges1Total = round((float(i.invoice_price)*clearingCharges1Per)/100, 2)
+                clearingCharges2Total = round((float(i.invoice_price)*clearingCharges2Per)/100, 2)
+                total = packingTotal + insuranceTotal + freightTotal + assessableValueTotal + gst1Total + gst2Total + clearingCharges1Total + clearingCharges2Total
+                i.landed_price = round(total + i.invoice_price,2)
+                i.save()
+                bomlist.appemd({})
+            toReturn.append({i.pk:bomlist})
         return Response(toReturn,status=status.HTTP_200_OK)
