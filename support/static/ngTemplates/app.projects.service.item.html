@@ -1,6 +1,6 @@
 <div class="row" style="margin-top:30px">
-  <div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-click="cmrTableAction($index,'details');$event.stopPropagation();" ng-repeat="cdt in cmrData">
-    <div class="container-fluid card" style="border: 2px solid {{cdt.status=='created'?'#b8b5b3':''}}{{cdt.status=='sent_for_approval'?'#F08080':''}}{{cdt.status=='approved'?'#449d44':''}}{{cdt.status=='ongoing'?'#337ab7':''}};cursor:pointer;">
+  <div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-click="cmrTableAction($index,'details');$event.stopPropagation();" ng-repeat="cdt in cmrData.serializerData">
+    <div class="container-fluid card" style="border: 3px solid {{cdt.status=='created'?'#b8b5b3':''}}{{cdt.status=='sent_for_approval'?'#F08080':''}}{{cdt.status=='approved'?'#449d44':''}}{{cdt.status=='ongoing'?'#337ab7':''}};cursor:pointer;background-color:{{cdt.colorCode}}">
       <div class="row text-center" style="height:6vh;">
 
         <div class="col-md-11" style="position:relative;display:block;">
@@ -21,6 +21,14 @@
           </div>
           <div class="row">
             <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Vendor </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>  {{cdt.vendor.name}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
               <span style="font-size:15px;"><strong> Stage </strong>:</span>
             </div>
             <div class="col-md-7">
@@ -29,10 +37,26 @@
           </div>
           <div class="row">
             <div class="col-md-5">
-              <span style="font-size:15px;"><strong>Mobile </strong>:</span>
+              <span style="font-size:15px;"><strong>Customer Mobile </strong>:</span>
             </div>
             <div class="col-md-7">
               <span>{{cdt.service.mobile}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Customer Email </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>  {{cdt.service.email}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Enquiry Ref  </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>  {{cdt.enquiry_ref}}</span>
             </div>
           </div>
           <div class="row">
@@ -63,5 +87,63 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="col-md-12" >
+    <table class="invoiceTable" style=" width: 100%;">
+      <thead>
+        <tr style="background-color: #eeeeee;height: 96px;">
+          <th>Product</th>
+          <th>Part No</th>
+          <th>Weight</th>
+          <th> Qty</th>
+          <th>HSN</th>
+          <th>Price</th>
+          <th>Quote Price (CHF)</th>
+          <th>Ex-Work Price (INR)</th>
+          <th>Packing Cost</th>
+          <th>Insurance</th>
+          <th>Freight</th>
+          <th>CIF/Pc</th>
+          <th>Total CIF</th>
+          <th>CD (%)</th>
+          <th>CD value</th>
+          <th>SWE</th>
+          <th>GST (%)</th>
+          <th>GST </th>
+          <th>Claering Charges 1 </th>
+          <th>Claering Charges 2 </th>
+          <th>Landing Cost/pc </th>
+          <th> Qty Received</th>
+        </tr>
+      </thead>
+      <tbody ng-repeat="(k,v) in cmrData.cmrTableData">
+
+        <tr ng-repeat="r in v" style="background-color:{{r.colorCode}}">
+          <td>{{r.productDesc1}}<span ng-if="r.productDesc2"> &nbsp({{r.productDesc2}})</span></td>
+          <td>{{r.partNo}}</td>
+          <td>{{r.weight}}</td>
+          <td>{{r.qty1}}</td>
+          <td>{{r.hsn}}</td>
+          <td style="text-align:right">{{r.price| number}}</td>
+          <td>{{r.qtPrice| number}}</td>
+          <td>{{r.wkPrice| number}}</td>
+          <td>{{r.packingCost| number}}</td>
+          <td>{{r.insurance| number}}</td>
+          <td>{{r.freight| number}}</td>
+          <td>{{r.cifPc| number}}</td>
+          <td>{{r.totcif | number}}</td>
+          <td>{{r.cdperc}}</td>
+          <td >{{r.cdVal| number}} </td>
+          <td>{{r.swe| number}}</td>
+          <td>{{r.gst}} </td>
+          <td>{{r.gstVal| number}} </td>
+          <td>{{r.cc1| number}} </td>
+          <td>{{r.cc2| number}} </td>
+          <td>{{r.landingCost| number}}</td>
+          <td>{{r.qty2}}</td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
 </div>
