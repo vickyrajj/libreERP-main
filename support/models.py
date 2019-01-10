@@ -36,6 +36,7 @@ class Products(models.Model):
     description_2 = models.CharField(max_length=100, null=True,blank =True)
     weight = models.FloatField(null=True,blank =True)
     price = models.FloatField(null=True,blank =True)
+    replaced = models.CharField(max_length=200, null=True)
     parent = models.ForeignKey('self', related_name='parentProduct', null=True)
     sheet = models.ForeignKey(ProductSheet, related_name='productsSheet', null=True)
     customs_no = models.PositiveIntegerField( null=True,blank =True,default=0)
@@ -93,21 +94,28 @@ class Projects(models.Model):
     exRate = models.FloatField( default = 75)
     profitMargin =  models.FloatField( default = 0)
     poNumber =  models.CharField( max_length = 20 , null=True,blank=True)
+    poDate = models.DateField(null = True)
     invoiceNumber = models.CharField( max_length = 20 , null=True,blank=True)
     boeRefNumber =  models.CharField( max_length = 20 , null=True,blank=True)
     quoteRefNumber = models.CharField( max_length = 20 , null=True,blank=True)
+    quoteDate = models.DateField(null = True)
     vendor = models.ForeignKey(Vendor , related_name='vendor' , null = True)
     quoteValidity = models.CharField(max_length = 200, default = "30 days from quote date")
     terms = models.CharField(max_length = 200, default = "EX-WORKS, BRUDERER AG, Switzerland")
     delivery = models.CharField(max_length = 200, default = "6 weeks from the date of receipt of PO and advance")
     paymentTerms = models.CharField(max_length = 200, default = "100% advance along with order")
+    paymentTerms1  = models.CharField(max_length = 200, default = "100% advance along with order")
+    junkStatus =  models.BooleanField(default = False)
+    shipmentMode =  models.CharField(max_length = 200, default = "Road")
+    shipmentDetails = models.CharField(max_length = 200, default = "Freight forwarder -")
+    weightValue =  models.FloatField( default = 0)
 
 
 
 class BoM(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User , related_name='usersBoM' , null = False)
-    project = models.ManyToManyField(Projects)
+    project = models.ForeignKey(Projects , null = True)
     products = models.ForeignKey( Products , null = True)
     quantity1 = models.PositiveIntegerField(null=True , default=0)
     quantity2 = models.PositiveIntegerField(null=True , default=0)
@@ -121,8 +129,10 @@ class BoM(models.Model):
 
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
+    project =  models.ForeignKey(Projects , null = True)
     product = models.ForeignKey(Products , null = True)
     qty = models.PositiveIntegerField(null=True , default=0)
+    addedqty = models.PositiveIntegerField(null=True , default=0)
     rate = models.FloatField(null = True)
 
 class MaterialIssue(models.Model):

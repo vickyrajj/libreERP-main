@@ -64,24 +64,43 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
   $scope.searchmaterial = {
-    search : ""
+    search : "",
+    dt:new Date()
   }
 
 
-
+  $scope.showPagint = true
   $scope.getMaterialIssue = function(offset){
+
+
+    if ($scope.searchmaterial.search.length==0) {
+      $scope.showPagint = true
+      var url = '/api/support/material/?created__lte='+$scope.searchmaterial.dt.toJSON().split('T')[0]+'&limit=7&offset=' + offset+ '&project__title__icontains=' + $scope.searchmaterial.search
+    }else {
+      $scope.showPagint = false
+      var url = '/api/support/material/?created__lte='+$scope.searchmaterial.dt.toJSON().split('T')[0]+'&project__title__icontains=' + $scope.searchmaterial.search
+    }
     $http({
       method: 'GET',
-      url: '/api/support/material/?limit=7&offset=' + offset+ '&search=' + $scope.searchmaterial.search
+      url: url
     }).
     then(function(response) {
-      $scope.materialIssue = response.data.results
+      if ($scope.searchmaterial.search.length==0) {
+        $scope.materialIssue = response.data.results
+      }else {
+        $scope.materialIssue = response.data
+      }
+      $scope.totSum = 0
+
       $scope.sum = []
       for (var i = 0; i < $scope.materialIssue.length; i++) {
         $scope.issue = $scope.materialIssue[i].materialIssue
-        $scope.sum.push($scope.issue.map(function(m){
+        var tot = $scope.issue.map(function(m){
           return m.qty*m.price
-        }).reduce(function(a,b){return a+b},0))
+        }).reduce(function(a,b){return a+b},0)
+        $scope.sum.push(tot)
+        console.log(tot);
+        $scope.totSum += tot
 
       }
     })
@@ -173,7 +192,18 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
 
 
 
-
+  $scope.createReportData = function(){
+    $http({
+      method: 'GET',
+      url: '/api/support/createStockReportData/'
+    }).
+    then(function(response) {
+      console.log(response.data);
+      Flash.create('success', response.data.status);
+    },function(err){
+      Flash.create('warning', err.status + ' : ' + err.statusText);
+    })
+  }
   $scope.delete = function(pk, index) {
     $http({
       method: 'DELETE',
@@ -266,12 +296,64 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
       $uibModal.open({
         templateUrl: '/static/ngTemplates/app.inventory.cart.modal.html',
         size: 'lg',
+        backdrop:false,
         resolve: {
           cartData: function() {
             return $rootScope.cart;
           }
         },
         controller: function($scope, $uibModalInstance, cartData) {
+          $scope.showSave = true
+          $scope.getFullProjectName = function(p){
+            if (p) {
+              var fn = p.title +' ( ' + p.comm_nr + ' )'
+              console.log(fn);
+              return fn
+            }else {
+              return
+            }
+          }
+          $scope.close = function() {
+            $uibModalInstance.dismiss();
+          };
+
+
+          $scope.addTableRow = function(indx) {
+            $scope.productsOrdered.push({
+              part_no: '',
+              description_1: '',
+              price: '',
+              weight:0,
+              prodQty: 1,
+              total_quantity : 1,
+            });
+            $scope.showButton = false
+          }
+
+          $scope.change = function(query) {
+            return $http.get('/api/support/products/?limit=10&searchContains=' + query).
+            then(function(response) {
+              return response.data.results;
+            })
+          };
+          $scope.showButton = true
+
+          $scope.$watch('productsOrdered', function(newValue, oldValue) {
+             if (typeof newValue[newValue.length-1].part_no == 'object') {
+               if($scope.productsOrdered.length>1){
+                 for (var i = 0; i < $scope.productsOrdered.length; i++) {
+                   if($scope.productsOrdered[i].pk ==newValue[newValue.length-1].part_no.pk ){
+                     Flash.create('warning', 'Product Already Added');
+                     return
+                   }
+               }
+               }
+               $scope.showButton = true
+              $scope.productsOrdered[$scope.productsOrdered.length-1] = newValue[newValue.length-1].part_no
+              $scope.productsOrdered[$scope.productsOrdered.length-1].prodQty = 1
+            }
+          }, true)
+
           $scope.projectSearch = function(query) {
             return $http.get('/api/support/projects/?title__contains=' + query+'&status__in=approved,ongoing&savedStatus=false').
             then(function(response) {
@@ -306,7 +388,12 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           }
 
           $scope.delete = function(index){
-            $scope.productsOrdered.splice(index,1);
+            if(index== $scope.productsOrdered.length-1){
+              $scope.showButton = true
+              $scope.productsOrdered.splice(index,1);
+            }
+              $scope.productsOrdered.splice(index,1);
+
           }
           // $scope.delete = function(pk,index){
           //   $http({method : 'DELETE' , url : '/api/support/products/' + pk + '/' }).
@@ -328,12 +415,16 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               Flash.create('warning', 'Select Project');
               return
             }
-
-
             if ($scope.productsOrdered.length<=0) {
-
               Flash.create('warning', 'Add Products');
               return
+            }
+            for (var i = 0; i < $scope.productsOrdered.length; i++) {
+              console.log($scope.productsOrdered[i].pk);
+              if($scope.productsOrdered[i].total_quantity<=0||!$scope.productsOrdered[i].pk){
+                Flash.create('warning', 'Remove the products marked in red or with empty value');
+                return
+              }
             }
 
             var dataToSend = {
@@ -347,6 +438,8 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
               data: dataToSend
             }).
             then(function(response) {
+              $scope.showButton = false
+              $scope.showSave = false
               $scope.values = response.data
             })
           }
@@ -366,8 +459,9 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
       $uibModal.open({
         templateUrl: '/static/ngTemplates/app.inventory.stockcheck.modal.html',
         size: 'lg',
+
         controller: function($scope, $uibModalInstance) {
-          $scope.off = 0;
+        $scope.off = 0;
         $scope.fectchStock = function(){
           $http({
               method: 'GET',
@@ -375,6 +469,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             }).
             then(function(response) {
               $scope.stockdata = response.data.data
+              console.log($scope.stockdata ,'aaaaaaaaaaaaaa');
 
             })
         }
@@ -419,9 +514,9 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             //   })
           });
 
-          $scope.save = function (){
-
-          }
+          // $scope.save = function (){
+          //
+          // }
 
         },
       })

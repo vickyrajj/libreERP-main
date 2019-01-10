@@ -19,9 +19,20 @@ from django.core.exceptions import SuspiciousOperation
 
 
 class ProductsSerializer(serializers.ModelSerializer):
+    total_quantity = serializers.SerializerMethodField()
     class Meta:
         model = Products
-        fields = ('pk', 'created', 'part_no','description_1','description_2','customs_no','parent','weight','price','sheet','bar_code','gst','custom')
+        fields = ('pk', 'created', 'part_no','description_1','description_2','replaced','customs_no','parent','weight','price','sheet','bar_code','gst','custom','total_quantity')
+    def get_total_quantity(self , obj):
+        inventory = Inventory.objects.filter(product=obj.pk)
+        qty = 0
+        for i in inventory:
+            qty+= i.qty
+        if qty>0:
+            return qty
+        else:
+            return 0
+
 
 
 
@@ -44,7 +55,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Projects
-        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','quote_ref','enquiry_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus','invoiceValue','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','packing','vendor','exRate','poNumber','invoiceNumber','boeRefNumber','profitMargin','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms')
+        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','quote_ref','enquiry_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus','invoiceValue','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','packing','vendor','exRate','poNumber','invoiceNumber','boeRefNumber','profitMargin','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms','junkStatus','poDate','quoteDate','shipmentMode','shipmentDetails','weightValue','paymentTerms1')
 
     def create(self , validated_data):
         p = Projects()
@@ -57,9 +68,9 @@ class ProjectsSerializer(serializers.ModelSerializer):
         if 'comm_nr' in self.context['request'].data:
             p.comm_nr = self.context['request'].data['comm_nr']
         if 'quote_ref' in self.context['request'].data:
-            p.customer_ref = self.context['request'].data['quote_ref']
+            p.quote_ref = self.context['request'].data['quote_ref']
         if 'enquiry_ref' in self.context['request'].data:
-            p.customer_ref = self.context['request'].data['enquiry_ref']
+            p.enquiry_ref = self.context['request'].data['enquiry_ref']
         if 'date' in self.context['request'].data:
             p.date = self.context['request'].data['date']
         if 'revision' in self.context['request'].data:
@@ -74,7 +85,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
         return p
 
     def update (self, instance, validated_data):
-        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','quote_ref','enquiry_ref','machinemodel','approved1','approved1_user','approved1_date','revision','savedStatus','invoiceValue','packing','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','exRate','profitMargin','invoiceNumber','boeRefNumber','poNumber','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms']:
+        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','quote_ref','enquiry_ref','machinemodel','approved1','approved1_user','approved1_date','revision','savedStatus','invoiceValue','packing','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','exRate','profitMargin','invoiceNumber','boeRefNumber','poNumber','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms','junkStatus','poDate','quoteDate','shipmentMode','shipmentDetails','weightValue','paymentTerms1']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -99,7 +110,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
 class BoMSerializer(serializers.ModelSerializer):
     products = ProductsSerializer(many = False , read_only = True)
-    project =  ProjectsSerializer(many = True  , read_only =True)
+    project =  ProjectsSerializer(many = False  , read_only =True)
     class Meta:
         model = BoM
         fields = ('pk','created','user' , 'products','project','quantity1','quantity2','price','landed_price','invoice_price','customer_price','gst','custom','customs_no')
@@ -112,8 +123,9 @@ class BoMSerializer(serializers.ModelSerializer):
             print b.products,'bbbbbbbbb'
         b.save()
         if 'project' in self.context['request'].data:
-            for i in self.context['request'].data['project']:
-                b.project.add(Projects.objects.get(pk = i))
+            b.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
+            # for i in self.context['request'].data['project']:
+            #     b.project.add(Projects.objects.get(pk = i))
         b.save()
         return b
         def update (self, instance, validated_data):
@@ -128,13 +140,16 @@ class BoMSerializer(serializers.ModelSerializer):
 
 class InventorySerializer(serializers.ModelSerializer):
     product = ProductsSerializer(many = False , read_only = True)
+    project =  ProjectsSerializer(many = False  , read_only =True)
     class Meta:
         model = Inventory
-        fields = ('pk','created','product','qty','rate')
+        fields = ('pk','created','product','qty','rate','project','addedqty')
     def create(self, validated_data):
         b = Inventory(**validated_data)
         if 'product' in self.context['request'].data:
             b.product = Products.objects.get(pk=int(self.context['request'].data['product']))
+        if 'project' in self.context['request'].data:
+            b.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
         b.save()
         return b
 

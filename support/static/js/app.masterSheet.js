@@ -66,7 +66,7 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
     views: views,
     url: '/api/support/products/',
     searchField: 'part_no',
-    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1', 'gst','customs_no','custom'],
+    fields: ['part_no', 'weight', 'price', 'description_2', 'description_1', 'gst','customs_no','custom','replaced'],
     checkbox: false,
     deletable:true,
     canCreate : true,
@@ -129,6 +129,9 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
           if ($scope.form.sheet == emptyFile) {
             Flash.create('warning', 'Please Select File');
             return
+          }
+          else{
+              Flash.create('success', 'Sheet is Uploading, Please Wait');
           }
 
           var fd = new FormData();

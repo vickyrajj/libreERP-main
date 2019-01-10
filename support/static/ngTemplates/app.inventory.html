@@ -1,12 +1,13 @@
-<div class="shaddowed card bg-white" style="min-height:93.7vh;">
+<div class="shaddowed card bg-white" style="min-height:93.7vh;overflow: hidden">
   <breadcrumb></breadcrumb>
 
 
   <div class="row">
     <div class="col-md-3" style="padding-top:20px">
       <strong style="margin:0 13px 0 20px">Inventory</strong><switch ng-model="modeToggle" class="neutral "></switch>
-      <strong style="margin-left:13px">Material Issue</strong>
-      <span><button type="button" class="btn btn-success  pull-right" ng-click="download()">Download</button></span>
+      <strong style="margin-left:13px">Material Issued</strong>
+
+      <span><button type="button" class="btn btn-success  pull-right" ng-click="download()">Stock Check</button></span>
     </div>
     <div class="col-md-8  text-left" ng-if="!modeToggle" style="padding-top:20px">
       <div class="container-fluid">
@@ -20,6 +21,7 @@
           <span class="input-group-addon" ng-click="reset()" style="cursor:pointer; background-color:#fff;">Reset</span>
           <span class="input-group-addon" ng-click="getList();" style="cursor:pointer; background-color:#fff;border:1px solid #fff;color:#286090"> <i class="fa fa-shopping-cart fa-2x"></i>
             {{cart.length}}</span>
+
         </div>
       </div>
 
@@ -28,14 +30,41 @@
       <div class="container-fluid">
         <div class="input-group">
           <input type='text' ng-model='searchmaterial.search' class="form-control" placeholder="Search a Project " ng-enter="enterFunmaterial()" style="height:40px" />
+          <!-- <div class="form-group">
+            <label>As On</label>
+            <div class="input-group">
+              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="searchmaterial.dt" is-open="status.opened" ng-change="enterFunmaterial()"/>
+              <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div> -->
           <span class="input-group-addon" ng-click="refreshmaterial()" style="cursor:pointer; background-color:#fff;"><i class="fa fa-refresh"></i></span>
-          <span class="input-group-addon" ng-click="prevmaterial()" style="cursor:{{offsetmaterial!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i class="fa fa-arrow-left"></i>Prev</span>
-          <span class="input-group-addon" ng-click="nextmaterial()" style="cursor:pointer; background-color:#fff;">Next <i class="fa fa-arrow-right"></i></span>
+          <span class="input-group-addon" ng-if="showPagint" ng-click="prevmaterial()" style="cursor:{{offsetmaterial!=0?'pointer;background-color:#fff;':'not-allowed;background-color:#eee'}}"><i class="fa fa-arrow-left"></i>Prev</span>
+          <span class="input-group-addon" ng-if="showPagint" ng-click="nextmaterial()" style="cursor:pointer; background-color:#fff;">Next <i class="fa fa-arrow-right"></i></span>
         </div>
+
       </div>
 
     </div>
   </div>
+    <div class="row"  ng-if="modeToggle">
+      <div class="col-md-4 col-md-offset-4" style="margin-top:25px">
+
+      <div class="form-group">
+        <!-- <label>As On</label> -->
+        <div class="input-group">
+          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="searchmaterial.dt" is-open="status.opened" ng-change="enterFunmaterial()"/>
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </div>
+      </div>
+        </div>
+          <div class="col-md-1">
+            <h2 style="margin-top:25px">{{totSum.toFixed(2)| number}}</h2>
+          </div>
+    </div>
   <!-- <div class="row">
      <div class="col-md-10 col-md-offset-1 " ng-repeat=" p in products" >
        <div class="row card" ng-click="toggle(p.productPk,$index)"
@@ -73,13 +102,15 @@ style="padding:10px;">
   <div class="row" style="margin-top:20px;" ng-if="!modeToggle">
     <div class="col-md-8 " style="padding-left:30px">
       <div class="btn-group">
+        <span><button class="btn btn-primary" ng-click="createReportData()"> Create Stock Summary </button></span>
         <span><a class="btn btn-primary" target="_blank" href="/api/support/downloadStockReport/"> Download Stock Summary </a></span>
        <span><a class="btn btn-primary" target="_blank" href="/api/support/projectStockConsumption/"> Product Stock Consumed </a></span>
        <span><a class="btn btn-primary" target="_blank" href="/api/support/downloadInvoiceReport/"> Invoice BOE </a></span>
+        <span><a class="btn btn-primary" target="_blank" href="/api/support/stockDetial/"> Stock Detail</a></span>
       </div>
     </div>
     <div class="col-md-4  text-right" style="padding-right:30px;">
-      <h2 style="margin:0px"> Total : {{total.toFixed(2)}} </h2>
+      <h2 style="margin:0px"> Total : {{total.toFixed(2)| number}} </h2>
     </div>
     <div class="col-md-12">
       <div class="container-fluid" style="margin-top:15px;" ng-repeat="p in products">
@@ -101,11 +132,11 @@ style="padding:10px;">
               </div>
               <div class="col-md-2">
                 <span style="font-size:12px"><strong> Price :
-                  </strong>{{p.totalprice.toFixed(2)}} </span>
+                  </strong>{{p.totalprice.toFixed(2)| number}} </span>
               </div>
               <div class="col-md-2">
                 <span style="font-size:12px"><strong> Total :
-                  </strong>{{p.totalVal.toFixed(2)}} </span>
+                  </strong>{{p.totalVal.toFixed(2)| number}} </span>
               </div>
               <div class="col-md-2">
                 <button class="btn btn-primary" ng-if="p.totalqty>0&&!p.addedCart" style="font-size:12px" ng-click="addToCart(p.productPk,$index);$event.stopPropagation();">Add to Cart
@@ -152,10 +183,10 @@ style="padding:10px;">
                     <span>{{f.qty}}</span>
                   </td>
                   <td class="text-center">
-                    <span>{{f.rate.toFixed(2)}}</span>
+                    <span>{{f.rate.toFixed(2)| number}}</span>
                   </td>
                   <td class="text-center">
-                    <span>{{(f.rate * f.qty).toFixed(2) }}</span>
+                    <span>{{(f.rate * f.qty).toFixed(2)| number }}</span>
                   </td>
                 </tr>
               </table>

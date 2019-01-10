@@ -1,5 +1,5 @@
 <div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;cursor:pointer">
-  <div class="container-fluid card" style="border: 2px solid rgb(51, 122, 183);" ng-click="rowActionClicked('details')">
+  <div class="container-fluid card" style="border: 2px solid #F08080;" ng-click="rowActionClicked('details')">
     <div class="row text-center" style="height:6vh;">
       <div class="col-md-12" style="position:relative;display:block;">
         <div class="row" style="padding-left:10px;">
@@ -17,12 +17,12 @@
           <span>  {{data.service.name}}</span>
           </div>
         </div>
-       <div class="row" ng-if="data.savedStatus">
+       <div class="row" ng-if="data.junkStatus">
          <div class="col-md-5">
              <span style="font-size:15px;"><strong> Stage </strong>:</span>
          </div>
          <div class="col-md-7">
-         <span ng-if="data.savedStatus"> Archieved</span>
+         <span ng-if="data.junkStatus"> Junk</span>
          </div>
        </div>
        <div class="row">

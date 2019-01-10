@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'ProductsUpload/$' , ProductsUploadAPIView.as_view() ),
     url(r'POSlip/$' , GetPurchaseAPIView.as_view() ),
+    url(r'landingDetail/$' , GetLandingAPIView.as_view() ),
     url(r'quotation/$' , QuotationAPIView.as_view() ),
     url(r'inventoryData/$' , ProductInventoryAPIView.as_view() ),
     url(r'order/$' , OrderAPIView.as_view() ),
@@ -31,12 +32,12 @@ urlpatterns = [
     url(r'sendEmail/$' , EmailApi.as_view() ),
     url(r'calculate/$' , CalculateAPIView.as_view() ),
     url(r'getMaterial/$' , GetMaterialAPIView.as_view() ),
-
     url(r'projectStockConsumption/$' , DownloadProjectSCExcelReponse.as_view() ),
-
     url(r'createStockReportData/$' , CreateStockReportDataAPIView.as_view() ),
     url(r'downloadStockReport/$' , DownloadStockReportAPIView.as_view() ),
     url(r'downloadInvoiceReport/$' , DownloadInvoiceReportAPIView.as_view() ),
+    url(r'stockDetial/$' , StockDownloadAPIView.as_view() ),
+    url(r'getCmrList/$' , GetCmrListAPIView.as_view() ),
 
     # url(r'stock/$' , StockAPIView.as_view() ),
 ]

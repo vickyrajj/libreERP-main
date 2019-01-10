@@ -1,4 +1,4 @@
-<div class="container-fluid" style="padding:20px;" ng-controller="businessManagement.projects.archieve.explore">
+<div class="container-fluid" style="padding:20px;" ng-controller="businessManagement.projects.junk.explore">
   <div class="col-md-3" style="border-right:solid 2px #eeeeee;margin-bottom:3em;min-height:80vh">
     <div class="row">
       <div class="col-md-12">
@@ -52,6 +52,7 @@
               <span>  {{form.quote_ref}}</span>
               </div>
             </div>
+
             <div class="row" style="padding-top:10px">
               <div class="col-md-5 text-center">
                   <label> Enquiry Ref : </label>
@@ -121,6 +122,7 @@
             <span> {{form.quoteDate}}</span>
           </div>
         </div>
+
         <div class="row" style="padding-top:10px">
           <div class="col-md-5 text-center">
             <label> Invoice Number : </label>
@@ -361,7 +363,7 @@
                 <label> Ex Work Price: </label>
               </div>
               <div class="col-md-3 text-center">
-                <span>{{(form.invoiceValue).toFixed(2) | number}}</span>
+                <span>{{(form.invoiceValue).toFixed(2)}}</span>
               </div>
               <div class="col-md-3 text-center">
                 <span> {{((form.invoiceValue * form.exRate)).toFixed(2) | number}}</span>
@@ -372,13 +374,13 @@
                 <label> Packing: </label>
               </div>
               <div class="col-md-3 text-center">
-                <span>{{form.packing}}</span>
+                <span>{{form.packing | number}}</span>
               </div>
               <div class="col-md-3 text-center">
                 <span> {{(form.packing * form.exRate).toFixed(2) | number}}</span>
               </div>
               <div class="col-md-2 text-center">
-                <span> {{(form.packing *100/ form.invoiceValue).toFixed(2) | number}} %</span>
+                <span> {{(form.packing *100/ form.invoiceValue).toFixed(2)}} %</span>
               </div>
             </div>
             <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
@@ -419,7 +421,7 @@
                 <!-- <span>{{(form.invoiceValue*form.exRate*(100+form.assessableValueFraction)/100).toFixed(2)}}</span> -->
               </div>
               <div class="col-md-2 text-center">
-                <span>{{form.assessableValue}} %</span>
+                <span>{{form.assessableValue | number}} %</span>
               </div>
             </div>
             <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
@@ -456,7 +458,7 @@
                 <span>{{form.clearingCharges1 | number}}</span>
               </div>
               <div class="col-md-2 text-center">
-                <span> {{(form.clearingCharges1*100/(form.invoiceValue* form.exRate)).toFixed(2)}} %</span>
+                <span> {{(form.clearingCharges1*100/(form.invoiceValue* form.exRate)).toFixed(2) | number}} %</span>
               </div>
             </div>
             <div class="row" style="padding-top:10px;border-bottom:1px solid #eeeeee">
@@ -469,7 +471,7 @@
                 <span>{{form.clearingCharges2 | number}}</span>
               </div>
               <div class="col-md-2 text-center">
-                <span> {{(form.clearingCharges2*100/(form.invoiceValue * form.exRate)).toFixed(2)}} %</span>
+                <span> {{(form.clearingCharges2*100/(form.invoiceValue * form.exRate)).toFixed(2) | number}} %</span>
               </div>
             </div>
           </div>

@@ -1,70 +1,65 @@
-<div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.projects.service.item" ng-click="rowActionClicked('details');$event.stopPropagation();">
-  <div class="container-fluid card" style="border: 2px solid {{data.status=='created'?'#b8b5b3':''}}{{data.status=='sent_for_approval'?'#F08080':''}}{{data.status=='approved'?'#449d44':''}}{{data.status=='ongoing'?'#337ab7':''}};cursor:pointer;">
-    <div class="row text-center" style="height:6vh;">
-      <!-- <div class="col-md-1" style="position:relative;display:block;color:{{data.status=='created'?'#b8b5b3':''}}{{data.status=='sent_for_approval'?'#F08080':''}}{{data.status=='approved'?'#d9534f':''}}{{data.status=='ongoing'?'#337ab7':''}}">
-        <i class="fa fa-circle fa-lg" style="margin-top:10px;"></i>
-    </div> -->
-      <div class="col-md-11" style="position:relative;display:block;">
-        <div class="row" style="padding-left:10px;">
-          <h2>{{data.title}}</h2>
-        </div>
-      </div>
-    </div>
-    <div class="row container-fluid" style="padding-top:20px;height:12vh;">
-      <div class="col-md-10" style="z-index: 1;">
-        <div class="row">
-          <div class="col-md-5">
-              <span style="font-size:15px;"><strong> Customer </strong>:</span>
-          </div>
-          <div class="col-md-7">
-          <span>  {{data.service.name}}</span>
+<div class="row" style="margin-top:30px">
+  <div class="col-md-4" style="padding-bottom:20px;padding-left:10px;padding-right:10px;" ng-click="cmrTableAction($index,'details');$event.stopPropagation();" ng-repeat="cdt in cmrData">
+    <div class="container-fluid card" style="border: 2px solid {{cdt.status=='created'?'#b8b5b3':''}}{{cdt.status=='sent_for_approval'?'#F08080':''}}{{cdt.status=='approved'?'#449d44':''}}{{cdt.status=='ongoing'?'#337ab7':''}};cursor:pointer;">
+      <div class="row text-center" style="height:6vh;">
+
+        <div class="col-md-11" style="position:relative;display:block;">
+          <div class="row" style="padding-left:10px;">
+            <h2>{{cdt.title}}</h2>
           </div>
         </div>
-       <div class="row">
-         <div class="col-md-5">
-             <span style="font-size:15px;"><strong> Stage </strong>:</span>
-         </div>
-         <div class="col-md-7">
-         <span>  {{data.status}}</span>
-         </div>
-       </div>
-       <div class="row">
-         <div class="col-md-5">
-             <span style="font-size:15px;"><strong>Mobile </strong>:</span>
-         </div>
-         <div class="col-md-7">
-         <span>{{data.service.mobile}}</span>
-         </div>
-       </div>
-       <div class="row">
-         <div class="col-md-5">
-             <span><strong>Closing date </strong>: </span>
-         </div>
-         <div class="col-md-7">
-         <span>{{data.date}}</span>
-         </div>
-       </div>
-        <!-- <div ng-repeat='d in data.responsible '><strong>Responsible Person</strong>: {{d.first_name}} {{d.last_name}}</div><br> -->
       </div>
-      <!-- <i style="width:30px;" class="fa fa-mobile fa-lg"></i>
-      <i style="width:30px;" class="fa fa-envelope "></i> -->
-      <div class="col-md-2">
-        <div style="padding-right:20px;">
+      <div class="row container-fluid" style="padding-top:20px;height:12vh;">
+        <div class="col-md-10" style="z-index: 1;">
           <div class="row">
-            <span class="pull-right" style="cursor:pointer;" ng-click="rowActionClicked('edit');$event.stopPropagation();">
+            <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Customer </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>  {{cdt.service.name}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <span style="font-size:15px;"><strong> Stage </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>  {{cdt.status}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <span style="font-size:15px;"><strong>Mobile </strong>:</span>
+            </div>
+            <div class="col-md-7">
+              <span>{{cdt.service.mobile}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <span><strong>Closing date </strong>: </span>
+            </div>
+            <div class="col-md-7">
+              <span>{{cdt.date}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div style="padding-right:20px;">
+            <div class="row">
+              <span class="pull-right" style="cursor:pointer;" ng-click="cmrTableAction($index,'edit');$event.stopPropagation();">
               <i class="fa fa-pencil fa-2x" style="margin-top:0px;"></i>
             </span>
-          </div>
-          <div class="row">
-            <span class="pull-right" style="cursor:pointer;" ng-click="$event.stopPropagation()" mwl-confirm title="Delete" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('delete');" confirm-button-type="default" cancel-button-type="default"></i>
+            </div>
+            <div class="row">
+              <span class="pull-right" style="cursor:pointer;" ng-click="$event.stopPropagation()" mwl-confirm title="Delete" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="cmrTableAction($index,'delete');" confirm-button-type="default"
+                cancel-button-type="default"></i>
               <i class="fa fa-trash fa-2x" style="margin-top:15px;"></i>
             </span>
+            </div>
+
           </div>
-          <!-- <div class="row">
-            <span class="pull-right" style="cursor:pointer;" >
-              <i class="fa fa-info-circle fa-lg" style="margin-top:15px;"></i>
-            </span>
-          </div> -->
         </div>
       </div>
     </div>
