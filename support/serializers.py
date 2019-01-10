@@ -52,10 +52,11 @@ class ProjectsSerializer(serializers.ModelSerializer):
     # responsible = userSearchSerializer(many = True , read_only = True)
     service = serviceLiteSerializer(many = False , read_only = True)
     vendor = VendorSerializer(many = False , read_only = True)
-
+    total_po = serializers.SerializerMethodField()
+    total_material = serializers.SerializerMethodField()
     class Meta:
         model = Projects
-        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','quote_ref','enquiry_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus','invoiceValue','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','packing','vendor','exRate','poNumber','invoiceNumber','boeRefNumber','profitMargin','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms','junkStatus','poDate','quoteDate','shipmentMode','shipmentDetails','weightValue','paymentTerms1')
+        fields  = ('pk', 'created', 'title', 'service', 'date', 'responsible','machinemodel','comm_nr','quote_ref','enquiry_ref','approved1','approved2','approved1_user','approved2_user','approved1_date','approved2_date','status','revision','savedStatus','invoiceValue','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','packing','vendor','exRate','poNumber','invoiceNumber','boeRefNumber','profitMargin','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms','junkStatus','poDate','quoteDate','shipmentMode','shipmentDetails','weightValue','paymentTerms1','total_po','total_material')
 
     def create(self , validated_data):
         p = Projects()
@@ -85,7 +86,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
         return p
 
     def update (self, instance, validated_data):
-        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','quote_ref','enquiry_ref','machinemodel','approved1','approved1_user','approved1_date','revision','savedStatus','invoiceValue','packing','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','exRate','profitMargin','invoiceNumber','boeRefNumber','poNumber','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms','junkStatus','poDate','quoteDate','shipmentMode','shipmentDetails','weightValue','paymentTerms1']:
+        for key in ['title','status','approved2' , 'approved2_date','approved2_user','comm_nr','quote_ref','enquiry_ref','machinemodel','approved1','approved1_user','approved1_date','revision','savedStatus','invoiceValue','packing','insurance','freight','assessableValue','gst1','gst2','clearingCharges1','clearingCharges2','exRate','profitMargin','invoiceNumber','boeRefNumber','poNumber','quoteRefNumber','quoteValidity','terms','delivery','paymentTerms','junkStatus','poDate','quoteDate','shipmentMode','shipmentDetails','weightValue','paymentTerms1','total_po','total_material']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -102,7 +103,25 @@ class ProjectsSerializer(serializers.ModelSerializer):
             instance.date = self.context['request'].data['date']
         instance.save()
         return instance
-
+    def get_total_po(self , obj):
+        bomObj = BoM.objects.filter(project=obj.pk)
+        total = 0
+        # for i in bomObj:
+        total= sum(i.landed_price * i.quantity2 for i in bomObj)
+        if total>0:
+            return round(total,2)
+        else:
+            return 0
+    def get_total_material(self , obj):
+        materialObj = MaterialIssueMain.objects.filter(project=obj.pk)
+        total = 0
+        for i in materialObj:
+            matObj = i.materialIssue.all()
+            total+= sum(j.price*j.qty for j in matObj)
+        if total>0:
+            return round(total,2)
+        else:
+            return 0
 
 
 

@@ -1945,12 +1945,9 @@ class GetCmrListAPIView(APIView):
 class ProjectProductAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
-        print request.GET
         projectObj = Projects.objects.filter(savedStatus=False,junkStatus=False,comm_nr=request.GET['comm'])
-        print projectObj,'projjjjjjjjjjjjj'
         toReturn = []
         for i in projectObj:
-            print i.pk
             bomlist = []
             bomObj = BoM.objects.filter(project=i)
             for j in bomObj:
