@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'downloadStockReport/$' , DownloadStockReportAPIView.as_view() ),
     url(r'downloadInvoiceReport/$' , DownloadInvoiceReportAPIView.as_view() ),
     url(r'stockDetial/$' , StockDownloadAPIView.as_view() ),
+    url(r'productTable/$' , ProjectProductAPIView.as_view() ),
 
     # url(r'stock/$' , StockAPIView.as_view() ),
 ]
