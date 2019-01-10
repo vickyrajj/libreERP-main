@@ -1945,19 +1945,45 @@ class GetCmrListAPIView(APIView):
 class ProjectProductAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
+        print request.GET
         projectObj = Projects.objects.filter(savedStatus=False,junkStatus=False,comm_nr=request.GET['comm'])
-        projectsObj = list(projectObj.values('comm_nr').distinct())
+        print projectObj,'projjjjjjjjjjjjj'
         toReturn = []
-        # for p in projectsObj:
-        #     projDetail = []
-        proData = projectObj.filter(comm_nr=projectsObj[0]['comm_nr'])
-        print proData
-        for i in proData:
+        for i in projectObj:
             print i.pk
             bomlist = []
-            bomObj = list(BoM.objects.filter(project__id=i.pk).values('products__pk','products__description_1','products__description_2','products__weight','products__part_no','products__customs_no','custom','user_id','gst','project__pk','quantity1','quantity2','price','landed_price',''))
-            for b in bomObj:
-                bomlist.append(b)
-            toReturn.append({'projectPk':i.pk,'bomdata':bomlist})
-        # toReturn.append({'project':projDetail})
+            bomObj = BoM.objects.filter(project=i)
+            for j in bomObj:
+                qtPrice = round((i.profitMargin*j.price/100) + j.price,2)
+                wkPrice = round(j.price*i.exRate,2)
+                try:
+                    packingCost = round((i.packing/i.invoiceValue)*wkPrice,2)
+                except:
+                    packingCost = 0
+                try:
+                    insurance = round((i.insurance/i.invoiceValue)*wkPrice,2)
+                except:
+                    insurance = 0
+                try:
+                    freight = round((i.freight/i.invoiceValue)*wkPrice,2)
+                except:
+                    freight = 0
+                cifPc = round(wkPrice+packingCost+insurance+freight,2)
+                totcif = round(cifPc*j.quantity1,2)
+                cdVal = round((cifPc+((cifPc*i.assessableValue)/100))*(j.custom/100),2)
+                swe = round(cdVal*0.1,2)
+                gstVal = round((cifPc+cdVal+swe)*j.gst/100,2)
+                try:
+                    cc1 = round(wkPrice*(i.clearingCharges1/(i.invoiceValue*j.exRate)),2)
+                except:
+                    cc1 = 0
+                try:
+                    cc2 = round(wkPrice*(i.clearingCharges2/(i.invoiceValue*j.exRate)),2)
+                except:
+                    cc2 = 0
+
+                bomlist.append({'productDesc1':j.products.description_1,'productDesc2':j.products.description_2,'partNo':j.products.part_no,'weight':j.products.weight,'qty1':j.quantity1,'hsn':j.products.customs_no,'price':j.price,'qty2':j.quantity2,'qtPrice':qtPrice,'wkPrice':wkPrice,'packingCost':packingCost,'insurance':insurance,'freight':freight,'cifPc':cifPc,'totcif':totcif,'cdperc':j.custom,'cdVal':cdVal,'swe':swe,'gst':j.gst,'gstVal':gstVal,'cc1':cc1,'cc2':cc2,'landingCost':j.landed_price,})
+                print bomlist
+
+            toReturn.append({i.pk:bomlist})
         return Response(toReturn,status=status.HTTP_200_OK)
