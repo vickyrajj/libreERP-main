@@ -1,0 +1,94 @@
+{% block content %}
+
+
+
+
+<div class="container-fluid">
+  <div class="col-md-12">
+    <div class="col-md-10">
+      <div class="row" style="margin-top:1em;">
+        <div class="col-md-6 col-xs-12">
+          <div style="display:inline-block;">
+            <h1 class="heading_medium">{{book.title}}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:1em;">
+        <div class="col-md-2 col-xs-12 rightborder">
+          <table>
+            <tr>
+              <td><span style="color: #9E9E9E">Adden On 29 sep'18</span></td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-3 col-xs-12 col-sm-12 smdevice rightborder">
+          <table>
+            <tr>
+              <td style="width:50%"> <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+                <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+                <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+                <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i>
+                <i class="fa fa-star " style="color:#f4c810" aria-hidden="true"></i></td>
+              <td><span style="font-size:15px;"><b class="text-muted">(11 Reviews)</b></span></td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12 smdevice">
+          <table class="alignintable">
+            <tr>
+              <td class="tablehead"><span> Share this course:</span></td>
+              <td><i class="fa fa-facebook" aria-hidden="true"></i></td>
+              <td><i class="fa fa-twitter" aria-hidden="true"></i></td>
+              <td><i class="fa fa-linkedin" aria-hidden="true"></i></td>
+              <td style="width:8%;"><i class="fa fa-youtube" aria-hidden="true"></i></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Description</h3>
+          <p>{{book.description}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 min_padd">
+      <div class="text-center">
+        <img src="/static/images/24tut/cbook.jpg" width="70%">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
+  {% verbatim %}
+  <div class="container">
+    <div class="col-md-6 clickchange" ng-model='forum' ng-class="click4" ng-click="clicks(4)">
+      <span><b>Solutions</b><i ng-if="device.smallDevice " class="fa {{forum==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
+      <div ng-class="class1"></div>
+    </div>
+    <div class="col-md-6 clickchange1" ng-model='refbook' ng-class="click5" ng-click="clicks(5)">
+      <span><b> Forum</b><i ng-if="device.smallDevice " class="fa {{refbook==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
+      <div ng-class="class2"></div>
+    </div>
+  </div>
+  {% endverbatim %}
+</div>
+<div class="container-fluid">
+  <div class="col-md-12">
+    <div class="col-md-6" style="min-height:60vh;padding:0px;">
+      <!-- <img src="/static/images/24tut/atomic.png" width="50%"style="position:absolute;z-index:-100;top:18%;left:21%;opacity:0.2;"> -->
+      <div class="row" style="font-size:18px;display:inline-block;text-align:left;width:100%;">
+        <ul class="list-unstyled chap_list">
+          {% for s in sectionobj %}
+          <li><a ui-sref="chapter({chapterName: '{{s.shortUrl}}' })"><span>{{s.title}}</span></a></li>
+          <!-- <div class="row"> -->
+              <!-- <a href="/{{s.shortUrl}}"><h3 style="font-size:15px;">{{s.title}}</h3></a> -->
+          <!-- </div> -->
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

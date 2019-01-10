@@ -92,81 +92,81 @@ app.config(function($stateProvider) {
       controller: 'controller.index'
     })
 
-    $stateProvider
-      .state('enroll', {
-        url: "/enroll",
-        templateUrl: '/static/ngTemplates/app.homepage.enroll.html',
-        controller: 'controller.enroll'
-      })
+  $stateProvider
+    .state('enroll', {
+      url: "/enroll",
+      templateUrl: '/static/ngTemplates/app.homepage.enroll.html',
+      controller: 'controller.enroll'
+    })
 
-    $stateProvider
-      .state('contact', {
-        url: "/contact",
-        templateUrl: '/static/ngTemplates/app.homepage.contact.html',
-        controller: 'controller.contact'
-      })
+  $stateProvider
+    .state('contact', {
+      url: "/contact",
+      templateUrl: '/static/ngTemplates/app.homepage.contact.html',
+      controller: 'controller.contact'
+    })
 
-    $stateProvider
-      .state('services', {
-        url: "/services",
-        templateUrl: '/static/ngTemplates/app.homepage.services.html',
-        controller: 'controller.services'
-      })
+  $stateProvider
+    .state('services', {
+      url: "/services",
+      templateUrl: '/static/ngTemplates/app.homepage.services.html',
+      controller: 'controller.services'
+    })
 
-    $stateProvider
-      .state('about', {
-        url: "/about",
-        templateUrl: '/static/ngTemplates/app.homepage.about.html',
-        // controller: 'controller.about'
-      })
-    $stateProvider
-      .state('career', {
-        url: "/career",
-        templateUrl: '/ngTemplates/tutorsCareer.html',
-        // controller: 'controller.about'
-      })
-    $stateProvider
-      .state('testimonials', {
-        url: "/testimonials",
-        templateUrl: '/static/ngTemplates/app.homepage.testimonials.html',
-        controller: 'controller.testimonials'
-      })
-    $stateProvider
-      .state('courses', {
-        url: "/courses",
-        templateUrl: '/static/ngTemplates/app.homepage.courses.html',
-        controller: 'controller.courses'
-      })
-    $stateProvider
-      .state('ncert', {
-        url: "/ncert",
-        templateUrl: '/static/ngTemplates/app.homepage.ncert.html',
-        controller: 'controller.ncert'
-      })
-    $stateProvider
-      .state('policy', {
-        url: "/policy",
-        templateUrl: '/ngTemplates/tutorsPolicy.html',
-        // controller: 'controller.policy'
-      })
-    $stateProvider
-      .state('refund', {
-        url: "/refund",
-        templateUrl: '/ngTemplates/tutorsRefund.html',
-        // controller: 'controller.refund'
-      })
-    $stateProvider
-      .state('terms', {
-        url: "/terms",
-        templateUrl: '/ngTemplates/tutorsTerms.html',
-        // controller: 'controller.terms'
-      })
-    $stateProvider
-      .state('desclaimer', {
-        url: "/desclaimer",
-        templateUrl: '/ngTemplates/tutorsDisclaimer.html',
-        // controller: 'controller.terms'
-      })
+  $stateProvider
+    .state('about', {
+      url: "/about",
+      templateUrl: '/static/ngTemplates/app.homepage.about.html',
+      // controller: 'controller.about'
+    })
+  $stateProvider
+    .state('career', {
+      url: "/career",
+      templateUrl: '/ngTemplates/tutorsCareer.html',
+      // controller: 'controller.about'
+    })
+  $stateProvider
+    .state('testimonials', {
+      url: "/testimonials",
+      templateUrl: '/static/ngTemplates/app.homepage.testimonials.html',
+      controller: 'controller.testimonials'
+    })
+  $stateProvider
+    .state('courses', {
+      url: "/courses",
+      templateUrl: '/static/ngTemplates/app.homepage.courses.html',
+      controller: 'controller.courses'
+    })
+  $stateProvider
+    .state('ncert', {
+      url: "/ncert",
+      templateUrl: '/static/ngTemplates/app.homepage.ncert.html',
+      controller: 'controller.ncert'
+    })
+  $stateProvider
+    .state('policy', {
+      url: "/policy",
+      templateUrl: '/ngTemplates/tutorsPolicy.html',
+      // controller: 'controller.policy'
+    })
+  $stateProvider
+    .state('refund', {
+      url: "/refund",
+      templateUrl: '/ngTemplates/tutorsRefund.html',
+      // controller: 'controller.refund'
+    })
+  $stateProvider
+    .state('terms', {
+      url: "/terms",
+      templateUrl: '/ngTemplates/tutorsTerms.html',
+      // controller: 'controller.terms'
+    })
+  $stateProvider
+    .state('desclaimer', {
+      url: "/desclaimer",
+      templateUrl: '/ngTemplates/tutorsDisclaimer.html',
+      // controller: 'controller.terms'
+    })
 
 
   $stateProvider
@@ -183,7 +183,7 @@ app.config(function($stateProvider) {
       controller: 'controller.blogDetails'
     })
 
-    $stateProvider
+  $stateProvider
     .state('solutions', {
       url: "/hc-verma-solutions",
       templateUrl: '/dynamicTemplates/hc-verma-solutions.html',
@@ -192,7 +192,10 @@ app.config(function($stateProvider) {
   $stateProvider
     .state('chapter', {
       url: "/hc-verma-solutions/:chapterName",
-      templateUrl: 'static/ngTemplates/app.homepage.chapter.html',
+      // templateUrl: '/dynamicTemplates/chapterName',
+      templateUrl: function(params) {
+        return '/dynamicTemplates/' + params.chapterName + '.html';
+      },
       controller: 'controller.chapter'
     })
 
@@ -202,9 +205,9 @@ app.controller('controller.ncert', function($scope, $state, $http, $timeout, $in
 
 
   $http({
-    method:'GET',
-    url:'/api/LMS/getLevelsAndBooks/'
-  }).then(function (response) {
+    method: 'GET',
+    url: '/api/LMS/getLevelsAndBooks/'
+  }).then(function(response) {
     console.log(response);
 
     $scope.levelsAndBooks = response.data.LevelsAndBooks
@@ -252,10 +255,44 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
 });
 
 
-app.controller('controller.chapter', function($scope,$rootScope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $document) {
+app.controller('controller.chapter', function($scope, $rootScope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $document) {
 
 
-  $scope.signin = function(){
+
+  function elementInViewport(el) {
+    var top = el.offsetTop;
+    var left = el.offsetLeft;
+    var width = el.offsetWidth;
+    var height = el.offsetHeight;
+
+    while (el.offsetParent) {
+      el = el.offsetParent;
+      top += el.offsetTop;
+      left += el.offsetLeft;
+    }
+
+    return (
+      top >= window.pageYOffset &&
+      left >= window.pageXOffset &&
+      (top + height) <= (window.pageYOffset + window.innerHeight) &&
+      (left + width) <= (window.pageXOffset + window.innerWidth)
+    );
+  }
+
+  $timeout(function() {
+    var activeElem = document.getElementById('activeli');
+    var isElementinView = elementInViewport(activeElem);
+
+    if (!isElementinView) {
+      console.log('scroll');
+      var objDiv = document.getElementById("leftSection");
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
+    
+  }, 2000);
+
+
+  $scope.signin = function() {
     $rootScope.$broadcast('opensignInPopup', {});
   }
 
@@ -879,7 +916,7 @@ app.controller('main', function($scope, $state, $http, $timeout, $interval, $uib
   });
 
 
-  $scope.signin = function(){
+  $scope.signin = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.homepage.signin.html',
       size: 'lg',

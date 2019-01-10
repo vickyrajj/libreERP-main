@@ -1,0 +1,72 @@
+<div class="container-fluid" style="padding-left:0;padding-right:0;">
+  <div class="col-md-3 pull-right" style="background-image:linear-gradient(-179deg,#3b63d7,#edae2c);min-height:96vh;position:fixed;padding:0;left:0;:0;z-index:50;color:#fff;width:402px;">
+    <div class="logoeffect">
+      <a href="/">  <img src="/static/images/24tut//icon_grad.svg" width="70%" ></a>
+    </div>
+    <div class="" style="background: rgba(0,0,0,.05);padding: 10px 15px;color: #fff;">
+      <h4>OTHER CHAPTERS</h4>
+    </div>
+    <div id="leftSection" class="" style="padding-left:0px;padding-right:0px;overflow: hidden;width:99%;">
+      <ul class="list-unstyled other_chap">
+        {% for sec in sections %}
+            {% if sectionobj.shortUrl == sec.shortUrl %}
+              <li id="activeli" class="activeli"><a class="activea" ui-sref="chapter({chapterName: '{{sec.shortUrl}}' })"><span>{{sec.title}}</span></a></li>
+            {% else %}
+              <li><a ui-sref="chapter({chapterName: '{{sec.shortUrl}}' })"><span>{{sec.title}}</span></a></li>
+            {% endif %}
+        {% endfor %}
+
+        <!-- <li><a href="/chapter"><span>Introduction to Physics</span></a></li>
+        <li><a href="/chapter"><span>Physics and Mathematics</span></a></li>
+        <li><a href="/chapter"><span>Rest and Motion Kinematics</span></a></li>
+        <li><a href="/chapter"><span>The Forces</span></a></li>
+        <li><a href="/chapter"><span>Newton's Laws of Motion</span></a></li>
+        <li><a href="/chapter"><span>Friction</span></a></li>
+        <li><a href="/chapter"><span>Circular Motion</span></a></li>
+        <li><a href="/chapter"><span>Work and Energy</span></a></li>
+        <li><a href="/chapter"><span>Centre of Mass, Linear Momentum, Collision</span></a></li>
+        <li><a href="/chapter"><span>Rotational Mechanics</span></a></li>
+        <li><a href="/chapter"><span>Gravitation</span></a></li>
+        <li><a href="/chapter"><span>Simple Harmonics Motion</span></a></li>
+        <li><a href="/chapter"><span>Fluid Mechanics</span></a></li>
+        <li><a href="/chapter"><span>Some Mechanical Properties of Matter</span></a></li>
+        <li><a href="/chapter"><span>Wave Motion and Waves on a String</span></a></li>
+        <li><a href="/chapter"><span>Sound Waves</span></a></li>
+        <li><a href="/chapter"><span>Light Waves</span></a></li>
+        <li><a href="/chapter"><span>Geometrical Optics</span></a></li>
+        <li><a href="/chapter"><span>Optical Instruments</span></a></li>
+        <li><a href="/chapter"><span>Dispersion and Spectra</span></a></li>
+        <li><a href="/chapter"><span>Speed of Light</span></a></li>
+        <li><a href="/chapter"><span>Photometry</span></a></li> -->
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-1 q_div">
+    <div class="" style="position:relative;overflow:hidden;width:100%;">
+      <ul class="list-unstyled q_list" style="overflow:auto;width:126%;overflow-x:hidden;">
+        <li ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]" ng-click="toTheTop($index)"><span class="q_no">q{{i}}</span>
+          <div class="question">
+            <div class="" style="padding:20px;">
+              <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-9 col-md-offset-3 solution_div" style="background-color:#e8e8e8">
+    <a class="btn" ng-click="signin()">sign in</a>
+    <!-- <div ng-show="displ">
+      <span>Q{{idx}}</span>
+    </div> -->
+    <div class="container-fluid">
+      {% for q in questions %}
+      <div class="row" >
+        <p style="font-size:17px;padding-left:15px"><strong>{{ forloop.counter }}.</strong> &nbsp; {{q.ques | safe}}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
