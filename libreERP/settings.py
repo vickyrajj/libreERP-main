@@ -67,7 +67,7 @@ SOURCE_LIST = ['CIOC','MONOMERCE','TUTORS_24','RACKMINT','EPSILON_AI']
 LOGIN_REDIRECT = 'ERP' # the url to which the user will be redirected once successfully loggedin
 # Options are : ERP , ecommerce , blogs , corporate
 
-LOGOUT_REDIRECT = 'root' # similarly the url to which the user will be directed one logged out
+LOGOUT_REDIRECT = 'ERP' # similarly the url to which the user will be directed one logged out
 
 USE_CDN = False # when turned on the application will use the cndjs.com and other similar
 #content delivery network for css and jss libraries
@@ -78,6 +78,11 @@ BRAND_LOGO = '/static/images/cioc_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
+
+import requests
+def SEND_SMS(number , txt):
+    url = SMS_API_PREFIX + 'number=%s&message=%s'%(number, txt)
+    requests.get(url)
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -101,7 +106,6 @@ INSTALLED_APPS = (
     'HR', # people aspect of the platform
     'PIM', # personal information manager
     'social', # social networking client
-    'homepage', # landing page
     'mail', # mail application
     'businessManagement', # BM application
     'projectManagement',

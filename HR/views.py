@@ -89,7 +89,7 @@ def tokenAuthentication(request):
     authStatus = {'status' : 'success' , 'message' : 'Account actived, please login.' }
     return render(request , globalSettings.LOGIN_TEMPLATE , {'authStatus' : authStatus ,'useCDN' : globalSettings.USE_CDN})
 
-
+@csrf_exempt
 def generateOTP(request):
     print request.POST
     key_expires = timezone.now() + datetime.timedelta(2)
@@ -99,7 +99,10 @@ def generateOTP(request):
         key_expires=key_expires , keyType = 'otp')
     ak.save()
     print ak.activation_key
-    # send a SMS with the OTP
+    print user.profile.mobile
+
+    globalSettings.SEND_SMS(user.profile.mobile , 'OTP is %s'%(ak.activation_key)  )
+
     return JsonResponse({} ,status =200 )
 
 
