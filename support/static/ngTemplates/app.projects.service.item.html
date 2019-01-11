@@ -1,10 +1,11 @@
 <div class="row" style="margin-top:30px">
-  <div class="col-md-12 text-left" ng-if="cmrData.totalOrdered>0" style="margin-bottom:35px">
-    <div class="col-md-3" style="font-size:25px">
-      <strong>Total Ordered : </strong>{{cmrData.totalOrdered}}<br>
-      <strong>Total Consumed : </strong>{{cmrData.totalConsumed}}<br>
+  <div class="col-md-12 text-left" style="margin-bottom:35px">
+    <div class="col-md-3" >
+      <h3><strong>Comm nr : </strong>{{cmrData.comm_nr}}</h3>
+      <h3 ng-if="cmrData.totalOrdered>0"><strong>Total Ordered : </strong>{{cmrData.totalOrdered.toFixed(2)}}</h3>
+      <h3 ng-if="cmrData.totalOrdered>0"><strong>Total Consumed : </strong>{{cmrData.totalConsumed.toFixed(2)}}</h3><br>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-9" ng-if="cmrData.totalOrdered>0">
       <canvas id="pie" class="chart chart-pie" chart-data="[cmrData.totalOrdered,cmrData.totalConsumed]" chart-labels="['Total Ordered','Total Consumed']" chart-options="{legend: { display: true }}" chart-colors="['#90EE90', '#FF6600']" height="50vh"></canvas>
     </div>
   </div>
@@ -104,7 +105,7 @@
 
   <div class="col-md-12" style="margin-top:30px" ng-if="cmrData.totalPo>0">
     <div class="col-md-12 text-right" style="font-size:26px">
-      <strong>Total PO : </strong>{{cmrData.totalPo}}
+      <strong>Total PO : </strong>{{cmrData.totalPo.toFixed(2)}}
     </div>
 
     <table class="invoiceTable" style=" width: 100%;">

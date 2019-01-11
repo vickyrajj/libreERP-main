@@ -260,6 +260,12 @@
                           class="fa fa-download"></i> Download PO in CHF </a></span>
                   </div>
                 </div><br>
+                <div class="row">
+                  <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=INR" style="min-width:50px"><i
+                          class="fa fa-download"></i> Download PO in INR </a></span>
+                  </div>
+                </div><br>
                 <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
                   <div class="col-md-12 text-center">
                     <span ><a class="btn btn-primary" target="_blank" href="/api/support/landingDetail/?project={{form.pk}}" style="min-width:50px"><i
@@ -787,6 +793,12 @@
                         class="fa fa-download"></i> Download PO in CHF </a></span>
                 </div>
               </div><br>
+              <div class="row">
+                <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=INR" style="min-width:50px"><i
+                        class="fa fa-download"></i> Download PO in INR </a></span>
+                </div>
+              </div><br>
               <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
                   <span ><a class="btn btn-primary" target="_blank" href="/api/support/landingDetail/?project={{form.pk}}" style="min-width:50px"><i
@@ -1262,6 +1274,12 @@
                         class="fa fa-download"></i> Download PO in CHF </a></span>
                 </div>
               </div><br>
+              <div class="row">
+                <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=INR" style="min-width:50px"><i
+                        class="fa fa-download"></i> Download PO in INR </a></span>
+                </div>
+              </div><br>
               <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
                   <span ><a class="btn btn-primary" target="_blank" href="/api/support/landingDetail/?project={{form.pk}}" style="min-width:50px"><i
@@ -1720,6 +1738,12 @@
                     <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
                       <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF" style="min-width:50px"><i
                             class="fa fa-download"></i> Download PO in CHF </a></span>
+                    </div>
+                  </div><br>
+                  <div class="row">
+                    <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
+                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=INR" style="min-width:50px"><i
+                            class="fa fa-download"></i> Download PO in INR </a></span>
                     </div>
                   </div><br>
                   <div class="row" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">

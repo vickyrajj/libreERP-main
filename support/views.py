@@ -39,7 +39,7 @@ from django.db.models.functions import Extract , ExtractDay, ExtractMonth, Extra
 from django.db.models import Sum , Avg
 import json
 import os
-from django.db.models import CharField, Value , Func
+from django.db.models import CharField,FloatField, Value , Func
 import csv
 import pandas as pd
 from django.http import HttpResponse
@@ -363,14 +363,22 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
 
 
     elements.append(Spacer(1,10))
-
+    if currencyTyp == 'CHF':
+        priceTitle = 'Unit price in CHF'
+        amountTitle = 'Amount in CHF'
+    elif currencyTyp == 'INR':
+        priceTitle = 'Unit price in INR'
+        amountTitle = 'Amount in INR'
+    else:
+        priceTitle = 'Unit price'
+        amountTitle = 'Amount'
     p101_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
     p101_02 =Paragraph("<para fontSize=8>Part Number</para>",styles['Normal'])
     p101_03 =Paragraph("<para fontSize=8>Part Desc</para>",styles['Normal'])
     p101_07 =Paragraph("<para fontSize=8>HS Code</para>",styles['Normal'])
     p101_04 =Paragraph("<para fontSize=8>Qty</para>",styles['Normal'])
-    p101_05 =Paragraph("<para fontSize=8>Unit price in CHF</para>",styles['Normal'])
-    p101_06 =Paragraph("<para fontSize=8>Amount in CHF</para>",styles['Normal'])
+    p101_05 =Paragraph("<para fontSize=8>{0}</para>".format(priceTitle),styles['Normal'])
+    p101_06 =Paragraph("<para fontSize=8>{0}</para>".format(amountTitle),styles['Normal'])
 
 
     data5=[[p101_01,p101_02,p101_03,p101_07,p101_04,p101_05,p101_06]]
@@ -384,11 +392,11 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
         desc = i.products.description_1
         hs = i.products.customs_no
 
-        price = i.price
+        price = i.price * multNumber
         qty = i.quantity1
         amnt = round((price * qty),2)
         grandTotal +=amnt
-
+        grandTotal = round(grandTotal,2)
 
         p12_01 = Paragraph("<para fontSize=8>{0}</para>".format(id),styles['Normal'])
         p12_02 =Paragraph("<para fontSize=8>{0}</para>".format(part_no),styles['Normal'])
@@ -1825,7 +1833,8 @@ class DownloadProjectSCExcelReponse(APIView):
                                                 if v.project.pk!=h.project.pk:
                                                 # listVal += s['addedqty']
                                                     # value = ''
-                                                    value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + s['comm_nr'] + ')'
+                                                    value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + h.project.comm_nr + ')'
+                                                    print value
                                                     val.append(value)
 
                     val = json.dumps(val)
@@ -1850,7 +1859,8 @@ class CreateStockReportDataAPIView(APIView):
         for i in prodObj:
             invtObjs = Inventory.objects.filter(product=i,created__lte=dtime)
             if invtObjs.count()>0:
-                total = invtObjs.aggregate(total=Sum(F('qty') * F('rate'))).get('total',0)
+                total = invtObjs.aggregate(total=Sum(F('qty') * F('rate'),output_field=FloatField())).get('total',0)
+                # print total
                 stockTotal += total
         print 'total valueeeeeeeeeee',stockTotal
         if stockTotal>0:
@@ -1870,7 +1880,8 @@ class CreateStockReportDataAPIView(APIView):
                     for j in matIssMainObjs:
                         tot = 0
                         matIssueObjs = j.materialIssue.all()
-                        tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price'))).get('total',0)
+                        tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price'),output_field=FloatField())).get('total',0)
+                        # print tot
                         vl += tot
                     try:
                         pObj=ProjectStockSummary.objects.get(stockReport=ssReportObj,title=i.title)
@@ -1984,11 +1995,11 @@ class ProjectProductAPIView(APIView):
                 swe = round(cdVal*0.1,2)
                 gstVal = round((cifPc+cdVal+swe)*j.gst/100,2)
                 try:
-                    cc1 = round(wkPrice*(i.clearingCharges1/(i.invoiceValue*j.exRate)),2)
+                    cc1 = round(wkPrice*(i.clearingCharges1/(i.invoiceValue*i.exRate)),2)
                 except:
                     cc1 = 0
                 try:
-                    cc2 = round(wkPrice*(i.clearingCharges2/(i.invoiceValue*j.exRate)),2)
+                    cc2 = round(wkPrice*(i.clearingCharges2/(i.invoiceValue*i.exRate)),2)
                 except:
                     cc2 = 0
 

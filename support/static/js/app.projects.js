@@ -36,7 +36,7 @@ app.controller("businessManagement.projects", function($scope, $state, $users, $
     console.log(response.data);
     $scope.cmnrList = response.data
     for (var i = 0; i < $scope.cmnrList.length; i++) {
-      $scope.filteredData[$scope.cmnrList[i]] = {'totalPo':0,'totalOrdered':0,'totalConsumed':0}
+      $scope.filteredData[$scope.cmnrList[i]] = {'totalPo':0,'totalOrdered':0,'totalConsumed':0,'comm_nr':$scope.cmnrList[i]}
       $http({
         method: 'GET',
         url: '/api/support/productTable/?comm=' + $scope.cmnrList[i],
