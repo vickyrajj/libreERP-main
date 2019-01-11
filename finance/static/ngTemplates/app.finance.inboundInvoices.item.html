@@ -1,0 +1,41 @@
+<div class="col-md-4 card">
+  <div class="container-fluid" style="padding-top:25px;padding-bottom:25px;cursor:pointer"  ng-click = "rowActionClicked('details')">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-5">
+            <span style="font-size:14px"><strong> Name : </strong></span>
+          </div>
+          <div class="col-md-5">
+            <span style="font-size:14px">{{data.name}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+            <span style="font-size:14px"><strong> Person Name : </strong></span>
+          </div>
+          <div class="col-md-5">
+            <span style="font-size:14px">{{data.name}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+            <span style="font-size:14px"><strong> Status : </strong></span>
+          </div>
+          <div class="col-md-5">
+            <span style="font-size:14px">{{data.status}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="row">
+            <i class="fa fa-2x fa-pencil" style="position:absolute;right:20px;cursor:pointer;" ng-click = "rowActionClicked('edit');$event.stopPropagation();"></i>
+        </div>
+        <div class="row" ng-click=";$event.stopPropagation();">
+            <i class="fa fa-2x fa-trash"  mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="rowActionClicked('delete')" confirm-button-type="default" cancel-button-type="default"  style="position:absolute;right:20px;top:40px;cursor:pointer;"></i>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
