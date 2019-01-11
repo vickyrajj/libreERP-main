@@ -58,9 +58,10 @@ class SendSMSApi(APIView):
         if 'number' not in request.data or 'text' not in request.data:
             return Response(status = status.HTTP_400_BAD_REQUEST)
         else:
-            url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(request.data['number'] , request.data['text'])
+            # url = globalSettings.SMS_API_PREFIX + 'number=%s&message=%s'%(request.data['number'] , request.data['text'])
             # print url
-            requests.get(url)
+            # requests.get(url)
+            globalSettings.SEND_SMS(request.data['number'] , request.data['text'])
             return Response(status = status.HTTP_200_OK)
 
 def serviceRegistration(request): # the landing page for the vendors registration page
