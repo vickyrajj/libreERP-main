@@ -367,39 +367,201 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.selectedSortOption={
     value:'Created'
   }
-  $scope.tableUpdated=false
-  $scope.archTableUpdated=true
+  $scope.selectedSortOptionArch={
+    value:'Created'
+  }
   $scope.isTableView=true
+  $scope.viewby = 15;
+  $scope.viewbyArch = 15;
+  $scope.currentPage = {
+    page:1
+  }
+  $scope.currentPageArch = {
+    page:1
+  }
 
   $scope.setMyView=function(){
     $scope.isTableView=!$scope.isTableView
   }
-  $scope.filterByUid=function(){
+
+  $scope.filterByUid=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return a[0].uid > b[0].uid});
+      $scope.setTableValuesArch ()
+    }else{
       $scope.reviewData.sort(function(a, b){return a[0].uid - b[0].uid});
+      $scope.setTableValues ()
+    }
   }
-  $scope.filterByCompany=function(){
+
+  $scope.filterByCompany=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return a[0].company > b[0].company});
+      $scope.setTableValuesArch ()
+    }else{
       $scope.reviewData.sort(function(a, b){return a[0].company > b[0].company});
+      $scope.setTableValues ()
+    }
+
   }
-  $scope.filterByRating=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].rating > b[0].rating});
+
+  $scope.filterByRating=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return a[0].rating < b[0].rating});
+      $scope.setTableValuesArch ()
+    }else{
+      $scope.reviewData.sort(function(a, b){return a[0].rating < b[0].rating});
+      $scope.setTableValues ()
+    }
   }
-  $scope.filterByStatus=function(){
+
+  $scope.filterByStatus=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return a[0].statusChat > b[0].statusChat});
+      $scope.setTableValuesArch ()
+    }else{
       $scope.reviewData.sort(function(a, b){return a[0].statusChat > b[0].statusChat});
+      $scope.setTableValues ()
+    }
   }
-  $scope.filterByUser=function(){
+
+  $scope.filterByUser=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
+      $scope.setTableValuesArch ()
+    }else{
       $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
+      $scope.setTableValues ()
+    }
   }
-  $scope.filterByCreated=function(){
+
+  $scope.filterByCreated=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return $filter('date')(a[0].created, 'dd/MM/yyyy') > $filter('date')(b[0].created, 'dd/MM/yyyy')});
+      $scope.setTableValuesArch ()
+    }else{
       $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, 'dd/MM/yyyy') > $filter('date')(b[0].created, 'dd/MM/yyyy')});
+      $scope.setTableValues ()
+    }
   }
 
+  $scope.setTableValues =function(){
+    $scope.totalItems = $scope.reviewData.length;
+    $scope.itemsPerPage = $scope.viewby;
+    $scope.maxSize = 4;
+    $scope.setPage(1)
+  }
+  $scope.setTableValuesArch =function(){
+    $scope.totalItemsArch = $scope.archivedData.length;
+    $scope.itemsPerPageArch = $scope.viewbyArch;
+    $scope.maxSizeArch = 4;
+    $scope.setPageArch(1)
+  }
 
+  $scope.setPage = function (pageNo) {
+    $scope.currentPage.page = pageNo;
+    $scope.setPagingData($scope.currentPage.page)
+  };
+  $scope.setPageArch = function (pageNo) {
+    $scope.currentPageArch.page = pageNo;
+    $scope.setPagingDataArch($scope.currentPageArch.page)
+  };
+
+  $scope.setPagingData= function (page) {
+    console.log(page);
+    var pagedData = $scope.reviewData.slice(
+      (page - 1) * $scope.itemsPerPage,
+      page * $scope.itemsPerPage
+    );
+    $scope.tableDataAvail = pagedData;
+  }
+  $scope.setPagingDataArch= function (page) {
+    console.log(page);
+    var pagedData = $scope.archivedData.slice(
+      (page - 1) * $scope.itemsPerPageArch,
+      page * $scope.itemsPerPageArch
+    );
+    $scope.tableDataAvailArc = pagedData;
+  }
+
+  $scope.pageChanged = function() {
+    $scope.setPage($scope.currentPage.page)
+  };
+  $scope.pageChangedArch = function() {
+    $scope.setPageArch($scope.currentPageArch.page)
+  };
+
+   $scope.setItemsPerPageArch = function(num) {
+     $scope.itemsPerPageArch = num;
+     $scope.currentPageArch.page = 1;
+     $scope.setPageArch($scope.currentPageArch.page)
+   }
+   $scope.setItemsPerPage = function(num) {
+     $scope.itemsPerPage = num;
+     $scope.currentPage.page = 1;
+     $scope.setPage($scope.currentPage.page)
+   }
+
+   $scope.tabelRowAction=function(data){
+     $scope.lastActiveTR=$scope.reviewData.indexOf(data)
+     $scope.isDetailInfoUpdated=false
+     $scope.detailInfoData=data
+     setTimeout(function () {
+       $scope.isDetailInfoUpdated=true
+     }, 100);
+   }
+   $scope.tabelRowActionArch=function(data){
+     $scope.lastActiveTRArch=$scope.archivedData.indexOf(data)
+     $scope.isDetailInfoUpdatedArch=false
+     $scope.detailInfoDataArch=data
+     setTimeout(function () {
+       $scope.isDetailInfoUpdatedArch=true
+     }, 100);
+   }
+
+  $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
+    switch (newValue) {
+        case 'Created':
+          $scope.filterByCreated(false);
+          break;
+        case 'Agent Name':
+          $scope.filterByUser(false);
+          break;
+        case 'UID':
+           $scope.filterByUid(false);
+          break;
+        case 'Rating':
+          $scope.filterByRating(false);
+          break;
+        case 'Company':
+          $scope.filterByCompany(false);
+          break;
+      }
+  },true)
+  $scope.$watch('selectedSortOptionArch.value',function(newValue,oldValue){
+    switch (newValue) {
+        case 'Created':
+          $scope.filterByCreated(true);
+          break;
+        case 'Agent Name':
+          $scope.filterByUser(true);
+          break;
+        case 'UID':
+           $scope.filterByUid(true);
+          break;
+        case 'Rating':
+          $scope.filterByRating(true);
+          break;
+        case 'Company':
+          $scope.filterByCompany(true);
+          break;
+      }
+  },true)
 
 
   $scope.getArchData = function(date,user,email,client,download,typOfCall){
     $scope.archivedData=[];
     $scope.loadingDataForArc=true;
-    $scope.archTableUpdated=false
     var url = '/api/support/reviewHomeCal/?status=archived'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
@@ -430,11 +592,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
         url: url,
       }).
       then(function(response) {
-        console.log(response.data,'dddddddddddd',typeof response.data);
-        $scope.archivedData =response.data
-
+        $scope.archivedData = response.data
+        $scope.detailInfoDataArch=$scope.archivedData[0]
+        $scope.lastActiveTRArch=0;
+        $scope.setTableValuesArch ()
         $scope.loadingDataForArc=false;
-        $scope.archTableUpdated=true;
+        $scope.isDetailInfoUpdatedArch=true
         if(response.data.length<1){
           $scope.archievedMyDialouge=true;
         }else{
@@ -444,42 +607,9 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }
   }
 
-  var counttt=0;
-
-
-
-  $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
-    counttt++;
-    if(counttt>1){
-      $scope.tableUpdated=false
-      setTimeout(function () {
-        $scope.tableUpdated=true
-      }, 100);
-    }
-    switch (newValue) {
-        case 'Created':
-          $scope.filterByCreated();
-          break;
-        case 'Agent Name':
-          $scope.filterByUser();
-          break;
-        case 'UID':
-           $scope.filterByUid();
-          break;
-        case 'Rating':
-          $scope.filterByRating();
-          break;
-        case 'Company':
-          $scope.filterByCompany();
-          break;
-      }
-  },true)
-
   $scope.getData = function(date,user,email,client,download,typOfCall){
-
-   $scope.reviewData=[]
-   $scope.tableUpdated=false
-   $scope.loadingData=true;
+    $scope.reviewData=[]
+    $scope.loadingData=true;
     var url = '/api/support/reviewHomeCal/?limit'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
@@ -511,15 +641,16 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
         url: url,
       }).
       then(function(response) {
-        console.log(response.data,'dddddddddddd',typeof response.data);
-        $scope.reviewData=response.data
-        // $scope.filterByCreated()
+        $scope.reviewData = response.data
+        $scope.detailInfoData=$scope.reviewData[0]
+        $scope.lastActiveTR=0;
+        $scope.setTableValues ()
         $scope.loadingData=false;
-        $scope.tableUpdated=true
+        $scope.isDetailInfoUpdated=true
         if(response.data.length<1){
-          $scope.myDialouge=true;
+          $scope.noDataDialouge=true;
         }else{
-          $scope.myDialouge=false;
+          $scope.noDataDialouge=false;
         }
       });
     }
@@ -550,7 +681,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.filterData = function(download){
 
     var typOfCall=''
-
     if (typeof $scope.form.date =='undefined') {
       Flash.create('warning','Please Select Proper Date')
       return
@@ -595,9 +725,9 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     $scope.getArchData(date,user,$scope.form.email,client,download,typOfCall)
   }
 
-  $scope.download = function(){
-    $scope.filterData(true)
-  }
+    $scope.download = function(){
+      $scope.filterData(true)
+    }
 
   $scope.tableAction = function(target,table) {
 

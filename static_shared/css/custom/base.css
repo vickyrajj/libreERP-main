@@ -212,7 +212,6 @@ input:checked + .bal_slider:before {
 }
 
 
-
 .boardHeader{
   padding:20px;
   color:#666666;
@@ -354,19 +353,6 @@ input:checked + .bal_slider:before {
     box-sizing: border-box;
 }
 
-.myyyy{
-  animation: dropDownBalram 2s;
-}
-
-
-@keyframes dropDownBalram {
-  0%{
-    opacity: 6;
-  }
-  100%{
-    opacity: 1;
-  }
-}
 
 .timeline li > .timeline-item > .time {
     color: #999;
@@ -1067,7 +1053,7 @@ body {
 .My_container{
     display: flex;
     overflow: hidden;
-    height: 93vh;
+    height: 90vh;
     position: relative;
     /* width: 100%; */
 
@@ -1159,13 +1145,12 @@ cursor: pointer
 
 /* ********************************************************************************************************************************  */
 
-.btn{
+/* .btn{
   display: block;
   -webkit-appearance: none;
   border: 0px solid rgba(255, 255, 255, 0.45);
   border-radius: 7px;
   border-top-left-radius: 25px;
-  /* padding: 1em 2em; */
   background-repeat: no-repeat;
   background-size: 100%;
   background-clip: padding-box;
@@ -1187,7 +1172,7 @@ cursor: pointer
   moz-transition: all .4s ease-in-out;
   -webkit-transition: all .9s ease-in-out;
   color:#FFF
-}
+} */
 
 
 .form-control{
@@ -1198,7 +1183,7 @@ cursor: pointer
 }
 
 
-.myyy .btn{
+/* .removeGradientBtn .btn{
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -1223,7 +1208,7 @@ cursor: pointer
   border-left-color: transparent;
   border-radius: 4px;
   color:black
-}
+} */
 
 @keyframes my_fade {
   0%{

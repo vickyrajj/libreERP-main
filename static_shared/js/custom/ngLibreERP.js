@@ -31,16 +31,16 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
       highlight: '#04414f'
     };
 
-    $scope.showw=false;
+  $scope.showCustomerIcons=false;
   $scope.dashboardAccess = false;
   $scope.brandLogo = BRAND_LOGO;
-   $scope.brandName = BRAND_NAME;
-  // $scope.brandName = 'Syrow';
+  $scope.brandName = BRAND_NAME;
+
   $timeout(function() {
     $scope.isCustomer = $permissions.myPerms('app.customer.access')
-    console.log($scope.isCustomer);
-    $scope.showw=true;
-    console.log($scope.me);
+    console.log('is customer: ' , $scope.isCustomer);
+    $scope.showCustomerIcons=true;
+    console.log('user details :',$scope.me);
     // $scope.brandName = 'Customer';
       // if($scope.isCustomer){
       //   $http({
@@ -61,12 +61,12 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
 
 
-  function setCookie(cname,cvalue,exdays) {
-      var d = new Date();
-      d.setTime(d.getTime() + (exdays*24*60*60*1000));
-      var expires = "expires=" + d.toGMTString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  }
+  // function setCookie(cname,cvalue,exdays) {
+  //     var d = new Date();
+  //     d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  //     var expires = "expires=" + d.toGMTString();
+  //     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  // }
 
   // var myPk = myProfile().pk
   //
@@ -96,21 +96,21 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
 
 
-  function getCookie(cname) {
-      var name = cname + "=";
-      var decodedCookie = decodeURIComponent(document.cookie);
-      var ca = decodedCookie.split(';');
-      for(var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-              c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-              return c.substring(name.length, c.length);
-          }
-      }
-      return "";
-  }
+  // function getCookie(cname) {
+  //     var name = cname + "=";
+  //     var decodedCookie = decodeURIComponent(document.cookie);
+  //     var ca = decodedCookie.split(';');
+  //     for(var i = 0; i < ca.length; i++) {
+  //         var c = ca[i];
+  //         while (c.charAt(0) == ' ') {
+  //             c = c.substring(1);
+  //         }
+  //         if (c.indexOf(name) == 0) {
+  //             return c.substring(name.length, c.length);
+  //         }
+  //     }
+  //     return "";
+  // }
 
 function checkingHeartbeat(){
   $http({
@@ -128,65 +128,60 @@ setInterval(function () {
   checkingHeartbeat()
 }, 20000);
 
-setTimeout(function () {
-  $http({
-    method: 'GET',
-    url: '/api/support/svgColor/?fileName=example.svg'
-  }).
-  then(function(response) {
-    console.log(response);
-  }, function(response) {});
-}, 5000);
+// setTimeout(function () {
+//   $http({
+//     method: 'GET',
+//     url: '/api/support/svgColor/?fileName=example.svg'
+//   }).
+//   then(function(response) {
+//     console.log(response);
+//   }, function(response) {});
+// }, 5000);
 
-$scope.mobileView=false;
+// $scope.mobileView=false;
 
-setInterval(function(){
-
-  if($(window).width() < 800) {
-    document.getElementById('mainUI').addEventListener('click', function() {
-        if($(window).width() < 800) {
-        $scope.sideMenuVisibility=false
-      }
-
-    })
-
-      $scope.mobileView=true;
-      if(!$scope.sideMenuVisibility)
-        {
-          document.getElementById('navbarTop').style.margin='0%';
-          document.getElementById('mainUIParent').style.width='100%';
-          document.getElementById('sideMenu').style.display='none'
-        }
-  }else{
-      $scope.mobileView=false;
-  }
-},10)
-
+// setInterval(function(){
+//
+//   if($(window).width() < 800) {
+//     document.getElementById('mainUI').addEventListener('click', function() {
+//         if($(window).width() < 800) {
+//         $scope.sideMenuVisibility=false
+//       }
+//     })
+//     $scope.mobileView=true;
+//     if(!$scope.sideMenuVisibility){
+//         document.getElementById('navbarTop').style.margin='0%';
+//         document.getElementById('mainUIParent').style.width='100%';
+//         document.getElementById('sideMenu').style.display='none'
+//     }
+//   }else{
+//       $scope.mobileView=false;
+//   }
+// },10)
 
 
 $scope.onHover=false;
-console.log($scope.onHover);
-  $scope.sideMenuVisibility = true;
+$scope.sideMenuVisibility = false;
   // retrive it back
-  var sideMenuVisibility=getCookie("sideMenuVisibility");
-  console.log(getCookie("sideMenuVisibility"))
-  if (sideMenuVisibility == "false") {
-      $scope.sideMenuVisibility=false;
-     } else {
-     $scope.sideMenuVisibility=true;
-  }
+  // var sideMenuVisibility=getCookie("sideMenuVisibility");
+  // console.log(getCookie("sideMenuVisibility"))
+  // if (sideMenuVisibility == "false") {
+  //     $scope.sideMenuVisibility=false;
+  //    } else {
+  //    $scope.sideMenuVisibility=true;
+  // }
 
   $scope.toggleSideMenu = function() {
     $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
-    console.log($scope.sideMenuVisibility);
+
     if ($scope.sideMenuVisibility === false) {
         sideMenuVisibility='false';
        } else {
        sideMenuVisibility='true';
     }
     // save it in cookies
-    setCookie('sideMenuVisibility',sideMenuVisibility,30);
-    console.log(getCookie('sideMenuVisibility'))
+    // setCookie('sideMenuVisibility',sideMenuVisibility,30);
+    // console.log(getCookie('sideMenuVisibility'))
   }
 
   $permissions.module().

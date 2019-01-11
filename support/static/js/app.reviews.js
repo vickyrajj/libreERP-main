@@ -13,50 +13,46 @@ app.config(function($stateProvider) {
 
 
 app.controller("businessManagement.customerReviews", function($scope, $state, $http, $rootScope,$filter,$uibModal,DTOptionsBuilder, DTColumnDefBuilder) {
+
   $rootScope.state = 'Reviews';
   $scope.reviewData = []
   $scope.form = {date:new Date(),email:''}
   $scope.loadingData=true;
-  $scope.valueee=false
+  $scope.isDetailInfoUpdated=false
   $scope.currentPage = {
     page:1
   }
 
 
-$scope.viewby = 14;
 
-  $scope.myValues=function(){
-    $scope.totalItems = $scope.reviewData.length;
-    $scope.itemsPerPage = $scope.viewby;
-    $scope.maxSize = 4;
-    $scope.setPage(1)
-  }
-
+    $scope.viewby = 15;
+    $scope.setTableValues =function(){
+      $scope.totalItems = $scope.reviewData.length;
+      $scope.itemsPerPage = $scope.viewby;
+      $scope.maxSize = 4;
+      $scope.setPage(1)
+    }
    $scope.setPage = function (pageNo) {
      $scope.currentPage.page = pageNo;
      $scope.setPagingData($scope.currentPage.page)
    };
-
    $scope.setPagingData= function (page) {
-     console.log(page);
-    var pagedData = $scope.reviewData.slice(
-      (page - 1) * $scope.itemsPerPage,
-      page * $scope.itemsPerPage
-    );
-    $scope.tableDataAvail = pagedData;
-    console.log($scope.tableDataAvail);
-  }
+      console.log(page);
+      var pagedData = $scope.reviewData.slice(
+        (page - 1) * $scope.itemsPerPage,
+        page * $scope.itemsPerPage
+      );
+      $scope.tableDataAvail = pagedData;
+   }
+   $scope.pageChanged = function() {
+     $scope.setPage($scope.currentPage.page)
+   };
 
-
- $scope.pageChanged = function() {
-   $scope.setPage($scope.currentPage.page)
- };
-
- $scope.setItemsPerPage = function(num) {
-   $scope.itemsPerPage = num;
-   $scope.currentPage.page = 1;
-   $scope.setPage($scope.currentPage.page)
- }
+   $scope.setItemsPerPage = function(num) {
+     $scope.itemsPerPage = num;
+     $scope.currentPage.page = 1;
+     $scope.setPage($scope.currentPage.page)
+   }
 
 var today_date = new Date();
 var today_day = today_date.getDate();
@@ -76,16 +72,15 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
   }).
   then(function(response) {
     $scope.reviewData = response.data
-    $scope.myData=$scope.reviewData[0]
-    $scope.last=0;
-    $scope.myValues()
+    $scope.detailInfoData=$scope.reviewData[0]
+    $scope.lastActiveTR=0;
+    $scope.setTableValues ()
     $scope.loadingData=false;
-    $scope.valueee=true
-    $scope.tableUpdated=true;
+    $scope.isDetailInfoUpdated=true
     if(response.data.length<1){
-      $scope.myDialouge=true;
+      $scope.noDataDialouge=true;
     }else{
-      $scope.myDialouge=false;
+      $scope.noDataDialouge=false;
     }
     // $scope.filterByCreated();
   });
@@ -108,19 +103,11 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
 var countt=0
   $scope.doing=function(data){
 
-    $scope.last=$scope.reviewData.indexOf(data)
-
-    // if(countt>0){
-    //   console.log(index , $scope.last);
-    //   document.getElementById('id'+$scope.last).style.backgroundColor='#fff'
-    // }
-    // countt++;
-    // document.getElementById('id'+index).style.backgroundColor='#f0f0f0'
-    $scope.valueee=false
-    $scope.myData=data
-    // $scope.last=index
+    $scope.lastActiveTR=$scope.reviewData.indexOf(data)
+    $scope.isDetailInfoUpdated=false
+    $scope.detailInfoData=data
     setTimeout(function () {
-      $scope.valueee=true
+      $scope.isDetailInfoUpdated=true
     }, 100);
   }
 
@@ -150,9 +137,9 @@ var countt=0
   $scope.isTableView=true
 
   $scope.setDataAfterFilter=function(){
-    $scope.myData=$scope.reviewData[0]
-    $scope.last=0;
-    $scope.myValues()
+    $scope.detailInfoData=$scope.reviewData[0]
+    $scope.lastActiveTR=0;
+    $scope.setTableValues ()
   }
 
   $scope.setMyView=function(){
@@ -189,9 +176,8 @@ var countt=0
   $scope.selectedSortOption={
     value:'Created'
   }
-  $scope.tableUpdated=false
+
   $scope.loadingData=true;
-  var counttt=0;
 
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
     if(newValue==undefined)
@@ -253,9 +239,9 @@ var countt=0
   //       $scope.loadingData=false;
   //       $scope.tableUpdated=true;
   //       if(response.data.length<1){
-  //         $scope.myDialouge=true;
+  //         $scope.noDataDialouge=true;
   //       }else{
-  //         $scope.myDialouge=false;
+  //         $scope.noDataDialouge=false;
   //       }
   //     });
   //   }
@@ -268,9 +254,7 @@ var countt=0
 
 
   $scope.getData = function(date,email,download,typOfCall){
-    // alert('herer')
    $scope.reviewData=[]
-   $scope.tableUpdated=false
    $scope.loadingData=true;
     var url = '/api/support/reviewHomeCal/?customer'
     // '/api/support/reviewHomeCal/?customer&chatedDate='+new Date()
@@ -299,17 +283,15 @@ var countt=0
       }).
       then(function(response) {
         $scope.reviewData = response.data
-
-        $scope.myData=$scope.reviewData[0]
-        $scope.last=0;
-        $scope.myValues()
+        $scope.detailInfoData=$scope.reviewData[0]
+        $scope.lastActiveTR=0;
+        $scope.setTableValues ()
         $scope.loadingData=false;
-        $scope.valueee=true
-        $scope.tableUpdated=true;
+        $scope.isDetailInfoUpdated=true
         if(response.data.length<1){
-          $scope.myDialouge=true;
+          $scope.noDataDialouge=true;
         }else{
-          $scope.myDialouge=false;
+          $scope.noDataDialouge=false;
         }
       });
     }

@@ -3,12 +3,9 @@
   <img ng-src="/static/images/spinner.gif" alt="">
 </div>
 
-<div class="bg-white My_container" style="" ng-if="tableUpdated&&isTableView">
-
+<div class="bg-white My_container" style="" ng-if="!loadingData&&isTableView">
   <!-- <breadcrumb></breadcrumb> -->
-
           <div class="Left_container">
-
             <table id="myQATable" style="width:100%;">
               <thead>
                 <tr class="">
@@ -49,42 +46,38 @@
                      </div>
 
                    </span>
-                  <!-- <div style="float:right;padding:1rem;opacity:0.6;">
-                    <i ng-if="data[0].typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
-                    <i ng-if="data[0].typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
-                  </div> -->
                 </td>
               </tr>
             </tbody>
 
           </table>
 
-          <div style="position:fixed;bottom:0px;padding: 2.5rem;background:#fff" >
+          <div ng-if="tableDataAvail.length" style="position:fixed;bottom:0px;padding: 2.5rem;background:#fff" >
 
             <span>
               <select ng-model="viewby" ng-change="setItemsPerPage(viewby)">
-              <option>15</option>
-              <option>30</option>
-              <option>45</option>
-              <option>60</option>
-            </select></span>
-            <span><pagination
-              style="margin:-10px 0px"
-               total-items="totalItems"
-               ng-model="currentPage.page"
-               ng-change="pageChanged()"
-               class="pagination-sm"
-               items-per-page="itemsPerPage"
-               previous-text="&lsaquo;"
-               next-text="&rsaquo;"
-               first-text="&laquo;"
-               last-text="&raquo;"
-               max-size="maxSize"
-               force-ellipses="true"
-               boundary-links="true">
-          </pagination></span>
-
-
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+                <option>60</option>
+              </select>
+            </span>
+            <span>
+              <pagination
+                 style="margin:-10px 0px"
+                 total-items="totalItems"
+                 ng-model="currentPage.page"
+                 ng-change="pageChanged()"
+                 class="pagination-sm"
+                 items-per-page="itemsPerPage"
+                 previous-text="&lsaquo;"
+                 next-text="&rsaquo;"
+                 first-text="&laquo;"
+                 last-text="&raquo;"
+                 max-size="maxSize"
+                 force-ellipses="true"
+                 boundary-links="true"></pagination>
+            </span>
           </div>
         </div>
 
@@ -95,9 +88,7 @@
               </div>
           </div> -->
 
-        <review-info ng-if="valueee&&myData"  data ="myData"></review-info>
-
-
+        <review-info ng-if="isDetailInfoUpdated&&detailInfoData"  data ="detailInfoData"></review-info>
 
         <div class="Right_container">
           <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;height:100vh;padding:2rem;right:0;width:35rem">
@@ -113,7 +104,7 @@
             </div>
               <div class="form-group login-input-group">
                 <label><b> Select Date </b></label>
-                <div class="input-group login-input-group myyy">
+                <div class="input-group login-input-group removeGradientBtn">
                   <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.date" is-open="status.opened" />
                   <span class="input-group-btn">
                     <button style="border:none" type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="fa fa-calendar"></i></button>
@@ -143,19 +134,12 @@
             </div>
           </div>
         </div>
-
-</div>
-
-
-
-
-
+  </div>
 
 
   <div class="row container-fluid" style="margin-top:15px" ng-if="!isTableView">
 
     <div class="col-sm-12">
-
       <div class="" >
           <uib-tabset>
             <uib-tab active="true">
@@ -209,7 +193,6 @@
                       </div>
                     </div>
                     </div>
-
                   <div class="col-sm-3" >
                      <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;width:20%;height:100vh;top:5vh;right:0px;padding:20px 25px;box-shadow:-1px -1px 1px #f6f6f6">
                        <div style="display:block;margin:10px 0px;">
@@ -224,7 +207,7 @@
                        </div>
                          <div class="form-group">
                            <label><b> Select Date </b></label>
-                           <div class="input-group">
+                           <div class="input-group removeGradientBtn">
                              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.date" is-open="status.opened" />
                              <span class="input-group-btn">
                                <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="fa fa-calendar"></i></button>
@@ -266,70 +249,5 @@
             </uib-tab>
           </uib-tabset>
       </div>
-
-
-
-
-
-      <!-- <div class="" ng-if="isTableView&&tableUpdated">
-        <div class="row">
-            <div class="col-md-4">
-              <table style="width:100%;font-size:16px" id="myQATable" datatable="" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="row-border hover">
-                <thead>
-                  <tr id="">
-                    <th style="text-align:center;display:none">Chat Start</th>
-                  </tr>
-                </thead>
-               <tbody>
-               <tr id="id{{$index}}" ng-repeat="data in reviewData" style="" ng-click="doing(data)">
-                 <td>
-                     <div class="" style="border-radius:50%;width:50px;height:50px;margin:5px 10px;float:left">
-                       <img ng-if="data[0].user_id" style="width:50px" src="{{data[0].user_id | getDP}}" alt="">
-
-                     </div>
-                     <span style="display:inline-block">
-                       <div class="">
-                         <span style="font-size: 15px;font-weight: 700;">{{data[0].user_id | getName}}</span>
-                         <span style="font-size: 13px;font-weight: 400;">{{data[0].company? data[0].company:'-'}}</span>
-                       </div>
-                       <div class="">
-                         <span style="font-size: 14px;">{{data[0].uid}}</span>
-                       </div>
-                       <div class="">
-                         <span style="font-size: 13px;opacity: 0.8;">Created : {{data[0].created|  date : 'dd-MMM-yyyy'}}</span>
-                         <span ng-if="data[0].statusChat=='started'" style="font-size: 14px;opacity: 0.8;color:green;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
-                         <span ng-if="data[0].statusChat=='closed'" style="font-size: 14px;opacity: 0.8;color:#A40B0B;background:#e0e0e0;padding:0px 5px"  ><b>{{data[0].statusChat|humanize}}</b></span>
-                         <span ng-if="data[0].statusChat=='reviewed'" style="font-size: 14px;opacity: 0.8;color:brown;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
-                       </div>
-
-                     </span>
-                     <div class="" style="margin:5px 10px;float:right;font-size:20px;padding:12px;opacity:0.6;">
-
-                      <i ng-if="data[0].typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
-                      <i ng-if="data[0].typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            </div>
-
-
-            <div class="col-md-8" ng-if="valueee">
-              <review-info  data ="myData"></review-info>
-            </div>
-        </div>
-      </div> -->
     </div>
-
-
-    <!-- <div class="col-md-8" ng-if="!loadingData">
-      <div>
-        <review-info data ="myData"></review-info>
-      </div>
-    </div> -->
-
-
-
-
   </div>

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top animated slideInDown" id="navbarTop" style="{{sideMenuVisibility ? 'margin-left:13%': 'margin-left:4%;'}};{{mobileView ? 'margin-left:31%':''}}" >
+<nav class="navbar navbar-default navbar-fixed-top animated slideInDown" id="navbarTop" style="margin-left: 7rem;" >
   <div class="container-fluid" style="height:100%;">
     <div class="navbar-header"  style="height: 100%;">
       <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navBar" aria-expanded="false" aria-controls="navbar">
@@ -47,7 +47,7 @@
   		</ul>
       <ul class = "nav navbar-nav navbar-right" style="height:5vh;">
         <li class="dropdown" style="height:100%;">
-          <a ng-if="!isCustomer&&showw" class="dropdown-toggle" data-toggle="dropdown" style="width:55px;height:50px;text-align: center;" role="button" aria-haspopup="true" aria-expanded="false">
+          <a ng-if="!isCustomer&&showCustomerIcons" class="dropdown-toggle" data-toggle="dropdown" style="width:55px;height:50px;text-align: center;" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-envelope-o fa-lg"></i>
             <span ng-if="instantMessagesCount > 0" class="label label-success" style="position: absolute;top: 5px;">{{instantMessagesCount}}</span>
           </a>
@@ -81,7 +81,7 @@
           </ul>
         </li>
       </ul> <!-- /. notification icons group -->
-      <div ng-if="!isCustomer&&showw" style="position:relative;padding-top:0.5vh;">
+      <div ng-if="!isCustomer&&showCustomerIcons" style="position:relative;padding-top:0.5vh;">
         <form  class="navbar-form navbar-right" role="search" style="position:absolute;right:270px;">
           <i style="margin-top:.5rem" ng-click="terminal.show = !terminal.show;" class="fa fa-search fa-lg noselect"></i>
           <input ng-if="terminal.show" focus-me="terminal.show" type="text" class="form-control animated fadeIn" placeholder="Enter command" ng-enter="parseCommand()" ng-blur="closeTerminal()" ng-model = "terminal.command" style="width:500px;" uib-typeahead="user as getName(user) for user in userSearch($viewValue)">
