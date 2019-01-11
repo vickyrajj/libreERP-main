@@ -369,12 +369,23 @@ $scope.count=0;
         url: '/api/support/chatThread/?uid=' + uid
       }).
       then(function(response) {
+
+        var chatThreadCreated = new Date(response.data[0].created).getTime()
+        console.log(chatThreadCreated);
+
+        var now = new Date().getTime();
+        var toPatch = {
+          user: $scope.me.pk
+        }
+        if (now - chatThreadCreated > 180000 ) {
+          toPatch.status = 'late'
+        }
+
+
         $http({
           method: 'PATCH',
           url: '/api/support/chatThread/' + response.data[0].pk + '/',
-          data: {
-            user: $scope.me.pk
-          }
+          data:toPatch
         }).
         then(function(response) {
           console.log(response.data);

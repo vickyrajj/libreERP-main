@@ -545,7 +545,7 @@ def getChatterScript(request , fileName):
         return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
     else:
         # pass
-        return HttpResponse(request,'')
+        # return HttpResponse(request,'')
         return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
 
 
