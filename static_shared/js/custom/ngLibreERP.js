@@ -88,29 +88,8 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
   $scope.onHover=false;
   console.log($scope.onHover);
-    $scope.sideMenuVisibility = true;
+  $scope.sideMenuVisibility = false;
     // retrive it back
-    var sideMenuVisibility=getCookie("sideMenuVisibility");
-    console.log(getCookie("sideMenuVisibility"))
-    if (sideMenuVisibility == "false") {
-        $scope.sideMenuVisibility=false;
-       } else {
-       $scope.sideMenuVisibility=true;
-    }
-
-    $scope.toggleSideMenu = function() {
-      $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
-      console.log($scope.sideMenuVisibility);
-      if ($scope.sideMenuVisibility === false) {
-          sideMenuVisibility='false';
-         } else {
-         sideMenuVisibility='true';
-      }
-      // save it in cookies
-      setCookie('sideMenuVisibility',sideMenuVisibility,30);
-      console.log(getCookie('sideMenuVisibility'))
-    }
-
   $permissions.module().
   success(function(response) {
     // console.log(response);

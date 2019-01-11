@@ -32,7 +32,7 @@ $scope.config = {
     "value": $scope.me.pk
   }],
   searchField: 'jobtype',
-  itemsNumPerView: [16, 32, 48],
+  itemsNumPerView: [12, 24, 48],
 }
 
 $scope.tableAction = function(target, action, mode) {

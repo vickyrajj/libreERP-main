@@ -53,7 +53,7 @@ app.controller("businessManagement.assets.form.info", function($scope, $rootScop
     }],
     searchField: 'name',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
   $scope.tabs = [];
@@ -392,7 +392,7 @@ app.controller("businessManagement.assets", function($scope, $rootScope, $state,
     url: '/api/assets/assets/',
     searchField: 'name',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 
@@ -491,7 +491,7 @@ app.controller("businessManagement.assets.explore.auditlogs", function($scope, $
       "value": $scope.auditlogsCheckin.pk
     }],
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
   // $scope.tableAction = function(target, action, mode) {

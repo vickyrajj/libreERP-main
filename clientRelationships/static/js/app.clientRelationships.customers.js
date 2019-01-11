@@ -18,7 +18,7 @@ app.controller("businessManagement.clientRelationships.customers", function($sco
     filterSearch: true,
     searchField: 'name or web',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
     getParams: [{
       key: 'vendor',
       value: false

@@ -2,9 +2,9 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
 from ERP.models import service
-from projects.models import project
 from time import time
 # Create your models here.
+# from projects.models import project
 
 def getInvoicesPath(instance , filename ):
     return 'finance/invoices/%s_%s_%s' % (str(time()).replace('.', '_'),instance.user.username, filename)
@@ -19,6 +19,7 @@ def getInvoiceUploadPath(instance,filename):
     return "finance/vendor/%s_%s__%s"% (str(time()).replace('.','_'),instance.approver, filename)
 
 class Account(models.Model):
+    title = models.CharField(max_length = 20 , null = True , blank = True)
     created = models.DateTimeField(auto_now_add=True)
     number = models.PositiveIntegerField()
     ifsc = models.CharField(max_length = 15 , null = False)
@@ -37,7 +38,6 @@ class CostCenter(models.Model):
     code = models.CharField(max_length = 50 , blank = False)
     created = models.DateTimeField(auto_now_add=True)
     account = models.ForeignKey(Account)
-    projects = models.ManyToManyField(project , related_name = 'costCenters')
 
     def __unicode__(self):
         return '<name : %s > , <head : %s > , <code : %s>' %(self.name , self.head.username , self.code)
@@ -52,6 +52,8 @@ CURRENCY_CHOICES = (
     ('INR' , 'INR'),
     ('USD' , 'USD'),
 )
+
+
 
 
 class Inflow(models.Model):
@@ -100,24 +102,30 @@ class ExpenseSheet(models.Model):
     approvalStage = models.PositiveSmallIntegerField(default=0)
     dispensed = models.BooleanField(default = False)
     notes =  models.CharField(max_length = 30 , null = True)
-    project = models.ForeignKey(project , null = False)
+    # project = models.ForeignKey(project , null = False)
     transaction = models.ForeignKey(Transaction , null = True , related_name = 'expenseSheet')
     submitted = models.BooleanField(default = False)
-    def __unicode__(self):
-        return '<notes : %s > , <approved : %s > , <project : %s > , < user : %s >' %(self.notes , self.approved , self.project , self.user.username)
+    totalDisbursed = models.FloatField(default=0)
+    # def __unicode__(self):
+    #     return '<notes : %s > , <approved : %s > , <project : %s > , < user : %s >' %(self.notes , self.approved , self.project , self.user.username)
+
+class ExpenseHeading(models.Model):
+    title = models.CharField(max_length = 40 , null = False)
 
 class Invoice(models.Model):
     user = models.ForeignKey(User , related_name='invoiceGeneratedOrSubmitted' , null = False)
     created = models.DateTimeField(auto_now_add=True)
     service = models.ForeignKey(service , null = False)
-    code =  models.CharField(max_length = 30 , null = False)
+    code =  models.ForeignKey(ExpenseHeading , null = True , related_name='employeeInvoice')
     amount = models.PositiveIntegerField(null=False , default=0)
     currency = models.CharField(max_length = 5 , choices = CURRENCY_CHOICES)
     dated = models.DateField(null = False)
     attachment = models.FileField(upload_to = getInvoicesPath ,  null = True)
-    sheet = models.ForeignKey(ExpenseSheet , related_name='invoices' , null = False)
+    sheet = models.ForeignKey(ExpenseSheet , related_name='invoices' , null = True)
+    transaction = models.ForeignKey(Transaction , null = True , related_name = 'directInvoicePayments')
     description = models.TextField(max_length = 200 , null = False) # describe or justify the expense
     approved = models.BooleanField(default = False) # it is possible to have a sheet with some of the invoices rejected and if the sheet is approved the amount to be paid will be the sum of claims in the approved invoices only
+    dispensed = models.BooleanField(default = False)
     def __unicode__(self):
         return '<service : %s > , <amount : %s > , <sheet : %s > , < user : %s >' %(self.service , self.amount , self.sheet , self.user.username)
 

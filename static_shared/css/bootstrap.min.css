@@ -4353,6 +4353,7 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
   cursor: default;
   background-color: #fff;
   border: 1px solid #ddd;
+  border-top:solid 3px red;
   border-bottom-color: transparent
 }
 

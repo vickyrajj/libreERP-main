@@ -1,4 +1,4 @@
-app.controller('businessManagement.finance.expenses', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
+app.controller('home.finance.expenseClaims', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions) {
   // settings main page controller
 
   $scope.loadTags = function(query) {
@@ -112,12 +112,12 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
 
 })
 
-app.controller('businessManagement.finance.expenses.item', function($scope, $http) {
+app.controller('businessManagement.finance.expenseClaims.item', function($scope, $http) {
 
 });
 
 
-app.controller('businessManagement.finance.expenseSheet.invoiceView', function($scope, $http, input) {
+app.controller('businessManagement.finance.expenseClaimsheet.invoiceView', function($scope, $http, input) {
   console.log(input);
   $scope.invoice = input;
   $scope.$watch('invoice.approved', function(newValue, oldValue) {
@@ -134,7 +134,7 @@ app.controller('businessManagement.finance.expenseSheet.invoiceView', function($
 });
 
 
-app.controller('businessManagement.finance.expenses.explore', function($scope, $http, $aside, Flash) {
+app.controller('businessManagement.finance.expenseClaims.explore', function($scope, $http, $aside, Flash) {
 
   $scope.expense = $scope.data.tableData[$scope.tab.data.index]
 
@@ -158,7 +158,7 @@ app.controller('businessManagement.finance.expenses.explore', function($scope, $
           return $scope.invoices[ind];
         }
       },
-      controller: 'businessManagement.finance.expenseSheet.invoiceView',
+      controller: 'businessManagement.finance.expenseClaimsheet.invoiceView',
     })
   }
   $scope.form = {
@@ -184,7 +184,7 @@ app.controller('businessManagement.finance.expenses.explore', function($scope, $
 
 })
 
-app.controller('businessManagement.finance.expenses.form', function($scope, $http, Flash) {
+app.controller('businessManagement.finance.expenseClaims.form', function($scope, $http, Flash) {
   $scope.refreshOption = true;
   $scope.projectSearch = function(query) {
     return $http.get('/api/projects/project/?title__contains=' + query).

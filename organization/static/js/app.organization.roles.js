@@ -30,7 +30,7 @@ app.controller("workforceManagement.organization.roles", function($scope, $state
     views: views,
     url: '/api/organization/role/',
     searchField: 'name',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 

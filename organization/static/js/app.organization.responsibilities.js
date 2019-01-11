@@ -32,7 +32,7 @@ app.controller("workforceManagement.organization.responsibilities", function($sc
     views: views,
     url: '/api/organization/responsibility/',
     searchField: 'title',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 

@@ -8,13 +8,13 @@
         <span class="icon-bar"></span>
       </button>
 
-      <a ng-click="toggleSideMenu()" class="navbar-brand" >
+      <!-- <a ng-click="toggleSideMenu()" class="navbar-brand" >
         <i style="margin-top:-10px;" class="fa fa-bars fa-2x"></i>
-      </a>
+      </a> -->
 
-      <a class="navbar-brand" href="/" style="margin-left:30px;padding:7px">
+      <a class="navbar-brand" href="/" style="margin-left:0px;padding:7px">
         <!-- <img ng-src="{{brandLogo}}" height="40" style="margin-top:-10px;max-width:100px;" /> -->
-        <span><h1 style="margin:0px;">CIOC</h1></span>
+        <span><h1 style="margin:0px;color:rgb(12, 122, 150);">CIOC</h1></span>
       </a>
       <div class="navbar-brand" style="margin-right:30px;"><i class="fa fa-angle-right"></i> ERP  </div>
     </div>
@@ -80,7 +80,7 @@
         </li>
       </ul> <!-- /. notification icons group -->
       <div style="position:relative;padding-top:0.5vh;">
-        <form  class="navbar-form navbar-right" role="search" style="position:absolute;right:270px;color:white">
+        <form  class="navbar-form navbar-right" role="search" style="position:absolute;right:270px;">
           <i style="margin:10px;" ng-click="terminal.show = !terminal.show;" class="fa fa-terminal noselect"></i>
           <input ng-if="terminal.show" focus-me="terminal.show" type="text" class="form-control animated fadeIn" placeholder="Enter command" ng-enter="parseCommand()" ng-blur="closeTerminal()" ng-model = "terminal.command" style="width:500px;" uib-typeahead="user as getName(user) for user in userSearch($viewValue)">
           <div style="position:absolute;top:45px;background:white;width:87%;left:10%;padding:0px;" ng-if="terminal.showCommandOptions && terminal.show" class="card" >

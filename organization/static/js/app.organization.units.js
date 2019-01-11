@@ -29,7 +29,7 @@ app.controller("workforceManagement.organization.units", function($scope, $state
     views: views,
     url: '/api/organization/unit/',
     searchField: 'name',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 

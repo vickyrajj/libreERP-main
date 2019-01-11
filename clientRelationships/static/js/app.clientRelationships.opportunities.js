@@ -148,7 +148,7 @@ app.controller("businessManagement.clientRelationships.opportunities.created", f
     url: '/api/clientRelationships/deal/',
     searchField: 'name',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
     drills : [
       {icon : 'fa fa-bars' , name : 'Limit search' , btnClass : 'default' , options : [
         {key : 'created', value : true},

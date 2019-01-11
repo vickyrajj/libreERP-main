@@ -209,7 +209,7 @@ app.controller("workforceManagement.organization", function($scope, $state, $use
     views: views,
     url: '/api/organization/divisions/',
     searchField: 'name',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 

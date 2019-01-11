@@ -28,7 +28,7 @@ app.controller("workforceManagement.recruitment.onboarding", function($scope, $s
     url: '/api/recruitment/applyJob/',
     searchField: 'firstname',
     getParams : [{key : 'status' , value : 'Onboarding'},],
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
   $scope.tableAction = function(target, action, mode) {

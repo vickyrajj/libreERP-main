@@ -2,6 +2,10 @@
   border-top:6px solid var(--themeMain) !important;
 }*/
 
+.btn{
+	border-radius: 0px !important;
+}
+
 .showOptions{
 	animation: showOptions 0.4s;
 }

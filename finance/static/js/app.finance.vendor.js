@@ -17,7 +17,7 @@ app.controller('businessManagement.finance.vendor', function($scope, $http, $asi
     filterSearch: true,
     searchField: 'name',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
     getParams: [{
       key: 'vendor',
       value: true

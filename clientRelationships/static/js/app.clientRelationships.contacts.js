@@ -17,7 +17,7 @@ app.controller("businessManagement.clientRelationships.contacts", function($scop
     url: '/api/clientRelationships/contact/',
     searchField: 'name',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 

@@ -115,7 +115,7 @@ app.controller("workforceManagement.employees.approvals", function($scope, $stat
     views: views,
     url: '/api/HR/leave/',
     // searchField: 's',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 
@@ -153,7 +153,7 @@ app.controller("workforceManagement.employees.approvals", function($scope, $stat
     views: views,
     url: '/api/performance/timeSheet/',
     searchField: 'dept_name',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 

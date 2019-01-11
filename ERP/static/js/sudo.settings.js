@@ -108,7 +108,7 @@ app.controller('admin.settings.configure.calendar.form' , function($scope , $sta
     views: views,
     url: '/api/ERP/companyHoliday/',
     searchField: 'name',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 

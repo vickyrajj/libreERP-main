@@ -49,7 +49,12 @@ app.config(function($stateProvider ){
     templateUrl: '/static/ngTemplates/app.home.myWork.html',
     controller: 'controller.home.myWork'
   })
-  
+  .state('home.expenseClaims', {
+    url: "/expenseClaims",
+    templateUrl: '/static/ngTemplates/app.finance.expenses.html',
+    controller: 'home.finance.expenseClaims'
+  })
+
 
 });
 

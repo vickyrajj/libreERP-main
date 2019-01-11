@@ -1,4 +1,4 @@
-<div class="col-md-3" style="margin-top: 10px;">
+<div class="col-md-3" style="margin-top: 10px;" ng-click="rowActionClicked('details');">
   <div class="container-fluid card" style="padding-top:10px;" >
     <div class="row container-fluid">
       <div class="col-md-10">
@@ -7,9 +7,7 @@
         <label><b>Model No : </b> </label>{{data.modelNo}} <br>
       </div>
     <div class="col-md-2">
-      <span><i class="fa fa-info" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('details')"></i></span>
-      <br> <br>
-      <span><i class="fa fa-pencil" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('edit')"></i></span>
+      <span><i class="fa fa-pencil" style="color: rgb(24, 108, 219);font-size: 20px;cursor:pointer;" ng-click="rowActionClicked('edit');$event.stopPropagation()"></i></span>
     </div>
     </div>
   </div>

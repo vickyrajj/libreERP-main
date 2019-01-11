@@ -19,11 +19,6 @@ app.config(function($stateProvider) {
         }
       }
     })
-    .state('businessManagement.finance.expenses', {
-      url: "/expenses",
-      templateUrl: '/static/ngTemplates/app.finance.expenses.html',
-      controller: 'businessManagement.finance.expenses'
-    })
     .state('businessManagement.finance.accounts', {
       url: "/accounts",
       templateUrl: '/static/ngTemplates/app.finance.accounts.html',
@@ -43,6 +38,16 @@ app.config(function($stateProvider) {
       url: "/vendor",
       templateUrl: '/static/ngTemplates/app.finance.vendor.html',
       controller: 'businessManagement.finance.vendor'
+    })
+    .state('businessManagement.finance.inboundInvoices', {
+      url: "/inboundInvoices",
+      templateUrl: '/static/ngTemplates/app.finance.inboundInvoices.html',
+      controller: 'businessManagement.finance.inboundInvoices'
+    })
+    .state('businessManagement.finance.pettyCash', {
+      url: "/pettyCash",
+      templateUrl: '/static/ngTemplates/app.finance.pettyCash.html',
+      controller: 'businessManagement.finance.pettyCash'
     })
 });
 
