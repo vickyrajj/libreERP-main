@@ -196,7 +196,8 @@ class ReviewFilterCalAPIView2(APIView):
         print '****** entered', request.GET
         # all chat threads
         toReturn = {}
-        chatThreadObj = ChatThread.objects.all()
+        allUidInChat =  list(SupportChat.objects.all().values_list('uid',flat=True).distinct())
+        chatThreadObj = ChatThread.objects.filter(uid__in=allUidInChat)
         # print chatThreadObj,'all chat thread obj'
         if 'customer' in self.request.GET:
             userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
@@ -545,8 +546,8 @@ def getChatterScript(request , fileName):
         return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
     else:
         # pass
-        # return HttpResponse(request,'')
-        return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
+        return HttpResponse(request,'')
+        # return render(request, 'chatter.js', dataToSend ,content_type="application/x-javascript")
 
 
 
