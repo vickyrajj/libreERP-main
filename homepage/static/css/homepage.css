@@ -2050,7 +2050,22 @@ hr {
 .fromtop {
   margin-top: 30em;
 }
-
+.center-align {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  position:relative;
+  /* display:inline-block; */
+}
+.tocenter{
+  display:inline-block;
+}
+.adjustwidth{
+  width:30%;
+}
+.leftalign{
+  left: 27em;
+}
 /* .answers li::before{
   content:'';
   width:30px;
@@ -2334,8 +2349,14 @@ hr {
 
   /* mobile display size starts here.... */
   /* courses */
+  .leftalign{
+    left: 6em;
+  }
+  .adjustwidth{
+    width:100%;
+  }
   .fromtop {
-    margin-top: 15em;
+    margin-top: 25em;
   }
 
   .aligntotext1 {

@@ -172,8 +172,34 @@ app.config(function($stateProvider) {
       templateUrl: 'static/ngTemplates/app.homepage.exam.html',
       controller: 'controller.exam'
     })
+  $stateProvider
+    .state('examresults', {
+      url: "/examresults",
+      templateUrl: 'static/ngTemplates/app.homepage.examresults.html',
+      params: {
+        'attempt': null,
+        'notattempt': null,
+        'reviewed': null,
+        'notview': null,
+        'answerlist': null
+      },
+      controller: 'controller.examresults'
+    })
 
 });
+
+app.controller('controller.examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
+  console.log($stateParams.answerlist);
+  $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+  $scope.summary = $stateParams;
+  $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+  $scope.series = ['Series A', 'Series B'];
+
+  $scope.data = [
+    [65, 59, 80, 81, 56, 55, 40],
+    [28, 48, 40, 19, 86, 27, 90]
+  ];
+})
 
 app.controller('controller.exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
   $scope.questionList = [{
@@ -407,16 +433,21 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
       ],
       savedIndex: null
     },
+    {
+      Question: 'Etiam ultricies sem ac ipsum venenatis molestie.',
+      Options: [
+        'Etiam',
+        'blandit',
+        'porttitor',
+        'sollicitudin'
+      ],
+      savedIndex: null
+    },
 
 
   ];
   $scope.options
   $scope.count = 0
-  // $scope.answered = "answered";
-  // $scope.notanswered = "notanswered";
-  // $scope.reviewed = "reviewed";
-  // $scope.attemptreview = "attemptreview";
-  // $scope.notview = "notview";
 
   $scope.selections = []
   for (var i = 0; i < $scope.questionList.length; i++) {
@@ -429,44 +460,35 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
     console.log($scope.selections, );
   }
   $scope.save = function(val) {
-    console.log($scope.questionList[val].savedIndex, 'aaaaaaaaa');
 
-    if($scope.count==$scope.questionList.length-1){
+
+    if ($scope.count == $scope.questionList.length - 1) {
       $scope.count = $scope.count;
       $scope.questionList[val].status = 'answered';
-    }else{
+    } else {
       if ($scope.questionList[val].savedIndex != null) {
         $scope.count = $scope.count + 1;
         $scope.questionList[val].status = 'answered';
         $scope.questionList[$scope.count].status = 'notanswered';
       } else {
-        console.log('nooooooo');
+
         // Flash.create('danger','Please Select One Option')
         Flash.create('warning', 'Please Mention The Name');
         return
       }
     }
-    // for (var i = 0; i < $scope.selections.length; i++) {
-    //   if(i == val){
-    //     if($scope.selections[i] == null){
-    //       $scope.answered = "notanswered";
-    //     }else if($scope.selections[i] != null){
-    //       $scope.answered = "answered";
-    //     }
-    //   }
-    //
-    // }
+
 
   }
   $scope.review = function(val) {
-    if($scope.count==$scope.questionList.length-1){
+    if ($scope.count == $scope.questionList.length - 1) {
       $scope.count = $scope.count;
-      if ($scope.questionList[val].savedIndex != null){
+      if ($scope.questionList[val].savedIndex != null) {
         $scope.questionList[val].status = 'attemptreviewed';
-      }else{
-          $scope.questionList[val].status = 'reviewed';
+      } else {
+        $scope.questionList[val].status = 'reviewed';
       }
-    }else{
+    } else {
       if ($scope.questionList[val].savedIndex != null) {
         $scope.count = $scope.count + 1;
         $scope.questionList[val].status = 'attemptreviewed';
@@ -477,7 +499,7 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
         $scope.questionList[val].status = 'reviewed';
         $scope.questionList[$scope.count].status = 'notanswered';
         // Flash.create('danger','Please Select One Option')
-        Flash.create('warning', 'Please Mention The Name');
+        Flash.create('warning', 'Please Select The option');
         return
       }
     }
@@ -486,7 +508,7 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
   $scope.clearselection = function(val) {
     $scope.selections[val] = null;
     $scope.questionList[val].status = 'notanswered';
-    $scope.questionList[val].savedIndex =null;
+    $scope.questionList[val].savedIndex = null;
   }
   $scope.queclick = function(val) {
 
@@ -494,9 +516,63 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
     if ($scope.questionList[val].status != 'answered' && $scope.questionList[val].status != 'reviewed' && $scope.questionList[val].status != 'attemptreviewed') {
       $scope.questionList[val].status = 'notanswered'
     }
-
   }
+  $scope.finish = function(answerlist, questions) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.examsubmit.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        questions: function() {
+          return questions;
+        },
+        answerlist: function() {
+          return answerlist;
+        }
+      },
 
+      controller: function($scope, questions, $uibModalInstance, answerlist) {
+        console.log(answerlist, 'llllll');
+        $scope.questions = questions
+        $scope.attempted = 0;
+        $scope.notAnswered = 0;
+        $scope.reviewed = 0;
+        $scope.attemptedreview = 0;
+        $scope.notview = 0;
+        for (var i = 0; i < $scope.questions.length; i++) {
+          if ($scope.questions[i].status == 'answered') {
+            $scope.attempted += 1;
+          } else if ($scope.questions[i].status == 'notanswered') {
+            $scope.notAnswered += 1;
+          } else if ($scope.questions[i].status == 'reviewed') {
+            $scope.reviewed += 1;
+          } else if ($scope.questions[i].status == 'attemptreviewed') {
+            $scope.attemptedreview += 1;
+          } else {
+            $scope.notview += 1;
+          }
+
+        }
+        $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+        $scope.submit = function() {
+          $uibModalInstance.close();
+          $scope.params = {
+            'attempt': $scope.attempted + $scope.attemptedreview,
+            'notattempt': $scope.notAnswered,
+            'reviewed': $scope.reviewed,
+            'notview': $scope.notview,
+            'answerlist': answerlist
+          }
+
+          $state.go("examresults", $scope.params);
+        }
+        $scope.closeModal = function() {
+          $uibModalInstance.dismiss();
+        }
+
+      },
+    })
+  }
 });
 
 

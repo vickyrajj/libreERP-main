@@ -1,0 +1,90 @@
+<div class="container-fluid">
+  <h2 class="text-center"><b>Exam Summary</b></h2>
+  <div class="row">
+    <div class="col-md-offset-1 col-md-3" style="margin-top:2em;">
+      <span style="font-size:18px;"><b>Total No of Questions:</b></span><span style="font-size:18px;"><b>&nbsp; 24</b></span>
+    </div>
+    <div class=" col-md-2">
+      <table>
+        <tr>
+          <td>
+            <div class="answered"><span class="numberalign1"><b>{{arr.includes(summary.attempt)?'0'+summary.attempt:summary.attempt}}</b></span></div>
+          </td>
+          <td style="padding: 2em 0 0 1em;"><span class="aligntotext" style="font-size:18px;"> Attempted</span> </td>
+        </tr>
+      </table>
+    </div>
+    <div class=" col-md-2">
+      <table>
+        <tr>
+          <td>
+            <div class="notanswered"><span class="numberalign1"><b>{{arr.includes(summary.notattempt)?'0'+summary.notattempt:summary.notattempt}}</b></span></div>
+          </td>
+          <td style="padding: 2em 0 0 1em;"><span class="aligntotext" style="font-size:18px;">Not Attempted</span> </td>
+        </tr>
+      </table>
+    </div>
+    <div class=" col-md-2">
+      <table>
+        <tr>
+          <td>
+            <div class="reviewed"><span class="numberalign1"><b>{{arr.includes(summary.reviewed)?'0'+summary.reviewed:summary.reviewed}}</b></span></div>
+          </td>
+          <td style="padding: 1.2em 0 0 0em;"><span class="aligntotext" style="font-size:18px;">Reviewed</span> </td>
+        </tr>
+      </table>
+    </div>
+    <div class=" col-md-2">
+      <table>
+        <tr>
+          <td>
+            <div class="notview"><span class="numberalign1"><b>{{arr.includes(summary.notview)?'0'+summary.notview:summary.notview}}</b></span></div>
+          </td>
+          <td style="padding: 1.2em 0 0 0em;"><span class="aligntotext" style="font-size:18px;"> Not Visited</span> </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="container text-center">
+    <div class="row">
+      <div style="margin-top:2em;text-align:center;position:relative;">
+        <div style="display:inline-block;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);min-height:5em;border-radius: 10px;" class="adjustwidth">
+          <div style="background-color:#25B5E9;min-height:3em;border-top-left-radius: 10px;border-top-right-radius: 10px;">
+            <span style="font-size:20px;color:#fff;padding:0.4em;position:absolute;" class="leftalign"><b>Maths</b></span>
+          </div>
+          <div style="padding: 1em;">
+            <table style="width:100%">
+              <tr style="font-size:17px;">
+                <td style="text-align: left;">Total No Questions</td>
+                <td>{{summary.attempt+summary.notattempt+summary.reviewed+summary.notview}}</td>
+              </tr>
+              <tr style="font-size:17px;margin-top:1em;">
+                <td style="text-align: left;">Attempted</td>
+                <td>{{summary.attempt}}</td>
+              </tr>
+              <tr style="font-size:17px;margin-top:1em;">
+                <td style="text-align: left;">Not Answered</td>
+                <td>{{summary.notattempt}}</td>
+              </tr>
+              <tr style="font-size:17px;margin-top:1em;">
+                <td style="text-align: left;">Not Visited</td>
+                <td>{{summary.notview}}</td>
+              </tr>
+              <tr style="font-size:17px;margin-top:1em;">
+                <td style="text-align: left;">Review Later</td>
+                <td>{{summary.reviewed}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:2em;text-align:center;">
+    <button class="btnaction1" style="min-width:10%;" ng-click=""><b>View Score</b></button>
+    <div class="text-center">
+      <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="labels" min-width="50%" height="50vh" chart-series="series"> 
+      </canvas>
+    </div>
+  </div>
+</div>
