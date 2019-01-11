@@ -28,6 +28,7 @@ class Account(models.Model):
     contactPerson = models.ForeignKey(User , null = False , related_name = 'accountsManaging')
     authorizedSignaturies = models.ManyToManyField(User , related_name = 'checkingAccounts')
     personal = models.BooleanField(default = False) # if this account is personal account , in that case the authorized person will be the person to which this account belongs
+    balance = models.FloatField(default = 0)
     def __unicode__(self):
         return '<Number : %s > , <responsible : %s > , <bank : %s>' %(self.number , self.contactPerson.username , self.bank)
 
@@ -82,8 +83,8 @@ class Transaction(models.Model):
     externalReferenceID = models.CharField(max_length = 30 , null = False)
     externalConfirmationID = models.CharField(max_length = 30 , null = False)
     created = models.DateTimeField(auto_now_add=True)
-    api = models.CharField(max_length = 20 , null = False)
-    apiCallParams = models.CharField(max_length = 1500 , null = False)
+    api = models.CharField(max_length = 20 , null = True)
+    apiCallParams = models.CharField(max_length = 1500 , null = True)
 
     def __unicode__(self):
         return '<from : %s > , <to : %s > , <amount : %s> , < user : %s>' %(self.fromAcc , self.toAcc , self.ammount , self.user.username)
