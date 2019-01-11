@@ -1872,6 +1872,7 @@ class CreateStockReportDataAPIView(APIView):
                     vl = 0
                     for j in matIssMainObjs:
                         print j,'jjjjjjjjjjjjjj'
+                        tot = 0
                         matIssueObjs = j.materialIssue.all()
                         tot = matIssueObjs.aggregate(total=Sum(F('qty') * F('price')))['total']
                         print tot,'tottttttttt'
