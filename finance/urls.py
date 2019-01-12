@@ -14,6 +14,10 @@ router.register(r'inflow' , InflowViewSet , base_name ='inflow')
 router.register(r'vendorprofile' , VendorProfileViewSet , base_name ='vendorprofile')
 router.register(r'vendorservice' , VendorServiceViewSet , base_name ='vendorservice')
 router.register(r'vendorinvoice' , VendorInvoiceViewSet , base_name ='vendorinvoice')
+router.register(r'purchaseorder' , PurchaseOrderViewSet , base_name ='purchaseorder')
+router.register(r'purchaseorderqty' , PurchaseOrderQtyViewSet , base_name ='purchaseorder')
+
+
 
 urlpatterns = [
     url(r'^', include(router.urls)),

@@ -2,27 +2,27 @@
   <div class="col-md-1">
     <i class="fa fa-bank fa-2x text-muted"></i>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3" style="font-size:15px;">
     <div class="row">
-      <span style="font-size:12px;" class="text-muted">From</span>
+      <Strong>From</Strong>
     </div>
     <div class="row">
       <span class="text-muted">Account Number</span> : {{data.fromAcc.number}} <br>
       <span class="text-muted">Bank</span> : {{data.fromAcc.bank}} <br>
     </div>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3" style="font-size:15px;">
     <div class="row">
-      <span style="font-size:12px;" class="text-muted">To</span>
+      <strong>To</strong>
     </div>
     <div class="row">
       <span class="text-muted">Account Number</span> : {{data.toAcc.number}} <br>
       <span class="text-muted">Bank</span> : {{data.toAcc.bank}} <br>
     </div>
   </div>
-  <div class="col-md-2">
+  <div class="col-md-2" style="font-size:17px;">
     <div class="row">
-      <span style="font-size:12px;" class="text-muted">Amount</span> : {{data.ammount}}
+      <Strong>Amount : </Strong>{{data.amount | number}}
     </div>
   </div>
   <div class="col-md-2">
@@ -33,9 +33,9 @@
       <span>{{data.user | getName}} </span>
     </div>
   </div>
-  <div class="col-md-1" >
+  <div class="col-md-1">
     <div class="row">
-      <button type="button" class="btn btn-primary btn-block" ng-click="rowActionClicked('more')">More</button>
+      <span class="btn btn-primary" ng-click="rowActionClicked('more')">More <i class="fa fa-info-circle fa-lg"></i></span>
     </div>
   </div>
 </div>

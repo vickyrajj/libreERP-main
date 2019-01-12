@@ -141,7 +141,7 @@ app.directive('userField', function() {
     },
     controller: function($scope, $state, $http, Flash) {
       $scope.userSearch = function(query) {
-        return $http.get($scope.url + '?username__contains=' + query).
+        return $http.get($scope.url + '?username__icontains=' + query).
         then(function(response) {
           return response.data;
         })
@@ -183,14 +183,14 @@ app.directive('usersField', function() {
       }
       // $scope.user = undefined;
       $scope.userSearch = function(query) {
-        return $http.get($scope.url + '?username__contains=' + query).
+        return $http.get($scope.url + '?offset=0&limit=10&username__icontains=' + query).
         then(function(response) {
-          for (var i = 0; i < response.data.length; i++) {
-            if ($scope.data.indexOf(response.data[i]) != -1) {
-              response.data.splice(i, 1);
-            }
-          }
-          return response.data;
+          // for (var i = 0; i < response.data.length; i++) {
+          //   if ($scope.data.indexOf(response.data[i]) != -1) {
+          //     response.data.splice(i, 1);
+          //   }
+          // }
+          return response.data.results;
         })
       };
       $scope.getName = function(u) {
@@ -205,6 +205,10 @@ app.directive('usersField', function() {
       }
 
       $scope.addUser = function() {
+        if ($scope.d.user==undefined||$scope.d.user.pk==undefined) {
+          Flash.create('danger', 'Please Select A Valid User')
+          return;
+        }
         for (var i = 0; i < $scope.data.length; i++) {
           if ($scope.data[i] == $scope.d.user.pk) {
             Flash.create('danger', 'User already a member of this group')

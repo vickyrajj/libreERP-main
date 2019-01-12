@@ -1,16 +1,16 @@
-<div class="modal-header">
-  Transaction details
+<div class="modal-header text-center" style="font-size:20px">
+  <strong>Transaction details</strong>
 </div>
 <div class="modal-body">
   <div class="container-fluid">
     <div class="row">
-      <strong>From : </strong>{{transaction.fromAcc.number}}<span class="text-muted">{{transaction.fromAcc.bank}}</span>
+      <strong>From : </strong>{{transaction.fromAcc.number}}<span class="text-muted"> ( {{transaction.fromAcc.bank}} )</span>
     </div>
     <div class="row">
-      <strong>To : </strong>{{transaction.toAcc.number}}<span class="text-muted">{{transaction.toAcc.bank}}</span>
+      <strong>To : </strong>{{transaction.toAcc.number}}<span class="text-muted"> ( {{transaction.toAcc.bank}} )</span>
     </div>
     <div class="row">
-      <strong>Amount : </strong>{{transaction.ammount}}
+      <strong>Amount : </strong>{{transaction.amount | number}}
     </div>
     <div class="row">
       <strong>Transacted By : </strong>{{transaction.user | getName}}
@@ -18,11 +18,17 @@
     <div class="row">
       <strong>Balance Left : </strong>{{transaction.balance}}
     </div>
-    <div class="row">
+    <div class="row" ng-if="transaction.externalReferenceID">
       <strong>External Reference : </strong>{{transaction.externalReferenceID}}
     </div>
-    <div class="row">
+    <div class="row" ng-if="transaction.externalConfirmationID">
       <strong>External Confirmation : </strong>{{transaction.externalConfirmationID}}
+    </div>
+    <div class="row" ng-if="transaction.externalConfirmationID">
+      <strong>API : </strong>{{transaction.api}}
+    </div>
+    <div class="row" ng-if="transaction.externalConfirmationID">
+      <strong>API Call Parameter : </strong>{{transaction.apiCallParams}}
     </div>
   </div>
 </div>
