@@ -84,8 +84,6 @@ app.controller('businessManagement.finance.accounts.transaction', function($scop
     amount: 1,
     externalReferenceID: '',
     externalConfirmationID: '',
-    api: '',
-    apiCallParams: '',
     showMore: false,
   }
   $scope.accountSearch = function(query) {
@@ -127,12 +125,7 @@ app.controller('businessManagement.finance.accounts.transaction', function($scop
     if (f.externalConfirmationID!=null && f.externalConfirmationID.length>0) {
       toSend.externalConfirmationID = f.externalConfirmationID
     }
-    if (f.api!=null && f.api.length>0) {
-      toSend.api = f.api
-    }
-    if (f.apiCallParams!=null && f.apiCallParams.length>0) {
-      toSend.apiCallParams = f.apiCallParams
-    }
+
     console.log(toSend);
     $http({
       method: 'POST',

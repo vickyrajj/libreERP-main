@@ -41,8 +41,8 @@ class AccountSerializer(serializers.ModelSerializer):
         if 'addMoney' in self.context['request'].data:
             instance.balance += int(self.context['request'].data['addMoney'])
         instance.save()
+        instance.authorizedSignaturies.clear()
         if 'authorizedSignaturies' in self.context['request'].data:
-            instance.authorizedSignaturies.clear()
             for u in self.context['request'].data['authorizedSignaturies']:
                 instance.authorizedSignaturies.add(User.objects.get(pk = int(u)))
         return instance
@@ -109,7 +109,7 @@ class InflowSerializer(serializers.ModelSerializer):
     toAcc = AccountLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Inflow
-        fields = ('pk', 'toAcc' , 'created' , 'referenceID' , 'user', 'service', 'currency', 'dated', 'attachment', 'description', 'verified' , 'fromBank', 'chequeNo' , 'mode')
+        fields = ('pk', 'toAcc' , 'created' ,'amount', 'referenceID' , 'user', 'service', 'currency', 'dated', 'attachment', 'description', 'verified' , 'fromBank', 'chequeNo' , 'mode','gstCollected')
         read_only_fields = ('user' , 'amount')
     def create(self , validated_data):
         u = self.context['request'].user

@@ -143,7 +143,7 @@ class ProductMetaSerializer(serializers.ModelSerializer):
 class ContractSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
-        fields = ('pk'  ,'user' , 'created' , 'updated', 'value', 'status', 'details' , 'data', 'dueDate')
+        fields = ('pk'  ,'user' , 'created' , 'updated', 'value','deal', 'status', 'details' , 'data', 'dueDate','billedDate','recievedDate','archivedDate','approvedDate','grandTotal','totalTax')
         read_only_fields = ('user',)
     def create(self , validated_data):
         c = Contract(**validated_data)

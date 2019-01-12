@@ -5,6 +5,12 @@ from .serializers import *
 from API.permissions import *
 from .models import *
 from django.db.models import Q, F
+from openpyxl import load_workbook,Workbook
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from io import BytesIO
+from rest_framework.views import APIView
 # Create your views here.
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -18,11 +24,24 @@ class InflowViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = InflowSerializer
     queryset = Inflow.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['amount']
+    def get_queryset(self):
+        if 'search' in self.request.GET:
+            try:
+                toRet = Inflow.objects.filter(amount__gte=int(self.request.GET['search']))
+                return toRet
+            except:
+                return Inflow.objects.all()
+        else:
+            return Inflow.objects.all()
 
 class CostCenterViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = CostCenterSerializer
     queryset = CostCenter.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
 
 class TransactionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
@@ -85,3 +104,47 @@ class PurchaseOrderQtyViewSet(viewsets.ModelViewSet):
     queryset = PurchaseOrderQty.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['purchaseorder','product']
+
+class UplodInflowDataAPI(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes = (permissions.IsAuthenticated ,)
+    def post(self , request , format = None):
+        print 'entered','*******************'
+        requestData = request.data
+        print requestData
+        tosend={}
+        if 'exFile' in requestData:
+            excelFile = request.FILES['exFile']
+            if request.data['verified'] in ['true','1','yes',]:
+                verified = True
+            else:
+                verified = False
+            currency = request.data['currency']
+            toAcc = Account.objects.get(pk=int(request.data['toAcc']))
+            user = request.user
+            print verified,type(verified),toAcc,currency,user
+            wb = load_workbook(filename = BytesIO(excelFile.read()))
+            for idx,ws in enumerate(wb.worksheets):
+                wsTitle = ws.title
+                print wsTitle,idx
+                if idx==0:
+                    storeData = []
+                    print 'savingggggggg'
+                    for i in range(2,ws.max_row+1):
+                        try:
+                            amount = int(ws['A'+str(i)].value) if ws['A'+str(i)].value else 0
+                            referenceID = str(ws['B'+str(i)].value) if ws['B'+str(i)].value else None
+                            dated = ws['C'+str(i)].value.date() if ws['C'+str(i)].value else None
+                            description = str(ws['D'+str(i)].value) if ws['D'+str(i)].value else None
+                            chequeNo = str(ws['E'+str(i)].value) if ws['E'+str(i)].value else None
+                            mode = str(ws['F'+str(i)].value) if ws['F'+str(i)].value else 'cash'
+                            mode = mode.lower()
+                            gstCollected = float(ws['G'+str(i)].value) if ws['G'+str(i)].value else 0
+
+                            infObj = Inflow(user=user,toAcc=toAcc,currency=currency,verified=verified,amount=amount,referenceID=referenceID,dated=dated,description=description,chequeNo=chequeNo,mode=mode,gstCollected=gstCollected)
+                            storeData.append(infObj)
+                        except:
+                            print 'row number {0} in Excel - {1} is not created'.format(i,wsTitle)
+                    Inflow.objects.bulk_create(storeData)
+                    print 'total {0} Objects has been created'.format(len(storeData))
+        return Response(tosend, status=status.HTTP_200_OK)

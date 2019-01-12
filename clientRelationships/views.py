@@ -304,6 +304,7 @@ def genInvoice(response, contract, request):
                      pBodyQty, pBodyTotal, pBodyTax, pBodySubTotal])
 
     contract.grandTotal = grandTotal
+    contract.totalTax = totalTax
     contract.save()
 
     tableGrandStyle = tableHeaderStyle.clone('tableGrandStyle')
@@ -514,9 +515,17 @@ class RelationshipViewSet(viewsets.ModelViewSet):
 class ContractViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = ContractSerializer
-
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['status', 'value']
     def get_queryset(self):
-        return Contract.objects.all()
+        if 'search' in self.request.GET:
+            try:
+                toRet = Contract.objects.filter(value__gte=int(self.request.GET['search']))
+                return toRet
+            except:
+                return Contract.objects.all()
+        else:
+            return Contract.objects.all()
 
 
 class ActivityViewSet(viewsets.ModelViewSet):
