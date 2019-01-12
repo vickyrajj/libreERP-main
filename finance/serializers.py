@@ -243,3 +243,27 @@ class VendorInvoiceSerializer(serializers.ModelSerializer):
             instance.disbursed = reqData['disbursed']
         instance.save()
         return instance
+
+class PurchaseOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PurchaseOrder
+        fields = ('pk', 'created' , 'name' , 'address' , 'personName' , 'user' , 'status', 'poNumber' , 'quoteNumber' , 'deliveryDate' , 'terms')
+        read_only_fields = ('user', )
+    def create(self , validated_data):
+        u = self.context['request'].user
+        po = PurchaseOrder(**validated_data)
+        po.user = u
+        po.save()
+        return po
+
+class PurchaseOrderQtySerializer(serializers.ModelSerializer):
+    purchaseorder = PurchaseOrderSerializer(many = False , read_only = True)
+    class Meta:
+        model = PurchaseOrderQty
+        fields = ('pk', 'created' , 'product' , 'qty' , 'price','purchaseorder' )
+    def create(self , validated_data):
+        d = PurchaseOrderQty(**validated_data)
+        if 'purchaseorder' in self.context['request'].data:
+            d.purchaseorder = PurchaseOrder.objects.get(pk=int(self.context['request'].data['purchaseorder']))
+        d.save()
+        return d

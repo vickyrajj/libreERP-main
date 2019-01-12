@@ -5,8 +5,6 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from HR.views import loginView , logoutView , home , registerView , tokenAuthentication , root, generateOTP, documentView
 
-from homepage.views import blog,blogDetails,news,team, career ,policy ,terms ,refund , contacts , registration,index,crmHome,customerLoginView , customerHomeView
-
 from ERP.views import serviceRegistration , renderedStatic
 # from django.conf.urls.defaults import *
 
@@ -14,7 +12,6 @@ app_name="libreERP"
 
 urlpatterns = [
     url(r'^$', home , name ='ERP'),
-    url(r'^CRM/', crmHome , name ='CRM'),
     url(r'^api/', include('API.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login', loginView , name ='login'),
