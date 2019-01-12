@@ -67,10 +67,12 @@
           <div ng-class="class3"></div>
         </div>
       </a>
-      <div class="col-md-2 clickchange" ng-class="click4" ng-click="clicks(4)">
-        <span><b>Forum</b></span>
-        <div ng-class="class4"></div>
-      </div>
+      <!-- <a href="/forum"> -->
+        <div class="col-md-2 clickchange" ng-class="click4" ng-click="clicks(4)">
+          <span><b>Forum</b></span>
+          <div ng-class="class4"></div>
+        </div>
+      <!-- </a> -->
       <div class="col-md-3 clickchange1" ng-class="click5" ng-click="clicks(5)">
         <span><b>Refernce Books</b></span>
         <div ng-class="class5"></div>
@@ -101,7 +103,7 @@
     </div>
   </div>
 
-  <div class="container" ng-show="books" id="books">
+  <div class="container" ng-show="books">
     <div class="col-md-8 col-md-offset-2">
       <div ng-repeat="a in bookscontent">
         <div class="row " ng-class="!$last ? 'contentborder' : 'contentborderlast'" style="position:relative;">
@@ -134,6 +136,54 @@
       </div>
     </div>
   </div>
+
+  <div class="container" ng-show="forum">
+    <div ng-repeat="a in forumlist" style="margin-top:3em">
+      <div class="col-md-8 col-md-offset-2 ">
+        <div>
+          <div style="padding: 1em;border-bottom: 1px solid #eaecf0;display: flex;align-items: center;">
+            <div style="width:60px;">
+              <img src="{{a.imgsrc}}" style="width:45px;border-radius:50%;height:45px;" />
+            </div>
+            <div class="" style="flex: 0 1 auto;max-width: 65%;font-size: 1em;">
+              <div class="toprow" style="">
+                <i class="fa fa-thumb-tack"></i>
+                <span style="font-size:17px;color: #3C4556;cursor:pointer;" ng-click="forumview($index)">{{a.title}}</span>
+              </div>
+              <div class="bottomrow" style="font-size: 1em;">
+                <span class="" style="font-size:15px;color: #3C4556;">{{a.secondtext}}</span>
+              </div>
+            </div>
+            <div style="flex: 1 0 0;text-align: right;color: #949fb4;">
+              <span style="text-align: right;">Replies:{{a.replies}}</span>
+            </div>
+          </div>
+          <div class="" style='padding: 1em;border-bottom: 1px solid #eaecf0;' ng-show="count==$index?openedforum:''">
+            <div ng-repeat="b in a.users">
+              <div style="padding: 1.5em;{{$last?'':'border-bottom: 1px solid #eaecf0'}};display: flex;align-items: center;" ng-mouseover="open = true" ng-mouseleave="open = false">
+                <div style="width:60px;flex: 0 0 auto;text-align: left;">
+                  <img src="{{b.userimg}}" style="width:45px;border-radius:50%;height:45px;" />
+                </div>
+                <div style="flex: 0 1 auto;max-width: 65%;font-size: 1em;">
+                  <span>{{b.name}}</span>
+                  <div style="padding-top: 1em;">
+                    <span style="font-size:16px;">{{b.comment}}</span>
+                  </div>
+                  <div style="margin-top:1em;">
+                    <button class="btn btn-primary" type="button" ng-show="open"> Reply</button>
+                  </div>
+                </div>
+                <div style="flex: 1 0 0;text-align: right;">
+                  <i class="fa fa-heart" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 
 

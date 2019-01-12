@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside']);
+var app = angular.module('app', ['ui.router', 'ui.bootstrap', 'angular-owl-carousel-2', 'ui.bootstrap.datetimepicker', 'flash', 'ngAside', ]);
 
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide, $locationProvider, $urlMatcherFactoryProvider) {
@@ -185,20 +185,47 @@ app.config(function($stateProvider) {
       },
       controller: 'controller.examresults'
     })
+  // $stateProvider
+  //   .state('forum', {
+  //     url: "/forum",
+  //     templateUrl: 'static/ngTemplates/app.homepage.courses.html',
+  //     controller: 'controller.courses'
+  //   })
 
 });
+
 
 app.controller('controller.examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
   console.log($stateParams.answerlist);
   $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
   $scope.summary = $stateParams;
-  $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-  $scope.series = ['Series A', 'Series B'];
+  $scope.correctanswers = [0, 1, 2, 2, 1, 1, 2, 3, 3, 2, 1, 0, 0, 2, 2, 1, 3, 2, 1, 0, 0, 2, 2, 1];
 
-  $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
-  ];
+
+  $scope.countforcorrect = 0;
+  $scope.countforincorrect = 0;
+  $scope.unattempt = 0;
+  $scope.checkanswers = function(arr1, arr2) {
+    if (arr1 == null || arr2 == null) {
+      return;
+    } else {
+      arr1.forEach(function(item1, idx1) {
+        arr2.forEach(function(item2, idx2) {
+          if (idx1 === idx2) {
+            if (item1 != null && item2 != null && item1 === item2) {
+              $scope.countforcorrect += 1;
+            } else if (item1 != null && item2 != null && item1 != item2) {
+              $scope.countforincorrect += 1;
+            } else {
+              $scope.unattempt += 1;
+            }
+          }
+        })
+      });
+    }
+  }
+  $scope.checkanswers($scope.correctanswers, $scope.summary.answerlist);
+  console.log($scope.countforcorrect, $scope.countforincorrect, $scope.unattempt, 'vvv');
 })
 
 app.controller('controller.exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
@@ -469,7 +496,10 @@ app.controller('controller.exam', function($scope, $state, $http, $timeout, $int
       if ($scope.questionList[val].savedIndex != null) {
         $scope.count = $scope.count + 1;
         $scope.questionList[val].status = 'answered';
-        $scope.questionList[$scope.count].status = 'notanswered';
+        if ($scope.questionList[$scope.count].status != 'answered' && $scope.questionList[$scope.count].status != 'reviewed' && $scope.questionList[$scope.count].status != 'attemptreviewed') {
+          $scope.questionList[$scope.count].status = 'notanswered';
+        }
+
       } else {
 
         // Flash.create('danger','Please Select One Option')
@@ -690,6 +720,89 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
 
     }
   ];
+  $scope.forumlist = [{
+      'title': "How to use check activites int the checkbox ",
+      "imgsrc": "/static/images/24tut/author1.png",
+      "secondtext": "Orchestrator Mobile",
+      'replies': '20',
+      "users": [{
+          "name": 'David Johnson',
+          "userimg": "/static/images/24tut/author4.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+        {
+          "name": 'Kishore',
+          "userimg": "/static/images/24tut/author3.jpg",
+          'comment': 'This is really cool.We’ll have to do a bit of work to push the app data down the vpn on our corporate phones, as our orchestrator isn’t internet accessible outside our network. Excited to try it out once I get someone to help me with that,'
+        },
+        {
+          "name": 'Yash',
+          "userimg": "/static/images/24tut/author2.jpeg",
+          'comment': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        },
+        {
+          "name": 'Mir',
+          "userimg": "/static/images/24tut/author5.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+      ]
+    },
+    {
+      'title': "We need a new colleague!",
+      "imgsrc": "/static/images/24tut/vip.png",
+      "secondtext": "UiPath Jobs",
+      'replies': '16',
+      "users": [{
+          "name": 'David Johnson',
+          "userimg": "/static/images/24tut/author4.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+        {
+          "name": 'Kishore',
+          "userimg": "/static/images/24tut/author3.jpg",
+          'comment': 'This is really cool.We’ll have to do a bit of work to push the app data down the vpn on our corporate phones, as our orchestrator isn’t internet accessible outside our network. Excited to try it out once I get someone to help me with that,'
+        },
+
+      ]
+    },
+    {
+      'title': "Open Source Activity packs for Community",
+      "imgsrc": "/static/images/24tut/facebook.png",
+      "secondtext": "Releases",
+      'replies': '15',
+      "users": [
+
+        {
+          "name": 'Yash',
+          "userimg": "/static/images/24tut/author2.jpeg",
+          'comment': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        },
+        {
+          "name": 'Mir',
+          "userimg": "/static/images/24tut/author5.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+      ]
+    },
+    {
+      'title': "How to ask a good question?",
+      "imgsrc": "/static/images/24tut/istudy.png",
+      "secondtext": "FAQ and Tutorials forum faq",
+      'replies': '10',
+      "users": [
+
+        {
+          "name": 'Yash',
+          "userimg": "/static/images/24tut/author2.jpeg",
+          'comment': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        },
+      ],
+    },
+
+
+
+
+  ]
 
 
   $scope.properties = {
@@ -801,6 +914,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       $scope.books = false;
       $scope.testseries = false;
       $scope.forum = !$scope.forum;
+
       $scope.videos = false;
       $scope.refbook = false;
       if ($scope.device.smallDevice == true) {
@@ -812,12 +926,15 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          // $scope.forumlink = "/courses/forum/"
+          // console.log($scope.forumlink,'llll');
         } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          // $scope.forumlink = "/courses"
         }
 
 
@@ -853,7 +970,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
 
 
 
-  $scope.headclick = function(val) {;
+  $scope.headclick = function(val) {
     $scope.bookscontent[val].view = !$scope.bookscontent[val].view;
   }
   $scope.loadcontent = function(val, length) {
@@ -890,6 +1007,12 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       price: '15.00 ',
     },
   ]
+  $scope.count = null;
+  $scope.openedforum = false;
+  $scope.forumview = function(val) {
+    $scope.count = val;
+    $scope.openedforum = !$scope.openedforum;
+  }
 
 })
 app.controller('controller.disclaimer', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {})
