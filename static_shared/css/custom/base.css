@@ -500,6 +500,27 @@ body {
   color: #fff;
 }
 
+.nav-center> li > a {
+  color:grey;
+}
+
+.nav-center> li > a:hover, .nav-center > li >a:focus , .nav-center> .active > a {
+	background-color: var(--themeMain);
+	color: #fff;
+}
+
+.nav-center-inverse> li > a {
+  color:white;
+  border-right: solid 6px var(--themeMain);
+}
+
+.nav-center-inverse> li > a:hover, .nav-center-inverse > li >a:focus , .nav-center-inverse> .active > a{
+  background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;
+  border-right: solid 6px white;
+  color: #fff;
+}
+
+
 .sidebarList> li > a {
 	color:#337AB7;
 }

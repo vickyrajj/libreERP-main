@@ -4,8 +4,8 @@
   <div class="col-md-9">
     <generic-Calendar date="date" day-Items="data.items" item-Templates="{{templates}}" day-Clicked="showDay" item-Clicked="showPerticular"></generic-Calendar>
   </div>
-  <div class="col-md-3" style="position:absolute; height:100%;top:0px;right:0px;background-color:var(--themeMain);color:white;">
-    <div class="row" style="background-color:var(--themeMain);color:white;">
+  <div class="col-md-3" style="position:absolute; height:100%;top:0px;right:0px;">
+    <div class="row" >
 
       <div class="dayDetails">
         <div class="sideBarDate"><i class="fa fa-calendar fa-2x pull-left"></i>{{date | date : 'dd MMM yyyy'}} </div>
@@ -14,7 +14,7 @@
       </div>
 
     </div>
-    <div class="row bg-green dayInfoBox" style="max-height:350px;overflow:auto;">
+    <div class="row dayInfoBox" style="max-height:350px;overflow:auto;">
       <!-- <div class=" dayDetails">
         <div class="">
           <i class="fa fa-clock-o fa fa-3x pull-left"></i> <i class="fa fa-sign-in"></i> : 2:26pm
@@ -46,6 +46,8 @@
         </li>
       </ul>
     </div>
+
+    <hr>
 
     <div ng-if="['Reminder' , 'Meeting'].indexOf(itemInView.type)!=-1 " class="row container-fluid" style="padding-top:10px;padding-bottom:10px;">
 

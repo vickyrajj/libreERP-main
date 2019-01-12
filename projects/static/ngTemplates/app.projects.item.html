@@ -1,4 +1,4 @@
-<div class="col-md-4" style="margin-bottom:20px;" ng-controller="projectManagement.project.item">
+<div class="col-md-4" style="margin-bottom:20px;" ng-controller="projectManagement.project.item" ng-click="rowActionClicked('projectBrowser')">
   <div class="container-fluid card" style="padding:30px;padding-top:0px;">
     <div class="row">
       <div class="row">
@@ -12,7 +12,7 @@
             message="Are you sure?"
             confirm-text="Yes <i class='fa fa-check'></i>"
             cancel-text="No"
-            on-confirm="delete(data.pk , index)"
+            on-confirm="delete(data.pk , index);$event.stopPropagation();"
             confirm-button-type="danger"
             cancel-button-type="default" style="position:relative;top:30px;right:-15px;cursor:pointer;">
           </i>
@@ -25,7 +25,6 @@
         <strong>{{data.team.length}}</strong> Team members <br>
         <strong>{{data.files.length}}</strong> files <br>
         <strong>{{data.repos.length}}</strong> Repos <br>
-        <i class="fa fa-info-circle fa-4x text-primary" ng-click="rowActionClicked('projectBrowser')" style="position:absolute;right:20px;bottom:-10px;cursor:pointer;"></i>
     </div>
   </div>
 </div>

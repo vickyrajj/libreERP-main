@@ -61,11 +61,13 @@
   display: block;
 }
 .dayInfoBox >ul >li >a:hover ,.dayInfoBox >ul >li >a:focus {
-  background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;
+  /*background: rgba(0, 0, 0, 0.2) none repeat scroll 0% 0%;*/
+  border-right:4px solid red;
 }
 .dayInfoBox >ul >li >a{
   text-decoration: none;
   box-sizing: border-box;
-  color: #fff;
+  /*color: #fff;*/
+  border-right:4px solid white;
 
 }
