@@ -9,35 +9,108 @@ from ERP.models import service
 from projects.models import project
 from projects.serializers import projectLiteSerializer
 from datetime import datetime
+from HR.serializers import userSearchSerializer
 
 class AccountSerializer(serializers.ModelSerializer):
+    contactPerson = userSearchSerializer(many=False,read_only=True)
+    # authorizedSignaturies = userSearchSerializer(many=True,read_only=True)
     class Meta:
         model = Account
-        fields = ('pk', 'personal', 'created' , 'number' , 'ifsc' , 'bank'  , 'bankAddress' , 'contactPerson' , 'authorizedSignaturies')
+        fields = ('pk', 'personal','title', 'created' , 'number' , 'ifsc' , 'bank'  , 'bankAddress' , 'contactPerson' , 'authorizedSignaturies','balance')
+        read_only_fields = ('contactPerson','authorizedSignaturies')
+
+    def create(self , validated_data):
+        acc = Account(**validated_data)
+        if 'contactPerson' in self.context['request'].data:
+            acc.contactPerson = User.objects.get(pk=int(self.context['request'].data['contactPerson']))
+        acc.save()
+        if 'authorizedSignaturies' in self.context['request'].data:
+            for u in self.context['request'].data['authorizedSignaturies']:
+                acc.authorizedSignaturies.add(User.objects.get(pk = int(u)))
+        return acc
+
+    def update(self ,instance, validated_data):
+        for key in ['personal','title', 'number' , 'ifsc', 'bank' , 'bankAddress' , 'balance']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                print "Error while saving " , key
+                pass
+        if 'contactPerson' in self.context['request'].data:
+            instance.contactPerson = User.objects.get(pk=int(self.context['request'].data['contactPerson']))
+        if 'addMoney' in self.context['request'].data:
+            instance.balance += int(self.context['request'].data['addMoney'])
+        instance.save()
+        if 'authorizedSignaturies' in self.context['request'].data:
+            instance.authorizedSignaturies.clear()
+            for u in self.context['request'].data['authorizedSignaturies']:
+                instance.authorizedSignaturies.add(User.objects.get(pk = int(u)))
+        return instance
 
 class AccountLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('pk', 'number', 'ifsc', 'bank')
+        fields = ('pk', 'title' , 'number', 'ifsc', 'bank')
 
 class CostCenterSerializer(serializers.ModelSerializer):
+    head = userSearchSerializer(many=False,read_only=True)
+    account = AccountLiteSerializer(many=False,read_only=True)
     class Meta:
         model = CostCenter
-        fields = ('pk', 'head' , 'name' , 'code' , 'created' , 'account' , 'projects')
+        fields = ('pk', 'head' , 'name' , 'code' , 'created' , 'account' )
+
+    def create(self , validated_data):
+        cc = CostCenter(**validated_data)
+        if 'head' in self.context['request'].data:
+            cc.head = User.objects.get(pk=int(self.context['request'].data['head']))
+        if 'account' in self.context['request'].data:
+            cc.account = Account.objects.get(pk=int(self.context['request'].data['account']))
+        cc.save()
+        return cc
+    def update(self ,instance, validated_data):
+        for key in ['name' , 'code']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                print "Error while saving " , key
+                pass
+        if 'head' in self.context['request'].data:
+            instance.head = User.objects.get(pk=int(self.context['request'].data['head']))
+        if 'account' in self.context['request'].data:
+            instance.account = Account.objects.get(pk=int(self.context['request'].data['account']))
+        instance.save()
+        return instance
 
 class TransactionSerializer(serializers.ModelSerializer):
     fromAcc = AccountLiteSerializer(many = False , read_only = True)
     toAcc = AccountLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Transaction
-        fields = ('pk', 'fromAcc' , 'toAcc' , 'ammount' , 'user' , 'balance', 'externalReferenceID', 'externalConfirmationID', 'created', 'api', 'apiCallParams')
+        fields = ('pk', 'created','fromAcc' , 'toAcc' , 'user' , 'amount' , 'balance', 'externalReferenceID', 'externalConfirmationID', 'api', 'apiCallParams')
+        read_only_fields = ('user',)
+    def create(self , validated_data):
+        tcs = Transaction(**validated_data)
+        tcs.user = self.context['request'].user
+        if 'toAcc' in self.context['request'].data:
+            toAc = Account.objects.get(pk=int(self.context['request'].data['toAcc']))
+            toAc.balance += self.context['request'].data['amount']
+            toAc.save()
+            tcs.toAcc = toAc
+            tcs.balance = toAc.balance
+        if 'fromAcc' in self.context['request'].data:
+            frmAc = Account.objects.get(pk=int(self.context['request'].data['fromAcc']))
+            frmAc.balance -= self.context['request'].data['amount']
+            frmAc.save()
+            tcs.fromAcc = frmAc
+        tcs.save()
+        return tcs
 
 class InflowSerializer(serializers.ModelSerializer):
     toAcc = AccountLiteSerializer(many = False , read_only = True)
     class Meta:
         model = Inflow
         fields = ('pk', 'toAcc' , 'created' , 'referenceID' , 'user', 'service', 'currency', 'dated', 'attachment', 'description', 'verified' , 'fromBank', 'chequeNo' , 'mode')
-        read_only_fields = ('user' , 'amount', 'balance')
+        read_only_fields = ('user' , 'amount')
     def create(self , validated_data):
         u = self.context['request'].user
         inf = Inflow(**validated_data)

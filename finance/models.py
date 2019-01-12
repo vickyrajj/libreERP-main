@@ -26,7 +26,7 @@ class Account(models.Model):
     bank = models.CharField(max_length = 50 , null = False)
     bankAddress = models.TextField(max_length = 500 , null = False)
     contactPerson = models.ForeignKey(User , null = False , related_name = 'accountsManaging')
-    authorizedSignaturies = models.ManyToManyField(User , related_name = 'checkingAccounts')
+    authorizedSignaturies = models.ManyToManyField(User , related_name = 'checkingAccounts',blank=True)
     personal = models.BooleanField(default = False) # if this account is personal account , in that case the authorized person will be the person to which this account belongs
     balance = models.FloatField(default = 0)
     def __unicode__(self):
@@ -59,7 +59,7 @@ CURRENCY_CHOICES = (
 
 class Inflow(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    ammount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField()
     toAcc = models.ForeignKey(Account , null = False , related_name = 'inflowCredits')
     referenceID = models.CharField(max_length = 30 , null = False)
     user = models.ForeignKey(User , related_name='inflowsTransacted' , null = False)
@@ -72,22 +72,21 @@ class Inflow(models.Model):
     fromBank = models.CharField(max_length = 30 , null = True)
     chequeNo = models.CharField(max_length = 30 , null = True)
     mode = models.CharField(choices = INFLOW_TYPES , max_length = 20, default = 'cash')
-    balance =  models.PositiveIntegerField()
 
 class Transaction(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
     fromAcc = models.ForeignKey(Account , null = False , related_name = 'debits')
     toAcc = models.ForeignKey(Account , null = False , related_name = 'credits')
-    ammount = models.PositiveIntegerField()
     user = models.ForeignKey(User , related_name='transactions' , null = False)
-    balance = models.PositiveIntegerField()
-    externalReferenceID = models.CharField(max_length = 30 , null = False)
-    externalConfirmationID = models.CharField(max_length = 30 , null = False)
-    created = models.DateTimeField(auto_now_add=True)
+    amount = models.PositiveIntegerField(default=0)
+    balance = models.PositiveIntegerField(default=0)
+    externalReferenceID = models.CharField(max_length = 30 , null = True)
+    externalConfirmationID = models.CharField(max_length = 30 , null = True)
     api = models.CharField(max_length = 20 , null = True)
     apiCallParams = models.CharField(max_length = 1500 , null = True)
 
     def __unicode__(self):
-        return '<from : %s > , <to : %s > , <amount : %s> , < user : %s>' %(self.fromAcc , self.toAcc , self.ammount , self.user.username)
+        return '<from : %s > , <to : %s > , <amount : %s> , < user : %s>' %(self.fromAcc , self.toAcc , self.amount , self.user.username)
 
 APPROVAL_CHOICES = (
     ('Yes' , 'Yes'),

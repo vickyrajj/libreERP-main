@@ -1,7 +1,8 @@
-<div class="col-md-5 card" style="padding-top:10px;" ng-controller="businessManagement.finance.expenseClaims.item">
-  <div class="row">
+<div class="col-md-4" style="padding-bottom:10px;padding-left:10px;padding-right:10px" ng-controller="businessManagement.finance.expenseClaims.item">
+  <div class="card" style="padding:10px;border-radius:20px">
+  <div class="row" ng-click="rowActionClicked('costCenterBrowser')" style="cursor:pointer">
     <div class="col-md-2">
-      <img ng-src="{{data.head | getDP}}" class="img-circle pull-right" width="50"/>
+      <img ng-src="{{data.head.pk | getDP}}" class="img-circle pull-right" width="40"/>
     </div>
     <div class="col-md-10">
       <div class="row">
@@ -11,13 +12,11 @@
         <strong>Code : </strong> <span>{{data.code}}</span>
       </div>
       <div class="row">
-        <strong>Account : </strong> <span>{{data.account}}</span>
-      </div>
-      <div class="row">
-        <strong>Projects : </strong> <span>{{data.projects}}</span>
+        <strong>Account : </strong> <span>{{data.account.number}}</span>
       </div>
     </div>
-    <i class="fa fa-info-circle fa-4x text-primary" ng-click="rowActionClicked('costCenterBrowser')" style="position:absolute;right:20px;bottom:10px;cursor:pointer;">
-    </i>
   </div>
+  <i class="fa fa-pencil fa-2x text-primary" ng-click="rowActionClicked('edit')" style="position:absolute;right:20px;bottom:10px;cursor:pointer;">
+  </i>
+</div>
 </div>

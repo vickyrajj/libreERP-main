@@ -1,22 +1,25 @@
 <div class="col-md-6" style="padding-bottom:10px;padding-left:10px;padding-right:10px;" ng-controller="businessManagement.finance.accounts.item">
-  <div class="card" style="padding:10px;">
-    <div class="row">
+  <div class="card" style="padding:10px;border-radius:20px">
+    <div class="row" ng-click="rowActionClicked('accountBrowser')" style="cursor:pointer">
       <div class="col-md-2">
         <img ng-src="{{getBankIcon(data.bank)}}" class="img-circle pull-right" width="50"/>
       </div>
       <div class="col-md-10">
         <div class="row">
-          <span style="font-size:20px;" class="text-muted"><strong>Account : </strong> {{data.number}}</span>
+          <span style="font-size:20px;" class="text-muted"><strong>Bank Name : </strong> {{data.bank}}</span>
         </div>
         <div class="row">
-          <strong>Contact Person: </strong> <span>{{data.contactPerson | getName}}</span>
+          <span style="font-size:18px;" class="text-muted"><strong>Account : </strong> {{data.number}}</span>
         </div>
         <div class="row">
-          <strong>IFSC : </strong> <span>{{data.ifsc}}</span>
+          <span style="font-size:18px;" class="text-muted"><strong>IFSC : </strong> {{data.ifsc}}</span>
+        </div>
+        <div class="row">
+          <span style="font-size:18px;" class="text-muted"><strong>Contact Person: </strong>{{data.contactPerson.pk | getName}}</span>
         </div>
       </div>
-      <i class="fa fa-info-circle fa-2x text-primary" ng-click="rowActionClicked('accountBrowser')" style="position:absolute;right:20px;bottom:20px;cursor:pointer;">
-      </i>
     </div>
+    <i class="fa fa-pencil fa-2x text-primary" ng-click="rowActionClicked('edit')" style="position:absolute;right:20px;bottom:20px;cursor:pointer;">
+    </i>
   </div>
 </div>

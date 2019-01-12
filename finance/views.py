@@ -4,12 +4,15 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
 from .models import *
+from django.db.models import Q, F
 # Create your views here.
 
 class AccountViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['number']
 
 class InflowViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
@@ -24,7 +27,15 @@ class CostCenterViewSet(viewsets.ModelViewSet):
 class TransactionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = TransactionSerializer
-    queryset = Transaction.objects.all()
+    # queryset = Transaction.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['amount','toAcc']
+    def get_queryset(self):
+        if 'filterBoth' in self.request.GET:
+            toRet = Transaction.objects.filter(Q(fromAcc__number=self.request.GET['filterBoth'])|Q(toAcc__number=self.request.GET['filterBoth']))
+            return toRet
+        else:
+            return Transaction.objects.all()
 
 class ExpenseSheetViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
