@@ -72,6 +72,10 @@ class Inflow(models.Model):
     fromBank = models.CharField(max_length = 30 , null = True)
     chequeNo = models.CharField(max_length = 30 , null = True)
     mode = models.CharField(choices = INFLOW_TYPES , max_length = 20, default = 'cash')
+    gstCollected = models.FloatField(default=0)
+
+# class InflowQtyMap(models.Model):
+
 
 class Transaction(models.Model):
     created = models.DateTimeField(auto_now_add=True)

@@ -21,4 +21,5 @@ router.register(r'purchaseorderqty' , PurchaseOrderQtyViewSet , base_name ='purc
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'uplodInflowData/$' , UplodInflowDataAPI.as_view()),
 ]

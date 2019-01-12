@@ -4,6 +4,8 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
 from gitweb.serializers import repoLiteSerializer
+from finance.models import CostCenter
+
 
 class mediaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,10 +24,16 @@ class projectCommentSerializer(serializers.ModelSerializer):
         model = projectComment
         fields = ( 'user' , 'text' , 'media')
 
+class CostCenterLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CostCenter
+        fields = ('pk', 'head' , 'name' , 'code' , 'account' )
+
 class projectSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
     repos = repoLiteSerializer(many = True , read_only = True)
     comments = projectCommentSerializer(many = True , read_only = True)
+    costCenter = CostCenterLiteSerializer(many = False , read_only = True)
     class Meta:
         model = project
         fields = ('pk','dueDate', 'created' , 'title' , 'description' , 'files' , 'team', 'comments', 'repos','user','costCenter')
@@ -33,6 +41,8 @@ class projectSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         p = project(**validated_data)
         p.user = self.context['request'].user
+        if 'costCenter' in self.context['request'].data:
+            p.costCenter = CostCenter.objects.get(pk=int(self.context['request'].data['costCenter']))
         p.save()
         for u in self.context['request'].data['team']:
             p.team.add(User.objects.get(pk=u))

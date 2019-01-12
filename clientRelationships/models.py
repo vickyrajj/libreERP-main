@@ -130,6 +130,7 @@ class Contract(models.Model): # invoices actually
     archivedDate = models.DateTimeField(null = True)
     approvedDate = models.DateTimeField(null = True)
     grandTotal = models.PositiveIntegerField(default=0)
+    totalTax = models.FloatField(default=0)
 
 SCHEDULE_CHOICES = (
     ('N/A' , 'N/A'),
