@@ -12,7 +12,7 @@
 
 {% block content %}
 
-<div ui-view style="margin-top:40px;"></div>
+<div ui-view></div>
 
 
 {% include "tutorsFooter.html" %}
@@ -34,7 +34,9 @@
 <script src="{% static 'js/datetimepicker.js' %}"></script>
 <script src="{% static 'js/angular-flash.js' %}"></script>
 <script src="{% static 'js/custom/filters.js' %}"></script>
-
-
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$']]} });
+</script>
 
 {% endblock %}

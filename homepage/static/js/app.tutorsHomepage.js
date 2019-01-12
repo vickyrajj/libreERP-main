@@ -198,6 +198,12 @@ app.config(function($stateProvider) {
       },
       controller: 'controller.chapter'
     })
+  $stateProvider
+    .state('courseVideo', {
+      url: "/courseVideo",
+      templateUrl: '/static/ngTemplates/app.homepage.courseVideo.html',
+      controller: 'controller.courseVideo'
+    })
 
 });
 
@@ -257,6 +263,21 @@ app.controller('controller.blogDetails', function($scope, $state, $http, $timeou
 
 app.controller('controller.chapter', function($scope, $rootScope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, $document) {
 
+  $scope.initiateMath = function() {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  }
+
+
+  $scope.menu = false;
+  $scope.show_menu = function() {
+    console.log('clickedddddd');
+
+    if ($scope.menu == true) {
+      $scope.menu = false;
+    } else {
+      $scope.menu = true;
+    }
+  }
 
 
   function elementInViewport(el) {
@@ -286,9 +307,10 @@ app.controller('controller.chapter', function($scope, $rootScope, $state, $http,
     if (!isElementinView) {
       console.log('scroll');
       var objDiv = document.getElementById("leftSection");
-      objDiv.scrollTop = objDiv.scrollHeight;
+      // objDiv.scrollIntoView()
+      // objDiv.scrollTop = objDiv.scrollHeight;
     }
-    
+
   }, 2000);
 
 
@@ -301,15 +323,30 @@ app.controller('controller.chapter', function($scope, $rootScope, $state, $http,
     $scope.displ = true;
     $scope.idx = idx
   }
-  $scope.toTheTop = function() {
-    $document.scrollTopAnimated(0, 5000).then(function() {
-      console && console.log('You just scrolled to the top!');
-    });
+  $scope.toTheTop = function(id) {
+    // $document.scrollTopAnimated(0, 5000).then(function() {
+    //   console && console.log('You just scrolled to the top!');
+    // });
+    console.log(id);
+    var ele = document.getElementById('q' + id)
+    console.log(ele);
+    console.log(ele.scrollHeight);
+    ele.scrollIntoView();
+    $scope.menu = false;
   }
-  var section3 = angular.element(document.getElementById('section-3'));
-  $scope.toSection3 = function() {
-    $document.scrollToElementAnimated(section3);
-  }
+
+  // window.onscroll = function() {
+  //   $scope.flybutton()
+  // };
+  //
+  // $scope.flybutton = function() {
+  //   document.getElementById("flybtn").style.display = "block";
+  //   document.getElementById("flybtn1").style.display = "block";
+  //   setTimeout(function() {
+  //     document.getElementById("flybtn").style.display = "none";
+  //     document.getElementById("flybtn1").style.display = "none";
+  //   }, 1000);
+  // }
 
 })
 app.controller('controller.courses', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
@@ -496,9 +533,43 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       }
     }
   }
+  $scope.bgrand = function () {
+
+            return  '#' + Math.floor(Math.random()*16777215).toString(16)
+
+
+    };
+    $scope.arr = [];
 
 
 
+  $scope.refbooks = [{
+    'name': 'concept of Physics',
+    'img': '/static/images/24tut/hcv.jpg',
+    'author': 'HC-Verma',
+    'detail':'Textbook for class 12'
+  }, {
+    'name': 'concept of Chemistry',
+    'img': '/static/images/24tut/cbook.jpg',
+    'author': 'HC-Verma',
+    'detail':'Textbook for class 12'
+  }, {
+    'name': 'concept of Maths',
+    'img': '/static/images/24tut/math.jpg',
+    'author': 'HC-Verma',
+    'detail':'Textbook for class 12'
+  }, {
+    'name': 'concept of Biology',
+    'img': '/static/images/24tut/bio.jpg',
+    'author': 'HC-Verma',
+    'detail':'Textbook for class 12'
+
+  }, ]
+  for (var i = 0; i < $scope.refbooks .length; i++) {
+    var color = $scope.bgrand ();
+    $scope.arr.push(color)
+    // console.log($scope.arr);
+  }
 
   $scope.headclick = function(val) {
     $scope.bookscontent[val].view = !$scope.bookscontent[val].view;

@@ -3,7 +3,7 @@
 
 
 
-<div class="container-fluid">
+<div class="container-fluid"style="padding-top:40px;">
   <div class="col-md-12">
     <div class="col-md-10">
       <div class="row" style="margin-top:1em;">
@@ -54,14 +54,14 @@
     </div>
     <div class="col-md-2 min_padd">
       <div class="text-center">
-        <img src="/static/images/24tut/cbook.jpg" width="70%">
+        <img src="/static/images/24tut/hcv.jpg"class="tb_image">
       </div>
     </div>
   </div>
 </div>
 <div class="container-fluid" style="background-color:#FCC300;min-height:10vh;  position:relative;padding-bottom: 2em;">
   {% verbatim %}
-  <div class="container">
+  <div class="col-md-12">
     <div class="col-md-6 clickchange" ng-model='forum' ng-class="click4" ng-click="clicks(4)">
       <span><b>Solutions</b><i ng-if="device.smallDevice " class="fa {{forum==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
       <div ng-class="class1"></div>
@@ -77,7 +77,7 @@
   <div class="col-md-12">
     <div class="col-md-6" style="min-height:60vh;padding:0px;">
       <!-- <img src="/static/images/24tut/atomic.png" width="50%"style="position:absolute;z-index:-100;top:18%;left:21%;opacity:0.2;"> -->
-      <div class="row" style="font-size:18px;display:inline-block;text-align:left;width:100%;">
+      <div class="row text-center" style="font-size:18px;display:inline-block;width:100%;">
         <ul class="list-unstyled chap_list">
           {% for s in sectionobj %}
           <li><a ui-sref="chapter({chapterName: '{{s.shortUrl}}' })"><span>{{s.title}}</span></a></li>

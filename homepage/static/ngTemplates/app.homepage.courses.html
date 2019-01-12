@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="row" style="margin-top:2em;">
-      <div class="col-md-3 col-xs-12 rightborder" >
+      <div class="col-md-3 col-xs-12 rightborder">
         <table>
           <tr>
             <td style="width:35%;"><img src="/static/images/24tut/author1.png" class="img-responsive img-circle" style="height:50px;width:50px;" /></td>
@@ -45,7 +45,7 @@
       <div class="col-md-6">
         <table class="alignintable">
           <tr>
-            <td class="tablehead" ><span> Share this course:</span></td>
+            <td class="tablehead"><span> Share this course:</span></td>
             <td><i class="fa fa-facebook" aria-hidden="true"></i></td>
             <td><i class="fa fa-twitter" aria-hidden="true"></i></td>
             <td><i class="fa fa-linkedin" aria-hidden="true"></i></td>
@@ -88,15 +88,15 @@
       <div ng-repeat="a in bookscontent">
         <div class="row " ng-class="!$last ? 'contentborder' : 'contentborderlast'" style="position:relative;">
           <div ng-click="headclick($index)" ng-class="!$last ? 'headblock' : 'headblocklast'">
-            <span class="titlesize" ><b>{{a.title}}<span style="font-size:15px;margin-left:1em;"> (6 Lessons)</span></b></span>
-            <span class="titleicon" ><i class="fa fa-angle-{{a.view==true?'up':'down'}}" style="font-size:30px;"></i></span>
+            <span class="titlesize"><b>{{a.title}}<span style="font-size:15px;margin-left:1em;"> (6 Lessons)</span></b></span>
+            <span class="titleicon"><i class="fa fa-angle-{{a.view==true?'up':'down'}}" style="font-size:30px;"></i></span>
             <div ng-class="!$last ? 'roundcircle' : 'roundcirclelast'"> </div>
           </div>
           <div ng-show="a.view">
             <div>
               <div class="row " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
                 <div class="col-md-10 col-xs-11  firstchild ">{{a.chapter.one}}</div>
-                <div class="col-md-2 col-xs-1  firstchild right_on" >1</div>
+                <div class="col-md-2 col-xs-1  firstchild right_on">1</div>
               </div>
             </div>
             <div class="row " ng-class="!$last ? 'contentblock' : 'contentblocklast'">
@@ -126,7 +126,7 @@
               </div>
             </div>
             <div class="text-center">
-              <button class="btn-style1" ng-click="loadcontent($index)" >{{a.view1 == true?'Load Less':'Load More'}}</button>
+              <button class="btn-style1" ng-click="loadcontent($index)">{{a.view1 == true?'Load Less':'Load More'}}</button>
             </div>
 
           </div>
@@ -134,27 +134,64 @@
       </div>
     </div>
   </div>
+  <div class="container-fluid no_padding" ng-show="videos">
+    <div class="col-md-12 min_padd text-center" style="background:#eee;display:flex;">
+      <div class="video_card text-center" ng-repeat="i in subject" href="/courseVideo">
+        <!-- <img src="{{i.img}}" alt=""> -->
+        <h2 style="">{{i.name}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="container no_padding" ng-show="refbook">
+    <div class="row min_padd text-center" style="">
+      <div class="col-md-6" style="position: relative;"ng-repeat="b in refbooks">
+        <div class="movie-card">
+          <div class="col-md-5 studentcard" style="min-height:300px;">
+            <img src="{{b.img}}" class="imgstyle" />
+          </div>
+          <!-- <div class="circle">
+            <div><b>83%</b></div>
+          </div> -->
+          <div class="colorcircle" style="background-color:{{arr[$index]}}">
+          </div>
+          <div class="col-md-7 text-left">
+            <div style="margin-top:3em;">
+              <span style="font-size:18px;color:#5B5B5B;"> <strong>{{b.name}}</strong> </span><br>
+              <span style="font-size:18px;color:#5B5B5B;">{{b.detail}}</span>
+            </div>
+            <div class="stucardtext">
+              <span style="font-size:18px;"><b>{{b.author}}</b></span>
+            </div>
+            <div style="padding-bottom: 20px;">
+              <span style="font-size:15px;color:#5B5B5B;padding-bottom: 20px;"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 
-  <div class="container-fluid" style="background-color: #fff;">
-    <div class="container" style=" margin-bottom: 2em;text-align: center;">
-      <h1 style="margin-top:2em;"><b>Related Courses</b></h1>
-      <span class="heading_small">COURSES YOU MIGHT BE INTERESTED IN</span>
-      <div class="row" style="margin-bottom:2em;">
-        <div ng-repeat="a in cardss">
-          <div class="anim-in-out anim-zoom-out">
-            <div style="margin-top: 2em;">
-              <div class="col-md-4">
-                <div class="cardstype">
-                  <img src="{{a.img1}}" class="img-radiuss" alt="Avatar" style="width:100%">
-                  <div class="body1" style="background-color: #fff;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-                    <h4 style="border-bottom:1px solid #C9C9C9;padding-bottom:1em;"><b>{{a.title}}</b></h4>
-                    <p style="padding-top:1em;">{{a.content}}</p>
-                    <table class="table-align">
-                      <td class="tablealign1"><span style="text-align: center"><img src="{{a.img2}}" class="img-responsive img-circle" style="height:50px;width:50px;"></span></td>
-                      <td class="tablealign2"><b>{{a.name}}</b></td>
-                      <td><span class="badge badge-pills">&#8377;{{a.price}}/hr</span></td>
-                    </table>
-                  </div>
+<div class="container-fluid" style="background-color: #fff;">
+  <div class="container" style=" margin-bottom: 2em;text-align: center;">
+    <h1 style="margin-top:2em;"><b>Related Courses</b></h1>
+    <span class="heading_small">COURSES YOU MIGHT BE INTERESTED IN</span>
+    <div class="row" style="margin-bottom:2em;">
+      <div ng-repeat="a in cardss">
+        <div class="anim-in-out anim-zoom-out">
+          <div style="margin-top: 2em;">
+            <div class="col-md-4">
+              <div class="cardstype">
+                <img src="{{a.img1}}" class="img-radiuss" alt="Avatar" style="width:100%">
+                <div class="body1" style="background-color: #fff;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                  <h4 style="border-bottom:1px solid #C9C9C9;padding-bottom:1em;"><b>{{a.title}}</b></h4>
+                  <p style="padding-top:1em;">{{a.content}}</p>
+                  <table class="table-align">
+                    <td class="tablealign1"><span style="text-align: center"><img src="{{a.img2}}" class="img-responsive img-circle" style="height:50px;width:50px;"></span></td>
+                    <td class="tablealign2"><b>{{a.name}}</b></td>
+                    <td><span class="badge badge-pills">&#8377;{{a.price}}/hr</span></td>
+                  </table>
                 </div>
               </div>
             </div>
@@ -163,56 +200,57 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="container-fluid" style="min-height:60vh;background-color:#F9F9F9;">
-    <div class="col-md-12 min_padd text-center">
-      <h1 class="heading_big">eLearny's Testimonials</h1>
-      <h5 class="heading_small">WHAT STUDENTS THINK OF US</h5>
+<div class="container-fluid" style="min-height:60vh;background-color:#F9F9F9;">
+  <div class="col-md-12 min_padd text-center">
+    <h1 class="heading_big">eLearny's Testimonials</h1>
+    <h5 class="heading_small">WHAT STUDENTS THINK OF US</h5>
+  </div>
+  <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-4">
+      <div class="container-fluid tell_card">
+        <img src="/static/images/24tut/tell1.jpeg" class="tell_abt">
+        <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
+        <div class="text-center tell_c_info">
+          <h2 class="pro_head">Lauren Ralph</h2>
+          <h5 class="text-muted">eLearny Student</h5>
+          <div class="" style="padding:10px 30px;line-height:2;">
+            <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
+            <img src="/static/images/24tut/qleft.png" class="quotes_img">
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="col-md-8 col-md-offset-2">
-      <div class="col-md-4">
-        <div class="container-fluid tell_card">
-          <img src="/static/images/24tut/tell1.jpeg" class="tell_abt">
-          <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
-          <div class="text-center tell_c_info">
-            <h2 class="pro_head">Lauren Ralph</h2>
-            <h5 class="text-muted">eLearny Student</h5>
-            <div class="" style="padding:10px 30px;line-height:2;">
-              <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
-              <img src="/static/images/24tut/qleft.png" class="quotes_img">
-            </div>
+    <div class="col-md-4">
+      <div class="container-fluid tell_card">
+        <img src="/static/images/24tut/tell2.jpeg" class="tell_abt">
+        <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
+        <div class="text-center  tell_c_info">
+          <h2 class="pro_head">Stan Lee</h2>
+          <h5 class="text-muted">Music Student</h5>
+          <div class="" style="padding:10px 30px;line-height:2;">
+            <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
+            <img src="/static/images/24tut/qleft.png" class="quotes_img">
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="container-fluid tell_card">
-          <img src="/static/images/24tut/tell2.jpeg" class="tell_abt">
-          <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
-          <div class="text-center  tell_c_info">
-            <h2 class="pro_head">Stan Lee</h2>
-            <h5 class="text-muted">Music Student</h5>
-            <div class="" style="padding:10px 30px;line-height:2;">
-              <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
-              <img src="/static/images/24tut/qleft.png" class="quotes_img">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="container-fluid tell_card">
-          <img src="/static/images/24tut/tell5.png" class="tell_abt">
-          <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
-          <div class="text-center tell_c_info">
-            <h2 class="pro_head">Joseph Irvin</h2>
-            <h5 class="text-muted">Programmer</h5>
-            <div class="" style="padding:10px 30px;line-height:2;">
-              <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
-              <img src="/static/images/24tut/qleft.png" class="quotes_img">
-            </div>
+    </div>
+    <div class="col-md-4">
+      <div class="container-fluid tell_card">
+        <img src="/static/images/24tut/tell5.png" class="tell_abt">
+        <img src="/static/images/24tut/clip.png" class="tell_abt_overlay">
+        <div class="text-center tell_c_info">
+          <h2 class="pro_head">Joseph Irvin</h2>
+          <h5 class="text-muted">Programmer</h5>
+          <div class="" style="padding:10px 30px;line-height:2;">
+            <span class="heading_small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod sed do eiusmod.</span>
+            <img src="/static/images/24tut/qleft.png" class="quotes_img">
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
 </div>
