@@ -22,7 +22,8 @@
   </div>
   <div class="col-md-2" style="font-size:17px;">
     <div class="row">
-      <Strong>Amount : </Strong>{{data.amount | number}}
+      <Strong>Amount : </Strong>{{data.amount | number}} <br>
+      <Strong>Balance : </Strong>{{data.balance | number}} <br>
     </div>
   </div>
   <div class="col-md-2">
@@ -31,11 +32,6 @@
     </div>
     <div class="row" style="text-align:center;">
       <span>{{data.user | getName}} </span>
-    </div>
-  </div>
-  <div class="col-md-1">
-    <div class="row">
-      <span class="btn btn-primary" ng-click="rowActionClicked('more')">More <i class="fa fa-info-circle fa-lg"></i></span>
     </div>
   </div>
 </div>

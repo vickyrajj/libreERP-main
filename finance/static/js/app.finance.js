@@ -29,25 +29,40 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.finance.costCenter.html',
       controller: 'businessManagement.finance.costCenter'
     })
-    .state('businessManagement.finance.inflow', {
-      url: "/inflow",
-      templateUrl: '/static/ngTemplates/app.finance.inflow.html',
-      controller: 'businessManagement.finance.inflow'
+    .state('businessManagement.finance.sales', {
+      url: "/sales",
+      templateUrl: '/static/ngTemplates/app.finance.sales.html',
+      controller: 'businessManagement.finance.sales'
     })
     .state('businessManagement.finance.vendor', {
       url: "/vendor",
       templateUrl: '/static/ngTemplates/app.finance.vendor.html',
       controller: 'businessManagement.finance.vendor'
     })
-    .state('businessManagement.finance.inboundInvoices', {
-      url: "/inboundInvoices",
-      templateUrl: '/static/ngTemplates/app.finance.inboundInvoices.html',
-      controller: 'businessManagement.finance.inboundInvoices'
+    .state('businessManagement.finance.expenses', {
+      url: "/expenses",
+      templateUrl: '/static/ngTemplates/app.finance.expenses.html',
+      controller: 'businessManagement.finance.expenses'
     })
     .state('businessManagement.finance.pettyCash', {
       url: "/pettyCash",
       templateUrl: '/static/ngTemplates/app.finance.pettyCash.html',
       controller: 'businessManagement.finance.pettyCash'
+    })
+    .state('businessManagement.finance.invoicing', {
+      url: "/invoicing",
+      templateUrl: '/static/ngTemplates/app.finance.invoicing.html',
+      controller: 'businessManagement.finance.invoicing'
+    })
+    .state('businessManagement.finance.inventory', {
+      url: "/inventory",
+      templateUrl: '/static/ngTemplates/app.finance.inventory.html',
+      controller: 'businessManagement.finance.inventory'
+    })
+    .state('businessManagement.finance.GSTReporting', {
+      url: "/GSTReporting",
+      templateUrl: '/static/ngTemplates/app.finance.GSTReporting.html',
+      controller: 'businessManagement.finance.GSTReporting'
     })
 });
 

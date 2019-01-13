@@ -1,4 +1,4 @@
-app.controller('businessManagement.finance.inflow.form', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $uibModalInstance) {
+app.controller('businessManagement.finance.sales.form', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $uibModalInstance) {
   $scope.form = {
     toAcc: '',
     verified: false,
@@ -52,7 +52,7 @@ app.controller('businessManagement.finance.inflow.form', function($scope, $http,
   }
 });
 
-app.controller('businessManagement.finance.inflow', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions , $uibModal) {
+app.controller('businessManagement.finance.sales', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions , $uibModal) {
 
   $scope.data = {
     tableData: [],
@@ -61,7 +61,7 @@ app.controller('businessManagement.finance.inflow', function($scope, $http, $asi
 
   var multiselectOptions = [{
     icon: 'fa fa-plus',
-    text: 'new'
+    text: 'Import'
   }, ];
 
   views = [{
@@ -104,8 +104,7 @@ app.controller('businessManagement.finance.inflow', function($scope, $http, $asi
     console.log(target, action, mode);
     console.log($scope.data.tableData);
 
-    if (action == 'new') {
-      console.log('new');
+    if (action == 'Import') {
       $scope.openInflowForm();
     } else if (action == 'delete') {
       console.log('delete', target);

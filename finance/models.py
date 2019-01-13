@@ -18,6 +18,7 @@ def getcontentDocsPath(instance , filename ):
 def getInvoiceUploadPath(instance,filename):
     return "finance/vendor/%s_%s__%s"% (str(time()).replace('.','_'),instance.approver, filename)
 
+from organization.models import Unit
 class Account(models.Model):
     title = models.CharField(max_length = 20 , null = True , blank = True)
     created = models.DateTimeField(auto_now_add=True)
@@ -29,6 +30,8 @@ class Account(models.Model):
     authorizedSignaturies = models.ManyToManyField(User , related_name = 'checkingAccounts',blank=True)
     personal = models.BooleanField(default = False) # if this account is personal account , in that case the authorized person will be the person to which this account belongs
     balance = models.FloatField(default = 0)
+    unit = models.ForeignKey(Unit , related_name='costCenters' , null = True) # find out based on the head / contact person
+
     def __unicode__(self):
         return '<Number : %s > , <responsible : %s > , <bank : %s>' %(self.number , self.contactPerson.username , self.bank)
 
