@@ -30,7 +30,7 @@ app.controller("businessManagement.productsInventory.store", function($scope, $h
     views: views,
     url: '/api/POS/store/',
     searchField: 'name',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
   $scope.tableAction = function(target, action, mode) {
     console.log(target, action, mode);

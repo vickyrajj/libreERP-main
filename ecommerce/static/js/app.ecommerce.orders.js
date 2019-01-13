@@ -837,7 +837,7 @@ app.controller('businessManagement.ecommerce.orders', function($scope, $http, $a
     url: '/api/ecommerce/order/',
     searchField: 'status',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
   $scope.tableAction = function(target, action, mode) {

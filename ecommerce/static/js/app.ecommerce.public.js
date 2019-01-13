@@ -3502,7 +3502,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.totalWeight = 0;
       console.log( $scope.cartProducts);
       for (var i = 0; i < $scope.cartProducts.length; i++) {
-        $scope.totalWeight+= $scope.cartProducts[i].grossWeight
+        $scope.totalWeight+= parseFloat($scope.cartProducts[i].grossWeight) * $scope.cartProducts[i].qty
       }
       $scope.totalWeight = 2.204 * $scope.totalWeight
 

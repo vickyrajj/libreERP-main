@@ -528,7 +528,7 @@ app.controller("businessManagement.productsInventory.manufacture", function($sco
     views: views,
     url: '/api/POS/product/',
     searchField: 'name',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
     getParams: [{
       key: 'haveComposition',
       value: true
@@ -596,7 +596,7 @@ app.controller("businessManagement.productsInventory.manufacture", function($sco
     views: inProcessviews,
     url: '/api/POS/manufactureManifest/',
     searchField: 'name',
-    itemsNumPerView: [16, 32, 48]
+    itemsNumPerView: [12, 24, 48]
   }
 
 

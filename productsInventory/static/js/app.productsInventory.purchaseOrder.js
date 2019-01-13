@@ -299,7 +299,7 @@ app.controller("businessManagement.productsInventory.purchaseOrder", function($s
     views: views,
     url: '/api/POS/purchaseOrder/',
     searchField: 'service',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
     getParams : [{key : 'status' , value : 'created'}]
   }
 
@@ -307,7 +307,7 @@ app.controller("businessManagement.productsInventory.purchaseOrder", function($s
     views: views,
     url: '/api/POS/purchaseOrder/',
     searchField: 'service',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
     getParams : [{key : 'status' , value : 'approved'}]
   }
 
@@ -315,7 +315,7 @@ app.controller("businessManagement.productsInventory.purchaseOrder", function($s
     views: views,
     url: '/api/POS/purchaseOrder/',
     searchField: 'service',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
     getParams : [{key : 'status' , value : 'recieved'}]
   }
 

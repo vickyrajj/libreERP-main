@@ -16,7 +16,7 @@ app.controller("businessManagement.ecommerce.pages", function($scope, $state, $u
     views: views,
     url: '/api/ecommerce/pages/',
     searchField: 'title',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 

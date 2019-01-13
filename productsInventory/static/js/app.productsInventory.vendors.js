@@ -308,7 +308,7 @@ app.controller("businessManagement.productsInventory.vendors", function($scope, 
     views: views,
     url: '/api/POS/vendorProfile/',
     searchField: 'service',
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
 
