@@ -175,7 +175,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
 
 
   $scope.edit = function(){
-    $state.go('admin.blog' , { id : $scope.articleInView.pk , action : 'edit'});
+    $state.go('businessManagement.blog' , { id : $scope.articleInView.pk , action : 'edit'});
   }
 
   $scope.comment = {text :''};
@@ -198,7 +198,7 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
 
   $scope.goBack = function(){
     $scope.mode = 'list';
-    $state.go('admin.blog' , { id : '', action : 'list'});
+    $state.go('businessManagement.blog' , { id : '', action : 'list'});
   }
 
   $scope.viewArticle = function(index){ // if we have the data in the scope and just want to read the artile
@@ -410,9 +410,9 @@ app.controller("controller.home.blog", function($scope , $state , $users ,  $sta
         icon: false,
         onclick: function() {
           if ($scope.mode == 'edit') {
-            $state.go('admin.blog' , { action:'list'} )
+            $state.go('businessManagement.blog' , { action:'list'} )
           } else {
-            $state.go('admin.blog' , {id : '' , action:'list'} )
+            $state.go('businessManagement.blog' , {id : '' , action:'list'} )
           }
 
         }

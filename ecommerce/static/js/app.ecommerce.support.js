@@ -46,7 +46,7 @@ app.controller("businessManagement.ecommerce.support", function($scope, $state, 
     url: '/api/ecommerce/supportFeed/',
     searchField: 'status',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
     getParams : [{key : 'status__in' , value : 'created,ongoing'}],
   }
 
@@ -104,7 +104,7 @@ app.controller("businessManagement.ecommerce.support", function($scope, $state, 
     url: '/api/ecommerce/supportFeed/',
     searchField: 'status',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
     getParams : [{key : 'status__in' , value : 'junk,resolved'}],
   }
 

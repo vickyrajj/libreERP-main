@@ -1240,7 +1240,48 @@ app.controller('businessManagement.deliveryCenter.orders.online.explore', functi
       $scope.changeStatus(i, status)
     }
   }
-  $scope.generateManifestForAll = function() {
+  $scope.openWeightPopup = function(pdList) {
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.courierWeight.html',
+      size: 'md',
+      backdrop: true,
+      controller: function($scope, $uibModalInstance) {
+        console.log(pdList, 'products Dataaaaaaaaaaaaa');
+        totalWeight = 0
+        for (var i = 0; i < pdList.length; i++) {
+          if (pdList[i].product.product.grossWeight != null && pdList[i].product.product.grossWeight.length > 0) {
+            a = parseFloat(pdList[i].product.product.grossWeight)
+            pwt = a * pdList[i].qty
+            totalWeight += pwt
+          }
+        }
+        $scope.orderForm = {
+          weight: totalWeight
+        }
+        $scope.saveWeight = function() {
+          console.log($scope.orderForm.weight);
+          if ($scope.orderForm.weight.length == 0) {
+            Flash.create('warning', 'Please Mention Order Weight')
+            return
+          } else {
+            $uibModalInstance.dismiss({
+              weight: $scope.orderForm.weight
+            });
+          }
+        }
+      },
+    }).result.then(function() {
+
+    }, function(res) {
+      console.log(res);
+      if (typeof res == 'object' && res.weight) {
+        console.log(res);
+        $scope.generateManifestForAll(res.weight)
+      }
+    });
+  }
+  $scope.generateManifestForAll = function(orderWeight) {
     console.log($scope.order);
     if (!$scope.checkConditions.thirdParty) {
       console.log('self courierrrrrrrrr');
@@ -1277,9 +1318,10 @@ app.controller('businessManagement.deliveryCenter.orders.online.explore', functi
         courierAWBNo: '',
         notes: ''
       }
+      console.log('order Weighttttttttttttt', orderWeight);
       $http({
         method: 'GET',
-        url: '/api/ecommerce/createShipment/?country=US&orderPk=' + $scope.order.pk
+        url: '/api/ecommerce/createShipment/?country=' + $scope.order.countryCode + '&orderPk=' + $scope.order.pk + '&totalWeight=' + orderWeight
       }).then(function(response) {
         console.log(response.data);
         $scope.courierForm.courierName = response.data.courierName

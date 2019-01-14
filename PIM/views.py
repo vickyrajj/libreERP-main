@@ -185,14 +185,14 @@ class ImageFetchApi(APIView):
         img=''
         images =[]
         if request.GET['value'] == 'static':
-            for img in glob.glob(os.path.join('static_shared','images' , '*')):
+            for img in glob.glob(os.path.join( globalSettings.BASE_DIR,  'static_shared','images' , '*')):
                 # n= cv2.imread(img)
                 link = '/static/images/'
                 name = img.split('static_shared/images/')[1]
                 image = link+name
                 images.append(image)
         else:
-            for media in glob.glob(os.path.join('media_root','ecommerce','pictureUploads' , '*')):
+            for media in glob.glob(os.path.join(  globalSettings.BASE_DIR, 'media_root','ecommerce','pictureUploads' , '*')):
                 link = '/media/ecommerce/pictureUploads/'
                 name = media.split('media_root/ecommerce/pictureUploads/')[1]
                 image = link+name
@@ -203,23 +203,23 @@ class ImageFetchApi(APIView):
         if 'rename' in request.POST:
             if 'pictureUploads' in request.POST['path']:
                 print 'picture uploadsss'
-                path = os.path.join('media_root','ecommerce','pictureUploads')
+                path = os.path.join(globalSettings.BASE_DIR, 'media_root','ecommerce','pictureUploads')
             else:
                 print 'staticccc'
-                path = os.path.join('static_shared','images')
+                path = os.path.join(globalSettings.BASE_DIR, 'static_shared','images')
             old_file = os.path.join(path, request.POST['oldName'])
             new_file = os.path.join(path, request.POST['newName'])
             os.rename(old_file, new_file)
         if 'static' in request.POST:
             file =request.POST['file']
             filename = file.name
-            filepath = os.path.join('static_shared','images' , file.name)
+            filepath = os.path.join(globalSettings.BASE_DIR,'static_shared','images' , file.name)
             BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             os.path.join(BASE_DIR , filepath)
         if 'media' in request.POST:
             file =request.POST['file']
             filename = file.name
-            filepath = os.path.join('media_root','ecommerce','pictureUploads' , file.name)
+            filepath = os.path.join(globalSettings.BASE_DIR,'media_root','ecommerce','pictureUploads' , file.name)
             BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             os.path.join(BASE_DIR , filepath)
         return Response(status = status.HTTP_200_OK)
@@ -227,7 +227,7 @@ class ImageFetchApi(APIView):
         if request.GET['value'] == 'static':
             image = request.GET['mediaName']
             image = image.split('static/images/')[1]
-            img = os.path.join('static_shared','images' , image)
+            img = os.path.join(globalSettings.BASE_DIR,'static_shared','images' , image)
             if os.path.exists(img):
               os.remove(img)
             else:
@@ -235,7 +235,7 @@ class ImageFetchApi(APIView):
         elif request.GET['value'] == 'media':
             image = request.GET['mediaName']
             image = image.split('/media/ecommerce/pictureUploads/')[1]
-            img = os.path.join('media_root','ecommerce','pictureUploads' , image)
+            img = os.path.join(globalSettings.BASE_DIR,'media_root','ecommerce','pictureUploads' , image)
             if os.path.exists(img):
               os.remove(img)
             else:

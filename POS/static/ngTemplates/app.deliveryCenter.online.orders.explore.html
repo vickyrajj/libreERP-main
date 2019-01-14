@@ -88,7 +88,7 @@
           </div> -->
               <div class="col-md-4" ng-if="checkConditions.thirdParty && order.status!='failed' && order.orderQtyMap[succIdx].courierName==null && order.orderQtyMap[succIdx].courierAWBNo==null">
                 <div class="form-group">
-                  <button type="button" class="btn btn-primary" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="generateManifestForAll()" confirm-button-type="default" cancel-button-type="default">Generate Manifest </button>
+                  <button type="button" class="btn btn-primary" mwl-confirm title="Approve" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="openWeightPopup(order.orderQtyMap)" confirm-button-type="default" cancel-button-type="default">Generate Manifest </button>
                   <p class="help-block">Generate Manifest for selected orders</p>
                 </div>
               </div>

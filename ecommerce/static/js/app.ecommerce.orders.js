@@ -143,7 +143,7 @@
 
 
 
-app.controller('businessManagement.ecommerce.orders.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $sce ,$uibModal) {
+app.controller('businessManagement.ecommerce.orders.explore', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $sce, $uibModal) {
 
   function getCookie(cname) {
     var name = cname + "=";
@@ -210,14 +210,14 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
   $scope.order = $scope.tab.data.order
   $scope.expanded = false;
   // $scope.sts = 'aaa'
-  $scope.currency =''
+  $scope.currency = ''
   // $scope.currency = settings_currencySymbol;
   console.log(ORDERS_STATUS_LIST);
   $scope.orderStatusList = ORDERS_STATUS_LIST
   $scope.lastStatus = $scope.orderStatusList.slice(-1)[0]
   $scope.succIdx = -1
   for (var i = 0; i < $scope.tab.data.order.orderQtyMap.length; i++) {
-    if ($scope.tab.data.order.orderQtyMap[i].status!='cancelled') {
+    if ($scope.tab.data.order.orderQtyMap[i].status != 'cancelled') {
       $scope.succIdx = i
     }
   }
@@ -229,55 +229,61 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
   then(function(response) {
     if (response.data[0] != null) {
-        $scope.currency =response.data[0].value
+      $scope.currency = response.data[0].value
+    }
+  })
+  $scope.checkConditions = {
+    splitOrder: false,
+    thirdParty: false,
+    changeStatus: false,
+    posPrinting: false,
+    showGst: true
+  }
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=isStoreGlobal').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.checkConditions.showGst = false
       }
-    })
-    $scope.checkConditions = {splitOrder:false,thirdParty:false,changeStatus:false,posPrinting:false,showGst:true}
-    $http.get('/api/ERP/appSettings/?app=25&name__iexact=isStoreGlobal').
-    then(function(response) {
-      console.log('ratingggggggggggggggggggg', response.data);
-      if (response.data[0] != null) {
-        if (response.data[0].flag) {
-          $scope.checkConditions.showGst = false
-        }
+    }
+  })
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=splitOrderManagement').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.checkConditions.splitOrder = true
       }
-    })
-    $http.get('/api/ERP/appSettings/?app=25&name__iexact=splitOrderManagement').
-    then(function(response) {
-      console.log('ratingggggggggggggggggggg', response.data);
-      if (response.data[0] != null) {
-        if (response.data[0].flag) {
-          $scope.checkConditions.splitOrder = true
-        }
+    }
+  })
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=thirdPartyCourier').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.checkConditions.thirdParty = true
       }
-    })
-    $http.get('/api/ERP/appSettings/?app=25&name__iexact=thirdPartyCourier').
-    then(function(response) {
-      console.log('ratingggggggggggggggggggg', response.data);
-      if (response.data[0] != null) {
-        if (response.data[0].flag) {
-          $scope.checkConditions.thirdParty = true
-        }
+    }
+  })
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=changeOrderStatusManually').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.checkConditions.changeStatus = true
       }
-    })
-    $http.get('/api/ERP/appSettings/?app=25&name__iexact=changeOrderStatusManually').
-    then(function(response) {
-      console.log('ratingggggggggggggggggggg', response.data);
-      if (response.data[0] != null) {
-        if (response.data[0].flag) {
-          $scope.checkConditions.changeStatus = true
-        }
+    }
+  })
+  $http.get('/api/ERP/appSettings/?app=25&name__iexact=posPrinting').
+  then(function(response) {
+    console.log('ratingggggggggggggggggggg', response.data);
+    if (response.data[0] != null) {
+      if (response.data[0].flag) {
+        $scope.checkConditions.posPrinting = true
       }
-    })
-    $http.get('/api/ERP/appSettings/?app=25&name__iexact=posPrinting').
-    then(function(response) {
-      console.log('ratingggggggggggggggggggg', response.data);
-      if (response.data[0] != null) {
-        if (response.data[0].flag) {
-          $scope.checkConditions.posPrinting = true
-        }
-      }
-    })
+    }
+  })
 
   $scope.orderItemCancel = function(idx) {
     console.log(idx, $scope.order.orderQtyMap[idx]);
@@ -294,10 +300,15 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         $scope.order.orderQtyMap[idx].status = response.data.status
         $scope.order.orderQtyMap[idx].refundAmount = response.data.refundAmount
         $scope.order.orderQtyMap[idx].refundStatus = response.data.refundStatus
-        var toSend = {value : response.data.pk};
-        $http({method : 'POST' , url : '/api/ecommerce/sendStatus/' , data : toSend}).
-        then(function(response) {
-        })
+        var toSend = {
+          value: response.data.pk
+        };
+        $http({
+          method: 'POST',
+          url: '/api/ecommerce/sendStatus/',
+          data: toSend
+        }).
+        then(function(response) {})
         Flash.create('success', 'Item Has Been Cancelled');
         $scope.saveLog(idx, 'This Item Has Been Cancelled')
       }
@@ -310,13 +321,13 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         approved: true,
         status: 'ordered'
       }
-      $scope.msg='Order Has Been Approved'
+      $scope.msg = 'Order Has Been Approved'
     } else {
       var tosend = {
         approved: false,
         status: 'failed'
       }
-      $scope.msg='Order Has Been Rejected'
+      $scope.msg = 'Order Has Been Rejected'
     }
     $http({
       method: 'PATCH',
@@ -332,15 +343,15 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       }
     })
   }
-  $scope.openManifestFile=function(){
-    window.open('/home/cioc/Desktop/libreERP-main/media_root/ecommerce/manifest/example_shipment_label794650.pdf','_blank');
+  $scope.openManifestFile = function() {
+    window.open('/home/cioc/Desktop/libreERP-main/media_root/ecommerce/manifest/example_shipment_label794650.pdf', '_blank');
   }
   $scope.openManifest = function(idx) {
     if (!$scope.checkConditions.thirdParty) {
       console.log('self Manifestttttttttt');
       var td = new Date()
       m = td.getMonth() + 1
-      var awbNo = td.getDate().toString()+m.toString()+td.getFullYear().toString().substr(-2)+$scope.order.pk
+      var awbNo = td.getDate().toString() + m.toString() + td.getFullYear().toString().substr(-2) + $scope.order.pk
       console.log(awbNo);
       $http({
         method: 'PATCH',
@@ -356,7 +367,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         Flash.create('success', 'Saved');
         $scope.order.orderQtyMap[idx] = response.data
       })
-    }else {
+    } else {
       $uibModal.open({
         templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.manifestForm.html',
         size: 'lg',
@@ -366,18 +377,22 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
             return $scope.order.orderQtyMap[idx];
           }
         },
-        controller: function($scope, item , $uibModalInstance) {
+        controller: function($scope, item, $uibModalInstance) {
           $scope.item = item;
           console.log($scope.item);
-          $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
-          if ($scope.item.courierName!=null&&$scope.item.courierName.length>0) {
+          $scope.courierForm = {
+            courierName: '',
+            courierAWBNo: '',
+            notes: ''
+          }
+          if ($scope.item.courierName != null && $scope.item.courierName.length > 0) {
             $scope.courierForm.courierName = $scope.item.courierName
             $scope.courierForm.courierAWBNo = $scope.item.courierAWBNo
             $scope.courierForm.notes = $scope.item.notes
           }
-          $scope.saveManifest = function(){
-            if ($scope.courierForm.courierName.length==0||$scope.courierForm.courierAWBNo.length==0||$scope.courierForm.notes.length==0) {
-              Flash.create('warning','All Fields Are Required')
+          $scope.saveManifest = function() {
+            if ($scope.courierForm.courierName.length == 0 || $scope.courierForm.courierAWBNo.length == 0 || $scope.courierForm.notes.length == 0) {
+              Flash.create('warning', 'All Fields Are Required')
               return
             }
             $http({
@@ -390,7 +405,7 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
               }
             }).
             then(function(response) {
-              console.log(response.data,$scope.item);
+              console.log(response.data, $scope.item);
               Flash.create('success', 'Saved');
               $uibModalInstance.dismiss(response.data);
             })
@@ -399,13 +414,13 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       }).result.then(function() {
 
       }, function(res) {
-        console.log('87987987+9797987987979879',res,typeof(res));
-        console.log('ssssssssssssss',$scope.order.orderQtyMap[idx]);
-        if (typeof(res)!='string') {
+        console.log('87987987+9797987987979879', res, typeof(res));
+        console.log('ssssssssssssss', $scope.order.orderQtyMap[idx]);
+        if (typeof(res) != 'string') {
           console.log('saveddddddddddddd');
-          if ($scope.order.orderQtyMap[idx].courierName != null && $scope.order.orderQtyMap[idx].courierName.length >0) {
+          if ($scope.order.orderQtyMap[idx].courierName != null && $scope.order.orderQtyMap[idx].courierName.length > 0) {
             $scope.saveLog(idx, 'Manifest Has Been Updated')
-          }else {
+          } else {
             $scope.saveLog(idx, 'Manifest Has Been Created')
           }
           $scope.order.orderQtyMap[idx] = res
@@ -444,13 +459,13 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
       return function(response) {
         console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         Flash.create('success', 'Status Changed To ' + sts);
-        $scope.order.orderQtyMap[idx].status =   response.data.status
+        $scope.order.orderQtyMap[idx].status = response.data.status
         // $scope.saveLog(idx, 'This Item Has ' + sts)
-        if (sts=='reachedNearestHub') {
+        if (sts == 'reachedNearestHub') {
           sts = 'reached To Nearest Hub'
-        }else if (sts=='outForDelivery') {
+        } else if (sts == 'outForDelivery') {
           sts = 'out For Delivery'
-        }else if (sts=='returnToOrigin') {
+        } else if (sts == 'returnToOrigin') {
           sts = 'return To Origin'
         }
         $scope.saveLog(idx, 'This Item Has Been ' + sts)
@@ -459,20 +474,31 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         // then(function(response) {
         // })
 
-        console.log(response.data.status,'aaaaahhhhh');
-        if (response.data.status=='delivered'){
+        console.log(response.data.status, 'aaaaahhhhh');
+        if (response.data.status == 'delivered') {
           console.log("delivered");
-          var toSend = {value : response.data.pk};
-          $http({method : 'POST' , url : '/api/ecommerce/sendDeliveredStatus/' , data : toSend}).
+          var toSend = {
+            value: response.data.pk
+          };
+          $http({
+            method: 'POST',
+            url: '/api/ecommerce/sendDeliveredStatus/',
+            data: toSend
+          }).
           then(function(response) {
             console.log(response.data);
           })
-        }else{
+        } else {
           console.log("notdelivered");
-          var toSend = {value : response.data.pk};
-          $http({method : 'POST' , url : '/api/ecommerce/sendStatus/' , data : toSend}).
-          then(function(response) {
-          })
+          var toSend = {
+            value: response.data.pk
+          };
+          $http({
+            method: 'POST',
+            url: '/api/ecommerce/sendStatus/',
+            data: toSend
+          }).
+          then(function(response) {})
         }
 
 
@@ -499,13 +525,13 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
   //   }
   // })
 
-  $scope.downloadManifestPrinter = function(){
+  $scope.downloadManifestPrinter = function() {
     if ($scope.checkConditions.posPrinting && !$scope.connected) {
       Flash.create('danger', 'Please Connect The Device With Id')
       return
     }
     console.log('print manifest in printer');
-    var url = '/api/ecommerce/downloadManifest/?allData='+$scope.order.pk
+    var url = '/api/ecommerce/downloadManifest/?allData=' + $scope.order.pk
     if ($scope.connected) {
       url += '&printerDeviceId=' + $scope.connectData.deviceID
     }
@@ -517,12 +543,12 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     })
   }
 
-  $scope.changeStatusForAll = function(status){
+  $scope.changeStatusForAll = function(status) {
     for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
-      $scope.changeStatus(i,status)
+      $scope.changeStatus(i, status)
     }
   }
-  $scope.resetManifest = function(){
+  $scope.resetManifest = function() {
     console.log('resettinggggggggggggg');
     for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
       $http({
@@ -545,111 +571,117 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     }
   }
 
-  $scope.openWeightPopup = function(){
+  $scope.openWeightPopup = function(pdList) {
 
-        $uibModal.open({
-          templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.courierWeight.html',
-          size: 'md',
-          backdrop: true,
-          controller: function($scope,$uibModalInstance) {
-            $scope.orderForm = {weight:''}
-            $scope.saveWeight = function(){
-              if ($scope.orderForm.weight.length==0) {
-                Flash.create('warning','Please Mention Order Weight')
-                return
-              }else {
-                $uibModalInstance.dismiss({weight:$scope.orderForm.weight});
-              }
-            }
-          },
-        }).result.then(function() {
-
-        }, function(res) {
-          console.log(res);
-          if (typeof res == 'object' && res.weight) {
-            console.log(res);
-            $scope.generateManifestForAll(res.weight)
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.courierWeight.html',
+      size: 'md',
+      backdrop: true,
+      controller: function($scope, $uibModalInstance) {
+        console.log(pdList, 'products Dataaaaaaaaaaaaa');
+        totalWeight = 0
+        for (var i = 0; i < pdList.length; i++) {
+          if (pdList[i].product.product.grossWeight != null && pdList[i].product.product.grossWeight.length > 0) {
+            a = parseFloat(pdList[i].product.product.grossWeight)
+            pwt = a * pdList[i].qty
+            totalWeight += pwt
           }
-        });
+        }
+        $scope.orderForm = {
+          weight: totalWeight
+        }
+        $scope.saveWeight = function() {
+          console.log($scope.orderForm.weight);
+          if ($scope.orderForm.weight.length == 0) {
+            Flash.create('warning', 'Please Mention Order Weight')
+            return
+          } else {
+            $uibModalInstance.dismiss({
+              weight: $scope.orderForm.weight
+            });
+          }
+        }
+      },
+    }).result.then(function() {
+
+    }, function(res) {
+      console.log(res);
+      if (typeof res == 'object' && res.weight) {
+        console.log(res);
+        $scope.generateManifestForAll(res.weight)
+      }
+    });
   }
-  $scope.generateManifestForAll = function (orderWeight) {
+  $scope.generateManifestForAll = function(orderWeight) {
     console.log($scope.order);
     if (!$scope.checkConditions.thirdParty) {
       console.log('self courierrrrrrrrr');
       var td = new Date()
       m = td.getMonth() + 1
-      var awbNo = td.getDate().toString()+m.toString()+td.getFullYear().toString().substr(-2)+$scope.order.pk
+      var awbNo = td.getDate().toString() + m.toString() + td.getFullYear().toString().substr(-2) + $scope.order.pk
       console.log(awbNo);
       for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
         // if ($scope.order.orderQtyMap[i].selected) {
-          $http({
-            method: 'PATCH',
-            url: '  /api/ecommerce/orderQtyMap/' + $scope.order.orderQtyMap[i].pk + '/',
-            data: {
-              courierName: 'Self',
-              courierAWBNo: awbNo,
-              notes: 'Self',
+        $http({
+          method: 'PATCH',
+          url: '  /api/ecommerce/orderQtyMap/' + $scope.order.orderQtyMap[i].pk + '/',
+          data: {
+            courierName: 'Self',
+            courierAWBNo: awbNo,
+            notes: 'Self',
+          }
+        }).then((function(i) {
+          return function(response) {
+            $scope.order.orderQtyMap[i].courierName = response.data.courierName
+            $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
+            console.log(response.data);
+            if (i == $scope.order.orderQtyMap.length - 1) {
+              Flash.create('success', 'Saved');
             }
-          }).then((function(i){
-            return function(response){
-              $scope.order.orderQtyMap[i].courierName = response.data.courierName
-              $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
-              console.log(response.data);
-              if (i == $scope.order.orderQtyMap.length-1) {
-                Flash.create('success', 'Saved');
-              }
-            }
-          })(i))
+          }
+        })(i))
         // }
       }
-    }else {
+    } else {
 
-      // $scope.items = []
-      // for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
-      //   console.log($scope.order.orderQtyMap[i].selected);
-      //   if ($scope.order.orderQtyMap[i].selected) {
-      //     $scope.items.push($scope.order.orderQtyMap[i])
-      //   }
-      // }
-      // if ($scope.items.length==0) {
-      //   Flash.create('warning', 'please select order')
-      //   return
-      // }
-
-      $scope.courierForm = {courierName:'',courierAWBNo:'',notes:''}
-      console.log('order Weighttttttttttttt',orderWeight);
+      $scope.courierForm = {
+        courierName: '',
+        courierAWBNo: '',
+        notes: ''
+      }
+      console.log('order Weighttttttttttttt', orderWeight);
       $http({
-        method:'GET',
-        url:'/api/ecommerce/createShipment/?country='+$scope.order.countryCode+'&orderPk='+$scope.order.pk+'&totalWeight='+orderWeight
-      }).then(function (response) {
+        method: 'GET',
+        url: '/api/ecommerce/createShipment/?country=' + $scope.order.countryCode + '&orderPk=' + $scope.order.pk + '&totalWeight=' + orderWeight
+      }).then(function(response) {
         console.log(response.data);
         $scope.courierForm.courierName = response.data.courierName
         $scope.courierForm.courierAWBNo = response.data.trackingID
 
         for (var i = 0; i < $scope.order.orderQtyMap.length; i++) {
           // if ($scope.order.orderQtyMap[i].selected) {
-            if ($scope.courierForm.courierName.length==0||$scope.courierForm.courierAWBNo.length==0) {
-              Flash.create('warning','All Fields Are Required')
-              return
+          if ($scope.courierForm.courierName.length == 0 || $scope.courierForm.courierAWBNo.length == 0) {
+            Flash.create('warning', 'All Fields Are Required')
+            return
+          }
+          $http({
+            method: 'PATCH',
+            url: '  /api/ecommerce/orderQtyMap/' + $scope.order.orderQtyMap[i].pk + '/',
+            data: {
+              courierName: $scope.courierForm.courierName,
+              courierAWBNo: $scope.courierForm.courierAWBNo,
+              notes: 'AUTO GENERATED',
             }
-            $http({
-              method: 'PATCH',
-              url: '  /api/ecommerce/orderQtyMap/' + $scope.order.orderQtyMap[i].pk + '/',
-              data: {
-                courierName: $scope.courierForm.courierName,
-                courierAWBNo: $scope.courierForm.courierAWBNo,
-                notes: 'AUTO GENERATED',
+          }).then((function(i) {
+            return function(response) {
+              $scope.order.orderQtyMap[i].courierName = response.data.courierName
+              $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
+              console.log(response.data);
+              if (i == $scope.order.orderQtyMap.length - 1) {
+                Flash.create('success', 'Saved');
               }
-            }).then((function(i){
-              return function(response){
-                $scope.order.orderQtyMap[i].courierName = response.data.courierName
-                $scope.order.orderQtyMap[i].courierAWBNo = response.data.courierAWBNo
-                console.log(response.data);
-                if (i == $scope.order.orderQtyMap.length-1) {
-                  Flash.create('success', 'Saved');
-                }
-              }
-            })(i))
+            }
+          })(i))
           // }
         }
 
@@ -732,8 +764,8 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     //   }
     // });
   }
-  $scope.addNewProduct = function(pk){
-    console.log('order pkkkkkkkk',pk);
+  $scope.addNewProduct = function(pk) {
+    console.log('order pkkkkkkkk', pk);
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.ecommerce.vendor.orders.addNewProduct.html',
       size: 'lg',
@@ -743,8 +775,11 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
           return pk;
         }
       },
-      controller: function($scope, orderPk , $uibModalInstance) {
-        $scope.newForm = {product:'',qty:1}
+      controller: function($scope, orderPk, $uibModalInstance) {
+        $scope.newForm = {
+          product: '',
+          qty: 1
+        }
         $scope.productSearch = function(val) {
           return $http.get('/api/ecommerce/listing/?product__name__icontains=' + val + '&limit=10').
           then(function(response) {
@@ -755,23 +790,23 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
         $http.get('/api/ERP/appSettings/?app=25&name__iexact=isStoreGlobal').
         then(function(response) {
           if (response.data[0] != null) {
-              $scope.isStoreGlobal =response.data[0].value
-            }
-          })
+            $scope.isStoreGlobal = response.data[0].value
+          }
+        })
 
         console.log($scope.newForm);
-        $scope.saveNewOrder = function(){
+        $scope.saveNewOrder = function() {
           console.log($scope.newForm);
           var np = $scope.newForm
           if (typeof np.product != 'object') {
-            Flash.create('warning','Please Select Suggested Product')
+            Flash.create('warning', 'Please Select Suggested Product')
             return
           }
           var totalAmnt;
           if (!$scope.isStoreGlobal) {
-             totalAmnt = np.product.product.price + np.product.product_taxAmount
-          }else {
-             totalAmnt = np.product.product.price
+            totalAmnt = np.product.product.price + np.product.product_taxAmount
+          } else {
+            totalAmnt = np.product.product.price
           }
 
           $http({
@@ -807,8 +842,8 @@ app.controller('businessManagement.ecommerce.orders.explore', function($scope, $
     }).result.then(function() {
 
     }, function(res) {
-      console.log('87987987+9797987987979879',res,typeof(res));
-      console.log('ssssssssssssss',$scope.order);
+      console.log('87987987+9797987987979879', res, typeof(res));
+      console.log('ssssssssssssss', $scope.order);
       if (res.pk) {
         console.log('saveddddddddddddd');
         $scope.order = res
@@ -837,7 +872,7 @@ app.controller('businessManagement.ecommerce.orders', function($scope, $http, $a
     url: '/api/ecommerce/order/',
     searchField: 'status',
     deletable: true,
-    itemsNumPerView: [16, 32, 48],
+    itemsNumPerView: [12, 24, 48],
   }
 
   $scope.tableAction = function(target, action, mode) {
@@ -902,8 +937,8 @@ app.controller('businessManagement.ecommerce.orders.item', function($scope, $htt
   $http.get('/api/ERP/appSettings/?app=25&name__iexact=currencySymbol').
   then(function(response) {
     if (response.data[0] != null) {
-        $scope.currency =response.data[0].value
-      }
-    })
+      $scope.currency = response.data[0].value
+    }
+  })
 
 })
