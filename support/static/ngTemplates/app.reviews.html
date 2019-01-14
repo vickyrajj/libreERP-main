@@ -44,6 +44,7 @@
                        <span ng-if="data.statusChat=='started'" style="color:green"><b>{{data.statusChat|humanize}}</b></span>
                        <span ng-if="data.statusChat=='closed'" style="color:#A40B0B"><b>{{data.statusChat|humanize}}</b></span>
                        <span ng-if="data.statusChat=='reviewed'" style="color:brown"><b>{{data.statusChat|humanize}}</b></span>
+                       <span ng-if="data.statusChat=='late'" style="color:brown"><b>{{data.statusChat|humanize}}</b></span>
                        <span style="float:right;margin-left: 2rem;opacity:0.6;">
                          <i ng-if="data.typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
                          <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
