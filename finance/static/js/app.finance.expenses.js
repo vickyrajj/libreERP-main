@@ -201,117 +201,131 @@ $scope.showOption = function() {
 
   $scope.save = function() {
     // .toJSON().split('T')[0])
-    // console.log($scope.form.deliveryDate, typeof $scope.form.deliveryDate);
-    // if(typeof $scope.form.deliveryDate == 'object'){
-    //   $scope.form.deliveryDate = $scope.form.deliveryDate.toJSON().split('T')[0]
-    // }
-    // else{
-    //   $scope.form.deliveryDate = $scope.form.deliveryDate
-    // }
+    console.log($scope.form.deliveryDate, typeof $scope.form.deliveryDate);
+    if(typeof $scope.form.deliveryDate == 'object'){
+      $scope.form.deliveryDate = $scope.form.deliveryDate.toJSON().split('T')[0]
+    }
+    else{
+      $scope.form.deliveryDate = $scope.form.deliveryDate
+    }
 
     if($scope.form.project!=undefined){
-      console.log($scope.form.project,'aaaa');
+      if($scope.form.project.costCenter!=undefined){
+        $scope.form.costCenter = $scope.form.project.costCenter
+        if($scope.form.costCenter.unit!=undefined){
+          $scope.form.bussinessunit = $scope.form.costCenter.unit
+        }
+      }
     }
     if($scope.form.costcenter!=undefined){
-      console.log($scope.form.costcenter,'aaaa');
+      if($scope.form.costcenter.unit!=undefined){
+        $scope.form.bussinessunit = $scope.form.costcenter.unit
+      }
     }
-    //
-    // if ($scope.mode == 'new') {
-    //   if($scope.form.name==''||$scope.form.address==''){
-    //     Flash.create('danger','Fill the Details')
-    //     return
-    //   }
-    //   var dataToSend = {
-    //     name:$scope.form.name,
-    //     personName : $scope.form.personName,
-    //     address : $scope.form.address,
-    //     phone : $scope.form.phone,
-    //     email : $scope.form.email,
-    //     pincode : $scope.form.pincode,
-    //     deliveryDate : $scope.form.deliveryDate,
-    //     poNumber : $scope.form.poNumber,
-    //     quoteNumber : $scope.form.quoteNumber,
-    //     terms :  $scope.form.terms,
-    //     costcenter : $scope.form.costcenter.pk,
-    //     bussinessunit : $scope.form.bussinessunit.pk,
-    //     project : $scope.form.project.pk,
-    //   }
-    //   $http({
-    //     method: 'POST',
-    //     url: '/api/finance/purchaseorder/',
-    //     data: dataToSend
-    //   }).
-    //   then(function(response) {
-    //     Flash.create('success', response.status + ' : ' + response.statusText);
-    //     if ($scope.products.length > 0) {
-    //       for (var i = 0; i < $scope.products.length; i++) {
-    //         var toSend = {
-    //           product: $scope.products[i].product,
-    //           qty: $scope.products[i].qty,
-    //           price: $scope.products[i].price,
-    //           purchaseorder: response.data.pk,
-    //
-    //         }
-    //         $http({
-    //           method: 'POST',
-    //           url: '/api/finance/purchaseorderqty/',
-    //           data: toSend
-    //         }).
-    //         then(function(response) {})
-    //       }
-    //     }
-    //     $scope.resetForm()
-    //     $scope.products = []
-    //     $scope.options = false
-    //   }, function(response) {
-    //     Flash.create('danger', response.status + ' : ' + response.statusText);
-    //   })
-    // }
-    // else{
-    //   var dataToSend = {
-    //   name:$scope.form.name,
-    //   personName : $scope.form.personName,
-    //   address : $scope.form.address,
-    //   deliveryDate : $scope.form.deliveryDate,
-    //   poNumber : $scope.form.poNumber,
-    //   quoteNumber : $scope.form.quoteNumber,
-    //   terms :  $scope.form.terms,
-    // }
-    //   $http({
-    //     method: 'PATCH',
-    //     url: '/api/finance/purchaseorder/' + $scope.form.pk +'/',
-    //     data: dataToSend
-    //   }).
-    //   then(function(response) {
-    //     Flash.create('success', response.status + ' : ' + response.statusText);
-    //     if ($scope.products.length > 0) {
-    //       for (var i = 0; i < $scope.products.length; i++) {
-    //         var toSend = {
-    //           product: $scope.products[i].product,
-    //           qty: $scope.products[i].qty,
-    //           price: $scope.products[i].price,
-    //           purchaseorder: response.data.pk
-    //         }
-    //         if($scope.products[i].pk){
-    //           method = 'PATCH',
-    //           url = '/api/finance/purchaseorderqty/' + $scope.products[i].pk +'/'
-    //         }
-    //         else{
-    //           method = 'POST'
-    //           url = '/api/finance/purchaseorderqty/'
-    //         }
-    //         $http({
-    //           method: method,
-    //           url: url,
-    //           data: toSend
-    //         }).
-    //         then(function(response) {})
-    //       }
-    //     }
-    //   }, function(response) {
-    //     Flash.create('danger', response.status + ' : ' + response.statusText);
-    //   })
-    // }
+
+    if ($scope.mode == 'new') {
+      if($scope.form.name==''||$scope.form.address==''){
+        Flash.create('danger','Fill the Details')
+        return
+      }
+      var dataToSend = {
+        name:$scope.form.name,
+        personName : $scope.form.personName,
+        address : $scope.form.address,
+        phone : $scope.form.phone,
+        email : $scope.form.email,
+        pincode : $scope.form.pincode,
+        deliveryDate : $scope.form.deliveryDate,
+        poNumber : $scope.form.poNumber,
+        quoteNumber : $scope.form.quoteNumber,
+        terms :  $scope.form.terms,
+        costcenter : $scope.form.costcenter.pk,
+        bussinessunit : $scope.form.bussinessunit.pk,
+        project : $scope.form.project.pk,
+
+      }
+      $http({
+        method: 'POST',
+        url: '/api/finance/purchaseorder/',
+        data: dataToSend
+      }).
+      then(function(response) {
+        Flash.create('success', response.status + ' : ' + response.statusText);
+        if ($scope.products.length > 0) {
+          for (var i = 0; i < $scope.products.length; i++) {
+            var toSend = {
+              product: $scope.products[i].product,
+              qty: $scope.products[i].qty,
+              price: $scope.products[i].price,
+              purchaseorder: response.data.pk,
+
+            }
+            $http({
+              method: 'POST',
+              url: '/api/finance/purchaseorderqty/',
+              data: toSend
+            }).
+            then(function(response) {})
+          }
+        }
+        $scope.resetForm()
+        $scope.products = []
+        $scope.options = false
+      }, function(response) {
+        Flash.create('danger', response.status + ' : ' + response.statusText);
+      })
+    }
+    else{
+      var dataToSend = {
+        name:$scope.form.name,
+        personName : $scope.form.personName,
+        address : $scope.form.address,
+        phone : $scope.form.phone,
+        email : $scope.form.email,
+        pincode : $scope.form.pincode,
+        deliveryDate : $scope.form.deliveryDate,
+        poNumber : $scope.form.poNumber,
+        quoteNumber : $scope.form.quoteNumber,
+        terms :  $scope.form.terms,
+        costcenter : $scope.form.costcenter.pk,
+        bussinessunit : $scope.form.bussinessunit.pk,
+        project : $scope.form.project.pk,
+    }
+      $http({
+        method: 'PATCH',
+        url: '/api/finance/purchaseorder/' + $scope.form.pk +'/',
+        data: dataToSend
+      }).
+      then(function(response) {
+        Flash.create('success', response.status + ' : ' + response.statusText);
+        if ($scope.products.length > 0) {
+          for (var i = 0; i < $scope.products.length; i++) {
+            var toSend = {
+              product: $scope.products[i].product,
+              qty: $scope.products[i].qty,
+              price: $scope.products[i].price,
+              purchaseorder: response.data.pk
+            }
+            if($scope.products[i].pk){
+              method = 'PATCH',
+              url = '/api/finance/purchaseorderqty/' + $scope.products[i].pk +'/'
+            }
+            else{
+              method = 'POST'
+              url = '/api/finance/purchaseorderqty/'
+            }
+            $http({
+              method: method,
+              url: url,
+              data: toSend
+            }).
+            then(function(response) {})
+          }
+        }
+      }, function(response) {
+        Flash.create('danger', response.status + ' : ' + response.statusText);
+      })
+    }
   }
 
 $scope.deleteData = function(pkVal,idx){

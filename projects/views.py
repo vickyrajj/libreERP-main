@@ -50,3 +50,8 @@ class IssueViewSet(viewsets.ModelViewSet):
     queryset = Issues.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['project','responsible']
+
+class PettyCashViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = PettyCashSerializer
+    queryset = ProjectPettyExpense.objects.all()

@@ -12,6 +12,7 @@ router.register(r'project' , projectViewSet , base_name ='project')
 router.register(r'timelineItem' , timelineItemViewSet , base_name ='projectTimelineItem')
 router.register(r'projectSearch' , projectLiteViewSet , base_name ='projectSearch')
 router.register(r'issue' , IssueViewSet , base_name ='issue')
+router.register(r'pettyCash' , PettyCashViewSet , base_name ='pettyCash')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

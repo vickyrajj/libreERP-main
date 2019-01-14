@@ -18,7 +18,7 @@ class AccountViewSet(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['number']
+    filter_fields = ['number','personal','contactPerson']
 
 class InflowViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
@@ -60,6 +60,11 @@ class ExpenseSheetViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ExpenseSheetSerializer
     queryset = ExpenseSheet.objects.all()
+
+class ExpenseHeadingViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ExpenseHeadingSerializer
+    queryset = ExpenseHeading.objects.all()
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)

@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
 from ERP.models import service
+from organization.models import Division , Unit
 from time import time
 from projects.models import *
 # Create your models here.
@@ -42,7 +43,8 @@ class CostCenter(models.Model):
     name = models.CharField(max_length = 100 , blank = False)
     code = models.CharField(max_length = 50 , blank = False)
     created = models.DateTimeField(auto_now_add=True)
-    account = models.ForeignKey(Account)
+    account = models.ForeignKey(Account,related_name='costCenterAccount')
+    unit = models.ForeignKey(Unit,related_name='userDesignationUnit',null=True)
 
     def __unicode__(self):
         return '<name : %s > , <head : %s > , <code : %s>' %(self.name , self.head.username , self.code)
