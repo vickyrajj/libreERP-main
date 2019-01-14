@@ -53,6 +53,56 @@
           <textarea ui-tinymce="tinymceOptions" ng-model="cpForm.firstMessage"></textarea>
         </div>
       </div>
+      <div class="row" style="padding-bottom:15px;">
+        <div class="col-md-4" style="font-size:15px;">
+          <span ><span style="margin-right:5px">7</span><i class="fa fa-compass"></i> &nbsp;<span>Select Button Type</span></span>
+        </div>
+        <div class="col-md-8">
+          <input type="radio" ng-model="cpForm.chatIconType" value="Circle">
+            <span>
+              <span style="border:2px solid #e0e0e0;padding:2px 3px 2px 7px;border-radius:50%;background:{{cpForm.supportBubbleColor}};color:{{cpForm.fontColor}}">
+                <i class="fa fa-whatsapp" aria-hidden="true"></i>
+              </span>
+            </span> &nbsp;
+          <input type="radio" ng-model="cpForm.chatIconType" value="Box">
+          <span>
+            <span style="border:2px solid #e0e0e0;padding:2px 5px;background:{{cpForm.supportBubbleColor}};color:{{cpForm.fontColor}}">
+              Chat With Us <i class="fa fa-whatsapp" aria-hidden="true"></i>
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="row" style="padding-bottom:15px;">
+        <div class="col-md-4" style="font-size:15px;">
+          <span ><span style="margin-right:5px">8</span><i class="fa fa-object-group"></i> &nbsp;<span>Desktop Button Position</span></span>
+        </div>
+        <div class="col-md-8">
+          <input ng-if="cpForm.chatIconType=='Box'" type="radio" ng-model="cpForm.chatIconPosition" value="left-center">&nbsp;
+            <span style="display:inline-block;margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;top:40%;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span> &nbsp;
+            <input type="radio" ng-model="cpForm.chatIconPosition" value="right-center" ng-if="cpForm.chatIconType=='Box'">&nbsp;
+            <span style="display:inline-block; margin-bottom:-7px" ng-if="cpForm.chatIconType=='Box'">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;top:40%;right:0px;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span> &nbsp;
+            <input type="radio" ng-model="cpForm.chatIconPosition" value="left-bottom">&nbsp;
+            <span style="display:inline-block ;margin-bottom:-7px">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;bottom:0%;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span> &nbsp;
+              <input type="radio" ng-model="cpForm.chatIconPosition" value="right-bottom">&nbsp;
+            <span style="display:inline-block;margin-bottom:-7px">
+              <div style="border:2px solid #e0e0e0;width:30px;height:30px;position:relative">
+                <span style="position: absolute;bottom:0%;right: 0px;background:black;border-radius:50%;width:7px;height:7px"></span>
+              </div>
+            </span>
+        </div>
+      </div>
       <div class="row justify-content-center" style="">
         <button type="button" class="btn btn-primary " ng-click="saveCustomerProfile()">Save</button>
       </div>

@@ -72,6 +72,13 @@ app.controller("businessManagement.customerSettings", function($scope, $state, $
       fd.append('dp', $scope.cpForm.dp);
     }
 
+    if ($scope.cpForm.chatIconPosition != '') {
+      fd.append('chatIconPosition', $scope.cpForm.chatIconPosition);
+    }
+    if ($scope.cpForm.chatIconType != '') {
+      fd.append('chatIconType', $scope.cpForm.chatIconType);
+    }
+
     $http({
       method: 'PATCH',
       url: '/api/support/customerProfile/' + $scope.cpForm.pk + '/',

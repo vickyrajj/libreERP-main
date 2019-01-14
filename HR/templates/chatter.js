@@ -1890,7 +1890,7 @@ function createChatDiv() {
               font-size: 10px;\
               background-image:linear-gradient(to right, "+windowColor +","+ windowColor+","+ windowColor+");\
               width: 100%;\
-              color: "+fontAndIconColor+";;\
+              color: "+fontAndIconColor+";\
               padding:0px;\
               margin:0px;\
             }\
@@ -1906,6 +1906,37 @@ function createChatDiv() {
             .startNewChatBtn > span{\
               font-size:14px;\
               font-weight:bolder;\
+            }\
+            .confirmationDiv{\
+              clear: both; \
+              background-color:#eee; \
+              border-radius:5px; \
+              box-sizing:border-box; \
+              margin: 9px;\
+              animation: msgDiv 0.7s ease;\
+            }\
+            .confirmationSureText{\
+              color: "+windowColor+";\
+              font-size: 16px;\
+              font-weight: bold;\
+              text-align: center;\
+              padding: 15px;\
+              opacity:0.9;\
+            }\
+            .confirmationBtnDiv{\
+              text-align: center;\
+              padding: 15px;\
+            }\
+            .confirmationBtn{\
+              background-color: "+supportBubbleColor+";\
+              padding: 10px 15px;\
+              border: 1px solid #fff;\
+              width: 78px;\
+              margin: 0px 10px;\
+              color: #fff;\
+              font-weight: bold;\
+              border-radius: 5px;\
+              cursor:pointer;\
             }\
             @keyframes moveInLeft{\
               0%{\
@@ -2597,6 +2628,43 @@ function hideAudioAndVidoeBtn(){
 
 var isConfirmedToEnd=false;
 
+function addExitConfirmation() {
+  var confirmationBox = '<div class="confirmationDiv">'+
+  '<div class="confirmationSureText">Are you sure you want to end this chat?</div>'+
+  '<div class="confirmationBtnDiv">'+
+    '<button id="confirmationCancel" class="confirmationBtn">Cancel</button>'+
+    '<button id="confirmationYes" class="confirmationBtn">Yes</button>'+
+    '</div>'+
+  '</div>'
+  var div = document.createElement("div");
+  div.setAttribute("id", "confirmationBox")
+  div.innerHTML = confirmationBox
+  messageBox.appendChild(div);
+  scroll();
+  document.getElementById('confirmationCancel').addEventListener("click", function() {
+    var confBox = document.getElementById('confirmationBox')
+    confBox.parentNode.removeChild(confBox);
+  });
+
+  document.getElementById('confirmationYes').addEventListener("click", function() {
+
+    var confBox = document.getElementById('confirmationBox')
+    confBox.parentNode.removeChild(confBox);
+
+    isConfirmedToEnd=true
+      if(getFrameContent!=undefined){
+        getFrameContent.postMessage('userleft',webRtcAddress );
+      }
+        if (threadExist==undefined) {
+          return
+        }
+        endChat();
+        hideAudioAndVidoeBtn()
+  });
+}
+
+
+
   exitBtn.addEventListener("click", function() {
 
     if(isConfirmedToEnd){
@@ -2609,19 +2677,21 @@ var isConfirmedToEnd=false;
         closeSupport.click()
         return
       }
-      if (confirm("Are you sure you want to end this chat ?")) {
-        isConfirmedToEnd=true
-          if(getFrameContent!=undefined){
-            getFrameContent.postMessage('userleft',webRtcAddress );
-          }
-            if (threadExist==undefined) {
-              return
-            }
-            endChat();
-            hideAudioAndVidoeBtn()
-      } else {
-        return
-      }
+
+      addExitConfirmation()
+      // if (confirm("Are you sure you want to end this chat ?")) {
+      //   isConfirmedToEnd=true
+      //     if(getFrameContent!=undefined){
+      //       getFrameContent.postMessage('userleft',webRtcAddress );
+      //     }
+      //       if (threadExist==undefined) {
+      //         return
+      //       }
+      //       endChat();
+      //       hideAudioAndVidoeBtn()
+      // } else {
+      //   return
+      // }
     }
   }, false);
 
