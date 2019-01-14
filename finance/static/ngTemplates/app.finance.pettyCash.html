@@ -1,7 +1,86 @@
 <breadcrumb></breadcrumb>
 <div class="container-fluid">
 
-
+  <div class="row" style="margin-top:20px" ng-if="userAccounts.length>0">
+    <div class="col-md-5">
+      <div class="card" style="padding:10px;border-radius:20px;margin-bottom:15px;cursor:pointer;border:2px solid {{form.accountIdx==$index?'blue':'aliceblue'}}" ng-repeat="acc in userAccounts" ng-click="form.accountIdx=$index">
+        <div class="row">
+          <div class="col-md-2">
+            <img ng-src="/static/images/pettyAccount.jpeg" class="img-circle pull-right" width="60"/>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <strong style="font-size:20px;">{{acc.contactPerson.pk | getName}}</strong>
+            </div>
+            <div class="row">
+              <span style="font-size:20px;" class="text-muted"><strong>Bank Name : </strong> {{acc.bank}}</span>
+            </div>
+            <div class="row">
+              <span style="font-size:18px;" class="text-muted"><strong>Account : </strong> {{acc.number}}</span>
+            </div>
+          </div>
+          <div class="col-md-4 text-right">
+            <h2 style="color:#b1afaf"> <i class="fa fa-inr"></i> {{acc.balance | number}} </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="col-md-12 text-center">
+        <strong style="font-size:18px">Create Expense Record</strong>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Title</label>
+            <input uib-typeahead="head as head.title for head in titleSearch($viewValue)" ng-model="form.heading" type="text" class="form-control" placeholder="Search By Some Title">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Amount</label>
+            <input type="text" class="form-control" ng-model="form.amount" min="1">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Project</label>
+            <input uib-typeahead="prj as prj.title for prj in projectSearch($viewValue)" ng-model="form.project" type="text" class="form-control" placeholder="Search By Project Title">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Attachment</label>
+            <input type="file" file-model="form.attachment">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="name" ng-model="form.description" class="form-control" rows="3" placeholder="Description For The Expense"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <button type="button" class="btn btn-success" ng-click="createRecord()">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="userAccounts.length>0">
+    <hr>
+    <h1>Records List</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-center" ng-if="userAccounts.length==0" style="margin-top:30vh">
+      <span class="text-muted" style="font-size:40px;">No Accounts For You</span>
+    </div>
+  </div>
 
 
 </div>

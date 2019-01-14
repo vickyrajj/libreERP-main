@@ -116,3 +116,4 @@ class ProjectPettyExpense(models.Model): # also petty cash
     description = models.TextField(max_length=200 , null = True)
     heading = models.ForeignKey(ExpenseHeading , null = True , related_name='pettyExpense')
     attachment = models.FileField(upload_to = getPettyCashInvoicePath ,  null = True)
+    createdUser = models.ForeignKey(User, null= True, related_name='userExpense')

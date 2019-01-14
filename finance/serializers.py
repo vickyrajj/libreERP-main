@@ -10,6 +10,8 @@ from projects.models import project
 from projects.serializers import projectLiteSerializer
 from datetime import datetime
 from HR.serializers import userSearchSerializer
+from HR.models import designation
+from organization.serializers import UnitsLiteSerializer
 
 class AccountSerializer(serializers.ModelSerializer):
     contactPerson = userSearchSerializer(many=False,read_only=True)
@@ -55,14 +57,20 @@ class AccountLiteSerializer(serializers.ModelSerializer):
 class CostCenterSerializer(serializers.ModelSerializer):
     head = userSearchSerializer(many=False,read_only=True)
     account = AccountLiteSerializer(many=False,read_only=True)
+    unit = UnitsLiteSerializer(many=False,read_only=True)
     class Meta:
         model = CostCenter
-        fields = ('pk', 'head' , 'name' , 'code' , 'created' , 'account' )
+        fields = ('pk', 'head' , 'name' , 'code' , 'created' , 'account','unit' )
 
     def create(self , validated_data):
         cc = CostCenter(**validated_data)
         if 'head' in self.context['request'].data:
-            cc.head = User.objects.get(pk=int(self.context['request'].data['head']))
+            userObj = User.objects.get(pk=int(self.context['request'].data['head']))
+            cc.head = userObj
+            desgObj = designation.objects.get(user=userObj)
+            if desgObj.unit:
+                print 'adding unittttttttttttttt'
+                cc.unit = desgObj.unit
         if 'account' in self.context['request'].data:
             cc.account = Account.objects.get(pk=int(self.context['request'].data['account']))
         cc.save()
@@ -75,7 +83,15 @@ class CostCenterSerializer(serializers.ModelSerializer):
                 print "Error while saving " , key
                 pass
         if 'head' in self.context['request'].data:
-            instance.head = User.objects.get(pk=int(self.context['request'].data['head']))
+            userObj = User.objects.get(pk=int(self.context['request'].data['head']))
+            instance.head = userObj
+            desgObj = designation.objects.get(user=userObj)
+            if desgObj.unit:
+                print 'updatingggggg unittttttttttttttt'
+                instance.unit = desgObj.unit
+            else:
+                print 'deleteeee unittttttttttttttt'
+                instance.unit = None
         if 'account' in self.context['request'].data:
             instance.account = Account.objects.get(pk=int(self.context['request'].data['account']))
         instance.save()
@@ -267,3 +283,8 @@ class PurchaseOrderQtySerializer(serializers.ModelSerializer):
             d.purchaseorder = PurchaseOrder.objects.get(pk=int(self.context['request'].data['purchaseorder']))
         d.save()
         return d
+
+class ExpenseHeadingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExpenseHeading
+        fields = ('pk', 'title')

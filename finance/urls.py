@@ -16,6 +16,7 @@ router.register(r'vendorservice' , VendorServiceViewSet , base_name ='vendorserv
 router.register(r'vendorinvoice' , VendorInvoiceViewSet , base_name ='vendorinvoice')
 router.register(r'purchaseorder' , PurchaseOrderViewSet , base_name ='purchaseorder')
 router.register(r'purchaseorderqty' , PurchaseOrderQtyViewSet , base_name ='purchaseorder')
+router.register(r'expenseHeading' , ExpenseHeadingViewSet , base_name ='expenseHeading')
 
 
 

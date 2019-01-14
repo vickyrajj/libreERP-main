@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
 from gitweb.serializers import repoLiteSerializer
-from finance.models import CostCenter
+from finance.models import CostCenter , ExpenseSheet , Account , ExpenseHeading
 
 
 class mediaSerializer(serializers.ModelSerializer):
@@ -28,6 +28,16 @@ class CostCenterLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = CostCenter
         fields = ('pk', 'head' , 'name' , 'code' , 'account' )
+
+class ExpenseHeadingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExpenseHeading
+        fields = ('pk', 'title')
+
+class AccountLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ('pk', 'title' , 'number', 'ifsc', 'bank')
 
 class projectSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
@@ -99,3 +109,10 @@ class IssueSerializer(serializers.ModelSerializer):
         q.project = project.objects.get(pk=int(self.context['request'].data['project']))
         q.save()
         return q
+
+class PettyCashSerializer(serializers.ModelSerializer):
+    project = projectLiteSerializer(many = False , read_only = True)
+    class Meta:
+        model = ProjectPettyExpense
+        fields = ( 'pk', 'created','ammount', 'project', 'account', 'description', 'heading','attachment', 'createdUser')
+        read_only_fields = ('createdUser',)
