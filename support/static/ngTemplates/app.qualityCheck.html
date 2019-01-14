@@ -6,7 +6,7 @@
         <uib-tabset>
 
           <!-- ===============================================Browse====================================================== -->
-            <uib-tab active="browseTab">
+            <uib-tab active="browseTab" ng-click="tabSelected.tab='browse'">
               <uib-tab-heading>
                 Browse
                 <i class="fa fa-list-ul"></i>
@@ -247,7 +247,7 @@
 
             <!-- ===============================================Archived====================================================== -->
 
-          <uib-tab active="archiveTab">
+          <uib-tab active="archiveTab" ng-click="tabSelected.tab='archived'">
               <uib-tab-heading>
                 Archived
                 <i class="fa fa-archive"></i>

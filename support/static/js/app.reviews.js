@@ -99,6 +99,7 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
     $scope.reviewData = response.data.data
     console.log($scope.reviewData , " Review data");
     $scope.reviewDataLength = response.data.dataLength
+    $scope.totalItems = response.data.dataLength
     if($scope.reviewData.length>0){
       $scope.tabelRowAction($scope.reviewData[0])
       $scope.noDataDialouge=false;
@@ -319,6 +320,12 @@ var countt=0
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
     }
+
+    if ($scope.selectedSortOption.value!='' && $scope.selectedSortOption.value!=undefined ) {
+      url += '&sort' + '&sortby=' + $scope.selectedSortOption.value
+    }
+
+
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
@@ -331,6 +338,7 @@ var countt=0
         $scope.reviewData = response.data.data
         console.log($scope.reviewData , " Review data");
         $scope.reviewDataLength = response.data.dataLength
+        $scope.totalItems = response.data.dataLength
         if($scope.reviewData.length>0){
           $scope.tabelRowAction($scope.reviewData[0])
           $scope.noDataDialouge=false;

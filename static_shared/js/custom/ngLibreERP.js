@@ -704,6 +704,10 @@ app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users
     // {icon : 'sticky-note-o' , state : 'home.notes'},
   ]
 
+  $scope.fixedItems = [
+    {icon : 'fa-window-restore' , state : 'home.welcome' , dispName:'Welcome'}
+  ]
+
   var parts = $state.current.name.split('.');
   $scope.applicationsArray=[]
   $scope.modulesArray=[]

@@ -361,6 +361,10 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     tableData: []
   };
 
+  $scope.tabSelected = {
+    tab : 'browse'
+  }
+
   $scope.form = {date:null,user:'',email:'',client:''}
   $scope.reviewData = []
   $scope.archivedData=[]
@@ -641,6 +645,13 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     if (typOfCall=='both') {
       url += '&both'
     }
+
+
+    if ($scope.selectedSortOptionArch.value!='' && $scope.selectedSortOptionArch.value!=undefined ) {
+      url += '&sort' + '&sortby=' + $scope.selectedSortOptionArch.value
+    }
+
+
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
@@ -652,6 +663,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
         $scope.archivedData = response.data.data
         console.log($scope.archivedData , " Archieve data");
         $scope.archivedDataLength = response.data.dataLength
+        $scope.totalItemsArch = response.data.dataLength
         if($scope.archivedData.length>0){
           $scope.tabelRowActionArch($scope.archivedData[0])
           if(myCountArch<1){
@@ -697,6 +709,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
     }
+
+    if ($scope.selectedSortOption.value!='' && $scope.selectedSortOption.value!=undefined ) {
+      url += '&sort' + '&sortby=' + $scope.selectedSortOption.value
+    }
+
+
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
@@ -709,6 +727,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
         $scope.reviewData = response.data.data
         console.log($scope.reviewData , " Review data");
         $scope.reviewDataLength = response.data.dataLength
+        $scope.totalItems = response.data.dataLength
         if($scope.reviewData.length>0){
           if(myCount<1){
             $scope.setTableValues()
@@ -727,8 +746,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }
   }
 
-  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
-  $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
+  if ($scope.tabSelected.tab == 'browse') {
+    $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
+  }else {
+    $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
+  }
+
 
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
@@ -792,8 +815,13 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       var date = $scope.form.date
     }
     // console.log(date);
-    $scope.getData(date,user,$scope.form.email,client,download,typOfCall)
-    $scope.getArchData(date,user,$scope.form.email,client,download,typOfCall)
+    if ($scope.tabSelected.tab == 'browse') {
+      $scope.getData(date,user,$scope.form.email,client,download,typOfCall)
+    }else {
+      $scope.getArchData(date,user,$scope.form.email,client,download,typOfCall)
+    }
+
+
   }
 
     $scope.download = function(){
