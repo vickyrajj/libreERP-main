@@ -116,18 +116,41 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
     // $scope.filterByCreated();
   });
 
-  $scope.tableAction = function(target,table) {
-    if(table){
-      target=$scope.reviewData.indexOf(target)
-    }
-    var appType = 'Info';
-    $scope.addTab({
-      title: 'Chat : ' + $scope.reviewData[target].uid,
-      cancel: true,
-      app: 'ChatInfo',
-      data: $scope.reviewData[target],
-      active: true
-    })
+  $scope.tableAction = function(index) {
+    // if(table){
+    //   target=$scope.reviewData.indexOf(target)
+    // }
+    // var appType = 'Info';
+    // $scope.addTab({
+    //   title: 'Chat : ' + $scope.reviewData[target].uid,
+    //   cancel: true,
+    //   app: 'ChatInfo',
+    //   data: $scope.reviewData[target],
+    //   active: true
+    // })
+
+
+
+    console.log($scope.reviewData[index]);
+
+    $http({
+      method: 'GET',
+      url: '/api/support/reviewHomeChats/?uid='+$scope.reviewData[index].uid,
+    }).
+    then(function(response) {
+      var appType = 'Info';
+
+        $scope.addTab({
+          title: 'Chat : ' + $scope.reviewData[index].uid,
+          cancel: true,
+          app: 'ChatInfo',
+          data: {
+            chatThreadData:$scope.reviewData[index],
+            supportChatData:response.data
+          },
+          active: true,
+        })
+    });
 
   }
 
@@ -141,9 +164,11 @@ var countt=0
   $scope.addTab = function(input) {
     $scope.searchTabActive = false;
     alreadyOpen = false;
+    console.log(input);
+    console.log($scope.tabs);
     for (var i = 0; i < $scope.tabs.length; i++) {
-      console.log($scope.tabs[i].data[0].id, input.data[0].id, $scope.tabs[i].app, input.app);
-      if ($scope.tabs[i].data[0].id == input.data[0].id && $scope.tabs[i].app == input.app) {
+      console.log($scope.tabs[i].data.chatThreadData.id,input.data.chatThreadData.id, $scope.tabs[i].app ,input.app);
+      if ($scope.tabs[i].data.chatThreadData.id == input.data.chatThreadData.id && $scope.tabs[i].app == input.app) {
         $scope.tabs[i].active = true;
         alreadyOpen = true;
       } else {
@@ -381,16 +406,18 @@ var countt=0
 
 
 app.controller("app.customerReviews.explore", function($scope, $http, $permissions, $timeout, $uibModal) {
-  console.log($scope.tab.data);
-  $scope.data = $scope.tab.data
 
   $scope.commentPerm = false;
-
   $timeout(function () {
     $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
   }, 500);
 
+  $scope.reviewCommentData = []
   $scope.reviewForm = {message:''}
+  $scope.msgData=[]
+  $scope.fullChatData=[]
+  $scope.msgData = $scope.tab.data.chatThreadData
+  $scope.fullChatData=$scope.tab.data.supportChatData
 
   $scope.calculateTime = function(user, agent) {
     console.log('inside cal cccccccccccc');
@@ -409,12 +436,11 @@ app.controller("app.customerReviews.explore", function($scope, $http, $permissio
       return
     }
   }
-  $scope.msgData = $scope.tab.data
-  console.log($scope.tab.data);
-  $scope.reviewCommentData = []
+
+
   $http({
     method: 'GET',
-    url: '/api/support/reviewComment/?user='+$scope.msgData[0].user_id+'&uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+    url: '/api/support/reviewComment/?user='+$scope.msgData.user_id+'&uid='+$scope.msgData.uid+'&chatedDate='+$scope.msgData.created.split('T')[0],
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
@@ -423,14 +449,12 @@ app.controller("app.customerReviews.explore", function($scope, $http, $permissio
 
   $http({
     method: 'GET',
-    url: '/api/support/chatThread/?uid='+$scope.msgData[0].uid
+    url: '/api/support/chatThread/?uid='+$scope.msgData.uid
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
-    $scope.chatThreadData =response.data[0]
+    $scope.myChatThreadData =response.data[0]
   });
-
-
 
   $scope.audio_chat={
     agent:null,
@@ -441,20 +465,20 @@ app.controller("app.customerReviews.explore", function($scope, $http, $permissio
     visitor:null
   };
 
-  $scope.typ=$scope.msgData[0].typ
-  if($scope.msgData[0].typ=='audio'){
+  $scope.typ=$scope.msgData.typ
+  if($scope.msgData.typ=='audio'){
     $scope.audio_chat={
-      agent:'/media/agent'+$scope.msgData[0].uid+'.mp3',
-      visitor:'/media/local'+$scope.msgData[0].uid+'.mp3'
+      agent:'/media/agent'+$scope.msgData.uid+'.mp3',
+      visitor:'/media/local'+$scope.msgData.uid+'.mp3'
     }
   }
 
-  else if($scope.msgData[0].typ=='video'){
+  else if($scope.msgData.typ=='video'){
     $scope.video_chat={
-      agent:'/media/agent'+$scope.msgData[0].uid+'.webm',
-      visitor:'/media/local'+$scope.msgData[0].uid+'.webm'
+      agent:'/media/agent'+$scope.msgData.uid+'.webm',
+      visitor:'/media/local'+$scope.msgData.uid+'.webm'
     }
-    $scope.screen_video='/media/screen'+$scope.msgData[0].uid+'.webm'
+    $scope.screen_video='/media/screen'+$scope.msgData.uid+'.webm'
   }
 
   var stream_agent,stream_visitor,canvas_agent,canvas_visitor,ctx_agent,ctx_visitor,unique_agent_video_id,unique_visitor_video_id;
@@ -464,8 +488,8 @@ app.controller("app.customerReviews.explore", function($scope, $http, $permissio
     if($scope.video_chat||$scope.audio_chat){
 
       if ($scope.video_chat.agent) {
-          unique_agent_video_id="vid_agent"+$scope.chatThreadData.uid;
-          unique_visitor_video_id="vid_visitor"+$scope.chatThreadData.uid;
+          unique_agent_video_id="vid_agent"+$scope.myChatThreadData.uid;
+          unique_visitor_video_id="vid_visitor"+$scope.myChatThreadData.uid;
           stream_agent  = document.getElementById(unique_agent_video_id);
           stream_visitor  = document.getElementById(unique_visitor_video_id);
           canvas_agent = document.getElementById('canvas_agent');
@@ -561,13 +585,13 @@ $scope.showChart = function(){
     size: 'lg',
     backdrop: true,
     resolve: {
-      chatThreadData: function() {
-        return $scope.chatThreadData;
+      myChatThreadData: function() {
+        return $scope.myChatThreadData;
       }
     },
-    controller: function($scope, chatThreadData , $users , $uibModalInstance, Flash) {
+    controller: function($scope, myChatThreadData , $users , $uibModalInstance, Flash) {
 
-      $scope.chatThreadData = chatThreadData
+      $scope.myChatThreadData = myChatThreadData
       $scope.calculateTime = function (user , agent) {
         if (user!=undefined) {
           var usertime = new Date(user);
@@ -586,7 +610,7 @@ $scope.showChart = function(){
       }
       $http({
           method: 'GET',
-          url: '/api/support/supportChat/?uid='+chatThreadData.uid,
+          url: '/api/support/supportChat/?uid='+myChatThreadData.uid,
         }).
         then(function(response) {
           console.log(response.data,typeof response.data,response.data.length);
@@ -610,7 +634,7 @@ $scope.showChart = function(){
       $scope.changeStatus = function(status){
         $http({
           method: 'PATCH',
-          url: '/api/support/chatThread/' + $scope.chatThreadData.pk + '/',
+          url: '/api/support/chatThread/' + $scope.myChatThreadData.pk + '/',
           data: {status:status}
         }).
         then(function(response) {
@@ -624,10 +648,9 @@ $scope.showChart = function(){
   }).result.then(function () {
 
   }, function (status) {
-    console.log(status);
-    console.log($scope.chatThreadData);
+
     if (status != 'backdrop click' && status != 'escape key press') {
-      $scope.chatThreadData.status = status
+      $scope.myChatThreadData.status = status
     }
   });
 
@@ -643,7 +666,7 @@ $scope.snap=function() {
       backdrop: true,
       resolve: {
         data: function(){
-          return $scope.msgData[0].uid
+          return $scope.msgData.uid
         }
       },
       controller: function($scope, $users, $uibModalInstance,data, Flash) {
@@ -714,15 +737,15 @@ $scope.snap=function() {
     });
   }
   $scope.postComment = function(){
-    console.log($scope.msgData[0].created);
+    console.log($scope.msgData.created);
     if ($scope.reviewForm.message.length == 0) {
       Flash.create('warning','Please Write Some Comment')
       return
     }
     var fd1 = new FormData();
     fd1.append('message', $scope.reviewForm.message);
-    fd1.append('uid', $scope.msgData[0].uid);
-    fd1.append('chatedDate', $scope.msgData[0].created.split('T')[0]);
+    fd1.append('uid', $scope.msgData.uid);
+    fd1.append('chatedDate', $scope.msgData.created.split('T')[0]);
     console.log(fd1);
     SendingPostRequest(fd1);
   }
@@ -732,12 +755,12 @@ $scope.snap=function() {
 
 
   // $scope.postComment = function(){
-  //   console.log($scope.msgData[0].created);
+  //   console.log($scope.msgData.created);
   //   if ($scope.reviewForm.message.length == 0) {
   //     Flash.create('warning','Please Write Some Comment')
   //     return
   //   }
-  //   var toSend = {message:$scope.reviewForm.message,uid:$scope.msgData[0].uid,chatedDate:$scope.msgData[0].created.split('T')[0]}
+  //   var toSend = {message:$scope.reviewForm.message,uid:$scope.msgData.uid,chatedDate:$scope.msgData.created.split('T')[0]}
   //   $http({
   //     method: 'POST',
   //     url: '/api/support/reviewComment/',

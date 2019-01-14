@@ -340,7 +340,7 @@ app.directive('reviewInfo', function() {
       $scope.reviewForm = {message:''}
 
       $scope.calculateTime = function(user, agent) {
-    
+
         if (user != undefined) {
           var usertime = new Date(user);
           var agenttime = new Date(agent);
@@ -536,7 +536,7 @@ app.directive('reviewInfo', function() {
             }).
             then(function(response) {
               console.log(response.data,typeof response.data,response.data.length);
-              $scope.myChatData = response.data
+              $scope.fullChatData = response.data
             });
 
 

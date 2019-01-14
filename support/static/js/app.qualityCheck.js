@@ -17,28 +17,33 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
   }, 500);
 
+  $scope.msgData=[]
+  $scope.fullChatData=[]
+  $scope.msgData = $scope.tab.data.chatThreadData
+  $scope.fullChatData=$scope.tab.data.supportChatData
   $scope.me = $users.get('mySelf');
-  $scope.msgData = $scope.tab.data
-  console.log($scope.msgData);
   $scope.reviewCommentData = [];
 
   $http({
     method: 'GET',
     url: '/api/support/reviewComment/?uid='+$scope.msgData.uid+'&chatedDate='+$scope.msgData.created.split('T')[0],
-
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
     $scope.reviewCommentData =response.data
   });
+
   $http({
     method: 'GET',
     url: '/api/support/chatThread/?uid='+$scope.msgData.uid
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
-    $scope.chatThreadData =response.data[0]
+    console.log(response.data[0]);
+    console.log($scope.msgData);
+    $scope.myChatThreadData =response.data[0]
   });
+
   $scope.reviewForm = {message:''}
 
   $scope.audio_chat={
@@ -73,8 +78,8 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     if($scope.video_chat||$scope.audio_chat){
 
       if ($scope.video_chat.agent) {
-          unique_agent_video_id="vid_agent"+$scope.chatThreadData.uid;
-          unique_visitor_video_id="vid_visitor"+$scope.chatThreadData.uid;
+          unique_agent_video_id="vid_agent"+$scope.myChatThreadData.uid;
+          unique_visitor_video_id="vid_visitor"+$scope.myChatThreadData.uid;
           stream_agent  = document.getElementById(unique_agent_video_id);
           stream_visitor  = document.getElementById(unique_visitor_video_id);
           canvas_agent = document.getElementById('canvas_agent');
@@ -263,13 +268,13 @@ $scope.snap=function() {
       size: 'lg',
       backdrop: true,
       resolve: {
-        chatThreadData: function() {
-          return $scope.chatThreadData;
+        myChatThreadData: function() {
+          return $scope.myChatThreadData;
         }
       },
-      controller: function($scope, chatThreadData , $users , $uibModalInstance, Flash) {
+      controller: function($scope, myChatThreadData , $users , $uibModalInstance, Flash) {
 
-        $scope.chatThreadData = chatThreadData
+        $scope.myChatThreadData = myChatThreadData
         $scope.calculateTime = function (user , agent) {
           if (user!=undefined) {
             var usertime = new Date(user);
@@ -288,7 +293,7 @@ $scope.snap=function() {
         }
         $http({
             method: 'GET',
-            url: '/api/support/supportChat/?uid='+chatThreadData.uid,
+            url: '/api/support/supportChat/?uid='+myChatThreadData.uid,
           }).
           then(function(response) {
             console.log(response.data,typeof response.data,response.data.length);
@@ -312,7 +317,7 @@ $scope.snap=function() {
         $scope.changeStatus = function(status){
           $http({
             method: 'PATCH',
-            url: '/api/support/chatThread/' + $scope.chatThreadData.pk + '/',
+            url: '/api/support/chatThread/' + $scope.myChatThreadData.pk + '/',
             data: {status:status}
           }).
           then(function(response) {
@@ -326,10 +331,8 @@ $scope.snap=function() {
     }).result.then(function () {
 
     }, function (status) {
-      console.log(status);
-      console.log($scope.chatThreadData);
       if (status != 'backdrop click' && status != 'escape key press') {
-        $scope.chatThreadData.status = status
+        $scope.myChatThreadData.status = status
       }
     });
 
@@ -825,57 +828,53 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       $scope.filterData(true)
     }
 
-  $scope.tableAction = function(target,table) {
+  $scope.tableAction = function(index) {
 
-    if(table){
-      target=$scope.reviewData.indexOf(target)
-    }
+    console.log($scope.reviewData[index]);
 
-    var appType = 'Info';
-    $scope.addTab({
-      title: 'Agent : ' + $scope.reviewData[target].uid,
-      cancel: true,
-      app: 'AgentInfo',
-      data: $scope.reviewData[target],
-      active: true,
-      typ:'browse'
-    })
-    // for (var i = 0; i < $scope.reviewData.length; i++) {
-    //   if ($scope.reviewData[i].pk == parseInt(target)) {
-    //     if (action == 'edit') {
-    //       var title = 'Edit : ';
-    //       var appType = 'companyEdit';
-    //     } else if (action == 'info') {
-    //       var title = 'Details : ';
-    //       var appType = 'companyInfo';
-    //     }
-    //
-    //     $scope.addTab({
-    //       title: title + $scope.reviewData[i].pk,
-    //       cancel: true,
-    //       app: appType,
-    //       data: $scope.reviewData[i],
-    //       active: true
-    //     })
-    //   }
-    // }
+    $http({
+      method: 'GET',
+      url: '/api/support/reviewHomeChats/?uid='+$scope.reviewData[index].uid,
+    }).
+    then(function(response) {
+      var appType = 'Info';
+
+        $scope.addTab({
+          title: 'Agent : ' + $scope.reviewData[index].uid,
+          cancel: true,
+          app: 'AgentInfo',
+          data: {
+            chatThreadData:$scope.reviewData[index],
+            supportChatData:response.data
+          },
+          active: true,
+          typ:'browse'
+        })
+    });
+
   }
-  $scope.tableArchAction = function(target,table) {
+  $scope.tableArchAction = function(index) {
 
-    if(table){
-      target=$scope.archivedData.indexOf(target)
-    }
-    // console.log(target, action, mode);
-    console.log($scope.archivedData[target]);
-    var appType = 'Info';
-    $scope.addTab({
-      title: 'Agent : ' + $scope.archivedData[target][0].uid,
-      cancel: true,
-      app: 'AgentInfo',
-      data: $scope.archivedData[target],
-      active: true,
-      typ:'archived'
-    })}
+
+    $http({
+      method: 'GET',
+      url: '/api/support/reviewHomeChats/?uid='+$scope.archivedData[index].uid,
+    }).
+    then(function(response) {
+      var appType = 'Info';
+      $scope.addTab({
+        title: 'Agent : ' + $scope.archivedData[index].uid,
+        cancel: true,
+        app: 'AgentInfo',
+        data: {
+            chatThreadData:$scope.archivedData[index],
+            supportChatData:response.data
+          },
+        active: true,
+        typ:'archived'
+      })
+    });
+  }
 
   $scope.tabs = [];
   $scope.searchTabActive = true;
@@ -897,9 +896,11 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.addTab = function(input) {
     $scope.searchTabActive = false;
     alreadyOpen = false;
+    console.log(input);
+    console.log($scope.tabs);
     for (var i = 0; i < $scope.tabs.length; i++) {
-      console.log($scope.tabs[i].data[0].id,input.data[0].id, $scope.tabs[i].app ,input.app);
-      if ($scope.tabs[i].data[0].id == input.data[0].id && $scope.tabs[i].app == input.app) {
+      console.log($scope.tabs[i].data.chatThreadData.id,input.data.chatThreadData.id, $scope.tabs[i].app ,input.app);
+      if ($scope.tabs[i].data.chatThreadData.id == input.data.chatThreadData.id && $scope.tabs[i].app == input.app) {
         $scope.tabs[i].active = true;
         alreadyOpen = true;
       } else {
