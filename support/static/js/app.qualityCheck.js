@@ -357,7 +357,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     tableData: []
   };
 
-  $scope.form = {date:new Date(),user:'',email:'',client:''}
+  $scope.form = {date:null,user:'',email:'',client:''}
   $scope.reviewData = []
   $scope.archivedData=[]
   $scope.browseTab = true;
@@ -374,10 +374,21 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.viewby = 15;
   $scope.viewbyArch = 15;
   $scope.currentPage = {
-    page:1
+    page:0
   }
   $scope.currentPageArch = {
-    page:1
+    page:0
+  }
+
+  $scope.offset=0
+
+  $scope.detailInfoData={
+    chatThreadData:null,
+    supportChatData:null,
+  }
+  $scope.detailInfoDataArch={
+    chatThreadData:null,
+    supportChatData:null,
   }
 
   $scope.setMyView=function(){
@@ -386,20 +397,20 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
 
   $scope.filterByUid=function(isArchived){
     if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a[0].uid > b[0].uid});
+      $scope.archivedData.sort(function(a, b){return a.uid > b.uid});
       $scope.setTableValuesArch ()
     }else{
-      $scope.reviewData.sort(function(a, b){return a[0].uid - b[0].uid});
+      $scope.reviewData.sort(function(a, b){return a.uid - b.uid});
       $scope.setTableValues ()
     }
   }
 
   $scope.filterByCompany=function(isArchived){
     if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a[0].company > b[0].company});
+      $scope.archivedData.sort(function(a, b){return a.company > b.company});
       $scope.setTableValuesArch ()
     }else{
-      $scope.reviewData.sort(function(a, b){return a[0].company > b[0].company});
+      $scope.reviewData.sort(function(a, b){return a.company > b.company});
       $scope.setTableValues ()
     }
 
@@ -407,73 +418,85 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
 
   $scope.filterByRating=function(isArchived){
     if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a[0].rating < b[0].rating});
+      $scope.archivedData.sort(function(a, b){return a.rating < b.rating});
       $scope.setTableValuesArch ()
     }else{
-      $scope.reviewData.sort(function(a, b){return a[0].rating < b[0].rating});
+      $scope.reviewData.sort(function(a, b){return a.rating < b.rating});
       $scope.setTableValues ()
     }
   }
 
   $scope.filterByStatus=function(isArchived){
     if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a[0].statusChat > b[0].statusChat});
+      $scope.archivedData.sort(function(a, b){return a.statusChat > b.statusChat});
       $scope.setTableValuesArch ()
     }else{
-      $scope.reviewData.sort(function(a, b){return a[0].statusChat > b[0].statusChat});
+      $scope.reviewData.sort(function(a, b){return a.statusChat > b.statusChat});
       $scope.setTableValues ()
     }
   }
 
   $scope.filterByUser=function(isArchived){
     if(isArchived){
-      $scope.archivedData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
+      $scope.archivedData.sort(function(a, b){return $filter("getName")(a.user_id) > $filter("getName")(b.user_id)});
       $scope.setTableValuesArch ()
     }else{
-      $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
+      $scope.reviewData.sort(function(a, b){return $filter("getName")(a.user_id) > $filter("getName")(b.user_id)});
       $scope.setTableValues ()
     }
   }
 
   $scope.filterByCreated=function(isArchived){
+    console.log($scope.reviewData);
     if(isArchived){
-      $scope.archivedData.sort(function(a, b){return $filter('date')(a[0].created, 'dd/MM/yyyy') > $filter('date')(b[0].created, 'dd/MM/yyyy')});
+      $scope.archivedData.sort(function(a, b){return $filter('date')(a.created, 'dd/MM/yyyy') > $filter('date')(b.created, 'dd/MM/yyyy')});
       $scope.setTableValuesArch ()
     }else{
-      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, 'dd/MM/yyyy') > $filter('date')(b[0].created, 'dd/MM/yyyy')});
+      $scope.reviewData.sort(function(a, b){return $filter('date')(a.created, 'dd/MM/yyyy') > $filter('date')(b.created, 'dd/MM/yyyy')});
+      console.log($scope.reviewData);
+      if($scope.reviewData.length>0){
+        $scope.tabelRowAction($scope.reviewData[0])
+      }
       $scope.setTableValues ()
     }
   }
 
   $scope.setTableValues =function(){
-    $scope.totalItems = $scope.reviewData.length;
+    $scope.totalItems = $scope.reviewDataLength;
     $scope.itemsPerPage = $scope.viewby;
     $scope.maxSize = 4;
     $scope.setPage(1)
   }
   $scope.setTableValuesArch =function(){
-    $scope.totalItemsArch = $scope.archivedData.length;
+    $scope.totalItemsArch = $scope.archivedDataLength;
     $scope.itemsPerPageArch = $scope.viewbyArch;
     $scope.maxSizeArch = 4;
     $scope.setPageArch(1)
   }
 
   $scope.setPage = function (pageNo) {
+    if(pageNo==$scope.currentPage.page)
+      return
     $scope.currentPage.page = pageNo;
     $scope.setPagingData($scope.currentPage.page)
   };
   $scope.setPageArch = function (pageNo) {
+    if(pageNo==$scope.currentPageArch.page)
+      return
     $scope.currentPageArch.page = pageNo;
     $scope.setPagingDataArch($scope.currentPageArch.page)
   };
 
   $scope.setPagingData= function (page) {
-    console.log(page);
-    var pagedData = $scope.reviewData.slice(
-      (page - 1) * $scope.itemsPerPage,
-      page * $scope.itemsPerPage
-    );
-    $scope.tableDataAvail = pagedData;
+    // console.log(page);
+    // var pagedData = $scope.reviewData.slice(
+    //   (page - 1) * $scope.itemsPerPage,
+    //   page * $scope.itemsPerPage
+    // );
+    // $scope.tableDataAvail = pagedData;
+    console.log('herer');
+    $scope.offset=(page-1)*$scope.viewby
+    // $scope.filterData()
   }
   $scope.setPagingDataArch= function (page) {
     console.log(page);
@@ -505,21 +528,49 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
    $scope.tabelRowAction=function(data){
      $scope.lastActiveTR=$scope.reviewData.indexOf(data)
      $scope.isDetailInfoUpdated=false
-     $scope.detailInfoData=data
-     setTimeout(function () {
-       $scope.isDetailInfoUpdated=true
-     }, 100);
+     $scope.detailInfoData.chatThreadData=data
+     $scope.fetchChatsForUID(data)
+
    }
+
+
+   $scope.fetchChatsForUID= function(data){
+     $http({
+       method: 'GET',
+       url: '/api/support/reviewHomeChats/?uid='+data.uid,
+     }).
+     then(function(response) {
+       $scope.detailInfoData.supportChatData = response.data
+       setTimeout(function () {
+         $scope.isDetailInfoUpdated=true
+       }, 100);
+     });
+   }
+   $scope.fetchChatsForUIDArch= function(data){
+     $http({
+       method: 'GET',
+       url: '/api/support/reviewHomeChats/?uid='+data.uid,
+     }).
+     then(function(response) {
+       $scope.detailInfoDataArch.supportChatData = response.data
+       setTimeout(function () {
+         $scope.isDetailInfoUpdated=true
+       }, 100);
+     });
+   }
+
+
    $scope.tabelRowActionArch=function(data){
      $scope.lastActiveTRArch=$scope.archivedData.indexOf(data)
      $scope.isDetailInfoUpdatedArch=false
-     $scope.detailInfoDataArch=data
-     setTimeout(function () {
-       $scope.isDetailInfoUpdatedArch=true
-     }, 100);
+     $scope.detailInfoDataArch.chatThreadData=data
+     $scope.fetchChatsForUIDArch(data);
    }
 
   $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
+    if (newValue==undefined) {
+      return
+    }
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated(false);
@@ -539,6 +590,9 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       }
   },true)
   $scope.$watch('selectedSortOptionArch.value',function(newValue,oldValue){
+    if (newValue==undefined) {
+      return
+    }
     switch (newValue) {
         case 'Created':
           $scope.filterByCreated(true);
@@ -562,7 +616,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.getArchData = function(date,user,email,client,download,typOfCall){
     $scope.archivedData=[];
     $scope.loadingDataForArc=true;
-    var url = '/api/support/reviewHomeCal/?status=archived'
+    var url = '/api/support/reviewHomeCal/?status=archived&limit='+$scope.viewby+'&offset='+$scope.offset
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -592,8 +646,11 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
         url: url,
       }).
       then(function(response) {
-        $scope.archivedData = response.data
-        $scope.detailInfoDataArch=$scope.archivedData[0]
+        $scope.archivedData = response.data.data
+        $scope.archivedDataLength = response.data.length
+        if($scope.archivedData.length>0){
+          $scope.tabelRowActionArch($scope.archivedData[0])
+        }
         $scope.lastActiveTRArch=0;
         $scope.setTableValuesArch ()
         $scope.loadingDataForArc=false;
@@ -610,7 +667,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.getData = function(date,user,email,client,download,typOfCall){
     $scope.reviewData=[]
     $scope.loadingData=true;
-    var url = '/api/support/reviewHomeCal/?limit'
+    var url = '/api/support/reviewHomeCal/?limit='+$scope.viewby+'&offset='+$scope.offset
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -641,8 +698,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
         url: url,
       }).
       then(function(response) {
-        $scope.reviewData = response.data
-        $scope.detailInfoData=$scope.reviewData[0]
+        $scope.reviewData = response.data.data
+        $scope.reviewDataLength = response.data.length
+        console.log($scope.reviewData,"***************************************************");
+        if($scope.reviewData.length>0){
+          $scope.tabelRowAction($scope.reviewData[0])
+        }
         $scope.lastActiveTR=0;
         $scope.setTableValues ()
         $scope.loadingData=false;

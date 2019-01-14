@@ -189,6 +189,83 @@ def createExcel(data):
     # wb.save(filename = dest_filename)
     return wb
 
+
+class ReviewFilterCalAPIView2(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self, request, format=None):
+        print '****** entered', request.GET
+        # all chat threads
+        toReturn = {}
+        chatThreadObj = ChatThread.objects.all()
+        # print chatThreadObj,'all chat thread obj'
+        if 'customer' in self.request.GET:
+            userCompany = list(service.objects.filter(contactPerson=self.request.user).values_list('pk',flat=True).distinct())
+            userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
+            chatThreadObj = chatThreadObj.filter(company__in=userCustProfile)
+            if 'customerProfilePkList' in self.request.GET:
+                return Response(userCustProfile, status=status.HTTP_200_OK)
+            if 'agentComapnyPk' in self.request.GET:
+                userCompany = list(service.objects.filter(advisors=self.request.user).values_list('pk',flat=True).distinct())
+                userCustProfile = list(CustomerProfile.objects.filter(service__in=userCompany).values_list('pk',flat=True).distinct())
+                return Response(userCustProfile, status=status.HTTP_200_OK)
+        if 'getMyReviews' in self.request.GET:
+            #when agent logged in
+            chatThreadObj = chatThreadObj.filter(user = self.request.user)
+        if 'date' in self.request.GET:
+            date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
+            SupChatObj = SupportChat.objects.filter(created__startswith = date)
+            uidL = list(SupChatObj.values_list('uid',flat=True).distinct())
+            chatThreadObj = chatThreadObj.filter(uid__in=uidL)
+        if 'user' in self.request.GET:
+            user = User.objects.get(pk = int(self.request.GET['user']))
+            chatThreadObj = chatThreadObj.filter(user = user)
+        if 'client' in self.request.GET:
+            userCustProfile = list(CustomerProfile.objects.filter(service=self.request.GET['client']).values_list('pk',flat=True).distinct())
+            chatThreadObj = chatThreadObj.filter(company__in=userCustProfile)
+        if 'email' in self.request.GET:
+            uidList = list(Visitor.objects.filter(email=self.request.GET['email']).values_list('uid',flat=True).distinct())
+            chatThreadObj = chatThreadObj.filter(uid__in=uidList)
+        if 'audio' in self.request.GET:
+            chatThreadObj = chatThreadObj.filter(typ = 'audio')
+        if 'both' in self.request.GET:
+            chatThreadObj = chatThreadObj.filter(Q(typ='audio')|Q(typ='video'))
+        if 'video' in self.request.GET:
+            chatThreadObj = chatThreadObj.filter(typ = 'video')
+        if 'status' in self.request.GET:
+            if self.request.GET['status']=='archived':
+                chatThreadObj = chatThreadObj.filter(status = 'archived')
+        else:
+            chatThreadObj = chatThreadObj.filter(~Q(status = 'archived'))
+
+        toReturn['length'] = chatThreadObj.count()
+        chatThreadList =  list(chatThreadObj.values())
+
+        if 'limit' in self.request.GET and 'offset' in self.request.GET:
+            print 'in limit'
+            offset = int(self.request.GET['offset'])
+            limit = offset+int(self.request.GET['limit'])
+            chatThreadList = chatThreadList[offset:limit]
+
+        print len(chatThreadList)
+        toReturn['data'] = chatThreadList
+        # print toReturn,'toReturn'
+        return Response(toReturn, status=status.HTTP_200_OK)
+
+
+class ReviewHomeChatsAPIView(APIView):
+    renderer_classes = (JSONRenderer,)
+    def get(self, request, format=None):
+        toReturn = []
+        supChatObj = SupportChat.objects.all()
+        if 'uid' in self.request.GET:
+            supChatObj = supChatObj.filter(uid = self.request.GET['uid'])
+        if 'date' in self.request.GET:
+            date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
+            supChatObj = supChatObj.filter(created__startswith = date)
+        toReturn = list(supChatObj.values())
+        return Response(toReturn, status=status.HTTP_200_OK)
+
+
 class ReviewFilterCalAPIView(APIView):
     renderer_classes = (JSONRenderer,)
 

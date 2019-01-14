@@ -6,24 +6,24 @@
     <!-- <h4 style="display:inline-block">Agent Info:</h4> -->
 
     <div style="margin:15px 0px">
-      <img style="width:5rem" ng-if="msgData[0].user_id" src="{{msgData[0].user_id | getDP}}" alt="">
+      <img style="width:5rem" ng-if="msgData.user_id" src="{{msgData.user_id | getDP}}" alt="">
       <div class="" style="display:inline-block">
-        <!-- <p style="font-size:16px;font-weight:700">{{msgData[0].user_id | getName}}</p> -->
-          <p ng-if="msgData[0].name"><strong>{{msgData[0].name}}</strong></p>
+        <!-- <p style="font-size:16px;font-weight:700">{{msgData.user_id | getName}}</p> -->
+          <p ng-if="msgData.name"><strong>{{msgData.name}}</strong></p>
       </div>
     </div>
     <span class="btn btn_gradient" ng-click="showChart()" style="float:right">Change Status</span>
-    <p><strong><i class="fa fa-calendar-o" aria-hidden="true"></i> </strong>{{msgData[0].created | date : 'dd-MMM-yyyy'}}</p>
-    <p ng-if="msgData[0].chatDuration>0.0"><strong><i class="fa fa-clock-o" aria-hidden="true"></i> </strong>{{msgData[0].chatDuration}} Min</p>
-    <!-- <p ng-if="msgData[0].company"><strong>Client : </strong>{{msgData[0].company}}</p> -->
-    <p ng-if="msgData[0].email"><strong>Visitor's Email : </strong>{{msgData[0].email}}</p>
-    <p ng-if="msgData[0].customerRating"><strong><i class="fa fa-star fa-md" aria-hidden="true"></i> </strong>{{msgData[0].customerRating}} </p>
-    <p ng-if="msgData[0].customerFeedback"><strong>Feedback : </strong>{{msgData[0].customerFeedback}}</p>
-    <p ng-if="chatThreadData.uid!=none"><strong>Status : </strong>{{chatThreadData.status}}
-      <span ng-if="msgData[0].statusChat!='started'">
-        <span ng-if="msgData[0][msgData[0].statusChat+'By']&&msgData[0][msgData[0].statusChat+'On']">by {{msgData[0][msgData[0].statusChat+'By']}}</span>
-        <span ng-if="msgData[0][msgData[0].statusChat+'On']&&!msgData[0][msgData[0].statusChat+'By']"> by Visitor</span>
-        <span ng-if="msgData[0][msgData[0].statusChat+'On']">on {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[0][msgData[0].statusChat+'On'].split('.')[0].split(' ')[1]}}</span>
+    <p><strong><i class="fa fa-calendar-o" aria-hidden="true"></i> </strong>{{msgData.created | date : 'dd-MMM-yyyy'}}</p>
+    <p ng-if="msgData.chatDuration>0.0"><strong><i class="fa fa-clock-o" aria-hidden="true"></i> </strong>{{msgData.chatDuration}} Min</p>
+    <!-- <p ng-if="msgData.company"><strong>Client : </strong>{{msgData.company}}</p> -->
+    <p ng-if="msgData.email"><strong>Visitor's Email : </strong>{{msgData.email}}</p>
+    <p ng-if="msgData.customerRating"><strong><i class="fa fa-star fa-md" aria-hidden="true"></i> </strong>{{msgData.customerRating}} </p>
+    <p ng-if="msgData.customerFeedback"><strong>Feedback : </strong>{{msgData.customerFeedback}}</p>
+    <p ng-if="msgData.uid!=none"><strong>Status : </strong>{{msgData.status}}
+      <span ng-if="msgData.statusChat!='started'">
+        <span ng-if="msgData[msgData.statusChat+'By']&&msgData[msgData.statusChat+'On']">by {{msgData[msgData.statusChat+'By']}}</span>
+        <span ng-if="msgData[msgData.statusChat+'On']&&!msgData[msgData.statusChat+'By']"> by Visitor</span>
+        <span ng-if="msgData[msgData.statusChat+'On']">on {{msgData[msgData.statusChat+'On'].split('.')[0].split(' ')[0]}} at {{msgData[msgData.statusChat+'On'].split('.')[0].split(' ')[1]}}</span>
      </span>
     </p>
   </div>
@@ -32,13 +32,13 @@
     <div class="row">
       <div ng-if="video_chat.agent">
         <div class="col-md-4">
-          <video id="vid_agent{{chatThreadData.uid}}" style="width:100%" height="240">
+          <video id="vid_agent{{msgData.uid}}" style="width:100%" height="240">
                 <source ng-src="{{video_chat.visitor}}" type="video/webm">
           </video>
         </div>
         <canvas id="canvas_agent" style="display:none"></canvas>
         <canvas id="canvas_visitor" style="display:none"></canvas>
-        <video id="vid_visitor{{chatThreadData.uid}}" class="col-md-4"height="240">
+        <video id="vid_visitor{{msgData.uid}}" class="col-md-4"height="240">
             <source ng-src="{{video_chat.agent}}" type="video/webm">
         </video>
         <video id="" class="col-md-4" height="240" controls>
@@ -85,7 +85,7 @@
 
   <!-- message section -->
   <div class="" style="margin-bottom:20px;display:block">
-    <div class="row col-md-12" ng-repeat="msg in msgData">
+    <div class="row col-md-12" ng-repeat="msg in fullChatData">
       <div ng-if="!msg.logs" class="container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#fff;border:2px solid #eee;':'left; background-color:#175aa5;'}} padding:5px 10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
         <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="white-space:pre-wrap;color: {{msg.sentByAgent ? 'black':'white'}}" >
           {{msg.message}}</p>
@@ -120,7 +120,7 @@
 
       <div class="" ng-repeat="comment in reviewCommentData" style="margin-top:25px;">
         <div class="col-md-9">
-          <div style="background-color:{{comment.user==msgData[0].user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; margin-top:5px ;border-radius:15px 50px 50px 15px; padding:8px 10px 0px 15px;word-break: break-all !important;">
+          <div style="background-color:{{comment.user==msgData.user_id? '#ea1515':'#286EFA'}};float:right; color:#fff; margin-top:5px ;border-radius:15px 50px 50px 15px; padding:8px 10px 0px 15px;word-break: break-all !important;">
             <p> {{comment.message}} </p>
           </div>
           <div ng-if="comment.agent_capture">
@@ -128,8 +128,8 @@
             <img ng-src="{{comment.visitor_capture}}" alt="">
           </div>
         </div>
-          <img style="width:5rem" ng-if="msgData[0].user_id" src="{{msgData[0].user_id | getDP}}" alt="">
-          <p style="font-size:15px;display:inline-block;">{{msgData[0].user_id | getName}}</p>
+          <img style="width:5rem" ng-if="msgData.user_id" src="{{msgData.user_id | getDP}}" alt="">
+          <p style="font-size:15px;display:inline-block;">{{msgData.user_id | getName}}</p>
       </div>
     </div>
 
