@@ -533,40 +533,52 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       }
     }
   }
-  $scope.bgrand = function () {
+  $scope.bgrand = function() {
 
-            return  '#' + Math.floor(Math.random()*16777215).toString(16)
+    return '#' + Math.floor(Math.random() * 16777215).toString(16)
 
 
-    };
-    $scope.arr = [];
+  };
+  $scope.arr = [];
 
+  $scope.subject = [{
+      'name': 'Physics',
+    }, {
+      'name': 'Maths',
+    },
+    {
+      'name': 'Chemistry',
+    },
+    {
+      'name': 'Biology',
+    }
+  ]
 
 
   $scope.refbooks = [{
     'name': 'concept of Physics',
     'img': '/static/images/24tut/hcv.jpg',
     'author': 'HC-Verma',
-    'detail':'Textbook for class 12'
+    'detail': 'Textbook for class 12'
   }, {
     'name': 'concept of Chemistry',
     'img': '/static/images/24tut/cbook.jpg',
     'author': 'HC-Verma',
-    'detail':'Textbook for class 12'
+    'detail': 'Textbook for class 12'
   }, {
     'name': 'concept of Maths',
     'img': '/static/images/24tut/math.jpg',
     'author': 'HC-Verma',
-    'detail':'Textbook for class 12'
+    'detail': 'Textbook for class 12'
   }, {
     'name': 'concept of Biology',
     'img': '/static/images/24tut/bio.jpg',
     'author': 'HC-Verma',
-    'detail':'Textbook for class 12'
+    'detail': 'Textbook for class 12'
 
   }, ]
-  for (var i = 0; i < $scope.refbooks .length; i++) {
-    var color = $scope.bgrand ();
+  for (var i = 0; i < $scope.refbooks.length; i++) {
+    var color = $scope.bgrand();
     $scope.arr.push(color)
     // console.log($scope.arr);
   }
