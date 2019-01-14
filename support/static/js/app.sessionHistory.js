@@ -17,15 +17,14 @@ app.controller("businessManagement.sessionHistory.explore", function($scope, $st
     $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
   }, 500);
 
-
-  // console.log($scope.commentPerm);
   $scope.me = $users.get('mySelf');
   $scope.msgData = $scope.tab.data
+  console.log($scope.msgData);
   $scope.reviewCommentData = [];
 
   $http({
     method: 'GET',
-    url: '/api/support/reviewComment/?uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+    url: '/api/support/reviewComment/?uid='+$scope.msgData.uid+'&chatedDate='+$scope.msgData.created.split('T')[0],
 
   }).
   then(function(response) {
@@ -34,7 +33,7 @@ app.controller("businessManagement.sessionHistory.explore", function($scope, $st
   });
   $http({
     method: 'GET',
-    url: '/api/support/chatThread/?uid='+$scope.msgData[0].uid
+    url: '/api/support/chatThread/?uid='+$scope.msgData.uid
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
@@ -51,50 +50,50 @@ app.controller("businessManagement.sessionHistory.explore", function($scope, $st
     visitor:null
   };
 
-  $scope.typ=$scope.msgData[0].typ
-  if($scope.msgData[0].typ=='audio'){
+  $scope.typ=$scope.msgData.typ
+  if($scope.msgData.typ=='audio'){
     $scope.audio_chat={
-      agent:'/media/agent'+$scope.msgData[0].uid+'.mp3',
-      visitor:'/media/local'+$scope.msgData[0].uid+'.mp3'
+      agent:'/media/agent'+$scope.msgData.uid+'.mp3',
+      visitor:'/media/local'+$scope.msgData.uid+'.mp3'
     }
   }
 
-  else if($scope.msgData[0].typ=='video'){
+  else if($scope.msgData.typ=='video'){
     $scope.video_chat={
-      agent:'/media/agent'+$scope.msgData[0].uid+'.webm',
-      visitor:'/media/local'+$scope.msgData[0].uid+'.webm'
+      agent:'/media/agent'+$scope.msgData.uid+'.webm',
+      visitor:'/media/local'+$scope.msgData.uid+'.webm'
     }
-    $scope.screen_video='/media/screen'+$scope.msgData[0].uid+'.webm'
+    $scope.screen_video='/media/screen'+$scope.msgData.uid+'.webm'
   }
 
-var stream_agent,stream_visitor,canvas_agent,canvas_visitor,ctx_agent,ctx_visitor,unique_agent_video_id,unique_visitor_video_id;
+  var stream_agent,stream_visitor,canvas_agent,canvas_visitor,ctx_agent,ctx_visitor,unique_agent_video_id,unique_visitor_video_id;
 
-setTimeout(function () {
+  setTimeout(function () {
 
-  if($scope.video_chat||$scope.audio_chat){
+    if($scope.video_chat||$scope.audio_chat){
 
-    if ($scope.video_chat.agent) {
-        unique_agent_video_id="vid_agent"+$scope.chatThreadData.uid;
-        unique_visitor_video_id="vid_visitor"+$scope.chatThreadData.uid;
-        stream_agent  = document.getElementById(unique_agent_video_id);
-        stream_visitor  = document.getElementById(unique_visitor_video_id);
-        canvas_agent = document.getElementById('canvas_agent');
-        canvas_visitor = document.getElementById('canvas_visitor');
-        ctx_agent = canvas_agent.getContext('2d');
-        ctx_visitor = canvas_visitor.getContext('2d');
-        w=200; h=200;
-        canvas_agent.width = w;
-        canvas_agent.height = h;
-        canvas_visitor.width = w;
-        canvas_visitor.height = h;
+      if ($scope.video_chat.agent) {
+          unique_agent_video_id="vid_agent"+$scope.chatThreadData.uid;
+          unique_visitor_video_id="vid_visitor"+$scope.chatThreadData.uid;
+          stream_agent  = document.getElementById(unique_agent_video_id);
+          stream_visitor  = document.getElementById(unique_visitor_video_id);
+          canvas_agent = document.getElementById('canvas_agent');
+          canvas_visitor = document.getElementById('canvas_visitor');
+          ctx_agent = canvas_agent.getContext('2d');
+          ctx_visitor = canvas_visitor.getContext('2d');
+          w=200; h=200;
+          canvas_agent.width = w;
+          canvas_agent.height = h;
+          canvas_visitor.width = w;
+          canvas_visitor.height = h;
 
+      }
+      else if($scope.audio_chat.agent){
+          stream_agent  = document.getElementById("aud_agent");
+          stream_visitor  = document.getElementById("aud_visitor");
+      }
     }
-    else if($scope.audio_chat.agent){
-        stream_agent  = document.getElementById("aud_agent");
-        stream_visitor  = document.getElementById("aud_visitor");
-    }
-  }
-}, 900);
+  }, 900);
   setTimeout(function () {
   if(stream_agent.readyState>0&&stream_agent.readyState>0){
           $scope.slider = {
@@ -174,7 +173,7 @@ $scope.snap=function() {
       backdrop: true,
       resolve: {
         data: function(){
-          return $scope.msgData[0].uid
+          return $scope.msgData.uid
         }
       },
       controller: function($scope, $users, $uibModalInstance,data, Flash) {
@@ -245,15 +244,15 @@ $scope.snap=function() {
     });
   }
   $scope.postComment = function(){
-    console.log($scope.msgData[0].created);
+    console.log($scope.msgData.created);
     if ($scope.reviewForm.message.length == 0) {
       Flash.create('warning','Please Write Some Comment')
       return
     }
     var fd1 = new FormData();
     fd1.append('message', $scope.reviewForm.message);
-    fd1.append('uid', $scope.msgData[0].uid);
-    fd1.append('chatedDate', $scope.msgData[0].created.split('T')[0]);
+    fd1.append('uid', $scope.msgData.uid);
+    fd1.append('chatedDate', $scope.msgData.created.split('T')[0]);
     console.log(fd1);
     SendingPostRequest(fd1);
   }
@@ -353,29 +352,271 @@ $scope.snap=function() {
     }
   }
 })
-app.controller("businessManagement.sessionHistory", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
+app.controller("businessManagement.sessionHistory", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal,$filter, $rootScope,$window) {
 
   $scope.data = {
     tableData: []
   };
 
-  $scope.form = {date:new Date(),user:'',email:'',client:''}
+  $scope.form = {date:null,user:'',email:'',client:''}
   $scope.reviewData = []
   $scope.archivedData=[]
+  $scope.browseTab = true;
   $scope.chatTypes=['All','audio','video','Audio & Video']
   $scope.form.selectedChatType="All";
   $scope.sortOptions=['Created','Agent Name','UID','Rating','Company']
-  $scope.selectedSortOption={value:"Created"}
-  $scope.tableUpdated=false
-  $scope.archTableUpdated=false
-  $scope.browseTab = true;
-  $scope.archiveTab = false;
+  $scope.selectedSortOption={
+    value:'Created'
+  }
+  $scope.selectedSortOptionArch={
+    value:'Created'
+  }
+  $scope.isTableView=true
+  $scope.viewby = 15;
+  $scope.viewbyArch = 15;
+  $scope.currentPage = {
+    page:0
+  }
+  $scope.currentPageArch = {
+    page:0
+  }
+  $scope.offset=0
+
+  $scope.detailInfoData={
+    chatThreadData:null,
+    supportChatData:null,
+  }
+  $scope.detailInfoDataArch={
+    chatThreadData:null,
+    supportChatData:null,
+  }
+
+  $scope.setMyView=function(){
+    $scope.isTableView=!$scope.isTableView
+  }
+
+  $scope.filterByUid=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return a.uid > b.uid});
+      $scope.setTableValuesArch ()
+    }else{
+      $scope.reviewData.sort(function(a, b){return a.uid - b.uid});
+      $scope.setTableValues ()
+    }
+  }
+
+  $scope.filterByCompany=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return a.company > b.company});
+      $scope.setTableValuesArch ()
+    }else{
+      $scope.reviewData.sort(function(a, b){return a.company > b.company});
+      $scope.setTableValues ()
+    }
+
+  }
+
+  $scope.filterByRating=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return a.rating < b.rating});
+      $scope.setTableValuesArch ()
+    }else{
+      $scope.reviewData.sort(function(a, b){return a.rating < b.rating});
+      $scope.setTableValues ()
+    }
+  }
+
+  $scope.filterByStatus=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return a.statusChat > b.statusChat});
+      $scope.setTableValuesArch ()
+    }else{
+      $scope.reviewData.sort(function(a, b){return a.statusChat > b.statusChat});
+      $scope.setTableValues ()
+    }
+  }
+
+  $scope.filterByUser=function(isArchived){
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return $filter("getName")(a.user_id) > $filter("getName")(b.user_id)});
+      $scope.setTableValuesArch ()
+    }else{
+      $scope.reviewData.sort(function(a, b){return $filter("getName")(a.user_id) > $filter("getName")(b.user_id)});
+      $scope.setTableValues ()
+    }
+  }
+
+  $scope.filterByCreated=function(isArchived){
+    console.log($scope.reviewData);
+    if(isArchived){
+      $scope.archivedData.sort(function(a, b){return $filter('date')(a.created, 'dd/MM/yyyy') > $filter('date')(b.created, 'dd/MM/yyyy')});
+      $scope.setTableValuesArch ()
+    }else{
+      $scope.reviewData.sort(function(a, b){return $filter('date')(a.created, 'dd/MM/yyyy') > $filter('date')(b.created, 'dd/MM/yyyy')});
+      console.log($scope.reviewData);
+      if($scope.reviewData.length>0){
+        $scope.tabelRowAction($scope.reviewData[0])
+      }
+      $scope.setTableValues ()
+    }
+  }
+
+  $scope.setTableValues =function(){
+    $scope.totalItems = $scope.reviewDataLength;
+    $scope.itemsPerPage = $scope.viewby;
+    $scope.maxSize = 4;
+    $scope.setPage(1)
+  }
+  $scope.setTableValuesArch =function(){
+    $scope.totalItemsArch = $scope.archivedDataLength;
+    $scope.itemsPerPageArch = $scope.viewbyArch;
+    $scope.maxSizeArch = 4;
+    $scope.setPageArch(1)
+  }
+
+  $scope.setPage = function (pageNo) {
+    console.log('page No' +pageNo);
+    $scope.currentPage.page = pageNo;
+    $scope.setPagingData($scope.currentPage.page)
+  };
+  $scope.setPageArch = function (pageNo) {
+    if(pageNo==$scope.currentPageArch.page)
+      return
+    $scope.currentPageArch.page = pageNo;
+    $scope.setPagingDataArch($scope.currentPageArch.page)
+  };
+
+  $scope.setPagingData= function (page) {
+    // console.log(page);
+    // var pagedData = $scope.reviewData.slice(
+    //   (page - 1) * $scope.itemsPerPage,
+    //   page * $scope.itemsPerPage
+    // );
+    // $scope.tableDataAvail = pagedData;
+
+    $scope.offset=(page-1)*$scope.viewby
+    $scope.filterData()
+  }
+  $scope.setPagingDataArch= function (page) {
+    $scope.offset=(page-1)*$scope.viewby
+    $scope.filterData()
+  }
+
+  $scope.pageChanged = function() {
+    $scope.setPage($scope.currentPage.page)
+  };
+  $scope.pageChangedArch = function() {
+    $scope.setPageArch($scope.currentPageArch.page)
+  };
+
+   $scope.setItemsPerPageArch = function(num) {
+     $scope.itemsPerPageArch = num;
+     $scope.currentPageArch.page = 1;
+     $scope.setPageArch($scope.currentPageArch.page)
+   }
+   $scope.setItemsPerPage = function(num) {
+     $scope.itemsPerPage = num;
+     $scope.currentPage.page = 1;
+     $scope.setPage($scope.currentPage.page)
+   }
+
+   $scope.tabelRowAction=function(data){
+     $scope.lastActiveTR=$scope.reviewData.indexOf(data)
+     $scope.isDetailInfoUpdated=false
+     $scope.detailInfoData.chatThreadData=data
+     $scope.fetchChatsForUID(data)
+
+   }
+
+    $scope.tabelRowActionArch=function(data){
+      $scope.lastActiveTRArch=$scope.archivedData.indexOf(data)
+      console.log(data , $scope.lastActiveTRArch );
+      $scope.isDetailInfoUpdatedArch=false
+      $scope.detailInfoDataArch.chatThreadData=data
+      $scope.fetchChatsForUIDArch(data);
+    }
+
+
+   $scope.fetchChatsForUID= function(data){
+     $http({
+       method: 'GET',
+       url: '/api/support/reviewHomeChats/?uid='+data.uid,
+     }).
+     then(function(response) {
+       console.log('response data' , response.data);
+       $scope.detailInfoData.supportChatData = response.data
+       setTimeout(function () {
+         $scope.isDetailInfoUpdated=true
+       }, 100);
+     });
+   }
+   $scope.fetchChatsForUIDArch= function(data){
+     $http({
+       method: 'GET',
+       url: '/api/support/reviewHomeChats/?uid='+data.uid,
+     }).
+     then(function(response) {
+       console.log('response data' ,response.data );
+       $scope.detailInfoDataArch.supportChatData = response.data
+       setTimeout(function () {
+         $scope.isDetailInfoUpdated=true
+       }, 200);
+     });
+   }
+
+
+
+  // $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
+  //   if (newValue==undefined) {
+  //     return
+  //   }
+  //   switch (newValue) {
+  //       case 'Created':
+  //         $scope.filterByCreated(false);
+  //         break;
+  //       case 'Agent Name':
+  //         $scope.filterByUser(false);
+  //         break;
+  //       case 'UID':
+  //          $scope.filterByUid(false);
+  //         break;
+  //       case 'Rating':
+  //         $scope.filterByRating(false);
+  //         break;
+  //       case 'Company':
+  //         $scope.filterByCompany(false);
+  //         break;
+  //     }
+  // },true)
+  // $scope.$watch('selectedSortOptionArch.value',function(newValue,oldValue){
+  //   if (newValue==undefined) {
+  //     return
+  //   }
+  //   switch (newValue) {
+  //       case 'Created':
+  //         $scope.filterByCreated(true);
+  //         break;
+  //       case 'Agent Name':
+  //         $scope.filterByUser(true);
+  //         break;
+  //       case 'UID':
+  //          $scope.filterByUid(true);
+  //         break;
+  //       case 'Rating':
+  //         $scope.filterByRating(true);
+  //         break;
+  //       case 'Company':
+  //         $scope.filterByCompany(true);
+  //         break;
+  //     }
+  // },true)
+  let myCount=0;
+  let myCountArch=0;
 
   $scope.getArchData = function(date,user,email,client,download,typOfCall){
     $scope.archivedData=[];
     $scope.loadingDataForArc=true;
-    $scope.archTableUpdated=false
-    var url = '/api/support/reviewHomeCal/?status=archived'
+    var url = '/api/support/reviewHomeCal/?status=archived&limit='+$scope.viewby+'&offset='+$scope.offset
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -405,79 +646,33 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
         url: url,
       }).
       then(function(response) {
-        // $scope.custDetails = response.data[0]
-        console.log(response.data,'dddddddddddd',typeof response.data);
-        $scope.archivedData =response.data
-        $scope.loadingDataForArc=false;
-        $scope.archTableUpdated=true;
-        if(response.data.length<1){
-          $scope.archievedMyDialouge=true;
-        }else{
+        $scope.archivedData = response.data.data
+        console.log($scope.archivedData , " Archieve data");
+        $scope.archivedDataLength = response.data.dataLength
+        if($scope.archivedData.length>0){
+          $scope.tabelRowActionArch($scope.archivedData[0])
+          if(myCountArch<1){
+            $scope.setTableValuesArch()
+          }
+          myCountArch++;
           $scope.archievedMyDialouge=false;
+        }else{
+          $scope.archievedMyDialouge=true;
         }
+
+        $scope.loadingDataForArc=false;
+        $scope.isDetailInfoUpdatedArch=true
+
       });
     }
   }
-// innerHTML=$scope.reviewData.statusChat+'By'
-  // $scope.filterParams=[];
-  $scope.isTableView=true
-  $scope.setMyView=function(){
-    $scope.isTableView=!$scope.isTableView
-  }
-  $scope.filterByUid=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].uid - b[0].uid});
-  }
-  $scope.filterByCompany=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].company > b[0].company});
-  }
-  $scope.filterByRating=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].rating > b[0].rating});
-  }
-  $scope.filterByStatus=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].statusChat > b[0].statusChat});
-  }
-  $scope.filterByUser=function(){
-      $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
-  }
-  $scope.filterByCreated=function(){
-      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") < $filter('date')(b[0].created, "dd/MM/yyyy")});
-  }
 
-
-  var counttt=0
-  $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
-    counttt++;
-    if(counttt>1){
-      $scope.tableUpdated=false
-      setTimeout(function () {
-        $scope.tableUpdated=true
-      }, 100);
-    }
-    switch (newValue) {
-        case 'Created':
-          $scope.filterByCreated();
-          break;
-        case 'Agent Name':
-          $scope.filterByUser();
-          break;
-        case 'UID':
-           $scope.filterByUid();
-          break;
-        case 'Rating':
-          $scope.filterByRating();
-          break;
-        case 'Company':
-          $scope.filterByCompany();
-          break;
-      }
-  })
 
 
   $scope.getData = function(date,user,email,client,download,typOfCall){
     $scope.reviewData=[]
     $scope.loadingData=true;
-    $scope.tableUpdated=false
-    var url = '/api/support/reviewHomeCal/?limit=15&offset='+$scope.Archoffsett
+    var url = '/api/support/reviewHomeCal/?limit='+$scope.viewby+'&offset='+$scope.offset
     url += '&getMyReviews=1'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
@@ -488,9 +683,6 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     if (typeof client == 'object') {
       url += '&client=' + client.pk
     }
-    if (email.length > 0 && email.indexOf('@') > 0) {
-      url += '&email=' + email
-    }
     if (typOfCall=='audio') {
       url += '&audio'
     }
@@ -500,24 +692,35 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     if (typOfCall=='both') {
       url += '&both'
     }
+    if (email.length > 0 && email.indexOf('@') > 0) {
+      url += '&email=' + email
+    }
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
+
       $http({
         method: 'GET',
         url: url,
       }).
       then(function(response) {
-
-        console.log(response.data,'dddddddddddd',typeof response.data);
-        $scope.reviewData =response.data
-        $scope.loadingData=false;
-        $scope.tableUpdated=true
-        if(response.data.length<1){
-          $scope.myDialouge=true;
+        $scope.reviewData = response.data.data
+        console.log($scope.reviewData , " Review data");
+        $scope.reviewDataLength = response.data.dataLength
+        if($scope.reviewData.length>0){
+          if(myCount<1){
+            $scope.setTableValues()
+          }
+          myCount++;
+          $scope.tabelRowAction($scope.reviewData[0])
+          $scope.noDataDialouge=false;
         }else{
-          $scope.myDialouge=false;
+          $scope.noDataDialouge=true;
         }
+
+        $scope.loadingData=false;
+        $scope.isDetailInfoUpdated=true
+
       });
     }
   }
@@ -545,8 +748,8 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     }
   })
   $scope.filterData = function(download){
+
     var typOfCall=''
-    console.log($scope.form.date,typeof($scope.form.date),$scope.oldDateValue);
     if (typeof $scope.form.date =='undefined') {
       Flash.create('warning','Please Select Proper Date')
       return
@@ -580,51 +783,30 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     else if ($scope.form.selectedChatType=='Audio & Video') {
       typOfCall='both'
     }
-
     if ($scope.changeDateType&&$scope.form.date!=null) {
-      console.log('update');
       res = new Date($scope.form.date)
       var date = new Date(res.setDate(res.getDate() + 1))
     }else {
-      console.log('no changeeeeeee');
       var date = $scope.form.date
     }
-
+    // console.log(date);
     $scope.getData(date,user,$scope.form.email,client,download,typOfCall)
     $scope.getArchData(date,user,$scope.form.email,client,download,typOfCall)
   }
 
-  $scope.download = function(){
-    $scope.filterData(true)
-  }
-
-
-  // views = [{
-  //   name: 'list',
-  //   icon: 'fa-th-large',
-  //   template: '/static/ngTemplates/genericTable/genericSearchList.html',
-  //   itemTemplate: '/static/ngTemplates/app.qualityCheck.items.html',
-  // }, ];
-  //
-  //
-  // $scope.config = {
-  //   views: views,
-  //   url: '/api/support/reviewHomeCal/',
-  //   searchField: 'name',
-  //   itemsNumPerView: [16, 32, 48],
-  //   getParams:$scope.filterParams
-  // }
-
+    $scope.download = function(){
+      $scope.filterData(true)
+    }
 
   $scope.tableAction = function(target,table) {
-    // console.log(target, action, mode);
+
     if(table){
       target=$scope.reviewData.indexOf(target)
     }
-    console.log($scope.reviewData[target]);
+
     var appType = 'Info';
     $scope.addTab({
-      title: 'Agent : ' + $scope.reviewData[target][0].uid,
+      title: 'Agent : ' + $scope.reviewData[target].uid,
       cancel: true,
       app: 'AgentInfo',
       data: $scope.reviewData[target],
@@ -652,6 +834,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     // }
   }
   $scope.tableArchAction = function(target,table) {
+
     if(table){
       target=$scope.archivedData.indexOf(target)
     }
@@ -685,7 +868,6 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   }
 
   $scope.addTab = function(input) {
-    // console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {

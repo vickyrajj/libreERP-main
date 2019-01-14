@@ -340,7 +340,7 @@ app.directive('reviewInfo', function() {
       $scope.reviewForm = {message:''}
 
       $scope.calculateTime = function(user, agent) {
-        console.log('inside cal cccccccccccc');
+    
         if (user != undefined) {
           var usertime = new Date(user);
           var agenttime = new Date(agent);
