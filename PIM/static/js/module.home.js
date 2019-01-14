@@ -107,6 +107,12 @@ app.config(function($stateProvider) {
     //   controller: 'controller.home.myWork'
     // })
 
+    .state('home.welcome', {
+      url: "/welcome",
+      templateUrl: '/static/ngTemplates/app.home.welcome.html',
+      controller: 'module.home.welcome'
+    })
+
     .state('home.manageUsers', {
       url: "/manageUsers",
       templateUrl: '/static/ngTemplates/app.HR.manage.users.html',
@@ -368,6 +374,9 @@ app.config(function($stateProvider) {
 
 
 });
+
+app.controller("module.home.welcome", function($scope, $state, $http) {
+})
 
 app.controller("module.home.settings", function($scope, $state, $http) {
 
