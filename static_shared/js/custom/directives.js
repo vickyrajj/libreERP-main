@@ -504,7 +504,7 @@ app.directive('reviewInfo', function() {
       console.log('modalllllllllllllllll');
       $uibModal.open({
         templateUrl: '/static/ngTemplates/app.support.review.fullChat.modal.html',
-        size: 'lg',
+        size: 'xl',
         backdrop: true,
         resolve: {
           myChatThreadData: function() {

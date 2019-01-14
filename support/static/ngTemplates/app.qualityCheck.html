@@ -11,13 +11,13 @@
                 Browse
                 <i class="fa fa-list-ul"></i>
               </uib-tab-heading>
-              <div style="text-align:center;position:fixed;top:40%;right:40%" ng-if="loadingData">
+              <!-- <div style="text-align:center;position:fixed;top:40%;right:40%" ng-if="loadingData">
                 <img ng-src="/static/images/spinner.gif" alt="">
-              </div>
+              </div> -->
                                         <!-- ===========Table View============= -->
 
 
-              <div class="bg-white My_container" style="" ng-if="!loadingData&&isTableView">
+              <div class="bg-white My_container" style="" ng-if="isTableView">
 
                                             <!-- **********left container********************* -->
                         <div class="Left_container">
@@ -67,15 +67,18 @@
 
                         <div ng-if="reviewData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff" >
                           <span>
-                            <select ng-model="viewby" ng-change="setItemsPerPage(viewby)">
+                            <!-- <select ng-model="viewby" ng-change="setItemsPerPage(viewby)">
                               <option>15</option>
                               <option>30</option>
                               <option>45</option>
                               <option>60</option>
+                            </select> -->
+                            <select ng-model="pageOptionsSelected.value" ng-change="setItemsPerPage(pageOptionsSelected.value)">
+                              <option ng-repeat="view in pageOptions" value="{{view}}">{{view}} </option>
                             </select>
                           </span>
                           <span>
-                            <pagination
+                            <div uib-pagination
                                style="margin:-10px 0px"
                                total-items="totalItems"
                                ng-model="currentPage.page"
@@ -89,7 +92,7 @@
                                max-size="maxSize"
                                force-ellipses="true"
                                boundary-links="true"></pagination>
-                          </span>
+                          </div>
                         </div>
                       </div>
 

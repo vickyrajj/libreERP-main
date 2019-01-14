@@ -375,12 +375,19 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.selectedSortOption={
     value:'Created'
   }
+  $scope.pageOptions=['12','20','30']
+  $scope.pageOptionsSelected={
+    value:$scope.pageOptions[0]
+  }
+  $scope.pageOptionsSelectedArch={
+    value:12
+  }
   $scope.selectedSortOptionArch={
     value:'Created'
   }
   $scope.isTableView=true
-  $scope.viewby = 15;
-  $scope.viewbyArch = 15;
+  // $scope.viewby = 12;
+  // $scope.viewbyArch = 15;
   $scope.currentPage = {
     page:0
   }
@@ -388,7 +395,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     page:0
   }
   $scope.offset=0
-
   $scope.detailInfoData={
     chatThreadData:null,
     supportChatData:null,
@@ -397,86 +403,20 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     chatThreadData:null,
     supportChatData:null,
   }
-
   $scope.setMyView=function(){
     $scope.isTableView=!$scope.isTableView
   }
 
-  $scope.filterByUid=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a.uid > b.uid});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return a.uid - b.uid});
-      $scope.setTableValues ()
-    }
-  }
-
-  $scope.filterByCompany=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a.company > b.company});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return a.company > b.company});
-      $scope.setTableValues ()
-    }
-
-  }
-
-  $scope.filterByRating=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a.rating < b.rating});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return a.rating < b.rating});
-      $scope.setTableValues ()
-    }
-  }
-
-  $scope.filterByStatus=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a.statusChat > b.statusChat});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return a.statusChat > b.statusChat});
-      $scope.setTableValues ()
-    }
-  }
-
-  $scope.filterByUser=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return $filter("getName")(a.user_id) > $filter("getName")(b.user_id)});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return $filter("getName")(a.user_id) > $filter("getName")(b.user_id)});
-      $scope.setTableValues ()
-    }
-  }
-
-  $scope.filterByCreated=function(isArchived){
-    console.log($scope.reviewData);
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return $filter('date')(a.created, 'dd/MM/yyyy') > $filter('date')(b.created, 'dd/MM/yyyy')});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return $filter('date')(a.created, 'dd/MM/yyyy') > $filter('date')(b.created, 'dd/MM/yyyy')});
-      console.log($scope.reviewData);
-      if($scope.reviewData.length>0){
-        $scope.tabelRowAction($scope.reviewData[0])
-      }
-      $scope.setTableValues ()
-    }
-  }
-
   $scope.setTableValues =function(){
     $scope.totalItems = $scope.reviewDataLength;
-    $scope.itemsPerPage = $scope.viewby;
+    $scope.itemsPerPage = $scope.pageOptionsSelected.value;
+    console.log($scope.itemsPerPage);
     $scope.maxSize = 4;
     $scope.setPage(1)
   }
   $scope.setTableValuesArch =function(){
     $scope.totalItemsArch = $scope.archivedDataLength;
-    $scope.itemsPerPageArch = $scope.viewbyArch;
+    $scope.itemsPerPageArch = $scope.pageOptionsSelectedArch.value;
     $scope.maxSizeArch = 4;
     $scope.setPageArch(1)
   }
@@ -494,18 +434,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   };
 
   $scope.setPagingData= function (page) {
-    // console.log(page);
-    // var pagedData = $scope.reviewData.slice(
-    //   (page - 1) * $scope.itemsPerPage,
-    //   page * $scope.itemsPerPage
-    // );
-    // $scope.tableDataAvail = pagedData;
 
-    $scope.offset=(page-1)*$scope.viewby
+    $scope.offset=(page-1)*$scope.pageOptionsSelected.value
     $scope.filterData()
   }
   $scope.setPagingDataArch= function (page) {
-    $scope.offset=(page-1)*$scope.viewby
+    $scope.offset=(page-1)*$scope.pageOptionsSelectedArch.value
     $scope.filterData()
   }
 
@@ -554,7 +488,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
        $scope.detailInfoData.supportChatData = response.data
        setTimeout(function () {
          $scope.isDetailInfoUpdated=true
-       }, 100);
+       }, 50);
      });
    }
    $scope.fetchChatsForUIDArch= function(data){
@@ -567,7 +501,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
        $scope.detailInfoDataArch.supportChatData = response.data
        setTimeout(function () {
          $scope.isDetailInfoUpdated=true
-       }, 200);
+       }, 50);
      });
    }
 
@@ -623,7 +557,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.getArchData = function(date,user,email,client,download,typOfCall){
     $scope.archivedData=[];
     $scope.loadingDataForArc=true;
-    var url = '/api/support/reviewHomeCal/?status=archived&limit='+$scope.viewby+'&offset='+$scope.offset
+    var url = '/api/support/reviewHomeCal/?status=archived&limit='+$scope.pageOptionsSelected.value+'&offset='+$scope.offset
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -687,7 +621,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.getData = function(date,user,email,client,download,typOfCall){
     $scope.reviewData=[]
     $scope.loadingData=true;
-    var url = '/api/support/reviewHomeCal/?limit='+$scope.viewby+'&offset='+$scope.offset
+    var url = '/api/support/reviewHomeCal/?limit='+$scope.pageOptionsSelected.value+'&offset='+$scope.offset
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
