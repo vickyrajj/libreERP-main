@@ -239,7 +239,19 @@ class ReviewFilterCalAPIView2(APIView):
             chatThreadObj = chatThreadObj.filter(~Q(status = 'archived'))
 
         toReturn['dataLength'] = chatThreadObj.count()
-        chatThreadList =  list(chatThreadObj.values())
+
+        newlist = chatThreadObj
+        if 'sort' in self.request.GET:
+            if 'sortByCreated' in self.request.GET:
+                newlist = sorted(chatThreadObj, key=lambda x: x.created, reverse=True)
+            if 'sortByAgentName' in self.request.GET:
+                newlist = sorted(chatThreadObj, key=lambda x: x.created, reverse=True)
+            if 'sortByUID' in self.request.GET:
+                newlist = sorted(chatThreadObj, key=lambda x: x.uid, reverse=True)
+            if 'sortByRating' in self.request.GET:
+                newlist = sorted(chatThreadObj, key=lambda x: x.customerRating, reverse=True)
+
+        chatThreadList =  list(newlist.values())
 
         if 'limit' in self.request.GET and 'offset' in self.request.GET:
             print 'in limit'
