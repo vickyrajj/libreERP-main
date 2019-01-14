@@ -1284,8 +1284,6 @@ function createChatDiv() {
             var singleServiceText = document.getElementById('singleServiceText')
             var singleServiceFont = document.getElementById('singleServiceFont')
 
-            // singleService = document.getElementById('singleService')
-
             singleService.addEventListener("mouseover" , function () {
               singleServiceText.style.display = ""
             })
@@ -1304,6 +1302,7 @@ function createChatDiv() {
             }else if (activeService == 'audioCircle') {
               singleServiceText.innerHTML = "Audio Call"
               singleServiceFont.className = "SyrowFont font-SyrowAudioCall sy-md-2 sy-ops"
+              // singleService.addEventListener("click" , openChat , false)
             }else if (activeService == 'videoCircle') {
               singleServiceText.innerHTML = "Video Call"
               singleServiceFont.className = "SyrowFont font-SyrowVideoCall sy-md-2 sy-ops"
