@@ -1,335 +1,502 @@
 <div class=" bg-white" style="min-height:93vh;position:relative;overflow:hidden">
-  <breadcrumb></breadcrumb>
+  <!-- <breadcrumb></breadcrumb> -->
 
   <div class="row">
       <div class="container-fluid">
         <uib-tabset>
-          <uib-tab active="browseTab">
-            <uib-tab-heading>
-              Browse
-              <i class="fa fa-list-ul"></i>
-            </uib-tab-heading>
-              <div class="row">
-                <div class="col-sm-9" style="margin-top:15px">
-                  <div style="position: absolute;top:400px;left:35%;" ng-if="loadingData">
-                    <img ng-src="/static/images/spinner.gif" alt="">
-                  </div>
-                  <div ng-if="!isTableView" class="col-md-4" style="margin-bottom:20px; padding-left:10px;padding-right:10px;" ng-repeat="data in reviewData" ng-click="tableAction($index)">
-                    <div class="container-fluid card" style="padding-bottom:0px">
-                      <div class="row" style="border-bottom: 1px solid #dedede; height:170px; opacity:0.9;letter-spacing:0.6px; {{data[0].user_id==null ? 'background-color: #fc000033':''}}; {{data[0].statusChat=='closed'?'background-color: #16e61133':'' }}">
-                        <div class="col-md-12">
-                          <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}
-                             <span ng-if="data[0].rating == 5" class="pull-right">
-                               <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
-                               <i class="fa fa-star fa-lg" style="color:#086b0a" aria-hidden="true"></i>
-                              </span>
-                             <span ng-if="data[0].rating == 4" class="pull-right">
-                                <i class="fa fa fa-smile-o fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
-                               <i class="fa fa-star fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
-                              </span>
-                             <span ng-if="data[0].rating == 3" class="pull-right">
-                                <i class="fa fa-meh-o fa-lg" style="color:#dff20c" aria-hidden="true"></i>
-                                <i class="fa fa-star fa-lg" style="color:#dff20c" aria-hidden="true"></i>
-                               </span>
-                             <span ng-if="data[0].rating == 2||data[0].rating == 1" class="pull-right">
-                                <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
-                                <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
-                            </span>
-                          </h5>
 
-                          <h5 style="font-weight:501">UID : {{data[0].uid}}
-                            <span class="pull-right" style="color:#286090 ;font-size:15px">{{data[0].numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
-                          </h5>
-                          <h5 style="font-weight:501">Client : {{data[0].company}}</h5>
-                          <h5 style="font-weight:501" ng-if="data[0].email">Visitor's Email :  {{data[0].email}}</h5>
-                          <h5 style="font-weight:501" ng-if="data[0].chatDuration!=0">Chat Duration :  {{data[0].chatDuration}} Min</h5>
-                          <h5 style="font-weight:501" ng-if="data[0].statusChat">Status :  {{data[0].statusChat}}
-                             <span ng-if="data[0].statusChat!='started'">by
-                               <span ng-if="data[0][data[0].statusChat+'By']&&data[0][data[0].statusChat+'On']">{{data[0][data[0].statusChat+'By']}}</span>
-                               <span ng-if="data[0][data[0].statusChat+'On']&&!data[0][data[0].statusChat+'By']">Visitor</span>
-                              on {{data[0][data[0].statusChat+'On'].split('.')[0].split(' ')[0]}} at {{data[0][data[0].statusChat+'On'].split('.')[0].split(' ')[1]}} </span>
-                           </h5>
-                        </div>
-                      </div>
-                      <div class="row container-fluid" style="padding-top:10px;height:50px;background-color:#286090; opacity:1">
-                        <div class="col-md-12" style="color:#fff">
-                          <h5>Date: {{data[0].created | date : 'dd-MMM-yyyy'}}
-                            <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
-                          </h5>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-12" ng-if="isTableView">
-                    <table style="width:100%;font-size:16px" id="myQATable" datatable="" class="row-border hover">
-                      <thead>
-                        <tr id="myQATableHeader">
-                          <th style="text-align:center;display:none">Chat Start</th>
-                        </tr>
-                      </thead>
-                     <tbody>
-                       <tr ng-repeat="data in reviewData" style="" ng-click="tableAction(data,true)">
-                         <td>
-                           <div class="" style="border-radius:50%;width:50px;height:50px;margin:5px 10px;float:left">
-                             <img style="width:5rem" ng-if="msgData[0].user_id" src="{{msgData[0].user_id | getDP}}" alt="">
+          <!-- ===============================================Browse====================================================== -->
+            <uib-tab active="browseTab" ng-click="tabSelected.tab='browse'">
+              <uib-tab-heading>
+                Browse
+                <i class="fa fa-list-ul"></i>
+              </uib-tab-heading>
+              <div style="text-align:center;position:fixed;top:40%;right:40%" ng-if="loadingData">
+                <img ng-src="/static/images/spinner.gif" alt="">
+              </div>
+                                        <!-- ===========Table View============= -->
 
-                           </div>
-                           <span style="display:inline-block">
-                             <div class="">
-                               <span style="font-size: 15px;font-weight: 700;">{{data[0].user_id | getName}}</span>
-                               <span style="font-size: 13px;font-weight: 400;">{{data[0].company? data[0].company:'-'}}</span>
-                             </div>
-                             <div class="">
-                               <span style="font-size: 14px;">{{data[0].uid}}</span>
-                             </div>
-                             <div class="">
-                               <span style="font-size: 13px;opacity: 0.8;">Created : {{data[0].created|  date : 'dd-MMM-yyyy'}}</span>
-                               <span ng-if="data[0].statusChat=='started'" style="font-size: 14px;opacity: 0.8;color:green;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
-                               <span ng-if="data[0].statusChat=='closed'" style="font-size: 14px;opacity: 0.8;color:#A40B0B;background:#e0e0e0;padding:0px 5px"  ><b>{{data[0].statusChat|humanize}}</b></span>
-                               <span ng-if="data[0].statusChat=='reviewed'" style="font-size: 14px;opacity: 0.8;color:brown;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
-                             </div>
-                           </span>
-                           <div class="" style="margin:5px 10px;float:right;font-size:20px;padding:12px;opacity:0.6;">
-                            <i ng-if="data[0].typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
-                            <i ng-if="data[0].typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
-                          </div>
-                         </td>
-                       </tr>
-                     </tbody>
-                    </table>
-                  </div>
-                  <div class="" style="position: absolute;top:400px;left:40%;color:#f0f0f0;font-size:40px" ng-if="myDialouge">
-                    No More Data
-                  </div>
-                </div>
-                <div class="col-sm-3">
 
-                  <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;width:21%;padding:20px 30px;box-shadow:-1px -1px 1px #f6f6f6;height:100vh">
-                      <div style="display:block;margin:10px 0px;">
-                        <button type="button" class="btn btn-block btn-primary" ng-click="setMyView()" style="outline:none">
-                           <i ng-if="!isTableView"class="fa fa-table fa-md"  aria-hidden="true">
-                             <span>Switch to Table View</span>
-                           </i>
-                           <i ng-if="isTableView" class="fa fa-address-card-o fa-md" aria-hidden="true">
-                             <span>Switch to Column View</span>
-                           </i>
-                        </button>
-                      </div>
-                      <div class="form-group">
-                        <label> Select Date </label>
-                        <div class="input-group removeGradientBtn">
-                          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.date" is-open="status.opened" />
-                          <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              <div class="bg-white My_container" style="" ng-if="!loadingData&&isTableView">
+
+                                            <!-- **********left container********************* -->
+                        <div class="Left_container">
+                          <table id="myQATable" style="width:100%;">
+                            <thead>
+                              <tr>
+                                <th style="text-align:center;display:none">Chat Start</th>
+                              </tr>
+                            </thead>
+                           <tbody>
+                           <tr id="id{{$index}}" ng-repeat="data in reviewData" ng-click="tabelRowAction(data)" style="background-color: {{$index==lastActiveTR?'#f0f0f0':' '}}">
+                             <td class="tabel_data">
+                                <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
+                                <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">
+                                <span style="display:inline-block">
+                                   <div ng-if="data.name">
+                                     <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
+                                     <!-- <span style="font-weight: 400;font-size:75%">{{data.company? data.company:'-'}}</span> -->
+                                   </div>
+
+                                   <span style="font-size:83%">{{data.uid}}</span>
+                                     <!-- <span ng-if="data.chatDuration>0.0" style="font-size:80%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
+
+                                     <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;margin-right:1rem;color:red">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
+                                     <span ng-if="data.customerRating>3" style="font-size:80%;margin-right:1rem;color:green">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span> -->
+
+                                   <div>
+                                     <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
+                                     <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:90%;margin-right:1rem;color:red">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
+                                     <span ng-if="data.customerRating>3" style="font-size:90%;margin-right:1rem;color:green">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
+                                   </div>
+                                   <div class="tabel_dataStatus" style="font-size:80%">
+                                     <span style="background:#fff;" ><i class="fa fa-calendar-o" aria-hidden="true"></i> {{data.created|  date : 'dd-MMM-yyyy'}}</span>
+                                     <span ng-if="data.statusChat=='started'" style="color:green"><b>{{data.statusChat|humanize}}</b></span>
+                                     <span ng-if="data.statusChat=='closed'" style="color:#A40B0B"><b>{{data.statusChat|humanize}}</b></span>
+                                     <span ng-if="data.statusChat=='reviewed'" style="color:brown"><b>{{data.statusChat|humanize}}</b></span>
+                                     <span style="float:right;margin-left: 2rem;opacity:0.6;">
+                                       <i ng-if="data.typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
+                                       <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
+                                     </span>
+                                   </div>
+                                 </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <div ng-if="reviewData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff" >
+                          <span>
+                            <select ng-model="viewby" ng-change="setItemsPerPage(viewby)">
+                              <option>15</option>
+                              <option>30</option>
+                              <option>45</option>
+                              <option>60</option>
+                            </select>
+                          </span>
+                          <span>
+                            <pagination
+                               style="margin:-10px 0px"
+                               total-items="totalItems"
+                               ng-model="currentPage.page"
+                               ng-change="pageChanged()"
+                               class="pagination-sm"
+                               items-per-page="itemsPerPage"
+                               previous-text="&lsaquo;"
+                               next-text="&rsaquo;"
+                               first-text="&laquo;"
+                               last-text="&raquo;"
+                               max-size="maxSize"
+                               force-ellipses="true"
+                               boundary-links="true"></pagination>
                           </span>
                         </div>
                       </div>
-                      <div class="form-group">
-                        <label> Agent Name </label>
-                        <input type="text" class="form-control" placeholder="Search and select" uib-typeahead="user as user.username for user in userSearch($viewValue)" ng-model="form.user">
-                      </div>
-                      <div class="form-group">
-                        <label> Client Name </label>
-                        <input type="text" class="form-control" placeholder="Search and select" uib-typeahead="service as service.name for service in serviceSearch($viewValue)" ng-model="form.client">
-                      </div>
-                      <div class="form-group">
-                        <label> Visitor Email </label>
-                        <input type="email" class="form-control" placeholder="User E-mail..." ng-model="form.email">
-                      </div>
-                      <div class="form-group">
-                        <label>Select Chat Type (Audio/Video):</label>
-                        <select class="form-control" ng-model="form.selectedChatType" style="outline:none">
-                          <option ng-repeat="chatType in chatTypes" value="{{chatType}}">{{chatType}}</option>
-                        </select>
-                      </div>
-                      <div class="btn-group" style="padding-top:20px;">
-                        <button type="button" class="btn btn-primary" ng-click="filterData()">
-                          <strong>Filter</strong>
-                        </button>
-                        <button type="button" class="btn btn-default" ng-click="download()" ng-if="reviewData.length>0">
-                          Download <i class="fa fa-download"></i>
-                        </button>
 
-                      </div>
-                      <div class="form-group" style="margin-top:20px">
-                        <label>Sort By:</label>
-                        <select class="form-control" ng-model="selectedSortOption.value" style="border:0">
-                          <option ng-repeat="sort in sortOptions" value="{{sort}}" style="border:0">{{sort}} </option>
-                        </select>
-                      </div>
-                  </div>
-                </div>
-              </div>
-          </uib-tab>
-          <uib-tab active="archiveTab">
-            <uib-tab-heading>
-              Archived
-              <i class="fa fa-archive"></i>
-            </uib-tab-heading>
+                                  <!-- ***********Middle_container******************** -->
 
-              <div class="row">
-                <div class="col-sm-9" style="margin-top:15px">
-                  <div style="position: absolute;top:400px;left:35%;" ng-if="loadingDataForArc">
-                    <img ng-src="/static/images/spinner.gif" alt="">
-                  </div>
-                  <div ng-if="!isTableView" class="col-md-4" style="margin-bottom:10px; padding-left:10px;padding-right:10px;" ng-repeat="data in archivedData " ng-click="tableArchAction($index)">
-                    <!-- {{data[0]}} -->
-                    <div class="container-fluid card" style="padding-bottom:0px">
-                      <div class="row container-fluid" style="border-bottom: 1px solid #dedede; height:150px; opacity:0.9;letter-spacing:0.6px;">
-                        <div class="col-md-12">
-                          <h5 style="font-weight:501">Agent Name : {{data[0].user_id | getName}}
-                             <span ng-if="data[0].rating == 5" class="pull-right">
-                               <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
-                               <i class="fa fa-star fa-lg" style="color:#086b0a" aria-hidden="true"></i>
-                              </span>
-                             <span ng-if="data[0].rating == 4" class="pull-right">
-                                <i class="fa fa fa-smile-o fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
-                               <i class="fa fa-star fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
-                              </span>
-                             <span ng-if="data[0].rating == 3" class="pull-right">
-                                <i class="fa fa-meh-o fa-lg" style="color:#dff20c" aria-hidden="true"></i>
-                                <i class="fa fa-star fa-lg" style="color:#dff20c" aria-hidden="true"></i>
-                               </span>
-                             <span ng-if="data[0].rating == 2||data[0].rating == 1" class="pull-right">
-                                <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
-                                <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
-                            </span>
-                          </h5>
-                          <h5 style="font-weight:501">UID : {{data[0].uid}}
-                            <span class="pull-right" style="color:#286090 ;font-size:15px">{{data[0].numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
-                          </h5>
-                          <h5 style="font-weight:501">Client : {{data[0].company}}</h5>
-                          <h5 style="font-weight:501" ng-if="data[0].email">Visitor's Email :  {{data[0].email}}</h5>
-                          <h5 style="font-weight:501" ng-if="data[0].chatDuration!=0">Chat Duration :  {{data[0].chatDuration}} Min</h5>
-                          <h5 style="font-weight:501" ng-if="data[0].statusChat">Status :  {{data[0].statusChat}}
-                             <span ng-if="data[0].statusChat!='started'">by {{data[0][data[0].statusChat+'By']}} on {{data[0][data[0].statusChat+'On'].split('.')[0]}} </span>
-                           </h5>
-                          <!-- <i class="fa fa-star" style="color:#fbd73f" aria-hidden="true"></i> -->
+                      <review-info ng-if="detailInfoData.chatThreadData&&detailInfoData.supportChatData.length>0&&isDetailInfoUpdated&&!noDataDialouge"  data ="detailInfoData"></review-info>
+
+                                 <!-- ************** Right_container******************** -->
+
+                      <div class="Right_container">
+                        <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;height:100vh;padding:2rem;right:0;width:35rem;top:5vh">
+                          <div style="display:block;margin:1rem 0px;">
+                            <button type="button" class="btn btn-block btn-warning" ng-click="setMyView()" style="outline:none">
+                               <i ng-if="!isTableView"class="fa fa-table fa-md"  aria-hidden="true">
+                                 <span>Switch to Table View</span>
+                               </i>
+                               <i ng-if="isTableView" class="fa fa-address-card-o fa-md" aria-hidden="true">
+                                 <span>Switch to Column View</span>
+                               </i>
+                            </button>
+                          </div>
+                            <div class="form-group login-input-group">
+                              <label><b> Select Date </b></label>
+                              <div class="input-group login-input-group removeGradientBtn">
+                                <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.date" is-open="status.opened" />
+                                <span class="input-group-btn">
+                                  <button style="border:none" type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="fa fa-calendar"></i></button>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="form-group login-input-group">
+                              <label><b> Visitor Email </b></label>
+                              <input type="email" class="form-control" placeholder="User E-mail..." ng-model="form.email">
+                            </div>
+                            <div class="form-group login-input-group">
+                                <label for="sel1">Select Chat Type (Audio/Video):</label>
+                                <select class="form-control login-input-group" id="sel1" ng-model="form.selectedChatType" style="border:none">
+                                  <option ng-repeat="chatType in chatTypes" value="{{chatType}}">{{chatType}}</option>
+                                </select>
+                            </div>
+                            <div class="btn-group-vertical">
+                              <button type="button" class="btn btn-primary" ng-click="filterData()">
+                                <strong>Filter</strong>
+                              </button>
+                           </div>
+                           <div class="form-group login-input-group" style="margin-top:20px">
+                            <label>Sort By:</label>
+                            <select class="form-control" ng-model="selectedSortOption.value" style="border:none">
+                              <option ng-repeat="sort in sortOptions" value="{{sort}}">{{sort}} </option>
+                            </select>
+                          </div>
                         </div>
                       </div>
-                      <div class="row container-fluid" style="padding-top:10px;height:50px;background-color:#286090; opacity:1">
-                        <div class="col-md-12" style="color:#fff">
-                          <h5>Date: {{data[0].created | date : 'dd-MMM-yyyy'}}
-                            <span class="pull-right" style="cursor:pointer;"><i class="fa fa-info-circle fa-lg"></i></span>
-                          </h5>
+
+                </div>
+
+
+                                      <!-- =============Column view=============== -->
+
+                <div class="row container-fluid" style="margin-top:15px;" ng-if="!isTableView">
+
+                    <div class="col-md-9">
+                      <div class="col-md-4" ng-repeat="r in reviewData">
+                        <div class="row" style="margin-bottom:30px; margin-right:15px;">
+                            <div class="card" style="margin-bottom:-2px; border-radius:4px 4px 0px 0px; padding:15px;">
+                                <div class="row" style="padding:0px 10px; min-height:130px;">
+                                  <div class="col-md-8">
+                                    <h6>Agent Name : {{r.user_id | getName}}</h6>
+                                    <h6>UID : {{r.uid}}</h6>
+                                    <h6>Date : {{r.created | date : "dd-MMM-yyyy"}}</h6>
+                                    <h6 ng-if="r.email">Visitor's Email : {{r.email}}</h6>
+                                    <h6 ng-if="r.chatDuration!=0">Chat Duration : {{r.chatDuration}}</h6>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="row">
+                                      <span ng-if="r.rating == 5" class="pull-right">
+                                          <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
+                                          <i class="fa fa-star fa-lg" style="color:#086b0a" aria-hidden="true"></i>
+                                         </span>
+                                      <span ng-if="r.rating == 4" class="pull-right">
+                                           <i class="fa fa fa-smile-o fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
+                                          <i class="fa fa-star fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
+                                         </span>
+                                      <span ng-if="r.rating == 3" class="pull-right">
+                                           <i class="fa fa-meh-o fa-lg" style="color:#dff20c" aria-hidden="true"></i>
+                                           <i class="fa fa-star fa-lg" style="color:#dff20c" aria-hidden="true"></i>
+                                          </span>
+                                      <span ng-if="r.rating == 2||data.rating == 1" class="pull-right">
+                                           <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
+                                           <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
+                                       </span>
+                                    </div>
+                                    <div class="row" style="padding-top:15px;" >
+                                      <span class="pull-right" style="color:#286090 ;font-size:15px">{{r.numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
+                                    </div>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="btn btn-block btn-primary" style="border-top:1px solid #eee; padding:10px; border-radius:0px 0px 4px 4px;" ng-click="tableAction($index)">
+                            View Chat
+                          </div>
+                      </div>
+                    </div>
+                    </div>
+                  <div class="col-sm-3" >
+                     <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;height:100vh;padding:2rem;right:0;width:35rem;top:5vh">
+                       <div style="display:block;margin:10px 0px;">
+                         <button type="button" class="btn btn-block btn-warning" ng-click="setMyView()" style="outline:none">
+                            <i ng-if="!isTableView"class="fa fa-table fa-md"  aria-hidden="true">
+                              <span>Switch to Table View</span>
+                            </i>
+                            <i ng-if="isTableView" class="fa fa-address-card-o fa-md" aria-hidden="true">
+                              <span>Switch to Column View</span>
+                            </i>
+                         </button>
+                       </div>
+                         <div class="form-group">
+                           <label><b> Select Date </b></label>
+                           <div class="input-group removeGradientBtn">
+                             <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.date" is-open="status.opened" />
+                             <span class="input-group-btn">
+                               <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="fa fa-calendar"></i></button>
+                             </span>
+                           </div>
+                         </div>
+                         <div class="form-group">
+                           <label><b> Visitor Email </b></label>
+                           <input type="email" class="form-control" placeholder="User E-mail..." ng-model="form.email">
+                         </div>
+                         <div class="form-group">
+                             <label for="sel1">Select Chat Type (Audio/Video):</label>
+                             <select class="form-control" id="sel1" ng-model="form.selectedChatType" style="outline:none">
+                               <option ng-repeat="chatType in chatTypes" value="{{chatType}}">{{chatType}}</option>
+                             </select>
+                         </div>
+                         <div class="btn-group-vertical">
+                           <button type="button" class="btn btn-primary" ng-click="filterData()">
+                             <strong>Filter</strong>
+                           </button>
+                        </div>
+                        <div class="form-group" style="margin-top:20px">
+                         <label>Sort By:</label>
+                         <select class="form-control" ng-model="selectedSortOption.value">
+                           <option ng-repeat="sort in sortOptions" value="{{sort}}">{{sort}} </option>
+                         </select>
+                       </div>
+                     </div>
+                 </div>
+
+              </div>
+          </uib-tab>
+
+
+
+
+            <!-- ===============================================Archived====================================================== -->
+
+          <uib-tab active="archiveTab" ng-click="tabSelected.tab='archived'">
+              <uib-tab-heading>
+                Archived
+                <i class="fa fa-archive"></i>
+              </uib-tab-heading>
+              <div style="text-align:center;position:fixed;top:40%;right:40%" ng-if="loadingDataForArc">
+                <img ng-src="/static/images/spinner.gif" alt="">
+              </div>
+                                              <!-- ==============Table View=========== -->
+            <div class="bg-white My_container" style="" ng-if="!loadingDataForArc&&isTableView">
+
+                                          <!-- **********left container********************* -->
+                      <div class="Left_container">
+                        <table id="myQATable" style="width:100%;">
+                          <thead>
+                            <tr>
+                              <th style="text-align:center;display:none">Chat Start</th>
+                            </tr>
+                          </thead>
+                         <tbody>
+                         <tr id="id{{$index}}" ng-repeat="data in archivedData" ng-click="tabelRowActionArch(data)" style="background-color: {{$index==lastActiveTRArch?'#f0f0f0':' '}}">
+                           <td class="tabel_data">
+                              <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
+                              <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">
+                              <span style="display:inline-block">
+                                 <div ng-if="data.name">
+                                   <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
+                                   <!-- <span style="font-weight: 400;font-size:75%">{{data.company? data.company:'-'}}</span> -->
+                                 </div>
+
+                                 <span style="font-size:83%">{{data.uid}}</span>
+                                   <!-- <span ng-if="data.chatDuration>0.0" style="font-size:80%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
+
+                                   <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;margin-right:1rem;color:red">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
+                                   <span ng-if="data.customerRating>3" style="font-size:80%;margin-right:1rem;color:green">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span> -->
+
+                                 <div>
+                                   <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
+                                   <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:90%;margin-right:1rem;color:red">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
+                                   <span ng-if="data.customerRating>3" style="font-size:90%;margin-right:1rem;color:green">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
+                                 </div>
+                                 <div class="tabel_dataStatus" style="font-size:80%">
+                                   <span style="background:#fff;" ><i class="fa fa-calendar-o" aria-hidden="true"></i> {{data.created|  date : 'dd-MMM-yyyy'}}</span>
+                                   <span ng-if="data.statusChat=='started'" style="color:green"><b>{{data.statusChat|humanize}}</b></span>
+                                   <span ng-if="data.statusChat=='closed'" style="color:#A40B0B"><b>{{data.statusChat|humanize}}</b></span>
+                                   <span ng-if="data.statusChat=='reviewed'" style="color:brown"><b>{{data.statusChat|humanize}}</b></span>
+                                   <span style="float:right;margin-left: 2rem;opacity:0.6;">
+                                     <i ng-if="data.typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
+                                     <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
+                                   </span>
+                                 </div>
+                               </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <div ng-if="archivedData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff" >
+                        <span>
+                          <select ng-model="viewbyArch" ng-change="setItemsPerPageArch(viewbyArch)">
+                            <option>15</option>
+                            <option>30</option>
+                            <option>45</option>
+                            <option>60</option>
+                          </select>
+                        </span>
+                        <span>
+                          <pagination
+                             style="margin:-10px 0px"
+                             total-items="totalItems"
+                             ng-model="currentPage.page"
+                             ng-change="pageChanged()"
+                             class="pagination-sm"
+                             items-per-page="itemsPerPage"
+                             previous-text="&lsaquo;"
+                             next-text="&rsaquo;"
+                             first-text="&laquo;"
+                             last-text="&raquo;"
+                             max-size="maxSize"
+                             force-ellipses="true"
+                             boundary-links="true"></pagination>
+                        </span>
+                      </div>
+                    </div>
+
+                                <!-- ***********Middle_container******************** -->
+
+                    <!-- <review-info ng-if="isDetailInfoUpdatedArch&&detailInfoDataArch"  data ="detailInfoDataArch" ></review-info> -->
+                    <review-info ng-if="detailInfoDataArch.chatThreadData&&detailInfoDataArch.supportChatData.length>0&&isDetailInfoUpdatedArch&&!archievedMyDialouge"  data ="detailInfoDataArch"></review-info>
+
+                               <!-- ************** Right_container******************** -->
+
+                    <div class="Right_container">
+                      <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;height:100vh;padding:2rem;right:0;width:35rem;top:5vh">
+                        <div style="display:block;margin:1rem 0px;">
+                          <button type="button" class="btn btn-block btn-warning" ng-click="setMyView()" style="outline:none">
+                             <i ng-if="!isTableView"class="fa fa-table fa-md"  aria-hidden="true">
+                               <span>Switch to Table View</span>
+                             </i>
+                             <i ng-if="isTableView" class="fa fa-address-card-o fa-md" aria-hidden="true">
+                               <span>Switch to Column View</span>
+                             </i>
+                          </button>
+                        </div>
+                          <div class="form-group login-input-group">
+                            <label><b> Select Date </b></label>
+                            <div class="input-group login-input-group removeGradientBtn">
+                              <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.date" is-open="status.opened" />
+                              <span class="input-group-btn">
+                                <button style="border:none" type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="fa fa-calendar"></i></button>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="form-group login-input-group">
+                            <label><b> Visitor Email </b></label>
+                            <input type="email" class="form-control" placeholder="User E-mail..." ng-model="form.email">
+                          </div>
+                          <div class="form-group login-input-group">
+                              <label for="sel1">Select Chat Type (Audio/Video):</label>
+                              <select class="form-control login-input-group" id="sel1" ng-model="form.selectedChatType" style="border:none">
+                                <option ng-repeat="chatType in chatTypes" value="{{chatType}}">{{chatType}}</option>
+                              </select>
+                          </div>
+                          <div class="btn-group-vertical">
+                            <button type="button" class="btn btn-primary" ng-click="filterData()">
+                              <strong>Filter</strong>
+                            </button>
+                         </div>
+                         <div class="form-group login-input-group" style="margin-top:20px">
+                          <label>Sort By:</label>
+                          <select class="form-control" ng-model="selectedSortOptionArch.value" style="border:none">
+                            <option ng-repeat="sort in sortOptions" value="{{sort}}">{{sort}} </option>
+                          </select>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-md-12" ng-if="isTableView">
-                    <table style="width:100%;font-size:16px" id="myQATable" datatable="" class="row-border hover">
-                      <thead>
-                        <tr id="myQATableHeader">
-                          <th style="text-align:center;display:none">Chat Start</th>
-                        </tr>
-                      </thead>
-                     <tbody>
-                       <tr ng-repeat="data in archivedData" style="" ng-click="tableArchAction(data,true)">
-                         <td>
-                           <div class="" style="border-radius:50%;width:50px;height:50px;margin:5px 10px;float:left">
-                             <img style="width:5rem" ng-if="data[0].user_id" src="{{data[0].user_id | getDP}}" alt="">
 
-                           </div>
-                           <span style="display:inline-block">
-                             <div class="">
-                               <span style="font-size: 15px;font-weight: 700;">{{data[0].user_id | getName}}</span>
-                               <span style="font-size: 13px;font-weight: 400;">{{data[0].company? data[0].company:'-'}}</span>
-                             </div>
-                             <div class="">
-                               <span style="font-size: 14px;">{{data[0].uid}}</span>
-                             </div>
-                             <div class="">
-                               <span style="font-size: 13px;opacity: 0.8;">Created : {{data[0].created|  date : 'dd-MMM-yyyy'}}</span>
-                               <span ng-if="data[0].statusChat=='started'" style="font-size: 14px;opacity: 0.8;color:green;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
-                               <span ng-if="data[0].statusChat=='closed'" style="font-size: 14px;opacity: 0.8;color:#A40B0B;background:#e0e0e0;padding:0px 5px"  ><b>{{data[0].statusChat|humanize}}</b></span>
-                               <span ng-if="data[0].statusChat=='reviewed'" style="font-size: 14px;opacity: 0.8;color:brown;background:#e0e0e0;padding:0px 5px" ><b>{{data[0].statusChat|humanize}}</b></span>
-                             </div>
-                           </span>
-                           <div class="" style="margin:5px 10px;float:right;font-size:20px;padding:12px;opacity:0.6;">
-                            <i ng-if="data[0].typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
-                            <i ng-if="data[0].typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
-                          </div>
-                         </td>
-                       </tr>
-                     </tbody>
-                    </table>
-                  </div>
-                  <div class="" style="position: absolute;top:400px;left:40%;color:#f0f0f0;font-size:40px" ng-if="myDialouge">
-                    No More Data
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;width:20%;padding:20px 30px;box-shadow:-1px -1px 1px #f6f6f6;height:100vh">
-                      <div style="display:block;margin:10px 0px;">
-                        <button type="button" class="btn btn-block btn-primary" ng-click="setMyView()" style="outline:none">
-                           <i ng-if="!isTableView"class="fa fa-table fa-md"  aria-hidden="true">
-                             <span>Switch to Table View</span>
-                           </i>
-                           <i ng-if="isTableView" class="fa fa-address-card-o fa-md" aria-hidden="true">
-                             <span>Switch to Column View</span>
-                           </i>
-                        </button>
-                      </div>
-                      <div class="form-group">
-                        <label> Select Date </label>
-                        <div class="input-group removeGradientBtn">
-                          <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.date" is-open="status.opened" />
-                          <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label> Agent Name </label>
-                        <input type="text" class="form-control" placeholder="Search and select" uib-typeahead="user as user.username for user in userSearch($viewValue)" ng-model="form.user">
-                      </div>
-                      <div class="form-group">
-                        <label> Client Name </label>
-                        <input type="text" class="form-control" placeholder="Search and select" uib-typeahead="service as service.name for service in serviceSearch($viewValue)" ng-model="form.client">
-                      </div>
-                      <div class="form-group">
-                        <label> Visitor Email </label>
-                        <input type="email" class="form-control" placeholder="User E-mail..." ng-model="form.email">
-                      </div>
-                      <div class="form-group">
-                        <label>Select Chat Type (Audio/Video):</label>
-                        <select class="form-control" ng-model="form.selectedChatType" style="outline:none">
-                          <option ng-repeat="chatType in chatTypes" value="{{chatType}}">{{chatType}}</option>
-                        </select>
-                      </div>
-                      <div class="btn-group" style="padding-top:20px;">
-                        <button type="button" class="btn btn-primary" ng-click="filterData()">
-                          <strong>Filter</strong>
-                        </button>
-                        <button type="button" class="btn btn-default" ng-click="download()" ng-if="reviewData.length>0">
-                          Download <i class="fa fa-download"></i>
-                        </button>
-
-                      </div>
-                      <div class="form-group" style="margin-top:20px">
-                        <label>Sort By:</label>
-                        <select class="form-control" ng-model="selectedSortOption" style="border:0">
-                          <option ng-repeat="sort in sortOptions" value="{{sort}}" style="border:0">{{sort}} </option>
-                        </select>
-                      </div>
-                  </div>
-                </div>
               </div>
 
-          </uib-tab>
-          <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
-            <uib-tab-heading>
-              {{tab.title}}
-              <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
-            </uib-tab-heading>
-            <div ng-if="tab.app == 'companyEdit'">
-              <div ng-include="'/static/ngTemplates/app.customers.form.html'"></div>
-            </div>
-            <div ng-if="tab.app == 'AgentInfo'">
-              <div ng-include="'/static/ngTemplates/app.sessionHistory.explore.html'"></div>
+
+                                              <!-- =============Column view=============== -->
+
+              <div class="row container-fluid" style="margin-top:15px" ng-if="!isTableView">
+                <div class="col-sm-12">
+                  <div class="col-md-9">
+                    <div class="col-md-4" ng-repeat="r in archivedData">
+                      <div class="row" style="margin-bottom:30px; margin-right:15px;">
+                          <div class="card" style="margin-bottom:-2px; border-radius:4px 4px 0px 0px; padding:15px;">
+                              <div class="row" style="padding:0px 10px; min-height:130px;">
+                                <div class="col-md-8">
+                                  <h6>Agent Name : {{r.user_id | getName}}</h6>
+                                  <h6>UID : {{r.uid}}</h6>
+                                  <h6>Date : {{r.created | date : "dd-MMM-yyyy"}}</h6>
+                                  <h6 ng-if="r.email">Visitor's Email : {{r.email}}</h6>
+                                  <h6 ng-if="r.chatDuration!=0">Chat Duration : {{r.chatDuration}}</h6>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="row">
+                                    <span ng-if="r.rating == 5" class="pull-right">
+                                        <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
+                                        <i class="fa fa-star fa-lg" style="color:#086b0a" aria-hidden="true"></i>
+                                       </span>
+                                    <span ng-if="r.rating == 4" class="pull-right">
+                                         <i class="fa fa fa-smile-o fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
+                                        <i class="fa fa-star fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
+                                       </span>
+                                    <span ng-if="r.rating == 3" class="pull-right">
+                                         <i class="fa fa-meh-o fa-lg" style="color:#dff20c" aria-hidden="true"></i>
+                                         <i class="fa fa-star fa-lg" style="color:#dff20c" aria-hidden="true"></i>
+                                        </span>
+                                    <span ng-if="r.rating == 2||data.rating == 1" class="pull-right">
+                                         <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
+                                         <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
+                                     </span>
+                                  </div>
+                                  <div class="row" style="padding-top:15px;" >
+                                    <span class="pull-right" style="color:#286090 ;font-size:15px">{{r.numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
+                                  </div>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="btn btn-block btn-primary" style="border-top:1px solid #eee; padding:10px; border-radius:0px 0px 4px 4px;" ng-click="tableAction($index)">
+                          View Chat
+                        </div>
+                    </div>
+                  </div>
+                  </div>
+                <div class="col-sm-3" >
+                   <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;height:100vh;padding:2rem;right:0;width:35rem;top:5vh">
+                     <div style="display:block;margin:10px 0px;">
+                       <button type="button" class="btn btn-block btn-warning" ng-click="setMyView()" style="outline:none">
+                          <i ng-if="!isTableView"class="fa fa-table fa-md"  aria-hidden="true">
+                            <span>Switch to Table View</span>
+                          </i>
+                          <i ng-if="isTableView" class="fa fa-address-card-o fa-md" aria-hidden="true">
+                            <span>Switch to Column View</span>
+                          </i>
+                       </button>
+                     </div>
+                       <div class="form-group">
+                         <label><b> Select Date </b></label>
+                         <div class="input-group removeGradientBtn">
+                           <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.date" is-open="status.opened" />
+                           <span class="input-group-btn">
+                             <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="fa fa-calendar"></i></button>
+                           </span>
+                         </div>
+                       </div>
+                       <div class="form-group">
+                         <label><b> Visitor Email </b></label>
+                         <input type="email" class="form-control" placeholder="User E-mail..." ng-model="form.email">
+                       </div>
+                       <div class="form-group">
+                           <label for="sel1">Select Chat Type (Audio/Video):</label>
+                           <select class="form-control" id="sel1" ng-model="form.selectedChatType" style="outline:none">
+                             <option ng-repeat="chatType in chatTypes" value="{{chatType}}">{{chatType}}</option>
+                           </select>
+                       </div>
+                       <div class="btn-group-vertical">
+                         <button type="button" class="btn btn-primary" ng-click="filterData()">
+                           <strong>Filter</strong>
+                         </button>
+                      </div>
+                      <div class="form-group" style="margin-top:20px">
+                       <label>Sort By:</label>
+                       <select class="form-control" ng-model="selectedSortOptionArch.value">
+                         <option ng-repeat="sort in sortOptions" value="{{sort}}">{{sort}} </option>
+                       </select>
+                     </div>
+                   </div>
+               </div>
+              </div>
             </div>
           </uib-tab>
 
+
+
+      <!-- tabs -->
+      <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
+        <uib-tab-heading>
+          {{tab.title}}
+          <i ng-if="tab.cancel" class="fa fa-close" ng-click="closeTab($index);"></i>
+        </uib-tab-heading>
+        <div ng-if="tab.app == 'companyEdit'">
+          <div ng-include="'/static/ngTemplates/app.customers.form.html'"></div>
+        </div>
+        <div ng-if="tab.app == 'AgentInfo'">
+          <div ng-include="'/static/ngTemplates/app.sessionHistory.explore.html'"></div>
+        </div>
+      </uib-tab>
         </uib-tabset>
       </div>
   </div>

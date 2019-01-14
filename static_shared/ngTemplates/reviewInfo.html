@@ -12,7 +12,7 @@
           <p ng-if="msgData.name"><strong>{{msgData.name}}</strong></p>
       </div>
     </div>
-    <span class="btn btn_gradient" ng-click="showChart()" style="float:right">Change Status</span>
+    <span class="btn btn-primary" ng-click="showChart()" style="float:right">Change Status</span>
     <p><strong><i class="fa fa-calendar-o" aria-hidden="true"></i> </strong>{{msgData.created | date : 'dd-MMM-yyyy'}}</p>
     <p ng-if="msgData.chatDuration>0.0"><strong><i class="fa fa-clock-o" aria-hidden="true"></i> </strong>{{msgData.chatDuration}} Min</p>
     <!-- <p ng-if="msgData.company"><strong>Client : </strong>{{msgData.company}}</p> -->

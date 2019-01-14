@@ -6,7 +6,7 @@
         <uib-tabset>
 
           <!-- ===============================================Browse====================================================== -->
-            <uib-tab active="browseTab">
+            <uib-tab active="browseTab" ng-click="tabSelected.tab='browse'">
               <uib-tab-heading>
                 Browse
                 <i class="fa fa-list-ul"></i>
@@ -28,7 +28,7 @@
                               </tr>
                             </thead>
                            <tbody>
-                           <tr id="id{{$index}}" ng-repeat="data in tableDataAvail" ng-click="tabelRowAction(data)" style="background-color: {{$index==lastActiveTR?'#f0f0f0':' '}}">
+                           <tr id="id{{$index}}" ng-repeat="data in reviewData" ng-click="tabelRowAction(data)" style="background-color: {{$index==lastActiveTR?'#f0f0f0':' '}}">
                              <td class="tabel_data">
                                 <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
                                 <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">
@@ -65,7 +65,7 @@
                           </tbody>
                         </table>
 
-                        <div ng-if="tableDataAvail.length" style="position:fixed;bottom:0px;padding: 2.5rem;background:#fff" >
+                        <div ng-if="reviewData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff" >
                           <span>
                             <select ng-model="viewby" ng-change="setItemsPerPage(viewby)">
                               <option>15</option>
@@ -95,7 +95,7 @@
 
                                   <!-- ***********Middle_container******************** -->
 
-                      <review-info ng-if="detailInfoData.chatThreadData&&detailInfoData.supportChatData.length>0&&isDetailInfoUpdated"  data ="detailInfoData"></review-info>
+                      <review-info ng-if="detailInfoData.chatThreadData&&detailInfoData.supportChatData.length>0&&isDetailInfoUpdated&&!noDataDialouge"  data ="detailInfoData"></review-info>
 
                                  <!-- ************** Right_container******************** -->
 
@@ -157,33 +157,33 @@
                             <div class="card" style="margin-bottom:-2px; border-radius:4px 4px 0px 0px; padding:15px;">
                                 <div class="row" style="padding:0px 10px; min-height:130px;">
                                   <div class="col-md-8">
-                                    <h6>Agent Name : {{r[0].user_id | getName}}</h6>
-                                    <h6>UID : {{r[0].uid}}</h6>
-                                    <h6>Date : {{r[0].created | date : "dd-MMM-yyyy"}}</h6>
-                                    <h6 ng-if="r[0].email">Visitor's Email : {{r[0].email}}</h6>
-                                    <h6 ng-if="r[0].chatDuration!=0">Chat Duration : {{r[0].chatDuration}}</h6>
+                                    <h6>Agent Name : {{r.user_id | getName}}</h6>
+                                    <h6>UID : {{r.uid}}</h6>
+                                    <h6>Date : {{r.created | date : "dd-MMM-yyyy"}}</h6>
+                                    <h6 ng-if="r.email">Visitor's Email : {{r.email}}</h6>
+                                    <h6 ng-if="r.chatDuration!=0">Chat Duration : {{r.chatDuration}}</h6>
                                   </div>
                                   <div class="col-md-4">
                                     <div class="row">
-                                      <span ng-if="r[0].rating == 5" class="pull-right">
+                                      <span ng-if="r.rating == 5" class="pull-right">
                                           <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
                                           <i class="fa fa-star fa-lg" style="color:#086b0a" aria-hidden="true"></i>
                                          </span>
-                                      <span ng-if="r[0].rating == 4" class="pull-right">
+                                      <span ng-if="r.rating == 4" class="pull-right">
                                            <i class="fa fa fa-smile-o fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
                                           <i class="fa fa-star fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
                                          </span>
-                                      <span ng-if="r[0].rating == 3" class="pull-right">
+                                      <span ng-if="r.rating == 3" class="pull-right">
                                            <i class="fa fa-meh-o fa-lg" style="color:#dff20c" aria-hidden="true"></i>
                                            <i class="fa fa-star fa-lg" style="color:#dff20c" aria-hidden="true"></i>
                                           </span>
-                                      <span ng-if="r[0].rating == 2||data.rating == 1" class="pull-right">
+                                      <span ng-if="r.rating == 2||data.rating == 1" class="pull-right">
                                            <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
                                            <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
                                        </span>
                                     </div>
                                     <div class="row" style="padding-top:15px;" >
-                                      <span class="pull-right" style="color:#286090 ;font-size:15px">{{r[0].numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
+                                      <span class="pull-right" style="color:#286090 ;font-size:15px">{{r.numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
                                     </div>
                                 </div>
                               </div>
@@ -247,7 +247,7 @@
 
             <!-- ===============================================Archived====================================================== -->
 
-          <uib-tab active="archiveTab">
+          <uib-tab active="archiveTab" ng-click="tabSelected.tab='archived'">
               <uib-tab-heading>
                 Archived
                 <i class="fa fa-archive"></i>
@@ -267,7 +267,7 @@
                             </tr>
                           </thead>
                          <tbody>
-                         <tr id="id{{$index}}" ng-repeat="data in tableDataAvailArc" ng-click="tabelRowActionArch(data)" style="background-color: {{$index==lastActiveTRArch?'#f0f0f0':' '}}">
+                         <tr id="id{{$index}}" ng-repeat="data in archivedData" ng-click="tabelRowActionArch(data)" style="background-color: {{$index==lastActiveTRArch?'#f0f0f0':' '}}">
                            <td class="tabel_data">
                               <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
                               <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">
@@ -304,7 +304,7 @@
                         </tbody>
                       </table>
 
-                      <div ng-if="tableDataAvailArc.length" style="position:fixed;bottom:0px;padding: 2.5rem;background:#fff" >
+                      <div ng-if="archivedData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff" >
                         <span>
                           <select ng-model="viewbyArch" ng-change="setItemsPerPageArch(viewbyArch)">
                             <option>15</option>
@@ -334,7 +334,8 @@
 
                                 <!-- ***********Middle_container******************** -->
 
-                    <review-info ng-if="isDetailInfoUpdatedArch&&detailInfoDataArch"  data ="detailInfoDataArch" ></review-info>
+                    <!-- <review-info ng-if="isDetailInfoUpdatedArch&&detailInfoDataArch"  data ="detailInfoDataArch" ></review-info> -->
+                    <review-info ng-if="detailInfoDataArch.chatThreadData&&detailInfoDataArch.supportChatData.length>0&&isDetailInfoUpdatedArch&&!archievedMyDialouge"  data ="detailInfoDataArch"></review-info>
 
                                <!-- ************** Right_container******************** -->
 
@@ -396,33 +397,33 @@
                           <div class="card" style="margin-bottom:-2px; border-radius:4px 4px 0px 0px; padding:15px;">
                               <div class="row" style="padding:0px 10px; min-height:130px;">
                                 <div class="col-md-8">
-                                  <h6>Agent Name : {{r[0].user_id | getName}}</h6>
-                                  <h6>UID : {{r[0].uid}}</h6>
-                                  <h6>Date : {{r[0].created | date : "dd-MMM-yyyy"}}</h6>
-                                  <h6 ng-if="r[0].email">Visitor's Email : {{r[0].email}}</h6>
-                                  <h6 ng-if="r[0].chatDuration!=0">Chat Duration : {{r[0].chatDuration}}</h6>
+                                  <h6>Agent Name : {{r.user_id | getName}}</h6>
+                                  <h6>UID : {{r.uid}}</h6>
+                                  <h6>Date : {{r.created | date : "dd-MMM-yyyy"}}</h6>
+                                  <h6 ng-if="r.email">Visitor's Email : {{r.email}}</h6>
+                                  <h6 ng-if="r.chatDuration!=0">Chat Duration : {{r.chatDuration}}</h6>
                                 </div>
                                 <div class="col-md-4">
                                   <div class="row">
-                                    <span ng-if="r[0].rating == 5" class="pull-right">
+                                    <span ng-if="r.rating == 5" class="pull-right">
                                         <i class="fa fa fa-smile-o fa-lg" style="color:#086b0a" aria-hidden="true"></i>
                                         <i class="fa fa-star fa-lg" style="color:#086b0a" aria-hidden="true"></i>
                                        </span>
-                                    <span ng-if="r[0].rating == 4" class="pull-right">
+                                    <span ng-if="r.rating == 4" class="pull-right">
                                          <i class="fa fa fa-smile-o fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
                                         <i class="fa fa-star fa-lg" style="color:#2fdd23" aria-hidden="true"></i>
                                        </span>
-                                    <span ng-if="r[0].rating == 3" class="pull-right">
+                                    <span ng-if="r.rating == 3" class="pull-right">
                                          <i class="fa fa-meh-o fa-lg" style="color:#dff20c" aria-hidden="true"></i>
                                          <i class="fa fa-star fa-lg" style="color:#dff20c" aria-hidden="true"></i>
                                         </span>
-                                    <span ng-if="r[0].rating == 2||data.rating == 1" class="pull-right">
+                                    <span ng-if="r.rating == 2||data.rating == 1" class="pull-right">
                                          <i class="fa fa fa-frown-o fa-lg" style="color:#f70202" aria-hidden="true"></i>
                                          <i class="fa fa-star fa-lg" style="color:#f70202" aria-hidden="true"></i>
                                      </span>
                                   </div>
                                   <div class="row" style="padding-top:15px;" >
-                                    <span class="pull-right" style="color:#286090 ;font-size:15px">{{r[0].numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
+                                    <span class="pull-right" style="color:#286090 ;font-size:15px">{{r.numOfComments}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></span>
                                   </div>
                               </div>
                             </div>

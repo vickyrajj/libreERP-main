@@ -193,7 +193,7 @@ def createExcel(data):
 class ReviewFilterCalAPIView2(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
-        print '****** entered', request.GET
+        print '****** entered', self.request.GET ,' gggggggggggggg'
         # all chat threads
         toReturn = {}
         allUidInChat =  list(SupportChat.objects.all().values_list('uid',flat=True).distinct())
@@ -239,19 +239,17 @@ class ReviewFilterCalAPIView2(APIView):
             chatThreadObj = chatThreadObj.filter(~Q(status = 'archived'))
 
         toReturn['dataLength'] = chatThreadObj.count()
-
-        newlist = chatThreadObj
+        chatThreadList =  list(chatThreadObj.values())
         if 'sort' in self.request.GET:
-            if 'sortByCreated' in self.request.GET:
-                newlist = sorted(chatThreadObj, key=lambda x: x.created, reverse=True)
-            if 'sortByAgentName' in self.request.GET:
-                newlist = sorted(chatThreadObj, key=lambda x: x.created, reverse=True)
-            if 'sortByUID' in self.request.GET:
-                newlist = sorted(chatThreadObj, key=lambda x: x.uid, reverse=True)
-            if 'sortByRating' in self.request.GET:
-                newlist = sorted(chatThreadObj, key=lambda x: x.customerRating, reverse=True)
-
-        chatThreadList =  list(newlist.values())
+            if self.request.GET['sortby']=='Created':
+                chatThreadList = sorted(chatThreadList, key=lambda x: x['created'], reverse=True)
+            if self.request.GET['sortby']=='Agent Name':
+                chatThreadList = sorted(chatThreadList, key=lambda x: x['created'], reverse=True)
+            if self.request.GET['sortby']=='UID':
+                chatThreadList = sorted(chatThreadList, key=lambda x: x['uid'], reverse=True)
+            if self.request.GET['sortby']=='Rating':
+                chatThreadList = sorted(chatThreadList, key=lambda x: x['customerRating'], reverse=True)
+            # print chatThreadList
 
         if 'limit' in self.request.GET and 'offset' in self.request.GET:
             print 'in limit'

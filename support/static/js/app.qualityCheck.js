@@ -19,11 +19,12 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
 
   $scope.me = $users.get('mySelf');
   $scope.msgData = $scope.tab.data
+  console.log($scope.msgData);
   $scope.reviewCommentData = [];
 
   $http({
     method: 'GET',
-    url: '/api/support/reviewComment/?uid='+$scope.msgData[0].uid+'&chatedDate='+$scope.msgData[0].created.split('T')[0],
+    url: '/api/support/reviewComment/?uid='+$scope.msgData.uid+'&chatedDate='+$scope.msgData.created.split('T')[0],
 
   }).
   then(function(response) {
@@ -32,7 +33,7 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
   });
   $http({
     method: 'GET',
-    url: '/api/support/chatThread/?uid='+$scope.msgData[0].uid
+    url: '/api/support/chatThread/?uid='+$scope.msgData.uid
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
@@ -49,20 +50,20 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     visitor:null
   };
 
-  $scope.typ=$scope.msgData[0].typ
-  if($scope.msgData[0].typ=='audio'){
+  $scope.typ=$scope.msgData.typ
+  if($scope.msgData.typ=='audio'){
     $scope.audio_chat={
-      agent:'/media/agent'+$scope.msgData[0].uid+'.mp3',
-      visitor:'/media/local'+$scope.msgData[0].uid+'.mp3'
+      agent:'/media/agent'+$scope.msgData.uid+'.mp3',
+      visitor:'/media/local'+$scope.msgData.uid+'.mp3'
     }
   }
 
-  else if($scope.msgData[0].typ=='video'){
+  else if($scope.msgData.typ=='video'){
     $scope.video_chat={
-      agent:'/media/agent'+$scope.msgData[0].uid+'.webm',
-      visitor:'/media/local'+$scope.msgData[0].uid+'.webm'
+      agent:'/media/agent'+$scope.msgData.uid+'.webm',
+      visitor:'/media/local'+$scope.msgData.uid+'.webm'
     }
-    $scope.screen_video='/media/screen'+$scope.msgData[0].uid+'.webm'
+    $scope.screen_video='/media/screen'+$scope.msgData.uid+'.webm'
   }
 
   var stream_agent,stream_visitor,canvas_agent,canvas_visitor,ctx_agent,ctx_visitor,unique_agent_video_id,unique_visitor_video_id;
@@ -172,7 +173,7 @@ $scope.snap=function() {
       backdrop: true,
       resolve: {
         data: function(){
-          return $scope.msgData[0].uid
+          return $scope.msgData.uid
         }
       },
       controller: function($scope, $users, $uibModalInstance,data, Flash) {
@@ -243,15 +244,15 @@ $scope.snap=function() {
     });
   }
   $scope.postComment = function(){
-    console.log($scope.msgData[0].created);
+    console.log($scope.msgData.created);
     if ($scope.reviewForm.message.length == 0) {
       Flash.create('warning','Please Write Some Comment')
       return
     }
     var fd1 = new FormData();
     fd1.append('message', $scope.reviewForm.message);
-    fd1.append('uid', $scope.msgData[0].uid);
-    fd1.append('chatedDate', $scope.msgData[0].created.split('T')[0]);
+    fd1.append('uid', $scope.msgData.uid);
+    fd1.append('chatedDate', $scope.msgData.created.split('T')[0]);
     console.log(fd1);
     SendingPostRequest(fd1);
   }
@@ -356,6 +357,10 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.data = {
     tableData: []
   };
+
+  $scope.tabSelected = {
+    tab : 'browse'
+  }
 
   $scope.form = {date:null,user:'',email:'',client:''}
   $scope.reviewData = []
@@ -474,8 +479,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   }
 
   $scope.setPage = function (pageNo) {
-    if(pageNo==$scope.currentPage.page)
-      return
+    console.log('page No' +pageNo);
     $scope.currentPage.page = pageNo;
     $scope.setPagingData($scope.currentPage.page)
   };
@@ -495,15 +499,11 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     // $scope.tableDataAvail = pagedData;
 
     $scope.offset=(page-1)*$scope.viewby
-    // $scope.filterData()
+    $scope.filterData()
   }
   $scope.setPagingDataArch= function (page) {
-    console.log(page);
-    var pagedData = $scope.archivedData.slice(
-      (page - 1) * $scope.itemsPerPageArch,
-      page * $scope.itemsPerPageArch
-    );
-    $scope.tableDataAvailArc = pagedData;
+    $scope.offset=(page-1)*$scope.viewby
+    $scope.filterData()
   }
 
   $scope.pageChanged = function() {
@@ -532,9 +532,9 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
 
    }
 
-
     $scope.tabelRowActionArch=function(data){
       $scope.lastActiveTRArch=$scope.archivedData.indexOf(data)
+      console.log(data , $scope.lastActiveTRArch );
       $scope.isDetailInfoUpdatedArch=false
       $scope.detailInfoDataArch.chatThreadData=data
       $scope.fetchChatsForUIDArch(data);
@@ -547,6 +547,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
        url: '/api/support/reviewHomeChats/?uid='+data.uid,
      }).
      then(function(response) {
+       console.log('response data' , response.data);
        $scope.detailInfoData.supportChatData = response.data
        setTimeout(function () {
          $scope.isDetailInfoUpdated=true
@@ -559,10 +560,11 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
        url: '/api/support/reviewHomeChats/?uid='+data.uid,
      }).
      then(function(response) {
+       console.log('response data' ,response.data );
        $scope.detailInfoDataArch.supportChatData = response.data
        setTimeout(function () {
          $scope.isDetailInfoUpdated=true
-       }, 100);
+       }, 200);
      });
    }
 
@@ -612,7 +614,8 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   //         break;
   //     }
   // },true)
-
+  let myCount=0;
+  let myCountArch=0;
 
   $scope.getArchData = function(date,user,email,client,download,typOfCall){
     $scope.archivedData=[];
@@ -639,6 +642,13 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     if (typOfCall=='both') {
       url += '&both'
     }
+
+
+    if ($scope.selectedSortOptionArch.value!='' && $scope.selectedSortOptionArch.value!=undefined ) {
+      url += '&sort' + '&sortby=' + $scope.selectedSortOptionArch.value
+    }
+
+
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
@@ -648,22 +658,28 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       }).
       then(function(response) {
         $scope.archivedData = response.data.data
-        $scope.archivedDataLength = response.data.length
+        console.log($scope.archivedData , " Archieve data");
+        $scope.archivedDataLength = response.data.dataLength
+        $scope.totalItemsArch = response.data.dataLength
         if($scope.archivedData.length>0){
           $scope.tabelRowActionArch($scope.archivedData[0])
+          if(myCountArch<1){
+            $scope.setTableValuesArch()
+          }
+          myCountArch++;
+          $scope.archievedMyDialouge=false;
+        }else{
+          $scope.archievedMyDialouge=true;
         }
-        $scope.lastActiveTRArch=0;
-        $scope.setTableValuesArch ()
+
         $scope.loadingDataForArc=false;
         $scope.isDetailInfoUpdatedArch=true
-        if(response.data.length<1){
-          $scope.archievedMyDialouge=true;
-        }else{
-          $scope.archievedMyDialouge=false;
-        }
+
       });
     }
   }
+
+
 
   $scope.getData = function(date,user,email,client,download,typOfCall){
     $scope.reviewData=[]
@@ -690,6 +706,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
     }
+
+    if ($scope.selectedSortOption.value!='' && $scope.selectedSortOption.value!=undefined ) {
+      url += '&sort' + '&sortby=' + $scope.selectedSortOption.value
+    }
+
+
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
@@ -700,14 +722,20 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       }).
       then(function(response) {
         $scope.reviewData = response.data.data
+        console.log($scope.reviewData , " Review data");
         $scope.reviewDataLength = response.data.dataLength
+        $scope.totalItems = response.data.dataLength
         if($scope.reviewData.length>0){
+          if(myCount<1){
+            $scope.setTableValues()
+          }
+          myCount++;
           $scope.tabelRowAction($scope.reviewData[0])
           $scope.noDataDialouge=false;
         }else{
           $scope.noDataDialouge=true;
         }
-        $scope.setTableValues ()
+
         $scope.loadingData=false;
         $scope.isDetailInfoUpdated=true
 
@@ -715,8 +743,12 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }
   }
 
-  $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
-  $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
+  if ($scope.tabSelected.tab == 'browse') {
+    $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
+  }else {
+    $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
+  }
+
 
   $scope.userSearch = function(query) {
     return $http.get('/api/HR/userSearch/?username__contains=' + query).
@@ -779,9 +811,14 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }else {
       var date = $scope.form.date
     }
-    console.log(date);
-    $scope.getData(date,user,$scope.form.email,client,download,typOfCall)
-    $scope.getArchData(date,user,$scope.form.email,client,download,typOfCall)
+    // console.log(date);
+    if ($scope.tabSelected.tab == 'browse') {
+      $scope.getData(date,user,$scope.form.email,client,download,typOfCall)
+    }else {
+      $scope.getArchData(date,user,$scope.form.email,client,download,typOfCall)
+    }
+
+
   }
 
     $scope.download = function(){
@@ -796,7 +833,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
 
     var appType = 'Info';
     $scope.addTab({
-      title: 'Agent : ' + $scope.reviewData[target][0].uid,
+      title: 'Agent : ' + $scope.reviewData[target].uid,
       cancel: true,
       app: 'AgentInfo',
       data: $scope.reviewData[target],
