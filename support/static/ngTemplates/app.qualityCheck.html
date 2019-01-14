@@ -309,19 +309,16 @@
 
                       <div ng-if="archivedData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff" >
                         <span>
-                          <select ng-model="viewbyArch" ng-change="setItemsPerPageArch(viewbyArch)">
-                            <option>15</option>
-                            <option>30</option>
-                            <option>45</option>
-                            <option>60</option>
+                          <select ng-model="pageOptionsSelected.value" ng-change="setItemsPerPageArch(pageOptionsSelected.value)">
+                            <option ng-repeat="view in pageOptions" value="{{view}}">{{view}} </option>
                           </select>
                         </span>
                         <span>
                           <pagination
                              style="margin:-10px 0px"
-                             total-items="totalItems"
+                             total-items="itemsPerPageArch"
                              ng-model="currentPage.page"
-                             ng-change="pageChanged()"
+                             ng-change="pageChangedArch()"
                              class="pagination-sm"
                              items-per-page="itemsPerPage"
                              previous-text="&lsaquo;"

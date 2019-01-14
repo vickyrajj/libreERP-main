@@ -379,9 +379,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.pageOptionsSelected={
     value:$scope.pageOptions[0]
   }
-  $scope.pageOptionsSelectedArch={
-    value:12
-  }
   $scope.selectedSortOptionArch={
     value:'Created'
   }
@@ -416,7 +413,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   }
   $scope.setTableValuesArch =function(){
     $scope.totalItemsArch = $scope.archivedDataLength;
-    $scope.itemsPerPageArch = $scope.pageOptionsSelectedArch.value;
+    $scope.itemsPerPageArch = $scope.pageOptionsSelected.value;
     $scope.maxSizeArch = 4;
     $scope.setPageArch(1)
   }
