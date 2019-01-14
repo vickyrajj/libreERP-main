@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'stockDetial/$' , StockDownloadAPIView.as_view() ),
     url(r'getCmrList/$' , GetCmrListAPIView.as_view() ),
     url(r'productTable/$' , ProjectProductAPIView.as_view() ),
+    url(r'cancelMaterial/$' , CancelMaterialAPIView.as_view() ),
 
     # url(r'stock/$' , StockAPIView.as_view() ),
 ]

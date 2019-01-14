@@ -209,6 +209,22 @@
             <input type="text" class="form-control text-center" ng-model="form.shipmentDetails" placeholder="Other Shipment Details" ng-change="shipmentDetails()">
           </div>
         </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> Notes (Quotation) : </label>
+          </div>
+          <div class="col-md-12">
+            <textarea rows="5" class="form-control form-control-line" ng-model="form.quoteNotes" ng-change="quoteNotesDetails()"></textarea>
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> Notes (PO) : </label>
+          </div>
+          <div class="col-md-12">
+              <textarea rows="5" class="form-control form-control-line" ng-model="form.poNotes" ng-change="poNotesDetails()"></textarea>
+          </div>
+        </div>
         <div class="row text-right" style="padding-top:10px" ng-if="options">
           <a class="btn" href="" ng-click="showOption()"> <i class="fa fa-arrow-up"></i> View Less Options </a>
         </div>
@@ -759,6 +775,22 @@
       </div>
       <div class="row" style="padding-top:10px">
         <div class="col-md-5 text-center">
+          <label>  Notes (Quotation) : </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.quoteNotes}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
+          <label>  Notes (PO) : </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.poNotes}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
           <label> Net Weight : </label>
         </div>
         <div class="col-md-7 text-center">
@@ -1235,6 +1267,22 @@
           <input type="text" class="form-control text-center" ng-model="form.shipmentDetails" placeholder="Other Shipment Details" ng-change="shipmentDetails()">
         </div>
       </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label> Notes (Quotation) : </label>
+        </div>
+        <div class="col-md-12">
+          <textarea rows="5" class="form-control form-control-line" ng-model="form.quoteNotes" ng-change="quoteNotesDetails()"></textarea>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label> Notes (PO) : </label>
+        </div>
+        <div class="col-md-12">
+            <textarea rows="5" class="form-control form-control-line" ng-model="form.poNotes" ng-change="poNotesDetails()"></textarea>
+        </div>
+      </div>
       <div class="row text-right" style="padding-top:10px" ng-if="options">
         <a class="btn" href="" ng-click="showOption()"> <i class="fa fa-arrow-up"></i> View Less Options </a>
       </div>
@@ -1691,18 +1739,26 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
-              <label> Shipment mode : </label>
-            </div>
-            <div class="col-md-7 text-center">
-              <span> {{form.shipmentMode}}</span>
-            </div>
-          </div>
-          <div class="row" style="padding-top:10px">
-            <div class="col-md-5 text-center">
               <label> Other Special Instruction : </label>
             </div>
             <div class="col-md-7 text-center">
               <span> {{form.shipmentDetails}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+              <label>  Notes (Quotation) : </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.quoteNotes}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+              <label>  Notes (PO) : </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.poNotes}}</span>
             </div>
           </div>
           <div class="row" style="padding-top:10px">

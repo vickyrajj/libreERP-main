@@ -1166,7 +1166,28 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     then(function(response) {})
   }
 
-
+  $scope.quoteNotesDetails = function() {
+    var send = {
+      quoteNotes: $scope.form.quoteNotes,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
+  $scope.poNotesDetails = function() {
+    var send = {
+      poNotes: $scope.form.poNotes,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
 
   $scope.sendForApproval = function() {
 

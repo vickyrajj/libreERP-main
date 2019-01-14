@@ -109,7 +109,8 @@ class Projects(models.Model):
     shipmentMode =  models.CharField(max_length = 200, default = "Road")
     shipmentDetails = models.CharField(max_length = 200, default = "Freight forwarder -")
     weightValue =  models.FloatField( default = 0)
-
+    quoteNotes =  models.CharField(max_length = 500, null=True,blank=True)
+    poNotes =  models.CharField(max_length = 500, null=True,blank=True)
 
 
 class BoM(models.Model):

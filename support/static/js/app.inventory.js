@@ -204,17 +204,32 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
       Flash.create('warning', err.status + ' : ' + err.statusText);
     })
   }
-  $scope.delete = function(pk, index) {
+  // $scope.delete = function(pk, index) {
+  //   $http({
+  //     method: 'DELETE',
+  //     url: '/api/support/material/' + pk + '/'
+  //   }).
+  //   then(function(response) {
+  //     Flash.create('success', 'Deleted');
+  //     $scope.materialIssue.splice(index, 1)
+  //     $scope.sum.splice(index, 1)
+  //   })
+  // }
+  $scope.cancelMaterial = function(pk) {
+    dataSnd = {'pkData' : pk}
     $http({
-      method: 'DELETE',
-      url: '/api/support/material/' + pk + '/'
+      method: 'POST',
+      url: '/api/support/cancelMaterial/',
+      data : dataSnd
     }).
     then(function(response) {
-      Flash.create('success', 'Deleted');
-      $scope.materialIssue.splice(index, 1)
-      $scope.sum.splice(index, 1)
+      $scope.getMaterialIssue($scope.offset)
+      // Flash.create('success', 'Deleted');
+      // $scope.materialIssue.splice(index, 1)
+      // $scope.sum.splice(index, 1)
     })
   }
+
   $scope.toggleMaterial = function(pk, indx) {
     // $scope.prodInventories[indx].open = !$scope.prodInventories[indx].open
     for (var i = 0; i < $scope.materialIssue.length; i++) {
@@ -306,7 +321,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           $scope.showSave = true
           $scope.getFullProjectName = function(p){
             if (p) {
-              var fn = p.title +' ( ' + p.comm_nr + ' )'
+              var fn = p.title +' ( ' + p.comm_nr + ' )'+' - ' + p.vendor.name 
               console.log(fn);
               return fn
             }else {
@@ -421,8 +436,8 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
             }
             for (var i = 0; i < $scope.productsOrdered.length; i++) {
               console.log($scope.productsOrdered[i].pk);
-              if($scope.productsOrdered[i].total_quantity<=0||!$scope.productsOrdered[i].pk){
-                Flash.create('warning', 'Remove the products marked in red or with empty value');
+              if($scope.productsOrdered[i].total_quantity<=0||!$scope.productsOrdered[i].pk||$scope.productsOrdered[i].prodQty>$scope.productsOrdered[i].total_quantity){
+                Flash.create('warning', 'Remove the products marked in red or with empty value or reduce the quantity ');
                 return
               }
             }
