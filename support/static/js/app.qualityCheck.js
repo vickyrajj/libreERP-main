@@ -379,7 +379,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.currentPageArch = {
     page:0
   }
-
   $scope.offset=0
 
   $scope.detailInfoData={
@@ -494,7 +493,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     //   page * $scope.itemsPerPage
     // );
     // $scope.tableDataAvail = pagedData;
-    console.log('herer');
+
     $scope.offset=(page-1)*$scope.viewby
     // $scope.filterData()
   }
@@ -534,6 +533,14 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
    }
 
 
+    $scope.tabelRowActionArch=function(data){
+      $scope.lastActiveTRArch=$scope.archivedData.indexOf(data)
+      $scope.isDetailInfoUpdatedArch=false
+      $scope.detailInfoDataArch.chatThreadData=data
+      $scope.fetchChatsForUIDArch(data);
+    }
+
+
    $scope.fetchChatsForUID= function(data){
      $http({
        method: 'GET',
@@ -560,57 +567,51 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
    }
 
 
-   $scope.tabelRowActionArch=function(data){
-     $scope.lastActiveTRArch=$scope.archivedData.indexOf(data)
-     $scope.isDetailInfoUpdatedArch=false
-     $scope.detailInfoDataArch.chatThreadData=data
-     $scope.fetchChatsForUIDArch(data);
-   }
 
-  $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
-    if (newValue==undefined) {
-      return
-    }
-    switch (newValue) {
-        case 'Created':
-          $scope.filterByCreated(false);
-          break;
-        case 'Agent Name':
-          $scope.filterByUser(false);
-          break;
-        case 'UID':
-           $scope.filterByUid(false);
-          break;
-        case 'Rating':
-          $scope.filterByRating(false);
-          break;
-        case 'Company':
-          $scope.filterByCompany(false);
-          break;
-      }
-  },true)
-  $scope.$watch('selectedSortOptionArch.value',function(newValue,oldValue){
-    if (newValue==undefined) {
-      return
-    }
-    switch (newValue) {
-        case 'Created':
-          $scope.filterByCreated(true);
-          break;
-        case 'Agent Name':
-          $scope.filterByUser(true);
-          break;
-        case 'UID':
-           $scope.filterByUid(true);
-          break;
-        case 'Rating':
-          $scope.filterByRating(true);
-          break;
-        case 'Company':
-          $scope.filterByCompany(true);
-          break;
-      }
-  },true)
+  // $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
+  //   if (newValue==undefined) {
+  //     return
+  //   }
+  //   switch (newValue) {
+  //       case 'Created':
+  //         $scope.filterByCreated(false);
+  //         break;
+  //       case 'Agent Name':
+  //         $scope.filterByUser(false);
+  //         break;
+  //       case 'UID':
+  //          $scope.filterByUid(false);
+  //         break;
+  //       case 'Rating':
+  //         $scope.filterByRating(false);
+  //         break;
+  //       case 'Company':
+  //         $scope.filterByCompany(false);
+  //         break;
+  //     }
+  // },true)
+  // $scope.$watch('selectedSortOptionArch.value',function(newValue,oldValue){
+  //   if (newValue==undefined) {
+  //     return
+  //   }
+  //   switch (newValue) {
+  //       case 'Created':
+  //         $scope.filterByCreated(true);
+  //         break;
+  //       case 'Agent Name':
+  //         $scope.filterByUser(true);
+  //         break;
+  //       case 'UID':
+  //          $scope.filterByUid(true);
+  //         break;
+  //       case 'Rating':
+  //         $scope.filterByRating(true);
+  //         break;
+  //       case 'Company':
+  //         $scope.filterByCompany(true);
+  //         break;
+  //     }
+  // },true)
 
 
   $scope.getArchData = function(date,user,email,client,download,typOfCall){
@@ -699,20 +700,17 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
       }).
       then(function(response) {
         $scope.reviewData = response.data.data
-        $scope.reviewDataLength = response.data.length
-        console.log($scope.reviewData,"***************************************************");
+        $scope.reviewDataLength = response.data.dataLength
         if($scope.reviewData.length>0){
           $scope.tabelRowAction($scope.reviewData[0])
+          $scope.noDataDialouge=false;
+        }else{
+          $scope.noDataDialouge=true;
         }
-        $scope.lastActiveTR=0;
         $scope.setTableValues ()
         $scope.loadingData=false;
         $scope.isDetailInfoUpdated=true
-        if(response.data.length<1){
-          $scope.noDataDialouge=true;
-        }else{
-          $scope.noDataDialouge=false;
-        }
+
       });
     }
   }
