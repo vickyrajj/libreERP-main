@@ -2105,11 +2105,11 @@ hr {
   border-radius: 30px;
   margin-bottom: 15px;
   width: 280px;
-  height: 50px;
+  height: 47px;
   box-shadow: 0 2px 2px 0 rgba(167, 167, 167, 0.45);
   color: #fff;
   cursor: pointer;
-  padding-top: 10px;
+  padding-top: 7px;
 }
 
 .goo {
@@ -2131,11 +2131,11 @@ hr {
 .login-input-group input {
   position: relative;
   width: 100%;
-  border-top-left-radius: 30px !important;
+  border-top-left-radius: 15px !important;
 }
 
 .min_height {
-  min-height: 50vh;
+  min-height: 40vh;
 }
 
 .lo_marg {
@@ -3103,7 +3103,7 @@ hr {
     padding: 0px;
   }
 
-  .only_mob {
+  .cancel_btn {
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -3130,8 +3130,18 @@ hr {
     border: 0 solid #000;
     box-shadow: none;
   }
+  .or{
+    margin-top: 5px;
+    margin-bottom:5px;
+  }
 
   /* mobile screen size ends here.... */
+}
+
+@media only screen and (max-height : 300px), screen and (max-height: 438px){
+  .cancel_btn {
+    display: none;
+  }
 }
 
 @media only screen and (device-width : 414px) and (device-height : 736px) and (-webkit-device-pixel-ratio : 3) {
@@ -3234,7 +3244,7 @@ hr {
 @media screen and (device-width : 411px) and (device-height : 823px) {
 
   /* for google pixel devices starts here */
-  .only_mob {
+  .cancel_btn {
     width: 100%;
     min-height: 35px;
     padding: 10px;

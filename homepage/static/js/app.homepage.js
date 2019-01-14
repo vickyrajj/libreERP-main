@@ -1381,6 +1381,17 @@ app.controller('controller.enroll', function($scope, $state, $http, $timeout, $i
 
 app.controller('main', function($scope, $state, $http, $timeout, $interval, $uibModal, $rootScope, Flash) {
 
+        $scope.slideDown = function() {
+          $timeout(function() {
+            console.log("sliding down");
+            var element = document.getElementsByClassName('signup_modal');
+            element[0].scrollIntoView({block: "end"});
+          },1000)
+        }
+
+      },
+    })
+  }
 
   $rootScope.getCookie = function(cname) {
     var name = cname + "=";

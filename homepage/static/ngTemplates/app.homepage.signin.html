@@ -5,11 +5,13 @@
   <div class="col-md-4 min_height  hidden-xs hidden-sm" style="position:relative;background-image: linear-gradient(to bottom ,rgba(233, 233, 233, 0),rgba(233, 233, 233, 0.2), rgba(233, 233, 233, 0.8),rgba(233, 233, 233, 0.2),rgba(233, 233, 233, 0));margin-left:0px;padding-left:0px;">
     <img src="/static/images/24tut/illustration_svg.png" class="log_img">
   </div>
-  <div class="col-md-8 min_height for_mob" style="padding-left:40px;">
-    <img src="/static/images/24tut/black icon_grad.svg" class="modal_logo">
-    <h1 style="font-size:1.4em;font-weight:bold;"> Login now to learn LIVE Online from India's best teachers</h1>
-    <div class="col-md-4 hidden-md hidden-lg">
-      <img src="/static/images/24tut/illustration_svg.png" style="width:65%;margin-bottom:17px;margin-left:30px;">
+  <div class="col-md-8 min_height for_mob text-center" style="padding-left:40px;">
+    <div class="text-center">
+      <img src="/static/images/24tut/black icon_grad.svg" class="modal_logo">
+    </div>
+    <h1 class="heading_small or"> Login now to learn LIVE Online from India's best teachers</h1>
+    <div class="col-md-4 hidden-md hidden-lg text-center">
+      <img src="/static/images/24tut/illustration_svg.png" style="width:50%;margin-bottom:10px;" ng-click="close()">
     </div>
     <div class="container-fluid lo_marg text-center">
       <div class="login_btn goo">
@@ -23,7 +25,7 @@
     <div class="col-md-8 col-md-offset-2 ph_div">
       <div class="login-input-group">
         <label>Phone Number</label>
-        <input type="tel" class="form-control" required="" placeholder="+91" maxlength="10">
+        <input type="tel" class="form-control" required="" ng-focus="slideDown()" placeholder="+91" maxlength="10">
         <div class="error-container">Enter a valid phone number</div>
       </div>
       <button type="button" class="btn_gradient form-control" style="padding-bottom:30px;">
@@ -31,7 +33,7 @@
       </button>
     </div>
   </div>
-  <div class="text-center hidden-md hidden-lg only_mob" ng-click="close()">
+  <div class="text-center hidden-md hidden-lg cancel_btn" ng-click="close()">
     <span>Cancel</span>
   </div>
 </div>
