@@ -6,10 +6,11 @@ from .models import *
 from gitweb.serializers import repoLiteSerializer
 from ERP.serializers import serviceSerializer
 from ERP.models import service
-from projects.models import project
+from projects.models import *
 from projects.serializers import projectLiteSerializer
 from datetime import datetime
 from HR.serializers import userSearchSerializer
+from organization.serializers import *
 
 class AccountSerializer(serializers.ModelSerializer):
     contactPerson = userSearchSerializer(many=False,read_only=True)
@@ -245,14 +246,23 @@ class VendorInvoiceSerializer(serializers.ModelSerializer):
         return instance
 
 class PurchaseOrderSerializer(serializers.ModelSerializer):
+    costcenter = CostCenterSerializer(many = False , read_only = True)
+    bussinessunit = UnitsLiteSerializer(many = False , read_only = True)
+    project = projectLiteSerializer(many = False , read_only = True)
     class Meta:
         model = PurchaseOrder
-        fields = ('pk', 'created' , 'name' , 'address' , 'personName' , 'user' , 'status', 'poNumber' , 'quoteNumber' , 'deliveryDate' , 'terms')
+        fields = ('pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' , 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice')
         read_only_fields = ('user', )
     def create(self , validated_data):
         u = self.context['request'].user
         po = PurchaseOrder(**validated_data)
         po.user = u
+        if 'costcenter' in self.context['request'].data:
+            po.costcenter = CostCenter.objects.get(pk=int(self.context['request'].data['costcenter']))
+        if 'bussinessunit' in self.context['request'].data:
+            po.bussinessunit = Unit.objects.get(pk=int(self.context['request'].data['bussinessunit']))
+        if 'project' in self.context['request'].data:
+            po.project = project.objects.get(pk=int(self.context['request'].data['project']))
         po.save()
         return po
 
