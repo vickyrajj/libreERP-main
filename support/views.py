@@ -1850,7 +1850,6 @@ class DownloadProjectSCExcelReponse(APIView):
 
             Sheet1.append(["Supplier","Project", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed by others'])
             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
-            print projData
             for i in projData:
                 bomObj=BoM.objects.filter(project__id=i.pk)
                 materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
@@ -1868,7 +1867,6 @@ class DownloadProjectSCExcelReponse(APIView):
                         for m in mat:
                             # print m['product_id'],'lllll',j.products.pk
                             if m['product_id']==j.products.pk:
-                                print m['qty']
                                 stockConsumed += m['qty']
                             # else:
                             #     stockConsumed = 0
@@ -1888,7 +1886,6 @@ class DownloadProjectSCExcelReponse(APIView):
                                                 # listVal += s['addedqty']
                                                     # value = ''
                                                     value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + h.project.comm_nr + ')'
-                                                    print value
                                                     val.append(value)
 
                     val = json.dumps(val)
@@ -1930,8 +1927,6 @@ class DownloadProjectSCExcelReponse(APIView):
             Sheet1.column_dimensions['F'].width = 30
             Sheet1.column_dimensions['G'].width = 20
             Sheet1.column_dimensions['H'].width = 50
-
-
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
         return response
@@ -1999,6 +1994,8 @@ class DownloadStockReportAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
         print  request.GET
+        workbook = Workbook()
+        toReturn = workbook.active
         dtObj = datetime.datetime.now()
         if dtObj.month > 3:
             fstDate = date(dtObj.year,4,1)
@@ -2015,8 +2012,8 @@ class DownloadStockReportAPIView(APIView):
         projStokObjs = ProjectStockSummary.objects.filter(stockReport__in=rptPkList)
         unqTitles = list(projStokObjs.values_list('title',flat=True).distinct())
 
-        toReturn = []
-        hd = ['Date','Stock value at ware house']
+        # toReturn = []
+        hd = ['Date','Stock value at warehouse']
         hd += unqTitles
         # for i in unqTitles:
         #     hd.append('Consumption Of Stock - '+i)
@@ -2034,15 +2031,24 @@ class DownloadStockReportAPIView(APIView):
                     print 'project errorrr'
                     sam.append(0)
             toReturn.append(sam)
-        print toReturn
-
-        return ExcelResponse(toReturn, 'Stock_Summary' , 'Stock Summary')
+        if toReturn.max_column <= len(string.ascii_uppercase):
+            for character in string.ascii_uppercase[0:toReturn.max_column]:
+                toReturn.column_dimensions[character].width = 20
+        response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=stockSummary.xlsx'
+        return response
+        # return ExcelResponse(toReturn, 'Stock_Summary' , 'Stock Summary')
 
 class DownloadInvoiceReportAPIView(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self , request , format = None):
         projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),junkStatus=False,savedStatus=False)
-        toReturn = [['Purchase Order Ref','Supplier','Invoice No.','BOE']]
+        workbook = Workbook()
+        toReturn = workbook.active
+        hd = ['Purchase Order Ref','Supplier','Invoice No.','BOE']
+
+        toReturn.append(hd)
+
         for p in projectObj:
             sam = []
             sam.append(p.poNumber)
@@ -2050,7 +2056,14 @@ class DownloadInvoiceReportAPIView(APIView):
             sam.append(p.invoiceNumber)
             sam.append(p.boeRefNumber)
             toReturn.append(sam)
-        return ExcelResponse(toReturn, 'Invoice_BOE' , 'Invoice BOE')
+        # return ExcelResponse(toReturn, 'Invoice_BOE' , 'Invoice BOE')
+        toReturn.column_dimensions['A'].width = 20
+        toReturn.column_dimensions['B'].width = 20
+        toReturn.column_dimensions['C'].width = 20
+        toReturn.column_dimensions['D'].width = 20
+        response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=Invoice_BOE.xlsx'
+        return response
 
 class GetCmrListAPIView(APIView):
     renderer_classes = (JSONRenderer,)
