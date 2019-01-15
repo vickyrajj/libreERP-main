@@ -46,9 +46,9 @@ app.controller('businessManagement.finance.pettyCash', function($scope, $http, $
   $scope.getExpenseData()
 
   $scope.titleSearch = function(query) {
-    return $http.get('/api/finance/expenseHeading/?title__icontains=' + query).
+    return $http.get('/api/finance/expenseHeading/?limit=15&title__icontains=' + query).
     then(function(response) {
-      return response.data;
+      return response.data.results;
     })
   };
 

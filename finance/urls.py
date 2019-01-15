@@ -25,4 +25,6 @@ urlpatterns = [
     url(r'uplodInflowData/$' , UplodInflowDataAPI.as_view()),
     url(r'getExpenseData/$' , GetExpenseDataAPI.as_view()),
     url(r'expensesGraphData/$' , ExpensesGraphDataAPI.as_view()),
+    url(r'monthsExpensesData/$' , MonthsExpensesDataAPI.as_view()),
+    url(r'downloadExpenseSummary/$' , DownloadExpenseSummaryAPI.as_view()),
 ]
