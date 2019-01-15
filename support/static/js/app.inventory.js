@@ -321,7 +321,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           $scope.showSave = true
           $scope.getFullProjectName = function(p){
             if (p) {
-              var fn = p.title +' ( ' + p.comm_nr + ' )'+' - ' + p.vendor.name 
+              var fn = p.title +' ( ' + p.comm_nr + ' )'+' - ' + p.vendor.name
               console.log(fn);
               return fn
             }else {
@@ -370,7 +370,7 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
           }, true)
 
           $scope.projectSearch = function(query) {
-            return $http.get('/api/support/projects/?title__contains=' + query+'&status__in=approved,ongoing&savedStatus=false').
+            return $http.get('/api/support/projects/?searchContains=' + query+'&status__in=approved,ongoing&savedStatus=false').
             then(function(response) {
               return response.data;
             })

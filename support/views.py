@@ -95,10 +95,18 @@ class ProductSheetViewSet(viewsets.ModelViewSet):
 
 class ProjectsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
-    queryset = Projects.objects.all().order_by('-created')
+    # queryset = Projects.objects.all().order_by('-created')
     serializer_class = ProjectsSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['status','title','savedStatus','junkStatus','comm_nr']
+    def get_queryset(self):
+        if 'searchContains' in self.request.GET:
+            objs = Projects.objects.all()
+            product = objs.filter(title__contains=str(self.request.GET['searchContains']))
+            product1  = objs.filter(comm_nr__icontains=str(self.request.GET['searchContains']))
+            return product | product1
+        else:
+            return Projects.objects.all().order_by('-created')
 
 class VendorViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -1866,6 +1874,10 @@ class DownloadProjectSCExcelReponse(APIView):
                         # stockConsumed=0
                         for m in mat:
                             # print m['product_id'],'lllll',j.products.pk
+                            # print m['stock']
+                            # for so in ast.literal_eval( m['stock']):
+                            #     if so['addedqty'] > 0:
+                            #         if so['comm_nr'] == i.comm_nr:
                             if m['product_id']==j.products.pk:
                                 stockConsumed += m['qty']
                             # else:
@@ -1893,7 +1905,7 @@ class DownloadProjectSCExcelReponse(APIView):
                 Sheet1.append(['', '','','',' ',' ',' '])
 
             Sheet1.append(['material Issued'])
-            Sheet1.append(['Part No','Description','Quantity','project'])
+            Sheet1.append(['Part No','Description','Quantity','project',])
             for d in projData:
                 bomObj=BoM.objects.filter(project__id=d.pk)
                 materialObj=MaterialIssueMain.objects.filter(project__id=d.pk)
@@ -1930,6 +1942,40 @@ class DownloadProjectSCExcelReponse(APIView):
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
         return response
+
+# class DownloadProjectSCExcelReponse(APIView):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     def get(self , request , format = None):
+#         workbook = Workbook()
+#         projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,junkStatus=False)
+#         projectsObj = list(projectObj.values('comm_nr').distinct())
+#         sendData =[]
+#         for idx,p in enumerate(projectsObj):
+#             if idx==0:
+#                 Sheet1 = workbook.active
+#                 Sheet1.title = p['comm_nr']
+#             if idx>0:
+#                 Sheet1 = workbook.create_sheet(p['comm_nr'])
+#
+#             Sheet1.append(["Supplier","Project", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed by others'])
+#             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
+#             for i in projData:
+#                 print i,'aaaaaaaa'
+#                 bomObj=BoM.objects.filter(project__id=i.pk)
+#                 materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
+#                 listVal = 0
+#                 val = []
+#                 stockConsumed=0
+#                 mat = []
+#                 for b in bomObj:
+#                     for k in materialObj:
+#                         materialdata= list(k.materialIssue.all().values())
+
+
+        response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
+        return response
+
 
 
 class CreateStockReportDataAPIView(APIView):
