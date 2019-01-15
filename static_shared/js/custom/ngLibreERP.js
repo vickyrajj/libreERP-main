@@ -51,27 +51,6 @@ function getCookie(cname) {
 
 $scope.mobileView=false;
 
-setInterval(function(){
-
-if($(window).width() < 600) {
-  document.getElementById('mainUI').addEventListener('click', function() {
-      if($(window).width() < 600) {
-      $scope.sideMenuVisibility=false
-    }
-
-  })
-
-    $scope.mobileView=true;
-    if(!$scope.sideMenuVisibility)
-      {
-        document.getElementById('navbarTop').style.margin='0%';
-        document.getElementById('mainUIParent').style.width='100%';
-        document.getElementById('sideMenu').style.display='none'
-      }
-}else{
-    $scope.mobileView=false;
-}
-},10)
 // $(window).on('mouseover', function() {
 //
 // })
@@ -79,28 +58,8 @@ if($(window).width() < 600) {
 
 $scope.onHover=false;
 console.log($scope.onHover);
-$scope.sideMenuVisibility = true;
+$scope.sideMenuVisibility = false;
 // retrive it back
-var sideMenuVisibility=getCookie("sideMenuVisibility");
-console.log(getCookie("sideMenuVisibility"))
-if (sideMenuVisibility == "false") {
-    $scope.sideMenuVisibility=false;
-   } else {
-   $scope.sideMenuVisibility=true;
-}
-
-$scope.toggleSideMenu = function() {
-  $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
-  console.log($scope.sideMenuVisibility);
-  if ($scope.sideMenuVisibility === false) {
-      sideMenuVisibility='false';
-     } else {
-     sideMenuVisibility='true';
-  }
-  // save it in cookies
-  setCookie('sideMenuVisibility',sideMenuVisibility,30);
-  console.log(getCookie('sideMenuVisibility'))
-}
 
 
   $scope.tutoringCall = function(request) {
