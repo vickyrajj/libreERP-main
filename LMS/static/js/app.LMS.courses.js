@@ -31,7 +31,7 @@ app.controller("home.LMS.courses", function($scope, $state, $users, $stateParams
 
 
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
+    console.log(target, action, mode, );
     console.log($scope.data.tableData);
 
     for (var i = 0; i < $scope.data.tableData.length; i++) {
@@ -226,15 +226,33 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
   //     // templateUrl: 'popup.html',
   //   });
   // }
+  $scope.booksdata=[];
+  $http({
+    method: 'GET',
+    url: '/api/LMS/bookcoursemap/?course' + $scope.course.pk
+  }).then(function(response) {
+    $scope.booksdata.push( response.data);
+    $scope.bdata=response.data;
+  })
 
+console.log($scope.booksdata);
 
   $scope.addbook = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.LMs.course.bookUpload.html',
       size: 'md',
       backdrop: true,
+      resolve: {
+        data: function() {
+          return $scope.course;
+        },
+        dt: function() {
+          return $scope.booksdata;
+        }
+      },
 
-      controller: function($scope, $uibModalInstance) {
+      controller: function($scope, $uibModalInstance, data,dt) {
+        console.log('arrrrr----',dt);
         $scope.bookSearch = function(query) {
           return $http.get('/api/LMS/book/?title__contains=' + query).
           then(function(response) {
@@ -242,31 +260,27 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
           })
         };
 
-        // var toSend = {
-        //   book: ,
-        //   referenceBook: ,
-        //   course:
-        // }
-        //     $http({
-        //       method: 'POST',
-        //       url: '/api/LMS/course/' + response.data.pk + '/',
-        //       data: toSend
-        //     }).
-        //     then(function(response) {
-        //       $scope.resetForm();
-        //       Flash.create('success', 'Created')
-        //     })
-
-
-
+        $scope.saveBook = function() {
+          var url = '/api/LMS/bookcoursemap/'
+          var method = 'POST';
+          var toSend = {
+            book: $scope.form.book.pk,
+            course: data.pk,
+            referenceBook: $scope.form.referencebook,
           }
-
-        })
+          $http({
+            method: method,
+            url: url,
+            data: toSend
+          }).
+          then(function() {})
+        }
 
 
       }, //controller ends
     })
-  }
+  } //addbookfunction ends
+
 
 });
 

@@ -102,11 +102,19 @@
     </div>
 
     <div class="row">
-      <div class="col-md-3" style="padding-top:25px;">
-        <button type="button" class="btn btn-primary" ng-click="addbook()">
-          Add Book <i class="fa fa-plus fa-fw"></i>
-        </button>
+      <div class="container-fluid" >
+        <h4 class="text-muted">Added Books</h4>
+        <hr>
+        <div class="col-md-3"style="padding-bottom:10px;">
+          <button type="button" class="btn btn-primary" ng-click="addbook()">
+            Add Book <i class="fa fa-plus fa-fw"></i>
+          </button>
+        </div>
+        <div class="col-md-3 card"ng-repeat="b in bdata"style="width:100%;margin-bottom:10px;padding:5px;">
+          {{b.book.title}}
+        </div>
       </div>
+
 
     </div>
 

@@ -275,9 +275,17 @@ class ChannelSerializer(serializers.ModelSerializer):
 
 
 class BookCourseMapSerializer(serializers.ModelSerializer):
+    book = BookLiteSerializer(many = False , read_only = True)
     class Meta:
         model = BookCourseMap
         fields = ('pk' , 'book' , 'course', 'referenceBook' )
+    def create(self , validated_data):
+        print '@@@@@@@@@@@@@@'
+        b = BookCourseMap(**validated_data)
+        book = Book.objects.get(pk = self.context['request'].data['book'])
+        b.book = book
+        b.save()
+        return b
 
 
 class NoteSerializer(serializers.ModelSerializer):

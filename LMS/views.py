@@ -349,7 +349,8 @@ class BookCourseMapViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = BookCourseMapSerializer
     queryset = BookCourseMap.objects.all()
-
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['course']
 
 class NoteViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )

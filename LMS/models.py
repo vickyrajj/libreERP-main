@@ -291,6 +291,8 @@ class BookCourseMap(models.Model):
     book = models.ForeignKey(Book , null = True , related_name="book")
     course = models.ForeignKey(Course , null = True , related_name="course")
     referenceBook = models.BooleanField(default = False)
+    class Meta:
+        unique_together = ('book','course')
 
 class Note(models.Model):
     title =  models.CharField(choices = TYP_CHOICES , max_length = 50 , null = True)
