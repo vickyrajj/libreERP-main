@@ -1,5 +1,5 @@
 app.config(function($stateProvider){
-  $stateProvider.state('home.LMS.knowledgeBank', {
+  $stateProvider.state('home.knowledgeBank', {
     url: "/knowledgeBank",
     templateUrl: '/static/ngTemplates/app.LMS.knowledgeBank.html',
     controller: 'home.LMS.knowledgeBank'

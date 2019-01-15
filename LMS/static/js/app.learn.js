@@ -1,5 +1,5 @@
 app.config(function($stateProvider) {
-  $stateProvider.state('home.LMS.learn', {
+  $stateProvider.state('home.learn', {
     url: "/learn",
     templateUrl: '/static/ngTemplates/app.LMS.learn.html',
     controller: 'home.LMS.learn'
