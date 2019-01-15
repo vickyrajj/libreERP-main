@@ -22,6 +22,10 @@ router.register(r'video' , VideoViewSet , base_name ='video')
 router.register(r'feedback' , FeedbackViewSet , base_name ='feedback')
 router.register(r'book' , BookViewSet , base_name ='book')
 router.register(r'section' , SectionViewSet , base_name ='section')
+router.register(r'bookcoursemap' , BookCourseMapViewSet , base_name ='bookcoursemap')
+router.register(r'note' , NoteViewSet , base_name ='note')
+router.register(r'notesection' , NotesSectionViewSet , base_name ='notesection')
+
 
 
 urlpatterns = [

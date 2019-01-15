@@ -1,4 +1,4 @@
-app.config(function($stateProvider){
+app.config(function($stateProvider) {
   $stateProvider.state('home.LMS.courses', {
     url: "/courses",
     templateUrl: '/static/ngTemplates/app.LMS.courses.html',
@@ -6,7 +6,7 @@ app.config(function($stateProvider){
   });
 });
 
-app.controller("home.LMS.courses", function($scope, $state, $users, $stateParams, $http, Flash , $timeout) {
+app.controller("home.LMS.courses", function($scope, $state, $users, $stateParams, $http, Flash, $timeout) {
 
 
   $scope.data = {
@@ -52,7 +52,7 @@ app.controller("home.LMS.courses", function($scope, $state, $users, $stateParams
           data: {
             pk: target,
             index: i,
-            course : $scope.data.tableData[i]
+            course: $scope.data.tableData[i]
           },
           active: true
         })
@@ -86,10 +86,19 @@ app.controller("home.LMS.courses", function($scope, $state, $users, $stateParams
     }
   }
 
-  $timeout(function() {
-    $scope.addTab({"title":"Details :4","cancel":true,"app":"courseExplorer","data":{"pk":4,"index":3 , course : $scope.data.tableData[3]},"active":true})
-  }, 1000)
-
+  // $timeout(function() {
+  //   $scope.addTab({
+  //     "title": "Details :4",
+  //     "cancel": true,
+  //     "app": "courseExplorer",
+  //     "data": {
+  //       "pk": 4,
+  //       "index": 3,
+  //       course: $scope.data.tableData[3]
+  //     },
+  //     "active": true
+  //   })
+  // }, 1000)
 
 
 
@@ -101,7 +110,7 @@ app.controller("home.LMS.courses", function($scope, $state, $users, $stateParams
 
 });
 
-app.controller("home.LMS.courses.explore", function($scope, $state, $users, $stateParams, $http, Flash) {
+app.controller("home.LMS.courses.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal) {
 
   $scope.course = $scope.tab.data.course;
 
@@ -139,55 +148,74 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
     },
   ]
 
-  $scope.enrollmentForm = {user : undefined}
+  $scope.enrollmentForm = {
+    user: undefined
+  }
 
   $scope.addEnrollment = function() {
     if ($scope.enrollmentForm.user == undefined || typeof $scope.enrollmentForm.user != 'object') {
-      Flash.create('warning' , 'Please select a user first');
+      Flash.create('warning', 'Please select a user first');
       return;
     }
 
 
     for (var i = 0; i < $scope.course.enrollments.length; i++) {
       if ($scope.course.enrollments[i].user == $scope.enrollmentForm.user.pk) {
-        Flash.create('danger' , 'User already enrolled for this course');
+        Flash.create('danger', 'User already enrolled for this course');
         return;
       }
     }
 
-    var toSend = {user : $scope.enrollmentForm.user.pk , course : $scope.course.pk}
+    var toSend = {
+      user: $scope.enrollmentForm.user.pk,
+      course: $scope.course.pk
+    }
 
-    $http({method : 'POST' , url : '/api/LMS/enrollment/' , data : toSend}).
+    $http({
+      method: 'POST',
+      url: '/api/LMS/enrollment/',
+      data: toSend
+    }).
     then(function(response) {
-      Flash.create('success' , 'Added')
+      Flash.create('success', 'Added')
       $scope.enrollmentForm.user = undefined;
       $scope.course.enrollments.push(response.data);
     })
 
   }
 
-  $scope.studyMaterialForm = {attachment : emptyFile}
+  $scope.studyMaterialForm = {
+    attachment: emptyFile
+  }
 
   $scope.saveFile = function() {
     if ($scope.studyMaterialForm.attachment == emptyFile) {
-      Flash.create('warning' , 'No file selected');
+      Flash.create('warning', 'No file selected');
       return;
     }
 
     var fd = new FormData();
 
-    fd.append('attachment' , $scope.studyMaterialForm.attachment)
-    fd.append('course' , $scope.course.pk)
+    fd.append('attachment', $scope.studyMaterialForm.attachment)
+    fd.append('course', $scope.course.pk)
     if ($scope.activeTab == 0) {
-      fd.append('typ' , 'file')
-    }else {
-      fd.append('typ' , 'video')
+      fd.append('typ', 'file')
+    } else {
+      fd.append('typ', 'video')
     }
 
-    $http({method : 'POST' , url : '/api/LMS/studyMaterial/' , data : fd , transformRequest: angular.identity, headers: { 'Content-Type': undefined }}).
+    $http({
+      method: 'POST',
+      url: '/api/LMS/studyMaterial/',
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).
     then(function(response) {
       $scope.course.studyMaterials.push(response.data);
-      Flash.create('success' , 'File added');
+      Flash.create('success', 'File added');
     })
 
   }
@@ -200,15 +228,54 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
   // }
 
 
+  $scope.addbook = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.LMs.course.bookUpload.html',
+      size: 'md',
+      backdrop: true,
+
+      controller: function($scope, $uibModalInstance) {
+        $scope.bookSearch = function(query) {
+          return $http.get('/api/LMS/book/?title__contains=' + query).
+          then(function(response) {
+            return response.data;
+          })
+        };
+
+        // var toSend = {
+        //   book: ,
+        //   referenceBook: ,
+        //   course:
+        // }
+        //     $http({
+        //       method: 'POST',
+        //       url: '/api/LMS/course/' + response.data.pk + '/',
+        //       data: toSend
+        //     }).
+        //     then(function(response) {
+        //       $scope.resetForm();
+        //       Flash.create('success', 'Created')
+        //     })
+
+
+
+          }
+
+        })
+
+
+      }, //controller ends
+    })
+  }
 
 });
 
 app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateParams, $http, Flash) {
 
   $scope.topicSearch = function(query) {
-    return $http.get( '/api/LMS/topic' +'?title__contains=' + query).
-    then(function(response){
-      return response.data;
+    return $http.get('/api/LMS/topic/?limit=15&title__contains=' + query).
+    then(function(response) {
+      return response.data.results;
     })
   };
 
@@ -216,11 +283,19 @@ app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateP
     if (typeof topic != 'object') {
       return;
     }
-    return topic.title + '  ('+ topic.subject.title +')';
+    return topic.title + '  (' + topic.subject.title + ')';
   }
 
   $scope.resetForm = function() {
-    $scope.form = {topic : '' , enrollmentStatus : 'open' , description : '' , dp : emptyFile, TAs: [] , instructor : undefined , title : ''};
+    $scope.form = {
+      topic: '',
+      enrollmentStatus: 'open',
+      description: '',
+      dp: emptyFile,
+      TAs: [],
+      instructor: undefined,
+      title: ''
+    };
   }
 
   $scope.resetForm();
@@ -228,25 +303,29 @@ app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateP
   $scope.save = function() {
     var f = $scope.form;
     var toSend = {
-      instructor : f.instructor.pk,
-      topic : f.topic.pk,
-      description : f.description,
-      enrollmentStatus : f.enrollmentStatus,
-      TAs : f.TAs,
-      title : f.title
+      instructor: f.instructor.pk,
+      topic: f.topic.pk,
+      description: f.description,
+      enrollmentStatus: f.enrollmentStatus,
+      TAs: f.TAs,
+      title: f.title
     }
-    $http({method : 'POST' , url : '/api/LMS/course/' , data : toSend}).
+    $http({
+      method: 'POST',
+      url: '/api/LMS/course/',
+      data: toSend
+    }).
     then(function(response) {
       if ($scope.form.dp == emptyFile) {
         $scope.resetForm();
-        Flash.create('success' , 'Created')
-      }else {
+        Flash.create('success', 'Created')
+      } else {
         var fd = new FormData();
-        fd.append('dp' , $scope.form.dp);
+        fd.append('dp', $scope.form.dp);
 
         $http({
           method: 'PATCH',
-          url: '/api/LMS/course/' + response.data.pk +'/',
+          url: '/api/LMS/course/' + response.data.pk + '/',
           data: fd,
           transformRequest: angular.identity,
           headers: {

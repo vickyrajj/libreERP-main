@@ -1,6 +1,6 @@
 <div class="row" style="margin:0px;">
 
-  <div class="container-fluid" style="background-image: linear-gradient(rgba(36, 32, 32, 0.79), rgba(32, 32, 32, 0.74)), url('/static/images/24tut/studentimg.jpg');background-size:cover;background-repeat:no-repeat;height:40vh;">
+  <div class="container-fluid" ng-class='banner'  style="background-image: linear-gradient(rgba(36, 32, 32, 0.79), rgba(32, 32, 32, 0.74)), url('/static/images/24tut/studentimg.jpg');background-size:cover;background-repeat:no-repeat;height:40vh;">
   </div>
 
   <div class="container" style="padding-bottom:4em;">
@@ -69,16 +69,18 @@
         <span><b>Video Course</b><i ng-if="device.smallDevice " class="fa {{videos==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
         <div ng-class="class2"></div>
       </div>
-      <div class="col-md-2 clickchange" ng-model='testseries' ng-class="click3" ng-click="clicks(3)">
-        <span><b>Test Series</b><i ng-if="device.smallDevice " class="fa {{testseries==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
-        <div ng-class="class3"></div>
-      </div>
+      <a href="/exam">
+        <div class="col-md-2 clickchange" ng-model='testseries' ng-class="click3" ng-click="clicks(3)">
+          <span><b>Test Series</b><i ng-if="device.smallDevice " class="fa {{testseries==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
+          <div ng-class="class3"></div>
+        </div>
+      </a>
       <div class="col-md-2 clickchange" ng-model='forum' ng-class="click4" ng-click="clicks(4)">
         <span><b>Forum</b><i ng-if="device.smallDevice " class="fa {{forum==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
         <div ng-class="class4"></div>
       </div>
       <div class="col-md-3 clickchange1" ng-model='refbook' ng-class="click5" ng-click="clicks(5)">
-        <span><b>Refernce Books</b><i ng-if="device.smallDevice " class="fa {{refbook==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
+        <span><b>Reference Books</b><i ng-if="device.smallDevice " class="fa {{refbook==true?'fa-times':'fa-angle-up'}}" style="font-size:30px;position:absolute;right:1em;"></i></span>
         <div ng-class="class5"></div>
       </div>
     </div>
@@ -135,16 +137,65 @@
     </div>
   </div>
   <div class="container-fluid no_padding" ng-show="videos">
-    <div class="col-md-12 min_padd text-center" style="background:#eee;display:flex;">
-      <div class="video_card text-center" ng-repeat="i in subject" href="/courseVideo">
-        <!-- <img src="{{i.img}}" alt=""> -->
-        <h2 style="">{{i.name}}</h2>
+    <div class="col-md-12 min_padd text-center" style="background:#eee;">
+      <div class="col-md-3 video_card text-center" ng-repeat="i in subject">
+        <a href="/courseVideo">
+        <h2>{{i.name}}</h2>
+      </a>
       </div>
     </div>
   </div>
+
+  <div class="container" ng-show="forum">
+    <div ng-repeat="a in forumlist" style="margin-top:3em">
+      <div class="col-md-8 col-md-offset-2 ">
+        <div>
+          <div style="padding: 1em;border-bottom: 1px solid #eaecf0;display: flex;align-items: center;">
+            <div style="width:60px;">
+              <img src="{{a.imgsrc}}" style="width:45px;border-radius:50%;height:45px;" />
+            </div>
+            <div class="" style="flex: 0 1 auto;max-width: 65%;font-size: 1em;">
+              <div class="toprow" style="">
+                <i class="fa fa-thumb-tack"></i>
+                <span style="font-size:17px;color: #3C4556;cursor:pointer;" ng-click="forumview($index)">{{a.title}}</span>
+              </div>
+              <div class="bottomrow" style="font-size: 1em;">
+                <span class="" style="font-size:15px;color: #3C4556;">{{a.secondtext}}</span>
+              </div>
+            </div>
+            <div style="flex: 1 0 0;text-align: right;color: #949fb4;">
+              <span style="text-align: right;">Replies:{{a.replies}}</span>
+            </div>
+          </div>
+          <div class="" style='padding: 1em;border-bottom: 1px solid #eaecf0;' ng-show="count==$index?openedforum:''">
+            <div ng-repeat="b in a.users">
+              <div style="padding: 1.5em;{{$last?'':'border-bottom: 1px solid #eaecf0'}};display: flex;align-items: center;" ng-mouseover="open = true" ng-mouseleave="open = false">
+                <div style="width:60px;flex: 0 0 auto;text-align: left;">
+                  <img src="{{b.userimg}}" style="width:45px;border-radius:50%;height:45px;" />
+                </div>
+                <div style="flex: 0 1 auto;max-width: 65%;font-size: 1em;">
+                  <span>{{b.name}}</span>
+                  <div style="padding-top: 1em;">
+                    <span style="font-size:16px;">{{b.comment}}</span>
+                  </div>
+                  <div style="margin-top:1em;">
+                    <button class="btn btn-primary" type="button" ng-show="open"> Reply</button>
+                  </div>
+                </div>
+                <div style="flex: 1 0 0;text-align: right;">
+                  <i class="fa fa-heart" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container no_padding" ng-show="refbook">
     <div class="row min_padd text-center" style="">
-      <div class="col-md-6" style="position: relative;"ng-repeat="b in refbooks">
+      <div class="col-md-6" style="position: relative;" ng-repeat="b in refbooks">
         <div class="movie-card">
           <div class="col-md-5 studentcard" style="min-height:300px;">
             <img src="{{b.img}}" class="imgstyle" />

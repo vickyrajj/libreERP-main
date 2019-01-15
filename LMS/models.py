@@ -271,6 +271,7 @@ class Video(models.Model):
     attachment = models.FileField(upload_to = getVideoPath , null = True)
     thumbnail = models.ImageField(upload_to = getVideoThumbnailPath , null = True)
     channel = models.ForeignKey(Channel , null = True , related_name ="videos")
+    course = models.ForeignKey(Course , related_name = 'videos' , null = True)
 
 
 class Feedback(models.Model):
@@ -284,3 +285,21 @@ class Feedback(models.Model):
 
     class Meta:
         unique_together = ('user', 'video', 'typ')
+
+
+class BookCourseMap(models.Model):
+    book = models.ForeignKey(Book , null = True , related_name="book")
+    course = models.ForeignKey(Course , null = True , related_name="course")
+    referenceBook = models.BooleanField(default = False)
+
+class Note(models.Model):
+    title =  models.CharField(choices = TYP_CHOICES , max_length = 50 , null = True)
+    description = models.CharField(max_length = 20000 , null = False)
+    urlSuffix = models.CharField(choices = TYP_CHOICES , max_length = 100 , null = True)
+    image =  models.FileField(upload_to = getChannelDPPath , null = True)
+
+class NotesSection(models.Model):
+    note = models.ForeignKey(Note , null = True , related_name="note")
+    txt = models.CharField(max_length = 2000 , null = True)
+    image = models.FileField(upload_to = getQAttachmentPath , null = True)
+    mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)

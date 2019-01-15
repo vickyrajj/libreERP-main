@@ -343,3 +343,21 @@ class GetLevelsAndBooks(APIView):
             LevelsAndBooks.append(toAppend)
             print toAppend
         return Response({'LevelsAndBooks':LevelsAndBooks} , status = status.HTTP_200_OK)
+
+
+class BookCourseMapViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = BookCourseMapSerializer
+    queryset = BookCourseMap.objects.all()
+
+
+class NoteViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = NoteSerializer
+    queryset = Note.objects.all()
+
+
+class NotesSectionViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = NotesSectionSerializer
+    queryset = NotesSection.objects.all()

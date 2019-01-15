@@ -167,8 +167,6 @@ app.config(function($stateProvider) {
       templateUrl: '/ngTemplates/tutorsDisclaimer.html',
       // controller: 'controller.terms'
     })
-
-
   $stateProvider
     .state('blogs', {
       url: "/blogs",
@@ -201,10 +199,440 @@ app.config(function($stateProvider) {
   $stateProvider
     .state('courseVideo', {
       url: "/courseVideo",
-      templateUrl: '/static/ngTemplates/app.homepage.courseVideo.html',
-      controller: 'controller.courseVideo'
+      templateUrl: '/static/ngTemplates/app.homepage.coursevideo.html',
+      controller: 'controller.coursesVideo'
+    })
+  $stateProvider
+    .state('exam', {
+      url: "/exam",
+      templateUrl: 'static/ngTemplates/app.homepage.exam.html',
+      controller: 'controller.exam'
+    })
+  $stateProvider
+    .state('examresults', {
+      url: "/examresults",
+      templateUrl: 'static/ngTemplates/app.homepage.examresults.html',
+      params: {
+        'attempt': null,
+        'notattempt': null,
+        'reviewed': null,
+        'notview': null,
+        'answerlist': null
+      },
+      controller: 'controller.examresults'
     })
 
+});
+
+
+app.controller('controller.examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
+  console.log($stateParams.answerlist);
+  $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+  $scope.summary = $stateParams;
+  $scope.correctanswers = [0, 1, 2, 2, 1, 1, 2, 3, 3, 2, 1, 0, 0, 2, 2, 1, 3, 2, 1, 0, 0, 2, 2, 1];
+
+
+  $scope.countforcorrect = 0;
+  $scope.countforincorrect = 0;
+  $scope.unattempt = 0;
+  $scope.checkanswers = function(arr1, arr2) {
+    if (arr1 == null || arr2 == null) {
+      return;
+    } else {
+      arr1.forEach(function(item1, idx1) {
+        arr2.forEach(function(item2, idx2) {
+          if (idx1 === idx2) {
+            if (item1 != null && item2 != null && item1 === item2) {
+              $scope.countforcorrect += 1;
+            } else if (item1 != null && item2 != null && item1 != item2) {
+              $scope.countforincorrect += 1;
+            } else {
+              $scope.unattempt += 1;
+            }
+          }
+        })
+      });
+    }
+  }
+  $scope.checkanswers($scope.correctanswers, $scope.summary.answerlist);
+  console.log($scope.countforcorrect, $scope.countforincorrect, $scope.unattempt, 'vvv');
+})
+
+app.controller('controller.exam', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
+  $scope.questionList = [{
+
+      Question: 'Nunc gravida neque nec neque rutrum elementum.',
+      Options: [
+        'vitae',
+        'turpis',
+        'egestas',
+        'elementum'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Fusce euismod nisi vitae magna faucibus dignissim vitae in lectus.',
+      Options: [
+        'blap',
+        'bluri',
+        'bleep',
+        'bramp'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Curabitur bibendum velit in magna scelerisque, ac sodales nisl ornare.',
+      Options: [
+        'Nullam',
+        'mollis',
+        'lacus',
+        'scelerisque'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Vestibulum porta neque vitae turpis egestas elementum.',
+      Options: [
+        'Integer',
+        'sodales',
+        'finibus',
+        'ultricies'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Nam tempus ante pellentesque, molestie mi id, fringilla velit.',
+      Options: [
+        'Suspendisse',
+        'hendrerit',
+        'volutpat',
+        'scelerisque'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Nullam non risus in nisi sollicitudin consequat.',
+      Options: [
+        'Quisque',
+        'porttitor',
+        'tempor',
+        'vulputate'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Etiam ultricies sem ac ipsum venenatis molestie.',
+      Options: [
+        'Etiam',
+        'blandit',
+        'porttitor',
+        'sollicitudin'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Proin vitae sem consequat, dapibus elit sit amet, malesuada odio.',
+      Options: [
+        'Pellentesque',
+        'scelerisque',
+        'elementum',
+        'Nullam'
+      ],
+      savedIndex: null
+    },
+    {
+      Question: 'Etiam ultricies sem ac ipsum venenatis molestie.',
+      Options: [
+        'Etiam',
+        'blandit',
+        'porttitor',
+        'sollicitudin'
+      ],
+      savedIndex: null
+    },
+
+
+  ];
+  $scope.options
+  $scope.count = 0
+
+  $scope.selections = []
+  for (var i = 0; i < $scope.questionList.length; i++) {
+    $scope.selections.push(null)
+  }
+  $scope.selection = function(questionno, answerno) {
+    $scope.selections[questionno] = answerno;
+    $scope.questionList[questionno].savedIndex = answerno;
+    console.log(questionno, answerno);
+    console.log($scope.selections, );
+  }
+  $scope.save = function(val) {
+
+
+    if ($scope.count == $scope.questionList.length - 1) {
+      $scope.count = $scope.count;
+      $scope.questionList[val].status = 'answered';
+    } else {
+      if ($scope.questionList[val].savedIndex != null) {
+        $scope.count = $scope.count + 1;
+        $scope.questionList[val].status = 'answered';
+        if ($scope.questionList[$scope.count].status != 'answered' && $scope.questionList[$scope.count].status != 'reviewed' && $scope.questionList[$scope.count].status != 'attemptreviewed') {
+          $scope.questionList[$scope.count].status = 'notanswered';
+        }
+
+      } else {
+
+        // Flash.create('danger','Please Select One Option')
+        Flash.create('warning', 'Please Mention The Name');
+        return
+      }
+    }
+
+
+  }
+  $scope.review = function(val) {
+    if ($scope.count == $scope.questionList.length - 1) {
+      $scope.count = $scope.count;
+      if ($scope.questionList[val].savedIndex != null) {
+        $scope.questionList[val].status = 'attemptreviewed';
+      } else {
+        $scope.questionList[val].status = 'reviewed';
+      }
+    } else {
+      if ($scope.questionList[val].savedIndex != null) {
+        $scope.count = $scope.count + 1;
+        $scope.questionList[val].status = 'attemptreviewed';
+        $scope.questionList[$scope.count].status = 'notanswered';
+      } else {
+        console.log('nooooooo');
+        $scope.count = $scope.count + 1;
+        $scope.questionList[val].status = 'reviewed';
+        $scope.questionList[$scope.count].status = 'notanswered';
+        // Flash.create('danger','Please Select One Option')
+        Flash.create('warning', 'Please Select The option');
+        return
+      }
+    }
+
+  }
+  $scope.clearselection = function(val) {
+    $scope.selections[val] = null;
+    $scope.questionList[val].status = 'notanswered';
+    $scope.questionList[val].savedIndex = null;
+  }
+  $scope.queclick = function(val) {
+
+    $scope.count = val;
+    if ($scope.questionList[val].status != 'answered' && $scope.questionList[val].status != 'reviewed' && $scope.questionList[val].status != 'attemptreviewed') {
+      $scope.questionList[val].status = 'notanswered'
+    }
+  }
+  $scope.finish = function(answerlist, questions) {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.examsubmit.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        questions: function() {
+          return questions;
+        },
+        answerlist: function() {
+          return answerlist;
+        }
+      },
+
+      controller: function($scope, questions, $uibModalInstance, answerlist) {
+        console.log(answerlist, 'llllll');
+        $scope.questions = questions
+        $scope.attempted = 0;
+        $scope.notAnswered = 0;
+        $scope.reviewed = 0;
+        $scope.attemptedreview = 0;
+        $scope.notview = 0;
+        for (var i = 0; i < $scope.questions.length; i++) {
+          if ($scope.questions[i].status == 'answered') {
+            $scope.attempted += 1;
+          } else if ($scope.questions[i].status == 'notanswered') {
+            $scope.notAnswered += 1;
+          } else if ($scope.questions[i].status == 'reviewed') {
+            $scope.reviewed += 1;
+          } else if ($scope.questions[i].status == 'attemptreviewed') {
+            $scope.attemptedreview += 1;
+          } else {
+            $scope.notview += 1;
+          }
+
+        }
+        $scope.arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+        $scope.submit = function() {
+          $uibModalInstance.close();
+          $scope.params = {
+            'attempt': $scope.attempted + $scope.attemptedreview,
+            'notattempt': $scope.notAnswered,
+            'reviewed': $scope.reviewed,
+            'notview': $scope.notview,
+            'answerlist': answerlist
+          }
+
+          $state.go("examresults", $scope.params);
+        }
+        $scope.closeModal = function() {
+          $uibModalInstance.dismiss();
+        }
+
+      },
+    })
+  }
 });
 
 app.controller('controller.ncert', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
@@ -416,12 +844,14 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.banner = "banner"
         } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.banner = ""
         }
 
 
@@ -444,12 +874,16 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class1 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.banner = "banner"
+
         } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.banner = ""
+
         }
 
 
@@ -496,12 +930,16 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.banner = "banner"
+
         } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.banner = ""
+
         }
 
 
@@ -521,12 +959,16 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class4 = "";
+          $scope.banner = "banner"
+
         } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.banner = ""
+
         }
 
 
@@ -534,10 +976,13 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
     }
   }
   $scope.bgrand = function() {
-
-    return '#' + Math.floor(Math.random() * 16777215).toString(16)
-
-
+    // return '#' + Math.floor(Math.random() * 111111).toString(16)
+    var letters = 'BCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * letters.length)];
+    }
+    return color;
   };
   $scope.arr = [];
 
@@ -616,13 +1061,316 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
     },
   ]
 
+  $scope.forumlist = [{
+      'title': "How to use check activites int the checkbox ",
+      "imgsrc": "/static/images/24tut/author1.png",
+      "secondtext": "Orchestrator Mobile",
+      'replies': '20',
+      "users": [{
+          "name": 'David Johnson',
+          "userimg": "/static/images/24tut/author4.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+        {
+          "name": 'kumar',
+          "userimg": "/static/images/24tut/author3.jpg",
+          'comment': 'This is really cool.We’ll have to do a bit of work to push the app data down the vpn on our corporate phones, as our orchestrator isn’t internet accessible outside our network. Excited to try it out once I get someone to help me with that,'
+        },
+        {
+          "name": 'Yash',
+          "userimg": "/static/images/24tut/author2.jpeg",
+          'comment': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        },
+        {
+          "name": 'Mir',
+          "userimg": "/static/images/24tut/author5.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+      ]
+    },
+    {
+      'title': "We need a new colleague!",
+      "imgsrc": "/static/images/24tut/vip.png",
+      "secondtext": "UiPath Jobs",
+      'replies': '16',
+      "users": [{
+          "name": 'David Johnson',
+          "userimg": "/static/images/24tut/author4.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+        {
+          "name": 'kumar',
+          "userimg": "/static/images/24tut/author3.jpg",
+          'comment': 'This is really cool.We’ll have to do a bit of work to push the app data down the vpn on our corporate phones, as our orchestrator isn’t internet accessible outside our network. Excited to try it out once I get someone to help me with that,'
+        },
+
+      ]
+    },
+    {
+      'title': "Open Source Activity packs for Community",
+      "imgsrc": "/static/images/24tut/facebook.png",
+      "secondtext": "Releases",
+      'replies': '15',
+      "users": [
+
+        {
+          "name": 'Yash',
+          "userimg": "/static/images/24tut/author2.jpeg",
+          'comment': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        },
+        {
+          "name": 'Mir',
+          "userimg": "/static/images/24tut/author5.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+      ]
+    },
+    {
+      'title': "How to ask a good question?",
+      "imgsrc": "/static/images/24tut/istudy.png",
+      "secondtext": "FAQ and Tutorials forum faq",
+      'replies': '10',
+      "users": [
+
+        {
+          "name": 'Yash',
+          "userimg": "/static/images/24tut/author2.jpeg",
+          'comment': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        },
+      ],
+    },
+  ]
+  $scope.count = null;
+  $scope.openedforum = false;
+  $scope.forumview = function(val) {
+    $scope.count = val;
+    $scope.openedforum = !$scope.openedforum;
+  }
+
+
 })
 
 app.controller('controller.contact', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
   $scope.display
 })
 
-app.controller('controller.disclaimer', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {})
+app.controller('controller.coursesVideo', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+
+  $scope.playlist = [{
+      'title': 'Pair of Linear Equations in Two Variables',
+      'img': '/static/images/24tut/math1.jpg',
+      'duration': '14:07',
+      'author': 'HC Verma',
+    }, {
+      'title': 'Coordinate Geometry',
+      'img': '/static/images/24tut/math2.jpg',
+      'duration': '12:06',
+      'author': 'Jagdish Kumar',
+    }, {
+      'title': 'Arithmetic Progressions',
+      'img': '/static/images/24tut/maths3.jpg',
+      'duration': '15:00',
+      'author': 'Hitesh rama',
+    }, {
+      'title': 'Surface Areas and Volumes',
+      'img': '/static/images/24tut/maths4.jpg',
+      'duration': '16:00',
+      'author': 'Tom Ferry',
+    }, {
+      'title': 'Some Applications of Trigonometry',
+      'img': '/static/images/24tut/maths5.jpg',
+      'duration': '10:00',
+      'author': 'Hitesh C',
+    },
+    {
+      'title': 'Some Applications of Trigonometry',
+      'img': '/static/images/24tut/maths5.jpg',
+      'duration': '10:00',
+      'author': 'Hitesh C',
+    }, {
+      'title': 'Some Applications of Trigonometry',
+      'img': '/static/images/24tut/maths5.jpg',
+      'duration': '10:00',
+      'author': 'Hitesh C',
+    }, {
+      'title': 'Some Applications of Trigonometry',
+      'img': '/static/images/24tut/maths5.jpg',
+      'duration': '10:00',
+      'author': 'Hitesh C',
+    },
+    {
+      'title': 'Some Applications of Trigonometry',
+      'img': '/static/images/24tut/maths5.jpg',
+      'duration': '10:00',
+      'author': 'Hitesh C',
+    }, {
+      'title': 'Some Applications of Trigonometry',
+      'img': '/static/images/24tut/maths5.jpg',
+      'duration': '10:00',
+      'author': 'Hitesh C',
+    },
+  ]
+
+  $scope.comments = [{
+      'title': "How to use check activites int the checkbox ",
+      "imgsrc": "/static/images/24tut/author1.png",
+      "secondtext": "Orchestrator Mobile",
+      'replies': '20',
+      "users": [{
+          "name": 'David Johnson',
+          "userimg": "/static/images/24tut/author4.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+        {
+          "name": 'kumar',
+          "userimg": "/static/images/24tut/author3.jpg",
+          'comment': 'This is really cool.We’ll have to do a bit of work to push the app data down the vpn on our corporate phones, as our orchestrator isn’t internet accessible outside our network. Excited to try it out once I get someone to help me with that,'
+        },
+        {
+          "name": 'Yash',
+          "userimg": "/static/images/24tut/author2.jpeg",
+          'comment': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        },
+        {
+          "name": 'Mir',
+          "userimg": "/static/images/24tut/author5.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+      ]
+    },
+    {
+      'title': "We need a new colleague!",
+      "imgsrc": "/static/images/24tut/vip.png",
+      "secondtext": "UiPath Jobs",
+      'replies': '16',
+      "users": [{
+          "name": 'David Johnson',
+          "userimg": "/static/images/24tut/author4.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+        {
+          "name": 'kumar',
+          "userimg": "/static/images/24tut/author3.jpg",
+          'comment': 'This is really cool.We’ll have to do a bit of work to push the app data down the vpn on our corporate phones, as our orchestrator isn’t internet accessible outside our network. Excited to try it out once I get someone to help me with that,'
+        },
+
+      ]
+    },
+    {
+      'title': "Open Source Activity packs for Community",
+      "imgsrc": "/static/images/24tut/facebook.png",
+      "secondtext": "Releases",
+      'replies': '15',
+      "users": [
+
+        {
+          "name": 'Yash',
+          "userimg": "/static/images/24tut/author2.jpeg",
+          'comment': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        },
+        {
+          "name": 'Mir',
+          "userimg": "/static/images/24tut/author5.jpeg",
+          'comment': 'Monitoring will be so easy by this cool app'
+        },
+      ]
+    },
+    {
+      'title': "How to ask a good question?",
+      "imgsrc": "/static/images/24tut/istudy.png",
+      "secondtext": "FAQ and Tutorials forum faq",
+      'replies': '10',
+      "users": [
+
+        {
+          "name": 'Yash',
+          "userimg": "/static/images/24tut/author2.jpeg",
+          'comment': 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        },
+      ],
+    },
+  ]
+
+  // $scope.openedcomment = false;
+  for (var i = 0; i < $scope.comments.length; i++) {
+    $scope.comments[i].status = false;
+    $scope.comments[i].c = false;
+    for (var j = 0; j < $scope.comments[i].length; j++) {
+      $scope.comments[i].users[j].status = false;
+    }
+  }
+  $scope.commentview = function(val) {
+    $scope.comments
+    $scope.comments[val].status = !$scope.comments[val].status;
+  }
+  // $scope.replyToParent = function(val) {
+  //   for (var j = 0; j < $scope.comments[pidx].length; j++) {
+  //     $scope.comments[pidx].users[j].status = false;
+  //   }
+  //   $scope.comments[pidx].users[val].status = true;
+  // }
+
+  // $scope.noCmnt = function(val, pidx) {
+  //   if ($scope.comments[pidx].users[val].status == true) {
+  //     $scope.comments[pidx].users[val].status = false;
+  //   }
+  // }
+  $scope.replyToChild = function(val, pidx) {
+
+    if (pidx == null) {
+      $scope.comments[val].c = true;
+    } else {
+      for (var j = 0; j < $scope.comments[pidx].length; j++) {
+        $scope.comments[pidx].users[j].status = false;
+      }
+      $scope.comments[pidx].users[val].status = true;
+    }
+
+
+  }
+
+
+
+  $scope.noCmnt = function(val, pidx) {
+    if (pidx == null) {
+      $scope.comments[val].c = false;
+    }
+    if ($scope.comments[pidx].users[val].status == true) {
+      $scope.comments[pidx].users[val].status = false;
+    }
+  }
+
+  $scope.pushcomment = function(dd) {
+    alert('you commented');
+  }
+
+  $scope.hidden = false;
+  $scope.show = function(id) {
+    if ($scope.hidden == true) {
+      console.log('sfbdkjsbdf');
+      $scope.hidden = false;
+    } else {
+      $scope.hidden = true;
+    }
+  }
+
+
+  $(document)
+    .one('focus.autoExpand', 'textarea.autoExpand', function() {
+      var savedValue = this.value;
+      this.value = '';
+      this.baseScrollHeight = this.scrollHeight;
+      this.value = savedValue;
+    })
+    .on('input.autoExpand', 'textarea.autoExpand', function() {
+      var minRows = this.getAttribute('data-min-rows') | 0,
+        rows;
+      this.rows = minRows;
+      rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 16);
+      this.rows = minRows + rows;
+    });
+
+})
 
 app.controller('controller.testimonials', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
 

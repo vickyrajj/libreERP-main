@@ -1,0 +1,58 @@
+<div class="modal-body exammodal" >
+  <div>
+    <div class="col-md-6 col-xs-6 text-center">
+      <table>
+        <tr>
+          <td>
+            <div class="answered"><span class="numberalign1"><b>{{arr.includes(attempted)?'0'+attempted:attempted}}</b></span></div>
+          </td>
+          <td style="padding: 2em 0 0 1em;"><span class="aligntotext"> Attempted</span> </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-6 col-xs-6 text-center">
+      <table>
+        <tr>
+          <td>
+            <div class="notanswered"><span class="numberalign1"><b>{{arr.includes(notAnswered)?'0'+notAnswered:notAnswered}}</b></span></div>
+          </td>
+          <td style="padding: 2em 0 0 1em;"><span class="aligntotext">Not Attempted</span> </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-6 col-xs-6 text-center">
+      <table>
+        <tr>
+          <td>
+            <div class="notview"><span class="numberalign1"><b>{{arr.includes(notview)?'0'+notview:notview}}</b></span></div>
+          </td>
+          <td style="padding: 0.5em 0 0 0.5em;"><span class="aligntotext1">Not Viewed yet</span> </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-6 col-xs-6 text-center">
+      <table>
+        <tr>
+          <td>
+            <div class="reviewed"><span class="numberalign1"><b>{{arr.includes(reviewed)?'0'+reviewed:reviewed}}</b></span></div>
+          </td>
+          <td style="padding: 0.5em 0 0 0.5em;"><span class="aligntotext1">To be Reviewed</span> </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-12 col-xs-12 text-center" style="margin-top:-1em;">
+      <table>
+        <tr>
+          <td>
+            <div class="attemptreviewed"><span class="numberalign1"><b>{{arr.includes(attemptedreview)?'0'+attemptedreview:attemptedreview}}</b></span></div>
+          </td>
+          <td style="padding: 0.5em 0 0 0.5em;"><span class="aligntotext1">Attempted and Marked for Review</span> </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="text-center" style="margin-top:18em;" >
+    <button class="savebtn" style="width:20%;" ng-click="submit()">Submit</button>
+    <button class="btnaction" style="width:20%;" ng-click="closeModal()">Cancel</button>
+  </div>
+</div>

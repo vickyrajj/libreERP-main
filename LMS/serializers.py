@@ -272,3 +272,20 @@ class ChannelSerializer(serializers.ModelSerializer):
         c.user = self.context['request'].user
         c.save()
         return c
+
+
+class BookCourseMapSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookCourseMap
+        fields = ('pk' , 'book' , 'course', 'referenceBook' )
+
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ('pk' , 'title' , 'description', 'urlSuffix', 'image' )
+
+class NotesSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NotesSection
+        fields = ('pk' , 'note' , 'txt', 'image', 'mode' )

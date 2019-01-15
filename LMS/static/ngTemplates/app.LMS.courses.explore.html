@@ -75,7 +75,7 @@
     </div>
     <br>
     <div class="row">
-      <div class="col-md-3 col-sm-6 col-xs-12" ng-repeat = "enrollment in course.enrollments">
+      <div class="col-md-3 col-sm-6 col-xs-12" ng-repeat="enrollment in course.enrollments">
         <span class="info-box-icon" style="background-color:white;">
           <div class="row">
             <img style="width: 50%;" class="img" ng-src="{{enrollment.user | getDP}}">
@@ -89,13 +89,22 @@
 
     <br><br>
 
-    <div class="row" >
+    <div class="row">
       <div class="col-md-9">
-        <user-field url="/api/HR/userSearch/" user="enrollmentForm.user" label = "Add student" ></user-field>
+        <user-field url="/api/HR/userSearch/" user="enrollmentForm.user" label="Add student"></user-field>
       </div>
       <div class="col-md-3" style="padding-top:25px;">
         <button type="button" class="btn btn-primary" ng-click="addEnrollment()">
           Add <i class="fa fa-plus"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-3" style="padding-top:25px;">
+        <button type="button" class="btn btn-primary" ng-click="addbook()">
+          Add Book <i class="fa fa-plus fa-fw"></i>
         </button>
       </div>
 
@@ -130,6 +139,7 @@
       <div class="container-fluid" ng-if="activeTab == 3">
         <center><button type="button" class="btn btn-primary btn-md" ng-click="open()">ADD <i class="fa fa-plus"></i></button></center>
       </div>
+
       <div class="container-fluid">
         <div class="row" style="padding:20px;" ng-repeat="sm in course.studyMaterials">
           <div class="card" style="padding:10px;">
@@ -159,8 +169,10 @@
       </div>
     </div>
 
-
+    <div class="row">
+      <div class="container-fluid" ng-if="activeTab == 5">
+        <center><button type="button" class="btn btn-primary btn-md" ng-click="open()">Add Notes <i class="fa fa-plus"></i></button></center>
+      </div>
+    </div>
   </div>
-
-
 </div>

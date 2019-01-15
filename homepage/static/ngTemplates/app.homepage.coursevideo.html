@@ -1,0 +1,130 @@
+<div class="container-fluid mob"style="margin-top:50px">
+  <div class="col-md-9 mob">
+    <video controls="true" width="100%">
+      <source src="/static/images/24tut/video/24tutors.mp4" type="video/mp4" />
+    </video>
+    <div class="container-fluid video_title">
+      <div class="col-md-6 no_padding text-muted col-xs-12">
+        <h2>Maths Concept on Integrals</h2>
+        <h6>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut </h6>
+      </div>
+      <div class="col-md-6 text-muted">
+        <div class="col-md-12 col-xs-6">
+          <h5> <b>Martin Riggs</b> </h5>
+          <h5>24-09-2018</h5>
+        </div>
+        <div class="col-md-12 col-xs-6">
+          <span><i class="fa fa-share-square-o " aria-hidden="true" style="padding-right:7px;"></i>Share</span> &emsp;
+          <span><i class="fa fa-bookmark" aria-hidden="true"></i></span>&emsp;
+          <span class="dropdown">
+            <span class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></span>
+            <ul class="dropdown-menu">
+              <li><a href="#"></a>Save to Playlist</li>
+              <li><a href="#"></a>Not Interested</li>
+            </ul>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid" style="border-top:1px solid #bdbdbd;">
+      <div class="col-md-12 col-xs-12">
+        <h4><i class="fa fa-commenting" aria-hidden="true" style="padding-right:7px;"></i><span>4</span> <b>Comments</b> </h4>
+        <textarea class='autoExpand comment_area' rows='1' data-min-rows='0' placeholder='Add  a comment Here..' ng-focus="show()"></textarea>
+        <div class="pull-right" style="padding-top:10px;" ng-show="hidden">
+          <button type="button" class="btn btn-default" ng-click="show()">Cancel</button>
+          <button type="button" class="btn btn-primary" ng-click="pushcomment()">Comment</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid no_padding">
+      <div ng-repeat="a in comments">
+        <div class="container-fluid comments_min_padding" style="border-bottom: 1px solid #dfdcdc;">
+          <div class="col-md-1 col-xs-2 md_width">
+            <img src="{{a.imgsrc}}" style="width:45px;border-radius:50%;height:45px;" />
+          </div>
+          <div class="col-md-10 col-xs-10">
+            <div class="">
+              <i class="fa fa-thumb-tack"></i>
+              <span style="font-size:17px;color: #3C4556;cursor:pointer;">{{a.title}}</span>
+            </div>
+            <div class="" style="font-size: 1em;">
+              <span class="" style="font-size:15px;color: #3C4556;">{{a.secondtext}}</span>
+            </div>
+            <div class="col-md-12 no_padding">
+              <div class="container-fluid text-muted">
+                <span><i class="fa fa-thumbs-up fa-fw" aria-hidden="true"></i>20</span><span style="padding-left:10px;"> <i class="fa fa-thumbs-down fa-fw" aria-hidden="true"></i>2</span>
+                <span style="padding-left:10px;cursor:pointer;" ng-click="replyToChild($index,null)"><i class="fa fa-reply" aria-hidden="true"></i> Reply</span>
+                <div class="container-fluid" style="" ng-show="a.c==true">
+                <textarea class='autoExpand comment_area' rows='1' data-min-rows='0' placeholder='Add  a comment Here..'></textarea>
+                <div class="pull-right" style="padding-top:10px;">
+                  <button type="button" class="btn btn-default" ng-click="noCmnt($index,null)">Cancel</button>
+                  <button type="button" class="btn btn-primary" ng-click="pushcomment()" ng-model="form.comment">Reply</button>
+                </div>
+              </div>
+                <div class="row" style="padding-top:10px;">
+                  <a style="cursor:pointer;" ng-click="commentview($index)"> <b>{{comments[$index].status==true?'Hide':'view'}} reply<i class="fa fa-caret-{{comments[$index].status==true?'up':'down'}}" aria-hidden="true"></i></b> </a>
+                  &emsp;<span style="text-align: right;" class="hidden-md hidden-lg">Replies:{{a.users.length}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="color: #949fb4;" class="hidden-xs hidden-sm">
+            <span style="text-align: right;">Replies:{{a.users.length}}</span>
+          </div>
+        </div>
+
+        <div class="col-md-12 subcmnt" ng-show="comments[$index].status==true">
+          <div ng-repeat="b in a.users" class="container-fluid" style="padding:0.5em;">
+            <div class="col-md-1 col-xs-2 no_padding md_width">
+                <img src="{{b.userimg}}" style="width:40px;border-radius:50%;height:40px;" />
+            </div>
+            <div class="col-md-11 no_padding col-xs-10">
+              <span> <strong>{{b.name}}</strong> </span>
+              <div>
+                <span style="font-size:14px;">{{b.comment}}</span>
+              </div>
+              <div class="text-muted">
+                <span><i class="fa fa-thumbs-up fa-fw" aria-hidden="true"></i>4</span><span style="padding-left:10px;"> <i class="fa fa-thumbs-down fa-fw" aria-hidden="true"></i>0</span>
+                <span style="margin-left:10px;cursor:pointer;" ng-click="replyToChild($index,$parent.$index)"><i class="fa fa-reply" aria-hidden="true"></i> Reply</span>
+                <div class="container-fluid" style="" ng-show="a.users[$index].status==true">
+                  <textarea class='autoExpand comment_area' rows='1' data-min-rows='0' placeholder='Add  a comment Here..'></textarea>
+                  <div class="pull-right" style="padding-top:10px;">
+                    <button type="button" class="btn btn-default" ng-click="noCmnt($index,$parent.$index)">Cancel</button>
+                    <button type="button" class="btn btn-primary" ng-click="pushcomment()" ng-model="form.comment">Reply</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </div>
+
+  <div class="col-md-3" style="margin-top:15px;">
+    <div class="container-fluid pyl" ng-repeat="pl in playlist">
+      <div class="col-md-6 col-xs-4 mob">
+        <img src="{{pl.img}}">
+        <div class="pylover"></div>
+      </div>
+      <div class="col-md-5 col-xs-7 mob">
+        <div class="container-fluid" style="padding-top:8px;">
+          <span> <strong>{{pl.title}}</strong> </span>
+          <h5 class="text-muted">{{pl.author}}</h5>
+          <h6 class="text-muted"> <i class="fa fa-clock-o fa-fw" aria-hidden="true"></i><strong> {{pl.duration}}</strong> </h6>
+        </div>
+      </div>
+      <div class="col-md-1 col-xs-1 mob">
+        <div class="" style="padding-top:8px;">
+          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
