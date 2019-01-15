@@ -375,8 +375,6 @@ app.directive('reviewInfo', function() {
         $scope.myChatThreadData =response.data[0]
       });
 
-
-
       $scope.audio_chat={
         agent:null,
         visitor:null

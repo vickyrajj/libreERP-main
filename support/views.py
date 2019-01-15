@@ -68,8 +68,14 @@ class SupportChatViewSet(viewsets.ModelViewSet):
     filter_fields = ['uid','user']
     exclude_fields = ['id']
     def get_queryset(self):
+        supChatObj = SupportChat.objects.all()
         if 'user__isnull' in self.request.GET:
             return SupportChat.objects.filter(user__isnull=True)
+        if 'uid' in self.request.GET:
+            return supChatObj.filter(uid = self.request.GET['uid'])
+        if 'date' in self.request.GET:
+            date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d').date()
+            return supChatObj.filter(created__startswith = date)
         else:
             return SupportChat.objects.all()
 

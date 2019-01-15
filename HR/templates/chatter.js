@@ -866,9 +866,9 @@ function createChatDiv() {
                     '</div>'+
                     '<div id="videoSection" class="video_section">'+
                     '</div>'+
+                    '<p id="TypingBox" class="typingBox">Typing....</p>'+
                     '<div id="chatBox_content" class="chatBox_content">'+
                         '<div id="messageBox" class="content_section">'+
-                            '<p id="TypingBox" class="typingBox typingBox-right">Typing....</p>'+
                         '</div>'+
                     '</div>'+
                     '<div id="chatBox_footer" class="chatBox_footer">'+
@@ -1671,7 +1671,7 @@ function createChatDiv() {
           	}\
           }\
           .typingBox{\
-            display:none;position:absolute;bottom:10px;font-size:16px;padding:5px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;left:0px;\
+            display:none;z-index:11111111111111111111111111111;position:absolute;bottom:81px;font-size:15px;padding:5px;background-color:#f6f6f6;color:#000;border-radius: 0px 20px 20px 20px;left:0px;\
           }\
             @media only screen and (max-width: 600px) {\
               .chatdiv-right {\
@@ -2776,7 +2776,7 @@ function addExitConfirmation() {
           res.forEach((r)=>{
             if (r.match(regex)) {
               str=str.replace(r,'<a href="'+r+'" target="_blank">'+r+'</a>')
-                pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
+                pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;color:'+fontAndIconColor+'">'+ str +'</p>'
             }else{
                  pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
             }

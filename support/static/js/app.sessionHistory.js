@@ -479,7 +479,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
    $scope.fetchChatsForUID= function(data){
      $http({
        method: 'GET',
-       url: '/api/support/reviewHomeChats/?uid='+data.uid,
+      url: '/api/support/supportChat/?uid='+data.uid,
      }).
      then(function(response) {
        console.log('response data' , response.data);
@@ -492,7 +492,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
    $scope.fetchChatsForUIDArch= function(data){
      $http({
        method: 'GET',
-       url: '/api/support/reviewHomeChats/?uid='+data.uid,
+       url: '/api/support/supportChat/?uid='+data.uid,
      }).
      then(function(response) {
        console.log('response data' ,response.data );

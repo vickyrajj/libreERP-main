@@ -70,7 +70,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
    $scope.fetchChatsForUID= function(data){
      $http({
        method: 'GET',
-       url: '/api/support/reviewHomeChats/?uid='+data.uid,
+       url: '/api/support/supportChat/?uid='+data.uid,
      }).
      then(function(response) {
        console.log('response data' , response.data);

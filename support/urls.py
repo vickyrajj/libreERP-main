@@ -22,7 +22,7 @@ router.register(r'cannedResponses' , CannedResponsesViewSet , base_name = 'canne
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'reviewHomeChats/$' , ReviewHomeChatsAPIView.as_view() ),
+    # url(r'reviewHomeChats/$' , ReviewHomeChatsAPIView.as_view() ),
     url(r'reviewHomeCal/$' , ReviewFilterCalAPIView2.as_view() ),
     url(r'script/chatter/$' , GetChatterScriptAPI.as_view()),
     url(r'getMyUser/$' , GetMyUser.as_view()),

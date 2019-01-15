@@ -102,20 +102,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     }
 
 
-    // setTimeout(function() {
-    //   sendBackHeartBeat();
-    // }, 5000);
-
-
-
-
-
-
-
-
-
-
-
 
   Tinycon.setOptions({
   	width: 7,
