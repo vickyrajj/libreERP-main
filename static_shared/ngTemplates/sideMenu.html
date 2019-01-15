@@ -44,7 +44,7 @@
 
   <div class="row">
     <div class="container-fluid">
-      <ul class="nav nav-sidebar" style="width:100%;">
+      <ul class="nav nav-sidebar" style="width:102%;">
         <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
           <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:20rem;border-radius:0 3rem 3rem 0' : ''}}">
             <div ng-if="sideMenuVisibility" align="left">
