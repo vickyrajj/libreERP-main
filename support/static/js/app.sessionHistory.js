@@ -377,7 +377,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   $scope.selectedSortOption={
     value:'Created'
   }
-  $scope.pageOptions=['12','20','30']
+  $scope.pageOptions=['11','20','30']
   $scope.pageOptionsSelected={
     value:$scope.pageOptions[0]
   }

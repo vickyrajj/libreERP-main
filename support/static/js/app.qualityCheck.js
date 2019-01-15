@@ -377,7 +377,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
   $scope.selectedSortOption={
     value:'Created'
   }
-  $scope.pageOptions=['12','20','30']
+  $scope.pageOptions=['11','20','30']
   $scope.pageOptionsSelected={
     value:$scope.pageOptions[0]
   }

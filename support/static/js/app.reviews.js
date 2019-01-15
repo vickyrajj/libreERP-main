@@ -22,7 +22,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   $scope.currentPage = {
     page:1
   }
-  $scope.pageOptions=['12','20','30']
+  $scope.pageOptions=['11','20','30']
   $scope.pageOptionsSelected={
     value:$scope.pageOptions[0]
   }

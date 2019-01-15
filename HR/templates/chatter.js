@@ -665,37 +665,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
 
       if (args[0]=='T') {
-
-        document.getElementById('TypingBox').style.display="block"
-
-        // console.log('typingggggggggggggggggggggg');
-        onlineStatus.innerHTML = 'Typing...';
-        // isTyping.style.display = "";
-        // console.log(message,'message');
-        // div2.innerHTML = messageDiv('...')
-
+        document.getElementById('TypingBox').style.display="block";
+        // onlineStatus.innerHTML = 'Typing...';
         scroll();
         setTimeout(function(){
-            document.getElementById('TypingBox').style.display="none"
-
-          // isTyping.style.display = "none";
-          // messageBox.removeChild(div2);
-          // list.removeChild(list.childNodes[0]);
-        onlineStatus.innerHTML = 'Online';
+          document.getElementById('TypingBox').style.display="none";
+        // onlineStatus.innerHTML = 'Online';
       }, 5000);
         return
       }
 
       if (args[0]=="M") {
-        // console.log('MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM');
-          // notification.play();
           message = args[1]
-         // message = {msg:args[1].msg , sentByMe:false , created: args[1].created }
-         // chat.messages.push(args[1]);
          if (!chatOpen) {
            unreadMsgCount+=1;
-           // unreadMsg.style.display = "";
-           // unreadMsg.innerHTML =   '<span style="color:#286EFA;" >'+unreadMsgCount+'</span>'
          }
 
       // agentName.innerHTML = args[2];
@@ -1934,7 +1917,7 @@ function createChatDiv() {
             }\
             .confirmationBtn{\
               background-color: "+supportBubbleColor+";\
-              padding: 10px 15px;\
+              padding: 5px 10px;\
               border: 1px solid #fff;\
               width: 78px;\
               margin: 0px 10px;\

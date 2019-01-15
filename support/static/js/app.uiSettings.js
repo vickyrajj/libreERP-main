@@ -117,9 +117,6 @@ app.controller("settings.customerPrescripts", function($scope, $state,$permissio
       })
   }
 
-
-
-
 })
 
 app.controller("businessManagement.customerSettings", function($scope, $state, $http, $rootScope, Flash) {
