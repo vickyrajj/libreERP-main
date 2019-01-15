@@ -25,7 +25,6 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
   }
 
 
-
   $scope.validity = {firstName : null , lastName : null, email : null ,mobile : null,password : null , rePassword: null };
 
   $scope.form = {firstName :null ,lastName : null , email : null ,mobile : null , password : null, rePassword : null , emailOTP : null , mobileOTP: null , token: null , reg : null , agree : false, phoneCode:''};
@@ -35,10 +34,50 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
   $scope.usernameExist = false;
 
   $scope.getOTP = function() {
-    console.log($scope.form);
+
+    console.log(selected_dial_code);
+
+    function replaceAll(str , search) {
+      if (search =='+') {
+        str = str.replace(/\+/g, '');
+      }
+      if (search =='-') {
+        str = str.replace(/\-/g, '');
+      }
+      if (search =='(') {
+        str = str.replace(/\(/g, '');
+      }
+      if (search ==')') {
+        str = str.replace(/\)/g, '');
+      }
+      if (search ==' ') {
+        str = str.replace(/ /g, '');
+      }
+      return str
+    }
+
+    if ($scope.isStoreGlobal) {
+      $scope.phNumberStr = $('#phNumber').val()
+      $scope.phNumberStr = replaceAll($scope.phNumberStr, ' ')
+      $scope.phNumberStr = replaceAll($scope.phNumberStr, '-')
+      $scope.phNumberStr = replaceAll($scope.phNumberStr, '+')
+      $scope.phNumberStr = replaceAll($scope.phNumberStr, '(')
+      $scope.phNumberStr = replaceAll($scope.phNumberStr, ')')
+
+      for (var i = 0; i < selected_dial_code.length; i++) {
+        if (selected_dial_code.charAt(i) == $scope.phNumberStr.charAt(i)) {
+          $scope.appendDialCode = false;
+        }  else {
+          $scope.appendDialCode = true;
+          break;
+        }
+      }
+    }
+
     $scope.validityChecked = true;
     console.log($scope.form);
-    if (!$scope.form.agree || $scope.form.firstName == undefined || $scope.form.firstName == null || $scope.form.firstName.length ==0 || $scope.form.lastName == undefined || $scope.form.lastName == null || $scope.form.lastName.length ==0 || $scope.form.email == undefined || $scope.form.email == null || $scope.form.email.length ==0 || $scope.form.mobile == undefined || $scope.form.mobile == null || $scope.form.mobile.length ==0 || $scope.form.password == undefined || $scope.form.password == null || $scope.form.password.length <3 || $scope.form.email.indexOf('@') == -1) {
+
+    if (!$scope.form.agree || $scope.form.firstName == undefined || $scope.form.firstName == null || $scope.form.firstName.length ==0 || $scope.form.lastName == undefined || $scope.form.lastName == null || $scope.form.lastName.length ==0 || $scope.form.email == undefined || $scope.form.email == null || $scope.form.email.length ==0 || $scope.form.password == undefined || $scope.form.password == null || $scope.form.password.length <3 || $scope.form.email.indexOf('@') == -1) {
       console.log("form not valid , returning");
       return;
     }
@@ -48,10 +87,30 @@ app.controller('registration' , function($scope , $state , $http , $timeout , $i
       return;
     }
 
+    if ($scope.isStoreGlobal) {
+      if ($scope.appendDialCode) {
+          var mobileNumber = selected_dial_code + $scope.phNumberStr
+      }else {
+          var mobileNumber = $scope.phNumberStr
+      }
+
+      if ($scope.phNumberStr == undefined || $scope.phNumberStr.length==0 || $scope.phNumberStr ==null) {
+        return;
+      }
+    }else {
+      var mobileNumber = $scope.form.mobile
+      if ($scope.form.mobile == undefined || $scope.form.mobile.length==0 || $scope.form.mobile ==null) {
+        return;
+      }
+    }
+
+
+
     var toSend= {
-      mobile : $scope.form.mobile,
+      mobile : mobileNumber,
       email : $scope.form.email,
     }
+    console.log(toSend);
     // if ($scope.isStoreGlobal) {
     //   toSend.mobileWithCode = $scope.form.mobile
     // }

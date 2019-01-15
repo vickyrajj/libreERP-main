@@ -3,6 +3,7 @@ International Telephone Input v6.0.6
 https://github.com/Bluefieldscom/intl-tel-input.git
 */
 // wrap in UMD - see https://github.com/umdjs/umd/blob/master/jqueryPlugin.js
+var selected_dial_code;
 (function(factory) {
     if (typeof define === "function" && define.amd) {
         define([ "jquery" ], function($) {
@@ -736,6 +737,8 @@ https://github.com/Bluefieldscom/intl-tel-input.git
         // Note: preventConversion will be false (i.e. we allow conversion) on init and when dev calls public method setNumber
         _updateVal: function(val, format, addSuffix, preventConversion, isAllowedKey) {
             var formatted;
+            // console.log(this.selectedCountryData.dialCode);
+            selected_dial_code = this.selectedCountryData.dialCode
             if (this.options.autoFormat && window.intlTelInputUtils && this.selectedCountryData) {
                 if (typeof format == "number" && intlTelInputUtils.isValidNumber(val, this.selectedCountryData.iso2)) {
                     // if user specified a format, and it's a valid number, then format it accordingly

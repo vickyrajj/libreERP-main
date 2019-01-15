@@ -2287,91 +2287,92 @@ class BulklistingCreationAPIView(APIView):
 from paypal.standard.forms import PayPalPaymentsForm
 def paypal_return_view(request):
     orderObj = Order.objects.filter(user = request.user).last()
-    orderObj.paidAmount = orderObj.totalAmount
-    orderObj.approved = True
-    orderObj.save()
-
-    # send the email here
-    value = []
-    totalPrice = 0
-    promoAmount = 0
-    total=0
-    price = 0
-    grandTotal = 0
-    promoObj = Promocode.objects.all()
-    for p in promoObj:
-        if str(p.name)==str(orderObj.promoCode):
-            promoAmount = p.discount
-    print promoAmount
-    a = '#'
-    docID = str(a) + str(orderObj.pk)
-    for i in orderObj.orderQtyMap.all():
-        if i.prodSku == i.product.product.serialNo:
-            price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
-            price=round(price, 2)
-            totalPrice=i.qty*price
-            totalPrice=round(totalPrice, 2)
-            total+=totalPrice
-            total=round(total, 2)
-            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
-        else:
-            prodData = ProductVerient.objects.get(sku = i.prodSku)
-            price = prodData.discountedPrice
-            price=round(price, 2)
-            totalPrice=i.qty*price
-            totalPrice=round(totalPrice, 2)
-            total+=totalPrice
-            total=round(total, 2)
-            value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
-    grandTotal=total-(promoAmount * total)/100
-    grandTotal=round(grandTotal, 2)
-    request.user.cartItems.all().delete()
-    try:
-        isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
-    except:
-        isStoreGlobal = False
-    try:
-        companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
-        cleanr = re.compile('<.*?>')
-        companyAddress = re.sub(cleanr, '', companyAddress)
-    except:
-        companyAddress = ''
-
-    try:
-        gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
-    except:
-        gstValue = ''
-
-    if orderObj.user.email:
-        ctx = {
-            'heading' : "Invoice Details",
-            'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
-            'linkUrl': globalSettings.BRAND_NAME,
-            'sendersAddress' : globalSettings.SEO_TITLE,
-            # 'sendersPhone' : '122004',
-            'grandTotal':grandTotal,
-            'total': total,
-            'value':value,
-            'docID':docID,
-            'data':orderObj,
-            'promoAmount':promoAmount,
-            'linkedinUrl' : lkLink,
-            'fbUrl' : fbLink,
-            'twitterUrl' : twtLink,
-            'isStoreGlobal':isStoreGlobal,
-            'companyAddress':companyAddress,
-            'gstValue':gstValue
-        }
-        print ctx
-        contactData = []
-        email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
-        email_subject = "Order Details"
-        email_to = []
-        email_to.append(str(orderObj.user.email))
-        email_cc = []
-        email_bcc = []
-        send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
-    return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
+    return updateAndProcessOrder(orderObj.id , orderObj.totalAmount)
+    # orderObj.paidAmount = orderObj.totalAmount
+    # orderObj.approved = True
+    # orderObj.save()
+    #
+    # # send the email here
+    # value = []
+    # totalPrice = 0
+    # promoAmount = 0
+    # total=0
+    # price = 0
+    # grandTotal = 0
+    # promoObj = Promocode.objects.all()
+    # for p in promoObj:
+    #     if str(p.name)==str(orderObj.promoCode):
+    #         promoAmount = p.discount
+    # print promoAmount
+    # a = '#'
+    # docID = str(a) + str(orderObj.pk)
+    # for i in orderObj.orderQtyMap.all():
+    #     if i.prodSku == i.product.product.serialNo:
+    #         price = i.product.product.price - (i.product.product.discount * i.product.product.price)/100
+    #         price=round(price, 2)
+    #         totalPrice=i.qty*price
+    #         totalPrice=round(totalPrice, 2)
+    #         total+=totalPrice
+    #         total=round(total, 2)
+    #         value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+    #     else:
+    #         prodData = ProductVerient.objects.get(sku = i.prodSku)
+    #         price = prodData.discountedPrice
+    #         price=round(price, 2)
+    #         totalPrice=i.qty*price
+    #         totalPrice=round(totalPrice, 2)
+    #         total+=totalPrice
+    #         total=round(total, 2)
+    #         value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : totalPrice,"price":price})
+    # grandTotal=total-(promoAmount * total)/100
+    # grandTotal=round(grandTotal, 2)
+    # request.user.cartItems.all().delete()
+    # try:
+    #     isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
+    # except:
+    #     isStoreGlobal = False
+    # try:
+    #     companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+    #     cleanr = re.compile('<.*?>')
+    #     companyAddress = re.sub(cleanr, '', companyAddress)
+    # except:
+    #     companyAddress = ''
+    #
+    # try:
+    #     gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
+    # except:
+    #     gstValue = ''
+    #
+    # if orderObj.user.email:
+    #     ctx = {
+    #         'heading' : "Invoice Details",
+    #         'recieverName' : orderObj.user.first_name  + " " +orderObj.user.last_name ,
+    #         'linkUrl': globalSettings.BRAND_NAME,
+    #         'sendersAddress' : globalSettings.SEO_TITLE,
+    #         # 'sendersPhone' : '122004',
+    #         'grandTotal':grandTotal,
+    #         'total': total,
+    #         'value':value,
+    #         'docID':docID,
+    #         'data':orderObj,
+    #         'promoAmount':promoAmount,
+    #         'linkedinUrl' : lkLink,
+    #         'fbUrl' : fbLink,
+    #         'twitterUrl' : twtLink,
+    #         'isStoreGlobal':isStoreGlobal,
+    #         'companyAddress':companyAddress,
+    #         'gstValue':gstValue
+    #     }
+    #     print ctx
+    #     contactData = []
+    #     email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
+    #     email_subject = "Order Details"
+    #     email_to = []
+    #     email_to.append(str(orderObj.user.email))
+    #     email_cc = []
+    #     email_bcc = []
+    #     send_email(email_body,email_to,email_subject,email_cc,email_bcc,'html')
+    # return redirect("/checkout/cart?action=success&orderid=" + str(orderObj.pk))
 
 
 def paypal_cancel_view(request):
@@ -2454,7 +2455,7 @@ def payuPaymentInitiate(request):
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 
-def updateAndProcessOrder(orderID , amnt):
+def updateAndProcessOrder(orderID , amnt, referenceId=None):
     print 'in updateAndProcessOrderupdateAndProcessOrder'
     orderObj = Order.objects.get(id = orderID)
     orderObj.paidAmount = amnt

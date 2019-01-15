@@ -163,7 +163,7 @@ PAYMENT_MODE = 'paypal' # options are EBS , paypal , paytm , PAYU
 # paypal payment gateway details
 PAYPAL_RECEIVER_EMAIL = 'online@papered.in'
 # PAYPAL_RECEIVER_EMAIL = 'pradeep@cioc.in'
-PAYPAL_TEST = False
+PAYPAL_TEST = True
 
 SITE_ID = 1
 

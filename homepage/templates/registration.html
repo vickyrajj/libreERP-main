@@ -147,7 +147,7 @@
                         <div class="form-group">
                           <input ng-model="form.email" type="text" class="form-control floatInput" required/>
                           <span class="floating-label">Email *</span>
-                          <p class="help-text text-danger" ng-if="validityChecked == true && (form.email.length ==0 || form.email == null || form.email == undefined) ">Email is required</p>
+                          <p class="help-text text-danger" ng-if="validityChecked == true && (form.email.length ==0 || form.email == null || form.email == undefined || form.email.indexOf('@') == -1) ">Email is required</p>
                           <p class="help-text text-danger" ng-if="usernameExist">Email is already taken!</p>
                         </div>
                       </div>
@@ -162,8 +162,8 @@
                         <div class="col-md-10 col-sm-10 col-xs-10" style="padding-left:0px;">
                           <div class="form-group" style="margin-top:30px;">
                             <!-- <span class="floating-label">Phone *</span> -->
-                            <input  class="form-control floatInput" style="width:100%;" type="text" name="tel" ng-model="form.mobile" ng-intl-tel-input>
-                            <p class="help-text text-danger" ng-if="validityChecked == true && (form.mobile.length ==0 || form.mobile == null || form.mobile == undefined) ">Phone number is required</p>
+                            <input id="phNumber"  class="form-control floatInput" style="width:100%;" type="text" name="tel" ng-model="form.mobile" ng-intl-tel-input>
+                            <p class="help-text text-danger" ng-if="validityChecked == true && (phNumberStr.length ==0 || phNumberStr == null || phNumberStr == undefined) ">Phone number is required</p>
                           </div>
                         </div>
                       </div>
