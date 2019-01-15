@@ -1711,7 +1711,7 @@ hr {
   border-bottom: 20px solid #fff;
   position: absolute;
   top: 43px;
-  left: 80px;
+  left: 41%;
 }
 
 .triangle-hover1 {
@@ -1722,7 +1722,7 @@ hr {
   border-bottom: 20px solid #fff;
   position: absolute;
   top: 43px;
-  left: 130px;
+  left: 41%;
 }
 
 .headblock {
@@ -2340,6 +2340,57 @@ hr {
   left: 27em;
 }
 
+.visible {
+  visibility: hidden;
+}
+
+.effecton:hover .visible {
+  visibility: visible;
+}
+
+.comment_areaa {
+  display: block;
+  box-sizing: padding-box;
+  overflow: hidden;
+  padding: 10px 10px 0 10px;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 6px;
+  box-shadow: 2px 2px 8px rgba(black, .3);
+  border: 0;
+  resize: none;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.childforum {
+  padding: 1em;
+}
+
+.no_pad {
+  padding: 1em 0;
+}
+
+.contentrow {
+  font-size: 13px;
+  max-width: 65%;
+}
+
+.nodisplay {
+  display: none;
+}
+
+.heartsym {
+  display: inline-block;
+}
+
+.heartsym1 {
+  display: none;
+}
+
+.centeralignn {
+  text-align: right;
+}
+
 .pyl {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   margin-bottom: 8px;
@@ -2821,6 +2872,207 @@ hr {
 
   /* mobile display size starts here.... */
   /* courses */
+  .adjustwidth {
+    width: 100%;
+  }
+  .leftalign {
+    left: 6em;
+  }
+
+  .queanswer {
+    padding-top: 1em;
+    border-bottom: 0;
+    padding-bottom: 4em;
+  }
+
+  .maindiv {
+    padding: 2em 0.5em 1em 0.5em;
+  }
+
+  .subtext {
+    font-size: 15px;
+  }
+
+  .btn-section {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    border-top: 1px solid #D2D2D2;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 99;
+    background-color: #fff;
+  }
+
+  .savebtn {
+    padding: 0.5em 0;
+    border: 0;
+    margin: 1em 0.1em 1em 0.1em;
+    font-size: 14px;
+    width: 20%;
+    border-top-left-radius: 17px;
+  }
+
+  .btnaction {
+    padding: 0.5em 0;
+    margin: 1em 0.1em 1em 0.1em;
+    font-size: 14px;
+    width: 35%;
+    border-top-left-radius: 17px;
+  }
+
+  .btnaction1 {
+    padding: 0.5em 0;
+    margin: 1em 0.1em 1em 0.1em;
+    font-size: 14px;
+    width: 35%;
+    border-top-left-radius: 17px;
+  }
+
+  .headbtn {
+    padding: 0.5em 0;
+    border: 0;
+    margin: 1em 0.1em 1em 0.1em;
+    font-size: 14px;
+    min-width: 40%;
+  }
+
+  .fromtop {
+    margin-top: 25em;
+  }
+
+  .aligntotext1 {
+    font-size: 15px;
+    margin-left: 0;
+  }
+
+  .aligntotext {
+    font-size: 15px;
+    margin-left: 0.5em;
+  }
+
+  .notview {
+    width: 35px;
+    height: 35px;
+    background-color: #D2D2D2;
+    border-radius: 18px;
+    float: left;
+    margin: 1em 1em 1em 0;
+    position: relative;
+  }
+
+  .notview .numberalign, .reviewed .numberalign, .attemptreviewed .numberalign {
+    color: #fff;
+    text-align: center;
+    font-size: 15px;
+    position: absolute;
+    left: 35%;
+    top: 20%;
+  }
+
+  .answered {
+    width: 35px;
+    height: 45px;
+    border-radius: 0;
+    margin-top: 0.3em;
+    background: #29B999;
+    clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
+  }
+
+  .answered .numberalign {
+    color: #fff;
+    text-align: center;
+    font-size: 15px;
+    position: absolute;
+    left: 30%;
+    top: 40%;
+  }
+
+  .notanswered {
+    width: 35px;
+    height: 45px;
+    border-radius: 0;
+    margin-top: 1em;
+    background: #ED6060;
+    clip-path: polygon(52% 100%, 100% 68%, 100% 0, 0 0, 0 72%);
+  }
+
+  .notanswered .numberalign {
+    color: #fff;
+    text-align: center;
+    font-size: 15px;
+    position: absolute;
+    left: 30%;
+    top: 20%;
+  }
+
+  .reviewed {
+    width: 35px;
+    height: 35px;
+    background-color: #565FB8;
+    border-radius: 18px;
+    float: left;
+    margin: 1em 1em 1em 0;
+    position: relative;
+  }
+
+  .attemptreviewed {
+    width: 35px;
+    height: 35px;
+    background-color: #565FB8;
+    border-radius: 18px;
+    float: left;
+    margin: 1em 1em 1em 0;
+    position: relative;
+  }
+
+  .attemptreviewed::after {
+    content: '\2713';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 75%;
+    right: 0;
+    background-color: #86D37C;
+    color: #fff;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    text-align: center;
+  }
+
+  .answers {
+    padding: 0 0 0 1em;
+  }
+
+  .centeralignn {
+    text-align: left;
+  }
+
+  .heartsym {
+    display: none;
+  }
+
+  .heartsym1 {
+    display: block;
+  }
+
+  .contentrow {
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .no_pad {
+    padding: 1em 1em;
+  }
+
+  .childforum {
+    padding: 1em 0 0 0;
+  }
+
   .video_card {
     border-right: 0px solid #bebebe;
     border-bottom: 1px solid #bebebe;

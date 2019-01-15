@@ -1,0 +1,18 @@
+<div class="container-fluid text-center">
+  <style>
+    .nohover:hover {
+      transform: scale(1);
+      transition: 0;
+    }
+  </style>
+  <h2 style="padding-top: 2em;">{{idforchapter}}. {{head}}</h2>
+  <div class="container">
+    <div class="cardstype nohover" style="margin-top:3em;text-align: left;border-top-left-radius: 50px;">
+      <div ng-repeat="a in contents" style="padding-top: 1em;">
+        <span style="font-size:17px;margin:2em;">{{$index+1}}:</span><span style="font-size:17px;">{{a.no}}</span>
+      </div>
+    </div>
+  </div>
+
+
+</div>

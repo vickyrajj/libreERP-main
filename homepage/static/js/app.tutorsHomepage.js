@@ -221,6 +221,17 @@ app.config(function($stateProvider) {
       },
       controller: 'controller.examresults'
     })
+  $stateProvider
+    .state('notes', {
+      url: "/notes/:id",
+      templateUrl: 'static/ngTemplates/app.homepage.notes.html',
+      params: {
+        'id': null,
+        'chapter': null,
+
+      },
+      controller: 'controller.notes'
+    })
 
 });
 
@@ -778,33 +789,169 @@ app.controller('controller.chapter', function($scope, $rootScope, $state, $http,
 
 })
 app.controller('controller.courses', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce) {
+  $scope.items = [{
+      "class1": "click1",
+      "class2": "class1",
+      "click": "clicks(1)",
+      "head": 'Books',
+
+    },
+    {
+      "class1": "click2",
+      "class2": "class2",
+      "click": "clicks(2)",
+      "head": 'Videos',
+
+    },
+    {
+      "class1": "click3",
+      "class2": "class3",
+      "click": "clicks(3)",
+      "head": 'Test Series',
+
+    },
+    {
+      "class1": "click4",
+      "class2": "class4",
+      "click": "clicks(4)",
+      "head": 'Forums',
+
+    },
+    {
+      "class1": "click5",
+      "class2": "class5",
+      "click": "clicks(5)",
+      "head": 'Refernce Books',
+
+    },
+    {
+      "class1": "click6",
+      "class2": "class6",
+      "click": "clicks(6)",
+      "head": 'Notes',
+
+    },
+  ];
+
+  $scope.properties = {
+    URLhashListener: true,
+    startPosition: 'URLHash',
+    loop: false,
+    items: 1,
+  };
 
   $scope.bookscontent = [{
       'class': 'head1',
       'title': '01. Ncert Maths',
-      'chapter': {
-        'one': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'two': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'three': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'four': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'five': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'six': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'seven': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
+      'chapter': [{
+          'page': '1',
+          'content': '1a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '3',
+          'content': '1b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '5',
+          'content': '1c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '8',
+          'content': '1d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '12',
+          'content': '1e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '14',
+          'content': '1f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '17',
+          'content': '1g. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
 
-      }
+
+      ]
     },
     {
       'class': 'head1',
-      'title': '02. Ncert Science',
-      'chapter': {
-        'one': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'two': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'three': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'four': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'five': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'six': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
-        'seven': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit'
-      }
+      'title': '02. Ncert Biology',
+      'chapter': [{
+          'page': '1',
+          'content': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '3',
+          'content': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '5',
+          'content': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '8',
+          'content': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '12',
+          'content': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '14',
+          'content': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '19',
+          'content': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '20',
+          'content': '2h. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+
+
+      ]
+    },
+    {
+      'class': 'head1',
+      'title': '02. Ncert Chemistry',
+      'chapter': [{
+          'page': '1',
+          'content': '2a. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '3',
+          'content': '2b. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '5',
+          'content': '2c. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '8',
+          'content': '2d. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '12',
+          'content': '2e. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '14',
+          'content': '2f. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '19',
+          'content': '2g. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+        {
+          'page': '20',
+          'content': '2h. Lorem ipsum dolor sit amet, consectetur adipisicing elit',
+        },
+
+
+      ]
     },
   ];
 
@@ -814,6 +961,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
   $scope.testseries = false;
   $scope.forum = false;
   $scope.refbook = false;
+  $scope.notes = false;
   $scope.click = null;
 
   $scope.smDevice = function(x) {
@@ -835,6 +983,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       $scope.forum = false;
       $scope.videos = false;
       $scope.refbook = false;
+      $scope.notes = false;
       if ($scope.device.smallDevice == true) {
 
       } else {
@@ -844,13 +993,16 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.class6 = "";
           $scope.banner = "banner"
+
         } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.class6 = "";
           $scope.banner = ""
         }
 
@@ -865,6 +1017,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       $scope.forum = false;
       $scope.videos = !$scope.videos;
       $scope.refbook = false;
+      $scope.notes = false;
       if ($scope.device.smallDevice == true) {
 
       } else {
@@ -874,6 +1027,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class1 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.class6 = "";
           $scope.banner = "banner"
 
         } else {
@@ -882,6 +1036,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.class6 = "";
           $scope.banner = ""
 
         }
@@ -895,6 +1050,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       $scope.forum = false;
       $scope.videos = false;
       $scope.refbook = false;
+      $scope.notes = false;
       if ($scope.device.smallDevice == true) {
 
       } else {
@@ -905,12 +1061,14 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class4 = "";
           $scope.class2 = "";
           $scope.class5 = "";
+          $scope.class6 = "";
         } else {
           $scope.class1 = "";
           $scope.class4 = "";
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.class6 = "";
         }
 
 
@@ -921,6 +1079,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       $scope.forum = !$scope.forum;
       $scope.videos = false;
       $scope.refbook = false;
+      $scope.notes = false;
       if ($scope.device.smallDevice == true) {
 
       } else {
@@ -930,6 +1089,7 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.class6 = "";
           $scope.banner = "banner"
 
         } else {
@@ -938,6 +1098,39 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
+          $scope.class6 = "";
+          $scope.banner = ""
+
+        }
+
+
+      }
+    } else if (val == 5) {
+      $scope.books = false;
+      $scope.testseries = false;
+      $scope.forum = false;
+      $scope.videos = false;
+      $scope.refbook = !$scope.refbook
+      $scope.notes = false;
+      if ($scope.device.smallDevice == true) {
+
+      } else {
+        if ($scope.refbook == true) {
+          $scope.class5 = "triangle-hover1";
+          $scope.class1 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class4 = "";
+          $scope.class6 = "";
+          $scope.banner = "banner"
+
+        } else {
+          $scope.class1 = "";
+          $scope.class4 = "";
+          $scope.class2 = "";
+          $scope.class3 = "";
+          $scope.class5 = "";
+          $scope.class6 = "";
           $scope.banner = ""
 
         }
@@ -949,16 +1142,18 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
       $scope.testseries = false;
       $scope.forum = false;
       $scope.videos = false;
-      $scope.refbook = !$scope.refbook
+      $scope.refbook = false
+      $scope.notes = !$scope.notes
       if ($scope.device.smallDevice == true) {
 
       } else {
-        if ($scope.refbook == true) {
-          $scope.class5 = "triangle-hover1";
+        if ($scope.notes == true) {
+          $scope.class5 = "";
           $scope.class1 = "";
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class4 = "";
+          $scope.class6 = "triangle-hover1";
           $scope.banner = "banner"
 
         } else {
@@ -967,7 +1162,8 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
           $scope.class2 = "";
           $scope.class3 = "";
           $scope.class5 = "";
-          $scope.banner = ""
+          $scope.class6 = "";
+          $scope.banner = "";
 
         }
 
@@ -1031,8 +1227,9 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
   $scope.headclick = function(val) {
     $scope.bookscontent[val].view = !$scope.bookscontent[val].view;
   }
-  $scope.loadcontent = function(val) {
+  $scope.loadcontent = function(val, length) {
     $scope.bookscontent[val].view1 = !$scope.bookscontent[val].view1;
+    $scope.len = length;
   }
 
   $scope.cardss = [{
@@ -1141,12 +1338,310 @@ app.controller('controller.courses', function($scope, $state, $http, $timeout, $
     },
   ]
   $scope.count = null;
+  $scope.forumlist
+  for (var i = 0; i < $scope.forumlist.length; i++) {
+    $scope.forumlist[i].status = false;
+    for (var j = 0; j < $scope.forumlist[i].users.length; j++) {
+      $scope.forumlist[i].users[j].status = false;
+    }
+  }
   $scope.openedforum = false;
   $scope.forumview = function(val) {
-    $scope.count = val;
-    $scope.openedforum = !$scope.openedforum;
+
+    // $scope.openedforum = !$scope.openedforum;
+    $scope.forumlist[val].status = !$scope.forumlist[val].status
+
+  }
+  $scope.reply = false;
+  $scope.replyto = function(parentidx, idx) {
+
+    for (var j = 0; j < $scope.forumlist[parentidx].users.length; j++) {
+      $scope.forumlist[parentidx].users[j].status = false;
+    }
+    $scope.forumlist[parentidx].users[idx].status = true;
+    // $scope.count = idx;
+    // $scope.reply = true;
+
+  }
+  $scope.cancel = function(parentidx, idx) {
+    $scope.forumlist[parentidx].users[idx].status = false;
+    $scope.comment = '';
   }
 
+  $(document)
+    .one('focus.autoExpand', 'textarea.autoExpand', function() {
+      var savedValue = this.value;
+      this.value = '';
+      this.baseScrollHeight = this.scrollHeight;
+      this.value = savedValue;
+    })
+    .on('input.autoExpand', 'textarea.autoExpand', function() {
+      var minRows = this.getAttribute('data-min-rows') | 0,
+        rows;
+      this.rows = minRows;
+      rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 16);
+      this.rows = minRows + rows;
+    })
+
+  $scope.mathformulas = [{
+      'id': '1',
+      'chapter': 'Chapter-1',
+      'name': 'Relations and Functions Formula',
+    },
+    {
+      'id': '2',
+      'chapter': 'Chapter-2',
+      'name': 'Inverse Trigonometric Functions Formula',
+    },
+    {
+      'id': '3',
+      'chapter': 'Chapter-3',
+      'name': 'Matrices Formula',
+    },
+    {
+      'id': '4',
+      'chapter': 'Chapter-4',
+      'name': 'Determinants Formula',
+    },
+    {
+      'id': '5',
+      'chapter': 'Chapter-5',
+      'name': 'Continuity and Differentiability Formula',
+    },
+    {
+      'id': '6',
+      'chapter': 'Chapter-6',
+      'name': 'Application of Derivatives Formula',
+    },
+    {
+      'id': '7',
+      'chapter': 'Chapter-7',
+      'name': 'Integrals Formula',
+    },
+    {
+      'id': '8',
+      'chapter': 'Chapter-8',
+      'name': 'Application of Integrals Formula',
+    },
+    {
+      'id': '9',
+      'chapter': 'Chapter-9',
+      'name': 'Differential Equations Formula',
+    },
+    {
+      'id': '10',
+      'chapter': 'Chapter-10',
+      'name': 'Vector Algebra Formula',
+    },
+
+  ]
+  $scope.limit = Math.ceil($scope.mathformulas.length / 2);
+
+  $scope.chapterclick = function(chapterval, chapter) {
+    console.log(chapterval);
+    $state.go('notes', {
+      'id': chapterval,
+      'chapter': chapter
+    })
+  }
+
+
+
+})
+app.controller('controller.notes', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
+  $stateParams.id
+  $scope.c = $stateParams.chapter;
+  console.log($scope.c);
+  $scope.chaptercontent = [{
+      'id': '1',
+      'head': 'Relations and Functions Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+    {
+      'id': '2',
+      'head': 'Inverse Trigonometric Functions Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+    {
+      'id': '3',
+      'head': ' Matrices Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+    {
+      'id': '4',
+      'head': ' Determinants Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+    {
+      'id': '5',
+      'head': ' Continuity and Differentiability Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+    {
+      'id': '6',
+      'head': ' Integrals Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+    {
+      'id': '7',
+      'head': 'Application of Integrals Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+    {
+      'id': '8',
+      'head': 'Relations and Functions Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+    {
+      'id': '9',
+      'head': ' Differential Equations Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+    {
+      'id': '10',
+      'head': 'Vector Algebra Formula',
+      'content': [{
+          'no': 'relations'
+        },
+        {
+          'no': 'relations'
+        },
+        {
+          'no': 'functions'
+        },
+        {
+          'no': 'functions'
+        }
+      ]
+
+    },
+  ]
+  for (var i = 0; i < $scope.chaptercontent.length; i++) {
+    if ($scope.chaptercontent[i].id == $stateParams.id) {
+      console.log($scope.chaptercontent[i].id);
+      $scope.idforchapter = $scope.chaptercontent[i].id;
+      $scope.head = $scope.chaptercontent[i].head;
+      $scope.contents = $scope.chaptercontent[i].content
+    }
+
+  }
 
 })
 
