@@ -39,6 +39,11 @@ app.config(function($stateProvider) {
       templateUrl: '/static/ngTemplates/app.marketing.customers.html',
       controller: 'businessManagement.marketing.customers'
     })
+    .state('businessManagement.marketing.presentations', {
+      url: "/presentations",
+      templateUrl: '/static/ngTemplates/app.marketing.presentations.html',
+      controller: 'businessManagement.marketing.presentations'
+    })
 
 });
 
