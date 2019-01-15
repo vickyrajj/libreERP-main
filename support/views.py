@@ -162,6 +162,7 @@ class ProductsUploadAPIView(APIView):
             sheetObj = ProductSheet(file_name = excelFile.name,sheet=wsTitle)
             sheetObj.save()
             unSaved = []
+            count = 0
             for i in range(2,ws.max_row+1):
                 try:
                     print 'aaaaaaaaaaa'
@@ -229,10 +230,11 @@ class ProductsUploadAPIView(APIView):
 
 
                     Products.objects.get_or_create(part_no=part_no, description_1=description_1,description_2=description_2,replaced=replaced,parent=parent,weight=weight, price=price,customs_no=customs_no,custom=custom,gst=gst)
+                    count+=1
                 except:
                     unSaved.append(part_no)
-            print part_no
-        return Response(part_no,status=status.HTTP_200_OK)
+        data = {"count":count,"no":part_no}
+        return Response(data,status=status.HTTP_200_OK)
 from reportlab.lib.styles import getSampleStyleSheet
 from svglib.svglib import svg2rlg
 from reportlab.lib.enums import TA_RIGHT, TA_CENTER
@@ -654,19 +656,31 @@ def landingDetails(response , project , purchaselist, request):
     s20 =Paragraph("<para fontSize=8>Landing/Pc </para>",styles['Normal'])
     data2 += [[s01,s02,s03,s04,s05,s06,s07,s08,s09,s10,s11,s12,s13,s14,s1c5,s15,s16,s1g7,s17,s18,s19,s20]]
     id = 0
+    totpack = 0
+    inspack = 0
+    frepack = 0
+    landtot = 0
     for i in purchaselist:
         id+=1
         quotePrice = round(((project.profitMargin * i.price) / 100 + i.price),2)
         inrPrice = round((i.price * project.exRate),2)
         packing = round(((project.packing/ project.invoiceValue) * inrPrice),2)
+        packingtot = packing*i.quantity1
+        totpack+=packingtot
         insurance = round((((project.insurance  / project.invoiceValue) * inrPrice)),2)
+        insurancetot = insurance*i.quantity1
+        inspack+=insurancetot
         freight = round((((project.freight / project.invoiceValue) * inrPrice)),2)
+        freighttot = freight*i.quantity1
+        frepack+=freighttot
         cif = round((inrPrice + packing + insurance + freight),2)
         customVal = round(((cif +((cif * project.assessableValue)/100))*(i.custom)/100),2)
         socialVal = round((customVal *0.1),2)
         gstVal = round(((cif+customVal+socialVal)*(i.gst)/100),2)
         charge1 = round((inrPrice * (project.clearingCharges1 / (project.invoiceValue * project.exRate))),2)
         charge2 = round((inrPrice * (project.clearingCharges2 / (project.invoiceValue * project.exRate))),2)
+        landng=i.landed_price*i.quantity1
+        landtot+=landng
         # landed_price = ((cif + customVal + socialVal + charge1 + charge2),2)
         s21 =Paragraph("<para fontSize=8>{0} </para>".format(id),styles['Normal'])
         s22 =Paragraph("<para fontSize=8>{0} </para>".format(i.products.part_no),styles['Normal'])
@@ -691,6 +705,29 @@ def landingDetails(response , project , purchaselist, request):
         s39 =Paragraph("<para fontSize=8> {:,} </para>".format(round(charge2,2)),styles['Normal'])
         s40 =Paragraph("<para fontSize=8> {:,} </para>".format(i.landed_price),styles['Normal'])
         data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,s32,s33,s34,s3c5,s35,s36,s3g7,s37,s38,s39,s40])
+    s21 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s22 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s23 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s24 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s25 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    s26 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s27 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s28 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
+    s29 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
+    s30 =Paragraph("<para fontSize=8> {:,} </para>".format(round(totpack,2)),styles['Normal'])
+    s31 =Paragraph("<para fontSize=8> {:,}</para>".format(round(inspack,2)),styles['Normal'])
+    s32 =Paragraph("<para fontSize=8> {:,} </para>".format(round(frepack,2)),styles['Normal'])
+    s33 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s34 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
+    s3c5 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s35 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
+    s36 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s3g7 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    s37 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    s38 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    s39 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s40 =Paragraph("<para fontSize=8> {:,} </para>".format(round(landtot,2)),styles['Normal'])
+    data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,s32,s33,s34,s3c5,s35,s36,s3g7,s37,s38,s39,s40])
     t2=Table(data2,colWidths=(11*mm,23*mm, 37*mm, 20*mm, 20*mm, 10*mm, 20*mm,20*mm,20*mm,20*mm,20*mm,20*mm,20*mm,20*mm,10*mm,20*mm,15*mm,10*mm,20*mm,20*mm,20*mm,20*mm))
     t2.hAlign = 'LEFT'
     t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
@@ -1856,56 +1893,41 @@ class DownloadProjectSCExcelReponse(APIView):
             if idx>0:
                 Sheet1 = workbook.create_sheet(p['comm_nr'])
 
-            Sheet1.append(["Supplier","Project", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed by others'])
+            Sheet1.append(["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed'])
             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
-            for i in projData:
-                bomObj=BoM.objects.filter(project__id=i.pk)
-                materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
+            # for i in projData:
+            bomObj=BoM.objects.filter(project__comm_nr__exact=p['comm_nr'])
+            materialObj=MaterialIssueMain.objects.filter(project__comm_nr__exact=p['comm_nr'])
+            for j in bomObj:
+                listVal = 0
+                val = []
+                stockConsumed=0
+                for k in materialObj:
+                    mat = []
+                    materialdata= list(k.materialIssue.all().values())
+                    for g in materialdata:
+                        mat.append(g)
+                    for m in k.materialIssue.all():
+                        print j.products.part_no,m.product.pk,'aaaaaa'
+                        if j.products.pk==m.product.pk:
+                            stockConsumed += m.qty
+                            print stockConsumed,'aaaahhhhhhhh'
+                        # matdata = k.materialIssue.all()
+                        # for e in matdata:
+                        #     stock =  ast.literal_eval(e.stock)
+                        #     val = []
+                        #     for s in stock:
+                        #         if s['addedqty']>0:
+                        #                 if s['comm_nr']!=k.project.comm_nr:
+                        #                     print s['product']
+                        #                     value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + s['comm_nr'] + ')'
+                        #                     val.append(value)
 
-                for j in bomObj:
-                    listVal = 0
-                    val = []
-                    stockConsumed=0
-                    for k in materialObj:
-                        mat = []
-                        materialdata= list(k.materialIssue.all().values())
-                        for g in materialdata:
-                            mat.append(g)
-                        # stockConsumed=0
-                        for m in mat:
-                            # print m['product_id'],'lllll',j.products.pk
-                            # print m['stock']
-                            # for so in ast.literal_eval( m['stock']):
-                            #     if so['addedqty'] > 0:
-                            #         if so['comm_nr'] == i.comm_nr:
-                            if m['product_id']==j.products.pk:
-                                stockConsumed += m['qty']
-                            # else:
-                            #     stockConsumed = 0
-                    inv = Inventory.objects.all()
-                    for v in inv:
-                        # listVal =[]
-                        if j.project.pk == v.project.pk and j.products.pk == v.product.pk:
-                            materialObjs=MaterialIssueMain.objects.all()
-                            for h in materialObjs:
-                                matdata = h.materialIssue.all()
-                                for e in matdata:
-                                    stock =  ast.literal_eval(e.stock)
-                                    for s in stock:
-                                        if s['addedqty']>0:
-                                            if v.pk==s['inventory']:
-                                                if v.project.pk!=h.project.pk:
-                                                # listVal += s['addedqty']
-                                                    # value = ''
-                                                    value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + h.project.comm_nr + ')'
-                                                    val.append(value)
-
-                    val = json.dumps(val)
-                    Sheet1.append([i.vendor.name,i.title, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,val])
-                Sheet1.append(['', '','','',' ',' ',' '])
-
+                    # val = json.dumps(val)
+                Sheet1.append([j.project.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed])
+            Sheet1.append(['', '','','',' ',' ',' '])
             Sheet1.append(['material Issued'])
-            Sheet1.append(['Part No','Description','Quantity','project',])
+            Sheet1.append(['Part No','Description','Quantity','consumed From',])
             for d in projData:
                 bomObj=BoM.objects.filter(project__id=d.pk)
                 materialObj=MaterialIssueMain.objects.filter(project__id=d.pk)
@@ -1913,23 +1935,19 @@ class DownloadProjectSCExcelReponse(APIView):
                     bomObjs = list(bomObj.values())
                     for a in materialObj:
                         for b in a.materialIssue.all():
-                            # for c in bomObjs:
                             try :
-                                print bomObj.get(products__id=b.product.pk)
                                 bomObj.get(products__id=b.product.pk)
-                                print 'heeeeeeeeerrrrrreeeeeeee'
                                 pass
                             except:
-                                Sheet1.append([b.product.part_no, b.product.description_1,b.qty,a.project.title])
-                            # if b.product.pk not in bomObjs:
-                            #     print 'herrrrrrrrreeeee'
-                            #
-                            #     Sheet1.append([b.product.part_no, b.product.description_1,b.qty])
-                            # for c in bomObj:
-                            #     print c.products.pk , b.product.pk
-                                # if c.products.pk == b.product.pk:
-                                #     print 'hhhhhhhhhhheeeeeeeeerrrrrrrrreeeeeeeeee'
-                                    # Sheet1.append([b.product.part_no, b.product.description_1,b.qty])
+                                inval = []
+                                for u in ast.literal_eval(b.stock):
+                                    if u['comm_nr']!=a.project.comm_nr:
+                                        if u['addedqty']>0:
+                                            invalue = '(quantity : ' + str(u['addedqty']) + ', comm_nr : ' + u['comm_nr'] + ')'
+                                            inval.append(invalue)
+                                inval = json.dumps(inval)
+                                if len(inval)>5:
+                                    Sheet1.append([b.product.part_no, b.product.description_1,b.qty,inval])
 
             Sheet1.column_dimensions['A'].width = 20
             Sheet1.column_dimensions['B'].width = 20
@@ -1971,11 +1989,116 @@ class DownloadProjectSCExcelReponse(APIView):
 #                     for k in materialObj:
 #                         materialdata= list(k.materialIssue.all().values())
 
-
-        response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
-        return response
-
+        #
+        # response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        # response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
+        # return response
+#
+# class DownloadProjectSCExcelReponse(APIView):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     def get(self , request , format = None):
+#         workbook = Workbook()
+#         projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,junkStatus=False)
+#         projectsObj = list(projectObj.values('comm_nr').distinct())
+#         sendData =[]
+#         for idx,p in enumerate(projectsObj):
+#             if idx==0:
+#                 Sheet1 = workbook.active
+#                 Sheet1.title = p['comm_nr']
+#             if idx>0:
+#                 Sheet1 = workbook.create_sheet(p['comm_nr'])
+#
+#             Sheet1.append(["Supplier","Project", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed by others'])
+#             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
+#             for i in projData:
+#                 bomObj=BoM.objects.filter(project__id=i.pk)
+#                 materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
+#
+#                 for j in bomObj:
+#                     listVal = 0
+#                     val = []
+#                     stockConsumed=0
+#                     for k in materialObj:
+#                         mat = []
+#                         materialdata= list(k.materialIssue.all().values())
+#                         for g in materialdata:
+#                             mat.append(g)
+#                         # stockConsumed=0
+#                         for m in mat:
+#                             # print m['product_id'],'lllll',j.products.pk
+#                             # print m['stock']
+#                             # for so in ast.literal_eval( m['stock']):
+#                             #     if so['addedqty'] > 0:
+#                             #         if so['comm_nr'] == i.comm_nr:
+#                             if m['product_id']==j.products.pk:
+#                                 stockConsumed += m['qty']
+#                             # else:
+#                             #     stockConsumed = 0
+#                     inv = Inventory.objects.all()
+#                     for v in inv:
+#                         # listVal =[]
+#                         if j.project.pk == v.project.pk and j.products.pk == v.product.pk:
+#                             materialObjs=MaterialIssueMain.objects.all()
+#                             for h in materialObjs:
+#                                 matdata = h.materialIssue.all()
+#                                 for e in matdata:
+#                                     stock =  ast.literal_eval(e.stock)
+#                                     for s in stock:
+#                                         if s['addedqty']>0:
+#                                             if v.pk==s['inventory']:
+#                                                 if s['comm_nr']!=h.project.comm_nr:
+#                                                 # listVal += s['addedqty']
+#                                                     # value = ''
+#                                                     value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + h.project.comm_nr + ')'
+#                                                     val.append(value)
+#
+#                     val = json.dumps(val)
+#                     Sheet1.append([i.vendor.name,i.title, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,val])
+#                 Sheet1.append(['', '','','',' ',' ',' '])
+#
+#             Sheet1.append(['material Issued'])
+#             Sheet1.append(['Part No','Description','Quantity','consumed In','consumed From',])
+#             for d in projData:
+#                 bomObj=BoM.objects.filter(project__id=d.pk)
+#                 materialObj=MaterialIssueMain.objects.filter(project__id=d.pk)
+#                 if len(materialObj)>0:
+#                     bomObjs = list(bomObj.values())
+#                     for a in materialObj:
+#                         for b in a.materialIssue.all():
+#                             # for c in bomObjs:
+#                             try :
+#                                 bomObj.get(products__id=b.product.pk)
+#                                 pass
+#                             except:
+#                                 inval = []
+#                                 for u in ast.literal_eval(b.stock):
+#                                     if u['comm_nr']!=a.project.comm_nr:
+#                                         if u['addedqty']>0:
+#                                             invalue = '(quantity : ' + str(u['addedqty']) + ', comm_nr : ' + u['comm_nr'] + ')'
+#                                             inval.append(invalue)
+#                                 inval = json.dumps(inval)
+#                                 Sheet1.append([b.product.part_no, b.product.description_1,b.qty,a.project.title,inval])
+#                             # if b.product.pk not in bomObjs:
+#                             #     print 'herrrrrrrrreeeee'
+#                             #
+#                             #     Sheet1.append([b.product.part_no, b.product.description_1,b.qty])
+#                             # for c in bomObj:
+#                             #     print c.products.pk , b.product.pk
+#                                 # if c.products.pk == b.product.pk:
+#                                 #     print 'hhhhhhhhhhheeeeeeeeerrrrrrrrreeeeeeeeee'
+#                                     # Sheet1.append([b.product.part_no, b.product.description_1,b.qty])
+#
+#             Sheet1.column_dimensions['A'].width = 20
+#             Sheet1.column_dimensions['B'].width = 20
+#             Sheet1.column_dimensions['C'].width = 40
+#             Sheet1.column_dimensions['D'].width = 40
+#             Sheet1.column_dimensions['E'].width = 20
+#             Sheet1.column_dimensions['F'].width = 30
+#             Sheet1.column_dimensions['G'].width = 20
+#             Sheet1.column_dimensions['H'].width = 50
+#         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+#         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
+#         return response
 
 
 class CreateStockReportDataAPIView(APIView):

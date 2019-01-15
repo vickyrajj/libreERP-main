@@ -150,8 +150,12 @@ app.controller("businessManagement.masterSheet", function($scope, $state, $users
             $scope.form = {
               sheet: emptyFile
             };
+            console.log(response,'aaaaaa');
+            $scope.count = response.data.count
             Flash.create('success', 'Saved')
-            $uibModalInstance.dismiss();
+            $timeout(function() {
+              $uibModalInstance.dismiss();
+            }, 10000);
           })
 
         }
