@@ -491,7 +491,10 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
 
     elements.append(Paragraph("<para fontSize=8>Notes:</para>",styles['Normal']))
     print project.poNotes
-    datanotes = project.poNotes.replace('\n', '<br />')
+    try:
+        datanotes = project.poNotes.replace('\n', '<br />')
+    except:
+        datanotes = project.poNotes
 
     elements.append(Paragraph("<para fontSize=8>{0} </para>".format(datanotes),styles['Normal']))
     # elements.append(abc)
@@ -981,7 +984,10 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
         elements.append(t9)
         elements.append(Spacer(1,8))
         elements.append(Paragraph("<para fontSize=8>Notes:</para>",styles['Normal']))
-        datanotes = project.quoteNotes.replace('\n', '<br />')
+        try:
+            datanotes = project.poNotes.replace('\n', '<br />')
+        except:
+            datanotes = project.poNotes
         elements.append(Paragraph("<para fontSize=8>{0} </para>".format(datanotes),styles['Normal']))
         # elements.append(Paragraph("<para fontSize=8> 1. Indicate your GST number, HSN Code and PAN number in your PO. </para>",styles['Normal']))
         # elements.append(Paragraph("<para fontSize=8> 2. Indicate our Quote ref in your PO. </para>",styles['Normal']))
@@ -1012,7 +1018,10 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
         elements.append(Spacer(1,8))
 
         elements.append(Paragraph("<para fontSize=8>Notes:</para>",styles['Normal']))
-        datanotes = project.quoteNotes.replace('\n', '<br />')
+        try:
+            datanotes = project.poNotes.replace('\n', '<br />')
+        except:
+            datanotes = project.poNotes
         elements.append(Paragraph("<para fontSize=8>{0} </para>".format(datanotes),styles['Normal']))
         # elements.append(Paragraph("<para fontSize=8> 2. P & F  : Extra </para>",styles['Normal']))
         # elements.append(Paragraph("<para fontSize=8> 3.Warranty :Twelve months - Only on spares fixed by Burderer India engineer</para>",styles['Normal']))
@@ -1838,7 +1847,8 @@ class DownloadProjectSCExcelReponse(APIView):
                 Sheet1.title = p['comm_nr']
             if idx>0:
                 Sheet1 = workbook.create_sheet(p['comm_nr'])
-            Sheet1.append(["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed by others'])
+
+            Sheet1.append(["Supplier","Project", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed by others'])
             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
             print projData
             for i in projData:
@@ -1846,7 +1856,6 @@ class DownloadProjectSCExcelReponse(APIView):
                 materialObj=MaterialIssueMain.objects.filter(project__id=i.pk)
 
                 for j in bomObj:
-
                     listVal = 0
                     val = []
                     stockConsumed=0
@@ -1883,7 +1892,46 @@ class DownloadProjectSCExcelReponse(APIView):
                                                     val.append(value)
 
                     val = json.dumps(val)
-                    Sheet1.append([i.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,val])
+                    Sheet1.append([i.vendor.name,i.title, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,val])
+                Sheet1.append(['', '','','',' ',' ',' '])
+
+            Sheet1.append(['material Issued'])
+            Sheet1.append(['Part No','Description','Quantity','project'])
+            for d in projData:
+                bomObj=BoM.objects.filter(project__id=d.pk)
+                materialObj=MaterialIssueMain.objects.filter(project__id=d.pk)
+                if len(materialObj)>0:
+                    bomObjs = list(bomObj.values())
+                    for a in materialObj:
+                        for b in a.materialIssue.all():
+                            # for c in bomObjs:
+                            try :
+                                print bomObj.get(products__id=b.product.pk)
+                                bomObj.get(products__id=b.product.pk)
+                                print 'heeeeeeeeerrrrrreeeeeeee'
+                                pass
+                            except:
+                                Sheet1.append([b.product.part_no, b.product.description_1,b.qty,a.project.title])
+                            # if b.product.pk not in bomObjs:
+                            #     print 'herrrrrrrrreeeee'
+                            #
+                            #     Sheet1.append([b.product.part_no, b.product.description_1,b.qty])
+                            # for c in bomObj:
+                            #     print c.products.pk , b.product.pk
+                                # if c.products.pk == b.product.pk:
+                                #     print 'hhhhhhhhhhheeeeeeeeerrrrrrrrreeeeeeeeee'
+                                    # Sheet1.append([b.product.part_no, b.product.description_1,b.qty])
+
+            Sheet1.column_dimensions['A'].width = 20
+            Sheet1.column_dimensions['B'].width = 20
+            Sheet1.column_dimensions['C'].width = 40
+            Sheet1.column_dimensions['D'].width = 40
+            Sheet1.column_dimensions['E'].width = 20
+            Sheet1.column_dimensions['F'].width = 30
+            Sheet1.column_dimensions['G'].width = 20
+            Sheet1.column_dimensions['H'].width = 50
+
+
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
         return response
