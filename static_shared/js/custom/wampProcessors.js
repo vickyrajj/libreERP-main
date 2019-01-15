@@ -203,6 +203,8 @@ var hasAccesss=true;
             scope.sound.play();
             args[2].created = new Date();
             scope.myUsers[i].messages.push(args[2])
+            scope.myUsers[i].disableInput=true
+
             scope.myUsers[i].unreadMsg += 1
             scope.myUsers[i].spying.value=''
             //chat closed by user
@@ -444,61 +446,12 @@ var hasAccesss=true;
   // });
 
 
-  function sendBackHeartBeat() {
-    var scope = angular.element(document.getElementById('chatTab')).scope();
-    if (scope) {
-      function heartbeat(args) {
-        if (args[0]=='popup') {
-          console.log(args[2]);
-          alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
-          scope.myUsers.push(args[2]);
-          connection.session.publish(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', scope.me.pk], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published AP", args[2].uid);
-          });
-
-          var xhttp = new XMLHttpRequest();
-           xhttp.onreadystatechange = function() {
-             if (this.readyState == 4 && this.status == 200) {
-               console.log('chat thread pk changed');
-             }
-           };
-           xhttp.open('PATCH', '/api/support/chatThread/'+ args[2].chatThreadPk + '/', true);
-           xhttp.setRequestHeader("Content-type", "application/json");
-           xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-           xhttp.send(JSON.stringify({user:scope.me.pk}));
-          return
-        }
-        else {
-          return true
-        }
-      }
-
-
-      session.register(wamp_prefix+'service.support.heartbeat.'+scope.me.pk, heartbeat).then(
-          function (res) {
-            console.log("registered to service.support.heartbeat with "+scope.me.pk);
-          },
-          function (err) {
-            console.log("failed to registered: ");
-          }
-        );
-    }
-  }
-
-
-  setTimeout(function() {
-    sendBackHeartBeat();
-    checkOnline();
-  }, 1500);
 
 
   setInterval(function() {
     console.log('comin in interval');
     checkOnline();
-  }, 10000)
+  }, 7000)
 
   session.subscribe(wamp_prefix+'service.support.agent', supportChatResponse).then(
     function(sub) {
@@ -520,7 +473,7 @@ setTimeout(function () {
     }
   );
 
-}, 100);
+}, 5000);
 
 //
 // function myNew(args){

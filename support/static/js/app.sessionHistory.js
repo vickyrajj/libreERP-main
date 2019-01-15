@@ -1,7 +1,7 @@
 app.config(function($stateProvider) {
 
   $stateProvider.state('businessManagement.sessionHistory', {
-    url: "/sessionHistory",
+    url: "/qualityCheck",
     views: {
       "": {
         templateUrl: '/static/ngTemplates/app.sessionHistory.html',
@@ -17,28 +17,33 @@ app.controller("businessManagement.sessionHistory.explore", function($scope, $st
     $scope.commentPerm =  $permissions.myPerms('module.reviews.comment')
   }, 500);
 
+  $scope.msgData=[]
+  $scope.fullChatData=[]
+  $scope.msgData = $scope.tab.data.chatThreadData
+  $scope.fullChatData=$scope.tab.data.supportChatData
   $scope.me = $users.get('mySelf');
-  $scope.msgData = $scope.tab.data
-  console.log($scope.msgData);
   $scope.reviewCommentData = [];
 
   $http({
     method: 'GET',
     url: '/api/support/reviewComment/?uid='+$scope.msgData.uid+'&chatedDate='+$scope.msgData.created.split('T')[0],
-
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
     $scope.reviewCommentData =response.data
   });
+
   $http({
     method: 'GET',
     url: '/api/support/chatThread/?uid='+$scope.msgData.uid
   }).
   then(function(response) {
     console.log(response.data,'dddddddddddd',typeof response.data);
-    $scope.chatThreadData =response.data[0]
+    console.log(response.data[0]);
+    console.log($scope.msgData);
+    $scope.myChatThreadData =response.data[0]
   });
+
   $scope.reviewForm = {message:''}
 
   $scope.audio_chat={
@@ -73,8 +78,8 @@ app.controller("businessManagement.sessionHistory.explore", function($scope, $st
     if($scope.video_chat||$scope.audio_chat){
 
       if ($scope.video_chat.agent) {
-          unique_agent_video_id="vid_agent"+$scope.chatThreadData.uid;
-          unique_visitor_video_id="vid_visitor"+$scope.chatThreadData.uid;
+          unique_agent_video_id="vid_agent"+$scope.myChatThreadData.uid;
+          unique_visitor_video_id="vid_visitor"+$scope.myChatThreadData.uid;
           stream_agent  = document.getElementById(unique_agent_video_id);
           stream_visitor  = document.getElementById(unique_visitor_video_id);
           canvas_agent = document.getElementById('canvas_agent');
@@ -95,71 +100,73 @@ app.controller("businessManagement.sessionHistory.explore", function($scope, $st
     }
   }, 900);
   setTimeout(function () {
-  if(stream_agent.readyState>0&&stream_agent.readyState>0){
-          $scope.slider = {
-              value: 0,
+  if(stream_visitor!=undefined&&stream_agent!=undefined){
+    if(stream_agent.readyState>0&&stream_visitor.readyState>0){
+            $scope.slider = {
+                value: 0,
+                options: {
+                    floor: 0,
+                    ceil: stream_agent.duration,
+                    step: 0,
+                    rightToLeft: false
+                }
+            };
+            $scope.vol_slider = {
+              value: 10,
               options: {
-                  floor: 0,
-                  ceil: stream_agent.duration,
-                  step: 0,
-                  rightToLeft: false
-              }
-          };
-          $scope.vol_slider = {
-            value: 10,
-            options: {
-              floor:0,
-              ceil:10,
-              showSelectionBar: true,
-              getSelectionBarColor: function(value) {
-               if (value <= 3)
-                   return 'red';
-               if (value <= 6)
-                   return 'orange';
-               if (value <= 9)
-                   return 'yellow';
-               return '#2AE02A';
+                floor:0,
+                ceil:10,
+                showSelectionBar: true,
+                getSelectionBarColor: function(value) {
+                 if (value <= 3)
+                     return 'red';
+                 if (value <= 6)
+                     return 'orange';
+                 if (value <= 9)
+                     return 'yellow';
+                 return '#2AE02A';
+               }
              }
-           }
-         };
-          var StopSliderOnPause;
-          function handleSliderForVideo(){
-            StopSliderOnPause=setInterval(function () {
-              $scope.slider.options.ceil=stream_agent.duration;
-              if($scope.slider.value+1>=stream_agent.duration){
-                clearInterval(StopSliderOnPause);
-                $scope.play_pause=false;
-                $scope.slider.value=0;
-                stream_agent.pause();
-                stream_visitor.pause();
-              }
-              else{
-                $scope.slider.value=stream_agent.currentTime;
-              }
-            },500);
-          }
-          $scope.$watch('vol_slider.value', function(newValue, oldValue) {
-            stream_agent.volume=newValue/10;
-            stream_visitor.volume=newValue/10;
-          });
-          $scope.$watch('slider.value', function(newValue, oldValue) {
-            if(newValue-oldValue>1||oldValue-newValue>1){
-              stream_agent.currentTime=newValue
-              stream_visitor.currentTime=newValue
+           };
+            var StopSliderOnPause;
+            function handleSliderForVideo(){
+              StopSliderOnPause=setInterval(function () {
+                $scope.slider.options.ceil=stream_agent.duration;
+                if($scope.slider.value+1>=stream_agent.duration){
+                  clearInterval(StopSliderOnPause);
+                  $scope.play_pause=false;
+                  $scope.slider.value=0;
+                  stream_agent.pause();
+                  stream_visitor.pause();
+                }
+                else{
+                  $scope.slider.value=stream_agent.currentTime;
+                }
+              },500);
             }
-          });
-          $scope.play_video=function(){
-            $scope.play_pause=true;
-            stream_agent.play();
-            stream_visitor.play();
-            handleSliderForVideo();
-          }
-          $scope.pause_video=function(){
-            $scope.play_pause=false;
-            stream_agent.pause();
-            stream_visitor.pause();
-            clearInterval(StopSliderOnPause)
-          }
+            $scope.$watch('vol_slider.value', function(newValue, oldValue) {
+              stream_agent.volume=newValue/10;
+              stream_visitor.volume=newValue/10;
+            });
+            $scope.$watch('slider.value', function(newValue, oldValue) {
+              if(newValue-oldValue>1||oldValue-newValue>1){
+                stream_agent.currentTime=newValue
+                stream_visitor.currentTime=newValue
+              }
+            });
+            $scope.play_video=function(){
+              $scope.play_pause=true;
+              stream_agent.play();
+              stream_visitor.play();
+              handleSliderForVideo();
+            }
+            $scope.pause_video=function(){
+              $scope.play_pause=false;
+              stream_agent.pause();
+              stream_visitor.pause();
+              clearInterval(StopSliderOnPause)
+            }
+    }
   }
 }, 1500);
 $scope.snap=function() {
@@ -263,13 +270,13 @@ $scope.snap=function() {
       size: 'lg',
       backdrop: true,
       resolve: {
-        chatThreadData: function() {
-          return $scope.chatThreadData;
+        myChatThreadData: function() {
+          return $scope.myChatThreadData;
         }
       },
-      controller: function($scope, chatThreadData , $users , $uibModalInstance, Flash) {
+      controller: function($scope, myChatThreadData , $users , $uibModalInstance, Flash) {
 
-        $scope.chatThreadData = chatThreadData
+        $scope.myChatThreadData = myChatThreadData
         $scope.calculateTime = function (user , agent) {
           if (user!=undefined) {
             var usertime = new Date(user);
@@ -288,7 +295,7 @@ $scope.snap=function() {
         }
         $http({
             method: 'GET',
-            url: '/api/support/supportChat/?uid='+chatThreadData.uid,
+            url: '/api/support/supportChat/?uid='+myChatThreadData.uid,
           }).
           then(function(response) {
             console.log(response.data,typeof response.data,response.data.length);
@@ -312,7 +319,7 @@ $scope.snap=function() {
         $scope.changeStatus = function(status){
           $http({
             method: 'PATCH',
-            url: '/api/support/chatThread/' + $scope.chatThreadData.pk + '/',
+            url: '/api/support/chatThread/' + $scope.myChatThreadData.pk + '/',
             data: {status:status}
           }).
           then(function(response) {
@@ -326,10 +333,8 @@ $scope.snap=function() {
     }).result.then(function () {
 
     }, function (status) {
-      console.log(status);
-      console.log($scope.chatThreadData);
       if (status != 'backdrop click' && status != 'escape key press') {
-        $scope.chatThreadData.status = status
+        $scope.myChatThreadData.status = status
       }
     });
 
@@ -372,12 +377,16 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   $scope.selectedSortOption={
     value:'Created'
   }
+  $scope.pageOptions=['12','20','30']
+  $scope.pageOptionsSelected={
+    value:$scope.pageOptions[0]
+  }
   $scope.selectedSortOptionArch={
     value:'Created'
   }
   $scope.isTableView=true
-  $scope.viewby = 15;
-  $scope.viewbyArch = 15;
+  // $scope.viewby = 12;
+  // $scope.viewbyArch = 15;
   $scope.currentPage = {
     page:0
   }
@@ -385,7 +394,6 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     page:0
   }
   $scope.offset=0
-
   $scope.detailInfoData={
     chatThreadData:null,
     supportChatData:null,
@@ -394,86 +402,20 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     chatThreadData:null,
     supportChatData:null,
   }
-
   $scope.setMyView=function(){
     $scope.isTableView=!$scope.isTableView
   }
 
-  $scope.filterByUid=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a.uid > b.uid});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return a.uid - b.uid});
-      $scope.setTableValues ()
-    }
-  }
-
-  $scope.filterByCompany=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a.company > b.company});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return a.company > b.company});
-      $scope.setTableValues ()
-    }
-
-  }
-
-  $scope.filterByRating=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a.rating < b.rating});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return a.rating < b.rating});
-      $scope.setTableValues ()
-    }
-  }
-
-  $scope.filterByStatus=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return a.statusChat > b.statusChat});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return a.statusChat > b.statusChat});
-      $scope.setTableValues ()
-    }
-  }
-
-  $scope.filterByUser=function(isArchived){
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return $filter("getName")(a.user_id) > $filter("getName")(b.user_id)});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return $filter("getName")(a.user_id) > $filter("getName")(b.user_id)});
-      $scope.setTableValues ()
-    }
-  }
-
-  $scope.filterByCreated=function(isArchived){
-    console.log($scope.reviewData);
-    if(isArchived){
-      $scope.archivedData.sort(function(a, b){return $filter('date')(a.created, 'dd/MM/yyyy') > $filter('date')(b.created, 'dd/MM/yyyy')});
-      $scope.setTableValuesArch ()
-    }else{
-      $scope.reviewData.sort(function(a, b){return $filter('date')(a.created, 'dd/MM/yyyy') > $filter('date')(b.created, 'dd/MM/yyyy')});
-      console.log($scope.reviewData);
-      if($scope.reviewData.length>0){
-        $scope.tabelRowAction($scope.reviewData[0])
-      }
-      $scope.setTableValues ()
-    }
-  }
-
   $scope.setTableValues =function(){
     $scope.totalItems = $scope.reviewDataLength;
-    $scope.itemsPerPage = $scope.viewby;
+    $scope.itemsPerPage = $scope.pageOptionsSelected.value;
+    console.log($scope.itemsPerPage);
     $scope.maxSize = 4;
     $scope.setPage(1)
   }
   $scope.setTableValuesArch =function(){
     $scope.totalItemsArch = $scope.archivedDataLength;
-    $scope.itemsPerPageArch = $scope.viewbyArch;
+    $scope.itemsPerPageArch = $scope.pageOptionsSelected.value;
     $scope.maxSizeArch = 4;
     $scope.setPageArch(1)
   }
@@ -491,18 +433,12 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   };
 
   $scope.setPagingData= function (page) {
-    // console.log(page);
-    // var pagedData = $scope.reviewData.slice(
-    //   (page - 1) * $scope.itemsPerPage,
-    //   page * $scope.itemsPerPage
-    // );
-    // $scope.tableDataAvail = pagedData;
 
-    $scope.offset=(page-1)*$scope.viewby
+    $scope.offset=(page-1)*$scope.pageOptionsSelected.value
     $scope.filterData()
   }
   $scope.setPagingDataArch= function (page) {
-    $scope.offset=(page-1)*$scope.viewby
+    $scope.offset=(page-1)*$scope.pageOptionsSelected.value
     $scope.filterData()
   }
 
@@ -534,7 +470,6 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
 
     $scope.tabelRowActionArch=function(data){
       $scope.lastActiveTRArch=$scope.archivedData.indexOf(data)
-      console.log(data , $scope.lastActiveTRArch );
       $scope.isDetailInfoUpdatedArch=false
       $scope.detailInfoDataArch.chatThreadData=data
       $scope.fetchChatsForUIDArch(data);
@@ -551,7 +486,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
        $scope.detailInfoData.supportChatData = response.data
        setTimeout(function () {
          $scope.isDetailInfoUpdated=true
-       }, 100);
+       }, 50);
      });
    }
    $scope.fetchChatsForUIDArch= function(data){
@@ -563,8 +498,8 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
        console.log('response data' ,response.data );
        $scope.detailInfoDataArch.supportChatData = response.data
        setTimeout(function () {
-         $scope.isDetailInfoUpdated=true
-       }, 200);
+         $scope.isDetailInfoUpdatedArch=true
+       }, 50);
      });
    }
 
@@ -620,7 +555,8 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   $scope.getArchData = function(date,user,email,client,download,typOfCall){
     $scope.archivedData=[];
     $scope.loadingDataForArc=true;
-    var url = '/api/support/reviewHomeCal/?status=archived&limit='+$scope.viewby+'&offset='+$scope.offset
+    var url = '/api/support/reviewHomeCal/?status=archived&limit='+$scope.pageOptionsSelected.value+'&offset='+$scope.offset
+    url += '&getMyReviews=1'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -642,6 +578,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     if (typOfCall=='both') {
       url += '&both'
     }
+
 
     if ($scope.selectedSortOptionArch.value!='' && $scope.selectedSortOptionArch.value!=undefined ) {
       url += '&sort' + '&sortby=' + $scope.selectedSortOptionArch.value
@@ -683,7 +620,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   $scope.getData = function(date,user,email,client,download,typOfCall){
     $scope.reviewData=[]
     $scope.loadingData=true;
-    var url = '/api/support/reviewHomeCal/?limit='+$scope.viewby+'&offset='+$scope.offset
+    var url = '/api/support/reviewHomeCal/?limit='+$scope.pageOptionsSelected.value+'&offset='+$scope.offset
     url += '&getMyReviews=1'
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
@@ -711,6 +648,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       url += '&sort' + '&sortby=' + $scope.selectedSortOption.value
     }
 
+
     if (download) {
       $window.open(url+'&download','_blank');
     }else {
@@ -725,11 +663,11 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
         $scope.reviewDataLength = response.data.dataLength
         $scope.totalItems = response.data.dataLength
         if($scope.reviewData.length>0){
+          $scope.tabelRowAction($scope.reviewData[0])
           if(myCount<1){
             $scope.setTableValues()
           }
           myCount++;
-          $scope.tabelRowAction($scope.reviewData[0])
           $scope.noDataDialouge=false;
         }else{
           $scope.noDataDialouge=true;
@@ -742,11 +680,9 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
     }
   }
 
-    if ($scope.tabSelected.tab == 'browse') {
-      $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
-    }else{
-      $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
-    }
+    $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
+    $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
+
 
 
   $scope.userSearch = function(query) {
@@ -811,69 +747,66 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
       var date = $scope.form.date
     }
     // console.log(date);
-
     if ($scope.tabSelected.tab == 'browse') {
       $scope.getData(date,user,$scope.form.email,client,download,typOfCall)
-    }else{
+    }else {
       $scope.getArchData(date,user,$scope.form.email,client,download,typOfCall)
     }
+
+
   }
 
     $scope.download = function(){
       $scope.filterData(true)
     }
 
-  $scope.tableAction = function(target,table) {
+  $scope.tableAction = function(index) {
 
-    if(table){
-      target=$scope.reviewData.indexOf(target)
-    }
+    console.log($scope.reviewData[index]);
 
-    var appType = 'Info';
-    $scope.addTab({
-      title: 'Agent : ' + $scope.reviewData[target].uid,
-      cancel: true,
-      app: 'AgentInfo',
-      data: $scope.reviewData[target],
-      active: true,
-      typ:'browse'
-    })
-    // for (var i = 0; i < $scope.reviewData.length; i++) {
-    //   if ($scope.reviewData[i].pk == parseInt(target)) {
-    //     if (action == 'edit') {
-    //       var title = 'Edit : ';
-    //       var appType = 'companyEdit';
-    //     } else if (action == 'info') {
-    //       var title = 'Details : ';
-    //       var appType = 'companyInfo';
-    //     }
-    //
-    //     $scope.addTab({
-    //       title: title + $scope.reviewData[i].pk,
-    //       cancel: true,
-    //       app: appType,
-    //       data: $scope.reviewData[i],
-    //       active: true
-    //     })
-    //   }
-    // }
+    $http({
+      method: 'GET',
+      url: '/api/support/reviewHomeChats/?uid='+$scope.reviewData[index].uid,
+    }).
+    then(function(response) {
+      var appType = 'Info';
+
+        $scope.addTab({
+          title: 'Agent : ' + $scope.reviewData[index].uid,
+          cancel: true,
+          app: 'AgentInfo',
+          data: {
+            chatThreadData:$scope.reviewData[index],
+            supportChatData:response.data
+          },
+          active: true,
+          typ:'browse'
+        })
+    });
+
   }
-  $scope.tableArchAction = function(target,table) {
+  $scope.tableArchAction = function(index) {
 
-    if(table){
-      target=$scope.archivedData.indexOf(target)
-    }
-    // console.log(target, action, mode);
-    console.log($scope.archivedData[target]);
-    var appType = 'Info';
-    $scope.addTab({
-      title: 'Agent : ' + $scope.archivedData[target][0].uid,
-      cancel: true,
-      app: 'AgentInfo',
-      data: $scope.archivedData[target],
-      active: true,
-      typ:'archived'
-    })}
+
+    $http({
+      method: 'GET',
+      url: '/api/support/reviewHomeChats/?uid='+$scope.archivedData[index].uid,
+    }).
+    then(function(response) {
+      var appType = 'Info';
+      $scope.addTab({
+        title: 'Agent : ' + $scope.archivedData[index].uid,
+        cancel: true,
+        app: 'AgentInfo',
+        data: {
+            chatThreadData:$scope.archivedData[index],
+            supportChatData:response.data
+          },
+        active: true,
+        typ:'archived'
+      })
+    });
+  }
 
   $scope.tabs = [];
   $scope.searchTabActive = true;
@@ -895,9 +828,11 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
   $scope.addTab = function(input) {
     $scope.searchTabActive = false;
     alreadyOpen = false;
+    console.log(input);
+    console.log($scope.tabs);
     for (var i = 0; i < $scope.tabs.length; i++) {
-      console.log($scope.tabs[i].data[0].id,input.data[0].id, $scope.tabs[i].app ,input.app);
-      if ($scope.tabs[i].data[0].id == input.data[0].id && $scope.tabs[i].app == input.app) {
+      console.log($scope.tabs[i].data.chatThreadData.id,input.data.chatThreadData.id, $scope.tabs[i].app ,input.app);
+      if ($scope.tabs[i].data.chatThreadData.id == input.data.chatThreadData.id && $scope.tabs[i].app == input.app) {
         $scope.tabs[i].active = true;
         alreadyOpen = true;
       } else {

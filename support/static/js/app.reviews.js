@@ -22,6 +22,10 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   $scope.currentPage = {
     page:1
   }
+  $scope.pageOptions=['12','20','30']
+  $scope.pageOptionsSelected={
+    value:$scope.pageOptions[0]
+  }
 
   $scope.offset=0
 
@@ -33,7 +37,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
     $scope.viewby = 15;
     $scope.setTableValues =function(){
       $scope.totalItems = $scope.reviewDataLength;
-      $scope.itemsPerPage = $scope.viewby;
+      $scope.itemsPerPage = $scope.pageOptionsSelected.value;
       $scope.maxSize = 4;
       $scope.setPage(1)
     }
@@ -42,7 +46,7 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
      $scope.setPagingData($scope.currentPage.page)
    };
    $scope.setPagingData= function (page) {
-     $scope.offset=(page-1)*$scope.viewby
+     $scope.offset=(page-1)*$scope.pageOptionsSelected.value
      $scope.filterData()
    }
    $scope.pageChanged = function() {
@@ -93,7 +97,7 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
 
   $http({
     method: 'GET',
-    url:'/api/support/reviewHomeCal/?customer&&limit='+$scope.viewby+'&offset='+$scope.offset+'&date='+today_date
+    url:'/api/support/reviewHomeCal/?customer&&limit='+$scope.pageOptionsSelected.value+'&offset='+$scope.offset+'&date='+today_date
   }).
   then(function(response) {
     $scope.reviewData = response.data.data
@@ -154,8 +158,6 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
 
   }
 
-var countt=0
-
   $scope.tabs = [];
   $scope.searchTabActive = true;
   $scope.closeTab = function(index) {
@@ -182,39 +184,8 @@ var countt=0
 
 
   $scope.isTableView=true
-
-  $scope.setDataAfterFilter=function(){
-    $scope.detailInfoData=$scope.reviewData[0]
-    $scope.lastActiveTR=0;
-    $scope.setTableValues ()
-  }
-
   $scope.setMyView=function(){
     $scope.isTableView=!$scope.isTableView
-  }
-  $scope.filterByUid=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].uid - b[0].uid});
-      $scope.setDataAfterFilter()
-  }
-  $scope.filterByCompany=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].company > b[0].company});
-      $scope.setDataAfterFilter()
-  }
-  $scope.filterByRating=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].rating < b[0].rating});
-      $scope.setDataAfterFilter()
-  }
-  $scope.filterByStatus=function(){
-      $scope.reviewData.sort(function(a, b){return a[0].statusChat > b[0].statusChat});
-
-  }
-  $scope.filterByUser=function(){
-      $scope.reviewData.sort(function(a, b){return $filter("getName")(a[0].user_id) > $filter("getName")(b[0].user_id)});
-      $scope.setDataAfterFilter()
-  }
-  $scope.filterByCreated=function(){
-      $scope.reviewData.sort(function(a, b){return $filter('date')(a[0].created, "dd/MM/yyyy") > $filter('date')(b[0].created, "dd/MM/yyyy");})
-      $scope.setDataAfterFilter()
   }
 
   $scope.chatTypes=['All','audio','video','Audio & Video']
@@ -223,87 +194,12 @@ var countt=0
   $scope.selectedSortOption={
     value:'Created'
   }
-
   $scope.loadingData=true;
-  //
-  // $scope.$watch('selectedSortOption.value',function(newValue,oldValue){
-  //   if(newValue==undefined)
-  //   return
-  //   switch (newValue) {
-  //       case 'Created':
-  //         $scope.filterByCreated();
-  //         break;
-  //       case 'Agent Name':
-  //         $scope.filterByUser();
-  //         break;
-  //       case 'UID':
-  //          $scope.filterByUid();
-  //         break;
-  //       case 'Rating':
-  //         $scope.filterByRating();
-  //         break;
-  //       case 'Company':
-  //         $scope.filterByCompany();
-  //         break;
-  //       case ' ':
-  //         break
-  //     }
-  // },true)
-
-  // $scope.getData = function(date,email,download,typOfCall){
-  //
-  //  $scope.reviewData=[]
-  //  $scope.loadingData=true;
-  //  $scope.tableUpdated=false
-  //   var url = '/api/support/reviewHomeCal/?customer'
-  //   if (date!=null&&typeof date == 'object') {
-  //     url += '&date=' + date.toJSON().split('T')[0]
-  //   }
-  //   if (email.length > 0 && email.indexOf('@') > 0) {
-  //     url += '&email=' + email
-  //   }
-  //
-  //   if (typOfCall=='audio') {
-  //     url += '&audio'
-  //   }
-  //   if (typOfCall=='video') {
-  //     url += '&video'
-  //   }
-  //   if (typOfCall=='both') {
-  //     url += '&both'
-  //   }
-  //
-  //   if (download) {
-  //     $window.open(url+'&download','_blank');
-  //   }else {
-  //     $http({
-  //       method: 'GET',
-  //       url: url,
-  //     }).
-  //     then(function(response) {
-  //       console.log(response.data,'dddddddddddd',typeof response.data);
-  //       $scope.reviewData =response.data
-  //       $scope.loadingData=false;
-  //       $scope.tableUpdated=true;
-  //       if(response.data.length<1){
-  //         $scope.noDataDialouge=true;
-  //       }else{
-  //         $scope.noDataDialouge=false;
-  //       }
-  //     });
-  //   }
-  //
-  // }
-
-
-
-
-
 
   $scope.getData = function(date,email,download,typOfCall){
    $scope.reviewData=[]
    $scope.loadingData=true;
-    var url = '/api/support/reviewHomeCal/?customer&limit='+$scope.viewby+'&offset='+$scope.offset
+    var url = '/api/support/reviewHomeCal/?customer&limit='+$scope.pageOptionsSelected.value+'&offset='+$scope.offset
     // '/api/support/reviewHomeCal/?customer&chatedDate='+new Date()
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]

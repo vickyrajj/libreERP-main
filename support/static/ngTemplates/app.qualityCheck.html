@@ -46,19 +46,26 @@
 
                                    <div>
                                      <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
-                                     <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:90%;margin-right:1rem;color:red">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
-                                     <span ng-if="data.customerRating>3" style="font-size:90%;margin-right:1rem;color:green">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
+                                     <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;margin-right:1rem;padding: .1rem 1rem;background-color:#F97E7EE6">
+                                        <i class="fa fa-star fa-md" aria-hidden="true"></i> {{data.customerRating}}
+                                    </span>
+                                     <span ng-if="data.customerRating>3" style="font-size:80%;margin-right:1rem;padding: .1rem 1rem;background-color:#A1F298">
+                                        <i class="fa fa-star fa-md" aria-hidden="true"></i> {{data.customerRating}}
+                                    </span>
                                    </div>
                                    <div class="tabel_dataStatus" style="font-size:80%">
                                      <span style="background:#fff;" ><i class="fa fa-calendar-o" aria-hidden="true"></i> {{data.created|  date : 'dd-MMM-yyyy'}}</span>
-                                     <span ng-if="data.statusChat=='started'" style="color:green"><b>{{data.statusChat|humanize}}</b></span>
-                                     <span ng-if="data.statusChat=='closed'" style="color:#A40B0B"><b>{{data.statusChat|humanize}}</b></span>
-                                     <span ng-if="data.statusChat=='reviewed'" style="color:brown"><b>{{data.statusChat|humanize}}</b></span>
-                                     <span style="float:right;margin-left: 2rem;opacity:0.6;">
-                                       <i ng-if="data.typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
-                                       <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
-                                     </span>
+                                     <span ng-if="data.status=='late'" style="color:green"><b>{{data.status|humanize}}</b></span>
+                                     <span ng-if="data.status=='started'" style="color:green"><b>{{data.status|humanize}}</b></span>
+                                     <span ng-if="data.status=='closed'" style="color:#A40B0B"><b>{{data.status|humanize}}</b></span>
+                                     <span ng-if="data.status=='reviewed'" style="color:brown"><b>{{data.status|humanize}}</b></span>
+                                     <span ng-if="data.status=='resolved'" style="color:#FF8C00"><b>{{data.status|humanize}}</b></span>
+                                     <span ng-if="!data.user_id" style="color:#F90000"><b>Missed</b></span>
                                    </div>
+                                 </span>
+                                 <span style="float:right;margin-left: 2rem;opacity:0.6;padding:5px">
+                                   <i ng-if="data.typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
+                                   <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
                                  </span>
                               </td>
                             </tr>
@@ -67,12 +74,6 @@
 
                         <div ng-if="reviewData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff" >
                           <span>
-                            <!-- <select ng-model="viewby" ng-change="setItemsPerPage(viewby)">
-                              <option>15</option>
-                              <option>30</option>
-                              <option>45</option>
-                              <option>60</option>
-                            </select> -->
                             <select ng-model="pageOptionsSelected.value" ng-change="setItemsPerPage(pageOptionsSelected.value)">
                               <option ng-repeat="view in pageOptions" value="{{view}}">{{view}} </option>
                             </select>
@@ -154,11 +155,11 @@
 
                 <div class="row container-fluid" style="margin-top:15px;" ng-if="!isTableView">
 
-                    <div class="col-md-9">
+                    <div class="col-md-9" style="width:80%">
                       <div class="col-md-4" ng-repeat="r in reviewData">
-                        <div class="row" style="margin-bottom:30px; margin-right:15px;">
-                            <div class="card" style="margin-bottom:-2px; border-radius:4px 4px 0px 0px; padding:15px;">
-                                <div class="row" style="padding:0px 10px; min-height:130px;">
+                        <div class="row" style="margin-bottom:20px; margin-right:15px;">
+                            <div class="card" style="margin-bottom:-2px; border-radius:4px 4px 0px 0px; padding:10px;">
+                                <div class="row" style="padding:0px 10px; min-height:120px;">
                                   <div class="col-md-8">
                                     <h6>Agent Name : {{r.user_id | getName}}</h6>
                                     <h6>UID : {{r.uid}}</h6>
@@ -191,14 +192,38 @@
                                 </div>
                               </div>
                           </div>
-                          <div class="btn btn-block btn-primary" style="border-top:1px solid #eee; padding:10px; border-radius:0px 0px 4px 4px;" ng-click="tableAction($index)">
+                          <div class="btn btn-block btn-primary" style="border-top:1px solid #eee; padding:5px; border-radius:0px 0px 4px 4px;" ng-click="tableAction($index)">
                             View Chat
                           </div>
                       </div>
                     </div>
+
+                    <div ng-if="reviewData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff;left:60%" >
+                      <span>
+                        <select ng-model="pageOptionsSelected.value" ng-change="setItemsPerPage(pageOptionsSelected.value)">
+                          <option ng-repeat="view in pageOptions" value="{{view}}">{{view}} </option>
+                        </select>
+                      </span>
+                      <span>
+                        <div uib-pagination
+                           style="margin:-10px 0px"
+                           total-items="totalItems"
+                           ng-model="currentPage.page"
+                           ng-change="pageChanged()"
+                           class="pagination-sm"
+                           items-per-page="itemsPerPage"
+                           previous-text="&lsaquo;"
+                           next-text="&rsaquo;"
+                           first-text="&laquo;"
+                           last-text="&raquo;"
+                           max-size="maxSize"
+                           force-ellipses="true"
+                           boundary-links="true"></pagination>
+                      </div>
+                    </div>
                     </div>
                   <div class="col-sm-3" >
-                     <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;height:100vh;padding:2rem;right:0;width:35rem;top:5vh">
+                     <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;height:100vh;padding:2rem;right:0;width:18%;top:5vh">
                        <div style="display:block;margin:10px 0px;">
                          <button type="button" class="btn btn-block btn-warning" ng-click="setMyView()" style="outline:none">
                             <i ng-if="!isTableView"class="fa fa-table fa-md"  aria-hidden="true">
@@ -255,11 +280,11 @@
                 Archived
                 <i class="fa fa-archive"></i>
               </uib-tab-heading>
-              <div style="text-align:center;position:fixed;top:40%;right:40%" ng-if="loadingDataForArc">
+              <!-- <div style="text-align:center;position:fixed;top:40%;right:40%" ng-if="loadingDataForArc">
                 <img ng-src="/static/images/spinner.gif" alt="">
-              </div>
+              </div> -->
                                               <!-- ==============Table View=========== -->
-            <div class="bg-white My_container" style="" ng-if="!loadingDataForArc&&isTableView">
+            <div class="bg-white My_container" style="" ng-if="isTableView">
 
                                           <!-- **********left container********************* -->
                       <div class="Left_container">
@@ -277,30 +302,33 @@
                               <span style="display:inline-block">
                                  <div ng-if="data.name">
                                    <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
-                                   <!-- <span style="font-weight: 400;font-size:75%">{{data.company? data.company:'-'}}</span> -->
                                  </div>
 
                                  <span style="font-size:83%">{{data.uid}}</span>
-                                   <!-- <span ng-if="data.chatDuration>0.0" style="font-size:80%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
-
-                                   <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;margin-right:1rem;color:red">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
-                                   <span ng-if="data.customerRating>3" style="font-size:80%;margin-right:1rem;color:green">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span> -->
-
                                  <div>
                                    <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
-                                   <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:90%;margin-right:1rem;color:red">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
-                                   <span ng-if="data.customerRating>3" style="font-size:90%;margin-right:1rem;color:green">Rating :{{data.customerRating}} <i class="fa fa-star fa-md" aria-hidden="true"></i></span>
+                                   <span ng-if="data.customerRating<=3&&data.customerRating" style="font-size:80%;margin-right:1rem;padding: .1rem .3rem;background-color:#F97E7EE6">
+                                      <i class="fa fa-star fa-md" aria-hidden="true"></i> {{data.customerRating}}
+                                  </span>
+                                   <span ng-if="data.customerRating>3" style="font-size:80%;margin-right:1rem;padding: .1rem .3rem;background-color:#A1F298">
+                                      <i class="fa fa-star fa-md" aria-hidden="true"></i> {{data.customerRating}}
+                                  </span>
                                  </div>
                                  <div class="tabel_dataStatus" style="font-size:80%">
                                    <span style="background:#fff;" ><i class="fa fa-calendar-o" aria-hidden="true"></i> {{data.created|  date : 'dd-MMM-yyyy'}}</span>
-                                   <span ng-if="data.statusChat=='started'" style="color:green"><b>{{data.statusChat|humanize}}</b></span>
-                                   <span ng-if="data.statusChat=='closed'" style="color:#A40B0B"><b>{{data.statusChat|humanize}}</b></span>
-                                   <span ng-if="data.statusChat=='reviewed'" style="color:brown"><b>{{data.statusChat|humanize}}</b></span>
-                                   <span style="float:right;margin-left: 2rem;opacity:0.6;">
-                                     <i ng-if="data.typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
-                                     <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
-                                   </span>
+                                   <!-- {{data.statusChat}} -->
+                                   <span ng-if="data.status=='late'" style="color:green"><b>{{data.status|humanize}}</b></span>
+                                   <span ng-if="data.status=='started'" style="color:green"><b>{{data.status|humanize}}</b></span>
+                                   <span ng-if="data.status=='closed'" style="color:#A40B0B"><b>{{data.status|humanize}}</b></span>
+                                   <span ng-if="data.status=='reviewed'" style="color:brown"><b>{{data.status|humanize}}</b></span>
+                                   <span ng-if="data.status=='resolved'" style="color:#FF8C00"><b>{{data.status|humanize}}</b></span>
+                                   <span ng-if="!data.user_id" style="color:#F90000"><b>Missed</b></span>
+
                                  </div>
+                               </span>
+                               <span style="float:right;margin-left: 2rem;opacity:0.6;padding:5px">
+                                 <i ng-if="data.typ=='audio'" class="fa fa-phone fa-lg" aria-hidden="true"></i>
+                                 <i ng-if="data.typ=='video'" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
                                </span>
                             </td>
                           </tr>
@@ -433,6 +461,33 @@
                         </div>
                     </div>
                   </div>
+
+                  <div ng-if="archivedData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff;text-align:center" >
+                    <span>
+                      <select ng-model="pageOptionsSelected.value" ng-change="setItemsPerPageArch(pageOptionsSelected.value)">
+                        <option ng-repeat="view in pageOptions" value="{{view}}">{{view}} </option>
+                      </select>
+                    </span>
+                    <span>
+                      <pagination
+                         style="margin:-10px 0px"
+                         total-items="itemsPerPageArch"
+                         ng-model="currentPage.page"
+                         ng-change="pageChangedArch()"
+                         class="pagination-sm"
+                         items-per-page="itemsPerPage"
+                         previous-text="&lsaquo;"
+                         next-text="&rsaquo;"
+                         first-text="&laquo;"
+                         last-text="&raquo;"
+                         max-size="maxSize"
+                         force-ellipses="true"
+                         boundary-links="true"></pagination>
+                    </span>
+                  </div>
+
+
+
                   </div>
                 <div class="col-sm-3" >
                    <div class="container-fluid" style="position:fixed;background-color:#f0f0f0;height:100vh;padding:2rem;right:0;width:35rem;top:5vh">

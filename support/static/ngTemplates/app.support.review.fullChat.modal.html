@@ -1,28 +1,30 @@
 <div class="modal-body">
   <div class="container-fluid">
-    <h3>{{myChatThreadData[0].uid}}<span class="pull-right"><strong>Status : </strong>{{myChatThreadData.status | humanize}}</span></h3><hr>
+    <h5>{{myChatThreadData[0].uid}}<span class="pull-right"><strong>Status : </strong>{{myChatThreadData.status | humanize}}</span></h5><hr>
     <div class="row">
       <div class="col-md-11 col-md-offset-1">
         <div class="row text-center">
-          <span style="font-size:20px"><strong>Change Status</strong></span>
+          <span style="font-size:16px"><strong>Change Status</strong></span>
         </div>
-        <div class="row" style="padding-top:25px">
-          <div class="col-md-2 btn btn-primary" style="margin-right:20px"  mwl-confirm title="Started" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('started')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='started'">
+        <div class="row text-center" style="padding:10px;">
+          <div class="col-md-3 btn btn-primary" style="margin-right:15px"  mwl-confirm title="Started" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('started')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='started'">
             <strong>Started</strong>
           </div>
-          <div class="col-md-2 btn btn-primary" style="margin-right:20px"  mwl-confirm title="Reviewed" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('reviewed')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='reviewed'">
+          <div class="col-md-3 btn btn-primary" style="margin-right:15px"  mwl-confirm title="Reviewed" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('reviewed')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='reviewed'">
             <strong>Reviewed</strong>
           </div>
-          <div class="col-md-2 btn btn-primary" style="margin-right:20px"  mwl-confirm title="EscalatedL1" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('escalatedL1')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='escalatedL1'">
+          <div class="col-md-3 btn btn-primary" style="margin-right:15px"  mwl-confirm title="EscalatedL1" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('escalatedL1')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='escalatedL1'">
             <strong>EscalatedL1</strong>
           </div>
-          <div class="col-md-2 btn btn-primary" style="margin-right:20px"  mwl-confirm title="EscalatedL2" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('escalatedL2')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='escalatedL2'">
+        </div>
+        <div class="row" style="padding:10px;">
+          <div class="col-md-3 btn btn-primary" style="margin-right:15px"  mwl-confirm title="EscalatedL2" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('escalatedL2')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='escalatedL2'">
             <strong>EscalatedL2</strong>
           </div>
-          <div class="col-md-2 btn btn-primary" style="margin-right:20px"  mwl-confirm title="Resolved" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('resolved')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='resolved'">
+          <div class="col-md-3 btn btn-primary" style="margin-right:15px"  mwl-confirm title="Resolved" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('resolved')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='resolved'">
             <strong>Resolved</strong>
           </div>
-          <div class="col-md-2 btn btn-primary" style="margin-right:20px"  mwl-confirm title="Archived" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('archived')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='archived'">
+          <div class="col-md-3 btn btn-primary" style="margin-right:15px"  mwl-confirm title="Archived" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('archived')" confirm-button-type="default" cancel-button-type="default" ng-if="myChatThreadData.status !='archived'">
             <strong>Archived</strong>
           </div>
         </div>
@@ -30,31 +32,43 @@
     </div>
     <hr>
     <div class="col-md-12">
-      <h4 ng-if="myChatThreadData.resolvedBy" style="font-weight:501">
+      <h5 ng-if="myChatThreadData.resolvedBy" style="font-weight:501">
+      <h5 ng-if="myChatThreadData.resolvedBy" style="font-weight:501">
         <span><span style="background-color:'red'">Resolved On</span> : {{myChatThreadData.resolvedOn.split('.')[0].split('T')[0]}} at {{myChatThreadData.resolvedOn.split('.')[0].split('T')[1]}} </span>
         <span class="pull-right"> Resloved By : {{myChatThreadData.resolvedBy | getName}}</span>
-      </h4>
-      <h4 ng-if="myChatThreadData.reviewedBy" style="font-weight:501">
+      </h5>
+    </h5>
+      <h5 ng-if="myChatThreadData.reviewedBy" style="font-weight:501">
+      <h5 ng-if="myChatThreadData.reviewedBy" style="font-weight:501">
         <span>Reviewed On : {{myChatThreadData.reviewedOn.split('.')[0].split('T')[0]}} at {{myChatThreadData.reviewedOn.split('.')[0].split('T')[1]}} </span>
         <span class="pull-right"> Reviewed By : {{myChatThreadData.reviewedBy | getName}}</span>
-      </h4>
-      <h4 ng-if="myChatThreadData.archivedBy" style="font-weight:501">
+      </h5>
+    </h5>
+      <h5 ng-if="myChatThreadData.archivedBy" style="font-weight:501">
+      <h5 ng-if="myChatThreadData.archivedBy" style="font-weight:501">
         <span>Archived On : {{myChatThreadData.archivedOn.split('.')[0].split('T')[0]}} at {{myChatThreadData.archivedOn.split('.')[0].split('T')[1]}} </span>
         <span class="pull-right"> Archived By : {{myChatThreadData.archivedBy | getName}}</span>
-      </h4>
-      <h4 ng-if="myChatThreadData.escalatedL1By" style="font-weight:501">
+      </h5>
+    </h5>
+      <h5 ng-if="myChatThreadData.escalatedL1By" style="font-weight:501">
+      <h5 ng-if="myChatThreadData.escalatedL1By" style="font-weight:501">
         <span>EscalatedL1 On : {{myChatThreadData.escalatedL1On.split('.')[0].split('T')[0]}} at {{myChatThreadData.escalatedL1On.split('.')[0].split('T')[1]}} </span>
         <span class="pull-right"> EscalatedL1 By : {{myChatThreadData.escalatedL1By | getName}}</span>
-      </h4>
-      <h4 ng-if="myChatThreadData.escalatedL2By" style="font-weight:501">
+      </h5>
+    </h5>
+      <h5 ng-if="myChatThreadData.escalatedL2By" style="font-weight:501">
+      <h5 ng-if="myChatThreadData.escalatedL2By" style="font-weight:501">
         <span>EscalatedL2 On : {{myChatThreadData.escalatedL2On.split('.')[0].split('T')[0]}} at {{myChatThreadData.escalatedL2On.split('.')[0].split('T')[1]}} </span>
         <span class="pull-right"> EscalatedL2 By : {{myChatThreadData.escalatedL2By | getName}}</span>
-      </h4>
-      <h4 ng-if="myChatThreadData.closedOn" style="font-weight:501">
+      </h5>
+    </h5>
+      <h5 ng-if="myChatThreadData.closedOn" style="font-weight:501">
+      <h5 ng-if="myChatThreadData.closedOn" style="font-weight:501">
         <span>Closed On : {{myChatThreadData.closedOn.split('.')[0].split('T')[0]}} at {{myChatThreadData.closedOn.split('.')[0].split('T')[1]}} </span>
         <span ng-if="myChatThreadData.closedBy" class="pull-right"> Closed By : {{myChatThreadData.closedBy | getName}}</span>
         <span ng-if="!myChatThreadData.closedBy" class="pull-right"> Closed By : Visitor</span>
-      </h4>
+      </h5>
+    </h5>
       <!-- <h5 ng-if="myChatThreadData.resolvedBy" style="font-weight:501">Resolved on {{myChatThreadData.resolvedOn.split('T')[0]}} by {{myChatThreadData.resolvedBy | getName}}</h5>
       <h5 ng-if="myChatThreadData.reviewedBy" style="font-weight:501">Reviewed on {{myChatThreadData.reviewedOn.split('T')[0]}} by {{myChatThreadData.reviewedBy | getName}}</h5>
       <h5 ng-if="myChatThreadData.archivedBy" style="font-weight:501">Archived on {{myChatThreadData.archivedOn.split('T')[0]}} by {{myChatThreadData.archivedBy | getName}}</h5>
@@ -66,7 +80,8 @@
       <div class="row" ng-repeat="msg in fullChatData">
         <!-- <h3>{{msg.message}}</h3> -->
         <div ng-if="!msg.logs" class="row container-fluid" style="float:{{msg.sentByAgent ? 'right; background-color:#dba4ae; ':'left; background-color:#72b3d4;'}} padding:10px;margin:8px;border-radius:{{msg.sentByAgent ? '20px 0px 20px 20px':'0px 20px 20px 20px'}};">
-        <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" ><h4>{{msg.message}}</h4></p>
+        <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" ><h5>{{msg.message}}</h5></p>
+        <!-- <p ng-if="msg.message.length>0 && msg.attachmentType != 'youtubeLink'" style="word-break: break-all !important;" ><h5>{{msg.message}}</h5></p> -->
          <img ng-if="msg.attachmentType == 'image'" ng-src="{{msg.attachment}}" style="width:250px;">
          <video ng-if="msg.attachmentType == 'video'" width="280" height="240" ng-src="{{msg.attachment}}" controls></video>
          <audio ng-if="msg.attachmentType == 'audio'" ng-src="{{msg.attachment}}" controls></audio>

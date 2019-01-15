@@ -144,7 +144,7 @@
     <div class="row" style="margin:0px;margin-top:10px;margin-bottom:5px;padding-top:10px;padding-bottom:10px;">
       <span class="uibTypeaheadDropup">
         <!-- <input ng-if="chatBox.fileToSend.size==0" type="text" class="col-md-9" ng-enter="send()" placeholder="Message" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" data-placement="top" style="border:none;outline:none;background-color:white;"> -->
-        <textarea id="chatBoxdiv{{index}}" ng-keydown="textAreaBehavior($event)" ng-if="chatBox.fileToSend.size==0" class="col-md-9" rows="3" cols="80" style="border:none; outline:none; resize:none; background-color:#fff;" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" placeholder="Message" autofocus></textarea>
+        <textarea id="chatBoxdiv{{index}}" ng-disabled="data.disableInput" ng-keydown="textAreaBehavior($event)" ng-if="chatBox.fileToSend.size==0" class="col-md-9" rows="3" cols="80" style="border:none; outline:none; resize:none; background-color:#fff;" ng-model="chatBox.messageToSend" uib-typeahead="cannedRes.text as cannedRes.text for cannedRes in searchCannedRes($viewValue)" placeholder="Message" autofocus></textarea>
       </span>
 
       <input type="file" id="filePickerChat{{index}}" style="display:none;" file-model="chatBox.fileToSend">

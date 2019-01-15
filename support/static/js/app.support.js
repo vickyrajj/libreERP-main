@@ -53,6 +53,70 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
 
+
+
+
+
+    $scope.sendBackHeartBeat=function() {
+      // var scope = angular.element(document.getElementById('chatTab')).scope();
+
+
+        function heartbeat(args) {
+          if (args[0]=='popup') {
+            console.log(args[2]);
+            alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
+            $scope.myUsers.push(args[2]);
+            connection.session.publish(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', $scope.me.pk], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published AP", args[2].uid);
+            });
+
+            var xhttp = new XMLHttpRequest();
+             xhttp.onreadystatechange = function() {
+               if (this.readyState == 4 && this.status == 200) {
+                 console.log('chat thread pk changed');
+               }
+             };
+             xhttp.open('PATCH', '/api/support/chatThread/'+ args[2].chatThreadPk + '/', true);
+             xhttp.setRequestHeader("Content-type", "application/json");
+             xhttp.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+             xhttp.send(JSON.stringify({user:$scope.me.pk}));
+            return
+          }
+          else {
+            return true
+          }
+        }
+
+        connection.session.register(wamp_prefix+'service.support.heartbeat.'+$scope.me.pk, heartbeat).then(
+            function (res) {
+              console.log("registered to service.support.heartbeat with "+$scope.me.pk);
+            },
+            function (err) {
+              console.log("failed to registered: ");
+            }
+          );
+
+    }
+
+
+    // setTimeout(function() {
+    //   sendBackHeartBeat();
+    // }, 5000);
+
+
+
+
+
+
+
+
+
+
+
+
   Tinycon.setOptions({
   	width: 7,
   	height: 9,
@@ -114,7 +178,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
             console.log("Published");
           });
         }
-
+        $scope.sendBackHeartBeat();
         $scope.getOpenedChatFromCookie();
 
       });

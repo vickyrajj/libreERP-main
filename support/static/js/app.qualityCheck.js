@@ -100,71 +100,73 @@ app.controller("businessManagement.reviews.explore", function($scope, $state, $u
     }
   }, 900);
   setTimeout(function () {
-  if(stream_agent.readyState>0&&stream_agent.readyState>0){
-          $scope.slider = {
-              value: 0,
+  if(stream_visitor!=undefined&&stream_agent!=undefined){
+    if(stream_agent.readyState>0&&stream_visitor.readyState>0){
+            $scope.slider = {
+                value: 0,
+                options: {
+                    floor: 0,
+                    ceil: stream_agent.duration,
+                    step: 0,
+                    rightToLeft: false
+                }
+            };
+            $scope.vol_slider = {
+              value: 10,
               options: {
-                  floor: 0,
-                  ceil: stream_agent.duration,
-                  step: 0,
-                  rightToLeft: false
-              }
-          };
-          $scope.vol_slider = {
-            value: 10,
-            options: {
-              floor:0,
-              ceil:10,
-              showSelectionBar: true,
-              getSelectionBarColor: function(value) {
-               if (value <= 3)
-                   return 'red';
-               if (value <= 6)
-                   return 'orange';
-               if (value <= 9)
-                   return 'yellow';
-               return '#2AE02A';
+                floor:0,
+                ceil:10,
+                showSelectionBar: true,
+                getSelectionBarColor: function(value) {
+                 if (value <= 3)
+                     return 'red';
+                 if (value <= 6)
+                     return 'orange';
+                 if (value <= 9)
+                     return 'yellow';
+                 return '#2AE02A';
+               }
              }
-           }
-         };
-          var StopSliderOnPause;
-          function handleSliderForVideo(){
-            StopSliderOnPause=setInterval(function () {
-              $scope.slider.options.ceil=stream_agent.duration;
-              if($scope.slider.value+1>=stream_agent.duration){
-                clearInterval(StopSliderOnPause);
-                $scope.play_pause=false;
-                $scope.slider.value=0;
-                stream_agent.pause();
-                stream_visitor.pause();
-              }
-              else{
-                $scope.slider.value=stream_agent.currentTime;
-              }
-            },500);
-          }
-          $scope.$watch('vol_slider.value', function(newValue, oldValue) {
-            stream_agent.volume=newValue/10;
-            stream_visitor.volume=newValue/10;
-          });
-          $scope.$watch('slider.value', function(newValue, oldValue) {
-            if(newValue-oldValue>1||oldValue-newValue>1){
-              stream_agent.currentTime=newValue
-              stream_visitor.currentTime=newValue
+           };
+            var StopSliderOnPause;
+            function handleSliderForVideo(){
+              StopSliderOnPause=setInterval(function () {
+                $scope.slider.options.ceil=stream_agent.duration;
+                if($scope.slider.value+1>=stream_agent.duration){
+                  clearInterval(StopSliderOnPause);
+                  $scope.play_pause=false;
+                  $scope.slider.value=0;
+                  stream_agent.pause();
+                  stream_visitor.pause();
+                }
+                else{
+                  $scope.slider.value=stream_agent.currentTime;
+                }
+              },500);
             }
-          });
-          $scope.play_video=function(){
-            $scope.play_pause=true;
-            stream_agent.play();
-            stream_visitor.play();
-            handleSliderForVideo();
-          }
-          $scope.pause_video=function(){
-            $scope.play_pause=false;
-            stream_agent.pause();
-            stream_visitor.pause();
-            clearInterval(StopSliderOnPause)
-          }
+            $scope.$watch('vol_slider.value', function(newValue, oldValue) {
+              stream_agent.volume=newValue/10;
+              stream_visitor.volume=newValue/10;
+            });
+            $scope.$watch('slider.value', function(newValue, oldValue) {
+              if(newValue-oldValue>1||oldValue-newValue>1){
+                stream_agent.currentTime=newValue
+                stream_visitor.currentTime=newValue
+              }
+            });
+            $scope.play_video=function(){
+              $scope.play_pause=true;
+              stream_agent.play();
+              stream_visitor.play();
+              handleSliderForVideo();
+            }
+            $scope.pause_video=function(){
+              $scope.play_pause=false;
+              stream_agent.pause();
+              stream_visitor.pause();
+              clearInterval(StopSliderOnPause)
+            }
+    }
   }
 }, 1500);
 $scope.snap=function() {
@@ -436,7 +438,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     $scope.filterData()
   }
   $scope.setPagingDataArch= function (page) {
-    $scope.offset=(page-1)*$scope.pageOptionsSelectedArch.value
+    $scope.offset=(page-1)*$scope.pageOptionsSelected.value
     $scope.filterData()
   }
 
@@ -468,7 +470,6 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
 
     $scope.tabelRowActionArch=function(data){
       $scope.lastActiveTRArch=$scope.archivedData.indexOf(data)
-      console.log(data , $scope.lastActiveTRArch );
       $scope.isDetailInfoUpdatedArch=false
       $scope.detailInfoDataArch.chatThreadData=data
       $scope.fetchChatsForUIDArch(data);
@@ -497,7 +498,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
        console.log('response data' ,response.data );
        $scope.detailInfoDataArch.supportChatData = response.data
        setTimeout(function () {
-         $scope.isDetailInfoUpdated=true
+         $scope.isDetailInfoUpdatedArch=true
        }, 50);
      });
    }
@@ -660,11 +661,11 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
         $scope.reviewDataLength = response.data.dataLength
         $scope.totalItems = response.data.dataLength
         if($scope.reviewData.length>0){
+          $scope.tabelRowAction($scope.reviewData[0])
           if(myCount<1){
             $scope.setTableValues()
           }
           myCount++;
-          $scope.tabelRowAction($scope.reviewData[0])
           $scope.noDataDialouge=false;
         }else{
           $scope.noDataDialouge=true;
@@ -677,11 +678,9 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
     }
   }
 
-  if ($scope.tabSelected.tab == 'browse') {
     $scope.getData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
-  }else {
     $scope.getArchData($scope.form.date,$scope.form.user,$scope.form.email,$scope.form.client,$scope.form.typOfCall)
-  }
+
 
 
   $scope.userSearch = function(query) {

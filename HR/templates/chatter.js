@@ -333,6 +333,7 @@ var sy_circle_class="sy-circle-"+position_of_chat.split('-')[0] //sy-circle-righ
 var sy_text_class=" sy-text-"+position_of_chat.split('-')[0] // sy-text-right , sy-text-left
 var sy_firsttext_class="sy-firsttext-"+position_of_chat.split('-')[0]
 var chat_div_class="chatdiv-"+position_of_chat.split('-')[0];
+var suggested_text =
 
 firstMessage = firstMessage.replaceAll("&lt;",'<')
 firstMessage = firstMessage.replaceAll("&gt;",">")
@@ -819,7 +820,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     session.subscribe(wamp_prefix+'service.support.createDetailCookie.'+uid, createCookieDetail).then(
       function (res) {
-        console.log("subscribe to service.support.createDetailCookie'");
+        console.log("subscribed to service.support.createDetailCookie'");
       },
       function (err) {
         console.log("failed to subscribe: service.support.createDetailCookie");
@@ -828,7 +829,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     session.register(wamp_prefix+'service.support.heartbeat.'+uid, heartbeat).then(
       function (res) {
-        console.log("register to service.support.heartbeat'");
+        console.log("registered to service.support.heartbeat'");
       },
       function (err) {
         console.log("failed to register: service.support.heartbeat" + err);
@@ -838,7 +839,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     session.subscribe(wamp_prefix+'service.support.chat.' + uid, supportChat).then(
       function (sub) {
         subs=sub
-        console.log("subscribe to topic 'service.support.chat'" , uid );
+        console.log("subscribed to topic 'service.support.chat'" , uid );
         enableTextArea()
       },
       function (err) {
@@ -915,7 +916,7 @@ function createChatDiv() {
                   '<div id="supportCircle">'+
                       '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'" id="sy-main-icon">'+
                           '<span id="Syrow24hSupportText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text '+sy_firsttext_class+'">24 Hours Support</span>'+
-                          '<span id="chatSuggestionBar" style="display:none;background:'+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">'+firstMessage+'</span>'+
+                          '<span id="chatSuggestionBar" style="display:none;background:'+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
                           '<span class="SyrowFont font-Syrow24hSupport sy-md-1 sy-ops"></span>'+
                           '<div  id="sy-sub-icons">'+
                               '<div style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" id="callCircle" class="sy-circle '+sy_circle_class+'">'+
@@ -944,7 +945,7 @@ function createChatDiv() {
 
                   '<div id="singleService" style="background: '+supportBubbleColor+' !important; color:'+iconColor+';cursor:pointer" class="sy-circle first_animation '+sy_circle_class+'">'+
                     '<span id="singleServiceText" style="background: '+supportBubbleColor+' !important; color:'+iconColor+' ;display:none; transition: .5s;opacity:0" class="sy-text '+sy_text_class+'  "></span>'+
-                    '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested">'+firstMessage+'</span>'+
+                    '<span id="chatSuggestionBar1" style="display:none;background: '+supportBubbleColor+' !important; color:'+iconColor+'" class="sy-text-Suggested '+sy_firsttext_class+'">'+firstMessage+'</span>'+
                     '<span id="singleServiceFont" class="SyrowFont font-SyrowCallBack sy-md-2 sy-ops"></span></a>'+
                   '</div>'+
               '</div>'+
@@ -1469,21 +1470,20 @@ function createChatDiv() {
               right: 70px;\
             }\
               .sy-firsttext-left {\
-              left: 105px;\
+              left: 110px;\
             }\
               .sy-firsttext-right {\
-              right: 105px;\
+              right: 110px;\
             }\
               .sy-text-Suggested {\
               position: fixed;\
-              right: 110px;\
               margin-top: 13px;\
               border-radius: 15px;\
               padding: 4px 8px;\
               font-family: Verdana, Arial, sans-serif;\
-              font-size: 14px;\
+              font-size: 13px;\
               max-width:300px;\
-              bottom:20px;\
+              bottom:25px;\
               animation:chatSuggestionBar 3s\
             }\
               .sy-circle a, .sy-circle a:visited, .sy-circle a:active, .sy-circle a:hover, .sy-circle a:link {\
@@ -1651,6 +1651,23 @@ function createChatDiv() {
           	}\
           }\
           @keyframes first_animation{\
+            0%{\
+                transform:translateY(20px);\
+                opacity:0.5;\
+            	}\
+            40%{\
+                transform:translateY(-120px);\
+                opacity:0.7;\
+            	}\
+            90%{\
+                transform:translateY(10px);\
+                opacity:0.9;\
+            	}\
+              100%{\
+                	transform:translateY();\
+                  opacity:1;\
+            	}\
+            }\
           }\
           @keyframes changingOpacity{\
         	0%{\
@@ -1693,17 +1710,6 @@ function createChatDiv() {
                 z-index:9999999999999999999;\
                 border-radius:0px\
               }\
-              .sy-text-Suggested {\
-              position: fixed;\
-              right: 100px;\
-              margin-top: 13px;\
-              border-radius: 15px;\
-              padding: 4px 8px;\
-              font-family: Verdana, Arial, sans-serif;\
-              font-size: 10px;\
-              width:215px;\
-              animation:chatSuggestionBar 3s\
-            }\
               .chatBox_header{\
                 border-radius:0px !important;\
               }\
@@ -2877,7 +2883,7 @@ setInterval(function () {
   }
 
   function onlineAgent() {
-    // console.log('in onlineAgent######333333333' , agentPk);
+    console.log('checking for online ' , agentPk);
     if (agentPk) {
         connection.session.call(wamp_prefix+'service.support.heartbeat.' + agentPk, []).then(
           function (res) {
