@@ -4,6 +4,7 @@ from django.db import models
 from ERP.models import service
 from organization.models import Division , Unit
 from time import time
+from projects.models import *
 # Create your models here.
 # from projects.models import project
 
@@ -165,29 +166,3 @@ class VendorInvoice(models.Model):
     amount= models.FloatField(null=True , default=0)
     approved = models.NullBooleanField(null = True)
     disbursed = models.NullBooleanField(null = True)
-
-STATUS_CHOICES = (
-    ('created' , 'created'),
-    ('Sent' , 'Sent'),
-    ('Approved' , 'Approved'),
-    ('Final' , 'Final'),
-)
-
-class PurchaseOrder(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length = 100 , null = True)
-    address = models.CharField(max_length = 100 , null = True)
-    personName = models.CharField(max_length = 100 , null = True)
-    user = models.ForeignKey(User , related_name='purchaseUser' , null = True)
-    status = models.CharField(default = 'created' ,max_length = 5 ,choices = STATUS_CHOICES)
-    poNumber = models.CharField(max_length = 500,null=True)
-    quoteNumber = models.CharField(max_length = 500,null=True)
-    deliveryDate = models.DateField(null = True)
-    terms = models.CharField(max_length = 500 , null = True)
-
-class PurchaseOrderQty(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    product = models.CharField(max_length = 100 , null = True)
-    qty = models.PositiveIntegerField(null=True , default=0)
-    price = models.FloatField(null=True , default=0)
-    purchaseorder = models.ForeignKey(PurchaseOrder , related_name='productorder' , null = True)

@@ -88,6 +88,23 @@ app.controller('businessManagement.finance.expenses', function($scope, $http, $a
   //     }
   //   }
   // }
+
+
+  $scope.projectSearch = function(query) {
+      return $http.get('/api/projects/project/?title__contains=' + query).
+      then(function(response) {
+        return response.data;
+      })
+  };
+
+  $scope.costCenterSearch = function(query) {
+      return $http.get('/api/finance/costCenter/?name__contains=' + query).
+      then(function(response) {
+        console.log(response.data,'jjjjjjjj');
+        return response.data;
+      })
+  };
+
   $scope.tabs = [];
   $scope.searchTabActive = true;
 
@@ -124,6 +141,15 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
       name: '',
       address: '',
       personName: '',
+      phone : '',
+      email : '',
+      pincode : 0,
+      poNumber : '',
+      quoteNumber : '',
+      terms : '',
+      project : '',
+      costcenter : '',
+      bussinessunit : '',
     }
   }
   $scope.mode = 'new';
@@ -183,6 +209,20 @@ $scope.showOption = function() {
       $scope.form.deliveryDate = $scope.form.deliveryDate
     }
 
+    if($scope.form.project!=undefined){
+      if($scope.form.project.costCenter!=undefined){
+        $scope.form.costCenter = $scope.form.project.costCenter
+        if($scope.form.costCenter.unit!=undefined){
+          $scope.form.bussinessunit = $scope.form.costCenter.unit
+        }
+      }
+    }
+    if($scope.form.costcenter!=undefined){
+      if($scope.form.costcenter.unit!=undefined){
+        $scope.form.bussinessunit = $scope.form.costcenter.unit
+      }
+    }
+
     if ($scope.mode == 'new') {
       if($scope.form.name==''||$scope.form.address==''){
         Flash.create('danger','Fill the Details')
@@ -192,10 +232,17 @@ $scope.showOption = function() {
         name:$scope.form.name,
         personName : $scope.form.personName,
         address : $scope.form.address,
+        phone : $scope.form.phone,
+        email : $scope.form.email,
+        pincode : $scope.form.pincode,
         deliveryDate : $scope.form.deliveryDate,
         poNumber : $scope.form.poNumber,
         quoteNumber : $scope.form.quoteNumber,
         terms :  $scope.form.terms,
+        costcenter : $scope.form.costcenter.pk,
+        bussinessunit : $scope.form.bussinessunit.pk,
+        project : $scope.form.project.pk,
+
       }
       $http({
         method: 'POST',
@@ -230,13 +277,19 @@ $scope.showOption = function() {
     }
     else{
       var dataToSend = {
-      name:$scope.form.name,
-      personName : $scope.form.personName,
-      address : $scope.form.address,
-      deliveryDate : $scope.form.deliveryDate,
-      poNumber : $scope.form.poNumber,
-      quoteNumber : $scope.form.quoteNumber,
-      terms :  $scope.form.terms,
+        name:$scope.form.name,
+        personName : $scope.form.personName,
+        address : $scope.form.address,
+        phone : $scope.form.phone,
+        email : $scope.form.email,
+        pincode : $scope.form.pincode,
+        deliveryDate : $scope.form.deliveryDate,
+        poNumber : $scope.form.poNumber,
+        quoteNumber : $scope.form.quoteNumber,
+        terms :  $scope.form.terms,
+        costcenter : $scope.form.costcenter.pk,
+        bussinessunit : $scope.form.bussinessunit.pk,
+        project : $scope.form.project.pk,
     }
       $http({
         method: 'PATCH',
