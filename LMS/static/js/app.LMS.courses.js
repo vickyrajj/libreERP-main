@@ -242,27 +242,6 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
           })
         };
 
-        // var toSend = {
-        //   book: ,
-        //   referenceBook: ,
-        //   course:
-        // }
-        //     $http({
-        //       method: 'POST',
-        //       url: '/api/LMS/course/' + response.data.pk + '/',
-        //       data: toSend
-        //     }).
-        //     then(function(response) {
-        //       $scope.resetForm();
-        //       Flash.create('success', 'Created')
-        //     })
-
-
-
-          }
-
-        })
-
 
       }, //controller ends
     })
