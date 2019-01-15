@@ -148,7 +148,7 @@ app.controller('businessManagement.finance.sales', function($scope, $http, $asid
       templateUrl: '/static/ngTemplates/app.finance.inflow.form.html',
       size: 'lg',
       backdrop: true,
-      controller: 'businessManagement.finance.inflow.form',
+      controller: 'businessManagement.finance.sales.form',
     }).result.then(function() {
     }, function(res) {
       if (res == 'saved') {

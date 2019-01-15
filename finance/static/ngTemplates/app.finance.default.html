@@ -2,7 +2,7 @@
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
     <div class="container-fluid">
-      <div class="col-md-10">
+      <div class="col-md-8">
         <div class="col-md-12">
           <div class="container-fluid" style="min-height:35vh;">
             <div class="row">
@@ -24,7 +24,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-md-3 text-center">
                 <div class="in_center">
                   <span class="bigfont">77.662</span><br><span>Quantity Ordered</span>
@@ -40,27 +40,35 @@
                   <span class="bigfont">1.12L</span><br><span>Sales Revenue</span>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="col-md-12">
           <div class="container-fluid" style="margin-top:10px;">
-            <h2>Returned items by Reason</h2>
             <canvas id="items-bar-chart" height="90px">
             </canvas>
           </div>
         </div>
+        <!-- <div class="col-md-12">
+          <div class="col-md-4 text-center" style="position:relative;padding-bottom:15px" ng-repeat="pjExp in projExpData">
+            <span class="doughnut_text"> <b>{{pjExp.expPercent}}%</b> </span>
+            <canvas id="doughnut" class="chart chart-doughnut" chart-data="pjExp.cData" chart-labels="pjExp.cLabels" chart-options="pjExp.options" chart-colors="pjExp.color" width="400px" height="200px"></canvas>
+            <strong>Project : </strong><span>{{pjExp.title}}</span><br>
+            <strong>Budget : </strong><span>{{pjExp.budget | number}}</span>
+          </div>
+        </div> -->
       </div>
-      <div class="col-md-2">
-        <div class="text-center in_center">
-          <h3>Top Expenses</h3>
-          <span>by Quantity</span>
+      <div class="col-md-4">
+        <div class="text-center">
+          <h3>Expenses On Product Wise</h3>
         </div>
-        <div class="col-md-12 in_center" style="position:relative;">
-          <span class="doughnut_text"> <b>70%</b> </span>
-          <canvas id="expense-doughnut-chart1" height="200"></canvas>
+        <div class="col-md-6 text-center" style="position:relative;padding-bottom:15px;height:35vh" ng-repeat="pjExp in projExpData">
+          <span class="doughnut_text"> <b>{{pjExp.expPercent}}%</b> </span>
+          <canvas id="expense-doughnut-chart{{$index}}" height="250"></canvas>
+          <strong>Project : </strong><span>{{pjExp.title}}</span><br>
+          <strong>Budget : </strong><span>{{pjExp.budget | number}}</span>
         </div>
-        <div class="col-md-12 in_center"style="position:relative;">
+        <!-- <div class="col-md-12 in_center"style="position:relative;">
           <span class="doughnut_text"> <b>40%</b> </span>
           <canvas id="expense-doughnut-chart2" height="200"></canvas>
         </div>
@@ -71,7 +79,7 @@
         <div class="col-md-12 in_center"style="position:relative;">
           <span class="doughnut_text"> <b>80%</b> </span>
           <canvas id="expense-doughnut-chart4" height="200"></canvas>
-        </div>
+        </div> -->
       </div>
     </div>
 

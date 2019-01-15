@@ -15,8 +15,8 @@
 
 .doughnut_text {
   position: absolute;
-  top: 55%;
+  top: 25%;
   left: 40%;
-  font-size: 1.8em;
-  color:#8c8c8c
+  /*font-size: 1.5em;*/
+  color:#aaa4a4
 }

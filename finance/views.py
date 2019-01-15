@@ -4,13 +4,14 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
 from .models import *
-from django.db.models import Q, F
+from django.db.models import Q, F , Sum
 from openpyxl import load_workbook,Workbook
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from io import BytesIO
 from rest_framework.views import APIView
+from projects.models import ProjectPettyExpense
 # Create your views here.
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -152,4 +153,50 @@ class UplodInflowDataAPI(APIView):
                             print 'row number {0} in Excel - {1} is not created'.format(i,wsTitle)
                     Inflow.objects.bulk_create(storeData)
                     print 'total {0} Objects has been created'.format(len(storeData))
+        return Response(tosend, status=status.HTTP_200_OK)
+
+class GetExpenseDataAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print 'entered','*******************'
+        print request.GET
+        accountsList = list(request.user.accountsManaging.all().values_list('pk',flat=True).distinct())
+        print accountsList,'user accountssssss Listttttttt'
+        tosend=[]
+        expObj = ProjectPettyExpense.objects.filter(account__in=accountsList).values('project__pk','project__title').distinct()
+        print expObj
+        for i in expObj:
+            expTotal = ProjectPettyExpense.objects.filter(project__id=int(i['project__pk']),account__in=accountsList).aggregate(tot=Sum('amount'))
+            expTotal = expTotal['tot'] if expTotal['tot'] else 0
+            print expTotal
+            data = {'projectPk':i['project__pk'],'projectName':i['project__title'],'expTotal':expTotal}
+            tosend.append(data)
+        if 'limit' in request.GET:
+            try:
+                lmt = int(request.GET['limit'])
+                tosend = tosend[0:lmt]
+            except:
+                pass
+        return Response(tosend, status=status.HTTP_200_OK)
+
+class ExpensesGraphDataAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print 'entered','*******************'
+        print request.GET
+
+        tosend={'labels':[],'datasets':[]}
+        allExpenses = ProjectPettyExpense.objects.all()
+        projLists = allExpenses.values('project__pk','project__title').distinct()
+        accountList = allExpenses.values('account__pk','account__title').distinct()
+        for idx,i in enumerate(accountList):
+            data = {'label':i['account__title'],'data':[]}
+            for j in projLists:
+                if idx==0:
+                    tosend['labels'].append(j['project__title'])
+                expTotal = allExpenses.filter(project__id=int(j['project__pk']),account__id=int(i['account__pk'])).aggregate(tot=Sum('amount'))
+                expTotal = expTotal['tot'] if expTotal['tot'] else 0
+                data['data'].append(expTotal)
+            tosend['datasets'].append(data)
+
         return Response(tosend, status=status.HTTP_200_OK)

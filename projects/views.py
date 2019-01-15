@@ -22,7 +22,7 @@ class projectViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = projectSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title','costCenter']
+    filter_fields = ['title','costCenter','projectClosed']
     def get_queryset(self):
         u = self.request.user
         if u.is_superuser:
@@ -55,3 +55,12 @@ class PettyCashViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = PettyCashSerializer
     queryset = ProjectPettyExpense.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['project','account']
+    def get_queryset(self):
+        if 'getUserExpenses' in self.request.GET:
+            accountsList = list(self.request.user.accountsManaging.all().values_list('pk',flat=True).distinct())
+            print accountsList
+            return ProjectPettyExpense.objects.filter(account__in=accountsList)
+        else:
+            return ProjectPettyExpense.objects.all()

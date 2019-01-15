@@ -439,6 +439,7 @@ app.controller('projectManagement.projects.default', function($scope, $http, $as
     url: '/api/projects/project/',
     editorTemplate: '/static/ngTemplates/app.projects.form.project.html',
     searchField: 'title',
+    itemsNumPerView: [6, 12, 24],
   }
 
   $scope.tableAction = function(target, action, mode) {

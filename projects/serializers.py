@@ -5,6 +5,7 @@ from rest_framework.exceptions import *
 from .models import *
 from gitweb.serializers import repoLiteSerializer
 from finance.models import CostCenter , ExpenseSheet , Account , ExpenseHeading
+from django.db.models import Sum
 
 
 class mediaSerializer(serializers.ModelSerializer):
@@ -29,7 +30,7 @@ class CostCenterLiteSerializer(serializers.ModelSerializer):
         model = CostCenter
         fields = ('pk', 'head' , 'name' , 'code' , 'account' )
 
-class ExpenseHeadingSerializer(serializers.ModelSerializer):
+class ExpenseHeadingLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExpenseHeading
         fields = ('pk', 'title')
@@ -44,9 +45,10 @@ class projectSerializer(serializers.ModelSerializer):
     repos = repoLiteSerializer(many = True , read_only = True)
     comments = projectCommentSerializer(many = True , read_only = True)
     costCenter = CostCenterLiteSerializer(many = False , read_only = True)
+    totalCost = serializers.SerializerMethodField()
     class Meta:
         model = project
-        fields = ('pk','dueDate', 'created' , 'title' , 'description' , 'files' , 'team', 'comments', 'repos','user','costCenter')
+        fields = ('pk','dueDate', 'created' , 'title' , 'description' , 'files' , 'team', 'comments', 'repos','user','costCenter','budget','projectClosed','totalCost')
         read_only_fields = ('user', 'team',)
     def create(self , validated_data):
         p = project(**validated_data)
@@ -54,10 +56,12 @@ class projectSerializer(serializers.ModelSerializer):
         if 'costCenter' in self.context['request'].data:
             p.costCenter = CostCenter.objects.get(pk=int(self.context['request'].data['costCenter']))
         p.save()
-        for u in self.context['request'].data['team']:
-            p.team.add(User.objects.get(pk=u))
-        for f in self.context['request'].data['files']:
-            p.files.add(media.objects.get(pk = f))
+        if 'team' in self.context['request'].data:
+            for u in self.context['request'].data['team']:
+                p.team.add(User.objects.get(pk=u))
+        if 'files' in self.context['request'].data:
+            for f in self.context['request'].data['files']:
+                p.files.add(media.objects.get(pk = f))
         p.save()
         return p
     def update(self, instance , validated_data):
@@ -73,6 +77,13 @@ class projectSerializer(serializers.ModelSerializer):
                 instance.team.add(User.objects.get(pk=u))
         instance.save()
         return instance
+    def get_totalCost(self, obj):
+        try:
+            expTotal = ProjectPettyExpense.objects.filter(project=obj).aggregate(tot=Sum('amount'))
+            expTotal = expTotal.get('tot',0)
+            return expTotal
+        except:
+            return 0
 
 
 class projectLiteSerializer(serializers.ModelSerializer):
@@ -112,7 +123,24 @@ class IssueSerializer(serializers.ModelSerializer):
 
 class PettyCashSerializer(serializers.ModelSerializer):
     project = projectLiteSerializer(many = False , read_only = True)
+    account = AccountLiteSerializer(many = False , read_only = True)
+    heading = ExpenseHeadingLiteSerializer(many = False , read_only = True)
     class Meta:
         model = ProjectPettyExpense
-        fields = ( 'pk', 'created','ammount', 'project', 'account', 'description', 'heading','attachment', 'createdUser')
+        fields = ( 'pk', 'created','amount', 'project', 'account', 'description', 'heading','attachment', 'createdUser')
         read_only_fields = ('createdUser',)
+    def create(self , validated_data):
+        print self.context['request'].data
+        ptc = ProjectPettyExpense(**validated_data)
+        ptc.createdUser = self.context['request'].user
+        if 'heading' in self.context['request'].data:
+            ptc.heading = ExpenseHeading.objects.get(pk=int(self.context['request'].data['heading']))
+        if 'account' in self.context['request'].data:
+            accountObj = Account.objects.get(pk=int(self.context['request'].data['account']))
+            accountObj.balance -= float(self.context['request'].data['amount'])
+            accountObj.save()
+            ptc.account = accountObj
+        if 'project' in self.context['request'].data:
+            ptc.project = project.objects.get(pk=int(self.context['request'].data['project']))
+        ptc.save()
+        return ptc

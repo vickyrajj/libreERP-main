@@ -23,4 +23,6 @@ router.register(r'expenseHeading' , ExpenseHeadingViewSet , base_name ='expenseH
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'uplodInflowData/$' , UplodInflowDataAPI.as_view()),
+    url(r'getExpenseData/$' , GetExpenseDataAPI.as_view()),
+    url(r'expensesGraphData/$' , ExpensesGraphDataAPI.as_view()),
 ]
