@@ -1925,7 +1925,7 @@ class DownloadProjectSCExcelReponse(APIView):
                 Sheet1.title = p['comm_nr']
             if idx>0:
                 Sheet1 = workbook.create_sheet(p['comm_nr'])
-            hd = ["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed']
+            hd = ["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed In']
             hdWidth = [10,10,10]
             Sheet1.append(hd)
 
@@ -1949,23 +1949,31 @@ class DownloadProjectSCExcelReponse(APIView):
                     for g in materialdata:
                         mat.append(g)
                     for m in k.materialIssue.all():
-                        print j.products.part_no,m.product.pk,'aaaaaa'
                         if j.products.pk==m.product.pk:
                             stockConsumed += m.qty
-                            print stockConsumed,'aaaahhhhhhhh'
-                        # matdata = k.materialIssue.all()
-                        # for e in matdata:
-                        #     stock =  ast.literal_eval(e.stock)
-                        #     val = []
-                        #     for s in stock:
-                        #         if s['addedqty']>0:
-                        #                 if s['comm_nr']!=k.project.comm_nr:
-                        #                     print s['product']
-                        #                     value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + s['comm_nr'] + ')'
-                        #                     val.append(value)
+                    inv = Inventory.objects.all()
+                for v in inv:
+                    # listVal =[]
+                    if j.project.pk == v.project.pk and j.products.pk == v.product.pk:
+                        materialObjs=MaterialIssueMain.objects.all()
+                        for h in materialObjs:
+                            matdata = h.materialIssue.all()
+                            for e in matdata:
+                                stock =  ast.literal_eval(e.stock)
+                                for s in stock:
+                                    if s['addedqty']>0:
+                                        if v.pk==s['inventory']:
+                                            if s['comm_nr']!=h.project.comm_nr:
+                                                objts = BoM.objects.filter(project__comm_nr__exact=h.project.comm_nr,products__id=j.products.pk)
+                                                if len(objts)>0:
+                                                    pass
+                                                else:
+                                                    print 'jjjjjjjjjjjj'
+                                                    value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + h.project.comm_nr + ')'
+                                                    val.append(value)
 
-                    # val = json.dumps(val)
-                Sheet1.append([j.project.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed])
+                val = json.dumps(val)
+                Sheet1.append([j.project.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,val])
             Sheet1.append(['', '','','',' ',' ',' '])
             Sheet1.append(['material Issued'])
             Sheet1.append(['Part No','Description','Quantity','consumed From',])
