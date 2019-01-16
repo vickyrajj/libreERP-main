@@ -2011,9 +2011,10 @@ class DownloadProjectSCExcelReponse(APIView):
             Sheet1.column_dimensions['C'].width = 40
             Sheet1.column_dimensions['D'].width = 40
             Sheet1.column_dimensions['E'].width = 20
-            Sheet1.column_dimensions['F'].width = 30
-            Sheet1.column_dimensions['G'].width = 20
+            Sheet1.column_dimensions['F'].width = 20
+            Sheet1.column_dimensions['G'].width = 100
             Sheet1.column_dimensions['H'].width = 50
+
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
         return response
