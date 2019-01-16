@@ -65,13 +65,18 @@ class projectSerializer(serializers.ModelSerializer):
         p.save()
         return p
     def update(self, instance , validated_data):
+        for key in ['dueDate' , 'title' , 'description','budget','projectClosed',]:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                print "Error while saving " , key
+                pass
+
         if 'files' in self.context['request'].data:
             instance.files.clear()
             for f in self.context['request'].data['files']:
                 instance.files.add(media.objects.get(pk = f))
-        else:
-            instance.dueDate = validated_data['dueDate']
-            instance.description = validated_data['description']
+        if 'team' in self.context['request'].data:
             instance.team.clear()
             for u in self.context['request'].data['team']:
                 instance.team.add(User.objects.get(pk=u))
@@ -80,7 +85,7 @@ class projectSerializer(serializers.ModelSerializer):
     def get_totalCost(self, obj):
         try:
             expTotal = ProjectPettyExpense.objects.filter(project=obj).aggregate(tot=Sum('amount'))
-            expTotal = expTotal.get('tot',0)
+            expTotal = expTotal['tot'] if expTotal['tot'] else 0
             return expTotal
         except:
             return 0
@@ -137,6 +142,8 @@ class PettyCashSerializer(serializers.ModelSerializer):
             ptc.heading = ExpenseHeading.objects.get(pk=int(self.context['request'].data['heading']))
         if 'account' in self.context['request'].data:
             accountObj = Account.objects.get(pk=int(self.context['request'].data['account']))
+            if accountObj.balance < float(self.context['request'].data['amount']):
+                raise ValidationError({'Not valid data'})
             accountObj.balance -= float(self.context['request'].data['amount'])
             accountObj.save()
             ptc.account = accountObj
