@@ -801,9 +801,17 @@ app.directive('chatBox', function() {
       }
       }
 
+      $scope.$watch('data.closeIframe',function(newValue,oldValue){
+        console.log(newValue,'=********************************************');
+        //printed true ono cut
+        if(newValue){
+          $scope.msgDivHeight = 71
+        }
+      })
+
 
       $scope.setHeight = function () {
-        console.log('timesss');
+        console.log('Here');
         if ($scope.data.audio) {
           $scope.msgDivHeight = 66
         }else if ($scope.data.video) {
@@ -811,6 +819,7 @@ app.directive('chatBox', function() {
         }else {
           $scope.msgDivHeight = 71
         }
+        console.log($scope.msgDivHeight);
       }
 
       $scope.setHeight()
