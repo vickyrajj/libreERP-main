@@ -143,6 +143,7 @@ class PettyCashSerializer(serializers.ModelSerializer):
         if 'account' in self.context['request'].data:
             accountObj = Account.objects.get(pk=int(self.context['request'].data['account']))
             if accountObj.balance < float(self.context['request'].data['amount']):
+                print 'invalid dataaaaaaaaaaaaa'
                 raise ValidationError({'Not valid data'})
             accountObj.balance -= float(self.context['request'].data['amount'])
             accountObj.save()

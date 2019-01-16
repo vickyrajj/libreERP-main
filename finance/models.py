@@ -104,6 +104,9 @@ APPROVAL_CHOICES = (
     ('Pending' , 'Pending')
 )
 
+# class OutBoundInvoice(models.Model):
+#     created = models.DateTimeField(auto_now_add=True)
+
 class ExpenseSheet(models.Model):
     user = models.ForeignKey(User , related_name='expenseGeneratedOrSubmitted' , null = False)
     created = models.DateTimeField(auto_now_add=True)

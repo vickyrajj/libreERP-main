@@ -7,6 +7,8 @@ from .models import *
 from django.db.models import Q, F , Sum
 from openpyxl import load_workbook,Workbook
 from openpyxl.writer.excel import save_virtual_workbook
+from openpyxl.styles import PatternFill , Font
+import string
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -233,10 +235,15 @@ class DownloadExpenseSummaryAPI(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
     def get(self , request , format = None):
         print 'entered','*******************'
+
+        hdFont = Font(size=12,bold=True)
+        alphaChars = list(string.ascii_uppercase)
         workbook = Workbook()
         Sheet1 = workbook.active
         Sheet1.title = 'Expense Summary'
-        Sheet1.append(["Project", "Budget",'Expense'])
+        hd = ["Project", "Budget",'Expense']
+        hdWidth = [10,10,10]
+        Sheet1.append(hd)
         projectsList = project.objects.filter(projectClosed=False)
         print projectsList.count()
         for i in projectsList:
@@ -248,14 +255,36 @@ class DownloadExpenseSummaryAPI(APIView):
                 expTotal = 0
             data.append(expTotal)
             Sheet1.append(data)
+            for idx,j in enumerate(data):
+                if (len(str(j))+5) > hdWidth[idx]:
+                    hdWidth[idx] = len(str(j)) + 5
+        for idx,i in enumerate(hd):
+            cl = str(alphaChars[idx])+'1'
+            Sheet1[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+            Sheet1[cl].font = hdFont
+            Sheet1.column_dimensions[str(alphaChars[idx])].width = hdWidth[idx]
+
         allExpenses = ProjectPettyExpense.objects.all()
         projLists = allExpenses.values('project__pk','project__title').distinct()
         for i in projLists:
             Sheet = workbook.create_sheet(i['project__title'])
-            Sheet.append(['Title','Amount','Description'])
+            hd = ['Title','Amount','Description']
+            hdWidth = [10,10,10]
+            Sheet.append(hd)
+
             ptObjs = allExpenses.filter(project__id=int(i['project__pk']))
             for j in ptObjs:
-                Sheet.append([j.heading.title,j.amount,j.description])
+                data = [j.heading.title,j.amount,j.description]
+                Sheet.append(data)
+                for idx,k in enumerate(data):
+                    if (len(str(k))+5) > hdWidth[idx]:
+                        hdWidth[idx] = len(str(k)) + 5
+            for idx,j in enumerate(hd):
+                cl = str(alphaChars[idx])+'1'
+                Sheet[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+                Sheet[cl].font = hdFont
+                Sheet.column_dimensions[str(alphaChars[idx])].width = hdWidth[idx]
+
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=ExpenseSummary.xlsx'
         return response
