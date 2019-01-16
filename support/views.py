@@ -1926,6 +1926,7 @@ class DownloadProjectSCExcelReponse(APIView):
             if idx>0:
                 Sheet1 = workbook.create_sheet(p['comm_nr'])
             hd = ["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed In']
+            count=1
             hdWidth = [10,10,10]
             Sheet1.append(hd)
 
@@ -1968,15 +1969,22 @@ class DownloadProjectSCExcelReponse(APIView):
                                                 if len(objts)>0:
                                                     pass
                                                 else:
-                                                    print 'jjjjjjjjjjjj'
                                                     value = '(quantity : ' + str(s['addedqty']) + ', comm_nr : ' + h.project.comm_nr + ')'
                                                     val.append(value)
 
                 val = json.dumps(val)
+                count+=1
                 Sheet1.append([j.project.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,val])
             Sheet1.append(['', '','','',' ',' ',' '])
-            Sheet1.append(['material Issued'])
-            Sheet1.append(['Part No','Description','Quantity','consumed From',])
+            # hd1 = ['material Issued']
+            # Sheet1.append(hd1)
+            hd2= ['Part No','Description','Quantity','consumed From',]
+            Sheet1.append(hd2)
+            count = count+2
+            for idx,i in enumerate(hd2):
+                cl = str(alphaChars[idx])+str(count)
+                Sheet1[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+                Sheet1[cl].font = hdFont
             for d in projData:
                 bomObj=BoM.objects.filter(project__id=d.pk)
                 materialObj=MaterialIssueMain.objects.filter(project__id=d.pk)
