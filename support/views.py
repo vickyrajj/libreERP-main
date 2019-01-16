@@ -1925,7 +1925,7 @@ class DownloadProjectSCExcelReponse(APIView):
                 Sheet1.title = p['comm_nr']
             if idx>0:
                 Sheet1 = workbook.create_sheet(p['comm_nr'])
-            hd = ["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed','Stock Consumed In']
+            hd = ["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed','total','Stock Consumed In']
             count=1
             hdWidth = [10,10,10]
             Sheet1.append(hd)
@@ -1952,6 +1952,7 @@ class DownloadProjectSCExcelReponse(APIView):
                     for m in k.materialIssue.all():
                         if j.products.pk==m.product.pk:
                             stockConsumed += m.qty
+                        total = j.landed_price * stockConsumed
                 inv = Inventory.objects.all()
                 for v in inv:
                     # listVal =[]
@@ -1974,11 +1975,11 @@ class DownloadProjectSCExcelReponse(APIView):
 
                 val = json.dumps(val)
                 count+=1
-                Sheet1.append([j.project.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,val])
+                Sheet1.append([j.project.vendor.name, j.products.part_no,j.products.description_1,j.quantity2,j.landed_price,stockConsumed,total,val])
             Sheet1.append(['', '','','',' ',' ',' '])
             # hd1 = ['material Issued']
             # Sheet1.append(hd1)
-            hd2= ['Part No','Description','Quantity','consumed From',]
+            hd2= ['Part No','Description','Quantity','landed Cost','total','consumed From']
             Sheet1.append(hd2)
             count = count+2
             for idx,i in enumerate(hd2):
@@ -2004,7 +2005,8 @@ class DownloadProjectSCExcelReponse(APIView):
                                             inval.append(invalue)
                                 inval = json.dumps(inval)
                                 if len(inval)>5:
-                                    Sheet1.append([b.product.part_no, b.product.description_1,b.qty,inval])
+                                    tot = b.qty*b.price
+                                    Sheet1.append([b.product.part_no, b.product.description_1,b.qty,b.price,tot,inval])
 
             Sheet1.column_dimensions['A'].width = 20
             Sheet1.column_dimensions['B'].width = 20
@@ -2012,8 +2014,8 @@ class DownloadProjectSCExcelReponse(APIView):
             Sheet1.column_dimensions['D'].width = 40
             Sheet1.column_dimensions['E'].width = 20
             Sheet1.column_dimensions['F'].width = 20
-            Sheet1.column_dimensions['G'].width = 100
-            Sheet1.column_dimensions['H'].width = 50
+            Sheet1.column_dimensions['G'].width = 20
+            Sheet1.column_dimensions['H'].width = 100
 
         response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=stockConsumed.xlsx'
