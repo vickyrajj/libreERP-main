@@ -12,7 +12,7 @@ from django.conf import settings as globalSettings
 from time import time
 from HR.models import Unit
 from finance.models import CostCenter , ExpenseSheet , Account , ExpenseHeading
-
+from clientRelationships.models import ProductMeta
 
 
 def getProjectsUploadsPath(instance , filename ):
@@ -154,3 +154,6 @@ class PurchaseOrderQty(models.Model):
     qty = models.PositiveIntegerField(null=True , default=0)
     price = models.FloatField(null=True , default=0)
     purchaseorder = models.ForeignKey(PurchaseOrder , related_name='productorder' , null = True)
+    hsn = models.ForeignKey(ProductMeta, related_name='productmeta'  , null = True )
+    tax = models.FloatField(null = True)
+    total = models.FloatField(null = True)
