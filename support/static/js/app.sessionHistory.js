@@ -766,7 +766,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
 
     $http({
       method: 'GET',
-      url: '/api/support/reviewHomeChats/?uid='+$scope.reviewData[index].uid,
+      url: '/api/support/supportChat/?uid='+$scope.reviewData[index].uid,
     }).
     then(function(response) {
       var appType = 'Info';
@@ -790,7 +790,7 @@ app.controller("businessManagement.sessionHistory", function($scope, $state, $us
 
     $http({
       method: 'GET',
-      url: '/api/support/reviewHomeChats/?uid='+$scope.archivedData[index].uid,
+      url: '/api/support/supportChat/?uid='+$scope.archivedData[index].uid,
     }).
     then(function(response) {
       var appType = 'Info';

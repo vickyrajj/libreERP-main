@@ -756,30 +756,29 @@ app.directive('chatBox', function() {
         $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
       }
 
-      $scope.toggleVisitorScreen=function(){
-        if(!$scope.alreadyDone){
-          $scope.isVisitorVideoShowing=!$scope.isVisitorVideoShowing;
-          if(!$scope.isVisitorVideoShowing){
-            $scope.msgDivHeight = 51
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published");
-            });
-          }
-        else{
-
-          $scope.msgDivHeight = 52
-          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
-        }
-        }
-      }
+      // $scope.toggleVisitorScreen=function(){
+      //   if(!$scope.alreadyDone){
+      //     $scope.isVisitorVideoShowing=!$scope.isVisitorVideoShowing;
+      //     if(!$scope.isVisitorVideoShowing){
+      //       // $scope.msgDivHeight = 51
+      //       connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['HideVisitorVideo'], {}, {
+      //         acknowledge: true
+      //       }).
+      //       then(function(publication) {
+      //         console.log("Published");
+      //       });
+      //     }
+      //   else{
+      //     // $scope.msgDivHeight = 52
+      //     connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
+      //       acknowledge: true
+      //     }).
+      //     then(function(publication) {
+      //       console.log("Published");
+      //     });
+      //   }
+      //   }
+      // }
 
       $scope.hideVisitorScreen = function() {
         $scope.IsVisitorOn=!$scope.IsVisitorOn;
@@ -832,10 +831,27 @@ app.directive('chatBox', function() {
         }
         if (event.origin == webRtcAddress&&event.data.indexOf("*")) {
           console.log(event.data + ' ******************');
-          var uid = event.data.split('*')[0]
-          var imageData = event.data.split('*')[1]
-          if (uid==$scope.data.uid) {
-            $scope.takeSnapshot(imageData)
+          if(event.data=='calledToShowVisitorVideo'){
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['calledToShowVisitorVideo'], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }else if(event.data=='calledToHideVisitorVideo'){
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['calledToHideVisitorVideo'], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }
+          else{
+            var uid = event.data.split('*')[0]
+            var imageData = event.data.split('*')[1]
+            if (uid==$scope.data.uid) {
+              $scope.takeSnapshot(imageData)
+            }
           }
         }
       }

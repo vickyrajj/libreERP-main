@@ -480,7 +480,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
      $http({
        method: 'GET',
        url: '/api/support/supportChat/?uid='+data.uid,
-       // url: '/api/support/reviewHomeChats/?uid='+data.uid,
+       // url: '/api/support/supportChat/?uid='+data.uid,
      }).
      then(function(response) {
        console.log('response data' , response.data);
@@ -493,7 +493,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
    $scope.fetchChatsForUIDArch= function(data){
      $http({
        method: 'GET',
-       // url: '/api/support/reviewHomeChats/?uid='+data.uid,
+       // url: '/api/support/supportChat/?uid='+data.uid,
        url: '/api/support/supportChat/?uid='+data.uid,
      }).
      then(function(response) {
@@ -766,7 +766,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
 
     $http({
       method: 'GET',
-      url: '/api/support/reviewHomeChats/?uid='+$scope.reviewData[index].uid,
+      url: '/api/support/supportChat/?uid='+$scope.reviewData[index].uid,
     }).
     then(function(response) {
       var appType = 'Info';
@@ -790,7 +790,7 @@ app.controller("businessManagement.reviews", function($scope, $state, $users, $s
 
     $http({
       method: 'GET',
-      url: '/api/support/reviewHomeChats/?uid='+$scope.archivedData[index].uid,
+      url: '/api/support/supportChat/?uid='+$scope.archivedData[index].uid,
     }).
     then(function(response) {
       var appType = 'Info';

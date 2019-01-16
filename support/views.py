@@ -85,8 +85,10 @@ class GetMyUser(APIView):
     def get(self, request, format=None):
         print '****** entered', request.GET
         if 'getCompanyDetails' in request.GET:
+            # custP = CustomerProfile.objects.filter(pk=request.GET['getCompanyDetails'])
             objjj=list(CustomerProfile.objects.filter(pk=request.GET['getCompanyDetails']).values_list('name',flat=True))
-
+            # serviceObj=list(service.objects.filter(pk = custP[0].service.pk).values_list('contactPerson',flat=True))
+            # print serviceObj,"****************tTRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
             return Response(objjj, status=status.HTTP_200_OK)
         if 'allAgents' in request.GET:
             print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
