@@ -430,13 +430,30 @@ app.controller("businessManagement.projects.form", function($scope, $state, $use
   //   $scope.date = $scope.form.date.toJSON().split('T')[0]
   // }
   $scope.createProjects = function() {
-    // if ($scope.form.responsible == null || $scope.form.responsible.length == 0) {
-    //   Flash.create('warning', 'Please Mention Responsible Person Name')
-    //   return
-    // }
+    console.log(typeof $scope.form.vendor,'aaaaaaaa');
+    if ($scope.form.service == ''||typeof $scope.form.service!='object') {
+      Flash.create('warning', 'Please Select Customer')
+      return
+    }
+    if ($scope.form.vendor == ''||typeof $scope.form.vendor!='object') {
+      Flash.create('warning', 'Please Select Vendor')
+      return
+    }
+    if ($scope.form.title == '') {
+      Flash.create('warning', 'Please Add Title')
+      return
+    }
+    if($scope.form.date == ''){
+      Flash.create('warning', 'Please Add Tentative Closing Date')
+      return
+    }
+    else if (typeof $scope.form.date == 'object') {
+        $scope.form.date = $scope.form.date.toJSON().split('T')[0]
 
-    if (typeof $scope.form.date == 'object') {
-      $scope.form.date = $scope.form.date.toJSON().split('T')[0]
+    }
+    if ($scope.form.comm_nr == '') {
+      Flash.create('warning', 'Please Add comm_nr')
+      return
     }
     // $scope.$watch('form.vendor', function(newValue, oldValue) {
     //   console.log(newValue, 'hhhhhhhhhhhhhh');

@@ -656,14 +656,30 @@ def landingDetails(response , project , purchaselist, request):
     s20 =Paragraph("<para fontSize=8>Landing/Pc </para>",styles['Normal'])
     data2 += [[s01,s02,s03,s04,s05,s06,s07,s08,s09,s10,s11,s12,s13,s14,s1c5,s15,s16,s1g7,s17,s18,s19,s20]]
     id = 0
+    totprice = 0
+    totquote = 0
+    totinr = 0
     totpack = 0
     inspack = 0
     frepack = 0
     landtot = 0
+    ciftot = 0
+    cifroundtot = 0
+    totcustomVal = 0
+    totsocialVal = 0
+    totgstVal = 0
+    totcharge1Val = 0
+    totcharge2Val = 0
     for i in purchaselist:
         id+=1
+        pricetot = i.price*i.quantity1
+        totprice+=pricetot
         quotePrice = round(((project.profitMargin * i.price) / 100 + i.price),2)
+        quotetot = quotePrice*i.quantity1
+        totquote+=quotetot
         inrPrice = round((i.price * project.exRate),2)
+        inrtot = inrPrice*i.quantity1
+        totinr+=inrtot
         packing = round(((project.packing/ project.invoiceValue) * inrPrice),2)
         packingtot = packing*i.quantity1
         totpack+=packingtot
@@ -674,11 +690,24 @@ def landingDetails(response , project , purchaselist, request):
         freighttot = freight*i.quantity1
         frepack+=freighttot
         cif = round((inrPrice + packing + insurance + freight),2)
+        ciftot+=cif
+        cifround = cif * i.quantity1
+        cifroundtot+=cifround
         customVal = round(((cif +((cif * project.assessableValue)/100))*(i.custom)/100),2)
+        customtot = customVal * i.quantity1
+        totcustomVal +=customtot
         socialVal = round((customVal *0.1),2)
+        socialtot = socialVal * i.quantity1
+        totsocialVal +=socialtot
         gstVal = round(((cif+customVal+socialVal)*(i.gst)/100),2)
+        gsttot = gstVal * i.quantity1
+        totgstVal +=gsttot
         charge1 = round((inrPrice * (project.clearingCharges1 / (project.invoiceValue * project.exRate))),2)
+        charge1tot = charge1 * i.quantity1
+        totcharge1Val +=charge1tot
         charge2 = round((inrPrice * (project.clearingCharges2 / (project.invoiceValue * project.exRate))),2)
+        charge2tot = charge2 * i.quantity1
+        totcharge2Val +=charge2tot
         landng=i.landed_price*i.quantity1
         landtot+=landng
         # landed_price = ((cif + customVal + socialVal + charge1 + charge2),2)
@@ -709,23 +738,23 @@ def landingDetails(response , project , purchaselist, request):
     s22 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s23 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s24 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s25 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    s25 =Paragraph("<para fontSize=8>{:,}</para>".format(round(totprice,2)),styles['Normal'])
     s26 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s27 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s28 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
-    s29 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
+    s28 =Paragraph("<para fontSize=8> {:,} </para>".format(round(totquote,2)),styles['Normal'])
+    s29 =Paragraph("<para fontSize=8> {:,}  </para>".format(round(totinr,2)),styles['Normal'])
     s30 =Paragraph("<para fontSize=8> {:,} </para>".format(round(totpack,2)),styles['Normal'])
     s31 =Paragraph("<para fontSize=8> {:,}</para>".format(round(inspack,2)),styles['Normal'])
     s32 =Paragraph("<para fontSize=8> {:,} </para>".format(round(frepack,2)),styles['Normal'])
-    s33 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s34 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
+    s33 =Paragraph("<para fontSize=8> {:,} </para>".format(round(ciftot,2)),styles['Normal'])
+    s34 =Paragraph("<para fontSize=8> {:,} </para>".format(round(cifroundtot,2)),styles['Normal'])
     s3c5 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s35 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
-    s36 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s35 =Paragraph("<para fontSize=8> {:,}  </para>".format(round(totcustomVal,2)),styles['Normal'])
+    s36 =Paragraph("<para fontSize=8> {:,} </para>".format(round(totsocialVal,2)),styles['Normal'])
     s3g7 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    s37 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    s38 =Paragraph("<para fontSize=8></para>",styles['Normal'])
-    s39 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s37 =Paragraph("<para fontSize=8>{:,}</para>".format(round(totgstVal,2)),styles['Normal'])
+    s38 =Paragraph("<para fontSize=8>{:,}</para>".format(round(totcharge1Val,2)),styles['Normal'])
+    s39 =Paragraph("<para fontSize=8> {:,}</para>".format(round(totcharge2Val,2)),styles['Normal'])
     s40 =Paragraph("<para fontSize=8> {:,} </para>".format(round(landtot,2)),styles['Normal'])
     data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,s32,s33,s34,s3c5,s35,s36,s3g7,s37,s38,s39,s40])
     t2=Table(data2,colWidths=(11*mm,23*mm, 37*mm, 20*mm, 20*mm, 10*mm, 20*mm,20*mm,20*mm,20*mm,20*mm,20*mm,20*mm,20*mm,10*mm,20*mm,15*mm,10*mm,20*mm,20*mm,20*mm,20*mm))
@@ -2416,7 +2445,7 @@ def deliveryChallan(response , value , request):
 
 
 
-class MaterialIssuedNoteAPIView(APIView):
+class DeliveryChallanNoteAPIView(APIView):
     def get(self , request , format = None):
         print request.GET,'aaaaaa'
         value = request.GET['value']
