@@ -1879,6 +1879,8 @@ from openpyxl.writer.excel import save_virtual_workbook
 #         return response
 import ast
 import json
+from openpyxl.styles import PatternFill , Font
+import string
 class DownloadProjectSCExcelReponse(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def get(self , request , format = None):
@@ -1886,14 +1888,24 @@ class DownloadProjectSCExcelReponse(APIView):
         projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),savedStatus=False,junkStatus=False)
         projectsObj = list(projectObj.values('comm_nr').distinct())
         sendData =[]
+        hdFont = Font(size=12,bold=True)
+        alphaChars = list(string.ascii_uppercase)
         for idx,p in enumerate(projectsObj):
             if idx==0:
                 Sheet1 = workbook.active
                 Sheet1.title = p['comm_nr']
             if idx>0:
                 Sheet1 = workbook.create_sheet(p['comm_nr'])
+            hd = ["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed']
+            hdWidth = [10,10,10]
+            Sheet1.append(hd)
 
-            Sheet1.append(["Supplier", "Part No",'Description','Qty','Landed Cost','Stock Consumed'])
+            for idx,i in enumerate(hd):
+                cl = str(alphaChars[idx])+'1'
+                Sheet1[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+                Sheet1[cl].font = hdFont
+                # Sheet1.column_dimensions[str(alphaChars[idx])].width = hdWidth[idx]
+            # Sheet1['A1'].fill = PatternFill(start_color="6225c6", end_color="6225c6", fill_type = "solid")
             projData = projectObj.filter(comm_nr__exact=p['comm_nr'])
             # for i in projData:
             bomObj=BoM.objects.filter(project__comm_nr__exact=p['comm_nr'])
@@ -2176,18 +2188,25 @@ class DownloadStockReportAPIView(APIView):
 
         reportsObj = StockSummaryReport.objects.filter(dated__range=[fstDate,lstDate]).order_by('dated')
         print reportsObj.count()
-
+        hdFont = Font(size=12,bold=True)
+        alphaChars = list(string.ascii_uppercase)
         rptPkList = list(reportsObj.values_list('pk',flat=True))
         projStokObjs = ProjectStockSummary.objects.filter(stockReport__in=rptPkList)
         unqTitles = list(projStokObjs.values_list('title',flat=True).distinct())
 
         # toReturn = []
         hd = ['Date','Stock value at warehouse']
+        hdWidth = [10,10,10]
         hd += unqTitles
         # for i in unqTitles:
         #     hd.append('Consumption Of Stock - '+i)
-        toReturn.append(hd)
 
+        toReturn.append(hd)
+        for idx,i in enumerate(hd):
+            cl = str(alphaChars[idx])+'1'
+            toReturn[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+            toReturn[cl].font = hdFont
+            # Sheet1.column_dimensions[str(alphaChars[idx])].width = hdWidth[idx]
         for i in reportsObj:
             sam = []
             sam.append(str(i.dated))
@@ -2200,6 +2219,11 @@ class DownloadStockReportAPIView(APIView):
                     print 'project errorrr'
                     sam.append(0)
             toReturn.append(sam)
+            for idx,i in enumerate(sam):
+                cl = str(alphaChars[idx])+'1'
+                toReturn[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+                toReturn[cl].font = hdFont
+                # Sheet1.column_dimensions[str(alphaChars[idx])].width = hdWidth[idx]
         if toReturn.max_column <= len(string.ascii_uppercase):
             for character in string.ascii_uppercase[0:toReturn.max_column]:
                 toReturn.column_dimensions[character].width = 20
@@ -2214,10 +2238,15 @@ class DownloadInvoiceReportAPIView(APIView):
         projectObj = Projects.objects.filter(Q(status='approved')|Q(status='ongoing'),junkStatus=False,savedStatus=False)
         workbook = Workbook()
         toReturn = workbook.active
+        hdFont = Font(size=12,bold=True)
+        alphaChars = list(string.ascii_uppercase)
         hd = ['Purchase Order Ref','Supplier','Invoice No.','BOE']
-
+        hdWidth = [10,10,10]
         toReturn.append(hd)
-
+        for idx,i in enumerate(hd):
+            cl = str(alphaChars[idx])+'1'
+            toReturn[cl].fill = PatternFill(start_color="48dce0", end_color="48dce0", fill_type = "solid")
+            toReturn[cl].font = hdFont
         for p in projectObj:
             sam = []
             sam.append(p.poNumber)
@@ -2305,3 +2334,93 @@ class CancelMaterialAPIView(APIView):
             i.delete()
         materialObj.delete()
         return Response(status=status.HTTP_200_OK)
+
+def deliveryChallan(response , value , request):
+    styles = getSampleStyleSheet()
+    style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc.request = request
+    elements = []
+    invdata = MaterialIssueMain.objects.get(pk = request.GET['value'])
+    print invdata,'aaaaa'
+    p1 = Paragraph("<para alignment='center' fontSize=15  ><b> Delivery Challan</b></para>",styles['Normal'])
+
+    elements.append(p1)
+    elements.append(Spacer(1,15))
+    supplier = invdata.vendor.name
+    # projecttitle =invdata.project.title
+    # customer =invdata.project.service.name
+    # dated = invdata.created.date()
+    p0_01 =Paragraph("<para  alignment='left' fontSize=10>Supplier - {0}</para>".format(supplier),styles['Normal'])
+    # p1_01 =Paragraph("<para fontSize=10>Project title</para>",styles['Normal'])
+    # p1_02 =Paragraph(str(projecttitle),styles['Normal'])
+    #
+    # p2_01 =Paragraph("<para fontSize=10>Customer</para>",styles['Normal'])
+    # p2_02 =Paragraph(str(customer),styles['Normal'])
+    #
+    # p3_01 =Paragraph("<para fontSize=10>Date of issue</para>",styles['Normal'])
+    # p3_02 =Paragraph(str(dated),styles['Normal'])
+
+
+
+    data1=[[p0_01]]
+    # rheights=1*[0.2*inch] #[1.1*inch,1.1*inch]
+    # cwidths=6.5*inch
+    t1=Table(data1)
+
+    elements.append(t1)
+    elements.append(Spacer(1,40))
+
+
+    p4_01 =Paragraph("<para fontSize=6 align=center><b>Part number</b></para>",styles['Normal'])
+    p4_02 =Paragraph("<para fontSize=6 align=center><b>Part description</b></para>",styles['Normal'])
+    p4_03 =Paragraph("<para fontSize=6 align=center><b>Quantity</b></para>",styles['Normal'])
+    # p4_04 =Paragraph("<para fontSize=6 align=center><b>Stock value / unit<br/>(Z) </b></para>",styles['Normal'])
+    # p4_05 =Paragraph("<para fontSize=6 align=center><b>Stock value consumed for the comm nr<br/>(AD = ACxZ)</b></para>",styles['Normal'])
+    data2= [[p4_01,p4_02,p4_03]]
+
+    grandtotal = 0
+
+    for i in invdata.materialIssue.all():
+        partno = i.product.part_no
+        description = i.product.description_1
+        qty = i.qty
+        qdata = qty
+        price = i.price
+        pdata = price
+        total = qty*price
+        tdata = total
+        grandtotal+=total
+        gtotal = grandtotal
+        p6_01 =Paragraph(partno,styles['Normal'])
+        p6_02 =Paragraph(description,styles['Normal'])
+        p6_03 =Paragraph("{:,}".format(qdata),styles['Normal'])
+        # p6_04 =Paragraph("{:,}".format(round(pdata,2)),style_right)
+        # p6_05 =Paragraph("{:,}".format(round(tdata,2)),style_right)
+        data2+=[[p6_01,p6_02,p6_03]]
+
+    # p7_01 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+    # p7_02 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+    # p7_03 =Paragraph("<para fontSize=8 ></para>",styles['Normal'])
+    # p7_04 =Paragraph("<para fontSize=8 ><b>Total</b></para>",style_right)
+    # p7_05 =Paragraph("{:,}".format(round(gtotal,2)),style_right)
+    # data2+=[[p7_01,p7_02,p7_03,p7_04,p7_05]]
+
+    # rheight=0.4*inch #[1.1*inch,1.1*inch]
+    # cwidth=1.6*inch,3*inch,0.4*inch
+    t2=Table(data2)
+    t2.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t2)
+    doc.build(elements)
+
+
+
+
+class MaterialIssuedNoteAPIView(APIView):
+    def get(self , request , format = None):
+        print request.GET,'aaaaaa'
+        value = request.GET['value']
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+        deliveryChallan(response , value ,request)
+        return response

@@ -145,6 +145,49 @@ app.controller("businessManagement.inventory", function($scope, $state, $users, 
   });
 
 
+$scope.createDC= function(pkVal){
+  $uibModal.open({
+    templateUrl: '/static/ngTemplates/app.inventory.deliveryChallan.html',
+    size: 'xs',
+    backdrop:false,
+    resolve: {
+      value: function() {
+        return pkVal;
+      }
+    },
+    controller: function($scope, $uibModalInstance,value) {
+      $scope.form={
+        materialPk:'',
+        vandor:''
+      }
+      $scope.form.materialPk = value
+      $scope.vendorSearch = function(query) {
+        return $http.get('/api/support/vendor/?name__contains=' + query).
+        then(function(response) {
+          return response.data;
+        })
+      };
+      $scope.create = function() {
+        console.log($scope.form.vendor,$scope.form.materialPk );
+        $http({
+            method: 'PATCH',
+            url: '/api/support/material/' +$scope.form.materialPk+'/' ,
+            data:{
+              vendor:$scope.form.vendor.pk
+            }
+          }).
+          then(function(response) {
+              $uibModalInstance.dismiss();
+          })
+      };
+      $scope.close = function() {
+        $uibModalInstance.dismiss();
+      };
+    }
+  })
+    $scope.getMaterialIssue($scope.offsetmaterial)
+}
+
 
 //
 //   $scope.$watch('modeToggle', function(newValue, oldValue) {

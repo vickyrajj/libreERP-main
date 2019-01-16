@@ -1,0 +1,14 @@
+<div class="modal-header">
+Create Delivery Challan
+</div>
+<div class="modal-body">
+  <div class="row" style="padding:10px">
+    <div class="col-md-6">
+      <label>Supplier</label>
+      <input uib-typeahead="vendor as vendor.name for vendor in vendorSearch($viewValue)" ng-model="form.vendor" type="text" class="form-control">
+    </div>
+    <div class="col-md-2" style="padding-top:25px">
+      <button type="button" class="btn btn-primary " ng-click="create()">Create</button>
+    </div>
+  </div>
+</div>

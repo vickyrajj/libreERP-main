@@ -187,9 +187,10 @@ class MaterialIssueMainSerializer(serializers.ModelSerializer):
     materialIssue = MaterialIssueSerializer(many = True , read_only = True)
     project = ProjectsSerializer(many = False , read_only = True)
     user = userSearchSerializer(many = False , read_only = True)
+    vendor =  VendorSerializer(many = False , read_only = True)
     class Meta:
         model = MaterialIssueMain
-        fields = ('pk','created','project','materialIssue','user')
+        fields = ('pk','created','project','materialIssue','user','vendor')
     def create(self, validated_data):
         b = MaterialIssueMain(**validated_data)
         if 'materialIssue' in self.context['request'].data:
@@ -202,6 +203,26 @@ class MaterialIssueMainSerializer(serializers.ModelSerializer):
             b.user = User.objects.get(pk=int(self.context['request'].data['user']))
         b.save()
         return b
+    def update (self, instance, validated_data):
+        for key in ['pk','created','project','materialIssue','user','vendor']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'materialIssue' in self.context['request'].data:
+            for i in self.context['request'].data['materialIssue']:
+                materialIssue.add(MaterialIssue.objects.get(pk = i))
+            instance.save()
+        if 'project' in self.context['request'].data:
+            instance.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
+        if 'user' in self.context['request'].data:
+            instance.user = User.objects.get(pk=int(self.context['request'].data['user']))
+        instance.save()
+        if 'vendor' in self.context['request'].data:
+            instance.vendor = Vendor.objects.get(pk=int(self.context['request'].data['vendor']))
+        instance.save()
+        print instance.vendor
+        return instance
 
 class StockCheckSerializer(serializers.ModelSerializer):
     # inventory = InventorySerializer(many = False , read_only = True)

@@ -136,6 +136,7 @@ class Inventory(models.Model):
     addedqty = models.PositiveIntegerField(null=True , default=0)
     rate = models.FloatField(null = True)
 
+
 class MaterialIssue(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey( Products , null = True)
@@ -148,6 +149,7 @@ class MaterialIssueMain(models.Model):
     materialIssue = models.ManyToManyField(MaterialIssue, related_name='materialqty')
     user =  models.ForeignKey(User , related_name='materialuser')
     project = models.ForeignKey(Projects , related_name='materialproject')
+    vendor = models.ForeignKey(Vendor , related_name = 'vandormaterial' ,null = True, blank =True)
 
 class StockCheck(models.Model):
     inventory =   models.ForeignKey( Inventory , null = True)
