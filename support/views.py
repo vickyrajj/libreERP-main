@@ -1952,7 +1952,7 @@ class DownloadProjectSCExcelReponse(APIView):
                     for m in k.materialIssue.all():
                         if j.products.pk==m.product.pk:
                             stockConsumed += m.qty
-                    inv = Inventory.objects.all()
+                inv = Inventory.objects.all()
                 for v in inv:
                     # listVal =[]
                     if j.project.pk == v.project.pk and j.products.pk == v.product.pk:
