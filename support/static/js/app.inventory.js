@@ -149,7 +149,7 @@ $scope.createDC= function(pkVal){
   $uibModal.open({
     templateUrl: '/static/ngTemplates/app.inventory.deliveryChallan.html',
     size: 'xs',
-    backdrop:false,
+    // backdrop:false,
     resolve: {
       value: function() {
         return pkVal;
