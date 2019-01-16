@@ -226,16 +226,16 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
   //     // templateUrl: 'popup.html',
   //   });
   // }
-  $scope.booksdata=[];
+  $scope.booksdata = [];
   $http({
     method: 'GET',
     url: '/api/LMS/bookcoursemap/?course' + $scope.course.pk
   }).then(function(response) {
-    $scope.booksdata.push( response.data);
-    $scope.bdata=response.data;
+    $scope.booksdata.push(response.data);
+    $scope.bdata = response.data;
   })
 
-console.log($scope.booksdata);
+  console.log($scope.booksdata);
 
   $scope.addbook = function() {
     $uibModal.open({
@@ -251,8 +251,11 @@ console.log($scope.booksdata);
         }
       },
 
-      controller: function($scope, $uibModalInstance, data,dt) {
-        console.log('arrrrr----',dt);
+      controller: function($scope, $uibModalInstance, data, dt) {
+        $scope.dat = dt;
+        for (var i = 0; i < $scope.dat.length; i++) {
+          console.log($scope.dat[i], 'ddddddddddddddd');
+        }
         $scope.bookSearch = function(query) {
           return $http.get('/api/LMS/book/?title__contains=' + query).
           then(function(response) {
@@ -273,13 +276,24 @@ console.log($scope.booksdata);
             url: url,
             data: toSend
           }).
-          then(function() {})
+          then(function(response) {
+              console.log(response);
+              Flash.create('success', 'Book Added successfully');
+              $uibModalInstance.dismiss(response.data);
+            },
+            function(error) {
+              console.log(error, '-----err');
+              Flash.create('danger', 'Book is already added,choose a diffrent book');
+            })
         }
-
-
       }, //controller ends
-    })
-  } //addbookfunction ends
+    }).result.then(function(f) {
+
+    }, function(f) {
+      $scope.bdata.push(f)
+      console.log(f,'--------pushed');
+    });
+} //addbookfunction ends
 
 
 });
