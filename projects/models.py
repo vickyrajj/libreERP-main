@@ -22,7 +22,7 @@ def getcontentFilePath(instance , filename ):
     return 'projects/issue/%s_%s__%s' % (str(time()).replace('.', '_'), instance.title, filename)
 
 def getPettyCashInvoicePath(instance , filename ):
-    return 'projects/pettyExpense/%s_%s__%s' % (str(time()).replace('.', '_'), instance.title, filename)
+    return 'projects/pettyExpense/%s_%s__%s__%s' % (str(time()).replace('.', '_'), instance.heading.title,instance.project.title, filename)
 
 MEDIA_TYPE_CHOICES = (
     ('onlineVideo' , 'onlineVideo'),
@@ -57,6 +57,8 @@ class project(models.Model):
     costCenter = models.ForeignKey(CostCenter , null = True , related_name='projects')
     expenseSheets = models.ManyToManyField(ExpenseSheet , related_name='project')
     invoices = models.ManyToManyField(ExpenseSheet , related_name='projects')
+    budget = models.PositiveIntegerField(default=0)
+    projectClosed = models.BooleanField(default = False)
 
 class projectComment(comment):
     project = models.ForeignKey(project , null= False , related_name='comments')
@@ -112,7 +114,7 @@ class Issues(models.Model):
 
 class ProjectPettyExpense(models.Model): # also petty cash
     created = models.DateTimeField(auto_now_add=True)
-    ammount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField()
     project = models.ForeignKey(project , null = True , related_name='expenses')
     account = models.ForeignKey(Account , null = True , related_name='pettyCashExpenses')
     description = models.TextField(max_length=200 , null = True)

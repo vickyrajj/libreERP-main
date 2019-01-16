@@ -4,13 +4,19 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from .serializers import *
 from API.permissions import *
 from .models import *
-from django.db.models import Q, F
+from django.db.models import Q, F , Sum
 from openpyxl import load_workbook,Workbook
+from openpyxl.writer.excel import save_virtual_workbook
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from io import BytesIO
 from rest_framework.views import APIView
+from projects.models import ProjectPettyExpense , project
+import datetime
+from dateutil.relativedelta import relativedelta
+import calendar
+from django.http import HttpResponse
 # Create your views here.
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -65,6 +71,8 @@ class ExpenseHeadingViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ExpenseHeadingSerializer
     queryset = ExpenseHeading.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['title']
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
@@ -153,3 +161,101 @@ class UplodInflowDataAPI(APIView):
                     Inflow.objects.bulk_create(storeData)
                     print 'total {0} Objects has been created'.format(len(storeData))
         return Response(tosend, status=status.HTTP_200_OK)
+
+class GetExpenseDataAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print 'entered','*******************'
+        print request.GET
+        accountsList = list(request.user.accountsManaging.all().values_list('pk',flat=True).distinct())
+        print accountsList,'user accountssssss Listttttttt'
+        tosend=[]
+        expObj = ProjectPettyExpense.objects.filter(account__in=accountsList).values('project__pk','project__title').distinct()
+        print expObj
+        for i in expObj:
+            expTotal = ProjectPettyExpense.objects.filter(project__id=int(i['project__pk']),account__in=accountsList).aggregate(tot=Sum('amount'))
+            expTotal = expTotal['tot'] if expTotal['tot'] else 0
+            print expTotal
+            data = {'projectPk':i['project__pk'],'projectName':i['project__title'],'expTotal':expTotal}
+            tosend.append(data)
+        if 'limit' in request.GET:
+            try:
+                lmt = int(request.GET['limit'])
+                tosend = tosend[0:lmt]
+            except:
+                pass
+        return Response(tosend, status=status.HTTP_200_OK)
+
+class ExpensesGraphDataAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print 'entered','*******************'
+        print request.GET
+
+        tosend={'labels':[],'datasets':[]}
+        allExpenses = ProjectPettyExpense.objects.all()
+        projLists = allExpenses.values('project__pk','project__title').distinct()
+        accountList = allExpenses.values('account__pk','account__title').distinct()
+        for idx,i in enumerate(accountList):
+            data = {'label':i['account__title'],'data':[]}
+            for j in projLists:
+                if idx==0:
+                    tosend['labels'].append(j['project__title'])
+                expTotal = allExpenses.filter(project__id=int(j['project__pk']),account__id=int(i['account__pk'])).aggregate(tot=Sum('amount'))
+                expTotal = expTotal['tot'] if expTotal['tot'] else 0
+                data['data'].append(expTotal)
+            tosend['datasets'].append(data)
+
+        return Response(tosend, status=status.HTTP_200_OK)
+
+class MonthsExpensesDataAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print 'entered','*******************'
+        tosend={'labels':[],'datasets':[]}
+        today = datetime.date.today()
+        lstYear = today + relativedelta(years=-1,months=-1)
+        print today , lstYear
+        allExpenses = ProjectPettyExpense.objects.all()
+        for i in range(13):
+            lstYear += relativedelta(months=1)
+            mth = lstYear.month
+            yr = lstYear.year
+            label = str(calendar.month_abbr[mth]) + '-' + str(yr)
+            tosend['labels'].append(label)
+            expTotal = allExpenses.filter(created__year=yr,created__month=mth).aggregate(tot=Sum('amount'))
+            expTotal = expTotal['tot'] if expTotal['tot'] else 0
+            tosend['datasets'].append(expTotal)
+
+        return Response(tosend, status=status.HTTP_200_OK)
+
+class DownloadExpenseSummaryAPI(APIView):
+    permission_classes = (permissions.IsAuthenticated ,)
+    def get(self , request , format = None):
+        print 'entered','*******************'
+        workbook = Workbook()
+        Sheet1 = workbook.active
+        Sheet1.title = 'Expense Summary'
+        Sheet1.append(["Project", "Budget",'Expense'])
+        projectsList = project.objects.filter(projectClosed=False)
+        print projectsList.count()
+        for i in projectsList:
+            data = [i.title,i.budget]
+            try:
+                expTotal = ProjectPettyExpense.objects.filter(project=i).aggregate(tot=Sum('amount'))
+                expTotal = expTotal['tot'] if expTotal['tot'] else 0
+            except:
+                expTotal = 0
+            data.append(expTotal)
+            Sheet1.append(data)
+        allExpenses = ProjectPettyExpense.objects.all()
+        projLists = allExpenses.values('project__pk','project__title').distinct()
+        for i in projLists:
+            Sheet = workbook.create_sheet(i['project__title'])
+            Sheet.append(['Title','Amount','Description'])
+            ptObjs = allExpenses.filter(project__id=int(i['project__pk']))
+            for j in ptObjs:
+                Sheet.append([j.heading.title,j.amount,j.description])
+        response = HttpResponse(content=save_virtual_workbook(workbook),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=ExpenseSummary.xlsx'
+        return response

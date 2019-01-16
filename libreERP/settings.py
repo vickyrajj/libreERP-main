@@ -57,9 +57,9 @@ GITOLITE_KEY = '123' # the gitolite server push notification secret key, all git
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.151', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.0.15','192.168.1.123','192.168.0.109','192.168.0.110','192.168.0.108']
+ALLOWED_HOSTS = ['192.168.1.151', 'cioc.co.in', 'localhost', '127.0.0.1', '192.168.0.105', '192.168.0.105' ,'172.20.10.8', '192.168.1.113' ,'192.168.1.109' , '192.168.1.110' , '192.168.0.7','192.168.0.15','192.168.1.123','192.168.0.109','192.168.0.110','192.168.0.108','192.168.0.112']
 
-TRUSTED_DOMAINS = ['http://192.168.0.108','http://127.0.0.1','http://localhost']
+TRUSTED_DOMAINS = ['http://192.168.0.112','http://127.0.0.1','http://localhost']
 
 SOURCE_LIST = ['CIOC','MONOMERCE','TUTORS_24','RACKMINT','EPSILON_AI']
 

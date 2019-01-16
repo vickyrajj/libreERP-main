@@ -146,6 +146,9 @@ app.controller('businessManagement.finance.accounts', function($scope, $http, $a
   };
 
   var multiselectOptions = [{
+    icon: 'fa fa-download',
+    text: 'Download Expenses Summary'
+  },{
     icon: 'fa fa-plus',
     text: 'new'
   }, ];
@@ -172,6 +175,8 @@ app.controller('businessManagement.finance.accounts', function($scope, $http, $a
     if (action == 'new') {
       console.log('new');
       $scope.openAccountForm();
+    }else if (action=='Download Expenses Summary') {
+      window.open('/api/finance/downloadExpenseSummary/', '_blank');
     } else {
       for (var i = 0; i < $scope.data.tableData.length; i++) {
         if ($scope.data.tableData[i].pk == parseInt(target)) {

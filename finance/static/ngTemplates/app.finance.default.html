@@ -2,78 +2,39 @@
   <div class="container-fluid" style="padding:0px;">
     <breadcrumb></breadcrumb>
     <div class="container-fluid">
-      <div class="col-md-10">
+      <div class="row">
         <div class="col-md-12">
-          <div class="container-fluid" style="min-height:35vh;">
-            <div class="row">
-              <div class="col-md-3 text-center">
-                <div class="in_center with_border">
-                  <span class="bigfont">99,474</span><br><span>Production Volume</span>
-                </div>
-              </div>
-              <div class="col-md-6 text-center">
-                <div class="in_center with_border">
-                  <div class="" style="padding-bottom:40px;">
-                    <canvas id="active-line-chart" height="40"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3 text-center">
-                <div class="in_center with_border">
-                  <span class="bigfont">99,474</span><br><span>Active Machines</span>
+          <div class="col-md-8">
+            <div class="row" style="height:40vh">
+              <div class="col-md-12">
+                <div class="container-fluid">
+                  <canvas id="active-line-chart" height="100">
+              </canvas>
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-3 text-center">
-                <div class="in_center">
-                  <span class="bigfont">77.662</span><br><span>Quantity Ordered</span>
-                </div>
-              </div>
-              <div class="col-md-6 text-center">
-                <div class="" style="padding-top:20px;">
-                  <canvas id="sales-bar-chart" height="40"></canvas>
-                </div>
-              </div>
-              <div class="col-md-3 text-center">
-                <div class="in_center">
-                  <span class="bigfont">1.12L</span><br><span>Sales Revenue</span>
+            <div class="row" style="height:43vh">
+              <div class="col-md-12">
+                <div class="container-fluid" style="margin-top:10px;">
+                  <canvas id="items-bar-chart" height="120">
+              </canvas>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-12">
-          <div class="container-fluid" style="margin-top:10px;">
-            <h2>Returned items by Reason</h2>
-            <canvas id="items-bar-chart" height="90px">
-            </canvas>
+          <div class="col-md-4">
+            <div class="text-center">
+              <h3>Expenses On Project Wise</h3><br>
+            </div>
+            <div class="col-md-6 text-center" style="position:relative;padding-bottom:15px;height:35vh" ng-repeat="pjExp in projExpData">
+              <span class="doughnut_text"> <b>{{pjExp.expPercent}}%</b> </span>
+              <canvas id="expense-doughnut-chart{{$index}}" height="250" ng-click="showProjectForm(pjExp)" style="cursor:pointer"></canvas>
+              <strong>Project : </strong><span>{{pjExp.title}}</span><br>
+              <strong>Budget : </strong><span>{{pjExp.budget | number}}</span>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="col-md-2">
-        <div class="text-center in_center">
-          <h3>Top Expenses</h3>
-          <span>by Quantity</span>
-        </div>
-        <div class="col-md-12 in_center" style="position:relative;">
-          <span class="doughnut_text"> <b>70%</b> </span>
-          <canvas id="expense-doughnut-chart1" height="200"></canvas>
-        </div>
-        <div class="col-md-12 in_center"style="position:relative;">
-          <span class="doughnut_text"> <b>40%</b> </span>
-          <canvas id="expense-doughnut-chart2" height="200"></canvas>
-        </div>
-        <div class="col-md-12 in_center"style="position:relative;">
-          <span class="doughnut_text"> <b>50%</b> </span>
-          <canvas id="expense-doughnut-chart3" height="200"></canvas>
-        </div>
-        <div class="col-md-12 in_center"style="position:relative;">
-          <span class="doughnut_text"> <b>80%</b> </span>
-          <canvas id="expense-doughnut-chart4" height="200"></canvas>
         </div>
       </div>
     </div>
-
   </div>
 </div>

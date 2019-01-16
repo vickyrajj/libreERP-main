@@ -6,7 +6,7 @@
       <div class="card" style="padding:10px;border-radius:20px;margin-bottom:15px;cursor:pointer;border:2px solid {{form.accountIdx==$index?'blue':'aliceblue'}}" ng-repeat="acc in userAccounts" ng-click="form.accountIdx=$index">
         <div class="row">
           <div class="col-md-2">
-            <img ng-src="/static/images/pettyAccount.jpeg" class="img-circle pull-right" width="60"/>
+            <img ng-src="/static/images/pettyAccount.jpeg" class="img-circle pull-right" width="60" />
           </div>
           <div class="col-md-6">
             <div class="row">
@@ -25,59 +25,83 @@
         </div>
       </div>
     </div>
-    <div class="col-md-7">
-      <div class="col-md-12 text-center">
-        <strong style="font-size:18px">Create Expense Record</strong>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Title</label>
-            <input uib-typeahead="head as head.title for head in titleSearch($viewValue)" ng-model="form.heading" type="text" class="form-control" placeholder="Search By Some Title">
+    <div class="col-md-7" style="padding:0px 20px">
+      <div class="row" style="padding:0px 70px">
+        <div class="col-md-12 text-center" style="padding-bottom:15px">
+          <strong style="font-size:18px">Create Expense Record</strong>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Title</label>
+              <input uib-typeahead="head as head.title for head in titleSearch($viewValue)" ng-model="form.heading" type="text" class="form-control" placeholder="Search By Some Title">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Amount</label>
+              <input type="number" class="form-control" ng-model="form.amount" min="1">
+            </div>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Amount</label>
-            <input type="text" class="form-control" ng-model="form.amount" min="1">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Project</label>
+              <div class="{{form.newProject?'input-group':''}}">
+                <input uib-typeahead="prj as prj.title for prj in projectSearch($viewValue)" ng-model="form.project" type="text" class="form-control" placeholder="Search By Project Title">
+                <span ng-click="openProjectPopup()" ng-if="form.newProject" class="input-group-addon btn btn-primary" >New <i class="fa fa-plus-circle"></i></span>
+              </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Attachment</label>
+              <input type="file" file-model="form.attachment">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Project</label>
-            <input uib-typeahead="prj as prj.title for prj in projectSearch($viewValue)" ng-model="form.project" type="text" class="form-control" placeholder="Search By Project Title">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Description</label>
+              <textarea name="name" ng-model="form.description" class="form-control" rows="3" placeholder="Description For The Expense"></textarea>
+            </div>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Attachment</label>
-            <input type="file" file-model="form.attachment">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <button type="button" class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="createRecord()" confirm-button-type="default" cancel-button-type="default">Create</button>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group">
-            <label>Description</label>
-            <textarea name="name" ng-model="form.description" class="form-control" rows="3" placeholder="Description For The Expense"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 text-center">
-          <button type="button" class="btn btn-success" ng-click="createRecord()">Create</button>
         </div>
       </div>
     </div>
   </div>
   <div class="row" ng-if="userAccounts.length>0">
     <hr>
-    <h1>Records List</h1>
+    <div class="row" style="padding:25px 15px">
+      <div class="col-md-4" ng-repeat="exp in expData">
+        <div class="card" style="padding:0px 10px;border-radius:20px;margin-bottom:20px;cursor:pointer;background-color:{{exp.colorCode}}" ng-click="openExpenseDetails($index)">
+          <div class="row">
+            <div class="col-md-8">
+              <h3><i class="fa fa-globe"></i> {{exp.projectName}}</h3>
+            </div>
+            <div class="col-md-4 text-right" style="padding-left:0px">
+              <h2 style="color:#b1afaf"> <i class="fa fa-inr"></i> {{exp.expTotal | number}} </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center" ng-show="showMore">
+        <span class="btn btn-primary" ng-click="getExpenseData()">Load More</span>
+      </div>
+    </div>
   </div>
-  <div class="row">
-    <div class="col-md-12 text-center" ng-if="userAccounts.length==0" style="margin-top:30vh">
+  <div class="row" style="margin:20px 0px">
+    <div class="col-md-12 text-center" ng-if="userAccounts.length==0">
       <span class="text-muted" style="font-size:40px;">No Accounts For You</span>
     </div>
   </div>
