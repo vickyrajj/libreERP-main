@@ -272,8 +272,9 @@ app.controller('businessManagement.finance.default', function($scope, $http, $as
           }
           console.log(typeof f.dueDate);
           if (typeof f.dueDate == 'object') {
-            toSend.dueDate == f.dueDate
+            toSend.dueDate = f.dueDate
           }
+          console.log(toSend);
           $http({
             method: 'PATCH',
             url: '/api/projects/project/' + $scope.projForm.pk + '/',
