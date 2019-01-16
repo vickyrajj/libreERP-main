@@ -44,17 +44,12 @@
         </div>
       </div>
     </div>
-    <!-- <button type="button" ng-click="takeSnapshot()" class="btn btn-default">
-      snap
-    </button> -->
+
     <div ng-if="data.video&&!data.closeIframe" class="container-fluid" style="{{data.isVideoShowing&&isVisitorVideoShowing?'height:20vh':'height:2.8vh'}} ;transition:.5s; padding:0px;" ng-init="setHeight()">
-      <!-- <span style="position:absolute; right:7px; top:3px; background-color:black; padding:3px;"><i class="fa fa-times-circle"></i></span> -->
-      <!-- {{data.video}}
-      {{data.videoUrl}} -->
       <i style="position:absolute; right:10px; top:105px; color:#fff; cursor:pointer;" ng-click="captureImage()" class="fa fa-camera fa-lg" aria-hidden="true"></i>
       <i style="position:absolute; right:40px; top:105px; color:#fff; cursor:pointer;" ng-click="hideVisitorScreen()" class="fa fa-compress fa-lg" aria-hidden="true"></i>
       <i style="position:absolute; right:70px; top:105px; color:#fff; cursor:pointer;" ng-click="!data.alreadyDone? toggleVisitorScreen():''" class="fa fa-video-camera fa-lg" aria-hidden="true"></i>
-      <iframe id="iframeChat{{data.uid}}" ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; transition:0.5s;width:100%; border:1px solid #e0e0e0;" allowFullScreen></iframe>
+      <iframe id="iframeChat{{data.uid}}" ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; transition:0.5s;width:100%; border:1px solid #e0e0e0;" allow="geolocation; microphone; camera;"  autoplay="true" muted="muted" allowfullscreen></iframe>
       <!-- <iframe ng-src="{{data.currentUrl | trusted}}" scrolling="no" style="height:100%; transition:0.5s;width:100%; border:1px solid #e0e0e0;" allowFullScreen></iframe> -->
 
     </div>

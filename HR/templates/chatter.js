@@ -348,6 +348,11 @@ firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
 if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
+
+
+// function setWindowColor(wc, fc,){
+//   windowColor=
+// }
 // var color1 = tinycolor(windowColor);
 
 var windowColorR = parseInt(windowColor.slice(1,3),16)
@@ -2312,7 +2317,7 @@ var myformrating;
       document.getElementById('iframeDiv').style.display = "block";
     }
     if (event.data== 'replyToUseruserleft'){
-      setTimeout(endOfConversation, 3000);
+      setTimeout(endOfConversation, 2000);
     }
     if (event.data== 'dintPickTheCall'){
       if(isAudioClicked){
@@ -2436,9 +2441,8 @@ var myformrating;
   }
 
 function endOfConversation() {
-  // alert(videoOpened+' '+audioOpened)
+
     if (videoOpened) {
-      // alert(document.getElementById('iFrame1'))
       var iFrame = document.getElementById('iFrame1')
       iFrame.src = '';
       if (device=='sm') {
@@ -2453,7 +2457,7 @@ function endOfConversation() {
       }
       videoOpened = false
     }else if(audioOpened){
-      // alert('in here')
+
       var iFrame = document.getElementById('iFrame1')
       iFrame.src = '';
       audioSection.innerHTML = "";
@@ -2642,6 +2646,7 @@ function addExitConfirmation() {
     isConfirmedToEnd=true
       if(getFrameContent!=undefined){
         getFrameContent.postMessage('userleft',webRtcAddress );
+        hideTheIframeOnAgentSide()
       }
         if (threadExist==undefined) {
           return

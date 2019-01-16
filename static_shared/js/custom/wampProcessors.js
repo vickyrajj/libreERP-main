@@ -90,8 +90,7 @@ var hasAccesss=true;
     console.log(isfocused+' focused');
     var scope = angular.element(document.getElementById('chatTab')).scope();
 
-    // console.log(args);
-    // scope.notii();
+
     console.log(args);
     console.log(args[3]);
     console.log(scope.myCompanies);
@@ -243,6 +242,7 @@ var hasAccesss=true;
           }
           else if(args[1]=='hideTheIframe'){
             // alert('iframe chhupega abbb')
+            // scope.myUsers[i].videoUrl=null;
             scope.myUsers[i].closeIframe = true
           }
           else if(args[1]=='CustmorClosedTheChat'){
