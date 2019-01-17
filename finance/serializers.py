@@ -278,7 +278,7 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
     project = projectLiteSerializer(many = False , read_only = True)
     class Meta:
         model = PurchaseOrder
-        fields = ('pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' , 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice')
+        fields = ('pk', 'created' , 'name' , 'address' , 'personName' , 'phone', 'email' , 'pincode' , 'user' , 'status', 'poNumber' , 'quoteNumber' ,'quoteDate', 'deliveryDate' , 'terms' , 'costcenter' , 'bussinessunit' , 'project' , 'isInvoice')
         read_only_fields = ('user', )
     def create(self , validated_data):
         u = self.context['request'].user
@@ -291,7 +291,18 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
         if 'project' in self.context['request'].data:
             po.project = project.objects.get(pk=int(self.context['request'].data['project']))
         po.save()
+        po.poNumber = po.pk
+        po.save()
         return po
+    def update(self , instance , validated_data):
+        if 'costcenter' in self.context['request'].data:
+            instance.costcenter = CostCenter.objects.get(pk=int(self.context['request'].data['costcenter']))
+        if 'bussinessunit' in self.context['request'].data:
+            instance.bussinessunit = Unit.objects.get(pk=int(self.context['request'].data['bussinessunit']))
+        if 'project' in self.context['request'].data:
+            instance.project = project.objects.get(pk=int(self.context['request'].data['project']))
+        instance.save()
+        return instance
 
 class PurchaseOrderQtySerializer(serializers.ModelSerializer):
     purchaseorder = PurchaseOrderSerializer(many = False , read_only = True)
