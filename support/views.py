@@ -243,12 +243,12 @@ styles = getSampleStyleSheet()
 
 def footer(canvas, doc):
     canvas.saveState()
-    # header_content = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'Bruderer_Logo_svg.svg'))
-    # sx=sy=0.17
-    # header_content.width,header_content.height = header_content.minWidth()*sx, header_content.height*sy
-    # header_content.scale(sx,sy)
-    # header_content.hAlign = 'RIGHT'
-    # header_content.drawOn(canvas, 0,700)
+    header_content = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'Bruderer_Logo_svg.svg'))
+    sx=sy=0.17
+    header_content.width,header_content.height = header_content.minWidth()*sx, header_content.height*sy
+    header_content.scale(sx,sy)
+    header_content.hAlign = 'RIGHT'
+    header_content.drawOn(canvas, 450,750)
     P = Paragraph("<para  align='center'><font size='8'>CIN No. U31900KA2001PTC099049<br/> Regd. Office. #17P, Sadaramangala Industrial Area,Whitefield Road,Kadugodi,Bangalore 560 048<br/> Phone : +91 80 2841 1049<br/> e-mail : info@bruderer-india.com  website : www.bruderer.com</font> </para>", styles['Normal'])
     w, h = P.wrap(doc.width, doc.bottomMargin)
     P.drawOn(canvas, doc.leftMargin, h-20)
@@ -264,17 +264,17 @@ from functools import partial
 
 def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, request):
     styles = getSampleStyleSheet()
-    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=70,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
     elements = []
-    elements.append(Spacer(1,30))
-    header_content = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'Bruderer_Logo_svg.svg'))
-    sx=sy=0.17
-    header_content.width,header_content.height = header_content.minWidth()*sx, header_content.height*sy
-    header_content.scale(sx,sy)
-    header_content.hAlign = 'RIGHT'
-    elements.append(header_content)
-    elements.append(Spacer(1,10))
+    # elements.append(Spacer(1,30))
+    # header_content = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'Bruderer_Logo_svg.svg'))
+    # sx=sy=0.17
+    # header_content.width,header_content.height = header_content.minWidth()*sx, header_content.height*sy
+    # header_content.scale(sx,sy)
+    # header_content.hAlign = 'RIGHT'
+    # elements.append(header_content)
+    # elements.append(Spacer(1,10))
     style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
     # frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height-2*cm, id='normal')
     # template1 = PageTemplate(id='test', frames=frame, onPage=partial(header, content=header_content))
@@ -729,18 +729,18 @@ def landingDetails(response , project , purchaselist, request):
 
 def quotation(response , project , purchaselist , multNumber,typ,request):
     styles = getSampleStyleSheet()
-    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=70,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
     elements = []
     style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
-    elements.append(Spacer(1,30))
-    logo = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'Bruderer_Logo_svg.svg'))
-    sx=sy=0.17
-    logo.width,logo.height = logo.minWidth()*sx, logo.height*sy
-    logo.scale(sx,sy)
-    logo.hAlign = 'RIGHT'
-    elements.append(logo)
-    elements.append(Spacer(1,10))
+    # elements.append(Spacer(1,30))
+    # logo = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'Bruderer_Logo_svg.svg'))
+    # sx=sy=0.17
+    # logo.width,logo.height = logo.minWidth()*sx, logo.height*sy
+    # logo.scale(sx,sy)
+    # logo.hAlign = 'RIGHT'
+    # elements.append(logo)
+    # elements.append(Spacer(1,10))
 
     if typ == 'Invoice':
         summryHeader = Paragraph("""
