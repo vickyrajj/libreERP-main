@@ -181,10 +181,18 @@
         </div>
         <div class="row" style="padding-top:10px" ng-if="options">
           <div class="col-md-12 text-center">
-            <label> INCO Terms : </label>
+            <label> INCO Terms (Quotation) : </label>
           </div>
           <div class="col-md-12">
             <input type="text" class="form-control text-center" ng-model="form.terms" placeholder="INCO Terms" ng-change="incoTerms()">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> INCO Terms (PO): </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.termspo" placeholder="INCO Terms" ng-change="incoTermsPo()">
           </div>
         </div>
         <div class="row" style="padding-top:10px" ng-if="options">
@@ -753,10 +761,18 @@
       </div>
       <div class="row" style="padding-top:10px">
         <div class="col-md-5 text-center">
-          <label> INCO Terms : </label>
+          <label> INCO Terms (Quoatation) : </label>
         </div>
         <div class="col-md-7 text-center">
           <span> {{form.terms}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
+          <label> INCO Terms (PO): </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.termspo}}</span>
         </div>
       </div>
       <div class="row" style="padding-top:10px">
@@ -1265,10 +1281,18 @@
       </div>
       <div class="row" style="padding-top:10px" ng-if="options">
         <div class="col-md-12 text-center">
-          <label> INCO Terms : </label>
+          <label> INCO Terms (Quotation): </label>
         </div>
         <div class="col-md-12">
           <input type="text" class="form-control text-center" ng-model="form.terms" placeholder="INCO Terms" ng-change="incoTerms()">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label> INCO Terms (PO): </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.termspo" placeholder="INCO Terms" ng-change="incoTermsPo()">
         </div>
       </div>
       <div class="row" style="padding-top:10px" ng-if="options">
@@ -1752,10 +1776,18 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
-              <label> INCO Terms : </label>
+              <label> INCO Terms (Quotation): </label>
             </div>
             <div class="col-md-7 text-center">
               <span> {{form.terms}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+              <label> INCO Terms (PO): </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.termspo}}</span>
             </div>
           </div>
           <div class="row" style="padding-top:10px">
