@@ -40,17 +40,25 @@ class AccountLiteSerializer(serializers.ModelSerializer):
         model = Account
         fields = ('pk', 'title' , 'number', 'ifsc', 'bank')
 
+class OutBoundInvoiceLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OutBoundInvoice
+        fields = ('pk', 'user' , 'status', 'isInvoice', 'poNumber','name','deliveryDate','payDueDate')
+
 class projectSerializer(serializers.ModelSerializer):
     files = mediaSerializer(many = True , read_only = True)
     repos = repoLiteSerializer(many = True , read_only = True)
     comments = projectCommentSerializer(many = True , read_only = True)
     costCenter = CostCenterLiteSerializer(many = False , read_only = True)
+    ourBoundInvoices = OutBoundInvoiceLiteSerializer(many = True , read_only = True)
     totalCost = serializers.SerializerMethodField()
     class Meta:
         model = project
-        fields = ('pk','dueDate', 'created' , 'title' , 'description' , 'files' , 'team', 'comments', 'repos','user','costCenter','budget','projectClosed','totalCost')
+        fields = ('pk','dueDate', 'created' , 'title' , 'description' , 'files' , 'team', 'comments', 'repos','user','costCenter','budget','projectClosed','ourBoundInvoices','totalCost')
         read_only_fields = ('user', 'team',)
     def create(self , validated_data):
+        print validated_data
+        print 'seffffffff',self.context['request'].data
         p = project(**validated_data)
         p.user = self.context['request'].user
         if 'costCenter' in self.context['request'].data:

@@ -120,6 +120,20 @@ class PurchaseOrderQtyViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['purchaseorder','product']
 
+class OutBoundInvoiceViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = OutBoundInvoiceSerializer
+    queryset = OutBoundInvoice.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['poNumber']
+
+class OutBoundInvoiceQtyViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = OutBoundInvoiceQtySerializer
+    queryset = OutBoundInvoiceQty.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['outBound','product']
+
 class UplodInflowDataAPI(APIView):
     renderer_classes = (JSONRenderer,)
     permission_classes = (permissions.IsAuthenticated ,)
@@ -268,13 +282,16 @@ class DownloadExpenseSummaryAPI(APIView):
         projLists = allExpenses.values('project__pk','project__title').distinct()
         for i in projLists:
             Sheet = workbook.create_sheet(i['project__title'])
-            hd = ['Title','Amount','Description']
-            hdWidth = [10,10,10]
+            hd = ['Title','Amount','Account No.','User Name','Description']
+            hdWidth = [10,10,10,10,10]
             Sheet.append(hd)
 
             ptObjs = allExpenses.filter(project__id=int(i['project__pk']))
             for j in ptObjs:
-                data = [j.heading.title,j.amount,j.description]
+                uName = j.createdUser.first_name
+                if j.createdUser.last_name:
+                    uName += ' ' + j.createdUser.last_name
+                data = [j.heading.title,j.amount,j.account.number,uName,j.description]
                 Sheet.append(data)
                 for idx,k in enumerate(data):
                     if (len(str(k))+5) > hdWidth[idx]:

@@ -11,7 +11,7 @@ from django.conf import settings as globalSettings
 # Create your models here.
 from time import time
 from HR.models import Unit
-from finance.models import CostCenter , ExpenseSheet , Account , ExpenseHeading
+from finance.models import CostCenter , ExpenseSheet , Account , ExpenseHeading , OutBoundInvoice
 from clientRelationships.models import ProductMeta
 
 
@@ -54,9 +54,10 @@ class project(models.Model):
     description = models.TextField(max_length=2000 , blank=False)
     files = models.ManyToManyField(media , related_name='projects')
     team = models.ManyToManyField(User , related_name = 'projectsInvolvedIn')
-    costCenter = models.ForeignKey(CostCenter , null = True , related_name='projects')
     expenseSheets = models.ManyToManyField(ExpenseSheet , related_name='project')
     invoices = models.ManyToManyField(ExpenseSheet , related_name='projects')
+    costCenter = models.ForeignKey(CostCenter , null = True , related_name='projectCostcenter')
+    ourBoundInvoices = models.ManyToManyField(OutBoundInvoice , related_name='projectOutBoundInvoice')
     budget = models.PositiveIntegerField(default=0)
     projectClosed = models.BooleanField(default = False)
 

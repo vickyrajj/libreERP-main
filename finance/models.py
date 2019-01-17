@@ -170,9 +170,11 @@ class VendorInvoice(models.Model):
 
 STATUS_CHOICES = (
     ('created' , 'created'),
-    ('Sent' , 'Sent'),
     ('Approved' , 'Approved'),
-    ('Final' , 'Final'),
+    ('Sent' , 'Sent'),
+    ('Received' , 'Received'),
+    ('NotReceivedAndArchived' , 'NotReceivedAndArchived'),
+    ('Reconciled' , 'Reconciled'),
 )
 
 class OutBoundInvoice(models.Model):

@@ -22,7 +22,7 @@ class projectViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = projectSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['title','costCenter','projectClosed']
+    filter_fields = ['title','costCenter','projectClosed','ourBoundInvoices']
     def get_queryset(self):
         u = self.request.user
         if u.is_superuser:

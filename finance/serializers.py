@@ -10,12 +10,15 @@ from projects.models import *
 from projects.serializers import projectLiteSerializer
 from datetime import datetime
 from HR.serializers import userSearchSerializer
+from HR.models import designation
 
 from organization.serializers import *
 
-from HR.models import designation
 from organization.serializers import UnitsLiteSerializer
+from organization.models import Division , Unit
 
+from clientRelationships.models import ProductMeta
+from clientRelationships.serializers import ProductMetaSerializer
 
 class AccountSerializer(serializers.ModelSerializer):
     contactPerson = userSearchSerializer(many=False,read_only=True)
@@ -100,6 +103,11 @@ class CostCenterSerializer(serializers.ModelSerializer):
             instance.account = Account.objects.get(pk=int(self.context['request'].data['account']))
         instance.save()
         return instance
+
+class CostCenterLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CostCenter
+        fields = ('pk', 'head' , 'name' , 'code' , 'account' )
 
 class TransactionSerializer(serializers.ModelSerializer):
     fromAcc = AccountLiteSerializer(many = False , read_only = True)
@@ -301,3 +309,52 @@ class ExpenseHeadingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExpenseHeading
         fields = ('pk', 'title')
+
+class OutBoundInvoiceSerializer(serializers.ModelSerializer):
+    costcenter = CostCenterLiteSerializer(many = False , read_only = True)
+    bussinessunit = UnitsLiteSerializer(many=False,read_only=True)    
+    class Meta:
+        model = OutBoundInvoice
+        fields=('pk','created','user','status','isInvoice','poNumber','name','personName','phone','email','address','pincode','state','city','country','pin_status','deliveryDate','payDueDate','gstIn','costcenter','bussinessunit')
+    def create(self , validated_data):
+        obi = OutBoundInvoice(**validated_data)
+        obi.user = self.context['request'].user
+        if 'costcenter' in self.context['request'].data:
+            ccObj = CostCenter.objects.get(pk=int(self.context['request'].data['costcenter']))
+            obi.costcenter = ccObj
+        if 'bussinessunit' in self.context['request'].data:
+            unitObj = Unit.objects.get(pk=int(self.context['request'].data['bussinessunit']))
+            obi.bussinessunit = unitObj
+        obi.save()
+        if 'project' in self.context['request'].data:
+            projObj = project.objects.get(pk=int(self.context['request'].data['project']))
+            projObj.ourBoundInvoices.add(obi)
+            projObj.save()
+        return obi
+
+class OutBoundInvoiceQtySerializer(serializers.ModelSerializer):
+    hsn = ProductMetaSerializer(many = False , read_only = True)
+    class Meta:
+        model = OutBoundInvoiceQty
+        fields=('pk','created','outBound','product','qty','price','hsn','tax','total')
+    def create(self , validated_data):
+        obiq = OutBoundInvoiceQty(**validated_data)
+        if 'outBound' in self.context['request'].data:
+            obiq.outBound = OutBoundInvoice.objects.get(pk=int(self.context['request'].data['outBound']))
+        if 'hsn' in self.context['request'].data:
+            obiq.hsn = ProductMeta.objects.get(pk=int(self.context['request'].data['hsn']))
+        obiq.save()
+        return obiq
+    def update(self ,instance, validated_data):
+        for key in ['product','qty','price','tax','total']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                print "Error while saving " , key
+                pass
+        if 'outBound' in self.context['request'].data:
+            instance.outBound = OutBoundInvoice.objects.get(pk=int(self.context['request'].data['outBound']))
+        if 'hsn' in self.context['request'].data:
+            instance.hsn = ProductMeta.objects.get(pk=int(self.context['request'].data['hsn']))
+        instance.save()
+        return instance

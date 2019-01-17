@@ -1,0 +1,90 @@
+<div ng-controller="businessManagement.finance.invoicing.explore" style="padding-top:20px;">
+  <div class="col-md-3" style="border-right:solid 2px #eeeeee;">
+    <div class="row" style="font-size:20px">
+      <div class="col-md-12" style="padding-top:8px">
+        <span><i class="fa fa-hashtag"></i> {{data.poNumber}}</span>
+      </div>
+      <div class="col-md-12" style="padding-top:8px">
+        <span><i class="fa fa-building"></i> {{data.name}}</span>
+      </div>
+      <div class="col-md-12" style="padding-top:8px">
+        <span><i class="fa fa-user"></i> {{data.personName}}</span>
+      </div>
+      <div class="col-md-12" style="padding-top:8px">
+        <span><i class="fa fa-phone"></i> {{data.phone}}</span>
+      </div>
+      <div class="col-md-12" style="padding-top:8px">
+        <span><i class="fa fa-envelope"></i> {{data.email}}</span>
+      </div>
+      <div class="col-md-12" style="padding-top:8px">
+        <span><i class="fa fa-file-text"></i> {{data.gstIn}}</span>
+      </div>
+      <div class="col-md-12" style="padding-top:8px">
+        <span><i class="fa fa-shopping-basket"></i> {{data.deliveryDate | date : 'dd-MMM-yyyy'}}</span>
+      </div>
+      <div class="col-md-12" style="padding-top:8px">
+        <span><i class="fa fa-money"></i> {{data.payDueDate | date : 'dd-MMM-yyyy'}}</span>
+      </div>
+      <div class="col-md-12" style="padding-top:8px">
+        <span><i class="fa fa-map-marker"></i> {{data.address}}</span><br>
+        <span>{{data.city}} , {{data.pincode}}</span><br>
+        <span>{{data.state}} , {{data.country}}</span>
+      </div>
+    </div>
+    <hr>
+    <div class="row" style="font-size:25px">
+      <div class="col-md-12" ng-if="data.project!=null">
+        <span><strong>Project :</strong> {{data.project.title}}</span>
+      </div>
+      <div class="col-md-12" ng-if="data.costCenter!=null">
+        <span><strong>Cost Center :</strong> {{data.costCenter.name}}</span>
+      </div>
+      <div class="col-md-12" ng-if="data.bussinessunit!=null">
+        <span><strong>Unit :</strong> {{data.bussinessunit.name}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="row" style="margin-bottom:20px" ng-if="data.status=='created'">
+      <div class="col-md-12 text-right">
+        <span class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('Approved')" confirm-button-type="default" cancel-button-type="default">Approve <i class="fa fa-thumbs-up"></i></span>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:20px" ng-if="data.status!='created'">
+      <div class="col-md-6" style="font-size:20px">
+        <strong>Ststus : </strong>{{data.status}}
+      </div>
+      <div class="col-md-6 text-right" ng-if="!data.isInvoice">
+        <span class="text-muted" style="font-size:20px">Change To </span> <span class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus()" confirm-button-type="default" cancel-button-type="default"><i class="fa fa-share"></i> Invoice</span>
+      </div>
+      <div class="col-md-6 text-right" ng-if="data.isInvoice">
+        <span class="text-muted" style="font-size:20px" ng-if="data.status=='Approved'">Change To </span> <span ng-if="data.status=='Approved'" class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('Sent')" confirm-button-type="default" cancel-button-type="default">Sent</span>
+        <span ng-if="data.status=='Sent'" class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('Received')" confirm-button-type="default" cancel-button-type="default">Received</span>
+        <span ng-if="data.status=='Sent'" class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('NotReceivedAndArchived')" confirm-button-type="default" cancel-button-type="default">Not Received And Archived</span>
+        <span class="text-muted" style="font-size:20px" ng-if="data.status=='Received'||data.status=='NotReceivedAndArchived'">Change To </span> <span ng-if="data.status=='Received'||data.status=='NotReceivedAndArchived'" class="btn btn-success" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="changeStatus('Reconciled')" confirm-button-type="default" cancel-button-type="default">Reconciled</span>
+      </div>
+    </div>
+    <table class="invoiceTable" style=" width: 100%;">
+      <tbody>
+        <tr style="background-color: #eeeeee;height: 50px;">
+          <th>S.No</th>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>HSN/SAC Code</th>
+          <th>Tax</th>
+          <th>Sub Total</th>
+        </tr>
+        <tr ng-repeat="v in products track by $index">
+          <td>{{$index + 1}}</td>
+          <td>{{v.product}}</td>
+          <td>{{v.price}}</td>
+          <td>{{v.qty}}</td>
+          <td>{{v.hsn.description}}</td>
+          <td>{{v.tax}} %</td>
+          <td>{{v.total | number}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
