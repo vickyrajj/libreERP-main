@@ -146,9 +146,10 @@ app.controller('businessManagement.finance.inboundInvoices.form', function($scop
       pincode : 0,
       poNumber : '',
       quoteNumber : '',
+      quoteDate:'',
       terms : '',
       project : '',
-      costcenter : '',
+      // costcenter : '',
       bussinessunit : '',
     }
   }
@@ -208,20 +209,14 @@ $scope.showOption = function() {
     else{
       $scope.form.deliveryDate = $scope.form.deliveryDate
     }
+    if(typeof $scope.form.quoteDate == 'object'){
+      $scope.form.quoteDate = $scope.form.quoteDate.toJSON().split('T')[0]
+    }
+    else{
+      $scope.form.quoteDate = $scope.form.quoteDate
+    }
 
-    if($scope.form.project!=undefined){
-      if($scope.form.project.costCenter!=undefined){
-        $scope.form.costCenter = $scope.form.project.costCenter
-        if($scope.form.costCenter.unit!=undefined){
-          $scope.form.bussinessunit = $scope.form.costCenter.unit
-        }
-      }
-    }
-    if($scope.form.costcenter!=undefined){
-      if($scope.form.costcenter.unit!=undefined){
-        $scope.form.bussinessunit = $scope.form.costcenter.unit
-      }
-    }
+
 
     if ($scope.mode == 'new') {
       if($scope.form.name==''||$scope.form.address==''){
@@ -238,12 +233,44 @@ $scope.showOption = function() {
         deliveryDate : $scope.form.deliveryDate,
         poNumber : $scope.form.poNumber,
         quoteNumber : $scope.form.quoteNumber,
+        quoteDate :  $scope.form.quoteDate,
         terms :  $scope.form.terms,
-        costcenter : $scope.form.costcenter.pk,
-        bussinessunit : $scope.form.bussinessunit.pk,
-        project : $scope.form.project.pk,
-
+        // costcenter : $scope.form.costcenter.pk,
+        // bussinessunit : $scope.form.bussinessunit.pk,
+        // project : $scope.form.project.pk,
       }
+      // if($scope.form.project!=undefined){
+      //     dataToSend.project = $scope.form.project.pk
+      //   if($scope.form.project.costCenter!=undefined||$scope.form.project.costCenter!=null){
+      //     $scope.form.costCenter = $scope.form.project.costCenter;
+      //     console.log($scope.form.costCenter.pk,'jjjjjjjjeeeeeeee');
+      //     dataToSend.costcenter = $scope.form.costCenter.pk
+      //     if($scope.form.costCenter.unit!=undefined){
+      //       $scope.form.bussinessunit = $scope.form.costCenter.unit
+      //       dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+      //     }
+      //   }
+      // }
+      if($scope.form.project!=undefined){
+          dataToSend.project = $scope.form.project.pk
+        if($scope.form.project.costCenter!=undefined||$scope.form.project.costCenter!=null){
+          console.log($scope.form.project.costCenter);
+          $scope.form.costCenter = $scope.form.project.costCenter
+          dataToSend.costcenter = $scope.form.costCenter.pk
+          if($scope.form.costCenter.unit!=undefined){
+            $scope.form.bussinessunit = $scope.form.costCenter.unit
+            dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+          }
+        }
+      }
+      if($scope.form.costcenter!=undefined||$scope.form.costcenter!=null){
+        dataToSend.costcenter = $scope.form.costcenter.pk
+        if($scope.form.costcenter.unit!=undefined||$scope.form.costcenter.unit!=null){
+          $scope.form.bussinessunit = $scope.form.costcenter.unit
+          dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+        }
+      }
+      console.log(dataToSend,'aaaaaaaaa');
       $http({
         method: 'POST',
         url: '/api/finance/purchaseorder/',
@@ -286,11 +313,29 @@ $scope.showOption = function() {
         deliveryDate : $scope.form.deliveryDate,
         poNumber : $scope.form.poNumber,
         quoteNumber : $scope.form.quoteNumber,
+        quoteDate :  $scope.form.quoteDate,
         terms :  $scope.form.terms,
-        costcenter : $scope.form.costcenter.pk,
-        bussinessunit : $scope.form.bussinessunit.pk,
-        project : $scope.form.project.pk,
     }
+    if($scope.form.project!=undefined){
+        dataToSend.project = $scope.form.project.pk
+      if($scope.form.project.costCenter!=undefined||$scope.form.project.costCenter!=null){
+        console.log($scope.form.project.costCenter);
+        $scope.form.costCenter = $scope.form.project.costCenter
+        dataToSend.costcenter = $scope.form.costCenter.pk
+        if($scope.form.costCenter.unit!=undefined){
+          $scope.form.bussinessunit = $scope.form.costCenter.unit
+          dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+        }
+      }
+    }
+    if($scope.form.costcenter!=undefined||$scope.form.costcenter!=null){
+      dataToSend.costcenter = $scope.form.costCenter.pk
+      if($scope.form.costcenter.unit!=undefined||$scope.form.costcenter.unit!=null){
+        $scope.form.bussinessunit = $scope.form.costcenter.unit
+        dataToSend.bussinessunit = $scope.form.bussinessunit.pk
+      }
+    }
+
       $http({
         method: 'PATCH',
         url: '/api/finance/purchaseorder/' + $scope.form.pk +'/',
