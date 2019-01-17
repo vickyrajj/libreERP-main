@@ -116,11 +116,19 @@
               <div class="row">
                 <a href="/api/ecommerce/downloadManifest/?trackingId={{order.orderQtyMap[succIdx].courierAWBNo}}" target="_blank">
                  <button type="button" class="btn btn-primary">Download Manifest <i class="fa fa-download"></i></button> </a>
-                 <span class="btn btn-default" mwl-confirm title="Reset Manifest" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="resetManifest()" confirm-button-type="default" cancel-button-type="default">Reset Manifest <i class="fa fa-refresh"></i></span>
+
+              </div>
+              <div class="row" style="margin-top:15px;">
+                <button class="btn btn-default" mwl-confirm title="Reset Manifest" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="resetManifest()" confirm-button-type="default" cancel-button-type="default">Reset Manifest <i class="fa fa-refresh"></i></button>
               </div>
               <div class="row" style="margin-top:15px;">
                 <a href="/api/ecommerce/downloadManifest/?allData={{order.pk}}&packingSlip" target="_blank">
                 <button type="button" class="btn btn-default">Download PackingSlip <i class="fa fa-download"></i></button> </a>
+              </div>
+
+              <div class="row" style="margin-top:15px;">
+                <a href="/api/ecommerce/downloadInvoice/?value={{order.pk}}" target="_blank">
+                <button type="button" class="btn btn-default">Download Invoice <i class="fa fa-download"></i></button> </a>
               </div>
 
 
@@ -136,6 +144,11 @@
                <div class="row" style="margin-top:15px;">
                  <a href="/api/ecommerce/downloadManifest/?allData={{order.pk}}&packingSlip" target="_blank">
                    <button  type="button" class="btn btn-default">Download Packing Slip<i class="fa fa-download"></i></button> </a>
+               </div>
+
+               <div class="row" style="margin-top:15px;">
+                 <a href="/api/ecommerce/downloadInvoice/?value={{order.pk}}" target="_blank">
+                 <button type="button" class="btn btn-default">Download Invoice <i class="fa fa-download"></i></button> </a>
                </div>
 
 

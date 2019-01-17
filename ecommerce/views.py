@@ -461,7 +461,7 @@ class CreateOrderAPI(APIView):
 
             try:
                 countryCode = Countries.objects.filter(name__iexact = str(request.data['address']['country']))
-                data['countryCode'] = countryCode.sortname
+                data['countryCode'] = countryCode[0].sortname
             except :
                 pass
 
