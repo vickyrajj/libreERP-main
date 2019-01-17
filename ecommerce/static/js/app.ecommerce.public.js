@@ -1824,17 +1824,17 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
 
     $scope.detailsForm.user = $scope.me.pk
 
-    if ($scope.detailsForm.oldPassword.length==0 && $scope.detailsForm.newPassword.length>0) {
+    if ($scope.detailsForm.oldPassword.length == 0 && $scope.detailsForm.newPassword.length > 0) {
       Flash.create('warning', 'Enter old password')
       return
     }
 
-    if ($scope.detailsForm.oldPassword.length==0 && $scope.detailsForm.newPassword.length>0) {
+    if ($scope.detailsForm.oldPassword.length == 0 && $scope.detailsForm.newPassword.length > 0) {
       Flash.create('warning', 'Enter new password')
       return
     }
 
-    if ($scope.detailsForm.oldPassword.length==0 && $scope.detailsForm.newPassword.length==0) {
+    if ($scope.detailsForm.oldPassword.length == 0 && $scope.detailsForm.newPassword.length == 0) {
       delete $scope.detailsForm.oldPassword
       delete $scope.detailsForm.newPassword
     }
@@ -2443,7 +2443,7 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
       pincode: null,
       country: 'India',
       primary: false,
-      mobileNo:''
+      mobileNo: ''
     }
     if (settings_isStoreGlobal) {
       $scope.form.country = ''
@@ -2483,21 +2483,25 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
     }
 
     $scope.stateSearch = function(query) {
-      if ($scope.selectedCountryObj.id) {
-        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.id).
-        then(function(response) {
-          $scope.stateList = response.data
-          return response.data;
-        })
+      if ($scope.selectedCountryObj != undefined) {
+        if ($scope.selectedCountryObj.id != undefined) {
+          return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.id).
+          then(function(response) {
+            $scope.stateList = response.data
+            return response.data;
+          })
+        }
       }
     }
 
     $scope.citySearch = function(query) {
-      if ($scope.selectedStateObj.id) {
-        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.id).
-        then(function(response) {
-          return response.data;
-        })
+      if ($scope.selectedStateObj != undefined) {
+        if ($scope.selectedStateObj.id != undefined) {
+          return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.id).
+          then(function(response) {
+            return response.data;
+          })
+        }
       }
     }
 
@@ -2648,7 +2652,7 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
   $scope.saveAddress = function() {
     console.log($scope.form);
 
-    if ($scope.form.title.length == 0 || $scope.form.country.length ==0 || $scope.form.city.length == 0 || $scope.form.state.length == 0 || $scope.form.pincode.length == 0 || $scope.form.mobileNo.length==0) {
+    if ($scope.form.title.length == 0 || $scope.form.country.length == 0 || $scope.form.city.length == 0 || $scope.form.state.length == 0 || $scope.form.pincode.length == 0 || $scope.form.mobileNo.length == 0) {
       Flash.create('warning', 'Fill the required Data')
       return
     }
@@ -2948,21 +2952,27 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
   }
 
   $scope.stateSearch = function(query) {
-    if ($scope.selectedCountryObj.id) {
-      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.id).
-      then(function(response) {
-        $scope.stateList = response.data
-        return response.data;
-      })
+    if ($scope.selectedCountryObj != undefined) {
+
+      if ($scope.selectedCountryObj.id) {
+        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&country=' + $scope.selectedCountryObj.id).
+        then(function(response) {
+          $scope.stateList = response.data
+          return response.data;
+        })
+      }
     }
+
   }
 
   $scope.citySearch = function(query) {
-    if ($scope.selectedStateObj.id) {
-      return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.id).
-      then(function(response) {
-        return response.data;
-      })
+    if ($scope.selectedStateObj != undefined) {
+      if ($scope.selectedStateObj.id) {
+        return $http.get('/api/ecommerce/searchCountry/?query=' + query + '&state=' + $scope.selectedStateObj.id).
+        then(function(response) {
+          return response.data;
+        })
+      }
     }
   }
 
@@ -3184,7 +3194,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
   $scope.saveAdd = function() {
     console.log('here', $scope.data.address);
-    if ($scope.data.address.pincode.length == 0 || $scope.data.address.city.length == 0 || $scope.data.address.state.length == 0  || $scope.data.address.country.length == 0 || $scope.data.address.mobileNo == null || $scope.data.address.mobileNo.length == 0 ) {
+    if ($scope.data.address.pincode.length == 0 || $scope.data.address.city.length == 0 || $scope.data.address.state.length == 0 || $scope.data.address.country.length == 0 || $scope.data.address.mobileNo == null || $scope.data.address.mobileNo.length == 0) {
       Flash.create('danger', 'Please Fill Address Details');
       return;
     }
@@ -3199,6 +3209,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       },
       controller: function($scope, $state, $http, $timeout, $uibModal, $users, Flash, $uibModalInstance, add) {
         $scope.adrForm = add;
+        console.log($scope.adrForm);
         if ($scope.adrForm.title == undefined) {
           $scope.adrForm.title = ''
         }
@@ -3217,7 +3228,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
             method = 'PATCH'
             url += $scope.adrForm.pk + '/'
           }
-
+          console.log(method, url);
           $http({
             method: method,
             url: url,
@@ -3237,8 +3248,13 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
     }, function(f) {
       if (typeof(f) != 'string') {
-        $scope.data.address.pk = f.pk
-        $scope.savedAddress.push($scope.data.address)
+        if ($scope.data.address.pk) {
+
+        } else {
+          $scope.data.address.pk = f.pk
+          $scope.savedAddress.push($scope.data.address)
+        }
+
       }
 
     });
@@ -3445,17 +3461,17 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
             // }else {
             //     prodSku = $scope.cartItems[i].prodSku
             // }
-            var weight =$scope.cartItems[i].product.product.grossWeight
-            if(weight == undefined || weight == null){
+            var weight = $scope.cartItems[i].product.product.grossWeight
+            if (weight == undefined || weight == null) {
               weight = 0
             }
-            console.log($scope.cartItems[i].product.product.grossWeight,'hereee');
+            console.log($scope.cartItems[i].product.product.grossWeight, 'hereee');
             $scope.cartProducts.push({
               pk: $scope.cartItems[i].product.pk,
               qty: $scope.cartItems[i].qty,
               prodSku: $scope.cartItems[i].prodSku,
               desc: $scope.cartItems[i].desc,
-              grossWeight:weight
+              grossWeight: weight
             })
           }
         }
@@ -3516,13 +3532,13 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       $scope.getShippingCharges = false
       // grossWeight
       $scope.totalWeight = 0;
-      console.log( $scope.cartProducts);
+      console.log($scope.cartProducts);
       for (var i = 0; i < $scope.cartProducts.length; i++) {
-        $scope.totalWeight+= parseFloat($scope.cartProducts[i].grossWeight) * $scope.cartProducts[i].qty
+        $scope.totalWeight += parseFloat($scope.cartProducts[i].grossWeight) * $scope.cartProducts[i].qty
       }
       $scope.totalWeight = 2.204 * $scope.totalWeight
 
-      console.log($scope.totalWeight,'hello');
+      console.log($scope.totalWeight, 'hello');
       if (settings_isShipmentPrice) {
         $http({
           method: 'GET',
@@ -3536,7 +3552,7 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
           }
           $http({
             method: 'GET',
-            url: '/api/ecommerce/shipmentCharge/?country=' + $scope.country + '&pincode=' + $scope.data.address.pincode + '&weight=' +   $scope.totalWeight
+            url: '/api/ecommerce/shipmentCharge/?country=' + $scope.country + '&pincode=' + $scope.data.address.pincode + '&weight=' + $scope.totalWeight
           }).then(function(response) {
             $scope.shippingCharges = response.data
             $scope.getShippingCharges = true
