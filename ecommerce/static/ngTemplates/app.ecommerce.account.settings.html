@@ -3,7 +3,7 @@
     <div class="col-md-6 col-xs-12">
       <h4>Create New Address</h4>
       <div class="form-group" style="padding-top:25px">
-        <label>Title : </label>
+        <label>Title <sup>*</sup> : </label>
         <input ng-model="form.title" type="text" class="form-control" placeholder="Tittle...">
       </div>
 
@@ -25,7 +25,7 @@
       <div class="row">
         <div class="col-md-12 col-xs-12">
           <div class="form-group" >
-            <label>Phone No : </label>
+            <label>Phone No <sup>*</sup>: </label>
             <input ng-model="form.mobileNo" type="text" class="form-control" placeholder="Phone No..."></input>
           </div>
         </div>
@@ -36,27 +36,27 @@
         <div class="row">
           <div class="col-md-6 col-xs-6">
             <div class="form-group">
-              <label>Country : </label>
+              <label>Country <sup>*</sup>: </label>
               <input ng-model="form.country" uib-typeahead="c.name as c.name for c in countrySearch($viewValue)" type="text" class="form-control" placeholder="Country...">
             </div>
           </div>
           <div class="col-md-6 col-xs-6" >
             <div class="form-group">
-              <label>State : </label>
-              <input ng-model="form.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue)" type="text" class="form-control" placeholder="State..." ng-disabled="!showAddressForm.state">
+              <label>State <sup>*</sup>: </label>
+              <input ng-model="form.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue)" type="text" class="form-control" placeholder="State..." >
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6 col-xs-6">
             <div class="form-group">
-              <label>City : </label>
-              <input ng-model="form.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue)" type="text" class="form-control" placeholder="City..." ng-disabled="!showAddressForm.city">
+              <label>City <sup>*</sup>: </label>
+              <input ng-model="form.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue)" type="text" class="form-control" placeholder="City..." >
             </div>
           </div>
           <div class="col-md-6 col-xs-6">
             <div class="form-group">
-              <label>Pincode : </label>
+              <label>Pincode <sup>*</sup>: </label>
               <input ng-model="form.pincode" type="text" class="form-control" placeholder="Pincode...">
             </div>
           </div>

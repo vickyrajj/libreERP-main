@@ -2529,11 +2529,17 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
           }
           console.log($scope.selectedCountryObj);
         }
-        if (typeof $scope.selectedCountryObj == 'object') {
-          $scope.showAddressForm.state = true
-        } else {
-          $scope.showAddressForm.state = false
-        }
+        // if (typeof $scope.selectedCountryObj == 'object') {
+        //   $scope.showAddressForm.state = true
+        // } else {
+        //   $scope.showAddressForm.state = false
+        // }
+        console.log($scope.selectedCountryObj);
+        // if ($scope.selectedCountryObj.length) {
+        //   $scope.showAddressForm.state = true
+        // }else {
+        //   $scope.showAddressForm.state = false
+        // }
       }
     });
 
@@ -2555,11 +2561,11 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
           }
           console.log($scope.selectedStateObj);
         }
-        if (typeof $scope.selectedStateObj == 'object') {
-          $scope.showAddressForm.city = true
-        } else {
-          $scope.showAddressForm.city = false
-        }
+        // if (typeof $scope.selectedStateObj == 'object') {
+        //   $scope.showAddressForm.city = true
+        // } else {
+        //   $scope.showAddressForm.city = false
+        // }
       }
     });
   } else {
@@ -2640,10 +2646,13 @@ app.controller('controller.ecommerce.account.settings', function($scope, $rootSc
 
 
   $scope.saveAddress = function() {
-    if ($scope.form.title.length == 0 || $scope.form.city.length == 0 || $scope.form.state.length == 0) {
+    console.log($scope.form);
+
+    if ($scope.form.title.length == 0 || $scope.form.country.length ==0 || $scope.form.city.length == 0 || $scope.form.state.length == 0 || $scope.form.pincode.length == 0 || $scope.form.mobileNo.length==0) {
       Flash.create('warning', 'Fill the required Data')
       return
     }
+
     dataToSend = $scope.form;
     // if ($scope.form.pincode == null) {
     //   delete dataToSend.pincode
@@ -3174,7 +3183,8 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
 
 
   $scope.saveAdd = function() {
-    if ($scope.data.address.street.length == 0) {
+    console.log('here', $scope.data.address);
+    if ($scope.data.address.pincode.length == 0 || $scope.data.address.city.length == 0 || $scope.data.address.state.length == 0  || $scope.data.address.country.length == 0 || $scope.data.address.mobileNo == null || $scope.data.address.mobileNo.length == 0 ) {
       Flash.create('danger', 'Please Fill Address Details');
       return;
     }
@@ -3479,9 +3489,15 @@ app.controller('controller.ecommerce.checkout', function($scope, $rootScope, $st
       }
       $scope.data.stage = 'shippingDetails';
     } else if ($scope.data.stage == 'shippingDetails') {
+      console.log($scope.isStoreGlobal);
+      if (!$scope.isStoreGlobal) {
+        if ($scope.data.address.street == '' || $scope.data.address.landMark == '') {
+          Flash.create('warning', 'Please Fill All Details')
+          return
+        }
+      }
 
-
-      if ($scope.data.address.mobileNo == '' || $scope.data.address.street == '' || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == '' || $scope.data.address.landMark == '') {
+      if ($scope.data.address.mobileNo == '' || $scope.data.address.mobileNo == null || $scope.data.address.city == '' || $scope.data.address.pincode == '' || $scope.data.address.country == '' || $scope.data.address.state == '') {
         Flash.create('warning', 'Please Fill All Details')
         return
       } else {

@@ -392,7 +392,7 @@
                   <div class="row card" style="margin-left:0px;margin-right:0px;background-color:var(--themeColor)">
                     <h5 style="padding-left:10px;color:white"> DELIVERY ADDRESS </h5>
                   </div>
-                  <div class="col-md-12" ng-repeat="adr in savedAddress">
+                  <div class="col-md-12" ng-repeat="adr in savedAddress track by $index">
                     <div class="row" style="margin-top:15px">
                       <div class="col-md-1 col-xs-1 col-sm-1">
                         <input ng-model="check" type="radio" name="radio" value="adr.pk" ng-click="ChangeAdd($index,'use')" >
@@ -437,14 +437,14 @@
                               </div>
                               <div class="col-md-6 col-xs-12 col-sm-6">
                                 <div class="form-group">
-                                  <input ng-model="data.address.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.address.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showAddressForm.state">
+                                  <input ng-model="data.address.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.address.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." >
                                 </div>
                               </div>
                             </div>
                             <div class="row">
                               <div class="col-md-6 col-xs-12 col-sm-6">
                                 <div class="form-group">
-                                  <input ng-model="data.address.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.address.state.uniqueId)" type="text" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showAddressForm.city">
+                                  <input ng-model="data.address.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.address.state.uniqueId)" type="text" class="form-control" id="city" placeholder="Enter City.." >
                                 </div>
                               </div>
                               <div class="col-md-6 col-xs-12 col-sm-6">
@@ -463,14 +463,14 @@
                               </div>
                               <div class="col-md-6 col-xs-12 col-sm-6">
                                 <div class="form-group">
-                                  <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showAddressForm.city">
+                                  <input ng-model="data.address.city" type="text" class="form-control" id="city" placeholder="Enter City.." >
                                 </div>
                               </div>
                             </div>
                             <div class="row">
                               <div class="col-md-6 col-xs-12 col-sm-6">
                                 <div class="form-group">
-                                  <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showAddressForm.state">
+                                  <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State.." >
                                 </div>
                               </div>
                               <div class="col-md-6 col-xs-12 col-sm-6">
@@ -511,14 +511,14 @@
                                 </div>
                                 <div class="col-md-6 col-xs-12 col-sm-6">
                                   <div class="form-group">
-                                    <input ng-model="data.billingAddress.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.billingAddress.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showBillingAddressForm.state">
+                                    <input ng-model="data.billingAddress.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.billingAddress.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." >
                                   </div>
                                 </div>
                               </div>
                               <div class="row">
                                 <div class="col-md-6 col-xs-12 col-sm-6">
                                   <div class="form-group">
-                                    <input ng-model="data.billingAddress.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.billingAddress.state.uniqueId)" type="text" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showBillingAddressForm.city">
+                                    <input ng-model="data.billingAddress.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.billingAddress.state.uniqueId)" type="text" class="form-control" id="city" placeholder="Enter City.." >
                                   </div>
                                 </div>
                                 <div class="col-md-6 col-xs-12 col-sm-6">
@@ -537,14 +537,14 @@
                                 </div>
                                 <div class="col-md-6 col-xs-12 col-sm-6">
                                   <div class="form-group">
-                                    <input ng-model="data.billingAddress.city" type="text" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showBillingAddressForm.city">
+                                    <input ng-model="data.billingAddress.city" type="text" class="form-control" id="city" placeholder="Enter City.." >
                                   </div>
                                 </div>
                               </div>
                               <div class="row">
                                 <div class="col-md-6 col-xs-12 col-sm-6">
                                   <div class="form-group">
-                                    <input ng-model="data.billingAddress.state" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showBillingAddressForm.state">
+                                    <input ng-model="data.billingAddress.state" type="text" class="form-control" id="state" placeholder="Enter State.." >
                                   </div>
                                 </div>
                                 <div class="col-md-6 col-xs-12 col-sm-6">
@@ -591,14 +591,14 @@
 
                         <div class="col-md-5 col-xs-12 col-sm-6">
                           <div class="form-group">
-                            <input ng-model="data.address.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.address.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showAddressForm.state">
+                            <input ng-model="data.address.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.address.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." >
                           </div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-5 col-xs-12 col-sm-6">
                           <div class="form-group">
-                            <input ng-model="data.address.city" type="text" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.address.state.uniqueId)" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showAddressForm.city">
+                            <input ng-model="data.address.city" type="text" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.address.state.uniqueId)" class="form-control" id="city" placeholder="Enter City.." >
                           </div>
                         </div>
                         <div class="col-md-5 col-xs-12 col-sm-6">
@@ -642,14 +642,14 @@
 
                         <div class="col-md-5 col-xs-12 col-sm-6">
                           <div class="form-group">
-                            <input ng-model="data.address.city" type="text"  class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showAddressForm.city">
+                            <input ng-model="data.address.city" type="text"  class="form-control" id="city" placeholder="Enter City.." >
                           </div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-5 col-xs-12 col-sm-6">
                           <div class="form-group">
-                            <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showAddressForm.state">
+                            <input ng-model="data.address.state" type="text" class="form-control" id="state" placeholder="Enter State.." >
                           </div>
                         </div>
                         <div class="col-md-5 col-xs-12 col-sm-6">
@@ -710,14 +710,14 @@
                           </div>
                           <div class="col-md-6 col-xs-12 col-sm-6">
                             <div class="form-group">
-                              <input ng-model="data.billingAddress.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.billingAddress.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showBillingAddressForm.city">
+                              <input ng-model="data.billingAddress.state" uib-typeahead="s.name as s.name for s in stateSearch($viewValue, data.billingAddress.country.uniqueId)" type="text" class="form-control" id="state" placeholder="Enter State.." >
                             </div>
                           </div>
                         </div>
                         <div class="row">
                           <div class="col-md-6 col-xs-12 col-sm-6">
                             <div class="form-group">
-                              <input ng-model="data.billingAddress.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.billingAddress.state.uniqueId)" type="text" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showBillingAddressForm.city">
+                              <input ng-model="data.billingAddress.city" uib-typeahead="c.name as c.name for c in citySearch($viewValue, data.billingAddress.state.uniqueId)" type="text" class="form-control" id="city" placeholder="Enter City.." >
                             </div>
                           </div>
                           <div class="col-md-6 col-xs-12 col-sm-6">
@@ -736,14 +736,14 @@
                           </div>
                           <div class="col-md-6 col-xs-12 col-sm-6">
                             <div class="form-group">
-                              <input ng-model="data.billingAddress.city" type="text" class="form-control" id="city" placeholder="Enter City.." ng-disabled="!showBillingAddressForm.city">
+                              <input ng-model="data.billingAddress.city" type="text" class="form-control" id="city" placeholder="Enter City.." >
                             </div>
                           </div>
                         </div>
                         <div class="row">
                           <div class="col-md-6 col-xs-12 col-sm-6">
                             <div class="form-group">
-                              <input ng-model="data.billingAddress.state" type="text" class="form-control" id="state" placeholder="Enter State.." ng-disabled="!showBillingAddressForm.city">
+                              <input ng-model="data.billingAddress.state" type="text" class="form-control" id="state" placeholder="Enter State.." >
                             </div>
                           </div>
                           <div class="col-md-6 col-xs-12 col-sm-6">
