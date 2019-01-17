@@ -29,7 +29,7 @@
                             </thead>
                            <tbody>
                            <tr id="id{{$index}}" ng-repeat="data in reviewData" ng-click="tabelRowAction(data)" style="background-color: {{$index==lastActiveTR?'#f0f0f0':' '}}">
-                             <td class="tabel_data">
+                             <td class="tabel_data" style="height:7rem">
                                 <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
                                 <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">
                                 <span style="display:inline-block">
@@ -37,6 +37,7 @@
                                      <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
                                    </div>
                                    <span style="font-size:83%">{{data.uid}}</span>
+                                   <span ng-if="data.isLate" style="color:red">( Late )</span>
                                    <div>
                                      <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
                                    </div>
@@ -298,7 +299,7 @@
                           </thead>
                          <tbody>
                          <tr id="id{{$index}}" ng-repeat="data in archivedData" ng-click="tabelRowActionArch(data)" style="background-color: {{$index==lastActiveTRArch?'#f0f0f0':' '}}">
-                           <td class="tabel_data">
+                           <td class="tabel_data" style="height:7rem" >
                               <img class="table_image" ng-if="data.user_id" src="{{data.user_id | getDP}}" alt="">
                               <img class="table_image" ng-if="!data.user_id" ng-src="/static/images/avatar04.png" alt="">
                               <span style="display:inline-block">
@@ -306,6 +307,7 @@
                                    <span style="font-weight: 500;font-size:90%">{{data.name}}</span>
                                  </div>
                                  <span style="font-size:83%">{{data.uid}}</span>
+                                 <span ng-if="data.isLate" style="color:red">( Late )</span>
                                  <div>
                                    <span ng-if="data.chatDuration>0.0" style="font-size:90%"><i class="fa fa-clock-o" aria-hidden="true"></i>  {{data.chatDuration}} Min</span>
                                  </div>
