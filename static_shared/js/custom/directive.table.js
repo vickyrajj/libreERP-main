@@ -69,7 +69,7 @@ app.controller('genericTable' , function($scope , $http, $templateCache, $timeou
   $timeout(function() {
     var searchInpt = $('#genericTableSearch');
 
-    console.log(searchInpt);
+    // console.log(searchInpt);
     bbx1 = searchInpt.next()[0].getBoundingClientRect();
     bbx2 = searchInpt.prev()[0].getBoundingClientRect();
 

@@ -199,7 +199,7 @@ app.controller('businessManagement.finance.default', function($scope, $http, $as
 
           clr = random_rgba()
           var ids = "expense-doughnut-chart" + i
-          console.log(ids, clr);
+          // console.log(ids, clr);
           new Chart(document.getElementById(ids), {
             type: 'doughnut',
             data: {

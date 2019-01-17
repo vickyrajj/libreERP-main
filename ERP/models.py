@@ -8,6 +8,12 @@ from django.db import models
 def getERPPictureUploadPath(instance , filename ):
     return 'ERP/pictureUploads/%s_%s_%s' % (str(time()).replace('.', '_'), instance.user.username, filename)
 
+class GenericPincode(models.Model):
+    state = models.CharField(max_length = 35, null = True)
+    city =  models.CharField(max_length = 35, null = True)
+    country =  models.CharField(max_length = 35, default="India")
+    pincode = models.CharField( max_length = 7, null = True)
+    pin_status = models.CharField( max_length = 2, default = "1")
 
 class device(models.Model):
     sshKey = models.CharField(max_length = 500 , null = True)

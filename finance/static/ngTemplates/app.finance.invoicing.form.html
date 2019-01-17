@@ -1,0 +1,131 @@
+<div ng-controller="businessManagement.finance.invoicing.form">
+  <div class="row" ng-if="mode=='new'">
+    <div class="col-md-12" style="padding-left:40px;font-size:20px">
+      <strong style="margin-right:13px;">Sales Order</strong>
+      <switch ng-model="form.isInvoice" class="green" ></switch><strong style="margin-left:13px;">Invoice</strong>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-center" style="padding-left:40px;">
+      <h3 ng-if="mode=='new'">Create A New {{form.isInvoice?'Invoice':'Sales Order'}}</h3>
+      <h3 ng-if="mode=='edit'">Edit {{form.isInvoice?'Invoice':'Sales Order'}} </h3>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6" style="padding:15px 40px">
+        <div class="row">
+          <div class="form-group">
+            <label>PO Number</label>
+            <input type="text " class="form-control" ng-model="form.poNumber">
+          </div>
+          <div class="form-group">
+            <label>Company Name</label>
+            <input type="text " class="form-control" ng-model="form.name">
+          </div>
+          <div class="form-group">
+            <label>Responsible Person</label>
+            <input type="text " class="form-control" ng-model="form.personName">
+          </div>
+          <div class="form-group">
+            <label>Contact Number</label>
+            <input type="text " class="form-control" ng-model="form.phone">
+          </div>
+          <div class="form-group">
+            <label>Contact Email</label>
+            <input type="text " class="form-control" ng-model="form.email">
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <textarea class="form-control" rows="4" cols="80" ng-model="form.address"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Pincode</label>
+            <input type="text " class="form-control" ng-model="form.pincode">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6" style="padding:15px 40px">
+        <div class="form-group">
+          <label>GSTIN</label>
+          <input type="text " class="form-control" ng-model="form.gstIn">
+        </div>
+        <div class="form-group">
+          <label>Delivery Date</label>
+          <div class="input-group">
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.deliveryDate" is-open="status.opened" disabled/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="status.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Payment Due Date</label>
+          <div class="input-group">
+            <input type="text" class="form-control" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.payDueDate" is-open="status1.opened" disabled/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="status1.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+          </div>
+        </div>
+
+        <div class="form-group" ng-if="(form.costcenter.length==0&&form.bussinessunit.length==0)||form.project.pk">
+          <label>Project</label>
+          <input type="text" class="form-control" ng-model="form.project" uib-typeahead="p as p.title for p in projectSearch($viewValue)" placeholder="Search By Project Title" ng-disabled="mode=='edit'">
+        </div>
+        <div class="form-group" ng-if="(form.project.length==0&&form.bussinessunit.length==0)||form.costcenter.pk">
+          <label>Cost Center</label>
+          <input type="text" class="form-control" ng-model="form.costcenter" uib-typeahead="cost as cost.name for cost in costCenterSearch($viewValue)" placeholder="Search By CostCenter Name" ng-disabled="mode=='edit'">
+        </div>
+        <div class="form-group" ng-if="(form.project.length==0&&form.costcenter.length==0)||form.bussinessunit.pk">
+          <label>Business Unit</label>
+          <input type="text" class="form-control" ng-model="form.bussinessunit" uib-typeahead="units as units.name for units in unitSearch($viewValue)" placeholder="Search By Unit Name" ng-disabled="mode=='edit'">
+        </div>
+      </div>
+
+    </div>
+    <div class="row" style="padding-top:20px">
+      <div class="col-md-12">
+        <table class="invoiceTable" style=" width: 100%;">
+          <tbody>
+            <tr style="background-color: #eeeeee;height: 50px;">
+              <th>S.No</th>
+              <th>Product Name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>HSN/SAC Code</th>
+              <th>Tax</th>
+              <th>Sub Total</th>
+              <th></th>
+            </tr>
+            <tr ng-repeat="v in products track by $index">
+              <td>{{$index + 1}}</td>
+              <td><input type="text" class="form-control-pos text-center" ng-model="v.product" uib-typeahead="p as p.product for p in productSearch($viewValue)"></td>
+              <td><input type="text" class="form-control-pos text-center" ng-model="v.price"></td>
+              <td><input type="text" class="form-control-pos text-center" ng-model="v.qty"></td>
+              <td><input type="text" class="form-control" ng-model="v.hsn" uib-typeahead="meta as meta.description for meta in searchTaxCode($viewValue)"></td>
+              <td>{{v.tax}} %</td>
+              <td>{{v.total|number}}</td>
+              <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash fa-lg"></i> </button></td>
+            </tr>
+            <tr ng-click="addTableRow()">
+              <td><button style="background-color:white;border:none;"><i class="fa fa-plus" style="cursor:pointer"></i></button></td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <div class="row" style="padding:30px 0px">
+      <div class="col-md-12">
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="saveOutBound()" confirm-button-type="success" cancel-button-type="default">Save</button>
+          <button ng-if="mode=='new'" type="button" class="btn btn-default" mwl-confirm title="Form Reset" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="resetForm()" confirm-button-type="danger" cancel-button-type="default">Refresh</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

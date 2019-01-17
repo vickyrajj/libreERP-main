@@ -5,6 +5,7 @@ from ERP.models import service
 from organization.models import Division , Unit
 from time import time
 from projects.models import *
+from clientRelationships.models import ProductMeta
 # Create your models here.
 # from projects.models import project
 
@@ -166,3 +167,44 @@ class VendorInvoice(models.Model):
     amount= models.FloatField(null=True , default=0)
     approved = models.NullBooleanField(null = True)
     disbursed = models.NullBooleanField(null = True)
+
+STATUS_CHOICES = (
+    ('created' , 'created'),
+    ('Approved' , 'Approved'),
+    ('Sent' , 'Sent'),
+    ('Received' , 'Received'),
+    ('NotReceivedAndArchived' , 'NotReceivedAndArchived'),
+    ('Reconciled' , 'Reconciled'),
+)
+
+class OutBoundInvoice(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User , related_name='outBoundInvoiceUser' , null = True)
+    status = models.CharField(default = 'created' ,max_length = 12,choices = STATUS_CHOICES)
+    isInvoice = models.BooleanField(default = False)
+    poNumber = models.CharField(max_length = 50,null=True)
+    name = models.CharField(max_length = 100 , null = True)
+    personName = models.CharField(max_length = 50 , null = True)
+    phone = models.CharField(max_length = 20 , null = True)
+    email =  models.CharField(max_length = 50 , null = True)
+    address = models.TextField(max_length=200 , null = True)
+    pincode = models.CharField(max_length =10, null = True)
+    state = models.CharField(max_length = 50, null = True)
+    city =  models.CharField(max_length = 50, null = True)
+    country =  models.CharField(max_length = 30, null = True)
+    pin_status = models.CharField( max_length = 2, default = "1")
+    deliveryDate = models.DateField(null = True)
+    payDueDate = models.DateField(null = True)
+    gstIn = models.CharField(max_length = 30 ,null = True)
+    costcenter = models.ForeignKey(CostCenter , related_name='outBoundCostcenter' , null = True)
+    bussinessunit =  models.ForeignKey(Unit, related_name='outBoundBusinessunit'  , null = True )
+
+class OutBoundInvoiceQty(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    outBound = models.ForeignKey(OutBoundInvoice , related_name='outBoundQty' , null = True)
+    product = models.CharField(max_length = 100 , null = True)
+    qty = models.PositiveIntegerField(default=1)
+    price = models.FloatField(default=1)
+    hsn = models.ForeignKey(ProductMeta, related_name='outBoundQtyMeta' , null = True)
+    tax = models.FloatField(null = True)
+    total = models.FloatField(null = True)

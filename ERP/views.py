@@ -37,11 +37,16 @@ def renderedStatic(request , filename):
     return render(request , filename , {"lang" : request.LANGUAGE_CODE})
 
 
-
-
-
-
-
+class GenericPincodeViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny ,)
+    serializer_class = GenericPincodeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['pincode','state','city']
+    def get_queryset(self):
+        toReturn = GenericPincode.objects.all()
+        if 'pincode' in self.request.GET:
+            toReturn = toReturn.filter(pincode__iexact=self.request.GET['pincode'])
+        return toReturn
 
 class LocationTrackerAPI(APIView):
     renderer_classes = (JSONRenderer,)
