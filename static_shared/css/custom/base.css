@@ -30,9 +30,8 @@ html {
 
 
 body {
-    /* font-family:"Open Sans", "Noto Sans", Tahoma, sans-serif; */
     /* font-size: 0.8rem; */
-    font-family: 'Lato','Open Sans', sans-serif;
+    font-family: 'Raleway','Noto Sans', sans-serif;
     overflow-x: hidden;
     padding: 0;
    margin: 0;
@@ -464,12 +463,13 @@ body {
     box-shadow: 0 5px 6px -6px #999;
 } */
 .nav-sidebar> li > a {
-  color:#fff;
+  color:#e6e6e6;
 }
 
 .nav-sidebar> li > a:hover, .nav-sidebar > li >a:focus , .nav-sidebar> .active > a , .sidebarList> li > a:focus , .sidebarList> li > a:active{
 	background-color: var(--headerNavbarHighlight);
 	color: #fff;
+  outline: none;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover{

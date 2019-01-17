@@ -428,7 +428,7 @@ $scope.count=0;
           user: $scope.me.pk
         }
         if (now - chatThreadCreated > 180000 ) {
-          toPatch.status = 'late'
+          toPatch.isLate = true
         }
 
 

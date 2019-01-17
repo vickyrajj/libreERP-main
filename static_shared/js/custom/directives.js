@@ -723,7 +723,9 @@ app.directive('chatBox', function() {
             method: 'GET',
             url: '/api/support/getMyUser/?getCompanyDetails=' + $scope.data.companyPk,
           }).then(function(response){
-            $scope.companyName=response.data[0]
+            console.log(response.data);
+            $scope.companyName=response.data.cDetails[0]
+            $scope.compContactPersons=response.data.contactP
           })
 
       setTimeout(function () {
@@ -1111,6 +1113,45 @@ app.directive('chatBox', function() {
         }
       });
 
+
+      function sendMail(mailId,uid){
+        $http({
+          method: 'POST',
+          url: '/api/support/emailChat/',
+          data: {
+            email: mailId,
+            uid: uid
+          }
+        }).then(function(response) {
+          console.log('mail sent to '+mailId);
+        });
+      }
+
+
+      function sendMailToContactPersons(){
+        if($scope.isMailSent){
+          return
+        }
+        for (var i = 0; i < $scope.compContactPersons.length; i++) {
+          var profile=$users.get($scope.compContactPersons[i])
+          sendMail(profile.email,$scope.data.uid)
+        }
+        $scope.isMailSent=true;
+      }
+
+      setInterval(function () {
+        $http({
+          method: 'GET',
+          url: '/api/support/getChatStatus/?uid=' + $scope.data.uid,
+        }).
+        then(function(response) {
+          if(response.data.sendMail){
+            sendMailToContactPersons()
+          }
+        });
+      }, 1000*60*5);
+
+
       $http({
         method: 'GET',
         url: '/api/support/supportChat/?&uid=' + $scope.data.uid,
@@ -1124,9 +1165,6 @@ app.directive('chatBox', function() {
         $scope.data.boxOpen = true
         $scope.scroll()
       });
-
-
-      console.log('userrrrrrr', $scope.me.pk);
 
       $scope.chatBox = {
         messageToSend: '',
@@ -1303,6 +1341,17 @@ app.directive('chatBox', function() {
         }
       });
 
+      $scope.$watch('data.disableInput',function(newValue,oldValue){
+        if(newValue){
+          console.log("Sending mail to all contact persons");
+          sendMailToContactPersons();
+          if($scope.data.email){
+            console.log('sending mail to '+$scope.data.email);
+            sendMail($scope.data.email,$scope.data.uid)
+          }
+        }
+      })
+
 
       $scope.chatClose = function(indx, uid, chatThreadPk) {
         $scope.status = "F";
@@ -1314,18 +1363,7 @@ app.directive('chatBox', function() {
         });
 
         if ($scope.data.email) {
-
-          $http({
-            method: 'POST',
-            url: '/api/support/emailChat/',
-            data: {
-              email: $scope.data.email,
-              uid: $scope.data.uid
-            }
-          }).then(function(response) {
-            console.log('send email');
-          });
-
+          sendMail($scope.data.email,$scope.data.uid)
         }
 
         $http({
@@ -1342,10 +1380,7 @@ app.directive('chatBox', function() {
         $scope.closeChatBox(indx, $scope.data.myUserIndex)
       }
 
-
-
       $scope.closeChatBox = function(indx, myUserIndex) {
-
         $scope.closeChat(indx, myUserIndex)
         $scope.data.boxOpen = false
       }
