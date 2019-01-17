@@ -1099,6 +1099,17 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
     then(function(response) {})
   }
 
+  $scope.saveCurrency = function(){
+    var send = {
+      currency: $scope.form.currency,
+    }
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: send,
+    }).
+    then(function(response) {})
+  }
   $scope.validity = function() {
     var send = {
       quoteValidity: $scope.form.quoteValidity,

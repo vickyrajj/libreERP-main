@@ -22,6 +22,18 @@ STOCK__STATUS = (
 ('completed' , 'completed')
 )
 
+CURRENCY_CHOICE = (
+('CHF' , 'CHF'),
+('INR' , 'INR'),
+('EUR' , 'EUR'),
+('USD' , 'USD'),
+('JPY' , 'JPY'),
+('GBP' , 'GBP'),
+('AUD' , 'AUD'),
+('CAD' , 'CAD'),
+('ZAR' , 'ZAR'),
+)
+
 class ProductSheet(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     sheet = models.FileField(null = True , upload_to = getUploadedProductSheets)
@@ -111,6 +123,7 @@ class Projects(models.Model):
     weightValue =  models.FloatField( default = 0)
     quoteNotes =  models.CharField(max_length = 500, null=True,blank=True)
     poNotes =  models.CharField(max_length = 500, null=True,blank=True)
+    currency = models.CharField(choices = CURRENCY_CHOICE , max_length = 10 , default = 'CHF')
 
 
 class BoM(models.Model):
