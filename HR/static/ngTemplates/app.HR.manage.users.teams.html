@@ -1,0 +1,113 @@
+<div class="container-fluid" ng-controller="app.HR.manage.users.teams" >
+  <div class="row">
+    <div class="col-md-5" style="border-right: 2px solid #e0e0e0; margin-top:15px;">
+      <h2 style="margin: 20px 0px;" ng-if="!teamForm.pk"> Create New Team</h2>
+      <h2 style="margin: 20px 0px;" ng-if="teamForm.pk"> Edit Team</h2>
+
+      <div class="form-group">
+        <label for="">Title:</label>
+        <input type="text" ng-model="teamForm.title" class="form-control" id="" placeholder="title...">
+      </div>
+      <div class="form-group">
+        <label for="">Team Leads:</label>
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="selected_team_lead" uib-typeahead="u as u.username for u in searchUsers($viewValue)" placeholder="search and select team lead">
+          <span class="input-group-addon" ng-click="add_users('teamLead')" style="cursor:pointer">Add</span>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3 nameSmallCard" ng-repeat="u in teamForm.team_lead">
+            <b> {{u | getName}} </b>
+            <span style="position: absolute;right: 7px;top: 3px; cursor:pointer;" ng-click="remove_users($index,'teamLead')"> <i class="fa fa-times"></i></span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="">Quality Check:</label>
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="selected_qc" uib-typeahead="u as u.username for u in searchUsers($viewValue)" placeholder="search and select quality check">
+          <span class="input-group-addon" ng-click="add_users('teamQC')" style="cursor:pointer">Add</span>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3 nameSmallCard" ng-repeat="u in teamForm.quality_check" >
+            <b> {{u | getName}} </b>
+            <span style="position: absolute;right: 7px;top: 3px; cursor:pointer;" ng-click="remove_users($index,'teamQC')"> <i class="fa fa-times"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="">Advisors:</label>
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="selected_advisor" uib-typeahead="u as u.username for u in searchUsers($viewValue)" placeholder="search and select advisors">
+          <span class="input-group-addon" ng-click="add_users('advisors')" style="cursor:pointer">Add</span>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3 nameSmallCard" ng-repeat="u in teamForm.advisors" >
+            <b> {{u | getName}} </b>
+            <span style="position: absolute;right: 7px;top: 3px; cursor:pointer;" ng-click="remove_users($index,'advisors')"> <i class="fa fa-times"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="">Customer:</label>
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="selected_service" uib-typeahead="s as s.name for s in searchService($viewValue)" placeholder="search and select customer">
+          <span class="input-group-addon" ng-click="add_service()" style="cursor:pointer">Add</span>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3 nameSmallCard" ng-repeat="s in teamForm.service" >
+            <b> {{s | getCustService}} </b>
+            <span style="position: absolute;right: 7px;top: 3px; cursor:pointer;" ng-click="remove_service($index)"> <i class="fa fa-times"></i></span>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div ng-if="!teamForm.pk" class="form-group text-center">
+        <button ng-click="createTeamSave()" type="button" class="btn btn-primary">Save</button>
+      </div>
+
+      <div ng-if="teamForm.pk" class="form-group text-center">
+        <button ng-click="editTeamSave()" type="button" class="btn btn-primary">Save</button>
+        <button ng-click="resetForm()" type="button" class="btn btn-primary">Reset</button>
+
+      </div>
+
+
+    </div>
+    <div class="col-md-7" style="margin-top:15px;">
+      <h2 style="margin: 20px 0px;">Teams</h2>
+      <div class="row" style="padding:20px">
+        <div ng-repeat="t in teams">
+          <div class="col-md-5 card teamCard">
+            <div class="row" style="padding:15px; padding-bottom:0px;">
+              <span><b>Title :</b> {{t.title}} </span>
+            </div>
+            <div class="row" style="padding:15px; padding-bottom:0px;">
+              <span><b>Team Lead :</b> <span ng-repeat="a in t.team_lead track by $index"> {{a | getName}} <span ng-if="t.team_lead.length-1 != $index">,</span> </span></span>
+            </div>
+            <div class="row" style="padding:15px; padding-bottom:0px;">
+              <span><b>Quality check :</b> <span ng-repeat="a in t.quality_check track by $index"> {{a | getName}} <span ng-if="t.quality_check.length-1 != $index">,</span> </span></span>
+            </div>
+            <div class="row" style="padding:15px; padding-bottom:0px;">
+              <span><b>Advisors :</b> <span ng-repeat="a in t.advisors track by $index"> {{a | getName}} <span ng-if="t.advisors.length-1 != $index">,</span> </span></span>
+            </div>
+            <div class="row" style="padding:15px; padding-bottom:0px;">
+              <span><b>Customers :</b> <span ng-repeat="s in t.service track by $index"> {{s | getCustService}} <span ng-if="t.service.length-1 != $index">,</span> </span></span>
+            </div>
+            <div class="row" style="padding:15px">
+              <span class="pull-left" style="cursor:pointer; padding-left:5px;" mwl-confirm title="Confirm" message="Are you sure?" confirm-text="Yes <i class='fa fa-check'></i>" cancel-text="No" on-confirm="deleteTeam($index, t.pk)" confirm-button-type="danger" cancel-button-type="default"> <i class="fa fa-trash fa-lg" title="Delete Team"></i> </span>
+              <span class="pull-right" style="cursor:pointer; padding-right:5px;" ng-click="editTeam($index)"  > <i class="fa fa-edit fa-lg" title="Edit Team"></i> </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

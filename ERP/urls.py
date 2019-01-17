@@ -16,6 +16,8 @@ router.register(r'profile' , profileViewSet , base_name = 'profile')
 router.register(r'address' , addressViewSet , base_name = 'address')
 router.register(r'service' , serviceViewSet , base_name = 'service')
 router.register(r'companyHoliday' , CompanyHolidayViewSet , base_name = 'companyHoliday')
+router.register(r'teams' , TeamsViewSet , base_name = 'teams')
+
 
 urlpatterns = [
     url(r'^', include(router.urls)),

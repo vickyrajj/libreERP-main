@@ -235,6 +235,19 @@ app.filter('getDP' , function($users){
 })
 
 
+app.filter('getCustService' , function($custServices){
+  return function(pk){
+    if (pk == undefined || pk.length == 0) {
+      return "noname"
+    }else {
+      console.log('herrrrrrrrrrrrrrr');
+      var name = $custServices.get(pk)
+      return name
+    }
+  }
+})
+
+
 app.filter('getName' , function($users){
 
   return function(userUrl , mode){

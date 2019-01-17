@@ -14,7 +14,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
 
 });
 
-app.run(['$rootScope', '$state', '$stateParams', '$permissions', function($rootScope, $state, $stateParams, $permissions) {
+app.run(['$rootScope', '$state', '$stateParams', '$permissions' ,'$custServices', function($rootScope, $state, $stateParams, $permissions,$custServices) {
   $rootScope.$state = $state;
   $rootScope.$stateParams = $stateParams;
   $rootScope.$on("$stateChangeError", console.log.bind(console));

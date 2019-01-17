@@ -1476,38 +1476,38 @@ function createChatDiv() {
               display: none;\
             }\
             #singleService:hover > .sy-text-Suggested{ display:none !important}\
-              #sy-main-icon:hover > .sy-text {\
+              #sy-main-icon:hover > .sy-text, #sy-main-icon:active > .sy-text {\
               display: inline-block;\
             }\
-              #sy-main-icon:hover > .sy-text-Suggested {\
+              #sy-main-icon:hover > .sy-text-Suggested, #sy-main-icon:active > .sy-text-Suggested {\
               display: none !important;\
             }\
             "+ mainStr+"\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1) { \
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(1), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(1) { \
               display: block;\
               -webkit-animation: item-1 0.5s forwards; \
               -ms-animation: item-1 0.5s forwards; \
               -moz-animation: item-1 0.5s forwards;\
             }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2) { \
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(2), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(2) { \
               display: block;\
               -webkit-animation: item-2 0.5s forwards; \
               -ms-animation: item-2 0.5s forwards;\
               -moz-animation: item-2 0.5s forwards; \
             }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3) {\
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(3), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(3) {\
               display: block;\
               -webkit-animation: item-3 0.5s forwards; \
               -ms-animation: item-3 0.5s forwards; \
               -moz-animation: item-3 0.5s forwards; \
             }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4) { \
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(4), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(4) { \
               display: block;\
               -webkit-animation: item-4 0.5s forwards; \
               -ms-animation: item-4 0.5s forwards; \
               -moz-animation: item-4 0.5s forwards; \
             }\
-              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5) { \
+              #sy-main-icon:hover > #sy-sub-icons > div:nth-of-type(5), #sy-main-icon:active > #sy-sub-icons > div:nth-of-type(5) { \
               display: block;\
               -webkit-animation: item-5 0.5s forwards; \
               -ms-animation: item-5 0.5s forwards; \

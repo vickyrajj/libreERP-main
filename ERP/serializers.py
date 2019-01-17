@@ -260,3 +260,29 @@ class CompanyHolidaySerializer(serializers.ModelSerializer):
     class Meta:
         model = CompanyHolidays
         fields = ('pk','created','date','typ','name')
+
+class TeamsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teams
+        fields = ('pk','created','title','quality_check','team_lead','advisors','service')
+    # def create(self , validated_data):
+    #     t = Teams(title = validated_data['title'])
+    #     t.save()
+    #
+    #     if 'quality_check' in  self.context['request'].data:
+    #         for qc in self.context['request'].data['quality_check']:
+    #             user = User.objects.get(pk = int(qc))
+    #             # print validated_data , 'fhfghfffffffffff'
+    #             t.quality_check.add(user)
+    #
+    #     if 'team_lead' in  self.context['request'].data:
+    #         for tl in self.context['request'].data['team_lead']:
+    #             user = User.objects.get(pk = int(tl))
+    #             t.team_lead.add(user)
+    #
+    #     if 'advisors' in  self.context['request'].data:
+    #         for a in self.context['request'].data['advisors']:
+    #             user = User.objects.get(pk = int(a))
+    #             t.advisors.add(user)
+    #     t.save()
+    #     return t

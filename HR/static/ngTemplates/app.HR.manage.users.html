@@ -34,6 +34,13 @@
         <generic-Table callback-Fn="tableActionCustomer" data="dataCustomer.tableDataCustomer" config-Obj="{{configCustomer}}"></generic-Table>
       </uib-tab>
 
+      <uib-tab ng-click="tabLoadTeams.value = true">
+        <uib-tab-heading >
+          Teams <i ng-if="tab.cancel" class="fa fa-search"></i>
+        </uib-tab-heading>
+        <div ng-if="tabLoadTeams.value" ng-include="'/static/ngTemplates/app.HR.manage.users.teams.html'" ></div>
+      </uib-tab>
+
 
       <uib-tab ng-repeat="tab in tabs" active="tab.active" disable="tab.disabled">
         <uib-tab-heading>
