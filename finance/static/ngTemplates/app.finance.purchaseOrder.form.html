@@ -1,4 +1,4 @@
-<div ng-controller="businessManagement.finance.inboundInvoices.form">
+<div ng-controller="businessManagement.finance.purchaseOrder.form">
   <h3 ng-if="mode=='new'">Create a new PO</h3>
   <h3 ng-if="mode=='edit'">Edit PO </h3>
   <div class="container-fluid">
@@ -88,14 +88,14 @@
         <br>
         <br>
 
-        <!-- <div class="row text-center">
+        <div class="row text-center">
           <span>OR</span>
         </div>
 
         <div class="form-group">
           <label>Business Unit</label>
-          <input type="text " class="form-control" ng-model="form.bussinessunit">
-        </div> -->
+          <input type="text" class="form-control" ng-model="form.bussinessunit" uib-typeahead="unit as unit.name for unit in bussinessUnit($viewValue)">
+        </div>
       </div>
 
 

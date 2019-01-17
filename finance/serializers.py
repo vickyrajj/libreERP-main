@@ -276,7 +276,6 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
         u = self.context['request'].user
         po = PurchaseOrder(**validated_data)
         po.user = u
-        print 'herrrrrrrrrrrrreeeeeeee',self.context['request'].data
         if 'costcenter' in self.context['request'].data:
             po.costcenter = CostCenter.objects.get(pk=int(self.context['request'].data['costcenter']))
         if 'bussinessunit' in self.context['request'].data:

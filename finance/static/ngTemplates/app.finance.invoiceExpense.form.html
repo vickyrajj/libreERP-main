@@ -7,7 +7,8 @@
         <div class="row">
           <div class="form-group">
             <label>PO Number</label>
-            <input type="text " class="form-control" ng-model="form.poNumber">
+            <!-- <input type="text " class="form-control" ng-model="form.poNumber"> -->
+              <input type="text" class="form-control" ng-model="form.poNumber" uib-typeahead="po as po.poNumber for po in poSearch($viewValue)">
           </div>
           <div class="form-group">
             <label>Company Name</label>
@@ -19,7 +20,7 @@
           </div>
           <div class="form-group">
             <label>Contact Number</label>
-            <input type="text " class="form-control" ng-model="form.number">
+            <input type="text " class="form-control" ng-model="form.phone">
           </div>
           <div class="form-group">
             <label>Contact Email</label>
@@ -69,7 +70,7 @@
 
         <div class="form-group">
           <label>Project</label>
-          <input type="text " class="form-control" ng-model="form.pincode">
+          <input type="text" class="form-control" ng-model="form.project" uib-typeahead="project as project.title for project in projectSearch($viewValue)">
         </div>
 
         <br>
@@ -80,7 +81,7 @@
 
         <div class="form-group">
           <label>Cost Center</label>
-          <input type="text " class="form-control" ng-model="form.pincode">
+          <input type="text" class="form-control" ng-model="form.costcenter" uib-typeahead="cost as cost.name for cost in costCenterSearch($viewValue)">
         </div>
 
         <br>
@@ -92,12 +93,8 @@
 
         <div class="form-group">
           <label>Business Unit</label>
-          <input type="text " class="form-control" ng-model="form.pincode">
+          <input type="text" class="form-control" ng-model="form.bussinessunit" uib-typeahead="unit as unit.name for unit in bussinessUnit($viewValue)">
         </div>
-
-
-
-
       </div>
 
 
@@ -119,12 +116,12 @@
               <th>Sub Total</th>
               <th></th>
             </tr>
-            <tr ng-repeat="v in products track by $index">
+            <tr ng-repeat="v in form.products track by $index">
               <td>{{$index + 1}}</td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.product"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.price"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.qty"></td>
-              <td><input type="text" class="form-control-pos text-center" ng-model="v.productMeta"></td>
+              <td><input type="text" class="form-control-pos text-center" ng-model="v.productMeta" uib-typeahead="meta as meta.code for meta in productMetaSearch($viewValue)"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.tax"></td>
               <td><input type="text" class="form-control-pos text-center" ng-model="v.total"></td>
               <td><button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button></td>
@@ -146,7 +143,7 @@
     <div class="row" style="padding-top:15px">
       <div class="col-md-12">
         <div class="btn-group">
-          <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+          <button type="button" class="btn btn-primary" ng-click="saveInvoice()">Save</button>
           <button ng-if="mode=='new'" type="button" class="btn btn-default" ng-click="refresh()">Refresh</button>
         </div>
       </div>

@@ -206,3 +206,8 @@ class CompanyHolidaySerializer(serializers.ModelSerializer):
     class Meta:
         model = CompanyHolidays
         fields = ('pk','created','date','typ','name')
+
+class GenericPincodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GenericPincode
+        fields = ('pk' ,  'state' ,  'city' ,'country', 'pincode' , 'pin_status')
