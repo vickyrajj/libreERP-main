@@ -348,6 +348,11 @@ firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
 if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
+
+
+// function setWindowColor(wc, fc,){
+//   windowColor=
+// }
 // var color1 = tinycolor(windowColor);
 
 var windowColorR = parseInt(windowColor.slice(1,3),16)
@@ -576,8 +581,8 @@ function setIframeRotated(){
   iframeDiv.style.position = "fixed";
   iframeDiv.style.height = "70vh";
   iframeDiv.style.width = "70vh";
-  iframeDiv.style.bottom = "100px";
-  iframeDiv.style.right = "408px";
+  iframeDiv.style.bottom = "85px";
+  iframeDiv.style.right = "400px";
   iframeDiv.style.transition = "all .2s"
   iframeDiv.style.animation = "moveInFront 0.6s"
   iframeDiv.style.transform = "rotate(90deg)";
@@ -590,8 +595,8 @@ function setIframeToNormal(){
   iframeDiv.style.position = "fixed";
   iframeDiv.style.height = "70vh";
   iframeDiv.style.width = "50%";
-  iframeDiv.style.bottom = "100px";
-  iframeDiv.style.right = "410px";
+  iframeDiv.style.bottom = "85px";
+  iframeDiv.style.right = "400px";
   iframeDiv.style.transform = "rotate(0deg)";
   document.getElementById('iFrame1').style.height='100%'
   iframeDiv.style.boxShadow='-5px -10px 10px rgb(0,0,0,0.2)';
@@ -654,13 +659,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
         document.getElementById('iframeDiv').style.display = "block";
         chatBox.style.display = "block";
         return
-      }else if(args[0]=='ToggleVisitorVideo'){
-          setIframeRotated()
-          getFrameContent.postMessage('AgentClickedToHide','*')
-        return
-      }else if(args[0]=='ShowVisitorVideo'){
+      // }else if(args[0]=='ToggleVisitorVideo'){
+      //     setIframeRotated()
+      //     getFrameContent.postMessage('AgentClickedToHide','*')
+      //   return
+      // }else if(args[0]=='ShowVisitorVideo'){
+      //   setIframeToNormal()
+      //   getFrameContent.postMessage('AgentClickedToshow','*')
+      //   return
+      }else if(args[0]=='calledToShowVisitorVideo'){
         setIframeToNormal()
-        getFrameContent.postMessage('AgentClickedToshow','*')
+        getFrameContent.postMessage('rotateIcons','*')
+        return
+      }else if(args[0]=='calledToHideVisitorVideo'){
+        setIframeRotated()
+        getFrameContent.postMessage('rotateIcons','*')
         return
       }
 
@@ -1135,8 +1148,8 @@ function createChatDiv() {
         iframeDiv.style.position = "fixed";
         iframeDiv.style.height = "70vh";
         iframeDiv.style.width = "50%";
-        iframeDiv.style.bottom = "100px";
-        iframeDiv.style.right = "410px";
+        iframeDiv.style.bottom = "85px";
+        iframeDiv.style.right = "400px";
         iframeDiv.style.animation = "moveInFront 0.6s"
         iframeDiv.style.boxShadow='-5px -5px 10px rgb(0,0,0,0.2)';
         chatBox_header.style.borderRadius = "0px 10px 0px 0px"
@@ -2285,7 +2298,7 @@ var myformrating;
        window.open(url);
     }
     if (event.data=='calledToHideVideo') {
-      setIframeRotated()
+
       connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToHideVideo' ] , {}, {
         acknowledge: true
       }).
@@ -2296,7 +2309,7 @@ var myformrating;
       });
     }
     if (event.data=='calledToShowVideo') {
-      setIframeToNormal()
+
       connection.session.publish(wamp_prefix+'service.support.agent.'+agentPk, [uid , 'calledToShowVideo' ] , {}, {
         acknowledge: true
       }).
@@ -2312,7 +2325,7 @@ var myformrating;
       document.getElementById('iframeDiv').style.display = "block";
     }
     if (event.data== 'replyToUseruserleft'){
-      setTimeout(endOfConversation, 3000);
+      setTimeout(endOfConversation, 2000);
     }
     if (event.data== 'dintPickTheCall'){
       if(isAudioClicked){
@@ -2436,9 +2449,8 @@ var myformrating;
   }
 
 function endOfConversation() {
-  // alert(videoOpened+' '+audioOpened)
+
     if (videoOpened) {
-      // alert(document.getElementById('iFrame1'))
       var iFrame = document.getElementById('iFrame1')
       iFrame.src = '';
       if (device=='sm') {
@@ -2453,7 +2465,7 @@ function endOfConversation() {
       }
       videoOpened = false
     }else if(audioOpened){
-      // alert('in here')
+
       var iFrame = document.getElementById('iFrame1')
       iFrame.src = '';
       audioSection.innerHTML = "";
@@ -2642,6 +2654,7 @@ function addExitConfirmation() {
     isConfirmedToEnd=true
       if(getFrameContent!=undefined){
         getFrameContent.postMessage('userleft',webRtcAddress );
+        hideTheIframeOnAgentSide()
       }
         if (threadExist==undefined) {
           return

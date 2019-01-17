@@ -723,7 +723,9 @@ app.directive('chatBox', function() {
             method: 'GET',
             url: '/api/support/getMyUser/?getCompanyDetails=' + $scope.data.companyPk,
           }).then(function(response){
-            $scope.companyName=response.data[0]
+            console.log(response.data);
+            $scope.companyName=response.data.cDetails[0]
+            $scope.compContactPersons=response.data.contactP
           })
 
       setTimeout(function () {
@@ -744,12 +746,6 @@ app.directive('chatBox', function() {
             }
       }
 
-      setInterval(function () {
-        // alert($scope.data.currentUrl)
-      }, 10000);
-
-
-      // $scope.closeIframe1=$scope.data.closeIframe
 
       setTimeout(function() {
         if (document.getElementById("iframeChat" + $scope.data.uid) != null)
@@ -762,52 +758,30 @@ app.directive('chatBox', function() {
         $scope.getFrameContent.postMessage('captureImage', webRtcAddress);
       }
 
-      // const permissionToRemove = {
-      //     permissions: ["microphone"]
+      // $scope.toggleVisitorScreen=function(){
+      //   if(!$scope.alreadyDone){
+      //     $scope.isVisitorVideoShowing=!$scope.isVisitorVideoShowing;
+      //     if(!$scope.isVisitorVideoShowing){
+      //       // $scope.msgDivHeight = 51
+      //       connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['HideVisitorVideo'], {}, {
+      //         acknowledge: true
+      //       }).
+      //       then(function(publication) {
+      //         console.log("Published");
+      //       });
       //     }
+      //   else{
+      //     // $scope.msgDivHeight = 52
+      //     connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
+      //       acknowledge: true
+      //     }).
+      //     then(function(publication) {
+      //       console.log("Published");
+      //     });
+      //   }
+      //   }
+      // }
 
-      // $scope.$watch('data.closeIframe',function(newValue,oldValue){
-      //   if(newValue){
-      //     // if ($scope.getFrameContent==undefined) {
-      //     //   $scope.getFrameContent = document.getElementById("iframeChat"+ $scope.data.uid).contentWindow;
-      //     // }
-      //     // console.log('going to call');
-      //     // $scope.getFrameContent.postMessage('agentCalled', webRtcAddress);
-      //     // $scope.closeIframe1=newValue
-      //
-      //           browser.permissions.remove(permissionToRemove).then(result => {
-      //             console.log(result);
-      //           });
-      //       }
-      // })
-
-      $scope.toggleVisitorScreen=function(){
-        if(!$scope.alreadyDone){
-          $scope.isVisitorVideoShowing=!$scope.isVisitorVideoShowing;
-          if(!$scope.isVisitorVideoShowing){
-            // document.getElementById("iframeChat" + $scope.data.uid).style.height="14%";
-            $scope.msgDivHeight = 51
-            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ToggleVisitorVideo'], {}, {
-              acknowledge: true
-            }).
-            then(function(publication) {
-              console.log("Published");
-            });
-          }
-        else{
-          // document.getElementById("iframeChat" + $scope.data.uid).style.height="100%"
-          $scope.msgDivHeight = 52
-          // document.getElementById("iframeChat" + $scope.data.uid).style.transition=".5s"
-          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorVideo'], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
-        }
-        }
-      }
-      // window.addEventListener("message", receiveMessage, false);
       $scope.hideVisitorScreen = function() {
         $scope.IsVisitorOn=!$scope.IsVisitorOn;
         if($scope.IsVisitorOn){
@@ -828,10 +802,17 @@ app.directive('chatBox', function() {
       }
       }
 
-      // alert($scope.data.closeIframe+"******")
+      $scope.$watch('data.closeIframe',function(newValue,oldValue){
+        console.log(newValue,'=********************************************');
+        //printed true ono cut
+        if(newValue){
+          $scope.msgDivHeight = 71
+        }
+      })
+
 
       $scope.setHeight = function () {
-        console.log('timesss');
+        console.log('Here');
         if ($scope.data.audio) {
           $scope.msgDivHeight = 66
         }else if ($scope.data.video) {
@@ -839,6 +820,7 @@ app.directive('chatBox', function() {
         }else {
           $scope.msgDivHeight = 71
         }
+        console.log($scope.msgDivHeight);
       }
 
       $scope.setHeight()
@@ -851,25 +833,38 @@ app.directive('chatBox', function() {
         }
         if (event.origin == webRtcAddress&&event.data.indexOf("*")) {
           console.log(event.data + ' ******************');
-          var uid = event.data.split('*')[0]
-          var imageData = event.data.split('*')[1]
-          if (uid==$scope.data.uid) {
-            $scope.takeSnapshot(imageData)
+          if(event.data=='calledToShowVisitorVideo'){
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['calledToShowVisitorVideo'], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }else if(event.data=='calledToHideVisitorVideo'){
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['calledToHideVisitorVideo'], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }
+          else{
+            var uid = event.data.split('*')[0]
+            var imageData = event.data.split('*')[1]
+            if (uid==$scope.data.uid) {
+              $scope.takeSnapshot(imageData)
+            }
           }
         }
       }
 
       $scope.me = $users.get('mySelf');
-      // console.log($scope.data,'will fetch here');
       $scope.visitorForm = ''
       $scope.isTyping = false;
       $scope.chatHistBtn = false;
       $scope.chatHistory = []
       console.log($scope.data);
       console.log('adsd', $scope.data);
-
-
-
 
       $scope.takeSnapshot = function(imageUrl) {
         $uibModal.open({
@@ -888,16 +883,11 @@ app.directive('chatBox', function() {
             }
 
             $scope.showCanvas = false;
-
-
             $timeout(function() {
               $scope.canvas = new fabric.Canvas('snapshotCanvas', {
                 selection: false
               });
-
               $scope.showCanvas = true;
-
-
               var modalBody = document.getElementById('modalBody');
               $scope.canvas.setWidth(800);
               $scope.canvas.setHeight(500);
@@ -908,36 +898,26 @@ app.directive('chatBox', function() {
               $scope.data = {
                 "objects": []
               };
-
-
               $scope.size = 3;
               $scope.col = '#000000';
               $scope.mode = null;
-              // $scope.HeightCount = 0;
-
               $scope.startx;
               $scope.starty;
               $scope.endx;
               $scope.endy;
-
               fabric.Object.prototype.selectable = false;
-
               $scope.SetPen = function() {
                 $scope.canvas.isDrawingMode = true;
                 $scope.canvas.freeDrawingBrush.color = $scope.col;
                 $scope.canvas.freeDrawingBrush.width = $scope.size;
               }
-
               $scope.SetPen();
               $scope.mode = 'line'
-
               $scope.setColor = function(col) {
                 $scope.col = col;
                 $scope.canvas.freeDrawingBrush.color = col;
               }
-
               $scope.canvas.on('path:created', function(options) {
-                //console.log(options.path.path);
                 $scope.temp = {
                   timestamp: new Date().getTime(),
                   type: options.path.type,
@@ -960,10 +940,7 @@ app.directive('chatBox', function() {
                   objectCaching: false
                 };
 
-                //push path into $scope.data
                 $scope.data['objects'].push($scope.temp);
-                //console.log(options.path);
-                // $scope.data['objects'].push(options.path);
               });
 
               $scope.canvas.on('mouse:down', function(options) {
@@ -971,24 +948,19 @@ app.directive('chatBox', function() {
                 $scope.startx = $scope.pointer.x;
                 $scope.starty = $scope.pointer.y;
               });
-
               $scope.canvas.on('mouse:move', function(options) {
                 $scope.pointer = $scope.canvas.getPointer(options.e);
                 $scope.endx = $scope.pointer.x;
                 $scope.endy = $scope.pointer.y;
               });
-
               $scope.canvas.on('mouse:up', function() {
-
                 if ($scope.endy - $scope.starty < 0) {
-                  // if drag towards top
                   var tempy = $scope.starty;
                   $scope.starty = $scope.endy;
                   $scope.endy = tempy;
                 }
 
                 if ($scope.endx - $scope.startx < 0) {
-                  //  if drag towards left
                   var tempx = $scope.startx;
                   $scope.startx = $scope.endx;
                   $scope.endx = tempx;
@@ -1141,6 +1113,45 @@ app.directive('chatBox', function() {
         }
       });
 
+
+      function sendMail(mailId,uid){
+        $http({
+          method: 'POST',
+          url: '/api/support/emailChat/',
+          data: {
+            email: mailId,
+            uid: uid
+          }
+        }).then(function(response) {
+          console.log('mail sent to '+mailId);
+        });
+      }
+
+
+      function sendMailToContactPersons(){
+        if($scope.isMailSent){
+          return
+        }
+        for (var i = 0; i < $scope.compContactPersons.length; i++) {
+          var profile=$users.get($scope.compContactPersons[i])
+          sendMail(profile.email,$scope.data.uid)
+        }
+        $scope.isMailSent=true;
+      }
+
+      setInterval(function () {
+        $http({
+          method: 'GET',
+          url: '/api/support/getChatStatus/?uid=' + $scope.data.uid,
+        }).
+        then(function(response) {
+          if(response.data.sendMail){
+            sendMailToContactPersons()
+          }
+        });
+      }, 1000*60*5);
+
+
       $http({
         method: 'GET',
         url: '/api/support/supportChat/?&uid=' + $scope.data.uid,
@@ -1154,9 +1165,6 @@ app.directive('chatBox', function() {
         $scope.data.boxOpen = true
         $scope.scroll()
       });
-
-
-      console.log('userrrrrrr', $scope.me.pk);
 
       $scope.chatBox = {
         messageToSend: '',
@@ -1333,6 +1341,17 @@ app.directive('chatBox', function() {
         }
       });
 
+      $scope.$watch('data.disableInput',function(newValue,oldValue){
+        if(newValue){
+          console.log("Sending mail to all contact persons");
+          sendMailToContactPersons();
+          if($scope.data.email){
+            console.log('sending mail to '+$scope.data.email);
+            sendMail($scope.data.email,$scope.data.uid)
+          }
+        }
+      })
+
 
       $scope.chatClose = function(indx, uid, chatThreadPk) {
         $scope.status = "F";
@@ -1344,18 +1363,7 @@ app.directive('chatBox', function() {
         });
 
         if ($scope.data.email) {
-
-          $http({
-            method: 'POST',
-            url: '/api/support/emailChat/',
-            data: {
-              email: $scope.data.email,
-              uid: $scope.data.uid
-            }
-          }).then(function(response) {
-            console.log('send email');
-          });
-
+          sendMail($scope.data.email,$scope.data.uid)
         }
 
         $http({
@@ -1372,10 +1380,7 @@ app.directive('chatBox', function() {
         $scope.closeChatBox(indx, $scope.data.myUserIndex)
       }
 
-
-
       $scope.closeChatBox = function(indx, myUserIndex) {
-
         $scope.closeChat(indx, myUserIndex)
         $scope.data.boxOpen = false
       }

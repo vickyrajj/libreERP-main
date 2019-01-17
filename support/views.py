@@ -85,9 +85,12 @@ class GetMyUser(APIView):
     def get(self, request, format=None):
         print '****** entered', request.GET
         if 'getCompanyDetails' in request.GET:
+            custP = CustomerProfile.objects.filter(pk=request.GET['getCompanyDetails'])
             objjj=list(CustomerProfile.objects.filter(pk=request.GET['getCompanyDetails']).values_list('name',flat=True))
+            serviceObj=list(service.objects.filter(pk = custP[0].service.pk).values_list('contactPerson',flat=True))
 
-            return Response(objjj, status=status.HTTP_200_OK)
+
+            return Response({'cDetails':objjj,'contactP':serviceObj}, status=status.HTTP_200_OK)
         if 'allAgents' in request.GET:
             print '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'
             allAgents = list(User.objects.exclude(pk=self.request.user.pk).values_list('pk',flat=True))
@@ -1177,6 +1180,21 @@ class StreamRecordings(APIView):
         return Response({}, status = status.HTTP_200_OK)
 
 
+class getChatStatus(APIView):
+    renderer_classes = (JSONRenderer,)
+    permission_classes=(permissions.AllowAny,)
+    def get(self , request , format = None):
+        print request.data,'dddddddddddddddd'
+        uid=request.GET['uid']
+        sendMail=False;
+        chatT= ChatThread.objects.filter(uid=uid)[0]
+        diff=timezone.now()-chatT.lastActivity
+        diffInMin = diff.total_seconds()/60
+        if diffInMin>15 and chatT.status=='started':
+            sendMail=True;
+        return Response({'sendMail':sendMail}, status = status.HTTP_200_OK)
+
+
 # class SVGColor(APIView):
 #     renderer_classes = (JSONRenderer,)
 #     permission_classes=(permissions.AllowAny,)
@@ -1218,22 +1236,21 @@ class EmailChat(APIView):
         visitor = Visitor.objects.filter(uid = request.data['uid'])
         if len(visitor)>0:
             name = visitor[0].name
-            allChats = []
-            for a in sObj:
-                toAppend = {'user': a.user , 'message': a.message , 'created': a.created , 'uid': name }
-                if a.sentByAgent:
-                    toAppend['sentByAgent'] = True
-                    if a.attachment:
-                        # print a.attachment , 'ggggggggggggg'
-                        toAppend['attachment'] = globalSettings.SITE_ADDRESS + '/media/' + str(a.attachment)
-                else:
-                    toAppend['sentByAgent'] = False
-                    if a.attachment:
-                        toAppend['attachment'] = a.attachment
-                allChats.append(toAppend)
-            sObj = allChats
-            # print sObj , 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
-
+        else:
+            name=request.data['uid']
+        allChats = []
+        for a in sObj:
+            toAppend = {'user': a.user , 'message': a.message , 'created': a.created , 'uid': name }
+            if a.sentByAgent:
+                toAppend['sentByAgent'] = True
+                if a.attachment:
+                    toAppend['attachment'] = globalSettings.SITE_ADDRESS + '/media/' + str(a.attachment)
+            else:
+                toAppend['sentByAgent'] = False
+                if a.attachment:
+                    toAppend['attachment'] = a.attachment
+            allChats.append(toAppend)
+        sObj = allChats
         ctx = {
             'heading' : "Support Conversation",
             'allChats' : sObj

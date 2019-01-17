@@ -139,7 +139,7 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
 
     $http({
       method: 'GET',
-      url: '/api/support/reviewHomeChats/?uid='+$scope.reviewData[index].uid,
+      url: '/api/support/supportChat/?uid='+$scope.reviewData[index].uid,
     }).
     then(function(response) {
       var appType = 'Info';

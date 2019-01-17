@@ -51,6 +51,9 @@ class SupportChatSerializer(serializers.ModelSerializer):
                 s.responseTime = responseTime
             s.save()
             chatThObj = ChatThread.objects.filter(uid=s.uid)
+            if len(chatThObj)>0:
+                chatThObj[0].lastActivity=s.created
+                chatThObj[0].save()
             if len(chatThObj)>0 and s.sentByAgent==True:
                 print chatThObj[0].firstResponseTime ,'frt'
                 if chatThObj[0].firstResponseTime:
@@ -145,7 +148,7 @@ class ChatThreadSerializer(serializers.ModelSerializer):
                 instance.escalatedL2By = User.objects.get(pk=int(self.context['request'].user.pk))
                 instance.save()
 
-        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user','typ']:
+        for key in ['status' , 'customerRating' , 'customerFeedback' , 'company','user','typ','isLate']:
             try:
                 setattr(instance , key , validated_data[key])
             except:

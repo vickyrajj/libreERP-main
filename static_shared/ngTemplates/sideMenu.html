@@ -1,6 +1,6 @@
 <div class="" ng-controller="sideMenu" style="background:var(--themeMain);height:100vh;color:#fff;width:101%">
   <div ng-if="sideMenuVisibility" class="row" style="margin:0px;">
-    <div class="container-fluid" style="background-image: url('https://png.pngtree.com/thumb_back/fw800/back_pic/03/95/04/5757eb8d28d1012.jpg');background-size: cover;padding:20px;padding-bottom:30px;padding-left:40px;">
+    <div class="container-fluid" style="background-image: url('https://png.pngtree.com/thumb_back/fw800/back_pic/03/95/04/5757eb8d28d1012.jpg');background-size: cover;padding:2rem;padding-bottom:3rem;padding-left:4rem;">
       <div class="row" style="display:flex;flex-direction:column;justify-content:center;align-items:center">
         <img ng-src="{{user.pk | getDP}}" class="img img-circle pull-left" style="width:100px;"><br>
         <h3 style="color:#fff">{{user.pk | getName}}</h3>
@@ -20,21 +20,23 @@
     </div>
   </div>
 
+
   <div class="row">
     <div class="container-fluid">
-      <ul class="nav nav-sidebar" style="width:102%; cursor:pointer ">
-        <li ng-class="{active: $state.is(a.state)}" ng-repeat="a in fixedItems" ng-click="$state.go(a.state)" ng-mouseover="onHover2=true" ng-mouseleave="onHover2=false">
-          <a style="{{ onHover2&&!sideMenuVisibility ? 'width:20rem;border-radius:0 3rem 3rem 0' : ''}}">
-            <div ng-if="sideMenuVisibility" align="left">
+      <ul class="nav nav-sidebar" style="width:102%;">
+        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in fixedItems" ng-mouseover="onHover=true" ng-mouseleave="onHover=false" style="padding:.3rem">
+          <a ui-sref="{{a.state}}" style="height:6rem;padding-top: 2rem;border-radius:.5rem;{{ onHover&&!sideMenuVisibility ? 'width:20rem;border-radius:0 3rem 3rem 0;' : ''}}">
+            <!-- <div ng-if="sideMenuVisibility" align="left">
               <div class="row container-fluid">
                 <div style="display:flex;">
                   <i style="font-size:1.333333rem" class="fa {{a.icon}} fa-lg"></i>
                   <span style="">{{a.dispName | humanize}}</span>
                 </div>
               </div>
-            </div>
-            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:2.5rem;overflow-x:visible;"><i class="fa {{a.icon}} fa-lg pull-left" style="padding:0.2rem 1.3rem;"></i>
-              <span style="font-size:1.3rem" ng-if="onHover2" class="pull-right">{{a.dispName | humanize}}</span>
+            </div> -->
+            <div ng-if="!sideMenuVisibility" align="left" style="overflow-x:visible;text-align:center"><i class="fa {{a.icon}} fa-lg pull-left" style="padding:0.2rem .9rem;"></i>
+              <!-- <p ng-if="!onHover"style="font-size:60%">{{a.dispName | humanize}}</p> -->
+              <span style="font-size:1.3rem" ng-if="onHover" class="pull-right">{{a.dispName | humanize}}</span>
             </div>
           </a>
         </li>
@@ -45,17 +47,18 @@
   <div class="row">
     <div class="container-fluid">
       <ul class="nav nav-sidebar" style="width:102%;">
-        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" ng-mouseover="onHover=true" ng-mouseleave="onHover=false">
-          <a ui-sref="{{a.state}}" style="{{ onHover&&!sideMenuVisibility ? 'width:20rem;border-radius:0 3rem 3rem 0' : ''}}">
-            <div ng-if="sideMenuVisibility" align="left">
+        <li ng-class="{active: $state.includes(a.state)}" ng-repeat="a in apps" ng-mouseover="onHover=true" ng-mouseleave="onHover=false" style="padding:.3rem">
+          <a ui-sref="{{a.state}}" style="height:6rem;padding-top: 2rem;border-radius:.5rem;{{ onHover&&!sideMenuVisibility ? 'width:20rem;border-radius:0 3rem 3rem 0;' : ''}}">
+            <!-- <div ng-if="sideMenuVisibility" align="left">
               <div class="row container-fluid">
                 <div style="display:flex;">
                   <i style="font-size:1.333333rem" class="fa {{a.icon}} fa-lg"></i>
                   <span style="">{{a.dispName | humanize}}</span>
                 </div>
               </div>
-            </div>
-            <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:2.5rem;overflow-x:visible;"><i class="fa {{a.icon}} fa-lg pull-left" style="padding:0.2rem 1.3rem;"></i>
+            </div> -->
+            <div ng-if="!sideMenuVisibility" align="left" style="overflow-x:visible;text-align:center"><i class="fa {{a.icon}} fa-lg pull-left" style="padding:0.2rem .9rem;"></i>
+              <!-- <p ng-if="!onHover"style="font-size:60%">{{a.dispName | humanize}}</p> -->
               <span style="font-size:1.3rem" ng-if="onHover" class="pull-right">{{a.dispName | humanize}}</span>
             </div>
           </a>
@@ -64,9 +67,9 @@
     </div>
   </div>
 
-  <ul class="nav nav-sidebar" style="width:100%;position:absolute; bottom:10px; cursor:pointer ">
-    <li ng-mouseover="onHover1=true" ng-mouseleave="onHover1=false">
-      <a href="/logout" style="{{ onHover1&&!sideMenuVisibility ? 'width:20rem;border-radius:0 3rem 3rem 0' : ''}}">
+  <ul class="nav nav-sidebar" style="width:100%;position:absolute; bottom:1rem; cursor:pointer ">
+    <li ng-mouseover="onHover1=true" ng-mouseleave="onHover1=false" style="padding:.3rem">
+      <a href="/logout" style="height:6rem;padding-top: 2rem;border-radius:.5rem;">
         <div ng-if="sideMenuVisibility" align="left">
           <div class="row container-fluid">
             <div style="display:flex;">
@@ -75,8 +78,8 @@
             </div>
           </div>
         </div>
-        <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:2.5rem;overflow-x:visible;"><i class="fa fa-sign-out fa-lg pull-left" style="padding:0.2rem 1.3rem;"></i>
-          <span style="font-size:1.3rem" ng-if="onHover1" class="pull-right">Logout</span>
+        <div ng-if="!sideMenuVisibility" align="left" style="padding-bottom:2.5rem;overflow-x:visible;"><i class="fa fa-sign-out fa-lg pull-left" style="padding:0.2rem .9rem;"></i>
+          <p ng-if="!onHover"style="font-size:70%">Logout</p>
         </div>
       </a>
     </li>
