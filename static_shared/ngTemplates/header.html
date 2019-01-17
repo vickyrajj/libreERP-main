@@ -21,7 +21,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navBar" style="height:5vh;">
 
-  		<ul class="nav navbar-nav" style="height:5vh;">
+  		<ul class="nav navbar-nav" style="height:5vh;" ng-if="modules.length > 1">
   			<li style="height:100%;" ng-class="{active: $state.includes(m.name)}" ng-repeat="m in modules"><a style="padding-top:1.5vh;" ui-sref="{{m.name}}" ><i class="fa {{m.icon}}"></i> {{m.name | humanize}}</a></li>
   		</ul>
 
