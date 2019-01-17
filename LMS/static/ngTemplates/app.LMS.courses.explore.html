@@ -148,6 +148,10 @@
         <center><button type="button" class="btn btn-primary btn-md" ng-click="open()">ADD <i class="fa fa-plus"></i></button></center>
       </div>
       <div class="row">
+        <div class="container-fluid" ng-if="activeTab == 4">
+          <center><button type="button" class="btn btn-primary btn-md" ng-click="announce()">Make Announcement</button></center>
+        </div>
+      <div class="container-fluid">
         <div class="container-fluid" ng-if="activeTab == 5">
           <center><button type="button" class="btn btn-primary btn-md" ng-click="addNotes()">Add Notes <i class="fa fa-plus"></i></button></center>
         </div>

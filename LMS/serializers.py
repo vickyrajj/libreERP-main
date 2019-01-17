@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import *
 from .models import *
 import random, string
+from HR.serializers import userSearchSerializer
 
 # class TopicLiteSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -222,6 +223,8 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     enrollments = EnrollmentSerializer(many = True , read_only = True)
     studyMaterials = StudyMaterialSerializer(many = True , read_only = True)
+    instructor = userSearchSerializer(many = False , read_only = True)
+    topic = TopicSerializer(many = False , read_only = True)
     class Meta:
         model = Course
         fields = ('pk' , 'created' , 'updated', 'topic', 'enrollmentStatus', 'instructor' , 'TAs' , 'user' , 'description' , 'title' , 'enrollments' , 'studyMaterials')
@@ -229,11 +232,30 @@ class CourseSerializer(serializers.ModelSerializer):
     def create(self , validated_data):
         c = Course(**validated_data)
         c.user = self.context['request'].user
-        c.save()
-
+        topic = Topic.objects.get(pk = self.context['request'].data['topic'])
+        c.topic = topic
         for u in self.context['request'].data['TAs']:
             c.TAs.add(User.objects.get(pk = u))
+        c.save()
         return c
+    def update(self , instance , validated_data):
+        for key in ['enrollmentStatus', 'user' , 'description' , 'title' , 'enrollments' , 'studyMaterials']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'topic' in self.context['request'].data:
+            instance.topic = Topic.objects.get(pk =self.context['request'].data['topic'])
+
+        if 'instructor' in self.context['request'].data:
+            instance.instructor = User.objects.get(pk =self.context['request'].data['instructor'])
+
+        for u in self.context['request'].data['TAs'].split(','):
+            instance.TAs.add(User.objects.get(pk = u))
+
+        instance.save()
+        return instance
+
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
@@ -309,3 +331,9 @@ class NotesSectionSerializer(serializers.ModelSerializer):
         n.note = note
         n.save()
         return n
+
+class AnnouncementSerializer(serializers.ModelSerializer):
+    # paper = PaperSerializer(many = False , read_only = True)
+    class Meta:
+        model = Announcement
+        fields = ('pk' , 'created' , 'announcer', 'notified', 'notification', 'typ', 'paper', 'paperDueDate', 'time', 'venue', 'txt' ,'meetingId')

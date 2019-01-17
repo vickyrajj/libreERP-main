@@ -391,6 +391,20 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
   }
 
 
+  //---------adding notes
+  $scope.announce = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.LMs.course.announcement.form.html',
+      size: 'md',
+      backdrop: true,
+      controller: function($scope, $uibModalInstance) {
+      
+      }, //controller ends
+    })
+  } //addnotesfunction ends
+
+
+
 });
 
 app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateParams, $http, Flash) {
@@ -431,51 +445,101 @@ app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateP
     return topic.title + '  (' + topic.subject.title + ')';
   }
 
+  $scope.userSearch = function(query) {
+    //search for the user
+    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
 
-
-  // $scope.resetForm();
-
-  $scope.save = function() {
-    var f = $scope.form;
-    var toSend = {
-      instructor: f.instructor.pk,
-      topic: f.topic.pk,
-      description: f.description,
-      enrollmentStatus: f.enrollmentStatus,
-      TAs: f.TAs,
-      title: f.title
+  $scope.getInstructor = function(user) {
+    if (typeof user == 'undefined') {
+      return;
     }
+    return user.first_name + '  ' + user.last_name;
+  }
+
+  // $scope.save = function() {
+  //   var f = $scope.form;
+  //   var toSend = {
+  //     instructor: f.instructor.pk,
+  //     topic: f.topic.pk,
+  //     description: f.description,
+  //     enrollmentStatus: f.enrollmentStatus,
+  //     TAs: f.TAs,
+  //     title: f.title
+  //   }
+  //   $http({
+  //     method: 'POST',
+  //     url: '/api/LMS/course/',
+  //     data: toSend
+  //   }).
+  //   then(function(response) {
+  //     if ($scope.form.dp == emptyFile) {
+  //       $scope.resetForm();
+  //       Flash.create('success', 'Created')
+  //     } else {
+  //       var fd = new FormData();
+  //       fd.append('dp', $scope.form.dp);
+  //
+  //       $http({
+  //         method: 'PATCH',
+  //         url: '/api/LMS/course/' + response.data.pk + '/',
+  //         data: fd,
+  //         transformRequest: angular.identity,
+  //         headers: {
+  //           'Content-Type': undefined
+  //         }
+  //       }).
+  //       then(function(response) {
+  //         $scope.resetForm();
+  //         Flash.create('success', 'Created')
+  //       })
+  //
+  //
+  //
+  //     }
+  //
+  //   })
+  //
+  // }
+
+
+  $scope.saveCourse = function() {
+    if ($scope.mode == 'new') {
+      var method = 'POST'
+      var url = '/api/LMS/course/'
+    } else {
+      var method = 'PATCH'
+      var url = '/api/LMS/course/' + $scope.form.pk + '/'
+    }
+    var fd = new FormData();
+    fd.append('title', $scope.form.title);
+    fd.append('topic', $scope.form.topic.pk);
+    fd.append('enrollmentStatus', $scope.form.enrollmentStatus);
+    fd.append('description', $scope.form.description);
+    fd.append('dp', $scope.form.dp);
+    fd.append('TAs', $scope.form.TAs);
+    fd.append('instructor', $scope.form.instructor.pk);
     $http({
-      method: 'POST',
-      url: '/api/LMS/course/',
-      data: toSend
+      method: method,
+      url: url,
+      data: fd,
+      transformRequest: angular.identity,
+      headers: {
+        'Content-Type': undefined
+      }
     }).
     then(function(response) {
-      if ($scope.form.dp == emptyFile) {
-        $scope.resetForm();
-        Flash.create('success', 'Created')
+      if (response.config.method) {
+        Flash.create('success', 'Updated Course successfully')
       } else {
-        var fd = new FormData();
-        fd.append('dp', $scope.form.dp);
-
-        $http({
-          method: 'PATCH',
-          url: '/api/LMS/course/' + response.data.pk + '/',
-          data: fd,
-          transformRequest: angular.identity,
-          headers: {
-            'Content-Type': undefined
-          }
-        }).
-        then(function(response) {
-          $scope.resetForm();
-          Flash.create('success', 'Created')
-        })
-
-
-
+        Flash.create('success', 'Created Course successfully')
       }
-
+      if ($scope.mode == 'new') {
+        $scope.resetForm();
+      }
     })
 
   }

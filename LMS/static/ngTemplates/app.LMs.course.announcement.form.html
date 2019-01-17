@@ -1,0 +1,26 @@
+<div class="container-fluid"style="padding-bottom:15px;">
+  <h1>Announcement Form</h1>
+  <hr>
+  <div class="form-group">
+    <label> Announcer</label>
+    <input class="form-control" type="text" ng-model="form.instructor" uib-typeahead="user as getInstructor(user) for user in userSearch($viewValue)" placeholder="Search and select a Announcer">
+  </div>
+  <div class="form-group">
+    <label>Notification Type</label>
+    <select ng-model="form.enrollmentStatus" class="form-control">
+      <option value="sms">SMS</option>
+      <option value="email">Email</option>
+      <option value="sms&email">SMS & Email</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Txt </label>
+    <textarea type="text" class="form-control" rows="5" ng-model="" placeholder="" style="resize:none;"></textarea>
+  </div>
+  <div class="form-group">
+    <button type="button" class="btn btn-primary pull-right">
+      save
+    </button>
+  </div>
+
+</div>

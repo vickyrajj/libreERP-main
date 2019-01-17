@@ -25,6 +25,8 @@ router.register(r'section' , SectionViewSet , base_name ='section')
 router.register(r'bookcoursemap' , BookCourseMapViewSet , base_name ='bookcoursemap')
 router.register(r'note' , NoteViewSet , base_name ='note')
 router.register(r'notesection' , NotesSectionViewSet , base_name ='notesection')
+router.register(r'announcement' , AnnouncementViewSet , base_name ='announcement')
+
 
 
 

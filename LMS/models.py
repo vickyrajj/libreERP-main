@@ -309,27 +309,27 @@ class NotesSection(models.Model):
     mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)
 
 NOTIFICATION_TYPE = (
-    ('sms' , 'sma'),
-    ('email' , 'email'),
-    ('sms&email' , 'sms&email'),
+    ('sms' , 'SMS'),
+    ('email' , 'Email'),
+    ('sms&email' , 'SMS & Email'),
 )
 ANNOUNCEMENT_TYP_CHOICES = (
-    ('general','general'),
-    ('quiz','quiz'),
-    ('online_class','online_class'),
-    ('class','class'),
-    ('offline_quiz','offline_quiz')
+    ('general','General'),
+    ('quiz','Quiz'),
+    ('onlineclass','Online Class'),
+    ('class','Class'),
+    ('offlinequiz','Offline Quiz')
 )
 
-# class Announcement(models.Model):
-#     created = models.DateTimeField(auto_now_add = True)
-#     announcer = models.ForeignKey(User ,null = False , related_name ="announcements")
-#     notified = models.BooleanField(default = False)
-#     notification =  models.CharField(choices = NOTIFICATION_TYPE , max_length = 10 , null = True)
-#     typ = models.CharField(choices = ANNOUNCEMENT_TYP_CHOICES , max_length = 10 , null = True)
-#     paper = models.ForeignKey(Paper , null = True , related_name="paper")
-#     paperDueDate =  models.DateField(auto_now=True)
-#     time = models.DateTimeField(auto_now= True)
-#     venue =  models.CharField(max_length = 100 , null = True)
-#     txt =  models.TextField(null = True)
-#     # meetingId =
+class Announcement(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    announcer = models.ForeignKey(User ,null = False , related_name ="announcements")
+    notified = models.BooleanField(default = False)
+    notification =  models.CharField(choices = NOTIFICATION_TYPE , max_length = 10 , null = True)
+    typ = models.CharField(choices = ANNOUNCEMENT_TYP_CHOICES , max_length = 10 , null = True)
+    paper = models.ForeignKey(Paper , null = True , related_name="paper")
+    paperDueDate =  models.DateField(auto_now=True)
+    time = models.DateTimeField(auto_now= True)
+    venue =  models.CharField(max_length = 100 , null = True)
+    txt =  models.TextField(null = True)
+    meetingId = models.CharField(max_length = 100 , null = True)
