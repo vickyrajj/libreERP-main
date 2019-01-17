@@ -93,6 +93,24 @@
         </div>
         <div class="row" style="padding-top:10px">
           <div class="col-md-12 text-center">
+            <label> Currency Type : </label>
+          </div>
+          <div class="col-md-12 text-center">
+            <select class="form-control" ng-model="form.currency" ng-change="saveCurrency()">
+              <option value="CHF">CHF</option>
+              <option value="INR">INR</option>
+              <option value="EUR">EUR</option>
+              <option value="USD">USD</option>
+              <option value="JPY">JPY</option>
+              <option value="GBP">GBP</option>
+              <option value="AUD">AUD</option>
+              <option value="CAD">CAD</option>
+              <option value="ZAR">ZAR</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+          <div class="col-md-12 text-center">
             <label> PO Number : </label>
           </div>
           <div class="col-md-12">
@@ -163,10 +181,18 @@
         </div>
         <div class="row" style="padding-top:10px" ng-if="options">
           <div class="col-md-12 text-center">
-            <label> INCO Terms : </label>
+            <label> INCO Terms (Quotation) : </label>
           </div>
           <div class="col-md-12">
             <input type="text" class="form-control text-center" ng-model="form.terms" placeholder="INCO Terms" ng-change="incoTerms()">
+          </div>
+        </div>
+        <div class="row" style="padding-top:10px" ng-if="options">
+          <div class="col-md-12 text-center">
+            <label> INCO Terms (PO): </label>
+          </div>
+          <div class="col-md-12">
+            <input type="text" class="form-control text-center" ng-model="form.termspo" placeholder="INCO Terms" ng-change="incoTermsPo()">
           </div>
         </div>
         <div class="row" style="padding-top:10px" ng-if="options">
@@ -272,8 +298,8 @@
               <div class="col-md-12">
                 <div class="row">
                   <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
-                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF" style="min-width:50px"><i
-                          class="fa fa-download"></i> Download PO in CHF </a></span>
+                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ={{form.currency}}" style="min-width:50px"><i
+                          class="fa fa-download"></i> Download PO in {{form.currency}} </a></span>
                   </div>
                 </div><br>
                 <div class="row">
@@ -291,8 +317,8 @@
                 <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
                 <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                   <div class="col-md-12 text-center">
-                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF" style="min-width:50px"><i class="fa fa-download" ></i>
-                        Download Quotation In CHF </a></span>
+                    <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ={{form.currency}}" style="min-width:50px"><i class="fa fa-download" ></i>
+                        Download Quotation In {{form.currency}} </a></span>
                   </div>
                 </div><br>
                 <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
@@ -316,7 +342,7 @@
           <div class="col-md-4 text-center">
           </div>
           <div class="col-md-3 text-center">
-            <label>Ex Works Value In CHF</label>
+            <label>Ex Works Value In {{form.currency}}</label>
           </div>
           <div class="col-md-3 text-center">
             <label>Value In INR</label>
@@ -481,10 +507,10 @@
               <th ><div style="width: 150px;">Part No</div></th>
               <th><div style="width: 200px;">Products</div></th>
               <th>Weight</th>
-              <th>Price (CHF)</th>
+              <th>Price ({{form.currency}})</th>
               <th>Qty</th>
               <th>HSN</th>
-              <th>Quote Price (CHF)</th>
+              <th>Quote Price ({{form.currency}})</th>
               <th>Ex-Work Price (INR)</th>
               <th>Packing Cost</th>
               <th>Insurance</th>
@@ -668,6 +694,14 @@
           <span> {{form.revision}}</span>
         </div>
       </div>
+      <div class="row" style="padding-top:20px">
+        <div class="col-md-5 text-center">
+          <label> Currency Type : </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.currency}}</span>
+        </div>
+      </div>
       <div class="row" style="padding-top:10px">
         <div class="col-md-5 text-center">
           <label> PO Number : </label>
@@ -727,10 +761,18 @@
       </div>
       <div class="row" style="padding-top:10px">
         <div class="col-md-5 text-center">
-          <label> INCO Terms : </label>
+          <label> INCO Terms (Quoatation) : </label>
         </div>
         <div class="col-md-7 text-center">
           <span> {{form.terms}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-5 text-center">
+          <label> INCO Terms (PO): </label>
+        </div>
+        <div class="col-md-7 text-center">
+          <span> {{form.termspo}}</span>
         </div>
       </div>
       <div class="row" style="padding-top:10px">
@@ -821,8 +863,8 @@
             <div class="col-md-12">
               <div class="row">
                 <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
-                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF" style="min-width:50px"><i
-                        class="fa fa-download"></i> Download PO in CHF </a></span>
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ={{form.currency}}" style="min-width:50px"><i
+                        class="fa fa-download"></i> Download PO in {{form.currency}} </a></span>
                 </div>
               </div><br>
               <div class="row">
@@ -840,8 +882,8 @@
               <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
               <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
-                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF" style="min-width:50px"><i class="fa fa-download" ></i>
-                      Download Quotation In CHF </a></span>
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ={{form.currency}}" style="min-width:50px"><i class="fa fa-download" ></i>
+                      Download Quotation In {{form.currency}} </a></span>
                 </div>
               </div><br>
               <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
@@ -864,7 +906,7 @@
         <div class="col-md-4 text-center">
         </div>
         <div class="col-md-3 text-center">
-          <label>Ex Works Value In CHF</label>
+          <label>Ex Works Value In {{form.currency}}</label>
         </div>
         <div class="col-md-3 text-center">
           <label>Value In INR</label>
@@ -1003,7 +1045,7 @@
               <th> Qty</th>
               <th>HSN</th>
               <th>Price</th>
-              <th>Quote Price (CHF)</th>
+              <th>Quote Price ({{form.currency}})</th>
               <th>Ex-Work Price (INR)</th>
               <th>Packing Cost</th>
               <th>Insurance</th>
@@ -1149,6 +1191,24 @@
         </div>
 
       </div>
+      <div class="row" style="padding-top:10px">
+        <div class="col-md-12 text-center">
+          <label> Currency Type : </label>
+        </div>
+        <div class="col-md-12 text-center">
+          <select class="form-control" ng-model="form.currency" ng-change="saveCurrency()">
+            <option value="CHF">CHF</option>
+            <option value="INR">INR</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+            <option value="JPY">JPY</option>
+            <option value="GBP">GBP</option>
+            <option value="AUD">AUD</option>
+            <option value="CAD">CAD</option>
+            <option value="ZAR">ZAR</option>
+          </select>
+        </div>
+      </div>
 
       <div class="row" style="padding-top:10px">
         <div class="col-md-12 text-center">
@@ -1221,10 +1281,18 @@
       </div>
       <div class="row" style="padding-top:10px" ng-if="options">
         <div class="col-md-12 text-center">
-          <label> INCO Terms : </label>
+          <label> INCO Terms (Quotation): </label>
         </div>
         <div class="col-md-12">
           <input type="text" class="form-control text-center" ng-model="form.terms" placeholder="INCO Terms" ng-change="incoTerms()">
+        </div>
+      </div>
+      <div class="row" style="padding-top:10px" ng-if="options">
+        <div class="col-md-12 text-center">
+          <label> INCO Terms (PO): </label>
+        </div>
+        <div class="col-md-12">
+          <input type="text" class="form-control text-center" ng-model="form.termspo" placeholder="INCO Terms" ng-change="incoTermsPo()">
         </div>
       </div>
       <div class="row" style="padding-top:10px" ng-if="options">
@@ -1318,8 +1386,8 @@
             <div class="col-md-12">
               <div class="row">
                 <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
-                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF" style="min-width:50px"><i
-                        class="fa fa-download"></i> Download PO in CHF </a></span>
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ={{form.currency}}" style="min-width:50px"><i
+                        class="fa fa-download"></i> Download PO in {{form.currency}} </a></span>
                 </div>
               </div><br>
               <div class="row">
@@ -1337,8 +1405,8 @@
               <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
               <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                 <div class="col-md-12 text-center">
-                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF" style="min-width:50px"><i class="fa fa-download" ></i>
-                      Download Quotation In CHF </a></span>
+                  <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ={{form.currency}}" style="min-width:50px"><i class="fa fa-download" ></i>
+                      Download Quotation In {{form.currency}} </a></span>
                 </div>
               </div><br>
               <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
@@ -1360,7 +1428,7 @@
         <div class="col-md-4 text-center">
         </div>
         <div class="col-md-3 text-center">
-          <label>Ex Works Value In CHF</label>
+          <label>Ex Works Value In {{form.currency}}</label>
         </div>
         <div class="col-md-3 text-center">
           <label>Value In INR</label>
@@ -1499,7 +1567,7 @@
           <th>HSN</th>
           <th>Price</th>
           <th>Qty Received</th>
-          <th>Quote Price (CHF)</th>
+          <th>Quote Price ({{form.currency}})</th>
           <th>Ex-Work Price (INR)</th>
           <th>Packing Cost</th>
           <th>Insurance</th>
@@ -1641,6 +1709,15 @@
             </div>
 
           </div>
+          <div class="row" style="padding-top:20px">
+            <div class="col-md-5 text-center">
+              <label> Currency Type : </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.currency}}</span>
+            </div>
+
+          </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
               <label> PO Number : </label>
@@ -1699,10 +1776,18 @@
           </div>
           <div class="row" style="padding-top:10px">
             <div class="col-md-5 text-center">
-              <label> INCO Terms : </label>
+              <label> INCO Terms (Quotation): </label>
             </div>
             <div class="col-md-7 text-center">
               <span> {{form.terms}}</span>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px">
+            <div class="col-md-5 text-center">
+              <label> INCO Terms (PO): </label>
+            </div>
+            <div class="col-md-7 text-center">
+              <span> {{form.termspo}}</span>
             </div>
           </div>
           <div class="row" style="padding-top:10px">
@@ -1792,8 +1877,8 @@
                 <div class="col-md-12">
                   <div class="row">
                     <div class="col-md-12 text-center" ng-if="form.poNumber.length>0||form.projects.length>0||form.data.length>0">
-                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ=CHF" style="min-width:50px"><i
-                            class="fa fa-download"></i> Download PO in CHF </a></span>
+                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/POSlip/?project={{form.pk}}&poNumber={{form.poNumber}}&revision={{form.revision}}}&typ={{form.currency}}" style="min-width:50px"><i
+                            class="fa fa-download"></i> Download PO in {{form.currency}} </a></span>
                     </div>
                   </div><br>
                   <div class="row">
@@ -1811,8 +1896,8 @@
                   <!-- <span ng-if="form.poNumber==null||form.poNumber.length==0" class="btn btn-primary" ng-click="showFlashError()"><i class="fa fa-download"></i> Download PO </span><br><br> -->
                   <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
                     <div class="col-md-12 text-center">
-                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=CHF" style="min-width:50px"><i class="fa fa-download" ></i>
-                          Download Quotation In CHF </a></span>
+                      <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ={{form.currency}}" style="min-width:50px"><i class="fa fa-download" ></i>
+                          Download Quotation In {{form.currency}} </a></span>
                     </div>
                   </div><br>
                   <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
@@ -1889,7 +1974,7 @@
                 <div class="col-md-4 text-center">
                 </div>
                 <div class="col-md-3 text-center">
-                  <label>Ex Works Value In CHF</label>
+                  <label>Ex Works Value In {{form.currency}}</label>
                 </div>
                 <div class="col-md-3 text-center">
                   <label>Value In INR</label>
@@ -2067,7 +2152,7 @@
                   <th> Qty</th>
                   <th>HSN</th>
                   <th>Price</th>
-                  <th>Quote Price (CHF)</th>
+                  <th>Quote Price ({{form.currency}})</th>
                   <th>Ex-Work Price (INR)</th>
                   <th>Packing Cost</th>
                   <th>Insurance</th>

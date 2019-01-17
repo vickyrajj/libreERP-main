@@ -22,6 +22,18 @@ STOCK__STATUS = (
 ('completed' , 'completed')
 )
 
+CURRENCY_CHOICE = (
+('CHF' , 'CHF'),
+('INR' , 'INR'),
+('EUR' , 'EUR'),
+('USD' , 'USD'),
+('JPY' , 'JPY'),
+('GBP' , 'GBP'),
+('AUD' , 'AUD'),
+('CAD' , 'CAD'),
+('ZAR' , 'ZAR'),
+)
+
 class ProductSheet(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     sheet = models.FileField(null = True , upload_to = getUploadedProductSheets)
@@ -102,6 +114,7 @@ class Projects(models.Model):
     vendor = models.ForeignKey(Vendor , related_name='vendor' , null = True)
     quoteValidity = models.CharField(max_length = 200, default = "30 days from quote date")
     terms = models.CharField(max_length = 200, default = "EX-WORKS, BRUDERER AG, Switzerland")
+    termspo = models.CharField(max_length = 200, default = "EX-WORKS, BRUDERER AG, Switzerland")
     delivery = models.CharField(max_length = 200, default = "6 weeks from the date of receipt of PO and advance")
     paymentTerms = models.CharField(max_length = 200, default = "100% advance along with order")
     paymentTerms1  = models.CharField(max_length = 200, default = "100% advance along with order")
@@ -111,6 +124,7 @@ class Projects(models.Model):
     weightValue =  models.FloatField( default = 0)
     quoteNotes =  models.CharField(max_length = 500, null=True,blank=True)
     poNotes =  models.CharField(max_length = 500, null=True,blank=True)
+    currency = models.CharField(choices = CURRENCY_CHOICE , max_length = 10 , default = 'CHF')
 
 
 class BoM(models.Model):
