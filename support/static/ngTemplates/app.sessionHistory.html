@@ -71,7 +71,7 @@
                           </tbody>
                         </table>
 
-                        <div ng-if="reviewData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff" >
+                        <div ng-if="reviewData.length" style="position:fixed;bottom:0px;padding: 2rem 3rem;background:#fff" >
                           <span>
                             <select ng-model="pageOptionsSelected.value" ng-change="setItemsPerPage(pageOptionsSelected.value)">
                               <option ng-repeat="view in pageOptions" value="{{view}}">{{view}} </option>
@@ -199,7 +199,7 @@
                       </div>
                     </div>
 
-                    <div ng-if="reviewData.length" style="position:fixed;bottom:0px;padding: 2rem;background:#fff;left:60%" >
+                    <div ng-if="reviewData.length" style="position:fixed;bottom:0px;padding: 2rem 3rem;background:#fff;left:60%" >
                       <span>
                         <select ng-model="pageOptionsSelected.value" ng-change="setItemsPerPage(pageOptionsSelected.value)">
                           <option ng-repeat="view in pageOptions" value="{{view}}">{{view}} </option>
