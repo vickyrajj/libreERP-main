@@ -174,7 +174,8 @@ def invoice(response,inv):
         txt = 'IP No.'
         count = 289 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=inv.pk).count() - 25
         # n = count if count>=1000 else '0'+str(count)
-        billNo = 'CB'+str(count).zfill(4)+'/18'
+        twoDigitsYear = str(datetime.date.today().year)[2:]
+        billNo = 'CB'+str(count).zfill(4)+ '/' +twoDigitsYear
         a = defaultfilters.date(inv.activePatient.inTime + timedelta(hours=5,minutes=30), "d-m-Y , h:i A")
         d = defaultfilters.date(inv.activePatient.dateOfDischarge + timedelta(hours=5,minutes=30), "d-m-Y , h:i A")
         try:
@@ -296,28 +297,6 @@ def dischargeSummary(response,dis):
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=5*cm,leftMargin=0.1*cm,rightMargin=0.1*cm,bottomMargin=1*cm)
     elements = []
 
-    # logo = "hospital_logo.png"
-    # logo = os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'hospital_logo.png')
-    # im = Image(logo,height=1*inch ,width=0.6*inch)
-    #
-    # p1=[
-    #    Paragraph("<para fontSize=30 alignment='center' leading=25 textColor=darkblue><b> CHAITANYA HOSPITAL </b></para>",styles['Normal']),
-    #    Paragraph("<para fontSize=11  spaceBefore=12 leftIndent=5># 80, 3rd Cross, P & T Colony, R. T. Nagar, Bangalore - 560 032. Ph : 2333 3581, Fax : 2343 2633</para>",styles['Normal']),
-    #    Paragraph("<para fontSize=11 alignment='left'  leftIndent=5><strong>Reg. No. 711 / 95-96 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Tax No. AAAFC5438JSD001 </strong></para>",styles['Normal']),
-    #    ]
-    # # Paragraph("<para fontSize=13 alignment='center'><strong>Employee PaySlip For Month Of {0} {1} </strong></para>".format(calendar.month_name[now.month],now.year),styles['Normal'])
-    #
-    # data1=[[im,p1]]
-    # rheights=1*[1.1*inch]
-    # cwidths=2*[0.8*inch]
-    # cwidths[1]=7*inch
-    # t1=Table(data1,rowHeights=rheights,colWidths=cwidths)
-    # elements.append(t1)
-
-    # elements.append(Spacer(1, 150))
-
-    # elements.append(HRFlowable(width="100%", thickness=1, color=darkblue))
-
     elements.append(Spacer(1, 12))
 
     elements.append(Paragraph("<para fontSize=12 alignment='center'textColor=black><b> DISCHARGE SUMMARY </b></para>",styles['Normal']))
@@ -361,42 +340,6 @@ def dischargeSummary(response,dis):
         dN += ' , ' + i.name
         dM += ' , ' + i.mobile if i.mobile else ''
         dP += ' , ' + i.department
-
-
-
-    # if len(dList)==0:
-    #     dName = ''
-    #     docMobile = ''
-    #     dep = ''
-    # elif len(dList)==0:
-    #     dName = dis.treatingConsultant.name
-    #     docMobile = dis.treatingConsultant.mobile if dis.treatingConsultant.mobile else ''
-    #     dep = dis.treatingConsultant.department
-    # else:
-    #     for idx,i in enumerate(dList):
-    #         print i,idx
-    #         if idx == 0:
-    #             dName = i.name
-    #             docMobile = i.mobile if i.mobile else ''
-    #             dep = i.department
-    #         else:
-    #             dName += ' , ' + i.name
-    #             docMobile += ' , ' + i.mobile if i.mobile else ''
-    #             dep += ' , ' + i.department
-
-        # if dis.treatingConsultant.department:
-        #     dep = dis.treatingConsultant.department
-        # else:
-        #     dep = ''
-        #
-        # if dis.treatingConsultant.mobile:
-        #     docMobile = dis.treatingConsultant.mobile
-        # else:
-        #     docMobile = ''
-
-    # print dep
-    # print 'advv',dis.advice
-    # print 'revvvvvvvvvv',dis.reviewOn
 
     bottomDName = dNB
     bottomDMob = dMB
@@ -579,12 +522,13 @@ class GetReports(APIView):
         Records =list( Invoice.objects.filter(created__range=(start,end)).values('pk','invoiceName','grandTotal','activePatient__outPatient','activePatient__patient__firstName','activePatient__dischargeSummary__ipNo','activePatient__opNo'))
         # outPatientRecords = list( Invoice.objects.filter(created__range=(start,end),activePatient__outPatient=False).values('pk','invoiceName','grandTotal','activePatient__outPatient','activePatient__patient__firstName','activePatient__dischargeSummary__ipNo','activePatient__opNo'))
         # toSend = inpatientRecords+outPatientRecords
+        twoDigitsYear = str(datetime.date.today().year)[2:]
         for i in Records:
             print i['activePatient__outPatient']
             if i['activePatient__outPatient']:
                 i['billNo'] = 1970 + Invoice.objects.filter(activePatient__outPatient=True,pk__lt=i['pk']).count() - 18
             else:
                 count = 289 + Invoice.objects.filter(activePatient__outPatient=False,pk__lt=i['pk']).count() - 25
-                i['billNo'] = 'CB'+str(count).zfill(4)+'/18'
+                i['billNo'] = 'CB'+str(count).zfill(4)+ '/' +twoDigitsYear
         print '************',Records
         return Response(Records,status = status.HTTP_200_OK)

@@ -51,12 +51,11 @@ class ActivePatientSerializer(serializers.ModelSerializer):
             a.docName = Doctor.objects.get(pk=int(self.context['request'].data['docName']))
         a.patient = Patient.objects.get(pk=int(self.context['request'].data['patient']))
         a.save()
+        twoDigitsYear = str(datetime.date.today().year)[2:]
         if not a.outPatient:
             count = 180 + ActivePatient.objects.filter(outPatient=False,pk__lt=a.pk).count()
-            print count
             # n = count if count>=1000 else '0'+str(count)
-            ipn = 'RR/'+str(count).zfill(4)+'/18'
-            print ipn
+            ipn = 'RR/'+str(count).zfill(4)+ '/' +twoDigitsYear
             d = DischargeSummary.objects.create(patient=a,ipNo=ipn)
         else:
             a.opNo = a.pk
