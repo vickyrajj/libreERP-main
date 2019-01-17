@@ -78,6 +78,8 @@ BRAND_LOGO = '/static/images/cioc_icon.svg'
 BRAND_LOGO_INVERT = '/static/images/24_tutors_icon_invert.svg'
 
 SMS_API_PREFIX = "http://sms.azmobia.com/http-api.php?username=CIOC&password=cioc567&senderid=CIOCPL&route=1&"
+SHOW_COMMON_APPS = False
+DEFAULT_STATE = '/businessManagement/finance'
 
 import requests
 def SEND_SMS(number , txt):

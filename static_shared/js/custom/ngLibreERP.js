@@ -6,7 +6,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $provide,
     tabReplace: '    '
   });
 
-  $urlRouterProvider.otherwise('/businessManagement');
+  $urlRouterProvider.otherwise(DEFAULT_STATE);
   $httpProvider.defaults.xsrfCookieName = 'csrftoken';
   $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   $httpProvider.defaults.withCredentials = true;
@@ -592,6 +592,8 @@ app.controller('controller.generic.menu', function($scope, $http, $aside, $state
 app.controller('sideMenu', function($scope, $http, $aside, $state, Flash, $users, $filter, $permissions, $rootScope) {
 
   $scope.user = $users.get('mySelf');
+
+  $scope.SHOW_COMMON_APPS = SHOW_COMMON_APPS;
 
   $scope.fixedApps = [
     // {icon : 'home' , state : 'home'},
