@@ -244,3 +244,41 @@ app.filter('getName' , function($users){
     }
   }
 })
+
+app.filter('newlines', function () {
+    return function(text) {
+        return text.replace(/\n/g, '<br/>');
+    }
+})
+
+
+app.filter('noHTML', function () {
+    return function(text) {
+        return text
+                .replace(/&/g, '&amp;')
+                .replace(/>/g, '&gt;')
+                .replace(/</g, '&lt;');
+    }
+});
+
+app.filter('getTime',function(){
+   return function(date) {
+    var abc  = new Date(date)
+    var hours = abc.getHours();
+    var minutes = abc.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    console.log(strTime);
+    return strTime
+  }
+})
+
+
+app.filter('trusted', ['$sce', function ($sce) {
+    return function(url) {
+        return $sce.trustAsResourceUrl(url);
+    };
+}]);
