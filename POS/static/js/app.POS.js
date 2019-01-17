@@ -345,7 +345,7 @@ app.controller("controller.POS.productinfo.form", function($scope, product, $htt
     //   $scope.storeData.push($scope.product.storeQty[i].pk)
     //   $scope.checkStore.push($scope.product.storeQty[i].store.pk)
     // }
-    if ($scope.product.compositionQtyMap == null) {
+    if ($scope.product.compositionQtyMap == null || $scope.product.compositionQtyMap == "") {
       $scope.compositionQtyMap = []
     } else {
       $scope.compositionQtyMap = JSON.parse($scope.product.compositionQtyMap)

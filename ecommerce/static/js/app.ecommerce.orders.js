@@ -870,7 +870,7 @@ app.controller('businessManagement.ecommerce.orders', function($scope, $http, $a
   $scope.config = {
     views: views,
     url: '/api/ecommerce/order/',
-    searchField: 'status',
+    searchField: 'id',
     deletable: true,
     itemsNumPerView: [12, 24, 48],
   }

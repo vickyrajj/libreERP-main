@@ -2164,7 +2164,7 @@ app.controller('controller.ecommerce.account.orders', function($scope, $rootScop
   $scope.config = {
     views: views,
     url: '/api/ecommerce/order/',
-    searchField: 'status',
+    searchField: 'id',
     getParams: [{
       key: 'user',
       value: $scope.me.pk
