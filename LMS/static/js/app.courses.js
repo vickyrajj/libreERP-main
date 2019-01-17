@@ -395,10 +395,112 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
   $scope.announce = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.LMs.course.announcement.form.html',
-      size: 'md',
+      size: 'lg',
       backdrop: true,
       controller: function($scope, $uibModalInstance) {
-      
+
+        $scope.reset = function() {
+          $scope.form = {
+            typ: 'general'
+          }
+        }
+        $scope.reset();
+
+        $scope.userSearch = function(query) {
+          //search for the user
+          return $http.get('/api/HR/userSearch/?username__contains=' + query).
+          then(function(response) {
+            return response.data;
+          })
+        };
+
+        $scope.getUserName = function(user) {
+          if (typeof user == 'undefined') {
+            return;
+          }
+          return user.first_name + '  ' + user.last_name;
+        }
+
+        $scope.saveAnnouncement = function() {
+
+          if ($scope.form.typ == 'general') {
+            console.log('in general');
+            // $scope.form = {
+            //   typ: 'general'
+            // }
+            var toSend = {
+              typ : $scope.form.typ,
+              announcer: $scope.form.announcer.pk,
+              notification: $scope.notificationType,
+              txt: $scope.form.messageTxt,
+            }
+          } else if ($scope.form.typ == 'quiz') {
+            console.log('in onlinequiz');
+            // $scope.form = {
+            //   typ: 'quiz'
+            // }
+            var toSend = {
+              typ : $scope.form.typ,
+              announcer: $scope.form.announcer.pk,
+              notification: $scope.notificationType,
+              txt: $scope.form.messageTxt,
+              // paper: $scope.form.paper,
+              paperDueDate: $scope.paperDueDate,
+            }
+
+          } else if ($scope.form.typ == 'onlineclass') {
+            console.log('in onlineclass');
+            // $scope.form = {
+            //   typ: 'onlineclass'
+            // }
+            var toSend = {
+              typ : $scope.form.typ,
+              announcer: $scope.form.announcer.pk,
+              notification: $scope.notificationType,
+              txt: $scope.form.messageTxt,
+              meetingId: $scope.form.meetId,
+            }
+
+          } else if ($scope.form.typ == 'class') {
+            console.log('in offlineclass');
+            // $scope.form = {
+            //   typ: 'class'
+            // }
+            var toSend = {
+              typ : $scope.form.typ,
+              announcer: $scope.form.announcer.pk,
+              notification: $scope.notificationType,
+              txt: $scope.form.messageTxt,
+              time: $scope.form.classTime,
+              venue:$scope.form.classVenue,
+            }
+
+          } else {
+            console.log('in offlinequiz');
+            // $scope.form = {
+            //   typ: 'offlinequiz'
+            // }
+            var toSend = {
+              typ : $scope.form.typ,
+              announcer: $scope.form.announcer.pk,
+              notification: $scope.notificationType,
+              txt: $scope.form.messageTxt,
+              time: $scope.form.quizTime,
+              venue:$scope.form.quizVenue,
+            }
+          }
+          $http({
+            method: 'POST',
+            url: '/api/LMS/announcement/',
+            data: toSend,
+          }).
+          then(function(response) {
+            Flash.create('success', 'Saved Successfully')
+            $scope.reset();
+          })
+        }
+
+
       }, //controller ends
     })
   } //addnotesfunction ends

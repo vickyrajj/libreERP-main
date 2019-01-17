@@ -239,7 +239,7 @@ class CourseSerializer(serializers.ModelSerializer):
         c.save()
         return c
     def update(self , instance , validated_data):
-        for key in ['enrollmentStatus', 'user' , 'description' , 'title' , 'enrollments' , 'studyMaterials']:
+        for key in ['enrollmentStatus', 'description' , 'title' , 'enrollments' , 'studyMaterials','user']:
             try:
                 setattr(instance , key , validated_data[key])
             except:
@@ -334,6 +334,15 @@ class NotesSectionSerializer(serializers.ModelSerializer):
 
 class AnnouncementSerializer(serializers.ModelSerializer):
     # paper = PaperSerializer(many = False , read_only = True)
+    announcer = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = Announcement
-        fields = ('pk' , 'created' , 'announcer', 'notified', 'notification', 'typ', 'paper', 'paperDueDate', 'time', 'venue', 'txt' ,'meetingId')
+        fields = ('pk' , 'created' , 'announcer', 'notified', 'notification', 'typ',  'paperDueDate', 'time', 'venue', 'txt' ,'meetingId')
+    def create(self , validated_data):
+        p = Announcement(**validated_data)
+        announcer = User.objects.get(pk = self.context['request'].data['announcer'])
+        # paper = Paper.objects.get(pk = self.context['request'].data['paper'])
+        p.announcer = announcer
+        # p.paper = paper
+        p.save()
+        return p
