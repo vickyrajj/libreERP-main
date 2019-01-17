@@ -30,6 +30,8 @@ def getChannelDPPath(instance , filename ):
 def getSolutionVideoPath(instance , filename):
     return 'lms/solution/%s_%s' % (str(time()).replace('.', '_'), filename)
 
+def getNoteImagePath(instance , filename ):
+    return 'lms/noteImage/%s_%s' % (str(time()).replace('.', '_'), filename)
 
 
 
@@ -295,13 +297,39 @@ class BookCourseMap(models.Model):
         unique_together = ('book','course')
 
 class Note(models.Model):
-    title =  models.CharField(choices = TYP_CHOICES , max_length = 50 , null = True)
-    description = models.CharField(max_length = 20000 , null = False)
-    urlSuffix = models.CharField(choices = TYP_CHOICES , max_length = 100 , null = True)
-    image =  models.FileField(upload_to = getChannelDPPath , null = True)
+    title =  models.CharField(max_length = 100 , null = True)
+    description = models.TextField( null = False)
+    urlSuffix = models.CharField(max_length = 100 , null = True)
+    image =  models.FileField(upload_to = getNoteImagePath , null = True)
 
 class NotesSection(models.Model):
     note = models.ForeignKey(Note , null = True , related_name="note")
-    txt = models.CharField(max_length = 2000 , null = True)
+    txt = models.TextField( null = True)
     image = models.FileField(upload_to = getQAttachmentPath , null = True)
     mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)
+
+NOTIFICATION_TYPE = (
+    ('sms' , 'sma'),
+    ('email' , 'email'),
+    ('sms&email' , 'sms&email'),
+)
+ANNOUNCEMENT_TYP_CHOICES = (
+    ('general','general'),
+    ('quiz','quiz'),
+    ('online_class','online_class'),
+    ('class','class'),
+    ('offline_quiz','offline_quiz')
+)
+
+# class Announcement(models.Model):
+#     created = models.DateTimeField(auto_now_add = True)
+#     announcer = models.ForeignKey(User ,null = False , related_name ="announcements")
+#     notified = models.BooleanField(default = False)
+#     notification =  models.CharField(choices = NOTIFICATION_TYPE , max_length = 10 , null = True)
+#     typ = models.CharField(choices = ANNOUNCEMENT_TYP_CHOICES , max_length = 10 , null = True)
+#     paper = models.ForeignKey(Paper , null = True , related_name="paper")
+#     paperDueDate =  models.DateField(auto_now=True)
+#     time = models.DateTimeField(auto_now= True)
+#     venue =  models.CharField(max_length = 100 , null = True)
+#     txt =  models.TextField(null = True)
+#     # meetingId =

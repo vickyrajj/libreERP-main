@@ -293,7 +293,19 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = ('pk' , 'title' , 'description', 'urlSuffix', 'image' )
 
+class NoteLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ('pk' , 'title')
+
 class NotesSectionSerializer(serializers.ModelSerializer):
+    note = NoteLiteSerializer(many = False , read_only = True)
     class Meta:
         model = NotesSection
         fields = ('pk' , 'note' , 'txt', 'image', 'mode' )
+    def create(self , validated_data):
+        n = NotesSection(**validated_data)
+        note = Note.objects.get(pk = self.context['request'].data['note'])
+        n.note = note
+        n.save()
+        return n

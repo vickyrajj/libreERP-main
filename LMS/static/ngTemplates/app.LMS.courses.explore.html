@@ -102,15 +102,15 @@
     </div>
 
     <div class="row">
-      <div class="container-fluid" >
+      <div class="container-fluid">
         <h4 class="text-muted">Added Books</h4>
         <hr>
-        <div class="col-md-3"style="padding-bottom:10px;">
-          <button type="button" class="btn btn-primary" ng-click="addbook()">
+        <div class="col-md-3" style="padding-bottom:10px;">
+          <button type="button" class="btn btn-primary" ng-click="addBook()">
             Add Book <i class="fa fa-plus fa-fw"></i>
           </button>
         </div>
-        <div class="col-md-3 card"ng-repeat="b in bdata"style="width:100%;margin-bottom:10px;padding:5px;">
+        <div class="col-md-3 card" ng-repeat="b in bdata" style="width:100%;margin-bottom:10px;padding:5px;">
           {{b.book.title}}
         </div>
       </div>
@@ -149,7 +149,25 @@
       </div>
       <div class="row">
         <div class="container-fluid" ng-if="activeTab == 5">
-          <center><button type="button" class="btn btn-primary btn-md" ng-click="open()">Add Notes <i class="fa fa-plus"></i></button></center>
+          <center><button type="button" class="btn btn-primary btn-md" ng-click="addNotes()">Add Notes <i class="fa fa-plus"></i></button></center>
+        </div>
+        <div class="container-fluid" style="padding-top:15px;">
+          <div class="col-md-3" ng-repeat="n in noteData" style="margin-bottom:10px;">
+            <div class="container-fluid card">
+              <div ng-click="noteInfo($index)">
+                <h3>{{n.title}}</h3>
+                <hr>
+                <div class="container-fluid" style="overflow:hidden;height:158px;">
+                  <a href=""><h5>{{n.urlSuffix}}</h5></a>
+                  <p>{{n.description}}</p>
+                </div>
+              </div>
+              <div class="" ng-click="noteSection($index)" >
+                <i class="fa fa-plus-square pull-right" aria-hidden="true" style="cursor:pointer;"></i>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 

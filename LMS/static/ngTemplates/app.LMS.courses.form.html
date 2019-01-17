@@ -1,9 +1,7 @@
 <div class="container-fluid" ng-controller="home.LMS.courses.form">
-
-
   <div class="col-md-6">
-
-    <h2>Create a course</h2>
+    <h2 ng-if="mode == 'new'">Create a course</h2>
+    <h2 ng-if="mode == 'edit'">Edit this course</h2>
 
     <div class="form-group">
       <label>Title</label>
@@ -39,8 +37,11 @@
     <users-Field data="form.TAs" url="/api/HR/userSearch/" col="4" label="Teaching assistants"></users-Field>
     <user-field url="/api/HR/userSearch/" label = "Instructor" user="form.instructor"></user-field>
 
-    <button type="button" class="btn btn-primary" ng-click="save()">
+    <button type="button" class="btn btn-primary" ng-click="save()"ng-if="mode == 'new'">
       Save
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="save()" ng-if="mode == 'edit'">
+      Update
     </button>
   </div>
 </div>

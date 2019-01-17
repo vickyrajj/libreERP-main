@@ -362,3 +362,5 @@ class NotesSectionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = NotesSectionSerializer
     queryset = NotesSection.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['note']
