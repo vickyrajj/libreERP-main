@@ -61,7 +61,7 @@
                   <th scope="row">{{$index+1}}</th>
                   <td>{{sd.name}}</td>
                   <td><i class="fa {{currency}}"></i> {{sd.receivedAmount | number}}</td>
-                  <td><i class="fa {{currency}}"></i> {{sd.gstCollected | number}}</td>
+                  <td><i class="fa {{currency}}"></i> {{sd.receivedAmount==0?0:sd.gstCollected | number}}</td>
                 </tr>
               </tbody>
             </table>
