@@ -412,7 +412,7 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     p101_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
     p101_02 =Paragraph("<para fontSize=8>Part Number</para>",styles['Normal'])
     p101_03 =Paragraph("<para fontSize=8>Part Desc</para>",styles['Normal'])
-    p101_07 =Paragraph("<para fontSize=8>HS Code</para>",styles['Normal'])
+    p101_07 =Paragraph("<para fontSize=8>HSN Code</para>",styles['Normal'])
     p101_04 =Paragraph("<para fontSize=8>Qty</para>",styles['Normal'])
     p101_05 =Paragraph("<para fontSize=8>{0}</para>".format(priceTitle),styles['Normal'])
     p101_06 =Paragraph("<para fontSize=8>{0}</para>".format(amountTitle),styles['Normal'])
@@ -428,10 +428,8 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
         part_no = i.products.part_no
         desc = i.products.description_1
         hs = i.products.customs_no
-        if currencyTyp == 'INR':
-            price = i.landed_price * multNumber
-        else:
-            price = i.price * multNumber
+
+        price = i.landed_price
         qty = i.quantity1
         amnt = round((price * qty),2)
         grandTotal +=amnt
