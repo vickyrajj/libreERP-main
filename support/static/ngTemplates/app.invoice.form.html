@@ -1,0 +1,163 @@
+<div ng-controller="businessManagement.invoice.form">
+  <div class="container-fluid">
+  <h2>Create A Invoice</h2>
+  <div class="row" style="padding:10px">
+    <div class="col-md-12">
+      <div class="row" style="padding-top:15px">
+        <div class="col-md-5">
+          <label>Invoice No</label>
+          <input ng-model="form.invoiceNumber" type="text" class="form-control">
+        </div>
+        <div class="col-md-5">
+          <label>Invoice Date</label>
+          <input ng-model="form.qty" type="text" class="form-control">
+        </div>
+      </div>
+      <div class="row" style="padding-top:15px">
+        <div class="col-md-5">
+          <label>Customer PO Ref</label>
+          <input ng-model="form.poNumber" type="text" class="form-control">
+        </div>
+        <div class="col-md-5">
+          <label>Insurance</label>
+          <input ng-model="form.insuranceNumber" type="text" class="form-control">
+        </div>
+      </div>
+      <div class="row" style="padding-top:15px">
+        <div class="col-md-5">
+          <label>Transporter Name</label>
+          <input ng-model="form.transporter" type="text" class="form-control">
+        </div>
+        <div class="col-md-5">
+          <label>LR No</label>
+          <input ng-model="form.lrNo" type="text" class="form-control">
+        </div>
+      </div>
+      <div class="row" style="padding-top:15px">
+        <div class="col-md-5">
+          <label>Billing Details</label>
+        </div>
+        <div class="col-md-5">
+          <label>Shipping Details</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <label>Name</label>
+          <input ng-model="form.billName" type="text" class="form-control">
+        </div>
+        <div class="col-md-5">
+          <label>Name</label>
+          <input ng-model="form.shipName" type="text" class="form-control">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <label>Address</label>
+          <textarea rows="5" class="form-control form-control-line" ng-model="form.billAddress"></textarea>
+        </div>
+        <div class="col-md-5">
+          <label>Address</label>
+          <textarea rows="5" class="form-control form-control-line" ng-model="form.shipAddress"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <label>GSTIN</label>
+          <input ng-model="form.billGst" type="text" class="form-control">
+        </div>
+        <div class="col-md-5">
+          <label>GSTIN</label>
+            <input ng-model="form.shipGst" type="text" class="form-control">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-8">
+          <label>State</label>
+          <input ng-model="form.billState" type="text" class="form-control">
+        </div>
+        <div class="col-md-4">
+          <label>Code</label>
+          <input ng-model="form.billCode" type="text" class="form-control">
+        </div>
+        </div>
+        </div>
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-8">
+          <label>State</label>
+          <input ng-model="form.shipState" type="text" class="form-control">
+        </div>
+        <div class="col-md-4">
+          <label>Code</label>
+          <input ng-model="form.shipCode" type="text" class="form-control">
+        </div>
+        </div>
+        </div>
+      </div>
+      <div class="row"  style="padding-top:15px">
+        <div class="col-md-4">
+          <label><input type="checkbox" ng-model="form.isDetails" >  <span style="margin-left:10px;"> shipping Details Same As Billing </span></label>
+        </div>
+        <div class="col-md-6">
+          <label>Payment Terms</label>
+            <textarea rows="5" class="form-control form-control-line" ng-model="form.invoiceTerms"></textarea>
+        </div>
+      </div>
+      <div class="row" style="padding-top:15px">
+        <table class="invoiceTable" style=" width: 100%;">
+          <tbody>
+            <tr style="background-color: #eeeeee;height: 50px;">
+              <th>Si.No</th>
+              <th>Part No</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>HSN</th>
+              <th>Rate</th>
+              <th>Taxable Value</th>
+              <th>CGST %</th>
+              <th>CGST Amount</th>
+              <th>SGST %</th>
+              <th>SGST Amount</th>
+              <th>IGST %</th>
+              <th>IGST Amount</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+            <tr ng-repeat="v in products track by $index">
+              <td>{{$index + 1}}</td>
+                <td><input ng-model="v.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></td>
+              <td>{{v.description_1}}</td>
+              <td ><input type="number" step=1 class="form-control-pos" ng-model="v.qty" ng-init="v.qty=1"></td>
+              <td >{{v.customs_no}}</td>
+              <td ><input type="text"  class="form-control-pos" ng-model="v.price" ></td>
+              <td ><input type="text"  class="form-control-pos" ng-model="v.taxableprice" ></td>
+              <td >{{v.cgst}}</td>
+              <td >{{v.cgstVal}}</td>
+              <td >{{v.sgst}}</td>
+              <td >{{v.sgstVal}}</td>
+              <td >{{v.igst}}</td>
+              <td >{{v.igstVal}}</td>
+              <td >{{v.total}}</td>
+              <td>
+              <button type="button" class="btn btn-danger btn-sm" ng-click="delete($index)"> <i class="fa fa-trash"></i> </button>
+            </td>
+            </tr>
+            <tr >
+              <td><button style="background-color:white;border:none;" ng-click="addTableRow($index)" ><i class="fa fa-plus" style="cursor:pointer"></i></button></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-md-2" style="padding-top:25px">
+          <button type="button" class="btn btn-primary " ng-click="saveInvoice()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

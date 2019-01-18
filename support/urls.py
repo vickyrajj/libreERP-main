@@ -41,5 +41,7 @@ urlpatterns = [
     url(r'productTable/$' , ProjectProductAPIView.as_view() ),
     url(r'cancelMaterial/$' , CancelMaterialAPIView.as_view() ),
     url(r'deliveryChallan/$' , DeliveryChallanNoteAPIView.as_view() ),
+    url(r'invoice/$' , InvoiceAPIView.as_view() ),
+
     # url(r'stock/$' , StockAPIView.as_view() ),
 ]

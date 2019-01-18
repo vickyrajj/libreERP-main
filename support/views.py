@@ -1017,7 +1017,7 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
 
         data8=[[p77_01,p77_02]]
         pan =Paragraph("<para fontSize=8>AABCB6326Q</para>",styles['Normal'])
-        gst =Paragraph("<para fontSize=8>AABCB6326Q1Z6</para>",styles['Normal'])
+        gst =Paragraph("<para fontSize=8>29AABCB6326Q1Z6</para>",styles['Normal'])
         data8 +=[[pan,gst]]
         t9=Table(data8,6*[1.5*inch])
         t9.hAlign = 'LEFT'
@@ -2478,9 +2478,6 @@ def deliveryChallan(response , value , request):
     elements.append(t2)
     doc.build(elements)
 
-
-
-
 class DeliveryChallanNoteAPIView(APIView):
     def get(self , request , format = None):
         print request.GET,'aaaaaa'
@@ -2488,4 +2485,171 @@ class DeliveryChallanNoteAPIView(APIView):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
         deliveryChallan(response , value ,request)
+        return response
+
+def invoice(response  , request):
+    styles = getSampleStyleSheet()
+    style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc.request = request
+    elements = []
+    headerDetails = Paragraph("""
+    <para align='center'>
+    <font size ='8'>
+    <b> BRUDERER PRESSES INDIA PVT. LTD.</b><br/>
+    No.17P, Sadaramangala Industrial Area,Whitefield Road,<br/>
+    Kadugodi,Bangalore 560 048, KARNATAKA<br/>
+    Phone : 080-28411049<br/>
+    GSTIN NO : 29AABCB6326Q1Z6</font>
+    </para>
+    """ %(),styles['Normal'])
+    tdheader=[[headerDetails]]
+    headerTitle = Paragraph("""
+    <para align='center'>
+    <font size ='12'>
+    <b> Tax Invoice</b></font>
+    </para>
+    """ %(),styles['Normal'])
+    tdheader+=[[headerTitle]]
+    t2=Table(tdheader)
+    t2.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t2)
+    detail01 = Paragraph("""
+    <para>
+    Invoice No : 145236544
+    </para>
+    """ %(),styles['Normal'])
+    detail02 = Paragraph("""
+    <para >
+    Invoice Date : 145236544
+    </para>
+    """ %(),styles['Normal'])
+    tdata=[detail01],[detail02]
+    tdheader=[tdata]
+    t3=Table(tdheader)
+    t3.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t3)
+    detail11 = Paragraph("""
+    <para>
+    Customer PO Ref :
+    </para>
+    """ %(),styles['Normal'])
+    detail12 = Paragraph("""
+    <para >
+
+    </para>
+    """ %(),styles['Normal'])
+    detail13 = Paragraph("""
+    <para >
+    Insurance :
+    </para>
+    """ %(),styles['Normal'])
+    detail14 = Paragraph("""
+    <para >
+
+    </para>
+    """ %(),styles['Normal'])
+    t1data=[detail11],[detail12],[detail13],[detail14]
+    td1header=[t1data]
+    detail21 = Paragraph("""
+    <para>
+    Transporter Name :
+    </para>
+    """ %(),styles['Normal'])
+    detail22 = Paragraph("""
+    <para >
+
+    </para>
+    """ %(),styles['Normal'])
+    detail23 = Paragraph("""
+    <para >
+    LR No :
+    </para>
+    """ %(),styles['Normal'])
+    detail24 = Paragraph("""
+    <para >
+
+    </para>
+    """ %(),styles['Normal'])
+    t2data=[detail21],[detail22],[detail23],[detail24]
+    td1header+=[t2data]
+    t4=Table(td1header)
+    t4.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t4)
+    detail31 = Paragraph("""
+    <para align='center'>
+    Bill to Party
+    </para>
+    """ %(),styles['Normal'])
+    detail32 = Paragraph("""
+    <para align='center'>
+    Ship to Party
+    </para>
+    """ %(),styles['Normal'])
+    t2data=[detail31],[detail32]
+    td2header=[t2data]
+    t5=Table(td2header)
+    t5.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t5)
+    detail41 = Paragraph("""
+    <para>
+    Name :
+    </para>
+    """ %(),styles['Normal'])
+    detail42 = Paragraph("""
+    <para >
+
+    </para>
+    """ %(),styles['Normal'])
+    detail43 = Paragraph("""
+    <para >
+    Name :
+    </para>
+    """ %(),styles['Normal'])
+    detail44 = Paragraph("""
+    <para >
+
+    </para>
+    """ %(),styles['Normal'])
+    t4data=[detail41],[detail42],[detail43],[detail44]
+    td4header=[t4data]
+    t6=Table(td4header)
+    t6.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t6)
+    detail51 = Paragraph("""
+    <para>
+    Address : <br/>
+    </para>
+    """ %(),styles['Normal'])
+    detail52 = Paragraph("""
+    <para>
+    Address : <br/>
+    </para>
+    """ %(),styles['Normal'])
+    t5data=[detail51],[detail52]
+    td5header=[t5data]
+    detail61 = Paragraph("""
+    <para>
+    GSTIN :
+    </para>
+    """ %(),styles['Normal'])
+    detail62 = Paragraph("""
+    <para>
+    GSTIN :
+    </para>
+    """ %(),styles['Normal'])
+    t6data=[detail61],[detail62]
+    td5header+=[t6data]
+    t7=Table(td5header)
+    t7.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t7)
+    doc.build(elements)
+
+class InvoiceAPIView(APIView):
+    def get(self , request , format = None):
+        # print request.GET,'aaaaaa'
+        # value = request.GET['value']
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
+        invoice(response  ,request)
         return response

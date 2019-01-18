@@ -1578,6 +1578,67 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
   }
 
+  $scope.invoiceAdd = function(){
+
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.projects.invoice.modal.form.html',
+      size: 'xl',
+      backdrop: false,
+      resolve: {
+        data: function() {
+          return $scope.form;
+        }
+      },
+      controller: function($scope,data, $uibModalInstance) {
+        $scope.form = data
+        console.log(  $scope.form,'aaaaaaaa');
+        $scope.$watch('form.isDetails', function(newValue, oldValue) {
+          if(newValue==true){
+            $scope.form.shipName = $scope.form.billName
+            $scope.form.shipAddress = $scope.form.billAddress
+            $scope.form.shipGst = $scope.form.billGst
+            $scope.form.shipState = $scope.form.billState
+            $scope.form.shipCode = $scope.form.billCode
+          }
+          else{
+            $scope.form.shipName =''
+            $scope.form.shipAddress = ''
+            $scope.form.shipGst = ''
+            $scope.form.shipState = ''
+            $scope.form.shipCode =''
+          }
+        })
+        $scope.products = []
+        $scope.addTableRow = function(indx) {
+          $scope.products.push({
+            part_no: '',
+            description_1: '',
+            qty:0,
+            customs_no:'',
+            price: 0,
+            taxableprice:0,
+            cgst : 0,
+            cgstVal:0,
+            sgst:0,
+            sgstVal:0,
+            igst:0,
+            igstVal:0,
+            total:0
+          });
+        }
+        $scope.close=function(){
+          $uibModalInstance.dismiss();
+        }
+      }, //----controller ends
+    }).result.then(function(f) {
+      $scope.fetchData();
+    }, function(f) {
+      if (typeof f == 'object') {
+        $scope.form.service = f
+      }
+    });
+  }
+
   //   $uibModal.open({
   //     templateUrl: '/static/ngTemplates/app.projects.send.archieve.modal.html',
   //     size: 'lg',
@@ -1888,10 +1949,9 @@ app.controller("businessManagement.projects.junk.explore", function($scope, $sta
       }
     })
   }
-
-
-
   $scope.fetchData()
   $scope.fetchMaterial()
+
+
 
 })

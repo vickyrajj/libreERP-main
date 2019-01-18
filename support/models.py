@@ -129,6 +129,7 @@ class Projects(models.Model):
 
 
 class BoM(models.Model):
+    created = models.DateTimeField(auto_now_add  = True )
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User , related_name='usersBoM' , null = False)
     project = models.ForeignKey(Projects , null = True)
@@ -144,6 +145,7 @@ class BoM(models.Model):
     customs_no = models.PositiveIntegerField(null=True , default=0)
 
 class Inventory(models.Model):
+    created = models.DateTimeField(auto_now_add  = True )
     created = models.DateTimeField(auto_now_add=True)
     project =  models.ForeignKey(Projects , null = True)
     product = models.ForeignKey(Products , null = True)
@@ -186,3 +188,39 @@ class ProjectStockSummary(models.Model):
     value = models.FloatField(null = True,default=0)
     title = models.CharField(max_length = 100 , null = True)
     comm_nr =  models.CharField(max_length = 100 , null = True)
+
+class Invoice(models.Model):
+    invoiceNumber = models.CharField( max_length = 20 , null=True,blank=True)
+    invoiceDate = models.DateField(null = True)
+    poNumber =  models.CharField( max_length = 20 , null=True,blank=True)
+    insuranceNumber =  models.CharField( max_length = 20 , null=True,blank=True)
+    transporter =  models.CharField( max_length = 50 , null=True,blank=True)
+    lrNo =  models.CharField( max_length = 50 , null=True,blank=True)
+    billName = models.CharField( max_length = 50 , null=True,blank=True)
+    shipName = models.CharField( max_length = 50 , null=True,blank=True)
+    billAddress = models.CharField( max_length = 200 , null=True,blank=True)
+    shipAddress = models.CharField( max_length = 200 , null=True,blank=True)
+    billGst = models.CharField( max_length = 50 , null=True,blank=True)
+    shipGst = models.CharField( max_length = 50 , null=True,blank=True)
+    billState = models.CharField( max_length = 50 , null=True,blank=True)
+    shipState = models.CharField( max_length = 50 , null=True,blank=True)
+    billCode =  models.CharField( max_length = 20 , null=True,blank=True)
+    shipCode =  models.CharField( max_length = 20 , null=True,blank=True)
+    isDetails = models.BooleanField(default = False)
+    invoiceTerms = models.CharField( max_length = 200 , null=True,blank=True)
+    project = models.ForeignKey(Projects , null = True)
+
+class InvoiceQty(models.Model):
+    project =  models.ForeignKey(Projects , null = True)
+    product = models.ForeignKey(Products , null = True)
+    invoice = models.ForeignKey(Invoice , null = True)
+    customs_no = models.CharField( max_length = 20 , null=True,blank=True)
+    price = models.FloatField(null = True,default=0)
+    taxableprice =  models.FloatField(null = True,default=0)
+    cgst = models.FloatField(null = True,default=0)
+    cgstVal = models.FloatField(null = True,default=0)
+    sgst = models.FloatField(null = True,default=0)
+    sgstVal = models.FloatField(null = True,default=0)
+    igst = models.FloatField(null = True,default=0)
+    igstVal = models.FloatField(null = True,default=0)
+    total = models.FloatField(null = True,default=0)

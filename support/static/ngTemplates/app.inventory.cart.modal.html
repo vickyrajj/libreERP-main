@@ -29,7 +29,7 @@
         <tr ng-repeat="v in productsOrdered track by $index">
 
           <td style="background-color:{{v.prodQty<=v.total_quantity?'':'#d94738'}}">{{$index + 1}}</td>
-            <td><input ng-model="v.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></div></td>
+            <td><input ng-model="v.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></td>
           <!-- <td>{{v.part_no}}</td> -->
           <td>{{v.description_1}}</td>
           <td ><input type="number" step=1 class="form-control-pos" ng-model="v.prodQty" ng-init="v.prodQty=1"></td>

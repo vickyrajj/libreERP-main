@@ -152,6 +152,12 @@ app.config(function($stateProvider) {
       controller: 'businessManagement.vendor'
     })
 
+    .state('home.invoice', {
+      url: "/invoice",
+      templateUrl: '/static/ngTemplates/app.invoice.html',
+      controller: 'businessManagement.invoice'
+    })
+
     // .state('home.settings', {
     //   url: "/settings",
     //   views: {

@@ -1907,9 +1907,12 @@
                     </div>
                   </div><br>
                   <div class="row" ng-if="form.quoteRefNumber.length>0||form.projects.length>0||form.data.length>0">
-                    <div class="col-md-12 text-center">
+                    <!-- <div class="col-md-12 text-center">
                       <span ><a class="btn btn-primary" target="_blank" href="/api/support/quotation/?project={{form.pk}}&exRate={{form.exRate}}&typ=Invoice" style="min-width:50px"><i class="fa fa-download"></i>
                           Download Invoice </a> </span>
+                    </div> -->
+                    <div class="col-md-12">
+                      <button type="button" class="btn btn-primary"  ng-click="invoiceAdd()"> <i class="fa fa-plus"></i> Invoice </button>
                     </div>
                   </div>
                   <div class="row">
