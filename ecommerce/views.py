@@ -588,6 +588,8 @@ class CreateOrderAPI(APIView):
                     productName = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' + str(desc)
                     value.append({ "productName" : productName,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
+            shippingCharges = round(orderObj.shippingCharges,2)
+            grandTotal = grandTotal + shippingCharges
             grandTotal=round(grandTotal, 2)
             try:
                 isStoreGlobal = appSettingsField.objects.filter(name='isStoreGlobal')[0].flag
@@ -605,6 +607,14 @@ class CreateOrderAPI(APIView):
                 gstValue = appSettingsField.objects.filter(name='cstNo')[0].value
             except:
                 gstValue = ''
+            try:
+                currencyTyp = appSettingsField.objects.filter(name='currencySymbol')[0].value
+                if currencyTyp == 'fa-usd':
+                    currencyVal = 'USD'
+                else:
+                    currencyVal = 'INR'
+            except:
+                currencyVal = '(USD)'
             if orderObj.user.email and orderObj.paymentMode == 'COD':
                 ctx = {
                     'heading' : "Invoice Details",
@@ -623,7 +633,9 @@ class CreateOrderAPI(APIView):
                     'twitterUrl' : twtLink,
                     'isStoreGlobal':isStoreGlobal,
                     'companyAddress':companyAddress,
-                    'gstValue':gstValue
+                    'gstValue':gstValue,
+                    'currencyVal':currencyVal,
+                    'shippingCharges':shippingCharges
                 }
                 email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
                 email_subject = "Order Details"

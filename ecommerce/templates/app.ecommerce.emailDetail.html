@@ -189,7 +189,7 @@
     }
 
     p {
-      color: #555;
+      color: #000;
       font-family: Helvetica, Arial, sans-serif;
       font-size: 16px;
       line-height: 160%;
@@ -207,13 +207,13 @@
 
 <body>
   <!-- Wrapper/Container Table: Use a wrapper table to control the width and the background color consistently of your email. Use this approach instead of setting attributes on the body tag. -->
-  <table cellpadding="0" cellspacing="0" border="0" align="center" width="600" class="container">
+  <table cellpadding="0" cellspacing="10" border="0" align="center" width="700" class="container">
     <tr>
       <td class='movableContentContainer bgItem'>
-          <table cellpadding="0" cellspacing="0" border="0" align="left" width="600" class="container">
+          <table cellpadding="0" cellspacing="0" border="0" align="left" width="700" class="container">
             <tr>
               <td width="400" align="left">
-                    <p>Dear, <strong>{{recieverName}}</strong></p>
+                    <p style="font-size:18px;" >Dear, <strong>{{recieverName}}</strong></p>
                     <p>Thank you for shopping</p>
               </td>
               <td width="400" align="right">
@@ -221,39 +221,39 @@
               </td>
             </tr>
           </table>
-          <table cellpadding="0" cellspacing="0" border="0" align="left" width="600" class="container">
+          <table cellpadding="0" cellspacing="0" border="0" align="left" width="700" class="container">
             <tr>
-              <td width="500" align="left" style="background-color:rgb(189, 211, 244);padding:10px;">
+              <td width="500" align="left" style="background-color:#fff;padding:10px; color:#000; border:3px solid #9cc0ff; border-left:20px solid #9cc0ff;">
                     <p><strong> Your Billing Address </strong> </p>
                     {{recieverName}} <br/>
                     {{data.landMark}} <br/>
                     {{data.street}} <br/>
                     {{data.city}} {{data.state}} - {{data.pincode}} <br/>
-                    India <br/>
+                    {{data.country}} <br/>
                     {{data.mobileNo}}
               </td>
               <td width="100" >
               </td>
-              <td width="500" align="left" style="background-color:rgb(189, 211, 244);padding:10px;">
+              <td width="500" align="left" style="background-color:#fff;padding:10px; color:#000; border:3px solid #9cc0ff; border-left:20px solid #9cc0ff;">
                     <p><strong> Your Shipping Address </strong> </p>
                      {{recieverName}} <br/>
                      {{data.landMark}} <br/>
                      {{data.street}} <br/>
                      {{data.city}} {{data.state}} - {{data.pincode}} <br/>
-                     India <br/>
+                     {{data.country}} <br/>
                      {{data.mobileNo}}
               </td>
             </tr>
           </table>
-          <table cellpadding="2" cellspacing="0" border="0" align="left" width="600"  class="container" style="margin-top:20px">
+          <table cellpadding="2" cellspacing="0" border="0" align="left" width="700"  class="container" style="margin-top:20px">
             <tr height="50">
               <th width="400" align="left">
-                <p> <strong> Order Details </strong> </p>
+                <p style="font-size:18px; color:#000"> <strong> Order Details </strong> </p>
               </th>
             </tr>
           </table>
-            <table cellpadding="2" cellspacing="0" border="0" align="left" width="600"  class="container" style="margin-top:20px">
-            <tr id="tableHead" height="50">
+            <table cellpadding="2" cellspacing="0" border="0" align="left" width="700"  class="container" style="margin-top:20px; margin-bottom:20px">
+            <tr style="background-color:#9cc0ff; color:#000" height="50">
               <th width="400" align="center">
                 Product
               </th>
@@ -273,27 +273,27 @@
               </th>
             </tr>
             {% for u in  value %}
-            <tr height="50" style="border:1px solid rgb(189, 211, 244);"  border="1">
-              <td width="400" align="center" style="border:1px solid rgb(189, 211, 244);">
+            <tr height="50" style="border:1px solid #c6daff; color:#000"  border="1">
+              <td width="400" align="center" style="border:1px solid #9cc0ff;">
                 {{u.productName}}
               </td>
-              <td width="100" align="center" style="border:1px solid rgb(189, 211, 244);">
+              <td width="100" align="center" style="border:1px solid #9cc0ff;">
                 {{u.qty}}
               </td>
-              <td width="100" align="center" style="border:1px solid rgb(189, 211, 244);">
+              <td width="100" align="center" style="border:1px solid #9cc0ff;">
                 {{u.price}}
               </td>
               {% if isStoreGlobal == False %}
-              <td width="100" align="center" style="border:1px solid rgb(189, 211, 244);">
+              <td width="100" align="center" style="border:1px solid #9cc0ff;">
                 {{u.gst}}
               </td>
               {% endif %}
-              <td width="100" align="center" style="border:1px solid rgb(189, 211, 244);">
+              <td width="100" align="center" style="border:1px solid #9cc0ff;">
                 {{u.amount}}
               </td>
             </tr>
             {% endfor %}
-            <tr height="50" style="border:1px solid rgb(189, 211, 244);">
+            <tr height="50" style="border:1px solid #c6daff;  color:#000">
               <td width="100" align="left">
 
               </td>
@@ -306,63 +306,37 @@
               </td>
               {% endif %}
               <td width="100" align="center">
-                 Total:
+                <b> Total: </b>
               </td>
               <td width="100" align="center">
-                 {{total}}
-              </td>
-            </tr>
-            <tr height="50" style="border:1px solid rgb(189, 211, 244);">
-              <td width="100" align="left">
-
-              </td>
-              {% if isStoreGlobal == False %}
-              <td width="100" align="left">
-
-              </td>
-              {% endif %}
-              <td width="200" align="left">
-
-                Coupon Applied:
-              </td>
-              <td width="100" align="center">
-                {{data.promoCode}}
-              </td>
-              <td width="100" align="center">
-                {{promoAmount}}%
-              </td>
-            </tr>
-            <tr height="50"style="border:1px solid rgb(189, 211, 244);">
-              <td width="100" align="left">
-
-              </td>
-              <td width="100" align="left">
-
-              </td>
-              {% if isStoreGlobal == False %}
-              <td width="100" align="left">
-
-              </td>
-              {% endif %}
-              <td width="100" align="center">
-                 Grand Total:
-              </td>
-              <td width="100" align="center">
-                 {{grandTotal}}
+                <b> {{currencyVal}} {{total}}  </b>
               </td>
             </tr>
           </table>
-          <table cellpadding="2" cellspacing="0" border="0" align="left" width="600"  class="container" style="margin-top:20px">
-            <tr height="50">
+
+          <table width="700" style="margin-top:20px" >
+            <tr><td width="100" style="border:1px solid #9cc0ff;border-left:16px solid #9cc0ff;color:rgb(0,0,0);font-family:sans-serif;font-size:16px;line-height:20px;padding:16px 16px;" valign="top"> Coupon Applied :  {{data.promoCode}} {{promoAmount}}% <br></td></tr>
+          </table>
+
+          <table width="700" style="margin-top:15px">
+            <tr><td width="100" style="border:1px solid #9cc0ff;border-left:16px solid #9cc0ff;color:rgb(0,0,0);font-family:sans-serif;font-size:16px;line-height:20px;padding:16px 16px;" valign="top"> Shipping Charges: {{currencyVal}} {{shippingCharges}}</span> <br></td></tr>
+          </table>
+
+          <table width="700" style="margin-top:15px">
+            <tr><td width="100" style="border:1px solid #9cc0ff;border-left:16px solid #9cc0ff;color:rgb(0,0,0);font-family:sans-serif;font-size:16px;line-height:20px;padding:16px 16px;" valign="top"> Grand Total: {{currencyVal}} {{grandTotal}}<br></td></tr>
+          </table>
+
+          <table cellpadding="2" cellspacing="0" border="0" align="left" width="700"  class="container" style="margin-top:20px;  color:#000">
+            <tr height="50" >
               <th align="left">
-                <p><Strong>Payment Mode:</strong> {{data.paymentMode}}</p>
+                <p style="color:#000"><Strong>Payment Mode:</strong> {{data.paymentMode}}</p>
                   <hr>
-                  <p>Kind Regards,</p>
-                  <h3>Team {{sendersAddress}}</h3>
+                  <p style="color:#000">Kind Regards,</p>
+                  <h3 style="color:#000">Team {{sendersAddress}}</h3>
                   {% if isStoreGlobal == False %}
-                  <p>GSTIN: {{gstValue}}</p>
+                  <p style="color:#000">GSTIN: {{gstValue}}</p>
                   {% endif %}
-                  <p> {{companyAddress}} </p>
+                  <p style="color:#000"> {{companyAddress}} </p>
               </th>
             </tr>
           </table>
