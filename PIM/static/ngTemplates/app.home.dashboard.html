@@ -1,67 +1,71 @@
 <div class="" style="min-height:93vh;position:relative;background-color:#f8f8f8;">
 
   <breadcrumb></breadcrumb>
-  <div ng-if="!isAgent&&isAdminLoaded" class="container-fluid bal_fadding_In" style="color:#2B2B2B">
+  <div ng-if="!isAgent&&isAdminLoaded" class="container-fluid bal_fadding_In" style="color:#2B2B2B; margin-bottom:15px;">
 
     <div class="row">
       <div class="col-md-12">
         <h3 style="margin-top:0px">Activity <span>Past 7 Days</span></h3>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-6 ">
-        <div class="container-fluid" style="background-color:#fff;">
-          <div class="row" style="padding:25px">
-            <div class="row">
-              <div class="col-md-6">
-                <h4># Of Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
-              </div>
-              <div class="col-md-6 text-right">
-                <h4><i class="fa fa-arrow-{{changeInChat.increase?'up':'down'}}" style="color:{{changeInChat.increase? 'green':'red'}}"></i> &nbsp;{{changeInChat.percentage.toFixed(2)}}%</h4>
-              </div>
+
+
+    <div class="row container-fluid" style="margin-top:20px;">
+      <div class="col-md-3">
+        <div style="background-color:#1AB394; color:#fff; border-radius:5px;padding:15px 20px; ">
+          <div class="row">
+            <div class="col-xs-5">
+              <i class="fa fa-clock-o fa-5x" aria-hidden="true"></i> <br>
+              <i class="fa fa-arrow-{{changeInAvgChatDur.increase?'up':'down'}}"></i> {{changeInAvgChatDur.percentage.toFixed(2)}}%
             </div>
-            <div class="row">
-              <div class="col-md-12">
-                <h3>{{totalChats}}</h3>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <!-- <canvas id="bar" class="chart chart-bar" chart-data="barData" chart-labels="barlabels" chart-series="series" chart-colors="barColours" chart-options="sharesOptions">
-                </canvas> -->
-                <canvas id="line" class="chart chart-line" chart-data="noOfChatData"
-                    chart-labels="noOfChatLabels" chart-options="noOfChatOptions"
-                    chart-dataset-override="datasetOverride">
-                </canvas>
-              </div>
+            <div class="col-xs-7 text-right">
+              <p>Average Chat Duration </p>
+              <h2 style="margin:10px 0px"> {{avgChatDuration.toFixed(2)}} min</h2>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 ">
-        <div class="container-fluid" style="background-color:#fff;">
-          <div class="row" style="padding:25px">
-            <div class="row">
-              <div class="col-md-12">
-                <h4>Agent Leaderboard &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
-              </div>
-            </div>
-            <div class="row col-md-12">
-              <table class="table" style="font-size:18px">
-                <thead>
-                  <tr style="color:#43c8b0">
-                    <th style="border: 0;">Name</th>
-                    <th style="border: 0;"># Of Chats</th>
-                  </tr>
-                </thead>
-                <tbody>
 
-                  <tr ng-repeat="alb in agentLeaderBoard" ng-if="alb.agentPk != none">
-                    <td style="border: 0;">{{alb.agentPk | getName}}</td>
-                    <td style="border: 0;">{{alb.noOfChats}}</td>
-                  </tr>
-                </tbody>
-              </table>
+      <div class="col-md-3">
+        <div style="background-color:#23c6c8; color:#fff; border-radius:5px;padding:15px 20px; ">
+          <div class="row">
+            <div class="col-xs-5">
+              <i class="fa fa-envelope-o fa-5x" aria-hidden="true"></i> <br>
+              <i class="fa fa-arrow-{{changeInChat.increase?'up':'down'}}"></i> {{changeInChat.percentage.toFixed(2)}}%
+            </div>
+            <div class="col-xs-7 text-right">
+              <p>Total Conversations </p>
+              <h2 style="margin:10px 0px"> {{totalChats}} </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div style="background-color:#F8AC59; color:#fff; border-radius:5px;padding:15px 20px; ">
+          <div class="row">
+            <div class="col-xs-5">
+              <i class="fa fa-star-o fa-5x" aria-hidden="true"></i> <br>
+              <i class="fa fa-arrow-{{changeInAverageRating.increase?'up':'down'}}"></i> {{changeInAverageRating.percentage.toFixed(2)}}%
+            </div>
+            <div class="col-xs-7 text-right">
+              <p>Average Ratings </p>
+              <h2 style="margin:10px 0px"> {{avgRatingAll.toFixed(2)}} </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div style="background-color:#ED5565; color:#fff; border-radius:5px;padding:15px 20px; ">
+          <div class="row">
+            <div class="col-xs-5">
+              <i class="fa fa-reply-all fa-5x" aria-hidden="true"></i> <br>
+              <i class="fa fa-arrow-{{changeInRespTimeAvg.increase?'up':'down' }}"></i> {{changeInRespTimeAvg.percentage}}%
+            </div>
+            <div class="col-xs-7 text-right">
+              <p>Average Response Time </p>
+              <h2 style="margin:10px 0px"> {{avgRespTimeAll.toFixed(2)}} min </h2>
             </div>
           </div>
         </div>
@@ -69,107 +73,155 @@
     </div>
 
     <div class="row container-fluid" style="margin-top:20px;">
-      <div class="col-md-4">
-        <div class="container-fluid" style="background-color:#fff;box-shadow:0px 1px .5px var(--themeMain)">
-              <div class="row" style="background-color:#f6f6f6;padding:5px 10px;font-size:15px">
-                <p style="display:inline-block"># Of Missed Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></p>
-                <p style="display:inline-block;float:right"><i class="fa fa-arrow-{{changeInMissedChat.increase?'up':'down'}}" style="color:{{changeInMissedChat.increase? 'green':'red'}}"></i> &nbsp;{{changeInMissedChat.percentage.toFixed(2)}}%</p>
-              </div>
-
-              <div class="col-md-12" style="text-align:center;font-size:23px;font-weight:400;opacity:0.8">
-                <p>{{missedChats}}</p>
-              </div>
-        </div>
-      </div>
-
-
-      <div class="col-md-4">
-        <div class="container-fluid" style="background-color:#fff;box-shadow:0px 1px .5px var(--themeMain)">
-            <div class="row" style="background-color:#f6f6f6;padding:5px 10px;font-size:15px">
-                <p style="display:inline-block">Average Chat Duration &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></p>
-                <p style="display:inline-block;float:right"><i class="fa fa-arrow-{{changeInAvgChatDur.increase?'up':'down'}}" style="color:{{changeInAvgChatDur.increase? 'green':'red'}}"></i> &nbsp;{{changeInAvgChatDur.percentage.toFixed(2)}}%</p>
-            </div>
-            <div class="col-md-12" style="text-align:center;font-size:23px;font-weight:400;opacity:0.8">
-              <p>{{avgChatDuration.toFixed(2)}} Min</p>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="container-fluid" style="background-color:#fff;box-shadow:0px 1px .5px var(--themeMain)">
-          <div class="row" style="background-color:#f6f6f6;padding:5px 10px;font-size:15px">
-            <p style="display:inline-block">Average Rating &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></p>
-            <!-- <p style="display:inline-block;float:right"><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;2.94%</p> -->
-          <p style="display:inline-block;float:right"><i class="fa fa-arrow-{{changeInAverageRating.increase?'up':'down'}}" style="color:{{changeInAverageRating.increase? 'green':'red'}}"></i> &nbsp;{{changeInAverageRating.percentage.toFixed(2)}}%</p>
+      <div class="col-md-6 ">
+        <div class="container-fluid" style="background-color:#fff;border: 1px solid #eee;border-radius: 6px">
+          <div class="row" style="padding-top:15px">
+            <p class="text-center" style="color:#99abb4; font-size:18px; font-weight:400">Missed Chats Vs Handled Chats</p>
           </div>
-          <div class="col-md-12" style="text-align:center;font-size:23px;font-weight:400;opacity:0.8">
-            <p>{{avgRatingAll.toFixed(2)}}</p>
+          <div class="row" style="padding:25px">
+            <div class="col-md-12">
+              <canvas id="line" class="chart chart-line" chart-data="noOfChatData" chart-labels="noOfChatLabels" chart-options="noOfChatOptions" chart-series="series" chart-dataset-override="datasetOverride">
+                </canvas>
+            </div>
           </div>
         </div>
       </div>
+      <div class="col-md-6">
+        <div class="container-fluid" style="background-color:#fff;border: 1px solid #eee;border-radius: 6px; padding:20px">
+          <div class="row">
+            <div class="col-xs-4">
+              <p style="font-weight:400;font-size:18px;color:#99abb4"> Name</p>
+            </div>
+            <div class="col-xs-2">
+              <p style="font-weight:400;font-size:18px;color:#99abb4">ART (mins)</p>
+            </div>
+            <div class="col-xs-2">
+              <p style="font-weight:400;font-size:18px;color:#99abb4">AFRT (mins)</p>
+            </div>
+            <div class="col-xs-2">
+              <p style="font-weight:400;font-size:18px;color:#99abb4">Chats</p>
+            </div>
+            <div class="col-xs-2">
+              <p style="font-weight:400;font-size:18px;color:#99abb4"> Rating</p>
+            </div>
+          </div>
+          <hr>
+          <div ng-repeat="alb in agentLeaderBoard" class="row" style="margin-bottom:5px;">
+            <div class="col-xs-1">
+              <img ng-src="{{alb.agentPk | getDP}}" class="img img-circle" style="width:25px;height:25px;" alt="">
+            </div>
+            <div class="col-xs-3">
+              <p style="font-weight:400;color:#99abb4"> {{alb.agentPk | getName}}</p>
+            </div>
+            <div class="col-xs-2">
+              <p style="font-weight:400;color:#99abb4">{{alb.respTimeAvg.toFixed(2)}} </p>
+            </div>
+            <div class="col-xs-2">
+              <p style="font-weight:400;color:#99abb4">{{alb.firstResTimeAvg.toFixed(2)}}</p>
+            </div>
+            <div class="col-xs-2">
+              <p style="font-weight:400;color:#99abb4">{{alb.noOfChats}} </p>
+            </div>
+            <div class="col-xs-2">
+              <p style="font-weight:400;color:#99abb4">{{alb.ratingAvg.toFixed(2)}}</p>
+            </div>
+          </div>
+        </div>
 
-
+      </div>
     </div>
 
+
+
+    <div class="row container-fluid" style="margin-top:20px;">
+      <div class="col-md-6">
+        <div class="row">
+
+          <div class="col-md-6">
+            <div style="background-color:#3B3BB1; color:#fff; border-radius:5px;padding:15px 20px; ">
+              <div class="row">
+                <div class="col-xs-5">
+                  <img src="static/images/missed.png" style="height:70px ; width:70px" alt=""> <br>
+
+                  <!-- <i class="fa fa-reply-all fa-5x" aria-hidden="true"></i> <br> -->
+                  <i class="fa fa-arrow-{{changeInMissedChat.increase?'up':'down' }}"></i> {{changeInMissedChat.percentage}}%
+                </div>
+                <div class="col-xs-7 text-right">
+                  <p>Missed Chats </p>
+                  <h2 style="margin:10px 0px"> {{missedChats}} </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div style="background-color:#8EB11D; color:#fff; border-radius:5px;padding:15px 20px; ">
+              <div class="row">
+                <div class="col-xs-5">
+                  <i class="fa fa-clock-o fa-5x" aria-hidden="true"></i> <br>
+                  <i class="fa fa-arrow-{{changeInFrtAvg.increase?'up':'down' }}"></i> {{changeInFrtAvg.percentage}}%
+                </div>
+                <div class="col-xs-7 text-right">
+                  <p>First Response Time </p>
+                  <h2 style="margin:10px 0px"> {{firstResTimeAvgAll.toFixed(2)}} min </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="row" style="margin-top: 15px">
+          <div class="col-md-4">
+            <div style="background-color:#AC5AD1; color:#fff; border-radius:5px;padding:20px 25px; margin-bottom:15px; ">
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-phone fa-3x" aria-hidden="true"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <h2 style="margin:0px"> {{totalAudioCalls}} </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div style="background-color:#AC5AD1; color:#fff; border-radius:5px;padding:20px 25px; margin-bottom:15px; ">
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <h2 style="margin:0px"> {{totalVideoCalls}} </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div style="background-color:#AC5AD1; color:#fff; border-radius:5px;padding:20px 25px; margin-bottom:15px;">
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-commenting-o fa-3x" aria-hidden="true"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <h2 style="margin:0px"> {{totalChatMessage}} </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
     <!-- <div class="row">
       <div class="col-md-12">
         <h3>Satisfaction <span>Past 7 Days</span></h3>
       </div>
     </div> -->
-    <div class="">
-      <div class=" col-md-6">
-        <div class="col-md-12" style="background-color:#fff;margin-top:20px;box-shadow:0px 1px .5px var(--themeMain)">
-          <div class="row" style="background-color:#f6f6f6;padding:5px 10px;font-size:15px">
-            <p style="display:inline-block">Average Response Time(ART) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></p>
-            <p style="display:inline-block;float:right"><i class="fa fa-arrow-{{changeInRespTimeAvg.increase?'up':'down' }}" style="color:{{changeInRespTimeAvg.increase?'#bcd46e':'#c43f3f'}} "></i> &nbsp;{{changeInRespTimeAvg.percentage}}%</p>
-          </div>
-            <div class="col-md-12" style="text-align:center;font-size:23px;font-weight:400;opacity:0.8">
-            <p>{{avgRespTimeAll.toFixed(2)}} Min</p>
-          </div>
-        </div>
-        <div class="col-md-12" style="background-color:#fff;margin-top:20px;box-shadow:0px 1px .5px var(--themeMain)">
-            <div class="row" style="background-color:#f6f6f6;padding:5px 10px;font-size:15px">
-              <p style="display:inline-block">Average First Response Time(AFRT) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></p>
-              <p style="display:inline-block;float:right"><i class="fa fa-arrow-{{changeInFrtAvg.increase?'up':'down' }}" style="color:{{changeInFrtAvg.increase?'#bcd46e':'#c43f3f'}} "></i> &nbsp;{{changeInFrtAvg.percentage}}%</p>
-
-            </div>
-            <div class="col-md-12" style="text-align:center;font-size:23px;font-weight:400;opacity:0.8">
-            <p>{{firstResTimeAvgAll.toFixed(2)}} Min</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="container-fluid" style="background-color:#fff;margin-top:20px;box-shadow:0px 1px .5px var(--themeMain)">
-
-              <div class="col-md-12">
-                <h4>Agent Leaderboard &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
-              </div>
-
-            <div class="row col-md-12">
-              <table class="table" style="font-size:18px">
-                <thead>
-                  <tr style="color:#43c8b0">
-                    <th style="border: 0;">Name</th>
-                    <th style="border: 0;">ART (mins)</th>
-                    <th style="border: 0;">AFRT (mins)</th>
-                    <th style="border: 0;">Rating</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="alb in agentLeaderBoard">
-                    <td style="border: 0;">{{alb.agentPk | getName }}</td>
-                    <td style="border: 0;">{{alb.respTimeAvg.toFixed(2)}}</td>
-                    <td style="border: 0;">{{alb.firstResTimeAvg.toFixed(2)}}</td>
-                    <td style="border: 0;">{{alb.ratingAvg.toFixed(2)}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-        </div>
-      </div>
-    </div>
-</div>
+  </div>
 
   <div ng-if="isAgent&&isAgentLoaded" class="container-fluid bal_fadding_In" style="color:#525459">
     <div class="row">
@@ -182,26 +234,24 @@
         <div class="container-fluid" style="background-color:#fff;">
           <div class="row" style="padding:25px">
             <!-- <div class="row"> -->
-              <div class="col-sm-9">
-                <h4># Of Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
-              </div>
-              <div class="col-sm-3 text-right">
-                <h4><i class="fa fa-sort-{{changeInChat.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInChat.percentage.toFixed(2)}}%</h4>
-              </div>
+            <div class="col-sm-9">
+              <h4># Of Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+            </div>
+            <div class="col-sm-3 text-right">
+              <h4><i class="fa fa-sort-{{changeInChat.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInChat.percentage.toFixed(2)}}%</h4>
+            </div>
             <!-- </div> -->
             <!-- <div class="row"> -->
-              <div class="col-sm-12" style="padding-top:25px">
-                <h3>{{totalChats}}</h3>
-              </div>
+            <div class="col-sm-12" style="padding-top:25px">
+              <h3>{{totalChats}}</h3>
+            </div>
             <!-- </div> -->
             <!-- <div class="row"> -->
-              <div class="col-sm-12" style="padding-top:25px">
-                <!-- <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="barlabels"> chart-series="series"</canvas> -->
-                <canvas id="line" class="chart chart-line" chart-data="noOfChatData"
-                    chart-labels="noOfChatLabels" chart-options="noOfChatOptions"
-                    chart-dataset-override="datasetOverride">
+            <div class="col-sm-12" style="padding-top:25px">
+              <!-- <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="barlabels"> chart-series="series"</canvas> -->
+              <canvas id="line" class="chart chart-line" chart-data="noOfChatData" chart-labels="noOfChatLabels" chart-options="noOfChatOptions" chart-dataset-override="datasetOverride">
                 </canvas>
-              </div>
+            </div>
             <!-- </div> -->
           </div>
         </div>
@@ -210,40 +260,40 @@
         <div class="container-fluid" style="background-color:#fff;">
           <div class="row" style="padding:25px">
             <!-- <div class="row"> -->
-              <div class="col-sm-9">
-                <h4># Of Missed Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
-              </div>
-              <!-- <div class="col-sm-3 text-right">
+            <div class="col-sm-9">
+              <h4># Of Missed Chats &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+            </div>
+            <!-- <div class="col-sm-3 text-right">
                 <h4><i class="fa fa-sort-desc fa-lg" style="color:#bcd46e"></i> &nbsp;77.78%</h4>
               </div> -->
-              <div class="col-sm-3 text-right">
-                <h4><i class="fa fa-sort-{{changeInMissedChat.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInMissedChat.percentage.toFixed(2)}}%</h4>
-              </div>
+            <div class="col-sm-3 text-right">
+              <h4><i class="fa fa-sort-{{changeInMissedChat.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInMissedChat.percentage.toFixed(2)}}%</h4>
+            </div>
             <!-- </div> -->
             <!-- <div class="row"> -->
-              <div class="col-sm-12" style="padding-top:25px">
-                <h3>{{missedChats}}</h3>
-              </div>
+            <div class="col-sm-12" style="padding-top:25px">
+              <h3>{{missedChats}}</h3>
+            </div>
             <!-- </div> -->
           </div>
         </div>
         <div class="container-fluid" style="background-color:#fff;margin-top:20px">
           <div class="row" style="padding:25px">
             <!-- <div class="row"> -->
-              <div class="col-sm-9">
-                <h4>Average Chat Duration &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
-              </div>
-              <!-- <div class="col-sm-3 text-right">
+            <div class="col-sm-9">
+              <h4>Average Chat Duration &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+            </div>
+            <!-- <div class="col-sm-3 text-right">
                 <h4><i class="fa fa-sort-asc fa-lg" style="color:#e85c30"></i> &nbsp;19.44%</h4>
               </div> -->
-              <div class="col-sm-3 text-right">
-                <h4><i class="fa fa-sort-{{changeInAvgChatDur.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInAvgChatDur.percentage.toFixed(2)}}%</h4>
-              </div>
+            <div class="col-sm-3 text-right">
+              <h4><i class="fa fa-sort-{{changeInAvgChatDur.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInAvgChatDur.percentage.toFixed(2)}}%</h4>
+            </div>
             <!-- </div> -->
             <!-- <div class="row"> -->
-              <div class="col-sm-12" style="padding-top:25px">
-                <h3>{{avgChatDuration.toFixed(2)}} Min</h3>
-              </div>
+            <div class="col-sm-12" style="padding-top:25px">
+              <h3>{{avgChatDuration.toFixed(2)}} Min</h3>
+            </div>
             <!-- </div> -->
           </div>
         </div>
@@ -261,18 +311,18 @@
         <div class="container-fluid" style="background-color:#fff;">
           <div class="row" style="padding:25px">
             <!-- <div class="row"> -->
-              <div class="col-sm-9">
-                <h4>Average Rating &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
-              </div>
-              <div class="col-sm-3 text-right">
-                <h4><i class="fa fa-sort-{{changeInAverageRating.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInAverageRating.percentage.toFixed(2)}}%</h4>
-                <!-- <h4><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;changeInAverageRating %</h4> -->
-              </div>
+            <div class="col-sm-9">
+              <h4>Average Rating &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+            </div>
+            <div class="col-sm-3 text-right">
+              <h4><i class="fa fa-sort-{{changeInAverageRating.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInAverageRating.percentage.toFixed(2)}}%</h4>
+              <!-- <h4><i class="fa fa-sort-asc fa-lg" style="color:#bcd46e"></i> &nbsp;changeInAverageRating %</h4> -->
+            </div>
             <!-- </div> -->
             <!-- <div class="row"> -->
-              <div class="col-sm-12" style="padding-top:25px">
-                <h3>{{avgRatingAll.toFixed(2)}}</h3>
-              </div>
+            <div class="col-sm-12" style="padding-top:25px">
+              <h3>{{avgRatingAll.toFixed(2)}}</h3>
+            </div>
             <!-- </div> -->
           </div>
         </div>
@@ -282,17 +332,17 @@
         <div class="container-fluid" style="background-color:#fff;">
           <div class="row" style="padding:25px">
             <!-- <div class="row"> -->
-              <div class="col-sm-9">
-                <h4>Average Response Time(ART) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
-              </div>
-              <div class="col-sm-3 text-right">
-                <h4><i class="fa fa-sort-{{changeInRespTimeAvg.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInRespTimeAvg.percentage.toFixed(2)}}%</h4>
-              </div>
+            <div class="col-sm-9">
+              <h4>Average Response Time(ART) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+            </div>
+            <div class="col-sm-3 text-right">
+              <h4><i class="fa fa-sort-{{changeInRespTimeAvg.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInRespTimeAvg.percentage.toFixed(2)}}%</h4>
+            </div>
             <!-- </div> -->
             <!-- <div class="row"> -->
-              <div class="col-sm-12" style="padding-top:25px">
-                <h3>{{avgRespTimeAll.toFixed(2)}} Min</h3>
-              </div>
+            <div class="col-sm-12" style="padding-top:25px">
+              <h3>{{avgRespTimeAll.toFixed(2)}} Min</h3>
+            </div>
             <!-- </div> -->
           </div>
         </div>
@@ -304,17 +354,17 @@
         <div class="container-fluid" style="background-color:#fff;margin-top:20px">
           <div class="row" style="padding:25px">
             <!-- <div class="row"> -->
-              <div class="col-sm-9">
-                <h4>Average First Response Time(AFRT) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
-              </div>
-              <div class="col-sm-3 text-right">
-                <h4><i class="fa fa-sort-{{changeInFrtAvg.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInFrtAvg.percentage.toFixed(2)}}%</h4>
-              </div>
+            <div class="col-sm-9">
+              <h4>Average First Response Time(AFRT) &nbsp; <i class="fa fa-info-circle" style="color:#4a4641"></i></h4>
+            </div>
+            <div class="col-sm-3 text-right">
+              <h4><i class="fa fa-sort-{{changeInFrtAvg.increase?'asc':'desc'}} fa-lg" style="color:#bcd46e"></i> &nbsp;{{changeInFrtAvg.percentage.toFixed(2)}}%</h4>
+            </div>
             <!-- </div> -->
             <!-- <div class="row"> -->
-              <div class="col-sm-12" style="padding-top:25px">
-                <h3>{{firstResTimeAvgAll.toFixed(2)}} Min</h3>
-              </div>
+            <div class="col-sm-12" style="padding-top:25px">
+              <h3>{{firstResTimeAvgAll.toFixed(2)}} Min</h3>
+            </div>
             <!-- </div> -->
           </div>
         </div>
