@@ -1492,7 +1492,8 @@ def stock(response, request):
     productsList = list(productlist.values('product').distinct().values('product__pk','product__description_1','product__part_no','product__description_2','product__weight','product__price','product__bar_code'))
     toReturn=[]
     for i in productsList:
-        data = list(productlist.filter(product=i['product__pk']).values())
+        data = list(productlist.filter(product=i['product__pk']).values('product__part_no','project__vendor__name','qty','addedqty','rate','project__invoiceNumber'))
+        print data
         toReturn.append({'productPk':i['product__pk'],'productDesc':i['product__description_1'],'productPartno':i['product__part_no'],'productDesc2':i['product__description_2'],'productBarCode':i['product__bar_code'],'weight':i['product__weight'],'price':i['product__price'],'data':data})
     dtime = datetime.datetime.now()
     dt = dtime.date()
@@ -1514,7 +1515,9 @@ def stock(response, request):
     p3 =Paragraph("<para fontSize=8><b>Quantity</b></para>",styles['Normal'])
     p4 =Paragraph("<para fontSize=8><b>Price in INR</b></para>",styles['Normal'])
     p5 =Paragraph("<para fontSize=8><b>Total in INR</b></para>",styles['Normal'])
-    data += [[p1,p2,p3,p4,p5]]
+    p6 =Paragraph("<para fontSize=8><b>Supplier</b></para>",styles['Normal'])
+    p7 =Paragraph("<para fontSize=8><b>Invoice No</b></para>",styles['Normal'])
+    data += [[p1,p2,p3,p4,p5,p6,p7]]
     grandtot = 0
     for a in toReturn:
             p01 =Paragraph("<para fontSize=8>{0} </para>".format(a['productPartno']),styles['Normal'])
@@ -1537,6 +1540,8 @@ def stock(response, request):
             qdata = []
             rdata = []
             tdata = []
+            sdata = []
+            idata = []
             for d in a['data']:
                 if d['qty']>0:
                     qty = Paragraph("""
@@ -1574,29 +1579,47 @@ def stock(response, request):
                     ttotalheader=[[total]]
                     ttotalheader=Table(ttotalheader)
                     tdata.append(ttotalheader)
+                    supplier = Paragraph("<para ><font size ='8' > {0} \n</font> </para>".format(d['project__vendor__name']),styles['Normal'])
+                    supplierheader=[[supplier]]
+                    supplierheader=Table(supplierheader)
+                    sdata.append(supplierheader)
+                    invoiceid = Paragraph("<para><font size ='8' > {0} \n</font> </para>".format(d['project__invoiceNumber']),styles['Normal'])
+                    invoiceheader=[[invoiceid]]
+                    invoiceheader=Table(invoiceheader)
+                    idata.append(invoiceheader)
             if len(qdata) > 0:
                 p03 =qdata
             else:
-                p03 = Paragraph("<para align='center'><font size ='8' > 0 </font> </para>",styles['Normal'])
+                p03 = Paragraph("<para><font size ='8' > 0 </font> </para>",styles['Normal'])
             if len(rdata) > 0:
                 p04 =rdata
             else:
-                p04 = Paragraph("<para align='right'><font size ='8' > 0 &nbsp;&nbsp;</font> </para>",styles['Normal'])
+                p04 = Paragraph("<para><font size ='8' > 0 &nbsp;&nbsp;</font> </para>",styles['Normal'])
             if len(tdata) > 0:
                 p05 = tdata
             else:
                 p05 = Paragraph("<para align='right'><font size ='8' > 0 &nbsp;&nbsp;</font> </para>",styles['Normal'])
+            if len(sdata) > 0:
+                p06 = sdata
+            else:
+                p06 = Paragraph("<para align='right'><font size ='8' >  &nbsp;&nbsp;</font> </para>",styles['Normal'])
+            if len(idata) > 0:
+                p07 = idata
+            else:
+                p07 = Paragraph("<para align='right'><font size ='8' >  &nbsp;&nbsp;</font> </para>",styles['Normal'])
 
 
-            data.append([p01,p02,p03,p04,p05])
+            data.append([p01,p02,p03,p04,p05,p06,p07])
     p11 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     p12 =Paragraph("<para fontSize=8></para>",styles['Normal'])
     p13 =Paragraph("<para fontSize=8></para>",styles['Normal'])
     p14 =Paragraph("<para fontSize=8><b>Total in INR</b></para>",styles['Normal'])
     p15 =Paragraph("<para fontSize=8 align='right'><b>{:,}</b></para>".format(round(grandtot,2)),styles['Normal'])
-    data += [[p11,p12,p13,p14,p15]]
+    p16 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    p17 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    data += [[p11,p12,p13,p14,p15,p16,p17]]
 
-    t=Table(data,colWidths=(35*mm,40*mm,  35*mm, 35*mm, 35*mm))
+    t=Table(data)
     t.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     # t.hAlign = 'LEFT'
     # t.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
