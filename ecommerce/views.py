@@ -588,6 +588,7 @@ class CreateOrderAPI(APIView):
                     productName = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' + str(desc)
                     value.append({ "productName" : productName,"qty" : i.qty , "amount" : totalPrice,"price":price})
             grandTotal=total-(promoAmount * total)/100
+            print orderObj.shippingCharges,'orderrrrrrrrrrrrrrrOBBBBBBBBB'
             shippingCharges = round(orderObj.shippingCharges,2)
             grandTotal = grandTotal + shippingCharges
             grandTotal=round(grandTotal, 2)
