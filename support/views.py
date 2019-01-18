@@ -1590,11 +1590,11 @@ def stock(response, request):
             if len(qdata) > 0:
                 p03 =qdata
             else:
-                p03 = Paragraph("<para><font size ='8' > 0 </font> </para>",styles['Normal'])
+                p03 = Paragraph("<para align='center'><font size ='8' > 0 </font> </para>",styles['Normal'])
             if len(rdata) > 0:
                 p04 =rdata
             else:
-                p04 = Paragraph("<para><font size ='8' > 0 &nbsp;&nbsp;</font> </para>",styles['Normal'])
+                p04 = Paragraph("<para align='right'><font size ='8' > 0 &nbsp;&nbsp;</font> </para>",styles['Normal'])
             if len(tdata) > 0:
                 p05 = tdata
             else:
@@ -1619,7 +1619,7 @@ def stock(response, request):
     p17 =Paragraph("<para fontSize=8></para>",styles['Normal'])
     data += [[p11,p12,p13,p14,p15,p16,p17]]
 
-    t=Table(data)
+    t=Table(data,colWidths=(28*mm,37*mm,20*mm, 30*mm, 30*mm,40*mm,30*mm))
     t.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     # t.hAlign = 'LEFT'
     # t.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
