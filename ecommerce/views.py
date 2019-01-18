@@ -2784,6 +2784,8 @@ class ReportsDataAPI(APIView):
                         tAR += j.paidAmount
                         tGst += j.gstAmount
                     data['receivedAmount'] = tAR
+                    if tAR==0:
+                        tGst = 0
                     data['gstCollected'] = tGst
                     toReturn.append(data)
                     salesDownloadData.append(['ECOM_'+str(i.pk),tAR,tGst])
