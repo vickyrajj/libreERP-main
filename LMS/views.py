@@ -376,3 +376,5 @@ class HomeworkViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = HomeworkSerializer
     queryset = Homework.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['course']

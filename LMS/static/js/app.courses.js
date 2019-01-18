@@ -88,7 +88,7 @@ app.controller("home.LMS.courses", function($scope, $state, $users, $stateParams
 
 });
 
-app.controller("home.LMS.courses.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $aside) {
+app.controller("home.LMS.courses.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $aside, $rootScope) {
 
   $scope.course = $scope.tab.data.course;
 
@@ -110,7 +110,7 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
       icon: 'file-powerpoint-o'
     },
     {
-      name: 'Quiz',
+      name: 'Homework',
       active: false,
       icon: 'question-circle-o'
     },
@@ -395,9 +395,38 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
     url: '/api/LMS/announcement/'
   }).then(function(response) {
     $scope.announcements = response.data;
-    console.log($scope.announcements, '----------repspspsppspspsps');
+    // console.log($scope.announcements, '----------repspspsppspspsps');
   })
-  //---------adding notes
+  $rootScope.paperSearch = function(query) {
+    //search for the paper
+    return $http.get('/api/LMS/paper/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+  $rootScope.getPaper = function(paper) {
+    if (typeof paper == 'undefined') {
+      return;
+    }
+    return paper.name;
+  }
+
+  $rootScope.userSearch = function(query) {
+    //search for the user
+    return $http.get('/api/HR/userSearch/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  };
+
+  $rootScope.getUserName = function(user) {
+    if (typeof user == 'undefined') {
+      return;
+    }
+    return user.first_name + '  ' + user.last_name;
+  }
+
+  //---------adding announcements
   $scope.announce = function() {
     $uibModal.open({
       templateUrl: '/static/ngTemplates/app.LMs.course.announcement.form.html',
@@ -413,35 +442,6 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
           }
         }
         $scope.reset();
-
-        $scope.userSearch = function(query) {
-          //search for the user
-          return $http.get('/api/HR/userSearch/?username__contains=' + query).
-          then(function(response) {
-            return response.data;
-          })
-        };
-
-        $scope.getUserName = function(user) {
-          if (typeof user == 'undefined') {
-            return;
-          }
-          return user.first_name + '  ' + user.last_name;
-        }
-
-        $scope.paperSearch = function(query) {
-          //search for the paper
-          return $http.get('/api/LMS/paper/?name__contains=' + query).
-          then(function(response) {
-            return response.data;
-          })
-        };
-        $scope.getPaper = function(paper) {
-          if (typeof paper == 'undefined') {
-            return;
-          }
-          return paper.name;
-        }
 
 
         //-----save announcements
@@ -461,15 +461,42 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
           } else {
             if ($scope.form.typ == 'quiz') {
               toSend.paper = $scope.form.paper.pk
-              toSend.paperDueDate = $scope.paperDueDate
+              console.log($scope.form.paperDueDate, '------dddateee');
+              if ($scope.form.time != undefined && $scope.form.paperDueDate != undefined) {
+                toSend.time = $scope.form.time
+                toSend.paperDueDate = $scope.form.paperDueDate.toJSON().split('T')[0]
+              } else {
+                Flash.create('danger', 'Fill all the Fileds');
+                return;
+              }
             } else if ($scope.form.typ == 'onlineclass') {
               toSend.meetingId = $scope.form.meetId
+              if ($scope.form.time != undefined && $scope.form.date != undefined) {
+                toSend.time = $scope.form.time
+                toSend.date = $scope.form.date
+              } else {
+                Flash.create('danger', 'Fill all the Fileds');
+                return;
+              }
             } else if ($scope.form.typ == 'class') {
-              toSend.time = $scope.form.classTime
               toSend.venue = $scope.form.classVenue
+              if ($scope.form.classTime != undefined && $scope.form.classDate != undefined) {
+                toSend.date = $scope.form.classDate
+                toSend.time = $scope.form.classTime
+              } else {
+                Flash.create('danger', 'Fill all the Fileds');
+                return;
+              }
             } else {
-              toSend.time = $scope.form.quizTime
               toSend.venue = $scope.form.quizVenue
+              if ($scope.form.quizTime != undefined && $scope.form.quizDate != undefined) {
+                toSend.date = $scope.form.quizDate
+                toSend.time = $scope.form.quizTime
+              } else {
+                Flash.create('danger', 'Fill all the Fileds');
+                return;
+              }
+
             }
           }
           $http({
@@ -492,9 +519,64 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
         $scope.announcements.push(a)
       }
     });
-  } //addnotesfunction ends
+  } //-------------announcement ends
 
 
+
+  //----------fetch homework-------------
+  $http({
+    method: 'GET',
+    url: '/api/LMS/homework/?course=' + $scope.course.pk
+  }).then(function(response) {
+    $scope.homwrkData = response.data;
+  })
+  //-----------adding homewoks
+  $scope.homework = function() {
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.LMs.course.homework.form.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return $scope.course;
+        }
+      },
+      controller: function($scope, $uibModalInstance, data) {
+        $scope.saveHomework = function() {
+          console.log('ccccccclllll----in-----homeeeeee save', data.pk, '-----------', $scope.form.paper.pk);
+          var fd = new FormData();
+          fd.append('course', data.pk);
+          fd.append('paper', $scope.form.paper.pk);
+          fd.append('comment', $scope.form.comment);
+          fd.append('pdf', $scope.form.pdf);
+          var method = 'POST'
+          var url = '/api/LMS/homework/'
+          $http({
+            method: method,
+            url: url,
+            data: fd,
+            transformRequest: angular.identity,
+            headers: {
+              'Content-Type': undefined
+            }
+          }).
+          then(function(response) {
+            Flash.create('success', 'Saved Successfully');
+            $uibModalInstance.dismiss(response.data);
+
+          })
+        }
+
+      }, //controller ends
+    }).result.then(function(h) {
+
+    }, function(h) {
+      if (typeof h == 'object') {
+        $scope.homwrkData.push(h)
+      }
+    })
+  }
+  //homework ends------------
 
 });
 
@@ -550,51 +632,6 @@ app.controller("home.LMS.courses.form", function($scope, $state, $users, $stateP
     }
     return user.first_name + '  ' + user.last_name;
   }
-
-  // $scope.save = function() {
-  //   var f = $scope.form;
-  //   var toSend = {
-  //     instructor: f.instructor.pk,
-  //     topic: f.topic.pk,
-  //     description: f.description,
-  //     enrollmentStatus: f.enrollmentStatus,
-  //     TAs: f.TAs,
-  //     title: f.title
-  //   }
-  //   $http({
-  //     method: 'POST',
-  //     url: '/api/LMS/course/',
-  //     data: toSend
-  //   }).
-  //   then(function(response) {
-  //     if ($scope.form.dp == emptyFile) {
-  //       $scope.resetForm();
-  //       Flash.create('success', 'Created')
-  //     } else {
-  //       var fd = new FormData();
-  //       fd.append('dp', $scope.form.dp);
-  //
-  //       $http({
-  //         method: 'PATCH',
-  //         url: '/api/LMS/course/' + response.data.pk + '/',
-  //         data: fd,
-  //         transformRequest: angular.identity,
-  //         headers: {
-  //           'Content-Type': undefined
-  //         }
-  //       }).
-  //       then(function(response) {
-  //         $scope.resetForm();
-  //         Flash.create('success', 'Created')
-  //       })
-  //
-  //
-  //
-  //     }
-  //
-  //   })
-  //
-  // }
 
 
   $scope.saveCourse = function() {

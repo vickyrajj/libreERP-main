@@ -337,7 +337,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     # announcer = userSearchSerializer(many = False , read_only = True)
     class Meta:
         model = Announcement
-        fields = ('pk' , 'created' , 'announcer', 'notified', 'notification', 'typ',  'paperDueDate', 'time', 'venue', 'txt' ,'meetingId','paper')
+        fields = ('pk' , 'created' , 'announcer', 'notified', 'notification', 'typ',  'paperDueDate', 'time', 'venue', 'txt' ,'meetingId','paper','date')
     def create(self , validated_data):
         p = Announcement(**validated_data)
         if 'paper' in  self.context['request'].data:
@@ -347,14 +347,14 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         return p
 
 class HomeworkSerializer(serializers.ModelSerializer):
-    # paper = PaperSerializer(many = False , read_only = True)
+    paper = PaperSerializer(many = False , read_only = True)
     class Meta:
         model = Homework
         fields = ('pk' , 'created' , 'course', 'paper', 'pdf', 'comment')
-    # def create(self , validated_data):
-    #     p = Announcement(**validated_data)
-    #     if 'paper' in  self.context['request'].data:
-    #         paper = Paper.objects.get(pk = self.context['request'].data['paper'])
-    #         p.paper = paper
-    #     p.save()
-    #     return p
+    def create(self , validated_data):
+        p = Homework(**validated_data)
+        if 'paper' in  self.context['request'].data:
+            paper = Paper.objects.get(pk = self.context['request'].data['paper'])
+            p.paper = paper
+        p.save()
+        return p
