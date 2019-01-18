@@ -130,6 +130,8 @@ class PaperViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = PaperSerializer
     queryset = Paper.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['name']
 
 class AnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
@@ -369,3 +371,8 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, isAdmin, )
     serializer_class = AnnouncementSerializer
     queryset = Announcement.objects.all()
+
+class HomeworkViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, isAdmin, )
+    serializer_class = HomeworkSerializer
+    queryset = Homework.objects.all()

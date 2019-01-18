@@ -142,68 +142,104 @@
         </div>
       </div>
     </div>
+
     <hr>
     <div class="row">
       <div class="container-fluid" ng-if="activeTab == 3">
         <center><button type="button" class="btn btn-primary btn-md" ng-click="open()">ADD <i class="fa fa-plus"></i></button></center>
       </div>
-      <div class="row">
-        <div class="container-fluid" ng-if="activeTab == 4">
-          <center><button type="button" class="btn btn-primary btn-md" ng-click="announce()">Make Announcement</button></center>
-        </div>
-      <div class="container-fluid">
-        <div class="container-fluid" ng-if="activeTab == 5">
-          <center><button type="button" class="btn btn-primary btn-md" ng-click="addNotes()">Add Notes <i class="fa fa-plus"></i></button></center>
-        </div>
-        <div class="container-fluid" style="padding-top:15px;">
-          <div class="col-md-3" ng-repeat="n in noteData" style="margin-bottom:10px;">
-            <div class="container-fluid card">
-              <div ng-click="noteInfo($index)">
-                <h3>{{n.title}}</h3>
-                <hr>
-                <div class="container-fluid" style="overflow:hidden;height:158px;">
-                  <p>{{n.description}}</p>
-                </div>
-              </div>
-              <div class="">
-                <a href=""><h5>{{n.urlSuffix}}</h5></a>
-                <i class="fa fa-plus-square pull-right" ng-click="noteSection($index)" aria-hidden="true" style="cursor:pointer;"></i>
-              </div>
-            </div>
+    </div>
 
+    <div class="row">
+      <div class="container-fluid" ng-if="activeTab == 4">
+        <center><button type="button" class="btn btn-primary btn-md" ng-click="announce()">Make Announcement</button></center>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid" ng-if="activeTab == 5">
+        <center><button type="button" class="btn btn-primary btn-md" ng-click="addNotes()">Add Notes <i class="fa fa-plus"></i></button></center>
+      </div>
+    </div>
+
+    <div class="container-fluid" style="padding-top:15px;">
+      <div class="col-md-3" ng-repeat="n in noteData" style="margin-bottom:10px;">
+        <div class="container-fluid card">
+          <div ng-click="noteInfo($index)">
+            <h3>{{n.title}}</h3>
+            <hr>
+            <div class="container-fluid" style="overflow:hidden;height:158px;">
+              <p>{{n.description}}</p>
+            </div>
+          </div>
+          <div class="">
+            <a href="">
+              <h5>{{n.urlSuffix}}</h5>
+            </a>
+            <i class="fa fa-plus-square pull-right" ng-click="noteSection($index)" aria-hidden="true" style="cursor:pointer;"></i>
           </div>
         </div>
+
       </div>
+    </div>
 
-      <div class="container-fluid">
-        <div class="row" style="padding:20px;" ng-repeat="sm in course.studyMaterials">
-          <div class="card" style="padding:10px;">
-            <div class="row" ng-if="sm.typ == 'file'">
-              <div class="col-md-10">
-                <i class="fa fa-file-o fa-3x"></i> <a href="{{sm.attachment}}" target="_blank">{{sm.attachment.split('/')[sm.attachment.split('/').length -1]}}</a>
-              </div>
-              <div class="col-md-2">
-                <span class="text-muted">{{sm.created | timeAgo}}</span>
-              </div>
-            </div>
-            <div class="row" ng-if="sm.typ == 'video'">
-              <div class="col-md-10">
-
-                <video width="400" controls>
-                  <source ng-src="{{sm.attachment}}" type="video/mp4">
-                  Your browser does not support HTML5 video.
-                </video>
-              </div>
-              <div class="col-md-2">
-                <span class="text-muted">{{sm.created | timeAgo}}</span>
-              </div>
-            </div>
-
+    <div class="container-fluid">
+      <div class="col-md-3" ng-repeat="a in announcements" style="margin-bottom:10px;">
+        <div class="container-fluid card" style="min-height:160px;padding-top:8px;">
+          <div class="text-center">
+            <span style="text-transform: uppercase;color:#1d5fcf"> <strong>{{a.typ}}</strong> </span>
+          </div>
+          <hr>
+          <div>
+            <span><strong>Announcer : </strong> </span> <span> {{a.announcer | getName}}</span>
+          </div>
+          <div>
+            <span><strong>Notification Type : </strong> </span> <span> {{a.notification}}</span>
+          </div>
+          <div ng-if="a.typ === 'class' || a.typ ===  'offlinequiz'">
+            <!-- <span><strong>Date : </strong> </span> <span> {{a.time | date}}</span> -->
+            <span><strong>Time : </strong> </span> <span> {{a.time | date : "h.mm a"}}</span>
+          </div>
+          <div ng-if="a.venue!= null">
+            <span><strong>Venue : </strong> </span> <span> {{a.venue}}</span>
+          </div>
+          <div ng-if="a.paper!= null">
+            <span><strong>Paper : </strong> </span> <span> {{a.paper.name}}</span>
+          </div>
+          <div ng-if="a.meetingId!= null">
+            <span><strong>Meeting ID : </strong> </span> <span> {{a.meetingId}}</span>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="container-fluid">
+      <div class="row" style="padding:20px;" ng-repeat="sm in course.studyMaterials">
+        <div class="card" style="padding:10px;">
+          <div class="row" ng-if="sm.typ == 'file'">
+            <div class="col-md-10">
+              <i class="fa fa-file-o fa-3x"></i> <a href="{{sm.attachment}}" target="_blank">{{sm.attachment.split('/')[sm.attachment.split('/').length -1]}}</a>
+            </div>
+            <div class="col-md-2">
+              <span class="text-muted">{{sm.created | timeAgo}}</span>
+            </div>
+          </div>
+          <div class="row" ng-if="sm.typ == 'video'">
+            <div class="col-md-10">
+
+              <video width="400" controls>
+                <source ng-src="{{sm.attachment}}" type="video/mp4">
+                Your browser does not support HTML5 video.
+              </video>
+            </div>
+            <div class="col-md-2">
+              <span class="text-muted">{{sm.created | timeAgo}}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>

@@ -389,8 +389,14 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
     })
 
   }
-
-
+  //------fetch announcements
+  $http({
+    method: 'GET',
+    url: '/api/LMS/announcement/'
+  }).then(function(response) {
+    $scope.announcements = response.data;
+    console.log($scope.announcements, '----------repspspsppspspsps');
+  })
   //---------adding notes
   $scope.announce = function() {
     $uibModal.open({
@@ -401,7 +407,9 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
 
         $scope.reset = function() {
           $scope.form = {
-            typ: 'general'
+            typ: 'general',
+            notificationType: 'sms&email',
+            messageTxt: '',
           }
         }
         $scope.reset();
@@ -421,72 +429,47 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
           return user.first_name + '  ' + user.last_name;
         }
 
+        $scope.paperSearch = function(query) {
+          //search for the paper
+          return $http.get('/api/LMS/paper/?name__contains=' + query).
+          then(function(response) {
+            return response.data;
+          })
+        };
+        $scope.getPaper = function(paper) {
+          if (typeof paper == 'undefined') {
+            return;
+          }
+          return paper.name;
+        }
+
+
+        //-----save announcements
         $scope.saveAnnouncement = function() {
+          $scope.me = $users.get('mySelf');
+
+          var toSend = {
+            typ: $scope.form.typ,
+            announcer: $scope.me.pk,
+            notification: $scope.form.notificationType,
+            txt: $scope.form.messageTxt,
+          }
+
 
           if ($scope.form.typ == 'general') {
             console.log('in general');
-            // $scope.form = {
-            //   typ: 'general'
-            // }
-            var toSend = {
-              typ : $scope.form.typ,
-              announcer: $scope.form.announcer.pk,
-              notification: $scope.notificationType,
-              txt: $scope.form.messageTxt,
-            }
-          } else if ($scope.form.typ == 'quiz') {
-            console.log('in onlinequiz');
-            // $scope.form = {
-            //   typ: 'quiz'
-            // }
-            var toSend = {
-              typ : $scope.form.typ,
-              announcer: $scope.form.announcer.pk,
-              notification: $scope.notificationType,
-              txt: $scope.form.messageTxt,
-              // paper: $scope.form.paper,
-              paperDueDate: $scope.paperDueDate,
-            }
-
-          } else if ($scope.form.typ == 'onlineclass') {
-            console.log('in onlineclass');
-            // $scope.form = {
-            //   typ: 'onlineclass'
-            // }
-            var toSend = {
-              typ : $scope.form.typ,
-              announcer: $scope.form.announcer.pk,
-              notification: $scope.notificationType,
-              txt: $scope.form.messageTxt,
-              meetingId: $scope.form.meetId,
-            }
-
-          } else if ($scope.form.typ == 'class') {
-            console.log('in offlineclass');
-            // $scope.form = {
-            //   typ: 'class'
-            // }
-            var toSend = {
-              typ : $scope.form.typ,
-              announcer: $scope.form.announcer.pk,
-              notification: $scope.notificationType,
-              txt: $scope.form.messageTxt,
-              time: $scope.form.classTime,
-              venue:$scope.form.classVenue,
-            }
-
           } else {
-            console.log('in offlinequiz');
-            // $scope.form = {
-            //   typ: 'offlinequiz'
-            // }
-            var toSend = {
-              typ : $scope.form.typ,
-              announcer: $scope.form.announcer.pk,
-              notification: $scope.notificationType,
-              txt: $scope.form.messageTxt,
-              time: $scope.form.quizTime,
-              venue:$scope.form.quizVenue,
+            if ($scope.form.typ == 'quiz') {
+              toSend.paper = $scope.form.paper.pk
+              toSend.paperDueDate = $scope.paperDueDate
+            } else if ($scope.form.typ == 'onlineclass') {
+              toSend.meetingId = $scope.form.meetId
+            } else if ($scope.form.typ == 'class') {
+              toSend.time = $scope.form.classTime
+              toSend.venue = $scope.form.classVenue
+            } else {
+              toSend.time = $scope.form.quizTime
+              toSend.venue = $scope.form.quizVenue
             }
           }
           $http({
@@ -496,13 +479,19 @@ app.controller("home.LMS.courses.explore", function($scope, $state, $users, $sta
           }).
           then(function(response) {
             Flash.create('success', 'Saved Successfully')
+            $uibModalInstance.dismiss(response.data);
             $scope.reset();
           })
         }
-
-
       }, //controller ends
-    })
+    }).result.then(function(a) {
+
+    }, function(a) {
+      // console.log(a,typeof a);
+      if (typeof a == 'object') {
+        $scope.announcements.push(a)
+      }
+    });
   } //addnotesfunction ends
 
 

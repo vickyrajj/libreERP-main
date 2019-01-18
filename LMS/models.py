@@ -33,6 +33,14 @@ def getSolutionVideoPath(instance , filename):
 def getNoteImagePath(instance , filename ):
     return 'lms/noteImage/%s_%s' % (str(time()).replace('.', '_'), filename)
 
+def getNoteSectionPath(instance , filename ):
+    return 'lms/noteSection/%s_%s' % (str(time()).replace('.', '_'), filename)
+
+
+def getHomeworkPath(instance , filename ):
+    return 'lms/homework/%s_%s' % (str(time()).replace('.', '_'), filename)
+
+
 
 
 
@@ -162,6 +170,7 @@ class Paper(models.Model):
     questions = models.ManyToManyField(PaperQues , blank = True)
     active = models.BooleanField(default = False)
     user = models.ForeignKey(User , null = False , related_name='papersAuthored')
+    name = models.CharField(null = True , max_length = 100)
 
 CORRECTION_CHOICES = (
     ('yes' , 'yes'),
@@ -305,20 +314,20 @@ class Note(models.Model):
 class NotesSection(models.Model):
     note = models.ForeignKey(Note , null = True , related_name="note")
     txt = models.TextField( null = True)
-    image = models.FileField(upload_to = getQAttachmentPath , null = True)
+    image = models.FileField(upload_to = getNoteSectionPath , null = True)
     mode = models.CharField(choices = PART_TYPE_CHOICES , default = 'text' , null = False, max_length = 10)
 
 NOTIFICATION_TYPE = (
-    ('sms' , 'SMS'),
-    ('email' , 'Email'),
-    ('sms&email' , 'SMS & Email'),
+    ('sms' , 'sms'),
+    ('email' , 'email'),
+    ('sms&email' , 'sms&email'),
 )
 ANNOUNCEMENT_TYP_CHOICES = (
-    ('general','General'),
-    ('quiz','Quiz'),
-    ('onlineclass','Online Class'),
-    ('class','Class'),
-    ('offlinequiz','Offline Quiz')
+    ('general','general'),
+    ('quiz','quiz'),
+    ('onlineclass','onlineclasss'),
+    ('class','class'),
+    ('offlinequiz','offlinequiz')
 )
 
 class Announcement(models.Model):
@@ -327,9 +336,16 @@ class Announcement(models.Model):
     notified = models.BooleanField(default = False)
     notification =  models.CharField(choices = NOTIFICATION_TYPE , max_length = 10 , null = True)
     typ = models.CharField(choices = ANNOUNCEMENT_TYP_CHOICES , max_length = 10 , null = True)
-    # paper = models.ForeignKey(Paper , null = True , related_name="paper")
+    paper = models.ForeignKey(Paper , null = True , related_name="paper")
     paperDueDate =  models.DateField(auto_now=True,null=True)
     time = models.DateTimeField(auto_now= True)
     venue =  models.CharField(max_length = 100 , null = True)
     txt =  models.TextField(null = True)
     meetingId = models.CharField(max_length = 100 , null = True)
+
+class Homework(models.Model):
+    created = models.DateTimeField(auto_now_add = True)
+    course = models.ForeignKey(Course , null = True , related_name="homeworkcourse")
+    paper = models.ForeignKey(Paper , null = True , related_name="homeworkPaper")
+    pdf = models.FileField(upload_to = getHomeworkPath , null = True)
+    comment = models.TextField(null = True)

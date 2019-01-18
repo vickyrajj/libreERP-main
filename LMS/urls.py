@@ -26,8 +26,7 @@ router.register(r'bookcoursemap' , BookCourseMapViewSet , base_name ='bookcourse
 router.register(r'note' , NoteViewSet , base_name ='note')
 router.register(r'notesection' , NotesSectionViewSet , base_name ='notesection')
 router.register(r'announcement' , AnnouncementViewSet , base_name ='announcement')
-
-
+router.register(r'homework' , HomeworkViewSet , base_name ='homework')
 
 
 urlpatterns = [
