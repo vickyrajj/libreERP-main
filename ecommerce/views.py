@@ -2532,6 +2532,8 @@ def updateAndProcessOrder(orderID , amnt, referenceId=None):
             total+=totalPrice
             value.append({ "productName" : i.product.product.name,"qty" : i.qty , "amount" : round(totalPrice,2),"price":price,'gst':round(gst,1)})
     grandTotal=total-(promoAmount * total)/100
+    shippingCharges = round(orderObj.shippingCharges,2)
+    grandTotal = grandTotal + shippingCharges
     grandTotal=round(grandTotal, 2)
     orderObj.user.cartItems.all().delete()
     print orderObj.user.email, 'email'
@@ -2563,7 +2565,8 @@ def updateAndProcessOrder(orderID , amnt, referenceId=None):
             'twitterUrl' : twtLink,
             'isStoreGlobal':isStoreGlobal,
             'companyAddress':companyAddress,
-            'gstValue':gstValue
+            'gstValue':gstValue,
+            'shippingCharges':shippingCharges
         }
         email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
         email_subject = 'Order Placed'

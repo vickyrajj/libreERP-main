@@ -11,6 +11,7 @@ def send_email(email_body, email_to, email_subject,email_cc,email_bcc, email_typ
     #     print 'list'
     # else:
     #     print 'not list'
+    print 'in send email',email_to
     if globalSettings.EMAIL_API:
         sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
         emailIDs = []
