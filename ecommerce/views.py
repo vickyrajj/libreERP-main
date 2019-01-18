@@ -615,7 +615,7 @@ class CreateOrderAPI(APIView):
                 else:
                     currencyVal = 'INR'
             except:
-                currencyVal = '(USD)'
+                currencyVal = ''
             if orderObj.user.email and orderObj.paymentMode == 'COD':
                 ctx = {
                     'heading' : "Invoice Details",
@@ -2538,6 +2538,16 @@ def updateAndProcessOrder(orderID , amnt, referenceId=None):
     orderObj.user.cartItems.all().delete()
     print orderObj.user.email, 'email'
     print 'semndddddddddddddddd emaillllllllll'
+
+    try:
+        currencyTyp = appSettingsField.objects.filter(name='currencySymbol')[0].value
+        if currencyTyp == 'fa-usd':
+            currencyVal = 'USD'
+        else:
+            currencyVal = 'INR'
+    except:
+        currencyVal = ''
+
     try:
         companyAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
     except:
@@ -2566,6 +2576,7 @@ def updateAndProcessOrder(orderID , amnt, referenceId=None):
             'isStoreGlobal':isStoreGlobal,
             'companyAddress':companyAddress,
             'gstValue':gstValue,
+            'currencyVal':currencyVal,
             'shippingCharges':shippingCharges
         }
         email_body = get_template('app.ecommerce.emailDetail.html').render(ctx)
