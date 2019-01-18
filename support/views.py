@@ -1018,9 +1018,9 @@ def quotation(response , project , purchaselist , multNumber,typ,request):
         p77_02 =Paragraph("<para fontSize=8>GST NO. </para>",styles['Normal'])
 
         data8=[[p77_01,p77_02]]
-        p78_01 =Paragraph("<para fontSize=8>AABCB6326Q</para>",styles['Normal'])
-        p78_01 =Paragraph("<para fontSize=8>AABCB6326Q1Z6</para>",styles['Normal'])
-        data8 +=[[p78_01,p78_01]]
+        pan =Paragraph("<para fontSize=8>AABCB6326Q</para>",styles['Normal'])
+        gst =Paragraph("<para fontSize=8>AABCB6326Q1Z6</para>",styles['Normal'])
+        data8 +=[[pan,gst]]
         t9=Table(data8,6*[1.5*inch])
         t9.hAlign = 'LEFT'
         t9.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
@@ -1124,8 +1124,9 @@ def grn(response , project , purchaselist , request):
     <b>Project Title - </b>%s<br/>
     <b>Comm nr - </b>%s <br/>
     <b>PO ref no - </b>%s<br/>
+    <b>GRN Date - </b>%s<br/>
     </para>
-    """ %(project.title,project.comm_nr ,project.poNumber),styles['Normal'])
+    """ %(project.title,project.comm_nr ,project.poNumber,project.grnDate),styles['Normal'])
     td=[[details]]
     t=Table(td,colWidths=[4*inch])
     t.hAlign = 'LEFT'
@@ -1967,7 +1968,7 @@ class DownloadProjectSCExcelReponse(APIView):
             Sheet1.append(['', '','','',' ',' ',' '])
             # hd1 = ['material Issued']
             # Sheet1.append(hd1)
-            hd2= ['Part No','Description','Quantity','landed Cost','total','consumed From']
+            hd2= ['Supplier','Part No','Description','Quantity','landed Cost','total','consumed From']
             Sheet1.append(hd2)
             count = count+2
             for idx,i in enumerate(hd2):
@@ -1986,15 +1987,22 @@ class DownloadProjectSCExcelReponse(APIView):
                                 pass
                             except:
                                 inval = []
+                                suply = []
                                 for u in ast.literal_eval(b.stock):
                                     if u['comm_nr']!=a.project.comm_nr:
                                         if u['addedqty']>0:
+                                            sup = projectObj.get(pk=u['project'])
                                             invalue = '(quantity : ' + str(u['addedqty']) + ', comm_nr : ' + u['comm_nr'] + ')'
+                                            supplier = sup.vendor.name
                                             inval.append(invalue)
+                                            suply.append(str(supplier))
                                 inval = json.dumps(inval)
+                                # suply = json.dumps(suply)
+                                suply = str(suply).replace("[", " ")
+                                suply = str(suply).replace("]", " ")
                                 if len(inval)>5:
                                     tot = b.qty*b.price
-                                    Sheet1.append([b.product.part_no, b.product.description_1,b.qty,b.price,tot,inval])
+                                    Sheet1.append([str(suply),b.product.part_no, b.product.description_1,b.qty,b.price,tot,inval])
 
             Sheet1.column_dimensions['A'].width = 20
             Sheet1.column_dimensions['B'].width = 20
@@ -2189,16 +2197,16 @@ class CreateStockReportDataAPIView(APIView):
                         # print tot
                         vl += tot
                     try:
-                        pObj=ProjectStockSummary.objects.get(stockReport=ssReportObj,title=i.title)
+                        pObj=ProjectStockSummary.objects.get(stockReport=ssReportObj,title=i.title,comm_nr=i.comm_nr)
                         pObj.value=vl
                         pObj.save()
                     except:
-                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=vl,title=i.title))
+                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=vl,title=i.title,comm_nr=i.comm_nr))
                 else:
                     try:
                         pObj=ProjectStockSummary.objects.get(stockReport=ssReportObj)
                     except:
-                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=0,title=i.title))
+                        projStackSummary.append(ProjectStockSummary(stockReport=ssReportObj,value=0,title=i.title,comm_nr=i.comm_nr))
 
             print len(projStackSummary)
             ProjectStockSummary.objects.bulk_create(projStackSummary)
@@ -2229,14 +2237,14 @@ class DownloadStockReportAPIView(APIView):
         rptPkList = list(reportsObj.values_list('pk',flat=True))
         projStokObjs = ProjectStockSummary.objects.filter(stockReport__in=rptPkList)
         unqTitles = list(projStokObjs.values_list('title',flat=True).distinct())
-
-        # toReturn = []
         hd = ['Date','Stock value at warehouse']
+        titles = list(projStokObjs.values_list('title',flat=True).distinct().values('title','comm_nr'))
+        titl = []
+        for p in titles:
+            print p['comm_nr'],'ssssssssss'
+            titl.append(p['title']+' - ' +p['comm_nr'])
         hdWidth = [10,10,10]
-        hd += unqTitles
-        # for i in unqTitles:
-        #     hd.append('Consumption Of Stock - '+i)
-
+        hd += titl
         toReturn.append(hd)
         for idx,i in enumerate(hd):
             cl = str(alphaChars[idx])+'1'

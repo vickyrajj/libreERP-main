@@ -1519,6 +1519,17 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
   }
 
   $scope.send = function() {
+    dateVal = new Date()
+    console.log(dateVal,'aaaa');
+    $http({
+      method: 'PATCH',
+      url: '/api/support/projects/' + $scope.form.pk + '/',
+      data: {
+        status: 'ongoing',
+        grnDate: dateVal.toJSON().split('T')[0]
+      },
+    }).
+    then(function(response) {
     for (var i = 0; i < $scope.projects.length; i++) {
       $scope.qty = $scope.projects[i].quantity2;
       $scope.rate = $scope.projects[i].landed_price
@@ -1538,22 +1549,16 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
       }).
       then(function(response) {
         Flash.create('success', 'Saved');
-        $http({
-          method: 'PATCH',
-          url: '/api/support/projects/' + $scope.form.pk + '/',
-          data: {
-            status: 'ongoing'
-          },
-        }).
-        then(function(response) {
-          Flash.create('success', 'Saved');
-          $scope.form.status = response.data.status
-          $scope.updateStatus()
-          $scope.fetchMaterial()
 
-        })
       })
     }
+
+      Flash.create('success', 'Saved');
+      $scope.form.status = response.data.status
+      $scope.updateStatus()
+      $scope.fetchMaterial()
+
+    })
   }
 
   $scope.archieve = function() {

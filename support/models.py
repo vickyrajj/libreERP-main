@@ -125,6 +125,7 @@ class Projects(models.Model):
     quoteNotes =  models.CharField(max_length = 500, null=True,blank=True)
     poNotes =  models.CharField(max_length = 500, null=True,blank=True)
     currency = models.CharField(choices = CURRENCY_CHOICE , max_length = 10 , default = 'CHF')
+    grnDate = models.DateField(null = True)
 
 
 class BoM(models.Model):
@@ -184,3 +185,4 @@ class ProjectStockSummary(models.Model):
     stockReport = models.ForeignKey(StockSummaryReport , related_name='projectStockReport' , null = True)
     value = models.FloatField(null = True,default=0)
     title = models.CharField(max_length = 100 , null = True)
+    comm_nr =  models.CharField(max_length = 100 , null = True)
