@@ -11,7 +11,6 @@ app.config(function($stateProvider) {
   })
 });
 
-
 app.controller("businessManagement.customerReviews", function($scope, $state, $http, $rootScope,$filter,$uibModal,DTOptionsBuilder, DTColumnDefBuilder) {
 
   $rootScope.state = 'Reviews';
@@ -26,29 +25,29 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
   $scope.pageOptionsSelected={
     value:$scope.pageOptions[0]
   }
-
   $scope.offset=0
-
   $scope.detailInfoData={
     chatThreadData:null,
     supportChatData:null,
   }
 
-    $scope.viewby = 15;
     $scope.setTableValues =function(){
       $scope.totalItems = $scope.reviewDataLength;
       $scope.itemsPerPage = $scope.pageOptionsSelected.value;
       $scope.maxSize = 4;
       $scope.setPage(1)
     }
+
    $scope.setPage = function (pageNo) {
      $scope.currentPage.page = pageNo;
      $scope.setPagingData($scope.currentPage.page)
    };
+
    $scope.setPagingData= function (page) {
      $scope.offset=(page-1)*$scope.pageOptionsSelected.value
      $scope.filterData()
    }
+
    $scope.pageChanged = function() {
      $scope.setPage($scope.currentPage.page)
    };
@@ -64,7 +63,6 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
      $scope.isDetailInfoUpdated=false
      $scope.detailInfoData.chatThreadData=data
      $scope.fetchChatsForUID(data)
-
    }
 
    $scope.fetchChatsForUID= function(data){
@@ -82,60 +80,43 @@ app.controller("businessManagement.customerReviews", function($scope, $state, $h
    }
 
 
-let myCount=0;
-var today_date = new Date();
-var today_day = today_date.getDate();
-var today_month = today_date.getMonth() + 1;
-var today_year = today_date.getFullYear();
-if (today_day < 10) {
-  today_day = '0' + today_day;
-}
-if (today_month < 10) {
-  today_month = '0' + today_month;
-}
-var today_date = today_year + '-' + today_month + '-' + today_day;
+    let myCount=0;
+    var today_date = new Date();
+    var today_day = today_date.getDate();
+    var today_month = today_date.getMonth() + 1;
+    var today_year = today_date.getFullYear();
+    if (today_day < 10) {
+      today_day = '0' + today_day;
+    }
+    if (today_month < 10) {
+      today_month = '0' + today_month;
+    }
+    var today_date = today_year + '-' + today_month + '-' + today_day;
 
-  $http({
-    method: 'GET',
-    url:'/api/support/reviewHomeCal/?customer&&limit='+$scope.pageOptionsSelected.value+'&offset='+$scope.offset+'&date='+today_date
-  }).
-  then(function(response) {
-    $scope.reviewData = response.data.data
-    console.log($scope.reviewData , " Review data");
-    $scope.reviewDataLength = response.data.dataLength
-    $scope.totalItems = response.data.dataLength
-    if($scope.reviewData.length>0){
-      $scope.tabelRowAction($scope.reviewData[0])
-      $scope.noDataDialouge=false;
-    }else{
-      $scope.noDataDialouge=true;
-    }
-    if(myCount<1){
-      $scope.setTableValues()
-    }
-    myCount++;
-    // $scope.setTableValues()
-    $scope.loadingData=false;
-    $scope.isDetailInfoUpdated=true
-    // $scope.filterByCreated();
-  });
+    $http({
+      method: 'GET',
+      url:'/api/support/reviewHomeCal/?customer&&limit='+$scope.pageOptionsSelected.value+'&offset='+$scope.offset+'&date='+today_date
+    }).
+    then(function(response) {
+      $scope.reviewData = response.data.data
+      console.log($scope.reviewData , " Review data");
+      $scope.reviewDataLength = response.data.dataLength
+      $scope.totalItems = response.data.dataLength
+      if($scope.reviewData.length>0){
+        $scope.tabelRowAction($scope.reviewData[0])
+        $scope.noDataDialouge=false;
+      }else{
+        $scope.noDataDialouge=true;
+      }
+      if(myCount<1){
+        $scope.setTableValues()
+      }
+      myCount++;
+      $scope.loadingData=false;
+      $scope.isDetailInfoUpdated=true
+    });
 
   $scope.tableAction = function(index) {
-    // if(table){
-    //   target=$scope.reviewData.indexOf(target)
-    // }
-    // var appType = 'Info';
-    // $scope.addTab({
-    //   title: 'Chat : ' + $scope.reviewData[target].uid,
-    //   cancel: true,
-    //   app: 'ChatInfo',
-    //   data: $scope.reviewData[target],
-    //   active: true
-    // })
-
-
-
-    console.log($scope.reviewData[index]);
 
     $http({
       method: 'GET',
@@ -143,7 +124,6 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
     }).
     then(function(response) {
       var appType = 'Info';
-
         $scope.addTab({
           title: 'Chat : ' + $scope.reviewData[index].uid,
           cancel: true,
@@ -155,7 +135,6 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
           active: true,
         })
     });
-
   }
 
   $scope.tabs = [];
@@ -166,10 +145,7 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
   $scope.addTab = function(input) {
     $scope.searchTabActive = false;
     alreadyOpen = false;
-    console.log(input);
-    console.log($scope.tabs);
     for (var i = 0; i < $scope.tabs.length; i++) {
-      console.log($scope.tabs[i].data.chatThreadData.id,input.data.chatThreadData.id, $scope.tabs[i].app ,input.app);
       if ($scope.tabs[i].data.chatThreadData.id == input.data.chatThreadData.id && $scope.tabs[i].app == input.app) {
         $scope.tabs[i].active = true;
         alreadyOpen = true;
@@ -182,8 +158,8 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
     }
   }
 
-
   $scope.isTableView=true
+
   $scope.setMyView=function(){
     $scope.isTableView=!$scope.isTableView
   }
@@ -216,11 +192,9 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
     if (email.length > 0 && email.indexOf('@') > 0) {
       url += '&email=' + email
     }
-
     if ($scope.selectedSortOption.value!='' && $scope.selectedSortOption.value!=undefined ) {
       url += '&sort' + '&sortby=' + $scope.selectedSortOption.value
     }
-
 
     if (download) {
       $window.open(url+'&download','_blank');
@@ -245,7 +219,6 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
           $scope.setTableValues()
         }
         myCount++;
-        // $scope.setTableValues()
         $scope.loadingData=false;
         $scope.isDetailInfoUpdated=true
       });
@@ -287,7 +260,6 @@ var today_date = today_year + '-' + today_month + '-' + today_day;
           res = new Date($scope.form.date)
           var date = new Date(res.setDate(res.getDate() + 1))
         }else {
-          console.log('no changeeeeeee');
           var date = $scope.form.date
         }
         $scope.getData(date,$scope.form.email,download,typOfCall)
@@ -316,7 +288,7 @@ app.controller("app.customerReviews.explore", function($scope, $http, $permissio
   $scope.fullChatData=$scope.tab.data.supportChatData
 
   $scope.calculateTime = function(user, agent) {
-    console.log('inside cal cccccccccccc');
+
     if (user != undefined) {
       var usertime = new Date(user);
       var agenttime = new Date(agent);
@@ -515,7 +487,7 @@ $scope.showChart = function(){
 
 
       checkEmail = function(){
-        console.log($scope.form.email);
+
         $http({
             method: 'GET',
             url: '/api/support/visitor/?email='+$scope.form.email+'&uid='+uid,
@@ -534,12 +506,10 @@ $scope.showChart = function(){
           data: {status:status}
         }).
         then(function(response) {
-          // dataName = response.data.name
           Flash.create('success', 'Updated')
           $uibModalInstance.dismiss(response.data.status)
         });
       }
-
     },
   }).result.then(function () {
 
@@ -551,69 +521,65 @@ $scope.showChart = function(){
   });
 
 }
-$scope.snap=function() {
-    ctx_agent.fillRect(0, 0, w, h);
-    ctx_agent.drawImage(stream_agent, 0, 0, w, h);
-    ctx_visitor.fillRect(0, 0, w, h);
-    ctx_visitor.drawImage(stream_visitor, 0, 0, w, h);
-    $uibModal.open({
-      templateUrl: '/static/ngTemplates/app.qualityCheck.capture.modal.html',
-      size: 'md',
-      backdrop: true,
-      resolve: {
-        data: function(){
-          return $scope.msgData.uid
-        }
-      },
-      controller: function($scope, $users, $uibModalInstance,data, Flash) {
-        console.log("model opened");
-        $scope.uidd=data;
-        $scope.imgsrc_agent =canvas_agent.toDataURL();
-        $scope.imgsrc_visitor =canvas_visitor.toDataURL();
-        $scope.timeOfCapture=stream_agent.currentTime;
-
-        function dataURItoBlob(dataURI) {
-          var byteString = atob(dataURI.split(',')[1]);
-          var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-          var ab = new ArrayBuffer(byteString.length);
-          var ia = new Uint8Array(ab);
-          for (var i = 0; i < byteString.length; i++) {
-              ia[i] = byteString.charCodeAt(i);
+  $scope.snap=function() {
+      ctx_agent.fillRect(0, 0, w, h);
+      ctx_agent.drawImage(stream_agent, 0, 0, w, h);
+      ctx_visitor.fillRect(0, 0, w, h);
+      ctx_visitor.drawImage(stream_visitor, 0, 0, w, h);
+      $uibModal.open({
+        templateUrl: '/static/ngTemplates/app.qualityCheck.capture.modal.html',
+        size: 'md',
+        backdrop: true,
+        resolve: {
+          data: function(){
+            return $scope.msgData.uid
           }
-          var blob = new Blob([ab], {type: mimeString});
-          return blob;
-        }
-
-        $scope.blob_of_agent_image=dataURItoBlob($scope.imgsrc_agent);
-        $scope.blob_of_visitor_image=dataURItoBlob($scope.imgsrc_visitor);
-
-        $scope.onSend_Capture =function(){
-            if ($scope.reviewForm.message.length == 0) {
-              Flash.create('warning','Please Write Some Comment')
-              return
+        },
+        controller: function($scope, $users, $uibModalInstance,data, Flash) {
+          $scope.uidd=data;
+          $scope.imgsrc_agent =canvas_agent.toDataURL();
+          $scope.imgsrc_visitor =canvas_visitor.toDataURL();
+          $scope.timeOfCapture=stream_agent.currentTime;
+          function dataURItoBlob(dataURI) {
+            var byteString = atob(dataURI.split(',')[1]);
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
             }
-            $scope.timeOfGeneration=new Date().toISOString();
-            var fd = new FormData();
-            fd.append('message', $scope.reviewForm.message);
-            fd.append('uid', $scope.uidd);
-            fd.append('timestamp', $scope.timeOfCapture);
-            fd.append('visitor_capture', $scope.blob_of_visitor_image);
-            fd.append('agent_capture', $scope.blob_of_agent_image);
-            fd.append('chatedDate', $scope.timeOfGeneration.split('T')[0]);
-            console.log("Sending..");
-            SendingPostRequest(fd);
-            $uibModalInstance.dismiss()
+            var blob = new Blob([ab], {type: mimeString});
+            return blob;
           }
-      },
-      }).result.then(function() {
 
-    }, function(data) {
-      console.log(data);
-    });
-};
+          $scope.blob_of_agent_image=dataURItoBlob($scope.imgsrc_agent);
+          $scope.blob_of_visitor_image=dataURItoBlob($scope.imgsrc_visitor);
+          $scope.onSend_Capture =function(){
+              if ($scope.reviewForm.message.length == 0) {
+                Flash.create('warning','Please Write Some Comment')
+                return
+              }
+              $scope.timeOfGeneration=new Date().toISOString();
+              var fd = new FormData();
+              fd.append('message', $scope.reviewForm.message);
+              fd.append('uid', $scope.uidd);
+              fd.append('timestamp', $scope.timeOfCapture);
+              fd.append('visitor_capture', $scope.blob_of_visitor_image);
+              fd.append('agent_capture', $scope.blob_of_agent_image);
+              fd.append('chatedDate', $scope.timeOfGeneration.split('T')[0]);
+              SendingPostRequest(fd);
+              $uibModalInstance.dismiss()
+            }
+        },
+        }).result.then(function() {
+
+      }, function(data) {
+        console.log(data);
+      });
+  };
 
   function SendingPostRequest(toSend){
-    console.log("Posting....",toSend);
+
     $http({
       method: 'POST',
       url: '/api/support/reviewComment/',
@@ -628,12 +594,10 @@ $scope.snap=function() {
       $scope.reviewCommentData.push(response.data)
       $scope.reviewForm = {message:'',visitor_capture:'',visitor_capture:''}
     }, function(err) {
-      console.log(err.data.detail);
       Flash.create('danger', err.data.detail);
     });
   }
   $scope.postComment = function(){
-    console.log($scope.msgData.created);
     if ($scope.reviewForm.message.length == 0) {
       Flash.create('warning','Please Write Some Comment')
       return
@@ -642,35 +606,7 @@ $scope.snap=function() {
     fd1.append('message', $scope.reviewForm.message);
     fd1.append('uid', $scope.msgData.uid);
     fd1.append('chatedDate', $scope.msgData.created.split('T')[0]);
-    console.log(fd1);
     SendingPostRequest(fd1);
   }
-
-
-
-
-
-  // $scope.postComment = function(){
-  //   console.log($scope.msgData.created);
-  //   if ($scope.reviewForm.message.length == 0) {
-  //     Flash.create('warning','Please Write Some Comment')
-  //     return
-  //   }
-  //   var toSend = {message:$scope.reviewForm.message,uid:$scope.msgData.uid,chatedDate:$scope.msgData.created.split('T')[0]}
-  //   $http({
-  //     method: 'POST',
-  //     url: '/api/support/reviewComment/',
-  //     data : toSend
-  //   }).
-  //   then(function(response) {
-  //     console.log(response.data,'dddddddddddd',typeof response.data);
-  //     console.log(response.data);
-  //     $scope.reviewCommentData.push(response.data)
-  //     $scope.reviewForm = {message:''}
-  //   }, function(err) {
-  //     console.log(err.data.detail);
-  //     Flash.create('danger', err.data.detail);
-  //   });
-  // }
 
 });

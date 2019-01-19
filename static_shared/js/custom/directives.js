@@ -1582,14 +1582,7 @@ app.directive('chatBox', function() {
                   console.log(all_text.childNodes[i].childNodes[j]);
                 }
               }
-              console.log(all_text);
-              // var page = $('#all_text');
-              // var pageText = page.text().replace("<span>","").replace("</span>");
-              // var searchedText = $scope.searchForm.value
-              // var theRegEx = new RegExp("("+searchedText+")", "igm");
-              // var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
-              // page.html(newHtml);
-
+              
               for (var i = 0; i < $scope.chatData.length; i++) {
                 for (var j = 0; j < $scope.chatData[i].chatList.length; j++) {
                   if ($scope.chatData[i].chatList[j].message) {
@@ -1605,17 +1598,6 @@ app.directive('chatBox', function() {
                   }
                 }
               }
-              // for (var i = 0; i < $scope.texts.length; i++) {
-              //     var page = $('#all_text'+i);
-              //     // var page = $('#all_text');
-              //     var pageText = page.text().replace("<span>","").replace("</span>");
-              //     console.log(pageText);
-              //     var searchedText = $scope.searchForm.value
-              //     var theRegEx = new RegExp("("+searchedText+")", "igm");
-              //     var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
-              //     page.html(newHtml);
-              // }
-
             }
 
           },
@@ -1626,9 +1608,6 @@ app.directive('chatBox', function() {
         });
       }
 
-
-
-
       $scope.chatTransfer = function(uid, chatThreadPk) {
         console.log($scope.data, 'entireeeeeeeeeeeeee');
         $scope.onlineAgents = []
@@ -1638,18 +1617,17 @@ app.directive('chatBox', function() {
           url: '/api/support/getMyUser/?allAgents',
         }).
         then(function(response) {
-          console.log(response.data.allAgents, '@@@@@@@@@@@@@@@@@@@@@');
           $scope.allAgents = response.data.allAgents
           for (var i = 0; i < $scope.allAgents.length; i++) {
             connection.session.call(wamp_prefix+'service.support.hhhhh.' + $scope.allAgents[i], []).
             then((function(i) {
               return function(res) {
-                console.log('online', i);
+                // console.log('online', i);
                 $scope.onlineAgents.push($scope.allAgents[i])
               }
             })(i), (function(i) {
               return function(err) {
-                console.log(err, 'offline agents');
+                // console.log(err, 'offline agents');
                 $scope.offlineAgents.push($scope.allAgents[i])
               }
             })(i))
@@ -1672,7 +1650,6 @@ app.directive('chatBox', function() {
             }
           },
           controller: function($scope, onlineAgents, offlineAgents, userData, $users, $uibModalInstance, Flash) {
-            console.log(onlineAgents, offlineAgents);
             $scope.me = $users.get("mySelf")
             $scope.onlineAgents = onlineAgents
             $scope.offlineAgents = offlineAgents
@@ -1689,11 +1666,9 @@ app.directive('chatBox', function() {
             }
 
             $scope.transferChat = function() {
-              // console.log('in traaaaa');
 
               connection.session.call(wamp_prefix+'service.support.heartbeat.' + $scope.agentForm.pk, ['popup', $scope.me.username, userData]).then(
                 function(res) {
-                  // console.log(userData.chatThreadPk, $scope.agentForm.pk);
                   $http({
                     method: 'PATCH',
                     url: '/api/support/chatThread/' + userData.chatThreadPk + '/',
@@ -1707,42 +1682,24 @@ app.directive('chatBox', function() {
 
                 },
                 function(err) {
-                  console.log("Error:", err);
                   Flash.create('danger', "Chat Couldn't Transfer - Some Server Issues")
                 }
               );
             }
-
-
-
-
-
           },
         }).result.then(function() {
 
         }, function(data) {
           if (data == 'close') {
-            console.log(data);
-            console.log($scope.index);
             $scope.closeChatBox($scope.index, $scope.data.myUserIndex)
-            // console.log($scope.data);
-            // console.log($scope.data.myUserIndex , 'ffffffffffffff');
           }
         });
-        // }
-
-
-        // setTimeout(function () {
-        //   $scope.opnpoup()
-        // }, 1000);
-
       }
 
 
       $scope.searchCannedRes = function(val) {
         var hash = "#"
         if (val.includes('#')) {
-          // beforeHash = val.slice(0,val.indexOf(hash))
           var textAfterHash = val.slice(val.indexOf(hash) + hash.length);
           if (textAfterHash.length > 0) {
             return $http({
@@ -1751,7 +1708,6 @@ app.directive('chatBox', function() {
             }).
             then(function(response) {
               console.log(response.data);
-              // $scope.chatBox.messageToSend+=response.data.text
               return response.data;
             })
           }
@@ -1761,7 +1717,7 @@ app.directive('chatBox', function() {
 
 
       $scope.editUserDetails = function(uid) {
-        console.log($scope.visitorForm);
+
         $uibModal.open({
           templateUrl: '/static/ngTemplates/app.support.editUserDetails.modal.html',
           size: 'md',
@@ -1773,8 +1729,6 @@ app.directive('chatBox', function() {
           },
           controller: function($scope, visitorData, $users, $uibModalInstance, Flash) {
             $scope.uid = uid
-            console.log(uid);
-            console.log(visitorData);
 
             if (typeof visitorData == 'string') {
               $scope.form = {
@@ -1786,34 +1740,12 @@ app.directive('chatBox', function() {
             } else {
               $scope.form = visitorData
             }
-
-
-
-
-            // $scope.$watch('form.email', function(newValue, oldValue) {
-            //   console.log('inside weathcccc');
-            //   // console.log($scope.form);
-            //   // console.log(newValue);
-            //   if (newValue.length>0) {
-            //     $http({
-            //       method: 'GET',
-            //       url: '/api/support/visitor/?email='+newValue,
-            //     }).
-            //     then(function(response) {
-            //
-            //       console.log(response.data);
-            //     });
-            //   }
-            //
-            // });
             checkEmail = function() {
-              console.log($scope.form.email);
               $http({
                 method: 'GET',
                 url: '/api/support/visitor/?email=' + $scope.form.email,
               }).
               then(function(response) {
-                console.log(response.data, typeof response.data, response.data.length);
                 if (response.data.length > 0 && response.data[0].email == $scope.form.email) {
                   $scope.form.name = response.data[0].name
                   $scope.form.email = response.data[0].email
@@ -1824,14 +1756,10 @@ app.directive('chatBox', function() {
             }
 
             $scope.submit = function() {
-
-
               if ($scope.form.email == '') {
                 Flash.create('danger', 'Email is required')
                 return
               }
-
-
               $scope.toSend = $scope.form
               $scope.toSend.uid = $scope.uid;
 
@@ -1848,19 +1776,14 @@ app.directive('chatBox', function() {
                 data: $scope.toSend
               }).
               then(function(response) {
-                // dataName = response.data.name
-                // $scope.form = response.data;
                 Flash.create('success', 'User details saved')
                 $uibModalInstance.dismiss(response.data)
-
-
                 connection.session.publish(wamp_prefix+'service.support.createDetailCookie.' + response.data.uid, [response.data]).then(
                   function(res) {},
                   function(err) {
 
                   }
                 );
-
               });
             }
 
@@ -1872,9 +1795,6 @@ app.directive('chatBox', function() {
             $scope.data.name = data.name
             $scope.data.email = data.email
             $scope.visitorForm = data
-            console.log('something#################');
-
-
             $http({
               method: 'GET',
               url: '/api/support/visitor/?email=' + data.email,
@@ -1884,26 +1804,9 @@ app.directive('chatBox', function() {
                 $scope.chatHistBtn = true
               }
             })
-
           }
         });
       }
-
-
-      // $scope.arremoji = ['👋', '💁', '🙃', '🙏', '😬', '👇', '👈', '👉', '👋', '👏', '👐', '👆', '☝', '👊', '✋', '✌', '✊', '👌', '👍', '👎'];
-      //
-      // $scope.emojiOpen = false
-      //
-      // $scope.insertEmoji = function(indx) {
-      //   $scope.chatBox.messageToSend += $scope.arremoji[indx]
-      // }
-      //
-      //
-      // $scope.openEmoji = function() {
-      //   $scope.emojiOpen = !$scope.emojiOpen
-      //
-      // }
-
     }
   };
 });
@@ -1945,14 +1848,11 @@ app.directive('notificationStrip', function() {
     },
     controller: function($scope, $http, $users, $aside) {
       var parts = $scope.data.shortInfo.split(':');
-      // console.log(parts);
       if (typeof parts[1] == 'undefined') {
         $scope.notificationType = 'default';
       } else {
         $scope.notificationType = parts[0];
       }
-      // console.log($scope.data);
-      // console.log($scope.notificationType);
       var nodeUrl = '/api/social/' + $scope.notificationType + '/'
       if (typeof parts[1] != 'undefined' && $scope.data.originator == 'social') {
         // console.log(nodeUrl + parts[1]);
@@ -2138,7 +2038,6 @@ app.directive('chatWindow', function($users) {
             read: false
           };
 
-
           $http({
             method: 'POST',
             data: dataToSend,
@@ -2147,21 +2046,12 @@ app.directive('chatWindow', function($users) {
           then(function(response) {
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
-            console.log('sending.......', response.data.message, $scope.friend.username);
             connection.session.publish(wamp_prefix+'service.chat.' + $scope.friend.username, [$scope.status, response.data.message, $scope.me, response.data.pk], {}, {
               acknowledge: true
             }).
             then(function(publication) {
               console.log('published');
             });
-
-            // connection.session.publish('service.chat.General', [$scope.status, response.data.message, $scope.me.username, 'General'], {}, {
-            //   acknowledge: true
-            // }).
-            // then(function(publication) {
-            //   console.log('published');
-            // });
-
             $scope.chatForm.messageToSend = "";
           })
         }
@@ -2189,8 +2079,6 @@ app.directive('chatWindow', function($users) {
             }
           }).
           then(function(response) {
-            console.log('resssssss', response.data);
-            // $scope.ims.push(response.data)
             var fileTypeArr = response.data.attachment.split('.')
             var fileType = fileTypeArr[fileTypeArr.length - 1]
             if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'svg' || fileType == 'gif') {
@@ -2200,7 +2088,6 @@ app.directive('chatWindow', function($users) {
             }
             $scope.ims.push(response.data)
             $scope.senderIsMe.push(true);
-            console.log(response.data.attachment);
             connection.session.publish(wamp_prefix+'service.chat.' + $scope.friend.username, [$scope.status, response.data.attachment, $scope.me, response.data.pk], {}, {
               acknowledge: true
             }).
@@ -2211,7 +2098,6 @@ app.directive('chatWindow', function($users) {
       }; // send function for file
 
       $scope.attachFile = function() {
-        console.log($scope.friend.pk);
         $('#filePickerChat' + $scope.friend.pk).click();
       }
 
@@ -2219,7 +2105,6 @@ app.directive('chatWindow', function($users) {
         if (newValue == emptyFile) {
           return;
         }
-        console.log('herreee', $scope.chatForm.fileToSend);
       });
 
       $scope.removeFile = function() {
@@ -2227,12 +2112,9 @@ app.directive('chatWindow', function($users) {
       }
 
       $scope.expandImage = function(imgUrl) {
-        console.log('expaaannddddd');
-        console.log(imgUrl);
       }
 
       $scope.addMessage = function(msg, url) {
-        console.log('in add messagge');
         $scope.sound.play();
         $http({
           method: 'PATCH',
@@ -2242,7 +2124,6 @@ app.directive('chatWindow', function($users) {
           }
         }).
         then(function(response) {
-          console.log('resssssssss');
           if (response.data.attachment) {
             var fileTypeArr = response.data.attachment.split('.')
             var fileType = fileTypeArr[fileTypeArr.length - 1]
@@ -2287,7 +2168,6 @@ app.directive('chatWindow', function($users) {
               }
             }
             $scope.ims.push(im);
-            // console.log($scope.ims.length);
           }
         });
       };
@@ -2297,27 +2177,22 @@ app.directive('chatWindow', function($users) {
         $id.scrollTop($id[0].scrollHeight);
       }
     },
-    // attrs is the attrs passed from the main scope
     link: function postLink(scope, element, attrs) {
       scope.$watch('chatForm.messageToSend', function(newValue, oldValue) {
-        // console.log("changing");
         scope.status = "T"; // the sender is typing a message
         if (newValue != "") {
           connection.session.publish(wamp_prefix+'service.chat.' + scope.friend.username, [scope.status, scope.chatForm.messageToSend, scope.me.username]);
         }
         scope.status = "N";
-      }); // watch for the messageTosend
+      });
       scope.$watch('ims.length', function() {
         setTimeout(function() {
           scope.scroll();
         }, 500);
       });
       scope.$watch('pos', function(newValue, oldValue) {
-        // console.log(newValue);
         scope.location = 30 + newValue * 320;
-        // console.log("setting the new position value");
-        // console.log();
       });
-    } // link
+    }
   };
 });

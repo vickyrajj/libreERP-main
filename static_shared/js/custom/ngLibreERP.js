@@ -38,164 +38,44 @@ app.controller('main', function($scope, $state, $users, $aside, $http, $timeout,
 
   $timeout(function() {
     $scope.isCustomer = $permissions.myPerms('app.customer.access')
-    console.log('is customer: ' , $scope.isCustomer);
     $scope.showCustomerIcons=true;
-    console.log('user details :',$scope.me);
-    // $scope.brandName = 'Customer';
-      // if($scope.isCustomer){
-      //   $http({
-      //     method: 'GET',
-      //     url: '/api/ERP/service/?company=' + $scope.me.pk
-      //   }).
-      //   then(function(response) {
-      //     console.log(response.data[0],"**************************")
-      //     $scope.brandName=response.data[0].name
-      //   }, function(response) {
-      //     console.log('mooooooooo');
-      //   });
-      // }
-      // else {
-      //   $scope.brandName = BRAND_NAME;
-      // }
   }, 1000);
 
+  function checkingHeartbeat(){
+    $http({
+      method: 'GET',
+      url: '/api/support/heartbeat/?pk=' + $scope.me.pk +'&timesheet=true'
+    }).
+    then(function(response) {
+    }, function(response) {});
+  }
 
-
-  // function setCookie(cname,cvalue,exdays) {
-  //     var d = new Date();
-  //     d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  //     var expires = "expires=" + d.toGMTString();
-  //     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  // }
-
-  // var myPk = myProfile().pk
-  //
-  //   $http({method : 'GET' , url : '/api/ERP/permission/?user='+myPk}).
-  //   then(function(response){
-  //     myPerms = response.data;
-  //     console.log(myPerms);
-  //   })
-  //
-  // var myProfile= function (){
-  //   var httpRequest = new XMLHttpRequest()
-  //   httpRequest.open('GET', "/api/HR/users/?mode=mySelf&format=json" , false);
-  //   httpRequest.send(null);
-  //   if (httpRequest.status == 200) { // successfully
-  //     var temp = JSON.parse(httpRequest.responseText);
-  //     me = temp[0];
-  //     if (typeof me.url == 'undefined') {
-  //       me.url = '/api/HR/userSearch/'+ me.pk + '/';
-  //     }else {
-  //       me.url = me.url.split('?')[0]
-  //     }
-  //     return me;
-  //   } else if (httpRequest.status == 403) {
-  //     return null;
-  //   }
-  // }
-
-
-
-  // function getCookie(cname) {
-  //     var name = cname + "=";
-  //     var decodedCookie = decodeURIComponent(document.cookie);
-  //     var ca = decodedCookie.split(';');
-  //     for(var i = 0; i < ca.length; i++) {
-  //         var c = ca[i];
-  //         while (c.charAt(0) == ' ') {
-  //             c = c.substring(1);
-  //         }
-  //         if (c.indexOf(name) == 0) {
-  //             return c.substring(name.length, c.length);
-  //         }
-  //     }
-  //     return "";
-  // }
-
-function checkingHeartbeat(){
-  $http({
-    method: 'GET',
-    url: '/api/support/heartbeat/?pk=' + $scope.me.pk +'&timesheet=true'
-  }).
-  then(function(response) {
-    console.log('here');
-  }, function(response) {});
-}
-
-checkingHeartbeat()
-
-setInterval(function () {
   checkingHeartbeat()
-}, 20000);
 
-// setTimeout(function () {
-//   $http({
-//     method: 'GET',
-//     url: '/api/support/svgColor/?fileName=example.svg'
-//   }).
-//   then(function(response) {
-//     console.log(response);
-//   }, function(response) {});
-// }, 5000);
-
-// $scope.mobileView=false;
-
-// setInterval(function(){
-//
-//   if($(window).width() < 800) {
-//     document.getElementById('mainUI').addEventListener('click', function() {
-//         if($(window).width() < 800) {
-//         $scope.sideMenuVisibility=false
-//       }
-//     })
-//     $scope.mobileView=true;
-//     if(!$scope.sideMenuVisibility){
-//         document.getElementById('navbarTop').style.margin='0%';
-//         document.getElementById('mainUIParent').style.width='100%';
-//         document.getElementById('sideMenu').style.display='none'
-//     }
-//   }else{
-//       $scope.mobileView=false;
-//   }
-// },10)
+  setInterval(function () {
+    checkingHeartbeat()
+  }, 20000);
 
 
 $scope.onHover=false;
 $scope.sideMenuVisibility = false;
-  // retrive it back
-  // var sideMenuVisibility=getCookie("sideMenuVisibility");
-  // console.log(getCookie("sideMenuVisibility"))
-  // if (sideMenuVisibility == "false") {
-  //     $scope.sideMenuVisibility=false;
-  //    } else {
-  //    $scope.sideMenuVisibility=true;
-  // }
 
   $scope.toggleSideMenu = function() {
     $scope.sideMenuVisibility = !$scope.sideMenuVisibility;
-
     if ($scope.sideMenuVisibility === false) {
         sideMenuVisibility='false';
        } else {
        sideMenuVisibility='true';
     }
-    // save it in cookies
-    // setCookie('sideMenuVisibility',sideMenuVisibility,30);
-    // console.log(getCookie('sideMenuVisibility'))
   }
 
   $permissions.module().
   success(function(response) {
-    // console.log(response);
     $scope.modules = response;
     if ($scope.modules.length == 1) {
-      // console.log($state);
-      // console.log($state.current.name);
       if ($state.current.name.split('.').length == 1) {
-        // $state.go($scope.modules[0].name);
       }
     }
-
   });
 
 
@@ -270,9 +150,7 @@ $scope.sideMenuVisibility = false;
   }
 
   $scope.$watch('terminal.command.username', function(newValue, oldValue) {
-    console.log(newValue);
     if (typeof newValue != 'undefined') {
-      // $scope.terminal.showCommandOptions = true;
       $scope.addIMWindow($scope.terminal.command.pk);
       $scope.terminal.command.username = '';
       $scope.terminal = {
@@ -280,7 +158,6 @@ $scope.sideMenuVisibility = false;
         show: false,
         showCommandOptions: false
       };
-
     }
   });
 
@@ -289,17 +166,9 @@ $scope.sideMenuVisibility = false;
       $scope.terminal.show = false;
       return;
     }
-    // parse the command
-    // possible commands for the calendar app :
-    // 'remind me to ask bill for the report on the project'
-    // arrange a meeting with @team ELMS at 2 pm on alternate working day
-    // todo code review by EOD
     var cmd = $scope.terminal.command;
     if (typeof cmd == 'string' && cmd.startsWith('@')) {
       // user is searching for a user
-
-
-
     }
 
   };
@@ -324,8 +193,6 @@ $scope.sideMenuVisibility = false;
       $scope.terminal.show = false;
     }
   }
-
-
 
   settings = {
     theme: $scope.themeObj,

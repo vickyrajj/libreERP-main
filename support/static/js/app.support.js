@@ -11,7 +11,6 @@ app.config(function($stateProvider,anTinyconProvider) {
         }
       }
     })
-
     anTinyconProvider.setOptions({
          width: 7,
          height: 9,
@@ -24,10 +23,8 @@ app.config(function($stateProvider,anTinyconProvider) {
 
 app.controller("businessManagement.support", function($scope, $state, $users, $stateParams, $http, Flash, $timeout, $interval, $uibModal,ngAudio,anTinycon) {
 
-
   $scope.newUsers = [];
   $scope.myUsers = [];
-
 
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -52,18 +49,11 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     return "";
   }
 
-
-
-
-
-
     $scope.sendBackHeartBeat=function() {
-      // var scope = angular.element(document.getElementById('chatTab')).scope();
 
 
         function heartbeat(args) {
           if (args[0]=='popup') {
-            console.log(args[2]);
             alert(args[1]+" has assigned "+ args[2].uid + " uid chat to you!")
             $scope.myUsers.push(args[2]);
             connection.session.publish(wamp_prefix+'service.support.chat.' + args[2].uid, ['AP', $scope.me.pk], {}, {
@@ -72,7 +62,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
             then(function(publication) {
               console.log("Published AP", args[2].uid);
             });
-
             var xhttp = new XMLHttpRequest();
              xhttp.onreadystatechange = function() {
                if (this.readyState == 4 && this.status == 200) {
@@ -98,140 +87,135 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
               console.log("failed to registered: ");
             }
           );
-
     }
 
 
+    Tinycon.setOptions({
+    	width: 7,
+    	height: 9,
+    	font: '11px arial',
+    	color: '#ffffff',
+    	background: '#00008B',
+    	fallback: true
+    });
 
-  Tinycon.setOptions({
-  	width: 7,
-  	height: 9,
-  	font: '11px arial',
-  	color: '#ffffff',
-  	background: '#00008B',
-  	fallback: true
-  });
+    setInterval(function () {
+      if($scope.newUsers.length>0){
+        Tinycon.setBubble($scope.newUsers.length);
+        $scope.sound.play();
+      }else{
+        Tinycon.reset();
+      }
+    }, 5000);
 
-  $scope.sound = ngAudio.load("static/audio/notification.ogg");
+     $scope.sound = ngAudio.load("static/audio/notification.ogg");
+     $scope.myCompanies = [];
+     function fetchUsers() {
+      if (connectionOpened) {
+        $http({
+          method: 'GET',
+          url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
+        }).then(function(response) {
+            for (var i = 0; i < response.data.length; i++) {
+              $scope.myUsers.push({
+                name: response.data[i].name,
+                email: response.data[i].email,
+                uid: response.data[i].uid,
+                chatThreadPk: response.data[i].chatThreadPk,
+                messages: [],
+                isOnline: true,
+                unreadMsg: 0,
+                boxOpen: false,
+                companyPk: response.data[i].companyPk,
+                servicePk: response.data[i].servicePk,
+                spying: {
+                  value: '',
+                  isTyping: false
+                },
+                video: false,
+                videoUrl: '',
+                audio:false,
+                audioUrl:'',
+                isVideoShowing: true,
+                alreadyDone: false,
+                closeIframe:false
+              })
+              connection.session.publish(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
+                acknowledge: true
+              }).
+              then(function(publication) {
+                console.log("Published");
+              });
+          }
+          $scope.sendBackHeartBeat();
+          $scope.getOpenedChatFromCookie();
 
-  setInterval(function () {
-    if($scope.newUsers.length>0){
-      Tinycon.setBubble($scope.newUsers.length);
-      $scope.sound.play();
-    }else{
-      Tinycon.reset();
-    }
+        });
 
-  }, 5000);
-  $scope.myCompanies = [];
-  function fetchUsers() {
-    if (connectionOpened) {
-      console.log('iffffffffffffffffff');
-      $http({
-        method: 'GET',
-        url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
-      }).then(function(response) {
+        $http({
+          method: 'GET',
+          url: '/api/support/getMyUser/?getNewComp=' + $scope.me.pk,
+        }).then(function(response) {
+          console.log(response.data, 'Got unhamdled');
+          $scope.myCompanies = response.data
+        });
 
-        for (var i = 0; i < response.data.length; i++) {
-          $scope.myUsers.push({
-            name: response.data[i].name,
-            email: response.data[i].email,
-            uid: response.data[i].uid,
-            chatThreadPk: response.data[i].chatThreadPk,
-            messages: [],
-            isOnline: true,
-            unreadMsg: 0,
-            boxOpen: false,
-            companyPk: response.data[i].companyPk,
-            servicePk: response.data[i].servicePk,
-            spying: {
-              value: '',
-              isTyping: false
-            },
-            video: false,
-            videoUrl: '',
-            audio:false,
-            audioUrl:'',
-            isVideoShowing: true,
-            alreadyDone: false,
-            closeIframe:false
-          })
+        $http({
+          method: 'GET',
+          url: '/api/support/getMyUser/?getNewUser=1',
+        }).then(function(response) {
+          for (var i = 0; i < response.data.length; i++) {
+            if($scope.myCompanies.indexOf(response.data[i].companyPk)>=0){
+              $scope.newUsers.push({
+                name: '',
+                uid: response.data[i].uid,
+                messages: [],
+                isOnline: true,
+                companyPk: response.data[i].companyPk,
+                email: '',
+                boxOpen: false,
+                chatThreadPk: response.data[i].chatThreadPk,
+                spying: {
+                  value: '',
+                  isTyping: false
+                },
+                video: false,
+                videoUrl: '',
+                audio:false,
+                audioUrl:'',
+                isVideoShowing: true,
+                alreadyDone: false,
+                closeIframe:false
+              })
+            }
+          }
+        });
 
-          connection.session.publish(wamp_prefix+'service.support.agent', [response.data[i].uid, 'R'], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
-        }
-        $scope.sendBackHeartBeat();
-        $scope.getOpenedChatFromCookie();
-
-      });
-      $http({
-        method: 'GET',
-        url: '/api/support/getMyUser/?getNewComp=' + $scope.me.pk,
-      }).then(function(response) {
-        console.log(response.data, 'Got unhamdled');
-        $scope.myCompanies = response.data
-      });
-
-      $http({
-        method: 'GET',
-        url: '/api/support/getMyUser/?getNewUser=1',
-      }).then(function(response) {
-
-
-        for (var i = 0; i < response.data.length; i++) {
-
-          if($scope.myCompanies.indexOf(response.data[i].companyPk)>=0){
-            $scope.newUsers.push({
-              name: '',
-              uid: response.data[i].uid,
-              messages: [],
-              isOnline: true,
-              companyPk: response.data[i].companyPk,
-              email: '',
-              boxOpen: false,
-              chatThreadPk: response.data[i].chatThreadPk,
-              spying: {
-                value: '',
-                isTyping: false
-              },
-              video: false,
-              videoUrl: '',
-              audio:false,
-              audioUrl:'',
-              isVideoShowing: true,
-              alreadyDone: false,
-              closeIframe:false
-            })
+        var myActiveTime = Date.now();
+        function heartbeat() {
+          return {
+            ActiveUsers: $scope.myUsers,
+            pk: $scope.me.pk,
+            activeTime: myActiveTime
           }
         }
-      });
-      var myActiveTime = Date.now();
-      function heartbeat() {
-        return {
-          ActiveUsers: $scope.myUsers,
-          pk: $scope.me.pk,
-          activeTime: myActiveTime
-        }
+        connection.session.register(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
+          function(res) {
+            console.log("registered to service.support.hhhh ");
+          },
+          function(err) {
+            console.log("failed to registered: ");
+          });
+        return
+      }else {
+        setTimeout(function () {
+          fetchUsers()
+        }, 500);
       }
-      connection.session.register(wamp_prefix+'service.support.hhhhh.' + $scope.me.pk, heartbeat).then(
-        function(res) {
-          console.log("registered to service.support.hhhh ");
-        },
-        function(err) {
-          console.log("failed to registered: ");
-        });
-      return
-    }else {
-      setTimeout(function () {
-        // console.log('elseeeeeeeeeeeeeeeeee');
-        fetchUsers()
-      }, 500);
     }
-  }
+
+
+
   fetchUsers();
 
   $scope.onNotification = function(uid, msg, i = 'a') {
@@ -242,15 +226,13 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       body: msg,
       icon: 'my-icon.ico',
       onClick: function onNotificationClicked() {
-        console.log('Notification clicked');
         if (i == 'a') {
 
         } else {
           $scope.addToChat(i, uid)
         }
-
       },
-      autoClose: 20000 //auto close the notification after 4 seconds (you can manually close it via hide function)
+      autoClose: 20000
     }, function onShow(error, hide) {
       if (error) {
         window.alert('Unable to show notification: ' + error.message);
@@ -259,7 +241,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
         setTimeout(function hideNotification() {
           console.log('Hiding notification....');
-          hide(); //manually close the notification (you can skip this if you use the autoClose option)
+          hide();
         }, 20000);
       }
     });
@@ -302,56 +284,38 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
 
   var openedUsers = []
 
-  // anTinycon.setBubble(6);
-  // anTinycon.setOptions({
-  //     width: 7,
-  //     height: 9,
-  //     font: '10px arial',
-  //     colour: '#ffffff',
-  //     background: '#549A2F',
-  //     fallback: true
-  // });
-
-
   function addToCookie(uid, indx) {
     openedUsers.push({
       uid: uid,
       index: indx
     })
     setCookie('openedChats', JSON.stringify(openedUsers), 30);
-    console.log('added index ' + indx);
   }
 
   $scope.addToChat = function(indx, uid) {
-    // alert('adding '+uid)
     addToCookie(uid, indx);
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
-        console.log('already in chat');
         return
       }
     }
-
     if ($scope.chatsInView.length < 4) {
       $scope.myUsers[indx].myUserIndex = indx
       $scope.chatsInView.push($scope.myUsers[indx])
-      console.log('yess');
     } else {
       $scope.myUsers[indx].myUserIndex = indx
       $scope.chatsInView.push($scope.myUsers[indx])
       $scope.chatsInView.splice(0, 1)
-      console.log('elseeee');
     }
   }
 
   $scope.getOpenedChatFromCookie = function() {
-    console.log($scope.myUsers);
+
     var openedChats = getCookie('openedChats')
     if (openedChats.length == 0) {
       return
     }
     openedChats = JSON.parse(openedChats);
-    console.log(openedChats);
     for (var i = 0; i < openedChats.length; i++) {
       for (var j = 0; j < $scope.myUsers.length; j++) {
         if ($scope.myUsers[j].uid == openedChats[i].uid) {
@@ -364,12 +328,10 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
   $scope.chatClose = function(idx, chatThreadPk) {
-    console.log('coming in chatclose');
     var myUser = $scope.myUsers[idx];
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if (myUser.uid == $scope.chatsInView[i].uid) {
         $scope.chatsInView.splice(i, 1)
-        console.log('removing from chat');
       }
     }
     $scope.myUsers.splice(idx, 1)
@@ -385,11 +347,9 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
       return
     });
   }
-$scope.count=0;
+  $scope.count=0;
   $scope.assignUser = function(indx, uid) {
-
     $scope.myUsers.push($scope.newUsers[indx]);
-    // $scope.count++;
     $scope.addToChat($scope.myUsers.length-1, uid)
     $scope.newUsers.splice(indx, 1);
 
@@ -400,7 +360,6 @@ $scope.count=0;
     then(function(response) {
       console.log(response.data);
       for (var i = 0; i < response.data.length; i++) {
-
         $http({
           method: 'PATCH',
           url: '/api/support/supportChat/' + response.data[i].pk + '/',
@@ -411,7 +370,6 @@ $scope.count=0;
         then(function(response) {
           console.log(response.data);
         });
-
       }
 
       $http({
@@ -419,10 +377,7 @@ $scope.count=0;
         url: '/api/support/chatThread/?uid=' + uid
       }).
       then(function(response) {
-
         var chatThreadCreated = new Date(response.data[0].created).getTime()
-        console.log(chatThreadCreated);
-
         var now = new Date().getTime();
         var toPatch = {
           user: $scope.me.pk
@@ -430,7 +385,6 @@ $scope.count=0;
         if (now - chatThreadCreated > 180000 ) {
           toPatch.isLate = true
         }
-
 
         $http({
           method: 'PATCH',
@@ -441,7 +395,6 @@ $scope.count=0;
           console.log(response.data);
         });
       })
-
     });
 
     $scope.status = 'AP';
@@ -451,8 +404,6 @@ $scope.count=0;
     then(function(publication) {
       console.log("Published AP", uid);
     });
-
-
     $scope.status = 'R';
     connection.session.publish(wamp_prefix+'service.support.agent', [uid, $scope.status], {}, {
       acknowledge: true
@@ -460,7 +411,5 @@ $scope.count=0;
     then(function(publication) {
       console.log("Published");
     });
-
   }
-
 });

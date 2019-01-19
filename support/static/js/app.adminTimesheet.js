@@ -12,32 +12,27 @@ app.config(function($stateProvider) {
 });
 app.controller("businessManagement.adminTimesheet.explore", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope , ngAudio , $interval, $timeout , $permissions) {
 
-console.log($scope.me);
+    console.log($scope.me);
+    $scope.form1 = {date:new Date()}
+    $scope.fetchhh=function(date){
+      var url = '/api/support/heartbeat/?pk='+$scope.tab.data+'&getDetailData'
+      if (date!=null&&typeof date == 'object') {
+        url += '&date=' + date.toJSON().split('T')[0]
+      }
+      $http({
+      method: 'GET',
+      url: url,
+      }).
+      then(function(response) {
+        console.log(response.data);
+        $scope.fullInfo =response.data
+      });
+    }
+    $scope.fetchhh($scope.form1.date);
 
-$scope.form1 = {date:new Date()}
-
-$scope.fetchhh=function(date){
-  var url = '/api/support/heartbeat/?pk='+$scope.tab.data+'&getDetailData'
-
-  if (date!=null&&typeof date == 'object') {
-    url += '&date=' + date.toJSON().split('T')[0]
-  }
-  $http({
-  method: 'GET',
-  url: url,
-  }).
-  then(function(response) {
-
-  console.log(response.data,'dddddddddddd',typeof response.data);
-  $scope.fullInfo =response.data
-  });
-}
-$scope.fetchhh($scope.form1.date);
-$scope.filterCall=function(){
-  $scope.fetchhh($scope.form1.date);
-}
-
-
+    $scope.filterCall=function(){
+      $scope.fetchhh($scope.form1.date);
+    }
 })
 app.controller("businessManagement.adminTimesheet", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope,$window) {
 
@@ -45,24 +40,16 @@ app.controller("businessManagement.adminTimesheet", function($scope, $state, $us
     tableData: []
   };
 
-console.log($users.get('mySelf'));
+  console.log($users.get('mySelf'));
   $scope.form = {date:new Date(),user:'',email:'',client:''}
   $scope.reviewData = []
-  // $scope.archivedData=[]
-
-function archived(){
-  console.log('called');
-}
-
-$scope.browseTab = true;
-$scope.archiveTab = false;
+  $scope.browseTab = true;
+  $scope.archiveTab = false;
 
 
   $scope.getData = function(date,user,email,client,download){
-    console.log('@@@@@@@@@@@@@@@@@@',date,user,email,client,download);
     var url = '/api/support/heartbeat/?'
     url += 'getTimeSheetData'
-
     if (date!=null&&typeof date == 'object') {
       url += '&date=' + date.toJSON().split('T')[0]
     }
@@ -74,8 +61,7 @@ $scope.archiveTab = false;
         url: url,
       }).
       then(function(response) {
-        // $scope.custDetails = response.data[0]
-        console.log(response.data,'dddddddddddd',typeof response.data);
+        console.log(response.data);
         $scope.reviewData =response.data
       });
     }
@@ -83,35 +69,19 @@ $scope.archiveTab = false;
   $scope.getData($scope.form.date,$scope.form.user)
 
 
-  $scope.userSearch = function(query) {
-    return $http.get('/api/HR/userSearch/?username__contains=' + query).
-    then(function(response){
-      return response.data;
-    })
-  };
-  $scope.serviceSearch = function(query) {
-    return $http.get('/api/ERP/service/?name__contains=' + query+'&limit=15').
-    then(function(response){
-      return response.data.results;
-    })
-  };
   $scope.changeDateType = false
   $scope.$watch('form.date', function(newValue, oldValue) {
-    console.log(oldValue,newValue);
     if (oldValue == undefined || oldValue == null) {
       $scope.changeDateType = true
     }
   })
   $scope.filterData = function(download){
 
-    console.log($scope.form.date,typeof($scope.form.date),$scope.oldDateValue);
     if (typeof $scope.form.date =='undefined'||$scope.form.date ==null) {
       Flash.create('warning','Please Select Proper Date')
       return
     }
-    console.log($scope.form);
     $scope.getData($scope.form.date)
-
   }
 
   $scope.download = function(){
@@ -129,54 +99,4 @@ $scope.archiveTab = false;
     }
     $scope.ActiveRows[index]=true
   }
-
-  $scope.tableAction = function(target) {
-
-    console.log($scope.reviewData[target]);
-    var appType = 'Info';
-    $scope.addTab({
-      title: 'Agent : ' + $scope.reviewData[target][0].user_id,
-      cancel: true,
-      app: 'AgentInfo',
-      data: $scope.reviewData[target][0].user_id,
-      active: true,
-      typ:'browse'
-    })
-  }
-
-  $scope.tabs = [];
-  $scope.searchTabActive = true;
-
-  $scope.closeTab = function(index) {
-    console.log($scope.tabs[index].typ);
-    if ($scope.tabs[index].typ=='archived') {
-      $scope.browseTab = false;
-      $scope.archiveTab = true;
-      console.log($scope.archiveTab);
-    }else if ($scope.tabs[index].typ=='browse') {
-      $scope.archiveTab = false;
-      $scope.browseTab = true;
-      console.log($scope.archiveTab);
-    }
-    $scope.tabs.splice(index, 1)
-  }
-
-  $scope.addTab = function(input) {
-
-    $scope.searchTabActive = false;
-    alreadyOpen = false;
-    for (var i = 0; i < $scope.tabs.length; i++) {
-      // console.log($scope.tabs[i].data,input.data[0].id, $scope.tabs[i].app ,input.app);
-      if ($scope.tabs[i].data == input.data && $scope.tabs[i].app == input.app) {
-        $scope.tabs[i].active = true;
-        alreadyOpen = true;
-      } else {
-        $scope.tabs[i].active = false;
-      }
-    }
-    if (!alreadyOpen) {
-      $scope.tabs.push(input)
-    }
-  }
-
 });

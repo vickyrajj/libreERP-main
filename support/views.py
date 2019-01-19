@@ -1049,7 +1049,7 @@ class EmailChat(APIView):
         emailAddr=[]
         print request.data['email'],'email'
         emailAddr.append(request.data['email'])
-
+        chatStarted=ChatThread.objects.filter(uid=request.data['uid'])[0].created
         sObj = SupportChat.objects.filter(uid = request.data['uid'])
         visitor = Visitor.objects.filter(uid = request.data['uid'])
         if len(visitor)>0:
@@ -1066,12 +1066,13 @@ class EmailChat(APIView):
             else:
                 toAppend['sentByAgent'] = False
                 if a.attachment:
-                    toAppend['attachment'] = a.attachment
+                    toAppend['attachment'] = globalSettings.SITE_ADDRESS + '/media/' + str(a.attachment)
             allChats.append(toAppend)
         sObj = allChats
         ctx = {
             'heading' : "Support Conversation",
-            'allChats' : sObj
+            'allChats' : sObj,
+            'started':chatStarted
         }
         print ctx
         email_body = get_template('app.support.email.html').render(ctx)

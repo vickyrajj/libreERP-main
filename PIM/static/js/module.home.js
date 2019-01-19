@@ -763,14 +763,6 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
         } else {
           id = 0
         }
-        // $http({
-        //   method: 'GET',
-        //   url:  '/api/support/customerProfile/'+response.data[0]+'/',
-        // }).
-        // then(function(response) {
-        //   console.log(response.data);
-        //   $scope.cpForm = response.data
-        // });
         console.log(id, 'customer');
         $http({
           method: 'GET',
@@ -817,7 +809,6 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
           url: '/api/support/gethomeCal/',
         }).
         then(function(response) {
-          console.log('adminnnnnnnnnnnnnnn');
           console.log(response.data);
 
           $scope.isAdminLoaded=true

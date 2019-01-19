@@ -14,15 +14,11 @@ app.config(function($stateProvider) {
 
 app.controller("businessManagement.customers", function($scope, $state, $users, $stateParams, $http, Flash, $uibModal, $rootScope ,$permissions , $timeout) {
 
-
   $scope.me = $users.get('mySelf')
-
   $scope.customerCreatePerm = false;
-
   $timeout(function () {
     $scope.customerCreatePerm = $permissions.myPerms('module.customer.create')
   }, 300);
-
 
   $scope.data = {
     tableData: []
@@ -35,7 +31,6 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
     itemTemplate: '/static/ngTemplates/app.customers.items.html',
   }, ];
 
-
   $scope.config = {
     views: views,
     url: '/api/ERP/service/',
@@ -43,10 +38,7 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
     itemsNumPerView: [16, 32, 48],
   }
 
-
   $scope.tableAction = function(target, action, mode) {
-    console.log(target, action, mode);
-    console.log($scope.data.tableData);
 
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
@@ -67,24 +59,17 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
           data: $scope.data.tableData[i],
           active: true,
         })
-
       }
     }
   }
 
-  // setInterval(function () {
-  //   console.log(window.windowState);
-  // }, 5000);
-
   $scope.tabs = [];
   $scope.searchTabActive = true;
-
   $scope.closeTab = function(index) {
     $scope.tabs.splice(index, 1)
   }
 
   $scope.addTab = function(input) {
-    console.log(JSON.stringify(input));
     $scope.searchTabActive = false;
     alreadyOpen = false;
     for (var i = 0; i < $scope.tabs.length; i++) {
@@ -99,160 +84,11 @@ app.controller("businessManagement.customers", function($scope, $state, $users, 
       $scope.tabs.push(input)
     }
   }
-
 });
 
 app.controller("businessManagement.customers.explore", function($scope, $state,$filter, $users, $stateParams, $http, Flash, $uibModal) {
-  // $scope.compDetails = $scope.tab.data
-  // $scope.custDetails = {}
-  // $http({
-  //   method: 'GET',
-  //   url: '/api/support/customerProfile/?service=' + $scope.compDetails.pk,
-  // }).
-  // then(function(response) {
-  //   $scope.custDetails = response.data[0]
-  //   console.log($scope.custDetails, 'dddddddddddd');
-  // });
-  // $scope.custDetails = {}
-  // $http({
-  //   method: 'GET',
-  //   url: '/api/HR/users/',
-  // }).
-  // then(function(response) {
-  //   $scope.myUsers = response.data[0]
-  //   console.log($scope.myUsers, 'dddddddddddd');
-  // });
-// console.log($scope.brandLogo);
-$scope.myAdvisors=[]
 
-  // $scope.openChartPopoup = function(pk) {
-  //   $uibModal.open({
-  //     templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',
-  //     size: 'md',
-  //     backdrop: true,
-  //     resolve: {
-  //       cPk: function() {
-  //         return $scope.custDetails.pk;
-  //       },
-  //       compDetail:$scope.compDetails,
-  //       // logo:$scope.brandLogo
-  //     },
-  //     controller: function($scope, $users, $timeout, $uibModalInstance, cPk,compDetail,Flash) {
-  //
-  //       $scope.cpk;
-  //       $http({
-  //         method: 'GET',
-  //         url: '/api/support/script/chatter/?pk=' + cPk,
-  //       }).
-  //       then(function(response) {
-  //         console.log('reeeeeeeeeeeeeeeeeeesssssssssss', response.data);
-  //         $scope.cpk = response.data.data
-  //         console.log($scope.cpk);
-  //       });
-  //
-  // console.log(compDetail);
-  //
-  //       $scope.sendEmail=function(){
-  //         if ($scope.emailAddress) {
-  //
-  //           $http({
-  //             method: 'POST',
-  //             url: '/api/support/emailScript/',
-  //             data: {
-  //               email: $scope.emailAddress,
-  //               script: $scope.src,
-  //               companyName:compDetail.name,
-  //               // logo:$scope.brandLogo
-  //
-  //             }
-  //           }).then(function(response) {
-  //             console.log('send email');
-  //             Flash.create('success', 'Mail Sent')
-  //             $scope.emailAddress=''
-  //           });
-  //
-  //         }
-  //       }
-  //       $timeout(function() {
-  //         console.log(window.location.host, 'hosttttttt');
-  //         $scope.src = '<script src="' + "https://" + window.location.host + "/script/chatter-" + $scope.cpk + ".js" + '"></script>'
-  //       }, 600);
-  //
-  //     },
-  //   })
-  //
-  // }
-
-
-
-  // $scope.fetchProcess = function() {
-  //   $scope.process_list =[]
-  //   $http({
-  //     method: 'GET',
-  //     url: 'api/support/companyProcess/?service='+$scope.compDetails.pk
-  //   }).
-  //   then(function(response) {
-  //     console.log(response.data, 'response');
-  //     $scope.process_list = response.data
-  //   });
-  // }
-  //
-  // $scope.fetchUsers=function(){
-  //     var url = '/api/support/chatThread/?'
-  //     url += '&companyHandelrs=' + $scope.compDetails.pk
-  //     $http({
-  //       method: 'GET',
-  //       url: url,
-  //     }).
-  //     then(function(response) {
-  //       console.log(response.data);
-  //
-  //     });
-  // }
-  // $scope.fetchUsers();
-  // $scope.fetchProcess()
-
-
-
-  // $scope.add_process1 = function() {
-  //   if ($scope.process_text) {
-  //     for (var i = 0; i < $scope.process_list.length; i++) {
-  //       if ($scope.process_list[i] == $scope.process_text) {
-  //         Flash.create('warning', 'This process Is Already Added')
-  //         return
-  //       }
-  //     }
-  //     $http({
-  //       method: 'POST',
-  //       url: 'api/support/companyProcess/',
-  //       data: {
-  //         text: $scope.process_text,
-  //         service: $scope.compDetails.pk
-  //       }
-  //     }).
-  //     then(function(response) {
-  //       console.log(response.data, 'response');
-  //         $scope.process_list.push(response.data)
-  //         $scope.process_text = ''
-  //     });
-  //
-  //     // $scope.process_list.push($scope.process_text)
-  //   } else {
-  //     Flash.create('warning', 'Mention Some process')
-  //   }
-  // }
-
-  // $scope.close_process = function(indx) {
-  //   // console.log('closingl',indx,$scope.process_list);
-  //
-  //   $http({method : 'DELETE' , url : '/api/support/companyProcess/' + $scope.process_list[indx].pk + '/'}).
-  //   then(function(response){
-  //     Flash.create('success' , 'Deleted Successfully')
-  //     $scope.process_list.splice(indx, 1)
-  //   })
-  //
-  //
-  // }
+ $scope.myAdvisors=[]
 
 })
 
@@ -268,21 +104,20 @@ app.controller("businessManagement.customers.document", function($scope, $state,
     toolbar: 'saveBtn publishBtn cancelBtn headerMode bodyMode | undo redo | bullist numlist | alignleft aligncenter alignright alignjustify | outdent  indent blockquote | bold italic underline | image link',
   };
   $scope.compDetails = $scope.tab.data
-  console.log($scope.compDetails);
   $http({
     method: 'GET',
     url: '/api/support/customerProfile/?service=' + $scope.compDetails.pk,
   }).
   then(function(response) {
     $scope.custDetails = response.data[0]
-    console.log($scope.custDetails, 'dddddddddddd');
+    console.log($scope.custDetails);
     $http({
       method: 'GET',
       url: '/api/support/documentation/?customer=' + $scope.custDetails.pk,
     }).
     then(function(response) {
       $scope.custDocs = response.data
-      console.log($scope.custDocs, 'dddddddddddd');
+      console.log($scope.custDocs);
     });
   });
 
@@ -298,23 +133,19 @@ app.controller("businessManagement.customers.document", function($scope, $state,
     } else {
       $scope.docForm = $scope.custDocs[idx]
       $scope.versions = [];
-      console.log('coming hereeeee');
       $scope.fetchVersions($scope.docForm.pk)
     }
-    console.log($scope.docForm);
   }
+
   $scope.saveDoc = function() {
-    console.log($scope.docForm);
     if ($scope.docForm.title == null || $scope.docForm.title.length == 0) {
       Flash.create('warning', 'Title Is Required')
       return
     }
-    console.log($scope.docForm.text == null);
     if (($scope.docForm.text == null || $scope.docForm.text.length == 0) && ($scope.docForm.docs == null || $scope.docForm.docs == emptyFile)) {
       Flash.create('warning', 'Either Content Or Document File Is Required')
       return
     }
-
     var fd = new FormData();
     fd.append('title', $scope.docForm.title);
     fd.append('customer', $scope.custDetails.pk);
@@ -326,24 +157,18 @@ app.controller("businessManagement.customers.document", function($scope, $state,
     }
 
     if ($scope.docForm.process!=null && typeof $scope.docForm.process != 'string') {
-      console.log($scope.docForm.process.pk,'dddddddddddddddddd');
-      console.log($scope.docForm.process);
       fd.append('process' , $scope.docForm.process.pk)
     }
 
     if ($scope.docForm.articleOwner!=null && typeof $scope.docForm.articleOwner != 'string') {
-      console.log('article owner' , $scope.docForm.articleOwner , $scope.docForm.articleOwner.pk);
       fd.append('articleOwner' , $scope.docForm.articleOwner.pk)
     }
-
-
     var method = 'POST'
     var url = '/api/support/documentation/'
     if ($scope.docForm.pk != undefined) {
       method = 'PATCH'
       url += $scope.docForm.pk + '/'
     }
-    console.log(fd);
 
     $http({
       method: method,
@@ -371,11 +196,9 @@ app.controller("businessManagement.customers.document", function($scope, $state,
           }
         }).
         then(function(response) {
-          console.log('ddddddddddddddd', response.data);
           response.data.active = false
           $scope.versions.push(response.data)
         });
-
     })
   }
 
@@ -384,10 +207,8 @@ app.controller("businessManagement.customers.document", function($scope, $state,
   $scope.$watch('docForm.text', function(newValue, oldValue) {
     var span = document.createElement('span');
     span.innerHTML = newValue;
-    // console.log(span.innerHTML);
     $scope.h1_array = [{}];
     $scope.h2_array = [{}];
-
     var nodes = span.getElementsByTagName('h1');
     for (var i = 0; i < nodes.length; i++) {
       var current = nodes[i].outerHTML;
@@ -400,7 +221,6 @@ app.controller("businessManagement.customers.document", function($scope, $state,
           index_val: lineNumber,
           childeren: [{}]
         });
-      // console.log($scope.h1_array);
     }
     var nodes_h2 = span.getElementsByTagName('h2');
     for (var j = 0; j < nodes_h2.length; j++) {
@@ -413,7 +233,6 @@ app.controller("businessManagement.customers.document", function($scope, $state,
           title: nodes_h2[j].innerHTML,
           index_val: lineNumber
         });
-      // console.log($scope.h2_array);
     }
 
     if ($scope.h1_array.length > 1) {
@@ -428,38 +247,6 @@ app.controller("businessManagement.customers.document", function($scope, $state,
   }, true)
 
 
-  // $scope.openChartPopoup = function(pk){
-  //   $uibModal.open({
-  //     templateUrl: '/static/ngTemplates/app.customer.chat.modal.html',
-  //     size: 'md',
-  //     backdrop: true,
-  //     resolve: {
-  //       cPk: function() {
-  //         return $scope.custDetails.pk;
-  //       }
-  //     },
-  //     controller: function($scope, $users , $timeout , $uibModalInstance , cPk) {
-  //       $scope.cpk ;
-  //       $http({
-  //         method: 'GET',
-  //         url: '/api/support/script/chatter/?pk='+cPk,
-  //       }).
-  //       then(function(response) {
-  //         console.log('reeeeeeeeeeeeeeeeeeesssssssssss',response.data);
-  //         $scope.cpk= response.data.data
-  //         console.log($scope.cpk);
-  //       });
-  //
-  //       $timeout(function () {
-  //         console.log(window.location.host,'hosttttttt');
-  //         $scope.src = '<script src="' + "http://"+window.location.host+"/script/chatter-" + $scope.cpk + ".js" + '"></script>'
-  //       }, 600);
-  //
-  //     },
-  //   })
-  //
-  // }
-
   $scope.fetchVersions = function(pk) {
     $http({
       method: 'GET',
@@ -467,7 +254,6 @@ app.controller("businessManagement.customers.document", function($scope, $state,
     }).
     then(function(response) {
       $scope.versions = response.data
-
       for (var i = 0; i < $scope.versions.length; i++) {
         $scope.versions[i].active = false
       }
@@ -492,22 +278,14 @@ app.controller("businessManagement.customers.document", function($scope, $state,
         }
       },
     })
-
-    // $scope.editVersion = version
-    // $scope.docForm.text = version.text
-    // $scope.docForm.title = version.title
   }
 
-
-  $scope.userSearch = function(query) {
-    return $http.get('/api/HR/userSearch/?username__contains=' + query).
-    then(function(response) {
-      return response.data;
-    })
-  };
-
-
-
+    $scope.userSearch = function(query) {
+      return $http.get('/api/HR/userSearch/?username__contains=' + query).
+      then(function(response) {
+        return response.data;
+      })
+    };
     $scope.processSearch = function(val) {
       return $http({
         method: 'GET',
@@ -540,19 +318,6 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       return response.data;
     })
   };
-
-
-
-  // $scope.custDetails = {}
-  // $http({
-  //   method: 'GET',
-  //   url: '/api/support/customerProfile/?service=' + $scope.compDetails.pk,
-  // }).
-  // then(function(response) {
-  //   $scope.custDetails = response.data[0]
-  //   console.log($scope.custDetails, 'dddddddddddd');
-  // });
-
 
   $scope.cpForm = {
     chat: false,
@@ -598,26 +363,21 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
           return $scope.custDetails.pk;
         },
         compDetail:$scope.compDetails,
-        // logo:$scope.brandLogo
       },
       controller: function($scope, $users, $timeout, $uibModalInstance, cPk,compDetail,Flash) {
-
         $scope.cpk;
         $http({
           method: 'GET',
           url: '/api/support/script/chatter/?pk=' + cPk,
         }).
         then(function(response) {
-          console.log('reeeeeeeeeeeeeeeeeeesssssssssss', response.data);
+          console.log(response.data);
           $scope.cpk = response.data.data
-          console.log($scope.cpk);
-        });
 
-  console.log(compDetail);
+        });
 
         $scope.sendEmail=function(){
           if ($scope.emailAddress) {
-
             $http({
               method: 'POST',
               url: '/api/support/emailScript/',
@@ -625,22 +385,16 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
                 email: $scope.emailAddress,
                 script: $scope.src,
                 companyName:compDetail.name,
-                // logo:$scope.brandLogo
-
               }
             }).then(function(response) {
-              console.log('send email');
               Flash.create('success', 'Mail Sent')
               $scope.emailAddress=''
             });
-
           }
         }
         $timeout(function() {
-          console.log(window.location.host, 'hosttttttt');
           $scope.src = '<script src="' + "https://" + window.location.host + "/script/chatter-" + $scope.cpk + ".js" + '"></script>'
         }, 600);
-
       },
     })
 
@@ -657,8 +411,6 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       $scope.process_list = response.data
     });
   }
-
-  // $scope.fetchProcess()
 
   $scope.add_process1 = function() {
     if ($scope.process_text) {
@@ -677,32 +429,24 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
         }
       }).
       then(function(response) {
-        console.log(response.data, 'response');
           $scope.process_list.push(response.data)
           $scope.process_text = ''
       });
-
-      // $scope.process_list.push($scope.process_text)
     } else {
       Flash.create('warning', 'Mention Some process')
     }
   }
 
   $scope.close_process = function(indx) {
-    // console.log('closingl',indx,$scope.process_list);
-
     $http({method : 'DELETE' , url : '/api/support/companyProcess/' + $scope.process_list[indx].pk + '/'}).
     then(function(response){
       Flash.create('success' , 'Deleted Successfully')
       $scope.process_list.splice(indx, 1)
     })
-
-
   }
 
   if ($scope.tab != undefined) {
     $scope.compDetails = $scope.tab.data
-    console.log($scope.compDetails);
     $scope.fetchProcess()
     $scope.mode = 'edit';
     $scope.form = $scope.tab.data;
@@ -756,7 +500,6 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
   }
 
   $scope.addPerson = function(person){
-    console.log(person);
     if (typeof person != 'object') {
       Flash.create('warning' , 'Please Select Suggested Person')
       return;
@@ -779,11 +522,9 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
         $scope.form.cpName = ''
       }
     })
-
   }
 
   $scope.advisorSearch = function(query) {
-    console.log('here');
     return $http.get('/api/HR/users/?username__contains=' + query).
     then(function(response) {
       return response.data;
@@ -795,48 +536,20 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       Flash.create('warning' , 'This Person Has Already Added')
       return;
     }
-    console.log(person);
     $scope.form.advisors.push(person)
     $scope.form.advisorsPks.push(person.pk)
     $scope.form.adName = ''
-    console.log($scope.form.advisorsPks);
-
   }
 
   $scope.removePerson = function(idx){
     $scope.form.contactPerson.splice(idx,1)
     $scope.form.contactPersonPks.splice(idx,1)
-
   }
+
   $scope.removeAdvisors = function(idx){
     $scope.form.advisors.splice(idx,1)
     $scope.form.advisorsPks.splice(idx,1)
-
   }
-
-  // $scope.$watch('form.contactPerson' , function (oldValue,newValue) {
-  //
-  //
-  //   console.log(oldValue , newValue);
-  //
-  //   if (typeof newValue == 'object') {
-  //     $http({
-  //       method:'GET',
-  //       url:'/api/ERP/service/?contactPerson='+ $scope.form.contactPerson.pk
-  //     }).
-  //     then(function(response) {
-  //       if (response.data.length>0) {
-  //         Flash.create('warning' , 'You can not add this person')
-  //         // return ;
-  //       }
-  //     })
-  //   }
-  //
-  //
-  //
-  //
-  // })
-
 
   $scope.saveCompanyDetails = function() {
     var f = $scope.form
@@ -844,10 +557,7 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       Flash.create('warning', 'Name Is Required')
       return
     }
-    // if (f.contactPerson != null && f.contactPerson.length > 0 && typeof f.contactPerson != 'object') {
-    //   Flash.create('warning', 'Contact Person Must Be Suggested One')
-    //   return
-    // }
+
     $scope.toSend = {
       name: f.name,
       user: $scope.me.pk,
@@ -875,13 +585,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     if (f.web != null && f.web.length > 0) {
       $scope.toSend.web = f.web
     }
-    // if (f.contactPerson != null && typeof f.contactPerson == 'object') {
-    //   $scope.toSend.contactPerson = f.contactPerson.pk
-    // }
 
-    console.log($scope.toSend);
     $scope.companysave = function() {
-      console.log('save companyyyyyyyyyyyy');
       if ($scope.mode == 'new') {
         var method = 'POST'
         var url = '/api/ERP/service/'
@@ -920,9 +625,6 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       });
     }
 
-    // if (f.address!=null) {
-    console.log('addressssssssssss', f.address);
-
     if (f.address.street != null && f.address.street.length > 0 || f.address.city != null && f.address.city.length > 0 || f.address.state != null && f.address.state.length > 0 || f.address.country != null && f.address.country.length > 0) {
       var addData = f.address
       var method = 'POST'
@@ -945,19 +647,15 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
         $scope.companysave()
       })
     } else {
-      console.log('no addressssssssssss');
       $scope.companysave()
     }
-    // }
   }
 
 
 
   $scope.saveCustomerProfile = function() {
     $scope.saveCompanyDetails()
-    console.log($scope.cpForm);
     var fd = new FormData();
-
     var cpF = $scope.cpForm
     if (cpF.windowColor == '') {
       delete cpF.windowColor
@@ -979,10 +677,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     }
     if (cpF.firstMessage == null || cpF.firstMessage == '') {
       delete cpF.firstMessage
-      console.log('thereee', cpF.firstMessage);
     } else {
       fd.append('firstMessage', cpF.firstMessage);
-      console.log('not thereee', cpF.firstMessage);
     }
     if (cpF.name == null || cpF.name == '') {
       delete cpF.name
@@ -996,7 +692,6 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       url += $scope.cpForm.pk + '/'
     }
 
-
     fd.append('call', cpF.call);
     fd.append('email', cpF.email);
     fd.append('callBack', cpF.callBack);
@@ -1006,9 +701,6 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
     fd.append('ticket', cpF.ticket);
     fd.append('vr', cpF.vr);
     fd.append('service', cpF.service);
-
-    console.log(cpF.name);
-    console.log($scope.cpForm);
 
     if (cpF.windowColor != '') {
       fd.append('windowColor', cpF.windowColor);
@@ -1029,17 +721,8 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       fd.append('chatIconType', cpF.chatIconType);
     }
 
-    // if (cpF.firstMessage != '') {
-    //   fd.append('firstMessage', cpF.firstMessage);
-    // }
-
-    console.log(cpF.dp, 'dddddddddddddddddddddddddddddddddddddd');
-
-
     if (cpF.dp && typeof cpF.dp != 'string') {
-
       fd.append('dp', cpF.dp);
-      console.log('append');
     }
 
     $http({
@@ -1055,13 +738,5 @@ app.controller("businessManagement.customers.form", function($scope, $state, $us
       $scope.cpForm = response.data;
       console.log(response.data);
     })
-
-
-
-    // }
-
-
   }
-
-
 })
