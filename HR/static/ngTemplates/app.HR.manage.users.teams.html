@@ -15,7 +15,7 @@
           <span class="input-group-addon" ng-click="add_users('teamLead')" style="cursor:pointer">Add</span>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin:0px">
           <div class="col-md-3 nameSmallCard" ng-repeat="u in teamForm.team_lead">
             <b> {{u | getName}} </b>
             <span style="position: absolute;right: 7px;top: 3px; cursor:pointer;" ng-click="remove_users($index,'teamLead')"> <i class="fa fa-times"></i></span>
@@ -29,7 +29,7 @@
           <span class="input-group-addon" ng-click="add_users('teamQC')" style="cursor:pointer">Add</span>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin:0px">
           <div class="col-md-3 nameSmallCard" ng-repeat="u in teamForm.quality_check" >
             <b> {{u | getName}} </b>
             <span style="position: absolute;right: 7px;top: 3px; cursor:pointer;" ng-click="remove_users($index,'teamQC')"> <i class="fa fa-times"></i></span>
@@ -44,7 +44,7 @@
           <span class="input-group-addon" ng-click="add_users('advisors')" style="cursor:pointer">Add</span>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin:0px">
           <div class="col-md-3 nameSmallCard" ng-repeat="u in teamForm.advisors" >
             <b> {{u | getName}} </b>
             <span style="position: absolute;right: 7px;top: 3px; cursor:pointer;" ng-click="remove_users($index,'advisors')"> <i class="fa fa-times"></i></span>
@@ -59,7 +59,7 @@
           <span class="input-group-addon" ng-click="add_service()" style="cursor:pointer">Add</span>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin:0px">
           <div class="col-md-3 nameSmallCard" ng-repeat="s in teamForm.service" >
             <b> {{s | getCustService}} </b>
             <span style="position: absolute;right: 7px;top: 3px; cursor:pointer;" ng-click="remove_service($index)"> <i class="fa fa-times"></i></span>

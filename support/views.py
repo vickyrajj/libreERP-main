@@ -842,11 +842,16 @@ class GethomeCal2(APIView):
 
             uidL = list(oneAgentChatThreadObj.values_list('uid', flat = True).distinct())
             supportChats = SupportChat.objects.filter(uid__in = uidL)
+
+
             rtA = supportChats.filter(responseTime__isnull=False).aggregate(Avg('responseTime'))
             respTimeAvg = rtA['responseTime__avg'] if rtA['responseTime__avg'] else 0
+
             frtA = oneAgentChatThreadObj.filter(firstResponseTime__isnull=False).aggregate(Avg('firstResponseTime'))
             firstResTimeAvg = frtA['firstResponseTime__avg'] if frtA['firstResponseTime__avg'] else 0
+
             noOfChats = oneAgentChatThreadObj.count()
+
             cdA = oneAgentChatThreadObj.filter(chatDuration__isnull=False).aggregate(Avg('chatDuration'))
             chatDurationAvg = cdA['chatDuration__avg'] if cdA['chatDuration__avg'] else 0
             toAppend = {'agentPk':i,'ratingAvg':ratingAvg ,'respTimeAvg':respTimeAvg ,'firstResTimeAvg':firstResTimeAvg,'noOfChats':noOfChats,'chatDurationAvg':chatDurationAvg}

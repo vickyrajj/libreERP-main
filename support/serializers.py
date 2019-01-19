@@ -43,24 +43,34 @@ class SupportChatSerializer(serializers.ModelSerializer):
         fields = ( 'pk' , 'created' , 'uid', 'attachment' ,'user' ,'message' ,'attachmentType','sentByAgent','responseTime','logs' )
     def create(self ,  validated_data):
         s = SupportChat(**validated_data)
+        print s.uid ,'uiddddddd'
+        lstVisMsg = SupportChat.objects.filter(uid = s.uid, sentByAgent = False)
         s.save()
         if len(SupportChat.objects.all())>0:
-            lstMsg= SupportChat.objects.latest('created')
-            responseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
-            if lstMsg.sentByAgent==False and s.sentByAgent==True:
-                s.responseTime = responseTime
-            s.save()
+            if len(lstVisMsg) > 0 and s.sentByAgent==True:
+                for m in lstVisMsg:
+                    if m.responseTime:
+                        pass
+                    else:
+                        responseTime = round((s.created - m.created).total_seconds()/60.0 , 2)
+                        m.responseTime = responseTime
+                        m.save()
+                # lstMsg = thisUidMsg[0]
+                # responseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
+                # if lstMsg.sentByAgent==False and s.sentByAgent==True:
+                #     lstMsg.responseTime = responseTime
+                # lstMsg.save()
             chatThObj = ChatThread.objects.filter(uid=s.uid)
             if len(chatThObj)>0:
                 chatThObj[0].lastActivity=s.created
                 chatThObj[0].save()
-            if len(chatThObj)>0 and s.sentByAgent==True:
+            if len(chatThObj)>0 and s.sentByAgent==True and len(lstVisMsg) > 0:
                 print chatThObj[0].firstResponseTime ,'frt'
                 if chatThObj[0].firstResponseTime:
                     print 'frt is already there'
                 else:
                     print 'create frt'
-                    chatThObj[0].firstResponseTime = round((s.created - lstMsg.created).total_seconds()/60.0 , 2)
+                    chatThObj[0].firstResponseTime = round((s.created - lstVisMsg[0].created).total_seconds()/60.0 , 2)
                     chatThObj[0].save()
         return s
 
