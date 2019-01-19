@@ -146,6 +146,20 @@ class ProjectStockSummaryViewSet(viewsets.ModelViewSet):
     queryset = ProjectStockSummary.objects.all()
     serializer_class = ProjectStockSummarySerializer
 
+class InvoiceViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['project','invoiceNumber']
+
+class InvoiceQtyViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny , )
+    queryset = InvoiceQty.objects.all()
+    serializer_class = InvoiceQtySerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['invoice']
+
 class ProductsUploadAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated ,)
 
@@ -2487,12 +2501,15 @@ class DeliveryChallanNoteAPIView(APIView):
         deliveryChallan(response , value ,request)
         return response
 
-def invoice(response  , request):
+def invoice(response, pkVal  , request):
     styles = getSampleStyleSheet()
     style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
     elements = []
+    inv = Invoice.objects.get(pk=pkVal)
+    invdetails = InvoiceQty.objects.filter(invoice__id=pkVal)
+    print invdetails,'aaaaaaaaaa'
     headerDetails = Paragraph("""
     <para align='center'>
     <font size ='8'>
@@ -2516,14 +2533,14 @@ def invoice(response  , request):
     elements.append(t2)
     detail01 = Paragraph("""
     <para>
-    Invoice No : 145236544
+    Invoice No : %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.invoiceNumber),styles['Normal'])
     detail02 = Paragraph("""
     <para >
-    Invoice Date : 145236544
+    Invoice Date : %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.invoiceDate),styles['Normal'])
     tdata=[detail01],[detail02]
     tdheader=[tdata]
     t3=Table(tdheader)
@@ -2536,9 +2553,9 @@ def invoice(response  , request):
     """ %(),styles['Normal'])
     detail12 = Paragraph("""
     <para >
-
+    %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.poNumber),styles['Normal'])
     detail13 = Paragraph("""
     <para >
     Insurance :
@@ -2546,9 +2563,9 @@ def invoice(response  , request):
     """ %(),styles['Normal'])
     detail14 = Paragraph("""
     <para >
-
+        %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.insuranceNumber),styles['Normal'])
     t1data=[detail11],[detail12],[detail13],[detail14]
     td1header=[t1data]
     detail21 = Paragraph("""
@@ -2558,9 +2575,9 @@ def invoice(response  , request):
     """ %(),styles['Normal'])
     detail22 = Paragraph("""
     <para >
-
+    %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.transporter),styles['Normal'])
     detail23 = Paragraph("""
     <para >
     LR No :
@@ -2568,9 +2585,9 @@ def invoice(response  , request):
     """ %(),styles['Normal'])
     detail24 = Paragraph("""
     <para >
-
+    %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.lrNo),styles['Normal'])
     t2data=[detail21],[detail22],[detail23],[detail24]
     td1header+=[t2data]
     t4=Table(td1header)
@@ -2598,9 +2615,9 @@ def invoice(response  , request):
     """ %(),styles['Normal'])
     detail42 = Paragraph("""
     <para >
-
+    %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.billName),styles['Normal'])
     detail43 = Paragraph("""
     <para >
     Name :
@@ -2608,48 +2625,142 @@ def invoice(response  , request):
     """ %(),styles['Normal'])
     detail44 = Paragraph("""
     <para >
-
+    %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.shipName),styles['Normal'])
     t4data=[detail41],[detail42],[detail43],[detail44]
     td4header=[t4data]
     t6=Table(td4header)
     t6.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t6)
+    try:
+        billaddr = inv.billAddress.replace('\n', '<br />')
+    except:
+        billaddr = inv.billAddress
+    try:
+        shipaddr = inv.shipAddress.replace('\n', '<br />')
+    except:
+        shipaddr = inv.shipAddress
+
     detail51 = Paragraph("""
     <para>
-    Address : <br/>
+    Address : <br/> %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(billaddr),styles['Normal'])
     detail52 = Paragraph("""
     <para>
-    Address : <br/>
+    Address : <br/> %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(shipaddr),styles['Normal'])
     t5data=[detail51],[detail52]
     td5header=[t5data]
     detail61 = Paragraph("""
     <para>
-    GSTIN :
+    GSTIN : %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.billGst),styles['Normal'])
     detail62 = Paragraph("""
     <para>
-    GSTIN :
+    GSTIN : %s
     </para>
-    """ %(),styles['Normal'])
+    """ %(inv.billGst),styles['Normal'])
     t6data=[detail61],[detail62]
     td5header+=[t6data]
     t7=Table(td5header)
     t7.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t7)
+    detail51 = Paragraph("""
+    <para>
+    State :  %s
+    </para>
+    """ %(inv.billState),styles['Normal'])
+    detail52 = Paragraph("""
+    <para>
+    Code :  %s
+    </para>
+    """ %(inv.billCode),styles['Normal'])
+    detail53 = Paragraph("""
+    <para>
+    State :  %s
+    </para>
+    """ %(inv.shipState),styles['Normal'])
+    detail54 = Paragraph("""
+    <para>
+    Code :  %s
+    </para>
+    """ %(inv.shipCode),styles['Normal'])
+    t6data=[detail51],[detail52] ,[detail53],[detail54]
+    td6header=[t6data]
+    t8=Table(td6header)
+    t8.setStyle(TableStyle([('ALIGN',(0,0),(-1,-1),'CENTER'),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t8)
+    data2=[]
+    s01 =Paragraph("<para fontSize=8>S.No </para>",styles['Normal'])
+    s02 =Paragraph("<para fontSize=8>Product Description </para>",styles['Normal'])
+    s03 =Paragraph("<para fontSize=8>Qty </para>",styles['Normal'])
+    s04 =Paragraph("<para fontSize=8>Rate </para>",styles['Normal'])
+    s05 =Paragraph("<para fontSize=8>Taxable Value </para>",styles['Normal'])
+    s06 =Paragraph("<para fontSize=8>CGST Rate (%) </para>",styles['Normal'])
+    s07 =Paragraph("<para fontSize=8>CGST Amount </para>",styles['Normal'])
+    s08 =Paragraph("<para fontSize=8>SGST Rate (%)</para>",styles['Normal'])
+    s09 =Paragraph("<para fontSize=8>SGST Amount </para>",styles['Normal'])
+    s10 =Paragraph("<para fontSize=8>IGST Rate (%)  </para>",styles['Normal'])
+    s11 =Paragraph("<para fontSize=8>IGST Amount </para>",styles['Normal'])
+    s12 =Paragraph("<para fontSize=8>Total </para>",styles['Normal'])
+
+    data2 += [[s01,s02,s03,s04,s05,s06,s07,s08,s09,s10,s11,s12]]
+    id = 0
+    cgsttot = 0
+    taxable = 0
+    igsttot = 0
+    sgsttot = 0
+    grandtot =0
+
+    for i in invdetails:
+        id+=1
+        cgsttot += i.cgstVal
+        taxable +=i.taxableprice
+        igsttot += float(i.igstVal)
+        sgsttot += i.sgstVal
+        grandtot +=i.total
+        s21 =Paragraph("<para fontSize=8>{0} </para>".format(id),styles['Normal'])
+        s22 =Paragraph("<para fontSize=8>{0} </para>".format(smart_str(i.description_1)),styles['Normal'])
+        s23 =Paragraph("<para fontSize=8>{0} </para>".format(i.qty),styles['Normal'])
+        s24 =Paragraph("<para fontSize=8>{:,} </para>".format(round(i.price,2)),styles['Normal'])
+        s25 =Paragraph("<para fontSize=8> {:,}</para>".format(round(i.taxableprice,2)),styles['Normal'])
+        s26 =Paragraph("<para fontSize=8>{0} </para>".format(i.cgst),styles['Normal'])
+        s27 =Paragraph("<para fontSize=8>{:,} </para>".format(round(i.cgstVal,2)),styles['Normal'])
+        s28 =Paragraph("<para fontSize=8> {0} </para>".format(i.sgst),styles['Normal'])
+        s29 =Paragraph("<para fontSize=8> {:,} </para>".format(round(i.sgst,2)),styles['Normal'])
+        s30 =Paragraph("<para fontSize=8> {0} </para>".format(i.igst),styles['Normal'])
+        s31 =Paragraph("<para fontSize=8> {:,}</para>".format(round(i.igstVal,2)),styles['Normal'])
+        s32 =Paragraph("<para fontSize=8> {:,} </para>".format(round(i.total,2)),styles['Normal'])
+        data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,s32])
+    s21 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s22 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s23 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s24 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s25 =Paragraph("<para fontSize=8>{:,}</para>".format(round(taxable,2)),styles['Normal'])
+    s26 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s27 =Paragraph("<para fontSize=8>{:,} </para>".format(round(cgsttot,2)),styles['Normal'])
+    s28 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
+    s29 =Paragraph("<para fontSize=8> {:,}  </para>".format(round(sgsttot,2)),styles['Normal'])
+    s30 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
+    s31 =Paragraph("<para fontSize=8> {:,}</para>".format(round(igsttot,2)),styles['Normal'])
+    s32 =Paragraph("<para fontSize=8> {:,} </para>".format(round(grandtot,2)),styles['Normal'])
+
+    data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31])
+    t9=Table(data2)
+    t9.hAlign = 'LEFT'
+    t9.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t9)
     doc.build(elements)
 
-class InvoiceAPIView(APIView):
+class InvoiceDownloadAPIView(APIView):
     def get(self , request , format = None):
         # print request.GET,'aaaaaa'
-        # value = request.GET['value']
+        pkVal = request.GET['pkVal']
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment;filename="Quotationdownload.pdf"'
-        invoice(response  ,request)
+        invoice(response, pkVal ,request)
         return response

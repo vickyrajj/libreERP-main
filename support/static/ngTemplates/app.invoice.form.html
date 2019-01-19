@@ -9,10 +9,15 @@
           <input ng-model="form.invoiceNumber" type="text" class="form-control">
         </div>
         <div class="col-md-5">
-          <label>Invoice Date</label>
-          <input ng-model="form.qty" type="text" class="form-control">
+            <label>Invoice Date</label>
+            <div class="input-group">
+              <input type="text" class="form-control text-center" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.invoiceDate"  is-open="statusPo.opened" ng-init="today" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="statusPo.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
       <div class="row" style="padding-top:15px">
         <div class="col-md-5">
           <label>Customer PO Ref</label>
@@ -128,9 +133,9 @@
             </tr>
             <tr ng-repeat="v in products track by $index">
               <td>{{$index + 1}}</td>
-                <td><input ng-model="v.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></td>
+                <td><input ng-model="v.part_no" uib-typeahead="product as product.part_no for product in productSearch($viewValue) " type="text" class="form-control-pos text-center"></td>
               <td>{{v.description_1}}</td>
-              <td ><input type="number" step=1 class="form-control-pos" ng-model="v.qty" ng-init="v.qty=1"></td>
+              <td ><input type="number" step=1 class="form-control-pos" ng-model="v.qty" ></td>
               <td >{{v.customs_no}}</td>
               <td ><input type="text"  class="form-control-pos" ng-model="v.price" ></td>
               <td ><input type="text"  class="form-control-pos" ng-model="v.taxableprice" ></td>

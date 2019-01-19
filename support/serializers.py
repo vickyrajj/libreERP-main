@@ -252,3 +252,52 @@ class ProjectStockSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectStockSummary
         fields = ('pk','created','stockReport','value','title','comm_nr')
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    project = ProjectsSerializer(many = False , read_only = True)
+    class Meta:
+        model = Invoice
+        fields = ('pk','created','invoiceNumber','invoiceDate','poNumber','insuranceNumber','transporter','lrNo','billName','shipName','billAddress','shipAddress','billGst','shipGst','billState','shipState','billCode','shipCode','isDetails','invoiceTerms','project')
+    def create(self, validated_data):
+        i = Invoice(**validated_data)
+        if 'project' in self.context['request'].data:
+            i.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
+        i.save()
+        return i
+    def update (self, instance, validated_data):
+        for key in ['pk','created','invoiceNumber','invoiceDate','poNumber','insuranceNumber','transporter','lrNo','billName','shipName','billAddress','shipAddress','billGst','shipGst','billState','shipState','billCode','shipCode','isDetails','invoiceTerms','project']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'project' in self.context['request'].data:
+            instance.project = Projects.objects.get(pk=int(self.context['request'].data['project']))
+        instance.save()
+        return instance
+
+class InvoiceQtySerializer(serializers.ModelSerializer):
+    product = ProductsSerializer(many = False , read_only = True)
+    invoice = InvoiceSerializer(many = False , read_only = True)
+    class Meta:
+        model = InvoiceQty
+        fields = ('pk','created','product','invoice','customs_no','part_no','description_1','price','qty','taxableprice','cgst','cgstVal','sgst','sgstVal','igst','igstVal','total')
+    def create(self, validated_data):
+        i = InvoiceQty(**validated_data)
+        if 'product' in self.context['request'].data:
+            i.product = Products.objects.get(pk=int(self.context['request'].data['product']))
+        if 'invoice' in self.context['request'].data:
+            i.invoice = Invoice.objects.get(pk=int(self.context['request'].data['invoice']))
+        i.save()
+        return i
+    def update (self, instance, validated_data):
+        for key in ['pk','created','product','invoice','customs_no','part_no','description_1','price','qty','taxableprice','cgst','cgstVal','sgst','sgstVal','igst','igstVal','total']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        if 'product' in self.context['request'].data:
+            instance.product = Products.objects.get(pk=int(self.context['request'].data['product']))
+        if 'invoice' in self.context['request'].data:
+            instance.invoice = Invoice.objects.get(pk=int(self.context['request'].data['invoice']))
+        instance.save()
+        return instance

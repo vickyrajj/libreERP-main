@@ -16,6 +16,8 @@ router.register(r'stockcheck' , StockCheckViewSet , base_name = 'stockcheck')
 router.register(r'stockchecklog' , StockCheckLogViewSet , base_name = 'stockchecklog')
 router.register(r'stockSummaryReport' , StockSummaryReportViewSet , base_name = 'stockSummaryReport')
 router.register(r'projectStockSummary' , ProjectStockSummaryViewSet , base_name = 'projectStockSummary')
+router.register(r'invoice' , InvoiceViewSet , base_name = 'invoice')
+router.register(r'invoiceQty' , InvoiceQtyViewSet , base_name = 'invoiceQty')
 
 
 
@@ -41,7 +43,7 @@ urlpatterns = [
     url(r'productTable/$' , ProjectProductAPIView.as_view() ),
     url(r'cancelMaterial/$' , CancelMaterialAPIView.as_view() ),
     url(r'deliveryChallan/$' , DeliveryChallanNoteAPIView.as_view() ),
-    url(r'invoice/$' , InvoiceAPIView.as_view() ),
+    url(r'invoiceDownload/$' , InvoiceDownloadAPIView.as_view() ),
 
     # url(r'stock/$' , StockAPIView.as_view() ),
 ]

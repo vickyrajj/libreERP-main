@@ -1,7 +1,8 @@
 <div class="modal-header">
   <div class="row">
   <div class="col-md-11">
-  Create A Invoice
+    <span ng-if="!form.pk">Create Invoice</span>
+    <span ng-if="form.pk">Edit Invoice</span>
 </div>
 <div class="col-md-1">
   <button class="btn btn-default" ng-click="close()"><i class="fa fa-close"></i></button>
@@ -17,10 +18,16 @@
           <input ng-model="form.invoiceNumber" type="text" class="form-control">
         </div>
         <div class="col-md-5">
-          <label>Invoice Date</label>
-          <input ng-model="form.qty" type="text" class="form-control">
+            <label>Invoice Date</label>
+            <div class="input-group">
+              <input type="text" class="form-control text-center" show-weeks="false" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="form.invoiceDate"  is-open="statusPo.opened" ng-init="today" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="statusPo.opened = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
+
       <div class="row" style="padding-top:15px">
         <div class="col-md-5">
           <label>Customer PO Ref</label>
@@ -136,12 +143,12 @@
             </tr>
             <tr ng-repeat="v in products track by $index">
               <td>{{$index + 1}}</td>
-                <td><input ng-model="v.part_no" uib-typeahead="product as product.part_no for product in change($viewValue) " type="text" class="form-control-pos text-center"></td>
+                <td><input ng-model="v.part_no" uib-typeahead="product as product.part_no for product in productSearch($viewValue) " type="text" class="form-control-pos text-center"></td>
               <td>{{v.description_1}}</td>
-              <td ><input type="number" step=1 class="form-control-pos" ng-model="v.qty" ng-init="v.qty=1"></td>
+              <td ><input type="number" step=1 class="form-control-pos" ng-model="v.qty" ></td>
               <td >{{v.customs_no}}</td>
               <td ><input type="text"  class="form-control-pos" ng-model="v.price" ></td>
-              <td ><input type="text"  class="form-control-pos" ng-model="v.taxableprice" ></td>
+              <td >{{v.taxableprice}}</td>
               <td >{{v.cgst}}</td>
               <td >{{v.cgstVal}}</td>
               <td >{{v.sgst}}</td>
@@ -161,8 +168,12 @@
         </table>
       </div>
       <div class="row">
-        <div class="col-md-2" style="padding-top:25px">
+        <div class="col-md-6" style="padding-top:25px">
           <button type="button" class="btn btn-primary " ng-click="saveInvoice()">Save</button>
+        </div>
+        <div class="col-md-6 text-right" style="padding-top:25px" ng-if="form.pk">
+          <span ><a class="btn btn-primary" target="_blank" href="/api/support/invoiceDownload/?pkVal={{form.pk}}" style="min-width:50px"><i
+                class="fa fa-download"></i> Download Invoice </a></span>
         </div>
       </div>
     </div>

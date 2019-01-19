@@ -190,6 +190,7 @@ class ProjectStockSummary(models.Model):
     comm_nr =  models.CharField(max_length = 100 , null = True)
 
 class Invoice(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
     invoiceNumber = models.CharField( max_length = 20 , null=True,blank=True)
     invoiceDate = models.DateField(null = True)
     poNumber =  models.CharField( max_length = 20 , null=True,blank=True)
@@ -211,11 +212,14 @@ class Invoice(models.Model):
     project = models.ForeignKey(Projects , null = True)
 
 class InvoiceQty(models.Model):
-    project =  models.ForeignKey(Projects , null = True)
+    created = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey(Products , null = True)
     invoice = models.ForeignKey(Invoice , null = True)
+    part_no = models.CharField( max_length = 20 , null=True,blank=True)
+    description_1 = models.CharField( max_length = 200 , null=True,blank=True)
     customs_no = models.CharField( max_length = 20 , null=True,blank=True)
     price = models.FloatField(null = True,default=0)
+    qty = models.PositiveIntegerField(null=True , default=0)
     taxableprice =  models.FloatField(null = True,default=0)
     cgst = models.FloatField(null = True,default=0)
     cgstVal = models.FloatField(null = True,default=0)
