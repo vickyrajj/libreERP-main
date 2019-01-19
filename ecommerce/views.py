@@ -2712,7 +2712,7 @@ class UserProfileSettingAPI(APIView):
         print request.GET ,'gggggggggggggggggggggggggg'
         if 'user' in request.GET:
             user = User.objects.get(pk=request.GET['user'])
-            prof = profile.objects.get(user = user)
+            prof = profile.objects.get(pk = user.profile.pk)
             firstName = user.first_name
             lastName = user.last_name
             email = user.email
@@ -2765,6 +2765,7 @@ class UserProfileSettingAPI(APIView):
                     details['GST'] = request.data['gst']
                     pobj.details = str(details)
                     pobj.save()
+            pobj.save()
             toReturn['passwordChanged'] = False
             if 'oldPassword' in request.data:
                 if authenticate(username = user.username , password = request.data['oldPassword']) is not None:

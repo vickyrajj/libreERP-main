@@ -1829,12 +1829,12 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
       return
     }
 
-    if ($scope.detailsForm.oldPassword.length == 0 && $scope.detailsForm.newPassword.length > 0) {
+    if ($scope.detailsForm.newPassword.length == 0 && $scope.detailsForm.oldPassword.length > 0) {
       Flash.create('warning', 'Enter new password')
       return
     }
 
-    if ($scope.detailsForm.oldPassword.length == 0 && $scope.detailsForm.newPassword.length == 0) {
+    if ($scope.detailsForm.oldPassword.length == 0 || $scope.detailsForm.newPassword.length == 0) {
       delete $scope.detailsForm.oldPassword
       delete $scope.detailsForm.newPassword
     }
@@ -1848,7 +1848,9 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
         firstName: response.data.firstName,
         lastName: response.data.lastName,
         email: response.data.email,
-        mobile: response.data.mobile
+        mobile: response.data.mobile,
+        oldPassword: '',
+        newPassword: ''
       }
 
       if ($scope.isGst) {
@@ -1856,6 +1858,7 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
       }
 
       if (response.data.passwordChanged) {
+        alert("password has been changed, login again")
         window.location.href = "/";
       }
 
