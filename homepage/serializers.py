@@ -20,6 +20,7 @@ import ast
 import sendgrid
 import os
 import unicodedata
+from ERP.models import appSettingsField
 
 
 def merge_two_dicts(x, y):
@@ -30,7 +31,8 @@ def merge_two_dicts(x, y):
 
 def sendMail(d):
     ctx = {
-        'user':d
+        'user':d,
+        'brandName':globalSettings.SEO_TITLE
     }
     email_body = get_template('app.ecommerce.newUserEmail.html').render(ctx)
     email_subject = 'New User'
@@ -40,7 +42,6 @@ def sendMail(d):
         # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
         for i in globalSettings.G_ADMIN:
             emails.append({"email":i})
-        print emails,"**************&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
         data = {
           "personalizations": [
             {
@@ -50,7 +51,7 @@ def sendMail(d):
           ],
           "from": {
             "email": globalSettings.G_FROM,
-            "name":"BNI India"
+            "name":globalSettings.SEO_TITLE
           },
           "content": [
             {
@@ -105,28 +106,84 @@ class RegistrationSerializer(serializers.ModelSerializer):
                         adminData =  User.objects.get(pk=1)
                         print adminData.email,'*************************888'
                         msgBody = ['Provide the user permission for new registered customer Name : <strong>%s</strong> with EmailID : <strong>%s</strong>' %(u.first_name , u.email) ]
+
+                        try:
+                            fbUrl = appSettingsField.objects.filter(name='facebookLink')[0].value
+                        except:
+                            fbUrl = 'https://www.facebook.com/'
+
+                        try:
+                            twitterUrl = appSettingsField.objects.filter(name='twitterLink')[0].value
+                        except:
+                            twitterUrl = 'twitter.com'
+
+                        try:
+                            linkedinUrl = appSettingsField.objects.filter(name='linkedInLink')[0].value
+                        except:
+                            linkedinUrl = 'https://www.linkedin.com/'
+
+                        try:
+                            sendersAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+                        except:
+                            sendersAddress = ''
+
+                        try:
+                            sendersPhone =  appSettingsField.objects.filter(name='phone')[0].value
+                        except:
+                            sendersPhone = ''
+
+
                         ctx = {
                             'heading' : 'Welcome to Ecommerce',
                             'recieverName' : 'Admin',
                             'message': msgBody,
-                            'linkUrl': 'sterlingselect.com',
-                            'linkText' : 'View Online',
-                            'sendersAddress' : 'sterlingselect',
-                            'sendersPhone' : '841101',
-                            'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
-                            'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
-                            'twitterUrl' : 'twitter.com',
+                            # 'linkUrl': 'sterlingselect.com',
+                            # 'linkText' : 'View Online',
+                            'sendersAddress' : sendersAddress,
+                            'sendersPhone' : sendersPhone,
+                            'linkedinUrl' : linkedinUrl,
+                            'fbUrl' : twitterUrl,
+                            'twitterUrl' : twitterUrl,
                             'brandName' : globalSettings.BRAND_NAME,
                         }
-
                         email_body = get_template('app.homepage.permission.html').render(ctx)
                         email_subject = 'Permission for the new user'
-                        sentEmail=[]
-                        sentEmail.append(str(adminData.email))
-                        # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
-                        msg = EmailMessage(email_subject, email_body, to= sentEmail)
-                        msg.content_subtype = 'html'
-                        msg.send()
+                        if globalSettings.EMAIL_API:
+                            sg = sendgrid.SendGridAPIClient(apikey= globalSettings.G_KEY)
+                            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+                            data = {
+                              "personalizations": [
+                                {
+                                  "to": [
+                                    {
+                                      "email": str(globalSettings.G_ADMIN[0])
+                                      # str(orderObj.user.email)
+                                    }
+                                  ],
+                                  "subject": email_subject
+                                }
+                              ],
+                              "from": {
+                                "email": globalSettings.G_FROM,
+                                "name":globalSettings.SEO_TITLE
+                              },
+                              "content": [
+                                {
+                                  "type": "text/html",
+                                  "value": email_body
+                                }
+                              ]
+                            }
+                            response = sg.client.mail.send.post(request_body=data)
+                            print(response.body,"bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+                        else:
+                            sentEmail=[]
+                            sentEmail.append(str(adminData.email))
+                            # msg = EmailMessage(email_subject, email_body, to= sentEmail , from_email= 'do_not_reply@cioc.co.in' )
+                            msg = EmailMessage(email_subject, email_body, to= sentEmail)
+                            msg.content_subtype = 'html'
+                            msg.send()
+
 
                     else:
                         u.is_active = True
@@ -170,17 +227,46 @@ class RegistrationSerializer(serializers.ModelSerializer):
                         adminData =  User.objects.get(pk=1)
                         print adminData.email
                         msgBody = ['Provide the user permission for new registered customer Name : <strong>%s</strong> with EmailID : <strong>%s</strong>' %(u.first_name , u.email) ]
+
+
+                        try:
+                            fbUrl = appSettingsField.objects.filter(name='facebookLink')[0].value
+                        except:
+                            fbUrl = 'https://www.facebook.com/'
+
+                        try:
+                            twitterUrl = appSettingsField.objects.filter(name='twitterLink')[0].value
+                        except:
+                            twitterUrl = 'twitter.com'
+
+                        try:
+                            linkedinUrl = appSettingsField.objects.filter(name='linkedInLink')[0].value
+                        except:
+                            linkedinUrl = 'https://www.linkedin.com/'
+
+                        try:
+                            sendersAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+                        except:
+                            sendersAddress = ''
+
+                        try:
+                            sendersPhone =  appSettingsField.objects.filter(name='phone')[0].value
+                        except:
+                            sendersPhone = ''
+
+
+
                         ctx = {
                             'heading' : 'Welcome to Ecommerce',
                             'recieverName' : 'Admin',
                             'message': msgBody,
-                            'linkUrl': 'sterlingselect.com',
-                            'linkText' : 'View Online',
-                            'sendersAddress' : 'sterlingselect',
-                            'sendersPhone' : '841101',
-                            'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
-                            'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
-                            'twitterUrl' : 'twitter.com',
+                            # 'linkUrl': 'sterlingselect.com',
+                            # 'linkText' : 'View Online',
+                            'sendersAddress' : sendersAddress,
+                            'sendersPhone' : sendersPhone,
+                            'linkedinUrl' : linkedinUrl,
+                            'fbUrl' : fbUrl,
+                            'twitterUrl' : twitterUrl,
                             'brandName' : globalSettings.BRAND_NAME,
                         }
 
@@ -203,7 +289,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                               ],
                               "from": {
                                 "email": globalSettings.G_FROM,
-                                "name":"BNI India"
+                                "name":globalSettings.SEO_TITLE
                               },
                               "content": [
                                 {
@@ -309,17 +395,42 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
             msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP)]
 
+            try:
+                fbUrl = appSettingsField.objects.filter(name='facebookLink')[0].value
+            except:
+                fbUrl = 'https://www.facebook.com/'
+
+            try:
+                twitterUrl = appSettingsField.objects.filter(name='twitterLink')[0].value
+            except:
+                twitterUrl = 'twitter.com'
+
+            try:
+                linkedinUrl = appSettingsField.objects.filter(name='linkedInLink')[0].value
+            except:
+                linkedinUrl = 'https://www.linkedin.com/'
+
+            try:
+                sendersAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+            except:
+                sendersAddress = ''
+
+            try:
+                sendersPhone =  appSettingsField.objects.filter(name='phone')[0].value
+            except:
+                sendersPhone = ''
+
             ctx = {
                 'heading' : 'Welcome to Ecommerce',
                 'recieverName' : 'Customer',
                 'message': msgBody,
-                'linkUrl': 'sterlingselect.com',
-                'linkText' : 'View Online',
-                'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
-                'sendersPhone' : '841101',
-                'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
-                'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
-                'twitterUrl' : 'twitter.com',
+                # 'linkUrl': 'sterlingselect.com',
+                # 'linkText' : 'View Online',
+                'sendersAddress' : sendersAddress,
+                'sendersPhone' : sendersPhone,
+                'linkedinUrl' : linkedinUrl,
+                'fbUrl' : fbUrl,
+                'twitterUrl' : twitterUrl,
                 'brandName' : globalSettings.BRAND_NAME,
                 'username':username
             }
@@ -344,7 +455,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                   ],
                   "from": {
                     "email": globalSettings.G_FROM,
-                    "name":"BNI India"
+                    "name":globalSettings.SEO_TITLE
                   },
                   "content": [
                     {

@@ -80,6 +80,8 @@ BRAND_LOGO_INVERT = '/static/images/mono_icon_inverted.svg'
 SMART_REGISTRATION = True
 AUTO_ACTIVE_ON_REGISTER = False
 
+INVOICE_LOGO = '/static/images/bni_glob_invoice.svg'
+
 SEO_TITLE = 'BNI'
 SEO_DESCRIPTION = 'Sterling Select Online Shopping'
 SEO_IMG = '/static/images/company_icon.png'
@@ -302,7 +304,7 @@ G_FROM='onlinestore@bniglobalstore.com'
 #onlinestore@bniglobalstore.com
 G_KEY='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'
 #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
-G_ADMIN=["vikas.motla@gmail.com"]
+G_ADMIN=["vikas.motla@gmail.com","vikas.m@cioc.in"]
 
 
 DEFAULT_FROM_EMAIL = 'do_not_reply@24tutors.com'

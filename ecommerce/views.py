@@ -1704,7 +1704,7 @@ class PageNumCanvas(canvas.Canvas):
         p4.wrapOn(self , 200*mm , 10*mm)
         p4.drawOn(self , 85*mm  , 5*mm)
 
-        brandLogo = globalSettings.BRAND_LOGO.split('static/')[1]
+        brandLogo = globalSettings.INVOICE_LOGO.split('static/')[1]
         print os.path.join(globalSettings.BASE_DIR , 'static_shared',brandLogo)
         drawing = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared', brandLogo))
         sx=sy=0.5
@@ -1712,7 +1712,7 @@ class PageNumCanvas(canvas.Canvas):
         drawing.scale(sx,sy)
         #if you want to see the box around the image
         # drawing._showBoundary = True
-        renderPDF.draw(drawing, self,10*mm  , self._pagesize[1]-25*mm)
+        renderPDF.draw(drawing, self,10*mm  , self._pagesize[1]-30*mm)
 
         #width = self._pagesize[0]
         # page = "Page %s of %s" % (, page_count)

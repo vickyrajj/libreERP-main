@@ -27,6 +27,7 @@ from rest_framework.response import Response
 import sendgrid
 import os
 from ERP.models import appSettingsField
+from ERP.send_email import send_email
 
 def index(request):
     return render(request, 'index.html', {"home": True , "brandLogo" : globalSettings.BRAND_LOGO , "brandLogoInverted": globalSettings.BRAND_LOGO_INVERT , 'brandName' : globalSettings.BRAND_NAME,'seoDetails':{'title':globalSettings.SEO_TITLE,'description':globalSettings.SEO_DESCRIPTION,'image':globalSettings.SEO_IMG,'width':globalSettings.SEO_IMG_WIDTH,'height':globalSettings.SEO_IMG_HEIGHT,'author':globalSettings.SEO_AUTHOR,'twitter_creator':globalSettings.SEO_TWITTER_CREATOR,'twitter_site':globalSettings.SEO_TWITTER_SITE,'site_name':globalSettings.SEO_SITE_NAME,'url':globalSettings.SEO_URL,'publisher':globalSettings.SEO_PUBLISHER}})
@@ -213,18 +214,42 @@ class ReSendOtpAPI(APIView):
             reg.emailOTP = generateOTPCode()
             print reg.emailOTP,'email'
             msgBody = ['Your OTP to verify your email ID is <strong>%s</strong>.' %(reg.emailOTP)]
+            try:
+                fbUrl = appSettingsField.objects.filter(name='facebookLink')[0].value
+            except:
+                fbUrl = 'https://www.facebook.com/'
+
+            try:
+                twitterUrl = appSettingsField.objects.filter(name='twitterLink')[0].value
+            except:
+                twitterUrl = 'twitter.com'
+
+            try:
+                linkedinUrl = appSettingsField.objects.filter(name='linkedInLink')[0].value
+            except:
+                linkedinUrl = 'https://www.linkedin.com/'
+
+            try:
+                sendersAddress = appSettingsField.objects.filter(name='companyAddress')[0].value
+            except:
+                sendersAddress = ''
+
+            try:
+                sendersPhone =  appSettingsField.objects.filter(name='phone')[0].value
+            except:
+                sendersPhone = ''
 
             ctx = {
                 'heading' : 'Welcome to Ecommerce',
                 'recieverName' : 'Customer',
                 'message': msgBody,
-                'linkUrl': 'sterlingselect.com',
-                'linkText' : 'View Online',
-                'sendersAddress' : '(C) CIOC FMCG Pvt Ltd',
-                'sendersPhone' : '841101',
-                'linkedinUrl' : 'https://www.linkedin.com/company/24tutors/',
-                'fbUrl' : 'https://www.facebook.com/24tutorsIndia/',
-                'twitterUrl' : 'twitter.com',
+                # 'linkUrl': 'sterlingselect.com',
+                # 'linkText' : 'View Online',
+                'sendersAddress' : sendersAddress,
+                'sendersPhone' : sendersPhone,
+                'linkedinUrl' : linkedinUrl,
+                'fbUrl' : fbUrl,
+                'twitterUrl' : twitterUrl,
                 'brandName' : globalSettings.BRAND_NAME,
                 'username':username
             }
@@ -249,7 +274,7 @@ class ReSendOtpAPI(APIView):
                   ],
                   "from": {
                     "email": globalSettings.G_FROM,
-                    "name":"BNI India"
+                    "name":globalSettings.SEO_TITLE
                   },
                   "content": [
                     {
