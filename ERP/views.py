@@ -319,3 +319,10 @@ class CompanyHolidayViewSet(viewsets.ModelViewSet):
     serializer_class = CompanyHolidaySerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = [ 'name','date']
+
+class TeamsViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Teams.objects.all()
+    serializer_class = TeamsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = [ 'title']

@@ -458,8 +458,8 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
     var fd = new FormData();
 
 
-    if (prof.empID=='') {
-      Flash('success' , 'Please fill eemployee id')
+    if (prof.empID == '') {
+      Flash('success', 'Please fill eemployee id')
       return
     }
     fd.append('empID', prof.empID)
@@ -604,7 +604,7 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
   }
 
   $scope.save = function() {
-     $scope.saveFirstPage();
+    $scope.saveFirstPage();
     // if ($scope.page == 1) {
     //   $scope.saveFirstPage();
     // } else if ($scope.page == 2) {
@@ -617,34 +617,231 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
 });
 
 
-app.controller('admin.editCustomer',function($scope,$http,Flash){
-
-if (typeof $scope.tab != 'undefined') {
-  console.log($scope.tab.data);
+app.controller('app.HR.manage.users.teams', function($scope, $http, Flash) {
 
 
-  $scope.newCustomer = $scope.tab.data
-  // $scope.newCustomer.password = ''
-  $scope.newCustomer.access='full_access';
+  $scope.searchUsers = function(query) {
+    return $http.get('/api/HR/users/?username__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
+
+  $scope.searchService = function (query) {
+    return $http.get('/api/ERP/service/?name__contains=' + query).
+    then(function(response) {
+      return response.data;
+    })
+  }
 
 
-  // $scope.newCustomer=$scope.data.tableData[$scope.tab.data.index];
-  // console.log($scope.newCustomer);
-  $scope.mode = 'edit';
+  $scope.fetchTeams = function() {
+    $http({
+      method: 'GET',
+      url: '/api/ERP/teams/',
+    }).then(function(response) {
+      $scope.teams = response.data
+    })
+  }
+
+  $scope.fetchTeams()
+
+  $scope.resetForm = function () {
+    $scope.teamForm = {
+      title: '',
+      quality_check: [],
+      team_lead: [],
+      advisors: [],
+      service:[]
+    }
+  }
+
+  $scope.resetForm()
 
 
-}else {
-  $scope.mode = 'new';
-  $scope.newCustomer = {
-    username: '',
-    first_name: '',
-    last_name: '',
-    password: '',
-    email:'',
-    access: 'full_access'
-  };
 
-}
+  $scope.selected_qc = ''
+  $scope.selected_team_lead = ''
+  $scope.selected_advisor = ''
+  $scope.selected_service = ''
+
+
+  $scope.add_users = function (from) {
+    var alreadyAdded = false;
+
+    if (from == 'teamQC') {
+      var selectedArray = $scope.teamForm.quality_check
+      var selected = $scope.selected_qc
+    }else if (from == 'teamLead') {
+      var selectedArray = $scope.teamForm.team_lead
+      var selected = $scope.selected_team_lead
+    }else {
+      var selectedArray = $scope.teamForm.advisors
+      var selected = $scope.selected_advisor
+    }
+
+    if (typeof selected != 'object') {
+      Flash.create('warning', 'Select and Add')
+      return
+    }
+
+    for (var i = 0; i < selectedArray.length; i++) {
+      if (selectedArray[i] == selected.pk) {
+        alreadyAdded = true;
+        break;
+      } else {
+        alreadyAdded = false;
+      }
+    }
+
+    if (alreadyAdded) {
+      Flash.create('warning', 'Already Added')
+      return
+    }
+
+    if (from == 'teamQC') {
+      $scope.teamForm.quality_check.push($scope.selected_qc.pk)
+    }else if (from == 'teamLead') {
+      $scope.teamForm.team_lead.push($scope.selected_team_lead.pk)
+    }else {
+      $scope.teamForm.advisors.push($scope.selected_advisor.pk)
+    }
+    $scope.selected_qc = ''
+    $scope.selected_team_lead = ''
+    $scope.selected_advisor = ''
+
+  }
+
+  $scope.remove_users = function (indx, from) {
+    if (from == 'teamQC') {
+        $scope.teamForm.quality_check.splice(indx,1)
+    }else if (from == 'teamLead') {
+      $scope.teamForm.team_lead.splice(indx,1)
+    }else {
+      $scope.teamForm.advisors.splice(indx,1)
+    }
+    console.log($scope.teamForm);
+  }
+
+  $scope.add_service = function () {
+    if (typeof $scope.selected_service != 'object') {
+      Flash.create('warning', 'Select and Add')
+      return
+    }
+    var alreadyAdded = false;
+    for (var i = 0; i < $scope.teamForm.service.length; i++) {
+      if ($scope.teamForm.service[i] == $scope.selected_service.pk) {
+        alreadyAdded = true;
+        break;
+      } else {
+        alreadyAdded = false;
+      }
+    }
+    if (alreadyAdded) {
+      Flash.create('warning', 'Already Added')
+      return
+    }
+    $scope.teamForm.service.push($scope.selected_service.pk)
+    $scope.selected_service = ''
+  }
+
+  $scope.remove_service = function (indx) {
+    $scope.teamForm.service.splice(indx,1)
+  }
+
+  $scope.editTeam = function(indx) {
+    $scope.teamForm = $scope.teams[indx];
+  }
+
+  $scope.deleteTeam = function(indx,pk) {
+    $http({
+      method: 'DELETE',
+      url:'/api/ERP/teams/'+ pk +'/',
+    }).then(function(response) {
+      console.log('deleted');
+      $scope.teams.splice(indx,1)
+      Flash.create('success','Deleted Successfully')
+      $scope.resetForm()
+    })
+  }
+
+  $scope.createTeamSave = function() {
+
+    var dataToPost = $scope.teamForm;
+
+    if ($scope.teamForm.title == '' || $scope.teamForm.title == undefined || $scope.teamForm.length == 0) {
+      Flash.create('warning', 'Title can not be empty')
+      return;
+    }
+
+
+
+    console.log($scope.teamForm);
+
+    $http({
+      method: 'POST',
+      url: '/api/ERP/teams/',
+      data: dataToPost
+    }).then(function(response) {
+      console.log('posted');
+        $scope.teams.push(response.data)
+        Flash.create('success','Created Successfully')
+        $scope.resetForm()
+    })
+  }
+
+
+  $scope.editTeamSave = function() {
+
+    var dataToPost = $scope.teamForm;
+
+    if ($scope.teamForm.title == '' || $scope.teamForm.title == undefined || $scope.teamForm.length == 0) {
+      Flash.create('warning', 'Title can not be empty')
+      return;
+    }
+
+    $http({
+      method: 'PATCH',
+      url:'/api/ERP/teams/'+ $scope.teamForm.pk +'/',
+      data: dataToPost
+    }).then(function(response) {
+      console.log('patch');
+      Flash.create('success','Edited Successfully')
+      $scope.resetForm()
+    })
+  }
+
+})
+
+
+app.controller('admin.editCustomer', function($scope, $http, Flash) {
+
+  if (typeof $scope.tab != 'undefined') {
+    console.log($scope.tab.data);
+
+
+    $scope.newCustomer = $scope.tab.data
+    // $scope.newCustomer.password = ''
+    $scope.newCustomer.access = 'full_access';
+
+
+    // $scope.newCustomer=$scope.data.tableData[$scope.tab.data.index];
+    // console.log($scope.newCustomer);
+    $scope.mode = 'edit';
+
+
+  } else {
+    $scope.mode = 'new';
+    $scope.newCustomer = {
+      username: '',
+      first_name: '',
+      last_name: '',
+      password: '',
+      email: '',
+      access: 'full_access'
+    };
+
+  }
 
   $scope.full_access_app = [];
   $scope.rest_access_app = [];
@@ -674,7 +871,7 @@ if (typeof $scope.tab != 'undefined') {
 
 
   $scope.createCustomer = function() {
-    $scope.$broadcast('forceRefetch',)
+    $scope.$broadcast('forceRefetch', )
 
 
     //
@@ -696,7 +893,7 @@ if (typeof $scope.tab != 'undefined') {
       first_name: $scope.newCustomer.first_name,
       last_name: $scope.newCustomer.last_name,
       password: $scope.newCustomer.password,
-      email:$scope.newCustomer.email
+      email: $scope.newCustomer.email
     };
 
 
@@ -708,16 +905,16 @@ if (typeof $scope.tab != 'undefined') {
 
 
     if ($scope.mode == 'new') {
-      $scope.method="POST";
-      $scope.urlCust='/api/HR/usersAdminMode/'
+      $scope.method = "POST";
+      $scope.urlCust = '/api/HR/usersAdminMode/'
       // $scope.urlPerm =
-    }else {
-      $scope.method="PATCH"
-      $scope.urlCust='/api/HR/usersAdminMode/'+$scope.newCustomer.pk+'/'
+    } else {
+      $scope.method = "PATCH"
+      $scope.urlCust = '/api/HR/usersAdminMode/' + $scope.newCustomer.pk + '/'
       // $scope.urlPerm =
-      dataToSend.is_staff =  $scope.newCustomer.is_staff
-      dataToSend.is_active =  $scope.newCustomer.is_active
-      dataToSend.email =  $scope.newCustomer.email
+      dataToSend.is_staff = $scope.newCustomer.is_staff
+      dataToSend.is_active = $scope.newCustomer.is_active
+      dataToSend.email = $scope.newCustomer.email
     }
 
     console.log(dataToSend);
@@ -741,7 +938,7 @@ if (typeof $scope.tab != 'undefined') {
       })
 
       Flash.create('success', response.status + ' : ' + response.statusText);
-      $scope.$broadcast('forceRefetch',)
+      $scope.$broadcast('forceRefetch', )
       console.log(response.data);
 
 
@@ -772,6 +969,10 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
   //     {name : 'icon' , icon : 'fa-th' , template : '/static/ngTemplates/empSearch/tableIcon.html'},
   //     {name : 'graph' , icon : 'fa-pie-chart' , template : '/static/ngTemplates/empSearch/tableGraph.html'}
   //   ];
+
+  $scope.tabLoadTeams = {
+    value:false
+  }
 
   var views = [{
       name: 'table',
@@ -849,11 +1050,11 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
 
 
   var viewsCustomer = [{
-      name: 'table',
-      icon: 'fa-bars',
-      template: '/static/ngTemplates/genericTable/genericSearchList.html',
-      itemTemplate: '/static/ngTemplates/app.HR.manage.customers.items.html'
-    }];
+    name: 'table',
+    icon: 'fa-bars',
+    template: '/static/ngTemplates/genericTable/genericSearchList.html',
+    itemTemplate: '/static/ngTemplates/app.HR.manage.customers.items.html'
+  }];
 
 
 
@@ -918,7 +1119,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       first_name: $scope.newUser.firstName,
       last_name: $scope.newUser.lastName,
       password: $scope.newUser.password,
-      email:$scope.newUser.email_id
+      email: $scope.newUser.email_id
     };
 
     console.log(dataToSend);
@@ -931,7 +1132,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     then(function(response) {
 
       Flash.create('success', response.status + ' : ' + response.statusText);
-      $scope.$broadcast('forceRefetch',)
+      $scope.$broadcast('forceRefetch', )
       $scope.newUser = {
         username: '',
         firstName: '',
@@ -1121,7 +1322,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
     for (var i = 0; i < $scope.dataCustomer.tableDataCustomer.length; i++) {
       if ($scope.dataCustomer.tableDataCustomer[i].pk == parseInt(target)) {
         if (action == 'editCustomer') {
-          var title = 'Edit Customer :' ;
+          var title = 'Edit Customer :';
           var appType = 'editCustomerForm';
           // var response
           $http({
@@ -1140,9 +1341,12 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
           });
 
         } else if (action == 'deleteCustomer') {
-          $http({method : 'DELETE' , url : '/api/HR/usersAdminMode/' + $scope.dataCustomer.tableDataCustomer[i].pk +'/'}).
+          $http({
+            method: 'DELETE',
+            url: '/api/HR/usersAdminMode/' + $scope.dataCustomer.tableDataCustomer[i].pk + '/'
+          }).
           then(function(response) {
-            $scope.dataCustomer.tableDataCustomer.splice(i , 1);
+            $scope.dataCustomer.tableDataCustomer.splice(i, 1);
             Flash.create('success', 'Deleted Successfully')
           })
           return
@@ -1248,7 +1452,7 @@ app.controller('admin.manageUsers', function($scope, $http, $aside, $state, Flas
       first_name: userData.first_name,
       is_staff: userData.is_staff,
       is_active: userData.is_active,
-      email:userData.email
+      email: userData.email
     }
     if (userData.password != '') {
       dataToSend.password = userData.password

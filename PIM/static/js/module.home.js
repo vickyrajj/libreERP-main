@@ -810,8 +810,8 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
           url: '/api/support/gethomeCal/',
         }).
         then(function(response) {
-          console.log('adminnnnnnnnnnnnnnn');
-          console.log(response.data);
+          // console.log('adminnnnnnnnnnnnnnn');
+          // console.log(response.data);
           $scope.isAdminLoaded=true
           $scope.graphDataLoaded(response)
         });

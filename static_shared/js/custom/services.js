@@ -33,6 +33,36 @@ app.factory('$users', function(){
   }
 });
 
+app.factory('$custServices', function($http){
+  var services = []
+  function custServices(){
+    $http({method : 'GET' , url : '/api/ERP/service/'}).
+    then(function(response){
+      services = response.data;
+    })
+  }
+  custServices()
+
+
+  return {
+    get : function(pk){
+      console.log(pk);
+      console.log(services);
+      var toReturn = 'noName'
+      for (var i = 0; i < services.length; i++) {
+        if (services[i].pk == pk) {
+          toReturn = services[i].name
+          break;
+        }else {
+          toReturn = 'noName'
+        }
+      }
+      return toReturn
+    }
+  }
+
+})
+
 app.factory('$permissions', function($http){
 
   modules = [];
@@ -73,7 +103,7 @@ var myPerms;
   $http({method : 'GET' , url : '/api/ERP/permission/?user='+myPk}).
   then(function(response){
     myPerms = response.data;
-    console.log(myPerms);
+    // console.log(myPerms);
   })
 
 
@@ -108,7 +138,7 @@ var myPerms;
 
     }, myPerms : function(input) {
       if (typeof input != 'undefined') {
-        console.log('myp',myPerms,input);
+        // console.log('myp',myPerms,input);
         for (var i = 0; i < myPerms.length; i++) {
           if (myPerms[i].app.name == input) {
             return true
