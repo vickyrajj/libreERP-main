@@ -126,7 +126,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   $scope.myCompanies = [];
   function fetchUsers() {
     if (connectionOpened) {
-      console.log('iffffffffffffffffff');
+      // console.log('iffffffffffffffffff');
       $http({
         method: 'GET',
         url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
@@ -323,7 +323,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
   $scope.addToChat = function(indx, uid) {
-    // alert('adding '+uid)
     addToCookie(uid, indx);
     for (var i = 0; i < $scope.chatsInView.length; i++) {
       if ($scope.myUsers[indx].uid == $scope.chatsInView[i].uid) {
@@ -398,7 +397,7 @@ $scope.count=0;
       url: '/api/support/supportChat/?user__isnull=True&uid=' + uid
     }).
     then(function(response) {
-      console.log(response.data);
+      // console.log(response.data);
       for (var i = 0; i < response.data.length; i++) {
 
         $http({
@@ -409,7 +408,7 @@ $scope.count=0;
           }
         }).
         then(function(response) {
-          console.log(response.data);
+          // console.log(response.data);
         });
 
       }
@@ -421,7 +420,7 @@ $scope.count=0;
       then(function(response) {
 
         var chatThreadCreated = new Date(response.data[0].created).getTime()
-        console.log(chatThreadCreated);
+        // console.log(chatThreadCreated);
 
         var now = new Date().getTime();
         var toPatch = {
@@ -438,7 +437,7 @@ $scope.count=0;
           data:toPatch
         }).
         then(function(response) {
-          console.log(response.data);
+          // console.log(response.data);
         });
       })
 

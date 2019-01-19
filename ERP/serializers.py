@@ -265,24 +265,53 @@ class TeamsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teams
         fields = ('pk','created','title','quality_check','team_lead','advisors','service')
-    # def create(self , validated_data):
-    #     t = Teams(title = validated_data['title'])
-    #     t.save()
-    #
-    #     if 'quality_check' in  self.context['request'].data:
-    #         for qc in self.context['request'].data['quality_check']:
-    #             user = User.objects.get(pk = int(qc))
-    #             # print validated_data , 'fhfghfffffffffff'
-    #             t.quality_check.add(user)
-    #
-    #     if 'team_lead' in  self.context['request'].data:
-    #         for tl in self.context['request'].data['team_lead']:
-    #             user = User.objects.get(pk = int(tl))
-    #             t.team_lead.add(user)
-    #
-    #     if 'advisors' in  self.context['request'].data:
-    #         for a in self.context['request'].data['advisors']:
-    #             user = User.objects.get(pk = int(a))
-    #             t.advisors.add(user)
-    #     t.save()
-    #     return t
+    def create(self , validated_data):
+        t = Teams(title = validated_data['title'])
+        t.save()
+
+        if 'quality_check' in  self.context['request'].data:
+            for qc in self.context['request'].data['quality_check']:
+                user = User.objects.get(pk = int(qc))
+                t.quality_check.add(user)
+
+        if 'team_lead' in  self.context['request'].data:
+            for tl in self.context['request'].data['team_lead']:
+                user = User.objects.get(pk = int(tl))
+                t.team_lead.add(user)
+
+        if 'advisors' in  self.context['request'].data:
+            for a in self.context['request'].data['advisors']:
+                user = User.objects.get(pk = int(a))
+                t.advisors.add(user)
+
+        if 'service' in  self.context['request'].data:
+            for s in self.context['request'].data['service']:
+                print s
+                serv = service.objects.get(pk = int(s))
+                t.service.add(serv)
+
+        if 'advisors' in  self.context['request'].data and 'service' in self.context['request'].data:
+            for s in self.context['request'].data['service']:
+                serv = service.objects.get(pk = int(s))
+                serv.advisors.clear()
+                for a in self.context['request'].data['advisors']:
+                    serv.advisors.add(User.objects.get(pk = int(a)))
+                serv.save()
+
+        t.save()
+        return t
+    def update(self, instance, validated_data):
+        for key in ['title', 'quality_check' , 'team_lead', 'advisors' , 'service']:
+            try:
+                setattr(instance , key , validated_data[key])
+            except:
+                pass
+        instance.save()
+        if 'advisors' in  self.context['request'].data and 'service' in self.context['request'].data:
+            for s in self.context['request'].data['service']:
+                serv = service.objects.get(pk = int(s))
+                serv.advisors.clear()
+                for a in self.context['request'].data['advisors']:
+                    serv.advisors.add(User.objects.get(pk = int(a)))
+                serv.save()
+        return instance

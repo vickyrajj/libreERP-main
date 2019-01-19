@@ -1084,9 +1084,8 @@ app.directive('chatBox', function() {
         });
       }
 
-
-      if(!typeof($scope.data.email)=='undefined'){
-        if ($scope.data.email.length > 0 && $scope.data.email!=undefined) {
+      if($scope.data.email!=undefined){
+        if ($scope.data.email.length > 0) {
           $http({
             method: 'GET',
             url: '/api/support/visitor/?email=' + $scope.data.email,
@@ -1098,7 +1097,6 @@ app.directive('chatBox', function() {
             }
           })
         }
-
       }
       $scope.sound = ngAudio.load("static/audio/notification.mp3");
 
@@ -1582,22 +1580,12 @@ app.directive('chatBox', function() {
                   console.log(all_text.childNodes[i].childNodes[j]);
                 }
               }
-              console.log(all_text);
-              // var page = $('#all_text');
-              // var pageText = page.text().replace("<span>","").replace("</span>");
-              // var searchedText = $scope.searchForm.value
-              // var theRegEx = new RegExp("("+searchedText+")", "igm");
-              // var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
-              // page.html(newHtml);
 
               for (var i = 0; i < $scope.chatData.length; i++) {
                 for (var j = 0; j < $scope.chatData[i].chatList.length; j++) {
                   if ($scope.chatData[i].chatList[j].message) {
-                    var page = $('#p' + j);
-                    // console.log(page.text(),'page');
-                    // var page = $('#all_text');
+                    var page = $('#search' + $scope.chatData[i].chatList[0].uid + j);
                     var pageText = page.text().replace("<span>", "").replace("</span>");
-                    // console.log(pageText);
                     var searchedText = $scope.searchForm.value
                     var theRegEx = new RegExp("(" + searchedText + ")", "igm");
                     var newHtml = pageText.replace(theRegEx, "<span style='background-color:yellow'>$1</span>");
@@ -1605,17 +1593,6 @@ app.directive('chatBox', function() {
                   }
                 }
               }
-              // for (var i = 0; i < $scope.texts.length; i++) {
-              //     var page = $('#all_text'+i);
-              //     // var page = $('#all_text');
-              //     var pageText = page.text().replace("<span>","").replace("</span>");
-              //     console.log(pageText);
-              //     var searchedText = $scope.searchForm.value
-              //     var theRegEx = new RegExp("("+searchedText+")", "igm");
-              //     var newHtml = pageText.replace(theRegEx ,"<span style='background-color:yellow'>$1</span>");
-              //     page.html(newHtml);
-              // }
-
             }
 
           },

@@ -690,7 +690,7 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
         }
       ]
     },
-    legend: { display: true } 
+    legend: { display: true }
   };
 
   $scope.barlabels = [];

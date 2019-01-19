@@ -240,8 +240,11 @@ app.filter('getCustService' , function($custServices){
     if (pk == undefined || pk.length == 0) {
       return "noname"
     }else {
-      console.log('herrrrrrrrrrrrrrr');
       var name = $custServices.get(pk)
+      if (name.length>12) {
+        name = name.slice(0,12);
+        name = name + '..'
+      }
       return name
     }
   }

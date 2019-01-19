@@ -619,7 +619,6 @@ app.controller('sudo.admin.editProfile', function($scope, $http, $aside, $state,
 
 app.controller('app.HR.manage.users.teams', function($scope, $http, Flash) {
 
-
   $scope.searchUsers = function(query) {
     return $http.get('/api/HR/users/?username__contains=' + query).
     then(function(response) {
@@ -633,7 +632,6 @@ app.controller('app.HR.manage.users.teams', function($scope, $http, Flash) {
       return response.data;
     })
   }
-
 
   $scope.fetchTeams = function() {
     $http({
@@ -658,13 +656,10 @@ app.controller('app.HR.manage.users.teams', function($scope, $http, Flash) {
 
   $scope.resetForm()
 
-
-
   $scope.selected_qc = ''
   $scope.selected_team_lead = ''
   $scope.selected_advisor = ''
   $scope.selected_service = ''
-
 
   $scope.add_users = function (from) {
     var alreadyAdded = false;
@@ -706,10 +701,10 @@ app.controller('app.HR.manage.users.teams', function($scope, $http, Flash) {
     }else {
       $scope.teamForm.advisors.push($scope.selected_advisor.pk)
     }
+
     $scope.selected_qc = ''
     $scope.selected_team_lead = ''
     $scope.selected_advisor = ''
-
   }
 
   $scope.remove_users = function (indx, from) {
@@ -720,7 +715,6 @@ app.controller('app.HR.manage.users.teams', function($scope, $http, Flash) {
     }else {
       $scope.teamForm.advisors.splice(indx,1)
     }
-    console.log($scope.teamForm);
   }
 
   $scope.add_service = function () {
@@ -758,7 +752,6 @@ app.controller('app.HR.manage.users.teams', function($scope, $http, Flash) {
       method: 'DELETE',
       url:'/api/ERP/teams/'+ pk +'/',
     }).then(function(response) {
-      console.log('deleted');
       $scope.teams.splice(indx,1)
       Flash.create('success','Deleted Successfully')
       $scope.resetForm()
@@ -766,24 +759,18 @@ app.controller('app.HR.manage.users.teams', function($scope, $http, Flash) {
   }
 
   $scope.createTeamSave = function() {
-
     var dataToPost = $scope.teamForm;
-
     if ($scope.teamForm.title == '' || $scope.teamForm.title == undefined || $scope.teamForm.length == 0) {
       Flash.create('warning', 'Title can not be empty')
       return;
     }
 
 
-
-    console.log($scope.teamForm);
-
     $http({
       method: 'POST',
       url: '/api/ERP/teams/',
       data: dataToPost
     }).then(function(response) {
-      console.log('posted');
         $scope.teams.push(response.data)
         Flash.create('success','Created Successfully')
         $scope.resetForm()
@@ -792,25 +779,20 @@ app.controller('app.HR.manage.users.teams', function($scope, $http, Flash) {
 
 
   $scope.editTeamSave = function() {
-
     var dataToPost = $scope.teamForm;
-
     if ($scope.teamForm.title == '' || $scope.teamForm.title == undefined || $scope.teamForm.length == 0) {
       Flash.create('warning', 'Title can not be empty')
       return;
     }
-
     $http({
       method: 'PATCH',
       url:'/api/ERP/teams/'+ $scope.teamForm.pk +'/',
       data: dataToPost
     }).then(function(response) {
-      console.log('patch');
       Flash.create('success','Edited Successfully')
       $scope.resetForm()
     })
   }
-
 })
 
 
