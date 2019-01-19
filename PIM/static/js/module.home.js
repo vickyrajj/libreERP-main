@@ -689,11 +689,12 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
           position: 'left'
         }
       ]
-    }
+    },
+    legend: { display: true }
   };
 
   $scope.barlabels = [];
-  $scope.series = ['Series A', 'Series B'];
+  $scope.series = ['Handled Chats', 'Missed chats'];
 
   $scope.barData = [];
   // $scope.colours = ['#72C02C', '#3498DB'];
@@ -741,6 +742,12 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
     $scope.changeInFrtAvg = response.data.changeInData.changeInFrtAvg
     $scope.changeInRespTimeAvg = response.data.changeInData.changeInRespTimeAvg
     $scope.changeInAverageRating = response.data.changeInData.changeInAverageRating
+
+    $scope.totalAudioCalls = response.data.totalAudioCalls
+    $scope.totalVideoCalls = response.data.totalVideoCalls
+    $scope.totalChatMessage = response.data.totalChatMessage
+
+
   }
 
   $scope.fetchGraphData = function () {
@@ -810,8 +817,9 @@ app.controller("controller.home.main", function($scope, $state, $http , $permiss
           url: '/api/support/gethomeCal/',
         }).
         then(function(response) {
-          // console.log('adminnnnnnnnnnnnnnn');
-          // console.log(response.data);
+          console.log('adminnnnnnnnnnnnnnn');
+          console.log(response.data);
+
           $scope.isAdminLoaded=true
           $scope.graphDataLoaded(response)
         });
