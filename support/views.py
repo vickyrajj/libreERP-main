@@ -727,7 +727,7 @@ class GethomeCal2(APIView):
         totalChatCount = chatThreadObj.count()
         totalAudioCalls = chatThreadObj.filter(typ = 'audio').count()
         totalVideoCalls = chatThreadObj.filter(typ = 'video').count()
-        totalChatMessage = chatThreadObj.filter(~Q(typ='audio')| ~Q(typ='video')).count()
+        totalChatMessage = chatThreadObj.filter(~Q(typ='audio') & ~Q(typ='video')).count()
         totalChatCountOld = chatThreadObjOld.count()
         missedChatCount = chatThreadObj.filter(user__isnull=True).count()
         missedChatCountOld = chatThreadObjOld.filter(user__isnull=True).count()
