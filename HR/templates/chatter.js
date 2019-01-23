@@ -275,9 +275,7 @@ function setCookie(cname, cvalue, exdays) {
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
-  // console.log(decodedCookie);
   var ca = decodedCookie.split(';');
-  // console.log(ca);
   for(var i = 0; i < ca.length; i++) {
       var c = ca[i];
       while (c.charAt(0) == ' ') {
@@ -291,18 +289,15 @@ function getCookie(cname) {
 }
 
 
-
 var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
 
 var webRtcAddress = '{{webrtcAddress}}';
 var wamp_prefix = '{{wamp_prefix}}'
-  var msgCount=0;
-
+var msgCount=0;
 var custID = {{pk}};
 var custName='{{name}}'
 console.log('customer id....', custID);
-// var borderColor = '#ACA626';
-// var custName = 'CIOC'
+
 var windowColor = '{{windowColor}}'
 var custName = '{{custName}}'
 var chatSupport = '{{chat}}'
@@ -319,16 +314,6 @@ var fontAndIconColor='{{fontColor}}'
 var position_of_chat="{{chatIconPosition}}";
 var type_of_icon='{{chatIconType}}'
 
-console.log(position_of_chat ,type_of_icon );
-//chat box position -- .chat_div_right , .chat_div_left
-
-// type of box
-
- // left_center , right_center , left_bottom , right_bottom
-
-
-// type of circle
-//typingBox-right
 var sy_circle_class="sy-circle-"+position_of_chat.split('-')[0] //sy-circle-right , sy-circle-left
 var sy_text_class=" sy-text-"+position_of_chat.split('-')[0] // sy-text-right , sy-text-left
 var sy_firsttext_class="sy-firsttext-"+position_of_chat.split('-')[0]
@@ -341,19 +326,9 @@ firstMessage = firstMessage.replaceAll("<a","<a style="+'color:'+windowColor+';t
 firstMessage = firstMessage.replaceAll("<li>","<li style='list-style:none'>")
 
 
-// window.onbeforeunload = function() {
-//   alert('suere')
-// };
-
 if (nameSupport=='None') {
   nameSupport = 'Agent'
 }
-
-
-// function setWindowColor(wc, fc,){
-//   windowColor=
-// }
-// var color1 = tinycolor(windowColor);
 
 var windowColorR = parseInt(windowColor.slice(1,3),16)
 var windowColorG = parseInt(windowColor.slice(3,5),16)
@@ -372,7 +347,6 @@ var linkStyle = document.createElement('link');
 var failedMessages=[];
 var trySendingAgain=[];
 
-// Define our viewport meta values
 var viewports = {
 		default: metaTag.getAttribute('content'),
 		landscape: 'width=990'
@@ -438,10 +412,7 @@ var agentPk = null;
 var notification = new Audio('{{serverAddress}}/static/audio/notification.ogg');
 var emailRecieved = false
 
-
 var chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
-
-
 
 
 function fetchMessages(uid) {
@@ -473,7 +444,6 @@ function fetchThread(uid) {
           chatThreadPk = data[0].pk
           agentPk = data[0].user
         }
-        // console.log(data);
         fetchMessages(uid);
       } else if (this.responseText == '{"PARAMS":"createCookie"}') {
         console.log('genertate new uid');
@@ -497,12 +467,8 @@ var chatThreadPk
 function checkCookie() {
   uid = getCookie("uid");
   if (uid != "") {
-      // alert("Welcome again " + user);
-      // console.log('cookie exu=ist');
       fetchThread(uid);
-      // if (threadExist!=undefined && threadExist) {
-      //   fetchMessages(uid);
-      // }
+
   } else {
       // uid = custID +'$'+custName+'$'+broswer.charAt(0)
       uid = new Date().getTime()
@@ -646,6 +612,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
      // var div2 = document.createElement("div");
      // div2.id = "bubble";
      // messageBox.appendChild(div2);
+     setTimeout(function () {
+       inputText.placeholder = "Message...";
+       paperClip.style.display = "";
+       paperPlane.style.display = "";
+     }, 3000);
 
     var supportChat = function(args) {
       console.log('These are the arguments '+ args);
@@ -829,6 +800,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
       },
       function (err) {
         console.log("failed to register: service.support.heartbeat" + err);
+        // session.register(wamp_prefix+'service.support.heartbeat.'+uid, heartbeat).then(
+        //   function (res) {
+        //     console.log("registered to service.support.heartbeat'");
+        //   },
+        //   function (err) {
+        //     console.log("failed to register: service.support.heartbeat" + err);
+        //   }
+        // );
       }
     );
 
@@ -2278,16 +2257,21 @@ var myformrating;
       paperPlane.style.display = "";
     }, 2000);
 
-    connection.onclose = function(reason, details) {
-      console.log("Connection lost: ");
-      var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
-      connection.open()
-    }
+
 
     feedbackFormOpened = false
     feedbackFormSubmitted = false
 
   })
+
+  connection.onclose = function(reason, details) {
+    console.log("Connection lost: ");
+    inputText.placeholder = "Connecting....";
+    paperClip.style.display = "none";
+    paperPlane.style.display = "none";
+    var connection = new autobahn.Connection({url: '{{wampServer}}', realm: 'default'});
+    connection.open()
+  }
 
 
   window.addEventListener("message", receiveMessage, false);
