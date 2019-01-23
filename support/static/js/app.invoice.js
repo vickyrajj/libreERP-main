@@ -202,6 +202,12 @@ app.controller("businessManagement.invoice.form", function($scope, $state, $user
     if (newValue != undefined) {
       $scope.gstcode = gstData.substring(0, 2)
       $scope.gstCal = newValue.substring(0, 2)
+      $scope.form.billCode = newValue.substring(0, 2)
+    }
+  })
+  $scope.$watch('form.shipGst', function(newValue, oldValue) {
+    if (newValue != undefined) {
+      $scope.form.shipCode = newValue.substring(0, 2)
     }
   })
 

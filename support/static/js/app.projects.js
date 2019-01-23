@@ -1720,6 +1720,12 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
           if (newValue != undefined) {
             $scope.gstcode = gstData.substring(0, 2)
             $scope.gstCal = newValue.substring(0, 2)
+            $scope.form.billCode = newValue.substring(0, 2)
+          }
+        })
+        $scope.$watch('form.shipCode', function(newValue, oldValue) {
+          if (newValue != undefined) {
+            $scope.form.shipCode = newValue.substring(0, 2)
           }
         })
 
