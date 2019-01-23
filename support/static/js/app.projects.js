@@ -1705,6 +1705,7 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
             $scope.products[i].cgstVal = parseFloat((($scope.products[i].cgst*$scope.products[i].taxableprice)/100).toFixed(2))
             $scope.products[i].sgst = newValue[i].sgst
             $scope.products[i].sgstVal = parseFloat((($scope.products[i].sgst*$scope.products[i].taxableprice)/100).toFixed(2))
+            $scope.products[i].igstVal =parseFloat((($scope.products[i].igst*$scope.products[i].price)/100).toFixed(2))
             $scope.products[i].total =parseFloat(($scope.products[i].taxableprice+$scope.products[i].cgstVal+$scope.products[i].sgstVal+$scope.products[i].igstVal).toFixed(2))
           }
         }
@@ -1797,18 +1798,23 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
 
         })
       }
-      $scope.deleteTable = function(val, index) {
-        if (val != undefined) {
+
+      $scope.deleteTable = function(index,prodPk,pkVal) {
+        if(prodPk!=undefined){
           $http({
             method: 'DELETE',
-            url: '/api/support/invoiceQty/' + val + '/'
+            url: '/api/support/invoiceQty/' + pkVal + '/'
           }).
           then(function(response) {
+            $scope.products.splice(index, 1)
             Flash.create('success', 'Deleted');
-
             return
           })
-
+        }
+        else{
+            $scope.products.splice(index, 1)
+            Flash.create('success', 'Deleted');
+            return
         }
       };
 
