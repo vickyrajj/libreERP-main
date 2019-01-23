@@ -32,9 +32,6 @@ class ProductsSerializer(serializers.ModelSerializer):
         else:
             return 0
 
-
-
-
 class ProductSheetSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSheet

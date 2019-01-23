@@ -64,6 +64,7 @@ from reportlab.lib.units import inch, cm
 from django.template.loader import render_to_string, get_template
 from django.core.mail import send_mail, EmailMessage
 from excel_response import ExcelResponse
+from num2words import num2words
 
 class ProductsViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny , )
@@ -2595,12 +2596,12 @@ def invoice(response, pkVal  , request):
     elements.append(t4)
     detail31 = Paragraph("""
     <para align='center'>
-    Bill to Party
+    <b>Bill to Party</b>
     </para>
     """ %(),styles['Normal'])
     detail32 = Paragraph("""
     <para align='center'>
-    Ship to Party
+    <b>Ship to Party</b>
     </para>
     """ %(),styles['Normal'])
     t2data=[detail31],[detail32]
@@ -2723,37 +2724,40 @@ def invoice(response, pkVal  , request):
         igsttot += float(i.igstVal)
         sgsttot += i.sgstVal
         grandtot +=i.total
+        print grandtot
         s21 =Paragraph("<para fontSize=8>{0} </para>".format(id),styles['Normal'])
         s22 =Paragraph("<para fontSize=8>{0} </para>".format(smart_str(i.description_1)),styles['Normal'])
-        s23 =Paragraph("<para fontSize=8>{0} </para>".format(i.qty),styles['Normal'])
-        s24 =Paragraph("<para fontSize=8>{:,} </para>".format(round(i.price,2)),styles['Normal'])
-        s25 =Paragraph("<para fontSize=8> {:,}</para>".format(round(i.taxableprice,2)),styles['Normal'])
-        s26 =Paragraph("<para fontSize=8>{0} </para>".format(i.cgst),styles['Normal'])
-        s27 =Paragraph("<para fontSize=8>{:,} </para>".format(round(i.cgstVal,2)),styles['Normal'])
-        s28 =Paragraph("<para fontSize=8> {0} </para>".format(i.sgst),styles['Normal'])
-        s29 =Paragraph("<para fontSize=8> {:,} </para>".format(round(i.sgstVal,2)),styles['Normal'])
-        s30 =Paragraph("<para fontSize=8> {0} </para>".format(i.igst),styles['Normal'])
-        s31 =Paragraph("<para fontSize=8> {:,}</para>".format(round(i.igstVal,2)),styles['Normal'])
-        s32 =Paragraph("<para fontSize=8> {:,} </para>".format(round(i.total,2)),styles['Normal'])
+        s23 =Paragraph("<para fontSize=8 alignment='center'>{0} </para>".format(i.qty),styles['Normal'])
+        s24 =Paragraph("<para fontSize=8  alignment='right'>{:,} </para>".format(round(i.price,2)),styles['Normal'])
+        s25 =Paragraph("<para fontSize=8 alignment='right'> {:,}</para>".format(round(i.taxableprice,2)),styles['Normal'])
+        s26 =Paragraph("<para fontSize=8 alignment='right'>{0} </para>".format(i.cgst),styles['Normal'])
+        s27 =Paragraph("<para fontSize=8 alignment='right'>{:,} </para>".format(round(i.cgstVal,2)),styles['Normal'])
+        s28 =Paragraph("<para fontSize=8 alignment='right'> {0} </para>".format(i.sgst),styles['Normal'])
+        s29 =Paragraph("<para fontSize=8 alignment='right'> {:,} </para>".format(round(i.sgstVal,2)),styles['Normal'])
+        s30 =Paragraph("<para fontSize=8 alignment='right'> {0} </para>".format(i.igst),styles['Normal'])
+        s31 =Paragraph("<para fontSize=8 alignment='right'> {:,}</para>".format(round(i.igstVal,2)),styles['Normal'])
+        s32 =Paragraph("<para fontSize=8 alignment='right'> {:,} </para>".format(round(i.total,2)),styles['Normal'])
         data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,s32])
     s21 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s22 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s22 =Paragraph("<para fontSize=8><b>Total </b></para>",styles['Normal'])
     s23 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s24 =Paragraph("<para fontSize=8>Total </para>",styles['Normal'])
-    s25 =Paragraph("<para fontSize=8>{:,}</para>".format(round(taxable,2)),styles['Normal'])
+    s24 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s25 =Paragraph("<para fontSize=8  alignment='right'><b>{:,}</b></para>".format(round(taxable,2)),styles['Normal'])
     s26 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s27 =Paragraph("<para fontSize=8>{:,} </para>".format(round(cgsttot,2)),styles['Normal'])
+    s27 =Paragraph("<para fontSize=8 alignment='right'><b>{:,}</b> </para>".format(round(cgsttot,2)),styles['Normal'])
     s28 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
-    s29 =Paragraph("<para fontSize=8> {:,}  </para>".format(round(sgsttot,2)),styles['Normal'])
+    s29 =Paragraph("<para fontSize=8 alignment='right'> <b>{:,}</b>  </para>".format(round(sgsttot,2)),styles['Normal'])
     s30 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
-    s31 =Paragraph("<para fontSize=8> {:,}</para>".format(round(igsttot,2)),styles['Normal'])
-    s32 =Paragraph("<para fontSize=8> {:,} </para>".format(round(grandtot,2)),styles['Normal'])
-    data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31])
-    t9=Table(data2,colWidths=(12*mm,40.2*mm,12*mm,15*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm))
+    s31 =Paragraph("<para fontSize=8 alignment='right'><b> {:,}</b></para>".format(round(igsttot,2)),styles['Normal'])
+    s32 =Paragraph("<para fontSize=8 alignment='right'><b> {:,}</b> </para>".format(round(grandtot,2)),styles['Normal'])
+    data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,s32])
+    t9=Table(data2,colWidths=(12*mm,30.5*mm,12*mm,15*mm,17.5*mm,17.5*mm,17.5*mm,17.5*mm,17.5*mm,17.5*mm,17.5*mm,17.5*mm))
     t9.hAlign = 'LEFT'
     t9.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t9)
-    s41 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    gtotalText = num2words(int(grandtot), to='cardinal', lang='en_IN')
+    print gtotalText
+    s41 =Paragraph("<para fontSize=8> Rupees {0} </para>".format(gtotalText),styles['Normal'])
     datawords =[[s41]]
     t10=Table(datawords)
     t10.hAlign = 'LEFT'

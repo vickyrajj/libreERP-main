@@ -672,26 +672,26 @@ app.controller("controller.home.main", function($scope, $state, $http) {
   }];
 
 
-  $http({
-    method: 'GET',
-    url: '/api/support/gethomeCal/',
-  }).
-  then(function(response) {
-    $scope.totalChats = response.data.totalChats
-    $scope.missedChats = response.data.missedChats
-    $scope.agentChatCount = response.data.agentChatCount
-    $scope.barData = response.data.graphData
-    $scope.barlabels = response.data.graphLabels
-    $scope.avgChatDuration = response.data.avgChatDuration
-    $scope.agentLeaderBoard = response.data.agentLeaderBoard
-    $scope.avgRatingAll = response.data.avgRatingAll
-    $scope.avgRespTimeAll = response.data.avgRespTimeAll
-    $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
-    $scope.changeInChat = response.data.changeInData.changeInChat
-    $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
-    $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
-
-  });
+  // $http({
+  //   method: 'GET',
+  //   url: '/api/support/gethomeCal/',
+  // }).
+  // then(function(response) {
+  //   $scope.totalChats = response.data.totalChats
+  //   $scope.missedChats = response.data.missedChats
+  //   $scope.agentChatCount = response.data.agentChatCount
+  //   $scope.barData = response.data.graphData
+  //   $scope.barlabels = response.data.graphLabels
+  //   $scope.avgChatDuration = response.data.avgChatDuration
+  //   $scope.agentLeaderBoard = response.data.agentLeaderBoard
+  //   $scope.avgRatingAll = response.data.avgRatingAll
+  //   $scope.avgRespTimeAll = response.data.avgRespTimeAll
+  //   $scope.firstResTimeAvgAll = response.data.firstResTimeAvgAll
+  //   $scope.changeInChat = response.data.changeInData.changeInChat
+  //   $scope.changeInMissedChat = response.data.changeInData.changeInMissedChat
+  //   $scope.changeInAvgChatDur = response.data.changeInData.changeInAvgChatDur
+  //
+  // });
 
   $scope.modules = $scope.$parent.$parent.modules;
   $scope.dashboardAccess = false;
