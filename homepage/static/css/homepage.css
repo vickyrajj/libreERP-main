@@ -2069,6 +2069,15 @@ hr {
   color: rgb(93, 114, 254)
 }
 
+.pyl {
+  padding-right: 0px;
+  padding-top: 0px;
+}
+.mob img{
+  width: 135px;
+  height: 128px;
+}
+
 /* exams css properties */
 .selected {
   background-color: #D6F1FB;
@@ -2563,6 +2572,22 @@ hr {
     margin-top: 10px !important;
   }
 
+  .pyl {
+    padding-right: 0px;
+    padding-top: 0px;
+  }
+
+  .mob img {
+    width: 135px;
+    height: 128px;
+  }
+
+  .mob {
+    padding: 0px;
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
   /*  non hd screen ends here*/
 }
 
@@ -2875,6 +2900,7 @@ hr {
   .adjustwidth {
     width: 100%;
   }
+
   .leftalign {
     left: 6em;
   }
