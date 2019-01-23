@@ -232,9 +232,44 @@ app.config(function($stateProvider) {
       },
       controller: 'controller.notes'
     })
+  $stateProvider
+    .state('checkout', {
+      url: "/checkout",
+      templateUrl: '/static/ngTemplates/app.homepage.checkout.html',
+      controller: 'controller.checkout'
+    })
 
 });
+app.controller('controller.checkout', function($scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
+  $scope.showCoupon = false;
+  $scope.showapply = true;
+  $scope.coupon = function() {
+    $scope.showCoupon = true;
+    $scope.showapply = false;
+  }
 
+
+  $scope.payment = function(id) {
+    console.log(id, '-------------------before');
+    $uibModal.open({
+      templateUrl: '/static/ngTemplates/app.homepage.payment.html',
+      size: 'md',
+      backdrop: true,
+      resolve: {
+        data: function() {
+          return id;
+        }
+      },
+      controller: function($scope, $uibModalInstance, data) {
+        if (data == 'online') {
+          $scope.payMethod = 'online';
+        } else {
+          $scope.payMethod = 'cash';
+        }
+      },
+    })
+  }
+})
 
 app.controller('controller.examresults', function($rootScope, $scope, $state, $http, $timeout, $interval, $uibModal, $stateParams, $sce, Flash) {
   console.log($stateParams.answerlist);
