@@ -1653,91 +1653,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
           $uibModalInstance.dismiss();
         }
 
-        $scope.saveInvoice=function(){
-          // var dataToSend = {
-          //   invoiceNumber : $scope.form.invoiceNumber
-          //   invoiceDate : $sco
-          // }
-          if($scope.data.pk){
-            $scope.form.project = $scope.data.pk
-          }
-
-          if(!$scope.form.pk){
-            var method = 'POST'
-            var url = '/api/support/invoice/'
-          }
-          else{
-              var method = 'PATCH'
-              var url = '/api/support/invoice/' + $scope.form.pk +'/'
-          }
-          if (typeof $scope.form.invoiceDate == 'object') {
-              $scope.form.invoiceDate = $scope.form.invoiceDate.toJSON().split('T')[0]
-          }
-          else{
-              $scope.form.invoiceDate = $scope.form.invoiceDate
-          }
-          $http({
-            method: method,
-            url: url,
-            data: $scope.form,
-          }).
-          then(function(response) {
-            console.log(response.data);
-            Flash.create('success', 'Saved');
-            for (var i = 0; i < $scope.products.length; i++) {
-              if(!$scope.products[i].product){
-                var sendVal = {
-                  product : $scope.products[i].pk,
-                  invoice : response.data.pk,
-                  part_no : $scope.products[i].part_no,
-                  description_1 : $scope.products[i].description_1,
-                  customs_no : $scope.products[i].customs_no,
-                  price : $scope.products[i].price,
-                  qty : $scope.products[i].qty,
-                  taxableprice : $scope.products[i].taxableprice,
-                  cgst : $scope.products[i].cgst,
-                  cgstVal : $scope.products[i].cgstVal,
-                  sgst : $scope.products[i].sgst,
-                  sgstVal : $scope.products[i].sgstVal,
-                  igst : $scope.products[i].igst,
-                  igstVal : $scope.products[i].igstVal,
-                  total : $scope.products[i].total,
-                }
-                var url = '/api/support/invoiceQty/'
-                var method = 'POST'
-              }
-              else{
-                var sendVal = {
-                  product : $scope.products[i].product.pk,
-                  invoice : response.data.pk,
-                  part_no : $scope.products[i].part_no,
-                  description_1 : $scope.products[i].description_1,
-                  customs_no : $scope.products[i].customs_no,
-                  price : $scope.products[i].price,
-                  qty : $scope.products[i].qty,
-                  taxableprice : $scope.products[i].taxableprice,
-                  cgst : $scope.products[i].cgst,
-                  cgstVal : $scope.products[i].cgstVal,
-                  sgst : $scope.products[i].sgst,
-                  sgstVal : $scope.products[i].sgstVal,
-                  igst : $scope.products[i].igst,
-                  igstVal : $scope.products[i].igstVal,
-                  total : $scope.products[i].total,
-                }
-                var url = '/api/support/invoiceQty/' + $scope.products[i].pk + '/'
-                var method = 'PATCH'
-              }
-              $http({
-                method: method,
-                url: url,
-                data: sendVal,
-              }).
-              then(function(response) {
-              })
-            }
-
-          })
-        }
 
         $scope.productSearch = function(query) {
           return $http.get('/api/support/products/?part_no__contains=' + query).
@@ -1795,6 +1710,107 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
         }
 
       },true)
+
+
+      $scope.saveInvoice=function(){
+        // var dataToSend = {
+        //   invoiceNumber : $scope.form.invoiceNumber
+        //   invoiceDate : $sco
+        // }
+        if($scope.data.pk){
+          $scope.form.project = $scope.data.pk
+        }
+
+        if(!$scope.form.pk){
+          var method = 'POST'
+          var url = '/api/support/invoice/'
+        }
+        else{
+            var method = 'PATCH'
+            var url = '/api/support/invoice/' + $scope.form.pk +'/'
+        }
+        if (typeof $scope.form.invoiceDate == 'object') {
+            $scope.form.invoiceDate = $scope.form.invoiceDate.toJSON().split('T')[0]
+        }
+        else{
+            $scope.form.invoiceDate = $scope.form.invoiceDate
+        }
+        $http({
+          method: method,
+          url: url,
+          data: $scope.form,
+        }).
+        then(function(response) {
+          console.log(response.data);
+          Flash.create('success', 'Saved');
+          for (var i = 0; i < $scope.products.length; i++) {
+            if(!$scope.products[i].product){
+              var sendVal = {
+                product : $scope.products[i].pk,
+                invoice : response.data.pk,
+                part_no : $scope.products[i].part_no,
+                description_1 : $scope.products[i].description_1,
+                customs_no : $scope.products[i].customs_no,
+                price : $scope.products[i].price,
+                qty : $scope.products[i].qty,
+                taxableprice : $scope.products[i].taxableprice,
+                cgst : $scope.products[i].cgst,
+                cgstVal : $scope.products[i].cgstVal,
+                sgst : $scope.products[i].sgst,
+                sgstVal : $scope.products[i].sgstVal,
+                igst : $scope.products[i].igst,
+                igstVal : $scope.products[i].igstVal,
+                total : $scope.products[i].total,
+              }
+              var url = '/api/support/invoiceQty/'
+              var method = 'POST'
+            }
+            else{
+              var sendVal = {
+                product : $scope.products[i].product.pk,
+                invoice : response.data.pk,
+                part_no : $scope.products[i].part_no,
+                description_1 : $scope.products[i].description_1,
+                customs_no : $scope.products[i].customs_no,
+                price : $scope.products[i].price,
+                qty : $scope.products[i].qty,
+                taxableprice : $scope.products[i].taxableprice,
+                cgst : $scope.products[i].cgst,
+                cgstVal : $scope.products[i].cgstVal,
+                sgst : $scope.products[i].sgst,
+                sgstVal : $scope.products[i].sgstVal,
+                igst : $scope.products[i].igst,
+                igstVal : $scope.products[i].igstVal,
+                total : $scope.products[i].total,
+              }
+              var url = '/api/support/invoiceQty/' + $scope.products[i].pk + '/'
+              var method = 'PATCH'
+            }
+            $http({
+              method: method,
+              url: url,
+              data: sendVal,
+            }).
+            then(function(response) {
+            })
+          }
+
+        })
+      }
+      $scope.deleteTable = function(val, index) {
+        if (val != undefined) {
+          $http({
+            method: 'DELETE',
+            url: '/api/support/invoiceQty/' + val + '/'
+          }).
+          then(function(response) {
+            Flash.create('success', 'Deleted');
+
+            return
+          })
+
+        }
+      };
 
       }, //----controller ends
     }).result.then(function(f) {

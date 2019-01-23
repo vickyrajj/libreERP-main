@@ -2731,7 +2731,7 @@ def invoice(response, pkVal  , request):
         s26 =Paragraph("<para fontSize=8>{0} </para>".format(i.cgst),styles['Normal'])
         s27 =Paragraph("<para fontSize=8>{:,} </para>".format(round(i.cgstVal,2)),styles['Normal'])
         s28 =Paragraph("<para fontSize=8> {0} </para>".format(i.sgst),styles['Normal'])
-        s29 =Paragraph("<para fontSize=8> {:,} </para>".format(round(i.sgst,2)),styles['Normal'])
+        s29 =Paragraph("<para fontSize=8> {:,} </para>".format(round(i.sgstVal,2)),styles['Normal'])
         s30 =Paragraph("<para fontSize=8> {0} </para>".format(i.igst),styles['Normal'])
         s31 =Paragraph("<para fontSize=8> {:,}</para>".format(round(i.igstVal,2)),styles['Normal'])
         s32 =Paragraph("<para fontSize=8> {:,} </para>".format(round(i.total,2)),styles['Normal'])
@@ -2739,7 +2739,7 @@ def invoice(response, pkVal  , request):
     s21 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s22 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s23 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
-    s24 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s24 =Paragraph("<para fontSize=8>Total </para>",styles['Normal'])
     s25 =Paragraph("<para fontSize=8>{:,}</para>".format(round(taxable,2)),styles['Normal'])
     s26 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
     s27 =Paragraph("<para fontSize=8>{:,} </para>".format(round(cgsttot,2)),styles['Normal'])
@@ -2748,12 +2748,35 @@ def invoice(response, pkVal  , request):
     s30 =Paragraph("<para fontSize=8>  </para>",styles['Normal'])
     s31 =Paragraph("<para fontSize=8> {:,}</para>".format(round(igsttot,2)),styles['Normal'])
     s32 =Paragraph("<para fontSize=8> {:,} </para>".format(round(grandtot,2)),styles['Normal'])
-
     data2.append([s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31])
-    t9=Table(data2)
+    t9=Table(data2,colWidths=(12*mm,40.2*mm,12*mm,15*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm,16.3*mm))
     t9.hAlign = 'LEFT'
     t9.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
     elements.append(t9)
+    s41 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    datawords =[[s41]]
+    t10=Table(datawords)
+    t10.hAlign = 'LEFT'
+    t10.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t10)
+    try:
+        billaddr = inv.invoiceTerms.replace('\n', '<br />')
+    except:
+        billaddr = inv.invoiceTerms
+    dataFooter = []
+    s51 =Paragraph("<para fontSize=8>Payment Terms : {0} </para>".format(billaddr),styles['Normal'])
+    s52 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s53 =Paragraph("<para fontSize=6 alignment='center'> Certified that the particulars given above are true and correct <br/></para><para fontSize=10> For BRUDERER PRESSES INDIA PVT.LTD.</para>",styles['Normal'])
+    dataFooter =[[s51,s52,s53]]
+    s61 =Paragraph("<para fontSize=8>Bank Details : IDBI Bank Ltd., Whitefield Branch,<br/>Bangalore - 560 066, Karnataka<br/>Account No. 1545102000003858 <br/>IFSC Code : IBKL0001545</para>",styles['Normal'])
+    s62 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s63 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    dataFooter +=[[s61,s62,s63]]
+    t11=Table(dataFooter,colWidths=(80*mm,49.5*mm,80*mm))
+    # t11.hAlign = 'LEFT'
+    t11.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black), ('LINEABOVE', (1,1), (-1,-1), 0.25, colors.white),]))
+    elements.append(t11)
+
     doc.build(elements)
 
 class InvoiceDownloadAPIView(APIView):
