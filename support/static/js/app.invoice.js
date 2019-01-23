@@ -29,11 +29,11 @@ app.controller("businessManagement.invoice", function($scope, $state, $users, $s
     for (var i = 0; i < $scope.data.tableData.length; i++) {
       if ($scope.data.tableData[i].pk == parseInt(target)) {
         if (action == 'edit') {
-          var title = 'Edit Invoice :';
+          var title = 'Edit Invoice : ';
           var appType = 'invoiceEditor';
         }
         else if (action == 'explore') {
-          var title = 'Explore Invoice :';
+          var title = 'Explore Invoice : ';
           var appType = 'invoiceExplore';
         }
         else if (action == 'delete') {
@@ -131,6 +131,13 @@ $scope.products = []
   })
   $scope.products = []
   $scope.addTableRow = function(indx) {
+    if ($scope.products.length > 0) {
+      var obj = $scope.products[$scope.products.length - 1]
+      if (obj.part_no.length == 0) {
+        Flash.create('danger', 'Please Fill Previous Row Data')
+        return
+      }
+    }
     $scope.products.push({
       part_no: '',
       description_1: '',
@@ -147,15 +154,27 @@ $scope.products = []
       total:0
     });
   }
+  $scope.deleteData = function(pkVal, idx) {
+    console.log(pkVal, idx);
+    if (pkVal == undefined) {
+      $scope.products.splice(idx, 1)
+      return
+    } else {
+      $http({
+        method: 'DELETE',
+        url: '/api/support/invoiceQty/' + pkVal + '/'
+      }).
+      then(function(response) {
+        $scope.products.splice(idx, 1)
+        return
+      })
+    }
+  }
   $scope.close=function(){
     $uibModalInstance.dismiss();
   }
 
   $scope.saveInvoice=function(){
-    // var dataToSend = {
-    //   invoiceNumber : $scope.form.invoiceNumber
-    //   invoiceDate : $sco
-    // }
 
     if($scope.form.project){
       $scope.form.project = $scope.form.project.pk
@@ -242,9 +261,9 @@ $scope.products = []
   }
 
   $scope.productSearch = function(query) {
-    return $http.get('/api/support/products/?part_no__contains=' + query).
+    return $http.get('/api/support/products/?limit=10&part_no__contains=' + query).
     then(function(response) {
-      return response.data;
+      return response.data.results;
     })
   };
 
@@ -261,9 +280,9 @@ $scope.$watch('form.billGst', function(newValue, oldValue) {
 
 $scope.$watch('products', function(newValue, oldValue) {
   for (var i = 0; i < newValue.length; i++) {
-    console.log(typeof newValue[i],'hhhhhhhhhhhh');
+    // console.log(typeof newValue[i],'hhhhhhhhhhhh');
     if(typeof newValue[i].part_no=='object'){
-      console.log(newValue[i].part_no.part_no);
+      delete newValue[i].part_no.pk
       $scope.products[i] = newValue[i].part_no
       $scope.products[i].qty = 1
       $scope.products[i].taxableprice = parseFloat(newValue[i].part_no.price*$scope.products[i].qty)
