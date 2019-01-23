@@ -282,14 +282,14 @@ def purchaseOrder(response , project , purchaselist, multNumber,currencyTyp, req
     doc = SimpleDocTemplate(response,pagesize=letter, topMargin=70,leftMargin=0.1*cm,rightMargin=0.1*cm)
     doc.request = request
     elements = []
-    # elements.append(Spacer(1,30))
-    # header_content = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'Bruderer_Logo_svg.svg'))
-    # sx=sy=0.17
-    # header_content.width,header_content.height = header_content.minWidth()*sx, header_content.height*sy
-    # header_content.scale(sx,sy)
-    # header_content.hAlign = 'RIGHT'
-    # elements.append(header_content)
-    # elements.append(Spacer(1,10))
+    elements.append(Spacer(1,30))
+    header_content = svg2rlg(os.path.join(globalSettings.BASE_DIR , 'static_shared','images' , 'Bruderer_Logo_svg.svg'))
+    sx=sy=0.17
+    header_content.width,header_content.height = header_content.minWidth()*sx, header_content.height*sy
+    header_content.scale(sx,sy)
+    header_content.hAlign = 'RIGHT'
+    elements.append(header_content)
+    elements.append(Spacer(1,10))
     style_right = ParagraphStyle(name='right', parent=styles['Normal'], alignment=TA_RIGHT)
     # frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height-2*cm, id='normal')
     # template1 = PageTemplate(id='test', frames=frame, onPage=partial(header, content=header_content))
