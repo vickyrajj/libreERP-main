@@ -49,7 +49,7 @@
       <i style="position:absolute; right:10px; top:105px; color:#fff; cursor:pointer;" ng-click="captureImage()" class="fa fa-camera fa-lg" aria-hidden="true"></i>
       <i style="position:absolute; right:40px; top:105px; color:#fff; cursor:pointer;" ng-click="hideVisitorScreen()" class="fa fa-compress fa-lg" aria-hidden="true"></i>
       <!-- <i style="position:absolute; right:70px; top:105px; color:#fff; cursor:pointer;" ng-click="!data.alreadyDone? toggleVisitorScreen():''" class="fa fa-video-camera fa-lg" aria-hidden="true"></i> -->
-      <iframe id="iframeChat{{data.uid}}" ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; transition:0.5s;width:100%; border:1px solid #e0e0e0;" allow="geolocation; microphone; camera;"  autoplay="true" muted="muted" allowfullscreen></iframe>
+      <iframe id="iframeChat{{data.uid}}" ng-src="{{data.videoUrl | trusted}}" scrolling="no" style="height:100%; transition:0.5s;width:100%; border:1px solid #e0e0e0;" allow="geolocation; microphone; camera;"  autoplay="true" allowfullscreen></iframe>
       <!-- <iframe ng-src="{{data.currentUrl | trusted}}" scrolling="no" style="height:100%; transition:0.5s;width:100%; border:1px solid #e0e0e0;" allowFullScreen></iframe> -->
 
     </div>
