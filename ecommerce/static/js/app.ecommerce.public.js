@@ -1854,6 +1854,7 @@ app.controller('controller.ecommerce.account.default', function($scope, $rootSco
       }
 
       if ($scope.isGst) {
+        
         $scope.detailsForm.gst = response.data.gst
       }
 

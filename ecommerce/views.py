@@ -1612,7 +1612,7 @@ def addPageNumber(canvas, doc):
     h=b[3]-b[1]
 
     d = Drawing(60,60,transform=[60./w,0,0,60./h,0,0])
-    d.add(qrw)
+    # d.add(qrw)
     renderPDF.draw(d, canvas ,180*mm,270*mm)
 
     pass
