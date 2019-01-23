@@ -102,7 +102,7 @@ from svglib.svglib import svg2rlg
 from excel_response import ExcelResponse
 import re
 from ERP.send_email import send_email
-
+from reportlab.platypus.flowables import Image as GNAA
 
 # from sendgrid.helpers.mail import *
 
@@ -2081,6 +2081,360 @@ def genInvoice(response, contract, request):
 #     return response
 
 
+
+class PageCanvas(canvas.Canvas):
+
+    #----------------------------------------------------------------------
+    def __init__(self, *args, **kwargs):
+        """Constructor"""
+        canvas.Canvas.__init__(self, *args, **kwargs)
+        self.pages = []
+
+    #----------------------------------------------------------------------
+    def showPage(self):
+        """
+        On a page break, add information to the list
+        """
+        self.pages.append(dict(self.__dict__))
+        self._startPage()
+
+    #----------------------------------------------------------------------
+    def save(self):
+        """
+        Add the page number to each page (page x of y)
+        """
+        page_count = len(self.pages)
+
+        for page in self.pages:
+            self.__dict__.update(page)
+            # self.draw_page_number(page_count)
+            if page == self.pages[-1]:
+                self.drawLetterHeadFooter()
+            else:
+                pass
+
+            canvas.Canvas.showPage(self)
+
+        canvas.Canvas.save(self)
+
+    #----------------------------------------------------------------------
+    def draw_page_number(self, page_count):
+        """
+        Add the page number
+        """
+
+        text = "<font size='8'>Page #%s of %s</font>" % (self._pageNumber , page_count)
+        p = Paragraph(text , styleN)
+        p.wrapOn(self , 50*mm , 10*mm)
+        p.drawOn(self , 100*mm , 10*mm)
+
+    def drawLetterHeadFooter(self):
+        panNumber = settingsFields.get(name = 'companyAddress').value
+        p = Paragraph("<para fontSize=8  alignment='center'>We Thank You for Your Business.</para>",styles['Normal'])
+
+        p.wrapOn(self , 50*mm , 10*mm)
+        p.drawOn(self , 85*mm  , 8*mm)
+
+
+def generateInvoiceBni(response, contract ,request):
+
+
+    isStoreGlobal = False
+    ab = appSettingsField.objects.filter(name='isStoreGlobal')
+    if len(ab)>0:
+        if ab[0].flag:
+            isStoreGlobal = True
+
+    styles = getSampleStyleSheet()
+    doc = SimpleDocTemplate(response,pagesize=letter, topMargin=0.2*cm,leftMargin=0.1*cm,rightMargin=0.1*cm)
+    doc.request = request
+    elements = []
+    companyAddress = settingsFields.get(name = 'companyAddress').value
+    companyAddress = companyAddress.replace(',', '<br/>', 1)
+    companyAddress = companyAddress.replace('nagar,', 'nagar<br/>', 1)
+    telPhone  = str(settingsFields.get(name = 'phone').value)
+    email = str(settingsFields.get(name = 'email').value)
+
+    websiteAddress = globalSettings.SEO_AUTHOR
+    # brandLogo = globalSettings.ICON_LOGO
+
+    if isStoreGlobal:
+        gstvarName = ''
+        gstNumber = ''
+    else:
+        gstvarName = 'GSTIN is :'
+        gstNumber = str(settingsFields.get(name = 'cstNo').value)
+
+
+    s01 =Paragraph("<para fontSize=8> "+ companyAddress +" <br/> Tel :'"+ telPhone +"' <br/> Email: "+ email +" <br/> "+websiteAddress+" <br/> "+ gstvarName +" "+ gstNumber +" </para>",styles['Normal'])
+    s02 =Paragraph("<para fontSize=8> </para>",styles['Normal'])
+    s03 = []
+    brandLogo = globalSettings.ICON_LOGO.split('static/')[1]
+    logo = os.path.join(globalSettings.BASE_DIR , 'static_shared',brandLogo)
+    im = GNAA(logo, width=120, height=80)
+    s03.append(im)
+    dataHeader =[[s01,s02,s03]]
+    t1=Table(dataHeader,colWidths=(90*mm,29.5*mm,90*mm))
+    t1.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'), ('LINEBELOW', (0,-1), (-1,-1), 1, colors.black),]))
+    elements.append(t1)
+
+
+    # if isStoreGlobal:
+
+    try:
+        detailsObj = contract.user.profile.details
+        details = ast.literal_eval(detailsObj)
+        gstVal = details['GST']
+    except:
+        gstVal = ''
+
+    currencySymbol = appSettingsField.objects.filter(name='currencySymbol')
+    if len(currencySymbol)>0:
+        if currencySymbol[0].value == 'fa-usd':
+            currency = 'USD'
+        else:
+            currency = 'INR'
+    else:
+        currency = 'USD'
+
+    dataDetails = []
+
+
+    s11 =Paragraph("<para fontSize=8> <br/> "+ str(contract.user.first_name) +" "+ str(contract.user.last_name) +"<br/>102 Eden Park, 20 Vittal Mallya Rd.<br/>"+ str(contract.city) +" - "+ str(contract.pincode) +"<br/>"+ str(contract.state) +" <br/> "+ str(contract.country) +"<br/>"+ str(contract.mobileNo) +"<br/><br/><br/></para>",styles['Normal'])
+
+
+    s12 =Paragraph("<para> </para>",styles['Normal'])
+    s13 = Paragraph("<para alignment='right' fontSize=18> INVOICE </para>",styles['Normal'])
+    dataDetails +=[[s11,s12,s13]]
+
+    invoiceNumber = ''
+    orderNumber = str(contract.pk)
+
+    if isStoreGlobal:
+        s21 =Paragraph("<para fontSize=8>Order Number : "+ orderNumber +"</para>",styles['Normal'])
+    else:
+        s21 =Paragraph("<para fontSize=8> GSTIN : "+ gstVal +"<br/>Order Number : "+ orderNumber +"</para>",styles['Normal'])
+
+    s22 =Paragraph("<para> </para>",styles['Normal'])
+
+    print datetime.datetime.now()
+    invoiceDate = str(datetime.datetime.now().date())
+    orderDate = str(contract.created.date())
+
+
+    s23 = Paragraph("<para alignment='right' fontSize=8> Invoice Date: "+ invoiceDate +" <br/>Order Date: "+ orderDate +" </para>",styles['Normal'])
+    dataDetails +=[[s21,s22,s23]]
+    t2=Table(dataDetails,colWidths=(90*mm,29.5*mm,90*mm))
+    t2.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'RIGHT'),('VALIGN',(0,0),(-1,-1),'TOP'), ]))
+    elements.append(t2)
+
+    p101_01 =Paragraph("<para fontSize=8>Sl. no</para>",styles['Normal'])
+    p101_02 =Paragraph("<para fontSize=8>Product</para>",styles['Normal'])
+    p101_09 =Paragraph("<para fontSize=8>Qty</para>",styles['Normal'])
+    p101_03 =Paragraph("<para fontSize=8>HSN</para>",styles['Normal'])
+    p101_04 =Paragraph("<para fontSize=8>Price <span fontSize=6> ("+currency+")</span></para>",styles['Normal'])
+    p101_05 =Paragraph("<para fontSize=8>SGST  <span fontSize=6> ("+currency+")</span></para>",styles['Normal'])
+    p101_06 =Paragraph("<para fontSize=8>CGST  <span fontSize=6> ("+currency+")</span></para>",styles['Normal'])
+    p101_07 =Paragraph("<para fontSize=8>Total GST  <span fontSize=6> ("+currency+")</span></para>",styles['Normal'])
+    p101_08 =Paragraph("<para fontSize=8>Total Price  <span fontSize=6> ("+currency+")</span></para>",styles['Normal'])
+
+    if isStoreGlobal:
+        data1=[[p101_01,p101_02,p101_09,p101_03,p101_04,p101_08]]
+    else:
+        data1=[[p101_01,p101_02,p101_09,p101_03,p101_04,p101_05,p101_06,p101_07,p101_08]]
+    # p101_06 =Paragraph("<para fontSize=8>{0}</para>".format(amountTitle),styles['Normal']) IF ANY NON STATIC DATA GIIVE LIKE THIS
+
+    rheights=1*[0.2*inch]
+    if isStoreGlobal:
+        t3=Table(data1,rowHeights=rheights,colWidths=(15*mm, 90*mm,25*mm ,25*mm, 25*mm, 25*mm))
+    else:
+        t3=Table(data1,rowHeights=rheights,colWidths=(15*mm, 50*mm,10*mm ,20*mm, 25*mm, 20*mm, 20*mm, 25*mm, 25*mm))
+    t3.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'),('BOX',(0,0),(-1,-1),0.25,colors.black),('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)]))
+    elements.append(t3)
+    Serialid=0
+    data2 = []
+    totaldiscount = 0
+    total = 0
+    totalprice = 0
+    promoAmount = 0
+    discount = 0
+    promoCode = ''
+    promoObj = Promocode.objects.all()
+    if contract.promoCode:
+        for p in promoObj:
+            if str(p.name)==str(contract.promoCode):
+                promoAmount = p.discount
+                print  p.name,'aaaaaaaaaaaaaaaa'
+                promoCode = p.name
+    else:
+        promoCode="None"
+
+    for i in contract.orderQtyMap.all():
+        Serialid+=1
+        if i.prodSku == i.product.product.serialNo:
+            print i.product.product.name, i.product.product.discount, i.priceDuringOrder
+            price = i.priceDuringOrder - (i.product.product.discount * i.priceDuringOrder)/100
+            price=round(price, 2)
+            totalprice = i.qty*price
+            totalprice=round(totalprice, 2)
+            total=round(total, 2)
+            if i.desc:
+                desc =i.desc
+            else:
+                desc=""
+            qtyData = i.product.product.howMuch
+            if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
+                if qtyData >1000:
+                    qtyValue = str(qtyData/1000) + ' Kg'
+                else:
+                    qtyValue = str(qtyData) + ' gm'
+            elif str(i.product.product.unit)=='Millilitre' or str(i.product.product.unit)=='ml':
+                if qtyData>1000:
+                    qtyValue = str(qtyData/1000) + ' lt'
+                else:
+                    qtyValue = str(qtyData) + ' ml'
+            elif str(i.product.product.unit)=='Size and Color' or str(i.product.product.unit)=='Size':
+                if int(qtyData)==1:
+                    qtyValue = 'XS'
+                elif int(qtyData)==2:
+                    qtyValue = 'S'
+                elif int(qtyData)==2:
+                    qtyValue = 'M'
+                elif int(qtyData)==4:
+                    qtyValue = 'L'
+                elif int(qtyData)==5:
+                    qtyValue = 'XL'
+                elif int(qtyData)==6:
+                    qtyValue = 'XL'
+                else:
+                    qtyValue = qtyData
+            else:
+              qtyValue = qtyData
+            prodName = str(i.product.product.name) + ' '  + str(qtyValue) + ' ' +str(desc)
+            if i.product.product.productMeta is None:
+                gstAmount = ''
+                hsnCode = ''
+                gstAmount2 = ''
+            else:
+                totalprice = totalprice + i.gstAmount
+                gstAmount = i.gstAmount
+                gstAmount2 = gstAmount/2
+                hsnCode = str(i.product.product.productMeta.code)
+            total+=totalprice
+        else:
+            prodData = ProductVerient.objects.get(sku = i.prodSku)
+            price = prodData.discountedPrice
+            price=round(price, 2)
+            totalprice = i.qty*price
+            totalprice=round(totalprice, 2)
+            total=round(total, 2)
+            if i.desc:
+                desc =i.desc
+            else:
+                desc=""
+            qtyData = i.product.product.howMuch * prodData.unitPerpack
+            if str(i.product.product.unit)=='Gram' or str(i.product.product.unit)=='gm':
+                if qtyData >1000:
+                    qtyValue = str(qtyData/1000) + ' Kg'
+                else:
+                    qtyValue = str(qtyData) + ' gm'
+            elif str(i.product.product.unit)=='Millilitre' or str(i.product.product.unit)=='ml':
+                if qtyData>1000:
+                    qtyValue = str(qtyData/1000) + ' lt'
+                else:
+                    qtyValue = str(qtyData) + ' ml'
+            elif str(i.product.product.unit)=='Size and Color' or str(i.product.product.unit)=='Size':
+                if int(qtyData)==1:
+                    qtyValue = 'XS'
+                elif int(qtyData)==2:
+                    qtyValue = 'S'
+                elif int(qtyData)==2:
+                    qtyValue = 'M'
+                elif int(qtyData)==4:
+                    qtyValue = 'L'
+                elif int(qtyData)==5:
+                    qtyValue = 'XL'
+                elif int(qtyData)==6:
+                    qtyValue = 'XL'
+                else:
+                    qtyValue = qtyData
+            else:
+              qtyValue = qtyData
+
+
+            prodName = str(i.product.product.name) + ' ' + str(qtyValue)+ ' ' +str(desc)
+
+            if i.product.product.productMeta is None:
+                gstAmount = ''
+                hsnCode = ''
+                gstAmount2 = ''
+            else:
+                totalprice = totalprice + i.gstAmount
+                gstAmount = i.gstAmount
+                gstAmount2 = gstAmount/2
+                hsnCode = str(i.product.product.productMeta.code)
+            total+=totalprice
+
+        qty = i.qty
+        p111_01 =Paragraph("<para fontSize=8>"+ str(Serialid) +"</para>",styles['Normal'])
+        p111_02 =Paragraph("<para fontSize=8> "+ str(prodName) +" </para>",styles['Normal'])
+        p111_09 =Paragraph("<para fontSize=8> "+ str(qty) +" </para>",styles['Normal'])
+        p111_03 =Paragraph("<para fontSize=8>" + str(hsnCode) +"</para>",styles['Normal'])
+        p111_04 =Paragraph("<para fontSize=8> "+ str(price) +"</para>",styles['Normal'])
+        p111_05 =Paragraph("<para fontSize=8>"+ str(gstAmount2)+"</para>",styles['Normal'])
+        p111_06 =Paragraph("<para fontSize=8>"+ str(gstAmount2)+"</para>",styles['Normal'])
+        p111_07 =Paragraph("<para fontSize=8>"+ str(gstAmount)+" </para>",styles['Normal'])
+        p111_08 =Paragraph("<para fontSize=8  alignment='right'>"+ str(i.totalAmount) +"</para>",styles['Normal'])
+
+        if isStoreGlobal:
+            data2.append([p111_01,p111_02,p111_09,p111_03,p111_04,p111_08])
+        else:
+            data2.append([p111_01,p111_02,p111_09,p111_03,p111_04,p111_05,p111_06,p111_07,p111_08])
+
+
+    shippingCharges = round(contract.shippingCharges,2)
+    subtotal = round(total,2)
+    grandTotal=round(contract.totalAmount, 2)
+    if isStoreGlobal:
+        t4=Table(data2,colWidths=(15*mm, 90*mm,25*mm ,25*mm, 25*mm, 25*mm))
+    else:
+        t4=Table(data2,colWidths=(15*mm, 50*mm,10*mm ,20*mm, 25*mm, 20*mm, 20*mm, 25*mm, 25*mm))
+
+    t4.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP')]))
+    elements.append(t4)
+    p121_01 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    p121_02 =Paragraph("<para fontSize=8 alignment='left'> Subtotal</para>",styles['Normal'])
+    p121_03 =Paragraph("<para fontSize=8  alignment='right'> <span fontSize=7> "+currency+ "</span>  "+str(subtotal) +"</para>",styles['Normal'])
+    data3=[[p121_01,p121_02,p121_03]]
+
+    p131_01 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    p131_02 =Paragraph("<para fontSize=8 alignment='left'>Shipping Charges</para>",styles['Normal'])
+    p131_03 =Paragraph("<para fontSize=8  alignment='right'> <span fontSize=7> "+ currency+ "</span> "+ str(shippingCharges) +"</para>",styles['Normal'])
+    data3+=[[p131_01,p131_02,p131_03]]
+
+    # p132_01 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    # p132_02 =Paragraph("<para fontSize=8 alignment='left'>Promo Code Discount</para>",styles['Normal'])
+    # p132_03 =Paragraph("<para fontSize=8  alignment='right'>"+ str(promoAmount) +"</para>",styles['Normal'])
+    # data3+=[[p132_01,p132_02,p132_03]]
+
+    t5=Table(data3,colWidths=(140*mm, 30*mm,40*mm))
+    t5.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP')]))
+    elements.append(t5)
+
+    p141_01 =Paragraph("<para fontSize=8></para>",styles['Normal'])
+    p141_02 =Paragraph("<para fontSize=8 alignment='left'>Total </para>",styles['Normal'])
+    p141_03 =Paragraph("<para fontSize=8  alignment='right'> <span fontSize=7> "+ currency + "</span> "+ str(grandTotal) +"</para>",styles['Normal'])
+    data4=[[p141_01,p141_02,p141_03]]
+    t6=Table(data4,colWidths=(140*mm, 30*mm,40*mm))
+    t6.setStyle(TableStyle([('TEXTFONT', (0, 0), (-1, -1), 'Times-Bold'),('TEXTCOLOR',(0,0),(-1,-1),black),('ALIGN',(0,0),(-1,-1),'LEFT'),('VALIGN',(0,0),(-1,-1),'TOP'), ('LINEBELOW', (1,0), (-1,-1), 0.5, colors.black),('LINEABOVE', (1,0), (-1,-1), 0.5, colors.black),]))
+    elements.append(t6)
+
+
+
+
+
+    doc.build(elements, canvasmaker=PageCanvas)
+
 class DownloadInvoiceAPI(APIView):
     renderer_classes = (JSONRenderer,)
     def get(self, request, format=None):
@@ -2103,8 +2457,11 @@ class DownloadInvoiceAPI(APIView):
         print o
         response['Content-Disposition'] = 'attachment; filename="invoice%s_%s.pdf"' % (
              datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)
-        genInvoice(response, o, request)
-
+        if re.search('BNI', globalSettings.SEO_TITLE, re.IGNORECASE):
+            print 'call bni'
+            generateInvoiceBni(response, o, request)
+        else:
+            genInvoice(response, o, request)
         f = open(os.path.join(globalSettings.BASE_DIR, 'media_root/invoice%s_%s.pdf' %
                               ( datetime.datetime.now(pytz.timezone('Asia/Kolkata')).year, o.pk)), 'wb')
         f.write(response.content)

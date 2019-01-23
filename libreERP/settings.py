@@ -82,7 +82,7 @@ AUTO_ACTIVE_ON_REGISTER = False
 
 INVOICE_LOGO = '/static/images/bni_glob_invoice.svg'
 
-SEO_TITLE = 'BNI'
+SEO_TITLE = 'BNI India'
 SEO_DESCRIPTION = 'Sterling Select Online Shopping'
 SEO_IMG = '/static/images/company_icon.png'
 SEO_IMG_WIDTH = 1024
