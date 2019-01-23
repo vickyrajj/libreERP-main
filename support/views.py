@@ -2596,12 +2596,12 @@ def invoice(response, pkVal  , request):
     elements.append(t4)
     detail31 = Paragraph("""
     <para align='center'>
-    Bill to Party
+    <b>Bill to Party</b>
     </para>
     """ %(),styles['Normal'])
     detail32 = Paragraph("""
     <para align='center'>
-    Ship to Party
+    <b>Ship to Party</b>
     </para>
     """ %(),styles['Normal'])
     t2data=[detail31],[detail32]
