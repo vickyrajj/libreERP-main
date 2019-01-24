@@ -443,6 +443,7 @@ function fetchThread(uid) {
           console.log(data,'fffffffffffffffff');
           chatThreadPk = data[0].pk
           agentPk = data[0].user
+          streamType=data[0].typ
         }
         fetchMessages(uid);
       } else if (this.responseText == '{"PARAMS":"createCookie"}') {
@@ -462,6 +463,7 @@ function fetchThread(uid) {
 var threadExist
 var threadResponse
 var chatThreadPk
+var streamType=''
 
 
 function checkCookie() {
@@ -1182,7 +1184,7 @@ function createChatDiv() {
   var mainStr = "";
   var supportOptions = [ {name:'callCircle' , value:true} , {name:'chatCircle' , value:true} , {name:'audioCircle' , value:true}, {name:'videoCircle' , value:true} , {name:'ticketCircle' , value:true} ];
 
-  for (var i = 0; i < supportOptions.length; i++) {
+  for (let i = 0; i < supportOptions.length; i++) {
     if (supportOptions[i].name=='callCircle') {
       supportOptions[i].value = callBackSupport;
     }
@@ -1195,13 +1197,30 @@ function createChatDiv() {
       if(videoSupport){
           videoContains=true;
       }
-      supportOptions[i].value = audioSupport;
+      setTimeout(function () {
+        console.log(streamType);
+        if(streamType=='video'){
+          supportOptions[i].value = false;
+        }else{
+          supportOptions[i].value = audioSupport;
+        }
+
+      }, 1000);
     }
-    if (supportOptions[i].name=='videoCircle') {
-      supportOptions[i].value = videoSupport;
+    if (supportOptions[i].name=='videoCircle'&&streamType!='audio') {
       if(audioSupport){
           audioContains=true;
       }
+
+      setTimeout(function () {
+        console.log(streamType);
+        if(streamType=='audio'){
+          supportOptions[i].value = false;
+        }else{
+          supportOptions[i].value = videoSupport;
+        }
+
+      }, 1000);
 
 
     }
@@ -2225,6 +2244,7 @@ var myformrating;
     chat = {user : custName , messages : [ { message:"first", sentByAgent:true , created:  new Date() } ] }
     pushMessages()
     setAudioVideoBtn();
+    streamType=''
     countForFrameContent=0;
     if(countForFrameContent>0){
       document.getElementById('iFrame1').src = '';
@@ -2507,10 +2527,10 @@ function togglingActive(element,value,type){
 
     function setAudioVideoBtn(){
       setTimeout(function () {
-        if(videoContains){
+        if(videoContains&&streamType!='audio'){
           videoBtn.style.display='block'
         }
-        if(audioContains){
+        if(audioContains&&streamType!='video'){
           audioBtn.style.display='block'
         }
       }, 1000);
@@ -2772,8 +2792,8 @@ function addExitConfirmation() {
           var pTag
           res.forEach((r)=>{
             if (r.match(regex)) {
-              str=str.replace(r,'<a href="'+r+'" target="_blank">'+r+'</a>')
-                pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;color:'+fontAndIconColor+'">'+ str +'</p>'
+              str=str.replace(r,'<a style="color:'+fontAndIconColor+'" href="'+r+'" target="_blank">'+r+'</a>')
+                pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
             }else{
                  pTag='<p style="font-size:14px; margin:5px 0px; box-sizing:border-box;">'+ str +'</p>'
             }

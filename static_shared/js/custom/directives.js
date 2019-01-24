@@ -809,28 +809,30 @@ app.directive('chatBox', function() {
 
       $scope.hideVisitorScreen = function() {
         $scope.IsVisitorOn=!$scope.IsVisitorOn;
-        if($scope.IsVisitorOn){
-          connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
-            acknowledge: true
-          }).
-          then(function(publication) {
-            console.log("Published");
-          });
-        }
-      else{
-        connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
-          acknowledge: true
-        }).
-        then(function(publication) {
-          console.log("Published");
-        });
-      }
+          if($scope.IsVisitorOn){
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['ShowVisitorScreen'], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }
+          else{
+            connection.session.publish(wamp_prefix+'service.support.chat.' + $scope.data.uid, ['hideVisitorScreen'], {}, {
+              acknowledge: true
+            }).
+            then(function(publication) {
+              console.log("Published");
+            });
+          }
       }
 
       $scope.$watch('data.closeIframe',function(newValue,oldValue){
         console.log(newValue,'=********************************************');
         //printed true ono cut
+
         if(newValue){
+          document.getElementById("iframeChat"+ $scope.data.uid).src='';
           $scope.msgDivHeight = 71
         }
       })
