@@ -96,6 +96,10 @@ class GetMyUser(APIView):
             allAgents = list(User.objects.exclude(pk=self.request.user.pk).values_list('pk',flat=True))
             print allAgents,type(allAgents)
             return Response({'allAgents':allAgents}, status=status.HTTP_200_OK)
+        if 'getChatThread' in request.GET:
+            uidsList = list(ChatThread.objects.filter(uid = request.GET['uid']).values_list('pk','company').distinct())
+            return Response({'chatThread':uidsList}, status=status.HTTP_200_OK)
+
         if 'getMyUser' in request.GET:
             # uidsList = list(SupportChat.objects.filter(user = self.request.GET['user']).values_list('uid',flat=True).distinct())
             uidsList = list(ChatThread.objects.filter(user = self.request.GET['user'],status='started').values_list('uid',flat=True).distinct())
@@ -1010,12 +1014,23 @@ class getChatStatus(APIView):
         print request.data,'dddddddddddddddd'
         uid=request.GET['uid']
         sendMail=False;
+        changeStatus=False;
+        compPk=''
         chatT= ChatThread.objects.filter(uid=uid)[0]
-        diff=timezone.now()-chatT.lastActivity
-        diffInMin = diff.total_seconds()/60
-        if diffInMin>15 and chatT.status=='started':
-            sendMail=True;
-        return Response({'sendMail':sendMail}, status = status.HTTP_200_OK)
+        if 'sendMail' in request.GET:
+            diff=timezone.now()-chatT.lastActivity
+            diffInMin = diff.total_seconds()/60
+            if diffInMin>10 and chatT.status=='started':
+                sendMail=True;
+        if 'checkStatus' in request.GET:
+            diffForstatus=timezone.now()-chatT.created
+            diffForstatusInMints=diffForstatus.total_seconds()/60
+            if diffForstatusInMints>10 and chatT.user is None:
+                changeStatus=True;
+                chatT.status="missed"
+                chatT.save()
+                compPk=chatT.company.pk
+        return Response({'sendMail':sendMail,'changeStatus':changeStatus,'companyPk':compPk}, status = status.HTTP_200_OK)
 
 
 # class SVGColor(APIView):

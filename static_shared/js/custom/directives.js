@@ -357,6 +357,31 @@ app.directive('reviewInfo', function() {
         }
       }
 
+      $scope.imageClicked=function(val){
+        // alert(val)
+        $uibModal.open({
+          templateUrl: '/static/ngTemplates/app.support.chatBox.imageModal.html',
+          size: 'lg',
+          backdrop: true,
+          resolve: {
+            imageSrc: function() {
+              return val;
+            }
+          },
+          controller: function($scope, $users,imageSrc, $uibModalInstance) {
+            $scope.myImageSrc=imageSrc
+          },
+          }).result.then(function() {
+
+          }, function(data) {
+
+          if (data != 'backdrop click' && data != '' && data != 'escape key press') {
+            console.log(data);
+            $scope.chatBox.messageToSend = $scope.chatBox.messageToSend + data
+          }
+        });
+      }
+
       $scope.reviewCommentData = []
       $http({
         method: 'GET',
@@ -812,7 +837,7 @@ app.directive('chatBox', function() {
 
 
       $scope.setHeight = function () {
-        console.log('Here');
+        // console.log('Here');
         if ($scope.data.audio) {
           $scope.msgDivHeight = 66
         }else if ($scope.data.video) {
@@ -1140,14 +1165,15 @@ app.directive('chatBox', function() {
       setInterval(function () {
         $http({
           method: 'GET',
-          url: '/api/support/getChatStatus/?uid=' + $scope.data.uid,
+          url: '/api/support/getChatStatus/?sendMail&uid=' + $scope.data.uid,
         }).
         then(function(response) {
           if(response.data.sendMail){
+            // $scope.chatClose()
             sendMailToContactPersons()
           }
         });
-      }, 1000*60*5);
+      }, 1000*60*2);
 
 
       $http({

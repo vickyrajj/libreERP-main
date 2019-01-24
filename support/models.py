@@ -89,6 +89,7 @@ CHATTHREAD_STATUS_CHOICES = (
     ('archived' , 'archived'),
     ('escalatedL1' , 'escalatedL1'),
     ('escalatedL2' , 'escalatedL2'),
+    ('missed' , 'missed'),
 )
 
 class ChatThread(models.Model):

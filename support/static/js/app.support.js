@@ -53,10 +53,6 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
   }
 
 
-
-
-
-
     $scope.sendBackHeartBeat=function() {
       // var scope = angular.element(document.getElementById('chatTab')).scope();
 
@@ -121,12 +117,55 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
     }else{
       Tinycon.reset();
     }
-
   }, 5000);
+
+
+  function sendMail(mailId,uid){
+    $http({
+      method: 'POST',
+      url: '/api/support/emailChat/',
+      data: {
+        email: mailId,
+        uid: uid
+      }
+    }).then(function(response) {
+      console.log('mail sent to '+mailId);
+    });
+  }
+   $scope.sendMailsToContact=function(contacts,chatUid){
+    for (var i = 0; i < contacts.length; i++) {
+      var profile=$users.get(contacts[i])
+      sendMail(profile.email,chatUid)
+    }
+  }
+
+
+
+  setInterval(function () {
+    for (let i = 0; i < $scope.newUsers.length; i++) {
+      $http({
+        method: 'GET',
+        url: '/api/support/getChatStatus/?checkStatus&uid=' + $scope.newUsers[i].uid,
+      }).
+      then(function(response) {
+        console.log(response.data);
+        if(response.data.changeStatus){
+          $http({
+              method: 'GET',
+              url: '/api/support/getMyUser/?getCompanyDetails=' + response.data.companyPk,
+            }).then(function(response){
+              let compContactPersons=response.data.contactP
+              $scope.sendMailsToContact(compContactPersons,$scope.newUsers[i].uid)
+            })
+          $scope.newUsers.splice(i, 1);
+        }
+      });
+    }
+  }, 1000*60*1);
+
   $scope.myCompanies = [];
   function fetchUsers() {
     if (connectionOpened) {
-      // console.log('iffffffffffffffffff');
       $http({
         method: 'GET',
         url: '/api/support/getMyUser/?getMyUser=1&user=' + $scope.me.pk,
@@ -185,6 +224,7 @@ app.controller("businessManagement.support", function($scope, $state, $users, $s
         for (var i = 0; i < response.data.length; i++) {
 
           if($scope.myCompanies.indexOf(response.data[i].companyPk)>=0){
+            console.log(response.data,"555555555555555555555");
             $scope.newUsers.push({
               name: '',
               uid: response.data[i].uid,
@@ -429,6 +469,7 @@ $scope.count=0;
         if (now - chatThreadCreated > 180000 ) {
           toPatch.isLate = true
         }
+
 
 
         $http({
