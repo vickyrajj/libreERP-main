@@ -356,7 +356,7 @@
             <label> Ex Work Price: </label>
           </div>
           <div class="col-md-3 text-center">
-            <input type="number" class="form-control text-center" ng-model="form.invoiceValue" ng-change="invoceSave()">
+            <input type="number" class="form-control text-center" ng-model="form.invoiceValue" ng-change="invoceSave()" disabled>
           </div>
           <div class="col-md-3 text-center">
             <span> {{((form.invoiceValue * form.exRate)).toFixed(2) | number}}</span>

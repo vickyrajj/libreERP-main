@@ -138,14 +138,14 @@
                 <td><input type="number" step=1 class="form-control-pos" ng-model="v.qty"></td>
                 <td>{{v.customs_no}}</td>
                 <td><input type="text" class="form-control-pos" ng-model="v.price"></td>
-                <td>{{v.taxableprice}}</td>
+                <td>{{v.taxableprice | number}}</td>
                 <td>{{v.cgst}}</td>
-                <td>{{v.cgstVal}}</td>
+                <td>{{v.cgstVal | number}}</td>
                 <td>{{v.sgst}}</td>
-                <td>{{v.sgstVal}}</td>
+                <td>{{v.sgstVal | number}}</td>
                 <td>{{v.igst}}</td>
-                <td>{{v.igstVal}}</td>
-                <td>{{v.total}}</td>
+                <td>{{v.igstVal | number}}</td>
+                <td>{{v.total | number}}</td>
                 <td>
                   <button type="button" class="btn btn-danger btn-sm" ng-click="deleteData(v.pk , $index)"> <i class="fa fa-trash"></i> </button>
                 </td>

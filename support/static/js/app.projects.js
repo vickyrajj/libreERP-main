@@ -1867,7 +1867,6 @@ app.controller("businessManagement.projects.service.view", function($scope, $sta
             $timeout(function() {
               Flash.create('success', 'Saved');
             }, 1500);
-
           })
         }
 
